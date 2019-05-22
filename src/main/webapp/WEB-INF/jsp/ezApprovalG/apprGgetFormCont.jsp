@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -21,8 +23,8 @@
 		    var OrderCell = "";
 		    var pDeptID;
 		    var Rtnval = new Array();
-		    var DocFileType = "${fileType}";
-		    var Server_Name = "${serverName}";
+		    var DocFileType = "<c:out value = '${fileType}'/>";
+		    var Server_Name = "<c:out value = '${serverName}'/>";
 		    var TreeIdx;
 		    var ListIdx;
 		    var RetValue;
@@ -34,7 +36,7 @@
 		        Tree_setconfig();
 		        
 		        var pFormKind;
-		        pDeptID = "${deptID}";
+		        pDeptID = "<c:out value = '${deptID}'/>";
 		
 		        try {
 		            RetValue = parent.getformcont_cross_dialogArguments[0];

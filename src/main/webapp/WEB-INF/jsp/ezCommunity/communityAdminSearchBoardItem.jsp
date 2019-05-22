@@ -267,7 +267,7 @@
 				
 				if (CrossYN()) {
 				    if (gubun == "3") {
-				        window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=1&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+				        window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=1&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 				    } else {
 				    	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code), "", 750, 721);
 				    }
@@ -337,7 +337,7 @@
 	
 			function CheckIfHasReplies() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
+				xmlhttp.open("GET", "/ezCommunity/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "TRUE") {
@@ -390,14 +390,14 @@
 				var boardname = document.getElementById("txtBoardName").value;
 	
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
-				url += "&boardname=" + boardname;
+				url += "&boardname=" + encodeURIComponent(boardname);
 				url += "&page=" + newPage.toString();
 				url += "&gubun=" + gubun;
 	
@@ -422,14 +422,14 @@
 				var boardname = document.getElementById("txtBoardName").value;
 	
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
-				url += "&boardname=" + boardname;
+				url += "&boardname=" + encodeURIComponent(boardname);
 				url += "&page=" + newPage.toString();
 				url += "&gubun=" + gubun;
 	
@@ -457,14 +457,14 @@
 				var boardname = document.getElementById("txtBoardName").value;
 				
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
-				url += "&boardname=" + boardname;
+				url += "&boardname=" + encodeURIComponent(boardname);
 				url += "&page=" + CurPage.toString();
 				url += "&gubun=" + gubun;
 				
@@ -567,12 +567,12 @@
 				var result = "";
 				
 		    	  $.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "text",
 						async : false,
 						url : "/ezCommunity/getParentBoardID.do",
 						data : {
-							boardID : encodeURIComponent(pBoardID)
+							boardID : pBoardID
 						},
 						success: function(text){
 							result = text;

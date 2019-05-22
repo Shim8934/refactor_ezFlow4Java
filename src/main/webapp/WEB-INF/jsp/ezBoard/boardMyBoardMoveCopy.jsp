@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -13,8 +14,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
 	    <script type="text/javascript">
 	        var treeView = new TreeView();
-	        var pSelID = "${selID}";
-	        var pNodeTreeID = "${nodeID}";
+	        var pSelID = "<c:out value='${selID}'/>";
+	        var pNodeTreeID = "<c:out value='${nodeID}'/>";
 	        var ReturnFunction;
 	        
 	        window.onload = function () {

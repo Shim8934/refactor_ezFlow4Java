@@ -30,6 +30,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
@@ -98,7 +99,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	/**
 	 * 메일 수신확인/회수 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailReaderList.do")
+	@RequestMapping(value="/ezEmail/mailReaderList.do", method = RequestMethod.GET)
 	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String url = request.getParameter("url") == null ? "" : request.getParameter("url");
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
@@ -127,7 +128,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	/**
 	 * 메일 수신확인 리스트 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetReceiveList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetReceiveList.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailGetReceiveList(
 			@CookieValue("loginCookie") String loginCookie,
@@ -399,7 +400,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	/**
 	 * 메일 회수 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailCancelSend.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailCancelSend.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailCancelSend(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -558,7 +559,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		return "OK";
 	}
 	
-	@RequestMapping(value="/ezEmail/readExternalRecipient.do")
+	@RequestMapping(value="/ezEmail/readExternalRecipient.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String readExternalRecipient(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("readExternalRecipient started.");

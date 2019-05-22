@@ -350,8 +350,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 				//자원관리 풋터리스트				
 				List<MResourceScheduleVO> resourceFooterList = mResourceService.getResFavoriteList(userId, info.getCompanyId(), tenantId, langStr);
 				
+				/* 2019-05-09 홍승비 - useLoginCookieSSO 여부 파라미터 추가 */
+				String useLoginCookieSSO = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
+
 				dataObject.put("boardFooterList", boardFooterList);
 				dataObject.put("resourceFooterList", resourceFooterList);
+				dataObject.put("useLoginCookieSSO", useLoginCookieSSO);
 			}				
 			
 			result.put("status", "ok");

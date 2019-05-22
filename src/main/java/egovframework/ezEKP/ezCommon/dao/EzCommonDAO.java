@@ -11,6 +11,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
@@ -27,7 +28,10 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class EzCommonDAO extends EgovAbstractDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(EzCommonDAO.class);
-            
+
+    @Value("#{globals['Globals.DbType']}")
+	private String dbType;
+
     @Autowired
     private Properties config;
 
@@ -298,6 +302,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_addjobmaster orderby column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.addAddJobMasterOrderBy");
+		}
+	}
+	
+	public void addAddJobMasterProxy() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddAddJobMasterProxy");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster proxy column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterProxy");
 		}
 	}
 	
@@ -610,4 +624,42 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void addWebfolderTotalLimit() {
+		try {
+			select("EzCommonDAO.checkWebfolderTotalLimit");
+		} catch (Exception ex) {
+			logger.debug("tbl_webfolder_config company_total_limit, department_total_limit, user_total_limit doesn't exist. creating the column...");
+			
+			if (dbType.equalsIgnoreCase("oracle")) {
+				// rename column
+				update("EzCommonDAO.renameWebfolderConfigTotalLimit");
+				// add column
+				update("EzCommonDAO.addWebfolderConfigTotalLimit");
+			} else {
+				update("EzCommonDAO.createWebfolderConfigTotalLimit");
+			}
+		}
+		
+		try {
+			select("EzCommonDAO.checkWebfolderUserCnType");
+		} catch (Exception ex) {
+			logger.debug("tbl_webfolder_user type doesn't exist. creating the column...");
+			
+			if (dbType.equalsIgnoreCase("oracle")) {
+				// add nullable column
+				update("EzCommonDAO.addWebfolderUserCnTypeColumn");
+				// update all rows type = 'U'
+				update("EzCommonDAO.updateWebfolderUserCnType");
+				// modify nullable to not null
+				update("EzCommonDAO.modifyWebfolderUserCnTypeColumn");
+				// primary key change
+				update("EzCommonDAO.dropWebfolderUserPrimaryKey");
+				update("EzCommonDAO.addWebfolderUserPrimaryKey");
+			} else {
+				update("EzCommonDAO.createWebfolderUserCnTypeColumn");
+				update("EzCommonDAO.updateWebfolderUserCnType");
+			}
+		}
+	}
+>>>>>>> refs/remotes/origin/personalizedPortal
 }

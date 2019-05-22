@@ -27,7 +27,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		
 		<script type="text/javascript">
-			var attModId = "${attModId}";
+			var attModId = "<c:out value='${attModId}'/>";
 			var companyId = "${companyId}";
 			
 			window.onload = function () {

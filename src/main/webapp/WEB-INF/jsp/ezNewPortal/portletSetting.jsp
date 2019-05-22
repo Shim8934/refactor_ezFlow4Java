@@ -285,7 +285,7 @@
 				 				
 				 				// checkbox click event
 				 				input.addEventListener('click', function() {
-				 					if(this.getAttribute('checked') && !this.getAttribute("data-isfixed")) {
+				 					if(this.getAttribute('checked') && !this.getAttribute("isfixed")) {
 				 						this.removeAttribute('checked');	
 				 						div.classList.remove('ui-portlet-on');
 				 						div.classList.add('ui-portlet-off');
@@ -397,11 +397,13 @@
 			
 			//2018-12-18 유은정 - 포틀릿 필수 사용 지정 관련 개발
 			var checkIsFixed = function() {
-				var isFixed = this.getAttribute("data-isfixed");
+				var isFixed = this.getAttribute("isfixed");
 				
 				if (isFixed === "true") {
 					alert('<spring:message code="ezNewPortal.t131" />');
 					$(this).prop("checked", true);
+					document.getElementById(this.id).parentElement.parentElement.classList.remove('ui-portlet-off');
+					document.getElementById(this.id).parentElement.parentElement.classList.add('ui-portlet-on');
 					return;
 				}
 			}

@@ -37,9 +37,9 @@
 			var previousSubCell = null;
 			var previousCell = null;
 			var count = 1000;
-			var pageid = "${pageID}";
+			var pageid = '<c:out value="${pageID}"/>';
 			var parentpageid = "${parentPageID}";
-			var mode = "${mode}";
+			var mode = '<c:out value="${mode}"/>';
 			var editmode = "${editMode}";
 			var gubunFlag = "${gubunFlag}";
 			var bInherit = false;

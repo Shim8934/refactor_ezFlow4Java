@@ -191,7 +191,7 @@
 		        fd2.append("thumbnail", thumbnail);
 		        
 		        xhr2 = new XMLHttpRequest();
-	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + document.getElementsByName('movieView')[0].id + "&fileLimit=" + AttachLimit, false);
+	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + encodeURIComponent(document.getElementsByName('movieView')[0].id) + "&fileLimit=" + AttachLimit, false);
 	            xhr2.send(fd2);
 	            
 			    newID = "{" + GetGUID() + "}";
@@ -281,13 +281,11 @@
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}
-						if ("${boardInfo.apprMail_FG}" == "Y") {
+						
+						/* 2019-05-08 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+						if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 						    xmlhttp = createXMLHttpRequest();
-						    if (pMode != "modify") {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
-						    } else {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
-						    }
+						    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}

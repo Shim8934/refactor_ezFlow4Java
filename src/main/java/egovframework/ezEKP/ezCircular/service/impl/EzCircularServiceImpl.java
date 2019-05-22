@@ -199,7 +199,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		if (fileList != null && !fileList.equals("")) {
 			//2018-02-13 주홍선 파일경로 잘못되어있던 것 수정
-			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+			File file = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile"));
 
 			if (!file.exists()) {
 	        	file.mkdir();
@@ -310,10 +310,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
 
-		File file = new File(beforeFilePath);
+		File file = new File(commonUtil.detectPathTraversal(beforeFilePath));
 
 		try {
-			file.renameTo(new File(afterFilePath));
+			file.renameTo(new File(commonUtil.detectPathTraversal(afterFilePath)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -329,8 +329,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		BufferedWriter bw = null;
 
 		try {
-			File originFile = new File(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName); // 복사할 파일의 경로
-			File copyFilePath = new File(pDirPath + "tempUploadFile" + commonUtil.separator + fileName);
+			File originFile = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName)); // 복사할 파일의 경로
+			File copyFilePath = new File(commonUtil.detectPathTraversal(pDirPath + "tempUploadFile" + commonUtil.separator + fileName));
 
 			fis = new FileInputStream(originFile);
 			fos = new FileOutputStream(copyFilePath);
@@ -604,7 +604,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		if (fileList != null && !fileList.equals("")) {
-			File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+			File file = new File(commonUtil.detectPathTraversal(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + circularID + "_uploadFile"));
 
 			if (!file.exists()) {
 	        	file.mkdir();
@@ -717,7 +717,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	private void deleteDirectory (String circularID, String pDirpath, int tenantID) throws Exception {
 		logger.debug("deleteDirectory ended.");
 		
-		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+		File directoryFile = new File(commonUtil.detectPathTraversal(pDirpath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile"));
 		File[] deleteFileList = directoryFile.listFiles();
 
 		if (directoryFile.exists()) {

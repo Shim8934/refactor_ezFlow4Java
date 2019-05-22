@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.web;
 
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -44,7 +45,7 @@ public class EzWebFolderController_m {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController_m.class);
 	
-	@RequestMapping(value="/ezWebFolder/webfolderSharingList.do")
+	@RequestMapping(value="/ezWebFolder/webfolderSharingList.do", method = RequestMethod.GET)
 	public String webfolderSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
@@ -52,7 +53,7 @@ public class EzWebFolderController_m {
 		return "ezWebFolder/webfolderSharingList";
 	}
 	
-	@RequestMapping(value="/ezWebFolder/getSharingList.do")
+	@RequestMapping(value="/ezWebFolder/getSharingList.do", method = RequestMethod.POST)
 	public @ResponseBody String getSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSharingList started.");
 		
@@ -75,7 +76,7 @@ public class EzWebFolderController_m {
 		return resultBody.toString();
 	}
 	
-	@RequestMapping(value="/ezWebFolder/webfolderSharedList.do")
+	@RequestMapping(value="/ezWebFolder/webfolderSharedList.do", method = RequestMethod.GET)
 	public String webfolderSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
@@ -83,7 +84,7 @@ public class EzWebFolderController_m {
 		return "ezWebFolder/webfolderSharedList";
 	}
 	
-	@RequestMapping(value="/ezWebFolder/getSharedList.do")
+	@RequestMapping(value="/ezWebFolder/getSharedList.do", method = RequestMethod.POST)
 	public @ResponseBody String getSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSharedList started.");
 		
@@ -106,7 +107,7 @@ public class EzWebFolderController_m {
 		return resultBody.toString();
 	}
 	
-	@RequestMapping(value="/ezWebFolder/showShareInfo.do")
+	@RequestMapping(value="/ezWebFolder/showShareInfo.do", method = RequestMethod.GET)
 	public String showShareInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		String folderFileId = request.getParameter("folderFileId");
 		String folderFileType = request.getParameter("folderFileType");
@@ -156,7 +157,7 @@ public class EzWebFolderController_m {
 				for (int i = 0; i < userListJson.size(); i++) {
 					JSONObject orgObj = (JSONObject) userListJson.get(i);
 					JSONObject obj = new JSONObject();
-					if (((String) orgObj.get("userType")).equals("U")) {
+					if (MessageDigest.isEqual(orgObj.get("userType").toString().getBytes(), "U".getBytes())) {
 						obj.put("userId", (String) orgObj.get("userId"));
 						obj.put("userName", (String) orgObj.get("userName"));
 						userList.add(obj);
@@ -183,7 +184,7 @@ public class EzWebFolderController_m {
 		return result;
 	}
 	
-	@RequestMapping(value="/ezWebFolder/addShareView.do")
+	@RequestMapping(value="/ezWebFolder/addShareView.do", method = RequestMethod.GET)
 	public String addShareView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addShareView started.");
 		
@@ -243,7 +244,7 @@ public class EzWebFolderController_m {
 		return  resultBody.toString();
 	}
 	
-	@RequestMapping(value="/ezWebFolder/deleteShareConfirm.do")
+	@RequestMapping(value="/ezWebFolder/deleteShareConfirm.do", method = RequestMethod.GET)
 	public String deleteShareConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("deleteShareConfirm started.");
 		
@@ -317,14 +318,14 @@ public class EzWebFolderController_m {
 		return  resultBody.toString();
 	}
 	
-	@RequestMapping(value="/ezWebFolder/webfolderHiddenSharedList.do")
+	@RequestMapping(value="/ezWebFolder/webfolderHiddenSharedList.do", method = RequestMethod.GET)
 	public String webfolderHiddenSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
 		return "ezWebFolder/webfolderHiddenSharedList";
 	}
 	
-	@RequestMapping(value="/ezWebFolder/getHiddenSharedList.do")
+	@RequestMapping(value="/ezWebFolder/getHiddenSharedList.do", method = RequestMethod.POST)
 	public @ResponseBody String getHiddenSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getHiddenSharedList started.");
 		
@@ -340,7 +341,7 @@ public class EzWebFolderController_m {
 		return resultBody.toString();
 	}
 	
-	@RequestMapping(value="/ezWebFolder/trashCan.do")
+	@RequestMapping(value="/ezWebFolder/trashCan.do", method = RequestMethod.GET)
 	public String trashCan (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse response, Model model )throws Exception {
 		logger.debug("trashCan started.");
@@ -434,7 +435,7 @@ public class EzWebFolderController_m {
 		return "json";
 	}
 	
-	@RequestMapping(value="/ezWebFolder/permanentDeleteConfirm.do")
+	@RequestMapping(value="/ezWebFolder/permanentDeleteConfirm.do", method = RequestMethod.GET)
 	public String permanentDeleteConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse response, Model model) throws Exception {
 		logger.debug("permanentDeleteConfirm started.");
@@ -513,6 +514,10 @@ public class EzWebFolderController_m {
 			if (resultBody.containsKey("duplicateInfoArray")) {
 				model.addAttribute("duplicateInfoArray", resultBody.get("duplicateInfoArray"));
 			}
+			
+			if (resultBody.containsKey("hasExceededCapacities")) {
+				model.addAttribute("hasExceededCapacities", resultBody.get("hasExceededCapacities"));
+			}
 		}else {
 			model.addAttribute("reason", resultBody.get("reason").toString());
 			model.addAttribute("status","error");
@@ -524,7 +529,7 @@ public class EzWebFolderController_m {
 		return "json";
 	}
 	
-	@RequestMapping(value = "/ezWebFolder/favorite.do")
+	@RequestMapping(value = "/ezWebFolder/favorite.do", method = RequestMethod.GET)
 	public String favor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		logger.debug("favorite started.");
 		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
@@ -594,7 +599,7 @@ public class EzWebFolderController_m {
 		return result;
 	}
 	
-	@RequestMapping(value="/ezWebFolder/moveTrashCanManage.do")
+	@RequestMapping(value="/ezWebFolder/moveTrashCanManage.do", method = RequestMethod.GET)
 	public String moveTrashCanManage (@CookieValue ("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 	logger.debug("moveTrashCanManage started.");
 	

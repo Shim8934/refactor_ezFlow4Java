@@ -169,9 +169,9 @@
 	            var strAttach = "";
 	            var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 	            var regData = GetbrowserLanguage();
-				var fontfam = "<spring:message code='main.t246'/>";
 	            
-	            strAttach += "<div class='attachedfile' id='ifrmPreViewRayer' style='margin:-13px; margin-bottom:10px; margin-top:-8px; font-family:"+ fontfam +"'>";
+	            /* 2019-05-02 홍승비 - 게시물 미리보기 첨부파일영역 폰트 수정 */
+	            strAttach += "<div class='attachedfile' id='ifrmPreViewRayer' style='margin:-13px; margin-bottom:10px; margin-top:-8px;'>";
 	
 	            var totalSize = 0;
 	            for (var j = 0; j < xmldomNodes.length; j++) {

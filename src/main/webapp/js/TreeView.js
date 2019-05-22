@@ -210,13 +210,20 @@ function TreeNode() {
         subImgNode.border = "0";
         subImgNode.style.width = TreeIconSizes["width"];
         subImgNode.style.height = TreeIconSizes["height"];
+        subImgNode.style.verticalAlign = "middle";
         subImgNode.src = pUseAgency ? TreeImages["iconcomp"] : TreeImages["base"];
-        if (IMAGETYPE == "BOARD")
-            subImgNode.src = TreeImages["iconboard"];
         
-        //treeDiv.innerHTML += subImgNode.outerHTML;
-        treeDiv.innerHTML += "<span class='sub_iconLNB tree_folder'></span>";
-
+        if (IMAGETYPE == "BOARD") {
+            subImgNode.src = TreeImages["iconboard"];
+        }
+        
+        /* 2019-05-08 홍승비 - 마이게시판의 하위게시판과 상위폴더(분류) 이미지 분리 */
+        if (IMAGETYPE == "BOARD") {
+        	treeDiv.innerHTML += subImgNode.outerHTML;
+        } else {
+        	treeDiv.innerHTML += "<span class='sub_iconLNB tree_folder'></span>";
+        }
+        
         //노드 이름 SPAN 생성
         var spnNode = document.createElement("SPAN");
         var nodeText = document.createTextNode(this.NodeName);
@@ -227,10 +234,15 @@ function TreeNode() {
         spnNode.className = "node_normal";
         spnNode.style.display = "inline-block";
         /*if(CrossYN()) {
-            spnNode.style.paddingTop = "0px";        	
+            spnNode.style.paddingTop = "0px";
         }
         
         spnNode.style.paddingLeft = "1px";*/
+        
+        if (IMAGETYPE == "BOARD") {
+        	spnNode.style.padding = "0px 0px 0px 2px";
+        	spnNode.style.verticalAlign = "middle";
+        }
         
         if (color != "" && color != "TREE" && color != "BOARD")
             spnNode.style.color = color;

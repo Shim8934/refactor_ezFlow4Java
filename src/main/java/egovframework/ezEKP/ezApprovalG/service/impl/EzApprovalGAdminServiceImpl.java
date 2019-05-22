@@ -447,13 +447,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("contType", pContType);
 		map.put("deptID", pOwnDeptID);
 		
-		String duplicated = ezApprovalGAdminDAO.checkContainer(map);
-		
-		if (duplicated == null) {
-			duplicated = "";
+		int duplicated = ezApprovalGAdminDAO.checkContainer(map);
+		if (duplicated > 0) {
 			logger.debug("insertContainer duplicated.");
+			return "DUPLICATE";
 			
-			return "FALSE";
 		} else {
 			logger.debug("insertContainer started.");
 			ezApprovalGAdminDAO.insertContainer(map);
@@ -482,6 +480,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String pContID = xmlData.getDocumentElement().getChildNodes().item(0).getTextContent().trim();
 		String pContType = xmlData.getDocumentElement().getChildNodes().item(1).getTextContent().trim();
 		String pOwnDeptID = xmlData.getDocumentElement().getChildNodes().item(2).getTextContent().trim();
+		String pModFlag = xmlData.getDocumentElement().getChildNodes().item(3).getTextContent().trim();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("contID", pContID);		
@@ -490,25 +489,38 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("updateContainer started.");
-		ezApprovalGAdminDAO.updateContainer(map);
-		logger.debug("updateContainer ended.");
+		try {
+			if (pModFlag != null && pModFlag.equals("Y")) {
+				int duplicated = ezApprovalGAdminDAO.checkContainer(map);
+				if (duplicated > 0) {
+					logger.debug("updateContainer duplicated.");
+					return "DUPLICATE";
+				}
+			}
 		
-		logger.debug("deleteContainerUseDep started.");
-		ezApprovalGAdminDAO.deleteContainerUseDep(map);
-		logger.debug("deleteContainerUseDep ended.");
-		
-		int cnt = xmlData.getDocumentElement().getChildNodes().getLength();		
-	
-	    for (int i = 3; i < cnt - 1; i++) {
-	    	map.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
+			logger.debug("updateContainer started.");
+			ezApprovalGAdminDAO.updateContainer(map);
+			logger.debug("updateContainer ended.");
 			
-			logger.debug("insertContainerUseDep started.");
-	    	ezApprovalGAdminDAO.insertContainerUseDep(map);
-	    	logger.debug("insertContainerUseDep ended.");
-	    }
-	    
-	    return "TRUE";
+			logger.debug("deleteContainerUseDep started.");
+			ezApprovalGAdminDAO.deleteContainerUseDep(map);
+			logger.debug("deleteContainerUseDep ended.");
+			
+			int cnt = xmlData.getDocumentElement().getChildNodes().getLength();		
+			
+			for (int i = 4; i < cnt - 1; i++) {
+				map.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
+				
+				logger.debug("insertContainerUseDep started.");
+				ezApprovalGAdminDAO.insertContainerUseDep(map);
+				logger.debug("insertContainerUseDep ended.");
+			}
+			
+			return "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "FALSE";
+		}
 	}
 
 	@Override
@@ -1520,7 +1532,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<DATA1>" + vo.getSealNum() + "</DATA1>");
 			sb.append("<DATA2>" + vo.getSealPath() + "</DATA2>");
 			sb.append("<DATA3>" + commonUtil.cleanValue(vo.getRegUserID()) + "</DATA3>");
-			File file = new File(realPath + vo.getSealPath());
+			File file = new File(commonUtil.detectPathTraversal(realPath + vo.getSealPath()));
 			if ( !file.exists() ) {
 				sb.append("<DATA4>false</DATA4></CELL>");
 			} else {
@@ -1654,7 +1666,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append("<CELL><VALUE>" + vo.getRegUserName2() + "</VALUE></CELL>");
 			}
 			
-			File file = new File(realPath + vo.getSealPath());
+			File file = new File(commonUtil.detectPathTraversal(realPath + vo.getSealPath()));
 			
 			if (!file.exists()) {
 				sb.insert(sb.indexOf("</DATA3>") + 8, "<DATA4>false</DATA4>");
@@ -2478,8 +2490,35 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			recevGroupXML = formRecevGroup;
 		}
 		
+		boolean isUpdate = false;
 		String saveFileFolder = "";
 		String saveFileName = "";
+
+		if (!formID.equals("") && !formMhtInfo.equals("")) {
+			isUpdate = true;
+			saveFileFolder = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form";
+			saveFileName = saveFileFolder + commonUtil.separator + formID + ".mht";
+			
+			try {
+				File fileFolder = new File(commonUtil.detectPathTraversal(saveFileFolder));
+				
+				if (!fileFolder.exists()) {
+					fileFolder.mkdirs();
+				}
+				
+				File file = new File(commonUtil.detectPathTraversal(saveFileName));
+				if (file.exists()) {
+					strBeforeMHT = FileUtils.readFileToString(file);
+				}
+
+				FileWriter fw = new FileWriter(file);
+				fw.append(formMhtInfo);
+				fw.close();
+			} catch (Exception e) {
+				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
+			}
+		}
+		
 		// FormBuilder
 		boolean useReform = reformMht != null;
 
@@ -2740,6 +2779,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				File file = new File(saveFileName);
 				if (file.exists()) {
 					strBeforeMHT = FileUtils.readFileToString(file);
+				} else {
+					new File(commonUtil.detectPathTraversal(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator)))).mkdirs();
 				}
 
 				FileWriter fw = new FileWriter(file);
@@ -2876,8 +2917,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 //		FileOutputStream stream = null;
 		
 		try {
-			File fileFolder = new File(saveFileFolder);
-			File file = new File(saveFileName);
+			File fileFolder = new File(commonUtil.detectPathTraversal(saveFileFolder));
+			File file = new File(commonUtil.detectPathTraversal(saveFileName));
 			
 			if (!fileFolder.exists()) {
 				fileFolder.mkdirs();
@@ -2959,8 +3000,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			FileOutputStream stream = null;
 			
 			try {
-				File fileFolder = new File(saveFileFolder);
-				File file = new File(saveFileName);
+				File fileFolder = new File(commonUtil.detectPathTraversal(saveFileFolder));
+				File file = new File(commonUtil.detectPathTraversal(saveFileName));
 				
 				if (!fileFolder.exists()) {
 					fileFolder.mkdirs();
@@ -3239,12 +3280,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			if (!formMhtInfo.equals("")) {
 				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".hwp";
 				
-				File file = new File(saveFileName);
+				File file = new File(commonUtil.detectPathTraversal(saveFileName));
 				
 				if (file.exists()) {
 					strBeforeMHT = FileUtils.readFileToString(file);
 				} else {
-					new File(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator))).mkdirs();
+					new File(commonUtil.detectPathTraversal(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator)))).mkdirs();
 				}
 				
 				FileOutputStream stream = null;
@@ -3895,8 +3936,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		FileWriter fileWriter = null;
 		
 		try {
-			File fileFolder = new File(saveFileFolder);
-			File file = new File(saveFileName);
+			File fileFolder = new File(commonUtil.detectPathTraversal(saveFileFolder));
+			File file = new File(commonUtil.detectPathTraversal(saveFileName));
 			
 			if (!fileFolder.exists()) {
 				fileFolder.mkdirs();

@@ -98,262 +98,520 @@ public class EzWebFolderGWController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController.class);
 
-	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/id/{companyid}/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getBasicStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request, Locale locale) {
-		logger.debug("getBasicStorage start");
-		String serverName = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host") : "";
+	@RequestMapping(value = {"/rest/ezwebfolderadmin/default/capacity", "/rest/ezwebfolderadmin/default/capacity/{companyId:.+}"},
+			method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getDefaultCapacity(@PathVariable Optional<String> companyId, HttpServletRequest request) {
+		logger.debug("ezWebFolder GW getDefaultCapacity start");
+		String serverName = request.getHeader("x-user-host");
 		JSONObject result = new JSONObject();
-		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
-		
-		if (serverName.equals("") || companyId.equals("")) {
+		logger.debug("companyId: {}, serverName: {}", companyId.orElse(""), serverName);
+
+		if (containsNull(serverName)) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
 			return result;
 		}
-		
+
 		try {
-			int tenantId                      = loginService.getTenantId(serverName);
-			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, tenantId);
+			int tenantId = loginService.getTenantId(serverName);
+			WebfolderConfigVO webfolderConfig;
+			
+			if (companyId.isPresent()) {
+				webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId.get(), tenantId);
+			} else {
+				webfolderConfig = ezWebFolderAdminService.getEveryCompanyConfig(tenantId);
+			}
+
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("config", webfolderConfig);
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);
 		}
-		
-		logger.debug("getBasicStorage end");
+
+		logger.debug("ezWebFolder GW getDefaultCapacity end");
 		return result;
 	}
 
-	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/{newvalue}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putChangeBasicStorage(@PathVariable(value="newvalue") String newValue, HttpServletRequest request, Locale locale) {
-		logger.debug("putChangeBasicStorage start");
-		String serverName  = request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host")      : "";
-		String uploadLimit = request.getParameter("uploadLimit") != null ? request.getParameter("uploadLimit") : "";
-		String companyId   = request.getParameter("companyId")   != null ? request.getParameter("companyId")   : "";
-		JSONObject result  = new JSONObject();
-		
-		logger.debug("New Value: " + newValue + " || CompanyId: " + companyId +  " || serverName: " + serverName);
-		
-		if (serverName.equals("") || companyId.equals("") || uploadLimit.equals("") || newValue.equals("")) {
+	@RequestMapping(value = {"/rest/ezwebfolderadmin/default/capacity", "/rest/ezwebfolderadmin/default/capacity/{companyId:.+}"},
+			method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject setDefaultCapacity(@PathVariable String companyId, HttpServletRequest request) {
+		logger.debug("ezWebFolder GW setDefaultCapacity start");
+		String serverName = request.getHeader("x-user-host");
+		String uploadLimit = request.getParameter("uploadLimit");
+		String companyLimit = request.getParameter("companyLimit");
+		String departmentLimit = request.getParameter("departmentLimit");
+		String userLimit = request.getParameter("userLimit");
+		JSONObject result = new JSONObject();
+
+		logger.debug("uploadLimit: {}, companyLimit: {}, departmentLimit: {}, userLimit: {}, companyId: {}, serverName: {}", uploadLimit, companyLimit, departmentLimit, userLimit, companyId, serverName);
+
+		if (containsNull(uploadLimit, companyLimit, departmentLimit, userLimit, serverName)) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
 			return result;
 		}
-		
+
 		try {
 			int tenantId = loginService.getTenantId(serverName);
-			ezWebFolderAdminService.saveConfig(newValue, uploadLimit, companyId, tenantId);
+
+			ezWebFolderAdminService.saveConfig(companyLimit, departmentLimit, userLimit, uploadLimit, companyId, tenantId);
 			result.put("status", "ok");
 			result.put("code", 0);
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);
 		}
-		
-		logger.debug("putChangeBasicStorage end");
+
+		logger.debug("ezWebFolder GW setDefaultCapacity end");
 		return result;
 	}
 
-	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/id/{companyid}/person", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getPersonalStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request, Locale locale) {
-		logger.debug("getPersonalStorage start");
-		String serverName = request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host")                        : "";
-		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
-		String searchStr  = request.getParameter("searchStr")   != null ? request.getParameter("searchStr")                     : "";
-		String searchOpt  = request.getParameter("searchOpt")   != null ? request.getParameter("searchOpt")                     : "";
-		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
-		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
-		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
-		JSONObject result = new JSONObject();
-		int totalUsers    = 0;
-		int totalPages    = 0;
-		int pageSize      = 10;
-		int startPoint    = (currPage - 1) * pageSize;
-		String realColmn  = "";
-		
-		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Current page: " + currPage + " || Search String: " + searchStr + " || Search Opt: " + searchOpt  +  " || UserId: " + userId + " || Column: " + column + " || order: " + order);
-		
-		if (serverName.equals("") || companyId.equals("")) {
-			logger.debug("Parameter error!");
+	@RequestMapping(value = "/rest/ezwebfolderadmin/capacity/{type:companies|departments|users}/{id:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getCapacity(@PathVariable String type, @PathVariable String id, HttpServletRequest request) {
+		logger.debug("ezWebFolder GW getCapacity started");
+		Map<String, Object> result = new HashMap<>();
+		String serverName = request.getHeader("x-user-host");
+		String primary = request.getParameter("primary");
+		logger.debug("serverName: {}, type: {}, id: {}, primary: {}", serverName, type, id, primary);
+
+		if (containsNull(serverName, type, id)) {
+			logger.debug("parameter error");
 			result.put("status", "error");
 			result.put("code", 1);
-			return result;
+
+			return new JSONObject(result);
 		}
-		
+
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			int tenantId     = userInfo.getTenantId();
-			String primary   = userInfo.getPrimary();
-			
-			if (!column.equals("") && !order.equals("")) {
-				switch(column) {
-					case "cn": realColmn = "COMPANY_NAME"    ; break;
-					case "dn": realColmn = "DEPARTMENT_NAME" ; break;
-					case "un": realColmn = "DISPLAY_NAME"    ; break;
-					case "ut": realColmn = "JOB_TITLE"       ; break;
-					case "tc": realColmn = "TOTAL_CAPACITY"  ; break;
-					default  : realColmn = "COMPANY_NAME"    ; break;
+			type = getCapacityType(type);
+			int tenantId = loginService.getTenantId(serverName);
+			UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(id, type, Optional.ofNullable(primary).orElse("1"), tenantId);
+
+			if (capacity == null) {
+				logger.debug("capacity is null");
+				result.put("status", "error");
+				result.put("code", 3);
+
+				return new JSONObject(result);
+			}
+
+			if (capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
+				capacity.setUsedRate(0);
+			} else {
+				double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10737418.24;
+				capacity.setUsedRate((int) (Double.parseDouble(capacity.getTotalUsed()) / totalCapByBytes));
+			}
+
+			result.put("capacity", capacity);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+
+		logger.debug("ezWebFolder GW getCapacity ended");
+		return new JSONObject(result);
+	}
+
+	@RequestMapping(value = "/rest/ezwebfolderadmin/capacity/folder/{id:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getFolderCapacity(@PathVariable String id, HttpServletRequest request) {
+		logger.debug("ezWebFolder GW getCapacity started");
+		Map<String, Object> result = new HashMap<>();
+		String serverName = request.getHeader("x-user-host");
+		String primary = request.getParameter("primary");
+		logger.debug("serverName: {}, id: {}, primary: {}", serverName, id, primary);
+
+		if (containsNull(serverName, id)) {
+			logger.debug("parameter error");
+			result.put("status", "error");
+			result.put("code", 1);
+
+			return new JSONObject(result);
+		}
+
+		try {
+			int tenantId = loginService.getTenantId(serverName);
+			UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(id, Optional.ofNullable(primary).orElse("1"), tenantId);
+
+			if (capacity == null) {
+				logger.debug("capacity is null");
+				result.put("status", "error");
+				result.put("code", 3);
+
+				return new JSONObject(result);
+			}
+
+			if (capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
+				capacity.setUsedRate(0);
+			} else {
+				double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10737418.24;
+				capacity.setUsedRate((int) (Double.parseDouble(capacity.getTotalUsed()) / totalCapByBytes));
+			}
+
+			result.put("capacity", capacity);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+
+		logger.debug("ezWebFolder GW getCapacity ended");
+		return new JSONObject(result);
+	}
+
+	@RequestMapping(value = "/rest/ezwebfolderadmin/capacity/{type:companies|departments|users}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getCapacities(@PathVariable String type, HttpServletRequest request) {
+		logger.debug("ezWebFolder GW getCapacities started");
+		Map<String, Object> result = new HashMap<>();
+		String serverName = request.getHeader("x-user-host");
+		String companyId = request.getParameter("companyId");
+		String primary = Optional.ofNullable(request.getParameter("primary")).orElse("1");
+		String searchKeyword = Optional.ofNullable(request.getParameter("searchKeyword")).orElse("");
+		String searchOption = Optional.ofNullable(request.getParameter("searchOption")).orElse("");
+		String column = Optional.ofNullable(request.getParameter("column")).orElse("");
+		String order = Optional.ofNullable(request.getParameter("order")).orElse("");
+
+		int currPage = Optional.ofNullable(request.getParameter("currentPage")).map(Integer::parseInt).orElse(1);
+		int totalSize = 0;
+		int totalPages = 0;
+		int pageSize = 10;
+		int startPoint = (currPage - 1) * pageSize;
+		String realColmn = "";
+
+		logger.debug("type: {}, companyId: {}, serverName: {}, currentPage: {}, searchKeyword: {}, searchOption: {}, column: {}, order: {}", type, companyId, serverName, currPage, searchKeyword,
+				searchOption, column, order);
+
+		if (containsNull(serverName, type) || (!type.equals("companies") && containsNull(companyId.isEmpty()))) {
+			logger.debug("parameter error");
+			result.put("status", "error");
+			result.put("code", 1);
+
+			return new JSONObject(result);
+		}
+
+		try {
+			type = getCapacityType(type);
+			int tenantId = loginService.getTenantId(serverName);
+
+			if (column.length() > 0 && order.length() > 0) {
+				switch (column) {
+				case "cn":
+					realColmn = "COMPANY_NAME";
+					break;
+				case "dn":
+					realColmn = "DEPARTMENT_NAME";
+					break;
+				case "un":
+					realColmn = "DISPLAY_NAME";
+					break;
+				case "ut":
+					realColmn = "JOB_TITLE";
+					break;
+				case "tc":
+					realColmn = "TOTAL_CAPACITY";
+					break;
+				default:
+					realColmn = "COMPANY_NAME";
+					break;
 				}
 			}
-			
+
 			logger.debug("Column: " + realColmn + " || order: " + order);
-			
-			List<UserCapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(realColmn, order, companyId, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
-			totalUsers                            = ezWebFolderAdminService.getTotalListUserCapacity(companyId, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
-			totalPages                            = (totalUsers + pageSize - 1)/pageSize;
-			
-			for (UserCapacityVO capacity: listUserCapacity) {
+
+			List<UserCapacityVO> capacityList = ezWebFolderAdminService.getCapacityList(type, primary, companyId, tenantId, realColmn, order, searchKeyword, searchOption, startPoint, pageSize);
+			totalSize = ezWebFolderAdminService.getTotalCapacityCount(type, companyId, tenantId, searchKeyword, searchOption);
+			totalPages = (totalSize + pageSize - 1) / pageSize;
+
+			for (UserCapacityVO capacity : capacityList) {
 				if (capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
 					capacity.setUsedRate(0);
-				}
-				else {
+				} else {
 					double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10737418.24;
-					capacity.setUsedRate((int)(Double.parseDouble(capacity.getTotalUsed())/totalCapByBytes));
+					capacity.setUsedRate((int) (Double.parseDouble(capacity.getTotalUsed()) / totalCapByBytes));
 				}
 			}
-			
-			result.put("capacityList", listUserCapacity);
+
+			result.put("capacityList", capacityList);
+			result.put("totalSize", totalSize);
+			result.put("totalPages", totalPages);
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("totalPages", totalPages);
-			result.put("totalUsers", totalUsers);
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);
 		}
-		
-		logger.debug("getPersonalStorage end");
-		return result;
+
+		logger.debug("ezWebFolder GW getCapacities ended");
+		return new JSONObject(result);
 	}
 
-	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/{newvalue}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putChangePersonalStorage(@PathVariable(value="newvalue") String newValue, @RequestParam("userList") List<String> userList, Locale locale, HttpServletRequest request) {
-		logger.debug("putChangePersonalStorage start");
-		String serverName = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host")    : "";
-		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+	@RequestMapping(value = "/rest/ezwebfolderadmin/capacity/{type:companies|departments|users}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject setCapacities(@PathVariable String type, @RequestParam("list") List<String> list, HttpServletRequest request) {
+		logger.debug("ezWebFolder GW setCapacities start");
+		String serverName = request.getHeader("x-user-host");
+		String companyId = request.getParameter("companyId");
+		String value = request.getParameter("value");
 		JSONObject result = new JSONObject();
-		
-		logger.debug("CompanyId: " + companyId + " || Servername: " + serverName + " || UserList: " + String.join(",", userList));
-		
-		if (serverName.equals("") || companyId.equals("")) {
+
+		logger.debug("type: {}, value: {}, companyId: {}, serverName: {}, list: {}", type, value, companyId, serverName, String.join(",", list));
+
+		if (containsNull(serverName, type, list, companyId, value)) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
 			return result;
 		}
-		
+
 		try {
-			int tenantId                      = loginService.getTenantId(serverName);
-			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, tenantId);
-			
-			ezWebFolderAdminService.updateNewAmount(userList, newValue, companyId, tenantId);
-			
+			type = getCapacityType(type);
+			int tenantId = loginService.getTenantId(serverName);
+
+			ezWebFolderAdminService.setCapacities(list, type, value, companyId, tenantId);
+
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);
 		}
-		
-		logger.debug("putChangePersonalStorage end");
+
+		logger.debug("ezWebFolder GW setCapacities end");
 		return result;
 	}
 
-	@RequestMapping(value="/rest/ezwebfolderadmin/storagereset/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putResetPersonalStorage(@RequestParam("userList") List<String> userList, HttpServletRequest request, Locale locale) {
-		logger.debug("putResetPersonalStorage start");
-		String serverName  = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host")    : "";
-		String companyId   = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
-		String totalAmount = "";
-		JSONObject result  = new JSONObject();
-		
-		logger.debug("CompanyId: " + companyId + " || Servername: " + serverName + " || UserList: " + String.join(",", userList));
-		
-		if (serverName.equals("") || companyId.equals("")) {
-			logger.debug("Parameter error!");
-			result.put("status", "error");
-			result.put("code", 1);
-			return result;
-		}
-		
-		try {
-			int tenantId                      = loginService.getTenantId(serverName);
-			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, tenantId);
-			
-			if (webfolderConfig != null) {
-				totalAmount = webfolderConfig.getTotalLimit();
-			}
-			
-			ezWebFolderAdminService.updateNewAmount(userList, totalAmount, companyId, tenantId);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 2);
-		}
-		logger.debug("putResetPersonalStorage end");
-		
-		return result;
-	}
-
-	@RequestMapping(value="/rest/ezwebfolder/capacity/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getUserCapacity(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
-		logger.debug("getUserCapacity start");
-		String serverName = request.getHeader("x-user-host") != null ? request.getHeader("x-user-host") : "";
+	@RequestMapping(value = "/rest/ezwebfolderadmin/capacity/reset/{type:companies|departments|users}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject resetCapacities(@PathVariable String type, @RequestParam("list") List<String> list, HttpServletRequest request) {
+		logger.debug("ezWebFolder GW resetCapacities start");
+		String serverName = request.getHeader("x-user-host");
 		JSONObject result = new JSONObject();
-		
-		logger.debug("UserId: " + userId + " || serverName: " + serverName);
-		
-		if (serverName.equals("") || userId.equals("")) {
+
+		logger.debug("type: {}, serverName: {}, list: {}", type, serverName, String.join(",", list));
+
+		if (containsNull(serverName, type, list)) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
 			return result;
 		}
-		
+
 		try {
-			LoginVO userInfo            = commonUtil.getUserForGw(userId, serverName);
-			int tenantId                = userInfo.getTenantId();
-			String primary              = userInfo.getPrimary();
-			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, tenantId);
-			
-			if (userCapacity.getTotalUsed().equals("0") || userCapacity.getTotalCapacity().equals("0")) {
-				userCapacity.setUsedRate(0);
-			}
-			else {
-				double totalCapByBytes = Double.parseDouble(userCapacity.getTotalCapacity()) * 10737418.24;
-				userCapacity.setUsedRate((int)(Double.parseDouble(userCapacity.getTotalUsed())/totalCapByBytes));
-			}
-			
-			result.put("userCapacity", userCapacity);
+			int tenantId = loginService.getTenantId(serverName);
+			type = getCapacityType(type);
+
+			ezWebFolderAdminService.deleteCapacities(list, type, tenantId);
+
 			result.put("status", "ok");
 			result.put("code", 0);
-		} 
-		catch (Exception e) {
+			result.put("data", "");
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 2);
 		}
-		
-		logger.debug("getUserCapacity end");
+
+		logger.debug("ezWebFolder GW resetCapacities end");
 		return result;
 	}
+
+	private String getCapacityType(String pathParam) {
+		switch (pathParam) {
+		case "companies":
+			return "C";
+		case "departments":
+			return "D";
+		case "users":
+			return "U";
+		}
+
+		return pathParam;
+	}
+
+//	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/id/{companyid}/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+//	public JSONObject getBasicStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request, Locale locale) {
+//		logger.debug("getBasicStorage start");
+//		String serverName = request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host") : "";
+//		JSONObject result = new JSONObject();
+//		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
+//		
+//		if (serverName.equals("") || companyId.equals("")) {
+//			logger.debug("Parameter error!");
+//			result.put("status", "error");
+//			result.put("code", 1);
+//			return result;
+//		}
+//		
+//		try {
+//			int tenantId                      = loginService.getTenantId(serverName);
+//			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, tenantId);
+//			result.put("status", "ok");
+//			result.put("code", 0);
+//			result.put("config", webfolderConfig);
+//		} 
+//		catch (Exception e) {
+//			e.printStackTrace();
+//			result.put("status", "error");
+//			result.put("code", 2);
+//		}
+//		
+//		logger.debug("getBasicStorage end");
+//		return result;
+//	}
+//
+//	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/{newvalue}/comp", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+//	public JSONObject putChangeBasicStorage(@PathVariable(value="newvalue") String newValue, HttpServletRequest request, Locale locale) {
+//		logger.debug("putChangeBasicStorage start");
+//		String serverName  = request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host")      : "";
+//		String uploadLimit = request.getParameter("uploadLimit") != null ? request.getParameter("uploadLimit") : "";
+//		String companyId   = request.getParameter("companyId")   != null ? request.getParameter("companyId")   : "";
+//		JSONObject result  = new JSONObject();
+//		
+//		logger.debug("New Value: " + newValue + " || CompanyId: " + companyId +  " || serverName: " + serverName);
+//		
+//		if (serverName.equals("") || companyId.equals("") || uploadLimit.equals("") || newValue.equals("")) {
+//			logger.debug("Parameter error!");
+//			result.put("status", "error");
+//			result.put("code", 1);
+//			return result;
+//		}
+//		
+//		try {
+//			int tenantId = loginService.getTenantId(serverName);
+//			ezWebFolderAdminService.saveConfig(companyLimit, departmentLimit, userLimit, uploadLimit, companyId, tenantId);
+//			result.put("status", "ok");
+//			result.put("code", 0);
+//		} 
+//		catch (Exception e) {
+//			e.printStackTrace();
+//			result.put("status", "error");
+//			result.put("code", 2);
+//		}
+//		
+//		logger.debug("putChangeBasicStorage end");
+//		return result;
+//	}
+//
+//	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/id/{companyid}/person", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+//	public JSONObject getPersonalStorage(@PathVariable(value="companyid") String companyId, HttpServletRequest request, Locale locale) {
+//		logger.debug("getPersonalStorage start");
+//		String serverName = request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host")                        : "";
+//		int currPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) :  1;
+//		String searchStr  = request.getParameter("searchStr")   != null ? request.getParameter("searchStr")                     : "";
+//		String searchOpt  = request.getParameter("searchOpt")   != null ? request.getParameter("searchOpt")                     : "";
+//		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+//		String column     = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
+//		String order      = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
+//		JSONObject result = new JSONObject();
+//		int totalUsers    = 0;
+//		int totalPages    = 0;
+//		int pageSize      = 10;
+//		int startPoint    = (currPage - 1) * pageSize;
+//		String realColmn  = "";
+//		
+//		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName + " || Current page: " + currPage + " || Search String: " + searchStr + " || Search Opt: " + searchOpt  +  " || UserId: " + userId + " || Column: " + column + " || order: " + order);
+//		
+//		if (serverName.equals("") || companyId.equals("")) {
+//			logger.debug("Parameter error!");
+//			result.put("status", "error");
+//			result.put("code", 1);
+//			return result;
+//		}
+//		
+//		try {
+//			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+//			int tenantId     = userInfo.getTenantId();
+//			String primary   = userInfo.getPrimary();
+//			
+//			if (!column.equals("") && !order.equals("")) {
+//				switch(column) {
+//					case "cn": realColmn = "COMPANY_NAME"    ; break;
+//					case "dn": realColmn = "DEPARTMENT_NAME" ; break;
+//					case "un": realColmn = "DISPLAY_NAME"    ; break;
+//					case "ut": realColmn = "JOB_TITLE"       ; break;
+//					case "tc": realColmn = "TOTAL_CAPACITY"  ; break;
+//					default  : realColmn = "COMPANY_NAME"    ; break;
+//				}
+//			}
+//			
+//			logger.debug("Column: " + realColmn + " || order: " + order);
+//			
+//			List<CapacityVO> listUserCapacity = ezWebFolderAdminService.getListUserCapacity(realColmn, order, companyId, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
+//			totalUsers                            = ezWebFolderAdminService.getTotalListUserCapacity(companyId, searchStr, searchOpt, startPoint, pageSize, tenantId, primary);
+//			totalPages                            = (totalUsers + pageSize - 1)/pageSize;
+//			
+//			for (CapacityVO capacity: listUserCapacity) {
+//				if (capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
+//					capacity.setUsedRate(0);
+//				}
+//				else {
+//					double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10737418.24;
+//					capacity.setUsedRate((int)(Double.parseDouble(capacity.getTotalUsed())/totalCapByBytes));
+//				}
+//			}
+//			
+//			result.put("capacityList", listUserCapacity);
+//			result.put("status", "ok");
+//			result.put("code", 0);
+//			result.put("totalPages", totalPages);
+//			result.put("totalUsers", totalUsers);
+//		} 
+//		catch (Exception e) {
+//			e.printStackTrace();
+//			result.put("status", "error");
+//			result.put("code", 2);
+//		}
+//		
+//		logger.debug("getPersonalStorage end");
+//		return result;
+//	}
+//
+//	@RequestMapping(value="/rest/ezwebfolderadmin/basicstorage/{newvalue}/person", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+//	public JSONObject putChangePersonalStorage(@PathVariable(value="newvalue") String newValue, @RequestParam("userList") List<String> userList, Locale locale, HttpServletRequest request) {
+//		logger.debug("putChangePersonalStorage start");
+//		String serverName = request.getHeader("x-user-host")    != null ? request.getHeader("x-user-host")    : "";
+//		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+//		JSONObject result = new JSONObject();
+//		
+//		logger.debug("CompanyId: " + companyId + " || Servername: " + serverName + " || UserList: " + String.join(",", userList));
+//		
+//		if (serverName.equals("") || companyId.equals("")) {
+//			logger.debug("Parameter error!");
+//			result.put("status", "error");
+//			result.put("code", 1);
+//			return result;
+//		}
+//		
+//		try {
+//			int tenantId                      = loginService.getTenantId(serverName);
+//			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, tenantId);
+//			
+//			//ezWebFolderAdminService.updateNewAmount(userList, newValue, companyId, tenantId);
+//			
+//			result.put("status", "ok");
+//			result.put("code", 0);
+//			result.put("data", "");
+//		} 
+//		catch (Exception e) {
+//			e.printStackTrace();
+//			result.put("status", "error");
+//			result.put("code", 2);
+//		}
+//		
+//		logger.debug("putChangePersonalStorage end");
+//		return result;
+//	}
 
 	@RequestMapping(value="/rest/ezwebfolderadmin/filehistorylist", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileHistory(HttpServletRequest request, Locale locale) {
@@ -430,12 +688,23 @@ public class EzWebFolderGWController {
 			}
 			
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
+			totalRows                    = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, primary, tenantId);
+			
+			if (totalRows % pageSize == 0) {
+				totalPages = (totalRows / pageSize);
+			} else {
+				totalPages = (totalRows / pageSize) + 1;
+			}
+			
+			if (currPage > totalPages & totalRows != 0) {
+				currPage = totalPages;
+				startPoint = (currPage -1 )* pageSize;
+			}
 			
 			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, startPoint, pageSize, primary, offset, tenantId);
-			totalRows                    = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, primary, tenantId);
-			totalPages                   = (totalRows + pageSize - 1)/pageSize;
 			
 			result.put("fileLogList", listFileLogs);
+			result.put("currPage", currPage);
 			result.put("totalPages", totalPages);
 			result.put("totalRows", totalRows);
 			result.put("status", "ok");
@@ -558,8 +827,6 @@ public class EzWebFolderGWController {
 		String folderId = (String) parameter.get("folderId");
 		String userId = (String) parameter.get("userId");
 
-		// TODO 널 또는 빈 값 체크 serverName, fileNames, folderId, userId
-
 		if (containsNull(serverName, fileNames, folderId, userId)) {
 			logger.debug("Parameter error!");
 
@@ -629,7 +896,6 @@ public class EzWebFolderGWController {
 		
 		process: try {
 			LoginVO userInfo  = commonUtil.getUserForGw(userId, serverName);
-			String primary    = userInfo.getPrimary();
 			String offset     = userInfo.getOffset();
 			
 			if (!isWebfolderAdmin(userInfo)){
@@ -640,12 +906,6 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			//Check upload conditions
-			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
-			
-			WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
-			double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
-			double totalUploadSize              = 0;
 			
 			List<String> onlyNameArray = ((List<JSONObject>) nameArray).stream().map(obj -> obj.get("originalFilename")).map(String.class::cast).collect(Collectors.toList());
 			List<DuplicateInfoVO> duplicateInfoList = new ArrayList<>();
@@ -687,6 +947,13 @@ public class EzWebFolderGWController {
 				break process;
 			}
 
+			//Check upload conditions
+			FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
+			
+			WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
+			double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
+			double totalUploadSize              = 0;
+
 			for (int i = 0; i < multiFileLists.size(); i++) {
 				totalUploadSize += multiFileLists.get(i).getSize();
 			}
@@ -698,10 +965,10 @@ public class EzWebFolderGWController {
 				return result;
 			}
 			
-			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+			UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(folderId, userInfo.getPrimary(), userInfo.getTenantId());
 			
-			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
-			double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
+			double totalUsed = Double.parseDouble(capacity.getTotalUsed());
+			double totalCapa = Double.parseDouble(capacity.getTotalCapacity()) * 1073741824;
 			
 			if (totalUploadSize > (totalCapa - totalUsed)) {
 				logger.debug("Not enough storage to upload these files!");
@@ -795,10 +1062,14 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			ezWebFolderService.deleteSelectedFiles(fileIDList, userInfo);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (ezWebFolderService.canDelete(fileIDList, null, userId, userInfo.getTenantId())) {
+				ezWebFolderService.deleteSelectedFiles(fileIDList, userInfo);
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "error");
+				result.put("code", 4);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -817,8 +1088,8 @@ public class EzWebFolderGWController {
 		String listFolderId   	= request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
 		String userId       	= request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
 		String serverName   	= request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host")   : "";
-		Date date               = new Date();
-		SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//Date date               = new Date();
+		//SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		JSONObject result   	= new JSONObject();
 		String[] fileIDList 	= listFileId.split(",");
 		String[] folderIDList 	= listFolderId.split(",");
@@ -852,12 +1123,11 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			JSONObject checkPermission = new JSONObject();
 			int tenantId 	= userInfo.getTenantId();
 			String comId 	= userInfo.getCompanyID();
-			String offset 	= userInfo.getOffset();
+			//String offset 	= userInfo.getOffset();
 			String deptId 	= userInfo.getDeptID();
-			String timeUTC  = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			//String timeUTC  = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			String checkPermission2 = "";
 				
 			if (!listFolderId.equals("")){
@@ -874,10 +1144,14 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			ezWebFolderService.deleteSelectedFilesFolders(fileIDList, folderIDList, userInfo);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (ezWebFolderService.canDelete(fileIDList, folderIDList, userId, tenantId)) {
+				ezWebFolderService.deleteSelectedFilesFolders(fileIDList, folderIDList, userInfo);
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "error");
+				result.put("code", 4);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -936,7 +1210,7 @@ public class EzWebFolderGWController {
 			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
 			
 			boolean isWindowsExplorer = webFlag.isEmpty();
-
+			
 			String updateFileName = "";
 				
 			String newFilePath = "";
@@ -986,14 +1260,14 @@ public class EzWebFolderGWController {
 				String realFileExt = fileExt;
 				
 				// file의 이름을 바꿔주는것에 사용
-				File file = new File(realPath +  filePath);
-				File fileToMove = new File(realPath + newFilePath);
+				File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
+				File fileToMove = new File(realPath + commonUtil.detectPathTraversal(newFilePath));
 				
 				if (fileExt.length() >= 10) {
 					fileExt = "unknown";
 				}
 				
-				FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(realFileExt.toLowerCase().toString(), tenantId);
+				FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(realFileExt.toLowerCase(), tenantId);
 					
 				if (fileType == null) {
 					fileExt = "unknown";
@@ -1826,12 +2100,18 @@ public class EzWebFolderGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			String offset    = userInfo.getOffset();
-			FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
-			ezWebFolderService.updateFolderUseStatus(folder, userInfo);
 			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (ezWebFolderService.canDelete(null, new String[] { folderId }, userId, userInfo.getTenantId())) {
+				String offset    = userInfo.getOffset();
+				FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
+				ezWebFolderService.updateFolderUseStatus(folder, userInfo);
+
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "error");
+				result.put("code", 4);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -2224,10 +2504,11 @@ public class EzWebFolderGWController {
 			
 			if (userInfo.getRollInfo().indexOf("c=1")  > -1 && !mode.equals("normal")) {
 				resultList = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-			}
-			else {
+				result.put("isAdminMode", true);
+			} else {
 				OrganDeptVO dept = ezOrganService.getDeptInfo(userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 				resultList.add(dept);
+				result.put("isAdminMode", false);
 			}
 			
 			result.put("data", resultList);

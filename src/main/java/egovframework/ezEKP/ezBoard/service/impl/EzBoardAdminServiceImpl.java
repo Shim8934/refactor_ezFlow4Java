@@ -156,16 +156,16 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		String dbPath = "";
 		
 		try {			
-			String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;	
-			String fullPath = realPath + docPath;
-			File doc = new File(fullPath);		
+			String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;
+			String fullPath = realPath + commonUtil.detectPathTraversal(docPath);
+			File doc = new File(fullPath);
 			
 			if (!doc.exists() || !doc.isDirectory()) {
 				doc.mkdir();
 			}
 			
 			dbPath = docPath + boardID + ".mht";
-			mhtFilePath = realPath + dbPath;
+			mhtFilePath = realPath + commonUtil.detectPathTraversal(dbPath);
 			File mht = new File(mhtFilePath);
 			
 			if (mht.exists()) {
@@ -497,9 +497,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 	public String getBoardTreePath(String boardID, int tenantID) throws Exception {
 		logger.debug("getBoardTreePath started");
-
-		String tempString = "";
-		
+		StringBuilder tempStr = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("boardID", boardID);
@@ -512,20 +510,20 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				map.put("parentBoardID", parentBoardID);
 				
 				String tempBoardID = ezBoardAdminDAO.getBoardID(map);
-				tempString += tempBoardID;
+				tempStr.append(tempBoardID);
 				
 				map.put("boardID", tempBoardID);
 				
 				parentBoardID = ezBoardAdminDAO.getParentBoardID(map);
 				
 				if (!parentBoardID.equals("top")) {
-					tempString += ",";
+					tempStr.append(",");
 				}
 			}
 		}
 
 		logger.debug("getBoardTreePath ended");
-		return tempString;
+		return tempStr.toString();
 	}
 
 	@Override
@@ -1059,12 +1057,13 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		try {
 			String copyList = doc.getElementsByTagName("COPYLIST").item(0).getTextContent();
 			String[] copyListArray = copyList.split(",");
-			String tempCopyList = "";
+			StringBuilder  buf = new StringBuilder ();
 			
 			for (String k : copyListArray) {
-				tempCopyList += "'" + k + "',";
+				buf.append("'" + k + "',");
 			}
 			
+			String tempCopyList = buf.toString();
 			tempCopyList = tempCopyList.substring(0, tempCopyList.length() - 1);
 			
 			Map<String, Object> map = new HashMap<String, Object>();

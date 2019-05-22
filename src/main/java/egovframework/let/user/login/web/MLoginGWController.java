@@ -117,7 +117,7 @@ public class MLoginGWController {
     		
     		String serverName = request.getHeader("x-user-host");
     		int tenantId = loginService.getTenantId(serverName);
-			    		
+    		
     		LoginVO loginVO = new LoginVO();
     		
     		loginVO.setId(uid);
@@ -125,6 +125,10 @@ public class MLoginGWController {
     		loginVO.setTenantId(tenantId);
     		
     		LoginVO resultVO = loginService.selectUser(loginVO);
+    		
+    		/* 2019-05-08 홍승비 - LoginCookieSSO를 사용하는지 값을 확인 */
+    		String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);	    	
+    		result.put("useLoginCookieSSO", useSSOCookie);
     		
     		int numberOfLoginFailPermit = 0;
     		// 로그인 실패 최대 허용 횟수를 구한다.
@@ -452,7 +456,17 @@ public class MLoginGWController {
         					map.put("useSecurity", useSecurity);    		
         					map.put("companyID", resultVO.getCompanyID());
         					map.put("primaryLang", primaryLang);
-        					map.put("rollInfo", resultVO.getRollInfo());    				
+        					map.put("rollInfo", resultVO.getRollInfo());
+        					
+        					// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
+        					Map<String, Object> mapSSO = new HashMap<String, Object>();
+        					if (!useSSOCookie.trim().isEmpty() && !"NO".equalsIgnoreCase(useSSOCookie)) {
+        						pwd = EgovFileScrty.encryptPassword(rpwd, uid);
+        						mapSSO.put("userPw", rpwd);
+        						mapSSO.put("encryptedUserPw", pwd);
+        						mapSSO.put("deptID", resultVO.getDeptID());
+        						mapSSO.put("companyID", resultVO.getCompanyID());
+        					}
         					
         					if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
         						map.put("userName", resultVO.getDisplayName1());
@@ -466,6 +480,7 @@ public class MLoginGWController {
         					result.put("status", "ok");
         					result.put("code", "0");
         					result.put("data", map);
+        					result.put("dataSSO", mapSSO);
         					
         					return result;
         				}

@@ -812,7 +812,7 @@ var strOpinionType5 = "005";
 var strOpinionType6 = "006";
 var strLangOpinionType1 = "一般";
 var strLangOpinionType2 = "差し戻し";
-var strLangOpinionType3 = "保留意見";
+var strLangOpinionType3 = "保留";
 var strLangOpinionType4 = "返送";
 
 // 2011.06.17 추가
@@ -821,9 +821,11 @@ var strLangOpinionType4 = "返送";
 var strModifyFlag1 = "001";
 var strModifyFlag2 = "002";
 var strModifyFlag3 = "003";
-var strLangModifyFlag1 = "削除";
-var strLangModifyFlag2 = "追加";
+var strModifyFlag4 = "004";
+var strLangModifyFlag1 = "追加";
+var strLangModifyFlag2 = "削除";
 var strLangModifyFlag3 = "修正";
+var strLangModifyFlag4 = "本文を追加";
 
 // Etc
 var strLangEtcAprType4 = "専決"; // 문서 싸인칸에 표시하는 전결문자

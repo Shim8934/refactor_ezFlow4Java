@@ -27,6 +27,7 @@ import javax.mail.Quota;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 
 import org.slf4j.Logger;
@@ -578,6 +579,19 @@ public class IMAPAccess {
 		
 		try {
 //			logger.debug("Content-Type=" + part.getContentType());
+
+			// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
+			// ContentID 없이 Content-Dispostion이 inline으로 첨부된
+			// 이미지가 있어 이 경우 첨부파일로서 처리하기 위해 추가함.(iPhone Mail에서 작성한 메일임.)
+			boolean isInlinePartWithoutContentID = false;
+
+			if (!part.isMimeType("multipart/*") && part instanceof MimePart) {
+				if (part.getDisposition() != null 
+						&& part.getDisposition().equalsIgnoreCase(Part.INLINE)
+						&& ((MimePart)part).getContentID() == null) {
+					isInlinePartWithoutContentID = true;
+				}
+			}
 			
 			// this is a multipart			
 			if (part.isMimeType("multipart/*")) {				
@@ -602,7 +616,8 @@ public class IMAPAccess {
 			//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 		    //    Content-Transfer-Encoding: base64	    											
 			else if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
-						|| part.isMimeType("application/*")) {
+						|| part.isMimeType("application/*")
+						|| isInlinePartWithoutContentID) {
 				isAttached = true;
 			}			
 		} catch (Exception e) {

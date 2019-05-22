@@ -5,6 +5,7 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
@@ -27,18 +28,26 @@
 			var strLang41   = "<spring:message code='ezWebFolder.t137'/>";
 			var strLang42   = "<spring:message code='ezWebFolder.t138'/>";
 			var strNoData   = "<spring:message code='ezWebFolder.t144'/>";
+			var currentType = "C";
 			var tableView   = new TableView();
+			var searchOptionNode = null;
 			
 			window.onload = function() {
 				closeAllPopup();
 				tableView.setTableId("tblFileList");
-				tableView.setTabledHeader("tblFileList1");
-				tableView.setTableType("configTable");
+				tableView.setTabledHeader("tblFileListHeader-company");
+				tableView.setTableType("companyConfigTable");
 				tableView.setSelectedClass("bnkWebFolder2");
 				tableView.setUnselectClass("bnkWebFolder");
 				tableView.setCallBack(refreshView);
-				search_Set("1");
+				
+				searchOptionNode = $("#searchOption option").toArray().map(function(element) {
+					return element.cloneNode(true);
+				});
+				
+				setListType("C");
 				preProcessing();
+				Tab1_NewTabIni("typeTab");
 			}
 			
 			window.onbeforeunload = function() {
@@ -73,6 +82,7 @@
 				}
 				
 				document.getElementById("inputSearch").value                = "";
+				// 회사라면 회사명으로 선택
 				document.getElementById("searchOption").options[0].selected = 'selected';
 			}
 			
@@ -89,12 +99,13 @@
 					type: "POST",
 					url: "/admin/ezWebFolder/getCapacities.do",
 					data: {
+						"type"        : currentType,
 						"currentPage" : pPage,
 						"searchStr"   : searchStr,
 						"searchOpt"   : searchOpt,
 						"column"      : orderInf.col ? orderInf.col : "",
 						"order"       : orderInf.ord ? orderInf.ord : "",
-						"companyId"   : document.getElementById("companyList").value
+						"companyId"   : <c:if test="${isAdminMode}">currentType == "C" ? null : </c:if>document.getElementById("companyList").value
 					},
 					dataType: "JSON",
 					async: true,
@@ -105,7 +116,7 @@
 						switch(code) {
 							case 0: 
 								var result  = data.capacityList;
-								totalRows   = data.totalUsers;
+								totalRows   = data.totalSize;
 								totalPages  = data.totalPages;
 								currentPage = pPage;
 								checkedArr  = [];
@@ -210,18 +221,18 @@
 			
 			function getSelectedRowInfo() {
 				var listOfSelectedRows = document.getElementsByClassName("bnkWebFolder2");
-				var userList       = [];
+				var list           = [];
 				var usedAmountList = [];
 				if (listOfSelectedRows.length == 0) {
 					return null;
 				}
 				
 				for (var i = 0; i < listOfSelectedRows.length; i++) {
-					userList.push(listOfSelectedRows[i].getAttribute("userId"));
+					list.push(listOfSelectedRows[i].getAttribute("cn"));
 					usedAmountList.push(listOfSelectedRows[i].getAttribute("usedAmount"));
 				}
 				
-				return {userList: userList, usedAmountList: usedAmountList};
+				return {list: list, usedAmountList: usedAmountList};
 			}
 			
 			function changeStorageVal() {
@@ -235,7 +246,7 @@
 					return;
 				}
 				
-				var userIdList = checkedList["userList"];
+				var list = checkedList["list"];
 				var amountList = checkedList["usedAmountList"];
 				
 				if (!isValid(newValue)) {
@@ -246,7 +257,7 @@
 				}
 				
 				for (var i = 0; i < amountList.length; i++) {
-					if (parseFloat(amountList[i]) > parseFloat(newValue)*1073741824) {
+					if (parseFloat(amountList[i]) > parseFloat(newValue) * 1073741824) {
 						alert("<spring:message code='ezWebFolder.t209'/>");
 						return;
 					}
@@ -256,9 +267,10 @@
 					type: "POST",
 					url: "/admin/ezWebFolder/updateCapacities.do",
 					data: {
-						"userListParam" : userIdList.toString(),
-						"companyId"     : document.getElementById("companyList").value,
-						"newStorage"    : newValue
+						"type"      : currentType,
+						"list"      : list.toString(),
+						"companyId" : document.getElementById("companyList").value,
+						"value"     : newValue
 					},
 					dataType: "JSON",
 					async: true,
@@ -296,14 +308,14 @@
 					return;
 				}
 				
-				var userIdList = checkedList["userList"];
+				var list = checkedList.list;
 				
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/restoreCapacities.do",
 					data: {
-						"userListParam" : userIdList.toString(),
-						"companyId"     : document.getElementById("companyList").value
+						"type" : currentType,
+						"list" : list.toString(),
 					},
 					dataType: "JSON",
 					async: true,
@@ -366,18 +378,19 @@
 			function scroll() {
 				var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
 				var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
+				var currentHeaderId = currentType == "U" ? "#tblFileListHeader-user" : currentType =="D" ? "#tblFileListHeader-department" : "#tblFileListHeader-company";
 				
 				 if (BoardList_BODYHeight > BoardListDivHeight) {
-					if ($("#tblFileList1 tr th#forScroll").length > 0) {
-						$("#tblFileList1 tr th#forScroll").remove();
+					if ($(currentHeaderId + " tr th.forScroll").length > 0) {
+						$(currentHeaderId + " tr th.forScroll").remove();
 					}
 				} else {
-					if ($("#tblFileList1 tr th#forScroll").length < 1) {
-						$("#tblFileList1 tr th#forScroll").remove();
-						$("#tblFileList1 tr").append("<th></th>");
+					if ($(currentHeaderId + " tr th.forScroll").length < 1) {
+						$(currentHeaderId + " tr th.forScroll").remove();
+						$(currentHeaderId + " tr").append("<th></th>");
 						
-							var lastTh = $("#tblFileList1 tr th").last();
-							lastTh.attr("id", "forScroll");
+							var lastTh = $(currentHeaderId + " tr th").last();
+							lastTh.attr("class", "forScroll");
 							lastTh.css("width", "15px");
 							
 					}
@@ -388,23 +401,154 @@
 					lastTh.css("display", "none");
 				}*/
 			}
+			
+			
+			var Tab1_SelectID = "";
+			function Tab1_MouserOver(obj) {
+				obj.className = "tabover";
+			}
+
+			function Tab1_MouserOut(obj) {
+				if (Tab1_SelectID != obj.id)
+					obj.className = "";
+			}
+
+			function Tab1_MouseClick(obj) {
+				obj.className = "tabon";
+				if (obj.id != Tab1_SelectID) {
+					if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+						document.getElementById(Tab1_SelectID).className = "";
+					
+					obj.className = "tabon";
+					Tab1_SelectID = obj.id;
+					ChangeTab(obj);
+				}
+			}
+
+			function setListType(type) {
+				var headerId = "";
+				$("#searchOption").empty();
+				
+				switch (type) {
+				case "C":
+					headerId = "tblFileListHeader-company";
+					tableView.setTableType("companyConfigTable");
+					document.getElementById("searchOption").appendChild(searchOptionNode[0]);
+					break;
+				case "D":
+					headerId = "tblFileListHeader-department";
+					tableView.setTableType("departmentConfigTable");
+					document.getElementById("searchOption").appendChild(searchOptionNode[1]);
+					break;
+				case "U":
+					headerId = "tblFileListHeader-user";
+					tableView.setTableType("userConfigTable");
+					document.getElementById("searchOption").appendChild(searchOptionNode[1]);
+					document.getElementById("searchOption").appendChild(searchOptionNode[2]);
+					break;
+				default:
+					throw "error";
+				}
+				
+				var tableElement = document.getElementById("tblFileList");
+				currentType = type;
+				
+				while (tableElement.firstChild) {
+					tableElement.removeChild(tableElement.firstChild);
+				}
+				
+				document.getElementById("storageVal").value = "";
+				<c:if test="${isAdminMode}">
+				[].slice.call(document.querySelectorAll(".company-list-hide")).forEach(function(hideElement) {
+					hideElement.style.display = type == "C" ? "none" : "";
+				});
+				</c:if>
+				
+				["tblFileListHeader-company", "tblFileListHeader-department", "tblFileListHeader-user"].filter(function(id) {
+					return id != headerId;
+				}).forEach(function(id) {
+					document.getElementById(id).style.display = "none";
+				});
+				
+				searchStr = "";
+				searchOpt = "";
+				currentPage = 1;
+				
+				document.getElementById(headerId).style.display = "";
+				tableView.setTabledHeader(headerId);
+				refreshView();
+			}
+
+			function ChangeTab(obj) {
+				var pSelectTab = obj.id;
+				var tableElement = document.getElementById("tblFileList");
+				
+				switch (pSelectTab) {
+				case "companyTab":
+					setListType("C");
+					break;
+				case "departmentTab":
+					setListType("D");
+					break;
+				case "userTab":
+					setListType("U");
+					break;
+				}
+			}
+
+			function Tab1_NewTabIni(pTabNodeID) {
+				var nodeElement = document.getElementById(pTabNodeID);
+				var childNodes = nodeElement.children;
+				var length = childNodes.length;
+				
+				for (var i = 0; i < length; i++) {
+					var currentNode = childNodes.item(i);
+					if (currentNode.nodeName == "P") {
+						var spanNode = currentNode.children.item(0);
+						if (spanNode.nodeName == "SPAN") {
+							spanNode.onmouseover = function() {
+								Tab1_MouserOver(this);
+							};
+							spanNode.onmouseout = function() {
+								Tab1_MouserOut(this);
+							};
+							spanNode.onclick = function() {
+								Tab1_MouseClick(this);
+							};
+							
+							if (i == 0) {
+								spanNode.className = "tabon";
+								Tab1_SelectID = spanNode.id;
+							}
+						}
+					}
+				}
+			}
 		</script>
 	</head>
 	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
 		<h1>
 			<spring:message code='ezWebFolder.t103'/>
 			<span id="mailBoxInfo"></span>
+			<span class="title_bar<c:if test="${isAdminMode}"> company-list-hide" style="display: none;</c:if>"><img src="/images/name_bar.gif"></span>
+			<select id="companyList" class="companySelect<c:if test="${isAdminMode}"> company-list-hide" style="display: none;</c:if>" onchange="change();">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
 		</h1>
-		<div style="margin-left:5px">
-			<div id="companySelect" style="margin: 10px 0px;">
-				<span style="font-size: 12px; display: inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
-				<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
-					<c:forEach var="item" items="${list}">
-						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-					</c:forEach>
-				</select>
-			</div>
-			
+	<div class="portlet_tabpart01_top" id="typeTab">
+		<p>
+			<span id="companyTab" class="tabover"><spring:message code='ezWebFolder.tab.company'/></span>
+		</p>
+		<p>
+			<span id="departmentTab"><spring:message code='ezWebFolder.tab.department'/></span>
+		</p>
+		<p>
+			<span id="userTab"><spring:message code='ezWebFolder.tab.user'/></span>
+		</p>
+	</div>
+	<div style="margin-top: 10px;">
 			<div style="position: relative; height: 27px; margin-bottom: 10px;">
 				<div style="position: relative;">
 					<div id="mainmenu2">
@@ -413,18 +557,20 @@
 							<li><a id="btnRefresh" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
 						</ul>
 					</div>
-					<div id="searchPanel" class="popup wfpersonal" style="display: none;">
+					<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
+						<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
 						<h1><spring:message code='ezWebFolder.t23'/></h1> 
 						<div class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
 						<div style="margin: 10px 0px 15px;">
 							<table class="content wftable">
 								<tr>
-									<th><spring:message code='ezWebFolder.t141'/></th>
-									<td style="border: 1px solid #d2d2d2; background-color: #fff;">
+									<th class="wfSearchTh"><spring:message code='ezWebFolder.t141'/></th>
+									<td class="wfSearchTd" style="border: 1px solid #d2d2d2; background-color: #fff;">
 										<div style="width: 100%; display : flex; align-items: center;">
 											<select id="searchOption" style="margin-left: 5px; height: 23px;">
-												<option value="deptName"><spring:message code='ezWebFolder.t142' /></option>
-												<option value="userName"><spring:message code='ezWebFolder.t143' /></option>
+												<option id="companyOption" value="displayName"><spring:message code='ezWebFolder.t146' /></option>
+												<option id="departmentOption" value="deptName"><spring:message code='ezWebFolder.t142' /></option>
+												<option id="userOption" value="displayName"><spring:message code='ezWebFolder.t143' /></option>
 											</select>
 											<input id="inputSearch" type="text" style="flex: 1; height: 23px; margin: 2px 5px; padding: 0px 5px; border-radius: 3px; border: 1px solid #ddd;">
 										</div>
@@ -436,8 +582,54 @@
 							<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
 							<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 						</div>
+						</div>
 					</div>
-				</div>
+<!-- 				<div id="searchpopup" class="popupwrap3" style="display: none; margin-bottom: 70px"> -->
+<!-- 					<div class="popupJQLayer" style="padding-top: 6px"> -->
+<!-- 						<div class="title"> -->
+<%-- 							<spring:message code='ezWebFolder.t10' /> --%>
+<%-- 							<spring:message code='ezWebFolder.t123' /> --%>
+<!-- 						</div> -->
+<!-- 						<div id="close"> -->
+<!-- 							<ul> -->
+<!-- 								<li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li> -->
+<!-- 							</ul> -->
+<!-- 						</div> -->
+<!-- 						<table class="content" style="margin-top: 10px;"> -->
+<!-- 							<tr> -->
+<%-- 								<th style="text-align: center"><spring:message code='ezBoard.t210' /></th> --%>
+<!-- 								<td><input type="text" id="Sdatepicker" class="datepicker" style="width: 80px; text-align: center" readonly="readonly"> ~ <input type="text" id="Edatepicker" class="datepicker" -->
+<!-- 									style="width: 80px; text-align: center" readonly="readonly" -->
+<!-- 								></td> -->
+<!-- 							</tr> -->
+<!-- 							<tr> -->
+<%-- 								<th style="text-align: center"><spring:message code='ezWebFolder.t152' /></th> --%>
+<!-- 								확장자 -->
+<!-- 								<td><input type="text" id="searchExt" style="width: 99%" value="" name="searchExt"></td> -->
+<!-- 							</tr> -->
+<!-- 							<tr> -->
+<%-- 								<th style="text-align: center"><spring:message code='ezWebFolder.t153' /></th> --%>
+<!-- 								파일명 -->
+<!-- 								<td><input type="text" id="searchFileName" style="width: 99%" value="" name="searchFileName"></td> -->
+<!-- 							</tr> -->
+<!-- 							<tr> -->
+<%-- 								<th style="text-align: center"><spring:message code='ezWebFolder.t154' /></th> --%>
+<!-- 								작성자 -->
+<!-- 								<td><input type="text" id="searchCreateName" style="width: 99%" value="" name="searchCreateName"></td> -->
+<!-- 							</tr> -->
+<!-- 						</table> -->
+<!-- 						<table style="width: 100%"> -->
+<!-- 							<tr> -->
+<!-- 								<td style="text-align: center;"> -->
+<!-- 									<div class="btnpositionLayer"> -->
+<%-- 										<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a> --%>
+<!-- 									</div> -->
+<!-- 								</td> -->
+<!-- 							</tr> -->
+<!-- 						</table> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+			</div>
 				<div style="position: absolute; top: 0px; right: 2px; height: 27px;">
 					<span style="height: 20px; line-height: 20px; display: inline; font-size: 14px;"><spring:message code='ezWebFolder.t145'/></span>
 					<input id="storageVal" type="text" style="width: 100px; height: 27px; border-radius: 5px; border: 1px solid #b3b3b3; padding-left: 5px;" placeholder="<spring:message code='ezWebFolder.t132' />"/>
@@ -448,18 +640,41 @@
 			
 			<div style="width:100%;"id ="tblFileList1_div">
 			<div style="margin:0px 0px 0px !important;min-width: 700px;" >
-				<table class="mainlist" style="width:100%"  id="tblFileList1">
-					<thead id ="BoardList_THEAD">
+				<table class="mainlist" style="width:100%;display:none;"  id="tblFileListHeader-user">
+					<thead>
 						<tr>
 							<th class="wfFilecheck" ><input type="checkbox"></th>
 							<th headers="cn" class="wfConfigCompany" ><spring:message code='ezWebFolder.t146'/></th>
 							<th headers="dn" class="wfConfigCompany"><spring:message code='ezWebFolder.t142'/></th>
-							<th headers="un" class="wfActive"><spring:message code='ezWebFolder.t143'/></th>
+							<th headers="un" class="wfActive"><spring:message code='ezWebFolder.t143.2'/></th>
 							<th headers="ut" class="wfActive" ><spring:message code='ezWebFolder.t147'/></th>
 							<th              class="wfConfigCapacity" style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
 							<th headers="tc" class="wfConfigCapacity" style="text-align: center; "><spring:message code='ezWebFolder.t149'/></th>
 							<th              class="wfConfigCompany" style="text-align: center;"><spring:message code='ezWebFolder.t150'/></th>
 						</tr>
+						</thead>
+					</table>
+					<table class="mainlist" style="width:100%;display:none;"  id="tblFileListHeader-department">
+						<thead>
+							<tr>
+								<th class="wfFilecheck" ><input type="checkbox"></th>
+								<th headers="cn" class="wfConfigCompany" ><spring:message code='ezWebFolder.t146'/></th>
+								<th headers="dn" class="wfConfigCompany"><spring:message code='ezWebFolder.t142.2'/></th>
+								<th              class="wfConfigCapacity" style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
+								<th headers="tc" class="wfConfigCapacity" style="text-align: center; "><spring:message code='ezWebFolder.t149'/></th>
+								<th              class="wfConfigCompany" style="text-align: center;"><spring:message code='ezWebFolder.t150'/></th>
+							</tr>
+						</thead>
+					</table>
+					<table class="mainlist" style="width:100%;"  id="tblFileListHeader-company">
+						<thead>
+							<tr>
+								<th class="wfFilecheck" ><input type="checkbox"></th>
+								<th headers="dn" class="wfConfigCompany" ><spring:message code='ezWebFolder.t146.2'/></th>
+								<th              class="wfConfigCapacity" style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
+								<th headers="tc" class="wfConfigCapacity" style="text-align: center; "><spring:message code='ezWebFolder.t149'/></th>
+								<th              class="wfConfigCompany" style="text-align: center;"><spring:message code='ezWebFolder.t150'/></th>
+							</tr>
 						</thead>
 					</table>
 					<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">

@@ -10,7 +10,9 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
-			var currPersonalLimit = "";
+			var currentCompanyLimit = "";
+			var currentDepartmentLimit = "";
+			var currentUserLimit = "";
 			var currUploadLimit   = "";
 			
 			window.onload = function () {
@@ -27,11 +29,12 @@
 			}
 			
 			function change() {
+				var selectCompanyValue = document.getElementById("companyList").value;
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/getConfig.do",
 					data: {
-						"companyId" : document.getElementById("companyList").value
+						"companyId" : <c:if test="${isAdminMode}">selectCompanyValue == "*" ? null : </c:if>selectCompanyValue
 					},
 					dataType: "JSON",
 					async: true,
@@ -42,17 +45,28 @@
 							case 0: 
 								var result = data.config;
 								
-								if (!result) {
-									currPersonalLimit = "";
-									currUploadLimit   = "";
-								}
-								else {
-									currPersonalLimit = result["totalLimit"];
-									currUploadLimit   = result["uploadLimit"];
+								if (result) {
+									currentCompanyLimit = result["companyTotalLimit"];
+									currentDepartmentLimit = result["departmentTotalLimit"];
+									currentUserLimit = result["userTotalLimit"];
+									currUploadLimit = result["uploadLimit"];
+								} else {
+									currentCompanyLimit = "";
+									currentDepartmentLimit = "";
+									currentUserLimit = "";
+									currUploadLimit = "";
 								}
 								
-								document.getElementById("uploadLimit").value   = currUploadLimit;
-								document.getElementById("personalLimit").value = currPersonalLimit;
+								if (selectCompanyValue == "*") {
+									document.getElementById("companyLimitTr").style.display = "";
+								} else {
+									document.getElementById("companyLimitTr").style.display = "none";
+								}
+								
+								document.getElementById("uploadLimit").value = currUploadLimit;
+								document.getElementById("companyLimit").value = currentCompanyLimit;
+								document.getElementById("departmentLimit").value = currentDepartmentLimit;
+								document.getElementById("userLimit").value = currentUserLimit;
 								break;
 							case 1:
 								alert("<spring:message code='ezWebFolder.t306'/>");
@@ -72,19 +86,20 @@
 			}
 			
 			function save() {
-				var uploadLimitVal = document.getElementById("uploadLimit").value;
-				
-				if (!isValid(uploadLimitVal)) {
+				var notValid = ["uploadLimit", "companyLimit", "departmentLimit", "userLimit"].some(function(name) {
+					var element = document.getElementById(name);
+					
+					if (isValid(element.value)) {
+						return false;
+					}
+					
 					alert("<spring:message code='ezWebFolder.t183'/>");
-					document.getElementById("uploadLimit").focus();
-					return;
-				}
+					element.focus();
+					
+					return true;
+				});
 				
-				var personalLimitVal = document.getElementById("personalLimit").value;
-				
-				if (!isValid(personalLimitVal)) {
-					alert("<spring:message code='ezWebFolder.t183'/>");
-					document.getElementById("personalLimit").focus();
+				if (notValid) {
 					return;
 				}
 
@@ -92,8 +107,10 @@
 					type: "POST",
 					url: "/admin/ezWebFolder/saveConfig.do",
 					data: {
-						"pLimitVal" : personalLimitVal,
-						"uLimitVal" : uploadLimitVal,
+						"companyLimit" : document.getElementById("companyLimit").value,
+						"departmentLimit" : document.getElementById("departmentLimit").value,
+						"userLimit" : document.getElementById("userLimit").value,
+						"uploadLimit" : document.getElementById("uploadLimit").value,
 						"companyId" : document.getElementById("companyList").value
 					},
 					dataType: "JSON",
@@ -103,8 +120,10 @@
 						switch(code) {
 							case 0: 
 								alert("<spring:message code='ezWebFolder.t182'/>");
-								currPersonalLimit = personalLimitVal;
-								currUploadLimit   = uploadLimitVal;
+								currentCompanyLimit = document.getElementById("companyLimit").value;
+								currentDepartmentLimit = document.getElementById("departmentLimit").value;
+								currentUserLimit = document.getElementById("userLimit").value;
+								currUploadLimit = document.getElementById("uploadLimit").value;
 								break;
 							case 1:
 								alert("<spring:message code='ezWebFolder.t306'/>");
@@ -124,8 +143,10 @@
 			}
 			
 			function cancel() {
-				document.getElementById("uploadLimit").value   = currUploadLimit;
-				document.getElementById("personalLimit").value = currPersonalLimit;
+				document.getElementById("uploadLimit").value = currUploadLimit;
+				document.getElementById("companyLimit").value = currentCompanyLimit;
+				document.getElementById("departmentLimit").value = currentDepartmentLimit;
+				document.getElementById("userLimit").value = currentUserLimit;
 			}
 			
 			function isValid(value) {
@@ -140,30 +161,46 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezWebFolder.t102'/></h1>
+		<h1>
+			<spring:message code='ezWebFolder.t102'/>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select id="companyList" class="companySelect" onchange="change();">
+				<c:if test = "${isAdminMode}">
+					<option value="*"><spring:message code='ezWebFolder.select.company.all'/></option>
+				</c:if>
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+		</h1>
 		<div style="margin-left:5px">
-			<div id="companySelect" style="margin: 10px 0px;">
-				<span style="font-size: 12px; display:inline-block; vertical-align: middle;"><b><spring:message code='ezWebFolder.t129'/></b></span>
-				<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="change();">
-					<c:forEach var="item" items="${list}">
-						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-					</c:forEach>
-				</select>
-			</div>
-			
 			<div id="mainSetting" style="margin: 10px 0px;">
 				<table class="content" style="width:400px">
 					<tr style="height: 40px;">
 						<th style="width:25%"><spring:message code='ezWebFolder.t130'/></th>
 						<th style="background : #ffff;">
-							<input id="uploadLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${upLimit}'/>" />
+							<input id="uploadLimit" type="text" style="height: 30px; padding: 0px 5px;" />
+							<span><spring:message code='ezWebFolder.t132' /></span>
+						</th>
+					</tr>
+					<tr id="companyLimitTr" style="height: 40px; display: none;">
+						<th><spring:message code='ezWebFolder.t131.1'/></th>
+						<th style="background : #ffff;">
+							<input id="companyLimit" type="text" style="height: 30px; padding: 0px 5px;" />
 							<span><spring:message code='ezWebFolder.t132' /></span>
 						</th>
 					</tr>
 					<tr style="height: 40px;">
-						<th><spring:message code='ezWebFolder.t131'/></th>
+						<th><spring:message code='ezWebFolder.t131.2'/></th>
 						<th style="background : #ffff;">
-							<input id="personalLimit" type="text" style="height: 30px; padding: 0px 5px;" value="<c:out value='${persLimit}'/>" />
+							<input id="departmentLimit" type="text" style="height: 30px; padding: 0px 5px;" />
+							<span><spring:message code='ezWebFolder.t132' /></span>
+						</th>
+					</tr>
+					<tr style="height: 40px;">
+						<th><spring:message code='ezWebFolder.t131.3'/></th>
+						<th style="background : #ffff;">
+							<input id="userLimit" type="text" style="height: 30px; padding: 0px 5px;" />
 							<span><spring:message code='ezWebFolder.t132' /></span>
 						</th>
 					</tr>

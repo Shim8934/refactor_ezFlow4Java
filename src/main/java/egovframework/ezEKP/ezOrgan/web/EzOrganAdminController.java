@@ -41,6 +41,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -158,6 +159,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createBoardLike();
     	ezCommonService.addQuickLinkLinkOrder();
     	ezCommonService.addComCloseCompanyId();
+    	ezCommonService.addWebfolderTotalLimit();
+    	ezCommonService.addAddJobMasterProxy();
     	
     	logger.debug("init ended.");
     }
@@ -165,7 +168,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 메인화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/organMain.do")
+	@RequestMapping(value = "/admin/ezOrgan/organMain.do", method = RequestMethod.GET)
 	public String organMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		logger.debug("organMain started.");
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -182,7 +185,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 왼쪽화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/organLeft.do")
+	@RequestMapping(value = "/admin/ezOrgan/organLeft.do", method = RequestMethod.GET)
 	public String organLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
@@ -221,7 +224,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 오른쪽화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/organRight.do")
+	@RequestMapping(value = "/admin/ezOrgan/organRight.do", method = RequestMethod.GET)
 	public String organRight(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		LoginVO user = commonUtil.userInfo(loginCookie);		
 		//관리자 권한 체크
@@ -275,7 +278,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 회사추가 팝업 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/companyInfo.do")
+	@RequestMapping(value = "/admin/ezOrgan/companyInfo.do", method = RequestMethod.GET)
 	public String companyInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 	    logger.debug("companyInfo started.");
 	    
@@ -295,7 +298,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 회사추가 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveCompanyInfo.do", produces = "text/html;charset=utf-8")	
+	@RequestMapping(value = "/admin/ezOrgan/saveCompanyInfo.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")	
 	@ResponseBody
 	public String saveCompanyInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("saveCompanyInfo started.");
@@ -447,7 +450,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 회사 & 부서 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/delDept.do", produces = "text/html;charset=utf-8")	
+	@RequestMapping(value = "/admin/ezOrgan/delDept.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")	
 	@ResponseBody
 	public String delDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("delDept started.");
@@ -554,7 +557,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 부서정보 팝업 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/deptInfo.do")	
+	@RequestMapping(value = "/admin/ezOrgan/deptInfo.do", method = RequestMethod.GET)	
 	public String deptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 	    logger.debug("deptInfo started");
 	    
@@ -581,7 +584,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 부서정보 및 내용 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getEntryInfo.do", produces = "text/xml;charset=utf-8")	
+	@RequestMapping(value = "/admin/ezOrgan/getEntryInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getEntryInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("getEntryInfo started");
@@ -607,7 +610,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 부서정보 수정 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveDeptInfo.do", produces = "text/html;charset=utf-8")	
+	@RequestMapping(value = "/admin/ezOrgan/saveDeptInfo.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String saveDeptInfo(@CookieValue("loginCookie") String loginCookie, OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("saveDeptInfo started");
@@ -803,7 +806,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 부서이동 팝업 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/selectDept.do")	
+	@RequestMapping(value = "/admin/ezOrgan/selectDept.do", method = RequestMethod.GET)	
 	public String selectDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);		
 		//관리자 권한 체크
@@ -829,7 +832,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 부서이동 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/movDept.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/movDept.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String movDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 	    logger.debug("movDept started.");
@@ -889,7 +892,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 부서검색 시 중복된 부서가 있을 경우 선택 팝업 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/checkName2.do")	
+	@RequestMapping(value = "/admin/ezOrgan/checkName2.do", method = RequestMethod.GET)	
 	public String checkName2() throws Exception{	
 		return "admin/ezOrgan/checkName2";
 	}
@@ -897,7 +900,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 부서 표출순서 조정 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveOrderList.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/saveOrderList.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String saveOrderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.debug("saveOrderList started.");
@@ -941,7 +944,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 사원정보 팝업 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/userInfo.do")	
+	@RequestMapping(value = "/admin/ezOrgan/userInfo.do", method = RequestMethod.GET)	
 	public String userInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 	    logger.debug("userInfo started");
 	    
@@ -985,7 +988,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 서명등록 팝업 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/configSignImage.do")	
+	@RequestMapping(value = "/admin/ezOrgan/configSignImage.do", method = RequestMethod.GET)	
 	public String configSignImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 	    logger.debug("configSignImage started");
 	    
@@ -1016,7 +1019,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 전자결재 서명 이미지 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getApprovalSignInfo.do")
+	@RequestMapping(value = "/admin/ezOrgan/getApprovalSignInfo.do", method = RequestMethod.GET)
 	public void getSignImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1037,7 +1040,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 암호관리 메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/inputPassword.do")
+	@RequestMapping(value = "/admin/ezOrgan/inputPassword.do", method = RequestMethod.GET)
 	public String inputPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return "admin/ezOrgan/inputPassword";
 	}
@@ -1045,7 +1048,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 새로운 비밀번호 설정 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/changePassword.do")
+	@RequestMapping(value = "/admin/ezOrgan/changePassword.do", method = RequestMethod.POST)
 	public void changePassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("changePassword started.");
 	    
@@ -1079,7 +1082,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 사원퇴직 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/retireUser.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/retireUser.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String retireUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("retireUser started.");
@@ -1182,7 +1185,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 사원이동 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/movUser.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/movUser.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String movUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("movUser started.");
@@ -1249,7 +1252,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 사원삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/delUser.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/delUser.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String delUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("delUser started.");
@@ -1505,7 +1508,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 사원정보 추가/수정 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveUserInfo.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/saveUserInfo.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
 	    logger.debug("saveUserInfo started.");
@@ -1687,7 +1690,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 사원정보 사진등록/변경 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/personPicture.do")
+	@RequestMapping(value = "/admin/ezOrgan/personPicture.do", method = RequestMethod.GET)
 	public String personPicture(HttpServletRequest request, HttpServletResponse response,Model model) throws Exception {
 	    logger.debug("personPicture started");
 	    
@@ -1703,7 +1706,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 사원정보 사진이미지 파일 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getPersonalInfo.do")
+	@RequestMapping(value = "/admin/ezOrgan/getPersonalInfo.do", method = RequestMethod.GET)
 	public void getPersonalInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("getPersonalInfo started");
 	    
@@ -1723,7 +1726,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	* 조직도관리 사원정보 사진이미지 임시 업로드 실행 함수(Ie9)
 	*/
-	@RequestMapping(value = "/admin/ezOrgan/signImageUploadIe9.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/signImageUploadIe9.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String signImangeUploadIe9(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 	    logger.debug("signImangeUploadIe9 started");
@@ -1763,7 +1766,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String fileName = sExt;
-		fileName = userID + "_" + guid + "." + fileName;
+		fileName = commonUtil.detectPathTraversal(userID + "_" + guid + "." + fileName);
 	 
 		if (mode.equals("PICTURE")) {
 			serverPath = thumbPath;
@@ -1775,14 +1778,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 		}
 		
-		File file = new File(serverPath);
+		File file = new File(commonUtil.detectPathTraversal(serverPath));
 			
 		if (!file.exists()) {
 			file.mkdirs();
 		}
 		
 		if (!mode.equals("TEMP")) {
-			File file1 = new File(tempPath);
+			File file1 = new File(commonUtil.detectPathTraversal(tempPath));
 			
 			if (!file1.exists()) {
 				file1.mkdirs();
@@ -1799,7 +1802,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		try {
 			stream = request.getInputStream();
-			bos = new FileOutputStream(serverPath+fileName);
+			bos = new FileOutputStream(commonUtil.detectPathTraversal(serverPath + fileName));
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
 			
@@ -1827,13 +1830,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		//썸네일 생성
         if (mode.equals("PICTURE")) {
         	String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
-        	File file2 = new File(serverPath + fileName);
-			File thumbnailFolder = new File(thumbnailPath);
+        	File file2 = new File(commonUtil.detectPathTraversal(serverPath + fileName));
+			File thumbnailFolder = new File(commonUtil.detectPathTraversal(thumbnailPath));
 			if (!thumbnailFolder.exists()) {
 				thumbnailFolder.mkdirs();
 			}
 			
-			File thumbnailFile = new File(thumbnailPath + commonUtil.separator + file2.getName());
+			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + file2.getName()));
 			createThumbnail(file2, thumbnailFile);
         }
 		
@@ -1845,7 +1848,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	* 조직도관리 사원정보 사진이미지 임시 업로드 실행 함수
 	*/
-	@RequestMapping(value = "/admin/ezOrgan/signImageUpload.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/signImageUpload.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String signImangeUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 	    logger.debug("signImangeUpload started");
@@ -1870,8 +1873,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			fileName = fileName.replace("+", "%2b");
 			fileName = fileName.replace(";", "%3b");
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+
 			logger.debug("file extension is : " + extension);
-			fileName = userID + "_" + guid + ".";
+			fileName = commonUtil.detectPathTraversal(userID + "_" + guid + ".");
 
 			if (mode.equals("PICTURE")) {
 				serverPath = thumbPath;
@@ -1883,14 +1887,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 			}
 						
-			File file = new File(serverPath);
+			File file = new File(commonUtil.detectPathTraversal(serverPath));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
 			if (!mode.equals("TEMP")) {
-				File file1 = new File(tempPath);
+				File file1 = new File(commonUtil.detectPathTraversal(tempPath));
 				
 				if (!file1.exists()) {
 					file1.mkdirs();
@@ -1898,7 +1902,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 
 			writeUploadedFile(multiFile, fileName + extension, tempPath);
-			File imageFile = new File(tempPath + fileName + extension);			
+			File imageFile = new File(commonUtil.detectPathTraversal(tempPath + fileName + extension));			
 
 			BufferedImage bi = ImageIO.read(imageFile);
 			/*2018-04-12이효진  bi.getType으로 지정시 color변경되어 TYPE_4BYTE_ABGR로 지정*/
@@ -1908,7 +1912,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 //            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
             bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
             
-            File file2 = new File(serverPath + fileName + "png");
+            File file2 = new File(commonUtil.detectPathTraversal(serverPath + fileName + "png"));
             ImageIO.write(bufferedImage, "png", file2);
             //임시 저장 파일 삭제
             deleteFile(tempPath + fileName + extension);
@@ -1916,12 +1920,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             //썸네일 생성
             if (mode.equals("PICTURE")) {
             	String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
-    			File thumbnailFolder = new File(thumbnailPath);
+    			File thumbnailFolder = new File(commonUtil.detectPathTraversal(thumbnailPath));
     			if (!thumbnailFolder.exists()) {
     				thumbnailFolder.mkdirs();
     			}
     			
-    			File thumbnailFile = new File(thumbnailPath + commonUtil.separator + file2.getName());
+    			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + file2.getName()));
     			createThumbnail(file2, thumbnailFile);
             }
             
@@ -1939,7 +1943,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 메뉴 호출 화면
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/addJobList.do")
+	@RequestMapping(value = "/admin/ezOrgan/addJobList.do", method = RequestMethod.GET)
 	public String addJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 	    logger.debug("addJobList started.");
 	    
@@ -1979,7 +1983,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 대상자 리스트 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getAddJobList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/getAddJobList.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getAddJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
         logger.debug("getAddJobList started.");
@@ -2050,7 +2054,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 대상자 상세정보 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getUserAddJobList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/getUserAddJobList.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getUserAddJobList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
         logger.debug("getUserAddJobList started.");
@@ -2084,7 +2088,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 겸직삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveSubTitle.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/saveSubTitle.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String saveSubTitle(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, Model model) throws Exception{
         logger.debug("saveSubTitle started.");
@@ -2237,7 +2241,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/addJobConfig.do")	
+	@RequestMapping(value = "/admin/ezOrgan/addJobConfig.do", method = RequestMethod.GET)	
 	public String addJobConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("addJobConfig started.");
 	    
@@ -2279,7 +2283,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 겸직등록 대상부서 선택 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/addjobAdd.do")	
+	@RequestMapping(value = "/admin/ezOrgan/addjobAdd.do", method = RequestMethod.GET)	
 	public String addjobAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("addjobAdd started.");
 	    
@@ -2307,7 +2311,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 권한관리 메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/permissionsList.do")	
+	@RequestMapping(value = "/admin/ezOrgan/permissionsList.do", method = RequestMethod.GET)	
 	public String permissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 	    logger.debug("permissionsList started.");
 	    
@@ -2359,7 +2363,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 권한관리 리스트 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getPermissionsList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/getPermissionsList.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getPermissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 	    logger.debug("getPermissionsList started.");
@@ -2439,7 +2443,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 권한관리 권한등록 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/permissionsCheck.do")	
+	@RequestMapping(value = "/admin/ezOrgan/permissionsCheck.do", method = RequestMethod.GET)	
 	public String permissionsCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 	    logger.debug("permissionsCheck started.");
 	    
@@ -2498,7 +2502,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 퇴직자관리 메뉴 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/retireUserManage.do")	
+	@RequestMapping(value = "/admin/ezOrgan/retireUserManage.do", method = RequestMethod.GET)	
 	public String retireUserManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("retireUserManage started");
 	    
@@ -2537,7 +2541,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 퇴직자 리스트 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getRetireUserList.do")	
+	@RequestMapping(value = "/admin/ezOrgan/getRetireUserList.do", method = RequestMethod.POST)	
 	public String getRetireUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("getRetireUserList started");
 	    
@@ -2594,7 +2598,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 퇴직자관리 복구 기능 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/restoreRetireUser.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/restoreRetireUser.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String restoreRetireUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("restoreRetireUser started.");
@@ -2685,7 +2689,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 퇴직자관리 퇴직사원 상세정보 창 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/retireUserInfo.do")
+	@RequestMapping(value = "/admin/ezOrgan/retireUserInfo.do", method = RequestMethod.GET)
 	public String retireUserInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 	    logger.debug("retireUserInfo started");
 	    
@@ -2717,7 +2721,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 퇴직자관리 퇴직사원 상세정보 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getRetireEntryInfo.do")
+	@RequestMapping(value = "/admin/ezOrgan/getRetireEntryInfo.do", method = RequestMethod.POST)
 	public String getRetireEntryInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
         logger.debug("getRetireEntryInfo started.");
         
@@ -2742,7 +2746,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 메일주소 창 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/configEmail.do")
+	@RequestMapping(value = "/admin/ezOrgan/configEmail.do", method = RequestMethod.GET)
 	public String configEmail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("configEmail started.");
 		
@@ -2786,7 +2790,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 메일주소 저장 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveEmail.do")
+	@RequestMapping(value = "/admin/ezOrgan/saveEmail.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveEmail(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, OrganUserVO organVO) throws Exception{
 		logger.debug("saveEmail started.");
@@ -2856,7 +2860,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 메일주소 도메인체크 및 중복체크 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/checkEmail.do")
+	@RequestMapping(value = "/admin/ezOrgan/checkEmail.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkEmail(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData) throws Exception{
 		logger.debug("checkEmail started.");
@@ -2886,7 +2890,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     /**
      * 조직도관리 편지함관리 창 호출 함수
      */
-    @RequestMapping(value = "/admin/ezOrgan/configUserQuota.do")
+    @RequestMapping(value = "/admin/ezOrgan/configUserQuota.do", method = RequestMethod.GET)
     public String configUserQuota(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
         logger.debug("configUserQuota started.");
         
@@ -2934,7 +2938,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     /**
      * 조직도관리 사용자 편지함용량 저장 실행 함수
      */
-    @RequestMapping(value = "/admin/ezOrgan/saveUserQuota.do")
+    @RequestMapping(value = "/admin/ezOrgan/saveUserQuota.do", method = RequestMethod.POST)
     @ResponseBody
     public String saveUserQuota(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData) throws Exception {
         logger.debug("saveUserQuota started.");
@@ -2989,7 +2993,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 그룹웨어 계정으로 비즈메카톡 계정을 동기화한다.
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/syncWithBizmekaTalkAccounts.do")
+	@RequestMapping(value = "/admin/ezOrgan/syncWithBizmekaTalkAccounts.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String syncWithBizmekaTalkAccounts(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("syncWithBizmekaTalkAccounts started.");
@@ -3030,7 +3034,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * ezSyncServer를 호출하여 인사 정보를 동기화한다.
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/syncOrganAccounts.do")
+	@RequestMapping(value = "/admin/ezOrgan/syncOrganAccounts.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String syncOrganAccounts(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("syncOrganAccounts started.");
@@ -3070,7 +3074,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * POP3/IMAP 설정 화면을 출력한다.
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/configPopImap.do")
+	@RequestMapping(value = "/admin/ezOrgan/configPopImap.do", method = RequestMethod.GET)
 	public String configPop3Imap(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest req, Model model) throws Exception {
 		logger.debug("configPop3Imap started.");
@@ -3109,7 +3113,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * POP3/IMAP 설정된 값을 추가 및 수정 한다.
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/setUseDisablePop3Imap.do")
+	@RequestMapping(value = "/admin/ezOrgan/setUseDisablePop3Imap.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String setUseDisablePop3Imap(@CookieValue("loginCookie") String loginCookie
 			, HttpServletRequest req) throws Exception	 {
@@ -3147,7 +3151,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 회사 추가,수정시 운영자 전자우편 ID 가져오기
 	 */
-	@RequestMapping(value="/admin/ezOrgan/getComanyConfig.do")
+	@RequestMapping(value="/admin/ezOrgan/getComanyConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String getComanyConfig(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
@@ -3294,7 +3298,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자가 조직도에서 유저선택 후 모바일 설정 버튼 클릭시 호출되는 메서드 
 	 */
-	@RequestMapping(value="/admin/ezOrgan/configMobileManaged.do")
+	@RequestMapping(value="/admin/ezOrgan/configMobileManaged.do", method = RequestMethod.GET)
 	public String adminMobileManaged(@CookieValue("loginCookie") String loginCookie,
 			Model model, HttpServletRequest request) throws Exception {
 		logger.debug("setUserMobileManaged started");
@@ -3343,7 +3347,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자가 유저별 모바일 설정을 한 뒤 확인 버튼을 눌렀을 때 호출되는 메서드 
 	 */
-	@RequestMapping(value="/admin/ezOrgan/setUserMobileManaged.do")
+	@RequestMapping(value="/admin/ezOrgan/setUserMobileManaged.do", method = RequestMethod.GET)
 	public void setUserMobileManaged(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setUserMobileManaged started");
@@ -3370,7 +3374,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 페이지 호출 메서드
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobInfoList.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/jobInfoList.do", method = RequestMethod.GET, produces="application/text; charset=utf8")
 	public String jobTitleList(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobInfoList started.");
 		
@@ -3400,7 +3404,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 등록/수정 팝업창 호출 메서드 
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitlePopupUI.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/jobTitlePopupUI.do", method = RequestMethod.GET, produces="application/text; charset=utf8")
 	public String jobTitlePopupUI(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitlePopupUI started.");
 		
@@ -3432,7 +3436,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 등록/수정 버튼 동작 메서드 
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitleAction.do")
+	@RequestMapping(value="/admin/ezOrgan/jobTitleAction.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String jobTitleAction(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleAction started.");
@@ -3467,7 +3471,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 직위/직책 리스트 호출 메서드
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitleListView.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/jobTitleListView.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleListView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		
@@ -3486,7 +3490,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 직위/직책 삭제 메서드
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitleDelete.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/jobTitleDelete.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleListView started.");
@@ -3509,7 +3513,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 직위/직책 사용중인 사용자 리스트 호출 메서드
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitleUserListView.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/jobTitleUserListView.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleUserListView(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleUserListView started.");
@@ -3545,7 +3549,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 직위/직책 사용중인 사용자수 조회 메서드(삭제 시, 사용중인 사용자가 있는지 검사를 위한 메서드 | 직위/직책 사용중이면 삭제 불가함)
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitleUserListCnt.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/jobTitleUserListCnt.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleUserListCnt(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleUserListCnt started.");
@@ -3564,7 +3568,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 직위/직책 갯수 조회 메서드(중복 조회를 하기 위한 메서드)
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitleCnt.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/jobTitleCnt.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleCnt(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleCnt started.");
@@ -3586,7 +3590,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 직위/직책 정보 조회 메서드(수정 시, 정보를 호출하기 위한 메서드)
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/jobTitleInfo.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/jobTitleInfo.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
 	@ResponseBody
 	public String jobTitleInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("jobTitleInfo started.");
@@ -3605,7 +3609,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/*
 	 * 직함관리 유저의 회사를 조회하는 메서드(회사간 겸직 시, 그 회사의 직위/직책을 불러오기 위한 회사 조회)
 	 * */
-	@RequestMapping(value="/admin/ezOrgan/getUserCompanyID.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/getUserCompanyID.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
 	@ResponseBody
 	public String getUserCompanyID(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("getUserCompanyID started.");
@@ -3622,7 +3626,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return companyID;
 	}
 	
-	@RequestMapping(value="/admin/ezOrgan/getJobOptionInfo.do", produces="application/text; charset=utf8")
+	@RequestMapping(value="/admin/ezOrgan/getJobOptionInfo.do", method = RequestMethod.POST, produces="application/text; charset=utf8")
 	@ResponseBody
 	public String getJobOptionInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("getJobOptionInfo started.");
@@ -3641,7 +3645,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 권한관리 팝업관리 리스트 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getPopUpPermissionsList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/getPopUpPermissionsList.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getPopUpPermissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 	    logger.debug("getPermissionsPopUpList started.");
@@ -3700,7 +3704,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 권한 등록/삭제
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveUserPermissionInfo.do", produces = "text/plain; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezOrgan/saveUserPermissionInfo.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
 	public String saveUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, String[] cn, String[] extensionAttribute1) throws Exception{
 		logger.debug("saveUserPermissionInfo started.");
@@ -3750,7 +3754,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 권한 추가/수정/삭제
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveStoreUserInfo.do", produces = "text/plain; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezOrgan/saveStoreUserInfo.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
 	public String saveStoreUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, String parentCn, String[] cn, String[] extensionAttribute1) throws Exception{
 		logger.debug("saveStoreUserPermissionInfo started.");
@@ -3802,7 +3806,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 권한관리 삭제 메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/chooseDeletege.do")
+	@RequestMapping(value = "/admin/ezOrgan/chooseDeletege.do", method = RequestMethod.GET)
 	public String chooseDeletege(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
 		String type = (request.getParameter("type") != null ? request.getParameter("type") : "");
@@ -3814,7 +3818,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/addJobUserModify.do")	
+	@RequestMapping(value = "/admin/ezOrgan/addJobUserModify.do", method = RequestMethod.GET)
 	public String addJobUserModify(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addJobUserModify started.");
 
@@ -3858,7 +3862,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/addJobCompanyName.do", produces = "text/plain; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezOrgan/addJobCompanyName.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
 	public String addJobCompanyName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addJobCompanyName started.");
@@ -3877,7 +3881,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return companyName;
 	}
 
-	@RequestMapping(value = "/admin/ezOrgan/saveUserImagebyTemp.do",produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/saveUserImagebyTemp.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject saveUserImagebyTemp(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 	    logger.debug("saveUserImagebyTemp started.");
@@ -3900,8 +3904,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		result = saveUserInfo(loginCookie, vo, request, response, locale);
 		resultMap.put("status", result);
 		
-		File oldFile =new File(tempFilePath);
-        File newFile =new File(newFilePath);
+		File oldFile =new File(commonUtil.detectPathTraversal(tempFilePath));
+        File newFile =new File(commonUtil.detectPathTraversal(newFilePath));
         
         Path oldFilePathC = Paths.get(tempFilePath);
 

@@ -708,7 +708,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 		
 //		logger.debug("insertJournal map" + map);
 		
-		String journalId = ezJournalDAO.insertJournal(map) + "";
+		String journalId = commonUtil.detectPathTraversal(ezJournalDAO.insertJournal(map) + "");
 		
 		String fileList = jsonParam.get("fileList").toString();
 //		logger.debug("fileList정보 : " + fileList.toString());
@@ -741,8 +741,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 			
 			for (int i = 0; i < attach.length; i++) {
 				String[] files = attach[i].split(":");
-				String filePath = files[0];
-				String fileName = files[1];
+				String filePath = commonUtil.detectPathTraversal(files[0]);
+				String fileName = commonUtil.detectPathTraversal(files[1]);
 				String fileSize = files[2];
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				
@@ -767,10 +767,10 @@ public class EzJournalServiceImpl implements EzJournalService {
 					String reuseFileName = "";
 					
 					try {
-						orgFilePath = pDirPath + "uploadFile" + commonUtil.separator + originJournalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension;
+						orgFilePath = commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + originJournalId + "_uploadFile" + commonUtil.separator + filePath + "." + extension);
 					//	filePath = "{" + UUID.randomUUID() + "}";
 						reuseFileName = filePath + "." + extension;
-						destFilePath = pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + reuseFileName;
+						destFilePath = commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile" + commonUtil.separator + reuseFileName);
 						
 						FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
 					} catch (Exception e) { }
@@ -813,8 +813,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
 		
-		File srcFile = new File(beforeFilePath);
-		File destFile = new File(afterFilePath);
+		File srcFile = new File(commonUtil.detectPathTraversal(beforeFilePath));
+		File destFile = new File(commonUtil.detectPathTraversal(afterFilePath));
 		
 		try {
 			boolean rename = srcFile.renameTo(destFile);
@@ -972,8 +972,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 			
 			for (int i = 0; i < attach.length; i++) {
 				String[] files = attach[i].split(":");
-				String filePath = files[0];
-				String fileName = files[1];
+				String filePath = commonUtil.detectPathTraversal(files[0]);
+				String fileName = commonUtil.detectPathTraversal(files[1]);
 				String fileSize = files[2];
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				
@@ -1059,7 +1059,7 @@ public class EzJournalServiceImpl implements EzJournalService {
 	private void deleteDirectory (String journalId, String pDirpath, int tenantId) throws Exception {
 		logger.debug("deleteDirectory started.");
 		
-		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile");
+		File directoryFile = new File(commonUtil.detectPathTraversal(pDirpath + "uploadFile" + commonUtil.separator + journalId + "_uploadFile"));
 		File[] deleteFileList = directoryFile.listFiles();
 
 		if (directoryFile.exists()) {

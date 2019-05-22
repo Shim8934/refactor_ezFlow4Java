@@ -93,7 +93,7 @@
 	    var xmlhttp2 = createXMLHttpRequest();
 	    function schedule_get_holiday() {
 	        xmlhttp2 = createXMLHttpRequest();
-	        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
+	        xmlhttp2.open("GET", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
 	        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
 	        xmlhttp2.send();
 	    }
@@ -190,7 +190,7 @@
 	        createNodeInsert(xmlpara, objNode, "DATA");
 	        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", "${userInfo.companyID}");
 
-	        xmlhttp.open("POST", "/ezSchedule/scheduleGetLunarUse.do", true);
+	        xmlhttp.open("GET", "/ezSchedule/scheduleGetLunarUse.do", true);
 	        xmlhttp.onreadystatechange = event_schedule_get_lunaruse;
 	        xmlhttp.send(xmlpara);
 	    }
@@ -471,7 +471,7 @@
 		//2018-06-05 구해안 showres 함수 추가
 		function showRes(val01) {
     		$.ajax({
-				type : "POST",
+				type : "GET",
 				dataType : "json",
 				async : false,
 				url : "/ezResource/scheduleResourceData.do",
@@ -530,13 +530,13 @@
 					$("#brdExplain").html(resbrdExc);
 					
 					if(result.attachList1 != null) {
-						document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + result.attachList1;
+						document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURI(result.attachList1);
 						document.getElementById("preview1").width = 200;
 						document.getElementById("preview1").height = 200;
 					}
 					
 					if(result.attachList2 != null) {
-						document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + result.attachList2;
+						document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURI(result.attachList2);
 						document.getElementById("preview2").width = 200;
 						document.getElementById("preview2").height = 200;
 					}

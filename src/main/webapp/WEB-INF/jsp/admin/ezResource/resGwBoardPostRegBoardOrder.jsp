@@ -25,16 +25,16 @@
     		.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}
 		</style>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			g_UserID	= "${userInfo.id}";
-			g_BrdID		= "${brdID}";
+			g_UserID	= "<c:out value='${userInfo.id}'/>";
+			g_BrdID		= "<c:out value='${brdID}'/>";
 
-			var L_UpLevel	= "${upLevel}";
-			var L_UpStep	= "${upStep}";
-			var L_UpCount	= "${upCount}";
+			var L_UpLevel	= "<c:out value='${upLevel}'/>";
+			var L_UpStep	= "<c:out value='${upStep}'/>";
+			var L_UpCount	= "<c:out value='${upCount}'/>";
 			var cAdmin		= "";
-			var pUserID		= "${userInfo.id}";
-			var pDeptID		= "${userInfo.deptID}";
-			var pCompanyID	= "${selCompanyID}";
+			var pUserID		= "<c:out value='${userInfo.id}'/>";
+			var pDeptID		= "<c:out value='${userInfo.deptID}'/>";
+			var pCompanyID	= "<c:out value='${selCompanyID}'/>";
 
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -28,39 +29,39 @@
 			var chkFlag			= false;
 			var arr_userinfo = new Array();
 			arr_userinfo[0]  = "user";								// 사용자-부서구분
-			arr_userinfo[1]  = "${userInfo.id}";              // 사용자ID
-			arr_userinfo[2]  = "${userInfo.displayName}";         // 사용자명
-			arr_userinfo[3]  = "${userInfo.title}";               // 사용자 직위
-			arr_userinfo[4]  = "${userInfo.deptID}";              // 사용자 부서 ID 
-			arr_userinfo[5]  = "${userInfo.deptName}";            // 사용자 부서 이름
-			arr_userinfo[6]  = "${userInfo.jikChek}";             // 사용자 직책            
-			arr_userinfo[8]  = "${userInfo.email}";               // E-Mail Address 
+			arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";              // 사용자ID
+			arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";         // 사용자명
+			arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";               // 사용자 직위
+			arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";              // 사용자 부서 ID 
+			arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";            // 사용자 부서 이름
+			arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";             // 사용자 직책            
+			arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";               // E-Mail Address 
 			arr_userinfo[9]  = "";
-			arr_userinfo[10] = "${susinAdmin}";                  // 수신 접수담당자
-			arr_userinfo[11]  = "${userInfo.displayName1}";		// 사용자명(P)
-			arr_userinfo[12]  = "${userInfo.displayName2}";		// 사용자명(S)
-			arr_userinfo[13]  = "${userInfo.title1}";				// 사용자 직위(P)
-			arr_userinfo[14]  = "${userInfo.title2}";				// 사용자 직위(S)
-			arr_userinfo[15]  = "${userInfo.deptName1}";			// 사용자 부서 이름(P)
-			arr_userinfo[16]  = "${userInfo.deptName2}";			// 사용자 부서 이름(S)
+			arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";                  // 수신 접수담당자
+			arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";		// 사용자명(P)
+			arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";		// 사용자명(S)
+			arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";				// 사용자 직위(P)
+			arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";				// 사용자 직위(S)
+			arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";			// 사용자 부서 이름(P)
+			arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";			// 사용자 부서 이름(S)
 			
 			var pUserID			= arr_userinfo[1];		// 사용자 ID
 			var pUserName		= arr_userinfo[2];	    // 사용자 이름
 			var pUserJobTitle	= arr_userinfo[3];	// 사용자 직위
 			var pDeptID			= arr_userinfo[4];		// 부서ID  
 			var pDeptName		= arr_userinfo[5];		// 부서 이름 
-			var optExt = "${poptExt}";
-			var maxSize = "${maxSize}";
-			var isBody = "${isBody}";
+			var optExt = "<c:out value ='${poptExt}'/>";
+			var maxSize = "<c:out value ='${maxSize}'/>";
+			var isBody = "<c:out value ='${isBody}'/>";
 			var BodyAttach = "N";
 			var AttachDelFlag = false;
-			var pDraftFlag = "${draftFlag}";
-			var approvalFlag = "${approvalFlag}";
-			var apprTotalAttachLimit = "${apprTotalAttachLimit}";
-			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+			var pDraftFlag = "<c:out value ='${draftFlag}'/>";
+			var approvalFlag = "<c:out value ='${approvalFlag}'/>";
+			var apprTotalAttachLimit = "<c:out value ='${apprTotalAttachLimit}'/>";
+			var attachFileNameMaxLength = Number("<c:out value ='${attachFileNameMaxLength}'/>");
 			var totalSize = 0;
-			var orgCompanyID = "${orgCompanyID}";
-			var ext = "${ext}";
+			var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
+			var ext = "<c:out value ='${ext}'/>";
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()
@@ -81,64 +82,53 @@
 			/**
 			* 첨부파일의 History 관리
 			*/
-			function CheckHistory(pFlag)
-			{
+			function CheckHistory(pFlag) {
 				var i, j;
 				var listview = new ListView();
 			    listview.LoadFromID("attachList");
 			        
-				if (pFlag == 0)
-				{
+				if (pFlag == 0) {
 					var FirstData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW");
-					var pAttachCurSel =listview.GetDataRows();
+					var pAttachCurSel = listview.GetDataRows();
 					
-					for (i=0; i<FirstData.length; i++)
-					{
+					for (i = 0; i < FirstData.length; i++) {
 						var tempSN = SelectSingleNodeValue(GetChildNodes(FirstData[i])[0], "DATA2");
 						var tempFileName = SelectSingleNodeValue(GetChildNodes(FirstData[i])[0], "DATA10");
 						var DelFlag = true;
 						
-						for (j=0; j<pAttachCurSel.length; j++)
-						{
-						    if (GetAttribute(pAttachCurSel[j], "DATA2") == tempSN && GetAttribute(pAttachCurSel[j], "DATA10") == tempFileName)
-							{
+						for (j = 0; j < pAttachCurSel.length; j++) {
+						    if (GetAttribute(pAttachCurSel[j], "DATA2") == tempSN && GetAttribute(pAttachCurSel[j], "DATA10") == tempFileName) {
 								DelFlag = false;
 							}
 						}
-						if (DelFlag)
-							UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t266'/>");
+						if (DelFlag) {
+							UpdateAttachHistory(tempSN, strModifyFlag2);
+						}
 					}
-				}
-				else
-				{
+				} else {
 					var FirstData = listview.GetDataRows();
 					var FileData = SelectNodes(FirstAttach,"LISTVIEWDATA/ROWS/ROW");
-					for (i=0; i<FirstData.length; i++)
-					{
-						
+					
+					for (i = 0; i < FirstData.length; i++) {
 						var tempSN = GetAttribute(FirstData[i], "DATA2");
 						var tempFileName = GetAttribute(FirstData[i], "DATA10");
 						var AddFlag = true;
 						
-						for (j=0; j<FileData.length; j++)
-						{
-			                if (getNodeText(FileData[j].getElementsByTagName("DATA2")[0]) == tempSN && getNodeText(FileData[j].getElementsByTagName("DATA10")[0]) == tempFileName)
-							{
+						for (j = 0; j < FileData.length; j++) {
+			                if (getNodeText(FileData[j].getElementsByTagName("DATA2")[0]) == tempSN && getNodeText(FileData[j].getElementsByTagName("DATA10")[0]) == tempFileName) {
 								AddFlag = false;
 							}
 						}
 						
-						if (AddFlag)
-						{
-							if (GetAttribute(FirstData[i], "DATA11")== "Y")
-								UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t267'/>");
-							else
-								UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t268'/>");
-						}
-						else
-						{
-							if (GetAttribute(FirstData[i], "DATA12")== "EDITED")
-								UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t269'/>");
+						if (AddFlag) {
+							if (GetAttribute(FirstData[i], "DATA11") == "Y") {
+								UpdateAttachHistory(tempSN, strModifyFlag4);
+							} else {
+								UpdateAttachHistory(tempSN, strModifyFlag1);
+							}
+						} else {
+							if (GetAttribute(FirstData[i], "DATA12") == "EDITED")
+								UpdateAttachHistory(tempSN, strModifyFlag3);
 						}
 					}
 				}
@@ -153,10 +143,10 @@
 				var doc;
 				var form;
 				getDocInfo();
-				pDocID = "${docID}";
+				pDocID = "<c:out value ='${docID}'/>";
 				pBoardFileSize  =	parseInt(maxSize);
 			    document.getElementById("docid").value =pDocID;
-			    document.getElementById("compid").value =  "${userInfo.companyID}";
+			    document.getElementById("compid").value =  "<c:out value ='${userInfo.companyID}'/>";
 				Resultxml = InitAttach(pDocID);
 				
 				totalSize = 0;
@@ -612,7 +602,7 @@
 						oPoster.AddFormData("UploadMaxFileSize", pBoardFileSize);
 						oPoster.AddFormData("UploadAddFileSize", pAttachAddFileSize);
 						oPoster.AddFile("UploadFile", g_fileList[i], 0);
-						oPoster.Host = "${serverName}";
+						oPoster.Host = "<c:out value ='${serverName}'/>";
 						oPoster.PostURL = "/myoffice/ezApprovalG_Cross/ezAPRATTACH/aspx/AttachFile.aspx";
 			            if (window.location.protocol == "http:")
 			                oPoster.Protocol = 0;

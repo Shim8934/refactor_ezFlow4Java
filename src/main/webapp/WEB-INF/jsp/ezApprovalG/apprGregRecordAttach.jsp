@@ -35,35 +35,35 @@
     var chkFlag			= false;
     var arr_userinfo = new Array();
     arr_userinfo[0]  = "user";
-    arr_userinfo[1]  = "${userInfo.id}";              // 사용자ID
-	arr_userinfo[2]  = "${userInfo.displayName}";         // 사용자명
-	arr_userinfo[3]  = "${userInfo.title}";               // 사용자 직위
-	arr_userinfo[4]  = "${userInfo.deptID}";              // 사용자 부서 ID 
-	arr_userinfo[5]  = "${userInfo.deptName}";            // 사용자 부서 이름
-	arr_userinfo[6]  = "${userInfo.jikChek}";             // 사용자 직책            
-	arr_userinfo[8]  = "${userInfo.email}";               // E-Mail Address 
+    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";              // 사용자ID
+	arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";         // 사용자명
+	arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";               // 사용자 직위
+	arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";              // 사용자 부서 ID 
+	arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";            // 사용자 부서 이름
+	arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";             // 사용자 직책            
+	arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";               // E-Mail Address 
 	arr_userinfo[9]  = "";
-	arr_userinfo[10] = "${susinAdmin}";                  // 수신 접수담당자
-	arr_userinfo[11]  = "${userInfo.displayName1}";		// 사용자명(P)
-	arr_userinfo[12]  = "${userInfo.displayName2}";		// 사용자명(S)
-	arr_userinfo[13]  = "${userInfo.title1}";				// 사용자 직위(P)
-	arr_userinfo[14]  = "${userInfo.title2}";				// 사용자 직위(S)
-	arr_userinfo[15]  = "${userInfo.deptName1}";			// 사용자 부서 이름(P)
-	arr_userinfo[16]  = "${userInfo.deptName2}";			// 사용자 부서 이름(S)
+	arr_userinfo[10] = "<c:out value='${susinAdmin}'/>";                  // 수신 접수담당자
+	arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";		// 사용자명(P)
+	arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";		// 사용자명(S)
+	arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";				// 사용자 직위(P)
+	arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";				// 사용자 직위(S)
+	arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";			// 사용자 부서 이름(P)
+	arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";			// 사용자 부서 이름(S)
     var pUserID			= arr_userinfo[1];
     var pUserName		= arr_userinfo[2];
     var pUserJobTitle	= arr_userinfo[3];
     var pDeptID			= arr_userinfo[4];
     var pDeptName		= arr_userinfo[5];
-	var optExt = "${poptExt}";
-	var maxSize = "${maxSize}";
-	var isBody = "${isBody}";
+	var optExt = "<c:out value='${poptExt}'/>";
+	var maxSize = "<c:out value='${maxSize}'/>";
+	var isBody = "<c:out value='${isBody}'/>";
     var BodyAttach = "N";
     var AttachDelFlag = false;
-    var pServerName = "${serverName}";
-    var _hasattach = "${hasattach}";
-    var approvalFlag = "${approvalFlag}";
-    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+    var pServerName = "<c:out value='${serverName}'/>";
+    var _hasattach = "<c:out value='${hasattach}'/>";
+    var approvalFlag = "<c:out value='${approvalFlag}'/>";
+    var attachFileNameMaxLength = Number("<c:out value='${attachFileNameMaxLength}'/>");
     var orgCompanyID = "";
     var ext = "";
     
@@ -83,26 +83,30 @@
         var listview = new ListView();
         listview.LoadFromID("attachList");
         var i, j;
+        
         if (pFlag == 0) {
-            var FirstData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW")
+            var FirstData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW");
+            
             for (i = 0; i < FirstData.length; i++) {
                 var tempSN = SelectSingleNodeValue(FirstData[i], "CELL/DATA2");
                 var tempFileName = SelectSingleNodeValue(FirstData[i], "CELL/DATA10");
-                var DelFlag = true;
                 var attachRow = listview.GetDataRows();
                 var attachLen = listview.length;
+                var DelFlag = true;
+                
                 for (j = 0; j < attachLen; j++) {
                     if (attachRow[j].getAttribute("DATA2") == tempSN && attachRow[j].getAttribute("DATA10") == tempFileName) {
                         DelFlag = false;
                     }
                 }
-                if (DelFlag)
-					UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t266'/>");
+                if (DelFlag) {
+					UpdateAttachHistory(tempSN, strModifyFlag2);
+                }
             }
-        }
-        else {
-            var FirstData = listview.GetDataRows();
-            var FileData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW");
+        } else {
+			var FirstData = listview.GetDataRows();
+			var FileData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW");
+			
             for (i = 0; i < FirstData.length; i++) {
                 var tempSN = FirstData[i].getAttribute("DATA2");
                 var tempFileName = FirstData[i].getAttribute("DATA10");
@@ -114,14 +118,15 @@
                     }
                 }
                 if (AddFlag) {
-                    if (FirstData[i].getAttribute("DATA11") == "Y")
-						UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t267'/>");
-                    else
-						UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t268'/>");
-                }
-                else {
-                    if (FirstData[i].getAttribute("DATA12") == "EDITED")
-						UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t269'/>");
+                    if (FirstData[i].getAttribute("DATA11") == "Y") {
+						UpdateAttachHistory(tempSN, strModifyFlag4);
+                    } else {
+						UpdateAttachHistory(tempSN, strModifyFlag1);
+                    }
+                } else {
+                    if (FirstData[i].getAttribute("DATA12") == "EDITED") {
+						UpdateAttachHistory(tempSN, strModifyFlag3);
+                    }
                 }
             }
         }
@@ -130,10 +135,10 @@
         var doc;
         var form;
         getDocInfo();
-        pDocID = "${docID}";
+        pDocID = "<c:out value='${docID}'/>";
         pBoardFileSize = parseInt(maxSize);
         document.getElementById("docid").value = pDocID;
-        document.getElementById("compid").value =  "${userInfo.companyID}";
+        document.getElementById("compid").value =  "<c:out value='${userInfo.companyID}'/>";
         Resultxml = InitAttach(pDocID);
         var listview = new ListView();
         listview.SetID("attachList");
@@ -440,7 +445,7 @@
                 oPoster.AddFormData("UploadMaxFileSize", pBoardFileSize);
                 oPoster.AddFormData("UploadAddFileSize", pAttachAddFileSize);
                 oPoster.AddFile("UploadFile", g_fileList[i], 0);
-				oPoster.Host = "${serverName}";
+				oPoster.Host = "<c:out value='${serverName}'/>";
                 oPoster.PostURL = "/myoffice/ezApprovalG/ezAPRATTACH/aspx/AttachFile.aspx";
                 if (window.location.protocol.toLowerCase() == "http:")
                     oPoster.Protocol = 0;

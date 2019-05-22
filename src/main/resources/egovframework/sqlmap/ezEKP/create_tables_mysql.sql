@@ -687,6 +687,7 @@ CREATE TABLE `jmocha_mail_general` (
   `MAIL_SENDER_NAME` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PREVIEW_SUBTREE` varchar(10) DEFAULT 'N',
   `PREVIEW_MAIL_IMAGE` varchar(10) DEFAULT 'Y',
+  `TEXT_OPTION` varchar(10) DEFAULT 'HTML',
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1894,6 +1895,7 @@ CREATE TABLE `tbl_addjobmaster` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `ORDERBY` varchar(200) DEFAULT NULL,
   `JOBID` varchar(100) DEFAULT NULL,
+  `PROXY` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2527,7 +2529,7 @@ CREATE TABLE `tbl_attitude` (
   `CONTENT` varchar(3000) DEFAULT NULL,
   `IP` varchar(60) DEFAULT NULL,
   `DATE_TYPE` char(1) NOT NULL,
-  `TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `TYPE_ID` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`ATTITUDE_ID`),
   KEY `dateIndex` (`TENANT_ID`,`WRITER_ID`,`START_DATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2632,8 +2634,8 @@ DROP TABLE IF EXISTS `tbl_attitude_conf`;
 CREATE TABLE `tbl_attitude_conf` (
   `COMPANY_ID` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  `WORK_STARTTIME` varchar(40) NOT NULL DEFAULT '09:00',
-  `WORK_ENDTIME` varchar(40) CHARACTER SET utf8mb4 NOT NULL DEFAULT '18:00',
+  `WORK_STARTTIME` varchar(40) NOT NULL DEFAULT '00:00',
+  `WORK_ENDTIME` varchar(40) CHARACTER SET utf8mb4 NOT NULL DEFAULT '09:00',
   `CLOSED_DAY` varchar(30) NOT NULL DEFAULT '1,0,0,0,0,0,1',
   `ATTITUDE_MOD_APPL` char(1) NOT NULL DEFAULT '1',
   `CLOSED_DATE_ATTITUDE` char(1) NOT NULL DEFAULT '1',
@@ -2744,12 +2746,12 @@ CREATE TABLE `tbl_attitude_modappl_history` (
   `ORIGIN_MOBILE` varchar(50) DEFAULT NULL,
   `ORIGIN_BIZSUB` varchar(120) DEFAULT NULL,
   `ORIGIN_IP` varchar(60) DEFAULT NULL,
-  `ORIGIN_TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `ORIGIN_TYPE_ID` varchar(30) DEFAULT NULL,
   `CHANGE_REGION` varchar(200) DEFAULT NULL,
   `CHANGE_MOBILE` varchar(50) DEFAULT NULL,
   `CHANGE_BIZSUB` varchar(120) DEFAULT NULL,
   `CHANGE_IP` varchar(60) DEFAULT NULL,
-  `CHANGE_TYPE_ID` varchar(30) DEFAULT NULL COMMENT 'ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
+  `CHANGE_TYPE_ID` varchar(30) DEFAULT NULL,
   `ORIGIN_TYPE_NAME` varchar(120) DEFAULT NULL,
   `ORIGIN_TYPE_NAME2` varchar(120) DEFAULT NULL,
   `CHANGE_TYPE_NAME` varchar(120) DEFAULT NULL,
@@ -11455,7 +11457,9 @@ CREATE TABLE `tbl_webfolder_config` (
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `COMPANY_ID` varchar(100) NOT NULL COMMENT '회사 아이디',
   `UPLOAD_LIMIT` varchar(100) DEFAULT NULL COMMENT '1회 업로드 제한량',
-  `TOTAL_LIMIT` varchar(100) DEFAULT NULL COMMENT '총 업로드 용량',
+  `COMPANY_TOTAL_LIMIT` varchar(100) DEFAULT NULL COMMENT '회사 폴더 업로드 용량',
+  `DEPARTMENT_TOTAL_LIMIT` varchar(100) DEFAULT NULL COMMENT '부서 폴더 업로드 용량',
+  `USER_TOTAL_LIMIT` varchar(100) DEFAULT NULL COMMENT '개인 폴더 업로드 용량',
   PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 기본설정';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -11708,7 +11712,8 @@ CREATE TABLE `tbl_webfolder_user` (
   `TOTAL_CAPACITY` varchar(250) DEFAULT NULL COMMENT '총용량',
   `COMPANY_ID` varchar(50) NOT NULL COMMENT '회사 아이디',
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  PRIMARY KEY (`CN`,`TENANT_ID`)
+  `TYPE` varchar(50) NOT NULL,
+  PRIMARY KEY (`CN`,`TENANT_ID`, `TYPE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용자';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

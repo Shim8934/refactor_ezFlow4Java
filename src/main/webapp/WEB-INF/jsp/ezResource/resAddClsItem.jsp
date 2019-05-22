@@ -268,18 +268,17 @@
 			}
 			
 			function btnfileup() {
+				flag1 = true;
 		        document.getElementById("file1").click();
 		    }
 			
 			function btnfileup2() {
+				flag2 = true;
 		        document.getElementById("file2").click();
 		    }
 			
 			var xhr = new XMLHttpRequest();
 			function btn_AttachAdd_onclick() {
-				if(document.getElementById("hdnfileNM1").value != "") {
-					btnfiledel(1);
-				}
 				var extension = document.getElementById("file1").value;
 	            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
 				var check = false;
@@ -287,7 +286,7 @@
 		        
 		        // 첨부파일 확장자 체크(이미지만 가능)
 		        if (!check) {
-		        	document.getElementById("file1").value = "";
+		        	document.getElementById("file1").files[0] = "";
 		        	alert("<spring:message code='ezCommunity.lhj03'/>");
 		        	return;
 		        }
@@ -312,6 +311,10 @@
 	        		
 	        		return;
 	            }
+	            
+	            if(document.getElementById("hdnfileNM1").value != "") {
+					btnfiledel(1);
+				}
 		        
 	            fd.append("fileToUpload", filelist[0]);
 
@@ -322,9 +325,6 @@
 			
 			var xhr2 = new XMLHttpRequest();
 			function btn_AttachAdd_onclick2() {
-				if(document.getElementById("hdnfileNM2").value != "") {
-					btnfiledel(2);
-				}
 				var extension = document.getElementById("file2").value;
 	            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
 				var check = false;
@@ -332,7 +332,7 @@
 		        
 		        // 첨부파일 확장자 체크(이미지만 가능)
 		        if (!check) {
-		        	document.getElementById("file2").value = "";
+		        	document.getElementById("file2").files[0] = "";
 		        	alert("<spring:message code='ezCommunity.lhj03'/>");
 		        	return;
 		        }
@@ -357,6 +357,10 @@
 	        		
 	        		return;
 	            }
+	            
+	            if(document.getElementById("hdnfileNM2").value != "") {
+					btnfiledel(2);
+				}
 		        
 	            fd.append("fileToUpload", filelist[0]);
 
@@ -366,37 +370,37 @@
 			}
 			
 			function uploadComplete() {
-	            if (CrossYN()) {
+	            /* if (CrossYN()) {
 	                document.getElementById("file1").value = "";
 	            }
-	            else {
+	            else { */
 	                document.getElementById("file1").type = "text";
 	                document.getElementById("file1").type = "file";
-	            }
+	            //}
 	            var xml = loadXMLString(xhr.responseText);
 
 	            preview1.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview1.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-	            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0])
-	            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM1").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}
 			
 			function uploadComplete2() {
-	            if (CrossYN()) {
+	           /*  if (CrossYN()) {
 	                document.getElementById("file2").value = "";
 	            }
-	            else {
+	            else { */
 	                document.getElementById("file2").type = "text";
 	                document.getElementById("file2").type = "file";
-	            }
+	            //}
 	            var xml = loadXMLString(xhr2.responseText);
 
 	            preview2.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview2.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0])
-            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM2").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}

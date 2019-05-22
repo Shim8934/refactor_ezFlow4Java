@@ -25,7 +25,7 @@
 		    var xmlhttp = createXMLHttpRequest();	
 		    var xmldoc = createXmlDom();		
 		    var pDeptID ;
-		    var companyID = "${userInfo.companyID}";
+		    var companyID = "<c:out value='${userInfo.companyID}'/>";
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -34,7 +34,7 @@
 		
 		    var ReturnFunction;
 		    window.onload = function () {
-		        pDeptID = "${userInfo.deptID}";
+		        pDeptID = "<c:out value='${userInfo.deptID}'/>";
 		
 		        if (CrossYN() || opener.SelCont_dialogArgument != undefined)
 		        {
