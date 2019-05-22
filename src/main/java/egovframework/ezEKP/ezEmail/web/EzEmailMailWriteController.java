@@ -117,6 +117,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 
 /** 
  * @Description [Controller] 메일 쓰기
@@ -164,6 +165,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+
+	@Autowired
+	private EzEmailUserAdminService ezEmailUserAdminService;
 	
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
@@ -3390,6 +3394,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 				// simpleMime의 값이 1인 경우는 Plain Text 형식이다.
 				if (simpleMime.equals("1")) {
+					textBody += addCopyrightText(userInfo, textBody, "text/plain"); // copyrightText
+					
 				 // 메일을 발송하는 경우
 		            if (!cmd.toUpperCase().equals("SAVE")) {
 		                // 예약 메일의 경우
@@ -3408,6 +3414,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            }
 		        // HTML 형식의 경우
 		        } else {
+		        	htmlBody += addCopyrightText(userInfo, htmlBody, "text/html"); // copyrightText
+					
 					// HTML 안에 포함된 인라인 이미지들에 대한 다운로드 링크를 cid 형식으로 변환한다.
 		        	// 이후 Related Part 처리 코드에서 변환을 하지만 Related Part 없이 HTML 파트만으로
 		        	// 인라인 이미지를 포함하고 있는 메일이 있어 추가함. 이 경우 이 처리를 하지 않으면
@@ -6037,6 +6045,59 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("downloadAttachInWriter ended");
+	}
+	
+	
+	/*
+	 * 수신인 안내문구 
+	 * 
+	 */
+	private String addCopyrightText (LoginVO userInfo, String mailBody, String type) throws Exception {
+		int tenantId = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		String defaultFontAndSize = "";
+		String addCopyrightStr = "";
+
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "font-size:" + fontSize + ";font-family:" + fontFamily + ";";
+			}
+		}
+		
+		String copyrightDiv = "<p>&nbsp;</p><div id=\"recipientPharse\" style=\"box-sizing:border-box; padding:5px 3px; border:1px solid #999; "
+				+ defaultFontAndSize + " color: rgb(153, 153, 153);\">%s</div>";
+		String useCopyright = ezCommonService.getCompanyConfig(tenantId, companyId, "useCopyright");
+		useCopyright = useCopyright.equals("") ? "YES" : useCopyright;
+		String copyrightText = ezEmailUserAdminService.getCopyrightText(userInfo.getTenantId(), companyId);	
+		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId 
+				+ "useCopyright=" + useCopyright + ", copyrightText=" + copyrightText);
+
+		if (!useCopyright.equals("NO") && !(copyrightText != null && copyrightText.equals("")) ) {
+			mailBody = mailBody.replaceAll("\\p{Zs}", " "); // 유니코드 범주내에서 구분 기호, 공백을  replacAll
+			
+			if ((mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
+				logger.debug("copyrightText ended.");
+				return addCopyrightStr;
+			}
+			
+			if (type.equals("text/html")) {
+				addCopyrightStr = String.format(copyrightDiv, copyrightText);
+			} else if(type.equals("text/plain")) {
+				String line = "--------------------------------------------------";
+				addCopyrightStr = "\r\n" + line;
+				addCopyrightStr += "\r\n" + copyrightText; // 태그 제외 된 copyright 문구, copyright 문구 뒤가 1-3개씩 잘리는 현상때문에 줄바꿈 추가
+				addCopyrightStr += "\r\n" + line + "\r\n";
+			}
+		}
+
+		logger.debug("addCopyrightStr=" + addCopyrightStr);
+		return addCopyrightStr;
 	}
 	
 }
