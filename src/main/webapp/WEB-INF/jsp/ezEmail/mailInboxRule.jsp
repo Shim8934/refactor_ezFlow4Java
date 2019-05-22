@@ -16,7 +16,8 @@
 		    var Xmlhttp = null;
 		    var sortRuleNameStatNum = 0;
 		    var sortRuleNameStat = [["PRIORITY",""],["ASC","sortup"],["DESC","sortdown"]];
-		    	
+		    var shareId = "${shareId}";
+		    
 		    document.onselectstart = function () { return false; };
 		    function window_onload() {
 		        //alert(navigator.userAgent);
@@ -27,8 +28,15 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
+		        var requestUrl = "/ezEmail/mailGetInboxRule.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
 		        Xmlhttp = createXMLHttpRequest();
-		        Xmlhttp.open("POST", "/ezEmail/mailGetInboxRule.do", true);
+		        Xmlhttp.open("POST", requestUrl, true);
 		        Xmlhttp.onreadystatechange = event_Get_listComplite;
 		        Xmlhttp.send("");
 		    }
@@ -38,8 +46,15 @@
 		        document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td style='text-align:center;'><img src='/images/email/progress_img.gif' /></td></tr></table>";
 		        _RowObject = null;
 		        document.getElementById("ContentDescription").innerHTML = "";
+		        
+				var requestUrl = "/ezEmail/mailGetInboxRule.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
 		        Xmlhttp = createXMLHttpRequest();
-		        Xmlhttp.open("POST", "/ezEmail/mailGetInboxRule.do", true);
+		        Xmlhttp.open("POST", requestUrl, true);
 		        Xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		        Xmlhttp.onreadystatechange = event_Get_listComplite;
 		        Xmlhttp.send("sortType=" + type);  
@@ -490,7 +505,14 @@
 		    var mail_newinboxrule_cross_dialogArguments = new Array();
 		    function New_InboxRule() {
 		        mail_newinboxrule_cross_dialogArguments[1] = New_InboxRule_Complete;
-		        var OpenWin = window.open("/ezEmail/mailNewInboxRule.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(620, 550));
+		        
+		        var requestUrl = "/ezEmail/mailNewInboxRule.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
+		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(620, 550));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function New_InboxRule_Complete(newWin) {
@@ -532,7 +554,14 @@
 		        }
 		        mail_detailinboxrule_cross_dialogArguments[0] = _RowObject;
 		        mail_detailinboxrule_cross_dialogArguments[1] = Detail_InboxRule_Complete;
-		        var OpenWin = window.open("/ezEmail/mailDetailInboxRule.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(620, 550));
+		        
+				var requestUrl = "/ezEmail/mailDetailInboxRule.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
+		        var OpenWin = window.open(requestUrl, "mail_NewInboxRule_cross", GetOpenWindowfeature(620, 550));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function Detail_InboxRule_Complete(newWin) {

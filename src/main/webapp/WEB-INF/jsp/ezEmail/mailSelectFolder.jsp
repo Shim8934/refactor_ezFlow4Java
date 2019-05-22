@@ -20,6 +20,7 @@
 	        var ReturnFunction;
 	        var retVal = new Array();
 	        retVal["isFolderChanged"] = false;
+	        var shareId = "${shareId}";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -163,7 +164,13 @@
 		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
 		        
-		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
+		        var requestUrl = "/ezEmail/mailMakeFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
+		        xmlHTTP.open("POST", requestUrl, false);
 		        xmlHTTP.send(xmlDOM);
 		        
 		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {

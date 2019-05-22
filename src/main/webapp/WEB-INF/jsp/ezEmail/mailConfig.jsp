@@ -12,6 +12,7 @@
 	        var pUse_Editor = "${userEditor}";
 	        var pNoneActiveX = "${noneActiveX}";
 	        var dotnetFlag = "${dotnetFlag}";
+	        var shareId = "${shareId}";
 	        
 	        window.onload = window_onload;
 	        document.onselectstart = function () { return false; };
@@ -48,7 +49,13 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoForward.do";
 	                    break;
 	                case "MailEnv_div5":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailInboxRule.do";
+	                	var requestUrl = "/ezEmail/mailInboxRule.do";
+	                	
+	                	if (shareId != "") {
+	                		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	                	}
+	                	
+	                    document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	                case "MailEnv_div6":
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoDelete.do";
@@ -105,19 +112,26 @@
 	    <title><spring:message code='ezEmail.t904' /></title>
 	</head>
 	<body class="mainbody" style="min-width: 835px">
-	    <h1><spring:message code='ezEmail.t10010' /></h1>
+	    <h1><spring:message code='ezEmail.t10010' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
 	        <div class="portlet_tabpart01">
 		        <div class="portlet_tabpart01_top" id="tab1">
-	                    <p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t177' /></span></p>
-	                    <p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t99000041' /></span></p>
-	                    <c:if test="${useOnlyInnerMail != 'YES'}">
-	                    <p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t238' /></span></p>
-	                    </c:if>
-	                    <p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezEmail.t137' /></span></p>
-	                    <p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab5"><spring:message code='ezEmail.t146' /></span></p>
-	                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
-	                    <p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
-	                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
+	        		<c:choose>
+		        		<c:when test="${shareId == null}">
+		        			<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t177' /></span></p>
+		                    <p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t99000041' /></span></p>
+		                    <c:if test="${useOnlyInnerMail != 'YES'}">
+		                    <p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t238' /></span></p>
+		                    </c:if>
+		                    <p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezEmail.t137' /></span></p>
+		                    <p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab5"><spring:message code='ezEmail.t146' /></span></p>
+		                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
+		                    <p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
+		                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
+		        		</c:when>
+		        		<c:otherwise>
+		        			<p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab1"><spring:message code='ezEmail.t146' /></span></p>
+		        		</c:otherwise>
+	        		</c:choose>
 	            </div>
 	        </div>
 	        <iframe id = "MailEnv_ifrm" style ="width:100%;height:100%;" frameborder="0" ></iframe>
