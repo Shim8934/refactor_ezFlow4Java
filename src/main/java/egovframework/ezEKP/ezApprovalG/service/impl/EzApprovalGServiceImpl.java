@@ -9653,7 +9653,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			rtnXML.append("<DOCNUMCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim())) + "</DOCNUMCODE>");
 			rtnXML.append("<ORGDOCNUMCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim())) + "</ORGDOCNUMCODE>");
 			rtnXML.append("<SEPERATEATTACHXML>" + makeXMLString(makeListField(docXML.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent().trim())) + "</SEPERATEATTACHXML>");
-			rtnXML.append("<SUMMARY>" + makeXMLString(makeListField(docXML.getElementsByTagName("SUMMARY").item(0).getTextContent().trim())) + "</SUMMARY>");
+			rtnXML.append("<SUMMARY>" + makeXMLString(makeListField(docXML.getElementsByTagName("SUMMARY").item(0).getTextContent())) + "</SUMMARY>");
 			rtnXML.append("<SECURITYAPPROVAL>" + makeXMLString(makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent())) + "</SECURITYAPPROVAL>");
             rtnXML.append("<ITEMNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("ITEMNAME2").item(0).getTextContent())) + "</ITEMNAME2>");
             rtnXML.append("<WRITERNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())) + "</WRITERNAME2>");
@@ -17552,9 +17552,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (docXML.getElementsByTagName("SUMMARY").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent().trim();
+			tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
 			
-			if (!tempValue.equals("")) {
+			if (!tempValue.trim().equals("")) {
 				if (firstFlag) {
 					map.put("v_SUMMARY", tempValue);
 					map.put("v_FIRSTFLAG17", firstFlag);
