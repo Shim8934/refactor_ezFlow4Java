@@ -376,6 +376,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
+	/* 요청하는 데가 없어서 주석처리
 	@RequestMapping(value = "/ezMemo/memoRead.do")
 	public String memoRead(String memoId, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoRead started.");
@@ -398,7 +399,7 @@ public class EzMemoController {
 		logger.debug("memoRead ended.");
 		return "ezMemo/memoRead";
 	}
-	
+	*/
 	/**
 	 * 메모분류함 생성, 수정, 삭제 method
 	 * @param loginCookie
