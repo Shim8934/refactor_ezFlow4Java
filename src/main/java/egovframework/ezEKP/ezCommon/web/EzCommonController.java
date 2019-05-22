@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
@@ -78,7 +79,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonController.class);
 	
-	@RequestMapping(value = "/ezCommon/manyColor.do")
+	@RequestMapping(value = "/ezCommon/manyColor.do", method = RequestMethod.GET)
 	public String manyColor(HttpServletRequest request, ModelMap model) throws Exception {
 		String type = "";
 		
@@ -95,7 +96,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	/**
 	 * 게시판 html -> mht 변환 표출 Method
 	 */
-	@RequestMapping(value = "/ezCommon/htmlToMHT.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezCommon/htmlToMHT.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String htmlToMHT(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("htmlToMHT started.");
@@ -175,7 +176,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	/**
 	 * 게시판 mht -> html 변환 표출 Method
 	 */
-	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String mhtToHTMLContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("mhtToHTMLContent started");
@@ -205,7 +206,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	/**
 	 * 게시판 mht -> html 변환 표출 Method
 	 */
-	@RequestMapping(value = "/ezCommon/mhtToHTML.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezCommon/mhtToHTML.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String mhtToHTML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("mhtToHTML started");
@@ -226,7 +227,7 @@ public class EzCommonController extends EgovFileMngUtil{
         
         filePath = realPath + uploadModule;
         
-        File file = new File(filePath);
+        File file = new File(commonUtil.detectPathTraversal(filePath));
         if (!file.exists()) {
         	file.mkdirs();
         }
@@ -288,7 +289,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	/**
 	 * ID클릭시 사용자 정보화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezCommon/showPersonInfo.do")
+	@RequestMapping(value = "/ezCommon/showPersonInfo.do", method = RequestMethod.GET)
 	public String showPersonInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,
 						HttpServletRequest request, HttpServletResponse response,
 						ModelMap model) throws Exception {
@@ -540,7 +541,7 @@ public class EzCommonController extends EgovFileMngUtil{
         return "/ezCommon/showPersonInfo";
 	}
 	
-	@RequestMapping(value = "/ezCommon/downloadAttach.do")
+	@RequestMapping(value = "/ezCommon/downloadAttach.do", method = RequestMethod.GET)
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttach started");
 
@@ -570,7 +571,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	/**
 	 * image파일용량 줄여주는 함수
 	 */
-	@RequestMapping(value = "/ezCommon/convertSaveImage.do")
+	@RequestMapping(value = "/ezCommon/convertSaveImage.do", method = RequestMethod.POST)
 	public void convertSaveImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("convertSaveImage started");
 
@@ -585,7 +586,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 		String realFilePath = pImgUrl.replace(request.getScheme() + ":" + commonUtil.separator + commonUtil.separator + request.getServerName() + ":" + request.getServerPort(), realPath);
 		
-		File file = new File(realFilePath);
+		File file = new File(commonUtil.detectPathTraversal(realFilePath));
 		
 		BufferedImage inputImage = ImageIO.read(file);
 		BufferedImage outputImage = null;

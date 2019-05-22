@@ -14,7 +14,7 @@
 		<script  type="text/javascript" >
 		    var eOneline = "false";
 		    var eAttach = "false";
-		    var pItemID = "${itemID}";
+		    var pItemID = "<c:out value='${itemID}'/>";
 		    var pBoardID = "${boardID}";
 		    var gubun = "${gubun}";
 		    var rvalue = new Array();

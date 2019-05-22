@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <HTML>
 	<head>
@@ -14,7 +15,7 @@
 		<script language="javascript" type="text/javascript">
 // 		    var XmlBodyATT = createXmlDom();
 		    document.onselectstart = function () { 
-				var useAllowTextSelection = "${useAllowTextSelection}";
+				var useAllowTextSelection = "<c:out value ='${useAllowTextSelection}'/>";
 	        	
 	        	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
             		ret = true;

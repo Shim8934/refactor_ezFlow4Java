@@ -22,7 +22,7 @@
 	
 			function getCommu() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezCommunity/getLeftCommunity.do",
 					dataType : "json",
 					success : function(result) {
@@ -87,7 +87,7 @@
 	                }
 	            }
 	            
-	            xmlhttp.open("POST", "/ezCommunity/getMyCoummunityBoardList.do", true);
+	            xmlhttp.open("GET", "/ezCommunity/getMyCoummunityBoardList.do", true);
 	            xmlhttp.onreadystatechange = getCommList_after;
 	            xmlhttp.send(xmlpara);
 	        }
@@ -148,7 +148,7 @@
 	        }
 	        function GetBoardList() {
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezCommunity/getLeftBoardList.do",
 					dataType : "json",
 					success : function(result) {
@@ -170,7 +170,7 @@
                 listHTML += "</ul></div></div></div>";
 
                 $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/getBestNewCommunity.do",
@@ -233,7 +233,7 @@
 	            createNodeAndInsertText(xmldom, objNode, "CID", idx);
 	            createNodeAndInsertText(xmldom, objNode, "UID", "${userInfo.id}");
 	
-	            xmlhttp.open("POST", "/ezCommunity/getACL.do", false);
+	            xmlhttp.open("GET", "/ezCommunity/getACL.do", false);
 	            xmlhttp.send(xmldom);
 	            if (xmlhttp.responseText == "ERR" | clubgubun == "1") {
 	                var rtn = OpenInformationUI(strLang5 + "<BR>" + strLang6);
@@ -245,7 +245,7 @@
 	
 	                    createNodeInsert(xmldom, objNode, "DATA");
 	                    createNodeAndInsertText(xmldom, objNode, "CODE", idx);
-	                    xmlhttp.open("POST", "/ezCommunity/getIsJoin.do", false);
+	                    xmlhttp.open("GET", "/ezCommunity/getIsJoin.do", false);
 	                    xmlhttp.send(xmldom);
 	
 	                    if (xmlhttp.responseText == "FALSE") {
@@ -321,7 +321,7 @@
 	        
 	        function get_newCommunity() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/getBestNewCommunity.do",

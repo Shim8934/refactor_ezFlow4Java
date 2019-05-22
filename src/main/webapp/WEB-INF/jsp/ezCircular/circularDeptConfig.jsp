@@ -21,7 +21,7 @@
 			
 			function getCircularDeptList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezCircular/getcircularDeptList.do",
 					dataType : "json",
 					data : {

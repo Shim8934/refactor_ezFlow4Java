@@ -32,7 +32,7 @@
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
-	            var useAllowTextSelection = "${useAllowTextSelection}";
+	            var useAllowTextSelection = "<c:out value ='${useAllowTextSelection}'/>";
 	            
 	            try {
 	            	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
@@ -67,7 +67,7 @@
 	            return ret;
 	        };
 // 	        var XmlBodyATT = createXmlDom();
-	        var pEditor = "${editor}";
+	        var pEditor = "<c:out value ='${editor}'/>";
 	        var isConDoc = false;
 	        var isEditor = false;
 	        

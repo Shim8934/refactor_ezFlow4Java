@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -11,8 +12,8 @@
 		<script type="text/javascript">
 			var delaycolor = "";
 			var completecolor = "";
-			var originColor = "${originColor}"; // 색상편집에서 지연된 업무의 상위색
-			var originColor2 = "${originColor2}"; // 색상편집에서 완료된 업무의 상위색
+			var originColor = "<c:out value='${originColor}'/>"; // 색상편집에서 지연된 업무의 상위색
+			var originColor2 = "<c:out value='${originColor2}'/>"; // 색상편집에서 완료된 업무의 상위색
 
 			document.onselectstart = function () { return false; };
 
@@ -136,8 +137,8 @@
 					<td>
 						<table style="table-layout:fixed;">
 							<tr>
-								<td><div id=DelayColorDisplay style="background-color:${delayColor}; height:21px; border:1px inset gray"></div></td>
-								<td id="DelayColor" style="display:none;">${delayColor}</td>
+								<td><div id=DelayColorDisplay style="background-color:<c:out value='${delayColor}'/>; height:21px; border:1px inset gray"></div></td>
+								<td id="DelayColor" style="display:none;"><c:out value='${delayColor}'/></td>
 								<td style="width:100px"><a class="imgbtn imgbck"><span onClick="manyColorShow('DelayColor')"><spring:message code='ezTask.t91' /></span></a></td>
 							</tr>
 						</table>
@@ -149,8 +150,8 @@
 					<td>
 						<table style="table-layout:fixed">
 							<tr>
-								<td><div id=CompleteColorDisplay style="background-color:${completeColor}; height:21px; border:1px inset gray"></div></td>
-								<td id="CompleteColor" style="display:none;">${completeColor}</td>
+								<td><div id=CompleteColorDisplay style="background-color:<c:out value='${completeColor}'/>; height:21px; border:1px inset gray"></div></td>
+								<td id="CompleteColor" style="display:none;"><c:out value='${completeColor}'/></td>
 								<td style="width:100px"><a class="imgbtn imgbck"><span onClick="manyColorShow('CompleteColor')"><spring:message code='ezTask.t91' /></span></a></td>
 							</tr>
 						</table>

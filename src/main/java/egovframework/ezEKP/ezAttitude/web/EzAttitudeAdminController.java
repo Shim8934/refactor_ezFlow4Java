@@ -46,6 +46,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
@@ -101,12 +102,11 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태관리 메인화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeMain.do")
-	public String attitudeMain(@CookieValue("loginCookie") String loginCookie,
-			LoginVO userInfo) {
+	@RequestMapping(value = "/admin/ezAttitude/attitudeMain.do", method = RequestMethod.GET)
+	public String attitudeMain(@CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("attitudeMain started");
 
-		userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -119,7 +119,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태관리 좌측 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeLeft.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeLeft.do", method = RequestMethod.GET)
 	public String attitudeLeft() {
 		return "/admin/ezAttitude/attitudeLeft";
 	}
@@ -127,7 +127,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태관리 우측 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeRight.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeRight.do", method = RequestMethod.GET)
 	public String attitudeRight() {
 		return "/admin/ezAttitude/attitudeRight";
 	}
@@ -135,7 +135,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태 수정 신청 현황
 	 */
-	@RequestMapping(value="/admin/ezAttitude/manageAttModAppList.do")
+	@RequestMapping(value="/admin/ezAttitude/manageAttModAppList.do", method = RequestMethod.GET)
 	public String adminGetAttModAppList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String pageNum,
 			@RequestParam(required=false)String apprUserName,
@@ -167,8 +167,6 @@ public class EzAttitudeAdminController {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar cal = Calendar.getInstance();
 			
-			
-			cal = Calendar.getInstance();
 			cal.setTime(sdf.parse(localDate));
 			cal.add(Calendar.DAY_OF_MONTH, -7);
 			
@@ -229,7 +227,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태규율관리 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeConfig.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeConfig.do", method = RequestMethod.GET)
 	public String attitudeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("attitudeConfig started.");
 		
@@ -281,7 +279,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태규율관리 회사별 설정 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeConfigInfo.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeConfigInfo.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject attitudeConfigInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("attitudeConfigInfo started.");
@@ -323,7 +321,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태규율관리 회사별 설정 수정 함수
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/updateAttitudeConfInfo.do")
+	@RequestMapping(value = "/admin/ezAttitude/updateAttitudeConfInfo.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateAttitudeConfInfo(AttitudeConfigVO attitudeConfigVO, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("updateAttitudeConfInfo started.");
@@ -375,7 +373,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태관리 휴가유형관리 화면조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfig.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfig.do", method = RequestMethod.GET)
 	public String attitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("attitudeTypeConfig started.");
 		
@@ -427,7 +425,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태관리 휴가유형관리 리스트 조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfigInfo.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeTypeConfigInfo.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONArray attitudeTypeConfigInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("attitudeTypeConfigInfo started.");
@@ -470,7 +468,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태관리 휴가유형관리 저장
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeTypeConfig.do")
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeTypeConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveAttitudeTypeConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("saveAttitudeTypeConfig started.");
@@ -515,7 +513,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태관리 휴가유형관리 휴가유형추가 화면조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/addAttitudeType.do")
+	@RequestMapping(value = "/admin/ezAttitude/addAttitudeType.do", method = RequestMethod.GET)
 	public String addAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("addAttitudeType started.");
 		
@@ -536,7 +534,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태관리 휴가유형관리 휴가유형추가,수정 화면 조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/showAttitudeType.do")
+	@RequestMapping(value = "/admin/ezAttitude/showAttitudeType.do", method = RequestMethod.GET)
 	public String  showAttitudeType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("showAttitudeType started.");
 				
@@ -587,7 +585,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태관리 휴가유형관리 휴가유형 등록 ,수정
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeType.do")
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeType.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("saveAttutideType started.");
@@ -648,7 +646,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태유형 삭제
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeType.do")
+	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeType.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteAttutideType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("saveAttutideType started.");
@@ -693,7 +691,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근무시간관리 화면조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConf.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConf.do", method = RequestMethod.GET)
 	public String attitudeUserConf(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/attitudeUserConf started");
 		
@@ -743,7 +741,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근무시간관리 리스트 출력
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfList.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeUserConfList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getAttitudeUserConfList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/attitudeUserConfList started");
@@ -813,7 +811,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근무시간 수정화면 조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConf.do")
+	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConf.do", method = RequestMethod.GET)
 	public String saveAttitudeUserConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/editAttitudeUserConf started");
 		
@@ -896,7 +894,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근무시간관리 근무시간 수정
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConfig.do")
+	@RequestMapping(value = "/admin/ezAttitude/editAttitudeUserConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String editAttitudeUserConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("editAttitudeUserConfig started");
@@ -941,7 +939,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태입력관리 화면조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeCheck.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeCheck.do", method = RequestMethod.GET)
 	public String attitudeCheck(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/attitudeDeptConf started");
 		
@@ -957,7 +955,6 @@ public class EzAttitudeAdminController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		cal = Calendar.getInstance();
 		cal.setTime(sdf.parse(localDate));
 		cal.add(Calendar.DAY_OF_MONTH, -7);
 		
@@ -1030,7 +1027,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태입력관리 조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeCheckList.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/attitudeCheckList started.");
@@ -1100,7 +1097,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태조회 미입력자관리 화면조회
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeAbsented.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAbsented.do", method = RequestMethod.GET)
 	public String attitudeAbsented(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/attitudeAbsented.do");
 		
@@ -1116,7 +1113,6 @@ public class EzAttitudeAdminController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		cal = Calendar.getInstance();
 		cal.setTime(sdf.parse(localDate));
 		cal.add(Calendar.DAY_OF_MONTH, -7);
 		
@@ -1167,7 +1163,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태조회 미입력자관리 조회
 	 */
-	@RequestMapping(value = {"/admin/ezAttitude/getAttitudeAbsentedList.do", "/ezAttitude/getAttitudeAbsentedList.do"})
+	@RequestMapping(value = {"/admin/ezAttitude/getAttitudeAbsentedList.do", "/ezAttitude/getAttitudeAbsentedList.do"}, method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getAttitudeAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("getAttitudeAbsentedList started.");
@@ -1243,7 +1239,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 미입력자 메일발송
 	 */
-	@RequestMapping(value = {"/admin/ezAttitude/absentedListSendMail.do", "/ezAttitude/absentedListSendMail.do"})
+	@RequestMapping(value = {"/ezAttitude/absentedListSendMail.do"}, method = RequestMethod.GET)
 	@ResponseBody
 	public String absentedListSendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("absentedListSendMail started.");
@@ -1309,7 +1305,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태권한관리 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorManage.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorManage.do", method = RequestMethod.GET)
 	public String attitudeAuthorManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("attitudeTypeConfig started.");
 		
@@ -1362,7 +1358,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태권한관리 리스트 조회하는 함수
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthList.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthList.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONArray getAttitudeAuthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/getAttitudeAuthList started");
@@ -1415,7 +1411,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태권한관리 권한삭제 함수
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeAuth.do")
+	@RequestMapping(value = "/admin/ezAttitude/deleteAttitudeAuth.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/admin/ezAttitude/deleteAttitudeAuth started");
@@ -1462,7 +1458,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태권한관리 권한추가 화면
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuth.do")
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuth.do", method = RequestMethod.GET)
 	public String saveAttitudeAuth(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("saveAttitudeAuth started.");
 		
@@ -1515,7 +1511,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태권한관리 권한추가 권한자 지정시(조직도)
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthor.do")
+	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthor.do", method = RequestMethod.GET)
 	public String selectAttitudeAuthor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/selectAttitudeAuthor started");
 
@@ -1545,7 +1541,6 @@ public class EzAttitudeAdminController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 				
-		JSONObject jObject = new JSONObject();
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) resultBody.get("data");
 			
@@ -1578,7 +1573,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 관리자 근태권한관리 권한부서 선택하기 (부서리스트)
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthorDept.do")
+	@RequestMapping(value = "/admin/ezAttitude/selectAttitudeAuthorDept.do", method = RequestMethod.GET)
 	public String selectAttitudeAuthorDept(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws Exception {
 		LOGGER.debug("selectAttitudeAuthorDept started");
 		
@@ -1647,7 +1642,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 해당사원이 열람 할 수 있는 부서 리스트
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorDeptList.do")
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAuthorDeptList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONArray attitudeAuthorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("attitudeAuthorDeptList started");
@@ -1692,7 +1687,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 권한 저장
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuthor.do")
+	@RequestMapping(value = "/admin/ezAttitude/saveAttitudeAuthor.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveAttitudeAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response) throws IOException, Exception {
 		LOGGER.debug("saveAttitudeAuthor started");
@@ -1744,7 +1739,7 @@ public class EzAttitudeAdminController {
 	 * 관리내역 리스트 가져오는 함수
 	 * @return 
 	 */
-	@RequestMapping(value = {"/admin/ezAttitude/attitudeHistoryList.do", "/ezAttitude/attitudeHistoryList.do"})
+	@RequestMapping(value = {"/admin/ezAttitude/attitudeHistoryList.do", "/ezAttitude/attitudeHistoryList.do"}, method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject attitudeHistoryList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeHistoryList.do");
@@ -1818,7 +1813,7 @@ public class EzAttitudeAdminController {
 		return data;
 	}
 	
-	@RequestMapping(value = "/ezAttitude/getTotalAttCount.do")
+	@RequestMapping(value = "/ezAttitude/getTotalAttCount.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String getTotalAttCount(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("getTotalAttCount started.");
@@ -1879,7 +1874,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근무시간관리 부서근무시간수정 화면
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConf.do")
+	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConf.do", method = RequestMethod.GET)
 	public String editAttitudeDeptConf(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("/admin/ezAttitude/editAttitudeDeptConf started");
 		
@@ -1965,7 +1960,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근무시간관리 부서근무시간 수정
 	 */
-	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConfig.do")
+	@RequestMapping(value = "/admin/ezAttitude/editAttitudeDeptConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String editAttitudeDeptConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		LOGGER.debug("editAttitudeDeptConfig started");
@@ -2010,7 +2005,7 @@ public class EzAttitudeAdminController {
 	/**
 	 * 근태 수정 신청 상세
 	 */
-	@RequestMapping(value="/admin/ezAttitude/attModAppDetail.do")
+	@RequestMapping(value="/admin/ezAttitude/attModAppDetail.do", method = RequestMethod.GET)
 	public String attModAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=true)String attModId,
 			@RequestParam(required=false)String companyId,

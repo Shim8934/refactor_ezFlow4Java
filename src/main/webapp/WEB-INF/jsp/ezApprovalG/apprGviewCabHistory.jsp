@@ -20,7 +20,7 @@
 <script type="text/javascript"  ID="clientEventHandlersJS">
     var g_CabClassNo;
     var OrderCell = "";
-    var CompanyID = "${userInfo.companyID}";
+    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
     var g_szParamXml="";
     var g_CabListXmlhttp=null;
     window.onload=window_onload;
@@ -58,7 +58,7 @@
         var objNode = createNodeInsert(xmlpara, objNode, "PARAMETERS"); 
         createNodeAndInsertText(xmlpara, objNode, "CABCLASSNO", pCabClassNo);
         createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);
-        createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", "${userInfo.lang}");
+        createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", "<c:out value='${userInfo.lang}'/>");
         oXmlhttp.open("POST", "/ezApprovalG/getCabinetHistory.do", false);
         oXmlhttp.send(xmlpara);
 

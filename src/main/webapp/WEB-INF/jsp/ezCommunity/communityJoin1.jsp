@@ -23,7 +23,7 @@
 			
 			function join_OK() {
 				// 자동가입 유형은 상세정보 입력 없이 바로 가입한다.
-				window.location.href="/ezCommunity/joinOk.do?code=<c:out value = '${no}' />";
+				document.getElementById("join").submit();
 			}
 			
 			window.onload = function () {
@@ -80,5 +80,8 @@
     			<span class="br"></span>
     		</div>
     	</div>
+		<form method="post" name="join" id="join" action="/ezCommunity/joinOk.do">
+			<input type=hidden name=code value="<c:out value = '${no}' />">
+		</form>
 	</body>
 </html>

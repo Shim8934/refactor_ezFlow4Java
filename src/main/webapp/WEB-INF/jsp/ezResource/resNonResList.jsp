@@ -30,7 +30,7 @@
 	        				<dl class="warningdl">
 	        				<dt><img src="/images/notify/warning01.gif" width="183" height="27"></dt>
 	        					<dd>
-	        						${accMessage}	
+	        						<c:out value="${accMessage}"/>	
 	        					</dd>
 	        				</dl>
 	        			</div>

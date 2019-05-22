@@ -19,35 +19,35 @@
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 		
 	    <script type="text/javascript">
-	        var pDocID = "${docID}";
-	        var pDocHref = "${docHref}";
-	        var pUserID = "${userInfo.id}";
+	        var pDocID = "<c:out value ='${docID}'/>";
+	        var pDocHref = "<c:out value ='${docHref}'/>";
+	        var pUserID = "<c:out value ='${userInfo.id}'/>";
 	        var flag = false;
 	        var flag2 = false;
 	        var newDocID = "";
 	        var stampFlag = false;
 	        var NostampFlag = false;
 	        var modeflag = false;
-	        var companyID = "${userinfo.companyID}"
+	        var companyID = "<c:out value ='${userinfo.companyID}'/>"
 			var arr_userinfo = new Array();
 			var maxwidth = 659;
 			
 			var arr_userinfo = new Array();
 		    arr_userinfo[0] = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName} '/>";
-		    arr_userinfo[3]  = "<c:out value = '${userInfo.title} '/>";
-		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
-		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName} '/>";
-		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
-		    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
 	        arr_userinfo[9] = companyID;
-	        arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
-		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
-		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
-		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
-		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
-		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
+	        arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
 	
 	        var is_Enc = "NONE";
 	        var isExternal = false;
@@ -599,7 +599,7 @@
 	        <tr>
 	            <td class="pad1">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "1");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value ='${hwpToolbar}'/>", "1");</script>
 	                </div>
 	            </td>
 	        </tr>

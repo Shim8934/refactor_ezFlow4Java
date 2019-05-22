@@ -44,8 +44,8 @@
 	    	}
 	    </style>
 	    <script type="text/javascript">
-	        var shareId = "${shareId}";
-	        var companyId = "${compId}";
+	        var shareId = '<c:out value = "${shareId}"/>';
+	        var companyId = '<c:out value = "${compId}"/>';
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var strLang1 = "<spring:message code='ezEmail.t10001' />";

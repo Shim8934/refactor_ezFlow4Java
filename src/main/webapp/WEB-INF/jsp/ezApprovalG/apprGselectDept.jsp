@@ -36,8 +36,8 @@
 		    var selectobject = "tree";
 		    var arrDeptInfo = new Array();
 		    var rtnVal = new Array();
-		    var DeptID = "${userInfo.deptID}";
-		    var CompanyID = "${userInfo.companyID}";
+		    var DeptID = "<c:out value='${userInfo.deptID}'/>";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
 		    var CurMthd = "OrganTree";
 		    var ReturnFunction;
 		    var winFlag;

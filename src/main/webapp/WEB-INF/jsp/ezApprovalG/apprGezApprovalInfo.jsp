@@ -52,31 +52,31 @@
 	    	}
 	    </style>
 	    <script type="text/javascript">
-	    	var approvalFlag = "${approvalFlag}";
+	    	var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 	        var OrderCell = "";
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user"; 							// 사용자-부서구분
-	        arr_userinfo[1] = "${userInfo.id}";           // 사용자ID
-	        arr_userinfo[2] = "${userInfo.displayName}";      // 사용자명
-	        arr_userinfo[3] = "${userInfo.title}";            // 사용자 직위
-	        arr_userinfo[4] = "${userInfo.deptID}";           // 사용자 부서 ID
+	        arr_userinfo[1] = "<c:out value ='${userInfo.id}'/>";           // 사용자ID
+	        arr_userinfo[2] = "<c:out value ='${userInfo.displayName}'/>";      // 사용자명
+	        arr_userinfo[3] = "<c:out value ='${userInfo.title}'/>";            // 사용자 직위
+	        arr_userinfo[4] = "<c:out value ='${userInfo.deptID}'/>";           // 사용자 부서 ID
 	        arr_userinfo[5] = "${userInfo.deptName}";         // 사용자 부서 이름
-	        arr_userinfo[6] = "${userInfo.jikChek}";          // 사용자 직책            
+	        arr_userinfo[6] = "<c:out value ='${userInfo.jikChek}'/>";          // 사용자 직책            
 	        arr_userinfo[7] = "N";                                        // 부재중 설정
-	        arr_userinfo[8] = "${userInfo.email}";            // E-Mail Address 
+	        arr_userinfo[8] = "<c:out value ='${userInfo.email}'/>";            // E-Mail Address 
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";             // 수신 접수담당자
-	        arr_userinfo[11] = "${userInfo.displayName1}"; 	// 사용자명(P)
-	        arr_userinfo[12] = "${userInfo.displayName2}"; 	// 사용자명(S)
-	        arr_userinfo[13] = "${userInfo.title1}"; 			// 사용자 직위(P)
-	        arr_userinfo[14] = "${userInfo.title2}"; 			// 사용자 직위(S)
+	        arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";             // 수신 접수담당자
+	        arr_userinfo[11] = "<c:out value ='${userInfo.displayName1}'/>"; 	// 사용자명(P)
+	        arr_userinfo[12] = "<c:out value ='${userInfo.displayName2}'/>"; 	// 사용자명(S)
+	        arr_userinfo[13] = "<c:out value ='${userInfo.title1}'/>"; 			// 사용자 직위(P)
+	        arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>"; 			// 사용자 직위(S)
 	        arr_userinfo[15] = "${userInfo.deptName1}"; 		// 사용자 부서 이름(P)
 	        arr_userinfo[16] = "${userInfo.deptName2}"; 		// 사용자 부서 이름(S)
-	        var CompanyID = "${userInfo.companyID}";
-	        var companyID = "${userInfo.companyID}";
-	        var UserLang = "${userInfo.lang}";
-	        var DeptID = "${userInfo.deptID}";
-	        var USE_OCS = "${useOcs}";
+	        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
+	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
+	        var DeptID = "<c:out value ='${userInfo.deptID}'/>";
+	        var USE_OCS = "<c:out value ='${useOcs}'/>";
 	        var linealt1 = "<spring:message code='ezApprovalG.t1742'/>";
 	        var linealt2 = "<spring:message code='ezApprovalG.t228'/>";
 	        var linealt3 = "<spring:message code='ezApprovalG.t226'/>";
@@ -134,7 +134,7 @@
 	        var WorkFlowXML = createXmlDom();
 	        var WorkFlowString = "";
 	        var WorkFlowOption = "AUTO";	// "AUTO" - 로딩시에 자동 입력 및 삭제. else - 확인시에만 체크.
-	        var optGamsabu = "${optGamsabu}";        
+	        var optGamsabu = "<c:out value ='${optGamsabu}'/>";        
 	        var ProcessorXML = createXmlDom();
 	        var InsertMode = "Add";
 	        var pAprLineXml = new Array(); // 결재선 , 수신처 Xml Return Value
@@ -161,12 +161,12 @@
 	        var pAprLineArea = 0;
 	        var onlydocinfiview;
 	        var onlyviewsusin = false;
-	        var pIniGubun = "${guBun}";
+	        var pIniGubun = "<c:out value ='${guBun}'/>";
 	        var AdminYN = "FALSE";
-	        var szRoleInfo = "${userInfo.rollInfo}";
+	        var szRoleInfo = "<c:out value ='${userInfo.rollInfo}'/>";
 	        var g_bRecAdmin = false;	//기록물 관리책임자 여부
 	        var g_bDeptCharger = false;	//부서업무 담당자 여부
-	        var g_InitFlag = "${initFlag}";
+	        var g_InitFlag = "<c:out value ='${initFlag}'/>";
 	        var bDisplayFlag = "0";
 	        var bSpecialFlag = "0";
 	        var arrTask = new Array();
@@ -181,30 +181,30 @@
 	        var chkReporter = false;
 	        var chkSuggester = false;
 	        var SummaryFlag;
-	        var pDocSn = "${docSN}";
-	        var SusinGroupUseFlag = "${susinGroupUseFlag}";
+	        var pDocSn = "<c:out value ='${docSN}'/>";
+	        var SusinGroupUseFlag = "<c:out value ='${susinGroupUseFlag}'/>";
 	        /* 2015-06-23 추가 - KSK */
 	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
-			var useAddressOpenAPI = "${useAddressOpenAPI}";
+			var useAddressOpenAPI = "<c:out value ='${useAddressOpenAPI}'/>";
 			var checkdocinfo = false;
-			var startDateTime = '${startDateTime}';
-			var pSignImage_Size = "${signImageSize}";
+			var startDateTime = "<c:out value ='${startDateTime}'/>";
+			var pSignImage_Size = "<c:out value ='${signImageSize}'/>";
 			var pAdmin = "N";
 			var pGongRamDocID;
 			//기안(DRAFT), 접수(RECV), 합의(HABYUI) 여부
 			var approvalType;
-			var chamjoAfterYN = "${chamjoAfterYN}";
-			var isUsed = "${isUsed}";
-			var beforeDocID = "${beforeDocID}";
-			var receptGubunYN = "${receptGubunYN}";
-			var addLastKyulJeYN = "${addLastKyulJeYN}";
-	        var orgCompanyID = "${orgCompanyID}";
-	        var ext = "${ext}";
+			var chamjoAfterYN = "<c:out value ='${chamjoAfterYN}'/>";
+			var isUsed = "<c:out value ='${isUsed}'/>";
+			var beforeDocID = "<c:out value ='${beforeDocID}'/>";
+			var receptGubunYN = "<c:out value ='${receptGubunYN}'/>";
+			var addLastKyulJeYN = "<c:out value ='${addLastKyulJeYN}'/>";
+	        var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
+	        var ext = "<c:out value ='${ext}'/>";
 	        var nonElecRec = "";
 	        var nonElecRecInfoXml = "";
 	        var g_CabID = "";
-	        var useReceiveInfoName = "${useReceiveInfoName}";
+	        var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){

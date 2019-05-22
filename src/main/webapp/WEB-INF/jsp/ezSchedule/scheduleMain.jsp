@@ -104,7 +104,7 @@
 		    
 		    function schedule_get_holiday() {		        
 		        $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetHoliday.do",
@@ -200,7 +200,7 @@
 		    function schedule_get_lunaruse() {
 		    	if (uselang != 3) {
 				    $.ajax({
-			    		type : "POST",
+			    		type : "GET",
 			    		dataType : "text",
 			    		async : false,
 			    		url : "/ezSchedule/scheduleGetLunarUse.do",
@@ -802,9 +802,9 @@
                     idlist = idtype;
                 var feature = GetOpenPosition(837, 660);
                 if (idlist == "G")
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
                 else
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
             }
 			
             var schedule_repetition_del_dialogArugment = new Array();

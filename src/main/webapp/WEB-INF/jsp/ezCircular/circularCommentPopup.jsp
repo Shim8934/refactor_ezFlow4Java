@@ -81,13 +81,13 @@
 		</style>
 		
 		<script type="text/javascript">
-			var circularID = "${vo.circularID}";
-			var circularUserID = "${vo.memberID}";
-			var status = "${vo.status}";
-			var userInfoID = "${userInfo.id}";
-			var option = "${vo.option}";
-			var commentStatus = "${vo.commentStatus}";
-			var shareStatus = "${vo.shareStatus}";
+			var circularID = "<c:out value='${vo.circularID}'/>";
+			var circularUserID = "<c:out value='${vo.memberID}'/>";
+			var status = "<c:out value='${vo.status}'/>";
+			var userInfoID = "<c:out value='${userInfo.id}'/>";
+			var option = "<c:out value='${vo.option}'/>";
+			var commentStatus = "<c:out value='${vo.commentStatus}'/>";
+			var shareStatus = "<c:out value='${vo.shareStatus}'/>";
 			var commentType = "totalComment";
 			var selSpan = "";
 			
@@ -164,7 +164,7 @@
 		<div class="layerpopup"  style="z-index: 3000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		<h1><spring:message code='ezCircular.t180'/>[${myCommentCount}/${totalCommentCount }]</h1>
+		<h1><spring:message code='ezCircular.t180'/>[<c:out value='${myCommentCount}'/>/<c:out value='${totalCommentCount }'/>]</h1>
 		<div id="close">
 			<ul>				
 				<li><span onclick="closePopup();"></span></li>
@@ -237,7 +237,7 @@
 		</c:if>
 		
 		<script type="text/javascript" >
-			var myCommentCount = "${myCommentCount}";
+			var myCommentCount = "<c:out value='${myCommentCount}'/>";
 			if(myCommentCount != 0) {
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			} 

@@ -20,9 +20,9 @@
         var test = [];
         var parent = "";
 		var folderId = "";
-		var folderType = "${folderType}";
-		var checkedfileList = "${fileList}";
-		var checkedfolderList = "${folderList}";
+		var folderType = "<c:out value='${folderType}'/>";
+		var checkedfileList = "<c:out value='${fileList}'/>";
+		var checkedfolderList = "<c:out value='${folderList}'/>";
 		var treeData;
 
         window.onload = function () {

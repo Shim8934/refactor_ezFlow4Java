@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -8,19 +9,19 @@
 		<script type="text/javascript">
 			window.onload = function()
 			{
-				if ("${resultCode}" == "1") {
+				if ("<c:out value='${resultCode}'/>" == "1") {
 					alert("<spring:message code='ezBoard.hyj02'/>");
 					return;
-				} else if ("${resultCode}" == "2") {
+				} else if ("<c:out value='${resultCode}'/>" == "2") {
 					alert("<spring:message code='main.t4000'/>");
 					return;
-				} else if ("${resultCode}" == "3") {
+				} else if ("<c:out value='${resultCode}'/>" == "3") {
 					alert("<spring:message code='ezEmail.lhm29'/>");
 					return;
 				}
 				
 				var strImagePath = document.getElementById("divImagePath").innerHTML;
-				var root_id = "${sRootId}";
+				var root_id = '<c:out value="${sRootId}"/>';
 				
 				if (strImagePath != undefined && strImagePath != "")
 				{
@@ -64,6 +65,6 @@
 		</script>
 	</head>
 	<body>		
-		<div id="divImagePath">${sUploadedPath}</div>				
+		<div id="divImagePath"><c:out value="${sUploadedPath}"/></div>
 	</body>
 </html>

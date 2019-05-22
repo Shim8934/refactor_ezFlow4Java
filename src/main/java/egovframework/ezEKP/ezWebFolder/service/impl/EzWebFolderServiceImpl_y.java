@@ -911,9 +911,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		// 파일 가지고 온 array의 이름과 id를 가지고 다시 업로드 시켜야함
 		// id의 정보를 가지고 와서 그 id의 정보를 가지고 온다 
 		for (int i = 0; i < multiFileLists.size(); i++ ) {
-
-			FileVO filevo;
-			filevo = getFolderFileDetailForExplorer("file", (String)(((JSONObject)fileIdArray.get(i)).get("fileIdArray")), userId, tenantId , comId, offset, primary);
+			FileVO filevo = getFolderFileDetailForExplorer("file", (String)(((JSONObject)fileIdArray.get(i)).get("fileIdArray")), userId, tenantId , comId, offset, primary);
 			fileName = filevo.getFilePath();
 			String[] arryStrings = fileName.split("/");
 			fileName = arryStrings[arryStrings.length-1];
@@ -948,7 +946,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			ezWebFolderService.saveLog("WR", comId, offset, userId, userInfo.getDisplayName1(), userInfo.getDisplayName2(), filevo.getFileName(), filevo.getFileSize(), filevo.getFileExt(), filevo.getFileTypeName(), tenantId);
 			
 			// db 업데이트 성공시 기존 파일 delete
-			File file = new File(realPath + filevo.getFilePath());
+			File file = new File(realPath + commonUtil.detectPathTraversal(filevo.getFilePath()));
+			
 			if (file.exists() && file.isFile()) {
 				if (file.delete()) {
 					LOGGER.debug("delete success.");

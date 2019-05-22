@@ -19,8 +19,8 @@
 			.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}
 		</style>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			var pCompanyID	= "${selCompanyID}";
-			var pResID		= "${brdID}";
+			var pCompanyID	= "<c:out value='${selCompanyID}'/>";
+			var pResID		= "<c:out value='${brdID}'/>";
 
 			function cmdDel_onclick() {
 				var rv = window.confirm("<spring:message code="ezResource.t61" />")

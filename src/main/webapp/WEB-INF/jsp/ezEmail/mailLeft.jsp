@@ -23,8 +23,8 @@
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
-	        var subCode = "${subCode}";
-	        var funcCode = "${funCode}";
+	        var subCode = '<c:out value="${subCode}"/>';
+	        var funcCode = '<c:out value="${funCode}"/>';
 	        var g_firstOpen = true;
 	        var lang = "${userinfo.lang}";
 	        var pNoneActiveX = "${noneActiveX}";

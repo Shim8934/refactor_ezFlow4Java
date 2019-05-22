@@ -652,13 +652,13 @@
 	        </tr>
 	        <tr class = 'approvalS'<c:if test="${approvalFlag != 'S' }"> style="display:none;"</c:if>>
 	        	<th><spring:message code = 'ezApprovalG.t118' /></th>
-	        	<td><select id="securityLevel" style="WIDTH: 100%">${securityNode }</select></td> 
+	        	<td><select id="securityLevel" style="WIDTH: 100%"><c:out value='${securityNode }' escapeXml='false'/></select></td> 
 	        </tr>
 	        <tr>
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S' }">
 			            <th><spring:message code = 'ezApprovalG.t1198' /> <span style="color:red">*</span></th>
-			            <td><select id="selKeepPeriod" style="WIDTH: 100%">${periodNode }</select></td>
+			            <td><select id="selKeepPeriod" style="WIDTH: 100%"><c:out value='${periodNode }' escapeXml='false'/></select></td>
 	        		</c:when>
 	        		<c:otherwise>
 			            <th><spring:message code = 'ezApprovalG.t117' /> <span style="color:red">*</span></th>
