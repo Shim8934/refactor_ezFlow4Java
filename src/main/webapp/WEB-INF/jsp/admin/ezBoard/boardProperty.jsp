@@ -897,7 +897,7 @@
 	        
 	        <%-- 2019-04-26 홍승비 - 게시판 옵션들을 모아놓은 게시판 설정 TR 추가 --%>
 	        <tr id="boardOptionTR" style="${style}">
-	        	<th><spring:message code="ezNewPortal.t048" /></th>
+	        	<th><spring:message code="ezBoard.hsbPR01" /></th>
 	        	<td>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t999020" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.hsb10" />&nbsp;</span>
