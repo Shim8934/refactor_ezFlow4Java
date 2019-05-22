@@ -600,4 +600,69 @@
 		AND 
 			COLNAME = 'FunctionTypeName'
 	</update>
+
+	<select id="EzCommonDAO.checkFormVersionColumnOfForminfo">
+		<![CDATA[
+			SELECT
+				FORMVERSION
+			FROM 
+				TBL_FORMINFO 
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo">
+		<![CDATA[
+			SELECT
+				FORMVERSION
+			FROM 
+				TBL_EXPENDAPRDOCINFO 
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo">
+		<![CDATA[
+			SELECT
+				FORMVERSION
+			FROM 
+				TBL_EXPAPRDOCINFO 
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo">
+		<![CDATA[
+			SELECT
+				FORMVERSION
+			FROM 
+				TBL_TMPEXPAPRDOCINFO 
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.addFormVersionColumnOfForminfo">
+		ALTER TABLE 
+			TBL_FORMINFO 
+		ADD 
+			FORMVERSION NUMBER(10,0) DEFAULT 0
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPENDAPRDOCINFO 
+		ADD 
+			FORMVERSION NUMBER(10,0) DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION NUMBER(10,0) DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo">
+		ALTER TABLE 
+			TBL_TMPEXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION NUMBER(10,0) DEFAULT 0 
+	</statement>
 </sqlMap>
