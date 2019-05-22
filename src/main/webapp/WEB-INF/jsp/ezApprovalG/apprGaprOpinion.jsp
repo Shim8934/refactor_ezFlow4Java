@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,34 +27,34 @@
 		    var g_OpinionModifyFlagAdd = true;
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0] = "user";
-		    arr_userinfo[1] = "${userInfo.id}";
-		    arr_userinfo[2] = "${userInfo.displayName}";
-		    arr_userinfo[3] = "${userInfo.title}";
-		    arr_userinfo[4] = "${userInfo.deptID}";
-		    arr_userinfo[5] = "${userInfo.deptName}";
-		    arr_userinfo[6] = "${userInfo.jikChek}";
+		    arr_userinfo[1] = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2] = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3] = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4] = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5] = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6] = "<c:out value ='${userInfo.jikChek}'/>";
 		    arr_userinfo[7] = "N";
-		    arr_userinfo[8] = "${userInfo.email}";
+		    arr_userinfo[8] = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9] = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11] = "${userInfo.displayName1}";
-		    arr_userinfo[12] = "${userInfo.displayName2}";
-		    arr_userinfo[13] = "${userInfo.title1}";
-		    arr_userinfo[14] = "${userInfo.title2}";
-		    arr_userinfo[15] = "${userInfo.deptName1}";
-		    arr_userinfo[16] = "${userInfo.deptName2}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11] = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12] = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13] = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15] = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16] = "<c:out value ='${userInfo.deptName2}'/>";
 		    var pUserID = arr_userinfo[1];
-		    var companyID = "${userInfo.companyID}";
-		    var pCompanyName = "${userInfo.companyName}";
+		    var companyID = "<c:out value ='${userInfo.companyID}'/>";
+		    var pCompanyName = "<c:out value ='${userInfo.companyName}'/>";
 		    var pDisplay = "";
 		    var pHeSongFlag = "";
 		    var pWindow;
 		    var ChkFlag = false;
-		    var UserLang = "${userInfo.lang}";
+		    var UserLang = "<c:out value ='${userInfo.lang}'/>";
 		    var RetValue;
 		    var ReturnFunction;
-		    var junGyulFlag = "${junGyulFlag}";
-		    var agreeReturnType = "${agreeReturnType}";
+		    var junGyulFlag = "<c:out value ='${junGyulFlag}'/>";
+		    var agreeReturnType = "<c:out value ='${agreeReturnType}'/>";
 		    var orgCompanyID = parent.orgCompanyID;
 		    
 		    var move_on, frameLeft, frameTop;
@@ -279,7 +280,7 @@
 		</style>
 	</head>
 	<body class="popup">
-	    <h1 style="cursor:move;" onmousedown="layerStart()" onmouseup="layerStop()" onmousemove="layerMove()">
+	    <h1>
 	        <spring:message code='ezApprovalG.t55'/>
 	        <span id="TDHeSongMsg" style="font-size: 8pt; display: none">*
 	            <spring:message code='ezApprovalG.t422'/>

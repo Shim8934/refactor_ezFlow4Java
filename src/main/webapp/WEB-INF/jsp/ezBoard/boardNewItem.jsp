@@ -53,10 +53,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 	    <script type="text/javascript">
 		    var pUploadFilePath = "${uploadFilePath}";
-		    var pBoardID = "${boardID}";
+		    var pBoardID = "<c:out value='${boardID}'/>";
 		    var pBoardName = "${boardInfo.boardName}";
-		    var pMode = "${mode}";
-		    var orgMode = "${mode}";
+		    var pMode = "<c:out value='${mode}'/>";
+		    var orgMode = "<c:out value='${mode}'/>";
 		    var pModeOld = "";
 		    var MHTLoadComplete = "";
 		    var SSUserID = "${userInfo.id}";
@@ -86,7 +86,7 @@
 		    var strWriterFakeName = "${strWriterFakeName}";
 		    var pAttachListXml = "";
 		    var AttachLimit = "${boardInfo.attachSizeLimit}";
-			var pReservedItem = "${reservedItem}";
+			var pReservedItem = "<c:out value='${reservedItem}'/>";
 		    var strUserRank = "${userInfo.title1}";
 		    var strUserRank2 = "${userInfo.title2}";
 		    var strUserPhone = "${userInfo.phone}";
@@ -811,15 +811,10 @@
 		                    alert("<spring:message code='ezBoard.t400' />" + pStartDate.substr(0, 16) + "<spring:message code='ezBoard.t401' />");
 		                }
 		                
-		                if ("${boardInfo.apprMail_FG}" == "Y") {
+		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+		                if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 		                    xmlhttp = createXMLHttpRequest();
-		
-		                    if (pMode != "modify") {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
-		                    } else {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID), false);
-		                    }
-		                        
+		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
 		                }
@@ -1319,19 +1314,24 @@
 		                }
 		                attachxml = strRet;
 		            } else {
-		            	    var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
-			                    var temppath = pUrl;
-			                    temppath = temppath.substring(34, temppath.length);
-			                    var orgfile = temppath.split("/");
-			                    orgfile = orgfile[orgfile.length - 1];
-			                    xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
-			                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
-			                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
-			                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
-			                        xmlstring += "<TYPE>APPROVAL</TYPE>";
-			                    else
-			                        xmlstring += "<TYPE>APPROVALG</TYPE>";
-			                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
+		            	var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+	                    var temppath = pUrl;
+	                    temppath = temppath.substring(34, temppath.length);
+	                    var orgfile = temppath.split("/");
+	                    orgfile = orgfile[orgfile.length - 1];
+	                    
+	                    var orgFileList = orgfile.split(".");
+	                    var orgFileType = orgFileList[orgFileList.length - 1];
+		                    
+		               if (orgFileType == "hwp"){
+		            	   	xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
+		                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+		                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
+		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
+		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
+		                    else
+		                        xmlstring += "<TYPE>APPROVALG</TYPE>";
+		                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
 			               
 			                xmlstring += "</ROWS></DATA>";
 			                xmldom2 = loadXMLString(xmlstring);
@@ -1345,13 +1345,16 @@
 			                for (i = 0; i < nodes.length; i++) {
 			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 			                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
-			                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
-			                    	filepath = filepath + ".ezd";
-			                    }
+			                    //if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
+			                    //	filepath = filepath + ".ezd";
+			                    //}
 			                    
 			                    strRet += "tempUploadFile/" + filepath + "|";
+				                attachxml = strRet;
 			                }
-			                attachxml = strRet;
+		               } else {
+			                xmlstring += "</ROWS></DATA>";
+		               }
 		            }
 		        }
 		    }
@@ -1462,12 +1465,12 @@
 		    				});	
 		                    var htmlData = message.GetEditorContentURL(fullPath);
 		                    message.SetEditorContent(htmlData);
-		                } else {  /* 2019-04-12 홍승비 - 본문이 없는 경우 p태그 안에 br태그 넣어주도록 수정 */
+		                } else {
 		                    if (OpenWin == null){
 		                        document.getElementById("txtTitle").focus();
 		                    }
 		                    
-		                    message.SetEditorContent("<p " + defaultFontAndSize + "><br></p>");
+		                    message.SetEditorContent("");
 		                }
 		            } else {
 		                if (pUrl == "") {
@@ -2093,7 +2096,7 @@
 			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t98' /></span></li>
+			                        <li><span onclick="SaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    	<c:if test="${boardInfo.guBun != '3'}">

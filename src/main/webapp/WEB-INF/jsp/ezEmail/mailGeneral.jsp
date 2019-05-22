@@ -43,7 +43,6 @@
 	                	$('#previewSubTreeSlb').val("N").attr("selected", "selected");
 	                }
                 }
-
 		    }
 
 		    function detailbox_after()
@@ -111,6 +110,7 @@
 				var xmlHTTP = createXMLHttpRequest();
 				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
 			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
+			    var textOptionVal = $("#textOptionSlb option:selected").val();
 				var sendStr = "<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
 				                "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
 				                "<PREVIEWMODE>" + document.getElementById("PreviewMode").value + "</PREVIEWMODE>"+
@@ -119,7 +119,8 @@
 				                "<PREVIEWHLIST>" + document.getElementById("HListUser").value + "</PREVIEWHLIST>" +
 				                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
 				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
-				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>";
+				                "<PREVIEWMAILIMAGE>" + document.getElementById("previewMailImage").value + "</PREVIEWMAILIMAGE>" +
+				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -135,6 +136,18 @@
                     	var type = previewSubTreeSlb;
                     	window.parent.parent.frames["left"].previewSubTreeCall(type);
                     }
+                }
+                
+                try {
+                	var pSaveInterval = window.parent.parent.frames["left"].pSaveInterval;
+                	var newInterval = parseInt(refreshinterval.value) * 1000;
+                	
+                    if (pSaveInterval != newInterval) {
+                    	window.parent.parent.frames["left"].pSaveInterval = newInterval;
+                    	window.parent.parent.frames["left"].setMailListRefreshTimer();
+                    }
+                } catch (e) {
+                	console.error(e.message);
                 }
                 
 				if (Gubun == "1") {
@@ -434,7 +447,7 @@
 			  <tr>
 			  	<th><spring:message code="ezEmail.kyj18"/> </th>
 			  	<td>
-			  		<select id="previewSubTreeSlb">
+			  		<select id="previewSubTreeSlb" style="width:100px;">
 			  			<option value="Y"><spring:message code="ezEmail.t808"/> </option>
 			  			<option value="N"><spring:message code='ezEmail.t99000009' /></option>
 			  		</select>
@@ -444,11 +457,20 @@
 		  <tr>
 		  	<th><spring:message code="ezEmail.ksa05"/> </th>
 		  	<td>
-		  		<select id="previewMailImage">
+		  		<select id="previewMailImage" style="width:100px;">
 		  			<option value="Y" <c:if test="${previewMailImage == 'Y'}">selected</c:if>><spring:message code="ezEmail.t808"/> </option>
 		  			<option value="N" <c:if test="${previewMailImage == 'N'}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
 		  		</select>
 		  	</td>
+		  </tr>
+		  <tr>
+		      <th><spring:message code="ezEmail.lhm80"/></th>
+		      <td>
+		          <select id="textOptionSlb" style="width:100px;">
+		              <option value="HTML">HTML</option>
+		              <option value="PLAIN" <c:if test="${textOption eq 'PLAIN'}">selected</c:if>>Plain Text</option>
+		          </select>
+		      </td>
 		  </tr>
 		</table>
 		<div align="center" style="width:680px;">

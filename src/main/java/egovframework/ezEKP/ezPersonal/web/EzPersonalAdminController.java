@@ -101,7 +101,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 메인화면 호출 함수
 	 */
-	@RequestMapping("/admin/ezPersonal/personalMain.do")
+	@RequestMapping(value = "/admin/ezPersonal/personalMain.do", method = RequestMethod.GET)
 	public String personalMain () throws Exception {
 		return "admin/ezPersonal/personalMain";
 	}
@@ -109,7 +109,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 왼쪽메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/personalLeft.do")
+	@RequestMapping(value = "/admin/ezPersonal/personalLeft.do", method = RequestMethod.GET)
 	public String personalLeft (@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("personalLeft started");
 
@@ -137,7 +137,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 공지사항메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/manageNotice.do")
+	@RequestMapping(value = "/admin/ezPersonal/manageNotice.do", method = RequestMethod.GET)
 	public String manageNotice (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("manageNotice started");
 
@@ -163,7 +163,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 공지사항 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/manageNoticeList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/manageNoticeList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String manageNoticeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("manageNoticeList started");
@@ -219,7 +219,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 공지사항 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/delNotice.do", produces = "text/xml; charset=utf-8") 
+	@RequestMapping(value = "/admin/ezPersonal/delNotice.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8") 
 	@ResponseBody
 	public String delNotice(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		logger.debug("delNotice started");
@@ -236,7 +236,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 공지사항 등록,수정화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/addNoticeCK.do")
+	@RequestMapping(value = "/admin/ezPersonal/addNoticeCK.do", method = RequestMethod.GET)
 	public String addNoticeCK(@CookieValue("loginCookie") String loginCookie, PersonalNoticeVO vo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addNoticeCK started");
 
@@ -265,7 +265,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 공지사항 등록,수정 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/saveNotice.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/saveNotice.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveNotice(@CookieValue("loginCookie") String loginCookie,@ModelAttribute PersonalNoticeVO vo) throws Exception {
 		logger.debug("saveNotice started");
@@ -290,7 +290,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 공지사항 본문화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/showNotice.do")
+	@RequestMapping(value = "/admin/ezPersonal/showNotice.do", method = RequestMethod.GET)
 	public String showNotice(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("showNotice started");
 
@@ -315,7 +315,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do")
+	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do", method = RequestMethod.GET)
 	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie, Model model) {
 		logger.debug("manageQuickLink started");
 
@@ -336,7 +336,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink 목록 호출 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public JSONObject getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getQuickLinkList started");
@@ -355,7 +355,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink 등록,수정화면 호출 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/addQuickLink.do")
+	@RequestMapping(value = "/admin/ezPersonal/addQuickLink.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject addQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addQuickLink started");
@@ -381,7 +381,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink 수정화면 내용 호출 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/getQuickLink.do", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLink.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public JSONObject getQuickLink(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		logger.debug("getQuickLink started");
@@ -401,7 +401,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 권한목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkACL.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkACL.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getQuickLinkACL(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		logger.debug("getQuickLinkACL started");
@@ -418,7 +418,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 권한등록화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/selectTarget.do")
+	@RequestMapping(value = "/admin/ezPersonal/selectTarget.do", method = RequestMethod.GET)
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("selectTarget started");
 
@@ -442,7 +442,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 등록,수정 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/saveQuickLink.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/saveQuickLink.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public void  saveQuickLink(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
 		logger.debug("saveQuickLink started");
@@ -458,7 +458,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickPoll메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/managePoll.do")
+	@RequestMapping(value = "/admin/ezPersonal/managePoll.do", method = RequestMethod.GET)
 	public String managePoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("managePoll started");
 
@@ -486,7 +486,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickPoll 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/managePollList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/managePollList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String managePollList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("managePollList started");
@@ -567,7 +567,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickPoll 등록화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/addPoll.do")
+	@RequestMapping(value = "/admin/ezPersonal/addPoll.do", method = RequestMethod.GET)
 	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, PersonalLightPollVO infoVO) throws Exception {
 		logger.debug("addPoll started");
 
@@ -597,7 +597,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickPoll 등록 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/savePoll.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/savePoll.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String savePoll(@CookieValue("loginCookie") String loginCookie,@RequestBody String data) throws Exception {
 		logger.debug("savePoll started");
@@ -623,7 +623,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickPoll 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/delPoll.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/delPoll.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String delPoll(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		logger.debug("delPoll started");
@@ -640,7 +640,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickPoll 본문화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/pollResult.do")
+	@RequestMapping(value = "/admin/ezPersonal/pollResult.do", method = RequestMethod.GET)
 	public String pollResult(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("pollResult started");
 
@@ -719,7 +719,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 팝업공지메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/managePopup.do")
+	@RequestMapping(value = "/admin/ezPersonal/managePopup.do", method = RequestMethod.GET)
 	public String managePopup(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("managePopup started");
 
@@ -750,7 +750,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 팝업공지 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/managePopupList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/managePopupList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String managePopupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("managePopupList started");
@@ -831,7 +831,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 팝업공지 공지사항등록,수정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/addPopupCK.do")
+	@RequestMapping(value = "/admin/ezPersonal/addPopupCK.do", method = RequestMethod.GET)
 	public String addPopupCK(@CookieValue("loginCookie") String loginCookie, PersonalPopupVO vo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addPopupCK started");
 
@@ -873,7 +873,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 팝업공지 공지사항 등록,수정 실행 함수
 	 */
 	
-	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String savePopup(@CookieValue("loginCookie") String loginCookie,PersonalPopupVO vo) throws Exception {
 		logger.debug("savePopup started");
@@ -897,7 +897,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 팝업공지 공지사항 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/delPopup.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/delPopup.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String deletePopup(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		logger.debug("deletePopup started");
@@ -914,7 +914,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 팝업공지 공지사항 공지사항 본문화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/showPopup.do")
+	@RequestMapping(value = "/admin/ezPersonal/showPopup.do", method = RequestMethod.GET)
 	public String showPopup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PersonalPopupVO vo, Model model) throws Exception {
 		logger.debug("showPopup started");
 
@@ -954,7 +954,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 이달의우수사원메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/employeeOfMonth.do")
+	@RequestMapping(value = "/admin/ezPersonal/employeeOfMonth.do", method = RequestMethod.GET)
 	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("employeeOfMonth started");
 		
@@ -968,7 +968,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 이달의우수사원메뉴 리스트 호출 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/getEmployeeOfMonthList.do", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getEmployeeOfMonthList.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public JSONObject getEmployeeOfMonthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getEmployeeOfMonthList started");
@@ -1006,7 +1006,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 이달의우수사원 등록화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/selectBest.do")
+	@RequestMapping(value = "/admin/ezPersonal/selectBest.do", method = RequestMethod.GET)
 	public String selectBest(Model model) {
 		logger.debug("selectBest started");
 
@@ -1019,7 +1019,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 이달의우수사원 등록,수정,삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/setEmployeeMonth.do")
+	@RequestMapping(value = "/admin/ezPersonal/setEmployeeMonth.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String setEmployeeMonth(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("setEmployeeMonth started");
@@ -1050,7 +1050,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 슬라이드이미지메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/sliderImages.do")
+	@RequestMapping(value = "/admin/ezPersonal/sliderImages.do", method = RequestMethod.GET)
 	public String sliderImages() throws Exception {
 		return "admin/ezPersonal/personalSliderImages";
 	}
@@ -1058,7 +1058,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 슬라이드이미지 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/getSlider.do", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getSlider.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public List<PersonalSliderImageVO> getSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSlider started");
@@ -1080,7 +1080,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 슬라이드이미지 등록화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/selectImage.do")
+	@RequestMapping(value = "/admin/ezPersonal/selectImage.do", method = RequestMethod.GET)
 	public String selectImage(@CookieValue("loginCookie") String loginCookie ,HttpServletRequest request, Model model) throws Exception {
 		logger.debug("selectImage started");
 
@@ -1109,7 +1109,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 슬라이드이미지 등록 이미지등록 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/saveSliderImage.do")
+	@RequestMapping(value = "/admin/ezPersonal/saveSliderImage.do", method = RequestMethod.POST)
 	public String saveSliderImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("saveSliderImage started");
 
@@ -1130,7 +1130,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String serverPath = dirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator;
 		String uniqueName = uploadSN + multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
 		
-		File dir = new File(realPath + serverPath);
+		File dir = new File(commonUtil.detectPathTraversal(realPath + serverPath));
 		
 		if (!dir.exists()) {
 			dir.mkdirs();
@@ -1138,7 +1138,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		writeUploadedFile(multiFile, uniqueName, realPath + serverPath);
 		
-		File file = new File(realPath + serverPath + uniqueName);
+		File file = new File(commonUtil.detectPathTraversal(realPath + serverPath + uniqueName));
 		
 		if (mode.equals("SLIDERIMAGE")) {
 			String saveName = UUID.randomUUID() + ".jpg";
@@ -1151,7 +1151,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			saveImage.drawImage(inputImage, 0, 0, 467, 200, null);
 			saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 			
-			File newFile = new File(realPath + serverPath + saveName);
+			File newFile = new File(commonUtil.detectPathTraversal(realPath + serverPath + saveName));
 			
 			ImageIO.write(outputImage, "png" , newFile);
 			deleteFile(realPath + serverPath + uniqueName);
@@ -1190,7 +1190,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 슬라이드이미지 등록 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/saveSlider.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/saveSlider.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("saveSlider started");
@@ -1216,7 +1216,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 슬라이드이미지 상태,순서 변경 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/statusChangeSlider.do")
+	@RequestMapping(value = "/admin/ezPersonal/statusChangeSlider.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String statusChangeSlider(@CookieValue("loginCookie") String loginCookie ,HttpServletRequest request) throws Exception {
 		logger.debug("statusChangeSlider started");
@@ -1243,7 +1243,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value = "/admin/ezPersonal/deleteSlider.do")
+	@RequestMapping(value = "/admin/ezPersonal/deleteSlider.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteSlider(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		logger.debug("deleteSlider started");
@@ -1260,7 +1260,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink 삭제 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/delQuickLink.do", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezPersonal/delQuickLink.do", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject  delQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("delQuickLink started");
@@ -1280,7 +1280,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink typeImage 추가
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/typeImageUpload.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/typeImageUpload.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	public String  typeImageUpload(@CookieValue("loginCookie") String loginCookie,  MultipartHttpServletRequest request, Model model ) throws Exception {
 		logger.debug("typeImageUpload started");
 
@@ -1302,7 +1302,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
         String pAttachPath = dirPath + commonUtil.separator + boardID + commonUtil.separator + fileName;
        
-        File dir = new File(realPath + serverPath);
+        File dir = new File(commonUtil.detectPathTraversal(realPath + serverPath));
 		
    		if (!dir.exists()) {
    			dir.mkdirs();
@@ -1313,7 +1313,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String extension = null;
         BufferedInputStream bis = null;
    		
-        File file = new File(realPath + pAttachPath);
+        File file = new File(commonUtil.detectPathTraversal(realPath + pAttachPath));
     
         try {
 	        bis = new BufferedInputStream(new FileInputStream(file));
@@ -1356,7 +1356,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		saveImage.setRenderingHints(hm);
 		
-		File newFile = new File(realPath + serverPath + pSaveName);
+		File newFile = new File(commonUtil.detectPathTraversal(realPath + serverPath + pSaveName));
 		
 		ImageIO.write(outputImage, extension.replace(".", "") , newFile);
 		//deleteFile(dirPath + serverPath + fileName);
@@ -1491,7 +1491,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/updateQuickLinkOrder.do", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezPersonal/updateQuickLinkOrder.do", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject updateQuickLinkOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jsonParam) throws Exception {
 		logger.debug("updateQuickLinkOrder started");
@@ -1515,7 +1515,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 슬라이디 이미지 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/updateSliderImageOrder.do", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezPersonal/updateSliderImageOrder.do", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject updateSliderImageOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jsonParam) throws Exception {
 		logger.debug("updateSliderImageOrder started");

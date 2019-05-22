@@ -223,7 +223,7 @@
 	        
 	        function CheckIfHasReplies() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + encodeURIComponent(pItemID) + ";", false);
+				xmlhttp.open("GET", "/ezCommunity/checkIfHasReply.do?itemList=" + encodeURIComponent(pItemID) + ";", false);
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "TRUE") {
@@ -387,7 +387,7 @@
 	            var xmlhttp = createXMLHttpRequest();
 	            var xmldom = createXmlDom();
 
-	            xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
+	            xmlhttp.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
 	            xmlhttp.send();
 
 	            xmldom = loadXMLString(xmlhttp.responseText);
@@ -687,7 +687,7 @@
                         } catch (e) { }
                         
 	                } else {
-	                    xmlhttp.open("POST", "/ezCommunity/checkOneLineOwner.do?replyID=" + encodeURIComponent(pReplyID), false);
+	                    xmlhttp.open("GET", "/ezCommunity/checkOneLineOwner.do?replyID=" + encodeURIComponent(pReplyID), false);
 	                    xmlhttp.send();
 
 	                    if (xmlhttp.responseText.substr(0, 2) != "OK") {
@@ -740,7 +740,7 @@
 	        // 댓글 작성자 클릭 시 정보 보여주는 부분 필요!
 	        function getOneLineReply() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezCommunity/readOneLineReply.do",

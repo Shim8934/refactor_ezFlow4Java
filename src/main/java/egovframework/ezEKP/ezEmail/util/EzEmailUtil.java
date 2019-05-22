@@ -77,6 +77,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -129,10 +130,14 @@ public class EzEmailUtil {
 	@Autowired
 	private EzAddressService ezAddressService;
 	
+	@Value("#{cryptos['EzEmailUtil.apb']}")
+	private String apb;
+	
 	public String getInboxFolderId() {
 		return "INBOX";
 	}
-
+	
+	
 	public String getSentFolderId(Locale locale) {
 		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
 		
@@ -409,6 +414,12 @@ public class EzEmailUtil {
 			e.printStackTrace();
 		} 
 		
+		if (addressStr != null) {
+			// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+			// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+			addressStr = addressStr.replace("\\\"", "");
+		}
+		
 		return addressStr;
 	}
 	
@@ -535,7 +546,13 @@ public class EzEmailUtil {
 					} catch (UnsupportedEncodingException e) {
 					}
 					
-					addressBuilder.append(name + " <" + addressStr + ">");					
+					if (name != null) {
+						// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+						// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+						name = name.replace("\\\"", "");
+					}					
+					
+					addressBuilder.append(name + " <" + addressStr + ">");							
 				}
 				else {
 					addressBuilder.append(addressStr + " <" + addressStr + ">");
@@ -593,6 +610,12 @@ public class EzEmailUtil {
 					} catch (UnsupportedEncodingException e) {
 					}
 					
+					if (name != null) {
+						// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+						// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+						name = name.replace("\\\"", "");
+					}
+					
 					addressBuilder.append(name + " <" + addressStr + ">");					
 				}
 				else {
@@ -609,159 +632,179 @@ public class EzEmailUtil {
 	}
 	
 	public String getSubject(Message message) throws Exception {
-        String subject = message.getSubject();
-        
-        if (subject == null) {
-        	subject = "";
-        }
-        
-        if (!subject.equals("")) {
-            String[] rawHeaders = message.getHeader("subject");
-            String rawHeader = rawHeaders[0].trim();
-                        
-			// 제목이 줄바꿈없이 인코딩 경우가 있어 추가함.
-            // Subject: =?ISO-2022-JP?B?GyRCIVobKEIyMDE3LzEyLzA0GyRCJE5MZEJqIVsbKEJPSlQ=?=
-            //		 =?ISO-2022-JP?B?GyRCJEszOkV2JDkkayRiJE4kSCRPISkbKEI=?==?iso-2022-jp?B?GyRCIWMbKEJJVBskQiUtJWMlUSVBJWMhPCU4GyhCIA==?=
-            //		 =?iso-2022-jp?B?GyRCJVkhPCU3JUMlLyFkGyhC?=                        
-			int pos = rawHeader.indexOf("?==?");
-			
-			if (pos >= 0) {
-				StringBuilder sb = new StringBuilder();
-				
-				sb.append(rawHeader.substring(0, pos + 2));
-				sb.append("\r\n ");
-				sb.append(rawHeader.substring(pos + 2));
-										
-				rawHeader = sb.toString();
-				
-				logger.debug("line broken new subject=" + rawHeader);	
-				
-				subject = MimeUtility.decodeText(rawHeader);
-			}
-			
-            // Subject: =?utf-8?q?=5b=46=65=64=45...=35=35 ?= 의 경우와 같이 
-            // ?= 앞에 공백 문자가 있어 제목이 디코딩 되지 않는 경우가 발견되어 추가함
-            if (rawHeader.startsWith("=?") && rawHeader.endsWith(" ?=")) {
-            	logger.debug("There is a space before ?=");
-            	
-            	int lastNonSpaceIndex = rawHeader.length() - 4;
-            	
-            	while (rawHeader.charAt(lastNonSpaceIndex) == ' ') {
-            		lastNonSpaceIndex--;
-            	}
-            	
-            	rawHeader = rawHeader.substring(0, lastNonSpaceIndex + 1) + "?=";
-            	subject = MimeUtility.decodeText(rawHeader);
-            }
-            
-            // 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
-            if (!isPureAscii(rawHeader)) {
-                byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+		String subject = "";
+		String originalSubject = "";
+		
+        try {		
+	        subject = message.getSubject();
+	        
+	        if (subject == null) {
+	        	subject = "";
+	        }
+	        
+	        originalSubject = subject;
                 
-                subject = decodeNonAsciiBytes(rawBytes);
-            } else {
-            	
-            	// 일부 Mailer에서 표준을 지키지 않고 큰 따옴표 두개로 감싸서
-            	// Subject를 구성하여 디코딩이 안 되는 경우가 있어 추가함
-            	// ex: "=?euc-kr?B?".Z3ctc25zLW5vZGUyICgyMjAuNzMuMTc4LjE4KSBbMV0gZ3ctc25zLW5vZGUyIENQVSBVc2VkICglKQ==."?="
-            	if (rawHeader.startsWith("\"=?") && rawHeader.endsWith("?=\"")) {
-            		rawHeader = rawHeader.substring(1, rawHeader.length() - 1);
-            		
-            		subject = String.format("\"%s\"", MimeUtility.decodeText(rawHeader));
-            	}
-            	
-                if (rawHeader.startsWith("=?")) {
-                    int secondQuestionPos = rawHeader.indexOf("?", 2);
-                    int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
-                    String charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1); 
-                    String encoding = rawHeader.substring(secondQuestionPos + 1, thirdQuestionPos);                                        
-                    
-                    // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
-                    // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(Base64 인코딩을 사용하면서) 
-                    // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함.  
-                    // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.
-                    if (subject.contains("�")
-                            && encoding.equalsIgnoreCase("B")) {
-                        String[] sequences = rawHeader.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
-                        
-                        if (sequences.length > 2) {
-                            logger.debug("broken multiple sequences. combining them...");
-                            logger.debug("original rawHeader:" + rawHeader);
-                            
-                            StringBuilder combined = new StringBuilder();                        
-                            combined.append(charSetAndEncoding);
-                            
-                            ByteArrayOutputStream combinedBytes = new ByteArrayOutputStream();
-                            
-                            for (int i = 1; i < sequences.length; i++) {
-                                String sequence = sequences[i].trim();
-                                
-                                logger.debug("sequence[" + i + "]:" + sequence);
-                                
-                                sequence = sequence.substring(0, sequence.lastIndexOf("?"));
-                                combinedBytes.write(Base64.decodeBase64(sequence));                            
-                            }
-                            
-                            combined.append(Base64.encodeBase64String(combinedBytes.toByteArray()));
-                            combined.append("?=");
-                            rawHeader = combined.toString();
-                            
-                            logger.debug("combined rawHeader:" + rawHeader);
-                            
-                            subject = MimeUtility.decodeText(rawHeader);
-                            
-                            logger.debug("subject=" + subject);
-                        }
-                    }
-                
-                    // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
-                    // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.
-                    String charSet = rawHeader.substring(2, secondQuestionPos).toLowerCase();
-                    
-                    if (charSet.equals("ks_c_5601-1987")) {
-                        rawHeader = rawHeader.replace(charSet, "ms949");
-                                                
-                        subject = MimeUtility.decodeText(rawHeader);
-                    } else if (charSet.equals("gb2312")) {
-                        rawHeader = rawHeader.replace(charSet, "gbk");
-                                                
-                        subject = MimeUtility.decodeText(rawHeader);
-                    } else if (charSet.equals("iso-2022-jp")) {
-                        rawHeader = rawHeader.replace(charSet, "cp50220");
-                                                
-                        subject = MimeUtility.decodeText(rawHeader);
-                    }                                                
-                }
-            }
-            
-            // 제목 중간에 Unicode 0x0(NULL)이 들어가 XML 파싱시 에러가 발생하는 메일이 발견되어 추가함.
-            subject = subject.replaceAll("[\\000]+", "");   
-            
-            // Non US-ASCII 문자로 인코딩된 제목 중에 unfolding이 제대로
-            // 되지 않아 줄바꿈 문자가 포함되는 경우가 있어 추가함
-            // Subject: 메일발송 실패:"대합일반산단 진입도로 공\
-            //	 고문 및 자기소개서 양식"            
-            if (subject.contains("\\\r\n ")) {
-                logger.debug("still folded subject=" + subject);
-                
-                subject = subject.replace("\\\r\n ", "");                
-            }
-
-            // Mac Outlook 보낸 메일의 제목이 decoding 되지 않은 패턴을 찾아 다시 decoding한다.
-            // 대괄호와 같은 문자와 한글이 혼용될 때 아래의 오른쪽 부분과 같이 제대로 디코딩되지 않는 경우가 발생함.
-            // RFC2047에 따른 인코딩이 한 줄에 여러 개가 있는 형태여서 JavaMail에서 문제가 발생하는 것으로 추정됨.
-            // Re: [캠코선박운용]메일 오류 => Re: [=?UTF-8?B?7Lqg7L2U7ISg67CV7Jq07Jqp?=]=?UTF-8?B?66mU7J28?=  오류
-            // Re: 회신: [ 캠코선박운용] 메신저 오류 => Re: 회신: [=?UTF-8?B?IOy6oOy9lOyEoOuwleyatOyaqQ==?=]  메신저 오류
-            Pattern pattern = Pattern.compile("=\\?(.*?)\\?=");
-            Matcher matcher = pattern.matcher(subject);
-
-            while (matcher.find()) {
-                String encData = matcher.group();
-                String decData = MimeUtility.decodeText(encData);
-                logger.debug("encData:" + encData + ",decData:" + decData);
-
-                subject = subject.replace(encData, decData);
-            }
+	        if (!subject.equals("")) {
+	            String[] rawHeaders = message.getHeader("subject");
+	            String rawHeader = rawHeaders[0].trim();
+	                        
+				// 제목이 줄바꿈없이 인코딩 경우가 있어 추가함.
+	            // Subject: =?ISO-2022-JP?B?GyRCIVobKEIyMDE3LzEyLzA0GyRCJE5MZEJqIVsbKEJPSlQ=?=
+	            //		 =?ISO-2022-JP?B?GyRCJEszOkV2JDkkayRiJE4kSCRPISkbKEI=?==?iso-2022-jp?B?GyRCIWMbKEJJVBskQiUtJWMlUSVBJWMhPCU4GyhCIA==?=
+	            //		 =?iso-2022-jp?B?GyRCJVkhPCU3JUMlLyFkGyhC?=                        
+				int pos = rawHeader.indexOf("?==?");
+				
+				if (pos >= 0) {
+					StringBuilder sb = new StringBuilder();
+					
+					sb.append(rawHeader.substring(0, pos + 2));
+					sb.append("\r\n ");
+					sb.append(rawHeader.substring(pos + 2));
+											
+					rawHeader = sb.toString();
+					
+					logger.debug("line broken new subject=" + rawHeader);	
+					
+					subject = MimeUtility.decodeText(rawHeader);
+				}
+				
+	            // Subject: =?utf-8?q?=5b=46=65=64=45...=35=35 ?= 의 경우와 같이 
+	            // ?= 앞에 공백 문자가 있어 제목이 디코딩 되지 않는 경우가 발견되어 추가함
+	            if (rawHeader.startsWith("=?") && rawHeader.endsWith(" ?=")) {
+	            	logger.debug("There is a space before ?=");
+	            	
+	            	int lastNonSpaceIndex = rawHeader.length() - 4;
+	            	
+	            	while (rawHeader.charAt(lastNonSpaceIndex) == ' ') {
+	            		lastNonSpaceIndex--;
+	            	}
+	            	
+	            	rawHeader = rawHeader.substring(0, lastNonSpaceIndex + 1) + "?=";
+	            	subject = MimeUtility.decodeText(rawHeader);
+	            }
+	            
+	            // 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
+	            if (!isPureAscii(rawHeader)) {
+	                byte[] rawBytes = rawHeader.getBytes("iso-8859-1");
+	                
+	                subject = decodeNonAsciiBytes(rawBytes);
+	            } else {
+	            	
+	            	// 일부 Mailer에서 표준을 지키지 않고 큰 따옴표 두개로 감싸서
+	            	// Subject를 구성하여 디코딩이 안 되는 경우가 있어 추가함
+	            	// ex: "=?euc-kr?B?".Z3ctc25zLW5vZGUyICgyMjAuNzMuMTc4LjE4KSBbMV0gZ3ctc25zLW5vZGUyIENQVSBVc2VkICglKQ==."?="
+	            	if (rawHeader.startsWith("\"=?") && rawHeader.endsWith("?=\"")) {
+	            		rawHeader = rawHeader.substring(1, rawHeader.length() - 1);
+	            		
+	            		subject = String.format("\"%s\"", MimeUtility.decodeText(rawHeader));
+	            	}
+	            	
+	                if (rawHeader.startsWith("=?")) {
+	                    int secondQuestionPos = rawHeader.indexOf("?", 2);
+	                    int thirdQuestionPos = rawHeader.indexOf("?", secondQuestionPos + 1);
+	                    String charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1); 
+	                    String encoding = rawHeader.substring(secondQuestionPos + 1, thirdQuestionPos);                                        
+	                    
+	                    String charSet = rawHeader.substring(2, secondQuestionPos).toLowerCase();
+	                    
+	                    // cp932는 자바에서 아예 인식되지 않는 코드여서 ms932로의 변경을 먼저 수행한다.
+	                    if (charSet.equals("cp932")) {
+	                        rawHeader = rawHeader.replace(charSet, "ms932");
+	                        charSetAndEncoding = rawHeader.substring(0, thirdQuestionPos + 1);
+	                                                
+	                        subject = MimeUtility.decodeText(rawHeader);
+	                    }                                                                                                
+	                    
+	                    // 일부 Mailer에서 RFC 2047에서 정의된 encoded word를 2개 이상의 라인으로 구성할 때
+	                    // 한글의 한 글자를 표현하는 Byte Array 중간에서 분리하는 경우가 있어(Base64 인코딩을 사용하면서) 
+	                    // 이 경우 JavaMail에서 디코딩할 때 글자가 깨지는 현상이 발생하여 한 줄로 합치는 작업을 직접 수행하도록 함.  
+	                    // 글자가 깨지는 경우 Unicode의 Replacement Character인 �가 나타남.
+	                    if (subject.contains("�")
+	                            && encoding.equalsIgnoreCase("B")) {
+	                        String[] sequences = rawHeader.split(charSetAndEncoding.replaceAll("\\?", "\\\\?"));
+	                        
+	                        if (sequences.length > 2) {
+	                            logger.debug("broken multiple sequences. combining them...");
+	                            logger.debug("original rawHeader:" + rawHeader);
+	                            
+	                            StringBuilder combined = new StringBuilder();                        
+	                            combined.append(charSetAndEncoding);
+	                            
+	                            ByteArrayOutputStream combinedBytes = new ByteArrayOutputStream();
+	                            
+	                            for (int i = 1; i < sequences.length; i++) {
+	                                String sequence = sequences[i].trim();
+	                                
+	                                logger.debug("sequence[" + i + "]:" + sequence);
+	                                
+	                                sequence = sequence.substring(0, sequence.lastIndexOf("?"));
+	                                combinedBytes.write(Base64.decodeBase64(sequence));                            
+	                            }
+	                            
+	                            combined.append(Base64.encodeBase64String(combinedBytes.toByteArray()));
+	                            combined.append("?=");
+	                            rawHeader = combined.toString();
+	                            
+	                            logger.debug("combined rawHeader:" + rawHeader);
+	                            
+	                            subject = MimeUtility.decodeText(rawHeader);
+	                            
+	                            logger.debug("subject=" + subject);
+	                        }
+	                    }
+	                
+	                    // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+	                    // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.	                    
+	                    if (charSet.equals("ks_c_5601-1987")) {
+	                        rawHeader = rawHeader.replace(charSet, "ms949");
+	                                                
+	                        subject = MimeUtility.decodeText(rawHeader);
+	                    } else if (charSet.equals("gb2312")) {
+	                        rawHeader = rawHeader.replace(charSet, "gbk");
+	                                                
+	                        subject = MimeUtility.decodeText(rawHeader);
+	                    } else if (charSet.equals("iso-2022-jp")) {
+	                        rawHeader = rawHeader.replace(charSet, "cp50220");
+	                                                
+	                        subject = MimeUtility.decodeText(rawHeader);
+	                    } 
+	                }
+	            }
+	            
+	            // 제목 중간에 Unicode 0x0(NULL)이 들어가 XML 파싱시 에러가 발생하는 메일이 발견되어 추가함.
+	            subject = subject.replaceAll("[\\000]+", "");   
+	            
+	            // Non US-ASCII 문자로 인코딩된 제목 중에 unfolding이 제대로
+	            // 되지 않아 줄바꿈 문자가 포함되는 경우가 있어 추가함
+	            // Subject: 메일발송 실패:"대합일반산단 진입도로 공\
+	            //	 고문 및 자기소개서 양식"            
+	            if (subject.contains("\\\r\n ")) {
+	                logger.debug("still folded subject=" + subject);
+	                
+	                subject = subject.replace("\\\r\n ", "");                
+	            }
+	
+	            // Mac Outlook 보낸 메일의 제목이 decoding 되지 않은 패턴을 찾아 다시 decoding한다.
+	            // 대괄호와 같은 문자와 한글이 혼용될 때 아래의 오른쪽 부분과 같이 제대로 디코딩되지 않는 경우가 발생함.
+	            // RFC2047에 따른 인코딩이 한 줄에 여러 개가 있는 형태여서 JavaMail에서 문제가 발생하는 것으로 추정됨.
+	            // Re: [캠코선박운용]메일 오류 => Re: [=?UTF-8?B?7Lqg7L2U7ISg67CV7Jq07Jqp?=]=?UTF-8?B?66mU7J28?=  오류
+	            // Re: 회신: [ 캠코선박운용] 메신저 오류 => Re: 회신: [=?UTF-8?B?IOy6oOy9lOyEoOuwleyatOyaqQ==?=]  메신저 오류
+	            Pattern pattern = Pattern.compile("=\\?(.*?)\\?=");
+	            Matcher matcher = pattern.matcher(subject);
+	
+	            while (matcher.find()) {
+	                String encData = matcher.group();
+	                String decData = MimeUtility.decodeText(encData);
+	                logger.debug("encData:" + encData + ",decData:" + decData);
+	
+	                subject = subject.replace(encData, decData);
+	            }
+	        }
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	
+        	// 디코딩 도중 예외가 발생하면 원제목을 반환하여 예외가 발생하더라도 메일 목록이 아예 표시되지 않는 등의 현상이 발생하지 않도록 한다.
+        	subject = originalSubject;
         }
         
         return subject;
@@ -879,13 +922,26 @@ public class EzEmailUtil {
 		
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
-		
+				
 		boolean forPrint = false;
 		boolean mobile = false;
 		String secureKey = null;
 		String securePassword = null;
 		boolean includeInlineAsAttachment = false;
 		String shareId = null;
+		
+		// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
+		// ContentID 없이 Content-Dispostion이 inline으로 첨부된
+		// 이미지가 있어 이 경우 첨부파일로서 처리하기 위해 추가함.(iPhone Mail에서 작성한 메일임.)
+		boolean isInlinePartWithoutContentID = false;
+		
+		if (part instanceof MimePart) {
+			if (part.getDisposition() != null 
+					&& part.getDisposition().equalsIgnoreCase(Part.INLINE)
+					&& ((MimePart)part).getContentID() == null) {
+				isInlinePartWithoutContentID = true;
+			}
+		}
 		
 		if (extraMap != null) {
 			if (extraMap.get("forPrint") != null) forPrint = (boolean)extraMap.get("forPrint");
@@ -932,7 +988,8 @@ public class EzEmailUtil {
 						|| (part.getContentType() != null && part.getContentType().contains("x-apple-part-url")
 						|| includeInlineAsAttachment))
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
-				|| part.isMimeType("application/*")) {
+				|| part.isMimeType("application/*")
+				|| isInlinePartWithoutContentID) {
             double size = part.getSize();
             String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
             
@@ -1027,6 +1084,12 @@ public class EzEmailUtil {
                 originalFilename = originalFilename.replace("iso-2022-jp", "cp50220");
                 
                 logger.debug("originalFilename changed iso-2022-jp to cp50220.");
+                
+                filename = MimeUtility.decodeText(originalFilename);
+            } else if (originalFilename != null && originalFilename.startsWith("=?cp932")) {
+                originalFilename = originalFilename.replace("cp932", "ms932");
+                
+                logger.debug("originalFilename changed cp932 to ms932.");
                 
                 filename = MimeUtility.decodeText(originalFilename);
             } else if (filename != null) {
@@ -1127,48 +1190,62 @@ public class EzEmailUtil {
 			boolean isCharSet = rawContentType.toLowerCase().contains("charset");
 			
 			try {
-				strContent = part.getContent().toString();
+				// cp932는 자바에서 아예 인식되지 않는 코드여서 ms932로의 변경을 먼저 수행한다.				
+				if (contentType.toLowerCase().contains("cp932")) {
+					InputStream is = getContentInputStream(part);
+					
+					if (is.available() > 0) {
+						byte[] buf = new byte[is.available()];
+						is.read(buf);
+						
+						logger.debug("text/html changed cp932 to ms932.");
+						
+						strContent = new String(buf, "ms932");
+					}											
+				} else {				
+					strContent = part.getContent().toString();
+									
+					if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
+			            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+			            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
+						if (strContent.contains("�")) {
+							InputStream is = getContentInputStream(part);
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
 								
-				if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
-		            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
-		            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
-					if (strContent.contains("�")) {
-						InputStream is = getContentInputStream(part);
-						
-						if (is.available() > 0) {
-							byte[] buf = new byte[is.available()];
-							is.read(buf);
+								logger.debug("text/html changed ks_c_5601-1987 to ms949.");
+								
+								strContent = new String(buf, "ms949");
+							}											
+						}
+					} else if (contentType.toLowerCase().contains("gb2312")) {
+						if (strContent.contains("�")) {
+							InputStream is = getContentInputStream(part);
 							
-							logger.debug("text/html changed ks_c_5601-1987 to ms949.");
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/html changed gb2312 to gbk.");
+								
+								strContent = new String(buf, "gbk");
+							}											
+						}
+					} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
+						if (strContent.contains("�")) {
+							InputStream is = getContentInputStream(part);
 							
-							strContent = new String(buf, "ms949");
-						}											
-					}
-				} else if (contentType.toLowerCase().contains("gb2312")) {
-					if (strContent.contains("�")) {
-						InputStream is = getContentInputStream(part);
-						
-						if (is.available() > 0) {
-							byte[] buf = new byte[is.available()];
-							is.read(buf);
-							
-							logger.debug("text/html changed gb2312 to gbk.");
-							
-							strContent = new String(buf, "gbk");
-						}											
-					}
-				} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
-					if (strContent.contains("�")) {
-						InputStream is = getContentInputStream(part);
-						
-						if (is.available() > 0) {
-							byte[] buf = new byte[is.available()];
-							is.read(buf);
-							
-							logger.debug("text/html changed iso-2022-jp to cp50220.");
-							
-							strContent = new String(buf, "cp50220");
-						}											
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/html changed iso-2022-jp to cp50220.");
+								
+								strContent = new String(buf, "cp50220");
+							}											
+						}
 					}
 				}
 				
@@ -1261,110 +1338,148 @@ public class EzEmailUtil {
 			
 			// 메일 본문의 링크를 누르면 별도의 창으로 표시되도록 하는 처리
 			htmlBody = addTargetBlank(htmlBody);				
-		} else if(part.isMimeType("text/plain")) {
-			String strContent = "";
-			String[] headers = part.getHeader("Content-Type");
+		} else if(part.isMimeType("text/plain")) {			
+			boolean isRealTextPlain = true;
 			
-			// Content-Type 헤더 자체가 없는 경우, part.isMimeType("text/plain")이 true가 될 수 있으나 part.getContent()는
-			// 예외가 발생한다. 이 경우 part.getInputStream()으로부터 직접 디코딩을 수행한다.
-			if (headers == null) {
-				logger.debug("no Content-Type header");
-				
-				InputStream is = getContentInputStream(part); 
-								
-				if (is.available() > 0) {
-					byte[] buf = new byte[is.available()];
-					is.read(buf);
-					
-					strContent = decodeNonAsciiBytes(buf);						
-				}					
+			if (part instanceof BodyPart) {
+		        String[] contentTypeHeaders = part.getHeader("Content-Type");
+		        
+		        if (contentTypeHeaders != null && contentTypeHeaders.length > 0) {
+		        	String contentTypeHeader = contentTypeHeaders[0];
+		        	
+		        	logger.debug("contentTypeHeader=" + contentTypeHeader);
+		        	
+		        	// 다음과 같이 Multipart 내 Part 중에 Content-Type이 잘못 생성된 메일이 있음.(image/gif가 되어야 함.)
+		        	// Content-Type: gif; name="signF_hakungLogo.gif"
+		        	// 이 경우 JavaMail에서는 디폴트인 text/plain 타입으로 취급하여 본문에 잘못된 내용이 들어와
+		        	// 실제 헤더에 text/plain이 있는 지 여부를 확인하도록 함.
+		        	if (!contentTypeHeader.toLowerCase().contains("text/plain")) {
+		        		logger.debug("it isn't real text/plain.");
+		        		
+		        		isRealTextPlain = false;
+		        	}
+		        }
 			}
-			else {
-				String contentType = part.getContentType();
+			
+	        if (isRealTextPlain) {
+				String strContent = "";
+				String[] headers = part.getHeader("Content-Type");
 				
-				try {
-					strContent = part.getContent().toString();
-					
-					if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
-			            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
-			            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
-						if (strContent.contains("�")) {
-							InputStream is = getContentInputStream(part);
-							
-							if (is.available() > 0) {
-								byte[] buf = new byte[is.available()];
-								is.read(buf);
-								
-								logger.debug("text/plain changed ks_c_5601-1987 to ms949.");
-								
-								strContent = new String(buf, "ms949");
-							}											
-						}
-					} else if (contentType.toLowerCase().contains("gb2312")) {
-						if (strContent.contains("�")) {
-							InputStream is = getContentInputStream(part);
-							
-							if (is.available() > 0) {
-								byte[] buf = new byte[is.available()];
-								is.read(buf);
-								
-								logger.debug("text/plain changed gb2312 to gbk.");
-								
-								strContent = new String(buf, "gbk");
-							}											
-						}
-					} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
-						if (strContent.contains("�")) {
-							InputStream is = getContentInputStream(part);
-							
-							if (is.available() > 0) {
-								byte[] buf = new byte[is.available()];
-								is.read(buf);
-								
-								logger.debug("text/plain changed iso-2022-jp to cp50220.");
-								
-								strContent = new String(buf, "cp50220");
-							}											
-						}
-					}															
-				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
-				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
-				} catch (Exception e) {
-					e.printStackTrace();
+				// Content-Type 헤더 자체가 없는 경우, part.isMimeType("text/plain")이 true가 될 수 있으나 part.getContent()는
+				// 예외가 발생한다. 이 경우 part.getInputStream()으로부터 직접 디코딩을 수행한다.
+				if (headers == null) {
+					logger.debug("no Content-Type header");
 					
 					InputStream is = getContentInputStream(part); 
-											
+									
 					if (is.available() > 0) {
 						byte[] buf = new byte[is.available()];
 						is.read(buf);
 						
 						strContent = decodeNonAsciiBytes(buf);						
-					}
-				}				
-			}
-			
-			strContent = commonUtil.cleanValue(strContent);
-			
-			strContent = convertSpaceToNBSP(strContent);
-			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
-			StringBuilder tempText2 = new StringBuilder();
-			String[] tempTexts = tempText.split("<br />");
-			
-			String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
-			
-			for (int i=0; i<tempTexts.length; i++) {
-				if (!tempTexts[i].equals("")) {
-					tempText2.append("<p " + defaultFontAndSize + ">" + tempTexts[i] + "</p>");
-				} else {
-					tempText2.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
+					}					
 				}
-			}
-			
-			htmlBody += tempText2.toString();
-			
-			htmlBody = changeURLsToAnchorTags(htmlBody);	
-			htmlBody = stripScriptTags(htmlBody);
-			htmlBody = addTargetBlank(htmlBody);
+				else {
+					String contentType = part.getContentType();
+					
+					try {
+						// cp932는 자바에서 아예 인식되지 않는 코드여서 ms932로의 변경을 먼저 수행한다.	
+						if (contentType.toLowerCase().contains("cp932")) {
+							InputStream is = getContentInputStream(part);
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/plain changed cp932 to ms932.");
+								
+								strContent = new String(buf, "ms932");
+							}											
+						} else {					
+							strContent = part.getContent().toString();
+							
+							if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
+					            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+					            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
+								if (strContent.contains("�")) {
+									InputStream is = getContentInputStream(part);
+									
+									if (is.available() > 0) {
+										byte[] buf = new byte[is.available()];
+										is.read(buf);
+										
+										logger.debug("text/plain changed ks_c_5601-1987 to ms949.");
+										
+										strContent = new String(buf, "ms949");
+									}											
+								}
+							} else if (contentType.toLowerCase().contains("gb2312")) {
+								if (strContent.contains("�")) {
+									InputStream is = getContentInputStream(part);
+									
+									if (is.available() > 0) {
+										byte[] buf = new byte[is.available()];
+										is.read(buf);
+										
+										logger.debug("text/plain changed gb2312 to gbk.");
+										
+										strContent = new String(buf, "gbk");
+									}											
+								}
+							} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
+								if (strContent.contains("�")) {
+									InputStream is = getContentInputStream(part);
+									
+									if (is.available() > 0) {
+										byte[] buf = new byte[is.available()];
+										is.read(buf);
+										
+										logger.debug("text/plain changed iso-2022-jp to cp50220.");
+										
+										strContent = new String(buf, "cp50220");
+									}											
+								}
+							} 
+						}
+					// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+					// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+						InputStream is = getContentInputStream(part); 
+												
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							strContent = decodeNonAsciiBytes(buf);						
+						}
+					}				
+				}
+				
+				strContent = commonUtil.cleanValue(strContent);
+				
+				strContent = convertSpaceToNBSP(strContent);
+				String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
+				StringBuilder tempText2 = new StringBuilder();
+				String[] tempTexts = tempText.split("<br />");
+				
+				String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+				
+				for (int i=0; i<tempTexts.length; i++) {
+					if (!tempTexts[i].equals("")) {
+						tempText2.append("<p " + defaultFontAndSize + ">" + tempTexts[i] + "</p>");
+					} else {
+						tempText2.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
+					}
+				}
+				
+				htmlBody += tempText2.toString();
+				
+				htmlBody = changeURLsToAnchorTags(htmlBody);	
+				htmlBody = stripScriptTags(htmlBody);
+				htmlBody = addTargetBlank(htmlBody);
+	        }
 		} else if(part.isMimeType("multipart/alternative")){
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
@@ -3319,7 +3434,9 @@ public class EzEmailUtil {
     	String credential = null;
     	
     	if (emailAddress != null && !emailAddress.equals("")) {
-	    	byte[] keyBytes = "bizmGW02".getBytes("UTF-8");
+    		
+    		
+	    	byte[] keyBytes = apb.getBytes("UTF-8");
 	    	byte[] ivBytes = "mekaGW02".getBytes("UTF-8");
 	    	byte[] input = emailAddress.getBytes("UTF-8");
 	    	

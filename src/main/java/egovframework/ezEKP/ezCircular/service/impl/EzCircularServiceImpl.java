@@ -199,7 +199,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		if (fileList != null && !fileList.equals("")) {
 			//2018-02-13 주홍선 파일경로 잘못되어있던 것 수정
-			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+			File file = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile"));
 
 			if (!file.exists()) {
 	        	file.mkdir();
@@ -279,10 +279,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
 				StringBuilder bodyContent = new StringBuilder("");
 
-				bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 13px; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
 		    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
-		    	bodyContent.append("</div>");
+		    	
+		    	String content_ = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
 
 				for (int i=0; i<receiverLength; i++) {
 					OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
@@ -297,7 +297,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 						to.setPersonal(receiverName[i].trim(), "UTF-8");
 						to.setAddress(AccessUserInfo.getMail());
 						
-						ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+						ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content_, false);
 					}
 				}	
 			}
@@ -310,10 +310,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
 
-		File file = new File(beforeFilePath);
+		File file = new File(commonUtil.detectPathTraversal(beforeFilePath));
 
 		try {
-			file.renameTo(new File(afterFilePath));
+			file.renameTo(new File(commonUtil.detectPathTraversal(afterFilePath)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -329,8 +329,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		BufferedWriter bw = null;
 
 		try {
-			File originFile = new File(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName); // 복사할 파일의 경로
-			File copyFilePath = new File(pDirPath + "tempUploadFile" + commonUtil.separator + fileName);
+			File originFile = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName)); // 복사할 파일의 경로
+			File copyFilePath = new File(commonUtil.detectPathTraversal(pDirPath + "tempUploadFile" + commonUtil.separator + fileName));
 
 			fis = new FileInputStream(originFile);
 			fos = new FileOutputStream(copyFilePath);
@@ -530,10 +530,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 			String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
 			StringBuilder bodyContent = new StringBuilder("");
 
-			bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
 			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
 	    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
-	    	bodyContent.append("</div>");
+	    	
+	    	String content_ = commonUtil.createNotiMailContent(bodyContent.toString(), tenantID, userInfo.getLocale());
 
 			for (int i=0; i<receiverLength; i++) {
 				OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
@@ -548,7 +548,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 					to.setPersonal(receiverName[i].trim(), "UTF-8");
 					to.setAddress(AccessUserInfo.getMail());
 					
-					ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+					ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content_, false);
 				}
 			}
 		}
@@ -604,7 +604,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		if (fileList != null && !fileList.equals("")) {
-			File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+			File file = new File(commonUtil.detectPathTraversal(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + circularID + "_uploadFile"));
 
 			if (!file.exists()) {
 	        	file.mkdir();
@@ -717,7 +717,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	private void deleteDirectory (String circularID, String pDirpath, int tenantID) throws Exception {
 		logger.debug("deleteDirectory ended.");
 		
-		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+		File directoryFile = new File(commonUtil.detectPathTraversal(pDirpath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile"));
 		File[] deleteFileList = directoryFile.listFiles();
 
 		if (directoryFile.exists()) {
@@ -1510,10 +1510,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 			String subject = egovMessageSource.getMessage("ezCircular.t163", userInfo.getLocale());
     	
 			StringBuilder bodyContent = new StringBuilder("");
-			bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
 			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularVO.getCircularID() + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
 			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
-			bodyContent.append("</div>");
+			
+			String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
 			
 			InternetAddress from = new InternetAddress();
 			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -1525,7 +1525,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 					to.setPersonal(commentVO.getMemberName(), "UTF-8");
 					to.setAddress(commentVO.getMail());
 
-					ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+					ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
 				}
 			}
     	}
@@ -1773,10 +1773,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		String subject = egovMessageSource.getMessage("ezCircular.t123", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
-    	bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
-    	bodyContent.append("</div>");
+    	
+    	String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
     	
     	InternetAddress from = new InternetAddress();
 		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -1813,7 +1813,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				to.setPersonal(AccessUserInfo.getDisplayName(), "UTF-8");
 				to.setAddress(AccessUserInfo.getMail());
 				
-				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
 			}
 		}
 		

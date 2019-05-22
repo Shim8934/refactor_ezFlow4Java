@@ -15,12 +15,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
@@ -43,7 +41,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -111,7 +108,7 @@ public class EzPollController extends EgovFileMngUtil {
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
 	
-	@RequestMapping(value="/ezPoll/pollCreate.do")
+	@RequestMapping(value="/ezPoll/pollCreate.do", method = RequestMethod.GET)
 	public String questionCreate(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, HttpSession session) throws Exception {
 		logger.debug("question create is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -122,8 +119,9 @@ public class EzPollController extends EgovFileMngUtil {
 		String [] filePath = null;
 		ObjectMapper om = new ObjectMapper();
 		List<PollAnswerVO> listOptions = null;
-		StringBuffer strXML = new StringBuffer();
-		StringBuffer strXMLRange = new StringBuffer();
+		StringBuilder listOfTargetBld = new StringBuilder();
+		StringBuilder strXML = new StringBuilder();
+		StringBuilder strXMLRange = new StringBuilder();
 		strXMLRange.append("<RANGE>"); 
 		String params = (request.getParameter("params") != null) ? request.getParameter("params") : "";
 		String searchStr = (request.getParameter("search") != null) ? request.getParameter("search") : "";
@@ -178,12 +176,11 @@ public class EzPollController extends EgovFileMngUtil {
 			        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
 			        	
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += organDeptVO.getDisplayName1() + ",";
+			        		listOfTargetBld.append(organDeptVO.getDisplayName1() + ",");
 			        	}
 			        	else {
-			        		listOfTarget += organDeptVO.getDisplayName2() + ",";
+			        		listOfTargetBld.append(organDeptVO.getDisplayName2() + ",");
 			        	}
-			        	
 			        }
 			        
 			        strXMLRange.append("</DEPT>"); 
@@ -199,16 +196,17 @@ public class EzPollController extends EgovFileMngUtil {
 		        				+ commonUtil.cleanValue(userVo.getId()) + "</DATA>");
 		        		
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += userVo.getDisplayName1() + ",";
+			        		listOfTargetBld.append(userVo.getDisplayName1() + ",");
 			        	}
 			        	else {
-			        		listOfTarget += userVo.getDisplayName2() + ",";
+			        		listOfTargetBld.append(userVo.getDisplayName2() + ",");
 			        	}
-		        		
-		        	}		        	
+		        	}
 		        	
 		        	strXMLRange.append("</MEMBER>");
 		        }
+		        
+		        listOfTarget = listOfTargetBld.toString();
 		        
 		        if (listOfTarget.endsWith(",")) {
 		        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
@@ -260,10 +258,10 @@ public class EzPollController extends EgovFileMngUtil {
 			        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
 			        	
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += organDeptVO.getDisplayName1() + ",";
+			        		listOfTargetBld.append(organDeptVO.getDisplayName1() + ",");
 			        	}
 			        	else {
-			        		listOfTarget += organDeptVO.getDisplayName2() + ",";
+			        		listOfTargetBld.append(organDeptVO.getDisplayName2() + ",");
 			        	}
 			        	
 			        }
@@ -288,31 +286,32 @@ public class EzPollController extends EgovFileMngUtil {
 		        				+ commonUtil.cleanValue(user.getId()) + "</DATA>");
 		        		
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += user.getDisplayName1() + ",";
+			        		listOfTargetBld.append(user.getDisplayName1() + ",");
 			        	}
 			        	else {
-			        		listOfTarget += user.getDisplayName2() + ",";
+			        		listOfTargetBld.append(user.getDisplayName2() + ",");
 			        	}
-		        		
-		        	}		        	
+		        	}
 		        	
 		        	strXMLRange.append("</MEMBER>");
 		        }
 		        
+		        listOfTarget = listOfTargetBld.toString();
+		        
 		        if (listOfTarget.endsWith(",")) {
 		        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
-		        }				
+		        }
 			}
 			
 		}
 		
-		strXMLRange.append("</RANGE>");		
-			
+		strXMLRange.append("</RANGE>");
+		
 		model.addAttribute("optList", om.writeValueAsString(listOptions));
 		model.addAttribute("mode", mode);
 		model.addAttribute("content", content);
 		model.addAttribute("filePath", strXML.toString());
-		model.addAttribute("targetPath", strXMLRange.toString());		
+		model.addAttribute("targetPath", strXMLRange.toString());
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);	
@@ -321,7 +320,6 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("configEndTime", endTime);
 		model.addAttribute("tenantId", loginVO.getTenantId());
 		
-		
 		logger.debug("question create finishes!");
 		return "/ezPoll/createPoll";
 	}
@@ -329,7 +327,7 @@ public class EzPollController extends EgovFileMngUtil {
 	/**
 	 * 투표 메인 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezPoll/pollMain.do")
+	@RequestMapping(value="/ezPoll/pollMain.do", method = RequestMethod.GET)
 	public String qstMain(HttpServletRequest request, ModelMap model) throws Exception{
 		logger.debug("pollMain Start");
 		String qstId = request.getParameter("qstId");
@@ -347,7 +345,7 @@ public class EzPollController extends EgovFileMngUtil {
 	/**
 	 * 투표 레프트 메뉴 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezPoll/pollLeft.do")
+	@RequestMapping(value="/ezPoll/pollLeft.do", method = RequestMethod.GET)
 	public String qstLeft(HttpServletRequest request, ModelMap model) throws Exception{
 		logger.debug("pollLeft Start");
 		String qstId = request.getParameter("qstId");
@@ -366,7 +364,7 @@ public class EzPollController extends EgovFileMngUtil {
 	/**
 	 * 투표 환경설정 메뉴 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezPoll/pollConfig.do")
+	@RequestMapping(value="/ezPoll/pollConfig.do", method = RequestMethod.GET)
 	public String getConfig() throws Exception{
 		logger.debug("pollConfig Start");
 		
@@ -374,10 +372,10 @@ public class EzPollController extends EgovFileMngUtil {
 		return "/ezPoll/pollConfig";
 	}
 
-	@RequestMapping(value="/ezPoll/pollList.do")
+	@RequestMapping(value="/ezPoll/pollList.do", method = RequestMethod.GET)
 	public String getQuestion(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes, HttpSession session) throws Exception {
-		logger.debug("get question is running!");				
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);		
+		logger.debug("get question is running!");
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userID = loginVO.getId();
 		String companyID = loginVO.getCompanyID();
 		int currPage = 1;
@@ -612,22 +610,22 @@ public class EzPollController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/ezPoll/pollComplete.do", method = RequestMethod.POST)
 	public String qstComplete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, PollAnswerVO pollAnswerVO, PollQuestionVO pollQuestionVO, ModelMap model, HttpServletResponse response) throws Exception {		
-		logger.debug("Question complete is running!");		
+		logger.debug("Question complete is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantID = loginVO.getTenantId();
-		String userID = loginVO.getId();		
-		String companyID = loginVO.getCompanyID();		
-		String numberOfOptions = req.getParameter("numberOfOptions");		
-		//String qstTitle = commonUtil.cleanValue(req.getParameter("qst_title"));	
-		String qstTitle = req.getParameter("qst_title");	
-		String qstContent = req.getParameter("hidContent");		
+		String userID = loginVO.getId();
+		String companyID = loginVO.getCompanyID();
+		String numberOfOptions = req.getParameter("numberOfOptions");
+		//String qstTitle = commonUtil.cleanValue(req.getParameter("qst_title"));
+		String qstTitle = req.getParameter("qst_title");
+		String qstContent = commonUtil.stripScriptTags(req.getParameter("hidContent"));
 		String filePath = req.getParameter("hidFilePath");
 		int secretVote = Integer.parseInt(req.getParameter("hidSecreteVote"));
 		String endDate = req.getParameter("hidEndDate");
 		String startDate = req.getParameter("hidStartDate");
-		String createDate = req.getParameter("hidCreateDate"); //20180109		
+		String createDate = req.getParameter("hidCreateDate"); //20180109
 		int numberOfMultiSelect = Integer.parseInt(req.getParameter("multiSelectNumber"));
-		String range = req.getParameter("RangeXMLStr");		
+		String range = req.getParameter("RangeXMLStr");
 		int resultFirst = Integer.parseInt(req.getParameter("hidResultFirst"));
 		String qstModifyInfo = req.getParameter("hidModifyInfo");
 		int setDate = Integer.parseInt(req.getParameter("hidSetDate"));
@@ -755,10 +753,10 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("Question complete finishes!");
-		return "forward:/ezPoll/pollList.do";
+		return "redirect:/ezPoll/pollList.do";
 	}
 	
-	@RequestMapping(value="/ezPoll/pollVote.do")
+	@RequestMapping(value="/ezPoll/pollVote.do", method = RequestMethod.GET)
 	public String qstVote(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PollQuestionVO pollQuestionVO, HttpSession session, RedirectAttributes redirectAttributes, ModelMap model) throws Exception {
 		logger.debug("question vote is running!");			
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -767,7 +765,6 @@ public class EzPollController extends EgovFileMngUtil {
 		String deptID =	loginVO.getDeptID();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		String brdId = request.getParameter("brdId") != null ? request.getParameter("brdId") : "";
-		int totalUsers = 0;		
 		int totalVotes = 0;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		int compareEnd = 0;
@@ -799,7 +796,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
 		
 		if (pollQuestionVO == null) {		
-			redirectAttributes.addAttribute("brdID", 6);			
+			redirectAttributes.addAttribute("brdID", 6);
 			return "redirect:/ezPoll/pollList.do";
 		}	
 		
@@ -919,6 +916,7 @@ public class EzPollController extends EgovFileMngUtil {
 			for(int i = 0; i < listOfPollUserAndAnswer.size(); i++){
 				if (listOfPollUserAndAnswer.get(i).getUserId().equals(user.getId())) {
 					iterator.remove();
+					break; //다중 투표 시 이미 제거한 상태에서 또 제거하게 되면 에러가 발생하게 되어 추가.
 				}
 			}
 		}
@@ -1115,7 +1113,7 @@ public class EzPollController extends EgovFileMngUtil {
 		return data;		
 	}	
 
-	@RequestMapping(value="/ezPoll/downloadAttach.do")
+	@RequestMapping(value="/ezPoll/downloadAttach.do", method = RequestMethod.GET)
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("Download attach is running!");	
 		LoginSimpleVO loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
@@ -1138,12 +1136,12 @@ public class EzPollController extends EgovFileMngUtil {
         	pDirPath = pDirPath + commonUtil.separator;
         }
        
-        String fullPath = pDirPath + "uploadFile" + commonUtil.separator + folderPath;    
+        String fullPath = pDirPath + "uploadFile" + commonUtil.separator + commonUtil.detectPathTraversal(folderPath);
         file = new File(fullPath);
         
-		if (file == null || !file.exists()) {      
-			fullPath = realPath + folderPath; 
-			file = new File(fullPath);			
+		if (file == null || !file.exists()) {
+			fullPath = realPath + commonUtil.detectPathTraversal(folderPath);
+			file = new File(fullPath);
 			
 			if (file == null || !file.exists()) {
 				logger.debug("Folder not found. folderPath=" + folderPath);
@@ -1156,7 +1154,7 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("Download attach finishes!");	
 	}
 	
-	@RequestMapping(value="/ezPoll/confirmDeleteQuestion.do")
+	@RequestMapping(value="/ezPoll/confirmDeleteQuestion.do", method = RequestMethod.GET)
 	public String confirmDeleteQuestion(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model) throws Exception {
 		logger.debug("Confirm delete question is running!");				
 		String listQstIds = "";
@@ -1186,7 +1184,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("listQuestionContents", listQuestionContents);
 		model.addAttribute("numberOfQst", listQuestionIDs.size());
 		model.addAttribute("listQstIds", listQstIds);
-
+		
 		logger.debug("Confirm delete question finishes!");
 		return "/ezPoll/confirmDeleteQst";
 	}	
@@ -1554,7 +1552,7 @@ public class EzPollController extends EgovFileMngUtil {
 		return strXML;		
 	}
 	
-	@RequestMapping(value = "/ezPoll/uploadCmtFile.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezPoll/uploadCmtFile.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String uploadCmtFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {
 		logger.debug("upload comment file is running!");
@@ -1585,7 +1583,7 @@ public class EzPollController extends EgovFileMngUtil {
         String extension = pFileName.substring(pFileName.lastIndexOf(".") + 1);
         
         if (extension.toLowerCase().equals("jpg") || extension.toLowerCase().equals("png") || extension.toLowerCase().equals("bmp")) {
-    		String pDirPath = commonUtil.getUploadPath("upload_common.ROOT", loginSimpleVO.getTenantId());    		
+    		String pDirPath = commonUtil.getUploadPath("upload_common.ROOT", loginSimpleVO.getTenantId());
     		pDirPath = realPath + pDirPath;
     		
             if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
@@ -1614,10 +1612,10 @@ public class EzPollController extends EgovFileMngUtil {
         else {
         	logger.debug("upload comment file finishes!");
         	return "ERROR";
-        }         
+        }
 	}
 	
-	@RequestMapping(value = "/ezPoll/uploadFile.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezPoll/uploadFile.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {		
 		logger.debug("Upload file is running!");		
@@ -1627,14 +1625,12 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		String realPath = request.getServletContext().getRealPath("");
 		String[] pFileName = new String[cnt];
-        Long[] fileSize = new Long[cnt];        
-        String[] resultUpload = new String[cnt];
+        Long[] fileSize = new Long[cnt];
         String[] sGUID = new String[cnt];
-        String[] pUploadSN = new String[cnt];        
+        String[] pUploadSN = new String[cnt];
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
 
         for (int i = 0; i < cnt; i++) {
-            resultUpload[i] = "false";
             sGUID[i] = UUID.randomUUID().toString();
             pUploadSN[i] = "{" + sGUID[i] + "}";
         }
@@ -1689,23 +1685,23 @@ public class EzPollController extends EgovFileMngUtil {
 				strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
             }
         }
-        strXML.append("</NODES></ROOT>");        
+        strXML.append("</NODES></ROOT>");
        
-        logger.debug("Upload file finishes!");        
+        logger.debug("Upload file finishes!");
         return strXML.toString();
     }
 	
-	@RequestMapping(value = "/ezPoll/uploadOptFile.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezPoll/uploadOptFile.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String uploadOptFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {
 		logger.debug("upload comment file is running!");
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
-		List<MultipartFile> multiFile = request.getFiles("fileToUpload");		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
 		String realPath = request.getServletContext().getRealPath("");
 		String pFileName = "";
-        Long fileSize = 0L;             
+        Long fileSize = 0L;
         String sGUID = "";
-        String pUploadSN = "";      
+        String pUploadSN = "";
 
         sGUID = UUID.randomUUID().toString();
         pUploadSN = sGUID;
@@ -1871,9 +1867,8 @@ public class EzPollController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/ezPoll/deleteCmtFile.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String deleteCmtFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, LoginSimpleVO loginSimpleVO, HttpServletResponse response) throws Exception {
+	public String deleteCmtFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, HttpServletResponse response) throws Exception {
 		logger.debug("Delete comment file is running!");
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		String fileName = "";
 		String strXML = "";
 		
@@ -1883,9 +1878,9 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		String realPath = req.getServletContext().getRealPath("");
 		String pDirPath = commonUtil.separator + "files" + commonUtil.separator + "commentImages" + commonUtil.separator;
-		String absoluteFilePath = realPath + pDirPath +  fileName;
 		
 		try {
+			String absoluteFilePath = realPath + pDirPath + commonUtil.detectPathTraversal(fileName);
 			File file = new File(absoluteFilePath);
 			
 			if (!file.exists()) {
@@ -1937,8 +1932,9 @@ public class EzPollController extends EgovFileMngUtil {
 			}
 			
 			fileName = optImgPrevArr[i].split("/")[0];
-			String absoluteFilePath = pDirPath + "uploadFile/" + fileName;
+			
 			try {
+				String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(fileName);
 				File file = new File(absoluteFilePath);
 				
 				if (!file.exists()) {
@@ -1978,7 +1974,8 @@ public class EzPollController extends EgovFileMngUtil {
 		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-		String absoluteFilePath = pDirPath + "uploadFile/" + fileName;
+		
+		String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(fileName);
 		
 		try {
 			File file = new File(absoluteFilePath);
@@ -2000,7 +1997,7 @@ public class EzPollController extends EgovFileMngUtil {
 		return strXML;
 	}
 			
-	@RequestMapping(value = "/ezPoll/showVotedUsersInfo.do")
+	@RequestMapping(value = "/ezPoll/showVotedUsersInfo.do", method = RequestMethod.GET)
 	public String showVotedUsersInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,HttpServletRequest request, ModelMap model) throws Exception {
 		logger.debug("Show voted user info is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -2062,7 +2059,7 @@ public class EzPollController extends EgovFileMngUtil {
 		return "/ezPoll/showVotedUsers";
 	}
 	
-	@RequestMapping(value = "/ezPoll/showUnJoinedUsersInfo.do")
+	@RequestMapping(value = "/ezPoll/showUnJoinedUsersInfo.do", method = RequestMethod.GET)
 	public String showUnJoinedUsersInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,HttpServletRequest request, ModelMap model) throws Exception {
 		logger.debug("Show un joined user info is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -2070,13 +2067,9 @@ public class EzPollController extends EgovFileMngUtil {
 		int tenantId = loginVO.getTenantId();
 		int qstId = -1;
 		int numberOfUnVotedUsers = 0;
-		int target = 0;
-		if(request.getParameter("target") != null){
-			target = Integer.parseInt(request.getParameter("target"));
-		}
 		
 		if (request.getParameter("qstId") != null) {
-			qstId =	Integer.parseInt(request.getParameter("qstId"));			
+			qstId =	Integer.parseInt(request.getParameter("qstId"));
 		}
 		
 		//Get all users for this question
@@ -2193,26 +2186,18 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("Finish vote finishes!");
 	}
 	
-	@RequestMapping(value = "/ezPoll/showSeenUserInfo.do")
+	@RequestMapping(value = "/ezPoll/showSeenUserInfo.do", method = RequestMethod.GET)
 	public String showSeenUsersInfo(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, ModelMap model) throws Exception {
 		logger.debug("Show seen users info is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
 		String companyID = loginVO.getCompanyID();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
-		int target = 0;
-		if(request.getParameter("target") != null){
-			target = Integer.parseInt(request.getParameter("target"));
-		}
 	
 		//Get all related users for this question
 		//해당 투표 대상자 전체 인원을 얻어옴. 2018-06-04 홍대표
 		List<LoginVO> listofUnseenUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId, companyID);
-		List<LoginVO> listofSeenUsers = new ArrayList<LoginVO>();
-		
-		//Get all of seen users
-//		List<String> listOfSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
-		listofSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId, companyID);
+		List<LoginVO> listofSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId, companyID);
 		
 		int numberOfSeenUsers = listofSeenUsers.size();
 		listofUnseenUsers.removeAll(listofSeenUsers);
@@ -2259,7 +2244,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Sort list of seen users
-		if (listofSeenUsers.size() > 0) {
+		if (!listofSeenUsers.isEmpty()) {
 			if (loginVO.getPrimary().equals("1")) {
 				Collections.sort(listofSeenUsers, (LoginVO user1, LoginVO user2) -> {
 			        return user1.getDisplayName1().compareTo(user2.getDisplayName1());		        
@@ -2273,7 +2258,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Sort list of unseen users
-		if (listofUnseenUsers.size() > 0) {
+		if (!listofUnseenUsers.isEmpty()) {
 			if (loginVO.getPrimary().equals("1")) {
 				Collections.sort(listofUnseenUsers, (LoginVO user1, LoginVO user2) -> {
 			        return user1.getDisplayName1().compareTo(user2.getDisplayName1());		        
@@ -2297,7 +2282,7 @@ public class EzPollController extends EgovFileMngUtil {
 		return "/ezPoll/showSeenUserInfo";
 	}
 	
-	@RequestMapping(value="/ezPoll/qstRangeSelect.do")
+	@RequestMapping(value="/ezPoll/qstRangeSelect.do", method = RequestMethod.GET)
 	public String qstRangeSelect(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
 		logger.debug("qstRangeSelect started");
 		
@@ -2334,7 +2319,7 @@ public class EzPollController extends EgovFileMngUtil {
 	/**
 	 * 메일 쓰기화면 호출 함수
 	 */
-	@RequestMapping(value="/ezPoll/mailWrite.do")
+	@RequestMapping(value="/ezPoll/mailWrite.do", method = RequestMethod.GET)
 	public String pollMailWrite( @CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {		
 		logger.debug("mailWrite started.");
 		
@@ -2433,13 +2418,14 @@ public class EzPollController extends EgovFileMngUtil {
  		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
  		String pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
  		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
- 		String mailSendObject = "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
+ 		StringBuilder mailSendObjectBld = new StringBuilder();
+ 		mailSendObjectBld.append("<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>");
  		
  		if (pMailSenderNM != null && !pMailSenderNM.trim().equals("")) {
  			String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
  			
  	 		for (String pSenderNM : senderList) {
- 	 			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
+ 	 			mailSendObjectBld.append("<option value='" + pSenderNM + "'>" + pSenderNM + "</option>");
  	 		}
  		}
         logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",pMailSenderNM=" + pMailSenderNM);
@@ -2638,7 +2624,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("pBigAttachDownloadPeriod", pBigAttachDownloadPeriod);
 		model.addAttribute("pAutoSaveTime", pAutoSaveTime);
 		model.addAttribute("pAttachWarning", pAttachWarning);
-		model.addAttribute("mailSendObject", mailSendObject);
+		model.addAttribute("mailSendObject", mailSendObjectBld.toString());
 		model.addAttribute("mailInnerDomain", mailInnerDomain);
 		model.addAttribute("inMailColor", inMailColor);
 		model.addAttribute("outMailColor", outMailColor);
@@ -2972,8 +2958,9 @@ public class EzPollController extends EgovFileMngUtil {
 		this.template.convertAndSend("/reply/getSeenUpdateForQst" + qstId + "+" + tenantId, json); 			
 	}	
 	
-	private boolean checkExist(String filePath) {		
-		File f = new File(filePath);
+	private boolean checkExist(String filePath) throws Exception {
+		String checkFilePath = commonUtil.detectPathTraversal(filePath);
+		File f = new File(checkFilePath);
 		
 		if (f.exists() && !f.isDirectory()) { 
 		    return true;
@@ -2987,11 +2974,11 @@ public class EzPollController extends EgovFileMngUtil {
 		String fileSize_ = "";
 		
         if (fileSize / 1024 / 1024 >= 1) {
-        	fileSize_ = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
+        	fileSize_ = String.format("%.2f", ((double)fileSize / 1024 / 1024 * 10) / 10);
         	fileSize_ = fileSize_ + "MB";
         }
         else if (fileSize / 1024 >= 1) {
-        	fileSize_ = String.format("%.2f", (double)(fileSize / 1024));
+        	fileSize_ = String.format("%.2f", ((double)fileSize / 1024));
         	fileSize_ = fileSize_ + "KB";
         }
         else {
@@ -3132,7 +3119,7 @@ public class EzPollController extends EgovFileMngUtil {
 		ezPollService.updateEndDateForQst(qstId, tenantID, endDate);
 		
 		logger.debug("Updating question end-date finishes!");
-		return "forward:/ezPoll/pollList.do";
+		return "redirect:/ezPoll/pollList.do";
 	}
 
 }

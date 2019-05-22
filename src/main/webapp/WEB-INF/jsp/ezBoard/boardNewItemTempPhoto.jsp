@@ -512,11 +512,14 @@
 	            var filecount = document.getElementsByName('checkmenuSub').length;
 	            var imageid = "";
 	
+	            /* 2019-04-25 홍승비 - 사진 순서 정렬을 위한 이미지ID 조정 (000~999) */
 	            for (var i = 0; i < filecount ; i++) {
-	                var tmpId = "{" + GetGUID() + "}";
-	                if (document.getElementsByName("mainFG")[i].checked)
+	            	var tmpId = getZeroNum(i);
+	                tmpId += "{" + GetGUID() + "}";
+	                
+	                if (document.getElementsByName("mainFG")[i].checked) {
 	                    mainImageID = tmpId;
-	
+	                }
 	                imageid += tmpId + ";";
 	            }
 	
@@ -560,13 +563,11 @@
 						    xmlhttp.send();
 						    xmlhttp = null;
 		                }
-		                if ("${boardInfo.apprMail_FG}" == "Y") {
+		                
+		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+		                if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 		                	xmlhttp = createXMLHttpRequest();
-						    if (pMode != "modify") {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
-						    } else {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID), false);
-						    }
+		                	xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 		                }
@@ -870,6 +871,13 @@
 	            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 	        }
 	
+	        /* 2019-04-25 홍승비 - 사진 순서 정렬을 위한 이미지ID 조정 (000~999)  */
+		    function getZeroNum(count){
+		    	var zeroNum = "000" + count;
+		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
+		    	return zeroNum;
+		    }
+	        
 	        function CustomRandom() {
 	            var now = new Date();
 	            var seed = now.getMilliseconds();

@@ -32,7 +32,7 @@
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
-	            var useAllowTextSelection = "${useAllowTextSelection}";
+	            var useAllowTextSelection = "<c:out value ='${useAllowTextSelection}'/>";
 	            
 	            try {
 	            	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
@@ -67,7 +67,7 @@
 	            return ret;
 	        };
 // 	        var XmlBodyATT = createXmlDom();
-	        var pEditor = "${editor}";
+	        var pEditor = "<c:out value ='${editor}'/>";
 	        var isConDoc = false;
 	        var isEditor = false;
 	        
@@ -350,11 +350,6 @@
 	                    if (document.getElementById("body") != null) {
 	                        if (BODYTag.getAttribute("tagfreeheight")) {
 	                            EditorHeight = BODYTag.getAttribute("tagfreeheight");
-	                        }
-	                        if (BODYTag.children.length >= 1) {
-	                            if (BODYTag.children[0].id != "bodyblock") {
-	                                BODYTag.innerHTML = "<div id='bodyblock' style='height: 100%;'>" + BODYTag.innerHTML + "</div>";
-	                            }
 	                        }
 	                        div_BODY.innerHTML = BODYTag.innerHTML;
 	                        parent.modifiOrgBody = BODYTag.innerHTML;

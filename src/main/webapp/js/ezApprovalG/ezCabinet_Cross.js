@@ -656,10 +656,6 @@ function GetCaninetListXml() {
         var oSParam = loadXMLString(g_CabSearchParamXml);
         xmlpara.documentElement.appendChild(oSParam.documentElement);
     }
-    else if (g_RecSearchParamXml != "") {
-        var oSParam = loadXMLString(g_RecSearchParamXml);
-        xmlpara.documentElement.appendChild(oSParam.documentElement);
-    }
 
     g_szParamXml = getXmlString(xmlpara);
 

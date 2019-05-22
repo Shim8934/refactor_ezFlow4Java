@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -9,8 +10,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		var userLang = "${userInfo.lang}";
-		var type = "${type}";
-		var height = "${height}";
+		var type = '<c:out value="${type}"/>';
+		var height = '<c:out value="${height}"/>';
 		
         function LockF5() {
             if (event.keyCode == 116) {
@@ -84,7 +85,7 @@
 
             if (type == "DEL") {
             	// 일지 양식작성에서 사용하는 부분
-            	if ("${type}" == "JOURNAL") {
+            	if ('<c:out value="${type}"/>' == "JOURNAL") {
             		selCell.removeAttribute("id");
             		selCell.innerHTML = "";
             	} else {
@@ -111,7 +112,7 @@
             }
             else {
             	// 일지양식작성에서 사용하는 부분
-                if ("${type}" == "JOURNAL") {
+                if ('<c:out value="${type}"/>' == "JOURNAL") {
 	                selCell.setAttribute("id", id);
                 	selCell.innerHTML = "@" + id;
                 	
@@ -390,12 +391,18 @@
 		var defaultFontSize = "${defaultFontSize}";
 		var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 		
+		var fontList = "<spring:message code='main.t0620' />".split(";");
+        var fontListObject = {};
+        for (var i = 0; i < fontList.length; i++) {
+        	fontListObject[fontList[i]] = fontList[i];
+        }
+		
 		CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 		CrossEditor.params.Height = (height - 10) + "px";
 		
 		CrossEditor.params.FullScreen = true;
         CrossEditor.params.PutStyleInBody = true;
-        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");
+        CrossEditor.params.Font = fontListObject;
         CrossEditor.params.ParagraphTagStyle = {"font-size":defaultFontSize, "font-family":defaultFontFamily};
 
         if (userLang == "1") {

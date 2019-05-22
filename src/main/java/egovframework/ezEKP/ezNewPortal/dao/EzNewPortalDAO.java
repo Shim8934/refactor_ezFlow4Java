@@ -274,6 +274,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<ApprGDocListVO>) list("ezNewPortal.getApprovalDraftList", map);
 	}
 	
+	public int getApprovalDoingListCount(Map<String, Object> map) throws Exception {
+		return (int) select("ezNewPortal.getApprovalDoingListCount", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGFormVO> getFavoriteForms(Map<String, Object> map) throws Exception {
 		return (List<ApprGFormVO>) list("ezNewPortal.getFavoriteForms", map);

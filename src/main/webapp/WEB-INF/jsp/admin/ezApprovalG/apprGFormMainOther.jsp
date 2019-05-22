@@ -34,10 +34,10 @@
 			var linealt2 = "<spring:message code='ezApprovalG.t228'/>";
 			var linealt3 = "<spring:message code='ezApprovalG.t226'/>";
 			var linealt4 = "<spring:message code='ezApprovalG.t227'/>";
-			var companyID = "${companyID}";
-		    var contID = "${contID}";
-		    var formID = "${formID}";
-		    var isInsUp = "${tCheck}";
+			var companyID = "<c:out value='${companyID}'/>";
+		    var contID = "<c:out value='${contID}'/>";
+		    var formID = "<c:out value='${formID}'/>";
+		    var isInsUp = "<c:out value='${tCheck}'/>";
 		    var TreeIdx;
 		    var treeNode;
 		    var listview;
@@ -51,15 +51,15 @@
 		    var strResx436 = "<spring:message code='ezApprovalG.t445'/>";
 		    var pDocType = "";
 		    var thisSelGUID = ""; 
-		    var FormProcSpelling = "${formProcSpelling}";
+		    var FormProcSpelling = "<c:out value='${formProcSpelling}'/>";
 		    var htmlData = "";
 		    var ConnData = "";
 		    var WorkData = "";
-		    var useEditor = "${useEditor}";
+		    var useEditor = "<c:out value='${useEditor}'/>";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var realPath = "<c:out value = '${realPath}' />";
 		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
-		    var ext = "${ext}";
+		    var ext = "<c:out value='${ext}'/>";
 		    var locale = "<c:out value = '${locale}' />";
 		    // FormBuilder
 		    var useReform = "${useReform}" === "true";
@@ -102,7 +102,7 @@
 		        Tab1_SelectID = "1tab1";
 		        ChangeTab(document.getElementById("1tab1"));
 
-		        getDeptFullTree("${companyID}");
+		        getDeptFullTree("<c:out value='${companyID}'/>");
 
 		        getFormRecv();
 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
@@ -110,9 +110,9 @@
 		        MakeListXML(pDocType);
 		        
 		        if (approvalFlag == "G") {
-			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG", null, true);
+			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<c:out value='${serverName}'/>", "aprG", null, true);
 		        } else {
-			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", true);
+			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<c:out value='${serverName}'/>", true);
 		        }
 		        $("#tr_setAutoItemCode").hide();
 		        
@@ -315,7 +315,7 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
+		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${companyID}'/>");
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 		            createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 		            
@@ -439,6 +439,12 @@
                     OpenAlertUI(pAlertContent);
                     return;
                 }
+		        //고정수신처 부서 등록 시, 수발신 담당자 유/무 체크
+		        if (!isReceiverChk(treeNode.GetNodeData("CN"))) {
+		            var pAlertContent = strLang1101 + strLang1102;
+		            OpenAlertUI(pAlertContent);
+		            return;
+		        }
 		        
 		        if (DuplicateFlag) {
 		            AprLineAddDept(treeNode.GetNodeData("VALUE"), treeNode.GetNodeData("CN"), "D");
@@ -477,7 +483,7 @@
 		    function chkAllDept(aDeptID, aDeptName) {
 		        try {
 		            var DuplicateFlag = DuplicateAprDeptCheck(aDeptID);
-		            if (DuplicateFlag)
+		            if (DuplicateFlag && isReceiverChk(aDeptID))
 		                AprLineAddDept(aDeptName, aDeptID, "D");
 		
 		            var xmlHTTP = createXMLHttpRequest();
@@ -495,7 +501,6 @@
 		            xmlNodes = loadXMLString(xmlHTTP.responseText);
 		
 		            var objNodes = SelectNodes(xmlNodes, "NODES/NODE");
-		
 		            if (objNodes.length > 0) {
 		                for (var i = 0; i < objNodes.length; i++) {
 		                    chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
@@ -593,21 +598,54 @@
 		                lvtFormView.DeleteRow(GetAttribute(selRow[i], "id"));
 		            }
 		        }
-		        else {
+		        
+		        if (lvtFormView.GetDataRows().length <= 0) {
+		        	var objTr = document.createElement("TR");
+		        	objTr.setAttribute("id", "lvtForm_TR_noItems");
+		        		
+		        	var oText = document.createTextNode(strLang944);
+		        	var objTd = document.createElement("TD");
+		        	objTd.align = "center";
+		        	
+		        	var colCount = document.getElementById("lvtForm").getElementsByTagName("th").length;
+		        	objTd.setAttribute("colSpan", colCount);
+		        	objTd.appendChild(oText);
+		        	objTr.appendChild(objTd);
+		        	
+		        	document.getElementById("lvtForm").appendChild(objTr);
 		        }
+		        
 		        lvtFormView = null;
 		    }
 		
 		    function deleteAllCont_onclick() {
-		        var selRow = listview.GetRowCount();
-		
-		        if (selRow > 0) {
+		    	var lvtFormView = new ListView();
+		        lvtFormView.LoadFromID("lvtForm");
+		        
+		        var selRow = lvtFormView.GetRowCount();
+		        if (selRow > 0 && lvtFormView.GetDataRows()[0].id != "lvtForm_TR_noItems") {
 		            while (true) {
 		                if (listview.GetRowCount() < 1)
 		                    break;
 		
 		                listview.DeleteRow(listview.GetSelectedRowID(0));
 		            }
+		        }
+		        
+		        if (lvtFormView.GetDataRows().length <= 0) {
+		        	var objTr = document.createElement("TR");
+		        	objTr.setAttribute("id", "lvtForm_TR_noItems");
+		        		
+		        	var oText = document.createTextNode(strLang944);
+		        	var objTd = document.createElement("TD");
+		        	objTd.align = "center";
+		        	
+		        	var colCount = document.getElementById("lvtForm").getElementsByTagName("th").length;
+		        	objTd.setAttribute("colSpan", colCount);
+		        	objTd.appendChild(oText);
+		        	objTr.appendChild(objTd);
+		        	
+		        	document.getElementById("lvtForm").appendChild(objTr);
 		        }
 		    }
 		

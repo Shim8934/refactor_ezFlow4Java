@@ -172,6 +172,8 @@ function modifyMemo(obj) {
             },  
             cache: false,
             success: function(result) {
+            	$("textarea[memoid=" + memoId + "]").val(result.contents);
+            	
             	saveMemoToast(memoId);
             	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
             },

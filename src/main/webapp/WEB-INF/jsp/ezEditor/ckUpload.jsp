@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -7,7 +8,7 @@
 			<script type="text/javascript">
 				window.onload = function()
 				{
-					var strImagePath = "${imgPath}";
+					var strImagePath = "<c:out value='${imgPath}'/>";
 					if (strImagePath != undefined && strImagePath != "")
 					{
 					    var strLocation = strImagePath;

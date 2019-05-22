@@ -88,7 +88,7 @@
         var objNode;
         createNodeInsert(xmlpara, objNode, "DATA");
         createNodeAndInsertText(xmlpara, objNode, "PARENTCN", "");
-        createNodeAndInsertText(xmlpara, objNode, "CN", "${userId}");
+        createNodeAndInsertText(xmlpara, objNode, "CN", "<c:out value='${userId}'/>");
         objRoot = createNodeAndInsertText(xmlpara, objNode, "PROP", "");
         if (document.getElementById("CheckUseDefault").checked == true) {
             createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "useDefault", "1");

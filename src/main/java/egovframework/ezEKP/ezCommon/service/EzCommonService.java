@@ -128,5 +128,8 @@ public interface EzCommonService {
 	
 	public void addComCloseCompanyId() throws Exception;
 
+	public void addWebfolderTotalLimit() throws Exception;
+
+	public void addAddJobMasterProxy() throws Exception;
 }
 

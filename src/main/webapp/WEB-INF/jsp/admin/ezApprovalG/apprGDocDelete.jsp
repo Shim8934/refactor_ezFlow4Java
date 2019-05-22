@@ -46,7 +46,7 @@
 		    var ListIdx;
 		    var text1 = "<spring:message code='ezStatistics.t1008'/>";
 		    var deleteTimes = 0;		    
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    
 		    var CurPage = "";
 			var totalPage = "";
@@ -456,7 +456,7 @@
 										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
 										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
 										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
+										//+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>' //발송상태 주석
 										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t448"></spring:message></th>'
 										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
 										)
@@ -470,7 +470,7 @@
 										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
 										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
 										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
+										//+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>' //발송상태 주석
 										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t368"></spring:message></th>'
 										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
 										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
@@ -503,7 +503,7 @@
 										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.writerDeptName	+ "</td>";
 										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.writerName		+ "</td>";
 										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.docstateName	+ "</td>";
-										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.sendFlag		+ "</td>";
+										//html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.sendFlag		+ "</td>"; //발송상태 주석
 										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.endDate			+ "</td>";
 										if (res.pSelectTab != "completedoclist") {
 											html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.receiptPointName			+ "</td>";
@@ -1030,7 +1030,7 @@
 						<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
 						<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
 						<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
-						<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
+						<%-- <th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th> --%><!-- 발송상태 주석 -->
 						<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
 						<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
 					</tr>

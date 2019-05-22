@@ -1166,7 +1166,7 @@ function ezWorkspaceData() {
 
 function schedule_get_holiday() {		        
     $.ajax({
-		type : "POST",
+		type : "GET",
 		dataType : "text",
 		async : true,
 		url : "/ezSchedule/scheduleGetHoliday.do",

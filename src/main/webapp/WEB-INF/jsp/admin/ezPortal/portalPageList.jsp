@@ -25,8 +25,8 @@
 			var g_UID = "";
 			var g_GubunFlag = "";
 			var g_UseFlag = "";
-			var g_SearchString = "${pSearchString}";
-			var g_PortalGubun = "${portalGubun}";
+			var g_SearchString = "<c:out value = '${pSearchString}' />";
+			var g_PortalGubun = "<c:out value = '${portalGubun}' />";
 			var g_intPage  = "${intPage}";
 			var g_totalPage= "${totalPage}";
 			var BlockSize = 10;

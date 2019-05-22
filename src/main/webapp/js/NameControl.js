@@ -2769,38 +2769,45 @@ function createXmlDom() {
 // XMLString을 DOM 객체로 반환합니다.
 function loadXMLString(xmlstring) {
     var xmlDoc;
-    if (window.ActiveXObject) {
-        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-        xmlDoc.async = "false";
-        xmlDoc.loadXML(xmlstring);
-    }
-    else if (window.DOMParser) {
-        var parser = new DOMParser();
-        xmlDoc = parser.parseFromString(xmlstring, "text/xml");
-        parser = null;
-    }
+//    if (window.ActiveXObject) {
+//        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+//        xmlDoc.async = "false";
+//        xmlDoc.loadXML(xmlstring);
+//    }
+//    else if (window.DOMParser) {
+//        var parser = new DOMParser();
+//        xmlDoc = parser.parseFromString(xmlstring, "text/xml");
+//        parser = null;
+//    }
+    var parser = new DOMParser();
+    xmlDoc = parser.parseFromString(xmlstring, "text/xml");
+    parser = null;
     return xmlDoc;
 }
 // 노드를 생성합니다.
 function createNode(node, tagName) {
-    if (window.ActiveXObject) {
-        return node.createNode(1, tagName, "");
-    }
-    else if (window.DOMParser) {
-        return node.createElement(tagName);
-    }
+//    if (window.ActiveXObject) {
+//        return node.createNode(1, tagName, "");
+//    }
+//    else if (window.DOMParser) {
+//        return node.createElement(tagName);
+//    }
+	return node.createElement(tagName);
 }
 // text를 추가합니다.
 function InsertText(xmlDoc, node, value) {
-    if (window.ActiveXObject) {
-        node.text = value;
-        xmlDoc.documentElement.appendChild(node);
-    }
-    else if (window.DOMParser) {
-        var newText = document.createTextNode(value);
-        node.appendChild(newText);
-        xmlDoc.documentElement.appendChild(node);
-    }
+//    if (window.ActiveXObject) {
+//        node.text = value;
+//        xmlDoc.documentElement.appendChild(node);
+//    }
+//    else if (window.DOMParser) {
+//        var newText = document.createTextNode(value);
+//        node.appendChild(newText);
+//        xmlDoc.documentElement.appendChild(node);
+//    }
+    var newText = document.createTextNode(value);
+    node.appendChild(newText);
+    xmlDoc.documentElement.appendChild(node);
 }
 // 노드를 생성하고 rootNode를 추가합니다.
 function createNodeInsert(xmlparam, node, tagName) {
@@ -2817,14 +2824,21 @@ function createNodeAndInsertText(xmlparam, node, tagName, value) {
 // 노드 텍스트를 가져옵니다.
 function getNodeText(node) {
     var result = "";
-    if (window.ActiveXObject) {
-        result = node.text;
-    }
-    else if (window.DOMParser) {
-    	if(node != null) {
-    		result = node.textContent;
-    	}
-    }
+//    if (window.ActiveXObject) {
+//    	if(node != null) {
+//    		result = node.text;
+//    	}
+//    }
+//    else if (window.DOMParser) {
+//    	if(node != null) {
+//    		result = node.textContent;
+//    	}
+//    }
+    
+    if(node != null) {
+		result = node.textContent;
+	}
+    
     return result;
 }
 //************************ 크로스 브라우져 ajax 처리 함수 끝 ************************//

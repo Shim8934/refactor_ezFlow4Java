@@ -2,15 +2,18 @@
 var ListXML = null;
 function View_Change() {
     listContentArry = new Array();
+    var listType = "";
     if (document.getElementById("ListViewType").value == "list") {
         document.getElementById("MailList").style.display = "";
         document.getElementById("MailListCard").style.display = "none";
         document.getElementById("DetailList_header").style.display = "";
+        listType = "list";
     }
     else {
         document.getElementById("MailList").style.display = "none";
         document.getElementById("MailListCard").style.display = "";
         document.getElementById("DetailList_header").style.display = "none";
+        listType = "card";
     }
     if (ListXML != null)
         MakeAddressList();
@@ -21,6 +24,15 @@ function View_Change() {
         else
             Get_AddressList();
     }*/
+    var xmlDom = createXmlDom();
+	var xmlHTTP = createXMLHttpRequest();
+	var objRoot;
+	createNodeInsert(xmlDom, objRoot, "DATA");
+	createNodeAndInsertText(xmlDom, objRoot, "USERID", pOwerID);
+	createNodeAndInsertText(xmlDom, objRoot, "LISTCNT", pPageSize);
+	createNodeAndInsertText(xmlDom, objRoot, "LISTTYPE", listType);
+	xmlHTTP.open("POST", "/ezAddress/addressSaveConfig.do", false);
+	xmlHTTP.send(xmlDom);
 }
 function Get_AddressList() {
     searchFlag = false;
@@ -629,8 +641,8 @@ function Window_onresize() {
             document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 271) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 205) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 238) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 243) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 271) + "px";
         }
     }
 }

@@ -38,7 +38,7 @@ public interface EzResourceService {
 
 	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String writerName, String writerDept, int tenantID, String offset) throws Exception;
 
-	public String getAdminFlag(String companyID, String brdID, String id, int tenantID) throws Exception;
+	public String getAdminFlag(String companyID, String brdID, String id, int tenantID, String deptID) throws Exception;
 
 	public String getItemList(String loginCookie, String brdID) throws Exception;
 
@@ -48,7 +48,7 @@ public interface EzResourceService {
 	
 	public String getRepetition(String xmlStr, int tenantID, String offset) throws Exception;
 	
-	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID) throws Exception;
+	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID, String deptID) throws Exception;
 	
 	public String getBrdApproveFlag(int brdID, String companyID, int tenantID) throws Exception;
 	
@@ -60,7 +60,7 @@ public interface EzResourceService {
 	
 	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID, String offset) throws Exception;
 	
-	public boolean multiDelResData(String xmlStr, int tenantID) throws Exception;
+	public boolean multiDelResData(String xmlStr, int tenantID, String realPath) throws Exception;
 	
 	public boolean modifyResData(String xmlStr, int tenantID) throws Exception;
 	
@@ -89,5 +89,7 @@ public interface EzResourceService {
 	
 	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID) throws Exception;
 	
-	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID) throws Exception;
+	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception;
+
+	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception;
 }

@@ -9,8 +9,9 @@ function resultRead() {
 	
 	$.ajax({
 		type : "POST",
-		url : "/admin/ezEmail/getLetterBox.do?companyId=" + returnCompany,
+		url : "/admin/ezEmail/getLetterBox.do",
 		datatype : 'json',
+		data : {"companyId" : returnCompany},
 		error : function(data) {
 			alert("error");
 			console.log(data);
@@ -89,13 +90,14 @@ function treeOnclick() {
 
 // 현재 노드 저장
 function selectBox(letterBoxNo) {
-	var query = "/admin/ezEmail/readLetterBox.do?letterBoxNo=" + letterBoxNo;
+	var query = "/admin/ezEmail/readLetterBox.do";
 	
 	$.ajax({
 		type : "POST",
 		url : query,
 		cache : false,
 		dataType : 'json',
+		data : {"letterBoxNo" : letterBoxNo},
 		success : function(data) {
 			setDisplay(data.displayname, data.displayname2);
 		},
@@ -244,13 +246,15 @@ function deleteLetterBox() {
 		
 		$.ajax({
 			type : "POST",
-			url : "/admin/ezEmail/deleteLetterBox.do?letterBoxNo=" + letterBoxNo,
+			url : "/admin/ezEmail/deleteLetterBox.do",
 			datatype : 'json',
+			data : {"letterBoxNo" : letterBoxNo},
 			success : function(data) {
 				$.ajax({
 					type : "POST",
-					url : "/admin/ezEmail/deleteLetterFile?letterBoxNo=" + letterBoxNo,
+					url : "/admin/ezEmail/deleteLetterFile",
 					datatype : 'json',
+					data : {"letterBoxNo" : letterBoxNo},
 					success : function(data) {},
 					error : function(data) {
 						alert("error");

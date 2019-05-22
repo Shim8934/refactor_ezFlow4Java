@@ -1647,8 +1647,7 @@ Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values (
 Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t09','Top',0);
 Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t10','Top',0);
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'일일업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'일일업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -1770,8 +1769,7 @@ values (0,'일일업무일지(기본)',
 </p>'
 ,'ezJournal.t05',UTC_TIMESTAMP(),'기본일일업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'주간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'주간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -1893,8 +1891,7 @@ values (0,'주간업무일지(기본)',
 </p>'
 ,'ezJournal.t06',UTC_TIMESTAMP(),'기본주간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'월간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'월간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2016,8 +2013,7 @@ values (0,'월간업무일지(기본)',
 </p>'
 ,'ezJournal.t07',UTC_TIMESTAMP(),'기본월간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'분기업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'분기업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2139,8 +2135,7 @@ values (0,'분기업무일지(기본)',
 </p>'
 ,'ezJournal.t08',UTC_TIMESTAMP(),'기본분기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'반기업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'반기업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2262,8 +2257,7 @@ values (0,'반기업무일지(기본)',
 </p>'
 ,'ezJournal.t09',UTC_TIMESTAMP(),'기본반기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'연간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'연간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2412,7 +2406,7 @@ INSERT INTO TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_
 INSERT INTO TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('24','video','wmv','/images/webfolder/video.png',0,'영상');
 
 -- webfolder capacity 용량
-INSERT INTO TBL_WEBFOLDER_CONFIG VALUES(0,'Top',1,1);
+INSERT INTO TBL_WEBFOLDER_CONFIG VALUES(0,'*',1,1,1,1);
 
 -- attitude(근태) form데이터
 INSERT INTO TBL_ATTITUDE_FORM (FORM_ID, TENANT_ID, FORM_NAME, FORM_NAME2, FORM_HTML) VALUES (0,0,'폼1','form1','<tr><th>성명</th><td id=\"writerName\" style=\"\"></td></tr><tr><th>일시 </th><td colspan=\"2\" id=\"attiTime\"><span id=\"periodblock\" datetype=\"3\"><input type=\"text\" id=\"Sdatepicker\" style=\"width:80px;text-align:center\" readonly=\"readonly\"><input id=\"Stimepicker\" type=\"text\" class=\"time\" style=\"width:43px;margin-left:10px;text-align:center;\" /> ~<input id=\"Etimepicker\" type=\"text\" class=\"time\" style=\"width:43px;margin-left:10px;text-align:center;\" /></span></td></tr><tr> <th>연락처</th> <td id=\"mobile\" style=\"\"><input name=\"mobile\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"50\"></td> </tr><tr> <th>업무대리</th> <td id=\"bizsub\" style=\"\"><input name=\"bizsub\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"120\"></td></tr>');

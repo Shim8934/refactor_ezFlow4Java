@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -1289,22 +1290,31 @@ public class EzWebFolderGWController_m {
 				}
 			}
 			
+			Map<String, Object> resultMap;
 			List<DuplicateInfoVO> duplicateList;
+			boolean hasExceededCapacities;
 			
 			if (isOverwritable || hasNameList) {
-				duplicateList = ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, fileNameArray, folderId, timeUTC, user, isOverwritable);
+				resultMap = ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, fileNameArray, folderId, timeUTC, user, isOverwritable);
 			} else {
-				duplicateList = ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId, timeUTC, user);
+				resultMap = ezWebFolderService_m.moveTrashCan(fileIDList, folderIDList, folderId, timeUTC, user);
 			}
 			
-			if (duplicateList.isEmpty()) {
+			duplicateList = (List<DuplicateInfoVO>) resultMap.get("duplicateList");
+			hasExceededCapacities = (boolean) Optional.ofNullable(resultMap.get("hasExceededCapacities")).orElse(false);
+			result.put("status", "ok");
+			
+			if (hasExceededCapacities) {
+				logger.debug("Not enough storage to move/copy these files!");
+				result.put("code", 4);
+				result.put("status", "error");
+			} else if (duplicateList.isEmpty()) {
 				result.put("code", 0);
 			} else {
 				result.put("code", 8);
 				result.put("duplicateInfoArray", duplicateList);
 			}
 			
-			result.put("status", "ok");
 		} catch (Exception e) {
 			e.printStackTrace();
 			

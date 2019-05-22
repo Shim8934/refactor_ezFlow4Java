@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
@@ -70,7 +71,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 * @throws Exception
 	 * 전자결재 한글기안기 오픈
 	 */
-	@RequestMapping(value = "/ezApprovalG/draftuiHWP.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/draftuiHWP.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String draftuiHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("draftuiHWP started");
 		
@@ -157,7 +158,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 * @throws Exception
 	 * 전자결재 한글결재 오픈
 	 */
-	@RequestMapping(value = "/ezApprovalG/approvuiHWP.do")
+	@RequestMapping(value = "/ezApprovalG/approvuiHWP.do", method = RequestMethod.GET)
 	public String approvuiHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("approvuiHWP started");
 
@@ -184,6 +185,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		if (docID == null) {
+			docID = "";
 		}
 		
 		if (mailChk == null) {
@@ -217,7 +222,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         	allFlag = "0";
         }
         
-        if (docID != null && !docID.equals("")) {
+        if (!docID.equals("")) {
 			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
 			String[] proxyUserArray = proxyUser.split(",");
 			boolean checkPermission = true;
@@ -297,7 +302,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 문서정보이력 상세보기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/docViewerHWP.do")
+	@RequestMapping(value = "/ezApprovalG/docViewerHWP.do", method = RequestMethod.GET)
 	public String docViewerHWP(HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("docViewerHWP started");
 
@@ -313,7 +318,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 
 	 */	
-	@RequestMapping(value = "/ezApprovalG/ezviewAprHWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezviewAprHWP.do", method = RequestMethod.GET)
 	public String ezviewAprHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezviewAprHWP started");
 
@@ -369,16 +374,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				
 				FileUtils.copyFile(orgFile, newFile);
 			}
@@ -407,7 +412,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 한글기안기 결재문서 메일발송 시 첨부파일로 떨구기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/mail_interuploadX_Server.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/mail_interuploadX_Server.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mail_interuploadX_Server(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception {
 		LOGGER.debug("mail_interuploadX_Server started");
@@ -416,15 +421,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 
-		String sGUID = xmlDom.getElementsByTagName("guid").item(0).getTextContent();
 		String sFileTitle = xmlDom.getElementsByTagName("name").item(0).getTextContent();
 		String sFileData = xmlDom.getElementsByTagName("filedata").item(0).getTextContent();
 		String sExt = xmlDom.getElementsByTagName("ext").item(0).getTextContent();
-		String sFolder = xmlDom.getElementsByTagName("dir").item(0).getTextContent();
-		String sPrefix = xmlDom.getElementsByTagName("prefix").item(0).getTextContent();
-
+		//2019.03.25 천성준 - 사용안해서 일단 주석
+		//String sGUID = xmlDom.getElementsByTagName("guid").item(0).getTextContent();
+		//String sFolder = xmlDom.getElementsByTagName("dir").item(0).getTextContent();
+		//String sPrefix = xmlDom.getElementsByTagName("prefix").item(0).getTextContent();
+		
+		//String filename = sFileTitle;
 		String pBigFileUpload = sFileData;
-		String filename = sFileTitle;
 		String newguid = UUID.randomUUID().toString();
 		String newfilename = newguid + "." + sExt;
 		String newwindowid = xmlDom.getElementsByTagName("newid").item(0).getTextContent();
@@ -470,7 +476,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			copyPath = copyPath + commonUtil.separator + "tempFileUpload";
 		}
 
-		File f = new File(pDirTempPath);
+		File f = new File(commonUtil.detectPathTraversal(pDirTempPath));
 
 		// 파일을 업로드할 폴더가 존재하지 않으면 생성한다.            
 		if (!f.exists()) {
@@ -479,7 +485,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		String saveLocalPath = pDirTempPath + commonUtil.separator + newfilename;
 		String orgFileName = sFileTitle + "." + sExt;            
-		long fileSize = 0;
+		//long fileSize = 0; //2019.03.25 천성준 - 사용안해서 일단 주석
 		if (useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1 && !useExtension.equals("*")) {
 			extResult = "denied";
 		} else {
@@ -489,7 +495,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				FileOutputStream fos = null;
 
 				try {
-					File nameFile = new File(saveLocalPath + "__.txt");
+					File nameFile = new File(commonUtil.detectPathTraversal(saveLocalPath + "__.txt"));
 					fos = new FileOutputStream(nameFile);
 					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
 				} catch (Exception e) {
@@ -501,8 +507,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				}
 			}
 
-			File file2 = new File(pDirTempPath + commonUtil.separator + newfilename);
-			File file3 = new File(realPath +  commonUtil.separator + sFileHref );
+			File file2 = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + newfilename));
+			File file3 = new File(commonUtil.detectPathTraversal(realPath +  commonUtil.separator + sFileHref ));
 
 			if (!file2.exists()) {
 				FileUtils.copyFile(file3, file2);
@@ -522,7 +528,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 한글양식 정보 버튼 
 	 */	
-	@RequestMapping(value = "/ezApprovalG/ezDocInfoG_View.do")
+	@RequestMapping(value = "/ezApprovalG/ezDocInfoG_View.do", method = RequestMethod.GET)
 	public String ezDocInfoG_View(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezDocInfoG_View started");
 
@@ -602,7 +608,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 한글양식 결재완료 문서 보기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/ezViewEnd_HWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezViewEnd_HWP.do", method = RequestMethod.GET)
 	public String ezViewEnd_HWP(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezViewEnd_HWP started");
 
@@ -696,7 +702,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	
 	
-	@RequestMapping(value = "/ezApprovalG/ezRecevGSusinHWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezRecevGSusinHWP.do", method = RequestMethod.GET)
 	public String ezRecevGSusinHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezRecevGSusinHWP started");
 
@@ -735,16 +741,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				InputStream orgFileInputStream;
 
 				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
@@ -791,7 +797,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	}	
 	
 	
-	@RequestMapping(value = "/ezApprovalG/ezDeptRecevUI_HWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezDeptRecevUI_HWP.do", method = RequestMethod.GET)
 	public String ezDeptRecevUI_HWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezDeptRecevUI_HWP started");
 
@@ -840,7 +846,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	}
 	
 
-	@RequestMapping(value = "/ezApprovalG/ezSimsaG_HWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezSimsaG_HWP.do", method = RequestMethod.GET)
 	public String ezSimsaG_HWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezSimsaG_HWP started");
 
@@ -881,7 +887,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송 발송 저장 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		LOGGER.debug("saveEndFileHwp started");
@@ -895,13 +901,14 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		try {
-			File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+			File file = new File(commonUtil.detectPathTraversal(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
 			String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
+			saveFileName = commonUtil.detectPathTraversal(saveFileName);
 			byte[] documentBytes = Base64.decodeBase64(formText);
 			
 			// 2018.08.23 KLIB 암호화
@@ -910,7 +917,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				saveFileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
-			Files.write(Paths.get(saveFileName), documentBytes, StandardOpenOption.TRUNCATE_EXISTING);
+			Files.write(Paths.get(commonUtil.detectPathTraversal(saveFileName)), documentBytes, StandardOpenOption.TRUNCATE_EXISTING);
 
 			result = "SUCCESS";
 		} catch (Exception e) {
@@ -927,7 +934,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 직인의뢰접수HWP화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezConvOutHWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezConvOutHWP.do", method = RequestMethod.GET)
 	public String ezConvOutHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezConvOutHWP started.");
 		
@@ -957,7 +964,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 결재문서 > 저장버튼 다운로드
 	 */
-	@RequestMapping(value = "/ezApprovalG/downloadHWPdoc.do")
+	@RequestMapping(value = "/ezApprovalG/downloadHWPdoc.do", method = RequestMethod.GET)
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		LOGGER.debug("============ downloadHWPdoc started ============");

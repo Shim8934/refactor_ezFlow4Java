@@ -28,6 +28,9 @@
 			.txt {
 				clear : none;
 			}
+			.contents_listCommunity li span.icon_reply {
+				float : left;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -129,7 +132,7 @@
 
 	        function get_newCommunity() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/getBestNewCommunity.do",
@@ -143,7 +146,7 @@
 
 	        function get_bestCommunity() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/getBestNewCommunity.do",
@@ -397,7 +400,7 @@
 
 	        function get_myCommunity() {
 	        	$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "text",
 						async : false,
 						url : "/ezCommunity/myCopNewBoardItem.do",
@@ -827,7 +830,7 @@
 	        
 	        function get_categoryCommunity(type) {
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : true,
 					url : "/ezCommunity/myCategoryCop.do",
@@ -1087,7 +1090,7 @@
 	            } */
 	            
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					url : "/ezCommunity/categoryCopList.do",
 					data	: {	mode	:	mode,
@@ -1340,7 +1343,7 @@
 
 	        function get_todaycop() {
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : true,
 					url : "/ezCommunity/todayCop.do",
@@ -1550,7 +1553,7 @@
 	            CurPage = "1";
 	            
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					url : "/ezCommunity/searchCop.do",
 					data	: {	option	:	searchoption,
@@ -1567,7 +1570,7 @@
 	            search = true;
 
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					url : "/ezCommunity/searchCop.do",
 					data	: {	option	:	searchoption,
@@ -1628,7 +1631,7 @@
 									
 									if (rtn) {
 										$.ajax({
-											type : "POST",
+											type : "GET",
 											dataType : "text",
 											async : false,
 											url : "/ezCommunity/getIsJoin.do",
@@ -1674,7 +1677,7 @@
 	        function move_cop_Complete(rtn) {
 	        	if (rtn) {
 	        		$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "text",
 						async : false,
 						url : "/ezCommunity/getIsJoin.do",
@@ -1861,6 +1864,12 @@
 		            		<c:when test="${fn:length(cNoticeList) ne 0 }">
 		            			<c:forEach items="${cNoticeList }" var="list" begin="0" end="4" >
 		            				<li>
+		            					<c:if test="${list.re_Level > 0}">
+		            						<span class="icon_reply">
+		            							<img src="/images/dum.gif" width="${list.re_Level * 10 }" height="1" border="0">
+		            							<img src="/images/i_rep.gif" alt border="0">
+		            						</span>
+		            					</c:if>
 		            					<c:if test="${list.writeDay >= pastDate}">
 		            						<span class="icon_new"><img src="../images/kr/community/communityPortlet_iconnew.gif"></span>
 		            					</c:if>

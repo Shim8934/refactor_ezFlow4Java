@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -12,8 +13,8 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
     <script type="text/javascript" id="clientEventHandlersJS">
-	    var pUserID = "${userInfo.id}";
-	    var sCompanyID = "${userInfo.companyID}";
+	    var pUserID = "<c:out value='${userInfo.id}'/>";
+	    var sCompanyID = "<c:out value='${userInfo.companyID}'/>";
     
         var nodeIdx;
         if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -37,7 +38,7 @@
 
                 Tree_setconfig();
                 var xmlDom = createXmlDom();
-                xmlDom = loadXMLString("${userCont}");
+                xmlDom = loadXMLString('${userCont}');
 
                 var treeView = new TreeView();
                 treeView.SetID("UserContTree");

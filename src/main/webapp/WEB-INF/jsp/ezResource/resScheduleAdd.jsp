@@ -24,13 +24,13 @@
 			<%-- var g_DD = "<%=Request.QueryString["dd"]%>";
 	    	var g_MM = "<%=Request.QueryString["mm"]%>";
 	    	var g_YY = "<%=Request.QueryString["yy"]%>"; --%>
-	    	var dayView = "${dayView}";
+	    	var dayView = "<c:out value='${dayView}'/>";
 	    	if (!dayView) {
 	    		dayView = 0;
 	    	}
 	    	var reFlag; 
 	    	var importanceVal;
-	    	var g_fromStr		= "${fromStr}";
+	    	var g_fromStr		= "<c:out value='${fromStr}'/>";
 	    	var s_userID		= "${userInfo.id}";
 	    	var ss_companyID	= "${userInfo.companyID}";
 	    	var ss_deptNM		= "";
@@ -52,10 +52,10 @@
 	    	var org_ownerID		= "${ownerID}";
 	    	var pnumVal			= "${pNum}";
 	    	var writerIDVal		= "${writerID}";
-	    	var cmd				= "${cmdStr}";
+	    	var cmd				= "<c:out value='${cmdStr}'/>";
 	    	var typeVal			= "${typeVal}";
-	    	var startDateVal	= "${startDateVal}";
-	    	var endDateVal		= "${endDateVal}";
+	    	var startDateVal	= "<c:out value='${startDateVal}'/>";
+	    	var endDateVal		= "<c:out value='${endDateVal}'/>";
 	    	var gFlagVal		= "${gresFlag}";
 	    	var uploadPath		= "${scheduleFilePath}";
 	    	var org_companyID	= ss_companyID;
@@ -225,7 +225,18 @@
 	            	autoSize: true,
 	            	showOn: "both",
 	            	buttonImage: "/images/ImgIcon/calendar-month.png",
-	            	buttonImageOnly: true
+	            	buttonImageOnly: true,
+	            	onSelect : function(dateText, inst) {
+		            	var startD = new Date(inst.lastVal);
+		            	var endD = new Date($("#Edatepicker").datepicker().val());
+		            	var dateDiff = (endD - startD)/1000/24/60/60;
+		            	
+		            	var nowSDate = dateText.split('-');
+		            	var nowSDate2 = new Date(nowSDate[0], nowSDate[1]-1, nowSDate[2]);
+		            	nowSDate2.setDate(nowSDate2.getDate() + dateDiff);
+
+		            	$("#Edatepicker").datepicker('setDate', nowSDate2);
+		            }
 	        	});
 	        	$("#Edatepicker").datepicker({
 	            	changeMonth: true,
@@ -479,6 +490,12 @@
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 		                SaveSchedule_onClick(cmd, ItemArray[0][i]);
 		            }
+	            	
+	            	// 2019-04-19 김민성 - 자원 동시에 예약 시 모든 자원 예약 후 화면 새로고침 되도록 수정
+	            	if (!setApprovFlag) {
+	        		    window_onUnload();
+	        		    window.close();
+	        		}
 	    	    }
 	        	return check;
 	    	}

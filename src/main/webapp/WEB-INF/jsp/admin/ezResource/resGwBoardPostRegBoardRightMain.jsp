@@ -12,12 +12,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwBoard_Post_RegBoardRightMain.js')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			g_BrdID = "${brdID}";
-			g_BrdNm = "<c:out value='${brdNm}' />";
-			g_UserID = "${userInfo.id}";
+			g_BrdID = "<c:out value='${brdID}'/>";
+			g_BrdNm = "<c:out value='${brdNm}'/>";
+			g_UserID = "<c:out value='${userInfo.id}'/>";
 
-			var L_BrdGb = "${brdGb}";
-			var pCompanyID = "${companyID}";
+			var L_BrdGb = "<c:out value='${brdGb}'/>";
+			var pCompanyID = "<c:out value='${companyID}'/>";
 
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -70,18 +70,48 @@
 				    acllist.options[indexV].innerHTML = strVal;
 				}
 			}
-	
+			
+			function optDeptCopy_Click(objthis) {
+				var indexV	= acllist.selectedIndex;
+				var copyYN = objthis.value ;
+				
+				if(copyYN == "1") {
+					try {
+				        acllist.options[indexV].setAttribute("sda_yn", "Y");
+				        acllist.options[indexV].sda_yn = "Y";
+				    } catch (e) {}
+				}
+				else {
+				 	 try {
+				        acllist.options[indexV].setAttribute("sda_yn", "N");
+				        acllist.options[indexV].sda_yn = "N";
+				    } catch (e) {}
+				}
+				
+			}
 	
 			function selAclList_Change(objthis) {
 				var indexV			= objthis.selectedIndex;
 				var strAclLvl;// = CrossYN() ? objthis.options[indexV].getAttribute("Access_lvl") : objthis.options[indexV].Access_lvl;
+				var deptYn;
+				var deptAclLvl;
 	
 				if (CrossYN()) {
 				    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
+				    deptYn = objthis.options[indexV].getAttribute("dept_yn");
+				    deptAclLvl = objthis.options[indexV].getAttribute("sda_yn");
 				} else {
 				    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
+				    deptYn = objthis.options[indexV].getAttribute("dept_yn");
+				    deptAclLvl = objthis.options[indexV].getAttribute("sda_yn");
 				    if (strAclLvl == undefined) {
 				        strAclLvl = objthis.options[indexV].Access_lvl;
+				    }
+				    if(deptYn == undefined) {
+				    	deptYn = objthis.options[indexV].dept_yn;
+				    }
+				    if(deptAclLvl == undefined) {
+				    	deptAclLvl = objthis.options[indexV].sda_yn;
 				    }
 				}
 	
@@ -89,6 +119,22 @@
 					brd_mng1.checked = true;
 				} else {
 					brd_mng2.checked = true;
+				}
+				
+				if(deptYn == "D") {
+					dept_copy1.disabled = false;
+					dept_copy2.disabled = false;
+					
+					if(deptAclLvl == "Y") {
+						dept_copy1.checked = true;
+					}
+					else {
+						dept_copy2.checked = true;
+					}
+				}
+				else {
+					dept_copy1.disabled = true;
+					dept_copy2.disabled = true;
 				}
 			}
 		</script>
@@ -117,7 +163,7 @@
 			<table class="box" style="width:100%">
 				<tr>
 					<th style="font-weight: normal;"><spring:message code="ezBoard.t606" /></th>
-					<td style="height:300px;">
+					<td style="height:300px;"colspan=3>
 						<select id="acllist" name="acllist" style="width: 99%; height: 98.5%; background:none; margin-left:3px; overflow-y: auto; overflow-x: auto; padding-right:0px;" size="10" onChange="selAclList_Change(this);">
 							${strOptions}
 						</select>
@@ -131,6 +177,17 @@
           					<td style="border:0px;">
           						<input type="radio" id="brd_mng1" name="brd_mng" value="1" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optAdmLvl}> <spring:message code="ezResource.t112" />
             					<input type="radio" id="brd_mng2" name="brd_mng" value="2" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optUserLvl}> <spring:message code="ezResource.t107" />
+            				</td>
+        				</tr>
+      					</table>
+       				</td>
+       				<th style="font-weight: normal; width: 30px;"><spring:message code='ezBoard.t999025' /></th>
+					<td style="border-bottom: 1px solid #d2d2d2;border-top: 1px solid #d2d2d2;">
+   						<table class="popuplist" style="width:100%">
+        				<tr>
+          					<td style="border:0px;">
+          						<input type="radio" id="dept_copy1" name="dept_copy" value="1" style="vertical-align: middle; margin-bottom:5px;" onClick="optDeptCopy_Click(this);" disabled checked> <spring:message code='ezBoard.t95' />
+            					<input type="radio" id="dept_copy2" name="dept_copy" value="2" style="vertical-align: middle; margin-bottom:5px;" onClick="optDeptCopy_Click(this);" disabled> <spring:message code='ezBoard.t96' />
             				</td>
         				</tr>
       					</table>

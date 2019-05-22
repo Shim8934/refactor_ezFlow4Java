@@ -40,6 +40,7 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -48,7 +49,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -122,7 +125,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 메일 왼쪽화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailLeft.do")
+	@RequestMapping(value="/ezEmail/mailLeft.do", method = RequestMethod.GET)
 	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("showMailLeft started.");
 		
@@ -144,8 +147,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			model.addAttribute("useMailReceiveScreen", useMailReceiveScreen);
 		}
 		
+		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
+		
 		if (usePreviewSubTree.equals("YES")) {
-			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
 			String previewSubTree = mailGeneralVO.getPreviewSubTree();
 			model.addAttribute("previewSubTree", previewSubTree);
 		}
@@ -229,7 +233,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		}
 		
 		if (useSharedMailbox.equals("YES")) {
-			List<Map<String, String>> shareInfoList = ezEmailService.getUserSharedMailboxList(loginInfo.getId(), loginInfo.getTenantId());
+			List<Map<String, String>> shareInfoList = ezEmailService.getUserSharedMailboxList(loginInfo.getId(), true, loginInfo.getTenantId());
 			model.addAttribute("shareInfoList", shareInfoList);
 		}
 		
@@ -283,6 +287,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		model.addAttribute("useBottomFrameOnly", useBottomFrameOnly);
 		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
+		model.addAttribute("refreshInterval", mailGeneralVO.getRefreshInterval());
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		
@@ -336,7 +341,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 메일 폴더 리스트 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/getFolderList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/getFolderList.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFolderList(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
 		logger.debug("getFolderList started.");
@@ -531,7 +536,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 읽지않은 메시지 개수 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/getFolderUnreadCount.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/getFolderUnreadCount.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFolderUnreadCount(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
 		logger.debug("getFolderUnreadCount started.");
@@ -546,6 +551,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		Document doc = commonUtil.convertRequestToDocument(request);
 		String folderName = doc.getElementsByTagName("URL").item(0).getTextContent();
 		logger.debug("folderName=" + folderName);
+		
+		int folderUnreadCount = 0;
+		int totalUnreadCount = 0;
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
 
@@ -568,12 +576,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
 		
 		IMAPAccess ia = null;
-		String unreadCountXML = null;
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			unreadCountXML = "<DATA>" + ia.getUnreadCount(folderName) + "</DATA>";
+			
+			folderUnreadCount = ia.getUnreadCount(folderName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -582,15 +590,102 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		}
 		
+		totalUnreadCount = ezEmailService.getTotalUnreadCount(userEmail.split("@")[0], loginInfo.getTenantId());
+		
+		String unreadCountXML =  String.format("<DATA><FOLDERUNREADCOUNT>%d</FOLDERUNREADCOUNT><TOTALUNREADCOUNT>%d</TOTALUNREADCOUNT></DATA>", 
+				folderUnreadCount, totalUnreadCount);
+		
 		logger.debug("getFolderUnreadCount ended.");
 		
 		return unreadCountXML;
 	}
 	
 	/**
+	 * 편지함들의 읽지않은 메시지 개수 정보 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/getUnreadCountAll.do", method=RequestMethod.POST, produces="application/json; charset=utf-8")
+	@ResponseBody
+	public JSONObject getUnreadCountAll(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData) throws Exception {
+		logger.debug("getUnreadCountAll started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		JSONObject resultObject = new JSONObject();
+		String resultCode = "OK";
+		IMAPAccess ia = null;
+		
+		try {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject requestObject = (JSONObject) jsonParser.parse(bodyData);
+			JSONArray requestMailboxList = (JSONArray) requestObject.get("mailboxList");
+			
+			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+			String password  = userIdAndPassword.get(1);
+			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+			String userAccount = userInfo.getId() + "@" + domainName;
+			
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+			String shareId = null;
+			
+			if (useSharedMailbox.equals("YES")) {
+				shareId = (String) requestObject.get("shareId");
+				
+				if (shareId != null) {
+					logger.debug("shareId=" + shareId);
+					
+					if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("getFolderUnreadCount ended.");
+						
+						throw new Exception("CANNOT_ACCESS_SHAREID");
+					}
+					
+					userAccount = shareId + "@" + domainName;
+				}
+			}
+			
+			logger.debug("userId=" + userInfo.getId() + ",userAccount=" + userAccount);
+			
+			JSONObject unreadCountMap = new JSONObject();
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale, ezEmailUtil);
+			
+			for (int i = 0; i < requestMailboxList.size(); i++) {
+				String mailboxName = (String) requestMailboxList.get(i);
+				unreadCountMap.put(mailboxName, ia.getUnreadCount(mailboxName));
+			}
+			
+			int totalUnreadCount = ezEmailService.getTotalUnreadCount(userInfo.getId(), userInfo.getTenantId());
+			
+			if (useSharedMailbox.equals("YES")) {
+				List<Map<String, String>> shareInfoList = ezEmailService.getUserSharedMailboxList(userInfo.getId(), true, userInfo.getTenantId());
+				resultObject.put("shareInfoList", shareInfoList);
+			}
+			
+			resultObject.put("shareId", shareId == null ? "" : shareId);
+			resultObject.put("unreadCountMap", unreadCountMap);
+			resultObject.put("totalUnreadCount", totalUnreadCount);
+		} catch (Exception e) {
+			resultCode = e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		resultObject.put("resultCode", resultCode);
+		
+		logger.debug("resultObject=" + resultObject.toJSONString());
+		logger.debug("getUnreadCountAll ended.");
+		return resultObject;
+	}
+	
+	/**
 	 * PC에서 메일 가져오기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailImportUpload.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailImportUpload.do", produces = "text/plain; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailImportUpload(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, MultipartHttpServletRequest request) throws Exception{
 		logger.debug("mailImportUpload started.");
@@ -689,8 +784,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	
 	/**
 	 * PC에서 메일 가져오기 실행 함수(ActiveX)
+	 * 
+	 * 사용하지 않는 코드(원래는 IE9에서 사용)여서 일단 method = RequestMethod.GET 로 수정함
 	 */
-	@RequestMapping(value="/ezEmail/mailImportUploadX.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailImportUploadX.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String mailImportUploadX(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailImportUploadX started.");
@@ -779,7 +876,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 * PC에서 메일함(메일파일묶음) 가져오기 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezEmail/mailboxImportZip.do")
+	@RequestMapping(value="/ezEmail/mailboxImportZip.do", method = RequestMethod.POST)
 	public String mailboxImportZip(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Locale locale, Model model) throws Exception{
 		logger.debug("mailboxImportZip started.");
 	
@@ -794,6 +891,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String folderPath = request.getParameter("folderPath");
 		List<MultipartFile> multiFile = request.getFiles("file1");
 		logger.debug("userkey=" + userkey + ",encryptPw=" + encryptPw + ",retryPathId=" + retryPathId + ",folderPath" + folderPath);
+		
+		retryPathId = commonUtil.detectPathTraversal(retryPathId);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int tenantId = userInfo.getTenantId();
@@ -1077,7 +1176,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * PC에 메일파일 저장하기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailExport.do")
+	@RequestMapping(value="/ezEmail/mailExport.do", method = RequestMethod.GET)
 	public void mailExport(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailExport started.");
 		
@@ -1180,7 +1279,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 여러개의 메일파일을 zip파일로 서버에 저장하기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailExportZip.do")
+	@RequestMapping(value="/ezEmail/mailExportZip.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailExportZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailExportZip started.");
@@ -1333,7 +1432,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 * 특정 메일함의 모든 메일을 zip파일로 서버에 저장하기 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezEmail/mailboxExportZip.do")
+	@RequestMapping(value="/ezEmail/mailboxExportZip.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailboxExportZip(@CookieValue("loginCookie") String loginCookie, Locale locale,
 				Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -1536,7 +1635,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 메일 zip파일 다운로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadMailZip.do")
+	@RequestMapping(value="/ezEmail/downloadMailZip.do", method = RequestMethod.GET)
 	public void downloadMailZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadMailZip started.");
 		
@@ -1566,6 +1665,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String encryptPw = request.getParameter("encryptPw");
 		String tempZipName = request.getParameter("temp");
 		logger.debug("tempZipName=" + tempZipName);
+		
+		tempZipName = commonUtil.detectPathTraversal(tempZipName);
 		
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
@@ -1600,7 +1701,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 * 메일함 zip파일 다운로드 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezEmail/downloadMailboxZip.do")
+	@RequestMapping(value="/ezEmail/downloadMailboxZip.do", method = RequestMethod.GET)
 	public void downloadMailboxZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadMailboxZip started.");
 		
@@ -1631,6 +1732,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String tempZipName = request.getParameter("temp");
 		String encryptPw = request.getParameter("encryptPw");
 		logger.debug("folderName=" + folderName + ",tempZipName=" + tempZipName + ", encryptPw=" + encryptPw);
+		
+		tempZipName = commonUtil.detectPathTraversal(tempZipName);
 		
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
@@ -1674,18 +1777,20 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * zip파일 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/deleteZipFile.do")
+	@RequestMapping(value="/ezEmail/deleteZipFile.do", method = RequestMethod.POST)
 	public String deleteZipFile(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("deleteZipFile started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String temp = request.getParameter("temp");
+		temp = commonUtil.detectPathTraversal(temp);
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
 		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + temp;
 		String tempId = request.getParameter("tempId");
+		tempId = commonUtil.detectPathTraversal(tempId);
 		String pDirEncZipTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempId;
 		
 		File file = new File(pDirTempPath + ".zip");
@@ -1798,7 +1903,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
     /**
 	 * 편지함 내보내기 옵션(암호화확인) 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailExportOption.do")
+	@RequestMapping(value="/ezEmail/mailExportOption.do", method = RequestMethod.GET)
 	public String mailExportOption(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
@@ -1819,7 +1924,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 편지함 가져오기 옵션(암호화확인) 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailImportOption.do")
+	@RequestMapping(value="/ezEmail/mailImportOption.do", method = RequestMethod.GET)
 	public String mailImportOption(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 

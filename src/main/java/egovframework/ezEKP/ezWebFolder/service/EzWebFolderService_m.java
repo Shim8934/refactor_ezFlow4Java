@@ -98,9 +98,9 @@ public interface EzWebFolderService_m {
 	
 	boolean restoreFileInFolder (String folderId, int tenantId, String userId, String timeUTC, String companyId, String offset, String userName1, String userName2) throws Exception;
 
-	List<DuplicateInfoVO> moveTrashCan (String[] fileIDList, String[] folderIDList,String folderId, String timeUTC, LoginVO userInfo) throws Exception;
+	Map<String, Object> moveTrashCan (String[] fileIDList, String[] folderIDList,String folderId, String timeUTC, LoginVO userInfo) throws Exception;
 
-	List<DuplicateInfoVO> moveTrashCan(String[] fileIDList, String[] folderIDList, String[] fileNameList, String folderId, String timeUTC, LoginVO userInfo, boolean overwritable) throws Exception;
+	Map<String, Object> moveTrashCan(String[] fileIDList, String[] folderIDList, String[] fileNameList, String folderId, String timeUTC, LoginVO userInfo, boolean overwritable) throws Exception;
 
 	void moveFolder (FolderVO folderVO, FolderVO destFoldeVO, String userId, String offset, int tenantId, String timeUTC) throws Exception;
 

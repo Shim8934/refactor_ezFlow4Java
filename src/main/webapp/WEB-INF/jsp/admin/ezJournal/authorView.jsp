@@ -105,7 +105,7 @@
 							</c:otherwise>
 						</c:choose>
 			    	</c:forEach>
-			    	setSelectedUser("${selectedUser }","${selectedUserName }");
+			    	setSelectedUser("<c:out value='${selectedUser}'/>", "<c:out value='${selectedUserName}'/>");
 		    		setDeptName();
 	    		</c:if>
    			});

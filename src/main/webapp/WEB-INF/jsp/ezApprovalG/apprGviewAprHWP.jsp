@@ -21,14 +21,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 	    <script type="text/javascript">
-	        var docID = "${docID}";
-	        var docHref = "${docHref}";
-	        var opinionFlag = "${opinionFlag}";
-	        var listTypeValue = "${listTypeValue}";
-	        var listSusin = "${listSusin}";
-	        var pDocState = "${docState}";
-	        var pOrgDocID = "${orgDocID}";
-	        var isOpinion = "${showOpinion}";
+	        var docID = "<c:out value='${docID}'/>";
+	        var docHref = "<c:out value='${docHref}'/>";
+	        var opinionFlag = "<c:out value='${opinionFlag}'/>";
+	        var listTypeValue = "<c:out value='${listTypeValue}'/>";
+	        var listSusin = "<c:out value='${listSusin}'/>";
+	        var pDocState = "<c:out value='${docState}'/>";
+	        var pOrgDocID = "<c:out value='${orgDocID}'/>";
+	        var isOpinion = "<c:out value='${showOpinion}'/>";
 	        var pDocID;
 	        var pDocHref;
 	        var pOpinionFlag;
@@ -44,34 +44,35 @@
 	
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
+		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";
 		    arr_userinfo[7]  = "N";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    var pCompanyID = "${userInfo.companyID}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[10] = "<c:out value='${susinAdmin}'/>";
+		    var pCompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";
 		    
 	        pUserID = arr_userinfo[1];
 	
-	        var pHasOpinion = "${hasOpinionYN}";
+	        var pHasOpinion = "<c:out value='${hasOpinionYN}'/>";
 			var pOpinionType = "Show";
-			var pUse_Editor = "${useEditor}";
-			var approvalFlag = "${approvalFlag}";
+			var pUse_Editor = "<c:out value='${useEditor}'/>";
+			var approvalFlag = "<c:out value='${approvalFlag}'/>";
 			var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
 			
 			function btnOpinion_onclick() {
-			    openOpinionViewUI();
+			    //openOpinionViewUI();
+				openOpinionUI_New("Show");
 			}
 	
 			window.onresize = function () {
@@ -92,7 +93,7 @@
 				    return;
 				}
 			
-			    if (pDocState == "015" && pOrgDocID.length >= 20 && "${listTypeValue}" == "99") {
+			    if (pDocState == "015" && pOrgDocID.length >= 20 && "<c:out value='${listTypeValue}'/>" == "99") {
 			        btnGongRam.style.display = "";
 			        pOpinionType = "";
 			    }
@@ -247,7 +248,7 @@
 	        <tr>
 	            <td style="padding-bottom: 10px">
 	                <div style="height: 100%">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value='${hwpToolbar}'/>", "");</script>
 	                </div>
 	            </td>
 	        </tr>

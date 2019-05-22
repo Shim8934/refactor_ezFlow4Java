@@ -89,13 +89,13 @@
 					var result = confirm(userName+"<spring:message code = 'ezCommunity.t561' />");
 					
 					if (result) {
-						document.location.href="adminOuterOkNo.do?flag="+a+"&userID="+b+"&code="+c+"&goToPage="+d;
+						document.location.href="/ezCommunity/adminOuterOkNo.do?flag="+a+"&userID="+b+"&code="+c+"&goToPage="+d;
 					}
 				} else {
 					var result = confirm(userName + "<spring:message code = 'ezCommunity.t562' />");
 					
 					if (result) {
-						document.location.href="adminOuterOkNo.do?flag="+a+"&userID="+b+"&code="+c+"&goToPage="+d;
+						document.location.href="/ezCommunity/adminOuterOkNo.do?flag="+a+"&userID="+b+"&code="+c+"&goToPage="+d;
 					}
 				}
 			}

@@ -61,20 +61,20 @@
 		    var Delete_FG = "${boardInfo.delete_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
-		    var pSortBy = "${boardInfo.sortBy}";
+		    var pSortBy = "<c:out value='${boardInfo.sortBy}'/>";
 		    var url = "${boardInfo.url}";
 		    var ShowAdjacent = "";
 		    var gubun = "${boardInfo.guBun}";
 		    var OrderOption = "";
 		    var OrderCell = "";
-		    var pBoardType = "${boardInfo.boardType}";
+		    var pBoardType = "<c:out value='${boardInfo.boardType}'/>";
 		    var USE_OCS = "${use_ocs}";
 		    var useRunTime = "${useRunTime}"
 		    var Use_OneLineCount = "${use_oneLineCount}";
 		    var pUse_Editor = "${use_Editor}";
 		    var SQLPARADATA = "";
-		    var pAdminType = "${boardInfo.adminType}";
-		    var pButtonHidden = "${boardInfo.buttonHidden}";
+		    var pAdminType = "<c:out value='${boardInfo.adminType}'/>";
+		    var pButtonHidden = "<c:out value='${boardInfo.buttonHidden}'/>";
 		    if (url != "") {
 		        window.location.href = url;
 		    }
@@ -929,6 +929,7 @@
 		    }
 		
 		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
+		    var copyboarditem_cross_dialogArguments = new Array();
 		    function CopyItem_onclick() {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202' />");
@@ -968,7 +969,20 @@
 		        pwidth = pwidth - 127;
 		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature += GetOpenPosition(355,600);
+				copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete;
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", feature, "");
+		    }
+		    /* 2019-04-17 홍승비 - 복사 후 좌측 게시물카운트 갱신 */
+		    function CopyItem_onclick_Complete(ret) {
+		        if (typeof (ret) != "undefined") {
+		            if (ret == "OK") {
+			            try {
+							leftCountRf();
+						} catch (e) {}
+		                window.location.reload();
+		                window.close();
+		            }
+		        }
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();

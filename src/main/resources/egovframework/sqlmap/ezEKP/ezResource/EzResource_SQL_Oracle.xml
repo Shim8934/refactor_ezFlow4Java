@@ -14,6 +14,7 @@
     <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
     <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
 	<typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
+	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -269,6 +270,14 @@
 		<result property="endFlag"				column="ENDFLAG"					columnIndex="12"/>
 		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue=""/>
 		<result property="allDay"					column="ALLDAY"					columnIndex="14"		nullValue=""/>
+	</resultMap>
+	
+	<resultMap class="ResGetClsAclListVO" 	id="resGetClsAclListVO">
+		<result property="deptYn"					column="DEPT_YN"				columnIndex="1" nullValue=""/>
+		<result property="sdaYn"					column="SDA_YN"					columnIndex="2" nullValue=""/>
+		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="3" nullValue=""/>
+		<result property="memberID"				    column="MEMBER_ID"				columnIndex="4" nullValue=""/>
+		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="5" nullValue=""/>
 	</resultMap>
 	
 	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
@@ -1049,41 +1058,6 @@
 		]]>
 	</select>
 	
-	<select id="EzResourceDAO.getDeptID" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT 
-				DEPARTMENT
-			FROM(
-				SELECT 
-					D.department
-				FROM 
-					TBL_USERMASTER D
-				WHERE 
-					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID# and d.cn = #writerID#
-				UNION ALL
-				SELECT 
-					C.cn as department
-				FROM 
-					TBL_USERMASTER B 
-				INNER JOIN 
-					TBL_ADDJOBMASTER A 
-				ON 
-					A.CN = B.CN 
-				AND 
-					A.TENANT_ID = B.TENANT_ID       
-				RIGHT JOIN 
-					TBL_DEPTMASTER C
-				ON 
-					A.DEPTID = C.CN
-				AND 
-					B.TENANT_ID = C.TENANT_ID   
-				WHERE 
-					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# and C.displayname = #deptNm# AND B.CN = #writerID#
-			) E
-			ROWNUM = 1
-		]]>
-	</select>
-	
 	<insert id="EzResourceDAO.addResData" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_RS_BRD ( 
@@ -1098,6 +1072,17 @@
         		,20, u'A00', u'', #v_Brd_Access#, 365, 0, 0, RTRIM(#v_P_Approve#)
       			,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), #tenantID# 
       		)
+		]]>		
+	</insert>
+	
+	<insert id="EzResourceDAO.addAttachFile" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_ATTACH ( 
+				ATTACHID, RESID, FILESIZE, FILENAME, FILEPATH, COMPANYID, TENANT_ID
+			)
+        	VALUES ( 
+        		SEQ_TBL_RS_ATTACH.NEXTVAL, #resID#, #fileSize#, #fileName#, #filePath#, #companyID#, #tenantID#
+			)
 		]]>		
 	</insert>
 	
@@ -1286,6 +1271,19 @@
 		]]>
 	</delete>
 	
+	<delete id="EzResourceDAO.delAttachFile" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_ATTACH 
+   			WHERE
+   				RESID = #resID#
+   			AND
+   				COMPANYID = #companyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
 	<select id="EzResourceDAO.selectFormID" parameterClass="Map" resultMap="resSelectFormIDVO">
 		<![CDATA[
 			SELECT
@@ -1348,6 +1346,23 @@
 		]]>	
 	</select>
 	
+	<select id="EzResourceDAO.getIsDept" parameterClass="Map" 	resultClass="String">
+		<![CDATA[
+			SELECT
+				DEPT_YN
+            FROM 
+            	TBL_RS_RESACL 
+            WHERE  
+            	COMPANYID = #v_PCOMPANYID#
+            AND 
+            	RESID = #v_PBRDID#
+            AND
+            	MEMBER_ID = #v_PUSERID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>	
+	</select>
+	
 	<select id="EzResourceDAO.getBrdApproveFlag" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1375,6 +1390,42 @@
     			RESID = #v_RESID#
 			AND
 				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				E.DEPARTMENT
+			FROM(
+				SELECT 
+					D.department
+				FROM 
+					TBL_USERMASTER D
+				WHERE 
+					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID# and d.cn = #writerID#
+				UNION ALL
+				SELECT 
+					C.cn as department
+				FROM 
+					TBL_USERMASTER B 
+				INNER JOIN 
+					TBL_ADDJOBMASTER A 
+				ON 
+					A.CN = B.CN 
+				AND 
+					A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+					TBL_DEPTMASTER C
+				ON 
+					A.DEPTID = C.CN
+				AND 
+					B.TENANT_ID = C.TENANT_ID   
+				WHERE 
+					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# and C.displayname = #deptNm# AND B.CN = #writerID#
+			) E
+			WHERE
+				ROWNUM = 1
 		]]>
 	</select>
 	
@@ -1594,6 +1645,53 @@
 		]]>
 	</select>
 	
+	<select id="EzResourceDAO.getOwnerInfo" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+		  SELECT 
+		  		CC.CN, CC.DISPLAYNAME, CC.title, CC.DESCRIPTION, CC.DESCRIPTION2, CC.department
+		  FROM ( 
+				SELECT 
+					BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT
+				FROM ( 
+					SELECT  
+	    					D.CN, D.DISPLAYNAME, D.title, D.DESCRIPTION , D.DESCRIPTION2, D.department
+		            FROM  
+		                TBL_USERMASTER D 
+		            WHERE  
+		                D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
+		        UNION ALL 
+		            SELECT  
+		                B.cn, B.DISPLAYNAME, A.title, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
+		            FROM  
+		                TBL_USERMASTER B  
+		            INNER JOIN  
+		                TBL_ADDJOBMASTER A  
+		            ON  
+		                A.CN = B.CN  
+		            AND  
+		                A.TENANT_ID = B.TENANT_ID        
+		            RIGHT JOIN  
+		                TBL_DEPTMASTER C 
+		            ON  
+		                A.DEPTID = C.CN 
+		            AND  
+		                B.TENANT_ID = C.TENANT_ID    
+		            WHERE  
+		                A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID#
+		         ) BB
+		  ]]>
+		     <iterate prepend="WHERE BB.cn IN" property="ownerList" open="(" close=")" conjunction=",">
+					#ownerList[]#
+			 </iterate>
+		<![CDATA[
+		    ) CC
+		    WHERE 
+		    	CC.CNT = '1'
+		    ORDER BY 
+		        DECODE(CC.CN, #ownerID#, 1, 2)
+		 ]]>
+	</select>
+	
 	<delete id="EzResourceDAO.modifyResSch_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
@@ -1742,53 +1840,6 @@
          		TENANT_ID = #tenantID#		
 		]]>
 	</update>
-	
-	<select id="EzResourceDAO.getOwnerInfo" parameterClass="Map" resultClass="OrganUserVO">
-		<![CDATA[
-		  SELECT 
-		  		CC.CN, CC.DISPLAYNAME, CC.title, CC.DESCRIPTION, CC.DESCRIPTION2, CC.department
-		  FROM ( 
-				SELECT 
-					BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT
-				FROM ( 
-					SELECT  
-	    					D.CN, D.DISPLAYNAME, D.title, D.DESCRIPTION , D.DESCRIPTION2, D.department
-		            FROM  
-		                TBL_USERMASTER D 
-		            WHERE  
-		                D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
-		        UNION ALL 
-		            SELECT  
-		                B.cn, B.DISPLAYNAME, A.title, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
-		            FROM  
-		                TBL_USERMASTER B  
-		            INNER JOIN  
-		                TBL_ADDJOBMASTER A  
-		            ON  
-		                A.CN = B.CN  
-		            AND  
-		                A.TENANT_ID = B.TENANT_ID        
-		            RIGHT JOIN  
-		                TBL_DEPTMASTER C 
-		            ON  
-		                A.DEPTID = C.CN 
-		            AND  
-		                B.TENANT_ID = C.TENANT_ID    
-		            WHERE  
-		                A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID#
-		         ) BB
-		  ]]>
-		     <iterate prepend="WHERE BB.cn IN" property="ownerList" open="(" close=")" conjunction=",">
-					#ownerList[]#
-			 </iterate>
-		<![CDATA[
-		    ) CC
-		    WHERE 
-		    	CC.CNT = '1'
-		    ORDER BY 
-		        DECODE(CC.CN, #ownerID#, 1, 2)
-		 ]]>
-	</select>
 	
 	<select id="EzResourceDAO.addRessch_S1" parameterClass="Map" resultClass="String">
 		SELECT
@@ -2124,6 +2175,23 @@
         ]]>
     </select>
     
+    <select id="EzResourceDAO.getAttachList" parameterClass="Map" resultClass="String">
+        <![CDATA[
+        	SELECT
+	        	FILEPATH
+	        FROM 
+	        	TBL_RS_ATTACH 
+			WHERE
+				RESID = #resID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				TENANT_ID = #tenantID# 
+			ORDER BY 
+				ATTACHID ASC
+        ]]>
+    </select>
+    
     <select id="EzResourceDAO.getResourceOrder" parameterClass="map" resultClass="String">
 		<![CDATA[
 			select 
@@ -2195,6 +2263,29 @@
 		]]>
 	</update>
 	
+	<select id="EzResourceDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
+		<![CDATA[
+			SELECT
+				DEPT_YN , 
+				SDA_YN ,
+				MEMBER_NAM ,
+				MEMBER_ID ,
+				ACCESS_LVL 
+        	FROM
+        		TBL_RS_RESACL 
+       		WHERE
+       			RESID = #v_BRD_UPPER#
+       		AND
+       			COMPANYID = #v_PCOMPANYID#
+       		AND 
+       			TENANT_ID = #tenantID#	
+       		AND
+       			SDA_Yn = 'Y'
+       		AND
+       			MEMBER_ID in ( $v_PUSERID$ )
+		]]>
+	</select>
+	
 	<select id="EzResourceDAO.isResourceGroupManager" parameterClass="map" resultClass="String">
 		<![CDATA[
 			select 
@@ -2256,7 +2347,7 @@
 				 and 
 					a.resid = #brdID#
 				 and 
-				 	( a.member_id = #userID# or a.member_id = 'everyone') )
+				 	( a.member_id = #userID# or a.member_id = 'everyone' or a.member_id = #deptID#) )
 			 ]]>
 	</select>
 </sqlMap>

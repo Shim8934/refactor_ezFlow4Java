@@ -336,6 +336,23 @@
 			ORDERBY VARCHAR(200) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkAddAddJobMasterProxy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PROXY
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterProxy"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			PROXY VARCHAR(200) DEFAULT NULL
+	</statement>
+	
 	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
 	<![CDATA[
 		SELECT 
@@ -842,4 +859,49 @@
 		ADD 
 			COMPANYID VARCHAR(100) DEFAULT NULL
 	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderTotalLimit">
+		SELECT
+			COMPANY_TOTAL_LIMIT, DEPARTMENT_TOTAL_LIMIT, USER_TOTAL_LIMIT
+		FROM
+			TBL_WEBFOLDER_CONFIG
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderConfigTotalLimit">
+		ALTER TABLE
+			TBL_WEBFOLDER_CONFIG
+		CHANGE
+			COLUMN TOTAL_LIMIT USER_TOTAL_LIMIT VARCHAR(100) NULL DEFAULT NULL,
+		ADD
+			COLUMN COMPANY_TOTAL_LIMIT VARCHAR(100) NULL DEFAULT NULL,
+		ADD
+			COLUMN DEPARTMENT_TOTAL_LIMIT VARCHAR(100) NULL DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderUserCnType">
+		SELECT
+			TYPE
+		FROM
+			TBL_WEBFOLDER_USER
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderUserCnTypeColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_USER
+		ADD
+			COLUMN TYPE VARCHAR(50) NOT NULL,
+		DROP
+			PRIMARY KEY,
+		ADD
+			PRIMARY KEY(CN, TENANT_ID, TYPE)
+	</statement>
+	
+	<update id="EzCommonDAO.updateWebfolderUserCnType">
+		UPDATE
+			TBL_WEBFOLDER_USER
+		SET
+			TYPE = 'U'
+	</update>
 </sqlMap>

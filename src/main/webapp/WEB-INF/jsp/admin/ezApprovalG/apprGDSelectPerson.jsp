@@ -21,10 +21,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/ListView_list.js')}"></script>
 		<script type="text/javascript">
-		    var type = "${type}";
+		    var type = "<c:out value='${type}'/>";
 		    var ReturnFunction;
-		    var userID = "${userInfo.id}";
-		    var companyID = "${buJaeCompanyID}";
+		    var userID = "<c:out value='${userInfo.id}'/>";
+		    var companyID = "<c:out value='${buJaeCompanyID}'/>";
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.selectperson_cross_dialogArguments[1];
@@ -53,13 +53,13 @@
 		
 		            if (type == "Proxy") {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${buJaedeptid}");
-		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "${buJaedeptid}");
+		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${buJaedeptid}'/>");
+		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${buJaedeptid}'/>");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            else {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${buJaedeptid}");
+		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${buJaedeptid}'/>");
 		                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID);
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }

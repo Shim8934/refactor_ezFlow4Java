@@ -353,8 +353,8 @@ label[for="listOpt2"] { position: relative; top: -4.5px;}
 .organList{ margin:3px; padding:0px; overflow:hidden; height:34px; line-height:34px;float:right;}
 .organList .organListDT{ margin:0px; padding:0px; float:left;}
 .organList .organListDD{ margin:0px; padding:2px 0px 0px 0px; float:right;}
-.moveWrap span{ display:inline-block; cursor:pointer; margin:3px 0px 0px 0px; padding:0px;}
-
+.moveWrap span.upBtn{ display:inline-block; cursor:pointer; margin:0px 0px 0px 0px; padding:0px;}
+.moveWrap span.downBtn{ display:inline-block; cursor:pointer; margin:0px 0px 0px 0px; padding:0px;}
 .concurrentUL{ margin:0px; padding:0px; list-style:none; width:100%;}
 .concurrentUL .concurrentLI{ margin:0px; padding:0px; height:67px; line-height:65px; border-bottom:1px solid #dddddd; float:none; cursor:pointer;}
 .concurrentUL .concurrentLI:hover{ background:#edf7ff;}

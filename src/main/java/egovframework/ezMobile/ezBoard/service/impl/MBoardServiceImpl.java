@@ -933,7 +933,7 @@ public class MBoardServiceImpl implements MBoardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userID", userID);
-		map.put("listSize", listCnt);
+		map.put("listSize", Integer.parseInt(listCnt));
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("deptID", deptID);
@@ -995,7 +995,18 @@ public class MBoardServiceImpl implements MBoardService {
             	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, companyID, tenantID, primary, 0, 0);
             } else {
             	// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
-				int isEqaulDept = accessID.split(",")[i].trim().equalsIgnoreCase(deptID) ? 1 : 0;
+            	/* 2019-04-16 홍승비 - 원회사의 사내겸직도 isEqaulDept값을 체크하도록 수정 */
+				int isEqaulDept = 0;
+				String tempDeptList = addJobStr + deptID;
+				for (int j = 0; j < tempDeptList.split(",").length; j++) {
+					if(accessID.split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+						isEqaulDept = 1;
+						break;
+					} else {
+						isEqaulDept = 0;
+					}
+				}
+				
 				int isDept = mBoardDAO.isDeptChk(accessID.split(",")[i].trim(), tenantID);
 				
             	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, companyID, tenantID, primary, isDept, isEqaulDept);

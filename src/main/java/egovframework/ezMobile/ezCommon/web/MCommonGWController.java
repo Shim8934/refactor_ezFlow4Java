@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 
 /** 
  * @Description [Controller] 모바일GW - 공통
@@ -42,8 +45,14 @@ public class MCommonGWController {
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private KlibUtil klibUtil;
+
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@RequestMapping(value = "/mobile/ezcommon/filedown", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mFileDown(HttpServletRequest request) throws Exception {
@@ -73,6 +82,10 @@ public class MCommonGWController {
 			if (fSize > 0) {
 				byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 				
+				if (filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+					bytes = klibUtil.decrypt(bytes);
+				}
+
 				JSONObject data = new JSONObject();
 				
 				data.put("bytes", bytes);
@@ -93,4 +106,38 @@ public class MCommonGWController {
 		
 		return result;
 	}
+	
+	 /**
+	 * 2019-05-09 홍승비 - 모바일 G/W 테넌트 컨피그 받아오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezcommon/tenantconfigs/{tenantconfig}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
+    public JSONObject getTenantConfigMobileGW(HttpServletRequest request) throws Exception {
+    	LOGGER.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW started");
+    	
+    	JSONObject result = new JSONObject();
+    	
+    	try {
+			int tenantID = Integer.parseInt(request.getParameter("tenantID"));
+			String tenantConfig = request.getParameter("tenantConfig");
+			String resultTC = ezCommonService.getTenantConfig(tenantConfig, tenantID);
+			
+			if (resultTC != null) {
+				LOGGER.debug("resultTC : " + resultTC);
+			} else {
+				resultTC = "";
+			}
+			
+			result.put("status", "ok");			
+			result.put("resultTC", resultTC);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+		}
+		LOGGER.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW ended.");
+    	return result;
+    }
+	
+	
 }
