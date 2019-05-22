@@ -682,11 +682,8 @@ $.extend(Datepicker.prototype, {
 	 */
 	_showDatepicker: function(input) {
 		if (document.getElementById('attitude_annual_conn') || parent.document.getElementById('attitude_annual_conn')) { //근태관리 연동양식일 경우
-			var todayDateStr = getToday();
-			if (todayDateStr.length == 7) {
-				getDisabledDays(todayDateStr.substr(0,4), todayDateStr.substr(4,1));
-			} else {
-				getDisabledDays(todayDateStr.substr(0,4), todayDateStr.substr(4,2));						
+			if (input.target.value.length == 10) {
+				getDisabledDays(input.target.value.substr(0,4), input.target.value.substr(5,2))
 			}
 		}
 		
