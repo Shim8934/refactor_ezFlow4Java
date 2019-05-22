@@ -279,7 +279,7 @@
 			ORDERBY NVARCHAR2(200) DEFAULT NULL
 	</statement>
 	
-	<select id="EzCommonDAO.addAddJobMasterProxy" resultClass="String">
+	<select id="EzCommonDAO.checkAddAddJobMasterProxy" resultClass="String">
 		<![CDATA[
 			SELECT 
 				ORDERBY
