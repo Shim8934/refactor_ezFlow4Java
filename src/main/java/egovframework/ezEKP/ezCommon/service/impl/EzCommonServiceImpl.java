@@ -1566,4 +1566,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addWebfolderTotalLimit() throws Exception {
 		ezCommonDAO.addWebfolderTotalLimit();
 	}
+	
+	@Override
+	public void addAddJobMasterProxy() throws Exception {
+		ezCommonDAO.addAddJobMasterProxy();
+	}
 }

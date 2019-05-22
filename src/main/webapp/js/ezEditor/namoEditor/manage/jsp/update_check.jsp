@@ -41,13 +41,13 @@
 	if(update_xml.exists()){
 		boolean update_check_value = update_check(update_xml_url,before_xml_url);
 		if(update_check_value){
-			result_pop = "<script language=\"javascript\">alert(NamoSELang.pe_Oc)</script>";
+			result_pop = "<script language=\"javascript\">alert(NamoSELang.pe_Og)</script>";
 			String saveCheck = update_xml(update_xml_url,before_xml_url);
 			if(saveCheck.equals("sucess")){
 				result_sc = resultStrSc;
 			}
 			else{
-				result_sc = "<script language=\"javascript\">alert(NamoSELang.pe_Di+NamoSELang.pe_tk);window.document.location.href='manager_setting.jsp';</script>";
+				result_sc = "<script language=\"javascript\">alert(NamoSELang.pe_DM+NamoSELang.pe_sq);window.document.location.href='manager_setting.jsp';</script>";
 			}
 		}
 		else{

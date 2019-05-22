@@ -130,5 +130,6 @@ public interface EzCommonService {
 
 	public void addWebfolderTotalLimit() throws Exception;
 
+	public void addAddJobMasterProxy() throws Exception;
 }
 
