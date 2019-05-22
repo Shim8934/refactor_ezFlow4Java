@@ -58,15 +58,15 @@
 			if(check)
 			{
 				session.invalidate(); 
-				result_sc = "<script>alert(NamoSELang.pe_wX);window.document.location.href='../index.html';</script>";
+				result_sc = "<script>alert(NamoSELang.pe_yV);window.document.location.href='../index.html';</script>";
 			}
 			else
 			{
-				result_sc = "<script>alert(NamoSELang.pe_tk+'" + fileName + "');history.back();</script> ";
+				result_sc = "<script>alert(NamoSELang.pe_sq+'" + fileName + "');history.back();</script> ";
 			}
 	}
 	else{
-		result_sc = "<script>alert(NamoSELang.pe_xQ);location.href='account_setting.jsp';</script>";
+		result_sc = "<script>alert(NamoSELang.pe_zf);location.href='account_setting.jsp';</script>";
 	}
 
 %>
