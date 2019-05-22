@@ -17,7 +17,7 @@
 	        var CancelFunction;
 	        var InputValue;
             var FolderId;
-            var folderNameList = "${folderNameList}";
+            var folderNameList = "<c:out value='${folderNameList}'/>";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -75,26 +75,39 @@
 	            }
 
 	            if (FolderId == "") {
-	            	url = "/ezCircular/circularFolderAdd.do"; 
+	            	$.ajax({
+						method : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularFolderAdd.do",
+						data : {
+							folderName : folderName
+						},
+						success : function() {
+							ReturnFunction();
+						},
+						error : function() {
+							alert("<spring:message code='ezCircular.t102' />");	
+						}
+					})
 	            } else {
-	            	url = "/ezCircular/circularFolderModify.do?FolderId=" + FolderId;
+	            	$.ajax({
+						method : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularFolderModify.do",
+						data : {
+							FolderId : FolderId,
+							folderName : folderName
+						},
+						success : function() {
+							ReturnFunction();
+						},
+						error : function() {
+							alert("<spring:message code='ezCircular.t102' />");	
+						}
+					})
 	            }
-	            
-				$.ajax({
-					method : "POST",
-					dataType : "text",
-					async : false,
-					url : url,
-					data : {
-						folderName : folderName
-					},
-					success : function() {
-						ReturnFunction();
-					},
-					error : function() {
-						alert("<spring:message code='ezCircular.t102' />");	
-					}
-				})
 	        }
 	        
 	        function btn_cancel_onclick() {

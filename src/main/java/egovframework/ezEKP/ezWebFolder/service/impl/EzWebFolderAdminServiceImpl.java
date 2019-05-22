@@ -777,10 +777,10 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				
 				String fileName = file.getFileName();
 				int dotPos      = fileName.lastIndexOf(".");
-				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+				String extend   = dotPos == -1 ? ".none" : commonUtil.detectPathTraversal(fileName.substring(dotPos + 1));
 				String newName  = webfolderUtil.generateFilePath(extend);
 				String newPath  = ezWebFolderService.getWebFolderDirPath(userInfo.getTenantId()) + newName;
-				File srcFile    = new File(realPath + file.getFilePath());
+				File srcFile    = new File(realPath + commonUtil.detectPathTraversal(file.getFilePath()));
 				File destFile   = new File(realPath  + newPath);
 				destFile.getParentFile().mkdirs(); 
 				destFile.createNewFile();
@@ -905,9 +905,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			FileUtils.cleanDirectory(file); 
 		}
 		
-		
 		if (file2.exists()) {
-			int pos         = fileName.lastIndexOf(".");
+			int pos         = fileName.lastIndexOf('.');
 			String extend   = fileName.substring(pos + 1);
 			String mainName = fileName.substring(0, pos);
 			int k           = 1;
@@ -1070,7 +1069,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String _fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, fileName);
 		String dirPath   = ezWebFolderService.getWebFolderDirPath(tenantId);
 		dirPath          = realPath + dirPath + "temp" + commonUtil.separator;
-		File file        = new File(dirPath + fileName);
+		File file        = new File(dirPath + commonUtil.detectPathTraversal(fileName));
 		
 		if (!file.exists()) {
 			throw new FileNotFoundException(fileName);

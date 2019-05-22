@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -15,12 +17,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var OrderCell = "";
-		    var g_InitFlag = "${initFlag}";
-		    var g_MultiSelect="${multiSelect}";
+		    var g_InitFlag = "<c:out value='${initFlag}'/>";
+		    var g_MultiSelect="<c:out value='${multiSelect}'/>";
 		    var xmlhttp = createXMLHttpRequest();
 		    var rtnVal = new Array();
-		    var CompanyID = "${userInfo.companyID}";
-		    var UserLang = "${userInfo.lang}";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var RetValue;
 		    var ReturnFunction;
 		    var winFlag;

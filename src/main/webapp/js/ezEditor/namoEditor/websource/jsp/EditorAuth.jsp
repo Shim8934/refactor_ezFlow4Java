@@ -1,7 +1,8 @@
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@page import="java.io.*"%>
-<%@page import ="java.net.*"%>
+<%@page import="java.net.*"%>
 <%@page import="java.util.regex.PatternSyntaxException"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%	String ce_domain = ""; String ce_exp = ""; %>
 <%@include file="EditorInformation.jsp"%>
 <%@include file="Util.jsp"%>
@@ -42,7 +43,25 @@
 			}
 		}
 	}else{
-		conval = ce_domain + "|" + ce_exp + "|" + authHostInfo + "|" + createEncodeEditorKey(ce_editorkey);
+
+		String exp_check = "true";
+		if(ce_exp.length() > 0){
+			String exp_date = new String(getBase64Decode(ce_exp), "ISO-8859-1");
+			SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+			Date expDate = simpleDate.parse(exp_date);
+			Date currentTime = new Date();
+			String today = simpleDate.format(currentTime);
+			Date currentDate = simpleDate.parse(today);
+			if(currentDate.compareTo( expDate ) > 0) {
+				exp_check = "false";
+			}
+		}else{
+			exp_check = "false";
+		}
+		
+		conval = ce_domain + "|" + exp_check + "|" + authHostInfo + "|" + createEncodeEditorKey(ce_editorkey);
+
+		//conval = ce_domain + "|" + ce_exp + "|" + authHostInfo + "|" + createEncodeEditorKey(ce_editorkey);
 		out.println(detectXSSEx(conval));
 	}
 

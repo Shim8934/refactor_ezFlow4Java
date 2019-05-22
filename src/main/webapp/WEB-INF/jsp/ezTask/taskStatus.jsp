@@ -18,14 +18,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezTask/circularProgressBar.js')}"></script>
 		
 		<script type="text/javascript">
-			var userid = "${userInfo.id }";
-	        var taskid = "${taskInfoVO.taskID }";
-	        var taskstatus = "${taskInfoVO.taskStatus }";
-	        var completerate = "${taskInfoVO.completeRate }";
-	        var creatorid = "${taskInfoVO.creatorID }";
-	        var personid = "${taskInfoVO.personID }";
-	        var delayColor = "${delayColor }";
-	        var completeColor = "${completeColor }";	
+			var userid = "<c:out value='${userInfo.id }'/>";
+	        var taskid = "<c:out value='${taskInfoVO.taskID }'/>";
+	        var taskstatus = "<c:out value='${taskInfoVO.taskStatus }'/>";
+	        var completerate = "<c:out value='${taskInfoVO.completeRate }'/>";
+	        var creatorid = "<c:out value='${taskInfoVO.creatorID }'/>";
+	        var personid = "<c:out value='${taskInfoVO.personID }'/>";
+	        var delayColor = "<c:out value='${delayColor }'/>";
+	        var completeColor = "<c:out value='${completeColor }'/>";	
 	        var tasktype = "<c:out value = '${taskInfoVO.taskType}' />";
 	        var repeatCount = "<c:out value = '${repeatCount}' />";
 	        var realDate = "<c:out value = '${realDate}' />";

@@ -1403,7 +1403,6 @@ function CalendarDataSource(chk_str, sStartDate, sEndDate) {
 		data : {
 			STARTDATE : sStartDate,
 			ENDDATE : sEndDate,
-			APP : chk_str,
 			GROUPID : groupid,
 			IDLIST : chk_str
 		},

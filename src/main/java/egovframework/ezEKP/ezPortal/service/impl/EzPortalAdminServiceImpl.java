@@ -569,7 +569,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		boolean bExist = true;
 		int fileCount = 0;
 		
-		File file = new File(dirPath + fileName); 
+		File file = new File(commonUtil.detectPathTraversal(dirPath + fileName)); 
 		
 		while (bExist) {
 			if (file.exists()) {

@@ -112,7 +112,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 메인화면 호출 Method
 	 */
-	@RequestMapping(value="/ezCircular/circularIndex.do")
+	@RequestMapping(value="/ezCircular/circularIndex.do", method = RequestMethod.GET)
 	public String main(HttpServletRequest req, Model model) {
 		logger.debug("Circularmain started");
 		
@@ -137,7 +137,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 왼쪽화면 호출 Method
 	 */
-	@RequestMapping(value="/ezCircular/circularLeft.do")
+	@RequestMapping(value="/ezCircular/circularLeft.do", method = RequestMethod.GET)
 	public String circularLeft() throws Exception {
 		logger.debug("circularLeft started.");
 
@@ -149,7 +149,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함 폴더트리 호출 Method
 	 */
-//	@RequestMapping(value="/ezCircular/getCircularFolderList.do")
+//	@RequestMapping(value="/ezCircular/getCircularFolderList.do", method = RequestMethod.GET)
 //	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 //		logger.debug("getCircularFolderList started.");
 //		
@@ -176,7 +176,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함관리 및 회람판에서 이동 호출 함수
 	 */
-	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getCircularFolderList started");
@@ -204,7 +204,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 신규회람판 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/newCircular.do")
+	@RequestMapping(value = "/ezCircular/newCircular.do", method = RequestMethod.GET)
 	public String newCircular(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("newCircular started");
 
@@ -220,7 +220,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 미리보기 표출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/getPreviewItem.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCircular/getPreviewItem.do", produces = "text/xml; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String getPreviewItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
 		logger.debug("getPreviewItem started.");
@@ -239,7 +239,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 미리보기게시물 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularItemPreviewContent.do")
+	@RequestMapping(value = "/ezCircular/circularItemPreviewContent.do", method = RequestMethod.GET)
 	public String circularItemPreviewContent() throws Exception{
 		logger.debug("circularItemPreviewContent started.");
 		
@@ -251,7 +251,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 첨부파일가져오기 표출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/getItemAttachments.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezCircular/getItemAttachments.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -292,7 +292,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 첨부파일 다운로드
 	 */
-	@RequestMapping(value = "/ezCircular/downloadAttach.do")
+	@RequestMapping(value = "/ezCircular/downloadAttach.do", method = RequestMethod.GET)
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started");
 		
@@ -339,7 +339,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 받은회람판 회람판 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularComplete.do")
+	@RequestMapping(value = "/ezCircular/circularComplete.do", method = RequestMethod.GET)
 	public String circularComplete(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("circularComplete started");
 		
@@ -355,7 +355,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 작성한 회람판 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularMyCircular.do")
+	@RequestMapping(value = "/ezCircular/circularMyCircular.do", method = RequestMethod.GET)
 	public String circularMyCircular(Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("circularMyCircular started");
 		
@@ -371,7 +371,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 임시 회람판 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularTemp.do")
+	@RequestMapping(value = "/ezCircular/circularTemp.do", method = RequestMethod.GET)
 	public String circularTemp(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("circularTemp started");
 		
@@ -387,7 +387,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 휴지통 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularDelete.do")
+	@RequestMapping(value = "/ezCircular/circularDelete.do", method = RequestMethod.GET)
 	public String circularDelete(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("circularDelete started");
 		
@@ -403,7 +403,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 검색 화면 호출 Method
 	 */
-	@RequestMapping("/ezCircular/circularSearchView.do")
+	@RequestMapping(value = "/ezCircular/circularSearchView.do", method = RequestMethod.GET)
 	public String circularSearchView(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO userInfo) throws Exception {
 		logger.debug("circularSearchView started");
 		
@@ -441,7 +441,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 환경설정 화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularConfig.do")
+	@RequestMapping(value = "/ezCircular/circularConfig.do", method = RequestMethod.GET)
 	public String circularConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("circularConfig started");
 		
@@ -453,7 +453,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 환경설정 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularGeneral.do")
+	@RequestMapping(value = "/ezCircular/circularGeneral.do", method = RequestMethod.GET)
 	public String circuralGeneral(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, Model model) throws Exception {
 		logger.debug("circuralGeneral started");
 		
@@ -498,7 +498,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 리스트설정셋팅 실행 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularGeneralListSave2.do")
+	@RequestMapping(value = "/ezCircular/circularGeneralListSave2.do", method = RequestMethod.POST)
 	public String boardGeneralListSave2(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -518,7 +518,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 게시물설정 표출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/setCircularConfig.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezCircular/setCircularConfig.do", produces = "text/plain; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String setCircularConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		logger.debug("setCircularConfig started");
@@ -555,7 +555,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 신규회람판 리스트 표출 Method
 	 */
-    @RequestMapping(value = "/ezCircular/getCircularList.do", produces = "text/xml; charset=utf-8")
+    @RequestMapping(value = "/ezCircular/getCircularList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
     @ResponseBody
     public String getCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
     	logger.debug("getCircularList started");
@@ -667,7 +667,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
 	 * 회람판 받은회람판 리스트 표출 Method
 	 */
-    @RequestMapping(value = "/ezCircular/getCircularCompleteList.do", produces = "text/xml; charset=utf-8")
+    @RequestMapping(value = "/ezCircular/getCircularCompleteList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
     @ResponseBody
     public String getCircularCompleteList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
     	logger.debug("getCircularCompleteList started");
@@ -772,7 +772,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
 	 * 회람판 임시회람판 리스트 표출 Method
 	 */
-    @RequestMapping(value = "/ezCircular/getCircularTempList.do", produces = "text/xml; charset=utf-8")
+    @RequestMapping(value = "/ezCircular/getCircularTempList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
     @ResponseBody
     public String getCircularTempList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
     	logger.debug("getCircularList started");
@@ -877,7 +877,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
 	 * 회람판 작성한회람판 리스트 표출 Method
 	 */
-    @RequestMapping(value = "/ezCircular/getMyCircularList.do", produces = "text/xml; charset=utf-8")
+    @RequestMapping(value = "/ezCircular/getMyCircularList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
     @ResponseBody
     public String getMyCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
     	logger.debug("getMyCircularList started");
@@ -988,7 +988,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
 	 * 휴지통 리스트 표출 Method
 	 */
-    @RequestMapping(value = "/ezCircular/getTDCircularList.do", produces = "text/xml; charset=utf-8")
+    @RequestMapping(value = "/ezCircular/getTDCircularList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
     @ResponseBody
     public String getTDCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
     	logger.debug("getTDCircularList started");
@@ -1089,7 +1089,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 회람작성창 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezCircular/circularWrite.do")
+	@RequestMapping(value = "/ezCircular/circularWrite.do", method = RequestMethod.GET)
 	public String circularWrite(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 
@@ -1161,6 +1161,8 @@ public class EzCircularController extends EgovFileMngUtil {
 			}
 			
 			result.setTitle(result.getTitle().replaceAll("\\\\", "\\\\\\\\"));
+			result.setTitle(commonUtil.stripScriptTags(result.getTitle()));
+			result.setContent(commonUtil.stripScriptTags(result.getContent()));
 			
 			List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", "", userInfo.getTenantId(), userInfo.getOffset());
 
@@ -1217,7 +1219,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 draganddrop 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/dragAndDrop.do")
+	@RequestMapping(value = "/ezCircular/dragAndDrop.do", method = RequestMethod.GET)
 	public String dragAndDrop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1385,7 +1387,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 상세정보 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezCircular/circularRead.do")
+	@RequestMapping(value = "/ezCircular/circularRead.do", method = RequestMethod.GET)
 	public String circularRead(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model) throws Exception {
 		logger.debug("circularRead Start");
 		
@@ -1424,15 +1426,13 @@ public class EzCircularController extends EgovFileMngUtil {
 	        	
 	        	model.addAttribute("attachList", aList);
 	        }
-	        
 	        //2018.08.08 캐비넷 추가
 	        String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
 	        if (use_cabinet.equals("YES")) {
 				use_cabinet = cabinetAdminService.checkModuleActive("option", userInfo);
 			}
-	        
-	        
-	        
+	        // 2019-03-21 김민성 - secure coding(XSS)
+	        //result.setContent(commonUtil.stripScriptTags(result.getContent()));
 			model.addAttribute("userInfo", userInfo);
 			model.addAttribute("result", result);
 			model.addAttribute("totalCommentCount", totalCommentCount);
@@ -1451,7 +1451,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 상세화면 의견목록 카운트 조회
 	 */
-	@RequestMapping(value = "/ezCircular/getCommentCount.do")
+	@RequestMapping(value = "/ezCircular/getCommentCount.do", method = RequestMethod.POST)
 	public String getCommentCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getCommentCount started.");
 		
@@ -1518,7 +1518,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 신규 회람판 클릭했을때, 확인 수 증가 및 확인일 설정 실행 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularConfirmStatus.do")
+	@RequestMapping(value = "/ezCircular/circularConfirmStatus.do", method = RequestMethod.POST)
 	public String circularConfirmStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("confirmStatus started");
 		
@@ -1536,7 +1536,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판작성 > 첨부파일 업로드
 	 */
-	@RequestMapping(value = "/ezCircular/uploadItemAttach.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezCircular/uploadItemAttach.do", produces = "text/plain; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String uploadItemAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception{
 		
@@ -1597,8 +1597,8 @@ public class EzCircularController extends EgovFileMngUtil {
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-        File file = new File(pDirPath + "uploadFile");
-        File tempFile = new File(pDirPath + "tempUploadFile");
+        File file = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile"));
+        File tempFile = new File(commonUtil.detectPathTraversal(pDirPath + "tempUploadFile"));
         
         logger.debug("pDirPath : " + pDirPath);
         
@@ -1651,7 +1651,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판작성 > 닫기 클릭시 임시첨부파일 삭제
 	 */
-	@RequestMapping(value = "/ezCircular/tempUploadFileDelete.do")
+	@RequestMapping(value = "/ezCircular/tempUploadFileDelete.do", method = RequestMethod.POST)
 	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
 		
 		logger.debug("tempUploadFileDelete started");
@@ -1707,7 +1707,7 @@ public class EzCircularController extends EgovFileMngUtil {
 				String sGUID = (String) jsonObj.get("newFileName");
 				String fileName = (String) jsonObj.get("pFileName");
 				
-				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + fileName);
+				File file = new File(commonUtil.detectPathTraversal(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + fileName));
 				
 				file.delete();
 			}
@@ -1752,7 +1752,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람처 목록화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularDeptConfig.do")
+	@RequestMapping(value = "/ezCircular/circularDeptConfig.do", method = RequestMethod.GET)
 	public String circularDeptConfig(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("circularDeptConfig started");
 		
@@ -1766,7 +1766,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람처 등록화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularDeptadd.do")
+	@RequestMapping(value = "/ezCircular/circularDeptadd.do", method = RequestMethod.GET)
 	public String circularDeptadd() {
 		logger.debug("circularDeptadd started");
 		
@@ -1778,7 +1778,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람처 저장 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularDeptSave.do")
+	@RequestMapping(value = "/ezCircular/circularDeptSave.do", method = RequestMethod.POST)
 	public String circularDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularDeptSave started");
 		
@@ -1802,7 +1802,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람처 조직도 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularSelectAttendant.do")
+	@RequestMapping(value = "/ezCircular/circularSelectAttendant.do", method = RequestMethod.GET)
 	public String circularSelectAttendant(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("circularSelectAttendant started");
 		
@@ -1819,7 +1819,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람처 목록 수정 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularDeptModify.do")
+	@RequestMapping(value = "/ezCircular/circularDeptModify.do", method = RequestMethod.GET)
 	public String circularDeptModify(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularDeptVO circularDeptVO, Model model) throws Exception {
 		logger.debug("circularDeptModify started");
 		
@@ -1869,7 +1869,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람처 삭제 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularDeptDel.do")
+	@RequestMapping(value = "/ezCircular/circularDeptDel.do", method = RequestMethod.POST)
 	public String circularDeptDel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularDeptDel started");
 		
@@ -1887,7 +1887,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 휴지통 회람 리스트 삭제 실행 Method
 	 */
-	@RequestMapping(value = "/ezCircular/deleteCircularList.do")
+	@RequestMapping(value = "/ezCircular/deleteCircularList.do", method = RequestMethod.POST)
 	public String deleteCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
 		logger.debug("deleteCircularList started");
 		
@@ -1919,7 +1919,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 휴지통 회람 삭제 실행 Method
 	 */
-	@RequestMapping(value = "/ezCircular/deleteCircular.do")
+	@RequestMapping(value = "/ezCircular/deleteCircular.do", method = RequestMethod.POST)
 	public String deleteCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("deleteCircular started");
 		
@@ -1958,7 +1958,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
 	 * 회람판 환경설정 즐겨찾기 회람자목록 화면 호출 Method
 	 **/
-	@RequestMapping(value = "/ezCircular/circularCheckName.do")
+	@RequestMapping(value = "/ezCircular/circularCheckName.do", method = RequestMethod.GET)
 	public String circularCheckName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularCheckName started");
 		
@@ -1980,7 +1980,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함 관리 호출 Method
 	 **/
-	@RequestMapping(value = "/ezCircular/circularFolderManage.do")
+	@RequestMapping(value = "/ezCircular/circularFolderManage.do", method = RequestMethod.GET)
 	public String circularFolderManage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularFolderManage started");
 		
@@ -1994,7 +1994,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함 추가 호출 Method
 	 **/
-	@RequestMapping(value = "/ezCircular/circularInputName.do")
+	@RequestMapping(value = "/ezCircular/circularInputName.do", method = RequestMethod.GET)
 	public String circularInputName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularInputName started");
 		
@@ -2019,7 +2019,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 회람종료 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularClose.do")
+	@RequestMapping(value = "/ezCircular/circularClose.do", method = RequestMethod.POST)
 	public String circularClose(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
 		logger.debug("circularClose started");
 		
@@ -2038,7 +2038,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 환경설정 저장 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularCheckFolder.do")
+	@RequestMapping(value = "/ezCircular/circularCheckFolder.do", method = RequestMethod.POST)
 	public String circularCheckFolder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularCheckFolder started");
 		
@@ -2057,7 +2057,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람처 폴더추가 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularFolderAdd.do")
+	@RequestMapping(value = "/ezCircular/circularFolderAdd.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void circularFolderAdd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
 		logger.debug("circularFolderAdd started");
@@ -2078,7 +2078,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람처 폴더수정 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularFolderModify.do")
+	@RequestMapping(value = "/ezCircular/circularFolderModify.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void circularFolderModify(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
 		logger.debug("circularFolderModify started");
@@ -2118,7 +2118,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함 폴더의 회람판 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularFolderDoc.do")
+	@RequestMapping(value = "/ezCircular/circularFolderDoc.do", method = RequestMethod.GET)
 	public String circularFolderDoc(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {		
 		logger.debug("circularFolderDoc started");
 
@@ -2142,7 +2142,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 이동 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezCircular/circularMove.do")
+	@RequestMapping(value = "/ezCircular/circularMove.do", method = RequestMethod.GET)
 	public String circularMove(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("circularMove started");
 		
@@ -2219,7 +2219,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 개인폴더 회람판 리스트 표출 Method
 	 */
-    @RequestMapping(value = "/ezCircular/getFolderCircularList.do", produces = "text/xml; charset=utf-8")
+    @RequestMapping(value = "/ezCircular/getFolderCircularList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
     @ResponseBody
     public String getFolderCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
     	logger.debug("getFolderCircularList started");
@@ -2328,7 +2328,7 @@ public class EzCircularController extends EgovFileMngUtil {
      * 해당회람자 댓글 목록 조회
      * 회람판ID, 회람자ID
      */
-    @RequestMapping(value = "/ezCircular/getCircularComment.do")
+    @RequestMapping(value = "/ezCircular/getCircularComment.do", method = RequestMethod.POST)
     public String getCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, HttpServletRequest request, Model model) throws Exception {
     	logger.debug("getCircularComment started.");
     	
@@ -2342,6 +2342,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	List<CircularCommentVO> circularCommentList = ezCircularService.getCircularComment(circularCommentVO, searchType, searchValue, userInfo.getId(), commentType, userInfo.getOffset(), userInfo.getTenantId());
     	int totalCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "totalComment", userInfo.getTenantId());
 		int myCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "myComment", userInfo.getTenantId());
+		
+		for(int i=0; i<circularCommentList.size(); i++) {
+			circularCommentList.get(i).setCircularComment(commonUtil.cleanValue(circularCommentList.get(i).getCircularComment()));
+		}
 
     	logger.debug("getCircularComment ended.");
     	
@@ -2359,7 +2363,7 @@ public class EzCircularController extends EgovFileMngUtil {
      * 회람판ID, 회람자ID, 댓글작성자ID, 글내용
      * 저장할때 
      */
-    @RequestMapping(value = "/ezCircular/editCircularComment.do")
+    @RequestMapping(value = "/ezCircular/editCircularComment.do", method = RequestMethod.POST)
     public String editCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO) throws Exception {
     	logger.debug("editCircularComment started.");
     	
@@ -2375,7 +2379,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
      * 회람판 의견 삭제
      */
-    @RequestMapping(value = "/ezCircular/deleteCircularComment.do")
+    @RequestMapping(value = "/ezCircular/deleteCircularComment.do", method = RequestMethod.POST)
     public String deleteCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO) throws Exception {
     	logger.debug("deleteCircularComment started.");
     	
@@ -2391,7 +2395,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
      * 회람 확인요청메일 (회람 미확인자)
      */
-    @RequestMapping(value = "/ezCircular/commentSendMail.do")
+    @RequestMapping(value = "/ezCircular/commentSendMail.do", method = RequestMethod.POST)
     public String commentSendMail(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO) throws Exception {
     	logger.debug("commentSendMail started.");
     	
@@ -2430,7 +2434,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
      * 회람 의견목록 팝업화면조회
      */
-    @RequestMapping(value = "/ezCircular/circularCommentPopup.do")
+    @RequestMapping(value = "/ezCircular/circularCommentPopup.do", method = RequestMethod.GET)
     public String circularCommentPopup(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, Model model) throws Exception {
     	logger.debug("circularCommentPopup started.");
     	logger.debug("circularID = " + circularCommentVO.getCircularID());
@@ -2451,9 +2455,9 @@ public class EzCircularController extends EgovFileMngUtil {
     }
 
     /**
-     * 회람처 추가
+     * 회람처 추가(사용안함)
      */
-    @RequestMapping(value = "/ezCircular/circularDeptListAdd.do")
+    @RequestMapping(value = "/ezCircular/circularDeptListAdd.do", method = RequestMethod.GET)
     public String circularDeptListAdd(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
     	logger.debug("circularDeptListAdd started.");
 
@@ -2472,7 +2476,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
      * 회람판 공유자지정화면 조회
      */
-    @RequestMapping(value = "/ezCircular/circularCommentSharePopup.do")
+    @RequestMapping(value = "/ezCircular/circularCommentSharePopup.do", method = RequestMethod.GET)
     public String shareUserPopup(@CookieValue("loginCookie") String loginCookie, CircularCommentVO vo, Model model) throws Exception {
     	logger.debug("shareUserPopup started.");
     	
@@ -2489,7 +2493,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
      * 회람판 공유자 조회
      */
-    @RequestMapping(value = "/ezCircular/getCommentShareUser.do")
+    @RequestMapping(value = "/ezCircular/getCommentShareUser.do", method = RequestMethod.POST)
     public String getCommentShareUser(@CookieValue("loginCookie") String loginCookie, CircularCommentVO vo, HttpServletRequest request, Model model) throws Exception {
     	logger.debug("getCommentShareUser started.");
     	
@@ -2512,7 +2516,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
      * 회람판 왼쪽메뉴 전체화면 카운트
      */
-    @RequestMapping(value = "/ezCircular/getListCount.do")
+    @RequestMapping(value = "/ezCircular/getListCount.do", method = RequestMethod.GET)
     public String getListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
     	logger.debug("getListCount started.");
     	
@@ -2532,7 +2536,7 @@ public class EzCircularController extends EgovFileMngUtil {
     /**
      * 회람판 공유자지정 실행함수
      */
-    @RequestMapping(value = "/ezCircular/commentShareUser.do")
+    @RequestMapping(value = "/ezCircular/commentShareUser.do", method = RequestMethod.POST)
     public String commentShareUser(@CookieValue("loginCookie") String loginCookie, CircularCommentVO vo, HttpServletRequest request, Model model) throws Exception {
     	logger.debug("commentShareUser started.");
     	
@@ -2550,7 +2554,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람작성 시 회람처 List 호출
      *  
 	 */
-	@RequestMapping(value = "/ezCircular/getcircularDeptList.do")
+	@RequestMapping(value = "/ezCircular/getcircularDeptList.do", method = RequestMethod.GET)
 	public String getcircularDeptList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("getcircularDeptList started");
 		
@@ -2591,7 +2595,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 인쇄상세질문 호출 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularprtQuestion.do")
+	@RequestMapping(value = "/ezCircular/circularprtQuestion.do", method = RequestMethod.GET)
 	public String circularprtQuestion(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("circularprtQuestion started");
 		
@@ -2607,7 +2611,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람확인
 	 */
-	@RequestMapping(value = "/ezCircular/circularConfirm.do")
+	@RequestMapping(value = "/ezCircular/circularConfirm.do", method = RequestMethod.POST)
 	public String circularConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("circularConfirm started.");
 		
@@ -2625,7 +2629,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 의견확인(의견, 공유상태 변경)
 	 */
-	@RequestMapping(value = "/ezCircular/commentConfirm.do")
+	@RequestMapping(value = "/ezCircular/commentConfirm.do", method = RequestMethod.POST)
 	public String commentConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("circularConfirm started.");
 		
@@ -2643,7 +2647,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람판 휴지통 복구 실행 Method
 	 */
-	@RequestMapping(value = "/ezCircular/restoreCircularList.do")
+	@RequestMapping(value = "/ezCircular/restoreCircularList.do", method = RequestMethod.POST)
 	public String restoreCircular(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("restoreCircularList started.");
 		
@@ -2660,7 +2664,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 18-05-28 김민성 - 회람판 회람글 확인자 정보 조회
 	 */
-	@RequestMapping(value = "/ezCircular/circularConfirmList.do")
+	@RequestMapping(value = "/ezCircular/circularConfirmList.do", method = RequestMethod.GET)
 	public String circularConfirmList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularConfirmList started.");
 		
@@ -2679,7 +2683,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		return "ezCircular/circularConfirmList";
 	}
 	
-	@RequestMapping(value = "/ezCircular/circularConfirmPagingList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezCircular/circularConfirmPagingList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String itemReadPagingList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, String circularID, int pageNum, int perCount) throws Exception {
 		logger.debug("circularConfirmPagingList started");
@@ -2695,7 +2699,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 2018-07-12 김보미 - 모두저장(압축파일 내려받기)
 	 */
-	@RequestMapping(value="/ezCircular/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
+	@RequestMapping(value="/ezCircular/downloadAttachAll.do", produces="text/plain; charset=UTF-8", method = RequestMethod.POST)
 	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachAll started.");
@@ -2722,19 +2726,19 @@ public class EzCircularController extends EgovFileMngUtil {
 		String downFileName = "";
 		
 		try {
-			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+			File tempFile = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + ".zip"));
 			
 			if (tempFile.exists()) {
 				tempFile.delete();
 			}
 			
-			tempFile = new File(tempFileUploadPath);
+			tempFile = new File(commonUtil.detectPathTraversal(tempFileUploadPath));
 			
 			if (!tempFile.exists()) {
 				tempFile.mkdirs();
 			}
 			
-			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+			zos = new ZipOutputStream(new FileOutputStream(commonUtil.detectPathTraversal(pDirTempPath + ".zip")), Charset.forName("utf-8"));
 				
 			JSONParser jp = new JSONParser();
 			JSONArray fileNamesArr = (JSONArray)jp.parse(fileNames);
@@ -2749,7 +2753,7 @@ public class EzCircularController extends EgovFileMngUtil {
 					BufferedInputStream bis = null;
 					
 					try {
-				       File sourceFile = new File(fullFilePath + fileNamesArr.get(i).toString());
+				       File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesArr.get(i).toString()));
 	                   
 				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
 				        String newFileName = commonUtil.getUniqueFileName(fileNamesArr2.get(i).toString(), fileNameMap);
@@ -2779,7 +2783,7 @@ public class EzCircularController extends EgovFileMngUtil {
 				zos.close();
 				zos = null;
 	
-				File file = new File(pDirTempPath + ".zip");
+				File file = new File(commonUtil.detectPathTraversal(pDirTempPath + ".zip"));
 				
 				if (file.exists()) {
 					downFile(request, response, pDirTempPath + ".zip", downFileName);
@@ -2787,7 +2791,7 @@ public class EzCircularController extends EgovFileMngUtil {
 				}
 			}
 		} catch (Exception e) {
-			File file = new File(pDirTempPath + ".zip");
+			File file = new File(commonUtil.detectPathTraversal(pDirTempPath + ".zip"));
 			
 			if (file.exists()) {
 				file.delete();

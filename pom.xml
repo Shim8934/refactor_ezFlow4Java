@@ -270,11 +270,11 @@
   			<artifactId>opencsv</artifactId>
   			<version>3.8</version>
 		</dependency>
-        <dependency>
+		<dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>1.5.7</version>
-        </dependency>  
+            <version>2.4.1</version>
+        </dependency> 
 		<dependency>
 		    <groupId>net.htmlparser.jericho</groupId>
 		    <artifactId>jericho-html</artifactId>

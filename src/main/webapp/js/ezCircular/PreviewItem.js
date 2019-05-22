@@ -250,11 +250,11 @@ function ItemPreviewRead(obj) {
         document.getElementById("previewmail_bar_h").style.cursor = "w-resize";
     
     xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/ezCircular/getPreviewItem.do?pcircularId=" + pcircularId + "&pmemberId=" + pmemberId, true);
+    xmlhttp.open("GET", "/ezCircular/getPreviewItem.do?pcircularId=" + pcircularId + "&pmemberId=" + pmemberId, true);
     xmlhttp.onreadystatechange = event_ItemPreviewRead;
     xmlhttp.send();
     xmlhttp2 = createXMLHttpRequest();
-    xmlhttp2.open("POST", "/ezCircular/getItemAttachments.do?pcircularId=" + pcircularId, true);
+    xmlhttp2.open("GET", "/ezCircular/getItemAttachments.do?pcircularId=" + pcircularId, true);
     xmlhttp2.onreadystatechange = event_ItemPreviewRead;
     xmlhttp2.send();
     

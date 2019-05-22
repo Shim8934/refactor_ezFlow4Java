@@ -56,6 +56,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
 		
+		String title = vo.getTitle();
+		title = commonUtil.detectPathTraversal(title);
+		title = commonUtil.stripScriptTags(title);
+		vo.setTitle(title);
+		
 		logger.debug("getTaskInfo ended.");
 		
 		return vo;
@@ -73,6 +78,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("tenantID", tenantID);		
 		
 		List<TaskCommentVO> list = ezTaskDAO.getCommentList(map);
+		int listCount = list.size();
+		
+		for (int i = 0; i < listCount; i++) {
+			String comment = list.get(i).getComment();
+			comment = commonUtil.stripScriptTags(comment);
+			list.get(i).setComment(comment);
+		}
 		
 		logger.debug("getCommentList ended.");
 		logger.debug("listSize = " + list.size());
@@ -108,6 +120,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("commentorID", commentorID);
 		map.put("commentorName", commentorName);
 		map.put("commentorName2", commentorName2);
+		
+		comment = commonUtil.stripScriptTags(comment);
+		
 		map.put("comment", comment);
 		map.put("hasComment", "Y");
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
@@ -168,6 +183,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("contentPath = " + taskInfoVO.getContentPath());
 		
 		String taskID = taskInfoVO.getTaskID();
+		String taskTitle = taskInfoVO.getTitle();
+		taskTitle = commonUtil.stripScriptTags(taskTitle);
+		taskInfoVO.setTitle(taskTitle);
 		
 		/* mht Save*/
 		String mhtFilePath = "";
@@ -181,12 +199,19 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			mhtFilePath = realPath + uploadTaskPath + commonUtil.separator + taskInfoVO.getContentPath();
 		}
 		
-		File docFolder = new File(realPath + uploadTaskPath + commonUtil.separator + "Doc");
+		String docPath = realPath + uploadTaskPath + commonUtil.separator + "Doc";
+		docPath = commonUtil.detectPathTraversal(docPath);
+		docPath = commonUtil.stripScriptTags(docPath);
+		
+		File docFolder = new File(docPath);
 		if (!docFolder.exists()) {
 			docFolder.mkdirs();
 		}
 		
 		PrintWriter pw = null;
+		
+		mhtFilePath = commonUtil.detectPathTraversal(mhtFilePath);
+		mhtFilePath = commonUtil.stripScriptTags(mhtFilePath);
 		
 		try {
 			pw = new PrintWriter(new File(mhtFilePath));
@@ -212,7 +237,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		if (fileList.length() > 0) {
 			Map<String, Object> attachMap = new HashMap<String, Object>();
 			String pDirPath = realPath + uploadTaskPath + commonUtil.separator;
-			File uploadFileFolder = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID);
+			String uploadFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID;
+			uploadFilePath = commonUtil.detectPathTraversal(uploadFilePath);
+			uploadFilePath = commonUtil.stripScriptTags(uploadFilePath);
+			
+			File uploadFileFolder = new File(uploadFilePath);
 			
 			logger.debug("fileList = " + fileList);
 			logger.debug("fileNamse = " + fileNames);
@@ -231,7 +260,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				String filePath = fileList.split("\\\\")[i];
 				String fileName = fileNames.split("\\\\")[i];
 				String fileSize = fileSizes.split("\\\\")[i];
-
+				
+				filePath = commonUtil.detectPathTraversal(filePath);
+				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath);
@@ -265,15 +296,23 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			mhtFilePath = realPath + uploadTaskPath + commonUtil.separator + contentPath;
 		}
 		
-		File folder = new File(realPath + uploadTaskPath + commonUtil.separator + "Doc");
+		content = commonUtil.stripScriptTags(content);
+		
+		String folderPath = realPath + uploadTaskPath + commonUtil.separator + "Doc";
+		folderPath = commonUtil.detectPathTraversal(folderPath);
+		folderPath = commonUtil.stripScriptTags(folderPath);
+		
+		File folder = new File(folderPath);
 		if (!folder.exists()) {
 			folder.mkdirs();
 		}
 		
 		PrintWriter pw = null;
+		String mhtFile = commonUtil.detectPathTraversal(mhtFilePath);
+		mhtFile = commonUtil.stripScriptTags(mhtFile);
 		
 		try {
-			pw = new PrintWriter(new File(mhtFilePath));
+			pw = new PrintWriter(new File(mhtFile));
 			pw.println(content);
 			pw.flush();
 		} catch (Exception e) {
@@ -294,7 +333,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		if (attachList.length() > 0) {
 			Map<String, Object> attachMap = new HashMap<String, Object>();
 			String pDirPath = realPath + uploadTaskPath + commonUtil.separator;
-			File uploadFileFolder = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID);
+			String uploadFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID;
+			uploadFilePath = commonUtil.detectPathTraversal(uploadFilePath);
+			uploadFilePath = commonUtil.stripScriptTags(uploadFilePath);
+			
+			File uploadFileFolder = new File(uploadFilePath);
 			
 			if (!uploadFileFolder.exists()) {
 				uploadFileFolder.mkdirs();
@@ -310,7 +353,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				String filePath = attachList.split("\\\\")[i];
 				String fileName = fileNames.split("\\\\")[i];
 				String fileSize = fileSizes.split("\\\\")[i];
-
+				
+				filePath = commonUtil.detectPathTraversal(filePath);
+				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath);
@@ -347,7 +392,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			String filePath = vo.getFilePath();
 			String fileSize = commonUtil.byteCalculation(vo.getFileSize());
 			String fileImage = null;
-
+			filePath = commonUtil.detectPathTraversal(filePath);
+			
 			if (fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".bmp") || fileName.contains(".gif") || fileName.contains(".png") || fileName.contains(".tif") || fileName.contains(".tiff") || fileName.contains(".jpeg")) {
 				fileImage = "/images/image.png";
 			} else if (fileName.contains(".doc")) {
@@ -392,6 +438,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("tenantID", tenantID);
 		
 		List<TaskAttachVO> list = ezTaskDAO.getAttachList(map);
+		int listSize = list.size();
+		
+		for (int i = 0; i < listSize; i++) {
+			String filePath = list.get(i).getFilePath();
+			filePath = commonUtil.detectPathTraversal(filePath);
+			list.get(i).setFilePath(filePath);
+		}
 		
 		logger.debug("getAttachList ended");
 		
@@ -426,7 +479,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	public void taskSaveConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception {
 		logger.debug("taskSaveConfig started.");
 		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor + " | originColor : " + originColor + " | originColor2 : " + originColor2);
-
+		
+		delayColor = commonUtil.stripScriptTags(delayColor);
+		completeColor = commonUtil.stripScriptTags(completeColor);
+		originColor = commonUtil.stripScriptTags(originColor);
+		originColor2 = commonUtil.stripScriptTags(originColor2);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
@@ -446,8 +504,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("taskUpdateConfig started.");
 		logger.debug("memberID : " + memberID + " | delayColor : " + delayColor + " | completeColor : " + completeColor + " | originColor : " + originColor);
 
+		delayColor = commonUtil.stripScriptTags(delayColor);
+		completeColor = commonUtil.stripScriptTags(completeColor);
+		originColor = commonUtil.stripScriptTags(originColor);
+		originColor2 = commonUtil.stripScriptTags(originColor2);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		
 		map.put("memberID", memberID);
 		map.put("delayColor", delayColor);
 		map.put("completeColor", completeColor);
@@ -502,6 +565,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		for(TaskInfoVO v: list) {
 			logger.debug("Task ID: " + v.getTaskID() + " || Task type: " + v.getTaskType());
+			String taskTitle = v.getTitle();
+			taskTitle = commonUtil.stripScriptTags(taskTitle);
+			v.setTitle(taskTitle);
 		}
 		
 		logger.debug("--------------------------------------------------------------");
@@ -991,6 +1057,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			map.put("taskID", taskID);
 			
 			TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
+			String taskTitle = vo.getTitle();
+			taskTitle = commonUtil.stripScriptTags(taskTitle);
+			vo.setTitle(taskTitle);
 			
 			if (vo == null) {
 				continue;
@@ -1004,14 +1073,19 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 			// 첨부파일이 있으면 첨부파일 삭제
 			if (vo.getHasAttach().equals("Y")) {
+				pDirPath = commonUtil.detectPathTraversal(pDirPath);
 				deleteDirectory(taskID, pDirPath, tenantID);
 			}
 
 			String mhtPath = vo.getContentPath();
 
 			logger.debug("Delete mhtPath : " + mhtPath);
-
-			File file = new File(pDirPath + mhtPath);
+			
+			String dirPath = pDirPath + mhtPath;
+			dirPath = commonUtil.detectPathTraversal(dirPath);
+			dirPath = commonUtil.stripScriptTags(dirPath);
+			
+			File file = new File(dirPath);
 
 			if (file.exists()) {
 				file.delete();
@@ -1032,6 +1106,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("insertTask started.");
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
+		String taskTitle = vo.getTitle();
+		taskTitle = commonUtil.stripScriptTags(taskTitle);
+		vo.setTitle(taskTitle);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("parentID", 0);
@@ -1084,6 +1161,9 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		String taskID = vo.getTaskID();
 		String nowDate = commonUtil.getTodayUTCTime("");
+		String taskTitle = vo.getTitle();
+		taskTitle = commonUtil.stripScriptTags(taskTitle);
+		vo.setTitle(taskTitle);
 		
 		logger.debug("taskID = " + taskID + " || Repetition: " + vo.getRepetition());
 		
@@ -1176,11 +1256,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
-
-		File file = new File(beforeFilePath);
+		
+		File file = new File(commonUtil.detectPathTraversal(beforeFilePath));
 
 		try {
-			file.renameTo(new File(afterFilePath));			
+			file.renameTo(new File(commonUtil.detectPathTraversal(afterFilePath)));			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1190,8 +1270,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 	private void deleteDirectory(String taskID, String pDirpath, int tenantID) throws Exception {
 		logger.debug("deleteDirectory ended.");
-
-		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile");
+		
+		String dirPath = pDirpath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile";
+		
+		File directoryFile = new File(commonUtil.detectPathTraversal(dirPath));
 		File[] deleteFileList = directoryFile.listFiles();
 
 		if (directoryFile.exists()) {

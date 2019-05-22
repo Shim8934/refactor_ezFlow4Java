@@ -37,7 +37,7 @@
 	            document.getElementById("seldate_span").innerHTML = date.split("-")[0] + "." + date.split("-")[1] + "." + date.split("-")[2];
 	
 	            $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezSchedule/scheduleNewWebPartList.do",
@@ -108,7 +108,7 @@
 	                    }
 	
 	
-	                    document.getElementById("scheduleTitle" + count).innerHTML = TITLE;
+	                    document.getElementById("scheduleTitle" + count).innerHTML = MakeXMLString(TITLE);
 	                    document.getElementById("scheduleTitle" + count).style.cursor = "pointer";
 	                    document.getElementById("scheduleTitle" + count).onclick = new Function("open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')")
 	                    count++;

@@ -1210,7 +1210,7 @@ public class EzWebFolderGWController {
 			FileVO fileVO    = ezWebFolderService.getFileByFileId(fileId, offset, tenantId);
 			
 			boolean isWindowsExplorer = webFlag.isEmpty();
-
+			
 			String updateFileName = "";
 				
 			String newFilePath = "";
@@ -1260,14 +1260,14 @@ public class EzWebFolderGWController {
 				String realFileExt = fileExt;
 				
 				// file의 이름을 바꿔주는것에 사용
-				File file = new File(realPath +  filePath);
-				File fileToMove = new File(realPath + newFilePath);
+				File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
+				File fileToMove = new File(realPath + commonUtil.detectPathTraversal(newFilePath));
 				
 				if (fileExt.length() >= 10) {
 					fileExt = "unknown";
 				}
 				
-				FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(realFileExt.toLowerCase().toString(), tenantId);
+				FileTypeVO fileType = ezWebFolderService.getFileTypeByFileExt(realFileExt.toLowerCase(), tenantId);
 					
 				if (fileType == null) {
 					fileExt = "unknown";

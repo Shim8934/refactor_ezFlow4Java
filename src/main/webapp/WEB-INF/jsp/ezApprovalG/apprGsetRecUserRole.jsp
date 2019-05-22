@@ -21,8 +21,8 @@
     var OrderCell = "";
     var g_RecID, g_SepAttNo, g_DeptCode;
     var rtnVal = new Array();
-    var CompanyID = "${userInfo.companyID}";
-    var UserLang = "${userInfo.lang}";
+    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+    var UserLang = "<c:out value='${userInfo.lang}'/>";
     var RetValue;
     var ReturnFunction;
     window.onload = function () {

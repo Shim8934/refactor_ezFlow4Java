@@ -75,8 +75,8 @@
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
 	        var browserIE = (!CrossYN()) ? true : false;
-	        var type = "${type}";
-	        var rulekind = "${ruleKind}";
+	        var type = '<c:out value="${type}"/>';
+	        var rulekind = '<c:out value="${ruleKind}"/>';
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var strLang_2 = "<spring:message code='ezEmail.t655' />";
@@ -273,7 +273,7 @@
 	                document.getElementById("dept_select").style.display = "none";
 	            }
 	            else {
-	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
+	                SelectReceiverWindow(eval('<c:out value="${defaultWin}"/>' + "Title"), eval("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
 	            }
 	            
 	            // (수신자 설정 시 drag, drop으로 순서 조정)
@@ -3944,7 +3944,7 @@
 	                            <table style="margin-top: 3px;">
 	                                <tr>
 	                                    <td class="box" style="border-right:0px">
-	                                        <div id="TreeView" style="width: 220px; height: 474px; overflow-x: hidden; overflow-y: auto;" ></div>
+	                                        <div id="TreeView" style="width: 220px; height: 474px; overflow-x: auto; overflow-y: auto;" ></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">

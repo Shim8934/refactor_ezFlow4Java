@@ -174,7 +174,7 @@ public class CommonUtil {
 	    	String parentFolder1 = "../";
 	    	String parentFolder2 = "..\\";
 	    	
-	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2)) {
+	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2) || filePath.toUpperCase().contains("WEB-INF")) {
 	    		logger.debug("PathTraversal detected. filePath=" + filePath);
 	    		
 	    		throw new Exception("PathTraversal detected.");
@@ -312,7 +312,7 @@ public class CommonUtil {
 			for (int k = 0; k < cookie.length; k++) {
 				switch (cookie[k].getName()) {
 				case "APRUI0":
-					user.setDeptID(cookie[k].getValue());
+					user.setDeptID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI1":
 					user.setDeptName1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
@@ -333,7 +333,7 @@ public class CommonUtil {
 					user.setTitle2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI7":
-					user.setCompanyID(cookie[k].getValue());
+					user.setCompanyID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				}
 			}

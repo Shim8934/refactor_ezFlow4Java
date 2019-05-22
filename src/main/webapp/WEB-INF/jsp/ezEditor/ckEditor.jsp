@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -8,8 +9,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/ckEditor/ckeditor.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-			var type = "${type}";
-			var height = "${height}";
+			var type = '<c:out value="${type}"/>';
+			var height = '<c:out value="${height}"/>';
 			var editorLoadFlag = false;
 			
 		    CKEDITOR.on( 'instanceReady', function( ev ) {
@@ -59,7 +60,7 @@
 					}
 					
 	                if (type == "APPROVAL" || type == "APPROVALG") {
-	                	if ("${isUsed}" != "reuse") {
+	                	if ('<c:out value="${isUsed}"/>' != "reuse") {
 	                    	Set_CellLocked();
 	                	}
 	                }
@@ -283,9 +284,9 @@
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
 		<script type="text/javascript">CKEDITOR.replace( 'editor1', {fullPage : false} );</script>
 		<script type="text/javascript">
-			var useHTMLMode = "${useHTMLMode}";
-			var defaultFontFamily = "${defaultFontFamily}";
-			var defaultFontSize = "${defaultFontSize}";
+			var useHTMLMode = "<c:out value='${useHTMLMode}'/>";
+			var defaultFontFamily = "<c:out value='${defaultFontFamily}'/>";
+			var defaultFontSize = "<c:out value='${defaultFontSize}'/>";
 			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			var uploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
 			

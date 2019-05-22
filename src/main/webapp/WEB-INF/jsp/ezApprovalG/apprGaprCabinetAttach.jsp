@@ -30,27 +30,27 @@
 	        var pUserName2, pUserJobTitle2, pDeptName2;
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "${userInfo.id}";
-	        arr_userinfo[2] = "${userInfo.displayName}";
-	        arr_userinfo[3] = "${userInfo.title}";
-	        arr_userinfo[4] = "${userInfo.deptID}";
-	        arr_userinfo[5] = "${userInfo.deptName}";
-	        arr_userinfo[6] = "${userInfo.jikChek}";
-	        arr_userinfo[8] = "${userInfo.email}";
+	        arr_userinfo[1] = "<c:out value ='${userInfo.id}'/>";
+	        arr_userinfo[2] = "<c:out value ='${userInfo.displayName}'/>";
+	        arr_userinfo[3] = "<c:out value ='${userInfo.title}'/>";
+	        arr_userinfo[4] = "<c:out value ='${userInfo.deptID}'/>";
+	        arr_userinfo[5] = "<c:out value ='${userInfo.deptName}'/>";
+	        arr_userinfo[6] = "<c:out value ='${userInfo.jikChek}'/>";
+	        arr_userinfo[8] = "<c:out value ='${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[11] = "${userInfo.displayName1}";
-	        arr_userinfo[12] = "${userInfo.displayName2}";
-	        arr_userinfo[13] = "${userInfo.title1}";
-	        arr_userinfo[14] = "${userInfo.title2}";
-	        arr_userinfo[15] = "${userInfo.deptName1}";
-	        arr_userinfo[16] = "${userInfo.deptName2}";
+	        arr_userinfo[11] = "<c:out value ='${userInfo.displayName1}'/>";
+	        arr_userinfo[12] = "<c:out value ='${userInfo.displayName2}'/>";
+	        arr_userinfo[13] = "<c:out value ='${userInfo.title1}'/>";
+	        arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>";
+	        arr_userinfo[15] = "<c:out value ='${userInfo.deptName1}'/>";
+	        arr_userinfo[16] = "<c:out value ='${userInfo.deptName2}'/>";
 	        var DeptID, deptName, UserID, AdminYN, CompanyID, PageSize, Block_Size;
 	        var deptName2;
-	        var UserLang = "${userInfo.lang}";
+	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
 	        var RetValue;
 	        var ReturnFunction;
-	        var pDraftFlag = "${draftFlag}";
-	        var approvalFlag = "${approvalFlag}";
+	        var pDraftFlag = "<c:out value ='${draftFlag}'/>";
+	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 			//페이징이 달라 구분값 추가
 			var diffPaging = "attachDoc";
 	        
@@ -59,7 +59,7 @@
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 	                KeEventControl(document.getElementById("txt_PageInputNum"));
 	            }
-	            pUserID = "${userInfo.id}";
+	            pUserID = "<c:out value ='${userInfo.id}'/>";
 	            pUserName = arr_userinfo[2];
 	            pUserJobTitle = arr_userinfo[3];
 	            pDeptID = arr_userinfo[4];
@@ -78,7 +78,7 @@
 	            }
 	
 	            pDocID = RetValue;
-	            pCompanyID = "${userInfo.companyID}";
+	            pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 	            pUserName2 = arr_userinfo[11];
 	            pUserJobTitle2 = arr_userinfo[12];
 	            pDeptName2 = arr_userinfo[13];

@@ -765,7 +765,7 @@ public class EzJournalGWController {
 			String mode = jsonParam.get("mode").toString();
 			LOGGER.debug("mode : " + mode);
 			
-			ezJournalService.updateJournal(journalId, jsonParam, info.getTenantId(), realPath);
+			ezJournalService.updateJournal(commonUtil.detectPathTraversal(journalId), jsonParam, info.getTenantId(), realPath);
 			
 			result.put("data", journalId);
 			result.put("status", "ok");
@@ -795,12 +795,12 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
 			String realPath = commonUtil.getRealPath(request);
-			String journalId = jsonParam.get("journalId").toString();
+			String journalId = commonUtil.detectPathTraversal(jsonParam.get("journalId").toString());
 			List<String> journalIdList = new ArrayList<String>();
 			
 			if (journalId.contains("[")) {
 				Gson gson = new Gson();
-				journalIdList = gson.fromJson(jsonParam.get("journalId").toString(), new TypeToken<List<String>>(){}.getType());
+				journalIdList = gson.fromJson(journalId, new TypeToken<List<String>>(){}.getType());
 			} else {
 				journalIdList.add(journalId);
 			}
@@ -1046,7 +1046,7 @@ public class EzJournalGWController {
     	
 		InputStream stream = null;
 		OutputStream bos = null;
-		String stordFilePathReal = (stordFilePath == null ? "" : stordFilePath);
+		String stordFilePathReal = (stordFilePath == null ? "" : commonUtil.detectPathTraversal(stordFilePath));
 		
 		try {
 		    File cFile = new File(stordFilePathReal);
@@ -1058,7 +1058,7 @@ public class EzJournalGWController {
 				}
 		    }
 	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+		    bos = new FileOutputStream(stordFilePathReal + File.separator + commonUtil.detectPathTraversal(newName));
 		    LOGGER.debug("###" + stordFilePathReal + File.separator + newName + "###");
 		    Decoder decoder = Base64.getDecoder();
 
@@ -1111,7 +1111,7 @@ public class EzJournalGWController {
 		//		mode = request.getParameter("mode");
 		//	}
 			String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
-			String filePath = request.getParameter("filePath");
+			String filePath = commonUtil.detectPathTraversal(request.getParameter("filePath"));
 			String fileList = request.getParameter("fileList");
 			
 			LOGGER.debug("pDirPath : " + pDirPath + " | fileList : " + fileList);
@@ -1122,40 +1122,41 @@ public class EzJournalGWController {
 					String[] data = fileList.split("/"); 
 					
 					for (int i=0; i<data.length; i++) {
-						String sGUID = data[i].split(":")[0];
-						String fileName = data[i].split(":")[1];
-						String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+						String sGUID = commonUtil.detectPathTraversal(data[i].split(":")[0]);
+						String fileName = commonUtil.detectPathTraversal(data[i].split(":")[1]);
+						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
 						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						if(file.exists()){
-						file.delete();
-					}			
+							file.delete();
+						}
+					}
 				}
-				}
-			} else {
+			}
+			else {
 				if (fileList.length() != 0) {
 					String[] data = fileList.split("/"); 
 					
 					for (int i=0; i<data.length; i++) {
-						String sGUID = data[i].split(":")[0];
-						String fileName = data[i].split(":")[1];
-						String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+						String sGUID = commonUtil.detectPathTraversal(data[i].split(":")[0]);
+						String fileName = commonUtil.detectPathTraversal(data[i].split(":")[1]);
+						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
 						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						
 						file.delete();
-					}			
+					}
 				}
 			}
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		
@@ -1201,7 +1202,7 @@ public class EzJournalGWController {
 					String filePath = filePathList.get(i);
 					String fileName = fileNameList.get(i);
 					
-					String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
+					String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.detectPathTraversal(filePath);
 					
 					LOGGER.debug("fullFilePath : " + fullFilePath);
 					
@@ -1286,8 +1287,7 @@ public class EzJournalGWController {
 			String realPath = commonUtil.getRealPath(request);
 			String uploadFilePath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
 			String filePath = request.getParameter("filePath");
-			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
-			
+			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.detectPathTraversal(filePath);
 			LOGGER.debug("fullFilePath : " + fullFilePath);
 			
 			File file = new File(fullFilePath);
