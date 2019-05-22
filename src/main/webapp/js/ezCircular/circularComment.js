@@ -53,7 +53,7 @@ function getCircularComment() {
 				commentList.forEach(function(vo, index) {
 					circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
 					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle; margin-bottom:9px'/>&nbsp;" + vo.memberName + "</td>";
-					circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + MakeXMLString(vo.circularComment) + "&nbsp;&nbsp;";
+					circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
 					
 					if (vo.memberID == userInfoID && vo.status == 0) {
 						circularCommentList += "<img src='/images/ImgIcon/circular_share2.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";

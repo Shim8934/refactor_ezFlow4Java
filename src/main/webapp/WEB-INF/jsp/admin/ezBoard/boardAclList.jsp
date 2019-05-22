@@ -46,7 +46,7 @@
 		    
 		    function DisplayTopBoard(){
 				$.ajax({
-					data : "POST",
+					type : "POST",
 					dataType : "text",
 					async : false,
 					url : "/ezBoard/getSubBoards.do",

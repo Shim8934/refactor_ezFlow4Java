@@ -15,8 +15,8 @@
 			var SubAreaExist  = "${subAreaExist}";
 			var g_SelectedObj = null;
 			var g_UID = "";
-			var parentuid = "${parentUID}";
-			var pageid = "${pageID}";
+			var parentuid = "<c:out value='${parentUID}'/>";
+			var pageid = "<c:out value='${pageID}'/>";
 			
 			// 추가
 			function Add()

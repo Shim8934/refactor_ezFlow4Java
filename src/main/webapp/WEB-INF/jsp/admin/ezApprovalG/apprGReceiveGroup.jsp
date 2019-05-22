@@ -28,7 +28,7 @@
 	        var lvtDept = new ListView();
 	        var lvtDeptSelect = new ListView();
 	        var treeView = new TreeView();
-	        var useReceiveInfoName = "${useReceiveInfoName}";
+	        var useReceiveInfoName = "<c:out value='${useReceiveInfoName}'/>";
 		    
 		    $(document).ready(function(){
 		    	document.getElementById("SCompID").value = "<c:out value='${companyID}'/>";

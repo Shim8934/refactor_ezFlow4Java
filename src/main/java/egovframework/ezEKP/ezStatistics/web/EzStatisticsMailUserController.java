@@ -52,7 +52,7 @@ public class EzStatisticsMailUserController {
 	/**
 	 * 개인별 통계 현황 표시 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsMailUser.do")
+	@RequestMapping(value="/ezStatistics/statisticsMailUser.do", method = RequestMethod.GET)
 	public String statisticsMailUser(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);

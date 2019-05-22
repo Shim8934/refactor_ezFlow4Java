@@ -27,8 +27,8 @@
     var g_szRecInfoXml;
     var g_SCFlag;
     var g_CodeInfoXml,g_bRecAdmin;
-    var CompanyID = "${userInfo.companyID}";
-    var UserLang = "${userInfo.lang}";
+    var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+    var UserLang = "<c:out value ='${userInfo.lang}'/>";
     var RetValue;
     var ReturnFunction;
     window.onload = function () {

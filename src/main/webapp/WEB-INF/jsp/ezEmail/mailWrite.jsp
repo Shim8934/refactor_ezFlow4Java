@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<head>
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
@@ -67,8 +67,8 @@
 	    <script type="text/javascript">
 	    var g_szAuthor = "";
 	    var g_szExchange = "exchange";
-	    var g_cmd = "${_cmd}";
-	    var Org_cmd = "${_cmd}";
+	    var g_cmd = '<c:out value="${_cmd}"/>';
+	    var Org_cmd = '<c:out value="${_cmd}"/>';
 	    var g_servername = "${serverName}";
 	    var g_myname = "${userInfo.displayName}";
 	    var g_myemail = "${userInfo.mail}";
@@ -117,14 +117,14 @@
 	    var userTimezone = "${userTimeset}";
 	    var isPrimary = "${userPrimary}";
 	    var initFlag = false;
-	    var gg_cmd = "${cmdOwn}";
-	    var gg_url = "${urlOwn}";        
+	    var gg_cmd = '<c:out value="${cmdOwn}"/>';
+	    var gg_url = '<c:out value="${urlOwn}"/>';        
 	    var g_newid = "${newWindowId}";
 	    var FileUploadtype = "${fileUploadType}";
 	    var iseachMail = "${isEach}";
 	    var individualmailuser = "${individualMailUser}";
 	    var pSecurity = "${pSecurity}";
-	    var docHref = "${docHref}";
+	    var docHref = '<c:out value="${docHref}"/>';
 	    var isReserve = "NO";
 	    var pCDOMessageId = "";
 	    var Add_xmlhttp = "";
@@ -146,8 +146,8 @@
 	    var inMailColor = "${inMailColor}";
 	    var outMailColor = "${outMailColor}";
 	    var pUse_Editor = "${useEditor}";
-	    var pDocID = "${docID}";
-	    var orgCompanyID = "${orgCompanyID}";
+	    var pDocID = '<c:out value="${docID}"/>';
+	    var orgCompanyID = '<c:out value="${orgCompanyID}"/>';
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFontAndSize = "${defaultFontAndSize}";
@@ -161,13 +161,13 @@
 	    var folderPath = "${drafts}";
 
 	    //업무일지 아이디
-	    var journalId = "${journalId}";
+	    var journalId = '<c:out value="${journalId}"/>';
 	    //근태관리 아이디
-	    var attitudeId = "${attitudeId}";
+	    var attitudeId = '<c:out value="${attitudeId}"/>';
 	    var attitudeIncludeMe = false; 
-	    var searchStartDate = "${searchStartDate}";
-	    var searchEndDate = "${searchEndDate}";
-	    var shareId = "${shareId}";
+	    var searchStartDate = '<c:out value="${searchStartDate}"/>';
+	    var searchEndDate = '<c:out value="${searchEndDate}"/>';
+	    var shareId = '<c:out value="${shareId}"/>';
 	    var isMailToMe = "${isMailToMe}"; 
 	    var receiverCount = 0;
         var groupAddressCountMap = {};
@@ -982,22 +982,27 @@
 	    function Editor_Complete() {
 	        if (initFlag == false) {
 	            if (Org_cmd == "board") {
-	                GetBoardItemInfo_New("${boardID}", "${itemID}", "${retransType}", g_font);
+	                GetBoardItemInfo_New('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>', '<c:out value="${retransType}"/>', g_font);
 	            }
 	            else if (Org_cmd == "Community") {
-	                GetBoardItemInfo_New3("${boardID}", "${itemID}", g_font);
+	                GetBoardItemInfo_New3('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>', g_font);
 	            }
+	            
+	            else if (Org_cmd == "report") {
+	                GetUpmooItemInfo_New('<c:out value="${itemID}"/>', '<c:out value="${docHref}"/>');
+	            }
+
 	            else if (Org_cmd == "docsend" || Org_cmd == "docsenddoc") {
-	                GetDocumentInfo(pDocID, docHref, "${docImagCnt}", "${docTarget}");
+	                GetDocumentInfo(pDocID, docHref, '<c:out value="${docImagCnt}"/>', '<c:out value="${docTarget}"/>');
 	            }
 	            else if (Org_cmd == "docsendDotNet") {
-	                GetDocumentInfo_DotNet(pDocID, docHref, "${docImagCnt}", "${docTarget}");
+	                GetDocumentInfo_DotNet(pDocID, docHref, '<c:out value="${docImagCnt}"/>', '<c:out value="${docTarget}"/>');
 	            }
 	            else if (Org_cmd == "boardDotNet") {
-	                GetBoardItemInfo_DotNet("${boardID}", "${itemID}", "${retransType}");
+	                GetBoardItemInfo_DotNet('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>', '<c:out value="${retransType}"/>');
 	            }
 	            else if (Org_cmd == "CommunityDotNet") {
-	                GetBoardItemInfo_New3_DotNet("${boardID}", "${itemID}");
+	                GetBoardItemInfo_New3_DotNet('<c:out value="${boardID}"/>', '<c:out value="${itemID}"/>');
 	            }	
 	            //업무일지면...
 	            else if (Org_cmd == "journal") {
@@ -1163,8 +1168,8 @@
 	        	}
 	    	} else {
 	    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);
-	    		
 	    		document.getElementById("tbContentElement").style.display = "";
+				ckeditorReload();
 				document.getElementById("plainTextArea").style.display = "none";
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
@@ -1176,6 +1181,15 @@
 	    	}
 	    }
 	    
+		function ckeditorReload() {
+			if (/chrome/i.test(navigator.userAgent) && message.CKEDITOR) {
+				try {
+					message.CKEDITOR.instances.editor1.setMode("source");
+					message.CKEDITOR.instances.editor1.setMode("wysiwyg");
+				} catch (e) {}
+			}
+		}
+		
 	    function ChangeSenderName(obj) {
 	        if (obj.value != "NONE")
 	            g_showdisplay = obj.value;
@@ -1588,11 +1602,11 @@
 				async : false,
 				url : "/admin/ezAttitude/getAttitudeAbsentedList.do",
 				data : {
-					companyId : "${companyId}",
-   					userName : "${searchUserName}",
-   					deptName : "${searchDeptName}",
-   					title : "${searchTitle}",
-   					deptId : "${searchDeptId}",
+					companyId : '<c:out value="${companyId}"/>',
+   					userName : '<c:out value="${searchUserName}"/>',
+   					deptName : '<c:out value="${searchDeptName}"/>',
+   					title : '<c:out value="${searchTitle}"/>',
+   					deptId : '<c:out value="${searchDeptId}"/>',
    					startDate : searchStartDate,
    					endDate : searchEndDate,
    					pageNum : "",
@@ -1997,7 +2011,11 @@
 				.appendTo(ul);
 			};
 		})
-	    
+		function bodydragover(evt) {
+				evt.dataTransfer.dropEffect = "none";
+				evt.stopPropagation();
+				evt.preventDefault();
+		}
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2260,7 +2278,7 @@
 	                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
 	                <c:choose>
 	                	<c:when test="${shareId != null and shareId != ''}">
-	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do?shareId=${shareId}"></iframe>
+	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do?shareId=<c:out value='${shareId}'/>"></iframe>
 	                	</c:when>
 	                	<c:otherwise>
 	                		<iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" src="/ezEmail/dragAndDrop.do"></iframe>

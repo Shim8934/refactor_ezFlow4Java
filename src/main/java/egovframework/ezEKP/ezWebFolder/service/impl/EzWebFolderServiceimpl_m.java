@@ -833,10 +833,9 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 	@Override
 	public int realFileDelete(FileVO fileVO, String realPath, LoginVO userInfo, String userName1, String userName2) throws Exception {
-
 		String pDirPath = realPath.substring(0, realPath.length() -1) + fileVO.getFilePath();
 		
-		File file = new File(pDirPath);
+		File file = new File(commonUtil.detectPathTraversal(pDirPath));
 		int isDeleted = -1;
 		
 		LOGGER.debug("pDirPath=" + pDirPath);

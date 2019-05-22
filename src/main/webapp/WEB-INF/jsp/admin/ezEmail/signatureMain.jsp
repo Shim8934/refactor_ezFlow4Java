@@ -34,8 +34,9 @@
 	        	
 	        	$.ajax({
 	        		type : "POST",
-	        		url : "/admin/ezEmail/readSignList.do?companyId=" + companyID,
+	        		url : "/admin/ezEmail/readSignList.do",
 	        		datatype : 'json',
+	        		data : {"companyId" : companyID},
 	        		error : function(data) {
 	        			alert("error");
 	        			console.log(data);
@@ -130,8 +131,9 @@
 	        	if (deleteConfirm) {
 	        		$.ajax({
 		        		type : "POST",
-		        		url : "/admin/ezEmail/deleteSignTemplate.do?signNo=" + signNo,
+		        		url : "/admin/ezEmail/deleteSignTemplate.do",
 		        		datatype : 'json',
+		        		data : {"signNo" : signNo},
 		        		error : function(data) {
 		        			alert("error");
 		        			console.log(data);
@@ -194,8 +196,9 @@
 	        	
 	        	$.ajax({
 	        		type : "POST",
-	        		url : "/admin/ezEmail/searchSignList.do?companyId=" + companyID + "&search=" + encodeURIComponent(search),
+	        		url : "/admin/ezEmail/searchSignList.do",
 	        		datatype : 'json',
+	        		data : {"companyId" : companyID, "search" : encodeURIComponent(search)},
 	        		error : function(data) {
 	        			alert("error");
 	        			console.log(data);
@@ -241,8 +244,9 @@
 	        function signPreview(signno) {
 	        	$.ajax({
 	        		type : "POST",
-	        		url : "/admin/ezEmail/signaturePreview.do?signNo=" + signno,
+	        		url : "/admin/ezEmail/signaturePreview.do",
 	        		datatype : 'json',
+	        		data : {"signNo" : signno},
 	        		error : function(data) {
 	        			alert("error");
 	        			console.log(data);

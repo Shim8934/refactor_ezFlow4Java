@@ -261,8 +261,9 @@
 		    	} else if (obj !== "none") {
 		    		$.ajax({
 		        		type : "POST",
-		        		url : "/admin/ezEmail/signaturePreview.do?signNo=" + obj,
+		        		url : "/admin/ezEmail/signaturePreview.do",
 		        		datatype : 'json',
+		        		data : {"signNo" : obj},
 		        		error : function(data) {
 		        			alert("error");
 		        			console.log(data);

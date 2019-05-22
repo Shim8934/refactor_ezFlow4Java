@@ -582,7 +582,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			for(int i = 0; i < filerootNameLen; i++) {
 				String uploadPath = commonUtil.getUploadPath(module.getFilerootName()[i], tenantId);
 				
-				Path filePath = Paths.get(realPath + uploadPath);
+				Path filePath = Paths.get((commonUtil.detectPathTraversal(realPath + uploadPath)));
 				if(filePath.toFile().exists()) {
 					Files.walkFileTree(filePath, new SimpleFileVisitor<Path>() {
 						

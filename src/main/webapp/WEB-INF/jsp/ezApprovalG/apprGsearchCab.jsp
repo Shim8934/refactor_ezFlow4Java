@@ -20,8 +20,8 @@
 		    var g_SelTaskCode="";
 		    var g_SelChargerID="";
 		    var g_InitFlag="0";
-		    var CompanyID = "${userInfo.companyID}";
-		    var approvalFlag = "${approvalFlag}";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		    window.onload = window_onload;
 		    window.onbeforeunload = window_onunload;
 		    var RetValue;

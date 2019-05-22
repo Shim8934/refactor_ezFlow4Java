@@ -32,6 +32,8 @@
     
     <util:properties id="config" location="classpath:/egovframework/egovProps/config.properties" />
     
+    <util:properties id="cryptos" location="classpath:/egovframework/egovProps/crypto.properties" />
+    
     <util:properties id="globals" location="classpath:/egovframework/egovProps/globals.properties" />
     
     <util:properties id="apprCode" location="classpath:/egovframework/egovProps/apprCode.properties" />

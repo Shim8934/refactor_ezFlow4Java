@@ -36,7 +36,7 @@ public class EzApprovalGReformController extends EgovFileMngUtil {
 	@Value("#{config['config.reformServerURL']}")
 	private String reformServerUrl;
 
-	@RequestMapping(value = "/reform/getDataSourceList.do", produces = "application/json")
+	@RequestMapping(value = "/reform/getDataSourceList.do", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public String getDataSourceList(HttpServletRequest request) throws Exception {
 		logger.debug("getDataSourceList started.");
@@ -68,7 +68,7 @@ public class EzApprovalGReformController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value = "/reform/getEncryptedSQLQuery.do", params = { "sqlQuery" })
+	@RequestMapping(value = "/reform/getEncryptedSQLQuery.do", method = RequestMethod.POST, params = { "sqlQuery" })
 	@ResponseBody
 	public String getEncryptedSQLQuery(HttpServletRequest request) throws Exception {
 		logger.debug("getEncryptedSQLQuery started.");

@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -50,7 +51,7 @@ public class EzStatisticsController {
 	/**
 	 * 통계 메인화면 호출 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsMain.do")
+	@RequestMapping(value="/ezStatistics/statisticsMain.do", method = RequestMethod.GET)
 	public String showMain() throws Exception {		
 		return "ezStatistics/statisticsMain";
 	}
@@ -58,7 +59,7 @@ public class EzStatisticsController {
 	/**
 	 * 사용자 통계 Excel 내려받기 호출 함수
 	 */
-	@RequestMapping(value = {"/ezStatistics/saticGetXls.do", "/ezStatistics/UserOSsaticXls.do"})
+	@RequestMapping(value = {"/ezStatistics/saticGetXls.do", "/ezStatistics/UserOSsaticXls.do"}, method = RequestMethod.POST)
 	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSave started");
 		
@@ -185,7 +186,7 @@ public class EzStatisticsController {
 	/**
 	 * 메일 통계 Excel 내려받기 호출 함수
 	 */
-	@RequestMapping(value = "/ezStatistics/saticGetXlsM.do")
+	@RequestMapping(value = "/ezStatistics/saticGetXlsM.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveM started");
 		
@@ -286,7 +287,7 @@ public class EzStatisticsController {
 	 * 전자결재 통계 Excel 내려받기 호출 함수
 	 * 양식별, 부서별, 개인별 통계 현황
 	 */
-	@RequestMapping(value = "/ezStatistics/saticGetXlsA.do")
+	@RequestMapping(value = "/ezStatistics/saticGetXlsA.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveA started");
 		
@@ -426,7 +427,7 @@ public class EzStatisticsController {
 	/**
     * 결재 통계 - 양식별/부서별/개인별 Excel 내려받기 호출 함수
     */
-   @RequestMapping(value = "/ezStatistics/saticGetXlsApproval.do")
+   @RequestMapping(value = "/ezStatistics/saticGetXlsApproval.do", method = RequestMethod.POST)
    public void qstResultAnalysisSaveApproval(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApproval started");
       
@@ -499,7 +500,7 @@ public class EzStatisticsController {
    /**
     * 결재 통계 - 양식별/부서별/개인별 결재처리 시간 Excel 내려받기 호출 함수
     */
-   @RequestMapping(value = "/ezStatistics/saticGetXlsApprovalTime.do")
+   @RequestMapping(value = "/ezStatistics/saticGetXlsApprovalTime.do", method = RequestMethod.POST)
    public void qstResultAnalysisSaveApprovalTime(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
       logger.debug("qstResultAnalysisSaveApprovalTime started");
       
@@ -590,7 +591,7 @@ public class EzStatisticsController {
 	 * 전자결재 통계 Excel 내려받기 호출 함수
 	 * 양식별, 부서별, 개인별 통계 현황
 	 */
-	@RequestMapping(value = "/ezStatistics/saticGetXlsTotalA.do")
+	@RequestMapping(value = "/ezStatistics/saticGetXlsTotalA.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveTotalA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveTotalA started");
 	
@@ -696,7 +697,7 @@ public class EzStatisticsController {
 	/**
 	 * 근태 통계 Excel 내려받기 호출 함수
 	 */
-	@RequestMapping(value = "/ezStatistics/saticGetXlsWA.do")
+	@RequestMapping(value = "/ezStatistics/saticGetXlsWA.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveWA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveM started");
 		

@@ -373,7 +373,7 @@
 			    selDate = date;			    
 
 			    $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleNewWebPartList.do",
@@ -390,6 +390,53 @@
 			   if (date == nowDay) {
 		        	var xmldom = createXmlDom();
 			        xmldom = loadXMLString(text);
+			        
+			        var count = 0;
+			        var mType;
+			        //2018-07-04 포탈에서 read.do 호출시 출처를 알기위한 변수추가
+		            var pageFrom = 'Portal';
+			        if (mode == "P") {
+			        	//2018.02.05 김기하 #11421
+			        	mType = "16";
+			        } else {
+			        	mType = "2345789";
+			        }			        
+
+			        for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {
+		        		var SCHEDULETYPE = getNodeText(xmldom.getElementsByTagName("SCHEDULETYPE").item(i));
+		        		
+		        		if (mType.indexOf(SCHEDULETYPE) > -1) {		        		
+				            var SCHEDULEID = getNodeText(xmldom.getElementsByTagName("SCHEDULEID").item(i));			            
+				            var DATETYPE = getNodeText(xmldom.getElementsByTagName("DATETYPE").item(i));
+				            var REPEATCOUNT = getNodeText(xmldom.getElementsByTagName("REPEATCOUNT").item(i));
+				            var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
+				            var ENDDATE = getNodeText(xmldom.getElementsByTagName("ENDDATE").item(i));
+				            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i));
+				            var startdate = new Date(STARTDATE.split(' ')[0].split('-')[0], STARTDATE.split(' ')[0].split('-')[1], STARTDATE.split(' ')[0].split('-')[2]);
+				            var enddate = new Date(ENDDATE.split(' ')[0].split('-')[0], ENDDATE.split(' ')[0].split('-')[1], ENDDATE.split(' ')[0].split('-')[2]);
+				            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
+			                
+			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px; white-space: pre;'>";
+			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\" title='" + MakeXMLString(TITLE) + "'>";
+			                listHTML += "&nbsp;"
+			                if(SCHEDULETYPE == 1) {
+			                	listHTML += "";
+			                } else if (SCHEDULETYPE == 2) {
+			                	listHTML += "(<spring:message code='ezSchedule.t12' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 3) {
+			                	listHTML += "(<spring:message code='ezSchedule.t11' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 7) {
+			                	listHTML += "(<spring:message code='ezSchedule.t282' />)&nbsp;";
+			                } else {
+			                	listHTML += "";
+			                }
+			                /* listHTML += TITLE.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/\'/g,"&#39;").replace(/\n/g,"<br />")+ "</span></li>"; */
+			                listHTML += MakeXMLString(TITLE)+"</span></li>"
+			                count++;
+			        	}
+			        }
+			        
+			        listHTML += "</ul>";
 			        
 		        	var cnt = xmldom.getElementsByTagName("ROW").length;
 
@@ -1287,7 +1334,7 @@
 		    
 		    function schedule_get_holiday() {
 		        $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetHoliday.do",

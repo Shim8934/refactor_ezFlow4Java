@@ -29,17 +29,18 @@
 		
 		<script type="text/javascript">
 	    	var msgRtn = "";
-	    	var mode = "${mode}";
-	    	var oldCircularID = "${circularID}";
+	    	var mode = "<c:out value='${mode}'/>";
+	    	var oldCircularID = "<c:out value='${circularID}'/>";
 	    	var AttachLimit = 5;
-	    	var userID = "${userID}";
-	    	var userName = "${userName}";
-	    	var userName2 = "${userName2}";
-	    	var userMyID = "${userMyID}";
-	    	var userMyName = "${userMyName}";
-	    	var userMyName2 = "${userMyName2}";
-	    	var listSize = "${listSize}";
-	    	var defaultFontAndSize  = "${defaultFontAndSize}";
+	    	var userID = "<c:out value='${userID}'/>";
+	    	var userName = "<c:out value='${userName}'/>";
+	    	var userName2 = "<c:out value='${userName2}'/>";
+	    	var userMyID = "<c:out value='${userMyID}'/>";
+	    	var userMyName = "<c:out value='${userMyName}'/>";
+	    	var userMyName2 = "<c:out value='${userMyName2}'/>";
+	    	var listSize = "<c:out value='${listSize}'/>";
+	    	var defaultFontAndSize  = "<c:out value='${defaultFontAndSize}'/>";
+	    	var strAttach = "<c:out value='${strAttach}'/>";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -58,12 +59,12 @@
 		    	}
 				if (listSize != 0) {
 		        	document.getElementById("title").value = "${result.title}";
-		        	document.getElementById("receiverlist").innerHTML = "${userName}";
-		        	document.getElementById("receiverlist2").innerHTML = "${userName2}";
-		        	document.getElementById("receiverID").innerHTML = "${userID}";
+		        	document.getElementById("receiverlist").innerHTML = "<c:out value='${userName}'/>";
+		        	document.getElementById("receiverlist2").innerHTML = "<c:out value='${userName2}'/>";
+		        	document.getElementById("receiverID").innerHTML = "<c:out value='${userID}'/>";
 
 		        	//hasFie구분
-		        	setAttachFileInfo("${strAttach}");
+		        	setAttachFileInfo("<c:out value='${strAttach}'/>");
 			        
 		        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 		        	
@@ -81,6 +82,7 @@
 		        		g_attendant["id"][i] = list[i];
 		        		g_attendant["name2"][i] = nameList2[i];
 		        	}
+		        	
 				}
 		    }
 		    
@@ -288,10 +290,12 @@
 					}
 
 		    		$.ajax ({
-		 			   	url : '/ezCircular/circularSaveTemp.do?mode=temp',
+		 			   	url : '/ezCircular/circularSaveTemp.do',
 		                type : 'POST',
 		                dataType : 'text',
-		                data : {	title : document.getElementById("title").value,
+		                data : {	
+		                			mode : "temp",
+		                			title : document.getElementById("title").value,
 		                			importance : document.getElementById("importance").value,
 		                			option : option,
 		                			receiverList : receiverList,
@@ -483,7 +487,7 @@
   			<tr>
   			<!-- 2018-02-13 주홍선 mode와 circularID 항상 보내도록 수정 -->
   				<td>
-   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do?mode=${mode}&circularID=${circularID}"></iframe>
+   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="<c:url value='/ezCircular/dragAndDrop.do?mode=${mode}&circularID=${circularID}'/>"></iframe>
   				</td>
   			</tr>
 		</table>

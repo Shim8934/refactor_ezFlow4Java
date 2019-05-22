@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -79,7 +80,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무관리 메인화면
 	 */
-	@RequestMapping(value="/ezTask/taskMain.do")
+	@RequestMapping(value="/ezTask/taskMain.do", method = RequestMethod.GET)
 	public String taskMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskMain started.");
 		
@@ -118,7 +119,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무상세화면 조회
 	 */
-	@RequestMapping(value = "/ezTask/taskRead.do")
+	@RequestMapping(value = "/ezTask/taskRead.do", method = RequestMethod.GET)
 	public String taskRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskRead started.");
 		
@@ -302,7 +303,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 *  업무상세화면 의견목록 조회
 	 */
-	@RequestMapping(value = "/ezTask/getTaskCommentList.do")
+	@RequestMapping(value = "/ezTask/getTaskCommentList.do", method = RequestMethod.GET)
 	public String getTaskCommentList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getTaskCommentList started.");
 		
@@ -459,7 +460,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "json";
 	}*/
 	
-	@RequestMapping(value = "/ezTask/getRepTaskDateList.do")
+	@RequestMapping(value = "/ezTask/getRepTaskDateList.do", method = RequestMethod.GET)
 	public String getRepTaskDateList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getRepTaskDateList started.");
 		
@@ -518,7 +519,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	 * 업무작성 저장 Method
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezTask/taskSave.do")
+	@RequestMapping(value = "/ezTask/taskSave.do", method = RequestMethod.POST)
 	public String taskSave(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskSave started");
 
@@ -554,7 +555,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		taskInfoVO.setEndDate(param.get("endDate").toString());
 		taskInfoVO.setTitle(param.get("title").toString());
 		taskInfoVO.setHasAttach(param.get("hasAttach").toString());
-		taskInfoVO.setContentPath(param.get("contentPath").toString());
+		
+		String contentPath = param.get("contentPath").toString();
+		contentPath = commonUtil.detectPathTraversal(contentPath);
+		contentPath = commonUtil.stripScriptTags(contentPath);
+		
+		taskInfoVO.setContentPath(contentPath);
 		taskInfoVO.setMemo(param.get("memo").toString());
 		taskInfoVO.setRepetition((param.get("repetition").toString()));
 		
@@ -597,7 +603,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 진행사항 수정화면 조회
 	 */
-	@RequestMapping(value = "/ezTask/taskWorkWrite.do")
+	@RequestMapping(value = "/ezTask/taskWorkWrite.do", method = RequestMethod.GET)
 	public String taskWorkWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskWorkWrite started.");
 		
@@ -619,7 +625,9 @@ public class EzTaskController extends EgovFileMngUtil {
 			strAttach.append("<ROOT><NODES>");
 	    	
 			for (TaskAttachVO vo : taskWorkAttachList) {
-				strAttach.append("<DATA><![CDATA[" + vo.getFilePath().substring(vo.getTaskID().length() + 2) + "]]></DATA>");
+				String filePath = vo.getFilePath().substring(vo.getTaskID().length() + 2);
+				
+				strAttach.append("<DATA><![CDATA[" + filePath + "]]></DATA>");
 				strAttach.append("<DATA2><![CDATA[" + vo.getFileName() + "]]></DATA2>");
 				strAttach.append("<DATA3><![CDATA[" + vo.getFileSize() + "]]></DATA3>");
 				strAttach.append("<DATA4><![CDATA[OK]]></DATA4>");
@@ -642,7 +650,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 진행사항 수정 Method
 	 */
-	@RequestMapping(value = "/ezTask/taskWorkSave.do")
+	@RequestMapping(value = "/ezTask/taskWorkSave.do", method = RequestMethod.POST)
 	public String taskWorkSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskWorkSave started.");
 		
@@ -658,6 +666,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		String fileSize = request.getParameter("fileSize");
 		String personAttach = request.getParameter("personAttach");
 		String contentPath = request.getParameter("contentPath");
+		contentPath = commonUtil.detectPathTraversal(contentPath);
+		contentPath = commonUtil.stripScriptTags(contentPath);
 		
 		String personContentPath = ezTaskService.taskWorkSave(taskID, content, attachList, fileName, fileSize, personAttach, contentPath, realPath, uploadTaskPath, tenantID);
 		
@@ -671,7 +681,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 진행상태 수정 Method
 	 */
-	@RequestMapping(value = "/ezTask/updateTaskStatus.do")
+	@RequestMapping(value = "/ezTask/updateTaskStatus.do", method = RequestMethod.POST)
 	public String updateTaskStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskUpdateInstance started.");
 		
@@ -695,15 +705,15 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 의견작성 Method
 	 */
-	@RequestMapping(value = "/ezTask/taskSaveComment.do")
+	@RequestMapping(value = "/ezTask/taskSaveComment.do", method = RequestMethod.POST)
 	public String taskSaveComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskSaveComment started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int tenantID = userInfo.getTenantId();
 		
-		String taskID = request.getParameter("taskID");
-		String textComment = request.getParameter("textComment");
+		String taskID = commonUtil.stripScriptTags(request.getParameter("taskID"));
+		String textComment = commonUtil.stripScriptTags(request.getParameter("textComment"));
 		
 		int result = ezTaskService.insertComment(taskID, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), textComment, tenantID);
 		
@@ -717,7 +727,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/** 
 	 * 의견삭제 Method
 	 */
-	@RequestMapping(value = "/ezTask/taskDeleteComment.do")
+	@RequestMapping(value = "/ezTask/taskDeleteComment.do", method = RequestMethod.POST)
 	public String taskDeleteComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskDeleteComment started.");
 		
@@ -737,7 +747,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 조직도화면조회
 	 */
-	@RequestMapping(value = "/ezTask/taskSelectEntity.do")
+	@RequestMapping(value = "/ezTask/taskSelectEntity.do", method = RequestMethod.GET)
 	public String taskSelectEntity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskSelectEntity started.");
 		
@@ -757,7 +767,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 진행상태 수정화면 조회
 	 */
-	@RequestMapping(value = "/ezTask/taskStatus.do")
+	@RequestMapping(value = "/ezTask/taskStatus.do", method = RequestMethod.GET)
 	public String taskStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskStatus started.");
 		
@@ -807,13 +817,13 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 첨부파일 다운로드
 	 */
-	@RequestMapping(value = "/ezTask/downloadAttach.do")
+	@RequestMapping(value = "/ezTask/downloadAttach.do", method = RequestMethod.GET)
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started.");
 
-		String filePath = request.getParameter("filePath");
-		String fileName = request.getParameter("fileName");
-		String realPath = commonUtil.getRealPath(request);
+		String filePath = commonUtil.detectPathTraversal(request.getParameter("filePath"));
+		String fileName = commonUtil.detectPathTraversal(request.getParameter("fileName"));
+		String realPath = commonUtil.detectPathTraversal(commonUtil.getRealPath(request));
 
 		if (fileName == null || fileName.equals("")) {
 			fileName = filePath;
@@ -831,7 +841,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * taskWork 첨부파일 목록조회
 	 */
-	@RequestMapping(value = "/ezTask/getTaskAttachList.do")
+	@RequestMapping(value = "/ezTask/getTaskAttachList.do", method = RequestMethod.GET)
 	public String getTaskAttachList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getTaskAttachList started.");
 		
@@ -864,7 +874,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * taskWork 첨부파일 목록조회
 	 */
-	@RequestMapping(value = "/ezTask/getTaskWorkAttachList.do")
+	@RequestMapping(value = "/ezTask/getTaskWorkAttachList.do", method = RequestMethod.GET)
 	public String getTaskWorkAttachList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getTaskWorkAttachList started.");
 		
@@ -897,7 +907,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무관리 환경설정
 	 */
-	@RequestMapping(value = "/ezTask/taskConfig.do")
+	@RequestMapping(value = "/ezTask/taskConfig.do", method = RequestMethod.GET)
 	public String taskConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskConfig started.");
 
@@ -923,7 +933,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 색상선택 화면 호출
 	 */
-	@RequestMapping(value = "/ezTask/taskManyColor.do")
+	@RequestMapping(value = "/ezTask/taskManyColor.do", method = RequestMethod.GET)
 	public String taskManyColor() throws Exception {
 		logger.debug("taskManyColor started.");
 		
@@ -935,18 +945,19 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무관리 색상 저장
 	 */
-	@RequestMapping(value = "/ezTask/taskSaveConfig.do")
+	@RequestMapping(value = "/ezTask/taskSaveConfig.do", method = RequestMethod.POST)
 	public String taskSaveConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("taskSaveConfig started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String delayColor = request.getParameter("delayColor");
-		String completeColor = request.getParameter("completeColor");
-		String originColor = request.getParameter("originColor");
-		String originColor2 = request.getParameter("originColor2");
+		String delayColor = commonUtil.stripScriptTags(request.getParameter("delayColor"));
+		String completeColor = commonUtil.stripScriptTags(request.getParameter("completeColor"));
+		String originColor = commonUtil.stripScriptTags(request.getParameter("originColor"));
+		String originColor2 = commonUtil.stripScriptTags(request.getParameter("originColor2"));
 		
 		int listCount = Integer.parseInt(request.getParameter("listCount"));
 		String selectTaskStatus = request.getParameter("selectTaskStatus");
+		selectTaskStatus = commonUtil.stripScriptTags(selectTaskStatus);
 		
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userInfo.getId(), userInfo.getTenantId());
 
@@ -966,7 +977,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무관리 검색
 	 */
-	@RequestMapping(value = "/ezTask/taskSearch.do")
+	@RequestMapping(value = "/ezTask/taskSearch.do", method = RequestMethod.GET)
 	public String taskSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("taskSearch started.");
 
@@ -992,7 +1003,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * draganddrop 호출 Method
 	 */
-	@RequestMapping(value = "/ezTask/dragAndDrop.do")
+	@RequestMapping(value = "/ezTask/dragAndDrop.do", method = RequestMethod.GET)
 	public String dragAndDrop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("dragAndDrop started.");
 
@@ -1008,7 +1019,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 첨부파일 업로드
 	 */
-	@RequestMapping(value = "/ezTask/uploadItemAttach.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezTask/uploadItemAttach.do", produces = "text/plain; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String uploadItemAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception{
 		logger.debug("uploadItemAttach started");
@@ -1049,7 +1060,9 @@ public class EzTaskController extends EgovFileMngUtil {
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-
+        
+        pDirPath = commonUtil.detectPathTraversal(pDirPath);
+        
         File file = new File(pDirPath + "uploadFile");
         File tempFile = new File(pDirPath + "tempUploadFile");
 
@@ -1093,7 +1106,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 닫기 클릭시 임시첨부파일 삭제
 	 */
-	@RequestMapping(value = "/ezTask/tempUploadFileDelete.do")
+	@RequestMapping(value = "/ezTask/tempUploadFileDelete.do", method = RequestMethod.POST)
 	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
 		logger.debug("tempUploadFileDelete started");
 
@@ -1109,8 +1122,10 @@ public class EzTaskController extends EgovFileMngUtil {
 
 			for (int i=0; i<dataLength; i++) {
 				String sGUID = data[i];
-
-				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID);
+				String fileDir = pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID;
+				fileDir = commonUtil.detectPathTraversal(fileDir);
+				
+				File file = new File(fileDir);
 
 				logger.debug("Delete FileList : " + file);
 
@@ -1126,7 +1141,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무작성, 수정화면조회 조회
 	 */
-	@RequestMapping(value = "/ezTask/taskWrite.do")
+	@RequestMapping(value = "/ezTask/taskWrite.do", method = RequestMethod.GET)
 	public String taskWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskWrite started.");
 		
@@ -1142,7 +1157,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
-		String realPath = commonUtil.getRealPath(request);
+		String realPath = commonUtil.detectPathTraversal(commonUtil.getRealPath(request));
 		String flag = request.getParameter("flag") == null ? "" : request.getParameter("flag");
 		
 		String taskID = request.getParameter("taskID");
@@ -1229,7 +1244,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
      * 지시화면 목록 조회
      */
-    @RequestMapping(value = "/ezTask/taskGetList.do", produces = "text/xml; charset=utf-8")
+    @RequestMapping(value = "/ezTask/taskGetList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.GET)
     @ResponseBody
     public String taskGetList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
     	logger.debug("taskGetList started.");
@@ -1349,7 +1364,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	return resultXML.toString();
     }   
     
-    @RequestMapping(value = "/ezTask/taskRepGetList.do", produces = "text/xml; charset=utf-8")
+    @RequestMapping(value = "/ezTask/taskRepGetList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.GET)
     @ResponseBody
     public String taskGetRepList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
     	logger.debug("taskGetRepList started.");
@@ -1379,8 +1394,22 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		if (taskInfoVO.getPersonContentPath() == null) {
 			taskInfoVO.setPersonContentPath("");
+		} else {
+			String personContentPath = taskInfoVO.getPersonContentPath();
+			personContentPath = commonUtil.detectPathTraversal(personContentPath);
+			personContentPath = commonUtil.stripScriptTags(personContentPath);
+			
+			taskInfoVO.setPersonContentPath(personContentPath);
 		}
     	
+		if (taskInfoVO.getContentPath() != null) {
+			String contentPath = taskInfoVO.getContentPath();
+			contentPath = commonUtil.detectPathTraversal(contentPath);
+			contentPath = commonUtil.stripScriptTags(contentPath);
+			
+			taskInfoVO.setContentPath(contentPath);
+		}
+		
     	StringBuffer resultXML = new StringBuffer();
     	
     	resultXML.append("<DATA>"); 
@@ -1433,7 +1462,7 @@ public class EzTaskController extends EgovFileMngUtil {
     /**
 	 * 업무 삭제 Method
 	 */
-	@RequestMapping(value = "/ezTask/taskDelete.do")
+	@RequestMapping(value = "/ezTask/taskDelete.do", method = RequestMethod.POST)
 	public String taskDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskDelete started.");
 		
@@ -1442,7 +1471,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String primary = userInfo.getPrimary();
 		String taskIDList = request.getParameter("taskIDList");
 
-		String realPath = commonUtil.getRealPath(request);
+		String realPath = commonUtil.detectPathTraversal(commonUtil.getRealPath(request));
 
 		String pDirPath = commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId());
         pDirPath = realPath + pDirPath;
@@ -1461,7 +1490,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 조직도 부서 호출
 	 */
-	@RequestMapping(value = "/ezTask/taskCheckName2.do")
+	@RequestMapping(value = "/ezTask/taskCheckName2.do", method = RequestMethod.GET)
 	public String taskCheckName2() throws Exception {
 		logger.debug("taskCheckName2 started.");
 
@@ -1473,7 +1502,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무관리 기본설정
 	 */
-	@RequestMapping(value = "/ezTask/taskGeneral.do")
+	@RequestMapping(value = "/ezTask/taskGeneral.do", method = RequestMethod.GET)
 	public String taskGeneral(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("taskGeneral started.");
 
@@ -1491,7 +1520,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무관리 기본설정 저장
 	 */
-	@RequestMapping(value = "/ezTask/taskSaveGeneral.do")
+	@RequestMapping(value = "/ezTask/taskSaveGeneral.do", method = RequestMethod.POST)
 	public String taskSaveGeneral(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskSaveGeneral started.");
 
@@ -1499,7 +1528,8 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		int listCount = Integer.parseInt(request.getParameter("listCount"));
 		String selectTaskStatus = request.getParameter("selectTaskStatus");
-
+		selectTaskStatus = commonUtil.stripScriptTags(selectTaskStatus);
+		
 		ezTaskService.updateTaskGeneral(userInfo.getId(), listCount, selectTaskStatus, userInfo.getTenantId());
 
 		logger.debug("taskSaveGeneral ended.");
@@ -1510,7 +1540,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무관리 기본설정 저장
 	 */
-	@RequestMapping(value = "/ezTask/taskRepetition.do")
+	@RequestMapping(value = "/ezTask/taskRepetition.do", method = RequestMethod.GET)
 	public String taskRepetition(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskRepetition started.");
 
@@ -1526,7 +1556,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무관리 반복일정 선택 후 삭제 시 팝업 
 	 */	
-	@RequestMapping(value="/ezTask/taskDeleteConfirm.do")	
+	@RequestMapping(value="/ezTask/taskDeleteConfirm.do", method = RequestMethod.GET)	
 	public String taskDeleteConfirm() throws Exception {
 		logger.debug("taskDeleteConfirm started.");
 		
@@ -1538,7 +1568,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무관리 반복일정 해당일정만 삭제
 	 */	
-	@RequestMapping(value="/ezTask/taskOnceDelete.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezTask/taskOnceDelete.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public void taskOnceDelete(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		logger.debug("taskOnceDelete started.");
@@ -1569,7 +1599,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	 * 2018-08-13 김보미
 	 * 업무관리 업무보기 인쇄 화면
 	 */
-	@RequestMapping(value = "/ezTask/taskReadPrint.do")
+	@RequestMapping(value = "/ezTask/taskReadPrint.do", method = RequestMethod.GET)
 	public String taskReadPrint(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskRead started.");
 		
@@ -1583,11 +1613,11 @@ public class EzTaskController extends EgovFileMngUtil {
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 		
-		String taskID = request.getParameter("taskID");		
-		String date = request.getParameter("date");
-		String selectedDate = request.getParameter("date");
-		String calDate = request.getParameter("calDate");
-		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
+		String taskID = commonUtil.stripScriptTags(request.getParameter("taskID"));		
+		String date = commonUtil.stripScriptTags(request.getParameter("date"));
+		String selectedDate = commonUtil.stripScriptTags(request.getParameter("date"));
+		String calDate = commonUtil.stripScriptTags(request.getParameter("calDate"));
+		String type = (request.getParameter("type") == null ? "" : commonUtil.stripScriptTags(request.getParameter("type")));
 		String dateList = "";
 		String completeRateList = "";
 		String statusList = "";	
@@ -1728,7 +1758,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	}
 	
 	/** 2019.01.30 유은정 - schedule left와 task left 분리*/
-	@RequestMapping(value = "/ezTask/taskLeft.do")
+	@RequestMapping(value = "/ezTask/taskLeft.do", method = RequestMethod.GET)
 	public String taskLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		logger.debug("taskLeft started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1751,7 +1781,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "/ezTask/taskLeft";
 	}
 	
-	@RequestMapping(value = "/ezTask/taskIndex.do")
+	@RequestMapping(value = "/ezTask/taskIndex.do", method = RequestMethod.GET)
 	public String taskIndex(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		logger.debug("taskIndex started");
 		logger.debug("taskIndex ended");
