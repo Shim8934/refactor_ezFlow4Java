@@ -87,12 +87,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Autowired
 	private EzResourceAdminService ezResourceAdminService;
 
-	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID) throws Exception {
+	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID, String adminType) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ParentID", parentID);
 		map.put("v_P_CompanyID", companyID);
 		map.put("v_P_TreeType", treeType);
 		map.put("tenantID", tenantID);
+		if(adminType.equals("Y")) {
+			map.put("adminType", adminType);
+		}
 		return ezResourceDAO.getAdmSubClsTree(map);
 	}
 
@@ -2217,6 +2220,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         String strUserID = "";
         String strDeptPath = "";
         String returnXML = "";
+        String userAdminFlag = "";
+        String strAdminType = "";
    
         Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
         String strParentID = xmlRes.getElementsByTagName("PARENT_ID").item(0).getTextContent().trim();
@@ -2224,7 +2229,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         String strAccessFlag = xmlRes.getElementsByTagName("ACCESS_FLAG").item(0).getTextContent().trim();
         String strFirstNode = xmlRes.getElementsByTagName("FIRST_NODE").item(0).getTextContent().trim();
         String strTreeType = xmlRes.getElementsByTagName("TREE_TYPE").item(0).getTextContent().trim();
-        strDeptPath = xmlRes.getElementsByTagName("DEPT_PATH").item(0).getTextContent().trim();
+        if(strTreeType.equals("0")) {
+        	strAdminType = xmlRes.getElementsByTagName("ADMIN_CHECK").item(0).getTextContent().trim();
+        }
 
         if(xmlRes.getElementsByTagName("BRDLIST").getLength() > 5) {
         	strUserID = xmlRes.getElementById("BRDLIST").getChildNodes().item(5).getTextContent().trim();
@@ -2232,9 +2239,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         	strDeptPath = "'" + strDeptPath.replace("," , "', '")+ "'";
         }
         
+        if(strAdminType.equals("Y")) {
+        	userAdminFlag = getAdminFlag(pComID, strParentID, pUserID, tenantID, pDeptID);
+        }
+        
         List<ResGetAdmSubClsTreeVO> resGetAdmSubClsTree = new ArrayList<ResGetAdmSubClsTreeVO>();
         if(strAccessFlag.equals("0")) {
-        	resGetAdmSubClsTree = getAdmSubClsTree(strParentID, strCompanyID, strTreeType, tenantID);
+        	resGetAdmSubClsTree = getAdmSubClsTree(strParentID, strCompanyID, strTreeType, tenantID, userAdminFlag);
         } else {
         	resGetAdmSubClsTree = getSubClsTree(strParentID, strCompanyID, strTreeType, strUserID, pComID, pDeptID, pUserID, tenantID);
         }
@@ -2291,15 +2302,19 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         	strTreeStyle.append("<NODES>");
         	returnXML = strTreeStyle.toString();
         }
-        
-         String userAdminFlag = getAdminFlag(pComID, strParentID, pUserID, tenantID, pDeptID);
-        
         if(strFirstNode.equals("Y")) {
         	for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
         		if(i == 0) {
         			 returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), true, langStr);
         		} else {
-        			returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+        			if(resGetAdmSubClsTree.get(i).getApproveFlag().equals("2")) {
+            			if(userAdminFlag.equals("Y")) {
+            				returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+            			}
+            		} 
+        			else {
+        				returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+        			}
         		}
         	}
         	returnXML += "</TREEVIEWDATA>";
