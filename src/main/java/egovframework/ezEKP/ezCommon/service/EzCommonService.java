@@ -95,5 +95,9 @@ public interface EzCommonService {
 	public void createJmochaMailCopyright() throws Exception;
 
 	public void updateListOptionData() throws Exception;
+
+	public void addFormVersion() throws Exception;
+
+	public void addAddJobMasterProxy() throws Exception;
 }
 

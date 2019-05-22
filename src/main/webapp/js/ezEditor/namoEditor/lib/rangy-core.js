@@ -1094,6 +1094,12 @@ rangy.createModule("Commands", ["WrappedSelection"], function(api, module) {
             // Elements whose specified value for command is neither null nor
             // equal to new value."
             children = [];
+
+			if(node && node.childNodes.length == 0 && node.innerHTML == "<br>"){
+				var newBr = node.ownerDocument.createElement("br");
+				node.appendChild(newBr);
+			}
+
             for (i = 0, len = node.childNodes.length, specifiedValue; i < len; ++i) {
                 child = node.childNodes[i];
                 if (child.nodeType == 1) {

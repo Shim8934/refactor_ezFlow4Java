@@ -933,7 +933,7 @@ public class MBoardServiceImpl implements MBoardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("userID", userID);
-		map.put("listSize", listCnt);
+		map.put("listSize", Integer.parseInt(listCnt));
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("deptID", deptID);

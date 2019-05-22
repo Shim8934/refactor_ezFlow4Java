@@ -287,6 +287,7 @@ var strLangLHM18 = "/blank_kr.htm";
 var strLangLHM19 = "보안메일을 삭제하시면 수신자도 보안메일의 열람이 불가능합니다.\n그래도 삭제하시겠습니까?";
 var strLangLHM20 = "보안메일을 이동하시면 보안메일의 열람과 보안정보 확인이 불가능합니다.\n그래도 이동하시겠습니까?";
 var strLangLHM21 = "공용배포그룹 정보";
+var strLangLHM22 = "수신자의 메일 주소에 사용할 수 없는 문자가 포함되어 있습니다. 메일 주소를 확인해주세요.";
 var strLangKMS01 = "";
 var strLangKMS02 = "첨부파일 총 크기가 ";
 var strLangKMS03 = "메일이 없습니다.";
