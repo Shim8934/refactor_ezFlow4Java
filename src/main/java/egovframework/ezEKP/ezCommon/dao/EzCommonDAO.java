@@ -661,5 +661,4 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
->>>>>>> refs/remotes/origin/personalizedPortal
 }
