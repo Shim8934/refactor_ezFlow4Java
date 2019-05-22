@@ -57,9 +57,9 @@
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
 		</style>
 		<script type="text/javascript">
-			var pBrdid = "${brdID}";
-	    	var pBrdnm = "<c:out value='${brdNm}' escapeXml='false'/>";
-	    	var pAccessCode = "${accessCode}";
+			var pBrdid = "<c:out value='${brdID}'/>";
+	    	var pBrdnm = "<c:out value='${brdNm}'/>";
+	    	var pAccessCode = "<c:out value='${accessCode}'/>";
 	    	var pCompanyID = "${companyID}";
 	    	var pUserID = "${userID}";
 	    	var pDeptID = "${deptID}";
@@ -89,7 +89,7 @@
 	    	var xmlhttp2 = createXMLHttpRequest();
 		    function schedule_get_holiday() {
 		        xmlhttp2 = createXMLHttpRequest();
-		        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
+		        xmlhttp2.open("GET", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
 		        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
 		        xmlhttp2.send();
 		    }
@@ -340,7 +340,7 @@
 	    	
 	    	function showRes(val01) {
 	    		$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezResource/scheduleResourceData.do",

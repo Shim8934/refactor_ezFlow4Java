@@ -24,8 +24,9 @@ function letterSearch() {
 	
 	$.ajax({
 		type : "POST",
-		url : "/ezEmail/searchLetter.do?search=" + encodeURI(encodeURIComponent(search)),
+		url : "/ezEmail/searchLetter.do",
 		datatype : 'json',
+		data : {'search': encodeURI(encodeURIComponent(search))},
 		error : function(data) {
 			alert("error");
 			//console.log(data);
@@ -175,8 +176,9 @@ function addLetterList(jsonArr) {
 					var boxName = "";
 					$.ajax({
 						type:"POST",
-						url:"/ezEmail/selectLetterBoxName.do?letterBoxNo=" + jsonArr[i].letterBoxNo,
+						url:"/ezEmail/selectLetterBoxName.do",
 						dataType:"json",
+						data : {"letterBoxNo" : jsonArr[i].letterBoxNo},
 						async: false,
 						success:function(data) {
 							boxName = data.displayname;

@@ -71,7 +71,7 @@
 		    	}
 		    	
 		    	$.ajax({
-		    		data : "POST",
+		    		type : "POST",
 		    		dataType : "text",
 		    		url : "/admin/ezBoard/moveBoard.do",
 		    		data : {

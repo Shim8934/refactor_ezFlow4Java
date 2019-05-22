@@ -183,9 +183,10 @@
 
 				$.ajax({
 					type : "POST",
-					url : "/admin/ezEmail/updateLetterOrder.do?letterOrder="
-							+ (i + 1) + "&" + "letterNo=" + letterNo,
+					url : "/admin/ezEmail/updateLetterOrder.do",
 					dataType : "text",
+					data : {"letterOrder" : (i + 1),
+							"letterNo" : letterNo},
 					error : function(data) {
 						alert("error");
 						return;

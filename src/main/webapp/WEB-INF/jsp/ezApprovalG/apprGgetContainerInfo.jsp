@@ -44,57 +44,57 @@
 	        var g_tagSelectsub = "1";
 	        var NodeList, curpage, nowblock, totalPage, block, p_page, p_nowblock, NodeListLen, Init_Flag, pChackYN, DocListType;
 	        var NodeList2, PageSize, ListView;
-	        var contFlag = "${contType}";
+	        var contFlag = "<c:out value = '${contType}'/>";
 	        var pSusinManagerFlag = "user";
-	        var UserID = "${userInfo.id}";
+	        var UserID = "<c:out value = '${userInfo.id}'/>";
 	        var Block_Size, WriterID;
 	        var docdir = "";
 	        var OrderOption = "";
 	        var OrderCell = "";
-	        var pEndDocHref = '${dirPath}';
+	        var pEndDocHref = "<c:out value = '${dirPath}'/>";
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "${userInfo.id}";
-	        arr_userinfo[2] = "${userInfo.displayName}";
-	        arr_userinfo[3] = "${userInfo.title}";
-	        arr_userinfo[4] = "${userInfo.deptID}";
-	        arr_userinfo[5] = "${userInfo.deptName}";
-	        arr_userinfo[6] = "${userInfo.jikChek}";
-	        arr_userinfo[7] = "${buJaeInfo}";
-	        arr_userinfo[8] = "${userInfo.email}";
+	        arr_userinfo[1] = "<c:out value = '${userInfo.id}'/>";
+	        arr_userinfo[2] = "<c:out value = '${userInfo.displayName}'/>";
+	        arr_userinfo[3] = "<c:out value = '${userInfo.title}'/>";
+	        arr_userinfo[4] = "<c:out value = '${userInfo.deptID}'/>";
+	        arr_userinfo[5] = "<c:out value = '${userInfo.deptName}'/>";
+	        arr_userinfo[6] = "<c:out value = '${userInfo.jikChek}'/>";
+	        arr_userinfo[7] = "<c:out value = '${buJaeInfo}'/>";
+	        arr_userinfo[8] = "<c:out value = '${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";
-	        arr_userinfo[11] = "${userInfo.displayName1}";
-	        arr_userinfo[12] = "${userInfo.displayName2}";
-	        arr_userinfo[13] = "${userInfo.title1}";
-	        arr_userinfo[14] = "${userInfo.title2}";
-	        arr_userinfo[15] = "${userInfo.deptName1}";
-	        arr_userinfo[16] = "${userInfo.deptName2}";
+	        arr_userinfo[10] = "<c:out value = '${susinAdmin}'/>";
+	        arr_userinfo[11] = "<c:out value = '${userInfo.displayName1}'/>";
+	        arr_userinfo[12] = "<c:out value = '${userInfo.displayName2}'/>";
+	        arr_userinfo[13] = "<c:out value = '${userInfo.title1}'/>";
+	        arr_userinfo[14] = "<c:out value = '${userInfo.title2}'/>";
+	        arr_userinfo[15] = "<c:out value = '${userInfo.deptName1}'/>";
+	        arr_userinfo[16] = "<c:out value = '${userInfo.deptName2}'/>";
 	        var LoadContID = "${contID}";
 	        var LoadSquery = "${sQuery}";
 	        var GamSaFlag = false;
-	        var CompanyID = "${userInfo.companyID}";
-	        var USE_OCS = "${useOcs}";
-	        var Udomain = "${userEmail}";
-	        var pOpenYaer = "${openYear}";
-			var approvalFlag = "${approvalFlag}"
+	        var CompanyID = "<c:out value = '${userInfo.companyID}'/>";
+	        var USE_OCS = "<c:out value = '${useOcs}'/>";
+	        var Udomain = "<c:out value = '${userEmail}'/>";
+	        var pOpenYaer = "<c:out value = '${openYear}'/>";
+			var approvalFlag = "<c:out value = '${approvalFlag}'/>"
 	        var CurrentHeight = 0;
 	        var CurrentWidth = 0;
 	        var pItemCD = ""; 
-	        var pEndAprType = "${endAprType}";
-	        var pEndAprState = "${endAprState}";
-	        var pUse_Editor = "${useEditor}";
+	        var pEndAprType = "<c:out value = '${endAprType}'/>";
+	        var pEndAprState = "<c:out value = '${endAprState}'/>";
+	        var pUse_Editor = "<c:out value = '${useEditor}'/>";
 	        var DocType = "";
  	        var DocState = "";
  	        var period;
  	        var pDocInfoValue = "1";
- 	       	var nowDate = "${nowDateUTC}";
+ 	       	var nowDate = "<c:out value = '${nowDateUTC}'/>";
  	        var orgCompanyID = "";
  	       	var ext;
  	        var pListTypeValue;
  	        var isSearch = false;
  	     	//개인문서함 엑셀내보내기시에 필요한 파일명.
- 	        var excelFileName = "${excelFileName}";
+ 	        var excelFileName = "<c:out value = '${excelFileName}'/>";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -142,7 +142,7 @@
 	                AddOption(sel_year, i, i);
 	
 	            try {
-	                if ("${type}" == "1")
+	                if ("<c:out value = '${type}'/>" == "1")
 	                    GamSaFlag = true;
 	
 	                PageSize = 10;
@@ -406,7 +406,7 @@
 		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
 		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
 					
-		            if (tmpStartDate <= "${nowDate}" && tmpEndDate >= "${nowDate}") {
+		            if (tmpStartDate <= "<c:out value = '${nowDate}'/>" && tmpEndDate >= "<c:out value = '${nowDate}'/>") {
 		                return true;
 		            }
 		        } 
@@ -836,10 +836,10 @@
 	            }
 	
 	            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-	                if ("${userInfoEnforce}" == "1") {
+	                if ("<c:out value = '${userInfoEnforce}'/>" == "1") {
 	                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezEnforce_HWP_Cross.aspx";
 	                }
-	                else if ("${userInfoEnforce}" == "2") {
+	                else if ("<c:out value = '${userInfoEnforce}'/>" == "2") {
 	                    openLocation = "../ezViewHWP/ezConv_HWP_Cross.aspx";
 	                }
 	                else {
@@ -847,7 +847,7 @@
 	                }
 	            }
 	            else {
-	                if ("${userInfoEnforce}" == "1") {                    
+	                if ("<c:out value = '${userInfoEnforce}'/>" == "1") {                    
 	                    if (CrossYN())
 	                        openLocation = "../enforce/convEnforce_CK.aspx";
 	                    else
@@ -855,7 +855,7 @@
 	                        openLocation = "../enforce/convEnforce.aspx";
 	                    }
 	                }
-	                else if ("${userInfoEnforce}" == "2") {
+	                else if ("<c:out value = '${userInfoEnforce}'/>" == "2") {
 	                    openLocation = "../enforce/ezConv.aspx";
 	                    if (CrossYN()) {
 	                        openLocation = "../enforce/ezConv_CK.aspx";
@@ -1155,8 +1155,8 @@
 	        				position  : arr_userinfo[3],
 	        				position2 : arr_userinfo[16],
 			        		companyID : CompanyID,
-		    				companyName : "${userInfo.companyName}",
-		    				companyName2 : "${userInfo.companyName2}"
+		    				companyName : "<c:out value = '${userInfo.companyName}'/>",
+		    				companyName2 : "<c:out value = '${userInfo.companyName2}'/>"
 	        				},
 	        		success: function(xml){
 	        		}        			

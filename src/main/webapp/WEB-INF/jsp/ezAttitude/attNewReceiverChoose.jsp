@@ -76,12 +76,12 @@
 	        var searchgubun = "N";
 	        var userid = "${userInfo.id}";
 	        var deptid = "${userInfo.deptID}";
-	        var companyid = "${companyID}";
+	        var companyid = "<c:out value='${companyID}'/>";
 	        var susinTo = 0;
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
 	        var browserIE = (!CrossYN()) ? true : false;
-	        var type = "${type}";
+	        var type = "<c:out value='${type}'/>";
 	        var rulekind = "${ruleKind}";
 	        var pListType = "TXT";
 	        var pListXML_Info = null;

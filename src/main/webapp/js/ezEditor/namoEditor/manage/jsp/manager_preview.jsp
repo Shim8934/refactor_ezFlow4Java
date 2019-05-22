@@ -6,7 +6,7 @@
 <html>
 <head>
 <title>Namo CrossEditor : Admin</title>
-	<script type="text/javascript">var pe_ajq="True";var pe_vV="pe_Fd"; </script>
+	<script type="text/javascript">var pe_ajN="True";var pe_vX="pe_It"; </script>
 	<script type="text/javascript" src="../manage_common.js"> </script>
 	<script type="text/javascript" src="../../js/namo_scripteditor.js"> </script>
 	<script type="text/javascript" src="../manager.js"> </script>
@@ -18,35 +18,35 @@
 
 <%@include file = "../include/top.html"%>
 
-<div id="preview" class="pe_ik">
-	<table class="pe_tK">
+<div id="preview" class="pe_ib">
+	<table class="pe_uz">
 	  <tr>
-		<td class="pe_ik">
+		<td class="pe_ib">
 		
 			<table id="Info">
 				<tr>
 					<td style="padding:0 0 0 10px;height:30px;text-align:left">
-					<font style="font-size:14pt;color:#3e77c1;font-weight:bold;text-decoration:none;"><span id="pe_aqV">&nbsp;</span></font></td>
+					<font style="font-size:14pt;color:#3e77c1;font-weight:bold;text-decoration:none;"><span id="pe_any">&nbsp;</span></font></td>
 					<td id="InfoText">&nbsp;</td>
 				</tr>
 				<tr>
-					<td colspan="2"><img id="pe_Dm" src="../images/title_line.jpg" alt="" /></td>
+					<td colspan="2"><img id="pe_Cr" src="../images/title_line.jpg" alt="" /></td>
 				</tr>
 			</table>
 		
 		</td>
 	  </tr>
 	  <tr>
-		<td class="pe_ik">
+		<td class="pe_ib">
 			
-			<table class="pe_oE">
+			<table class="pe_pa">
 			 <tr>
-				<td class="pe_hL">
-					<script>var CrossEditor=new NamoSE('namoeditor1');CrossEditor.params.ManageMode=true;CrossEditor.params.UserLang="auto";CrossEditor.params.Width="100%";if(pe_oG!="")CrossEditor.params.UserDomain=pe_oG;CrossEditor.editorStart(); </script>
+				<td class="pe_jn">
+					<script>var CrossEditor=new NamoSE('namoeditor1');CrossEditor.params.ManageMode=true;CrossEditor.params.UserLang="auto";CrossEditor.params.Width="100%";if(pe_nB!="")CrossEditor.params.UserDomain=pe_nB;CrossEditor.editorStart(); </script>
 				</td>
 			  </tr>
 			  <tr>
-				<td id="pe_YA" style="height:20px"></td>
+				<td id="pe_YP" style="height:20px"></td>
 			  </tr>
 			</table>
 			

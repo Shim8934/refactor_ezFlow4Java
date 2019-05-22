@@ -134,12 +134,13 @@ public class EzMemoGWController {
 			memoVO.setCompany_id(info.getCompanyId());
 			memoVO.setTenant_id(info.getTenantId());
 			
-			String contents = (String) jsonObject.get("contents");
+			String contents = commonUtil.stripScriptTags((String) jsonObject.get("contents"));
 			memoVO.setContents(contents);
 			
 			ezMemoService.setMemoContents(memoVO);
 			
 			result.put("status", "ok");
+			result.put("contents", contents);
 			result.put("code", 0);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -818,7 +819,7 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/moduleCopy/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
-		String contents = request.getParameter("contents");
+		String contents = commonUtil.stripScriptTags(request.getParameter("contents"));
 		
 		try {
 			String serverName = request.getHeader("x-user-host");

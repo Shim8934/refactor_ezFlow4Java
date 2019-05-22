@@ -11,20 +11,20 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
-		    var cnt = "${cnt}";
+		    var cnt = "<c:out value ='${cnt}'/>";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0] = "user"; 							
-		    arr_userinfo[1] = "${userInfo.id}";              
-		    arr_userinfo[2] = "${userInfo.displayName}";         
-		    arr_userinfo[3] = "${userInfo.title}";               
-		    arr_userinfo[4] = "${userInfo.deptID}";              
-		    arr_userinfo[5] = "${userInfo.deptName}";            
-		    arr_userinfo[6] = "${userInfo.jikChek}";                         
+		    arr_userinfo[1] = "<c:out value ='${userInfo.id}'/>";              
+		    arr_userinfo[2] = "<c:out value ='${userInfo.displayName}'/>";         
+		    arr_userinfo[3] = "<c:out value ='${userInfo.title}'/>";               
+		    arr_userinfo[4] = "<c:out value ='${userInfo.deptID}'/>";              
+		    arr_userinfo[5] = "<c:out value ='${userInfo.deptName}'/>";            
+		    arr_userinfo[6] = "<c:out value ='${userInfo.jikChek}'/>";                         
 		    arr_userinfo[7] = "N";
-		    arr_userinfo[8] = "${userInfo.email}";               
+		    arr_userinfo[8] = "<c:out value ='${userInfo.email}'/>";               
 		    arr_userinfo[9] = "";
 		    arr_userinfo[10] = "";
-		    var pCompanyID = "${userInfo.companyID}";
+		    var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 		    var ezchkpasswd_all_cross_dialogArguments = new Array();
 		    function chk_Passwd(pPwd) {
 		        var parameter = pPwd;

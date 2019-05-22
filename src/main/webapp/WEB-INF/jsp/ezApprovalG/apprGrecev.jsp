@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html style="height:97%">
 	<head>
@@ -21,11 +22,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			var pDocID = "${docID}";
-			var DraftFlag = "${draftFlag}";
+			var pDocID = "<c:out value = '${docID}'/>";
+			var DraftFlag = "<c:out value = '${draftFlag}'/>";
 			var pFormHref = new String("");
 			var pFormID = new String();
-			var pUserID = "${userInfo.id}";
+			var pUserID = "<c:out value = '${userInfo.id}'/>";
 			var pHasAttachYN = new String("N");
 			var pHasOpinionYN = new String("N");
 			var FormProc = null;
@@ -66,51 +67,51 @@
 			var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;  
 			var arr_userinfo = new Array();
 			arr_userinfo[0]  = "user";								// 사용자-부서구분
-			arr_userinfo[1]  = "${userInfo.id}";              // 사용자ID
-			arr_userinfo[2]  = "${userInfo.displayName}";         // 사용자명
-			arr_userinfo[3]  = "${userInfo.title}";               // 사용자 직위
-			arr_userinfo[4]  = "${userInfo.deptID}";              // 사용자 부서 ID
-			arr_userinfo[5]  = "${userInfo.deptName}";            // 사용자 부서 이름
-			arr_userinfo[6]  = "${userInfo.jikChek}";             // 사용자 직책            
-			arr_userinfo[8]  = "${userInfo.email}";               // E-Mail Address 
+			arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";              // 사용자ID
+			arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";         // 사용자명
+			arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";               // 사용자 직위
+			arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";              // 사용자 부서 ID
+			arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";            // 사용자 부서 이름
+			arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";             // 사용자 직책            
+			arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";               // E-Mail Address 
 			arr_userinfo[9]  = "";
-			arr_userinfo[10] = "${susinAdmin}";                  // 수신 접수담당자
+			arr_userinfo[10] = "<c:out value = '${susinAdmin}'/>";                  // 수신 접수담당자
 			// 수정(2007.06.18) : multidata 기능 추가
-			arr_userinfo[11]  = "${userInfo.displayName1}";		// 사용자명(P)
-			arr_userinfo[12]  = "${userInfo.displayName2}";		// 사용자명(S)
-			arr_userinfo[13]  = "${userInfo.title1}";				// 사용자 직위(P)
-			arr_userinfo[14]  = "${userInfo.title2}";				// 사용자 직위(S)
-			arr_userinfo[15]  = "${userInfo.deptName1}";			// 사용자 부서 이름(P)
-			arr_userinfo[16]  = "${userInfo.deptName2}";			// 사용자 부서 이름(S)
+			arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";		// 사용자명(P)
+			arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";		// 사용자명(S)
+			arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";				// 사용자 직위(P)
+			arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";				// 사용자 직위(S)
+			arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";			// 사용자 부서 이름(P)
+			arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";			// 사용자 부서 이름(S)
 			
 			var SignType = new Array();
 			var SignName = new Array();
 			var SignContent = new Array();
 			var KuyjeType = "002";
-			var signDateFormat = "${optSignDateFormat}";
-			var isSplit = "${optisSplit}";
-			var SplitKind = "${optSplitKind}";
+			var signDateFormat = "<c:out value = '${optSignDateFormat}'/>";
+			var isSplit = "<c:out value = '${optisSplit}'/>";
+			var SplitKind = "<c:out value = '${optSplitKind}'/>";
 			var ConvertYN = "Y";	// 이 값이 N이면, 원문서를 그대로 사용한다.
-			var _USE_DirectSign = "${useDirectSign}";     //20090112 직접서명
+			var _USE_DirectSign = "<c:out value = '${useDirectSign}'/>";     //20090112 직접서명
 			
 			//20110201  기안일자 확인 
-			var _DraftDate = "${draftDate}";
+			var _DraftDate = "<c:out value = '${draftDate}'/>";
 			var docAccess = 0 ;  //20110207 문서번호 채번후 연동 실패시에도 문서번호 롤백이 되어야 한다.
 			//2011.05.11 결재알림메일 기능 추가
 			var g_szUserID = arr_userinfo[8];  // E-Mail Address 
-			var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
+			var g_senderinfo = "<c:out value = '${userInfo.companyName}'/>" + ", " + "<c:out value = '${userInfo.deptName}'/>" + ", " + "<c:out value = '${userInfo.title}'/>";
 			//CKEDITOR-추가
 			var mhtData;
 			var mhtData2;
 			var StartMode = "0";
 			var StartMode2 = "0";
 			var SummaryFlag = true;
-			var approvalFlag = "${approvalFlag}";
-			var junGyulFlag = "${junGyulFlag}";
-			var pSignImage_Size = "${signImageSize}";
-			var docNumZeroCnt = "${docNumZeroCnt}";
+			var approvalFlag = "<c:out value = '${approvalFlag}'/>";
+			var junGyulFlag = "<c:out value = '${junGyulFlag}'/>";
+			var pSignImage_Size = "<c:out value = '${signImageSize}'/>";
+			var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
 			var curDocNum = "";
-			var draftDeptID = "${draftDeptID}";
+			var draftDeptID = "<c:out value = '${draftDeptID}'/>";
 			var orgCompanyID = "";
 			var ext = "mht";
 			var isHWP = "";
