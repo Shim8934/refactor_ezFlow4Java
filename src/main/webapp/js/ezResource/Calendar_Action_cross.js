@@ -672,8 +672,10 @@ function tableListControl_Week()
                 var approveflag_name = "";
                 if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 1)
                     approveflag_name = "icon_02";
-                else
+                else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 0)
                     approveflag_name = "icon_01";
+                else 
+                	approveflag_name = "icon_03";
 
                 var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[1].split(":");
                 var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[1].split(":");
@@ -807,8 +809,10 @@ function makeTable(xmldom, pNum, dayType) {
     var approveflag_name = "";
     if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 1)
         approveflag_name = "icon_02";
-    else
+    else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 0)
         approveflag_name = "icon_01";
+    else
+    	approveflag_name = "icon_03";
 
     var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[1].split(":");
     var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[1].split(":");
@@ -1581,8 +1585,8 @@ function showTooltip_MouseOver(obj, e) {
     	sSpan.style.marginTop = "0px";
     	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang307;
-    } else {
+        sTd.innerHTML += strLang323;
+    } else if (GetAttribute(obj,"approveFlag") == "0") {
         //_img.src = "/images/calendar/icon_resource_no.png"
         //_img.style.verticalAlign = "bottm";
         //sSpan.appendChild(_img);
@@ -1590,7 +1594,16 @@ function showTooltip_MouseOver(obj, e) {
     	sSpan.style.marginTop = "0px";
     	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang308;
+        sTd.innerHTML += strLang321;
+    } else {
+    	 //_img.src = "/images/calendar/icon_resource_no.png"
+        //_img.style.verticalAlign = "bottm";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_refuse";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
+        sTd.appendChild(sSpan);
+        sTd.innerHTML += strLang322;
     }
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);
