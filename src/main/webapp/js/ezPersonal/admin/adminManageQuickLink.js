@@ -181,6 +181,7 @@ function btn_delete(itemId, event) {
 	}
 	
 	$.ajax({
+		type : "POST",
 		url : "/admin/ezPersonal/delQuickLink.do",
 		async : false,
 		data : {pQuickLinkID : itemId},

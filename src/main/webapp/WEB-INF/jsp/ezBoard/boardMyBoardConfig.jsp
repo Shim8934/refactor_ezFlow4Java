@@ -14,8 +14,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
 	    <script type="text/javascript">
 	        var treeView = new TreeView();
-	        var pType = "${type}";
-	        var pBoardID = "${boardID}";
+	        var pType = "<c:out value='${type}'/>";
+	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var isChanged = "";
 	
 	        /* 2018-11-28 홍승비 - 마이게시판 관리 시 변화가 없다면 좌측 마이게시판 확장하지 않음 */

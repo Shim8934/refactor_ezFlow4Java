@@ -65,7 +65,7 @@
 	        var m_contactImg = { "normal": "/images/tab_addr1.gif", "select": "/images/tab_addr.gif" };
 	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal" };
 	        var ua = navigator.userAgent;
-	        var companyId = "${companyId}";
+	        var companyId = "<c:out value='${companyId}'/>";
 	        var selSpan = "";
 	        var AddressTreeView = null;
 	        var searchgubun = "N";
@@ -2712,7 +2712,7 @@
 		            <tr>
 		                <th><spring:message code='ezEmail.t710' /></th>
 		                <td>
-		                    <input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:100%;" value="${textName}">
+		                    <input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:100%;" value="<c:out value='${textName}'/>">
 		                </td>
 		            </tr>
 		            <tr>

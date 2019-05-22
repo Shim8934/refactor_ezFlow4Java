@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -12,8 +13,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
 		<script id="clientEventHandlersJS" type="text/javascript">
-		    var CompanyID = "${userInfo.companyID}";
-		    var UserLang = "${userInfo.lang}";
+		    var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+		    var UserLang = "<c:out value ='${userInfo.lang}'/>";
 		    var arrCabInfo = new Array();
 		    var g_NewVolNo;
 		    var rtnVal = new Array();
@@ -57,7 +58,7 @@
 		        rtnVal[0] = "FALSE";
 		    };
 		    function InitCabClassInfo(objCabInfoXml) {
-		        if ("${userInfo.lang}" == "1") { 
+		        if ("<c:out value ='${userInfo.lang}'/>" == "1") { 
 		        	arrCabInfo[2] = SelectSingleNodeValueNew(objCabInfoXml, "RESULT/TITLE");
 		        } else { 
 		        	arrCabInfo[2] = SelectSingleNodeValueNew(objCabInfoXml, "RESULT/TITLE2");

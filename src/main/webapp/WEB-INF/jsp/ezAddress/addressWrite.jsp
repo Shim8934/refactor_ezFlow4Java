@@ -11,17 +11,17 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>.txtClass{box-sizing : border-box; -moz-box-sizing:border-box;}</style>
 		<script type="text/javascript">
-			var addressid = "${addressId}";
-			var folderid = "${folderId}";
-			var foldertype = "${folderType}";
-			var ownerid = "${ownerId}";
-			var changekey = "${changeKey}";
-			var photourl = "${photoUrl}";
+			var addressid = "<c:out value='${addressId}'/>";
+			var folderid = "<c:out value='${folderId}'/>";
+			var foldertype = "<c:out value='${folderType}'/>";
+			var ownerid = "<c:out value='${ownerId}'/>";
+			var changekey = "<c:out value='${changeKey}'/>";
+			var photourl = "<c:out value='${photoUrl}'/>";
 			var g_AddressAttachLimit= 20;
-			var textEmail= "${textEmail}";
-		    var usernm = "${userNM}";
-		    var usernm2 = "${userNM2}";
-		    var useAddressOpenAPI = "${useAddressOpenAPI}";
+			var textEmail= "<c:out value='${textEmail}'/>";
+		    var usernm = "<c:out value='${userNM}'/>";
+		    var usernm2 = "<c:out value='${userNM2}'/>";
+		    var useAddressOpenAPI = "<c:out value='${useAddressOpenAPI}'/>";
 		    var xmlHttpAddressTree;
 		    var closeAlertMsg = "<spring:message code='ezAddress.t337' />";
 		    window.onload = function () {

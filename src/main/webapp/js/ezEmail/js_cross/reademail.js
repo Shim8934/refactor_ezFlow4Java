@@ -1106,7 +1106,7 @@ function item_View_New_Community(pBoardID, pItemID, pCommunityID) {
     pwidth = pwidth - 359;
 
     var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/ezCommunity/getItemViewNew.do?itemID=" + pItemID + "&boardID=" + pBoardID, false);
+    xmlhttp.open("GET", "/ezCommunity/getItemViewNew.do?itemID=" + pItemID + "&boardID=" + pBoardID, false);
     xmlhttp.send();
     
     var xmlDoc = xmlhttp.responseXML;

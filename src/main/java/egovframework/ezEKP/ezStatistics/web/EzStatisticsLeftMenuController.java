@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -41,7 +42,7 @@ public class EzStatisticsLeftMenuController {
 	/**
 	 * 통계 좌측 메뉴 화면 표시 함수
 	 */
-	@RequestMapping(value="/ezStatistics/statisticsLeftMenu.do")
+	@RequestMapping(value="/ezStatistics/statisticsLeftMenu.do", method = RequestMethod.GET)
 	public String statisticsLeftMenu(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		

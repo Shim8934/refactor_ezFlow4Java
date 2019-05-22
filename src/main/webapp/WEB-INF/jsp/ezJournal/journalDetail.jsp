@@ -18,15 +18,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">
 		
-			var formId = "${journal.formId}";
-			var journalId = "${journal.journalId}";
-			var journalTitle = "${journal.journalTitle}";
-			var typeId = "${journal.typeId}";
+			var formId = "<c:out value='${journal.formId}'/>";
+			var journalId = "<c:out value='${journal.journalId}'/>";
+			var journalTitle = "<c:out value='${journal.journalTitle}'/>";
+			var typeId = "<c:out value='${journal.typeId}'/>";
 			var isSum = "<c:out value='${journal.isSum}'/>";
 			
 			// 수정
 			function journalModify() {
-				console.log("formId : " + formId + ",journalId : " + journalId + ",isSum : " + isSum);
 				window.location.href = "/ezJournal/journalWrite.do?typeId=" + typeId + "&journalId=" + journalId + "&mode=modify" + "&isSum=" + isSum;
 			}
 			
@@ -37,7 +36,6 @@
 			
 			// 삭제
 			function journalDelete() {
-				
 				if (confirm("<spring:message code='ezJournal.t139'/>")) {
 					$.ajax ({
 						type : "POST",

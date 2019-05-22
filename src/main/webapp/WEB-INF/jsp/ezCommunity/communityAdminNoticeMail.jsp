@@ -42,7 +42,7 @@
 					dataType : "json",
 					async : false,
 					url : "/ezCommunity/adminNoticeMailOk.do",
-					data : {code : '${code}',
+					data : {code : '<c:out value="${code}"/>',
 							subject : titleStr, 
 							memo : contentStr
 						   },

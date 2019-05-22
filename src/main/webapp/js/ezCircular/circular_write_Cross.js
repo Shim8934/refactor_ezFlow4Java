@@ -362,7 +362,7 @@ function save_schedule()
     var rtv = false;
 
     $.ajax({
-		type : "POST",
+		type : "GET",
 		dataType : "text",
 		async : false,
 		url : "/ezSchedule/scheduleGetRegi.do",

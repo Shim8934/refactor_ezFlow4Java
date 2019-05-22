@@ -436,7 +436,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     	
 		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
 		
-		File file = new File(downFileName);
+		File file = new File(commonUtil.detectPathTraversal(downFileName));
 		//log.debug(this.getClass().getName()+" downFile downFileName "+downFileName);
 		//log.debug(this.getClass().getName()+" downFile orgFileName "+orgFileName);
 	

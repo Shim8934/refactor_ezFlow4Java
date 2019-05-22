@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -23,21 +24,21 @@
 		    var rtnVal = new Array();
 		    var g_SearchKeyword="";
 		    var AdminYN = "FALSE";
-		    var szRoleInfo = "${userInfo.rollInfo}";
+		    var szRoleInfo = "<c:out value='${userInfo.rollInfo}'/>";
 		    var g_bRecAdmin = false;
 		    var g_bDeptCharger = false;
 		    var xmlhttp = createXMLHttpRequest();
-		    var pUserID = "${userInfo.id}";
-		    var CompanyID = "${userInfo.companyID}";
+		    var pUserID = "<c:out value='${userInfo.id}'/>";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";
 		    arr_userinfo[9] = CompanyID;
 		    var RetValue;
 		    var ReturnFunction;
@@ -132,7 +133,7 @@
 		    			productionYear  : "",
 		    			searchKeyword   : document.getElementById("Cabinetkeyword").value,
 		    			flag : "1",
-		    			langType : "${userInfo.lang}"
+		    			langType : "<c:out value='${userInfo.lang}'/>"
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);

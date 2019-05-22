@@ -48,10 +48,8 @@
 		    		holiday_url = "/ezSchedule/scheduleGetHolidayJson.do"
 		    	}
 		    	
-		    	
-		    	
 		        $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "json",
 		    		async : true,
 		    		url : holiday_url,
@@ -573,7 +571,7 @@
 		    	
 		    	
 		        $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "json",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetHolidayJsonYear.do",
