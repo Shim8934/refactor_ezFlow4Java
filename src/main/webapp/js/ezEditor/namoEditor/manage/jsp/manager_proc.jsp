@@ -77,10 +77,10 @@
 	boolean check =  xmlCreate(xmlText,filenames);
 	
 	if(check){
-		result_sc = "<script type='text/javascript' language='javascript'>alert(NamoSELang.pe_wX);window.document.location.href='manager_setting.jsp?Tab=" + detectXSSEx(request.getParameter("Tab")) + "';</script>";
+		result_sc = "<script type='text/javascript' language='javascript'>alert(NamoSELang.pe_yV);window.document.location.href='manager_setting.jsp?Tab=" + detectXSSEx(request.getParameter("Tab")) + "';</script>";
 	}
 	else{
-		result_sc = "<script>alert(NamoSELang.pe_tk+'" + fileName + "');history.back();</script> ";
+		result_sc = "<script>alert(NamoSELang.pe_sq+'" + fileName + "');history.back();</script> ";
 	}
 
 %>

@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<head>
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
@@ -1033,7 +1033,9 @@
     	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
     	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
     	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+    	    resultStr = resultStr.replace(/<style .*?>/gi, "<style>");
     	    resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+    	    resultStr = resultStr.replace(/<script .*?>/gi, "<script>");
     	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
     	    resultStr = resultStr.replace(/<.*?>/gi, "");
 			
@@ -1160,8 +1162,8 @@
 	        	}
 	    	} else {
 	    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);
-	    		
 	    		document.getElementById("tbContentElement").style.display = "";
+				ckeditorReload();
 				document.getElementById("plainTextArea").style.display = "none";
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
@@ -1173,6 +1175,15 @@
 	    	}
 	    }
 	    
+		function ckeditorReload() {
+			if (/chrome/i.test(navigator.userAgent) && message.CKEDITOR) {
+				try {
+					message.CKEDITOR.instances.editor1.setMode("source");
+					message.CKEDITOR.instances.editor1.setMode("wysiwyg");
+				} catch (e) {}
+			}
+		}
+		
 	    function ChangeSenderName(obj) {
 	        if (obj.value != "NONE")
 	            g_showdisplay = obj.value;
@@ -1994,7 +2005,11 @@
 				.appendTo(ul);
 			};
 		})
-	    
+		function bodydragover(evt) {
+				evt.dataTransfer.dropEffect = "none";
+				evt.stopPropagation();
+				evt.preventDefault();
+		}
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  

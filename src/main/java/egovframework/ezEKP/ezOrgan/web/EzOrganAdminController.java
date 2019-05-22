@@ -140,7 +140,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createWebfolderToken();
     	ezCommonService.addUserMasterMailBoxQuota();
     	ezCommonService.addJournalFormDelFlag();
-    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+		ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+		ezCommonService.addFormVersion();
+    	ezCommonService.addAddJobMasterProxy();
     	
     	logger.debug("init ended.");
     }

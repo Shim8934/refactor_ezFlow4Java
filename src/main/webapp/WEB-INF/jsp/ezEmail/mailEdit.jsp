@@ -628,7 +628,9 @@
 	    	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
 	    	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
 	    	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+	    	    resultStr = resultStr.replace(/<style .*?>/gi, "<style>");
 	    	    resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+	    	    resultStr = resultStr.replace(/<script .*?>/gi, "<script>");
 	    	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
 	    	    resultStr = resultStr.replace(/<.*?>/gi, "");
 				

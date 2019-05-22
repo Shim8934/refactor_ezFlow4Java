@@ -397,7 +397,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(result);
 		
-		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		String userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		if (userInfo.getDeptID().equals(userRealDeptId)) {
+			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		} else {
+			buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
+		}
+		
+		
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userInfo", userInfo);
@@ -432,7 +440,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String listType = request.getParameter("listType");
 		String userID = request.getParameter("userID");
-		String deptID = request.getParameter("deptID");
+//		쓰는곳 없어서 내가 씀
+//		String deptID = request.getParameter("deptID");
+		String deptID = userInfo.getDeptID();
 		String pageSize = request.getParameter("pageSize");
 		String pageNum = request.getParameter("pageNum");
 		String companyID = request.getParameter("companyID");
@@ -442,7 +452,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String searchCompanyID = request.getParameter("searchCompanyID");
 		String searchStatus = request.getParameter("searchStatus");
 
-		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID = " + deptID);
+		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID(AddJob) = " + deptID);
 		
  		String userLang = userInfo.getLang();
 		Document domSub = null;
@@ -614,7 +624,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
-					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
+//					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
+					String proxyUser = ezApprovalGService.getProxyUser2(userInfo.getId(), "1", tenantID, userInfo.getOffset());
 					String[] proxyUserArray = proxyUser.split(",");
 					boolean checkPermission = true;
 					
@@ -3246,7 +3257,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String result = ezApprovalGService.getHistoryForAttach(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		String result = ezApprovalGService.getHistoryForAttach(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
 		logger.debug("getAttachHistory ended");
 		
@@ -3899,7 +3910,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optJunKyulInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE"); //전결 처리 방법
 		
 		if (docID != null && !docID.equals("")) {
-			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
+//			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
+			String proxyUser = ezApprovalGService.getProxyUser2(userInfo.getId(), "1", tenantID, userInfo.getOffset());
 			String[] proxyUserArray = proxyUser.split(",");
 			boolean checkPermission = true;
 			
@@ -5330,6 +5342,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
 					
 					if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+						model.addAttribute("chk", "no");
 						return "main/warning";
 					}
 					if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals(userInfo.getId()) && !doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("NULL")) {
