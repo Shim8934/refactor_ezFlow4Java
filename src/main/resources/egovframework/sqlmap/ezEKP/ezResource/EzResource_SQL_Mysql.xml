@@ -754,6 +754,7 @@
             	A.companyID ,
             	CHARACTERID ,
             	APPROVEFLAG ,
+            	RETURNFLAG ,
                 OWNERNM  ,
                 DEPTNM  
 			FROM
@@ -1878,6 +1879,19 @@
     		BRD_COMPANY = #v_P_companyID#
 	</select>
 	
+	<select id="EzResourceDAO.addRessch_S3" parameterClass="Map" resultClass="String">
+		SELECT
+			RETURNFLAG 
+     	FROM
+     		TBL_RS_BRD 
+    	WHERE
+    		BRD_ID = #v_P_ownerID#
+    	AND
+    		TENANT_ID = #tenantID#	
+    	AND
+    		BRD_COMPANY = #v_P_companyID#
+	</select>
+	
 	<insert id="EzResourceDAO.addRessch" parameterClass="Map">
 		<selectKey keyProperty="v_Num" resultClass="Integer">
 			SELECT
@@ -1896,12 +1910,12 @@
 			INSERT INTO
 				TBL_RS_SCHEDULE
      			( OWNERID, NUM, PNUM, COMPANYID, WRITERID, DEPTNM, OWNERNM, TITLE, LOCATION, TIMEDISPLAY, STARTDATE, ENDDATE, ALLDAY, ALERTTIME, CONTENT, IMPORTANCE
-     			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, SCHEDULEID, TENANT_ID )
+     			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, RETURNFLAG, SCHEDULEID, TENANT_ID )
      		VALUES
      			( #v_P_ownerID#, #v_Num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_deptNM#, #v_P_ownerNM#, #v_P_title#
      			, #v_P_location#, #v_P_timeDisplay#, STR_TO_DATE(#v_P_startDate#,'%Y-%m-%d %T'), STR_TO_DATE(#v_P_endDate#,'%Y-%m-%d %T')
      			, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, IFNULL(#v_P_reFlag#,' '), IFNULL(#v_P_gresFlag#,' '), STR_TO_DATE(#nowDate#, '%Y-%m-%d %T')
-     			, #v_P_entryList#, IFNULL(#v_P_characterID#,0), #v_P_attachFlag#, #v_P_Approve#, #v_P_ScheduleID#, #tenantID# )
+     			, #v_P_entryList#, IFNULL(#v_P_characterID#,0), #v_P_attachFlag#, #v_P_Approve#, #v_P_ReturnFlag#, #v_P_ScheduleID#, #tenantID# )
 		]]>
 	</insert>
 	

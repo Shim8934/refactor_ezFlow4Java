@@ -979,6 +979,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		map.put("v_P_Approve", approveFlag);
 		
+		String returnFlag = ezResourceDAO.addRessch_S3(map);
+		
+		map.put("v_P_ReturnFlag", returnFlag);
+		
 		ezResourceDAO.addResSch(map);
 		
 		return ezResourceDAO.addRessch_S2(map);
