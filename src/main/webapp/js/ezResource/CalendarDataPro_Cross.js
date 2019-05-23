@@ -1871,11 +1871,11 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     
     if (pTime == strLang126) {
     	sTime = new Date(GetAttribute(nextTo, "_start"));
-    	eTime = new Date(GetAttribute(nextTo, "_end"));
+        eTime = new Date(GetAttribute(nextTo, "_end"));
     }
     else {
-	    sTime = new Date(pTime.split(" - ")[0]);
-	    eTime = new Date(pTime.split(" - ")[1]);
+	    sTime = new Date(pTime.split(" - ")[0].replace(" ", "T"));
+	    eTime = new Date(pTime.split(" - ")[1].replace(" ", "T"));
     }
     var nTime = new Date();
     
