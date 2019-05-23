@@ -262,7 +262,7 @@
 			}
 	
 			function btnDocInfo_onclick() {
-				var url = "/ezApprovalG/ezDocInfoG_View.do?docID=" + pDocID + "&ingFlag=END";
+				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END";
 			    var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    var RtnVal = window.showModalDialog(url, "", feature);
 			}

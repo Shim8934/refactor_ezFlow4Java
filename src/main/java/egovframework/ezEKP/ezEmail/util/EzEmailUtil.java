@@ -4468,5 +4468,54 @@ public class EzEmailUtil {
 	public String convertSpaceToNBSP(String src) {
 		return src.replace(" ", "&nbsp;");
 	}
+	
+	public boolean isHtmlMessage(Message message) throws MessagingException, IOException {
+		if (message.getHeader("Content-Type") == null) {
+			return true;
+		}
+		
+		String tempBodyType = message.getHeader("Content-Type")[0];
+		String contentType = tempBodyType.split(";")[0].trim();
+
+		if (contentType.equals("text/plain")) {
+			return false;
+		} else if (contentType.equals("multipart/alternative")) {
+			return true;
+		}
+		
+		Object content = message.getContent();
+		
+		if (content instanceof Multipart) {
+			return containsHtmlMultipart((Multipart) content);
+		}
+		
+		return true;
+	}
+	
+	public boolean containsHtmlMultipart(Multipart multipart) throws MessagingException, IOException {
+		int partCount = multipart.getCount();
+		
+		Object partContent;
+
+		for (int i = 0; i < partCount; i++) {
+			BodyPart bodyPart = multipart.getBodyPart(i);
+			
+			if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
+				continue;
+			}
+			
+			partContent = bodyPart.getContent();
+			
+			if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
+				return true;
+			}
+
+			if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
 
