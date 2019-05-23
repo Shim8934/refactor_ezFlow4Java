@@ -258,7 +258,7 @@
  	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
  		 <div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezMemo.t001' /><spring:message code='ezMemo.t0016' /></div>
+				<div class="title"><spring:message code='ezMemo.t0067' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
@@ -267,7 +267,7 @@
 				<table class="content">
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.garm01' />
+							<spring:message code='ezMemo.t0068' />
 						</th>
 						<td>
 							<input type="text" onfocus="this.value=''" onkeypress="if(event.keyCode==13){getMemoList('search'); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
@@ -275,7 +275,7 @@
 					</tr>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.t210' />
+							<spring:message code='ezMemo.t0069' />
 						</th>
 						<td>
 							<input type="text" id="Sdatepicker" style="width: 80px; text-align: center; margin-left: 0px;" readonly="readonly">
@@ -288,8 +288,8 @@
 					<tr>
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-								<a class="imgbtn"><span onClick="getMemoList('search');"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezMemo.t0070' /></span></a>
+								<a class="imgbtn"><span onClick="getMemoList('search');"><spring:message code='ezMemo.t0016' /></span></a>
 							</div>	
 						</td>
 					</tr>
