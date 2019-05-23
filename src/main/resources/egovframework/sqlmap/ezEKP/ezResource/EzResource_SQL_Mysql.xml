@@ -733,6 +733,8 @@
 				BRD.BRD_UPPER = #v_pOwnerID#
 			AND
 				SCH.TENANT_ID = #tenantID#	
+			AND
+				BRD.APPROVEFLAG <> '2'
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC
@@ -845,6 +847,8 @@
 				REFLAG = '1'
 			AND
 				SCH.TENANT_ID = #tenantID#	
+			AND
+				BRD.APPROVEFLAG <> '2'
         	ORDER BY
         		STARTDATE ASC,
                 ENDDATE DESC 
