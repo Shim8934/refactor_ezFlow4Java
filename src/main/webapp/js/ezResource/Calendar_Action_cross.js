@@ -1077,7 +1077,7 @@ function tableListControl_today() {
             	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
                 //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
-            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_no' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
