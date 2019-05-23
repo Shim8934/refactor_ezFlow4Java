@@ -649,6 +649,7 @@
 				var imgPath = "";	  // 이미지 경로
 				var calendarHTML = document.getElementById("attiCalendar").innerHTML;
 				var resultLength = result.length;
+				var pDate = $("#calTitle").text().trim(); 
 				if (deptFlag == false){ //개인근태현황일때
 					for (var i = 0; i < resultLength; i++) {
 						var tdHTML = "";
@@ -659,8 +660,12 @@
 						} else if (result[i].modAppl  == '3') {
 							iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
 						}
+						
 						startDate = result[i].startDate.split(" ")[0]; 
 						endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
+						if(pDate != startDate.substring(0, 7)) {
+							continue;
+						}
 						 
 						if (result[i].dateType == '4' || result[i].dateType == '5') { 
 							subDate = calDateRange(startDate, endDate); 
