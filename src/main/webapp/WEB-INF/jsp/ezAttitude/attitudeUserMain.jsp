@@ -630,6 +630,7 @@
 					},
 					success : function(result) {
 						$("span[name=span_list] table tbody").remove();
+						$("#index_0 > table > tbody > tr").not(':first').remove();
 						getAttitudeMainList_after(result);
 						getAttiStatisList();
 					}
