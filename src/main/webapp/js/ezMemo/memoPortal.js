@@ -221,7 +221,7 @@ function memoSortable() {
        				}
        			 },
        			 error : function() {
-       				 alert(strLangMemo21);
+       				 alert(memoMessages.strLangMemo21);
        			 }
        		 });
        	 }
@@ -365,7 +365,7 @@ function modalDelete(memoId) {
         	
         },
         error : function() {
-        	alert(strLangMemo21);
+        	alert(memoMessages.strLangMemo21);
         }
 	});
 }
@@ -408,7 +408,7 @@ function modifyMemo(obj) {
             setContents(size, memoId, afterContents);
         },
         error : function() {
-        	alert(strLangMemo21);
+        	alert(memoMessages.strLangMemo21);
         }
     }); 
 }
@@ -439,7 +439,7 @@ function hideMemo(obj) {
         	  checkAndActionBigMemo(memoId);
           },
           error : function() {
-        	  alert(strLangMemo21);
+        	  alert(memoMessages.strLangMemo21);
           }
 	});
 }
@@ -464,7 +464,7 @@ function checkMemoConfig() {
     		}
     	},
     	error : function() {
-    		alert(strLangMemo21);
+    		alert(memoMessages.strLangMemo21);
     	}
     });
 }
@@ -547,7 +547,7 @@ function getMemoConfig() {
         	}
     	},
     	error : function() {
-    		alert(strLangMemo21);
+    		alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -583,7 +583,7 @@ function getMemoLayerSize(classNm, layerParam) {
 					}
 				},
 				error : function() {
-					alert(strLangMemo21);
+					alert(memoMessages.strLangMemo21);
 		    	}
 			});
 		// layer full-screen mode
@@ -627,7 +627,7 @@ function insertMemoConfig() {
 			checkMemoConfig();
 		},
 		error : function() {
-			alert(strLangMemo21);
+			alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -653,7 +653,7 @@ function setLayerPosition() {
     			
     		},
     		error : function() {
-    			alert(strLangMemo21);
+    			alert(memoMessages.strLangMemo21);
         	}
     	});
 	}
@@ -682,7 +682,7 @@ function setLayerArea() {
 				
 			},
 			error : function() {
-				alert(strLangMemo21);
+				alert(memoMessages.strLangMemo21);
 	    	}
 		});
 	}
@@ -894,7 +894,7 @@ function newMemo() {
         	}
         },
         error : function() {
-        	alert(strLangMemo21);
+        	alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -928,7 +928,7 @@ function modifyMemoColor(obj, idx) {
         	checkAndActionBigMemo(memoId, idx);
         },
         error : function() {
-        	alert(strLangMemo21);
+        	alert(memoMessages.strLangMemo21);
     	}
 	}); 
 }
@@ -967,7 +967,7 @@ function getMemoList(type) {
         	}
 	     },
 	     error : function() {
-	    	 alert(strLangMemo21);
+	    	 alert(memoMessages.strLangMemo21);
 	    }
 	});
 }
@@ -990,7 +990,7 @@ function memoFoldersInfo(type) {
 			
 			var folderList = result["folders"];
 			var html="";
-			html += "<option value='0'>" + strLangMemo9 + "</option>";
+			html += "<option value='0'>" + memoMessages.strLangMemo9 + "</option>";
 			folderList.forEach(function(list, index){
 				var folderName = list.folder_name;
 				
@@ -1034,7 +1034,7 @@ function memoFoldersInfo(type) {
 			changeFolder();
 		},
 		error : function() {
-			alert(strLangMemo21);
+			alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -1074,7 +1074,7 @@ function quickMemoDisplay() {
     		}
     	},
     	error : function() {
-    		alert(strLangMemo21);
+    		alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -1115,7 +1115,7 @@ function setMemoLayerMode(mode) {
     		
     	},
     	error : function() {
-    		alert(strLangMemo21);
+    		alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -1356,7 +1356,7 @@ function getMemoDetail(memoId) {
 			detailContents.focus();								// 큰 메모에 포커스 생성
     	},
     	error : function() {
-    		alert(strLangMemo21);
+    		alert(memoMessages.strLangMemo21);
     	}
     });
 }
@@ -1390,7 +1390,7 @@ function setBigMemoArea(bigHeight, bigWidth) {
         success : function(result) {
         },
         error : function() {
-        	alert(strLangMemo21);
+        	alert(memoMessages.strLangMemo21);
     	}
     });
 }
@@ -1408,7 +1408,7 @@ function setBigMemoPositon(bigTop, bigLeft) {
 		success : function(result) {
 		},
 		error : function() {
-			alert(strLangMemo21);
+			alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -1529,7 +1529,7 @@ function setDetailStatus(memoId) {
 		success : function(result) {
 		},
 		error : function() {
-			alert(strLangMemo21);
+			alert(memoMessages.strLangMemo21);
     	}
 	});
 }

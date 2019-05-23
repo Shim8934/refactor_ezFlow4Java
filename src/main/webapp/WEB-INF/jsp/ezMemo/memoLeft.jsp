@@ -118,8 +118,8 @@
 	            		span2.setAttribute("class", "node_selected");
 	            		span2.setAttribute("onclick", "memoClick(this);");
 	            		span2.setAttribute("folderId", "0");
-	            		span2.setAttribute("folderName", strLangMemo20);
-	            		span2.innerHTML = strLangMemo20;
+	            		span2.setAttribute("folderName", memoMessages.strLangMemo20);
+	            		span2.innerHTML = memoMessages.strLangMemo20;
 	            		
 	            		li.appendChild(span1);
 	            		li.appendChild(span2);

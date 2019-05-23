@@ -162,7 +162,7 @@ function addRemoveButton(memoId) {
 	
 	var popHeader = document.createElement('div');
 	popHeader.setAttribute("class", "memoPopHeader");
-	popHeader.innerHTML = "<span>"+strLangMemo4+"</span>";
+	popHeader.innerHTML = "<span>"+memoMessages.strLangMemo4+"</span>";
 	
 	var popContainer = document.createElement('div');
 	popContainer.setAttribute("class", "popContainer");
@@ -172,7 +172,7 @@ function addRemoveButton(memoId) {
 	
 	var footBtn = document.createElement('p');
 	footBtn.setAttribute("class", "footBtn");
-	//footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' onclick='modalDelete("+ memoId +")'>"+strLangMemo5+"</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' onclick=$('#modal"+memoId+"').remove()>"+strLangMemo6+"</span></div>";
+	//footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' onclick='modalDelete("+ memoId +")'>"+memoMessages.strLangMemo5+"</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' onclick=$('#modal"+memoId+"').remove()>"+memoMessages.strLangMemo6+"</span></div>";
 	
 	var div = document.createElement("div");
 	div.setAttribute("class", "modRm-wrap");
@@ -181,7 +181,7 @@ function addRemoveButton(memoId) {
 	span.setAttribute("class", "modRm");
 	span.setAttribute("id", "modRm"+memoId);
 	span.setAttribute("onclick", "modalDelete("+memoId+")");
-	span.innerHTML = strLangMemo5;
+	span.innerHTML = memoMessages.strLangMemo5;
 
 	var div2 = document.createElement("div");
 	div2.setAttribute("class", "close-wrap");
@@ -190,7 +190,7 @@ function addRemoveButton(memoId) {
 	span2.setAttribute("class", "close");
 	span2.setAttribute("id", "close"+memoId);
 	span2.setAttribute("onclick", "$('#modal"+memoId+"').remove()");
-	span2.innerHTML = strLangMemo6;
+	span2.innerHTML = memoMessages.strLangMemo6;
 	
 	div.appendChild(span);
 	div2.appendChild(span2);
@@ -289,7 +289,7 @@ function memoFoldersInfo() {
 			
 			var folderList = result["folders"];
 			var html="";
-			html += "<option value='0'>"+ strLangMemo9 +"</option>";
+			html += "<option value='0'>"+ memoMessages.strLangMemo9 +"</option>";
 			folderList.forEach(function(list, index){
 				var folderName = list.folder_name;
 				
@@ -333,7 +333,7 @@ function addEmptyMemo(flag) {
 	if(flag != 'layer') {		// 메모 게시판 게시물 없을 때
 		var div = document.createElement("div");
 		div.setAttribute("class", "emptyDiv");
-		div.innerHTML = "<dl class='nodata_sIcon'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + strLangMemo7 + "</dd></dl>";		
+		div.innerHTML = "<dl class='nodata_sIcon'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + memoMessages.strLangMemo7 + "</dd></dl>";		
 		
 		$("#boardMemoList").parent().prepend(div);
 		
@@ -346,7 +346,7 @@ function addEmptyMemo(flag) {
 		div.setAttribute("class", "memo_add");
 		div.id = "addFirstMemo";
 		var span = document.createElement("span");
-		span.innerHTML = strLangMemo7;
+		span.innerHTML = memoMessages.strLangMemo7;
 		
 		div.appendChild(span);
 		

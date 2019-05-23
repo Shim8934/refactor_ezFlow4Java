@@ -1,21 +1,16 @@
-// var strLangMemo1 = "선택된 영역이 없습니다.";
-// var strLangMemo2 = "메모를 추가하였습니다.";
-// var strLangMemo3 = "メモの追加に失敗しました。";
-var strLangMemo4 = "選択したメモを削除してよろしいですか？";
-var strLangMemo5 = "확인";
-var strLangMemo6 = "취소";
-var strLangMemo7 = "データが存在しません";
-// var strLangMemo8 = "저장했습니다";
-var strLangMemo9 = "すべてのメモ";
-var strLangMemo10 = "검색 조건이 없습니다.";
-var strLangMemo11 = "검색기간의 종료일을 지정해 주세요.";
-var strLangMemo12 = "검색기간의 시작일을 지정해 주세요.";
-var strLangMemo13 = "검색 시작일을 종료일보다 빠르게 지정해 주십시오.";
-var strLangMemo14 = "는 검색어로 사용할 수 없습니다.";
-var strLangMemo15 = "총";
-var strLangMemo16 = "개";
-var strLangMemo17 = "メモを選択してください。";
-var strLangMemo18 = "選択したメモを削除してよろしいですか？";
-// var strLangMemo19 = "복사되었습니다.";
-var strLangMemo20 = "すべてのメモ";
-var strLangMemo21 = "エラーが発生しました。";
+var memoMessages = {
+	strLangMemo4 : "選択したメモを削除してよろしいですか？",
+	strLangMemo5 : "확인",
+	strLangMemo6 : "취소",
+	strLangMemo7 : "データが存在しません",
+	strLangMemo9 : "すべてのメモ",
+	strLangMemo10 : "검색 조건이 없습니다.",
+	strLangMemo11 : "검색기간의 종료일을 지정해 주세요.",
+	strLangMemo12 : "검색기간의 시작일을 지정해 주세요.",
+	strLangMemo13 : "검색 시작일을 종료일보다 빠르게 지정해 주십시오.",
+	strLangMemo14 : "는 검색어로 사용할 수 없습니다.",
+	strLangMemo17 : "メモを選択してください。",
+	strLangMemo18 : "選択したメモを削除してよろしいですか？",
+	strLangMemo20 : "すべてのメモ",
+	strLangMemo21 : "エラーが発生しました。",
+}

@@ -41,7 +41,7 @@ function getMemoSortable() {
         				}
         			},
             		error : function() {
-            			alert(strLangMemo21);
+            			alert(memoMessages.strLangMemo21);
                 	}
         		 });
         	 }
@@ -64,7 +64,7 @@ function getMemoConfig() {
 				defaultColor = result.memoConfigVO.default_color;
 			},
     		error : function() {
-    			alert(strLangMemo21);
+    			alert(memoMessages.strLangMemo21);
         	}
 		});
 }
@@ -79,7 +79,7 @@ function getFolderList() {
 		async : false,
 			url : '/ezMemo/getMemoFoldersInfo.do',
 			success : function(result){
-				var opts = "<option value='0'>"+ strLangMemo9 +"</option>";;
+				var opts = "<option value='0'>"+ memoMessages.strLangMemo9 +"</option>";;
 				$(result.folders).each(function() {
 					var folderName = this.folder_name;
 					if (folderName.length > 11) {
@@ -91,7 +91,7 @@ function getFolderList() {
 				$("#memoType").html(opts);
 			},
     		error : function() {
-    			alert(strLangMemo21);
+    			alert(memoMessages.strLangMemo21);
         	}
 	  });
 }
@@ -132,7 +132,7 @@ function newMemo() {
         	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
         },
 		error : function() {
-			alert(strLangMemo21);
+			alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -162,7 +162,7 @@ function modifyMemoColor(obj, idx) {
 	    	checkAndActionBigMemo(memoId, idx);
 	    },
 		error : function() {
-			alert(strLangMemo21);
+			alert(memoMessages.strLangMemo21);
     	}
 	}); 
 }
@@ -191,7 +191,7 @@ function modifyMemo(obj) {
         	parent.parent.setContents(size, memoId, afterContents);	//큰 메모의 새로고침
         },
 		error : function() {
-			alert(strLangMemo21);
+			alert(memoMessages.strLangMemo21);
     	}
 	}); 
 }
@@ -218,7 +218,7 @@ function hideMemo(obj) {
         	checkAndActionBigMemo(memoId);
         },
 	  	error : function() {
-	  			alert(strLangMemo21);
+	  			alert(memoMessages.strLangMemo21);
 	    }
 	});
 }
@@ -251,7 +251,7 @@ function modalDelete(memoId) {
         	
         },
 		error : function() {
-			alert(strLangMemo21);
+			alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -292,24 +292,24 @@ function getMemoList(type) {
 		endDate = $("#Edatepicker").val();
 
 		if(searchInput == "" && startDate == "" && endDate == "") {
-			 alert(strLangMemo10);
+			 alert(memoMessages.strLangMemo10);
              return;
 		}
 		if(startDate != "" && endDate == "") {
-			alert(strLangMemo11);	
+			alert(memoMessages.strLangMemo11);	
             return;
 		}
 		if(startDate == "" && endDate != "") {
-			alert(strLangMemo12);	
+			alert(memoMessages.strLangMemo12);	
             return;
 		}
 		if(startDate > endDate) {
-			alert(strLangMemo13);
+			alert(memoMessages.strLangMemo13);
             return;
 		}
 		
 		if (searchInput.indexOf("%") != -1) {
-            alert("'%'" + strLangMemo14);
+            alert("'%'" + memoMessages.strLangMemo14);
             return;
         }
 		
@@ -341,7 +341,7 @@ function getMemoList(type) {
 			setMemoCount(memoList.length);
 	     },
  		error : function() {
- 			alert(strLangMemo21);
+ 			alert(memoMessages.strLangMemo21);
     	}
 	});
 }
@@ -366,11 +366,11 @@ function DeleteItem_onclick() {
 	});
 	
 	if (memo_ids.length == 0) {
-    	alert(strLangMemo17);
+    	alert(memoMessages.strLangMemo17);
         return;
     }
 	
-	if(confirm(strLangMemo18)) {
+	if(confirm(memoMessages.strLangMemo18)) {
     	$.ajax ({
 			url : '/ezMemo/memoDelete.do',
 			type : 'POST',
@@ -391,7 +391,7 @@ function DeleteItem_onclick() {
             	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
             },
     		error : function() {
-    			alert(strLangMemo21);
+    			alert(memoMessages.strLangMemo21);
         	}
 		});
 	}
@@ -414,7 +414,7 @@ function memoDisplayChange() {
 	});
 	
 	if (checkList.length == 0) {
-    	alert(strLangMemo17);
+    	alert(memoMessages.strLangMemo17);
         return;
     }
 	
@@ -432,7 +432,7 @@ function memoDisplayChange() {
                 parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
             },
     		error : function() {
-    			alert(strLangMemo21);
+    			alert(memoMessages.strLangMemo21);
         	}
 		}); 
 	}
@@ -458,7 +458,7 @@ function memoDisplayChange2() {
 	});
 	
 	if (checkList.length == 0) {
-    	alert(strLangMemo17);
+    	alert(memoMessages.strLangMemo17);
         return;
     }
 	
@@ -476,7 +476,7 @@ function memoDisplayChange2() {
                 parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
             },
     		error : function() {
-    			alert(strLangMemo21);
+    			alert(memoMessages.strLangMemo21);
         	}
 		}); 
 	}
@@ -496,7 +496,7 @@ function memoMove() {
 	});
 	
 	if (memo_ids.length == 0) {
-    	alert(strLangMemo17);
+    	alert(memoMessages.strLangMemo17);
         return;
     }
 	
@@ -542,7 +542,7 @@ function getMemoDetail(memoId) {
     		parent.parent.setBeforeMemo(beforeMemo);	// 포탈jsp에 있는 beforeMemo 변수 값 수정, 포탈에서 큰 메모 열었을 때 값 비교 때문
     	},
 		error : function() {
-			alert(strLangMemo21);
+			alert(memoMessages.strLangMemo21);
     	}
     });
 }
