@@ -59,6 +59,8 @@
 	        var iframeH = "";
 	        var deptID = "${deptID}";
 	        var cmd = "${cmdStr}";
+	        var resReturnFlag = "<c:out value='${resReturnFlag}'/>";
+	        var returnFlag = "<c:out value='${returnFlag}'/>";
 	        
 	        window.onload = function () {
 	            document.getElementById("displayNM").innerHTML = "<a onClick=MemberInfo_onClick('" + writerIDVal +"','" + deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
@@ -383,6 +385,51 @@
 	            document.getElementById("printItem").textContent = document.getElementById("itemList").textContent;
 	            document.getElementById("printTitle").textContent = document.getElementById("titleDIV").textContent;
 	        }
+	        
+	        function SetReturnFlag(pFlag) {
+	        	var msg = ""
+	            if (pFlag == "2") {
+	                msg = "" + strLang331 + "";
+	            } else if(pFlag == "1"){
+	                msg = "" + strLang332 + "";
+	            } else {
+	            	msg = "" + strLang333 + "";
+	            }
+	        	
+	        	var result = confirm(msg);
+	            if (result) {
+	            	var xmlHTTP = createXMLHttpRequest();
+	                var xmlDOM = createXmlDom();
+	                var objNode;
+
+	                createNodeInsert(xmlDOM, objNode, "DATA");
+	                createNodeAndInsertText(xmlDOM, objNode, "COMPANYID", ss_companyID);
+	                createNodeAndInsertText(xmlDOM, objNode, "RESID", document.getElementById("ownerID").value);
+	                createNodeAndInsertText(xmlDOM, objNode, "NUM", document.getElementById("num").value);
+	                createNodeAndInsertText(xmlDOM, objNode, "RETURN", pFlag);
+
+	                xmlHTTP.open("POST", "/ezResource/updateReturnFlag.do", false);
+	                xmlHTTP.send(xmlDOM);
+	                
+	                var rtnValue = xmlHTTP.responseText;
+	                
+	                if(pFlag == 2) {
+	                	alert(strLang334);
+	                }
+	                else {
+	                	alert(strLang335);
+	                } 
+	               
+	                xmlHTTP = null;
+	                xmlDOM = null;
+	                
+	                
+	                if (window.opener != null) {
+	                    window.opener.btnRefresh_onclick();
+	                }
+	                window.close();
+	            }
+	        }
 
 	        function SetApproval_onClick2(pCmd, pFlag) {
 	            var msg = ""
@@ -489,31 +536,39 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                        	<c:if test="${adminFg eq 'Y' || writerID eq userInfo.id}">
-                        		<li id="btn_modify"><span onclick="btn_modify()"><spring:message code="ezResource.t54" /></span></li>
-                        	</c:if>
-	                        
-							<c:if test = "${typeVal ne 'Readonly'}">
-								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}">
-									<c:choose>
-										<c:when test="${saveApproveFlag eq '1'}">
-                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 0)"> <spring:message code='ezResource.t190' /></span></li>
-										</c:when>
-										<c:when test="${saveApproveFlag eq '2'}">
-                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 1)"> <spring:message code='ezResource.t191' /></span></li>
-										</c:when>
-										<c:otherwise>
-                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 1)"> <spring:message code='ezResource.t191' /></span></li>
-                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 2)">승인거부</span></li>
-										</c:otherwise>
-									</c:choose>
+                	    	<c:if test= "${approveFlag ne '2' }">
+	                        	<c:if test="${adminFg eq 'Y' || writerID eq userInfo.id}">
+	                        		<li id="btn_modify"><span onclick="btn_modify()"><spring:message code="ezResource.t54" /></span></li>
+	                        	</c:if>
+		                        
+								<c:if test = "${typeVal ne 'Readonly'}">
+									<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}">
+										<c:choose>
+											<c:when test="${saveApproveFlag eq '1'}">
+	                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 0)"> <spring:message code='ezResource.t190' /></span></li>
+											</c:when>
+											<c:when test="${saveApproveFlag eq '2'}">
+	                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 1)"> <spring:message code='ezResource.t191' /></span></li>
+											</c:when>
+											<c:otherwise>
+	                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 1)"> <spring:message code='ezResource.t191' /></span></li>
+	                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 2)"> <spring:message code='ezResource.kmsr22' /></span></li>
+											</c:otherwise>
+										</c:choose>
+									</c:if>
 								</c:if>
-							</c:if>
-							
-							<c:if test="${adminFg eq 'Y' || writerID eq userInfo.id}">
-                        		<li id="deletebtbn"><span class="icon16 popup_icon16_delete" onclick="delSchedule_onClick('${num}','${ownerID}')"></span></li>
+								<c:if test="${writerID eq userInfo.id && resReturnFlag eq '1' && returnFlag eq '1'}">
+									<li><span onclick="SetReturnFlag(2)"> <spring:message code='ezResource.kmsr26' /></span></li>
+								</c:if>
+								
+								<c:if test="${adminFg eq 'Y' && resReturnFlag eq '1' && returnFlag eq '2'}">
+									<li><span onclick="SetReturnFlag(0)"> <spring:message code='ezResource.kmsr27' /></span></li>
+								</c:if>
+								
+								<c:if test="${adminFg eq 'Y' || writerID eq userInfo.id}">
+	                        		<li id="deletebtbn"><span class="icon16 popup_icon16_delete" onclick="delSchedule_onClick('${num}','${ownerID}')"></span></li>
+	                        	</c:if>
                         	</c:if>
-                        	
                         	<li><span class="icon16 popup_icon16_print" onclick="print_onClick2( false )"></span></li>
                     	</ul>
                 	</div>

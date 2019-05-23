@@ -338,6 +338,11 @@
 	    }
 
 	    function newSchedule_onclick(e) {
+	    	if(ApproveFlag == 2) {
+	    		alert(strLang336);
+	    		return;
+	    	}
+	    	
 	        var srcEl;
 
 	        if (CrossYN()) {
