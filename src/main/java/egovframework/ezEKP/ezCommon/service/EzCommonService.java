@@ -129,6 +129,8 @@ public interface EzCommonService {
 	public void addComCloseCompanyId() throws Exception;
 
 	public void addWebfolderTotalLimit() throws Exception;
+	
+	public void addFormVersion() throws Exception;
 
 	public void addMemoExtensionColumns() throws Exception;
 
