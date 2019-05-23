@@ -808,13 +808,14 @@ public class EzMemoGWController {
 		return result;
 	}
 	
-	/**
+	/** 사용하지 않는 기능
 	 * 다른 모듈에서 메모 추가 method
 	 * @param userId
 	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
+	/*
 	@RequestMapping(value = "/rest/ezMemo/moduleCopy/users/{userId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwOtherModuleCopy(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/moduleCopy/users/" + userId + "] started.");
@@ -855,7 +856,7 @@ public class EzMemoGWController {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/moduleCopy/users/" + userId + "] ended.");
 		return result;
 	}
-	
+	*/
 	/**
 	 * 메모 색상 변경 method
 	 * @param memoId

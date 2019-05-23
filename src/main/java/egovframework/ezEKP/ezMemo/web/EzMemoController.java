@@ -717,7 +717,7 @@ public class EzMemoController {
 		return "json";
 	}
 	
-	/**
+	/** 사용하지 않는 기능
 	 * 다른 모듈에서 메모 추가
 	 * @param loginCookie
 	 * @param request
@@ -726,6 +726,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
+	/*
 	@RequestMapping(value = "/ezMemo/otherModuleCopy.do", method = RequestMethod.POST)
 	public String otherModuleCopy(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String contents) throws Exception {
 		logger.debug("otherModuleCopy started");
@@ -744,7 +745,7 @@ public class EzMemoController {
 		logger.debug("otherModuleCopy ended");
 		return "json";
 	}
-	
+	*/
 	/**
 	 * 메모 색상 변경 method
 	 * @param loginCookie
