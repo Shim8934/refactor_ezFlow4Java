@@ -1131,9 +1131,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        			isSecureMail = orgMessage.getHeader("X-JMocha-Secure-Mail")[0];
 		        		}
 		        		
-		        		//set bodyType
-		        		bodyType = ezEmailUtil.isHtmlMessage(orgMessage) ? "0" : "1";
-		        		
 		        		if (orgMessage.getHeader("Return-Receipt-To") != null) {
 		        			replySendTime = "1";
 		        		} else {
@@ -1152,6 +1149,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		logger.debug("EDIT MODE : set mail option end");
 		        	}
+		        	
+		        	//set bodyType
+	        		bodyType = ezEmailUtil.isHtmlMessage(orgMessage) ? "0" : "1";
 				}
 				orgFolder.close(true);
 				
