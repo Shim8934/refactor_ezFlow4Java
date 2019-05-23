@@ -507,13 +507,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     		}
     		
         	//set bodyType
-        	if (message.getHeader("Content-Type") != null) {
-        		String tempBodyType = ezEmailUtil.getTextPart(message).get(1);
-        		
-        		if(tempBodyType.equals("text/plain")) {
-        			bodyType = "1";
-        		}
-    		}
+    		bodyType = ezEmailUtil.isHtmlMessage(message) ? "0" : "1";
         	
         	if (message.getHeader("Return-Receipt-To") != null) {
         		replySendTime = "1";
