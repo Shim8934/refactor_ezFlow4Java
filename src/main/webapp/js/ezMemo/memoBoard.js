@@ -36,7 +36,7 @@ function getMemoSortable() {
         			dataType : "JSON",
         			url : "/ezMemo/reOrder.do",
         			success : function(result) {
-        				if (result.status == 1) {
+        				if (result.status === 'ok') {
 	        				parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
         				}
         			},
