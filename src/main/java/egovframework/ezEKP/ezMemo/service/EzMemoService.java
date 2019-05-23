@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezMemo.service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
@@ -102,7 +103,7 @@ public interface EzMemoService {
 	 * @param MemoFolderVO
 	 * @throws Exception
 	 */
-	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception;
+	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO, Locale locale) throws Exception;
 	
 	/**
 	 * User가 가진 기본메모함의 folderID 정보를 가져온다.

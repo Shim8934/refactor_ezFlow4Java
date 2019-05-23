@@ -583,7 +583,7 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/check/users/" +userInfo.getId(), param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/check/locale/" + userInfo.getLocale() + "/users/" +userInfo.getId(), param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if ("ok".equals(status)) {

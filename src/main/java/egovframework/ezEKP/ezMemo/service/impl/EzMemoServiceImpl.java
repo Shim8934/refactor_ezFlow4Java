@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezMemo.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -246,13 +247,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.c
 
 	
 	@Override
-	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO) throws Exception {
+	public void setDefualtMemoFolder(MemoFolderVO memoFolderVO, Locale locale) throws Exception {
 		logger.debug("setDefaultMemoFolder started");
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("user_id", memoFolderVO.getUser_id());
 		map.put("tenant_id", memoFolderVO.getTenant_id());
 		map.put("company_id", memoFolderVO.getCompany_id());
-		map.put("folder_name", "기본메모함");
+		map.put("folder_name", egovMessageSource.getMessage("ezMemo.t0065", locale));
 		map.put("reg_date", commonUtil.getTodayUTCTime(""));
 		map.put("orders", 0);
 		map.put("delete_flag", 0);

@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezMemo.web;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -594,8 +595,8 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/folders/check/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject hasMemoFolder(@PathVariable String userId, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/rest/ezMemo/folders/check/locale/{locale}/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject hasMemoFolder(@PathVariable String userId, @PathVariable Locale locale, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/folders/check started.");
 		
 		JSONObject result = new JSONObject();
@@ -610,7 +611,7 @@ public class EzMemoGWController {
 			
 			int hasMemoFolder = ezMemoService.hasMemoFolder(memoFolderVO);
 			if(hasMemoFolder==0) {
-				ezMemoService.setDefualtMemoFolder(memoFolderVO);
+				ezMemoService.setDefualtMemoFolder(memoFolderVO, locale);
 			}
 			result.put("status", "ok");
 			result.put("code", 0);
