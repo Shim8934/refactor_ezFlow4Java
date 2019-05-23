@@ -217,3 +217,16 @@ var strLangkmsr02 = "자원관리자는 사용자 또는 관리자 권한이 있
 
 //2019-05-14
 var strLangkmsr03 = "Would you like to refuse approval?"
+var strLang321 = "Pending";
+var strLang322 = "Refuse";
+var strLang323 = "Approve";
+var strLang324 = "Rent";
+var strLang325 = "Return";
+var strLang326 = "Non-Return";
+var strLang327 = "End";
+var strLang331 = "Would you like to request a return?";
+var strLang332 = "Are you sure you want to approve the return request?";
+var strLang333 = "Would you like to return it?";
+var strLang334 = "Your return request has been completed.";
+var strLang335 = "Returned.";
+var strLang336 = "If the resource is set to disabled, it can not be scheduled.";
