@@ -120,6 +120,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", tenantId);
+		String usePlainForDefaultTextOption = ezCommonService.getTenantConfig("usePlainForDefaultTextOption", tenantId);
 		String userIdParam = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
 		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
 		String inputParams = userIdParam + "&" + usePreviewSubTreeParam;
@@ -135,6 +136,15 @@ public class EzEmailServiceImpl implements EzEmailService {
         	JSONObject obj = (JSONObject)object.get("result");
         	if (obj != null) {
         		MailGeneralVO mailGeneral = new MailGeneralVO();
+        		String textOption = (String)obj.get("textOption");
+        		
+        		if (textOption == null) {
+        			if (usePlainForDefaultTextOption.equalsIgnoreCase("YES")) {
+        				textOption = "PLAIN";
+        			} else {
+        				textOption = "HTML";
+        			}
+        		}
         		
         		mailGeneral.setListCount((String)obj.get("listCount"));
         		mailGeneral.setRefreshInterval((String)obj.get("refreshInterval"));
@@ -146,7 +156,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setPreviewHContent((String)obj.get("previewHContent"));
         		mailGeneral.setMailSenderNm((String)obj.get("mailSenderName"));
         		mailGeneral.setPreviewSubTree((String)obj.get("previewSubTree"));
-        		mailGeneral.setTextOption((String)obj.get("textOption"));
+        		mailGeneral.setTextOption(textOption);
         		
         		mailGeneralList.add(mailGeneral);
         	}
@@ -155,6 +165,12 @@ public class EzEmailServiceImpl implements EzEmailService {
         // set the defaults if there is no record in DB.
 		if (mailGeneralList.size() == 0) {
 			MailGeneralVO mailGeneral = new MailGeneralVO();
+			String textOption = "HTML";
+			
+			if (usePlainForDefaultTextOption.equalsIgnoreCase("YES")) {
+				textOption = "PLAIN";
+			}
+			
 			mailGeneral.setListCount("30");
 			mailGeneral.setRefreshInterval("300");
 			mailGeneral.setKeepDeleteLength("0");
@@ -165,7 +181,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setPreviewHContent("50");
 			mailGeneral.setMailSenderNm("");
 			mailGeneral.setPreviewSubTree("N");
-			mailGeneral.setTextOption("HTML");
+			mailGeneral.setTextOption(textOption);
 			
 			mailGeneralList.add(mailGeneral);
 		}
