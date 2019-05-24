@@ -22,6 +22,8 @@
 		    var usernm = "${userNM}";
 		    var usernm2 = "${userNM2}";
 		    var useAddressOpenAPI = "${useAddressOpenAPI}";
+		    var deptAdmin = "${deptAdmin}";
+		    var compAdmin = "${compAdmin}";
 		    var xmlHttpAddressTree;
 		    var closeAlertMsg = "<spring:message code='ezAddress.t337' />";
 		    window.onload = function () {
@@ -205,6 +207,14 @@
 		        if (pTextName.indexOf('<') != -1 || pTextName.indexOf('>') != -1 || pTextName.indexOf(';') != -1) {
 		        	document.getElementById("TextName").focus();
 		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
+		        	return;
+		        }
+		        
+		        if (foldertype == "D" && deptAdmin != "Y") {
+		        	alert("<spring:message code='ezAddress.t999900003' />");
+		        	return;
+		        } else if (foldertype == "C" && compAdmin != "Y") {
+		        	alert("<spring:message code='ezAddress.t999900004' />");
 		        	return;
 		        }
 		        
