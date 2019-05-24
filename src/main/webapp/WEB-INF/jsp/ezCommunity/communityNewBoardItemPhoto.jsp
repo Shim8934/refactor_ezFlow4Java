@@ -100,7 +100,7 @@
 		        var filename = "";
 		        var filepath = "";
 	
-		        xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(strItemID), false);
+		        xmlhttp.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(strItemID), false);
 		        xmlhttp.send();
 	
 		        xmldom.async = false;

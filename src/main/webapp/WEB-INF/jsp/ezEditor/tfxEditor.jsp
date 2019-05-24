@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -9,7 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>.xfeToolbar {border-top-left-radius : 0px !important; border-top-right-radius : 0px !important;}</style>
 		<script  type="text/javascript">
-			var type = "${type}";
+			var type = "<c:out value='${type}'/>";
 			var editorLoadFlag = false;
 			
 			function SetEditorContent(Data) {
@@ -197,11 +198,11 @@
 	</head>
 	<body style="margin: 0px; padding: 0px; overflow: hidden;" id="xfe">
 	    <script type="text/javascript">
-	    	var userLang = "${userInfo.lang}";
+	    	var userLang = "<c:out value='${userInfo.lang}'/>";
 	    	var lang = "";
-	    	var useHTMLMode = "${useHTMLMode}";
-	    	var defaultFontFamily = "${defaultFontFamily}";
-			var defaultFontSize = "${defaultFontSize}";
+	    	var useHTMLMode = "<c:out value='${useHTMLMode}'/>";
+	    	var defaultFontFamily = "<c:out value='${defaultFontFamily}'/>";
+			var defaultFontSize = "<c:out value='${defaultFontSize}'/>";
 			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			
 	    	switch (userLang) {

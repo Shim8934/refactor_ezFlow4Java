@@ -33,7 +33,7 @@
 		var userId = "<c:out value='${userId}'/>";
 		var userName = "<c:out value='${userName}'/>";
 		var folderId = "";
-		var folderType = "${folderType}";
+		var folderType = "<c:out value='${folderType}'/>";
 		var folderName1 = "";
 		var folderName2 = "";
 		var drawVolume = "";

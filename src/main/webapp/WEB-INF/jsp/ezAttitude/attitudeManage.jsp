@@ -519,7 +519,7 @@
 	    		layerHidden();
 	    		
 	    		$.ajax({
-	    			data : "GET",
+	    			type : "POST",
 	    			dataType : "json",
 	    			async : false,
 	    			url : "/ezAttitude/attitudeHistoryList.do",

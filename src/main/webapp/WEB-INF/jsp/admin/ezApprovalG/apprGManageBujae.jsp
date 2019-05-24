@@ -20,20 +20,20 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<script type="text/javascript">
-			var deptid = "${deptID}";
-			var userid = "${userID}";
-			var startdate = "${startDate}";
-			var enddate = "${endDate}";
-			var orguserid = "${userInfo.id}";
-			var BReason = "${bReason}";
+			var deptid = "<c:out value='${deptID}'/>";
+			var userid = "<c:out value='${userID}'/>";
+			var startdate = "<c:out value='${startDate}'/>";
+			var enddate = "<c:out value='${endDate}'/>";
+			var orguserid = "<c:out value='${userInfo.id}'/>";
+			var BReason = "<c:out value='${bReason}'/>";
 			var gIsAppoint = "1";
 			var gIsProxyUser = false;
-			var proxydeptid = "${proxyDeptID}";
-			var proxyuserid = "${proxyUserID}";
+			var proxydeptid = "<c:out value='${proxyDeptID}'/>";
+			var proxyuserid = "<c:out value='${proxyUserID}'/>";
 			var proxystartdate = "";
 		    var proxyenddate = "";
-		    var Roll = "${userInfo.rollInfo}";
-		    var approvalFlag = "${approvalFlag}";
+		    var Roll = "<c:out value='${userInfo.rollInfo}'/>";
+		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		    var buJaeId = "";
 		    var buJaedeptid = "";
 		    var proxybuJaeId = "";
@@ -64,9 +64,10 @@
 		            nowDate2.setMonth(nowDate2.getMonth());
 		            $("#Sdatepicker").datepicker('setDate', nowDate);
 		            $("#Edatepicker").datepicker('setDate', nowDate2);
-		            document.getElementById("absentreason").value = BReason;            
 		            gIsAppoint = "1";
 		        } */
+		            document.getElementById("absentreason").value = BReason;            
+		        
 		        if (proxystartdate != "") {
 		            gIsProxyUser = true;
 		        }
@@ -92,7 +93,7 @@
 		            buttonImageOnly: true
 		        });
 		        
-		    	var uploadSDate = "${startDate}";
+		    	var uploadSDate = "<c:out value='${startDate}'/>";
 
 	        	var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
@@ -100,7 +101,7 @@
 				var sHour = uploadSDate.substring(11, 13);
 				var sMin = uploadSDate.substring(14, 16);
 
-				var uploadEDate = "${endDate}";
+				var uploadEDate = "<c:out value='${endDate}'/>";
 				var eYear = uploadEDate.substring(0, 4);
 				var eMonth = uploadEDate.substring(5, 7);
 				var eDay = uploadEDate.substring(8, 10);
@@ -333,7 +334,7 @@
 		    function check_enddate() {
 		        if (!gIsAppoint && document.getElementById("TextName").value == "")
 		            return false;
-		        var initdate = "${initDate}";
+		        var initdate = "<c:out value='${initDate}'/>";
 		        var strCurrDate = initdate.substr(0, 10);
 		        var strStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        var strEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
@@ -384,7 +385,7 @@
 		
 		        if (gIsAppoint != '2') {
 		        	/* document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>"*/
-		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
+		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
 		                alert("<spring:message code='ezPersonal.t36'/>");
 		                return;
 		            }
@@ -615,7 +616,7 @@
 						<th><spring:message code='ezPersonal.t42'/></th>
 						<td>
 							<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
-								<OPTION selected value="<spring:message code='ezPersonal.t35'/>"></OPTION>
+								<OPTION selected value=""></OPTION>
 								<OPTION value="b1"><spring:message code='ezPersonal.b1'/></OPTION>
 								<OPTION value="b2"><spring:message code='ezPersonal.b2'/></OPTION>
 								<OPTION value="b3"><spring:message code='ezPersonal.b3'/></OPTION>

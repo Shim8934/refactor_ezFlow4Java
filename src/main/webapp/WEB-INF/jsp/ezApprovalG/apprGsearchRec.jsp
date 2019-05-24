@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -28,7 +30,7 @@
 		    var rtnVal = new Array();
 		    var g_AdminYN,g_DeptCode, g_DeptName;
 		    var g_SelChargerID="";
-		    var CompanyID = "${userInfo.companyID}";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
 		    var opnOption = "0";
 		    var RetValue;
 		    var ReturnFunction;

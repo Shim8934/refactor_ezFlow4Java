@@ -1584,6 +1584,8 @@
 		        	if(userId.substring(0, 14) == "anonyAttendant") {
 		        		userName = totalRows[i].getElementsByTagName("input")[0].value;
 		        		userName2 = totalRows[i].getElementsByTagName("input")[0].value;
+		        		description = "";
+		        		description2 = "";
 		        	} else {
 		        		userName = GetAttribute(totalRows[i], "DATA2");
 			        	userName2 = GetAttribute(totalRows[i], "DATA3");

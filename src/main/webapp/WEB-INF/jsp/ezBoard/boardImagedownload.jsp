@@ -10,7 +10,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	        var ImageCount = "${imageCount}";
-	        var BoardID = "${boardID}";
+	        var BoardID = "<c:out value='${boardID}'/>";
 	        var ImageID = "";
 	        var DelCount = 0;
 	        var ImageFilePath = "";

@@ -98,9 +98,10 @@
 		    function btnClose_onclick() {
 		        window.close();
 		    }
-				
+		    
+		    /* 2019-02-20 홍승비 - 커뮤니티 CSRF 수정 (단순 호출 작동 시 get방식 사용 )*/
 		    function btn_Reply_Onclick() {
-		        document.re.submit();
+		    	window.location.href = "/ezCommunity/board/bbsEditNew.do?mode=write&bName=${bName}&no=${grsNo}&head=${strTitle}&step=${myStep}&level=${myLevel}&ref=${grsRef}&pagec=${pagec}";
 		    }
 				
 		    function btn_Modify_Onclick() {
@@ -241,16 +242,7 @@
   			</tr>
   			<!-- 2018-05-04 홍승비 - 그룹게시판 다음글, 이전글 테이블 삭제 -->			
 		</table>
-                
-		<form style="display:none" name="re" method="post" action="/ezCommunity/board/bbsEditNew.do?mode=write&bName=<c:out value='${bName}'/>">
-			<input type="hidden" name="no" value="<c:out value='${grsNo}'/>">
-			<input type="hidden" name="head" value="<c:out value='${strTitle}'/>">
-			<input type="hidden" name="step" value="<c:out value='${myStep}'/>">
-			<input type="hidden" name="level" value="<c:out value='${myLevel}'/>">
-			<input type="hidden" name="ref" value="<c:out value='${grsRef}'/>">
-			<input type="hidden" name="pagec" value="<c:out value='${pagec}'/>">
-		</form>
-		
+				
 		<form style="display:none" method="post" name="del" action="/ezCommunity/board/bbsDelOk.do">
 			<input type=hidden name=grsNo value="<c:out value='${grsNo}'/>">
 			<input type=hidden name=goToPage value="<c:out value='${pagec}'/>">

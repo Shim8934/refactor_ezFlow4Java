@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -123,7 +124,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 
         try {
 	        filePath = realPath + filePath;
-	        File file = new File(filePath);
+	        File file = new File(commonUtil.detectPathTraversal(filePath));
 	        is = new FileInputStream(file);
 	        
 	        IOUtils.copy(is,response.getOutputStream());
@@ -224,7 +225,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	private String createBoundary() throws Exception{
         String strBoundary = "Boundary-=_";
-        Random Rnd = new Random();
+        SecureRandom Rnd = new SecureRandom();
 
         while (strBoundary.length() < 39) {
             int nch = Rnd.nextInt(9)+1; 
@@ -430,7 +431,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         			String extension = null;
         	        BufferedInputStream bis = null;
         	        
-        	        File f = new File(realPath + strResource);
+        	        File f = new File(commonUtil.detectPathTraversal(realPath + strResource));
         	        
         	        try {
         		        bis = new BufferedInputStream(new FileInputStream(f));
@@ -662,7 +663,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     			String extension = null;
     	        BufferedInputStream bis = null;
     	        
-    	        File f = new File(realPath + commonUtil.separator + strResource);
+    	        File f = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + strResource));
     	        
     	        try {
     		        bis = new BufferedInputStream(new FileInputStream(f));
@@ -719,7 +720,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			String contentType = null;
 			String extension = null;
 	        BufferedInputStream bis = null;
-	        File f = new File(realPath + m_ImageList[i]);
+	        File f = new File(commonUtil.detectPathTraversal(realPath + m_ImageList[i]));
 	        
 	        try {
 		        bis = new BufferedInputStream(new FileInputStream(f));
@@ -791,18 +792,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             } else {
             	try {
-            		File file = new File(realPath + m_ImageList[i]);
+            		File file = new File(commonUtil.detectPathTraversal(realPath + m_ImageList[i]));
             		in = new FileInputStream(file);
 				} catch (Exception e) {
 					try {
 						logger.debug("not found image(" + m_ImageList[i] + ") :::" + e.getMessage());
-						File file = new File(m_ImageList[i]);
+						File file = new File(commonUtil.detectPathTraversal(m_ImageList[i]));
 						in = new FileInputStream(file);
 						// 이미지 못찾을떄 사진없음 이미지 보여주기
 					} catch (FileNotFoundException e2) {
 						logger.debug("change default image" + e2.getMessage());
 						
-						in = new FileInputStream(realPath + "/images/default_pic.jpg");
+						in = new FileInputStream(commonUtil.detectPathTraversal(realPath + "/images/default_pic.jpg"));
 					}
 				}
                 int len = 0;
@@ -844,7 +845,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			String contentType = null;
 			String extension = null;
 	        BufferedInputStream bis = null;
-	        File f = new File(realPath + commonUtil.separator + m_BackImageList[i]);
+	        File f = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + m_BackImageList[i]));
 	        
 	        try {
 		        bis = new BufferedInputStream(new FileInputStream(f));
@@ -877,7 +878,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             if (strTemp.equals("http")) {
             	m_BackImageList[i] = m_BackImageList[i].substring(m_BackImageList[i].indexOf("/fileroot/"));
             	
-            	File file = new File(realPath + m_BackImageList[i]);
+            	File file = new File(commonUtil.detectPathTraversal(realPath + m_BackImageList[i]));
             	in = new FileInputStream(file);
             	int len = 0;
             	byte[] buf = new byte[1024];
@@ -899,7 +900,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             } else {
             	realPath = realPath + commonUtil.separator;
             	
-            	File file = new File(realPath + m_BackImageList[i]);
+            	File file = new File(commonUtil.detectPathTraversal(realPath + m_BackImageList[i]));
             	in = new FileInputStream(file);
                 int len = 0;
                 byte[] buf = new byte[1024];
@@ -930,7 +931,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String domain = request.getServerName() +":" +request.getServerPort();
         
         filePath = realPath + uploadModule;
-        File file = new File(filePath);
+        File file = new File(commonUtil.detectPathTraversal(filePath));
         
         if (!file.exists()) {
         	file.mkdir();
@@ -1048,7 +1049,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		String strImageName = UUID.randomUUID() + extension;
         String SfilePath = m_strSPath + strImageName;
         String LfilePath = m_strLPath + strImageName;
-        File file = new File(m_strLPath);
+        File file = new File(commonUtil.detectPathTraversal(m_strLPath));
 
         if (!file.exists()) {
         	file.mkdir();
@@ -1056,7 +1057,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         
         OutputStream bos = null;
         try {
-        	bos = new FileOutputStream(new File(LfilePath));
+        	bos = new FileOutputStream(new File(commonUtil.detectPathTraversal(LfilePath)));
         	bos.write(imageBytes);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
@@ -1109,7 +1110,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
-		BufferedReader br = new BufferedReader(new FileReader(strMHTpath.trim()));
+		BufferedReader br = new BufferedReader(new FileReader(commonUtil.detectPathTraversal(strMHTpath.trim())));
 	    try {
 	        StringBuilder sb = new StringBuilder();
 	        String line = br.readLine();
@@ -1565,6 +1566,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addWebfolderTotalLimit() throws Exception {
 		ezCommonDAO.addWebfolderTotalLimit();
+	}
+
+	@Override
+	public void addFormVersion() throws Exception {
+		ezCommonDAO.addFormVersion();
 	}
 	
 	@Override

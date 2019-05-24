@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"   pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -16,7 +17,7 @@
 	    <script id="clientEventHandlersJS" type="text/javascript">
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
-	        var approvalFlag = "${approvalFlag}";
+	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 	        var Check = false;
 	        var NodeList, curpage, nowblock, totalPage, block, p_page, p_nowblock, NodeListLen, Init_Flag, pChackYN, subCondition;
 	        var DocListType = "getDocList";
@@ -25,24 +26,24 @@
 	        var arr_userinfo = new Array();
 	        var OrderCell = "";
 	        arr_userinfo[0] = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
 	        arr_userinfo[7] = "N";
-	        arr_userinfo[8]  = "${userInfo.email}";
+	        arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";
-	        arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
-		    var companyID = "${userInfo.companyID}";       
-		 	var orgCompanyID = "${orgCompanyID}";
+	        arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+	        arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
+		    var companyID = "<c:out value ='${userInfo.companyID}'/>";       
+		 	var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
 		 	
 	        subCondition = "";
 	        
@@ -63,9 +64,9 @@
 	        window.onload = function () {
 	            pUserID = arr_userinfo[1];
 	            pUserName = arr_userinfo[2];
-	            pUserJobTitle = "${title }";
-	            pDeptID = "${detpID }";
-	            pDeptName = "${detpNM }";
+	            pUserJobTitle = "<c:out value ='${title }'/>";
+	            pDeptID = "<c:out value ='${detpID }'/>";
+	            pDeptName = "<c:out value ='${detpNM }'/>";
 // 	            pUserID = arr_userinfo[1];
 // 	            pUserName = arr_userinfo[2];
 // 	            pUserJobTitle = arr_userinfo[3];
@@ -79,7 +80,7 @@
 	            else {
 	                pDocID = window.dialogArguments;
 	            }
-	            pCompanyID = "${userInfo.companyID}";
+	            pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 	            getDocType();
 	            PageSize = 10;
 	            pChackYN = "FALSE";

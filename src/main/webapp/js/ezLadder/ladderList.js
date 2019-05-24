@@ -223,7 +223,7 @@ function view() {
 
 function viewAjax() {
 	$.ajax({
-		type: "POST",
+		type: "GET",
 		url: "/ezLadder/ladderMain.do",
 		dataType: "json",
 		traditional: true,

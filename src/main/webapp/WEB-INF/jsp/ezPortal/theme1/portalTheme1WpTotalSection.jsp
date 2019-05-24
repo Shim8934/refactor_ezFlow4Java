@@ -108,7 +108,7 @@
 				var date = newDate.getFullYear() + "-" + (parseInt((newDate.getMonth()+1)) < 10 ? "0"+(newDate.getMonth()+1) : newDate.getMonth()+1) + "-" +(newDate.getDate() < 10 ? "0"+newDate.getDate() : newDate.getDate());
 
 				$.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezSchedule/scheduleNewWebPartList.do",
@@ -325,9 +325,9 @@
 			            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));
 			            //if (startdate.getFullYear() == selDateType.getFullYear() && startdate.getMonth() == parseInt(selDateType.getMonth()) && startdate.getDate() == selDateType.getDate()) {
 		                if ((((startdate <= selDateType) && (enddate >= selDateType))) || (startdate >= selDateType && enddate <= selDateType)) {
-			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
-			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
-			                listHTML += "<nobr><b>&nbsp;" + TITLE + "</b></nobr></span></li>";
+			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px; white-space: pre;'>";
+			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + MakeXMLString(TITLE) + "'>";
+			                listHTML += "<nobr><b>&nbsp;" + MakeXMLString(TITLE) + "</b></nobr></span></li>";
 			                count++;
 			            }	           
 			        }

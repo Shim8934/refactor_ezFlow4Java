@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html style="height: 97%">
 	<head>
@@ -17,9 +18,9 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraftCK_Common.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Common_Function.js')}"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
-	        var pDocID = '${docID}';
-	        var pDocHref = '${docHref}';
-	        var pFormID = '${formID}';
+	        var pDocID = "<c:out value ='${docID}'/>";
+	        var pDocHref = "<c:out value ='${docHref}'/>";
+	        var pFormID = "<c:out value ='${formID}'/>";
 	        var pOpinionFlag;
 	        var pUserID;
 	        var flag = false;
@@ -27,27 +28,27 @@
 	        var newDocID = "";
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "${userInfo.id}";
-	        arr_userinfo[2] = "${userInfo.displayName}";
-	        arr_userinfo[3] = "${userInfo.title}";
-	        arr_userinfo[4] = "${userInfo.deptID}";
-	        arr_userinfo[5] = "${userInfo.deptName}";
-	        arr_userinfo[6] = "${userInfo.jikChek}";
-	        arr_userinfo[8] = "${userInfo.email}";
+	        arr_userinfo[1] = "<c:out value ='${userInfo.id}'/>";
+	        arr_userinfo[2] = "<c:out value ='${userInfo.displayName}'/>";
+	        arr_userinfo[3] = "<c:out value ='${userInfo.title}'/>";
+	        arr_userinfo[4] = "<c:out value ='${userInfo.deptID}'/>";
+	        arr_userinfo[5] = "<c:out value ='${userInfo.deptName}'/>";
+	        arr_userinfo[6] = "<c:out value ='${userInfo.jikChek}'/>";
+	        arr_userinfo[8] = "<c:out value ='${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";
-	        arr_userinfo[11] = "${userInfo.displayName1}";
-	        arr_userinfo[12] = "${userInfo.displayName2}";
-	        arr_userinfo[13] = "${userInfo.title1}";
-	        arr_userinfo[14] = "${userInfo.title2}";
-	        arr_userinfo[15] = "${userInfo.deptName1}";
-	        arr_userinfo[16] = "${userInfo.deptName2}";
-	        var companyID = "${userInfo.companyID}";
+	        arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+	        arr_userinfo[11] = "<c:out value ='${userInfo.displayName1}'/>";
+	        arr_userinfo[12] = "<c:out value ='${userInfo.displayName2}'/>";
+	        arr_userinfo[13] = "<c:out value ='${userInfo.title1}'/>";
+	        arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>";
+	        arr_userinfo[15] = "<c:out value ='${userInfo.deptName1}'/>";
+	        arr_userinfo[16] = "<c:out value ='${userInfo.deptName2}'/>";
+	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var pUserID = arr_userinfo[1];
-	        var CurrYear = "${oldYear}";
+	        var CurrYear = "<c:out value ='${oldYear}'/>";
 	        var g_szUserID = arr_userinfo[8];
-	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
-	        var pUse_Editor = "${useEditor}";
+	        var g_senderinfo = "<c:out value ='${userInfo.companyName}'/>" + ", " + "<c:out value ='${userInfo.deptName}'/>" + ", " + "<c:out value ='${userInfo.title}'/>";
+	        var pUse_Editor = "<c:out value ='${useEditor}'/>";
 	        var orgCompanyID = "";
 	        
 	        document.onselectstart = function () {
@@ -315,7 +316,7 @@
 	            var field = message.GetListItem(fields, "doctitle")
 	            createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", trim_Cross(getNodeText(field)));
 	            createNodeAndInsertText(xmlpara, objNode, "HTML", "");
-	            var href = "/fileroot/${userInfo.tenantId}/files/upload_approvalG/" + companyID + "/doc/" + CurrYear + "/1000/" + (newDocID % 1000) + "/" + newDocID + ".mht";
+	            var href = "/fileroot/<c:out value ='${userInfo.tenantId}'/>/files/upload_approvalG/" + companyID + "/doc/" + CurrYear + "/1000/" + (newDocID % 1000) + "/" + newDocID + ".mht";
 	            createNodeAndInsertText(xmlpara, objNode, "HREF", href);
 	            createNodeAndInsertText(xmlpara, objNode, "SIMSAUSERID", arr_userinfo[1]);
 	            createNodeAndInsertText(xmlpara, objNode, "SIMSAUSERNAME", arr_userinfo[11]);

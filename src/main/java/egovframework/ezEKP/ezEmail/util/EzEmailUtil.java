@@ -77,6 +77,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -129,10 +130,14 @@ public class EzEmailUtil {
 	@Autowired
 	private EzAddressService ezAddressService;
 	
+	@Value("#{cryptos['EzEmailUtil.apb']}")
+	private String apb;
+	
 	public String getInboxFolderId() {
 		return "INBOX";
 	}
-
+	
+	
 	public String getSentFolderId(Locale locale) {
 		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
 		
@@ -3429,7 +3434,9 @@ public class EzEmailUtil {
     	String credential = null;
     	
     	if (emailAddress != null && !emailAddress.equals("")) {
-	    	byte[] keyBytes = "bizmGW02".getBytes("UTF-8");
+    		
+    		
+	    	byte[] keyBytes = apb.getBytes("UTF-8");
 	    	byte[] ivBytes = "mekaGW02".getBytes("UTF-8");
 	    	byte[] input = emailAddress.getBytes("UTF-8");
 	    	
@@ -4460,6 +4467,55 @@ public class EzEmailUtil {
 	
 	public String convertSpaceToNBSP(String src) {
 		return src.replace(" ", "&nbsp;");
+	}
+	
+	public boolean isHtmlMessage(Message message) throws MessagingException, IOException {
+		if (message.getHeader("Content-Type") == null) {
+			return true;
+		}
+		
+		String tempBodyType = message.getHeader("Content-Type")[0];
+		String contentType = tempBodyType.split(";")[0].trim();
+
+		if (contentType.equals("text/plain")) {
+			return false;
+		} else if (contentType.equals("multipart/alternative")) {
+			return true;
+		}
+		
+		Object content = message.getContent();
+		
+		if (content instanceof Multipart) {
+			return containsHtmlMultipart((Multipart) content);
+		}
+		
+		return true;
+	}
+	
+	public boolean containsHtmlMultipart(Multipart multipart) throws MessagingException, IOException {
+		int partCount = multipart.getCount();
+		
+		Object partContent;
+
+		for (int i = 0; i < partCount; i++) {
+			BodyPart bodyPart = multipart.getBodyPart(i);
+			
+			if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
+				continue;
+			}
+			
+			partContent = bodyPart.getContent();
+			
+			if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
+				return true;
+			}
+
+			if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 

@@ -29,7 +29,7 @@
         var rtnVal = new Array();
         var g_AdminYN, g_DeptCode, g_DeptCode2, g_DeptName;
         var g_SelChargerID = "";
-        var CompanyID = "${userInfo.companyID}";
+        var CompanyID = "<c:out value='${userInfo.companyID}'/>";
         var opnOption = "0";
         var RetValue;
         var ReturnFunction;

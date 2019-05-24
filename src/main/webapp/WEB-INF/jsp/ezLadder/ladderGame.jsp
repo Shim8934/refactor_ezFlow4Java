@@ -923,7 +923,7 @@
 															</span>
 														</c:otherwise>
 													</c:choose>
-													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;"><c:out value="${line.userName}" /></span></div>
 													<c:if test="${id eq vo.writerId }">
 														<img src="/images/ezLadder/icon_switchAttendant.png" style="width: 20px;height: 20px;position: absolute;top: 0;right: 15px;" />
 													</c:if>
@@ -971,7 +971,7 @@
 																</span>
 															</c:otherwise>
 														</c:choose>
-													<div title="${line.userName}" class="userInfo" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<div title="${line.userName}" class="userInfo" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;"><c:out value='${line.userName}' /></span></div>
 												</div>
 											</li>
 										</c:forEach>
@@ -986,7 +986,7 @@
 									<c:forEach var="line" items="${list}">
 										<li>
 											<div title="${line.item}" class="resultItem" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
-												<span style="white-space: nowrap;">${line.item}</span>
+												<span style="white-space: nowrap;"><c:out value="${line.item}" /></span>
 											</div>
 										</li>
 									</c:forEach>
@@ -1030,7 +1030,7 @@
 							<td>
 								<div class="userName">${_comt.userName}</div>
 								<div id="div2Cmt<c:out value ="${_comt.id}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
-									<p id="cmtArea<c:out value ="${_comt.id}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;">${_comt.comment}</p>
+									<p id="cmtArea<c:out value ="${_comt.id}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"><c:out value="${_comt.comment}" /></p>
 								</div>
 								<div id="editCmtDiv<c:out value ="${_comt.id}" />" style="display: none;"></div>
 							</td>
