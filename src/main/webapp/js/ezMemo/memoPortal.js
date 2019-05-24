@@ -720,6 +720,7 @@ function memoLayerResize() {
 			} else {											// 레이어의 높이가 브라우저의 높이보다 크면
 				if (height > 380) {									// 단, 레이어의 높이가 380(레이어의 최소 높이)보다 크면
 					memoLayer.css('height', windowHeight);			// 높이를 브라우저 사이즈로 변경
+					memoLayer.css('top', 0);						// top = 0
 				}
 			}
 		}													// 레이어의 높이와 top의 크기의 합이 window의 높이보다 작으면 그대로
@@ -731,7 +732,8 @@ function memoLayerResize() {
 				
 			} else {											// 레이어의 넓이가 브라우저의 넓이보다 크면
 				if (width > 340) {									// 단, 레이어의 넓이가 340(레이어의 최소 넓이)보다는 크면
-					memoLayer.css('width', windowWidth);				// 넓이를 브라우저 사이즈로 변경
+					memoLayer.css('width', windowWidth);			// 넓이를 브라우저 사이즈로 변경
+					memoLayer.css('left', 0);						// left = 0
 				}
 			}
 		}	
@@ -1437,6 +1439,7 @@ function bigMemoResize() {
 		} else {											// 큰 메모의 높이가 브라우저의 높이보다 크면
 			if (height > 380) {									// 단, 큰 메모의 높이가 380(큰 메모의 최소  높이)보다 크면
 				bigMemo.css('height', windowHeight);			// 높이를 브라우저 사이즈로 변경
+				bigMemo.css('top', 0);							// top = 0
 			}
 		}
 	}													// 큰 메모의 높이와 top의 크기의 합이 window의 높이보다 작으면 그대로
@@ -1448,6 +1451,7 @@ function bigMemoResize() {
 		} else {											// 큰 메모의 넓이가 브라우저의 넓이보다 크면
 			if (width > 340) {									// 단, 큰 메모의 넓이가 340(큰 메모의 최소  넓이)보다는 크면
 				bigMemo.css('width', windowWidth);				// 넓이를 브라우저 사이즈로 변경
+				bigMemo.css('left', 0);							// left = 0
 			}
 		}
 	}													// 큰 메모의 넓이와 left의 크기의 합이 window의 넓이보다 작으면 그대로
