@@ -425,7 +425,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
  		
  		String textOption = mailGeneralVO.getTextOption();
  		
- 		if (textOption != null && textOption.equals("PLAIN")) {
+ 		if (textOption.equals("PLAIN")) {
  			bodyType = "1";
  		}
  		
