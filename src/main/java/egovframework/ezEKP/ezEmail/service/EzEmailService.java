@@ -47,7 +47,7 @@ public interface EzEmailService {
 	public String getMailReservedTime(String pMessageId) throws Exception;
 	public List<MailReadVO> getMailReadList(int tenantId, String pUserId, String pMessageId) throws Exception;
 	public List<MailCancelVO> getMailCancelList(String pMessage) throws Exception;
-	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception;
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception;
 	public String getMailReceiveMessageId(String pNum) throws Exception;
 	public void updateMailReceiveDetailInfo(String pNum, String[] receiveDetail) throws Exception;
 	public List<String> getMailReceiveAddress(String pNum) throws Exception;
@@ -115,5 +115,6 @@ public interface EzEmailService {
 	MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception;
 	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
+	public JSONObject recallMailByMessageId(String address, String messageId) throws Exception;
 	public int getTotalUnreadCount(String userId, int tenantId) throws Exception;
 }
