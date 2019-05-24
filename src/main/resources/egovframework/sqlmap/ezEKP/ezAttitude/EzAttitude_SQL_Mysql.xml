@@ -2136,7 +2136,7 @@
 			AND
 				TENANT_ID = #tenantId#
 			AND
-				MODAPPL != '5'
+				MODAPPL NOT IN ('1','5')
 			GROUP BY 
 				TYPE_ID
 		]]>
