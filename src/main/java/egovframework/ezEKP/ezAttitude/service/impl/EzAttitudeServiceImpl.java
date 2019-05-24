@@ -3066,7 +3066,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		double totalAnnualCnt = 0.0;
 		for ( Map<String, Object> m : ezAttitudeDAO.getuserAnnualCnt(map)) {
-			totalAnnualCnt += ((String)m.get("typeId")).equals("A05") ? Double.parseDouble((String.valueOf(m.get("cnt")))) * 1.0 : Double.parseDouble((String.valueOf(m.get("cnt")))) * 0.5;
+			totalAnnualCnt += ((String)m.get("typeId")).equals("A11") ? Double.parseDouble((String.valueOf(m.get("cnt")))) * 1.0 : Double.parseDouble((String.valueOf(m.get("cnt")))) * 0.5;
 		}
 		
 		double userMonthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map) - totalAnnualCnt;
