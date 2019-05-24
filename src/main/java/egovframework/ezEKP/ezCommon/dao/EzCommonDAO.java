@@ -642,6 +642,18 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+
+	public void addMsgInMailSearch() {
+		try {
+			if ((int) select("EzCommonDAO.checkMsgInMailSearch") == 0) {
+				update("EzCommonDAO.updateMsgInMailSearch");
+			}
+		} catch (Exception e) {
+			logger.debug("addMsgInMailSearch() ERROR...");
+			e.printStackTrace();
+		}
+	}
+
 	public void addFormVersion() {
 		try {
 			select("EzCommonDAO.checkFormVersionColumnOfForminfo");

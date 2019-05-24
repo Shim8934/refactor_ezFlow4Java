@@ -355,6 +355,26 @@ public class EzAddressController{
 		String userNM2 = userInfo.getDisplayName2();
 		String rootAddressSelection = "";
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		String compAdmin = "";
+		String deptAdmin = "";
+		
+		// 20190523 조진호 - url로 ownerId를 변경하여 접근하는 경우 사용자의 권한 확인
+		boolean gyumJikChk = true;
+		
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) > -1 || userInfo.getGyumJik().indexOf(userInfo.getDeptID()) > -1) { 
+				gyumJikChk = false;
+			}
+		}
+
+		if (gyumJikChk) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+	        	compAdmin = "Y";
+	        	deptAdmin = "Y";
+	        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+	        	deptAdmin = "Y";
+	        }
+		}
 		
 		// ownerId가 없으면 디비에서 구하기(주소록수정 시 ownerId가 null이기 때문에)
 		if (ownerId.trim().equals("")) {
@@ -366,10 +386,17 @@ public class EzAddressController{
 				} else {
 					ownerId = userInfo.getId();
 				}
-			}
-			else {
+			} else {
 				AddressFolderVO folderInfo = ezAddressService.getFolderInfo(folderId);
 				ownerId = folderInfo.getOwnerId();
+			}
+		} else { // 20190523 조진호 - 사용자가 url을 바꾸어 접근 한 경우 ownerId와 실제 사용자가 다르더라도 다른 사용자의 주소록에 등록이 가능한 오류 수정
+			if (folderType.equals("P") && !ownerId.equalsIgnoreCase(userInfo.getId())) {
+				ownerId = userInfo.getId();
+			} else if (folderType.equals("D") && !ownerId.equalsIgnoreCase(userInfo.getDeptID())) {
+				ownerId = userInfo.getDeptID();
+			} else if (folderType.equals("C") && !ownerId.equalsIgnoreCase(userInfo.getCompanyID())) {
+				ownerId = userInfo.getCompanyID();
 			}
 		}
 		
@@ -407,12 +434,14 @@ public class EzAddressController{
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("deptAdmin", deptAdmin);
+		model.addAttribute("compAdmin", compAdmin);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
 				 + ",changeKey=" + changeKey + ",photoUrl=" + photoUrl + ",textEmail=" + textEmail + ",userNM=" + userNM
 				 + ",userNM2=" + userNM2 + ",rootAddressSelection=" + rootAddressSelection + ",useAddressOpenAPI=" + useAddressOpenAPI
-				 + ",primaryLang=" + primaryLang + ",useZipCodeSearch=" + useZipCodeSearch);
+				 + ",primaryLang=" + primaryLang + ",useZipCodeSearch=" + useZipCodeSearch + ",deptAdmin=" + deptAdmin + ",compAdmin=" + compAdmin);
 		
 		return "ezAddress/addressWrite";
 	}
@@ -667,6 +696,30 @@ public class EzAddressController{
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
+		}
+		
+		if (ownerId.trim().equals("")) {
+			if (folderId.equals("0")) {
+				if (folderType.equals("C")) {
+					ownerId = userInfo.getCompanyID();
+				} else if (folderType.equals("D")) {
+					ownerId = userInfo.getDeptID();
+				} else {
+					ownerId = userInfo.getId();
+				}
+			} else {
+				AddressFolderVO folderInfo = ezAddressService.getFolderInfo(folderId);
+				ownerId = folderInfo.getOwnerId();
+			}
+		} else { // 20190523 조진호 - 사용자가 url을 바꾸어 접근 한 경우 ownerId와 실제 사용자가 다르더라도 다른 사용자의 주소록에 등록이
+					// 가능한 오류 수정
+			if (folderType.equals("P") && !ownerId.equalsIgnoreCase(userInfo.getId())) {
+				ownerId = userInfo.getId();
+			} else if (folderType.equals("D") && !ownerId.equalsIgnoreCase(userInfo.getDeptID())) {
+				ownerId = userInfo.getDeptID();
+			} else if (folderType.equals("C") && !ownerId.equalsIgnoreCase(userInfo.getCompanyID())) {
+				ownerId = userInfo.getCompanyID();
+			}
 		}
 		
 		model.addAttribute("addressId", addressId);
