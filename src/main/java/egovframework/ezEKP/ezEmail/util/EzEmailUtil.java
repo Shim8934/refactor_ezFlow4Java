@@ -4471,7 +4471,7 @@ public class EzEmailUtil {
 	
 	public boolean isHtmlMessage(Message message) throws MessagingException, IOException {
 		if (message.getHeader("Content-Type") == null) {
-			return true;
+			return false;
 		}
 		
 		String tempBodyType = message.getHeader("Content-Type")[0];
