@@ -687,8 +687,12 @@
 	        }
 	        function Open_Search() {
 	            try {
-	                var url;
-	                url = "/ezEmail/mailSearchView.do";
+					var url = "/ezEmail/mailSearchView.do";
+	                
+	                if (shareId != "") {
+	                	url += "?shareId=" + encodeURIComponent(shareId);
+	                }
+	                
 	                window.open(url, "right");
 	            } catch (e) { }
 	        }
@@ -1418,6 +1422,9 @@
 		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 		            	<c:if test="${shareInfo.managePermission eq 'Y'}">
 		            		<li><span onclick="folder_manage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t481" /></span></li>
+		            	</c:if>
+		            	<li><span onclick="Open_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t641" /></span></li>
+		            	<c:if test="${shareInfo.managePermission eq 'Y'}">
 		            		<h3 onclick="mail_Config('${shareInfo.shareId}')" style="border-top:0px"><span style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 		            	</c:if>
 		        	</ul>

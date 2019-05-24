@@ -530,8 +530,14 @@
 				searchFromList = true;
 		    	
 	            try {
-	                var url;
-	                url = "/ezEmail/mailSearchView.do?keywordFromList="+encodeURIComponent(keywordFromList)+"&searchCheck=" +encodeURIComponent(searchField)+"&searchFromList=" +encodeURIComponent(searchFromList);
+	                var url = "/ezEmail/mailSearchView.do?keywordFromList=" + encodeURIComponent(keywordFromList) 
+	                		+ "&searchCheck=" + encodeURIComponent(searchField) 
+	                		+ "&searchFromList=" + encodeURIComponent(searchFromList);
+	                
+	                if (shareId != "") {
+	                	url += "&shareId=" + encodeURIComponent(shareId);
+	                }
+	                
 	                window.open(url, "right");
 	            } catch (e) { }
 	            
