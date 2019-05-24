@@ -870,6 +870,8 @@
 				LINKORDER
 			FROM 
 				TBL_PS_QUICKLINK
+			WHERE 
+				ROWNUM <= 1
 		]]>
 	</select>
 
@@ -897,6 +899,8 @@
 				COMPANYID
 			FROM 
 				TBL_C_COMCLOSE
+			WHERE 
+				ROWNUM <= 1
 		]]>
 	</select>
 	
