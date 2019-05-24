@@ -421,6 +421,8 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		} catch (Exception e) {
 			logger.debug("addMsgInMailSearch() ERROR...");
 			e.printStackTrace();
+		}
+	}
 
 	public void addFormVersion() {
 		try {

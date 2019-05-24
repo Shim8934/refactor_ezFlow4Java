@@ -3010,6 +3010,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         
         logger.debug("recallMailByMessageId ended.");
         return result;
+	}
 
 	/**
 	 * 전체 안읽은 메일 개수 가져오기
