@@ -42,6 +42,23 @@
 		        } catch (e)
 		        { }
 		        
+	            try {
+			        if (document.getElementById('attitude_annual_conn')) { //근태관리 연동양식
+			    		$("select[id^=control]").each(function() {
+			    			$(this).val($(this).attr("attitudetype"));
+			    			$(this).children("option[value=" +$(this).attr("attitudetype") + "]").attr("selected","");
+			    		});
+			        	
+			    		$("input[type=button][id^=control]").each(function() {
+			    			$(this).css("display","none");
+			    		});
+			    		
+			    		$("select[id^=control]").each(function() {
+			    			$(this).css("top","7px");
+			    		});
+			        }
+	            } catch (e)
+	            { }
 		    };
 		    function BodyTagsEnabled(HtmlObject) {
 		        var SelectRows = HtmlObject.getElementsByTagName("SELECT");
