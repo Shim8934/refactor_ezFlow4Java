@@ -30,6 +30,7 @@
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
 		var m_strColorOpened = "#fafafa";
+		var companyId = "${companyId}";
 		
 		window.onload = function() {
 			$("#tbContentElement").attr("src", "/ezEditor/selectEditor.do?type=MAILSIGNATURE");
@@ -130,9 +131,10 @@
 				if (type == "modify") {
 				    params += "&signNo=" + signNo + "&type=" + type;
 				} else {
-				    params += "&type=" + type;
+				    params += "&type=" + type + "&companyId=" + companyId;
 				}
 				
+				console.log("params = " + params);
 				$.ajax({
 	        		type : "POST",
 	        		url : url,
@@ -186,7 +188,7 @@
 		
 		function rebody() {
 			if (type != "modify") {
-				window.message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P>");
+				window.message.SetEditorContent("");
 			}
 	    }
 		

@@ -442,7 +442,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			// analyze the message and retrieve the attached file list.
 			List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
 			List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, draftsFolderName, uid, -1, attachedFileList, false, false, locale, null, null);
-			body = EgovStringUtil.getSpclStrCnvr2(bodyInfoList.get(0));
+			body = bodyInfoList.get(0);
 			
 			if (attachedFileList.size() > 0) {
                 StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
@@ -504,13 +504,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     		}
     		
         	//set bodyType
-        	if (message.getHeader("Content-Type") != null) {
-        		String tempBodyType = ezEmailUtil.getTextPart(message).get(1);
-        		
-        		if(tempBodyType.equals("text/plain")) {
-        			bodyType = "1";
-        		}
-    		}
+    		bodyType = ezEmailUtil.isHtmlMessage(message) ? "0" : "1";
         	
         	if (message.getHeader("Return-Receipt-To") != null) {
         		replySendTime = "1";
@@ -595,6 +589,12 @@ public class EzEmailReservationController extends EgovFileMngUtil {
         String browser = ClientUtil.getClientInfo(request, "browser");
         boolean isCrossBrowser = browser.equals("IE9") ? false : true;
         
+        String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", loginInfo.getTenantId());
+		
+		if (mailMaxReceiverCount.equals("")) {
+			mailMaxReceiverCount = "200";
+		}
+		
 		model.addAttribute("to", to);
 		model.addAttribute("cc", cc);
 		model.addAttribute("bcc", bcc);
@@ -657,6 +657,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("draftsFolderName", draftsFolderName);
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
+		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		
         logger.debug("mailEdit ended.");
         

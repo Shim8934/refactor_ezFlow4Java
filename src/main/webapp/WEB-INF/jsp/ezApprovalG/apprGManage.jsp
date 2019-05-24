@@ -114,11 +114,12 @@
 		            return true;
 		    };
 		    function checkBujaeInfo() {
-		    	if (pListTypeValue == "10") {
-		    		checkBujaeInfo_Complete(true);
-		    		return;
-	            }
-		        var BString = arr_userinfo[7];
+//		    	if (pListTypeValue == "10") {
+//		    		checkBujaeInfo_Complete(true);
+//		    		return;
+//	            }
+		        var BString = "${buJaeInfo}";
+		        
 		        if (BString != "") {
 		            var BDim = new Array("");
 		            BDim = BString.split(":");
@@ -222,21 +223,21 @@
 		        }
 		        else if (pListTypeValue == "10") {
 		            getDocList();
-		            var result = "";
+// 		            var result = "";
 			    	
-			        $.ajax({
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		url : "/ezPersonal/saveBujae.do",
-			    		data : {
-			    				buJae  : bujaeVal,
-			    				proxy  : ""
-			    				},
-			    		success: function(xml){
-			    			result = xml;
-			    		}        			
-			    	});
+// 			        $.ajax({
+// 			    		type : "POST",
+// 			    		dataType : "text",
+// 			    		async : false,
+// 			    		url : "/ezPersonal/saveBujae.do",
+// 			    		data : {
+// 			    				buJae  : bujaeVal,
+// 			    				proxy  : ""
+// 			    				},
+// 			    		success: function(xml){
+// 			    			result = xml;
+// 			    		}        			
+// 			    	});
 		        }
 		        else if (pListTypeValue == "21") {
 		            getDocList();
@@ -259,9 +260,9 @@
 		    function setBujaeOff() {
 		    	var result = "";
 		    	
-		    	if(pListTypeValue != "10") {
-		    		bujaeVal = "";
-		    	}
+// 		    	if(pListTypeValue != "10") {
+// 		    		bujaeVal = "";
+// 		    	}
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -269,7 +270,8 @@
 		    		url : "/ezPersonal/saveBujae.do",
 		    		data : {
 		    				buJae  : bujaeVal,
-		    				proxy  : ""
+		    				proxy  : "",
+		    				dept : arr_userinfo[4]
 		    				},
 		    		success: function(xml){
 		    			result = xml;
@@ -278,6 +280,7 @@
 		        
 		        bujaeVal = arr_userinfo[7];
 		        arr_userinfo[7] = "";
+		        window.location.reload();
 		    }
 		
 		    $(function () {
@@ -993,7 +996,8 @@
 				                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
 				            }
 				            else
-				                OpenOpinionUI(pCurSelRow, "HeSong");
+				                //OpenOpinionUI(pCurSelRow, "HeSong");
+				            	openOpinionUI_New(pCurSelRow, "HeSong");
 					        }
 			        	}
 			    } else {
@@ -1004,7 +1008,8 @@
 							getDocList();
 							return;
 	                	}
-		                OpenOpinionUI(pCurSelRow, "HeSong");
+		                //OpenOpinionUI(pCurSelRow, "HeSong");
+		                openOpinionUI_New(pCurSelRow, "HeSong");
 		            }
 			    }
 		    }
@@ -1382,6 +1387,21 @@
 		        var oArrRows = DocList.GetSelectedRows();
 		        if (oArrRows.length > 0) {
 		            var tr = oArrRows[0];
+		            
+		            //현재부서정보와 대장등록할 문서의 부서정보가 다르면 리턴 (겸직변경)
+		            //결재할문서(1)과 부서수신함(4)의 부서아이디 DATA가 달라서 변경 
+					if (pListTypeValue == "1") {
+			            if (arr_userinfo[4] != tr.getAttribute("DATA7")) {
+			            	alert("'" + tr.getAttribute("DATA7") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA7") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
+			            	return;
+			            }
+					} else if (pListTypeValue == "4") {
+			            if (arr_userinfo[4] != tr.getAttribute("DATA6")) {
+			            	alert("'" + tr.getAttribute("DATA6") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA6") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
+			            	return;
+			            }
+					}
+		            
 		            var ret = CheckAprLineInfo(tr);
 		            if (ret != "OK") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
@@ -1568,31 +1588,48 @@
 		    function TotalSave_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
+		        
 		        var tr = DocList.GetSelectedRows();
-		
 		        if (tr.length == 0) {
-		        	//팝업창에서 알럿창으로 변경
-// 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>", "", "OPEN");
 					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 					alert(pAlertContent);
 		            return;
 		        }
-		        else {
-		            pDocID = tr[0].getAttribute("DATA1");
-		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
-		        }
-				
-		        //직인의뢰함에서 타입을 END로 주기위해
-		        var url;
-		        if (pListTypeValue == 7 || pListTypeValue == 8 || pListTypeValue == 9) {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;	
-		        } else {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID;
-		        }
 		        
+	            pDocID = tr[0].getAttribute("DATA1");
+	            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        
+	            if (orgCompanyID == null)
+	            	orgCompanyID = companyID;
+	            
+		        var mode = getDocMode(pDocID, orgCompanyID);
+				var url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=" + mode + "&orgCompanyID=" + orgCompanyID;
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
+		        
 		        feature = feature + GetOpenPosition(580, 480);
 		        window.open(url, "", feature);
+		    }
+		    function getDocMode(pDocID, pOrgCompanyID) {
+		    	var rtnVal = "APR";
+		    	try {
+		    		$.ajax({
+		     			type : "POST",
+		     			dataType : "text",
+		     			async : false,
+		     			url : "/ezApprovalG/getLineMode.do",
+		     			data : {
+		     					docID : pDocID,
+		     					orgCompanyID : pOrgCompanyID
+		     					},
+		     			success: function(result) {
+		     				rtnVal = result;
+		     			}
+		            });
+		    	} catch (e) {
+		    		alert("getDocMode() :: " + e.description);
+		    	}
+		    	
+		    	return rtnVal;
 		    }
 		
 		    var setsearchinfo_cross_dialogArguments = new Array();
@@ -2167,7 +2204,7 @@
 		  	</div>	
 		</div>
 		
-		<div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		<div style="WIDTH:100%;HEIGHT:315px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 			<div id="lvAprLine" ></div>
 		</div>		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

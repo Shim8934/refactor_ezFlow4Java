@@ -17,11 +17,6 @@
 				text-overflow:ellipsis;
 				display:inline-block;
 			}
-			.arrowSpan {
-				width:42px;
-				height:33px;
-				display:inline-block;
-			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -435,7 +430,10 @@
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-		            
+		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+		            var orgBoardTitle = document.getElementById("spn_" + pNodeID).title;
+				    var orgItemCount = orgBoardName.substring(orgBoardName.lastIndexOf("(") + 1, orgBoardName.length - 1);
+				    
 		            /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
 				  	if (typeof window.parent.frames["right"] == "undefined") {
 						if (chkPhotoBrd == 3) {
@@ -465,6 +463,31 @@
 			                }
 			           }
 					}
+		            
+		            /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getItemCount.do",
+						data : {
+							boardID : SelectedBoardID
+						},
+						success: function(resultCount) {
+							if (orgItemCount != resultCount) {
+								var newNodeName = "";
+								if (resultCount > 0) {
+									newNodeName =  orgBoardTitle + "(" + resultCount + ")";
+								} else {
+									newNodeName =  orgBoardTitle;
+								}
+								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
+							}
+						},
+						error: function() {
+							return;
+						}
+					});
 		        }
 		        catch (e) {
 		            alert(e.description);
@@ -883,10 +906,9 @@
         		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
-       			        document.write("<h2 class='off'>");
+       			        document.write("<h2 class='off' onclick='spanClick(\"TreeCtr" + i + "\")'>");
            				document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
            					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
-           				document.write("<span class='arrowSpan' onclick='spanClick(\"TreeCtr" + i + "\")'></span>");
            				document.write("</h2>\n");
            				document.write("<ul class='off'>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: hidden; overflow-y: auto;'></div>\n");

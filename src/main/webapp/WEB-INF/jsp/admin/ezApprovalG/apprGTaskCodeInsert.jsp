@@ -163,12 +163,14 @@
 	            	$(selKeepMethod).val(SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGMETHOD"));
 	            	$(selKeepPlace).val(SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGPLACE"));
 	            	$(securityLevel).val(SelectSingleNodeValue(TaskXml.documentElement, "ITEMSECURITY"));
-
+	            	$(selExFrequency).val(SelectSingleNodeValue(TaskXml.documentElement, "EXDISPLAYFREQUENCY"));
+	            	
 	            	document.getElementById("tbKPReason").value = SelectSingleNodeValue(TaskXml.documentElement, "KPREASON");
 
 	            	SelectOption(isPublic, SelectSingleNodeValue(TaskXml.documentElement, "ISPUBLIC"));
 
-	            	var DispFlag = SelectSingleNodeValue(TaskXml.documentElement, "EXDISPLAYFREQUENCY");
+	            	//2019-04-12 김혜정 비치기록물 값 잘못들어가는 버그 수정
+	            	var DispFlag = SelectSingleNodeValue(TaskXml.documentElement, "DISPLAYRECFLAG");
 	            	
 	            	if (DispFlag == "2") {
 		                document.getElementsByName("rdoDisplayFlag")[0].checked = true;
@@ -367,6 +369,15 @@
 		    function btnOk_onclick() {
 		        var tempCode = trim(document.getElementById("tbTaskCode").value);
 		        
+		        if (checkTaskCodeIsAvailable(tempCode)) {
+		        	if (approvalFlag == 'G') {
+			        	OpenAlertUI("<spring:message code = 'ezApprovalG.t742' />");
+		        	} else {
+			        	OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
+		        	}
+		            return;
+		        }
+		        
 		        if (approvalFlag == 'S') {
 		        	if (tempCode == "") {
 			            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
@@ -457,6 +468,11 @@
 		        }
 		    }
 		    
+		    function checkTaskCodeIsAvailable(codeValue) {
+		    	var pattern = /[^0-9a-zA-z]/gi;
+		    	return pattern.test(codeValue);
+		    }
+		    
 		    function btncancel_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction("FALSE");
@@ -502,7 +518,7 @@
 		    				keepingMethod : document.getElementById("selKeepMethod").value,
 		    				keepingPlace : document.getElementById("selKeepPlace").value,
 		    				displayRecFlag : pDisplayFlag,
-		    				displayRecTransTime : document.getElementById("tbDispTransTime").value,
+		    				displayRecTrasTime : document.getElementById("tbDispTransTime").value,
 		    				exDisplayFrequency : document.getElementById("selExFrequency").value,
 		    				specialCatalogFlag : pSpecialFlag,
 		    				sc1 : document.getElementById("tbList1").value,

@@ -211,3 +211,6 @@ var strLangKMS1 = "Repeat is impossible if it's more than 100 times.";
 
 //2019-01-16 김민성 - 관리자 > 자원관리 추가
 var strLangkmsr01 = "User is already added.";
+
+//2019-04-08 김민성
+var strLangkmsr02 = "The resource manager must have user or administrator permissions.";

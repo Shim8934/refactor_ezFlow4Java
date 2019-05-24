@@ -287,6 +287,7 @@ var strLangLHM18 = "/blank_jp.htm";
 var strLangLHM19 = "暗号化メールを削除すると受信者も閲覧できなくなります。\n続行しますか？";
 var strLangLHM20 = "暗号化メールを移動すると\nメール閲覧および詳細情報の確認ができなくなります。\n続行しますか？";
 var strLangLHM21 = "共用配布グループ情報";
+var strLangLHM22 = "宛先のメールアドレスに使用できない記号が含まれています。メールアドレスを確認してください。";
 var strLangKMS01 = "添付ファイルが";
 var strLangKMS02 = "ファイル添付は、";
 var strLangKMS03 = "データが存在しません";
@@ -311,6 +312,8 @@ var strLangSharedMailbox01 = "共有メールボックス";
 var strLangSharedMailbox02 = "パスワードを変更しますか?";
 var strLangSharedMailbox03 = "パスワードを変更しました。";
 
+var strLangReceiverCount01 = "受信者は";
+var strLangReceiverCount02 = "人まで設定可能です。";
 
 function GetLocalTime(Offset , pDateTime)
 {

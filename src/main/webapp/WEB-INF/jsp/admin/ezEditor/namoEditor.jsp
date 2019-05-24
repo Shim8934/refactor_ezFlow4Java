@@ -172,6 +172,10 @@
 
         function SetEditorContent(Data) {
             try {
+            	if (Data === "") {
+					Data = "<p " + defaultFontAndSize + "><br></p>";
+				}
+            	
                 CrossEditor.SetBodyValue(Data);
 //                 Set_CellLocked();
 
@@ -384,13 +388,20 @@
         var CrossEditor = new NamoSE("Namo");
         var defaultFontFamily = "${defaultFontFamily}";
 		var defaultFontSize = "${defaultFontSize}";
+		var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
+		
+		var fontList = "<spring:message code='main.t0620' />".split(";");
+        var fontListObject = {};
+        for (var i = 0; i < fontList.length; i++) {
+        	fontListObject[fontList[i]] = fontList[i];
+        }
 		
 		CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 		CrossEditor.params.Height = (height - 10) + "px";
 		
 		CrossEditor.params.FullScreen = true;
         CrossEditor.params.PutStyleInBody = true;
-        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");
+        CrossEditor.params.Font = fontListObject;
         CrossEditor.params.ParagraphTagStyle = {"font-size":defaultFontSize, "font-family":defaultFontFamily};
 
         if (userLang == "1") {

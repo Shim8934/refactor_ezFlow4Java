@@ -211,7 +211,7 @@ function SendAckForSend(errMsg, type) {
     
     if (type == "req-resend") {
         var pAlertContent = strLang725;
-        OpenAlertUI(pAlertContent);
+        OpenAlertUI(pAlertContent, OpenAlertUI_Close);
     }
 }
 
@@ -1322,21 +1322,22 @@ function convertDate(datestring) {
     }
 }
 
+var reqResend_dialogArgument = new Array();
 function btnReqReSend_onclick() {
-    var url = "/myoffice/ezApprovalG/ezRETOPINION_Cross.aspx";
-    var feature = "status:no;dialogWidth:420px;dialogHeight:270px;help:no;scroll:no"
-    feature = feature + GetShowModalPosition(420, 270);
-    var ret = window.showModalDialog(url, null, feature);
-
-    if (ret[0]) {
-        var pRetMsg = ret[1];
-        pRetMsg = ReplaceText(pRetMsg, "\n", "<br>");
-        pRetMsg = ReplaceText(pRetMsg, "&", "&amp;");
-        pRetMsg = ReplaceText(pRetMsg, "<", "&lt;");
-        pRetMsg = ReplaceText(pRetMsg, ">", "&gt;");
-
-        SendAckForSend(pRetMsg, "req-resend");
-    }
+	var url = "/ezApprovalG/ezRetOpinon.do";
+    var feature = "width=420, height=270, resizable = no, scrollbars = no";
+    
+    
+    reqResend_dialogArgument[0] = "req-resend"; 
+    reqResend_dialogArgument[1] = SendAckForSend; 
+    
+    feature = 'left='+(screen.availWidth-420)/2+',top='+(screen.availHeight-270)/2 + ',' + feature;
+    var ret = window.open(url, "reqResend", feature);
+    try { ret.focus(); } catch (e) { }
+    
+//    if (retValue == "true") {
+//        window.close();
+//    }
 }
 
 function getDraftUserInfo() {

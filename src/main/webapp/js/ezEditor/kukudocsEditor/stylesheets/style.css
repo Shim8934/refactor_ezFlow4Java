@@ -1145,7 +1145,7 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 
 /* About Dialog CSS */
 
-.kk_editor .kk_editor_dialog .kk_dialog_about {}
+.kk_editor .kk_editor_dialog .kk_dialog_about { width: 341px;}
 .kk_editor .kk_editor_dialog .kk_dialog_about .kk_about_logo { height: 95px;  width: 75px;  background-image: url(../images/logo.jpg);  background-size: 75px;  background-repeat: no-repeat;  display: inline-block;}
 .kk_editor .kk_editor_dialog .kk_dialog_about .kk_editor_company_name { padding: 0;  margin: 0; font-size: 40px; font-weight: bold; font-family: gothic; text-shadow: 1px 1px #000000;}
 .kk_editor .kk_editor_dialog .kk_dialog_about .kk_editor_sub_name { padding: 0;  margin: 0; font-size: 23px; font-weight: bold; font-family: gothic; text-align: right; }
@@ -1332,7 +1332,7 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 
 /* Settings Dialog CSS */
 
-.kk_editor .kk_editor_dialog .kk_dialog_setting {}
+.kk_editor .kk_editor_dialog .kk_dialog_setting { width:269px;}
 .kk_editor .kk_editor_dialog .kk_dialog_setting .kk_dialog_contents { padding-top: 10px; padding-bottom: 10px;}
 .kk_editor .kk_editor_dialog .kk_dialog_setting .kk_dialog_contents .kk_setting_page_title_wrapper {margin-top: 10px;padding-left: 10px;text-align: left;}
 .kk_editor .kk_editor_dialog .kk_dialog_setting .kk_dialog_contents .kk_setting_page_title_wrapper .kk_setting_page_title_label { margin-right: 15px; display: inline-block; vertical-align: middle; padding-left: 10px;width: 80px;}

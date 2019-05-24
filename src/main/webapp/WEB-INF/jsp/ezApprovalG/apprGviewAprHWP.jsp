@@ -71,7 +71,8 @@
 			var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
 			
 			function btnOpinion_onclick() {
-			    openOpinionViewUI();
+			    //openOpinionViewUI();
+				openOpinionUI_New("Show");
 			}
 	
 			window.onresize = function () {
@@ -208,7 +209,7 @@
 			}
 	
 			function btnDocInfo_onclick() {
-			    var url = "/ezApprovalG/ezDocInfoG_View.do?docID=" + docID + "&ingFlag=APR";
+			    var url = "/ezApprovalG/ezDocInfoView.do?docID=" + docID + "&ingFlag=APR";
 			    var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    var RtnVal = window.showModalDialog(url, "", feature);
 			}

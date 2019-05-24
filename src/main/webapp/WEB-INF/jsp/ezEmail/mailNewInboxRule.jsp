@@ -110,6 +110,8 @@
 		        switch (obj.value) {
 		            case "MOVE":
 		            case "COPY":
+		            	_curCellObj.innerHTML = "";
+		            	_curCellObj.removeAttribute("RuleKind", true);
 		                getFolder();
 		                break;
 		            case "DELETE":
@@ -118,9 +120,11 @@
 		                break;
 		            case "FORWARD":
 		            case "REDIRECTION":
+		            	_curCellObj.innerHTML = "";
+		            	_curCellObj.removeAttribute("RuleKind", true);
 		                document.getElementById("ReceiverSelecttd").style.width = "54%";
 		                document.getElementById("ReceiverSelect").style.display = "";
-		                $("#inboxRuleConbtn1").modal();
+		                $("#inboxRuleConbtn1").modal({escapeClose: false, clickClose: false});
 		                /* inboxRuleConbtn1.style.display = "";
 		                inboxRuleCon1.focus(); */
 		                break;
@@ -129,9 +133,9 @@
 		                _curCellObj.setAttribute("RuleKind", "READ");
 		                break;
 		            case "IMPORTANCE":
+		                _curCellObj.innerHTML = "<span style='vertical-align:middle;margin-top-10px;'><u>" + strLang343 + "</u></span>";
 		                _curCellObj.setAttribute("RuleKind", "IMPORTANCE");
 		                _curCellObj.nextSibling.nextSibling.style.display = "";
-		                _curCellObj.innerHTML = "<span style='vertical-align:middle;margin-top-10px;'><u>" + strLang343 + "</u></span>";
 		                _curCellObj.style.width = "auto";
 		                break;
 		        }
@@ -211,7 +215,8 @@
 		        }
 		    }
 		    function IsEmail(strEmail) {
-		        var regx = new RegExp(/^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/g);
+		        //var regx = new RegExp(/^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/g);
+		        var regx = new RegExp(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/);
 		        return regx.test(strEmail);
 		    }
 		    function IsDomain(strDomain) {
@@ -360,9 +365,8 @@
 		            if (!rtnValue)
 		                return;
 		        }
-		        if (rtnValue &&
-		            (_curCellObj.getAttribute("value") == "" ||
-		            _curCellObj.getAttribute("value") == null)) {
+		        
+		        if (_curCellObj.getAttribute("value") == null || _curCellObj.getAttribute("value") == "") {
 		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value=''><nobr><u>" + strLang219 + "</u></nobr></span>";
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("value", "");
@@ -482,10 +486,10 @@
 		                            break;
 		                    }
 		                    return;
-		                }
-		                else {
-		                    _curCellObj.removeAttribute("RuleKind", true)
-		                    _curCellObj.removeAttribute("value", true)
+		                } else {
+		                    _curCellObj.removeAttribute("RuleKind", true);
+		                    _curCellObj.removeAttribute("value", true);
+		                    _curCellObj.innerHTML = "";
 		                }
 		            }
 		            if (obj.value == "SENDER" || obj.value == "RECEIVER") {
@@ -499,7 +503,7 @@
 		
 		            // '모든 메시지 포함'일시 조건 추가 버튼을 숨기고 Rules에 값 반영
 		            if (obj.value != "ALLMESSAGES") {
-		            	$("#inboxRuleConbtn1").modal();
+		            	$("#inboxRuleConbtn1").modal({escapeClose: false, clickClose: false});
 		                /* inboxRuleConbtn1.style.display = "";
 		                inboxRuleCon1.focus(); */
 		                if (obj.name == "Condition")
@@ -541,7 +545,7 @@
 		            document.getElementById("ReceiverSelecttd").style.width = "60%";
 		            document.getElementById("ReceiverSelect").style.display = "none";
 		        }
-		        $("#inboxRuleConbtn1").modal();
+		        $("#inboxRuleConbtn1").modal({escapeClose: false, clickClose: false});
 		        /* inboxRuleConbtn1.style.display = "";
 		        inboxRuleCon1.focus(); */
 		        Commentdsc(_RuleKind)

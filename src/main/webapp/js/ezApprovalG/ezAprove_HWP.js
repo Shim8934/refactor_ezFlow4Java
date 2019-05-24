@@ -455,6 +455,39 @@ function openOpinionUI(ret)
 	return ret;
 }
 
+function openOpinionUI_New(pOpinionType) {
+	try {
+		var parameter = new Array();
+		parameter[0] = pDocID;		//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = "";			//DRAFTFLAG 결재는 공백 고정 
+		parameter[3] = docState;	//DOCSTATE
+		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		parameter[99] = ext;		//EXT
+		
+		var url = "/ezApprovalG/aprOpinionNew.do";
+		var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
+		var ret = window.showModalDialog(url,parameter,feature);
+		
+		if (ret != "cancel" && ret != undefined) {
+		    var objXML = new ActiveXObject("Microsoft.XMLDOM");
+		    objXML.loadXML(ret);
+		    
+		    var NodeList = objXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
+		    if (NodeList.length != 0) {
+				pHasOpinionYN = "Y";
+		    } else {
+				pHasOpinionYN = "N";
+				ret = "cancel";
+		    }
+		    makeOpinionList(objXML);
+	    }
+		
+	    return ret;
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e.description);
+	}
+}
 
 function makeOpinionList(OpinionXML) {
 	if (!HwpCtrl.CheckFieldExist("opinions"))
@@ -584,7 +617,7 @@ function SaveApproveInfo(pApproveFlag)
 
 	createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
 	createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
-	createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", pPublicityYN);
 	createNodeAndInsertText(xmlpara, objNode, "PROXYUSERID", pingUserID);
 
 	createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
@@ -621,6 +654,7 @@ function SaveApproveInfo(pApproveFlag)
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", pOrgAprUserName2);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
 	createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
 	
 	if (nonElecRec == "Y") {
 		var NonElecXML = createXmlDom();

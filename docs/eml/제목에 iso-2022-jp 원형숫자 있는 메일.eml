@@ -1,0 +1,41 @@
+Return-Path: <takako@ryobi-sol.co.jp>
+MIME-Version: 1.0
+Received: from 10.50.3.4 (EHLO mxg.ryobi.co.jp) ([10.50.3.4])
+          by ezEkp1 (JMOCHA ESMTP Server) with ESMTP ID 43790969
+          for <100999982@ryobi-holdings.jp>;
+          Tue, 23 Apr 2019 15:14:06 +0900 (JST)
+X-matriXgate-loop-detect: 310eef2899ecbd9b9233ac0f046b8695a469df43
+Received: from mail.ryobi-sol.co.jp ([210.172.124.102]) by mxg.ryobi.co.jp with ESMTP;
+	Tue, 23 Apr 2019 15:13:42 +0900 (JST)
+Received: (qmail 9730 invoked from network); 23 Apr 2019 15:13:41 +0900
+Received: from unknown (HELO Takako02) (210.172.124.112)
+  by 192.168.8.112 with SMTP; 23 Apr 2019 15:13:41 +0900
+From: =?iso-2022-jp?B?GyRCPi5AbiEhNS47UhsoQg==?= <takako@ryobi-sol.co.jp>
+To: =?iso-2022-jp?B?UlNPTBskQjRJTX08VBsoQjI=?= <100999982@ryobi-holdings.jp>
+Subject: =?iso-2022-jp?B?GyRCLSEtahsoQg==?=
+Date: Tue, 23 Apr 2019 15:13:40 +0900
+Message-ID: <002001d4f99b$b289f620$179de260$@ryobi-sol.co.jp>
+Content-Type: text/plain;
+	charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdT5m6Vu0vMm6vU+RUiwh5YGVFAcEg==
+Content-Language: ja
+X-matriXgate-msec-AV: Clean
+X-matriXgate-UniqId: Through
+X-matriXgate-msecIpRepId: i=d2ac7c66;s=100
+X-matriXgate-Action: Approve
+X-matriXgate: Uncategorized
+X-matriXgate-SenderAuth-Results: Through
+Authentication-Results: mxg.ryobi.co.jp;
+	spf=pass smtp.mailfrom=takako@ryobi-sol.co.jp;
+	sender-id=pass header.From=takako@ryobi-sol.co.jp;
+	dkim=none;
+	dkim-adsp=none header.From=takako@ryobi-sol.co.jp;
+X-matriXgate-Auth: UnknownUser
+X-matriXgate-archive-id: ff7.1030.7f13f4b55e80.5cbead2e.19401
+
+$BDLCNJ8;z2=$1%F%9%H(B
+$B%?%$%H%k!'-!-j(B
+
+

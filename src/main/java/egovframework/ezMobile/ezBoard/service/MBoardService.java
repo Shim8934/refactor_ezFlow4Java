@@ -86,4 +86,7 @@ public interface MBoardService {
 	//void getBoardTree_Set_D(String pStrLang, String query, int tenantID) throws Exception;
 	
 	void getBoardTree_Set(String pStrLang, String query, String result, int tenantID) throws Exception;
+	
+	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */
+	public List<String> getPDOAddJobDeptID(String userID, String companyID, int tenantID) throws Exception;
 }

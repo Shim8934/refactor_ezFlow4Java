@@ -57,7 +57,6 @@
 		    var pPreviewWContent = "${mailGeneral.previewWContent}";
 		    var pPreviewHList = "${mailGeneral.previewHList}";
 		    var pPreviewHContent = "${mailGeneral.previewHContent}";
-		    var pRefreshinterval = "${mailGeneral.refreshInterval}";
 		    var previewSubTree = "${mailGeneral.previewSubTree}";
 		    var CurrentHeight = 0;
 		    var CurrenWidth = 0;
@@ -72,10 +71,6 @@
 		    var tmp_href;
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "YES";
-		    var pSaveInterval = 0;
-		    var nextMailListRefreshTime = 0;
-		    var refreshIntervalTimerId = 0;
-		    var refreshTimeoutTimerId = 0;
 		    var webSocket =  null;
 		    var userkey = "";
 		    var pclose = "close";
@@ -322,21 +317,6 @@
 		        GetListInfo(HeaderObject, ContentObject);	        
 		        PreviewMode_ChangeBtn();
 		        window_onunload_Event = true;
-		                        
-		        if (pRefreshinterval != "") {
-		            console.log('Setting Mail List Refresh Timer...');
-		            
-	                pSaveInterval = parseInt(pRefreshinterval) * 1000;		            
-		            setMailListRefreshTimer();
-		            
-	                // 브라우저가 Page Visibility API를 지원할 때의 처리
-	                if ('hidden' in document) {
-	                    console.log('adding visibilitychange event handler');
-
-	                    document.addEventListener('visibilitychange', onVisibilityChange);
-	                    recordNextMailListRefreshTime();
-	                }		            
-		        }		
 		    }
 		    
 		    $(document).ready(function() {
@@ -379,79 +359,6 @@
 		    	
 		    });
 		    
-		    function getCurrentTime() {
-		        return new Date().getTime();		        
-		    }
-		    
-		    function setMailListRefreshTimer() { 
-		        if (pSaveInterval != 0) {
-		        	refreshIntervalTimerId = setInterval(function() {
-
-		                MailListRefresh();
-		                recordNextMailListRefreshTime();
-
-		            }, pSaveInterval);
-		        }
-		    }
-		    
-		    function recordNextMailListRefreshTime() {
-		        nextMailListRefreshTime = getCurrentTime() + pSaveInterval;
-		        
-		        console.log('currentTime=' + new Date() + ',Interval=' + pSaveInterval);
-		    }
-		    
-		    function onVisibilityChange() {
-                var remainingTime = nextMailListRefreshTime - getCurrentTime();
-              
-                console.log(remainingTime/1000);
-		        // 메일 목록 페이지 상태가 보임으로 변경될 때의 처리
- 		        if (!document.hidden) { 		            
- 		           console.log('remainingTime=' + remainingTime + ',showing...');
- 		           
- 		            // 다음 번 갱신 시간이 이미 지났으면 즉시 목록 갱신을 수행하고 갱신 타이머를 설정한다.
- 		            if (remainingTime <= 0) {
- 		                console.log('refresh time already passed. Refresing...');
- 		                
-	                	MailListRefresh();
- 		                
-                        // 다음 자동 갱신 시간을 기록한다.
-                        recordNextMailListRefreshTime();
- 		                
- 		                setMailListRefreshTimer();
- 		            // 다음 번 갱신 시간이 아직 남아 있으면 해당 시간에 갱신이 되도록 타이머를 등록한다.
- 		            } else {
-
- 		            	console.log('refresh time not yet passed. Registering Timer...');
- 		            	
- 		            	refreshTimeoutTimerId = setTimeout(function() {
- 		            		
- 		            		MailListRefresh();
- 		            		
- 		            		// 다음 자동 갱신 시간을 기록한다.
- 		            		recordNextMailListRefreshTime();
- 		            		
- 		            		// 다시 주기적으로 갱신 타이머가 동작하도록 등록한다.
- 		            		setMailListRefreshTimer();
- 		            	}, remainingTime);
-
- 		            }
- 	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
-		        } else {
-		        	console.log('remainingTime=' + remainingTime + ',hiding...');
-		            
-		            // 목록 갱신 타이머를 제거한다.
-		            if (refreshIntervalTimerId != 0) {
-		                clearInterval(refreshIntervalTimerId);
-		                refreshIntervalTimerId = 0;
-		            }
-		            
-		            if (refreshTimeoutTimerId != 0) {
-		                clearTimeout(refreshTimeoutTimerId);
-		                refreshTimeoutTimerId = 0;
-		            }
-		        }
-		    }
-		    
 		    function ReSendWithURLOnly(pURL) {
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
@@ -491,14 +398,15 @@
 	            var xmlhttp = createXMLHttpRequest();
 	            createNodeAndInsertText(xmlpara, objNode, "USERID", g_loginID);
 	            createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", document.getElementById("MailList").getAttribute("listpageCount"));
-	            createNodeAndInsertText(xmlpara, objNode, "REFRESHINTERVAL", " ${mailGeneral.refreshInterval}");
-	            createNodeAndInsertText(xmlpara, objNode, "KEEPDELETELENGTH", " ${mailGeneral.keepDeleteLength} ");
+	            createNodeAndInsertText(xmlpara, objNode, "REFRESHINTERVAL", "${mailGeneral.refreshInterval}");
+	            createNodeAndInsertText(xmlpara, objNode, "KEEPDELETELENGTH", "${mailGeneral.keepDeleteLength}");
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMODE", _pPreview);
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWLIST", parseInt(pMailListDiv));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWCONTENT", parseInt(pMailPreVDiv));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHLIST", parseInt(pMailListDiv_H));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWSUBTREE", previewSubTree);
+	            createNodeAndInsertText(xmlpara, objNode, "TEXTOPTION", "${mailGeneral.textOption}");
 	            
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
 	            xmlhttp.send(xmlpara);		  
@@ -650,24 +558,33 @@
 
 		    // 메일박스 내보내기 config 확인
 			function mailbox_export() {
-		    	
-				var folderTotalCount = document.getElementById("folderTotalCount").innerText;
-				
-				if (folderTotalCount < 1) {
-			    	alert("<spring:message code='ezEmail.kyj13' />");
-					return;
-				}
-		    	
-		    	var exportType = "MAILBOX";
-		    	
-		    	if (useEncryptZipForEmail == "YES") {
-		    			mailExportOption_onClick(exportType);
-		    	} else {
-			    	if (confirm("<spring:message code='ezEmail.lhm36' />")) {
-			    		mailbox_export_start();
-			    	}
-		    	}
-		    	
+
+                if (folderTotalCount == "") {
+                	setTimeout (function() {
+                		mailbox_export();
+                    }, 1000);
+                } else {
+					console.log('folderTotalCount=' + folderTotalCount);
+					if (folderTotalCount === null || typeof folderTotalCount === "undefined") {
+						// 이 경우가 나오면 안되요.
+						console.log('folderTotalCount is null or undefined');
+						return;
+					} else if (folderTotalCount < 1) {
+						alert("<spring:message code='ezEmail.kyj13' />");
+						return;
+					}
+
+					var exportType = "MAILBOX";
+
+					if (useEncryptZipForEmail == "YES") {
+						mailExportOption_onClick(exportType);
+					} else {
+						if (confirm("<spring:message code='ezEmail.lhm36' />")) {
+							mailbox_export_start();
+						}
+					}
+                }
+
 			}
 		    
 		    // 메일박스 내보내기
@@ -961,6 +878,7 @@
         	                MailListRefresh();
         	            } else if (result.indexOf("NO APPEND failed.") > -1) {
         		        	alert(strLang241);
+        		        	MailListRefresh();
         	            } else {
         	            	alert("<spring:message code='ezEmail.t404' />");
         	            }

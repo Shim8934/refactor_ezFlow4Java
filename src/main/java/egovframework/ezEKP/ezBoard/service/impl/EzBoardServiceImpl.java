@@ -2120,6 +2120,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		} catch (Exception e) {
 			logger.error("EzBoard :: deleteOneLineReply");
+			e.printStackTrace();
 			rtnValue = "FAIL";
 		}
 		
@@ -2357,6 +2358,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			try {
 				map.put("v_pFileContent", boardListVO.getImageContent().split(";:;")[i]);
 			} catch (Exception e) {
+				e.printStackTrace();
 				map.put("v_pFileContent", "");
 			}
 			map.put("v_pImageName", boardListVO.getImageNames().split("\\|")[i]);
@@ -2553,12 +2555,23 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			return retValue;
 		}
 		
+		/* 2019-04-16 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 권한체크에 포함하도록 수정 */
+		List<String> addJobList = getPDOAddJobDeptID(pUserID, pCompanyID, tenantID);
+		String addJobStr = "";
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr += addJobList.get(i) + ",";
+			}
+		}
+		
 		String pAccessID = pUserID;
 		String[] reverseDeptPath = ezOrganService.getDeptFullPath(pDeptID, tenantID).split(",");
 		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
 			pAccessID += "," + reverseDeptPath[i];
 			if (i == 0) {
 				pAccessID += ",everyone"; 
+			} else if (i == 3 && !addJobStr.equals("")) {
+				pAccessID += "," + addJobStr.substring(0, addJobStr.length() - 1);
 			}
 		}
 		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
@@ -2579,7 +2592,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0, showAllGroupBoard);            
 			} else {
 				// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
-				int isEqaulDept = pAccessID.split(",")[i].trim().equalsIgnoreCase(pDeptID) ? 1 : 0;
+				/* 2019-04-16 홍승비 - 원회사의 사내겸직도 isEqaulDept값을 체크하도록 수정 */
+				int isEqaulDept = 0;
+				String tempDeptList = addJobStr + pDeptID;
+				for (int j = 0; j < tempDeptList.split(",").length; j++) {
+					if(pAccessID.split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+						isEqaulDept = 1;
+						break;
+					} else {
+						isEqaulDept = 0;
+					}
+				}
+				
 				int isDept = ezBoardDAO.isDeptChk(pAccessID.split(",")[i].trim(), tenantID);
 				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, isDept, isEqaulDept, showAllGroupBoard);
 
@@ -2958,6 +2982,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			resultValue = "OK";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			e.printStackTrace();
 			resultValue = "ERROR";
 		}
 
@@ -3203,6 +3228,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	 */
 	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception {
 		logger.debug("saveMHT started");
+		logger.debug("strHTML length : " + strHTML.length());
 
 		String docPath = "";
 		String mhtFilePath = "";
@@ -3245,6 +3271,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			ret = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			ret = false;
 		} finally {
 			if(bos != null){
@@ -3627,6 +3654,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("insertNewItem started");
+		logger.debug("pMode : " + pMode);
 
 		BoardListVO boardListVO = new BoardListVO();
 		
@@ -4180,5 +4208,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("modUpdateDate ended.");
 	}
-
+	
+	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */
+	@Override
+	public List<String> getPDOAddJobDeptID(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("getPDOAddJobDeptID started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_pUserID", userID);
+		map.put("v_pCompanyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getPDOAddJobDeptID ended.");
+		return ezBoardDAO.getPDOAddJobDeptID(map);
+	}
+	
 }

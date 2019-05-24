@@ -12,13 +12,19 @@ function MailToMe_Onclick() {
             }
         }
         if (!existMe) {
+        	if (!increaseReceiverCount()) {
+        		return;
+        	}
+        	
             var newElem = PrepareMailTag(0, "email", g_myname, g_myemail, "");
             MsgToGot.appendChild(newElem);
         }
     } else {
         for (var i = 0; i < msgDiv.childNodes.length; i++) {
             if (msgDiv.childNodes[i].childNodes[0].getAttribute("email") && msgDiv.childNodes[i].childNodes[0].getAttribute("email") == g_myemail) {
-                while (msgDiv.childNodes[i].hasChildNodes()) {
+            	decreaseReceiverCount();
+            	
+            	while (msgDiv.childNodes[i].hasChildNodes()) {
                     msgDiv.childNodes[i].removeChild(msgDiv.childNodes[i].lastChild);
                 }
                 msgDiv.removeChild(msgDiv.childNodes[i]);
@@ -43,6 +49,7 @@ var g_fileSizelist = new Array();
 var g_fileBigSizeYN = new Array();
 var g_AttachList = new Array();
 var g_bMailCreated = false;
+
 function sendType_change(pMode) {
     var selIndex = 0;
     if (pMode > 0) selIndex = sendTypeSelect.selectedIndex;
@@ -871,7 +878,7 @@ function Save_onClick_Complete(ReturnValue) {
             if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1")
                 createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
             else
-                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n").replace(regex, " "));
+                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
             createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
@@ -1063,6 +1070,10 @@ function event_SaveonClick() {
                 		
                 		setTimeout(Send_onClick(), 100);
                 	}
+                }
+                // 잘못된 메일주소가 있을 경우 (ex> mailto:test@test.com)
+                else if (pRtnMessage.indexOf("Local address contains illegal character") > -1) {
+                	alert(strLangLHM22);
                 }
                 // 그 외
                 else {
@@ -1567,6 +1578,10 @@ function CompleteEmailAddress(formName, validDIV, iType) {
                 newElem = PrepareMailTag(iType, "email", mailTagNM, mailTagAddress, "");
                 var IsInsert = CheckMailReceiver(newElem);
                 if (!IsInsert) {
+                	if (!increaseReceiverCount()) {
+                		return;
+                	}
+                	
                     validDIV.appendChild(newElem);
                 }
                 continue;
@@ -1591,6 +1606,10 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	
 	        var IsInsert = CheckMailReceiver(newElem);
 	        if (!IsInsert) {
+	        	if (!increaseReceiverCount()) {
+            		return;
+            	}
+	        	
 	            validDIV.appendChild(newElem);
 	        }
 	        var szFromName = "";
@@ -1625,6 +1644,10 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	        var IsInsert = CheckMailReceiver(newElem);
 	
 	        if (!IsInsert) {
+	        	if (!increaseReceiverCount(m_addrBook["type"][0], m_addrBook["href"][0])) {
+            		return;
+            	}
+	        	
 	            validDIV.appendChild(newElem);
 	        }
 	
@@ -1697,6 +1720,7 @@ function CompleteEmailAddress_Complete(rgParams) {
         for (var z = 0; z < rgParams["returnedRecipientEmail"].length; z++) {
             for (var i = 0; i < checkname_cross_dialogArguments[5].childNodes.length; i++) {
                 if (GetAttribute(checkname_cross_dialogArguments[5].childNodes[i].childNodes[0], "email") == rgParams["returnedRecipientEmail"][z]) {
+                	decreaseReceiverCount(rgParams["returnedRecipientType"][z], rgParams["returnedRecipientHref"][z]);
                 	checkname_cross_dialogArguments[5].removeChild(checkname_cross_dialogArguments[5].childNodes[i]);
                     break;
                 }
@@ -1714,6 +1738,10 @@ function CompleteEmailAddress_Complete(rgParams) {
                 var IsInsert = CheckMailReceiver(newElem);
 
                 if (!IsInsert) {
+                	if (!increaseReceiverCount(rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientHref"][count1])) {
+                		return;
+                	}
+                	
                     checkname_cross_dialogArguments[5].appendChild(newElem);
                 }
             }
@@ -2093,10 +2121,6 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 
         if (Sender.indexOf("(,,)") > -1) Sender = Sender.split("(")[0];
 
-        htmlData = ReplaceText(htmlData, "<P ", "<DIV ");
-        htmlData = ReplaceText(htmlData, "/P>", "/DIV>");
-        htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
-        htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
         if (pRetransType != "boardAttach") {
             document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
@@ -2199,10 +2223,6 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
 
         if (Sender.indexOf("(,,)") > -1) Sender = Sender.split("(")[0];
 
-        htmlData = ReplaceText(htmlData, "<P ", "<DIV ");
-        htmlData = ReplaceText(htmlData, "/P>", "/DIV>");
-        htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
-        htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
         document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
         	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
@@ -2976,6 +2996,8 @@ function SelectReceiver_onClick(szDefaultWind) {
 function SelectReceiver_Complete(ReturnValue) {
     var receiverData = getReceiverChooseFormat();
     receiverData["addReceiver"] = addReceiver;
+    receiverData["receiverCount"] = receiverCount;
+    receiverData["groupAddressCountMap"] = groupAddressCountMap;
     receiverData["window"] = this;
     mail_newreceiverchoose_dialogArguments[0] = receiverData;
     mail_newreceiverchoose_dialogArguments[1] = SelectReceiver_onClick_Complete;
@@ -2987,6 +3009,8 @@ function SelectReceiver_onClick_Complete(pListViewMsgTo, pListViewMsgCC, pListVi
         MsgToGot.innerHTML = "";
         MsgCCGot.innerHTML = "";
         MsgBCCGot.innerHTML = "";
+        receiverCount = 0;
+        
         if (pListViewMsgBCC.getElementsByTagName("TR").length > 1) {
             document.getElementById("BccViewer").childNodes.item(1).src = GroupminImg;
             document.getElementById("MsgBCC_TRu").style.display = "";
@@ -3040,6 +3064,8 @@ function addReceiver(pListViewMsgTo, pListViewMsgCC, pListViewMsgBCC) {
     MsgToGot.innerHTML = "";
     MsgCCGot.innerHTML = "";
     MsgBCCGot.innerHTML = "";
+    receiverCount = 0;
+    
     if (pListViewMsgBCC.getElementsByTagName("TR").length > 1) {
         document.getElementById("BccViewer").childNodes.item(1).src = GroupminImg;
         document.getElementById("MsgBCC_TRu").style.display = "";
@@ -3100,17 +3126,48 @@ function NameChange_onClick_Complete(rgParams) {
     }
 
     if (rgParams["recipientTDData"] == "delete") {
+    	decreaseReceiverCount(checkname_cross_dialogArguments[3].getAttribute("type"), checkname_cross_dialogArguments[3].getAttribute("href"));
         changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
     } else if (rgParams["recipientTDData"] == "change") {
         length = rgParams["returnedRecipientName"].length;
-        for (count1 = 0; count1 < length; count1++) {
-            newElem = PrepareMailTag(checkname_cross_dialogArguments[3].getAttribute("iType"), rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientName"][count1],
-                rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
-
-            checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
+        
+        if (length == 0) {
+        	return; 
         }
-        return;
-        changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
+        
+        var isOrgElemSelected = false;
+        
+        for (count1 = 0; count1 < length; count1++) {
+        	newElem = PrepareMailTag(checkname_cross_dialogArguments[3].getAttribute("iType"), rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientName"][count1],
+                    rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
+        	
+        	var IsInsert = CheckMailReceiver(newElem);
+        	
+        	if (!IsInsert) {
+        		if (!increaseReceiverCount(rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientHref"][count1])) {
+            		return;
+            	}
+        		
+        		checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
+        	} else {
+        		if (!isOrgElemSelected) {
+        			if ((checkname_cross_dialogArguments[3].getAttribute("type") === "email")
+            				&& (rgParams["returnedRecipientType"][count1] === "email")
+            				&& (rgParams["returnedRecipientEmail"][count1] === checkname_cross_dialogArguments[3].getAttribute("email"))) {
+            			isOrgElemSelected = true;
+            		} else if ((checkname_cross_dialogArguments[3].getAttribute("type") === "mailgroup")
+            				&& (rgParams["returnedRecipientType"][count1] === "mailgroup")
+            				&& (rgParams["returnedRecipientHref"][count1] === checkname_cross_dialogArguments[3].getAttribute("href"))) {
+            			isOrgElemSelected = true;
+            		}
+        		}
+        	}
+        }
+        
+        if (!isOrgElemSelected) {
+        	decreaseReceiverCount(checkname_cross_dialogArguments[3].getAttribute("type"), checkname_cross_dialogArguments[3].getAttribute("href"));
+        	changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
+        }
     }
 }
 function GetAddrFormat(receiveCol) {
@@ -3220,19 +3277,7 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     var TopSpan = document.createElement("span");
     var newElem = document.createElement("span");
     
-    if (type == "mailgroup")
-        newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + "</u>; ";
-    else
-        newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + "</u>; ";
-
-    //newElem.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;'/> " + "</u>";
-
     newElem.style.cursor = "pointer";
-
-    if (type == "mailgroup") {
-        newElem.style.fontWeight = "bold";
-    }
-
     newElem.setAttribute("iType", iWhich); //newElem.getAttribute("iType") = iWhich;
     newElem.setAttribute("onclick", "NameChange_onClick()");
     newElem.setAttribute("type", type);//newElem.getAttribute("type") = type;
@@ -3240,25 +3285,36 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     newElem.setAttribute("email", email);// newElem.getAttribute("email") = email;
 
     if (type == "mailgroup") {
+    	newElem.setAttribute("href", href);
+    	newElem.style.fontWeight = "bold";
         newElem.style.color = inMailColor;
-    }
-    else {
-    	var InnerDomainList = InnerDomain.toLowerCase().split(';');
+        newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + "</u>; ";
+        
+        TopSpan.appendChild(newElem);
+        TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+    } else {
+    	var innerDomainList = InnerDomain.toLowerCase().split(';');
+    	var emailDomain = email.split('@')[1].toLowerCase();
+    	var isInnerDmain = false;
     	
-    	for (var i = 0; i < InnerDomainList.length; i++) {
-    		InnerDomainList[i] = InnerDomainList[i].trim();
+    	for (var i = 0; i < innerDomainList.length; i++) {
+    		if (emailDomain == innerDomainList[i]) {
+    			isInnerDmain = true;
+    			break;
+    		}
     	}
     	
-        if (InnerDomainList.indexOf(email.split('@')[1].toLowerCase()) == -1) 
-            newElem.style.color = outMailColor;
-        else
-            newElem.style.color = inMailColor;
+    	if (isInnerDmain) {
+    		newElem.style.color = inMailColor;
+    	} else {
+    		newElem.style.color = outMailColor;
+    	}
+        
+        newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + "</u>; ";
+        
+        TopSpan.appendChild(newElem);
+        TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
     }
-
-    newElem.setAttribute("href", href);//newElem.getAttribute("href") = href;
-
-    TopSpan.appendChild(newElem);
-    TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/> " + "</u>";
 
     return TopSpan;
 }
@@ -3271,18 +3327,23 @@ function addReceiverOneListView(iWhich, pListView) {
 
     for (var nCnt1 = 1; nCnt1 < pListView.getElementsByTagName("TR").length; nCnt1++) {
         g_bDirty = true;
+        
+        if (!increaseReceiverCount(pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA2"), pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA4"))) {
+    		return;
+    	}
+        
         if (pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA2") == "mailgroup") {
             newElem = PrepareMailTag(iWhich, "mailgroup",
                     pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA1"),
                     pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA3"),
                     pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA4"));
-        }
-        else {
+        } else {
             newElem = PrepareMailTag(iWhich, "email",
                     pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA1"),
                     pListView.getElementsByTagName("TR")[nCnt1].getAttribute("DATA2"),
                     "");
         }
+        
         switch (iWhich) {
             case 0:
                 MsgToGot.appendChild(newElem);
@@ -3317,11 +3378,11 @@ function addReceiverFromList(iWhich, receiverlist) {
         recvName = receiverlist["name"][nCnt1];
         recvEmail = receiverlist["email"][nCnt1];
         recvHref = receiverlist["href"][nCnt1];
-
-        if ( recvEmail == "a@a.com" ) {
-        	continue;
-        }
-
+        
+        if (!increaseReceiverCount(recvType, recvHref)) {
+    		return;
+    	}
+        
         newElem = PrepareMailTag(iWhich, recvType, recvName, recvEmail, recvHref);
 
         switch (iWhich) {
@@ -3512,139 +3573,11 @@ OLECMDEXECOPT_DODEFAULT = 0;
 
 var g_originalHTML = "";
 var g_originalPlainText = "";
-function pzFormProc_DocumentComplete() {
-    if (g_isFormat) return;
-
-    var MailBodyContent = document.createElement("DIV");
-    MailBodyContent.innerHTML = messageBody.getAttribute("mbody");
-
-    var DivCnt = MailBodyContent.getElementsByTagName("DIV").length;
-    for (var i = DivCnt; i >= 0; i--) {
-        if (MailBodyContent.getElementsByTagName("DIV").item(i) != null) {
-            try {
-                if (MailBodyContent.getElementsByTagName("DIV").item(i).getAttribute("id") == "ezFormProc_div") {
-                    MailBodyContent.getElementsByTagName("DIV").item(i).outerHTML = MailBodyContent.getElementsByTagName("DIV").item(i).innerHTML;
-                }
-                else if (MailBodyContent.getElementsByTagName("DIV").item(i).getAttribute("id") == "ORGMAIL_CONTENT___send") {
-                    MailBodyContent.getElementsByTagName("DIV").item(i).outerHTML = MailBodyContent.getElementsByTagName("DIV").item(i).innerHTML;
-                }
-                else if (MailBodyContent.getElementsByTagName("DIV").item(i).getAttribute("id") == "msgbody") {
-                    MailBodyContent.getElementsByTagName("DIV").item(i).outerHTML = MailBodyContent.getElementsByTagName("DIV").item(i).innerHTML;
-                }
-            } catch (e) {
-            }
-        }
-    }
-
-    message.SetEditorContent("<div id=msgbody><div>" + messageBody.getAttribute("mbody") + "</div></div>")
-    g_originalHTML = message.GetEditorContent();
-
-    if (eSubject.value != "") {
-    }
-    else
-        MsgTo.focus();
-
-    var tempDiv = document.createElement("DIV");
-    tempDiv.innerHTML = message.GetEditorContent();
-    var DivRows = tempDiv.getElementsByTagName("DIV");
-    for (var i = 0; i < DivRows.length; i++) {
-        if (DivRows.item(i).id == "MailSign" && DivRows.item(i).childNodes.length > 0) {
-            if (DivRows.item(i).childNodes.item(0).nodeName == "DIV") {
-                if (DivRows.item(i).childNodes.item(0).id == "kaoni_sign1") {
-                    document.getElementById("SelMailSign").selectedIndex = 1;
-                    CurrentSing = "1";
-                }
-                else if (DivRows.item(i).childNodes.item(0).id == "kaoni_sign2") {
-                    document.getElementById("SelMailSign").selectedIndex = 2;
-                    CurrentSing = "2";
-                }
-                else if (DivRows.item(i).childNodes.item(0).id == "kaoni_sign1") {
-                    document.getElementById("SelMailSign").selectedIndex = 3;
-                    CurrentSing = "3";
-                }
-            }
-        }
-    }
-    tempDiv = null;
-
-}
 
 function pzFormProc_FieldsAvailable() {
     tbContentElement.ShowWorkingDlg("", false);
 }
 
-function GetUpmooItemInfo_New(Itemid, DocHref) {
-    objMHT = new ActiveXObject("MhtFormat.Convert");
-    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURIComponent(DocHref);
-    objMHT.sync = true;
-    var strMht = objMHT.DownloadURL(fullPath);
-
-    objMHT.mhtData = strMht;
-    objMHT.filterIn();
-
-    var htmlData = "<div class='margin' id='ezFormProc_div'>" + objMHT.htmlData + "</div>";
-
-    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-    var xmlHTTP = new ActiveXObject("Microsoft.XMLHTTP");
-
-    var objRoot = xmlpara.createNode(1, "PARAMETER", "");
-    xmlpara.appendChild(objRoot);
-
-    // 0
-    var objNode = xmlpara.createNode(1, "ITEMID", "");
-    objNode.text = Itemid;
-    xmlpara.documentElement.appendChild(objNode);
-
-    // 1
-    objNode = xmlpara.createNode(1, "COMPANYID", "");
-    objNode.text = g_companyID;
-    xmlpara.documentElement.appendChild(objNode);
-
-
-
-    xmlHTTP.open("Post", "/myoffice/ezReport/remote/Call_View.aspx", false);
-    xmlHTTP.send(xmlpara);
-
-    try {
-        if (xmlHTTP.status == 200) {
-            var Resultxml = loadXMLString(xmlHTTP.responseText);
-            eSubject.value = Resultxml.selectSingleNode("DATA/ROW/TITLE").text;
-            var PostDate = Resultxml.selectSingleNode("DATA/ROW/POSTDATE").text;
-            var Sender = "";
-
-            if (isPrimary == "1") {
-                Sender = Resultxml.selectSingleNode("DATA/ROW/USERNM").text + " (" +
-                        Resultxml.selectSingleNode("DATA/ROW/USERDEPTNM").text + ", " +
-                        Resultxml.selectSingleNode("DATA/ROW/USERJOBTITLE").text + ")";
-            }
-            else {
-                Sender = Resultxml.selectSingleNode("DATA/ROW/USERNM2").text + " (" +
-                        Resultxml.selectSingleNode("DATA/ROW/USERDEPTNM2").text + ", " +
-                        Resultxml.selectSingleNode("DATA/ROW/USERJOBTITLE2").text + ")";
-            }
-
-            if (Resultxml.selectSingleNode("DATA/ROW/HASATTACH").text == "1") {
-                getReportAttachList(Itemid);
-            }
-
-            htmlData = htmlData.substr(htmlData.indexOf("<BODY"));
-            htmlData = ReplaceText(htmlData, "<P ", "<DIV ");
-            htmlData = ReplaceText(htmlData, "/P>", "/DIV>");
-            htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
-            htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
-
-            messageBody.mbody = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br>" + htmlData;
-            eSubject.value = strLang121 + eSubject.value;
-            Subject_ReApply();
-        }
-
-        xmlhttp = null;
-        xmlpara = null;
-    }
-    catch (e) {
-        alert("GetReportItemInfo :: " + e.description);
-    }
-}
 function getReportAttachList(ItemNo) {
     try {
 
@@ -3725,7 +3658,7 @@ function Set_sendflag() {
     }
 }
 
-function deleteMailUser(email, iWhich) {
+function deleteMailUser(email, iWhich, href) {
 
     if(!CrossYN())
         window.event.cancelBubble = true;
@@ -3733,30 +3666,48 @@ function deleteMailUser(email, iWhich) {
     switch (iWhich) {
         case "0":
             for (var i = 0; i < MsgToGot.children.length; i++) {
-                if (GetChildNodes(MsgToGot)[i].innerHTML.indexOf(email) > -1) {
-                    break;
+            	if (email == "mailgroup" && GetChildNodes(GetChildNodes(MsgToGot)[i])[0].getAttribute("href") == href) {
+            		decreaseReceiverCount(email, href);
+                	MsgToGot.removeChild(GetChildNodes(MsgToGot)[i]);
+                	
+                	return;
+        		} else if (GetChildNodes(GetChildNodes(MsgToGot)[i])[0].getAttribute("email") == email) {
+        			decreaseReceiverCount();
+        			MsgToGot.removeChild(GetChildNodes(MsgToGot)[i]);
+        			
+                    return;
                 }
             }
-            MsgToGot.removeChild(GetChildNodes(MsgToGot)[i]);
-            break;
 
         case "1":
             for (var j = 0; j < MsgCCGot.children.length; j++) {
-                if (GetChildNodes(MsgCCGot)[j].innerHTML.indexOf(email) > -1) {
-                    break;
+            	if (email == "mailgroup" && GetChildNodes(GetChildNodes(MsgCCGot)[j])[0].getAttribute("href") == href) {
+            		decreaseReceiverCount(email, href);
+                	MsgCCGot.removeChild(GetChildNodes(MsgCCGot)[j]);
+                	
+                	return;
+        		} else if (GetChildNodes(GetChildNodes(MsgCCGot)[j])[0].getAttribute("email") == email) {
+        			decreaseReceiverCount();
+                	MsgCCGot.removeChild(GetChildNodes(MsgCCGot)[j]);
+                	
+                	return;
                 }
             }
-            MsgCCGot.removeChild(GetChildNodes(MsgCCGot)[j]);
-            break;
 
         case "2":
             for (var k = 0; k < MsgBCCGot.children.length; k++) {
-                if (GetChildNodes(MsgBCCGot)[k].innerHTML.indexOf(email) > -1) {
-                    break;
+            	if (email == "mailgroup" && GetChildNodes(GetChildNodes(MsgBCCGot)[k])[0].getAttribute("href") == href) {
+            		decreaseReceiverCount(email, href);
+                	MsgBCCGot.removeChild(GetChildNodes(MsgBCCGot)[k]);
+                	
+                	return;
+        		} else if (GetChildNodes(GetChildNodes(MsgBCCGot)[k])[0].getAttribute("email") == email) {
+        			decreaseReceiverCount();
+                	MsgBCCGot.removeChild(GetChildNodes(MsgBCCGot)[k]);
+                	
+                	return;
                 }
             }
-            MsgBCCGot.removeChild(GetChildNodes(MsgBCCGot)[k]);
-            break;
     }
 }
 
@@ -4028,9 +3979,67 @@ function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
         dadiframe.fileupload2(pAttachListXml);            	
     xmlhttp = null;
 }
-//end
+
+
 function replaceAll(str, searchStr, replaceStr) {
 	return str.split(searchStr).join(replaceStr);
 }
-//end
 
+function getGroupAddressMemberCount(addressId) {
+	var count = $.ajax({
+    	type : "GET",
+    	dataType : "text",
+    	url : "/ezAddress/getGroupAddressMemberCount.do",
+    	data : {id : addressId},
+    	async : false
+    }).responseText;
+	
+	return parseInt(count);
+}
+
+function increaseReceiverCount(pType, pHref) {
+	if (typeof pType !== 'undefined' && typeof pHref !== 'undefined') {
+		if (pType == "mailgroup") {
+			var addressId = pHref.split("|!|")[0];
+			var count = getGroupAddressMemberCount(addressId);
+			
+			if (mailMaxReceiverCount < receiverCount + count) {
+				alert(strLangReceiverCount01 + mailMaxReceiverCount + strLangReceiverCount02);
+	            return false;
+			}
+			
+			groupAddressCountMap[addressId] = count;
+			receiverCount += count;
+		} else {
+			if (mailMaxReceiverCount < receiverCount + 1) {
+				alert(strLangReceiverCount01 + mailMaxReceiverCount + strLangReceiverCount02);
+	            return false;
+			}
+			
+			receiverCount += 1;
+		}
+	} else {
+		if (mailMaxReceiverCount < receiverCount + 1) {
+			alert(strLangReceiverCount01 + mailMaxReceiverCount + strLangReceiverCount02);
+            return false;
+		}
+		
+		receiverCount += 1;
+	}
+	
+	return true;
+}
+
+function decreaseReceiverCount(pType, pHref) {
+	if (typeof pType !== 'undefined' && typeof pHref !== 'undefined') {
+		if (pType == "mailgroup") {
+	    	var addressId = pHref.split("|!|")[0];
+	    	receiverCount -= groupAddressCountMap[addressId];
+	    	delete groupAddressCountMap[addressId];
+	    } else {
+	    	receiverCount -= 1;
+	    }
+	} else {
+		receiverCount -= 1;
+	}
+}

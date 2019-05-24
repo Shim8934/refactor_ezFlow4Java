@@ -61,6 +61,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useMailLinkHostname', '대용량첨부/보안메일 링크의 hostname 지정여부', 'NO', '대용량첨부메일 및 보안메일의 경우 어느 hostname으로 접속해도 설정된 mailLinkHostname 컨피그 값으로 링크가 만들어진다.YES: mailLinkHostname 링크 사용NO: 사용자의 그룹웨어 접속 hostname으로 링크 사용 (default: NO)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'UseMailBoxBackUp', '편지함 내보내기/가져오기 사용여부', 'YES', '메일 왼쪽 편지함에서 마우스 오른쪽 클릭 시 편지함 내보내기/가져오기가 가능하다.YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useMailAddrAutoComplete', '메일 수신인 자동완성 사용여부', 'YES', '메일쓰기>받는사람, 참조, 숨은참조에 수신인 이름 입력 시 자동완성 기능을 사용한다 YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'usePlainForDefaultTextOption', '기본 메일 본문 형식을 PlainText로 사용여부', 'NO', '메일 환경설정의 메일본문형식을 PlainText를 default로 설정한다. YES: 사용NO: 사용안함 (default: NO)', '2019-05-23 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useLoginCookieSSO', 'loginCookieSSO 로그인 쿠키 추가생성', 'NO', 'loginCookieSSO라는 쿠키에 도메인으로 설정하여 로그인 쿠키 하나 추가로 생성NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useLetter', '메일 편지지 기능 사용여부', 'YES', 'YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useLadder', '사다리게임 모듈 사용여부', 'NO', 'YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '기타모듈');
@@ -121,6 +122,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'mailLinkHostname', '대용량첨부메일/보안메일 링크의 hostname', '', '대용량첨부메일 및 보안메일 링크의 hostname을 설정한다. (port번호 포함, 80포트는 생략)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'MailInnerDomain', '내부 메일도메인', 'jtest.kaoni.com', '내부 메일 도메인 리스트. 세미콜론으로 도메인을 구분하며 메인 메일도메인은 필수로 포함한다. (세미콜론(;)으로 도메인 구분, 주 메일 도메인 필수로 포함, alias 도메인 사용할 경우 포함) (default: jtest.kaoni.com)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'MailAttachLimit', '메일 일반 첨부파일 최대 크기', '10', 'MB 단위로 메일 일반 첨부파일의 최대 크기를 지정한다. (default: 10)', '2017-01-06 00:00:00', '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'mailMaxReceiverCount', '메일 최대 수신자 수', '200', '메일 발송 시 최대 수신자 수를 지정한다. (default: 200)', '2019-03-21 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'LoginMailLogKeepPeriod', '로그인, 메일 로그 보존기간', '3', '월 단위로 로그인 기록과 메일 수발신 로그를 보존하는 기간을 지정한다. 지정한 기간이 지나면 삭제한다. (default: 3)', '2017-01-06 00:00:00', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'LicenseKey', '라이센스키', '', '라이센스 키', '2017-01-06 00:00:00', '일반');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'LangSecondary5', '멀티언어5(서브)', '', '', '2017-01-06 00:00:00', '일반');
@@ -841,8 +843,8 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 
 -- G
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('009',1,'제목',400,null,'DocTitle',null,null,'서버저장문서','제목','Title','タイトル','标题','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('009',2,'기안부서',120,null,'WriterDeptName',null,null,'기안부서','기안부서','Dept.(draft)','送信依頼部門','傳出部門委託','Top',0);
-INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('009',3,'기안자',100,null,'WriterName',null,null,'기안자','기안자','Drafter','送信依頼者','傳出贊助商','Top',0);
+INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('009',2,'기안부서',120,null,'WriterDeptName',null,null,'기안부서','기안부서','Dept.(draft)','起案部署','傳出部門委託','Top',0);
+INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('009',3,'기안자',100,null,'WriterName',null,null,'기안자','기안자','Drafter','起案者','傳出贊助商','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('009',4,'저장일시',100,null,'StartDate',null,null,'저장일시','저장일시','Save Date','保存日時','保存日期','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('009',5,'양식명',100,null,'FormName',null,null,'양식명','양식명','Form title','様式名','样式名','Top',0);
 INSERT INTO TBL_LISTOPTION (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('009',6,'첨부',30,null,'HASATTACHYN',null,null,'서버저장문서','첨부','Attach','添付','附件','Top',0);
@@ -1368,7 +1370,7 @@ INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, Tabl
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S200', 4, '보존기간', 'Keeping period', '保存期間', '保留时间', 80, NULL, 'ITEMLIMIT', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S200', 5, '보안등급', 'Security level', '保安等級', '安全级别', 80, NULL, 'ITEMSECURITY', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S200', 6, '공개여부', 'Public', '公開設定', '是否共享', 60, NULL, 'ITEMPUBLIC', NULL, NULL, NULL, NULL, 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 1, '문서분류', 'Classified document', '文書分類', '文件分类', 105, NULL, 'GROUPNAME', NULL, NULL, NULL, NULL, 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 1, '문서분류', 'Classified document', '文書の分類', '文件分类', 105, NULL, 'GROUPNAME', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 2, '코 드', 'Code', 'コード', '代码', 50, NULL, 'ITEMCODE', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 3, '기 능 명 칭', 'Name', '機能名', '功能名称', 180, NULL, 'ITEMNAME', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 4, '보존기간', 'Keeping period', '保存期間', '保留时间', 80, NULL, 'ITEMLIMIT', NULL, NULL, NULL, NULL, 'Top', 0);
@@ -1568,8 +1570,8 @@ INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPED
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('004','03','3년',1,'3년',null,'3 years','Top',0);
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('004','05','5년',1,'5년',null,'5 years','Top',0);
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('004','10','10년',1,'10년',null,'10 years','Top',0);
-INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('004','30','30년',1,'30년',null,'30 years','Top',0);
-INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('004','35','준영구',1,'준영구',null,'Semi-permanence','Top',0);
+INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('004','20','30년',1,'30년',null,'30 years','Top',0);
+INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('004','30','준영구',1,'준영구',null,'Semi-permanence','Top',0);
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('004','40','영구',1,'영구',null,'Permanence','Top',0);
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('005','1','대통령관련 기록물',1,'대통령관련 기록물','특수기록물(기록물)','President Related Records','Top',0);
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('005','2','비밀기록물',1,'비밀기록물',null,'Confidential Records','Top',0);
@@ -1638,8 +1640,7 @@ Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values (
 Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t09','Top',0);
 Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t10','Top',0);
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'일일업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'일일업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -1761,8 +1762,7 @@ values (0,'일일업무일지(기본)',
 </p>'
 ,'ezJournal.t05',UTC_TIMESTAMP(),'기본일일업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'주간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'주간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -1884,8 +1884,7 @@ values (0,'주간업무일지(기본)',
 </p>'
 ,'ezJournal.t06',UTC_TIMESTAMP(),'기본주간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'월간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'월간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2007,8 +2006,7 @@ values (0,'월간업무일지(기본)',
 </p>'
 ,'ezJournal.t07',UTC_TIMESTAMP(),'기본월간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'분기업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'분기업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2130,8 +2128,7 @@ values (0,'분기업무일지(기본)',
 </p>'
 ,'ezJournal.t08',UTC_TIMESTAMP(),'기본분기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'반기업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'반기업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2253,8 +2250,7 @@ values (0,'반기업무일지(기본)',
 </p>'
 ,'ezJournal.t09',UTC_TIMESTAMP(),'기본반기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'연간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'연간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>

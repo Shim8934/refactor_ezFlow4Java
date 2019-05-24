@@ -273,9 +273,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						fromStr = commonUtil.trimDoubleQuotes(fromStr);
 								
 						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-						if (fromEmail.equals("a@a.com")){
-							fromEmail = "";
-						}
 					} else {
 						String[] fromHeaders = message.getHeader("From");
 						if (fromHeaders != null) {
@@ -347,6 +344,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								}
 								
 								name = commonUtil.trimDoubleQuotes(name);
+							}
+							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
 							}
 							
 							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
@@ -446,6 +449,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = commonUtil.trimDoubleQuotes(name);
 							}
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
 							
 							/* 유저 본인의 이름을 맨앞으로 ccStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
@@ -493,6 +502,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							} else {
 								name = MimeUtility.decodeText(name);
 								name = commonUtil.trimDoubleQuotes(name);
+							}
+							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
 							}
 							
 							logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
@@ -1594,6 +1609,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		int unread = 0;
 		int importance = 1;
 		IMAPAccess ia = null;
+		Boolean emptyFlag = false;
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1602,6 +1618,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (f == null || !f.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
+				emptyFlag = true;
 			} else {
 				f.open(Folder.READ_WRITE);
 				Message message = null;
@@ -1612,6 +1629,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
+					emptyFlag = true;
 				} else {
 					FetchProfile fp = new FetchProfile();
 					
@@ -1701,6 +1719,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								toStr += ";";
 	                        }					
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							toStr += "\""+ name +"\" <" + iAddress.getAddress() + ">";
 						}
 					}
@@ -1766,6 +1790,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								ccStr += ";";
 	                        }
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							ccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
 						}
 					}
@@ -1791,6 +1821,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							if (i != 0) {
 								bccStr += ";";
 	                        }
+							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
 							
 							bccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
 						}
@@ -1845,6 +1881,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			if (ia != null) {
 				ia.close();
 			}
+		}
+		
+		if(emptyFlag) {
+			dateStr = "";
+			fromStr = "";
+			fromEmail = "";
+			toStr = "";
+			ccStr = "";
+			bccStr = "";
+			subject = "";
 		}
 		
 		StringBuilder sb = new StringBuilder();
@@ -1953,6 +1999,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     	
     			if (f == null || !f.exists()) {
     				logger.error("Folder not found. folderPath=" + folderPath);
+    				model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+					return "ezCommon/error";
     			} else {
     				f.open(Folder.READ_ONLY);
     				Message message = null;
@@ -1962,6 +2012,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				
     				if (message == null) {
     					logger.error("Message not found. uid=" + uid);
+    					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+    					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+    					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+    					return "ezCommon/error";
     				} else {
     					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
     					double size = Double.parseDouble(bodyInfoList.get(2));
@@ -2162,14 +2216,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							personName = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 						}
-						/**
-						 * 인쇄할 때 보낸 사람, 받는 사람, 참조에 메일 주소가 없는 경우(a@a.com)
-						 * 메일 주소가 나타나지 않도록 처리
-						 */
 						
                         if (propertyValue.equals("YES") || propertyValue.equals("")) {
                             pSender = personName;                                  
-                            pSender += fromAddress.getAddress() == null || ((InternetAddress)fromAddress).getAddress().equals("a@a.com") ? "" : "(" + fromAddress.getAddress() + ")";
+                            pSender += fromAddress.getAddress() == null ? "" : "(" + fromAddress.getAddress() + ")";
 	                    } else {
 	                    	pSender = personName;                                  
 	                    }						
@@ -2195,7 +2245,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
                             if (propertyValue.equals("YES") || propertyValue.equals("")) {
                                 pReciverTo += personName;
-                                pReciverTo += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";                                                                      
+                                pReciverTo += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";                                                                      
                             } else {
                                 pReciverTo += personName + "\t";
                             }							
@@ -2219,7 +2269,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							if (propertyValue.equals("YES") || propertyValue.equals("")) {
 								pReciverCc += personName;
-								pReciverCc += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+								pReciverCc += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
 							} else {
 								pReciverCc += personName + "\t";								
 							}
@@ -3708,13 +3758,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 */
 	private String getReceiverHTML(String name, String address, boolean isSecureMail){
 		String returnValue = null;
-		/**
-		 * 메일 주소가 없을 경우('a@a.com') 
-		 * 마우스 오버를 해도 메일 주소가 나타나지 않도록 처리.
-		 **/
-		if (address.equals("a@a.com")) { 
-			address = "";
-		}
 		
 		if (isSecureMail) {
 			returnValue = "<span title='" + (address == null? "" : EgovStringUtil.getSpclStrCnvr(address)) + "'>"

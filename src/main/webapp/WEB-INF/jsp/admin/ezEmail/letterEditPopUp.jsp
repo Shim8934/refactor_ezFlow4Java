@@ -189,7 +189,7 @@
 			
 			function rebody() {
 				if (popUpType != "modify") {
-					window.message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P>");	
+					window.message.SetEditorContent("");
 				}
 		    }
 		</script>	

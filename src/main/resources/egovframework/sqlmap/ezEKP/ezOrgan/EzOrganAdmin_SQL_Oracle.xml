@@ -18,6 +18,8 @@
 		<result property="company" 								column="COMPANYNAME" 					columnIndex="7"/>		
 		<result property="title1" 								column="T1" 							columnIndex="8"/>		
 		<result property="title2" 								column="T2" 							columnIndex="9"/>		
+		<result property="jobID" 								column="JOBID" 							columnIndex="10"/>
+		<result property="physicalDeliveryOfficeName" 			column="physicaldeliveryofficename" 	columnIndex="11"/>
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -4332,6 +4334,7 @@
 				A.CN ,
              	A.DEPTID ,
              	A.POSITIONCD ,
+             	C.physicalDeliveryOfficeName,
              	CASE
              		#v_LANGDATA#
                 WHEN
@@ -4373,7 +4376,8 @@
                 END
                 	COMPANYNAME  ,
              	A.TITLE T1  ,
-             	A.TITLE2 T2  
+             	A.TITLE2 T2  ,
+             	A.JOBID
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN

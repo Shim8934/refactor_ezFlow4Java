@@ -287,6 +287,7 @@ var strLangLHM18 = "/blank_us.htm";
 var strLangLHM19 = "If you delete an e-mail security is also impossible to view the secure mail recipients. \nAre you sure you want to delete it?";
 var strLangLHM20 = "If you move a security e-mail will not be checked for secure mail and browsing security information. \nDo you want to go anyway?";
 var strLangLHM21 = "About Distribution Group";
+var strLangLHM22 = "The recipient's email address contains characters that are not valid. Please email address.";
 var strLangKMS01 = "";
 var strLangKMS02 = "The total size of attached file";
 var strLangKMS03 = "No mail.";
@@ -311,6 +312,8 @@ var strLangSharedMailbox01 = "Shared mailbox";
 var strLangSharedMailbox02 = "Do you want to change password?";
 var strLangSharedMailbox03 = "Changed password.";
 
+var strLangReceiverCount01 = "The maximum number of recipients is ";
+var strLangReceiverCount02 = ".";
 
 function GetLocalTime(Offset , pDateTime)
 {

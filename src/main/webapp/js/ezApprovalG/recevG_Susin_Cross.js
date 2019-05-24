@@ -1864,6 +1864,52 @@ function openOpinionUI_Complete(ret) {
     }
 }
 
+function openOpinionUI_New(pOpinionType, CompleteFunction) {
+	try {
+		var parameter = new Array();
+		parameter[0] = pDocID;		//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = pDraftFlag;	//DRAFTFLAG
+		parameter[3] = pDocState;	//DOCSTATE
+		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		parameter[99] = ext;		//EXT
+		
+		apropinion_cross_dialogArguments[0] = parameter;
+		if (typeof(CompleteFunction) != "undefined") {
+			apropinion_cross_dialogArguments[1] = CompleteFunction; 
+		} else {
+			apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+		}
+		
+		DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do");
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e.description);
+	}
+}
+function openOpinionUI_New_Complete(ret) {
+	try {
+		DivPopUpHidden();
+		if (ret == "Clear") {
+			pHasOpinionYN = "N";
+		} else if (ret == "cancel") {
+			//do_nothing
+		} else {
+	        var objXML = createXmlDom();
+	        objXML = loadXMLString(ret);
+	        
+	        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+	        if (NodeList.length != 0) {
+	            pHasOpinionYN = "Y";
+	        } else {
+	            pHasOpinionYN = "N";
+	            ret = "cancel";
+	        }
+		}
+	} catch (e) {
+		alert("openOpinionUI_New_Complete ::: " + e.description);
+	}
+}
+
 function openFileAttachUI() {
     try {
         var parameter = pDocID;
@@ -2099,6 +2145,19 @@ function SaveDraftDocInfo_susin() {
 
 var inssepattach_cross_dialogArguments = new Array();
 function btnAddSepAttach_onclick() {
+	var deptCheckFlag = checkDeptAndCabinetId();
+	
+	if (deptCheckFlag == "3") {
+		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		return;
+	} else if (deptCheckFlag == "4") {
+		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		return;
+	} else if (deptCheckFlag == "2") {
+		alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+		return;
+	}
+	
     if (cabinetID == "") {
         var pAlertContent = strLang731;
         OpenAlertUI(pAlertContent);

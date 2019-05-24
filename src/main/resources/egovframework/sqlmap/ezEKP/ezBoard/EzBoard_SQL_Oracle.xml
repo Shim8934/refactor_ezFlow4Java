@@ -4754,11 +4754,17 @@
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,
-	          	<isEqual property="guBun" compareValue="2">
-	          		WriterName = #writerName#,
-	          		WriterName2 = #writerName2#,
-	          	</isEqual>
+	          	WriterName = #writerName#,
+	          	WriterName2 = #writerName2#,
+	          	WRITERDEPTID = #writerDeptID#,
+	          	WRITERDEPTNAME = #writerDeptName#,
+	          	WRITERDEPTNAME2 = #writerDeptName2#,
+	          	WRITERCOMPANYNAME = #writerCompanyName#,
+	          	WRITERCOMPANYNAME2 = #writerCompanyName2#,
 	          	ExtensionAttribute2 = #extensionAttribute2#,
+	          	ExtensionAttribute3 = #extensionAttribute3#,
+	          	ExtensionAttribute32 = #extensionAttribute32#,
+	          	ExtensionAttribute4 = #extensionAttribute4#,
 	          	ExtensionAttribute5 = #extensionAttribute5#,
 	          	DocPassWord = #docPassword#,
 	          	extensionAttribute6 = #extensionAttribute6#,
@@ -5487,4 +5493,32 @@
 		]]>
 	</update>
 	
+	<select id="EzBoardDAO.getPDOAddJobDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				AM.DEPTID
+			FROM
+				tbl_usermaster UM
+			INNER JOIN
+				TBL_ADDJOBMASTER AM
+			ON
+				UM.TENANT_ID = AM.TENANT_ID
+			AND
+				UM.CN = AM.CN
+			AND
+				UM.CN = #v_pUserID#
+			AND
+				UM.PHYSICALDELIVERYOFFICENAME = #v_pCompanyID#
+			INNER JOIN
+				TBL_DEPTMASTER DM
+			ON
+				UM.TENANT_ID = DM.TENANT_ID
+			AND
+				AM.DEPTID = DM.CN
+			AND
+				DM.EXTENSIONATTRIBUTE2 = #v_pCompanyID#
+			WHERE
+				UM.TENANT_ID = #v_TENANTID# 
+		]]>
+	</select>
 </sqlMap>

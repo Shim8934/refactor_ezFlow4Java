@@ -49,4 +49,6 @@ public interface EzResourceAdminService {
 	public void delClsData(String brdID, String companyID, int tenantID) throws Exception;
 	
 	public void delResAcll(String resID, String companyID, int tenantID) throws Exception;
+	
+	public boolean userResPermissionCheck(String xmlStr, int tenantID) throws Exception;
 }

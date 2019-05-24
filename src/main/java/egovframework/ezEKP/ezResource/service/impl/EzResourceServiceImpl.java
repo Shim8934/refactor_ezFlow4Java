@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezResource.service.impl;
 
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +17,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +28,13 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
+import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
@@ -34,6 +42,7 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResDateVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
+import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -54,6 +63,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Resource(name="EzResourceDAO")
 	private EzResourceDAO ezResourceDAO;
 	
+	@Autowired
+	private EzOrganDAO ezOrganDao;
+	
+	@Autowired
+	private EzOrganAdminDAO ezOrganAdminDao;
+	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
@@ -62,6 +77,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzResourceAdminService ezResourceAdminService;
 
 	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -240,7 +264,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID) throws Exception {
+	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_Brd_ID", brdID);
 		map.put("v_P_ODeptID", deptID);
@@ -260,10 +284,112 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_OwnerPos2", ownerPos2);
 		map.put("tenantID", tenantID);
 		ezResourceDAO.modifyResData(map);
+		
+		// 첨부파일 등록 실행
+		//deleteAttachFiles(brdID, realPath, companyID, tenantID);
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		attachMap.put("companyID", companyID);
+		attachMap.put("tenantID", tenantID);
+		attachMap.put("resID", brdID);
+		
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_resource.ROOT", tenantID);
+		
+		File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		ezResourceDAO.delAttachFile(attachMap);
+		
+		// 기존 존재하는 파일인 경우
+		if(strAttachList1.indexOf("/") != -1) {
+			String beforeFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachList1;
+			
+			strAttachList1 = strAttachList1.substring(strAttachList1.lastIndexOf("/")+1);
+			
+			String afterFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList1;
+			
+			File beforeFile = new File(beforeFilePath);
+			File afterFile = new File(afterFilePath);
+			
+			FileUtils.moveFile(beforeFile, afterFile);
+		}
+		
+		if(strAttachList2.indexOf("/") != -1) {
+			String beforeFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachList2;
+			
+			strAttachList2 = strAttachList2.substring(strAttachList2.lastIndexOf("/")+1);
+			
+			String afterFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList2;
+			
+			File beforeFile = new File(beforeFilePath);
+			File afterFile = new File(afterFilePath);
+			
+			FileUtils.moveFile(beforeFile, afterFile);
+		}
+		
+		if(file.exists()) {
+			File[] files = file.listFiles();
+			
+			for(File f: files){
+				f.delete();
+			}
+		}
+		
+		if(!strAttachList1.equals("") && strAttachList1 != null) {
+			String uploadFilePath = "";
+			long fileSize = 0;
+
+			uploadFilePath = commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
+			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList1;
+			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
+
+			File beforeFile = new File(beforeFilePath);
+			fileSize = beforeFile.length();
+			
+			File afterFile = new File(afterFilePath);
+			
+			if (!afterFile.exists()) {
+				FileUtils.moveFile(beforeFile, afterFile);
+			}
+			
+			attachMap.put("fileName", strAttachList1);
+			attachMap.put("fileSize", fileSize);
+			attachMap.put("filePath", uploadFilePath);
+			
+			logger.debug("file1 upload End");
+			ezResourceDAO.addAttachFile(attachMap);		// 첨부파일 추가
+		}
+		
+		if(!strAttachList2.equals("") && strAttachList2 != null) {
+			String uploadFilePath = "";
+			long fileSize = 0;
+			
+			uploadFilePath = commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
+			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList2;
+			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
+
+			File beforeFile = new File(beforeFilePath);
+			fileSize = beforeFile.length();
+			
+			File afterFile = new File(afterFilePath);
+			
+			if (!afterFile.exists()) {
+				FileUtils.moveFile(beforeFile, afterFile);
+			}
+			
+			attachMap.put("fileName", strAttachList2);
+			attachMap.put("fileSize", fileSize);
+			attachMap.put("filePath", uploadFilePath);
+			
+			logger.debug("file2 upload End");
+			ezResourceDAO.addAttachFile(attachMap);
+		}
 	}
 	
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID) throws Exception {
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2) throws Exception {
 		logger.debug("addResData Start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -306,6 +432,65 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Brd_Level", v_Brd_Level);
 		map.put("v_Brd_Step", v_Brd_Step);
 		ezResourceDAO.addResData(map);
+		
+		// 첨부파일 등록 실행
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		attachMap.put("companyID", companyID);
+		attachMap.put("tenantID", tenantID);
+		attachMap.put("resID", brdID);
+		
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_resource.ROOT", tenantID);
+		
+		File file = new File(pDirPath + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		if(!strAttachList1.equals("") && strAttachList1 != null) {
+			String uploadFilePath = commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
+			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList1;
+			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
+
+			File beforeFile = new File(beforeFilePath);
+			long fileSize = beforeFile.length();
+			
+			File afterFile = new File(afterFilePath);
+			
+			if (!afterFile.exists()) {
+				FileUtils.moveFile(beforeFile, afterFile);
+			}
+			
+			attachMap.put("fileName", strAttachList1);
+			attachMap.put("fileSize", fileSize);
+			attachMap.put("filePath", uploadFilePath);
+			
+			logger.debug("file1 upload End");
+			ezResourceDAO.addAttachFile(attachMap);		// 첨부파일 추가
+		}
+		
+		if(!strAttachList2.equals("") && strAttachList2 != null) {
+			String uploadFilePath = commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
+			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList2;
+			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
+
+			File beforeFile = new File(beforeFilePath);
+			long fileSize = beforeFile.length();
+			
+			File afterFile = new File(afterFilePath);
+			
+			if (!afterFile.exists()) {
+				FileUtils.moveFile(beforeFile, afterFile);
+			}
+			
+			attachMap.put("fileName", strAttachList2);
+			attachMap.put("fileSize", fileSize);
+			attachMap.put("filePath", uploadFilePath);
+			
+			logger.debug("file2 upload End");
+			ezResourceDAO.addAttachFile(attachMap);
+		}
+		
 		logger.debug("addResData End");
 	}
 	
@@ -415,7 +600,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.selectFormID(map);
 	}
 	
-	public String getAclTblBrd(String companyID, String brdID, String userID, String mode, int tenantID) throws Exception {
+	public String getAclTblBrd(String companyID, String brdID, String userID, String mode, int tenantID, String deptID) throws Exception {
 		logger.debug("getAclTblBrd Start");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PCOMPANYID", companyID);
@@ -435,52 +620,142 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("ownerID="+ownerID);
 		
 		boolean flag = false;
-		String[] ownerList = ownerID.split(",");
+		String[] ownerList = ownerID.split(",");			// 자원 관리자 체크
 		for(int i=0; i<ownerList.length; i++) {
 			if(userID.equals(ownerList[i])) {
 				flag = true;
 			}
 		}
 		
-		//if (ownerID == null || ownerID.equals("")) {
+		//해안1
+		
 		if(!flag) {
 			brdUpper = ezResourceDAO.getAclTblBrd_S2(map);
 			map.put("v_BRD_UPPER", brdUpper);
 			accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
 			logger.debug("brdUpper="+brdUpper);
 			logger.debug("accessLvl="+accessLvl);
-			if (accessLvl != null && accessLvl.trim().equals("1")) {
-				logger.debug("111");
-				result = "Y";
+			if (accessLvl != null && accessLvl.trim().equals("1")) {		// 유저의 권한 체크
+				logger.debug("user accessLvl = admin");
+				return "Y";
 			} else {
 				if (accessLvl != null && accessLvl.trim().equals("2")) {
-					logger.debug("222");
+					logger.debug("user accessLvl = user");
 					result = "U";
-				} else {
-					 if (mode.equals("everyone")) {
-							map.put("v_PUSERID", "everyone");
+				} 
+
+				if (mode.equals("everyone")) {							// 'everyone' 권한 체크	
+					map.put("v_PUSERID", "everyone");
+					accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
+					if (accessLvl != null && accessLvl.trim().equals("1")) {
+						logger.debug("everyone accessLvl = admin");
+						return "Y";
+					} else {
+						if (accessLvl != null && accessLvl.trim().equals("2")) {
+							logger.debug("everyone accessLvl = user");
+							result = "U";
+						}
+
+						String deptPath = ezOrganService.getDeptPath(deptID, tenantID);			// 부서 권한 체크
+						List<String> deptIds = new ArrayList<String>();
+						Collections.addAll(deptIds, deptPath.split(","));
+						deptIds.remove(0);				// companyID 삭제
+						
+						if(deptIds.size() > 0) {
+							Collections.reverse(deptIds);
+							map.put("v_PUSERID", deptIds.get(0));
 							accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
-							logger.debug("333");
-							if (accessLvl != null && accessLvl.trim().equals("1")) {
-								logger.debug("444");	
-								result = "Y";
-							} else {
+								
+							if(accessLvl != null && accessLvl.trim().equals("1")) {
+								logger.debug("user dept accessLvl = admin");
+								return "Y";
+							}
+							else {
 								if (accessLvl != null && accessLvl.trim().equals("2")) {
-									logger.debug("555");
+									logger.debug("user dept accessLvl = user");
 									result = "U";
-								} else {
-									logger.debug("666");
-									result = "";
+								}
+								// 부서 상위 권한 체크
+								deptIds.remove(0);				// 현재 부서ID 삭제
+								if(deptIds.size() > 0) {
+									String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+									
+									map.put("v_PUSERID", newDeptPath);
+									List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+		
+									if(deptAclList != null) {
+										for(int i=0; i<deptAclList.size(); i++) {
+											if(deptAclList.get(i).getAccessLvl().equals("1")) {
+												logger.debug("user upper dept accessLvl = admin");
+												return "Y";
+											}
+											else {
+												logger.debug("user upper dept accessLvl = user");
+												result = "U";
+											}
+										}
+									}
 								}
 							}
-							
-						} else {
-							logger.debug("777");
-							result = "";
 						}
-				}	
+						
+						// 사내 겸직 권한 체크
+						List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
+
+						if(userAddJobList.size() > 0) {
+							for(int i=0; i<userAddJobList.size(); i++) {
+								String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
+								List<String> addJobDeptIds = new ArrayList<String>();
+								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
+								addJobDeptIds.remove(0);				// companyID 삭제
+								
+								if(addJobDeptIds.size() > 0) {
+									Collections.reverse(addJobDeptIds);
+									map.put("v_PUSERID", addJobDeptIds.get(0));
+									accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
+									
+									if(accessLvl != null && accessLvl.trim().equals("1")) {
+										logger.debug("user addjob dept accessLvl = admin");
+										return "Y";
+									}
+									else {
+										if (accessLvl != null && accessLvl.trim().equals("2")) {
+											logger.debug("user addjob dept accessLvl = user");
+											result = "U";
+										} 
+										// 부서 상위 권한 체크
+										addJobDeptIds.remove(0);				// 현재 부서ID 삭제
+										if(addJobDeptIds.size() > 0) {
+											String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+											
+											map.put("v_PUSERID", newDeptPath);
+											List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+											
+											if(deptAclList != null) {
+												for(int j=0; j<deptAclList.size(); j++) {
+													if(deptAclList.get(j).getAccessLvl().equals("1")) {
+														logger.debug("user addjob upper dept accessLvl = admin");
+														return "Y";
+													}
+													else {
+														logger.debug("user addjob upper dept accessLvl = user");
+														result = "U";
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				} else {
+					logger.debug("This user does not have access.");
+					result = "";
+				}
 			}
 		} else {
+			logger.debug("user brd accessLvl = admin");
 			result = "Y";
 		}
 		logger.debug("result="+result);
@@ -1745,20 +2020,165 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public String getAdminFlag(String companyID, String brdID, String userID, int tenantID) throws Exception {
+	public String getAdminFlag(String companyID, String brdID, String userID, int tenantID, String deptID) throws Exception {
 		String accessLvl = "";
+		
 
 		/* 2018-07-13 홍승비 - everyone을 관리자로 설정한 경우 우선적으로 해당 관리자 플래그 받아오도록 수정 */
 		ResGetAdminFlagVO resGetAdminFlag = getAdmFlag(companyID, brdID, userID, tenantID);
-
-		String strXML = "<DATA>"+commonUtil.getQueryResult(resGetAdminFlag)+"</DATA>";
-		Document xmlDom = commonUtil.convertStringToDocument(strXML);
-	
-		if(xmlDom.getElementsByTagName("ROW") != null) {
-			for(int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
-				accessLvl = xmlDom.getElementsByTagName("ACCESSLVL").item(i).getTextContent().trim();
+		
+		if (resGetAdminFlag.getAccessLvl() != null && !resGetAdminFlag.getAccessLvl().equals("")) {
+			String strXML = "<DATA>"+commonUtil.getQueryResult(resGetAdminFlag)+"</DATA>";
+			Document xmlDom = commonUtil.convertStringToDocument(strXML);
+			
+			if(xmlDom.getElementsByTagName("ROW") != null) {
+				for(int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+					accessLvl = xmlDom.getElementsByTagName("ACCESSLVL").item(i).getTextContent().trim();
+				}
 			}
+			
+			logger.debug("everyone or user accessLvl : " + accessLvl);
+			
+			if(accessLvl.equals("1")) {			// everyone 혹은 user 권한이 관리자 이면 Y 리턴, 그 외 U + 부서권한 체크
+				return "Y";
+			} /*else {
+				//해안
+				String vTenantID = String.valueOf(tenantID);
+				Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
+				deptAccessLvlMap.put("IN_DEPT_CN", deptID);
+				deptAccessLvlMap.put("IN_TENANT_ID", vTenantID);
+				deptAccessLvlMap.put("IN_BRD_ID", brdID);
+				logger.debug("deptID : " + deptID + " tenant_id : " + vTenantID + " brd_ID : " + brdID);
+				
+				ezResourceDAO.getDeptAccessLvl(deptAccessLvlMap);
+				
+				String AccessDeptLvl = deptAccessLvlMap.get("OUT_RESULT_ACL").toString();
+				logger.debug("AccessDeptLvl : " + AccessDeptLvl);
+				
+				if (AccessDeptLvl != null && !AccessDeptLvl.equals("") && AccessDeptLvl.equals("1")) {
+					accessLvl = AccessDeptLvl;
+				}
+			} */
+			/*else {		// 아이디 혹은 everyone에서 관리자 권한 있을 때
+				return "Y";
+			}*/
+		} else {	//부서의 관리자 권한 확인
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("v_PCOMPANYID", companyID);
+			map.put("v_BRD_UPPER", brdID);
+			map.put("tenantID", tenantID);
+			
+			String deptPath = ezOrganService.getDeptPath(deptID, tenantID);
+			List<String> deptIds = new ArrayList<String>();
+			Collections.addAll(deptIds, deptPath.split(","));
+			deptIds.remove(0);				// companyID 삭제
+			if(deptIds.size() > 0) {
+				Collections.reverse(deptIds);
+				
+				map.put("v_PUSERID", deptIds.get(0));
+				String deptAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+					
+				if(deptAccLvl != null && deptAccLvl.trim().equals("1")) {
+					logger.debug("user dept accessLvl = admin");
+					return "Y";
+				}
+				else {
+					if (deptAccLvl != null && deptAccLvl.trim().equals("2")) {
+						logger.debug("user dept accessLvl = user");
+						accessLvl = "2";
+					}
+					// 부서 상위 권한 체크
+					deptIds.remove(0);				// 현재 부서ID 삭제
+					if(deptIds.size() > 0) {
+						String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+						
+						map.put("v_PUSERID", newDeptPath);
+						List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+		
+						if(deptAclList != null) {
+							for(int i=0; i<deptAclList.size(); i++) {
+								if(deptAclList.get(i).getAccessLvl().equals("1")) {
+									logger.debug("user upper dept accessLvl = admin");
+									return "Y";
+								}
+								else {
+									logger.debug("user upper dept accessLvl = user");
+									accessLvl = "2";
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			// 사내 겸직 권한 체크
+			List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
+
+			if(userAddJobList.size() > 0) {
+				for(int i=0; i<userAddJobList.size(); i++) {
+					String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
+					List<String> addJobDeptIds = new ArrayList<String>();
+					Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
+					addJobDeptIds.remove(0);				// companyID 삭제
+					if(addJobDeptIds.size() > 0) {
+						Collections.reverse(addJobDeptIds);
+						
+						map.put("v_PUSERID", addJobDeptIds.get(0));
+						String addJobAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+							
+						if(addJobAccLvl != null && addJobAccLvl.trim().equals("1")) {
+							logger.debug("user addjob dept accessLvl = admin");
+							return "Y";
+						}
+						else {
+							if (addJobAccLvl != null && addJobAccLvl.trim().equals("2")) {
+								logger.debug("user addjob dept accessLvl = user");
+								accessLvl = "2";
+							} 
+							// 부서 상위 권한 체크
+							addJobDeptIds.remove(0);				// 현재 부서ID 삭제
+							if(addJobDeptIds.size() > 0) {
+								String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+								
+								map.put("v_PUSERID", newDeptPath);
+								List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+								
+								if(deptAclList != null) {
+									for(int j=0; j<deptAclList.size(); j++) {
+										if(deptAclList.get(j).getAccessLvl().equals("1")) {
+											logger.debug("user addjob upper dept accessLvl = admin");
+											return "Y";
+										}
+										else {
+											logger.debug("user addjob upper dept accessLvl = user");
+											accessLvl = "2";
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			/* //해안
+ 			String vTenantID = String.valueOf(tenantID);
+			Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
+			deptAccessLvlMap.put("IN_DEPT_CN", deptID);
+			deptAccessLvlMap.put("IN_TENANT_ID", vTenantID);
+			deptAccessLvlMap.put("IN_BRD_ID", brdID);
+			logger.debug("deptID : " + deptID + " tenant_id : " + vTenantID + " brd_ID : " + brdID);
+			
+			ezResourceDAO.getDeptAccessLvl(deptAccessLvlMap);
+			
+			String AccessDeptLvl = deptAccessLvlMap.get("OUT_RESULT_ACL").toString();
+			logger.debug("AccessDeptLvl : " + AccessDeptLvl);
+			
+			if (AccessDeptLvl != null && !AccessDeptLvl.equals("")) {
+				accessLvl = AccessDeptLvl;
+			} */
 		}
+
 		
 		if(accessLvl.trim().equals("1")) {
 			return "Y";
@@ -1919,18 +2339,18 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         String strStyle = "font-weight:normal;height:10px;";
         
         returnXML += "<NODE>";
-        returnXML += makeXMLElement(strValue, "VALUE", true);
+        returnXML += makeXMLElement(strValue, "VALUE", false);
         returnXML += makeXMLElement(strStyle, "STYLE", false);
         returnXML += makeXMLElement(strData1, "DATA1", false);
-        returnXML += makeXMLElement(strData2, "DATA2", true);
+        returnXML += makeXMLElement(strData2, "DATA2", false);
         returnXML += makeXMLElement(strData3, "DATA3", false);
         returnXML += makeXMLElement(strData4, "DATA4", false);
         returnXML += makeXMLElement(strData5, "DATA5", false);
         returnXML += makeXMLElement(strData6, "DATA6", false);
         returnXML += makeXMLElement(strData7, "DATA7", false);
-        returnXML += makeXMLElement(strData8, "DATA8", true);
+        returnXML += makeXMLElement(strData8, "DATA8", false);
         returnXML += makeXMLElement(strData9, "DATA9", true);
-        returnXML += makeXMLElement(strData10, "DATA10", true);
+        returnXML += makeXMLElement(strData10, "DATA10", false);
         returnXML += makeXMLElement(strData11, "DATA11", false);
         returnXML += makeXMLElement(strData12, "DATA12", false);
         returnXML += makeXMLElement(strData13, "DATA13", false);
@@ -1969,7 +2389,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public boolean multiDelResData(String xmlStr, int tenantID) throws Exception {
+	public boolean multiDelResData(String xmlStr, int tenantID, String realPath) throws Exception {
 		String brdID = "";
 		String companyID = "";
 		
@@ -1979,8 +2399,32 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 		for (int i=0; i<brdID.split(",").length; i++) {
 			delResData(brdID.split(",")[i], companyID, tenantID);
+			deleteAttachFiles(brdID, realPath, companyID, tenantID);
 		}
 		return true;
+	}
+	
+	public void deleteAttachFiles(String resID, String realPath, String companyID, int tenantID) {
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		attachMap.put("companyID", companyID);
+		attachMap.put("tenantID", tenantID);
+		attachMap.put("resID", resID);
+		
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_resource.ROOT", tenantID);
+		
+		File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + resID + "_uploadFile");
+		
+		if(file.exists()) {
+			File[] files = file.listFiles();
+			
+			for(File f: files){
+				f.delete();
+			}
+			
+			file.delete();
+		}
+		
+		ezResourceDAO.delAttachFile(attachMap);
 	}
 	
 	@Override
@@ -2001,6 +2445,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String strODeptNm2 = "";
 	    String strOwnerNm2 = "";
 	    String strOwnerPos2 = "";
+	    String realPath = "";
+	    String strAttachList1 = "";
+	    String strAttachList2 = "";
 	    
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strBrdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2016,11 +2463,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
 			
-		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID);
+		realPath = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
+		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
+		
+		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2);
 
 		return true;
 	}
@@ -2044,6 +2495,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String strOwnerNm2 = "";
 	    String strOwnerPos2 = "";
 	    String strBreAccess = "";
+	    String realPath = "";
+	    String strAttachList1 = "";
+	    String strAttachList2 = "";
 	    
 	   	Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strClassGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2059,12 +2513,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		
+		realPath = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
+		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
 		strBreAccess = egovMessageSource.getMessage("ezResource.t58", locale);
 			
-		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID);
+		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2);
 
 		return true;
 	}
@@ -2339,10 +2797,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID) throws Exception {
+	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID, String pDeptID) throws Exception {
 		String aclTblBrd = "";
 		
-		 aclTblBrd = getAclTblBrd(pCompanyID, pBrdID, pUserID, pMode, tenantID);
+		 aclTblBrd = getAclTblBrd(pCompanyID, pBrdID, pUserID, pMode, tenantID, pDeptID);
 			
 		return aclTblBrd;
 	}
@@ -2640,101 +3098,33 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		strStartDateTime = EgovDateUtil.convertDate(strStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
 		strEndDateTime = EgovDateUtil.convertDate(strEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
-		
-		logger.debug("strStartDateTime : " + strStartDateTime);
-		logger.debug("strEndDateTime : " + strEndDateTime);
-		
+
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		//2018-09-02 구해안 기간이 상이할때 각 사이에 있는 날짜를 하나씩 다 꺼내와서 비교하기 위해 사이에 있는 예약을 다 가져옴
-		String tmpEndDateTime = strStartDateTime.substring(0, 10) + strEndDateTime.substring(10);
-		logger.debug("tmpEndDateTime : " + tmpEndDateTime);
-		
-		Date d1 = format.parse( strStartDateTime );
-		Date d2 = format.parse( strEndDateTime );
-		Date de1 = format.parse( tmpEndDateTime );
-
-		Calendar c1 = Calendar.getInstance();
-		Calendar c2 = Calendar.getInstance();
-		Calendar ce1 = Calendar.getInstance();
-		
-		//Calendar 타입으로 변경 add()메소드로 1일씩 추가해 주기위해 변경
-		c1.setTime( d1 );
-		c2.setTime( d2 );
-		ce1.setTime( de1 );
-
-		//시작날짜와 끝 날짜를 비교해, 시작날짜가 작거나 같은 경우 출력
 		List<Date[]> dateList = new ArrayList<Date[]>();
-		while( c1.compareTo( c2 ) !=1 ){
-
-		//담기
 		dateList.add(new Date[] {
-				d1,
-				de1
+				format.parse(strStartDateTime),
+				format.parse(strEndDateTime)
 		});
-
-		//시작날짜 + 1 일
-		c1.add(Calendar.DATE, 1);
-		d1 = c1.getTime();
-		ce1.add(Calendar.DATE, 1);
-		de1 = ce1.getTime();
-		}
-		
 		
 		boolean isDup = false;
 		
 		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
 		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, strPnum, companyID, strEndDateTime, strStartDateTime, offset, tenantID);
 		List<Date[]> dateList2 = new ArrayList<Date[]>();
-		String tmpEndDateTime2 = "";
 		for (ResDateVO dateVO : scheduleDateList) {
-			
-			Date getD1 = format.parse( commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false) );
-			Date getD2 = format.parse( commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false) );
-			tmpEndDateTime2 = format.format(getD1.getTime()).substring(0, 10) + format.format(getD2.getTime()).substring(10);
-//			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
-			logger.debug("tmpEndDateTime2 : " + tmpEndDateTime2);
-//			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
-			Date getDe1 = format.parse(tmpEndDateTime2);
-
-			Calendar getC1 = Calendar.getInstance();
-			Calendar getC2 = Calendar.getInstance();
-			Calendar getCe1 = Calendar.getInstance();
-			
-			//Calendar 타입으로 변경 add()메소드로 1일씩 추가해 주기위해 변경
-			getC1.setTime( getD1 );
-			getC2.setTime( getD2 );
-			getCe1.setTime( getDe1 );
-
-			//시작날짜와 끝 날짜를 비교해, 시작날짜가 작거나 같은 경우 출력
-			while( getC1.compareTo( getC2 ) !=1 ){
-
-			//담기
 			dateList2.add(new Date[] {
-					getD1,
-					getDe1
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false)),
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false))
 			});
-//			dateList2.add(new Date[] {
-//					format.parse(commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false)),
-//					format.parse(commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false))
-//			});
-
-			//시작날짜 + 1 일
-			getC1.add(Calendar.DATE, 1);
-			getD1 = getC1.getTime();
-			getCe1.add(Calendar.DATE, 1);
-			getDe1 = getCe1.getTime();
-			}
 		}
-		logger.debug("일반예약의 dateList2.size() : " + dateList2.size());
 		
 		if (dateList2.size() != 0) {
 			isDup = chkTableRepeat(dateList, dateList2, null, offset);
 			
 			if (isDup) {
-				logger.debug("===예약된 자원이 일반예약일때===");
 				logger.debug("getRepResource End. isDup=" + isDup);
 				return isDup;
 			}
@@ -3678,6 +4068,109 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
  		logger.debug("isResourceGroupManager ended");
 		return isManager;
+	}
+	
+	@Override
+	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception {
+		logger.debug("userResPermissionCheck start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("brdID", brdID);
+		map.put("deptID", deptID);
+		
+		String result = ezResourceDAO.userResPermissionCheck(map);
+		
+		if(result.equals("1")) {
+			return result;
+		}
+		
+		String deptPath = ezOrganService.getDeptPath(deptID, tenantID);	
+		List<String> deptIds = new ArrayList<String>();
+		Collections.addAll(deptIds, deptPath.split(","));
+		deptIds.remove(0);				// companyID 삭제
+		if(deptIds.size() > 1) {
+			Collections.reverse(deptIds);
+			deptIds.remove(0);				// 부서 ID 삭제
+			
+			// 상위 부서 권한 체크
+			String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+			
+			map.put("v_BRD_UPPER", brdID);
+			map.put("v_PCOMPANYID", companyID);
+			
+			map.put("v_PUSERID", newDeptPath);
+			List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+			
+			if(deptAclList.size() > 0) {
+				for(int i=0; i<deptAclList.size(); i++) {
+					if(deptAclList.get(i).getSdaYn().equals("Y")) {
+						return "1";
+					}
+				}
+			}
+		}
+		
+		
+		// 사내 겸직 권한 체크
+		List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
+
+		if(userAddJobList.size() > 0) {
+			for(int i=0; i<userAddJobList.size(); i++) {
+				String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
+				List<String> addJobDeptIds = new ArrayList<String>();
+				Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
+				addJobDeptIds.remove(0);				// companyID 삭제
+				
+				if(addJobDeptIds.size() > 0) {
+					Collections.reverse(addJobDeptIds);
+					
+					map.put("deptID", addJobDeptIds.get(0));
+					
+					String result2 = ezResourceDAO.userResPermissionCheck(map);	
+					
+					if(result2.equals("1")) {
+						return result2;
+					}
+					
+					addJobDeptIds.remove(0);			// deptID 삭제
+	
+					if(addJobDeptIds.size() > 0) {
+						String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+							
+						map.put("v_PUSERID", newDeptPath2);
+						List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
+						
+						if(deptAclList2.size() > 0) {
+							for(int j=0; j<deptAclList2.size(); j++) {
+								if(deptAclList2.get(j).getSdaYn().equals("Y")) {
+									return "1";
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		logger.debug("userResPermissionCheck end");
+		return result;
+	}
+	
+	@Override
+	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception {
+		logger.debug("getAttachList start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("resID", resID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		
+		logger.debug("getAttachList start");
+		return ezResourceDAO.getAttachList(map);
+		
 	}
 }
 

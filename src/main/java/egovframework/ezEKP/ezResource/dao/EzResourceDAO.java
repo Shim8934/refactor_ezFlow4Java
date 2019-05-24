@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResDateVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
+import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -90,6 +91,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<String> getDeletedRepScheduleDate(Map<String, Object> map) {
 		return (List<String>) list("EzResourceDAO.getDeletedRepScheduleDate", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getAttachList(Map<String, Object> map) {
+		return (List<String>) list("EzResourceDAO.getAttachList", map);
 	}
 	
 	public ResGetAdminFlagVO getAdmFlag(Map<String, Object> map) {
@@ -222,6 +228,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		insert("EzResourceDAO.modifyResSch_I2", map);
 	}
 	
+	public void addAttachFile(Map<String, Object> map) {
+		insert("EzResourceDAO.addAttachFile", map);
+	}
+	
 	public void modifyResData(Map<String, Object> map) {
 		update("EzResourceDAO.modifyResData", map);
 	}
@@ -298,6 +308,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		delete("EzResourceDAO.modifyResSch_D2", map);
 	}
 	
+	public void delAttachFile(Map<String, Object> map) {
+		delete("EzResourceDAO.delAttachFile", map);
+	}
+	
 	public String getResourceOrder(Map<String, Object> map) throws Exception {
 		return (String) select("EzResourceDAO.getResourceOrder", map);
 	}
@@ -316,6 +330,23 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public String isResourceGroupManager(Map<String, Object> map) throws Exception {
 		return (String) select("EzResourceDAO.isResourceGroupManager", map);
+	}
+	
+	public String getIsDept(Map<String, Object> map) throws Exception {
+		return (String) select("EzResourceDAO.getIsDept", map);
+	}
+	
+	public void getDeptAccessLvl(Map<String, Object> map) throws Exception {
+		update("EzResourceDAO.getDeptAccessLvl", map);
+	}
+	
+	public String userResPermissionCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzResourceDAO.userResPermissionCheck", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetClsAclListVO> getDeptAcl(Map<String, Object> map) {
+		return (List<ResGetClsAclListVO>) list("EzResourceDAO.getDeptAcl", map);
 	}
 }
 

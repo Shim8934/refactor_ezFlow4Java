@@ -1006,8 +1006,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 	        
 	        StringBuilder bodyContent = new StringBuilder();
 
-	        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
-	        
 	        if (userInfo.getPrimary().equals("1")) {
 	        	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
 	        } else {
@@ -1016,10 +1014,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 	        
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.get(0).getBrdNm()); 
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
-	        bodyContent.append("</DIV>");
 	        
 	        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + resInfo.get(0).getBrdNm() + "] " + title;
-	        
+	        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
 	        
 	    	InternetAddress from = new InternetAddress();
 	    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -1034,7 +1031,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 		    	to.setAddress(emailAddress);
 		        	
 		        
-		        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+		        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
 		    }
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1141,7 +1138,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			if(!authYn.equals("A")) {
 				
 				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
-				if(ownerId != "" || !ownerId.equals("1")) {
+				if(!ownerId.equals("") && !ownerId.equals("1")) {
 					for(int i=0; i<list.size(); i++) {
 						if(list.get(i).getBrdId().equals(ownerId)) {
 							authCheck = "Y";
@@ -1159,7 +1156,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			// 2018-10-31 김민성 - 자원 관리자 권한 가진 자원이 있는지 체크
 			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId, brdCompany);
-			if(ownerId != "") {
+			if(!ownerId.equals("")) {
 				for(int i=0; i<adminResList.size(); i++) {
 					if(adminResList.get(i).equals(ownerId)) {
 						adminYn = "Y";

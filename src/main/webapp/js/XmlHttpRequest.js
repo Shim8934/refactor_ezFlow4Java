@@ -711,7 +711,7 @@ function ConvertHTMLtoMHT(pContent) {
 
 function ConvertHTMLtoMHT(pContent, pType) {
 	var rtnVal = '';
-    $.ajax({
+	$.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
@@ -719,7 +719,10 @@ function ConvertHTMLtoMHT(pContent, pType) {
 		data : { strHTML   : encodeURIComponent(pContent), type	: pType },
 		success: function(result){
 			rtnVal = result;
-		}        			
+		},
+		error: function(request, status, error){
+			throw new Error("code : " + request.status + ", message : " + request.responseText + ", error : " + error);
+		}
 	});
     
     return rtnVal;
