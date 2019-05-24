@@ -904,7 +904,25 @@
 		SET
 			TYPE = 'U'
 	</update>
-
+	
+	<select id="EzCommonDAO.checkMsgInMailSearch" resultClass="int" >
+		SELECT 
+			COUNT(*) 
+		FROM(
+			SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_SCHEMA = 'jmocha' 
+			AND TABLE_NAME = 'JAMES_MAIL_SEARCH' 
+			AND COLUMN_NAME = 'MESSAGE_ID'
+		) existsYN
+	</select>
+	
+	<update id="EzCommonDAO.updateMsgInMailSearch">
+		ALTER TABLE 
+			JAMES_MAIL_SEARCH
+		ADD 
+			COLUMN MESSAGE_ID VARCHAR(200) NULL DEFAULT NULL 
+	</update>
+	
 	<select id="EzCommonDAO.checkFormVersionColumnOfForminfo">
 		SELECT 
 			FORMVERSION 
