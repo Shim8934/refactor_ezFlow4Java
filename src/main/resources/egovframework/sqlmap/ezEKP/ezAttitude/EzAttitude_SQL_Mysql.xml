@@ -2135,6 +2135,8 @@
 				COMPANY_ID = #companyId#
 			AND
 				TENANT_ID = #tenantId#
+			AND
+				MODAPPL != '5'
 			GROUP BY 
 				TYPE_ID
 		]]>
