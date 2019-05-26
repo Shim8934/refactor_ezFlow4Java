@@ -99,7 +99,12 @@ public class EzEmailMailSearchController {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailSearchView ended.");
+					
+					return "ezCommon/error";
 				} else {
 					MailSharedMailboxUserVO shareInfo = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
 					

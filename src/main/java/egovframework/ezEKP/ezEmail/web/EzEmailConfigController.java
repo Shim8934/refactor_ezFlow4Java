@@ -126,7 +126,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailConfig ended.");
+					
+					return "ezCommon/error";
 				} else {
 					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
 					
@@ -799,7 +804,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailSelectFolder ended.");
+					
+					return "ezCommon/error";
 				} else {
 					model.addAttribute("shareId", shareId);
 				}
@@ -867,14 +877,19 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInboxRule ended.");
+					
+					return "ezCommon/error";
 				} else {
 					model.addAttribute("shareId", shareId);
 				}
 			}
 		}
 		
-		logger.debug("mailInboxRule started.");
+		logger.debug("mailInboxRule ended.");
 		return "ezEmail/mailInboxRule";
 	}
 
@@ -894,7 +909,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailNewInboxRule ended.");
+					
+					return "ezCommon/error";
 				} else {
 					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
 					
@@ -904,8 +924,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("mailNewInboxRule started.");
-		
+		logger.debug("mailNewInboxRule ended.");
 		return "ezEmail/mailNewInboxRule";
 	}
 
@@ -1376,7 +1395,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailDetailInboxRule ended.");
+					
+					return "ezCommon/error";
 				} else {
 					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
 					

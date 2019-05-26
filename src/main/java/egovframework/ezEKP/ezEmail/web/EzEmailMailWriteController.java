@@ -276,7 +276,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     		
     		if (shareId != null) {
     			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
-    				logger.debug("the user cannot access the shareId.");
+    				model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailWrite ended.");
+					
+					return "ezCommon/error";
     			} else {
     				MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, loginInfo.getTenantId());
     				
@@ -1409,7 +1414,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			@CookieValue("loginCookie") String loginCookie, 
 			HttpServletRequest request,
 			LoginVO userInfo, 
-			Model model) throws Exception{
+			Model model,
+			Locale locale) throws Exception{
+		logger.debug("dragAndDropIframe started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1427,7 +1434,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("dragAndDropIframe ended.");
+					
+					return "ezCommon/error";
 				} else {
 					model.addAttribute("shareId", shareId);
 				}
@@ -1437,6 +1449,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
+		logger.debug("dragAndDropIframe ended.");
 		return "ezEmail/mailDragAndDrop";
 	}
 
@@ -5051,7 +5064,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailLetterOption ended.");
+					
+					return "ezCommon/error";
+					
 				} else {
 					model.addAttribute("shareId", shareId);
 				}

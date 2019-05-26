@@ -87,7 +87,12 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailFolderManage ended.");
+					
+					return "ezCommon/error";
 				} else {
 					MailSharedMailboxUserVO shareInfo = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
 					
@@ -131,7 +136,16 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			logger.debug("shareId=" + shareId);
 			
 			if (shareId != null) {
-				model.addAttribute("shareId", shareId);
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailMoveCopy ended.");
+					
+					return "ezCommon/error";
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
 			}
 		}
 		

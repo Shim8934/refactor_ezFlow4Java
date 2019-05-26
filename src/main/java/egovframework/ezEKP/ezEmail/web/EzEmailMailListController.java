@@ -131,10 +131,20 @@ public class EzEmailMailListController {
 			logger.debug("shareId=" + shareId);
 			
 			if (shareId != null) {
-				MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
-				model.addAttribute("shareId", shareId);
-				model.addAttribute("deletePermission", shareVO.getDeletePermission());
-				model.addAttribute("sendPermission", shareVO.getSendPermission());
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("showMailList ended.");
+					
+					return "ezCommon/error";
+				} else {
+					MailSharedMailboxUserVO shareVO = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+					
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("deletePermission", shareVO.getDeletePermission());
+					model.addAttribute("sendPermission", shareVO.getSendPermission());
+				}
 			}
 		}
 		

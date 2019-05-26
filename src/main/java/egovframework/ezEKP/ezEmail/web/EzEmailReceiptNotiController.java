@@ -99,7 +99,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	 * 메일 수신확인/회수 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailReaderList.do")
-	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailReaderList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailReaderList started.");
+		
 		String url = request.getParameter("url") == null ? "" : request.getParameter("url");
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", loginInfo.getTenantId());
@@ -111,7 +113,12 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailReaderList ended.");
+					
+					return "ezCommon/error";
 				} else {
 					model.addAttribute("shareId", shareId);
 				}
@@ -121,6 +128,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		model.addAttribute("isReadDelete", isReadDelete);
 		model.addAttribute("url", url);
 		
+		logger.debug("mailReaderList ended.");
 		return "ezEmail/mailReaderList";
 	}
 	
