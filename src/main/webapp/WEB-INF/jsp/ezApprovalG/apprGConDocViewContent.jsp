@@ -56,6 +56,11 @@
 			    		$("select[id^=control]").each(function() {
 			    			$(this).css("top","7px");
 			    		});
+			    		
+			    		$('#mobile').css('display',"none");
+			    	    $('#p_mobile').css('display',"");
+			    	    $('#mobile2').css('display',"none");
+			    	    $('#p_mobile2').css('display',"");
 			        }
 	            } catch (e)
 	            { }
