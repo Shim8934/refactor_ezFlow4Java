@@ -2851,13 +2851,47 @@ public class EzAttitudeGWController {
 			}
 			map.put("primary", primary);
 			
-			String searchStartTime = request.getParameter("startDate") + " 00:00:00";
-			String searchEndTime = request.getParameter("endDate") + " 23:59:59";
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
+			String secondYear = request.getParameter("secondYear");
+			
+			String searchStartTime = startDate + " 00:00:00";
+			String searchEndTime = endDate + " 23:59:59";
 			
 			map.put("searchStartTime", searchStartTime);
 			map.put("searchEndTime", searchEndTime);
 			
 			AttitudeAnnualVO vo = ezAttitudeService.getAnnualCnt(map);
+			
+			if(secondYear.equals("Y") || secondYear.equals("T")) {
+				Map<String, Object> map2 = new HashMap<String, Object>();
+				map2.put("userId", userId);
+				map2.put("companyId", request.getParameter("companyId"));
+				map2.put("tenantId", info.getTenantId());
+				map2.put("offsetMin", commonUtil.getMinuteUTC(info.getOffSet()));
+				
+				if (primary.equals("1")) {
+					primary = "";
+				}
+				map2.put("primary", primary);
+				
+				if(secondYear.equals("Y")) {
+					searchStartTime = (Integer.parseInt(startDate.substring(0, 4)) - 1) + startDate.substring(4, 10) + " 00:00:00";
+				} else {
+					searchStartTime = (Integer.parseInt(startDate.substring(0, 4)) - 2) + startDate.substring(4, 10) + " 00:00:00";
+				}
+				searchEndTime = (Integer.parseInt(endDate.substring(0, 4)) - 1) + endDate.substring(4, 10) + " 23:59:59";
+				
+				map2.put("searchStartTime", searchStartTime);
+				map2.put("searchEndTime", searchEndTime);
+				
+				double useAnnualCnt = Double.parseDouble(ezAttitudeService.getAnnualCnt(map2).getUseAnnualCnt());
+				if(useAnnualCnt > 11.0) {
+					useAnnualCnt = 11.0;
+				}
+				double totalAnnualCnt = Double.parseDouble(vo.getTotalAnnualCnt());
+				vo.setTotalAnnualCnt(totalAnnualCnt - useAnnualCnt + "");
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
