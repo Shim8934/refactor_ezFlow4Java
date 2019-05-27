@@ -121,6 +121,9 @@
 	    	$(document).ready(function() {
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '.mainlist th', function(){
+	    			if(joinDate == null || joinDate == "" || joinDate == "0") {
+            			joinDate = "0000-01-01";
+            		}
 	    			if ($(this).attr("colname") != "") {
 	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
 	    					src = "";
@@ -201,9 +204,6 @@
 	                		optionHtml += "startDate='" + startDate + "' endDate='" + endDate + "'>";
 		                	optionHtml += startDate + " ~ " + endDate + "</option>";
 	                	} else {
-	                		if(joinDate == null || joinDate == "" || joinDate == "0") {
-	                			joinDate = "0000-01-01";
-	                		}
 	                		if(joinDate.substring(5, 7) < todayMonth || (joinDate.substring(5, 7) == todayMonth && joinDate.substring(8, 10) < todayDate)) {
 	                			startDate = tempyear + "-" + joinDate.substring(5, 10);
 	                			endDate = caldate(new Date(tempyear + 1, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10)), 1);
@@ -230,15 +230,39 @@
 	    	
 	    	//연차 리스트
 	    	function getUserAnnualList() {
+	    		var startDate = $("#searchYear option:selected").attr("startDate");
+	    		var endDate = $("#searchYear option:selected").attr("endDate");
+	    		var secondYear = "N";
+	    		
+    			var startYear = startDate.substring(0, 4);
+    			var joinYear = joinDate.substring(0, 4);
+    			
+    			var startDate2 = new Date(startDate);
+    			var endDate2 = new Date(endDate);
+    			var joinDate2 = new Date(Number(joinDate.substring(0, 4)) + 1, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10));
+    			var joinDate3 = new Date(Number(joinDate.substring(0, 4)) + 2, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10));
+	    		if(annualGnrtStd == 0) {
+	    			if(startYear - joinYear == 1) {
+	    				secondYear = "Y";
+	    			}
+	    		} else {
+	    			if(startDate2 <= joinDate2 && endDate2 >= joinDate2) {
+	    				secondYear = "Y";
+	    			} else if(startDate2 <= joinDate3 && endDate2 >= joinDate3) {
+	    				secondYear = "T";
+	    			}
+	    		}
+	    		
 	    		$.ajax({
 	    			data : "GET",
 	    			dataType : "json",
 	    			url : "/ezAttitude/getUserAnnualList.do",
 	    			data : {
-	   					startDate : $("#searchYear option:selected").attr("startDate"),
-	   					endDate : $("#searchYear option:selected").attr("endDate"),
+	   					startDate : startDate,
+	   					endDate : endDate,
 	   					orderCell : orderCell,
-	   					orderOption : orderOption
+	   					orderOption : orderOption,
+	   					secondYear : secondYear
     				},
 	    			success : function(result) {
 	    				$("#userName").text(result.list[0].userName);

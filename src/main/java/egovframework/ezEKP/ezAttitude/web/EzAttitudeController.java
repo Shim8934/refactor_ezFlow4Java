@@ -3371,6 +3371,7 @@ public class EzAttitudeController {
 		String endDate = request.getParameter("endDate");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
+		String secondYear = request.getParameter("secondYear");
 		
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -3387,6 +3388,7 @@ public class EzAttitudeController {
 					.queryParam("endDate", endDate)
 					.queryParam("orderCell", orderCell)
 					.queryParam("orderOption", orderOption)
+					.queryParam("secondYear", secondYear)
 					.queryParam("userId", userId);
 			
 			RestTemplate rest = new RestTemplate();
