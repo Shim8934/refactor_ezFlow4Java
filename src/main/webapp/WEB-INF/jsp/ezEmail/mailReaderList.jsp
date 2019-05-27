@@ -331,7 +331,7 @@
 	                    </tr>
 	                </table>
 	            </table>
-	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 330px; width: 100%; overflow-y: auto;overflow-x:hidden;" onscroll="ContextMenuHidden()">
+	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 330px; width: 100%; overflow-y: auto;overflow-x:hidden;" >
 	                <table class="mainlist" style="width: 100%;" id="MailList">
 	                </table>
 	            </div>

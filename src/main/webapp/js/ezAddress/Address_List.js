@@ -163,8 +163,8 @@ function MakeAddressList() {
                 document.getElementById("FolderType").style.display = "";
                 _TR.setAttribute("_FolderType", FolderType);
                 _TR.setAttribute("_FolderID", FolderID);
-                document.getElementById("width1").style.width = "20%";
-                document.getElementById("width2").style.width = "20%";
+                document.getElementById("width1").style.width = "15%";
+                document.getElementById("width2").style.width = "15%";
             } else {
                 document.getElementById("FolderType").style.display = "none";
                 document.getElementById("width1").style.width = "20%";
@@ -241,10 +241,10 @@ function MakeAddressList() {
 
             var _TD5 = document.createElement("TD");
             if (searchFlag) {
-                _TD5.style.width = "20%";
+                _TD5.style.width = "15%";
             }
             else
-                _TD5.style.width = "20%";
+            _TD5.style.width = "20%";
             _TD5.style.margin = "0px";
             _TD5.style.padding = "0px";
             _TD5.style.whiteSpace = "nowrap";
@@ -259,7 +259,7 @@ function MakeAddressList() {
 
             var _TD6 = document.createElement("TD");
             if (searchFlag) {
-            	_TD6.style.width = "20%";
+            	_TD6.style.width = "15%";
             }
             else
             	_TD6.style.width = "20%";
