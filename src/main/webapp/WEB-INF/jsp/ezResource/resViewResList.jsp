@@ -165,7 +165,7 @@
 	    	/* 2019-02-21 홍승비 - CSRF 수정 > 단순 호출 동작이므로 get으로 수정 */
 	    	function RefreshPageDoc() {
 		        window.parent.left.location.href = "/ezResource/leftResource.do?flag=SELECT_NO";
-		        window.location.href  = "/ezResource/viewResList.do?brdID=" + pBrdid + "&brdNm=" + pBrdnm + "&accessCode=" + pAccessCode + "&goToPage=" + pcurpage;
+		        window.location.href  = "/ezResource/viewResList.do?brdID=" + pBrdid + "&brdNm=" + encodeURI(pBrdnm) + "&accessCode=" + pAccessCode + "&goToPage=" + pcurpage;
 	    	}
 
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
