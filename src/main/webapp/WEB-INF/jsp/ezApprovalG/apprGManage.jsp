@@ -280,7 +280,6 @@
 		        
 		        bujaeVal = arr_userinfo[7];
 		        arr_userinfo[7] = "";
-		        window.location.reload();
 		    }
 		
 		    $(function () {
