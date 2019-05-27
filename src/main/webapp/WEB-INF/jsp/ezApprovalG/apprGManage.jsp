@@ -269,7 +269,7 @@
 		    		async : false,
 		    		url : "/ezPersonal/saveBujae.do",
 		    		data : {
-		    				buJae  : bujaeVal,
+		    				buJae  : "",
 		    				proxy  : "",
 		    				dept : arr_userinfo[4]
 		    				},
@@ -280,6 +280,26 @@
 		        
 		        bujaeVal = arr_userinfo[7];
 		        arr_userinfo[7] = "";
+		       
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezPersonal/getBujaeInfo.do",
+		    		data : {
+		    				buJae  : bujaeVal,
+		    				proxy  : "",
+		    				dept : arr_userinfo[4]
+		    				},
+		    		success: function(xml){
+		    			result = xml;
+		    			if (result != "") {
+		    				window.location.reload();
+		    			}
+		    		}        			
+		    	});
+		        
+		        
 		    }
 		
 		    $(function () {
