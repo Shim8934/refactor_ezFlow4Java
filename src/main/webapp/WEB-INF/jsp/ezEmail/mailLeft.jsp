@@ -618,6 +618,11 @@
 	                }
 	                
 	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
+	                
+	            	if (shareId != "") {
+	            		url += "&shareId=" + encodeURIComponent(shareId);
+		            }
+	                
 	                window.open(url, "right");
 	                
 	                previewSubTreeCall();
