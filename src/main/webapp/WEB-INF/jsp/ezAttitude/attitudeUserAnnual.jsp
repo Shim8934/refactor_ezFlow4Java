@@ -120,10 +120,10 @@
 	    
 	    	$(document).ready(function() {
 	    		//헤더 클릭 시 정렬
+    			if(joinDate == null || joinDate == "" || joinDate == "0") {
+           			joinDate = "0000-01-01";
+           		}
 	    		$(document).on('click', '.mainlist th', function(){
-	    			if(joinDate == null || joinDate == "" || joinDate == "0") {
-            			joinDate = "0000-01-01";
-            		}
 	    			if ($(this).attr("colname") != "") {
 	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
 	    					src = "";
