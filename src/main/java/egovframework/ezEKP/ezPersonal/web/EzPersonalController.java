@@ -158,7 +158,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String buJaeInfo = request.getParameter("buJae");
 		String buJaeInfo2 = "";
 		String proxyInfo = request.getParameter("proxy");
-		System.out.println(userInfo.getDeptID());
 		String dept = request.getParameter("dept");
 		String buJaeId = request.getParameter("buJaeId");
 //		String proxyInfo2 = "";
@@ -2047,5 +2046,40 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		logger.debug("manageBujae ended");
 		return json;
+	}
+	
+	/**
+	 * 겸직 부재자정보 호출
+	 */
+	@RequestMapping(value = "/ezPersonal/getBujaeInfo.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getBujaeInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("getBujaeInfo started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String dept = request.getParameter("dept");
+		String bujaeId = request.getParameter("bujaeId");
+		String result = "";
+		
+		String userRealDeptId = "";
+		
+		if (bujaeId == null || bujaeId.equals("")) {
+			userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+			if (dept.equals(userRealDeptId)) {
+				result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
+			} else {
+				result = ezOrganService.getAddJobProxy(userInfo.getId(), dept, userInfo.getTenantId());
+			}
+		} else {
+			userRealDeptId = ezOrganService.getUserOrgDeptId(bujaeId, userInfo.getTenantId(), userInfo.getCompanyID());
+			if (dept.equals(userRealDeptId)) {
+				result = ezOrganService.getPropertyValue(bujaeId, "extensionAttribute5", userInfo.getTenantId());
+			} else {
+				result = ezOrganService.getAddJobProxy(bujaeId, dept, userInfo.getTenantId());
+			}
+		}
+		
+		logger.debug("getBujaeInfo ended");
+		return result;
 	}
 }
