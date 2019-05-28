@@ -360,6 +360,12 @@
 		                return;
 		            }
 		        } */
+		        
+		        //2019-05-28 천성준 - #15542 부재중인 사람을 대리결재자로 선택 안되도록 개선
+		        if (checkSelectedMemberIsBuJae()) {
+		        	return;
+		        }
+		        
 		        if (ReturnFunction != null) {
 		            if (type == "EMP")
 		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3"));
@@ -373,6 +379,59 @@
 		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3");
 		        }
 		        window.close();
+		    }
+		    
+		    function checkSelectedMemberIsBuJae() {
+		    	var listview = new ListView();
+	        	listview.LoadFromID("Organ");
+	        	
+		        var selRow = listview.GetSelectedRows();
+		        if (selRow.length > 0) {
+		        	var xmlDom = createXmlDom();
+		        	
+		        	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/admin/ezOrgan/getEntryInfo.do",
+			    		data : {
+			    			cn : selRow[0].getAttribute("DATA2"),
+			    			prop : "displayName;extensionAttribute5"
+			    		},
+			    		success: function(xml) {
+			    			xmlDom = loadXMLString(xml);
+			    		}
+			    	});
+		        	
+	        		var buJaeInfo = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE5");
+		        	if (buJaeInfo != "") {
+		        		var oDate = new Date();
+		        		var oYear = oDate.getFullYear();
+		        		var oMonth = oDate.getMonth() + 1;
+		        		var oDay = oDate.getDate();
+		        		var oHours = oDate.getHours();
+		        		var oMinutes = oDate.getMinutes();
+		        		
+		        		var bYear = buJaeInfo.split(":")[5].split("-")[0];
+		        		var bMonth = buJaeInfo.split(":")[5].split("-")[1];
+		        		var bDay = buJaeInfo.split(":")[5].split("-")[2].substring(0, 2);
+		        		var bHours = buJaeInfo.split(":")[5].split("-")[2].substring(3, 5); 
+		        		var bMinutes = buJaeInfo.split(":")[6]; 
+		        		
+		        		var currentDate = new Date(oYear, oMonth, oDay, oHours, oMinutes, 0); //현재 시간
+		        		var buJaeEndDate = new Date(bYear, bMonth, bDay, bHours, bMinutes, 0); //부재 종료 시간
+		        		
+		        		if (buJaeEndDate > currentDate) {
+		        			var pAlertMsg = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME") + " <spring:message code='ezApprovalG.t1721'/>\n";
+								pAlertMsg += buJaeInfo.split(":")[3] + ":" + buJaeInfo.split(":")[4] + " <spring:message code='ezApprovalG.t1722'/>\n";
+								pAlertMsg += buJaeInfo.split(":")[5] + ":" + buJaeInfo.split(":")[6] + " <spring:message code='ezApprovalG.t1723'/>\n";
+								pAlertMsg += "<spring:message code='ezApprovalG.t1392'/>";
+		        			alert(pAlertMsg);
+		        			return true;
+		        		}
+		        	}
+		        }
+		        return false;
 		    }
 		</script>
 		<style>
