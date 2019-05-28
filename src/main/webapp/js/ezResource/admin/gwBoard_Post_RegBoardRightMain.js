@@ -92,7 +92,7 @@ var gwboard_post_regboardright_dialogArguments = new Array();
 function cmdAdd_onclick() {
     if (CrossYN()) {
         gwboard_post_regboardright_dialogArguments[1] = cmdAdd_onclick_Complete;
-        var OpenWin = window.open("/admin/ezResource/popup/gwBoardPostRegBoardRight.do", "gwBoardPostRegBoardRight", GetOpenWindowfeature(970, 635));
+        var OpenWin = window.open("/admin/ezResource/popup/gwBoardPostRegBoardRight.do", "gwBoardPostRegBoardRight", GetOpenWindowfeature(970, 665));
         
         try { OpenWin.focus(); } catch (e) { }
     } else {
