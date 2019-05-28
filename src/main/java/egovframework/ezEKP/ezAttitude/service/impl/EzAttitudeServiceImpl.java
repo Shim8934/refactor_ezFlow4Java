@@ -2688,12 +2688,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String startDate, String endDate, String orderCell, String orderOption, String companyId, int tenantId) throws Exception {
+	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String startDate, String endDate, String orderCell, String orderOption, String secondYear, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getUserAnnual started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		
 		String startTime = startDate + " 00:00:00";
 		String endTime = endDate + " 23:59:59";
 		
@@ -2711,6 +2710,38 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userId", userId);
 		
 		List<AdminAttitudeVO> list = ezAttitudeDAO.getUserAnnual(map);
+		
+		if(secondYear.equals("Y") || secondYear.equals("T")) {
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("userId", userId);
+			map2.put("companyId", companyId);
+			map2.put("tenantId", tenantId);
+			map2.put("offsetMin", offset);
+			
+			if (primary.equals("1")) {
+				primary = "";
+			}
+			map2.put("primary", primary);
+			
+			String searchStartTime = null;
+			
+			if(secondYear.equals("Y")) {
+				searchStartTime = (Integer.parseInt(startDate.substring(0, 4)) - 1) + startDate.substring(4, 10) + " 00:00:00";
+			} else {
+				searchStartTime = (Integer.parseInt(startDate.substring(0, 4)) - 2) + startDate.substring(4, 10) + " 00:00:00";
+			}
+			String searchEndTime = (Integer.parseInt(endDate.substring(0, 4)) - 1) + endDate.substring(4, 10) + " 23:59:59";
+			
+			map2.put("searchStartTime", searchStartTime);
+			map2.put("searchEndTime", searchEndTime);
+			
+			double useAnnualCnt = Double.parseDouble(getAnnualCnt(map2).getUseAnnualCnt());
+			if(useAnnualCnt > 11.0) {
+				useAnnualCnt = 11.0;
+			}
+			double totalAnnualCnt = Double.parseDouble(list.get(0).getTotalAnnualCnt());
+			list.get(0).setTotalAnnualCnt(totalAnnualCnt - useAnnualCnt + "");
+		}
 		
 		LOGGER.debug("getUserAnnual ended.");
 		
