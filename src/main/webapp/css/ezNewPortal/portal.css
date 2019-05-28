@@ -621,7 +621,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:592px; z-index
 .writebanner_leftContents dl dt span.icon_approval{display:inline-block; verticla-align:top; margin:17px 0px 0px 8px; background-position:-62px -60px;}
 .writebanner_leftContents dl dt span.iconCommon{display:inline-block; vertical-align:middle; width:25px; height:25px; margin:16px auto; background:url(/images/ezNewPortal/theme3Img/writebanner_icon_v1.001.png) left top no-repeat; background-position:2px 2px;}
 .writebanner_leftContents dl dt.txt{color:#ffffff; font-size:14px;}
-.writebanner_leftContents dl dd{position:absolute; top:22px; right:20%; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebanner_leftContents dl dd{position:absolute; top:17px; right:22%; margin:0px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebanner_rightContents{float:left; width:calc(100% - 145px); background:#ffffff;}
 .writebanner_leftContents .countZero{background:rgba(0,0,0,0.2);}
 .writebannerTop{overflow:hidden; list-style:none; margin:0px; padding:19px 0px; border-bottom:1px solid #ececec;}
@@ -644,7 +644,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:592px; z-index
 .writebannerIcon .iconCircle .iconReturn{background-position:-23px -23px;}
 .writebannerIcon .iconCircle .iconReceive{background-position:-50px -24px;}
 .writebannerIcon .iconText{margin:10px 0px 0px 0px; padding:0px; color:#333; font-size:14px;}
-.writebannerIcon .count{position:absolute; top:-2px; right:25%; margin:0px 0px 0px 12px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
+.writebannerIcon .count{position:absolute; top:-2px; right:28%; margin:0px 0px 0px 12px; padding:2px 8px; color:#ffffff; font-size:12px; background:rgba(0,0,0,0.8); border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;}
 .writebannerIcon .countZero{background:rgba(0,0,0,0.2);}
 
 @media only screen and (max-width :1730px) and (min-width :1680px) {
