@@ -86,7 +86,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			logger.debug("shareId=" + shareId);
 			
 			if (shareId != null) {
-				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
 					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
 					
 					logger.debug("the user cannot access the shareId.");
