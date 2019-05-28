@@ -621,7 +621,30 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userInfo.getTenantId(), userInfo.getId());
+		String userId = userInfo.getId();
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				// 관리권한 체크 = 4
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					logger.debug("the user cannot access the shareId.");
+
+					return "ezCommon/error";
+				} else {
+					userId = shareId;
+					logger.debug("userId=" + userId);
+					
+					model.addAttribute("shareId", shareId);
+				}
+			}
+		}
+		
+		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userInfo.getTenantId(), userId);
 		
 		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
 		
@@ -725,6 +748,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String pContent1 = "";
 		String pContent2 = "";
 		String pContent3 = "";
+		String shareId = "";
 
 		if (root.getElementsByTagName("USEFLAG") != null) {
 			tempNode = root.getElementsByTagName("USEFLAG").item(0);
@@ -750,10 +774,22 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				pContent3 = tempNode.getTextContent();
 			}
 		}
+		if (root.getElementsByTagName("SHAREID") != null) {
+			tempNode = root.getElementsByTagName("SHAREID").item(0);
+			if (tempNode != null && !tempNode.getTextContent().equals("")) {
+				shareId = tempNode.getTextContent();
+			}
+		}
 		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-			ezEmailService.setMailSignature(userInfo.getTenantId(), userInfo.getId(), pUseFlag, pContent1, pContent2, pContent3);
+			String userId = userInfo.getId();
+			
+			if (shareId != null && !shareId.equals("")) {
+				userId = shareId;
+			}
+			
+			ezEmailService.setMailSignature(userInfo.getTenantId(), userId, pUseFlag, pContent1, pContent2, pContent3);
 		} catch (Exception e) {
 			rtnValue = "ERROR : " + e.getMessage();
 			logger.error("rtnValue=" + rtnValue);

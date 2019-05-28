@@ -61,7 +61,13 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoDelete.do";
 	                    break;
 	                case "MailEnv_div7":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailSignature.do";
+	                	var requestUrl = "/ezEmail/mailSignature.do";
+	                	
+	                	if (shareId != "") {
+	                		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	                	}
+	                	
+	                    document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	                case "MailEnv_div8":
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOffice.do";
@@ -130,6 +136,7 @@
 		        		</c:when>
 		        		<c:otherwise>
 		        			<p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab1"><spring:message code='ezEmail.t146' /></span></p>
+		        			<p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
 		        		</c:otherwise>
 	        		</c:choose>
 	            </div>
