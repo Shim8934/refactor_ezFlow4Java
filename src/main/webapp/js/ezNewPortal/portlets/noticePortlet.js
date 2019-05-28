@@ -61,7 +61,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 			str += "<ul class='portlet_list'>";
 			str += "<dl class='nodata'>";
 			str += "<dt>";
-			str += "<img src='/images/ezNewPortal/nodata.png'>";
+			str += "<img src='/images/kr/main/noData_sIcon.png'>";
 			str += "</dt>";
 			str += "<dd>&#34;" + messages.strLang1 + "&#34;</dd>";
 			str += "</dl>";

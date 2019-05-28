@@ -27,7 +27,7 @@
 						<ul class="portlet_list">
 							<dl class="comListDL01">
 								<dt class="comPic">
-									<img src="/images/kr/main/comImg_none.png">
+									<img src="/images/kr/main/noData_sIcon.png">
 								</dt>
 								<dd class="comTit_none">
 									"<spring:message code='main.t00026' />"
