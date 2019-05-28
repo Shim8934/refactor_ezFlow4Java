@@ -450,7 +450,7 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			returnXML += "<NODE>";
 			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getDeptYn()  + "</ATTRIBUTE>";
 			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getSdaYn()  + "</ATTRIBUTE>";
-			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getMemberNam()  + "</ATTRIBUTE>";
+			returnXML += "<ATTRIBUTE>" + commonUtil.cleanValue(clsACLList.get(i).getMemberNam())  + "</ATTRIBUTE>";
 			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getMemberID()  + "</ATTRIBUTE>";
 			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getAccessLvl()  + "</ATTRIBUTE>";
 			returnXML += "</NODE>";

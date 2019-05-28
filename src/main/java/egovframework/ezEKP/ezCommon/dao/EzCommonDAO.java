@@ -259,6 +259,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 	
+	public void addAddJobMasterProxy() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddAddJobMasterProxy");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster proxy column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterProxy");
+		}
+	}
+	
 	public void createTblIPAccessID() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblIPAccessID");
@@ -400,6 +410,44 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		} catch (Exception e) {
 			logger.debug("updateListOptionData() ERROR...");
 			e.printStackTrace();
+		}
+	}
+
+	public void addMsgInMailSearch() {
+		try {
+			if ((int) select("EzCommonDAO.checkMsgInMailSearch") == 0) {
+				update("EzCommonDAO.updateMsgInMailSearch");
+			}
+		} catch (Exception e) {
+			logger.debug("addMsgInMailSearch() ERROR...");
+			e.printStackTrace();
+		}
+	}
+
+	public void addFormVersion() {
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfForminfo");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfForminfo");
+		}
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo");
+		} catch (Exception e) {
+			logger.debug("tbl_expendaprdocinfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo");
+		}
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo");
+		} catch (Exception e) {
+			logger.debug("tbl_expaprdocinfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfExpaprdocinfo");
+		}
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo");
+		} catch (Exception e) {
+			logger.debug("tbl_tmpexpaprdocinfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo");
 		}
 	}
 }

@@ -412,7 +412,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
  		
  		String textOption = mailGeneralVO.getTextOption();
  		
- 		if (textOption != null && textOption.equals("PLAIN")) {
+ 		if (textOption.equals("PLAIN")) {
  			bodyType = "1";
  		}
  		
@@ -528,7 +528,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	if (_cmd.equals("docsendDotNet")) {
         		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
         	}
-    		
+        	// 결재문서 메일발송 시, PLAINTEXT로 설정되있으면 결재본문 이미지가 메일에 첨부안되는 현상 수정
+        	if (textOption.equals("PLAIN")) {
+     			bodyType = "0";
+     		}
     		/* 2017-01-26 이효민 : 필요하지 않아 주석처리
     		 * 현재 docHref가 IMAGE로만 오고있기 때문에 HolderDocSend는 항상 보이지 않는다(jsp페이지의 HolderDocSend도 주석처리해놓음)
     		if (this._DocHref.ToLower().IndexOf(".doc") == this._DocHref.Length - 4 || this._DocHref.ToLower().IndexOf(".hwp") == this._DocHref.Length - 4)
@@ -1131,9 +1134,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        			isSecureMail = orgMessage.getHeader("X-JMocha-Secure-Mail")[0];
 		        		}
 		        		
-		        		//set bodyType
-		        		bodyType = isHtmlMessage(orgMessage) ? "0" : "1";
-		        		
 		        		if (orgMessage.getHeader("Return-Receipt-To") != null) {
 		        			replySendTime = "1";
 		        		} else {
@@ -1152,6 +1152,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		logger.debug("EDIT MODE : set mail option end");
 		        	}
+		        	
+		        	//set bodyType
+	        		bodyType = ezEmailUtil.isHtmlMessage(orgMessage) ? "0" : "1";
 				}
 				orgFolder.close(true);
 				
@@ -1816,6 +1819,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (f.exists()) {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
 				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
+				fileName[i] = commonUtil.normalizeFileName(fileName[i]);
 				
 				if (fileName[i].lastIndexOf(".") > -1) {
 					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
@@ -1906,7 +1910,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-                	String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
+                	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
                 	
                 	file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
                 	fos = new FileOutputStream(file);
@@ -1970,9 +1974,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis = new FileInputStream(filePath[i]);
 					bis = new BufferedInputStream(fis);
 					
-					String nfcFilename = commonUtil.normalizeFileName(newFileName[i]);
-					
-					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + nfcFilename);
+					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
 					bos = new BufferedOutputStream(fos);
 					
 					int data = 0;
@@ -1992,7 +1994,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                }
 					
 					sb.append("<NODE>");
-					sb.append("<PUPLOADSN><![CDATA[" + nfcFilename + "]]></PUPLOADSN>");
+					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
 					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
 					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
 					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
@@ -2173,6 +2175,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (f.exists()) {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
 				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
+				fileName[i] = commonUtil.normalizeFileName(fileName[i]);
 				
 				if (fileName[i].lastIndexOf(".") > -1) {
 					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
@@ -2267,7 +2270,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
+					String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
 					
 					file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
 					fos = new FileOutputStream(file);
@@ -3773,9 +3776,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								else if (p.getDisposition() != null || p.isMimeType("application/*")) { 
 	    									MimeBodyPart newBodyPart = (MimeBodyPart)p;
 	    									
+	    									// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
+	    									// ContentID 없이 Content-Dispostion이 inline으로 첨부된
+	    									// 이미지가 있어 이 경우 첨부파일로서 처리하기 위해 추가함.(iPhone Mail에서 작성한 메일임.)
+	    									boolean isInlinePartWithoutContentID = false;
+
+    										if (newBodyPart.getDisposition() != null 
+    												&& newBodyPart.getDisposition().equalsIgnoreCase(Part.INLINE)
+    												&& newBodyPart.getContentID() == null) {
+    											isInlinePartWithoutContentID = true;
+    										}
+	    									
 	    									// 첨부파일 파트인 경우
 	    									if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
-	    											|| p.isMimeType("application/*")) {
+	    											|| p.isMimeType("application/*")
+	    											|| isInlinePartWithoutContentID) {
 	    										hasAttach = true;
 	    											    										
 	    										InternetHeaders newHeaders = new InternetHeaders();
@@ -5673,55 +5688,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private boolean isHtmlMessage(Message message) throws MessagingException, IOException {
-		if (message.getHeader("Content-Type") == null) {
-			return true;
-		}
-		
-		String tempBodyType = message.getHeader("Content-Type")[0];
-		String contentType = tempBodyType.split(";")[0].trim();
-
-		if (contentType.equals("text/plain")) {
-			return false;
-		} else if (contentType.equals("multipart/alternative")) {
-			return true;
-		}
-		
-		Object content = message.getContent();
-		
-		if (content instanceof Multipart) {
-			return containsHtmlMultipart((Multipart) content);
-		}
-		
-		return true;
-	}
-	
-	private boolean containsHtmlMultipart(Multipart multipart) throws MessagingException, IOException {
-		int partCount = multipart.getCount();
-		
-		Object partContent;
-
-		for (int i = 0; i < partCount; i++) {
-			BodyPart bodyPart = multipart.getBodyPart(i);
-			
-			if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
-				continue;
-			}
-			
-			partContent = bodyPart.getContent();
-			
-			if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
-				return true;
-			}
-
-			if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 	
 	/**

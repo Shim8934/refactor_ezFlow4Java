@@ -1610,7 +1610,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         // 사원의 경우
     	if (pClass.toLowerCase().equals("user")) {
     		ezOrganDAO.updateProperty(map);
-    	// 부서의 경우
+    	// 부서의 경우엔
     	} else {
     		ezOrganDAO.updateProperty_U(map);
     	}
@@ -2172,6 +2172,41 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getUserOrgDeptId ended");
 		
 		return ezOrganDAO.getUserOrgDeptId(map);
+	}
+	
+	@Override
+	public String updateAddJobProxy(String userID, String proxyInfo, int tenantID, String dept) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		map.put("proxyInfo", proxyInfo);
+		map.put("dept", dept);
+		
+		ezOrganDAO.updateAddJobProxy(map);
+		
+        return "OK";	
+	}
+	
+	@Override
+	public String getAddJobProxy(String id, String dept, int tenantId) throws Exception {
+		logger.debug("getAddJobProxy started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", id);
+		map.put("tenantID", tenantId);
+		map.put("dept", dept);
+		logger.debug("getAddJobProxy ended");
+		
+		return ezOrganDAO.getAddJobProxy(map);
+	}
+
+	@Override
+	public OrganUserVO getUserInfo(String id, String lang, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN", id);
+		map.put("v_LANGDATA", lang);
+		map.put("v_TENANT_ID",  tenantId);
+		return ezOrganDAO.getUserInfo(map);
 	}
 }
 

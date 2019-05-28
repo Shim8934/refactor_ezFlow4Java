@@ -186,7 +186,7 @@
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "group"){
 	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distribution") {
-	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " + Replace2HTML(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
 	                            pparsingXML = pparsingXML + "<DATA3>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
@@ -580,21 +580,30 @@
 	        }
 	
 	        function OK_Click() {
-	            if (document.all("TextName").value.trim() == "") {
+	        	var strName = document.getElementById("TextName").value.trim();
+	        	var strId = document.getElementById("TextId").value.trim();
+	        	
+	            if (strName == "") {
 	                alert("<spring:message code='ezEmail.t22' />");
-	                document.all("TextName").focus();
+	                document.getElementById("TextName").focus();
 	                return;
 	            }
 	            
-	            if (document.all("TextId").value.trim() == "") {
+	            if (strId == "") {
 	                alert("<spring:message code='ezEmail.lhm10' />");
-	                document.all("TextId").focus();
+	                document.getElementById("TextId").focus();
 	                return;
 	            }
+	            
+	            if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
+		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
+	           		alert("<spring:message code='ezEmail.t710' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+	           		document.getElementById("TextName").focus();
+		            return;
+		        }
 	            
 	            var regex = /^[a-z0-9\_\-\.]+$/;
-	            
-	            if (!regex.test(document.all("TextId").value.trim())) {
+	            if (!regex.test(strId)) {
 	            	alert("<spring:message code='ezEmail.lhm13' />");
 	            	return;
 	            }
@@ -2439,31 +2448,36 @@
             }
 	        
 	        function inputAddress() {
-                if (document.getElementById("emailname").value == "") {
+	        	var strName = document.getElementById("emailname").value;
+                var strEmail = document.getElementById("emailaddr").value.trim();
+	        	
+                if (strName == "") {
                     document.getElementById("emailname").focus();
                     alert(strLang196);
                     return;
-                } else if (document.getElementById("emailaddr").value == "") {
+                } else if (strEmail == "") {
                     document.getElementById("emailaddr").focus();
                     alert(strLang197);
                     return;
                 }
                 
-                var emailMatch = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-                if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
+                if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
+		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
+                	alert("<spring:message code='ezEmail.t31' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+                	document.getElementById("emailname").focus();
+		            return;
+		        }
+                
+                var emailMatch = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9_.-]+$/;
+                if (!emailMatch.test(strEmail)) {
+                	document.getElementById("emailaddr").focus();
                     alert(strLang198);
                     return;
                 }
 
                 var pparsingXML = "";
                 var pparsingXML2 = "";
-                var strName = "";
-                var strEmail = "";
                 var listid = "MsgToList";
-                
-                strName = document.getElementById("emailname").value;
-                strEmail = document.getElementById("emailaddr").value;
-                
                 var listview = new ListView();
                 listview.LoadFromID(listid);
                 var MaxID = 0;

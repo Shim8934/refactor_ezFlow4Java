@@ -74,7 +74,7 @@
 	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;margin-top:2px" maxlength="20">
 	    </div>
 	    <div class="btnposition btnpositionNew">
-	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezEmail.t38' /></span></a>
+	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezEmail.t48' /></span></a>
 	    </div>	
 	</body>
 </html>
