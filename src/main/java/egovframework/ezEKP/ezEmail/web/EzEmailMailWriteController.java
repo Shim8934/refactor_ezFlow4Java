@@ -424,7 +424,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",textOption=" + textOption + ",pMailSenderNM=" + pMailSenderNM);
  		
         //set mail sign
-        MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
+        MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), mailId);
         
         if (mailSignatureVO != null) {
         	mailSign1 = mailSignatureVO.getContent1();
