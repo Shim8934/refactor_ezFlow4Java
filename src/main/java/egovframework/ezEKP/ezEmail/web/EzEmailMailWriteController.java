@@ -528,7 +528,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	if (_cmd.equals("docsendDotNet")) {
         		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
         	}
-    		
+        	// 결재문서 메일발송 시, PLAINTEXT로 설정되있으면 결재본문 이미지가 메일에 첨부안되는 현상 수정
+        	if (textOption.equals("PLAIN")) {
+     			bodyType = "0";
+     		}
     		/* 2017-01-26 이효민 : 필요하지 않아 주석처리
     		 * 현재 docHref가 IMAGE로만 오고있기 때문에 HolderDocSend는 항상 보이지 않는다(jsp페이지의 HolderDocSend도 주석처리해놓음)
     		if (this._DocHref.ToLower().IndexOf(".doc") == this._DocHref.Length - 4 || this._DocHref.ToLower().IndexOf(".hwp") == this._DocHref.Length - 4)
