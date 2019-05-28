@@ -3565,6 +3565,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			startDate = year + "-" + month + "-01";
 			endDate = year + "-" + month + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 		} else {
+			
+			paramStartDate = paramStartDate.split("-")[1].split("").length == 1 ? "0" + paramStartDate.split("-")[1]: paramStartDate;
+			paramStartDate = paramStartDate.split("-")[2].split("").length == 1 ? "0" + paramStartDate.split("-")[2]: paramStartDate;
+			paramEndDate = paramEndDate.split("-")[1].split("").length == 1 ? "0" + paramEndDate.split("-")[1]: paramEndDate;
+			paramEndDate = paramEndDate.split("-")[2].split("").length == 1 ? "0" + paramEndDate.split("-")[2]: paramEndDate;
+			
 			startDate = paramStartDate;
 			endDate = paramEndDate;
 		}
