@@ -114,6 +114,8 @@ public interface EzBoardAdminService {
 
 	/* 2018-06-26 홍승비 - 권한복사 시 companyID 추가 */
 	public String copyBoardAcl(Document doc, String companyID, int tenantID) throws Exception;
+
+	public void trunkBoard(int tenantID) throws Exception;
 	
 
 }
