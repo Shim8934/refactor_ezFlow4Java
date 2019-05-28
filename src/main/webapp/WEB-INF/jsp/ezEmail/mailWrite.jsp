@@ -1054,6 +1054,25 @@
 				success : function(result) {
 					$("#eSubject").val("<spring:message code='ezJournal.t1' /><spring:message code='ezEmail.t674' /> : "+result.journalTitle);
 					var journalContent = "<p></p><p></p><hr>" + (result.journalContent).replace(/&#39;/gi, "\'");
+					
+					switch (mailsel) {
+		                case "0": 
+		                	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>" + journalContent;
+		                    break;
+		                case "1": 
+		                	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + journalContent;
+		                	tempvalue = "1";
+			                break;
+			            case "2": 
+			            	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + journalContent;
+			                tempvalue = "1";
+			                break;
+			            case "3": 
+			            	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + journalContent;
+			                tempvalue = "1";
+			                break;
+		            }
+						
 					message.SetEditorContent(journalContent);
 					var fileList = result.fileList;
 					
