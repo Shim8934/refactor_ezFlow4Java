@@ -596,7 +596,7 @@
         var elementid;
         if (GetAttribute(targetEl, "id") == "" || GetAttribute(targetEl, "id") == null) {
             for (var i = 0; i < GetChildNodes(targetEl).length; i++) {
-                if (GetChildNodes(targetEl)[i].id.indexOf("PostTreeView_node") > -1) 
+                if (GetChildNodes(targetEl)[i].id.indexOf(treeviewStr + "_node") > -1) 
                     elementid = GetAttribute(GetChildNodes(targetEl)[i], "id");
             }
         }
@@ -606,9 +606,9 @@
         if (elementid.indexOf(g_nodeid) == 0) {
             event.returnValue = false;
             if (window.event.ctrlKey)
-                parent.frames["right"].Mail_CopyPostSend("COPY", PostTreeView.getvalue(elementid.split(g_nodeid)[1], "href"), event.dataTransfer.getData("text"));
+                parent.frames["right"].Mail_CopyPostSend("COPY", window[treeviewStr].getvalue(elementid.split(g_nodeid)[1], "href"), event.dataTransfer.getData("text"));
             else
-                parent.frames["right"].Mail_CopyPostSend("MOVE", PostTreeView.getvalue(elementid.split(g_nodeid)[1], "href"), event.dataTransfer.getData("text"));
+                parent.frames["right"].Mail_CopyPostSend("MOVE", window[treeviewStr].getvalue(elementid.split(g_nodeid)[1], "href"), event.dataTransfer.getData("text"));
         }
     }
 

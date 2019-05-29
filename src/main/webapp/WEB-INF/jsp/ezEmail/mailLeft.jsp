@@ -571,20 +571,33 @@
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
 	            mail_foldermanage_Cross_dialogArguments[1] = folder_manager_after;
-	            var OpenWin = window.open("/ezEmail/mailFolderManage.do", "mail_foldermanage_Cross", GetOpenWindowfeature(555, 500));
+	            
+	            var requestUrl = "/ezEmail/mailFolderManage.do";
+	            
+	            if (shareId != "") {
+	            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	            }
+	            
+	            var OpenWin = window.open(requestUrl, "mail_foldermanage_Cross", GetOpenWindowfeature(555, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function folder_manager_after(RtnVal) {
-	            if (RtnVal && shareId == "") {
-	                var href = PostTreeView.getvalue(1, "href");
-	                PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	                PostTreeView.update();
+	            if (RtnVal) {
+	            	var href = window[treeviewStr].getvalue(1, "href");
+	            	
+	            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	            	window[treeviewStr].update();
 	                
-	                if (PostTreeView.selectedIndex() == -1) {
-	                    PostTreeView.select(1);
+	                if (window[treeviewStr].selectedIndex() == -1) {
+	                	window[treeviewStr].select(1);
 	                }
 	                
-	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
+	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
+	                
+	            	if (shareId != "") {
+	            		url += "&shareId=" + encodeURIComponent(shareId);
+		            }
+	                
 	                window.open(url, "right");
 	                
 	                previewSubTreeCall();
@@ -600,10 +613,11 @@
 	        */
 	        function mailbox_treeview_reload() {
 	        	setTimeout(function() {
-	        		PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	                PostTreeView.update();
+	        		window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	        		window[treeviewStr].update();
 	                
 	                previewSubTreeCall();
+	                applyEllipsisMailTree();
 	        	}, 100);
 	        }
 	        
@@ -655,8 +669,12 @@
 	        }
 	        function Open_Search() {
 	            try {
-	                var url;
-	                url = "/ezEmail/mailSearchView.do";
+					var url = "/ezEmail/mailSearchView.do";
+	                
+	                if (shareId != "") {
+	                	url += "?shareId=" + encodeURIComponent(shareId);
+	                }
+	                
 	                window.open(url, "right");
 	            } catch (e) { }
 	        }
@@ -693,13 +711,15 @@
 	            frmSpam.target = "right";
 	            frmSpam.submit();
 	        }
-	        function mail_Config() {
+	        function mail_Config(shareId) {
+	        	var requestUrl = "/ezEmail/mailConfig.do?flag=email";
 	        	
-				if (shareId == "") {
-					detailView();
-				}
-				
-	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=email";
+	        	if (typeof(shareId) != "undefined" && shareId != "") {
+	        		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+	        	}
+	        	
+	            parent.frames["right"].location.href = requestUrl;
+	            detailView(shareId);
 	        }
 	        
 	        function Email_Menu_Click() {
@@ -1193,6 +1213,7 @@
 			    shareTreeView.select(1);
 			    
 			    selectnode();
+			    previewSubTreeCall();
 			}
 
 			function SharefindID() {
