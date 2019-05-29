@@ -873,11 +873,13 @@
             
             if (document.getElementById("left")) {
 	            if (_foldername == "_INBOX") {
-		            var SPAN_TAG_MNG = document.createElement("SPAN");
-		            SPAN_TAG_MNG.setAttribute("class", "sub_iconLNB tree_manage");
-		            SPAN_TAG_MNG.setAttribute("onclick", "folder_manage()");
-		            
-		            SPAN3.appendChild(SPAN_TAG_MNG);
+	            	if (shareId == "" || managePermission == "Y") {
+	            		var SPAN_TAG_MNG = document.createElement("SPAN");
+			            SPAN_TAG_MNG.setAttribute("class", "sub_iconLNB tree_manage");
+			            SPAN_TAG_MNG.setAttribute("onclick", "folder_manage()");
+			            
+			            SPAN3.appendChild(SPAN_TAG_MNG);
+	            	}
 	            } else if (_foldername == "_SENT") {
 	            	/*if (useMailReceiveScreen == "YES") {
 			            var SPAN_TAG_MNG = document.createElement("SPAN");

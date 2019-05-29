@@ -43,6 +43,7 @@
 	      	var shareId = "";
 	      	var deletePermission = "";
 	      	var sendPermission = "";
+	      	var managePermission = "";
 	      	var treeviewStr = "PostTreeView";
 	      	
 	        document.onselectstart = function () { return false; };
@@ -299,10 +300,6 @@
 	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            var requestUrl = "/ezEmail/mailWrite.do?cmd=NEW";
 	            
-	            if (shareId != "") {
-	            	requestUrl += "&shareId=" + encodeURIComponent(shareId);
-	            }
-	            
 	            window.open(requestUrl, "", feature);
 	        }
 	        
@@ -317,10 +314,6 @@
 	            var pLeft = (pwidth - 890) / 2;
 	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            var requestUrl = "/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES";
-	            
-	            if (shareId != "") {
-	            	requestUrl += "&shareId=" + encodeURIComponent(shareId);
-	            }
 	            
 	            window.open(requestUrl, "", feature);
 	        }
@@ -601,9 +594,7 @@
 	                window.open(url, "right");
 	                
 	                previewSubTreeCall();
-	                
-	                $("#inboxMail").closest("div").append("<span onclick='folder_manage()' class='sub_iconLNB tree_manage'></span>");
-		            
+	                applyEllipsisMailTree();
 	            	detailView();
 	            }
 	        }
@@ -726,6 +717,7 @@
 	        	shareId = "";
 	        	deletePermission = "";
 	        	sendPermission = "";
+	        	managePermission = "";
 	        	treeviewStr = "PostTreeView";
 	        	
 	        	HiddenFolderMenu();
@@ -738,6 +730,7 @@
 	        	
 	        	detailView();
 	        	window[treeviewStr].select(1);
+	        	openFolder();
 	        }
 	        
 	        function showProgress() {
@@ -1141,10 +1134,11 @@
         	});
 
 			// 2018-10-16 공유사서함 관련 함수 추가
-			function Share_Menu_Click(_shareId, _deletePermission, _sendPermission) {
+			function Share_Menu_Click(_shareId, _deletePermission, _sendPermission, _managePermission) {
 				shareId = _shareId;
 				deletePermission = _deletePermission;
 				sendPermission = _sendPermission;
+				managePermission = _managePermission;
 				treeviewStr = 'shareTreeView_' + shareId;
 			    
 			    if (document.getElementById(treeviewStr).innerHTML === "") {
@@ -1179,6 +1173,7 @@
 			    }
 			    
 			    detailView(shareId);
+			    openFolder();
 			}
 			
 			function LoadEmailTree2(RootShareFolderXML) {
@@ -1248,23 +1243,44 @@
 			
 			function setTotalUnreadCount(shareId, totalUnreadCount) {
 				var totalUnreadCountId = "totalUnreadCount";
+				var h2TitleId = "h2TitleMail";
 				
 				if (shareId != "") {
-					totalUnreadCountId += "_" + shareId;
+					totalUnreadCountId = "totalUnreadCount_" + shareId;
+					h2TitleId = "h2Title_" + shareId;
 				}
 				
 				var totalUnreadCountElem = document.getElementById(totalUnreadCountId);
+				var h2TitleElem = document.getElementById(h2TitleId);
 				
 				if (totalUnreadCountElem != null) {
 					if (totalUnreadCount == 0) {
 						totalUnreadCountElem.innerHTML = "";
-	        			totalUnreadCountElem.previousSibling.style.maxWidth = "80%";
+						h2TitleElem.style.maxWidth = "80%";
 					} else {
 						totalUnreadCountElem.innerHTML = " " + totalUnreadCount;
-	        			totalUnreadCountElem.previousSibling.style.maxWidth = (155 - totalUnreadCountElem.offsetWidth) + "px";
+						h2TitleElem.style.maxWidth = (155 - totalUnreadCountElem.offsetWidth) + "px";
 					}
 				}
 			}
+			
+			function openFolder() {
+				var h2Id = "h2Mail";
+				var ulId = "ulMail";
+				
+				if (shareId != "") {
+					h2Id = "h2_" + shareId;
+					ulId = "ul_" + shareId;
+				}
+				
+	        	if ($("#" + h2Id).attr("class") == "off") {
+	        		$(".lnb H2").attr("class", "off");
+	        		$(".lnb UL").attr("class", "lnbUL off");
+	        		
+	        		$("#" + h2Id).attr("class", "on")
+	        		$("#" + ulId).attr("class", "lnbUL");
+	        	}
+	        }
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1298,7 +1314,11 @@
 	        	<p class="btn_write01" onclick="write_Letter()"><span class="sub_iconLNB tree_write"></span><spring:message code="ezEmail.t99000013" /></p>
 	        </div>
         	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
-		        <ul class="lnbUL">
+		        <h2 class="on" id="h2Mail" onclick="Email_Menu_Click();">
+		        	<span class="sub_iconLNB tree_arrow_up"></span>
+		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span>&nbsp;&nbsp;<span id="totalUnreadCount" style="color:#0470e4; position:absolute;"></span>
+		        </h2>
+		        <ul class="lnbUL" id="ulMail">
 		        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 		        	<li onclick="reception_check();"><span class="sub_iconLNB tree_receive_ok"></span><span class="list_text"><spring:message code="ezEmail.t516" /></span></li>
 		            <li onclick="Open_Search();"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
@@ -1314,6 +1334,27 @@
 		            	<li onclick="operatorSendMail()"><span class="sub_iconLNB left_admin_mail"></span><span class="list_text"><spring:message code="ezEmail.0hun01" /></span></li>
 		            </c:if>	
 		        </ul>
+		        <c:if test="${useSharedMailbox == 'YES'}">
+			        <c:forEach items="${shareInfoList}" var="shareInfo">
+			        	<h2 class="off" id="h2_${shareInfo.shareId}" onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
+			        		<span class="sub_iconLNB tree_arrow_up"></span>
+			        		<span class="h2Title" id="h2Title_${shareInfo.shareId}" style="display:inline-block"><c:out value="${shareInfo.shareName}" /></span>&nbsp;&nbsp;
+			        		<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;">
+			        			<c:if test="${shareInfo.totalUnreadCount != '0'}">(${shareInfo.totalUnreadCount})</c:if>
+			        		</span>
+			        	</h2>
+			        	<ul class="lnbUL off" id="ul_${shareInfo.shareId}">
+			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+			        		<li onclick="Open_Search();"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
+			        		<c:if test="${shareInfo.managePermission eq 'Y'}">
+			        			<li onclick="mail_Config('${shareInfo.shareId}')"><span class="sub_iconLNB tree_mail_config"></span><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
+			        		</c:if>
+			        	</ul>
+			        	<script>
+			        		setTotalUnreadCount("${shareInfo.shareId}", parseInt("${shareInfo.totalUnreadCount}"));
+			        	</script>
+			        </c:forEach>
+		        </c:if>
 	        </div>
 	        <div class="mail_space">
 	        	<span class="mail_spaceText"><spring:message code="main.t00045" />&nbsp;<span class="userPer" id="usePer"></span></span><span  id="myBar" class="mailBar"></span>
@@ -1334,7 +1375,7 @@
 			    <tr id="mailbox_import" <c:if test="${useMailBoxBackUp ne 'YES'}">style="display:none"</c:if>>
 			        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_import();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_fw.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.lhm32" /></span></td>
 			    </tr>
-			    <tr>
+			    <tr id="mailbox_delete">
 			        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="mailbox_delete();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/deleted.gif" alt="" align="absmiddle"  border="0" hspace="5"><spring:message code="ezEmail.t483" /></span></td>
 			    </tr>
 			    </table>
