@@ -55,7 +55,7 @@ function getTabList() {
     		    } else {
     			var listHTML = "";
     			listHTML += "<dl class='nodata'>";
-    	    	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+    	    	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
     	    	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
     	    	listHTML += "</dl>";
     	    	
@@ -119,7 +119,7 @@ function getBoardList_NewBoardSTD() {
             
         	var listHTML = "";
 			listHTML += "<dl class='nodata'>";
-        	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+        	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
         	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
         	listHTML += "</dl>";
         	
