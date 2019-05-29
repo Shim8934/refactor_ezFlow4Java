@@ -15,7 +15,6 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component_utf8.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
@@ -48,14 +47,6 @@
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
-// 	            if (document.documentElement.clientHeight > 900) {
-// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
-// 	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px"; */
-// 	            }
-// 	            else {
-// 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.33) + "px";
-// 	                /* document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.38 + "px"; */
-// 	            }
 	        }
 	        
 	        window.onload = function () {
@@ -69,18 +60,7 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            
-	            /* 2018-05-23 이소담 - 편지함 목록 스크롤 제거 
-	            if (document.documentElement.clientHeight > 900) {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";
-	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px";
-	            }
-	            else {
-	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";
-	                document.getElementById("AddressTreeView").style.maxHeight = document.documentElement.clientHeight * 0.58 + "px";
-	            } */
-
 	            Function_Flag(funcCode);
-	            //LoadAddressTree(true);
 	            previewSubTreeCall();
 	            leftResize();
 		        $(".taskListBox").mCustomScrollbar({
@@ -191,7 +171,7 @@
 	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
 	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
 	        	*/
-	        	$("[id^='PostTreeView_node']").each(function(index, element){
+	        	$("[id^='" + treeviewStr + "_node']").each(function(index, element){
 	        		
 	        		var imgCnt = $(element).parent().children('.sub_iconLNB').length - 2;
 	        		var title = $(element)[0].innerHTML;
@@ -206,33 +186,6 @@
 							
 	        	});
 	        }
-	        
-	        /**
-	        	주소록 ellipsis 추가.
-	        	박종균
-	        */
-	        function applyEllipsisAddressTree() {
-	        	/**
-	        		1. 왼쪽 메뉴에 존재하는 트리 node를 전부 가져온다.
-	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
-	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
-	        	*/
-	        	$($("[id^='AddressTreeView_node']")).each(function(index, element){
-	        		
-	        		var imgCnt = $(element).parent().children('.sub_iconLNB').length - 2;
-	        		var title = $(element)[0].innerHTML;
-	        		
-	        		if (imgCnt > 0) {
-	        			// 최초값 170, 한 블럭의 값 16 이지만 길이가 맞지않아 14로 설정
-	        			var customWidth = 170 - (14 * imgCnt);
-	        			$(element).css("width", customWidth+"px");
-	        			$(element).css("text-align", "justify");
-	        			$(element).attr("title", title);	
-	        		}
-							
-	        	});
-	        }	        
-	        
 	        
 	        // 수정 수아 재은
 	        function detailView(_shareId) {
@@ -296,13 +249,13 @@
 
     		          	for (var i = 0; i < treeArrNum; i++) {
     		        	    var getSubtree = $('.tree_plus').eq(i).attr('name');
-    		        	    var idx = getSubtree.split('PostTreeView_img_');
+    		        	    var idx = getSubtree.split(treeviewStr + '_img_');
     		        	    
     		        	    if (typeof idx[1] != "undefined") {
-    		        	    	var attr = $('#PostTreeView_img_' + idx[1]).attr("class").split(' ');
+    		        	    	var attr = $('#' + treeviewStr + '_img_' + idx[1]).attr("class").split(' ');
     		        	    	
     		        	    	if (attr[1] != "tree_plus") {
-    			        	    	PostTreeView.toggle(idx[1]);
+    		        	    		window[treeviewStr].toggle(idx[1]);
     		        	    	}
     		        	    }
     		          	}
@@ -318,12 +271,12 @@
 
 		          	while(treeArrNum > 0) {
 		        	    var getSubtree = $('.tree_plus').eq(0).attr('name');
-		        	    var idx = getSubtree.split('PostTreeView_img_');
+		        	    var idx = getSubtree.split(treeviewStr + '_img_');
 		        	    
 		        	    if (typeof idx[1] != "undefined") {
-		        	    	var childxml = get_childXML(PostTreeView.getvalue(idx[1], "href"), false, true, false);
-		        	    	PostTreeView.putchildxml(idx[1], childxml);
-		        	    	$('#PostTreeView_img_' + idx[1]).attr("class", "sub_iconLNB tree_minus");
+		        	    	var childxml = get_childXML(window[treeviewStr].getvalue(idx[1], "href"), false, true, false);
+		        	    	window[treeviewStr].putchildxml(idx[1], childxml);
+		        	    	$('#' + treeviewStr + '_img_' + idx[1]).attr("class", "sub_iconLNB tree_minus");
 		        	    	treeArrNum--;
 		        	    }
 		          	}
@@ -344,12 +297,13 @@
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - 890) / 2;
 	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            if (CrossYN() || pNoneActiveX == "YES") {
-	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
+	            var requestUrl = "/ezEmail/mailWrite.do?cmd=NEW";
+	            
+	            if (shareId != "") {
+	            	requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	            }
-	            else {
-                    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
-	            }          
+	            
+	            window.open(requestUrl, "", feature);
 	        }
 	        
 	        function write_LetterToMe() {
@@ -362,12 +316,13 @@
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - 890) / 2;
 	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-	            if (CrossYN() || pNoneActiveX == "YES") {
-	                window.open("/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES", "", feature);
+	            var requestUrl = "/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES";
+	            
+	            if (shareId != "") {
+	            	requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	            }
-	            else {
-                    window.open("/ezEmail/mailWrite.do?cmd=NEW&isMailToMe=YES", "", feature);
-	            }          
+	            
+	            window.open(requestUrl, "", feature);
 	        }
 	        
 	        function LoadEmailTree() {
@@ -397,7 +352,8 @@
 	                PostTreeView.select(1);
 	            }
 	            
-                selectnode();	            
+                selectnode();
+                previewSubTreeCall();
 	        }
 	        function requestdata(event) {
 	            if (!event) event = window.event;
@@ -510,11 +466,11 @@
 	
 	                if (get_unreadend_2010.href == window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href")) {
 	                    if (unreadcount == "0") {
-	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption);
-	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : ''");
+	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption);
+	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : ''");
 	                    } else {
-	                        PostTreeView.putcaption(PostTreeView.selectedIndex(), caption + "&nbsp;&nbsp;" + unreadcount);
-	                        //PostTreeView.putstyle(PostTreeView.selectedIndex(), "font-weight : bold");
+	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "&nbsp;&nbsp;" + unreadcount);
+	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : bold");
 	                    }
 	                    
 	                    var pageSrc = parent.frames["right"].document.location.toString();
@@ -523,9 +479,7 @@
 	                    }
 	                }
 	                
-	                /* TODO: 공유사서함 적용 후 주석 제거 후 수정
 	                setTotalUnreadCount(shareId, parseInt(totalUnreadCount));
-                	*/
 	            }
 	            
 	            xmlHTTP_Unread = null;
@@ -576,7 +530,6 @@
 		                    		}
 	                    		}
 	                    		
-	                    		/* TODO: 공유사서함 적용 후 주석 제거 후 수정
 	                    		setTotalUnreadCount("", totalUnreadCount);
 	                    		
 	                    		if ("${useSharedMailbox}" == "YES") {
@@ -585,7 +538,6 @@
 		                    			setTotalUnreadCount(shareInfo.shareId, parseInt(shareInfo.totalUnreadCount));
 		                    		}
 	                    		}
-	                    		*/
 	                    		
                    				try {
                     				var pageSrc = parent.frames["right"].document.location.toString();
@@ -750,94 +702,6 @@
 	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=email";
 	        }
 	        
-	        function Address_Menu_Click() {
-	        	HiddenFolderMenu();
-	            LoadAddressTree(true);
-	            
-	            if (AddressTreeView.selectedIndex() == -1)
-	                AddressTreeView.select(1);
-	            else
-	                selectnode_address();
-	            
-	            applyEllipsisAddressTree();
-	        }
-	        var AddressTreeView = null;
-	        function LoadAddressTree() {
-	            if (AddressTreeView == null) {
-	                AddressTreeView = new TreeView('AddressTreeView', 'AddressTreeView');
-	
-	                AddressTreeView.attachEvent('requestdata', requestdata_address);
-	                AddressTreeView.attachEvent('nodeselect', selectnode_address);
-	                AddressTreeView.attachEvent('nodedblclick', function () { AddressTreeView.toggle(AddressTreeView.selectedIndex()) });
-	            }
-	            var xmlHTTP = createXMLHttpRequest();
-	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
-	            xmlHTTP.send();
-	            var treeconfig;
-	            if (CrossYN()) {
-	                treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
-	            }
-	            else {
-	                treeconfig = new ActiveXObject("Microsoft.XMLDOM");
-	                treeconfig.async = false;
-	                treeconfig.loadXML(xmlHTTP.responseText);
-	            }
-	            AddressTreeView.config(treeconfig);
-	            AddressTreeView.source(document.getElementById("AddressFolderXML").innerHTML);
-	            AddressTreeView.update();
-	
-	            if (funcCode == "2") {
-	                if (subCode != "1" && subCode != "") {
-	                    AddressTreeView.select(subCode);
-	                    selectnode_address();
-	                }
-	                else
-	                    AddressTreeView.select(1);
-	            }
-	        }
-	        function requestdata_address(event) {
-	            if (!event) {
-	                event = window.event;
-	            }
-	
-	            var nodeIdx = event.nodeIdx;
-	
-	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
-	                nodeIdx = arguments[0].nodeIdx;
-	            }
-	
-	            var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "folderid"), AddressTreeView.getvalue(nodeIdx, "ownerid"), AddressTreeView.getvalue(nodeIdx, "type"))
-	            AddressTreeView.putchildxml(nodeIdx, childxml);
-	            
-	            /**
-	            	주소록 ellipsis 추가
-	            */
-	            applyEllipsisAddressTree();
-	        }
-	        function selectnode_address() {
-	            var nodeIdx = AddressTreeView.selectedIndex();
-	            var url = "/ezAddress/addressMainList.do?folderid=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "folderid")) + "&type=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "type"));
-	            window.open(url, "right");
-	        }
-	        var address_foldermanage_dialogArguments = new Array();
-	        function address_foldermanage() {
-	            address_foldermanage_dialogArguments[1] = address_foldermanage_Complete;
-	            var OpenWin = window.open("/ezAddress/addressFolderManage.do", "address_foldermanage", GetOpenWindowfeature(500, 500));
-	            try { OpenWin.focus(); } catch (e) { }
-	        }
-	        function address_foldermanage_Complete(ret) {
-	            if (ret != undefined) {
-	            	var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("POST", "/ezAddress/getRootAddressXML.do", false);
-		            xmlHTTP.send();
-	            	
-		            document.getElementById("AddressFolderXML").innerHTML = xmlHTTP.responseText;
-	            	LoadAddressTree();
-	            }
-	        }
-	        function address_Search() {
-	            window.open("/ezAddress/addressMainSearch.do", "right");
-	        }
 	        function Email_Menu_Click() {
 	        	shareId = "";
 	        	deletePermission = "";
@@ -1435,9 +1299,6 @@
 	        </div>
 	        <xml id="RootFolderXML" style="display: none;">
 		    	${rootFolderXML}
-		    </xml>
-		    <xml id="AddressFolderXML" style="display: none;">
-		   		${rootAddressXML}
 		    </xml>
 		    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 			<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="folderPanel" onclick="HiddenFolderMenu();" >&nbsp;</div>   		    		               
