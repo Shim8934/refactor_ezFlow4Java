@@ -71,7 +71,7 @@ public class EzLadderController {
 	/**
 	 * 사다리게임 메인 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezLadder/ladderMainPage.do")
+	@RequestMapping(value="/ezLadder/ladderMainPage.do", method=RequestMethod.GET)
 	public String qstMain() throws Exception{
 		logger.debug("ladderMainPage Start");
 		
@@ -82,7 +82,7 @@ public class EzLadderController {
 	/**
 	 * 사다리게임 레프트 메뉴 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezLadder/ladderLeft.do")
+	@RequestMapping(value="/ezLadder/ladderLeft.do", method=RequestMethod.GET)
 	public String qstLeft() throws Exception{
 		logger.debug("ladderLeft Start");
 		
@@ -93,7 +93,7 @@ public class EzLadderController {
 	/**
 	 * 사다리 게임 호출
 	 * */
-	@RequestMapping(value = "/ezLadder/ladderMain.do")
+	@RequestMapping(value = "/ezLadder/ladderMain.do", method=RequestMethod.GET)
 	public String ladderMain(String mode, String currPage, String searchSelect, String searchInput, String sort, String sortFlag, String searching, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ladderMain started.");
 		
@@ -185,7 +185,7 @@ public class EzLadderController {
 	/**
 	 * 사다리 게임 종류 선택
 	 * */
-	@RequestMapping(value = "/ezLadder/selectLadderType.do")
+	@RequestMapping(value = "/ezLadder/selectLadderType.do", method=RequestMethod.GET)
 	public String ladderTypeView() {
 		logger.debug("selectLadderType started.");
 		logger.debug("selectLadderType ended.");
@@ -211,7 +211,7 @@ public class EzLadderController {
 	/** 
 	 * 참여자 추가 (조직도 호출)
 	 * */
-	@RequestMapping(value = "/ezLadder/setLadderAttendantPopUp.do")
+	@RequestMapping(value = "/ezLadder/setLadderAttendantPopUp.do", method=RequestMethod.GET)
 	public String setLadderAttendantPopUp(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		logger.debug("setLadderAttendantPopUp started.");
 		
@@ -232,7 +232,7 @@ public class EzLadderController {
 	 * 사다리 게이머 바로 추가
 	 * @throws ParseException 
 	 * */
-	@RequestMapping(value = "/ezLadder/setLadderAttendant.do")
+	@RequestMapping(value = "/ezLadder/setLadderAttendant.do", method=RequestMethod.POST)
 	public String setLadderAttendant(@CookieValue("loginCookie") String loginCookie, String [] searchUserName, HttpServletRequest request, Model model) throws ParseException {
 		logger.debug("setLadderAttendant started.");
 		
@@ -327,14 +327,14 @@ public class EzLadderController {
 		
 		logger.debug("setLadder ended.");
 		
-		return "forward:/ezLadder/ladderMain.do?brdID=7";
+		return "redirect:/ezLadder/ladderMain.do?brdID=7";
 	}
 	
 	/**
 	 * 즐겨찾기 조회
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value = "/ezLadder/getLadderBM.do")
+	@RequestMapping(value = "/ezLadder/getLadderBM.do", method=RequestMethod.GET)
 	public String getLadderBM(@CookieValue("loginCookie") String loginCookie, String ladderBmId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getLadderBM started.");
 		
@@ -386,7 +386,7 @@ public class EzLadderController {
 	/**
 	 * 확인 팝업창들
 	 * */
-	@RequestMapping(value = "/ezLadder/ladderPopup.do")
+	@RequestMapping(value = "/ezLadder/ladderPopup.do", method=RequestMethod.GET)
 	public String ladderPopup(String popupType, Model model) {
 		logger.debug("ladderPopup started.");
 		
@@ -469,7 +469,7 @@ public class EzLadderController {
 	 * 추가, 수정 한 댓글 조회
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value = "/ezLadder/getLadderComment.do")
+	@RequestMapping(value = "/ezLadder/getLadderComment.do", method=RequestMethod.GET)
 	public String getLadderComment(@CookieValue("loginCookie") String loginCookie, String ladderId, String commentId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getLadderComment started.");
 		
@@ -582,7 +582,7 @@ public class EzLadderController {
 	 * 이전 사다리 목록 순서 바꾸기
 	 * @throws Exception 
 	 * */
-	@RequestMapping(value = "/ezLadder/setListOrder.do")
+	@RequestMapping(value = "/ezLadder/setListOrder.do", method=RequestMethod.POST)
 	public String setListOrder(@CookieValue("loginCookie") String loginCookie, LadderOrderVO ladOrderVO, String mode, String currPage, String searchSelect, String searchInput, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setListOrder started.");
 		
@@ -709,7 +709,7 @@ public class EzLadderController {
 	 * @throws Exception
 	 *
 	 */
-	@RequestMapping(value = "/ezLadder/deleteLadder.do")
+	@RequestMapping(value = "/ezLadder/deleteLadder.do", method=RequestMethod.GET)
 	public String deleteLadderList(@RequestParam(value="allData") List<String> allData, @CookieValue("loginCookie") String loginCookie, String ladderId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("deleteLadder started.");
 
@@ -761,7 +761,7 @@ public class EzLadderController {
 	 * @throws Exception
 	 * 
 	 */
-	@RequestMapping(value = "/ezLadder/serUserOrder.do")
+	@RequestMapping(value = "/ezLadder/serUserOrder.do", method=RequestMethod.POST)
 	public String setUserOrder(@CookieValue("loginCookie") String loginCookie, String ladderId, String firstUser, String firstUserOrder, String secondUser, 
 			String secondUserOrder, String firstItem, String secondItem, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("serUserOrder started.");

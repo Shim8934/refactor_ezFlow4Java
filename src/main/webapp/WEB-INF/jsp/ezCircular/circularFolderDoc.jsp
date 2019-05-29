@@ -37,7 +37,7 @@
 		</style>
 		
 	    <script type="text/javascript">
-	        var SSUserID = "${userInfo.id}";  
+	        var SSUserID = "<c:out value='${userInfo.id}'/>";  
 	        var pBoardType = "";
 	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";
@@ -59,12 +59,12 @@
 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
 	        var pAdminType = "n";
-	        var useEditor = "${useEditor}";
+	        var useEditor = "<c:out value='${useEditor}'/>";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
 	        var strMemberListInfo = "";
-	        var folderId = "${folderId}";
+	        var folderId = "<c:out value='${folderId}'/>";
 	        var pageCnt = "";
             var perCnt = "";
 	        window.onunload = Window_onunload;
@@ -302,7 +302,7 @@
                     document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
                 }
 
-                if ("${useOcs}" == "YES" && lstCnt > 0) {
+                if ("<c:out value='${useOcs}'/>" == "YES" && lstCnt > 0) {
                     check_presence();
                 }
 
@@ -656,7 +656,7 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
-	    <h1>${folderName}<span id="lstCnt"></span><span id="mailBoxInfo"></span>
+	    <h1><c:out value='${folderName}'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span class="searchForm">
 	        	<!-- 2018-07-12 김민성 - 회람판 검색 select box로 수정 -->
 	        	<select id="searchType" style="width: 65px; height: 27px; border: 1px solid #c8c8c8;">

@@ -18,8 +18,8 @@
 			var g_rightmargin = "${rightMargin}";
 			var g_topmargin = "${topMargin}";
 			var g_bottommargin = "${bottomMargin}";
-			var pageid = "${pageID}";
-			var parentuid = "${parentUID}";
+			var pageid = "<c:out value = '${pageID}' />";
+			var parentuid = "<c:out value = '${parentUID}' />";
 			
 			function window_onload() {
 				tdpreview.align = g_align;

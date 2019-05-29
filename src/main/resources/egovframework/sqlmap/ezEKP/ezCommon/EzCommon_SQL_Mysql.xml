@@ -336,6 +336,23 @@
 			ORDERBY VARCHAR(200) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkAddAddJobMasterProxy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PROXY
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterProxy"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			PROXY VARCHAR(200) DEFAULT NULL
+	</statement>
+	
 	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
 	<![CDATA[
 		SELECT 
@@ -841,5 +858,121 @@
 			TBL_C_COMCLOSE
 		ADD 
 			COMPANYID VARCHAR(100) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderTotalLimit">
+		SELECT
+			COMPANY_TOTAL_LIMIT, DEPARTMENT_TOTAL_LIMIT, USER_TOTAL_LIMIT
+		FROM
+			TBL_WEBFOLDER_CONFIG
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderConfigTotalLimit">
+		ALTER TABLE
+			TBL_WEBFOLDER_CONFIG
+		CHANGE
+			COLUMN TOTAL_LIMIT USER_TOTAL_LIMIT VARCHAR(100) NULL DEFAULT NULL,
+		ADD
+			COLUMN COMPANY_TOTAL_LIMIT VARCHAR(100) NULL DEFAULT NULL,
+		ADD
+			COLUMN DEPARTMENT_TOTAL_LIMIT VARCHAR(100) NULL DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderUserCnType">
+		SELECT
+			TYPE
+		FROM
+			TBL_WEBFOLDER_USER
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderUserCnTypeColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_USER
+		ADD
+			COLUMN TYPE VARCHAR(50) NOT NULL,
+		DROP
+			PRIMARY KEY,
+		ADD
+			PRIMARY KEY(CN, TENANT_ID, TYPE)
+	</statement>
+	
+	<update id="EzCommonDAO.updateWebfolderUserCnType">
+		UPDATE
+			TBL_WEBFOLDER_USER
+		SET
+			TYPE = 'U'
+	</update>
+	
+	<select id="EzCommonDAO.checkMsgInMailSearch" resultClass="int" >
+		SELECT 
+			COUNT(*) 
+		FROM(
+			SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_SCHEMA = 'jmocha' 
+			AND TABLE_NAME = 'JAMES_MAIL_SEARCH' 
+			AND COLUMN_NAME = 'MESSAGE_ID'
+		) existsYN
+	</select>
+	
+	<update id="EzCommonDAO.updateMsgInMailSearch">
+		ALTER TABLE 
+			JAMES_MAIL_SEARCH
+		ADD 
+			COLUMN MESSAGE_ID VARCHAR(200) NULL DEFAULT NULL 
+	</update>
+	
+	<select id="EzCommonDAO.checkFormVersionColumnOfForminfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_FORMINFO 
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_EXPENDAPRDOCINFO
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_EXPAPRDOCINFO
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_TMPEXPAPRDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.addFormVersionColumnOfForminfo">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPENDAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo">
+		ALTER TABLE 
+			TBL_TMPEXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
 	</statement>
 </sqlMap>

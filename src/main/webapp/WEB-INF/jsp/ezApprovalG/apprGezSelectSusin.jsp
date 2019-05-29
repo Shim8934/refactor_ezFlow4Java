@@ -40,7 +40,7 @@
 			arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";            // 사용자 직책            
 			arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";             // E-Mail Address 
 			arr_userinfo[9]  = " ";
-			arr_userinfo[10] = "${susinAdmin}";                  // 수신 접수담당자
+			arr_userinfo[10] = "<c:out value = '${susinAdmin}'/>";                  // 수신 접수담당자
 			// 2010.08.11 다국어
 			arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";		// 사용자명(P)
 			arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";		// 사용자명(S)
@@ -48,7 +48,7 @@
 			arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";				// 사용자 직위(S)
 			arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";			// 사용자 부서 이름(P)
 			arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";			// 사용자 부서 이름(S)
-			var p_CompanyID = "${userInfo.companyID}";
+			var p_CompanyID = "<c:out value = '${userInfo.companyID}'/>";
 			// pUserID = arr_userinfo[1];
 			var RetValue;
 			var ReturnFunction;
@@ -237,7 +237,7 @@
 				var isCurretnCompany = "N";
 				
 				Resultxml.async=false;
-				Resultxml = loadXMLFile("${susinXML}");
+				Resultxml = loadXMLFile("<c:out value = '${susinXML}'/>");
 				
 				var listview = new ListView();                          // ListView 선언
 			    listview.LoadFromID("divAPRDEPT");                              // ID 지정

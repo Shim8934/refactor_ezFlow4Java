@@ -46,7 +46,7 @@
 		}
 		</style>
 		<script type="text/javascript">
-		    var pBoardID = "${boardID}";
+		    var pBoardID = "<c:out value='${boardID}'/>";
 		    var pBoardName = "${boardName}";
 		    var SSUserID = "${userInfo.id}";
 		    var SSUserName = "${userInfo.displayName1}";
@@ -62,17 +62,17 @@
 		    var Delete_FG = "${boardInfo.delete_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
-		    var pSortBy = "${sortBy}";
+		    var pSortBy = "<c:out value='${sortBy}'/>";
 		    var ShowAdjacent = "";
 		    var gubun = "${boardInfo.guBun}";
 		    var totalCount = "0";
 		    var OrderOption = "";
 		    var OrderCell = "";
-		    var pBoardType = "${boardType}";
+		    var pBoardType = "<c:out value='${boardType}'/>";
 		    var USE_OCS = "${useOCS}";
 		    var useRunTime = "${useRunTime}"
 		    var SQLPARADATA = "";
-		    var pAdminType = "${adminType}";
+		    var pAdminType = "<c:out value='${adminType}'/>";
 		    var lang = "${userInfo.lang}";
 		    var previewType = "MOVIE";
 		    var clickPreviweType = "MOVIE";
@@ -587,7 +587,7 @@
 		    
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText == "FALSE") {
 		            xmlhttp = null;
@@ -599,7 +599,7 @@
 		    
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + strListInfo + "&mode=MOVIE", false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(strListInfo) + "&mode=MOVIE", false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -688,7 +688,7 @@
 		            }
 		            arrList = null;
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + strItemList, false);
+		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + encodeURIComponent(strItemList), false);
 		            xmlhttp.send();
 		            xmlhttp = null;
 		            getBoardList();

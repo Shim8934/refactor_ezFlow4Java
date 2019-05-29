@@ -138,7 +138,7 @@
 				<td style="text-align:left;padding-left:5px">
 					<select id="sharingUser" onchange="changeShareInfo(this.value)">
 					</select>
-					<a id="sharerInfo"><img src="/images/i_group_new.gif" style="vertical-align:middle;" /></a>
+					<a id="sharerInfo"><img src="/images/i_group_new.gif" style="vertical-align:middle;border:none;" /></a>
 				</td>
 			</tr>
 			<tr>

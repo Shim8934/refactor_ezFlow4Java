@@ -23,8 +23,8 @@
 	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
-	        var subCode = "${subCode}";
-	        var funcCode = "${funCode}";
+	        var subCode = '<c:out value="${subCode}"/>';
+	        var funcCode = '<c:out value="${funCode}"/>';
 	        var g_firstOpen = true;
 	        var lang = "${userinfo.lang}";
 	        var pNoneActiveX = "${noneActiveX}";
@@ -36,6 +36,11 @@
 	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
 	      	var operatorMailAddress = "${operatorMailAddress}";
 	      	var receiveText = "<spring:message code='ezEmail.t516' />";
+	      	var pRefreshinterval = "${refreshInterval}";
+	      	var pSaveInterval = 0;
+		    var nextMailListRefreshTime = 0;
+		    var refreshIntervalTimerId = 0;
+		    var refreshTimeoutTimerId = 0;
 	      	var shareId = "";
 	      	var deletePermission = "";
 	      	var sendPermission = "";
@@ -81,7 +86,100 @@
 		        $(".taskListBox").mCustomScrollbar({
 	        		theme : "dark"
 	        	});
+	            
+	            if (pRefreshinterval != "") {
+		            console.log('Setting Mail List Refresh Timer...');
+		            
+	                pSaveInterval = parseInt(pRefreshinterval) * 1000;		            
+		            setMailListRefreshTimer();
+		            
+	                // 브라우저가 Page Visibility API를 지원할 때의 처리
+	                if ('hidden' in document) {
+	                    console.log('adding visibilitychange event handler');
+
+	                    document.addEventListener('visibilitychange', onVisibilityChange);
+	                    recordNextMailListRefreshTime();
+	                }		            
+		        }
 	        }
+	        
+	        function getCurrentTime() {
+		        return new Date().getTime();		        
+		    }
+		    
+		    function setMailListRefreshTimer() {
+	            if (refreshIntervalTimerId != 0) {
+	                clearInterval(refreshIntervalTimerId);
+	                refreshIntervalTimerId = 0;
+	            }
+	            
+		        if (pSaveInterval != 0) {
+		        	refreshIntervalTimerId = setInterval(function() {
+
+		        		getUnreadCountAll();
+		                recordNextMailListRefreshTime();
+
+		            }, pSaveInterval);
+		        }
+		    }
+		    
+		    function recordNextMailListRefreshTime() {
+		        nextMailListRefreshTime = getCurrentTime() + pSaveInterval;
+		        
+		        console.log('currentTime=' + new Date() + ',Interval=' + pSaveInterval);
+		    }
+		    
+		    function onVisibilityChange() {
+                var remainingTime = nextMailListRefreshTime - getCurrentTime();
+              
+                console.log(remainingTime/1000);
+		        // 메일 목록 페이지 상태가 보임으로 변경될 때의 처리
+ 		        if (!document.hidden) { 		            
+ 		           console.log('remainingTime=' + remainingTime + ',showing...');
+ 		           
+ 		            // 다음 번 갱신 시간이 이미 지났으면 즉시 목록 갱신을 수행하고 갱신 타이머를 설정한다.
+ 		            if (remainingTime <= 0) {
+ 		                console.log('refresh time already passed. Refresing...');
+ 		                
+	                	getUnreadCountAll();
+ 		                
+                        // 다음 자동 갱신 시간을 기록한다.
+                        recordNextMailListRefreshTime();
+ 		                
+ 		                setMailListRefreshTimer();
+ 		            // 다음 번 갱신 시간이 아직 남아 있으면 해당 시간에 갱신이 되도록 타이머를 등록한다.
+ 		            } else {
+
+ 		            	console.log('refresh time not yet passed. Registering Timer...');
+ 		            	
+ 		            	refreshTimeoutTimerId = setTimeout(function() {
+ 		            		
+ 		            		getUnreadCountAll();
+ 		            		
+ 		            		// 다음 자동 갱신 시간을 기록한다.
+ 		            		recordNextMailListRefreshTime();
+ 		            		
+ 		            		// 다시 주기적으로 갱신 타이머가 동작하도록 등록한다.
+ 		            		setMailListRefreshTimer();
+ 		            	}, remainingTime);
+
+ 		            }
+ 	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
+		        } else {
+		        	console.log('remainingTime=' + remainingTime + ',hiding...');
+		            
+		            // 목록 갱신 타이머를 제거한다.
+		            if (refreshIntervalTimerId != 0) {
+		                clearInterval(refreshIntervalTimerId);
+		                refreshIntervalTimerId = 0;
+		            }
+		            
+		            if (refreshTimeoutTimerId != 0) {
+		                clearTimeout(refreshTimeoutTimerId);
+		                refreshTimeoutTimerId = 0;
+		            }
+		        }
+		    }
 	        
 	        /**
 	        	메일함 ellipsis 추가.
@@ -95,13 +193,14 @@
 	        	*/
 	        	$("[id^='PostTreeView_node']").each(function(index, element){
 	        		
-	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var imgCnt = $(element).parent().children('.sub_iconLNB').length - 2;
 	        		var title = $(element)[0].innerHTML;
 	        		
 	        		if (imgCnt > 0) {
-	        			// 최초값 164, 한 블럭의 값 18
-	        			var customWidth = 140 - (18 * imgCnt);
+	        			// 최초값 170, 한 블럭의 값 16 이지만 길이가 맞지 않아 14로 설정
+	        			var customWidth = 170 - (14 * imgCnt);
 	        			$(element).css("width", customWidth+"px");
+	        			$(element).css("text-align", "justify");
 	        			$(element).attr("title", title);	
 	        		}
 							
@@ -120,13 +219,14 @@
 	        	*/
 	        	$($("[id^='AddressTreeView_node']")).each(function(index, element){
 	        		
-	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var imgCnt = $(element).parent().children('.sub_iconLNB').length - 2;
 	        		var title = $(element)[0].innerHTML;
 	        		
 	        		if (imgCnt > 0) {
-	        			// 최초값 164, 한 블럭의 값 18
-	        			var customWidth = 140 - (18 * imgCnt);
+	        			// 최초값 170, 한 블럭의 값 16 이지만 길이가 맞지않아 14로 설정
+	        			var customWidth = 170 - (14 * imgCnt);
 	        			$(element).css("width", customWidth+"px");
+	        			$(element).css("text-align", "justify");
 	        			$(element).attr("title", title);	
 	        		}
 							
@@ -404,7 +504,8 @@
 	            if (xmlHTTP_Unread == null || xmlHTTP_Unread.readyState != 4)
 	                return;
 	            if (xmlHTTP_Unread.status >= 200 && xmlHTTP_Unread.status < 300) {
-            		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "DATA")[0]);
+            		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "FOLDERUNREADCOUNT")[0]);
+            		var totalUnreadCount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "TOTALUNREADCOUNT")[0]);
 	                var caption = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "foldername");
 	
 	                if (get_unreadend_2010.href == window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href")) {
@@ -420,14 +521,94 @@
 	                    if (pageSrc.indexOf("mailList.do") != -1) {
                         	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
-	                    
-	                    xmlDom = null;
 	                }
+	                
+	                /* TODO: 공유사서함 적용 후 주석 제거 후 수정
+	                setTotalUnreadCount(shareId, parseInt(totalUnreadCount));
+                	*/
 	            }
 	            
 	            xmlHTTP_Unread = null;
 	            applyEllipsisMailTree();
 	        }
+	        
+	        function getUnreadCountAll() {
+	        	var mailboxList = [];
+	        	var nodeCount = window[treeviewStr].nodecount();
+	        	
+	        	for (var i = 0; i < nodeCount; i++) {
+	        		mailboxList.push(window[treeviewStr].getvalue(i + 1, "href"));
+	        	}
+	        	
+	        	var requestData = {
+        			"mailboxList" : mailboxList
+	        	}
+	        	
+	        	if (shareId != "") {
+	        		requestData.shareId = shareId;
+                }
+	        	
+	        	$.ajax({
+                    url: "/ezEmail/getUnreadCountAll.do",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data : JSON.stringify(requestData),
+                    success : function(result) {
+                    	try {
+	                    	if (result.resultCode === "OK") {
+	                    		var unreadCountMap = result.unreadCountMap;
+	                    		var href, caption, unreadCount;
+	                    		var totalUnreadCount = result.totalUnreadCount;
+	                    		var shareInfoList = result.shareInfoList;
+	                    		
+	                    		if (shareId === result.shareId) {
+	                    			for (var i = 0; i < nodeCount; i++) {
+		                    			href = window[treeviewStr].getvalue(i + 1, "href");
+	                    				caption = window[treeviewStr].getvalue(i + 1, "foldername");
+		                    			unreadCount = unreadCountMap[href];
+	                    				
+	                    				if (typeof(unreadCount) === 'undefined' || unreadCount === 0) {
+		        	                    	window[treeviewStr].putcaption(i + 1, caption);
+		        	                    } else {
+		        	                    	window[treeviewStr].putcaption(i + 1, caption + "&nbsp;&nbsp;" + unreadCount);
+		        	                    }
+		                    		}
+	                    		}
+	                    		
+	                    		/* TODO: 공유사서함 적용 후 주석 제거 후 수정
+	                    		setTotalUnreadCount("", totalUnreadCount);
+	                    		
+	                    		if ("${useSharedMailbox}" == "YES") {
+	                    			for (var i = 0; i < shareInfoList.length; i++) {
+		                    			shareInfo = shareInfoList[i];
+		                    			setTotalUnreadCount(shareInfo.shareId, parseInt(shareInfo.totalUnreadCount));
+		                    		}
+	                    		}
+	                    		*/
+	                    		
+                   				try {
+                    				var pageSrc = parent.frames["right"].document.location.toString();
+            	                    
+                    				if (pageSrc.indexOf("mailList.do") > -1) {
+                                    	parent.frames["right"].MailListRefresh();
+            	                    }
+                   				} catch (e) { }
+	                    		
+	                    		applyEllipsisMailTree();
+	                    	} else {
+	                    		console.error(result.resultCode);
+	                    	}
+                    	} catch (e) {
+                    		console.error(e);
+                    	}
+                    },
+                    error : function(error) {
+                        console.error(error);
+                    }
+                });
+	        }
+	        
 	        function get_unreadcount() {
 	            return get_unreadcount_2010();
 	        }
@@ -734,9 +915,15 @@
 				}
 				
 				window.open(url, "right");
-			}	
-		    
- 			function event_folderMenu(event){
+			}
+
+			// scroll한 뒤 컨텍스트 메뉴의 위치가 잘못 나오는 현상이 있어 수정  
+			var scrollTop = 0;
+			$(window).scroll(function() {
+				scrollTop = $(this).scrollTop();
+			});
+
+ 			function event_folderMenu(event) {
  				event.preventDefault();
  				
 		    	if (!event) event = window.event;
@@ -745,18 +932,17 @@
 
 		        var listsizeheight = document.documentElement.clientHeight;
 		        var listsizewidth = document.documentElement.clientWidth;
-		        var EventDivSize = EventMouseY + 240;
-		        if (listsizeheight < EventDivSize) {
-		            var Div_ = EventDivSize - listsizeheight;
-		            EventMouseY = EventMouseY - Div_;
-		        }
 
-		        EventDivSize = EventMouseX + 140;
-		        if (listsizewidth < EventDivSize) {
+				var EventDivSize = EventMouseX + 140;
+				if (listsizewidth < EventDivSize) {
 		            var Div_ = EventDivSize - listsizewidth;
 		            EventMouseX = EventMouseX - Div_;
 		        }
-		        
+
+                if (scrollTop > 0) {
+                	EventMouseY += scrollTop;
+                }
+
 		        //document.getElementById("folderPanel").style.display = "";
 		        document.getElementById("folderMenuDiv").style.left = EventMouseX + "px";
 		        document.getElementById("folderMenuDiv").style.top = EventMouseY + "px";
@@ -1173,6 +1359,26 @@
 			    var rtn = GetAttribute(document.getElementById(str), "index");
 			    
 			    return rtn;
+			}
+			
+			function setTotalUnreadCount(shareId, totalUnreadCount) {
+				var totalUnreadCountId = "totalUnreadCount";
+				
+				if (shareId != "") {
+					totalUnreadCountId += "_" + shareId;
+				}
+				
+				var totalUnreadCountElem = document.getElementById(totalUnreadCountId);
+				
+				if (totalUnreadCountElem != null) {
+					if (totalUnreadCount == 0) {
+						totalUnreadCountElem.innerHTML = "";
+	        			totalUnreadCountElem.previousSibling.style.maxWidth = "80%";
+					} else {
+						totalUnreadCountElem.innerHTML = " " + totalUnreadCount;
+	        			totalUnreadCountElem.previousSibling.style.maxWidth = (155 - totalUnreadCountElem.offsetWidth) + "px";
+					}
+				}
 			}
 	    </script>
 		<style type="text/css">

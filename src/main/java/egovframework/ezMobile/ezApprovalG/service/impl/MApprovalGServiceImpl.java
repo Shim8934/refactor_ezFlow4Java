@@ -73,7 +73,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("companyID", userInfo.getCompanyId());
 		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffSet()));
 		map.put("searchText", searchText);
-		map.put("listSize", listSize);
+		map.put("listSize", Integer.parseInt(listSize));
 		map.put("lastDate", lastDate);
 		map.put("type", type);
 		map.put("approvalFlag", approvalFlag);

@@ -1,32 +1,40 @@
 package egovframework.ezEKP.ezWebFolder.vo;
 
 public class UserCapacityVO {
-	private String userId;
-	private String userName;
-	private String departmentId;
-	private String departmentName;
-	private String totalCapacity;
+	private String cn;
+	private String type;
+	private String displayName;
 	private String companyId;
 	private String companyName;
+	private String departmentName;
 	private String jobTitle;
+	private String totalCapacity;
 	private String totalUsed;
-	private int    usedRate;
-	private int    tenantId;
-	
-	public String getUserId() {
-		return userId;
+	private int usedRate;
+	private int tenantId;
+
+	public String getCn() {
+		return cn;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setCn(String cn) {
+		this.cn = cn;
 	}
 
-	public String getTotalCapacity() {
-		return totalCapacity;
+	public String getType() {
+		return type;
 	}
 
-	public void setTotalCapacity(String totalCapacity) {
-		this.totalCapacity = totalCapacity;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 
 	public String getCompanyId() {
@@ -37,28 +45,12 @@ public class UserCapacityVO {
 		this.companyId = companyId;
 	}
 
-	public int getTenantId() {
-		return tenantId;
+	public String getCompanyName() {
+		return companyName;
 	}
 
-	public void setTenantId(int tenantId) {
-		this.tenantId = tenantId;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getDepartmentId() {
-		return departmentId;
-	}
-
-	public void setDepartmentId(String departmentId) {
-		this.departmentId = departmentId;
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 	public String getDepartmentName() {
@@ -69,20 +61,20 @@ public class UserCapacityVO {
 		this.departmentName = departmentName;
 	}
 
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
 	public String getJobTitle() {
 		return jobTitle;
 	}
 
 	public void setJobTitle(String jobTitle) {
 		this.jobTitle = jobTitle;
+	}
+
+	public String getTotalCapacity() {
+		return totalCapacity;
+	}
+
+	public void setTotalCapacity(String totalCapacity) {
+		this.totalCapacity = totalCapacity;
 	}
 
 	public String getTotalUsed() {
@@ -99,5 +91,13 @@ public class UserCapacityVO {
 
 	public void setUsedRate(int usedRate) {
 		this.usedRate = usedRate;
+	}
+
+	public int getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(int tenantId) {
+		this.tenantId = tenantId;
 	}
 }

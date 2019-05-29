@@ -199,10 +199,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (mode.equals("logo")) {
 			String onlyFileName = fileName.substring(0, fileName.lastIndexOf(".") + 1);
             String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-            String logoTemp = onlyFileName + "_logoTemp" + "." + ext;
-            String logoFileName = code + "_logo" + ".png";
-            String logoThumbnailFileName = code + "_thumbnail" + ".png";
-
+            String logoTemp = commonUtil.detectPathTraversal(onlyFileName + "_logoTemp" + "." + ext);
+            String logoFileName = commonUtil.detectPathTraversal(code + "_logo" + ".png");
+            String logoThumbnailFileName = commonUtil.detectPathTraversal(code + "_thumbnail" + ".png");
+            logoPath = commonUtil.detectPathTraversal(logoPath);
             
             if (!new File(logoPath).exists()) {
 				new File(logoPath).mkdirs();
@@ -232,7 +232,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
     			saveImage = outputImage.createGraphics();
     			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
     			
-    			File newThumbnail = new File(logoPath + logoThumbnailFileName);
+    			File newThumbnail = new File(commonUtil.detectPathTraversal(logoPath + logoThumbnailFileName));
     			ImageIO.write(outputImage, "png", newThumbnail);
             } catch (Exception e) {
             	throw e;
@@ -262,6 +262,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
 		String logo = "default_logo_type5.jpg";
 		String thumb = "default_logo_empty.png";
+		logoPath = commonUtil.detectPathTraversal(logoPath);
 		
 		logger.debug("logoPath 		::		 " + logoPath);
 			
@@ -364,7 +365,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				new File(logoPath).mkdirs();
 			}
 			
-			File file = new File(logoPath + code + "_logo." + extName);
+			File file = new File(commonUtil.detectPathTraversal(logoPath + code + "_logo." + extName));
 			cClubLogo.transferTo(file);
 			
 			BufferedImage inputImage = ImageIO.read(file);
@@ -374,7 +375,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
 			
-			File newLogo = new File(logoPath + code + "_logo.png");
+			File newLogo = new File(commonUtil.detectPathTraversal(logoPath + code + "_logo.png"));
 			ImageIO.write(outputImage, "png", newLogo);			
 			file.delete();
 
@@ -394,7 +395,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				new File(logoPath).mkdirs();
 			}
 			
-			File file = new File(logoPath + code + "_thumbnail." + extName);
+			File file = new File(commonUtil.detectPathTraversal(logoPath + code + "_thumbnail." + extName));
 			cClubThumb.transferTo(file);
 			
 			BufferedImage inputImage = ImageIO.read(file);
@@ -404,7 +405,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
 			
-			File newThumbnail = new File(logoPath + code + "_thumbnail.png");
+			File newThumbnail = new File(commonUtil.detectPathTraversal(logoPath + code + "_thumbnail.png"));
 			ImageIO.write(outputImage, "png", newThumbnail);			
 			file.delete();
 			
@@ -806,9 +807,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Iterator<String> itr = request.getFileNames();
 		
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-		String tempPath = pDirPath  + "tempUploadFile";
-		String uploadPath = pDirPath  + pBoardID + commonUtil.separator + "uploadFile";
-		String docPath = pDirPath  + pBoardID + commonUtil.separator + "doc";
+		String tempPath = pDirPath + "tempUploadFile";
+		String uploadPath = pDirPath + pBoardID + commonUtil.separator + "uploadFile";
+		String docPath = pDirPath + pBoardID + commonUtil.separator + "doc";
+		
+		pDirPath = commonUtil.detectPathTraversal(pDirPath);
+		tempPath = commonUtil.detectPathTraversal(tempPath);
+		uploadPath = commonUtil.detectPathTraversal(uploadPath);
+		docPath = commonUtil.detectPathTraversal(docPath);
 		
 		File tempDir = new File(tempPath);
 		
@@ -816,7 +822,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			tempDir.mkdirs();
 		}
 		
-		File boardDir = new File(pDirPath + pBoardID);
+		File boardDir = new File(commonUtil.detectPathTraversal(pDirPath + pBoardID));
 		File uploadDir = new File(uploadPath);
 		File docDir = new File(docPath);
 		
@@ -854,12 +860,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						resultUpload = "denied";
 					} else {
 						pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + "_" + pFileName;
+						pAttachPath = commonUtil.detectPathTraversal(pAttachPath);
 						File thumbnailFile = new File(pAttachPath);
 						file.transferTo(thumbnailFile);
 						resultUpload = "true";
 					}
 				} else if (pMode.equals("PHOTO")) {
 					pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+					pAttachPath = commonUtil.detectPathTraversal(pAttachPath);
 					File thumbnailFile = new File(pAttachPath);
 					file.transferTo(thumbnailFile);
 					
@@ -871,7 +879,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					saveImage = outputImage.createGraphics();
 					saveImage.drawImage(inputImage, 0, 0, 100, 100, null);
 					
-					File tempTumbbail = new File(pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf(".")));
+					String tempThumbFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+					tempThumbFilaPath = commonUtil.detectPathTraversal(tempThumbFilaPath);
+					
+					File tempTumbbail = new File(tempThumbFilaPath);
 					ImageIO.write(outputImage, "png", tempTumbbail);
 					
 					resultUpload = "true";
@@ -1366,8 +1377,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		response.setContentType("text/html; charset=UTF-8");
 		
 		response.getWriter().write("<script language='javascript'>\n");
-		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
-		response.getWriter().write("</script>");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + commonUtil.stripScriptTags(code) + "';\n");
+		response.getWriter().write("</script>");	
 		response.getWriter().flush();
 	}
 
@@ -1427,7 +1438,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		response.getWriter().write("<script language='javascript'>\n");
-		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + commonUtil.stripScriptTags(code) + "';\n");
 		response.getWriter().write("</script>");
 		response.getWriter().flush();
 	}
@@ -1650,7 +1661,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (notResponse == 0) {
 			response.getWriter().write("<script language='javascript'>\n");
 			//response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
-			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + code + "&pollManagerID=" + pollManagerID + "&pollState=" + pollState + "';\n");		
+			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + commonUtil.stripScriptTags(code) + "&pollManagerID=" + commonUtil.stripScriptTags(pollManagerID) + "&pollState=" + commonUtil.stripScriptTags(pollState) + "';\n");		
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		} else {
@@ -1678,7 +1689,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		response.setContentType("text/html; charset=UTF-8");
 		
 		response.getWriter().write("<script language='javascript'>\n");
-		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + pClubNo + "';\n");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + commonUtil.stripScriptTags(pClubNo) + "';\n");
 		response.getWriter().write("</script>");
 		response.getWriter().flush();
 	}
@@ -1757,6 +1768,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String logoFileNameThumbnail = "";
 		
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
+		logoPath = commonUtil.detectPathTraversal(logoPath);
 		
 		// 상단 이미지 저장
 		if (!logoFile.isEmpty()) {
@@ -1764,6 +1776,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			iStart = attachFile.lastIndexOf(".");
 			extName = attachFile.substring(iStart);
 			String logoFileName = code + "_logo_Temp." + extName;
+			logoFileName = commonUtil.detectPathTraversal(logoFileName);
 			
 			File file = new File(logoPath + logoFileName);
 			logoFile.transferTo(file);
@@ -1776,7 +1789,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
 			
-			File newLogo = new File(logoPath + code + "_logo.png");
+			String newLogoFilePath = logoPath + code + "_logo.png";
+			newLogoFilePath = commonUtil.detectPathTraversal(newLogoFilePath);
+			
+			File newLogo = new File(newLogoFilePath);
 			ImageIO.write(outputImage, "png", newLogo);
 			logoFileNameLogo = code + "_logo.png";
 			
@@ -1788,8 +1804,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			iStart = attachFile.lastIndexOf(".");
 			extName = attachFile.substring(iStart);
 			String thumbFileName = code + "_thumb_Temp." + extName;
+			String thumbFilePath = logoPath + thumbFileName;
+			thumbFilePath = commonUtil.detectPathTraversal(thumbFilePath);
 			
-			File file = new File(logoPath + thumbFileName);
+			File file = new File(thumbFilePath);
 			thumbFile.transferTo(file);
 			
 			BufferedImage inputImage = ImageIO.read(file);
@@ -1800,7 +1818,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
 			
-			File newThumbnail = new File(logoPath + code + "_thumbnail.png");
+			String newThumbFilePath = logoPath + code + "_thumbnail.png";
+			newThumbFilePath = commonUtil.detectPathTraversal(newThumbFilePath);
+			
+			File newThumbnail = new File(newThumbFilePath);
 			ImageIO.write(outputImage, "png", newThumbnail);
 			logoFileNameThumbnail = code + "_thumbnail.png";
 			
@@ -1827,7 +1848,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String extName = fileName.substring(iStart);
 			String logoFileName = code + "_logo_Temp" + "." + extName;
 			
-			File file = new File(logoPath + logoFileName);
+			File file = new File(commonUtil.detectPathTraversal(logoPath + logoFileName));
 	        byte[] byteList = Base64.decodeBase64(fileData);
 	        
 	        FileOutputStream fos = null;
@@ -1844,7 +1865,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				saveImage = outputImage.createGraphics();
 				saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
 				
-				File newLogo = new File(logoPath + code + "_logo" + ".png");
+				File newLogo = new File(commonUtil.detectPathTraversal(logoPath + code + "_logo" + ".png"));
 				ImageIO.write(outputImage, "png", newLogo);
 				String logoFileNameLogo = code + "_logo" + ".png";
 				
@@ -1876,7 +1897,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String extName = fileName.substring(iStart);
 			String thumbFileName = code + "_thumb_Temp" + "." + extName;
 			
-			File file = new File(thumbPath + thumbFileName);
+			File file = new File(commonUtil.detectPathTraversal(thumbPath + thumbFileName));
 	        byte[] byteList = Base64.decodeBase64(fileData);
 	        
 	        FileOutputStream fos = null;
@@ -1893,7 +1914,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				saveImage = outputImage.createGraphics();
 				saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
 				
-				File newThumbnail = new File(thumbPath + code + "_thumbnail" + ".png");
+				File newThumbnail = new File(commonUtil.detectPathTraversal(thumbPath + code + "_thumbnail" + ".png"));
 				ImageIO.write(outputImage, "png", newThumbnail);
 				String logoFileNameThumbnail = code + "_thumbnail" + ".png";
 
@@ -2021,7 +2042,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<img src=\"/images/i_master.gif\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" WIDTH=\"15\" HEIGHT=\"9\" hspace=\"2\" border=\"0\" align=\"absmiddle\">");
 			}
 			
-			sb.append("<a href=\"adminMemberListOk.do?code=" + code + "&mode=" + mode + "&cID=" + clubUser.getC_ID().trim() + "&cNm=" + URLEncoder.encode(clubUser.getUserName(), "utf-8") + "&companyID=" + clubUser.getCompanyID().trim() + "\" valign=\"bottom\">");
+			sb.append("<a href=\"/ezCommunity/adminMemberListOk.do?code=" + code + "&mode=" + mode + "&cID=" + clubUser.getC_ID().trim() + "&cNm=" + URLEncoder.encode(clubUser.getUserName(), "utf-8") + "&companyID=" + clubUser.getCompanyID().trim() + "\" valign=\"bottom\">");
 			sb.append(clubUser.getUserName()+"</a>");
 			sb.append("</td>");
 			sb.append("<td class=\"white\">" + clubUser.getC_ID() + "</td>");
@@ -2426,7 +2447,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			pSignatureDir = commonUtil.getUploadPath("upload_community.ROOT", tenantID);
 		}
 		
-		String pResult = pSignatureDir + commonUtil.separator + pFileName;
+		String pResult = commonUtil.detectPathTraversal(pSignatureDir + commonUtil.separator + pFileName);
 		
 		logger.debug("getCommunityThumInfo ended.");		
 		return pResult;
@@ -3537,7 +3558,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             myLevel = Integer.parseInt(request.getParameter("level"));
         }
 		
-logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLevel);
+        logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLevel);
         String maxIdFieldName = "c_no";
         
         InputStream is = null;
@@ -3555,10 +3576,11 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         		if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1) {
 	                bbsEditOkSet1(bName.toUpperCase(), title, no, code, attachList, textContent, userInfo.getTenantId());
 	                String strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
+	                strPath = commonUtil.detectPathTraversal(strPath);
 	                logger.debug("strPath ==== " + strPath);
 	                try{
 		    		    pw = new PrintWriter(new File(strPath));
-			    		pw.print(MHTcontent);
+			    		pw.print(commonUtil.stripScriptTags(MHTcontent));
 			    		pw.flush();
 			    		pw.close();
 	                } catch (FileNotFoundException fnfe) {
@@ -3643,14 +3665,15 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, userInfo.getTenantId());
         	
         	try{
-        		File dir = new File(dirPath);
+        		File dir = new File(commonUtil.detectPathTraversal(dirPath));
         		
         		if (!dir.exists()) {
         			dir.mkdirs();
         		}
         		
+        		strPath = commonUtil.detectPathTraversal(strPath);
 	    		pw = new PrintWriter(new File(strPath));
-	    		pw.print(MHTcontent);
+	    		pw.print(commonUtil.stripScriptTags(MHTcontent));
 	    		pw.flush();
 	    		pw.close();
             } catch (FileNotFoundException fnfe) {
@@ -3690,7 +3713,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			if (fileName != null) {
 				folder = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
 				strFile = folder + fileName;
-				File file = new File(strFile);
+				File file = new File(commonUtil.detectPathTraversal(strFile));
 				
 				if (file.exists()) {
 					file.delete();
@@ -3706,7 +3729,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 					
 					for (int i = 0; i <= strAttachFile.length; i++) {
 						strFile = folder + strAttachFile[i];
-						File file = new File(strFile);
+						File file = new File(commonUtil.detectPathTraversal(strFile));
 						
 						if (file.exists()) {
 							file.delete();
@@ -6554,6 +6577,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		try {
 			docPath = realPath + strFilePath;
+			docPath = commonUtil.detectPathTraversal(docPath);
+			strBoardID = commonUtil.detectPathTraversal(strBoardID);
 			
 			if (!new File(docPath + strBoardID).exists()) {
 				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "uploadFile");
@@ -6563,13 +6588,14 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			}
 			
 			mhtFilePath = docPath + strBoardID + commonUtil.separator + "doc" + commonUtil.separator + strMHTFileName + ".mht";
+			mhtFilePath = commonUtil.detectPathTraversal(mhtFilePath);
 			
 			if(new File(mhtFilePath).exists()) {
 				new File(mhtFilePath).delete();
 			}
 			
 			PrintWriter pw = new PrintWriter(new File(mhtFilePath));
-			pw.print(strHTML);
+			pw.print(commonUtil.stripScriptTags(strHTML));
 			pw.flush();
 			pw.close();
 			
@@ -6614,22 +6640,24 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				map = new HashMap<String, Object>();
 				map.put("tenantID", tenantID);
 				
-				File file = new File(realPath + pUploadFilePath + attachmentsArr[i]);
+				File file = new File(commonUtil.detectPathTraversal(realPath + pUploadFilePath + attachmentsArr[i]));
 				fileSize = Integer.toString((int) file.length());
 				filePath = attachmentsArr[i];
 				
 				if (attachmentsArr[i].indexOf("tempUploadFile") > -1) {
-					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + filePath.replace("tempUploadFile", ""));
+					String destFilePath = commonUtil.detectPathTraversal(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + filePath.replace("tempUploadFile", ""));
+					File destFile = new File(destFilePath);
 					FileUtils.moveFile(file, destFile);
 					filePath = filePath.replace("tempUploadFile", "");
 				}
 				
 				if (!thumbPath.equals("")) {
-					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";")[i]);
+					File thumbnailFile = new File(commonUtil.detectPathTraversal(realPath + pUploadFilePath  + thumbPath.split(";")[i]));
 					map.put("itemID", itemID);
 					
 					if (thumbPath.indexOf("tempUploadFile") > -1) {
-						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
+						String destThumbFilePath = commonUtil.detectPathTraversal(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
+						File destThumbFile = new File(destThumbFilePath);
 						FileUtils.moveFile(thumbnailFile, destThumbFile);
 						map.put("filePath", boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("tempUploadFile", ""));
 					} else {
@@ -7221,15 +7249,15 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		}*/
 
 	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception {
-        String orgFilePath = pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht";
-        String destFilePath = pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht";
+        String orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht");
+        String destFilePath = commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht");
 
-        File destdir = new File(pRef + pDestBoardID);
+        File destdir = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID));
         if (!destdir.exists()) {
         	destdir.mkdir();
-        	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
+        	File destdir1 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc"));
         	destdir1.mkdir();
-        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "uploadFile");
+        	File destdir2 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "uploadFile"));
         	destdir2.mkdir();
         }
         
@@ -7240,20 +7268,17 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 	
 	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception {
-        String orgFilePath = pRef + pOrgFilePath;
-        String destFilePath = pRef + pDestFilePath;
-
-        File destdir = new File(pRef + pDestBoardID);
+        File destdir = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID));
         if (!destdir.exists()) {
         	destdir.mkdir();
-        	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
+        	File destdir1 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc"));
         	destdir1.mkdir();
-        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "uploadFile");
+        	File destdir2 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "uploadFile"));
         	destdir2.mkdir();
         }
         
-        File orgFile = new File(orgFilePath);
-        File destFile = new File(destFilePath);
+        File orgFile = new File(commonUtil.detectPathTraversal(pRef + pOrgFilePath));
+        File destFile = new File(commonUtil.detectPathTraversal(pRef + pDestFilePath));
         
         FileCopyUtils.copy(orgFile, destFile);
 	}
@@ -7263,8 +7288,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		String oriFileName = logoFile.getOriginalFilename();
 		String logoFileName = code + "_logo_Temp" + oriFileName.substring(oriFileName.lastIndexOf("."));
 		
-		File logoDir = new File(realPath + commonUtil.separator + logoPath);
-		File logo = new File(realPath + commonUtil.separator + logoPath + commonUtil.separator + logoFileName);
+		File logoDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + logoPath));
+		File logo = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + logoPath + commonUtil.separator + logoFileName));
 		
 		String result = "";
 		try {
@@ -7289,8 +7314,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		String oriFileName = thumbFile.getOriginalFilename();
 		String thumbFileName = code + "_thumb_Temp" + oriFileName.substring(oriFileName.lastIndexOf("."));
 		
-		File thumbDir = new File(realPath + commonUtil.separator + thumbPath);
-		File thumb = new File(realPath + commonUtil.separator + thumbPath + commonUtil.separator + thumbFileName);
+		File thumbDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + thumbPath));
+		File thumb = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + thumbPath + commonUtil.separator + thumbFileName));
 		
 		String result = "";
 		try {
@@ -7331,7 +7356,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		if (vo.getEmail() != null) {
 			String subject = "";
-			String bodyContent = "<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">";
+			String bodyContent = "";
 			if (clubVO.getC_ClubConfirmType().equals("3")) {
 				subject = "[" + clubVO.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
 				bodyContent += "[" + clubVO.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
@@ -7341,7 +7366,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				bodyContent += "[" + clubVO.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
 			}
         	
-        	bodyContent += "</DIV>";
+        	String content = commonUtil.createNotiMailContent(bodyContent, userInfo.getTenantId(), userInfo.getLocale());
         
         	InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -7353,7 +7378,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         	
         	logger.debug("from = " + userInfo.getEmail());
         	logger.debug("to = " + vo.getEmail());
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
         }
 		
 		logger.debug("joinOkSendMail ended.");
@@ -7374,9 +7399,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         /* 2018-11-27 홍승비 - 커뮤니티 탈퇴 신청 알림 메일 폰트 수정 */
         if (vo.getEmail() != null) {
         	String subject = "[" + vo.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
-        	String bodyContent = "<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">";
-        	bodyContent += "[" + vo.getC_ClubName() + "]" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
-        	bodyContent += "</DIV>";
+        	String bodyContent = "[" + vo.getC_ClubName() + "]" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
+        	
+        	String content = commonUtil.createNotiMailContent(bodyContent, userInfo.getTenantId(), userInfo.getLocale());
         	
         	InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -7386,7 +7411,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         	to.setPersonal(vo.getUserName(), "UTF-8");
         	to.setAddress(vo.getEmail());
         	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
         }
         
         logger.debug("commOutOkSendMail ended.");
@@ -7416,10 +7441,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         	
         	String subject = "[" + cvo.getC_ClubName() + "] " + subName;
 
-        	String bodyContent = "<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">";
-
-        	bodyContent = bodyContent + "[" + cvo.getC_ClubName() + "] " + bodyName;
-        	bodyContent = bodyContent + "</DIV>";
+        	String bodyContent = "[" + cvo.getC_ClubName() + "] " + bodyName;
+        	
+        	String content = commonUtil.createNotiMailContent(bodyContent, userInfo.getTenantId(), userInfo.getLocale());
         	
         	InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -7429,7 +7453,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         	to.setPersonal(uvo.getDisplayName(), "UTF-8");
         	to.setAddress(uvo.getMail());
         	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
         }
         
         logger.debug("okNoSetSendMail ended.");
@@ -7492,7 +7516,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		for (CommunityBoardDeleteItemVO k : boardInfoList) {
 			logger.debug("deleteBoardPath :  " + realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
-			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
+			Path docPath = Paths.get(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID()));
 			
 			//커뮤니티 게시판 디렉토리 하위 이미지, 게시물 관련 파일 모두 지우기
 			try {
@@ -7549,8 +7573,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		for (CommunityBoardDeleteItemVO k : boardItemList) {
-			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID()
-					+ commonUtil.separator + "doc" + commonUtil.separator + k.getItemID() + ".mht");
+			Path docPath = Paths.get(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID()
+					+ commonUtil.separator + "doc" + commonUtil.separator + k.getItemID() + ".mht"));
 			
 			Files.deleteIfExists(docPath);
 			
@@ -7561,7 +7585,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			List<String> filePathList = ezCommunityDAO.getCopyItemAttach(map);
 			
 			for (String h : filePathList) {
-				Path filePath = Paths.get(realPath + h);
+				Path filePath = Paths.get(commonUtil.detectPathTraversal(realPath + h));
 				
 				Files.deleteIfExists(filePath);
 			}
@@ -7591,9 +7615,6 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			
 			String communityID = sendPostNoticeMailGet1(boardID);
 			String subject = "[Community " + egovMessageSource.getMessage("ezCommunity.t127", locale) + boardInfo.getBoardName() + "] " + vo.getTitle();
-
-			bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
-
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.t126", locale) + "<br><br>");
 			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t117", locale) + boardInfo.getBoardName());
 			/* 2018-04-30 이소담 - 커뮤니티 > 답변 알림메일 송부 > 메일 > 게시일자, 게시자, 비정상적으로 표시되어서 수정 */
@@ -7601,8 +7622,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + vo.getWriteDate());
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", locale) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", "  + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", locale) + "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">" + vo.getTitle() + "</a>");
-        	bodyContent.append("</DIV>");
     		
+			String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), locale);
+			
         	InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
         	from.setAddress(userInfo.getEmail());
@@ -7615,7 +7637,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         	
         	logger.debug("from = " + userInfo.getEmail());
         	logger.debug("to = " + uvo.getMail());
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
 			
 		}
 		

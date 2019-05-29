@@ -10,17 +10,17 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-			var creatorid = "${addressInfo.creatorId}";
-			var modifierid = "${addressInfo.modifierId}";
-			var userid = "${userInfo.id}";
-			var foldertype = "${pFolderType}";
-			var addressid = "${pAddressId}";
-			var deptAdmin = "${deptAdmin}";
-			var compAdmin = "${compAdmin}";
-		    var pFolderID = "${pFolderId}";
-		    var pUse_Editor = "${useEditor}";
-		    var pNoneActiveX = "${noneActiveX}";
-		    var getMemo = '${getsMemo}';
+			var creatorid = "<c:out value='${addressInfo.creatorId}'/>";
+			var modifierid = "<c:out value='${addressInfo.modifierId}'/>";
+			var userid = "<c:out value='${userInfo.id}'/>";
+			var foldertype = "<c:out value='${pFolderType}'/>";
+			var addressid = "<c:out value='${pAddressId}'/>";
+			var deptAdmin = "<c:out value='${deptAdmin}'/>";
+			var compAdmin = "<c:out value='${compAdmin}'/>";
+		    var pFolderID = "<c:out value='${pFolderId}'/>";
+		    var pUse_Editor = "<c:out value='${useEditor}'/>";
+		    var pNoneActiveX = "<c:out value='${noneActiveX}'/>";
+		    var getMemo = "<c:out value='${getsMemo}'/>";
 		    
 		    window.onload = function () {
 		    	getMemo = getMemo.replace(/&lt;br&gt;/gi, "\n").replace(/\\\\/gi, "\\"); 

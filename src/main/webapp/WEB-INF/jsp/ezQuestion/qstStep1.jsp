@@ -22,8 +22,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript">
-			var L_SearchStartDt = "${uploadSDate}";
-	    	var L_SearchEndDt = "${uploadEDate}";
+			var L_SearchStartDt = "<c:out value='${uploadSDate}'/>";
+	    	var L_SearchEndDt = "<c:out value='${uploadEDate}'/>";
 			var FixMonth=Array(0,1,2,3,4,5,6,7,8,9,10,11,12);
 			var FixDay=Array(0,31,28,31,30,31,30,31,31,30,31,30,31);
 			var g_windowReference = null;

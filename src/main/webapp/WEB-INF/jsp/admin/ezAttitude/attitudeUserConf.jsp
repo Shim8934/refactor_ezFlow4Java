@@ -143,7 +143,7 @@
 				}
 	    		
 	    		$.ajax({
-	    			data : "POST",
+	    			type : "post",
 	    			dataType : "json",
 	    			async : false,
 	    			url : "/admin/ezAttitude/attitudeUserConfList.do",

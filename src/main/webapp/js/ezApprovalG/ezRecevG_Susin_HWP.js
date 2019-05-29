@@ -880,6 +880,39 @@ function openOpinionUI(pOpinionFlag) {
 	 return ret;
 }
 
+function openOpinionUI_New(pOpinionType) {
+	try {
+		var parameter = new Array();
+		parameter[0] = pDocID;		//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = pDraftFlag;	//DRAFTFLAG 
+		parameter[3] = pDocState;	//DOCSTATE
+		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		parameter[99] = ext;		//EXT
+		
+		var url = "/ezApprovalG/aprOpinionNew.do";
+		var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
+		var ret = window.showModalDialog(url,parameter,feature);
+		
+		if (ret != "cancel" && ret != undefined) {
+		    var objXML = new ActiveXObject("Microsoft.XMLDOM");
+		    objXML.loadXML(ret);
+		    
+		    var NodeList = objXML.selectNodes("LISTVIEWDATA/ROWS/ROW");
+		    if (NodeList.length != 0) {
+				pHasOpinionYN = "Y";
+		    } else {
+				pHasOpinionYN = "N";
+				ret = "cancel";
+		    }
+	    }
+		
+	    return ret;
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e.description);
+	}
+}
+
 function openFileAttachUI()
 {
   try{

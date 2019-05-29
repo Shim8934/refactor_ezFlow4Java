@@ -139,7 +139,7 @@
 							alert("<spring:message code='ezPersonal.t3006' />");
 						}else{
 							alert("<spring:message code='ezPersonal.t3007' />");
-							ContentDescription.innerHTML = "";
+							ContentDescription.innerHTML = '<div style="padding-top:80px;">' + "<spring:message code='ezPersonal.t3012'/>" + "</div>";
 							GetSignInfo();
 						}
 					},
@@ -174,6 +174,9 @@
 		            
 		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode="+mode+"&userID=" + userid);
 		            xhr.send(frm);
+		            
+		            //2019-04-30 천성준 - 같은 이름의 파일이 첨부가 안되는현상 때문에 첨부완료후 파일첨부란 초기화 
+		            document.form.file1.value = "";
 		    		}
 		        }
 		    }

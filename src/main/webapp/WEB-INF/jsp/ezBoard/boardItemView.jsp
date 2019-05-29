@@ -291,10 +291,11 @@
 //	 				            document.getElementById("pad1").style.height = contentHeight + "PX";
 //	 				        }
 //	 				    } else {
+							/* 2019-05-08 홍승비 - 익명게시판에 확장컬럼 존재 시 세로 리사이즈 오류 수정 */
 					        if (pAttributeYN == "Y") {
 					            var contentHeight;
 					            if (gubun == "2") {
-					                contentHeight = document.documentElement.clientHeight - 243;
+					                contentHeight = document.documentElement.clientHeight - 239 - addheight;
 					            } else {
 					                contentHeight = document.documentElement.clientHeight - 268 - addheight;
 					            }

@@ -112,7 +112,7 @@
 			
 			function getCommunityList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezCommunity/getLeftCommunity.do",
 					dataType : "json",
 					success : function(result) {
@@ -167,7 +167,7 @@
 			
 			function getBoardList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezCommunity/getLeftBoardList.do",
 					dataType : "json",
 					success : function(result) {

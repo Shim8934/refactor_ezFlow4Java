@@ -523,12 +523,10 @@ public class EzPollServiceImpl implements EzPollService{
 			set.addAll(listOfQuestion);
 			
 			//Get all question which this user is creator
-			List<PollQuestionVO> listOfQuestion2 = new ArrayList<PollQuestionVO>();
-			listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary, mode, companyID);		
+			List<PollQuestionVO> listOfQuestion2 = getOwnQuestions(userID, tenantID, searchStr, primary, mode, companyID);		
 			set.addAll(listOfQuestion2);
 			
-			List<PollQuestionVO> listOfQuestion3 = new ArrayList<PollQuestionVO>();
-			listOfQuestion3 = ezPollDAO.getOpenToAllQuestion(map);
+			List<PollQuestionVO> listOfQuestion3 = ezPollDAO.getOpenToAllQuestion(map);
 			set.addAll(listOfQuestion3);
 			
 		}
@@ -638,11 +636,8 @@ public class EzPollServiceImpl implements EzPollService{
 				//다른 qstId에서 파일을 사용하고 있는지 체크
 				fileUsingCheck = checkQstUsingFile(tenantId, qstId, qstFileName);
 				if(fileUsingCheck < 1 && qstFileName != null){
-					if(qstFileName != null){
-						qstFileName= qstFileName.split("/")[0];
-					}
-					
-					String absoluteFilePath = pDirPath + "uploadFile/" + qstFileName;
+					qstFileName= qstFileName.split("/")[0];
+					String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(qstFileName);
 					
 					try {
 						File file = new File(absoluteFilePath);
@@ -668,11 +663,8 @@ public class EzPollServiceImpl implements EzPollService{
 			ansFileName = ansFilesList.get(i);
 			fileUsingCheck = checkUsingFile(tenantId, ansFileName);
 			if(fileUsingCheck <= 1 && ansFileName != null){
-				if(ansFileName != null){
-					ansFileName= ansFileName.split("/")[0];
-				}
-				
-				String absoluteFilePath = pDirPath + "uploadFile/" + ansFileName;
+				ansFileName= ansFileName.split("/")[0];
+				String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(ansFileName);
 				
 				try {
 					File file = new File(absoluteFilePath);
@@ -699,7 +691,7 @@ public class EzPollServiceImpl implements EzPollService{
 				//댓글은 재사용하지 않기 때문에 파일 사용유무 체크하지 않음.
 				if(cmtFileName != null){
 					String pDirPath = (String)map.get("pDirPath");
-					String absoluteFilePath = pDirPath + "uploadFile/" + cmtFileName;
+					String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(cmtFileName);
 					
 					try {
 						File file = new File(absoluteFilePath);
@@ -724,7 +716,7 @@ public class EzPollServiceImpl implements EzPollService{
 					}*/
 					
 					String realPath = (String)map.get("realPath");
-					String absoluteFilePath = realPath + cmtFileName;
+					String absoluteFilePath = realPath + commonUtil.detectPathTraversal(cmtFileName);
 					
 					try {
 						File file = new File(absoluteFilePath);
@@ -752,11 +744,11 @@ public class EzPollServiceImpl implements EzPollService{
 		
 		/* 2018-07-19 홍승비 - 투표 팝업창 표시 시 가로스크롤 발생하지 않도록 width 수정 */
 		//메일 본문 작성.
-		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='poll_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezPoll/pollVote.do?qstId=" + qstId + "&params=&search=&searchN=', '', 'width=835, height=900, scrollbars=yes, resizable=yes')\">" + commonUtil.cleanValue(title) + "</span></br>");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName() + "</br>");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezAddress.t288", userInfo.getLocale()) + " : " + pollQuestion.getCreateDate());
-		bodyContent.append("</div>");
+		
+		String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantId, userInfo.getLocale());
 		
 		//메일 대상자 선정
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -801,7 +793,7 @@ public class EzPollServiceImpl implements EzPollService{
 			toArr[i] = to;
 		}
 		
-		ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, bodyContent.toString(), false);
+		ezEmailService.sendMail(loginCookie, from, toArr, null, null, subject, content, false);
 	}
 
 	@Override
@@ -843,7 +835,7 @@ public class EzPollServiceImpl implements EzPollService{
 		List<PollUserVO> pollUser = getAllUsersForQst(tenantId, qstId);
 		List<String> userList = new ArrayList<String>();
 		List<String> deptUserList = new ArrayList<String>();
-		String companyUser = new String();
+		String companyUser = "";
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		Iterator<PollUserVO> iter = pollUser.iterator();

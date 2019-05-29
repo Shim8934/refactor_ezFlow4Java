@@ -54,7 +54,18 @@
 	                        _DocContentHtml = ConXmlDiv.innerHTML;
 	                    }
 	
-	                    document.getElementById('div_Content').innerHTML = _DocContentHtml.replace(/(<p)/igm, '<div style=\"font-size:10pt;\"').replace(/<\/p>/igm, '</div>');
+						document.getElementById('div_Content').innerHTML = _DocContentHtml; //.replace(/(<p)/igm, '<div style=\"font-size:10pt;\"').replace(/<\/p>/igm, '</div>');
+	                    
+	                    var Document_Ptag = document.getElementById('div_Content').getElementsByTagName("P");
+	                    if (Document_Ptag.length > 0) {
+	                        for (var i = 0 ; i < Document_Ptag.length; i++) {
+	                            if (Document_Ptag[i].style.marginBottom == "")
+	                                Document_Ptag[i].style.marginBottom = "0px";
+	                            if (Document_Ptag[i].style.marginTop == "")
+	                                Document_Ptag[i].style.marginTop = "0px";
+	                        }
+	                    }
+	                    
 	                    _htmlcontent = document.getElementById('div_Content').innerHTML;
 	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
 	                    for (var i = 0; i < TDRows.length; i++) {

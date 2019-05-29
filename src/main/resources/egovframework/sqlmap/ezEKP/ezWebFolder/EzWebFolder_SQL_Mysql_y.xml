@@ -1306,6 +1306,7 @@
                    FROM (
                             select create_id
                             from tbl_webfolder_folder where folder_path like concat(#folderPath# , '%') and tenant_id = #tenantId#
+                            AND USE_STATUS = 'Y'
                             GROUP BY create_id
                         ) t1
                  ) = (
@@ -1313,6 +1314,7 @@
                        FROM (
                             select create_id
                             from tbl_webfolder_folder where folder_path like concat(#folderPath# , '%') and tenant_id = #tenantId#
+                            AND USE_STATUS = 'Y'
                             GROUP BY create_id
                       ) t2
                  WHERE CREATE_ID = #userId#
@@ -1434,7 +1436,7 @@
 	<select id ="EzWebFolderDAO_y.folderDetailByFileId" parameterClass="Map" resultMap="folderVO">
 		<![CDATA[
 			SELECT fld.*
-			FROM TBL_WEBFOLDER_FOLDER fld inner join TBL_WEBFOLDER_FILE f ON f.folder_id = fld.folder_id
+			FROM TBL_WEBFOLDER_FOLDER fld inner join TBL_WEBFOLDER_FILE f ON f.folder_id = fld.folder_id and f.tenant_id = fld.tenant_id 
 			WHERE f.TENANT_ID = #tenantId# and fld.COMPANY_ID = #comId# and f.FILE_ID = #fileId# 
 		]]>
 	</select>

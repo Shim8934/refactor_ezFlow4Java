@@ -12,14 +12,14 @@
 				<c:when test="${bIsMyContent == true || sysopCheck == '1' }">
 					<script language="javascript">
 						alert("<spring:message code='ezCommunity.t571' />");
-						document.location.href="/ezCommunity/guestOne.do?code=${code}&mode=list&goToPage=${curPage}";
+						document.location.href="/ezCommunity/guestOne.do?code=" + '<c:out value="${code}"/>' + "&mode=list&goToPage=${curPage}";
 					</script>					
 				</c:when>
 				
 				<c:otherwise>
 					<script language="javascript">
 						alert("<spring:message code='ezCommunity.t572' />");
-						document.location.href="/ezCommunity/guestOne.do?code=${code}&mode=list&goToPage=${curPage}";
+						document.location.href="/ezCommunity/guestOne.do?code=" + '<c:out value="${code}"/>' + "&mode=list&goToPage=${curPage}";
 					</script>
 				</c:otherwise>
 			</c:choose>
@@ -29,7 +29,7 @@
 		<c:if test="${mode == 'write' }">
 			<script language="javascript">
 				alert("<spring:message code='ezCommunity.t573' />");
-				document.location.href="/ezCommunity/guestOne.do?code=${code}&mode=list&goToPage=${curPage}";
+				document.location.href="/ezCommunity/guestOne.do?code=" + '<c:out value="${code}"/>' + "&mode=list&goToPage=${curPage}";
 			</script>
 		</c:if>
 		
@@ -38,14 +38,14 @@
 				<c:when test="${bIsMyContent == true || sysopCheck == '1' }">
 					<script language="javascript">
 						alert("<spring:message code='ezCommunity.t574' />");
-						document.location.href="/ezCommunity/guestOne.do?code=${code}&mode=list&goToPage=${curPage}";
+						document.location.href="/ezCommunity/guestOne.do?code=" + '<c:out value="${code}"/>' + "&mode=list&goToPage=${curPage}";
 					</script>					
 				</c:when>
 				
 				<c:otherwise>
 					<script language="javascript">
 						alert("<spring:message code='ezCommunity.t575' />");
-						document.location.href="/ezCommunity/guestOne.do?code=${code}&mode=list&goToPage=${curPage}";
+						document.location.href="/ezCommunity/guestOne.do?code=" + '<c:out value="${code}"/>' + "&mode=list&goToPage=${curPage}";
 					</script>
 				</c:otherwise>
 			</c:choose>
@@ -53,6 +53,6 @@
 		
 	</head>
 	<body>
-		<c:out value="${mode}" /> + " : " + <c:out value="${code }" />
+		<c:out value="${mode}" /> + " : " + <c:out value="${code}" />
 	</body>
 </html>

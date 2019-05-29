@@ -13,21 +13,21 @@
 	</head>
 	<script type="text/javascript" ID="clientEventHandlersJS">
 	    var ReturnFunction;
-	    var approvalFlag  	= "${approvalFlag}";
+	    var approvalFlag  	= "<c:out value ='${approvalFlag}'/>";
 	    //공통정보
-	    var publicityCode 	= "${publicityCode}";	//공개여부 - G는 대민공개여부
-	    var securityCode  	= "${securityCode}";	//보안등급
-	    var urgentApproval 	= "${urgentApproval}";	//긴급결재
+	    var publicityCode 	= "<c:out value ='${publicityCode}'/>";	//공개여부 - G는 대민공개여부
+	    var securityCode  	= "<c:out value ='${securityCode}'/>";	//보안등급
+	    var urgentApproval 	= "<c:out value ='${urgentApproval}'/>";	//긴급결재
 	    //G버전 전용
-	    var specialRecordCode 	= "${specialRecordCode}";	//특수기록물
-	    var securityApproval 	= "${securityApproval}";	//보안결재
-	    var limitRange 			= "${limitRange}";			//공개제한부분
-	    var pageNum 			= "${pageNum}";				//쪽수
-    	var publicityYN			= "${publicityYN}";			//공개여부
+	    var specialRecordCode 	= "<c:out value ='${specialRecordCode}'/>";	//특수기록물
+	    var securityApproval 	= "<c:out value ='${securityApproval}'/>";	//보안결재
+	    var limitRange 			= "<c:out value ='${limitRange}'/>";			//공개제한부분
+	    var pageNum 			= "<c:out value ='${pageNum}'/>";				//쪽수
+    	var publicityYN			= "<c:out value ='${publicityYN}'/>";			//공개여부
 	    //S버전 전용
-	    var storagePeriod 	= "${storagePeriod}";	//보존기간
-	    var taskCode 		= "${taskCode}";		//분류코드ID
-	    var itemName 		= "${itemName}";		//분류코드명
+	    var storagePeriod 	= "<c:out value ='${storagePeriod}'/>";	//보존기간
+	    var taskCode 		= "<c:out value ='${taskCode}'/>";		//분류코드ID
+	    var itemName 		= "<c:out value ='${itemName}'/>";		//분류코드명
 	    //요약정보는 TEXTAREA에 직접세팅
 	    
 	    window.onload = function () {
@@ -168,7 +168,7 @@
 	    			$("#urgentApproval_span").text(urgentApproval);
 	    		}
 	    		if (storagePeriod != "") {
-	    			$("#storagePeriod_span").text(storagePeriod + "<spring:message code='ezApprovalG.t456'/>");
+	    			$("#storagePeriod_span").text(storagePeriod);
 	    		}
 	    		if ($("#summary_txta").text().trim() == "") {
  	    			$("#summary_txta").attr("disabled", true);

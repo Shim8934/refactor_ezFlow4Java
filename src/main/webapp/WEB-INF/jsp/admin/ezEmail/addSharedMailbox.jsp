@@ -44,8 +44,8 @@
 	    	}
 	    </style>
 	    <script type="text/javascript">
-	        var shareId = "${shareId}";
-	        var companyId = "${compId}";
+	        var shareId = '<c:out value = "${shareId}"/>';
+	        var companyId = '<c:out value = "${compId}"/>';
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var strLang1 = "<spring:message code='ezEmail.t10001' />";
@@ -406,22 +406,33 @@
 	        }
 	
 	        function OK_Click() {
-	            if (document.getElementById("TextName").value.trim() == "") {
+	        	var strName = document.getElementById("TextName").value.trim();
+	        	var strId = document.getElementById("TextId").value.trim();
+	        	
+	            if (strName == "") {
 	                alert("<spring:message code='ezEmail.sharedMailbox10' />");
 	                document.getElementById("TextName").focus();
 	                return;
 	            }
 	            
-	            if (document.getElementById("TextId").value.trim() == "") {
+	            if (strId == "") {
 	                alert("<spring:message code='ezEmail.sharedMailbox11' />");
 	                document.getElementById("TextId").focus();
 	                return;
 	            }
 	            
+	            if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
+		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
+	           		alert("<spring:message code='ezEmail.sharedMailbox18' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+	           		document.getElementById("TextName").focus();
+		            return;
+		        }
+	            
 	            var regex = /^[a-z0-9\_\-\.]+$/;
 	            
-	            if (regex.test(document.getElementById("TextId").value.trim()) === false) {
+	            if (!regex.test(strId)) {
 	            	alert("<spring:message code='ezEmail.sharedMailbox12' />");
+	            	document.getElementById("TextId").focus();
 	            	return;
 	            }
 	            

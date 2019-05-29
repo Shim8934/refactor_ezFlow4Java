@@ -57,6 +57,9 @@
 						case 3:
 							alert("<spring:message code='ezWebFolder.t300' />");
 							break;
+						case 4:
+							alert("<spring:message code='webfolder.trash.delete.full' />");
+							break;
 					}
 				},
 				error : function(error) {

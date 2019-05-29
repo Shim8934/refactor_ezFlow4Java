@@ -75,8 +75,8 @@
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
 	        var browserIE = (!CrossYN()) ? true : false;
-	        var type = "${type}";
-	        var rulekind = "${ruleKind}";
+	        var type = '<c:out value="${type}"/>';
+	        var rulekind = '<c:out value="${ruleKind}"/>';
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var strLang_2 = "<spring:message code='ezEmail.t655' />";
@@ -273,7 +273,7 @@
 	                document.getElementById("dept_select").style.display = "none";
 	            }
 	            else {
-	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
+	                SelectReceiverWindow(eval('<c:out value="${defaultWin}"/>' + "Title"), eval("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
 	            }
 	            
 	            // (수신자 설정 시 drag, drop으로 순서 조정)
@@ -285,7 +285,7 @@
                       $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
                       $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
                   },
-                  click : function() {
+                  click : function(event) {
                 	  
                 	  var selectList = $("#" + event.currentTarget.id + " tr[selected=true]");
                       
@@ -3340,29 +3340,36 @@
                     inputAddress();
             }
             function inputAddress() {
-                if (document.getElementById("emailname").value == "") {
+            	var strName = document.getElementById("emailname").value;
+                var strEmail = document.getElementById("emailaddr").value.trim();
+            	
+                if (strName == "") {
                     document.getElementById("emailname").focus();
                     alert(strLang196);
                     return;
-                }
-                else if (document.getElementById("emailaddr").value == "") {
+                } else if (strEmail == "") {
                     document.getElementById("emailaddr").focus();
                     alert(strLang197);
                     return;
                 }
-                var emailMatch = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-                if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
+                
+                if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
+		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
+               		alert("<spring:message code='ezEmail.t31' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+               		document.getElementById("emailname").focus();
+		            return;
+		        }
+                
+                var emailMatch = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9_.-]+$/;
+                if (!emailMatch.test(strEmail)) {
                     alert(strLang198);
+                    document.getElementById("emailaddr").focus();
                     return;
                 }
 
                 var pparsingXML = "";
                 var pparsingXML2 = "";
-                var strName = "";
-                var strEmail = "";
                 var listid = "MsgToList";
-                strName = document.getElementById("emailname").value;
-                strEmail = document.getElementById("emailaddr").value;
                 pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
                 pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
                 pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
@@ -3402,6 +3409,9 @@
                     document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
                     document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
                 }
+                
+                document.getElementById("emailname").value = "";
+                document.getElementById("emailaddr").value = "";
             }
             var dropelement = "";
             function onDragEnter(evt, obj) {
@@ -3934,7 +3944,7 @@
 	                            <table style="margin-top: 3px;">
 	                                <tr>
 	                                    <td class="box" style="border-right:0px">
-	                                        <div id="TreeView" style="width: 220px; height: 474px; overflow-x: hidden; overflow-y: auto;" ></div>
+	                                        <div id="TreeView" style="width: 220px; height: 474px; overflow-x: auto; overflow-y: auto;" ></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">

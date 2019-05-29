@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -73,7 +74,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	/**
 	 * 편지함 관리 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailFolderManage.do")
+	@RequestMapping(value="/ezEmail/mailFolderManage.do", method = RequestMethod.GET)
 	public String mailFolderManage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		String pDeleteBoxID = ezEmailUtil.getTrashFolderId(locale);
 		String pDeleteBoxName = ezEmailUtil.getTrashFolderId(locale);
@@ -87,7 +88,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	/**
 	 * 편지함 추가/수정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/inputNameDlg.do")
+	@RequestMapping(value="/ezEmail/inputNameDlg.do", method = RequestMethod.GET)
 	public String inputNameDlg(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		
 		return "ezEmail/mailInputNameDlg";
@@ -96,7 +97,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	/**
 	 * 편지함 이동/복사 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMoveCopy.do")
+	@RequestMapping(value="/ezEmail/mailMoveCopy.do", method = RequestMethod.GET)
 	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailMoveCopy started.");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -124,7 +125,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	/**
 	 * 편지함 추가/수정/삭제/이동/복사/메일삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMakeFolder.do")
+	@RequestMapping(value="/ezEmail/mailMakeFolder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailMakeFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailMakeFolder started.");
@@ -370,7 +371,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	/**
 	 * 편지함 구독 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/setSubscribe.do")
+	@RequestMapping(value="/ezEmail/setSubscribe.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String setSubscribe(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("setSubscribe started.");

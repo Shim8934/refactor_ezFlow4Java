@@ -51,8 +51,8 @@
         <script type="text/javascript">
 	        var pListImagePath = "";
 	        var pListCount = "${listCount}";
-	        var pListImage = "${listImage}";
-	        var pBoardID = "${boardID}";
+	        var pListImage = "<c:out value='${listImage}'/>";
+	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
 	        var ImageID = "";
 	        var DelCount = 0;
@@ -64,8 +64,8 @@
 	        var ListImages = "${listImages}";
 	        var ImgaeReturnXml = "";
 	        var pMainFg = "${mainFg}";
-	        var pItemID = "${itemID}";
-	        var pGubun = "${guBun}";
+	        var pItemID = "<c:out value='${itemID}'/>";
+	        var pGubun = "<c:out value='${guBun}'/>";
 	        var orgImagePath = "${orgImagePath}";
 	        var pNoneActiveX = "YES";
 	        function window_onload() {
@@ -117,7 +117,7 @@
 
 		            if (!check) {
 		                document.getElementById("file1").value = "";
-		                alert("<spring:message code ='ezCommunity.lhj03' />");
+		                alert("<spring:message code ='ezBoard.hsbImg01' />");
 		                return;
 		            }
 		            

@@ -392,7 +392,7 @@ public class EzAttitudeGWController {
 			String companyId = request.getParameter("companyId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			if (companyId.equals("") || companyId == null) {
+			if (companyId == null || companyId.equals("")) {
 				companyId = info.getCompanyId();
 			}
 			
@@ -434,7 +434,7 @@ public class EzAttitudeGWController {
 			}
 			
 			Calendar cal = Calendar.getInstance();
-			cal.set(Integer.valueOf(date.substring(0, 4)), Integer.valueOf(date.substring(5)) - 1, 1);
+			cal.set(Integer.parseInt(date.substring(0, 4)), Integer.parseInt(date.substring(5)) - 1, 1);
 			
 			String startDate = date + "-01 00:00:00";
 			String endDate = date + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
@@ -983,7 +983,6 @@ public class EzAttitudeGWController {
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
-		JSONObject attJson = new JSONObject();
 
 		try{
 			String serverName = request.getHeader("x-user-host");
@@ -1071,8 +1070,6 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/modifyattitudes/count] started.");
 
 		JSONObject result = new JSONObject();
-		JSONObject data = new JSONObject();
-		JSONObject attJson = new JSONObject();
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
@@ -1178,8 +1175,6 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/modifyattitudes] started.");
 		
 		JSONObject result = new JSONObject();
-		JSONObject data = new JSONObject();
-		JSONObject attJson = new JSONObject();
 		
 		int status = 0;
 		
@@ -1227,7 +1222,6 @@ public class EzAttitudeGWController {
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
-		JSONObject attJson = new JSONObject();
 		
 		try{
 			String[] ids = idList.split(",");

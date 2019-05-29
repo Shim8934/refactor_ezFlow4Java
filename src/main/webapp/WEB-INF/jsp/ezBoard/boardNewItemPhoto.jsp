@@ -34,7 +34,7 @@
 	    <script type="text/javascript">
 	        var pMode = "NEW";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
-	        var pBoardID = "${boardID}";
+	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var pUrl = "${url}";
 	        var PhotoBoard = "N";
 	        var spanimagename = "";
@@ -389,13 +389,11 @@
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}
-						if ("${boardInfo.apprMail_FG}" == "Y") {
+						
+						/* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+						if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 						    xmlhttp = createXMLHttpRequest();
-						    if (pMode != "modify") {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
-						    } else {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
-						    }
+						    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}
@@ -440,7 +438,7 @@
 				        
 				        if (!check) {
 				        	document.getElementById("file1").files[i] = "";
-				        	alert("<spring:message code ='ezCommunity.lhj03' />");
+				        	alert("<spring:message code ='ezBoard.hsbImg01' />");
 				        	return;
 				        }
 				        else {

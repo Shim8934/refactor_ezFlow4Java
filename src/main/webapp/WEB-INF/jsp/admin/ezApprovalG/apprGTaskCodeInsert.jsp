@@ -369,6 +369,15 @@
 		    function btnOk_onclick() {
 		        var tempCode = trim(document.getElementById("tbTaskCode").value);
 		        
+		        if (checkTaskCodeIsAvailable(tempCode)) {
+		        	if (approvalFlag == 'G') {
+			        	OpenAlertUI("<spring:message code = 'ezApprovalG.t742' />");
+		        	} else {
+			        	OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
+		        	}
+		            return;
+		        }
+		        
 		        if (approvalFlag == 'S') {
 		        	if (tempCode == "") {
 			            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
@@ -457,6 +466,11 @@
 			            OpenAlertUI("<spring:message code = 'ezApprovalG.t750' />");		        		
 		        	}
 		        }
+		    }
+		    
+		    function checkTaskCodeIsAvailable(codeValue) {
+		    	var pattern = /[^0-9a-zA-z]/gi;
+		    	return pattern.test(codeValue);
 		    }
 		    
 		    function btncancel_onclick() {
@@ -638,13 +652,13 @@
 	        </tr>
 	        <tr class = 'approvalS'<c:if test="${approvalFlag != 'S' }"> style="display:none;"</c:if>>
 	        	<th><spring:message code = 'ezApprovalG.t118' /></th>
-	        	<td><select id="securityLevel" style="WIDTH: 100%">${securityNode }</select></td> 
+	        	<td><select id="securityLevel" style="WIDTH: 100%"><c:out value='${securityNode }' escapeXml='false'/></select></td> 
 	        </tr>
 	        <tr>
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S' }">
 			            <th><spring:message code = 'ezApprovalG.t1198' /> <span style="color:red">*</span></th>
-			            <td><select id="selKeepPeriod" style="WIDTH: 100%">${periodNode }</select></td>
+			            <td><select id="selKeepPeriod" style="WIDTH: 100%"><c:out value='${periodNode }' escapeXml='false'/></select></td>
 	        		</c:when>
 	        		<c:otherwise>
 			            <th><spring:message code = 'ezApprovalG.t117' /> <span style="color:red">*</span></th>

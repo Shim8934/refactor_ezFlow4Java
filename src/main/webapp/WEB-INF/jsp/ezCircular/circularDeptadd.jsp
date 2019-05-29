@@ -21,7 +21,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 	    <script type="text/javascript">
 	    	var userid = "";
-    		var circularBMId = "${circularBMId}";
+    		var circularBMId = "<c:out value='${circularBMId}'/>";
     		
 	    	window.onload = function() {
 	    		window.resizeTo(450 + (window.outerWidth - window.innerWidth), 275 + (window.outerHeight - window.innerHeight));

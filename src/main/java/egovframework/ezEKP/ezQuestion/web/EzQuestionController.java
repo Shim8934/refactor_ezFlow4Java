@@ -120,7 +120,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 메인 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstMain.do")
+	@RequestMapping(value="/ezQuestion/qstMain.do", method = RequestMethod.GET)
 	public String qstMain() throws Exception{
 		logger.debug("qstMain Start");
 		
@@ -131,7 +131,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 레프트 메뉴 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstLeft.do")
+	@RequestMapping(value="/ezQuestion/qstLeft.do", method = RequestMethod.GET)
 	public String qstLeft() throws Exception{
 		logger.debug("qstLeft Start");
 		
@@ -142,7 +142,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstList.do")
+	@RequestMapping(value="/ezQuestion/qstList.do", method = RequestMethod.GET)
 	public String qstList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, QstListVO qstListVO) throws Exception{
 		logger.debug("qstList Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -258,7 +258,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 설문 정보 호출, 그에 따른 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/pollOpen.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezQuestion/pollOpen.do", produces="text/xml; charset=utf-8", method = RequestMethod.GET)
 	public void pollOpen(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response, QstUserPollItemVO qstUserPollItemVO, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		logger.debug("pollOpen started");
 
@@ -477,7 +477,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 진행중인 설문화면 호출 함수
 	 */
 	@SuppressWarnings("unused")
-	@RequestMapping(value="/ezQuestion/qstResponse.do")
+	@RequestMapping(value="/ezQuestion/qstResponse.do", method = RequestMethod.GET)
 	public String qstResponse(@CookieValue("loginCookie") String loginCookie, QstUserPermissionVO qstUserPermissionVO, ModelMap model, HttpServletRequest request, QstVO qstVO) throws Exception{
 		logger.debug("qstResponse started");
 
@@ -638,7 +638,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 설문조사 하나의 글에 대한 등록 실행 , 설문리스트 메인 화면 호출 함수
 	 */
 	@SuppressWarnings("unused")
-	@RequestMapping(value="/ezQuestion/qstResponseOk.do")
+	@RequestMapping(value="/ezQuestion/qstResponseOk.do", method = RequestMethod.POST)
 	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, QstUserPermissionVO qstUserPermissionVO, HttpServletRequest request, HttpServletResponse response, QstResponseVO qstResponseVO) throws Exception{
 		logger.debug("qstResponseOk started");
 
@@ -857,7 +857,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 결과보기 화면 호출 함수
 	 */
 	@SuppressWarnings("unused")
-	@RequestMapping(value="/ezQuestion/qstResult.do")
+	@RequestMapping(value="/ezQuestion/qstResult.do", method = RequestMethod.GET)
 	public String qstResult(@CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap model, HttpServletRequest request, QstUserPollItemVO qstUserPollItemVO, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		logger.debug("qstResult started");
 
@@ -960,7 +960,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 STEP1화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstStep1.do")
+	@RequestMapping(value="/ezQuestion/qstStep1.do", method = RequestMethod.GET)
 	public String qstStep1(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model)  {
 		logger.debug("qstStep1 started.");
 		
@@ -1019,7 +1019,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 설문대상 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstRangeSelect.do")
+	@RequestMapping(value="/ezQuestion/qstRangeSelect.do", method = RequestMethod.GET)
 	public String qstRangeSelect(@CookieValue("loginCookie") String loginCookie, QstRangeSelectVO qstRangeSelectVO, HttpServletRequest req, Model model) throws Exception {
 		logger.debug("qstRangeSelect started");
 
@@ -1064,7 +1064,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 보기추가 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstStep2QuestionAdd.do")
+	@RequestMapping(value="/ezQuestion/qstStep2QuestionAdd.do", method = RequestMethod.POST)
 	public String qstStep2QuestionAdd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest req,Model model, QstAddVO questionAddVO) throws Exception {
 		logger.debug("qstStep2QuestionAdd started");
 
@@ -1089,7 +1089,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			itemId = req.getParameter("item_id").trim(); 
 		}*/
 		
-		if(req.getParameter("DataXML") != null) {
+		if(req.getParameter("DataXML") != null && !req.getParameter("DataXML").equals("")) {
 			pMode = "EDIT";
 			pDataXML = req.getParameter("DataXML").trim();
 			logger.debug("pDataXML="+pDataXML);
@@ -1250,7 +1250,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 파일첨부 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstAttachNonActX.do")
+	@RequestMapping(value="/ezQuestion/qstAttachNonActX.do", method = RequestMethod.POST)
 	public String qstAttachNonActX(HttpServletRequest req, Model model) {
 		logger.debug("qstAttachNonActX started");
 
@@ -1293,7 +1293,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 파일첨부 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/attachFileNonActX.do")
+	@RequestMapping(value="/ezQuestion/attachFileNonActX.do", method = RequestMethod.POST)
 	public String attachFileNonActXDad(@CookieValue("loginCookie") String loginCookie ,MultipartHttpServletRequest req,Model model) throws Exception {
 		logger.debug("attachFileNonActXDad started");
 
@@ -1319,7 +1319,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			//String pDirPath = config.getProperty("upload_board.UPLOADQUESTION");
 			String pDirPath = commonUtil.getUploadPath("upload_board.UPLOADQUESTION", loginVO.getTenantId());
 			//String qDirPath = commonUtil.getRealPath(req);
-			String qDirPath = commonUtil.getRealPath(req) + pDirPath;
+			String qDirPath = commonUtil.detectPathTraversal(commonUtil.getRealPath(req) + pDirPath);
 			File temp = new File(qDirPath);
 			
 			if(!temp.exists()) {
@@ -1355,7 +1355,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 파일첨부 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/attachFileDeleteNonActX.do")
+	@RequestMapping(value="/ezQuestion/attachFileDeleteNonActX.do", method = RequestMethod.POST)
 	public String attachFileDeleteNonActX(HttpServletRequest req,Model model) throws Exception {
 		logger.debug("attachFileDeleteNonActX started");
 
@@ -1367,7 +1367,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pQstType = req.getParameter("QstType_delFile");
 		}
 		if (req.getParameter("QstPath_delFile") != null && !req.getParameter("QstPath_delFile").equals("")) {
-			pQstPath = req.getParameter("QstPath_delFile");
+			pQstPath = commonUtil.detectPathTraversal(req.getParameter("QstPath_delFile"));
 		}
 		if (req.getParameter("QstIndex_delFile") != null && !req.getParameter("QstIndex_delFile").equals("")) {
 			pIndex = req.getParameter("QstIndex_delFile");
@@ -1394,7 +1394,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 임시저장 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstTempSave.do")
+	@RequestMapping(value="/ezQuestion/qstTempSave.do", method = RequestMethod.POST)
 	public void qstTempSave(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		logger.debug("qstTempSave started");
 
@@ -1420,7 +1420,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 불러오기 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/formTempLoadSafari.do")
+	@RequestMapping(value="/ezQuestion/formTempLoadSafari.do", method = RequestMethod.POST)
 	public void formTempLoadSafari(MultipartHttpServletRequest req,Model model, HttpServletResponse resp) throws Exception {
 		logger.debug("formTempLoadSafari started");
 
@@ -1440,7 +1440,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 질문취소 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstCancel.do")
+	@RequestMapping(value="/ezQuestion/qstCancel.do", method = RequestMethod.GET)
 	public void qstCancel(HttpServletRequest req, Model model, HttpServletResponse resp) throws Exception {
 		
 	}
@@ -1449,7 +1449,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 첨부파일 출력 화면 호출 함수
 	 */
 	@SuppressWarnings("unused")
-	@RequestMapping(value="/ezQuestion/qstAttachView.do")
+	@RequestMapping(value="/ezQuestion/qstAttachView.do", method = RequestMethod.GET)
 	public String attachView(@CookieValue("loginCookie") String loginCookie ,Locale locale, HttpServletRequest request, ModelMap model) throws Exception {
 		logger.debug("attachView started");
 
@@ -1520,7 +1520,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 첨부파일 호출 실행함수
 	 */
-	@RequestMapping(value="/ezQuestion/getPollAttachInfo.do")
+	@RequestMapping(value="/ezQuestion/getPollAttachInfo.do", method = RequestMethod.GET)
 	public void getPollAttachInfo(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, HttpServletResponse response, ModelMap model, QstAttachVO qstAttachVO) throws Exception{
 		logger.debug("getPollAttachInfo started.");
 		
@@ -1569,7 +1569,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 미리보기 첨부파일 호출 실행함수
 	 */
-	@RequestMapping(value="/ezQuestion/getPollAttachInfo2.do")
+	@RequestMapping(value="/ezQuestion/getPollAttachInfo2.do", method = RequestMethod.GET)
 	public void getPollAttachInfo2(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, HttpServletResponse response, ModelMap model, QstAttachVO qstAttachVO) throws Exception{
 		logger.debug("getPollAttachInfo started.");
 		
@@ -1627,7 +1627,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 결과보기 주관식일 경우 답변보기 화면 호출 함수
 	 */
 	@SuppressWarnings("unused")
-	@RequestMapping(value="/ezQuestion/qstResultSubjective.do")
+	@RequestMapping(value="/ezQuestion/qstResultSubjective.do", method = RequestMethod.GET)
 	public String qstResultSubjective(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		logger.debug("qstResultSubjectiv Start");
 		
@@ -1794,7 +1794,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	}
 	
 	@SuppressWarnings("unused")
-	@RequestMapping(value="/ezQuestion/qstResultSubjectiveAll.do",produces = "application/text; charset=utf8")
+	@RequestMapping(value="/ezQuestion/qstResultSubjectiveAll.do",produces = "application/text; charset=utf8", method = RequestMethod.POST)
 	@ResponseBody
 	public String qstResultSubjectiveAll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		logger.debug("qstResultSubjectivAll Start");
@@ -1960,7 +1960,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 삭제 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstDeleteItemMsg.do")
+	@RequestMapping(value="/ezQuestion/qstDeleteItemMsg.do", method = RequestMethod.GET)
 	public String qstDeleteItemMsg(HttpServletRequest req,Model model)  {
 		logger.debug("qstDeleteItemMsg started");
 
@@ -2029,7 +2029,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/deleteItemList.do")
+	@RequestMapping(value="/ezQuestion/deleteItemList.do", method = RequestMethod.POST)
 	public String deleteItemList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("deleteItemList started");
 
@@ -2047,7 +2047,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 검색 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstSearch.do")
+	@RequestMapping(value="/ezQuestion/qstSearch.do", method = RequestMethod.GET)
 	public String qstSearch(HttpServletRequest req,Model model)  {
 		logger.debug("qstSearch started");
 
@@ -2065,7 +2065,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 결과보기 응답자목록 화면 호출 함수
 	 */
 	@SuppressWarnings("unused")
-	@RequestMapping(value="/ezQuestion/qstResponseList.do")
+	@RequestMapping(value="/ezQuestion/qstResponseList.do", method = RequestMethod.GET)
 	public String qstResponseList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, QstUserPermissionVO qstUserPermissionVO) throws Exception {
 		logger.debug("qstResponseList started");
 
@@ -2164,7 +2164,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 상세분석 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstAnalysis.do")
+	@RequestMapping(value="/ezQuestion/qstAnalysis.do", method = RequestMethod.GET)
 	public String qstAnalysis(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, ModelMap model) throws Exception {
 		logger.debug("qstAnalysis started");
 
@@ -2978,7 +2978,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 상세분석 분석결과 저장 실행 함수
 	 */
-	@RequestMapping(value = "/ezQuestion/qstResultAnalysisSave.do")
+	@RequestMapping(value = "/ezQuestion/qstResultAnalysisSave.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("qstResultAnalysisSave started");
 
@@ -3098,7 +3098,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 상세분석 전체결과 저장 실행 함수
 	 */
 	@SuppressWarnings({ "unused", "resource" })
-	@RequestMapping(value = "/ezQuestion/resultTotalSave.do")
+	@RequestMapping(value = "/ezQuestion/resultTotalSave.do", method = RequestMethod.GET)
 	public void resultTotalSave(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("resultTotalSave started");
 
@@ -3257,7 +3257,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 설문대상 정보 저장 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/callSaveRangeACL.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value="/ezQuestion/callSaveRangeACL.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String callSaveRangeACL(@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlDoc,HttpServletRequest request,Model model) throws Exception {
 		logger.debug("callSaveRangeACL started");
@@ -3434,7 +3434,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문생성 ITEM SEQ 실행 함수
 	 */
-	@RequestMapping(value="/ezQuestion/callGetItemSeqXML.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value="/ezQuestion/callGetItemSeqXML.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String callGetItemSeqXML(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, Model model) throws Exception {
 		logger.debug("callGetItemSeqXML started");
@@ -3472,7 +3472,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 정보수정 화면 호출 함수
 	 */
-	@RequestMapping("/ezQuestion/qstChangePermission.do")
+	@RequestMapping(value = "/ezQuestion/qstChangePermission.do", method = RequestMethod.GET)
 	public String qstChangePermission(@CookieValue("loginCookie") String loginCookie, ModelMap model,HttpServletRequest req) throws Exception {
 		logger.debug("qstChangePermission Start");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -3621,7 +3621,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 정보수정 실행 함수
 	 */
-	@RequestMapping("/ezQuestion/callChangePermission.do")
+	@RequestMapping(value = "/ezQuestion/callChangePermission.do", method = RequestMethod.POST)
 	public void callChangePermission(@CookieValue("loginCookie") String loginCookie,Model model,HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		logger.debug("callChangePermission started");
 
@@ -3666,7 +3666,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 즉시마감 실행 함수
 	 */
-	@RequestMapping("/ezQuestion/callEndPoll.do")
+	@RequestMapping(value = "/ezQuestion/callEndPoll.do", method = RequestMethod.POST)
 	public String callEndPoll(@CookieValue("loginCookie") String loginCookie,Model model,HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		logger.debug("callEndPoll started");
 
@@ -3706,7 +3706,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 STEP1 재사용 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstStep1ReUse.do")
+	@RequestMapping(value="/ezQuestion/qstStep1ReUse.do", method = RequestMethod.GET)
 	public String qstStep1ReUse(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
 		logger.debug("qstStep1ReUse started");
 
@@ -3751,7 +3751,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 STEP2 재사용 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstStep2ReUse.do")
+	@RequestMapping(value="/ezQuestion/qstStep2ReUse.do", method = RequestMethod.POST)
 	public String qstStep2ReUse(HttpServletRequest req,Model model, QstStep1VO qstStep1VO, QstAddVO qstAddVO) throws Exception {
 		logger.debug("qstStep2ReUse started");
 
@@ -4094,7 +4094,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 권한없을 시 에러화면 호출 함수
 	 */
-	@RequestMapping(value="/ezQuestion/qstMsgAdminConfirm.do")
+	@RequestMapping(value="/ezQuestion/qstMsgAdminConfirm.do", method = RequestMethod.GET)
 	public String qstMsgAdminConfirm(HttpServletRequest request,ModelMap model) throws Exception {
 		logger.debug("qstMsgAdminConfirm started");
 

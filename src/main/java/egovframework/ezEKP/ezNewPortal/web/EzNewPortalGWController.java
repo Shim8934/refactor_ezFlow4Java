@@ -1556,7 +1556,9 @@ public class EzNewPortalGWController {
 
 			// 결재할 문서 개수 불러오기
 			if (useApproval.equals("YES")) {
-				int approvalCount = ezApprovalGSerivce.getWebPartListCount("1", userId, deptId, "", "COUNT", "", companyId, portletLang, tenantId, offsetMin);
+				String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
+				String lang = portletLang;
+				int approvalCount = ezNewPortalService.getApprovalDoingListCount(userId, companyId, tenantId, info.getOffSet(), approvalFlag, lang);
 				data.put("approvalCount", approvalCount);
 			}
 

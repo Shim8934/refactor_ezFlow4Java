@@ -13,10 +13,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
-			var code = "${code}";
-	        var ParentBoardID = "${parentBoardID}";
-	        var BoardGroupID = "${boardGroupID}";
-	        var BoardID = "${boardID}";
+			var code = '<c:out value="${code}"/>';
+	        var ParentBoardID = '<c:out value="${parentBoardID}"/>';
+	        var BoardGroupID = '<c:out value="${boardGroupID}"/>';
+	        var BoardID = '<c:out value="${boardID}"/>';
 	        var iMenuNum = 9;
 
 	        function hasSpecialCharacters(str) {
@@ -84,7 +84,7 @@
 	
 			    if (CrossYN()) {
 			        parent.window.frames.left.location.reload();
-			        parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=${code}";
+			        parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=" + '<c:out value="${code}"/>';
 	            }
 	            else
 	                window.parent.frames.item(0).location.reload();

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -18,7 +19,7 @@
         var g_SelColor = "#ECF3BA";
         var g_UnSelColor = "#FFFFFF";
         var g_HotTrackColor = "#f4f5f5";
-        var p_strKeyword = "${keyword}";
+        var p_strKeyword = "<c:out value='${keyword}'/>";
         var RetValue;
         var ReturnFunction;
         var OrderOption = "";

@@ -245,7 +245,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		File file = new File(pDirPath);
 		
-		if (!file.exists() && !file.mkdir()) {
+		if (!file.exists() && !file.mkdirs()) {
 			logger.debug("Can not create file!");
 			throw new IOException();
 		}
@@ -1022,7 +1022,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return setQuestionIds;
 	}
 	
-	private void cloneAttachFiles(List<AttachVO> attachs, String realPath, String dirPath) {
+	private void cloneAttachFiles(List<AttachVO> attachs, String realPath, String dirPath) throws Exception {
 		for (AttachVO attach : attachs) {
 			if (attach.getFurl() != null) {
 				continue;
@@ -1031,9 +1031,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			String fileName = attach.getFname();
 			int dotPos      = fileName.lastIndexOf(".");
 			String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-			String newName  = UUID.randomUUID().toString() + "." + extend;
+			String newName  = UUID.randomUUID().toString() + "." + commonUtil.detectPathTraversal(extend);
 			String newPath  = dirPath + newName;
-			File srcFile    = new File(realPath + attach.getFpath());
+			File srcFile    = new File(realPath + commonUtil.detectPathTraversal(attach.getFpath()));
 			File destFile   = new File(realPath + newPath);
 			
 			try {

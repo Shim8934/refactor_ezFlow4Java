@@ -20,14 +20,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var	DocID = '${docID}';
-		    var	DocHref = '${docHref}';
-		    var	OpinionFlag = '${opinionFlag}';
-		    var	ListTypeValue = '${listType}';
-		    var	ListSusin = '${listSusin}';
-		    var pDocState =  '${docState}';
-		    var pOrgDocID = '${orgDocID}';
-		    var isOpinion = '${isOpinion}';
+		    var	DocID = "<c:out value ='${docID}'/>";
+		    var	DocHref = "<c:out value ='${docHref}'/>";
+		    var	OpinionFlag = "<c:out value ='${opinionFlag}'/>";
+		    var	ListTypeValue = "<c:out value ='${listType}'/>";
+		    var	ListSusin = "<c:out value ='${listSusin}'/>";
+		    var pDocState =  "<c:out value ='${docState}'/>";
+		    var pOrgDocID = "<c:out value ='${orgDocID}'/>";
+		    var isOpinion = "<c:out value ='${isOpinion}'/>";
 		    var pDocID;
 		    var pDocHref;
 		    var pOpinionFlag;
@@ -42,32 +42,32 @@
 		    var AppenAprDocAttachList = "";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
 		    pUserID = arr_userinfo[1];
-		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
-	        var callBackType = "${callBackType}";
-		    var pHasOpinion = "${hasOpinionYN}";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
+	        var callBackType = "<c:out value ='${callBackType}'/>";
+		    var pHasOpinion = "<c:out value ='${hasOpinionYN}'/>";
 		    var pOpinionType = "Show";
-		    var pMailEditor = "${crossEditor}";
-		    var signImageType = "${signImageType}";
-		    var pMode = "${mode}";
-		    var forceCallBackYN = "${forceCallBackYN}";
-		    var ext = "${ext}";
-		    var orgCompanyID = "${orgCompanyID}";
+		    var pMailEditor = "<c:out value ='${crossEditor}'/>";
+		    var signImageType = "<c:out value ='${signImageType}'/>";
+		    var pMode = "<c:out value ='${mode}'/>";
+		    var forceCallBackYN = "<c:out value ='${forceCallBackYN}'/>";
+		    var ext = "<c:out value ='${ext}'/>";
+		    var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -80,7 +80,8 @@
 		    });
 		    
 		    function btnOpinion_onclick() {
-		        openOpinionViewUI();
+		        //openOpinionViewUI();
+		        openOpinionUI_New("Show");
 		    }
 		    function DocumentComplete() {
 		        if (flag == false) {
@@ -90,7 +91,7 @@
 		                btnClose_onclick();
 		                return;
 		            }
-		            if (pDocState == "015" && pOrgDocID.length >= 20 && "${listType}" == "99") {
+		            if (pDocState == "015" && pOrgDocID.length >= 20 && "<c:out value ='${listType}'/>" == "99") {
 		                document.getElementById("btnGongRam").style.display = "";
 		                pOpinionType = "";
 		            }
@@ -414,8 +415,13 @@
 		    function btnDocInfo_onclick() {
 		        ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
-		
-		        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + DocID + "&ingFlag=APR");
+		        
+				if (ListTypeValue == "21") {
+			        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=TMP");
+				} else {
+			        var mode = getDocMode();
+			        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=" + mode);
+				}
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
@@ -432,11 +438,35 @@
 		        if (ListTypeValue == "21") { //2019-02-08 천성준 - #14965 임시보관함문서 > 문서보기 > 통합PC저장 시, 첨부 및 문서파일을 내려받을수 없던 문제해결
 			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=TMP&orgCompanyID=" + orgCompanyID);
 		        } else {
-			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID=" + orgCompanyID);
+		        	var mode = getDocMode();
+			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + mode + "&orgCompanyID=" + orgCompanyID);
 		        }
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
+		    }
+		    function getDocMode() {
+		    	var rtnVal = "APR";
+		    	
+		    	try {
+		    		$.ajax({
+		     			type : "POST",
+		     			dataType : "text",
+		     			async : false,
+		     			url : "/ezApprovalG/getLineMode.do",
+		     			data : {
+		     					docID : pDocID,
+		     					orgCompanyID : orgCompanyID
+		     					},
+		     			success: function(result) {
+		     				rtnVal = result;
+		     			}        			
+		            });
+		    	} catch (e) {
+		    		alert("getDocMode() :: " + e.description);
+		    	}
+		    	
+		    	return rtnVal;
 		    }
 		    
 		    function btncallback_onclick() {

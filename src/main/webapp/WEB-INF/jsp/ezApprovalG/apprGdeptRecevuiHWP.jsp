@@ -20,11 +20,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	    <script type="text/javascript">
-	        var pDocID = "${docID}";
-	        var DraftFlag = "${draftFlag}";
+	        var pDocID = "<c:out value ='${docID}'/>";
+	        var DraftFlag = "<c:out value ='${draftFlag}'/>";
 	        var pFormHref = new String("");
 	        var pFormID = new String();
-	        var pUserID = "${userInfo.id}";
+	        var pUserID = "<c:out value ='${userInfo.id}'/>";
 			var pHasAttachYN = new String("N");
 			var pHasOpinionYN = new String("N");
 			var CurrentDate
@@ -61,38 +61,38 @@
 			var RootURL = document.location.protocol + "//" + document.location.hostname;
 			var arr_userinfo = new Array();
 			arr_userinfo[0] = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
+	        arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
 	
 	        var SignType = new Array();
 	        var SignName = new Array();
 	        var SignContent = new Array();
 	        var KuyjeType = "002";
-	        var signDateFormat = "${optSignDateFormat}";
-			var isSplit = "${optIsSplit}";
-	        var SplitKind = "${optSplitKind}";
-	        var _opinionYN = "${opinionYN}";
-	        var _opinionGamsaYN = "${opinionGamsaYN}";
-	        var _usepassword = "${usePassword}";
+	        var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
+			var isSplit = "<c:out value ='${optIsSplit}'/>";
+	        var SplitKind = "<c:out value ='${optSplitKind}'/>";
+	        var _opinionYN = "<c:out value ='${opinionYN}'/>";
+	        var _opinionGamsaYN = "<c:out value ='${opinionGamsaYN}'/>";
+	        var _usepassword = "<c:out value ='${usePassword}'/>";
 	        var pDocSN = "1";
-	        var pUse_Editor = "${useEditor}";
+	        var pUse_Editor = "<c:out value ='${useEditor}'/>";
 			var DocNumCode = "";
 			var ext = "hwp";
-			var isHWP = "${isHWP}";
-			var dirPath = "${dirPath}";
+			var isHWP = "<c:out value ='${isHWP}'/>";
+			var dirPath = "<c:out value ='${dirPath}'/>";
 			
 			function process_AfterOpen() {
 			    try {
@@ -759,13 +759,13 @@
 	                <table width="100%" height="100%">
 	                    <tr>
 	                        <td valign="center" id="form1">
-	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "1");</script>
+	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value ='${hwpToolbar}'/>", "1");</script>
 	                            <img src="../img/bbs_hr01.gif" width="1" height="10">
 	                        </td>
 	                    </tr>
 	                    <tr id="form2">
 	                        <td valign="center" height="1">
-	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl2", "3", "0", "${hwpToolbar}", "1");</script>
+	                            <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl2", "3", "0", "<c:out value ='${hwpToolbar}'/>", "1");</script>
 	                        </td>
 	                    </tr>
 	                </table>

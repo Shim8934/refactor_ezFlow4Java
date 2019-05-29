@@ -70,12 +70,12 @@
 .selectedUser:hover {background-color:#f4f5f5;}
 .selectedUser2 {cursor:pointer; background-color:#f1f8ff;}
 
-.separator {font-size:14px; padding-right: 5px; line-height: 18px;}
-.aName {cursor: pointer; white-space: nowrap; display: flex; flex: 0 10 auto; overflow: hidden; text-overflow: ellipsis; min-width: 20px;}
+.separator {font-size:14px; padding-right: 5px; line-height: 18px; margin-bottom:4px;white-space: nowrap; display: inline-block;display: table-cell }
+.aName {cursor: pointer; white-space: nowrap; display: inline-block; overflow: hidden; text-overflow: ellipsis; min-width: 20px;justify-content: flex-start;display: table-cell}
 .aName div:hover {color: #e04343;}
-.aName div{white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+.aName div{white-space: nowrap; text-overflow: ellipsis; overflow: hidden;display: table-cell;}
 
-.mainPath {white-space: nowrap; display: flex; flex-wrap: nowrap;}
+.mainPath {white-space: nowrap; display: inline-block; display: table;}
 .mainPath >div:last-child {min-width: initial; width: auto;}
 
 .wfListCnt {height: 20px; width: 40px;}
@@ -147,7 +147,7 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 .wfSearchPanel h1, .wfpersonal h1 {margin-top: 0px !important;}
 .wfcompstdiv {width: 400px; text-align: center;}
 #forScroll			{width: 6px; padding:0px;}
-.wfFilecheck 		{width: 2%; min-width:35px; text-align: center;}
+.wfFilecheck 		{width: 2%; min-width:35px;}
 .wfFileFavorite		{width: 3%; text-align: center; min-width:35px;}
 .wfFileType 		{width: 3%; text-align: center;}
 .wfFileName			{width: 30%;}

@@ -64,6 +64,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -173,7 +174,7 @@ public class CommonUtil {
 	    	String parentFolder1 = "../";
 	    	String parentFolder2 = "..\\";
 	    	
-	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2)) {
+	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2) || filePath.toUpperCase().contains("WEB-INF")) {
 	    		logger.debug("PathTraversal detected. filePath=" + filePath);
 	    		
 	    		throw new Exception("PathTraversal detected.");
@@ -311,7 +312,7 @@ public class CommonUtil {
 			for (int k = 0; k < cookie.length; k++) {
 				switch (cookie[k].getName()) {
 				case "APRUI0":
-					user.setDeptID(cookie[k].getValue());
+					user.setDeptID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI1":
 					user.setDeptName1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
@@ -332,7 +333,7 @@ public class CommonUtil {
 					user.setTitle2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI7":
-					user.setCompanyID(cookie[k].getValue());
+					user.setCompanyID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				}
 			}
@@ -1740,5 +1741,30 @@ public class CommonUtil {
 		}
 		
 		return result;
+	}
+	
+	/** 
+	 * <p>
+	 * 자동 발신 알림 메일 내용 생성<br>
+	 * 메일로 보낼 내용을 받아서 에디터 기본 폰트스타일과 감싸는 태그를 붙여 리턴함
+	 * </p>
+	 * @param content
+	 * @param tenantID
+	 * @param locale
+	 * @return 완성된 html 태그 스트링
+	 */
+	public String createNotiMailContent(String content, int tenantID, Locale locale) throws Exception {
+		String fontFamily = egovMessageSource.getMessage("main.t246", locale);
+		String fontSize = "13px";
+		
+		String fontStyle = ezCommonService.getTenantConfig("editorFontStyle", tenantID);
+		if(!ObjectUtils.defaultIfNull(fontStyle, "").isEmpty()) {
+			String [] dividedFontStyle = fontStyle.split("\\|");
+			
+			fontFamily = dividedFontStyle[0];
+			fontSize = dividedFontStyle[1];
+		}
+		
+		return String.format("<DIV id=\"msgBody\" style=\"font-size: %s; font-family: %s;\" name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", fontSize, fontFamily, content);
 	}
 }

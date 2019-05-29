@@ -1,0 +1,84 @@
+Return-Path: <ura19550114@docomo.ne.jp>
+Delivered-To: 100139757@ezekp.com
+Received: from 10.50.3.4 (EHLO mxg.ryobi.co.jp) ([10.50.3.4])
+          by ezEkp1 (JMOCHA ESMTP Server) with ESMTP ID 2039586809
+          for <n-usui@ryobi-holdings.jp>;
+          Sat, 20 Apr 2019 13:13:50 +0900 (JST)
+X-matriXgate-loop-detect: 0be2e4d6b85743bd925911c7071e9ea465d4a8d1
+Received: from docomo.ne.jp ([203.138.203.201]) by mxg.ryobi.co.jp with ESMTP;
+	Sat, 20 Apr 2019 13:13:44 +0900 (JST)
+Received: from docomo.ne.jp ([10.242.48.132])
+ by mfsmax.docomo.ne.jp(DOCOMO Mail Server Ver2.0) with SMTP id 368800615cae16ab1025
+ for <n-usui@ryobi-holdings.jp>; Sat, 20 Apr 2019 13:13:43 +0900 (JST)
+Subject: =?cp932?B?RndkOiCDcINYg4+BW4NoksqSbXBhc3N3b3JkOoF5grKYQZeNgXoyMDE5?=
+ =?cp932?B?lE6TeCCJqo5S7uCTh4muIIlji8aO+454l1yOWg==?=
+References: <483298066.277996.1555672500940@mxg.ryobi.co.jp>
+X-Mailer: iPhone Mail (13F69)
+X-DCMMail: spmode
+Date: Sat, 20 Apr 2019 13:13:43 +0900
+From: =?iso-2022-jp?B?GyRCM109KD9DGyhC?=<ura19550114@docomo.ne.jp>
+To: =?iso-2022-jp?B?GyRCR3YwZjUqPjsbKEI=?=<n-usui@ryobi-holdings.jp>
+Message-ID: <3D49A89C-82E7-48B3-8358-6B27D3051630@docomo.ne.jp>
+MIME-Version: 1.0 (1.0)
+Content-Type: multipart/alternative; boundary="Apple-Mail-B96FD866-A348-4865-A353-D496B931086F"
+X-matriXgate-msec-AV: Clean
+X-matriXgate-UniqId: Through
+X-matriXgate-msecIpRepId: i=cb8acbc9;s=10
+X-matriXgate-Action: Approve
+X-matriXgate: Non-Spam
+X-matriXgate-SenderAuth-Results: Through
+Authentication-Results: mxg.ryobi.co.jp;
+	spf=pass smtp.mailfrom=ura19550114@docomo.ne.jp;
+	sender-id=pass header.From=ura19550114@docomo.ne.jp;
+	dkim=none;
+	dkim-adsp=none header.From=ura19550114@docomo.ne.jp;
+X-matriXgate-Auth: UnknownUser
+X-matriXgate-archive-id: ff7.10b4.7f13e92f9e80.5cba9c7e.66926
+
+--Apple-Mail-B96FD866-A348-4865-A353-D496B931086F
+Content-Type: text/plain; charset="cp932"
+Content-Transfer-Encoding: Base64
+
+DQoNCmlQaG9uZYKpgueRl5BNDQoNCkJlZ2luIGZvcndhcmRlZCBtZXNzYWdlOg0KDQo+II23j2+Q
+bDogjYKLtIFAicCYYTx0YWthaGFzaGkteW9zaGlrYXp1QGFkLnRha2FzaGltYXlhLmNvLmpwPg0K
+PiCT+o6eOiAyMDE5lE40jI4xOZP6IDIwOjE1OjA3IEpTVA0KPiCItpDmOiAninyBQI9HkGInPGgt
+a2FrZUByeW9iaS1ob2xkaW5ncy5qcD4NCj4gjI+WvDogg3CDWIOPgVuDaJLKkm1wYXNzd29yZDqB
+eYKymEGXjYF6MjAxOZROk3ggiaqOUu7gk4eJriCJY4vGjvuOeJdcjloNCj4gDQo+IINwg1iDj4Fb
+g2iSypJtg4GBW4OLgUJQYXNzd29yZCBub3RpZmljYXRpb24gZW1haWwNCj4gDQo+IJGXkE2O0oFG
+dGFrYWhhc2hpLXlvc2hpa2F6dUBhZC50YWthc2hpbWF5YS5jby5qcCANCj4gjI+WvIFGgXmCsphB
+l42BejIwMTmUTpN4IImqjlLu4JOHia4giWOLxo77jniXXI5aDQo+IA0KPiCP44tMg4GBW4OLgsyT
+WZV0g3SDQINDg4uC8IjDjYaJu4K1gtyCtYK9gsyCxYFBg3CDWIOPgVuDaILwksqSbYK1gtyCt4FC
+DQo+IEFzIHdlIGhhdmUgZW5jcnlwdGVkIHRoZSBhYm92ZSBlbWFpbCBhdHRhY2htZW50LCB3ZSB3
+aWxsIG5vdGlmeSB0aGUgcGFzc3dvcmQuDQo+IChieSBtYXRyaVhnYXRlKQ0KPiANCj4gg3CDWIOP
+gVuDaILNiMiJuoLFgreBQlRoZSBwYXNzd29yZCBpcyBiZWxvdy4NCj4gIHhhJCxlNUt0DQo=
+--Apple-Mail-B96FD866-A348-4865-A353-D496B931086F
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: Base64
+
+PGh0bWw+PGhlYWQ+PG1ldGEgaHR0cC1lcXVpdj0iY29udGVudC10eXBlIiBjb250ZW50PSJ0ZXh0
+L2h0bWw7IGNoYXJzZXQ9dXRmLTgiPjwvaGVhZD48Ym9keSBkaXI9ImF1dG8iPjxkaXY+PGJyPjxi
+cj5pUGhvbmXjgYvjgonpgIHkv6E8L2Rpdj48ZGl2Pjxicj5CZWdpbiBmb3J3YXJkZWQgbWVzc2Fn
+ZTo8YnI+PGJyPjwvZGl2PjxibG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxkaXY+PGI+5beu5Ye65Lq6
+OjwvYj4g6auY5qmL44CA5L2z5ZKMJmx0OzxhIGhyZWY9Im1haWx0bzp0YWthaGFzaGkteW9zaGlr
+YXp1QGFkLnRha2FzaGltYXlhLmNvLmpwIj50YWthaGFzaGkteW9zaGlrYXp1QGFkLnRha2FzaGlt
+YXlhLmNvLmpwPC9hPiZndDs8YnI+PGI+5pel5pmCOjwvYj4gMjAxOeW5tDTmnIgxOeaXpSAyMDox
+NTowNyBKU1Q8YnI+PGI+5a6b5YWIOjwvYj4gJ+aOm+OAgOengOiHoycmbHQ7PGEgaHJlZj0ibWFp
+bHRvOmgta2FrZUByeW9iaS1ob2xkaW5ncy5qcCI+aC1rYWtlQHJ5b2JpLWhvbGRpbmdzLmpwPC9h
+PiZndDs8YnI+PGI+5Lu25ZCNOjwvYj4gPGI+44OR44K544Ov44O844OJ6YCa55+lcGFzc3dvcmQ6
+44CQ44GU6YCj57Wh44CRMjAxOeW5tOW6piDlsqHlsbHpq5nls7blsYsg5Za25qWt5Y+O5pSv5LqI
+566XPC9iPjxicj48YnI+PC9kaXY+PC9ibG9ja3F1b3RlPjxibG9ja3F1b3RlIHR5cGU9ImNpdGUi
+PjxkaXY+PHNwYW4+44OR44K544Ov44O844OJ6YCa55+l44Oh44O844Or44CCUGFzc3dvcmQgbm90
+aWZpY2F0aW9uIGVtYWlsPC9zcGFuPjxicj48c3Bhbj48L3NwYW4+PGJyPjxzcGFuPumAgeS/oeiA
+he+8mjxhIGhyZWY9Im1haWx0bzp0YWthaGFzaGkteW9zaGlrYXp1QGFkLnRha2FzaGltYXlhLmNv
+LmpwIj50YWthaGFzaGkteW9zaGlrYXp1QGFkLnRha2FzaGltYXlhLmNvLmpwPC9hPiA8L3NwYW4+
+PGJyPjxzcGFuPuS7tuWQje+8muOAkOOBlOmAo+e1oeOAkTIwMTnlubTluqYg5bKh5bGx6auZ5bO2
+5bGLIOWWtualreWPjuaUr+S6iOeulzwvc3Bhbj48YnI+PHNwYW4+PC9zcGFuPjxicj48c3Bhbj7k
+uIroqJjjg6Hjg7zjg6vjga7mt7vku5jjg5XjgqHjgqTjg6vjgpLmmpflj7fljJbjgZfjgb7jgZfj
+gZ/jga7jgafjgIHjg5Hjgrnjg6/jg7zjg4njgpLpgJrnn6XjgZfjgb7jgZnjgII8L3NwYW4+PGJy
+PjxzcGFuPkFzIHdlIGhhdmUgZW5jcnlwdGVkIHRoZSBhYm92ZSBlbWFpbCBhdHRhY2htZW50LCB3
+ZSB3aWxsIG5vdGlmeSB0aGUgcGFzc3dvcmQuPC9zcGFuPjxicj48c3Bhbj4oYnkgbWF0cmlYZ2F0
+ZSk8L3NwYW4+PGJyPjxzcGFuPjwvc3Bhbj48YnI+PHNwYW4+44OR44K544Ov44O844OJ44Gv5Lul
+5LiL44Gn44GZ44CCVGhlIHBhc3N3b3JkIGlzIGJlbG93Ljwvc3Bhbj48YnI+PHNwYW4+ICZuYnNw
+O3hhJCxlNUt0PC9zcGFuPjwvZGl2PjwvYmxvY2txdW90ZT48L2JvZHk+PC9odG1sPg==
+--Apple-Mail-B96FD866-A348-4865-A353-D496B931086F--
+
