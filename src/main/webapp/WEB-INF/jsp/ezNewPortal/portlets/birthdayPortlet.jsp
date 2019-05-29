@@ -43,7 +43,7 @@
 			</div>
 			<div id="nodata_NewBirthday" class="nodata_newBirthday" style="padding-top: 15px;display:none;">
 				<dl class='nodata'>
-					<dt><img src='/images/kr/main/nodata.png'></dt>
+					<dt><img src='/images/kr/main/noData_sIcon.png'></dt>
 					<dd>"<spring:message code='main.t00026' />"</dd>
 				</dl>
 			</div>
