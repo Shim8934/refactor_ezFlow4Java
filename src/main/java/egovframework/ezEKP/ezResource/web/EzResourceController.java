@@ -308,6 +308,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String type = "";
 		String viewType = "";
 		String approveFlag = "";
+		String returnFlag = "";
 		String writerName = "";
 		String writerDept = "";
 		String gubun = "P";
@@ -341,6 +342,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				approveFlag = xmlDom.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
 				writerName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
 				writerDept = xmlDom.getElementsByTagName("WRITERDEPT").item(0).getTextContent();
+				returnFlag = xmlDom.getElementsByTagName("RETURNFLAG").item(0).getTextContent();
 			}
 			
 			// 시분초 버림.
@@ -370,7 +372,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (viewType.equals("list")) {
 				Document orderXML = commonUtil.convertStringToDocument(reVal);
 					
-				// 승인 or 비승인 보기
+				// 승인 or 비승인 보기 => 승인 / 승인대기 / 승인거부 / 반납 / 미반납 으로 분류하기
 				if (!approveFlag.trim().equals("")) {
 					resultXML += "<root>";
 					for (int i=0; i<orderXML.getElementsByTagName("appointment").getLength(); i++) {
@@ -407,7 +409,44 @@ public class EzResourceController extends EgovFileMngUtil {
 						} 
 					}
 					resultXML += "</root>";
-						
+				} else if(!returnFlag.trim().equals("")) {
+					resultXML += "<root>";
+					for (int i=0; i<orderXML.getElementsByTagName("appointment").getLength(); i++) {
+						if (orderXML.getElementsByTagName("returnFlag").item(i).getTextContent().equals(returnFlag)
+								&& orderXML.getElementsByTagName("approveFlag").item(i).getTextContent().equals("1")) {
+							resultXML += "<appointment>";
+							resultXML += "<number>"+orderXML.getElementsByTagName("number").item(i).getTextContent()+"</number>";
+							resultXML += "<pnumber>"+orderXML.getElementsByTagName("pnumber").item(i).getTextContent()+"</pnumber>";
+							resultXML += "<owner_id>"+orderXML.getElementsByTagName("owner_id").item(i).getTextContent()+"</owner_id>";
+							resultXML += "<writer_id>"+orderXML.getElementsByTagName("writer_id").item(i).getTextContent()+"</writer_id>";
+							resultXML += "<subject>"+"<![CDATA["+orderXML.getElementsByTagName("subject").item(i).getTextContent()+"]]></subject>";
+							resultXML += "<instancetype>"+orderXML.getElementsByTagName("instancetype").item(i).getTextContent()+"</instancetype>";
+							resultXML += "<location>"+orderXML.getElementsByTagName("location").item(i).getTextContent()+"</location>";
+							resultXML += "<dtstart>"+orderXML.getElementsByTagName("dtstart").item(i).getTextContent()+"</dtstart>";
+							resultXML += "<dtend>"+orderXML.getElementsByTagName("dtend").item(i).getTextContent()+"</dtend>";
+							resultXML += "<dstartTime>"+orderXML.getElementsByTagName("dstartTime").item(i).getTextContent()+"</dstartTime>";
+							resultXML += "<dendTime>"+orderXML.getElementsByTagName("dendTime").item(i).getTextContent()+"</dendTime>";
+							resultXML += "<dsDaytype>"+orderXML.getElementsByTagName("dsDaytype").item(i).getTextContent()+"</dsDaytype>";
+							resultXML += "<deDaytype>"+orderXML.getElementsByTagName("deDaytype").item(i).getTextContent()+"</deDaytype>";
+							resultXML += "<alldayevent>"+orderXML.getElementsByTagName("alldayevent").item(i).getTextContent()+"</alldayevent>";
+							resultXML += "<busystatus>"+orderXML.getElementsByTagName("busystatus").item(i).getTextContent()+"</busystatus>";
+							resultXML += "<groupflag>"+orderXML.getElementsByTagName("groupflag").item(i).getTextContent()+"</groupflag>";
+							resultXML += "<gubunFlag>"+orderXML.getElementsByTagName("gubunFlag").item(i).getTextContent()+"</gubunFlag>";
+							resultXML += "<importance>"+orderXML.getElementsByTagName("importance").item(i).getTextContent()+"</importance>";
+							resultXML += "<approveFlag>"+orderXML.getElementsByTagName("approveFlag").item(i).getTextContent()+"</approveFlag>";
+							resultXML += "<returnFlag>"+orderXML.getElementsByTagName("returnFlag").item(i).getTextContent()+"</returnFlag>";
+							resultXML += "<owner_nm>"+orderXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
+							resultXML += "<dept_name>"+"<![CDATA["+ orderXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
+							resultXML += "<writeDay>"+orderXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
+							resultXML += "<owner_nm2>"+"</owner_nm2>";
+							resultXML += "<dept_name2>"+"</dept_name2>";
+							resultXML += "<jobtitle>"+"</jobtitle>";
+							resultXML += "<jobtitle2>"+"</jobtitle2>";
+							resultXML += "</appointment>";
+						} 
+					}
+					resultXML += "</root>";
+				
 				// 전체 보기
 				} else {
 					resultXML = commonUtil.convertDocumentToString(orderXML);
@@ -1871,6 +1910,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("brdNm",brdNm);
 		model.addAttribute("startDate",startDate);
 		model.addAttribute("endDate",endDate);
+		model.addAttribute("approveFlag",resBrd.getApproveFlag());
+		model.addAttribute("returnFlag",resBrd.getReturnFlag());
 		
 		return "/ezResource/resScheduleApprovList";
 	}
