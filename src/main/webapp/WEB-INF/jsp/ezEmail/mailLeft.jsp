@@ -41,6 +41,7 @@
 	      	var shareId = "";
 	      	var deletePermission = "";
 	      	var sendPermission = "";
+	      	var managePermission = "";
 	      	var treeviewStr = "PostTreeView";
 	      	
 	        document.onselectstart = function () { return false; };
@@ -836,6 +837,7 @@
 	        	shareId = "";
 	        	deletePermission = "";
 	        	sendPermission = "";
+	        	managePermission = "";
 	        	treeviewStr = "PostTreeView";
 	        	
 	        	HiddenFolderMenu();
@@ -1243,10 +1245,11 @@
 		    }
 			
 			// 2018-10-16 공유사서함 관련 함수 추가
-			function Share_Menu_Click(_shareId, _deletePermission, _sendPermission) {
+			function Share_Menu_Click(_shareId, _deletePermission, _sendPermission, _managePermission) {
 				shareId = _shareId;
 				deletePermission = _deletePermission;
 				sendPermission = _sendPermission;
+				managePermission = _managePermission;
 				treeviewStr = 'shareTreeView_' + shareId;
 			    
 			    if (document.getElementById(treeviewStr).innerHTML === "") {
@@ -1419,7 +1422,7 @@
 	        
 	        <c:if test="${useSharedMailbox == 'YES'}">
 		        <c:forEach items="${shareInfoList}" var="shareInfo">
-		        	<h2 onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');">
+		        	<h2 onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
 		        		<span style="max-width:80%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" />
 		        		</span><span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;"><c:if test="${shareInfo.totalUnreadCount != '0'}">(${shareInfo.totalUnreadCount})</c:if></span>
 		        	</h2>
