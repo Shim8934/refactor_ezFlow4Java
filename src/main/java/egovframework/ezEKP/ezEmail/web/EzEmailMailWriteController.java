@@ -6093,7 +6093,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (!useCopyright.equals("NO") && !(copyrightText != null && copyrightText.equals("")) ) {
 			mailBody = mailBody.replaceAll("\\p{Zs}", " "); // 유니코드 범주내에서 구분 기호, 공백을  replacAll
 			
-			if ((mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
+			if ((!copyrightText.equals("id=\"recipientPharse\"")) || (mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
 				logger.debug("copyrightText ended.");
 				return addCopyrightStr;
 			}
