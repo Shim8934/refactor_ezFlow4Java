@@ -1890,6 +1890,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdNm = "";
 		String startDate = "";
 		String endDate = "";
+		String type = "";
 		
 		if (req.getParameter("resID") != null) {
 			resID = req.getParameter("resID");
@@ -1900,13 +1901,16 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("endDate") != null) {
 			endDate = req.getParameter("endDate");
 		}
+		if (req.getParameter("type") != null) {
+			type = req.getParameter("type");
+		}
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		if (userInfo.getPrimary().equals("1")) {
 			brdNm = resBrd.getBrdNm();
 		} else {
 			brdNm = resBrd.getBrdNm2();
 		}
-	
+
 		model.addAttribute("userInfo",userInfo);
 		model.addAttribute("resID",resID);
 		model.addAttribute("brdNm",brdNm);
@@ -1914,6 +1918,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("endDate",endDate);
 		model.addAttribute("approveFlag",resBrd.getApproveFlag());
 		model.addAttribute("returnFlag",resBrd.getReturnFlag());
+		model.addAttribute("pType", type);
 		
 		return "/ezResource/resScheduleApprovList";
 	}

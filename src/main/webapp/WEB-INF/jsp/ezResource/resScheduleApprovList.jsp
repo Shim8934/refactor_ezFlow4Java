@@ -27,6 +27,7 @@
 	    	var totalPage = "";
 	    	var approveFlag = "<c:out value='${approveFlag}'/>";
 	    	var returnFlag = "<c:out value='${returnFlag}'/>";
+	    	var pType = "<c:out value='${pType}'/>";
 
 	    	$(function () {
 		        $("#Sdatepicker").datepicker({
@@ -120,6 +121,12 @@
 	    			else if(listviewtype == "2") {
 	    				document.getElementById("Span1").parentNode.style.display = "";
 	    			}
+	        	}
+	        	
+	        	if(pType == "User") {
+	        		document.getElementById("Span1").parentNode.style.display = "none";
+	    			document.getElementById("pn_img").parentNode.style.display = "none";
+	    			document.getElementById("pn_img2").parentNode.style.display = "none";
 	        	}
     			
 	        	xmlhttp = createXMLHttpRequest();
@@ -908,11 +915,19 @@
 		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd;border-bottom:0px; padding:5px 0px 5px 5px">
     		<a class="imgbtn" style="padding-top:2px; cursor:default;"><span id="Span3"><spring:message code='ezEmail.t556'/></span></a>
     		<input id="subject" type="text" style="width: 300px" />
-    		<a class="imgbtn" style="padding-top:2px"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
-    		<input id="writername" type="text" style="width: 80px" />
-    		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
-    		<a class="imgbtn" style="padding-top:2px"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
-    		<input id="writerdept" type="text" style="width: 120px" />
+    		<c:if test="${pType eq 'User'}">
+	    		<a id="writername1" class="imgbtn" style="padding-top:2px; display:none;"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
+	    		<input id="writername" type="text" style="width: 80px; display:none;" value='<c:out value="${userInfo.displayName }"/>'/>
+	    		<a id="writerdept1" class="imgbtn" style="padding-top:2px; display:none;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
+	    		<input id="writerdept" type="text" style="width: 120px; display:none;" value='<c:out value="${userInfo.deptName }"/>'/>
+	    	</c:if>
+	    	<c:if test="${pType ne 'User'}">
+	    		<a id="writername1" class="imgbtn" style="padding-top:2px;"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
+	    		<input id="writername" type="text" style="width: 80px;"/>
+	    		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
+	    		<a id="writerdept1" class="imgbtn" style="padding-top:2px;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
+	    		<input id="writerdept" type="text" style="width: 120px;"/>
+	    	</c:if>
     		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center">
        		<a class="imgbtn" style="padding-top:2px"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>

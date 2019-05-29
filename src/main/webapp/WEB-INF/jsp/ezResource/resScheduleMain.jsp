@@ -391,7 +391,11 @@
 	    }
 
 	    function btnApprov_list() {
-	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&startDate=" + sStartDate + "&endDate=" + sEndDate;
+	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&type=Admin&startDate=" + sStartDate + "&endDate=" + sEndDate;
+	    }
+	    
+	    function btnMyApprov_list() {
+	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&type=User&startDate=" + sStartDate + "&endDate=" + sEndDate;
 	    }
 
         function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
@@ -604,6 +608,9 @@
     				<%-- <c:if test="${approveFlag eq '1'}" > --%>
     					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.kmsr33'/></span></li>
     				<%-- </c:if> --%>
+    			</c:if>
+    			<c:if test="${approveFlag ne 2 }">
+    				<li id="myApprovlist"><span onClick="btnMyApprov_list();"><spring:message code='ezResource.kmsr34'/></span></li>
     			</c:if>
             </ul>
 		</div>
