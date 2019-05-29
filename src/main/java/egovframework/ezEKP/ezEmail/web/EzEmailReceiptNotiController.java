@@ -549,7 +549,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			String messageId = ((MimeMessage)message).getMessageID();
 			String subject = message.getSubject();
 			
-			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, mailId, subject, innerAddresses);
+			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), loginInfo.getPrimary(), messageId, mailId, subject, innerAddresses, locale);
 			
 			folder.close(true);
 			

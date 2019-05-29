@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
@@ -120,6 +121,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String usePreviewSubTree = ezCommonService.getTenantConfig("UsePreviewSubTreeForEmail", tenantId);
+		String usePlainForDefaultTextOption = ezCommonService.getTenantConfig("usePlainForDefaultTextOption", tenantId);
 		String userIdParam = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
 		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
 		String inputParams = userIdParam + "&" + usePreviewSubTreeParam;
@@ -135,6 +137,15 @@ public class EzEmailServiceImpl implements EzEmailService {
         	JSONObject obj = (JSONObject)object.get("result");
         	if (obj != null) {
         		MailGeneralVO mailGeneral = new MailGeneralVO();
+        		String textOption = (String)obj.get("textOption");
+        		
+        		if (textOption == null) {
+        			if (usePlainForDefaultTextOption.equalsIgnoreCase("YES")) {
+        				textOption = "PLAIN";
+        			} else {
+        				textOption = "HTML";
+        			}
+        		}
         		
         		mailGeneral.setListCount((String)obj.get("listCount"));
         		mailGeneral.setRefreshInterval((String)obj.get("refreshInterval"));
@@ -146,7 +157,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setPreviewHContent((String)obj.get("previewHContent"));
         		mailGeneral.setMailSenderNm((String)obj.get("mailSenderName"));
         		mailGeneral.setPreviewSubTree((String)obj.get("previewSubTree"));
-        		mailGeneral.setTextOption((String)obj.get("textOption"));
+        		mailGeneral.setTextOption(textOption);
         		
         		mailGeneralList.add(mailGeneral);
         	}
@@ -155,6 +166,12 @@ public class EzEmailServiceImpl implements EzEmailService {
         // set the defaults if there is no record in DB.
 		if (mailGeneralList.size() == 0) {
 			MailGeneralVO mailGeneral = new MailGeneralVO();
+			String textOption = "HTML";
+			
+			if (usePlainForDefaultTextOption.equalsIgnoreCase("YES")) {
+				textOption = "PLAIN";
+			}
+			
 			mailGeneral.setListCount("30");
 			mailGeneral.setRefreshInterval("300");
 			mailGeneral.setKeepDeleteLength("0");
@@ -165,7 +182,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setPreviewHContent("50");
 			mailGeneral.setMailSenderNm("");
 			mailGeneral.setPreviewSubTree("N");
-			mailGeneral.setTextOption("HTML");
+			mailGeneral.setTextOption(textOption);
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -701,7 +718,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception {
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception {
 		logger.debug("setMailCancelSend started.");
 		logger.debug("tenantId=" + tenantId + ",primary=" + primary + ",pMessageId=" + pMessageId + ",pUserId=" + pUserId + ",pSubject=" + pSubject);
 		
@@ -738,7 +755,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		//회수처리 함수 호출(비동기)
 		if (recallIdx != null && !recallIdx.equals("") && !recallIdx.equals("0")) {
-			ezEmailAsync.cancelMailDelete(recallIdx, tenantId);
+			ezEmailAsync.cancelMailDelete(recallIdx, tenantId, locale);
 		} else {
 			throw new Exception("Cannot get recallIdx. So, cannot call cancelMailDelete method(Async).");
 		}
@@ -2970,6 +2987,34 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return reasonCode;
 	}
 	
+	@Override
+	public JSONObject recallMailByMessageId(String address, String messageId) {
+		logger.debug("recallMailByMessageId started. address=" + address + ", messageId=" + messageId);
+		
+		JSONObject result = null;
+		
+		try {
+			String inputParams = "targetAddress=" + URLEncoder.encode(address, "UTF-8");
+			inputParams += "&" + "messageId=" + URLEncoder.encode(messageId, "UTF-8");
+			logger.debug("inputParams=" + inputParams);
+			
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/recallMailByMessageId", inputParams);
+			logger.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+	        	result = (JSONObject)object.get("result");
+	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
+        logger.debug("recallMailByMessageId ended.");
+        return result;
+	}
+
 	/**
 	 * 전체 안읽은 메일 개수 가져오기
 	 */

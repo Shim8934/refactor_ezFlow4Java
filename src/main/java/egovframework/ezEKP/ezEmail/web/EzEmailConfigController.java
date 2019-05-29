@@ -177,7 +177,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String refreshInterval = mailGeneralVO.getRefreshInterval() == null ? "" : mailGeneralVO.getRefreshInterval();
 		String keepDeleteLength = mailGeneralVO.getKeepDeleteLength() == null ? "" : mailGeneralVO.getKeepDeleteLength();
 		String previewSubtree = mailGeneralVO.getPreviewSubTree() == null ? "" : mailGeneralVO.getPreviewSubTree();
-		String textOption = mailGeneralVO.getTextOption() == null ? "" : mailGeneralVO.getTextOption();
+		String textOption = mailGeneralVO.getTextOption();
 		String mailSendObject = "";
 		String dotnetFlag = request.getParameter("dotnetFlag");
 		
