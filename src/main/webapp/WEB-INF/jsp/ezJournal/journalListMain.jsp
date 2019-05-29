@@ -1250,7 +1250,7 @@
 					</tr>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.t210' />
+							<spring:message code='ezJournal.t66' />
 						</th>
 						<td>
 							<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
