@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -804,12 +805,33 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * 메일 자동삭제 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoDelete.do")
-	public String mailAutoDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailAutoDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request ) throws Exception{
 		logger.debug("mailAutoDelete started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		String userId = userInfo.getId();
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId='" + shareId + "'");
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailConfig ended.");
+					
+					return "ezCommon/error";
+				} else {
+					userId = shareId;
+					model.addAttribute("shareId", shareId);
+				}
+			} 			
+		}
 		
-		List<MailDeleteVO> list = ezEmailService.getMailDelete(userInfo.getTenantId(), userInfo.getId());
+		List<MailDeleteVO> list = ezEmailService.getMailDelete(userInfo.getTenantId(), userId);
 		
 		for (MailDeleteVO vo : list) {
 			if (vo.getDeleteUnread().trim().equals("1")) {
@@ -860,7 +882,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * 메일 자동삭제 조건추가 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoDeleteAdd.do")
-	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, 
+			HttpServletResponse response, RedirectAttributes redirectAttribute) throws Exception{
 		logger.debug("mailAutoDeleteAdd started.");
 		
 		String path = request.getParameter("path") == null ? "" : request.getParameter("path");
@@ -869,12 +892,36 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String deleteUnreadStr = request.getParameter("unread") == null ? "" : request.getParameter("unread");
 		int deleteUnread = deleteUnreadStr.equals("") ? 0 : Integer.parseInt(deleteUnreadStr);
 		String folderName = request.getParameter("foldername") == null ? "" : request.getParameter("foldername");
-		
+				
 		logger.debug("path=" + path + ",expireTime=" + expireTime
 				 + ",deleteUnread=" + deleteUnread + ",folderName=" + folderName);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		ezEmailService.setMailDelete(userInfo.getTenantId(), userInfo.getId(), path, expireTime, deleteUnread, folderName);
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userId = userInfo.getId();
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null && !shareId.equals("")) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInboxRule ended.");
+					
+					return "ezCommon/error";
+					
+				} else {
+					userId = shareId;
+					redirectAttribute.addAttribute("shareId", shareId);
+				}
+			} 
+		}
+		
+		ezEmailService.setMailDelete(userInfo.getTenantId(), userId, path, expireTime, deleteUnread, folderName);
 		
 		logger.debug("mailAutoDeleteAdd ended. redirect to /ezEmail/mailAutoDelete.do");
 		return "redirect:/ezEmail/mailAutoDelete.do";
@@ -884,14 +931,38 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 * 메일 자동삭제 조건삭제 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoDeleteDelete.do")
-	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, 
+			HttpServletResponse response, RedirectAttributes redirectAttribute) throws Exception{
 		logger.debug("mailAutoDeleteDelete started.");
 		
 		String folderPath = request.getParameter("folderPath");
 		logger.debug("folderPath=" + folderPath);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		ezEmailService.deleteMailDelete(userInfo.getTenantId(), userInfo.getId(), folderPath);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userId = userInfo.getId();
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null && !shareId.equals("")) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailInboxRule ended.");
+					
+					return "ezCommon/error";
+					
+				} else {
+					userId = shareId;
+					redirectAttribute.addAttribute("shareId", shareId);
+				}
+			}
+		}
+		
+		ezEmailService.deleteMailDelete(userInfo.getTenantId(), userId, folderPath);
 		
 		logger.debug("mailAutoDeleteDelete ended. redirect to /ezEmail/mailAutoDelete.do");
 		return "redirect:/ezEmail/mailAutoDelete.do";

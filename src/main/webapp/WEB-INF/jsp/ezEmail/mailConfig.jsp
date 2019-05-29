@@ -58,7 +58,11 @@
 	                    document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	                case "MailEnv_div6":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoDelete.do";
+	                	var requestUrl = "/ezEmail/mailAutoDelete.do";
+	                	if (shareId != "") {
+	                		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	                	}
+	                    document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	                case "MailEnv_div7":
 	                	var requestUrl = "/ezEmail/mailSignature.do";
@@ -136,6 +140,7 @@
 		        		</c:when>
 		        		<c:otherwise>
 		        			<p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab1"><spring:message code='ezEmail.t146' /></span></p>
+		                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
 		        			<p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
 		        		</c:otherwise>
 	        		</c:choose>
