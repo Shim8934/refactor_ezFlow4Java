@@ -347,6 +347,8 @@
 			    			//html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"openDraftUI('DRAFT', '" + vo.attitudeId + "')\"><span>취소신청</span></a>" +"</td>";
 		    			} else if(vo.modAppl == "4") {
 		    				html += "<td style='width:12%'><spring:message code='ezAttitude.t211' /></td>";
+		    			} else if(vo.modAppl == "3") {
+		    				html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span><spring:message code='ezAttitude.t272' /></span></a>" +"</td>";
 		    			} else {
 		    				html += "<td style='width:12%'><spring:message code='ezAttitude.t209' /></td>";
 		    			}

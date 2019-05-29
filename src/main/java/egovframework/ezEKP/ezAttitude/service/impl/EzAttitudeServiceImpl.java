@@ -2863,11 +2863,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		int modAppl = ezAttitudeDAO.getAttModApp(map);
 		
-		if (modAppl == 0 || modAppl == 4) {
-			map.put("modappl", "1");
-		} else if (modAppl == 3) {
-			map.put("modappl", "2");
-		}
+		map.put("modappl", "1");
+		
 		//신청된 항목이 존재 할 때
 		if (modAppl == 1 || modAppl == 2) {
 			return "fail";
