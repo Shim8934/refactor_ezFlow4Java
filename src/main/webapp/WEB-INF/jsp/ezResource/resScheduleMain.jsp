@@ -602,7 +602,7 @@
             	<c:if test="${adminFg eq 'Y'}" >
     				<li><span onClick="btnform_onclick();"><spring:message code='ezResource.t378'/></span></li>
     				<%-- <c:if test="${approveFlag eq '1'}" > --%>
-    					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.t1000'/></span></li>
+    					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.kmsr33'/></span></li>
     				<%-- </c:if> --%>
     			</c:if>
             </ul>

@@ -315,6 +315,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String groupID = "";
 		String resultXML = "";
 		String resultXML1 = "";
+		String title = "";
 		int page = 0;
 		
 		if (req.getParameter("resID") != null) {
@@ -343,6 +344,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				writerName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
 				writerDept = xmlDom.getElementsByTagName("WRITERDEPT").item(0).getTextContent();
 				returnFlag = xmlDom.getElementsByTagName("RETURNFLAG").item(0).getTextContent();
+				title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
 			}
 			
 			// 시분초 버림.
@@ -350,7 +352,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent().substring(0, 10));
 			
 			//스케줄 정보 가져옴
-			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset());
+			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, title, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset());
 			logger.debug("getScheduleXML=" + reVal);
 			
 			// date타입 변경

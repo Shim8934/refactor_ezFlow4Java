@@ -142,6 +142,7 @@
 	        		createNodeAndInsertText(xmlpara, objNode, "RETURNFLAG", "");
 	        	}
 	        	//createNodeAndInsertText(xmlpara, objNode, "APPROVEFLAG", listviewtype);
+	        	createNodeAndInsertText(xmlpara, objNode, "TITLE", document.getElementById("subject").value);
 	        	createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", document.getElementById("writername").value);
 	        	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPT", document.getElementById("writerdept").value);
 	        	createNodeAndInsertText(xmlpara, objNode, "APP", "1");
@@ -905,11 +906,13 @@
   			</ul>
 		</div>
 		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd;border-bottom:0px; padding:5px 0px 5px 5px">
-    		<input id="writername" type="text" style="width: 80px" />
+    		<a class="imgbtn" style="padding-top:2px; cursor:default;"><span id="Span3"><spring:message code='ezEmail.t556'/></span></a>
+    		<input id="subject" type="text" style="width: 300px" />
     		<a class="imgbtn" style="padding-top:2px"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
+    		<input id="writername" type="text" style="width: 80px" />
     		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
-    		<input id="writerdept" type="text" style="width: 120px" />
     		<a class="imgbtn" style="padding-top:2px"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
+    		<input id="writerdept" type="text" style="width: 120px" />
     		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center">
        		<a class="imgbtn" style="padding-top:2px"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>

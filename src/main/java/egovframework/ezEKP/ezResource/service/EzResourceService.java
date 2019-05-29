@@ -36,7 +36,7 @@ public interface EzResourceService {
 	
 	public int getBrdCnt(int brdID, String companyID, int tenantID) throws Exception;
 
-	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String writerName, String writerDept, int tenantID, String offset) throws Exception;
+	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String title, String writerName, String writerDept, int tenantID, String offset) throws Exception;
 
 	public String getAdminFlag(String companyID, String brdID, String id, int tenantID, String deptID) throws Exception;
 

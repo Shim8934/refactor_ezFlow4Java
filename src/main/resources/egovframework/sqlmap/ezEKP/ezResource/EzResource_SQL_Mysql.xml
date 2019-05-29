@@ -642,6 +642,12 @@
 				A.OWNERID = #v_POWNERID#
 			AND
 				REFLAG = '0'
+			]]>
+			<isNotEmpty property="v_TITLE">
+			AND 
+                ( A.TITLE LIKE CONCAT('%', #v_TITLE#, '%')  )
+            </isNotEmpty>
+            <![CDATA[
 			AND 
                 ( OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%')  )
 			AND 
@@ -787,6 +793,12 @@
 				REFLAG = '1'				
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
+			]]>
+			<isNotEmpty property="v_TITLE">
+			AND 
+                ( A.TITLE LIKE CONCAT('%', #v_TITLE#, '%')  )
+            </isNotEmpty>
+            <![CDATA[
 			AND
 				( OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND
