@@ -229,7 +229,7 @@
       				</td>
     				</tr>
     			<tr>
-      				<th ><spring:message code='ezQuestion.t216' /></th>
+      				<th ><spring:message code='ezQuestion.t910030' /></th>
       				<td>
             			<input type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~
             			<input type="text" id="Edatepicker" style="width:80px;text-align:center">
