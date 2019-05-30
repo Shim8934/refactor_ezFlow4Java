@@ -315,30 +315,30 @@
 	    	}
 	    	
 	    	function getHolidayCnt(startDate, endDate) {
-    		  var returnCnt = 0;
-   		      var subDate = calDateRange(startDate, endDate);      
-   		      var betweenDate = new Date(startDate);
-   		      for (var i = 0; i <= subDate; i++) {
-   		         betweenDate.setDate(betweenDate.getDate() + (i == 0 ? 0 : 1));
+    			var returnCnt = 0;
+   		    	var subDate = calDateRange(startDate, endDate);      
+   		    	var betweenDate = new Date(startDate);
+   		    	for (var i = 0; i <= subDate; i++) {
+   		        	betweenDate.setDate(betweenDate.getDate() + (i == 0 ? 0 : 1));
    		         
-   		         var year = betweenDate.getFullYear();
-   		         var month = (betweenDate.getMonth() + 1) + "";
-   		         var date = betweenDate.getDate() + "";
-   		         if(month.length == 1) {
-   		            month = "0" + month;
-   		         }
-   		         if(date.length == 1) {
-   		            date = "0" + date;
-   		         }
+   		         	var year = betweenDate.getFullYear();
+   		         	var month = (betweenDate.getMonth() + 1) + "";
+   		         	var date = betweenDate.getDate() + "";
+   		         	if(month.length == 1) {
+   		            	month = "0" + month;
+   		         	}
+   		         	if(date.length == 1) {
+   		            	date = "0" + date;
+   		         	}
    		         
-   		         for (var j = 0; j < disabledDays.length; j++) { 
-   		            if($.inArray(year + '-' + month + '-' + date,disabledDays) != -1) { 
-   		               returnCnt++;
-   		               break;
-   		            } 
-   		         }
-   		      }
-    		  return returnCnt;
+   		         	for (var j = 0; j < disabledDays.length; j++) {
+   		            	if($.inArray(year + '-' + month + '-' + date,disabledDays) != -1) {
+   		               		returnCnt++;
+ 	  		               	break;
+   			            } 
+   			        }
+   		    	}
+    			return returnCnt;
 	    	}
 	    	
 	    	/**
