@@ -1057,6 +1057,10 @@ function quickMemoDisplay() {
     		var memoConfig = result.memoConfigVO;
     		//portalContextMenu.js
     		
+    		var layerStatus = $("#layer-popup").css("display");
+    		setMemoFlag('YES');
+    		
+    		/*
     		if (userGadget == 1) {
     			var layerStatus = $("#layer-popup").css("display");
 
@@ -1074,6 +1078,7 @@ function quickMemoDisplay() {
     			document.getElementById("layer-popup").style.display = "none";
     			setMemoFlag('NO');
     		}
+    		*/
     	},
     	error : function() {
     		alert(memoMessages.strLangMemo21);
