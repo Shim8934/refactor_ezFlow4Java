@@ -214,6 +214,8 @@ function hideMemo(obj) {
         cache: false,
         success: function(result) {
         	$('#memo' + memoId).css('opacity', 0.5);
+        	obj.parentElement.querySelector('input').setAttribute('display', 1)	// display 속성 1로 변경
+        	
         	parent.parent.getMemoList();
         	checkAndActionBigMemo(memoId);
         },
