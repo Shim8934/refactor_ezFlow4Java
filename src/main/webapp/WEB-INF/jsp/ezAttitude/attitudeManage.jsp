@@ -784,15 +784,15 @@
 	    			break;
 	    		}
 				
-		    	exportExcelframe.location.href=url + "?companyId=" + companyId 
-		    			+ "&userName=" + searchUserName 
-		    			+ "&title=" + searchTitle 
-		    			+ "&deptId="+ $('#ListDept').val()
-		    			+ "&startDate=" + searchStartDate 
-		    			+ "&endDate=" + searchEndDate 
-		    			+ "&orderCell=" + orderCell 
-		    			+ "&orderOption=" + orderOption 
-		    			+ "&attitudeType=" + searchAttitudeType
+		    	exportExcelframe.location.href=url + "?companyId=" + encodeURIComponent(companyId) 
+		    			+ "&userName=" + encodeURIComponent(searchUserName) 
+		    			+ "&title=" + encodeURIComponent(searchTitle) 
+		    			+ "&deptId="+ encodeURIComponent($('#ListDept').val())
+		    			+ "&startDate=" + encodeURIComponent(searchStartDate) 
+		    			+ "&endDate=" + encodeURIComponent(searchEndDate) 
+		    			+ "&orderCell=" + encodeURIComponent(orderCell) 
+		    			+ "&orderOption=" + encodeURIComponent(orderOption)
+		    			+ "&attitudeType=" + encodeURIComponent(searchAttitudeType)
 		    			+ "&duplicated=duplicated";
 		    	exportExcelframe.target="_blank";
 			}
