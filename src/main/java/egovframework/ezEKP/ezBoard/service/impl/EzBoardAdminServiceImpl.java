@@ -965,6 +965,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("deleteACL ended");
 	}
 
+	@Override
 	public void trunkBoard(int tenantID) throws Exception {
 		logger.debug("trunkBoard started");
 
