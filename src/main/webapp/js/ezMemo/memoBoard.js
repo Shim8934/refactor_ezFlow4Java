@@ -389,6 +389,9 @@ function DeleteItem_onclick() {
             	}
             	setMemoCount(memoLength);
             	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+            	for (var i = 0; i < memo_ids.length; i++) {
+                	checkAndActionBigMemo(memo_ids[i]);	// 큰 메모의 아이디값 확인 후 같은 아이디면 큰 메모 닫음
+                }
             },
     		error : function() {
     			alert(memoMessages.strLangMemo21);
