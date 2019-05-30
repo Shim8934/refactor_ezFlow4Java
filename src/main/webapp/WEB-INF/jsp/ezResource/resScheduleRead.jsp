@@ -557,7 +557,7 @@
 										</c:choose>
 									</c:if>
 								</c:if>
-								<c:if test="${writerID eq userInfo.id && resReturnFlag eq '1' && returnFlag eq '1'}">
+								<c:if test="${writerID eq userInfo.id && resReturnFlag eq '1' && saveApproveFlag eq '1' && returnFlag eq '1'}">
 									<li><span onclick="SetReturnFlag(2)"> <spring:message code='ezResource.kmsr26' /></span></li>
 								</c:if>
 								
