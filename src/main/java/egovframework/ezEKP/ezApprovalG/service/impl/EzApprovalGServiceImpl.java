@@ -1591,6 +1591,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				logger.debug("fieldName = " + fieldName);
 				logger.debug("fieldValue = " + fieldValue);
 				
+				if (fieldName.equals("PROCESSDATE") && fieldValue.indexOf("0000") > -1) {
+					fieldValue = "";
+				}
 				/*if (useReceiveInfoName.equals("1")) {
 					if ((vo.getReceiptMemberName() == null || vo.getReceiptMemberName().equals("")) && !vo.getReceiptPointName().equals("") && fieldName.equals("RECEIPTPOINTNAME")) {
 						fieldValue += messageSource.getMessage("ezApprovalG.lhj18", locale);
