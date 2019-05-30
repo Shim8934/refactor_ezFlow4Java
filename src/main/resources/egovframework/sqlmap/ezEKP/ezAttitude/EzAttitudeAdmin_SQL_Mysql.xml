@@ -1686,11 +1686,29 @@
 				TBL_ATTITUDE C
 			ON
 				(A.TENANT_ID = C.TENANT_ID 
-				AND 
-				 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
-				AND
-				 A.CN = C.WRITER_ID
-				 )
+			AND 
+			 	A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+			AND
+			 	A.CN = C.WRITER_ID)
+			AND 
+			 	(C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+			AND 
+				C.MODAPPL <> '5'
+			AND 
+				 (
+					   (
+						date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #startTime#
+						AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #endTime#
+						)
+					OR (
+						date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #startTime#
+						AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #endTime#
+						)
+					OR (
+						date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #startTime#
+						AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #endTime#
+						)
+				  )
 			LEFT OUTER JOIN 
 				TBL_ATTITUDE_TYPE D
 			ON 
@@ -1705,25 +1723,6 @@
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND 
 				A.cn = #userId#
-			AND 
-			 	(C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
-			AND 
-				C.MODAPPL <> '5'
-			AND 
-			 (
-				   (
-					date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #startTime#
-					AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #endTime#
-					)
-				OR (
-					date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #startTime#
-					AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #endTime#
-					)
-				OR (
-					date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #startTime#
-					AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #endTime#
-					)
-			  )
 		]]>
 		<isNotEmpty property="orderCell">
 			<![CDATA[

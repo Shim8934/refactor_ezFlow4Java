@@ -117,6 +117,7 @@
 	    	var orderOption = ""; //정렬 형식(ASC, DESC)
    			var src = "";
 	    	var selAttitudeId = "";
+	    	var disabledDays = new Array();
 	    
 	    	$(document).ready(function() {
     			if(joinDate == null || joinDate == "" || joinDate == "0") {
@@ -253,6 +254,26 @@
 	    			}
 	    		}
 	    		
+			    $.ajax({
+			    	type:"GET",
+			       	dataType : "json",
+			       	async : false,
+			       	url : "/ezAttitude/getDisabledDays.do",
+			       	data : {
+			          	startDate : startDate,
+			          	endDate : endDate
+			       	},
+			       	success : function(result) {
+			       		disabledDays = [];
+			       		result.forEach(function(resultDateStr, index) {
+			          		disabledDays.push(resultDateStr);
+			       		})
+			       	},
+			       	error : function(jqXHR, textStatus, errorThrown) {
+ 			  			alert("에러발생! " + jqXHR.status + ", " + jqXHR.statusText + ", " + jqXHR.readyState);
+					}
+				})
+	    		
 	    		$.ajax({
 	    			data : "GET",
 	    			dataType : "json",
@@ -293,6 +314,55 @@
 	    		});
 	    	}
 	    	
+	    	function getHolidayCnt(startDate, endDate) {
+    		  var returnCnt = 0;
+   		      var subDate = calDateRange(startDate, endDate);      
+   		      var betweenDate = new Date(startDate);
+   		      for (var i = 0; i <= subDate; i++) {
+   		         betweenDate.setDate(betweenDate.getDate() + (i == 0 ? 0 : 1));
+   		         
+   		         var year = betweenDate.getFullYear();
+   		         var month = (betweenDate.getMonth() + 1) + "";
+   		         var date = betweenDate.getDate() + "";
+   		         if(month.length == 1) {
+   		            month = "0" + month;
+   		         }
+   		         if(date.length == 1) {
+   		            date = "0" + date;
+   		         }
+   		         
+   		         for (var j = 0; j < disabledDays.length; j++) { 
+   		            if($.inArray(year + '-' + month + '-' + date,disabledDays) != -1) { 
+   		               returnCnt++;
+   		               break;
+   		            } 
+   		         }
+   		      }
+    		  return returnCnt;
+	    	}
+	    	
+	    	/**
+	    	* 두 날짜의 차이를 구하는 메소드
+	    	* val1 = startDate, val2 = endDate
+	    	*/
+	    	function calDateRange(val1, val2)
+	    	{
+	    	   var FORMAT = "-";
+
+	    	   // 년도, 월, 일로 분리
+	    	   var start_dt = val1.split(FORMAT);
+	    	   var end_dt = val2.split(FORMAT);
+
+	    	   // Number()를 이용하여 08, 09월을 10진수로 인식하게 함.
+	    	   start_dt[1] = (Number(start_dt[1]) - 1) + "";
+	    	   end_dt[1] = (Number(end_dt[1]) - 1) + "";
+
+	    	   var from_dt = new Date(start_dt[0], start_dt[1], start_dt[2]);
+	    	   var to_dt = new Date(end_dt[0], end_dt[1], end_dt[2]);
+
+	    	   return (to_dt.getTime() - from_dt.getTime()) / 1000 / 60 / 60 / 24;
+	    	}
+	    	
 	    	function userAnnualListSet(list) {
 	    		var html = "";
 	    		var accumCnt = 0;
@@ -305,6 +375,10 @@
 	    		
 	    		if (Number(list[0].annualCnt) > 0) {
 		    		list.forEach(function(vo, index) {
+		    			var holidatCnt = 0;
+		    			if(vo.endDate != null) {
+			    			holidatCnt = getHolidayCnt(vo.startDate.substr(0,10), vo.endDate.substr(0,10));
+		    			}
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
 		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
