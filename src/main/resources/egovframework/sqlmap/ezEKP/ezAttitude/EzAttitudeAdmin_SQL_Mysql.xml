@@ -1615,14 +1615,29 @@
 			    C.CONTENT as content,
 			    C.MODAPPL as modAppl,
 			    ifnull(F.ANNUAL_APPR_STATUS, -1) as annualApprStatus,
-			    ifnull( 
-						CASE
-						   WHEN C.TYPE_ID = 'A11' THEN to_days(C.END_DATE) - to_days(C.START_DATE)
-			               WHEN C.TYPE_ID = 'A12' THEN 0.5
-			               WHEN C.TYPE_ID = 'A13' THEN 0.5
-						   ELSE 0
-						END
-				, 0) as annualCnt,
+			    IFNULL(((to_days(
+								IF(
+									date_add(C.END_DATE, INTERVAL +#offsetMin# minute) > #endTime#, 
+			                        #endTime#, 
+			                        date_add(IFNULL(C.END_DATE, C.START_DATE), INTERVAL +#offsetMin# minute)
+								   )
+							   ) 
+					   -
+					   to_days(
+								IF(
+									date_add(C.START_DATE, INTERVAL +#offsetMin# minute) < #startTime#, 
+			                        #startTime#, 
+			                        date_add(C.START_DATE, INTERVAL +#offsetMin# minute)
+								   )
+							   ))
+						+
+							(CASE
+							   WHEN C.TYPE_ID = 'A11' THEN 1
+				               WHEN C.TYPE_ID = 'A12' THEN 0.5
+				               WHEN C.TYPE_ID = 'A13' THEN 0.5
+							   ELSE 0
+							END)
+				), 0) as annualCnt,
 			    ifnull(
 				    (
 						SELECT
@@ -1675,25 +1690,6 @@
 				 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
 				AND
 				 A.CN = C.WRITER_ID
-				AND 
-				 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
-				AND 
-				 C.MODAPPL <> '5'
-				AND 
-				 (
-					   (
-						date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #startTime#
-						AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #endTime#
-						)
-					OR (
-						date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #startTime#
-						AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #endTime#
-						)
-					OR (
-						date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #startTime#
-						AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #endTime#
-						)
-				  )
 				 )
 			LEFT OUTER JOIN 
 				TBL_ATTITUDE_TYPE D
@@ -1709,6 +1705,25 @@
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND 
 				A.cn = #userId#
+			AND 
+			 	(C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+			AND 
+				C.MODAPPL <> '5'
+			AND 
+			 (
+				   (
+					date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #startTime#
+					AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #endTime#
+					)
+				OR (
+					date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #startTime#
+					AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #endTime#
+					)
+				OR (
+					date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #startTime#
+					AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #endTime#
+					)
+			  )
 		]]>
 		<isNotEmpty property="orderCell">
 			<![CDATA[
@@ -1733,14 +1748,32 @@
 			    	A.DESCRIPTION$primary$ AS userDeptName,
 			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
 				    (ifnull(B.MONTHLY_HOLIDAY_CNT, 0) + ifnull(B.ANNUAL_HOLIDAY_CNT, 0) + ifnull(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS totalAnnualCnt,
-				    ifnull(sum( 
-						CASE
-						   WHEN C.TYPE_ID = 'A11' THEN to_days(C.END_DATE) - to_days(C.START_DATE)
-			               WHEN C.TYPE_ID = 'A12' THEN 0.5
-			               WHEN C.TYPE_ID = 'A13' THEN 0.5
-						   ELSE 0
-						END
-					), 0) as useAnnualCnt
+				    IFNULL((SUM(to_days(
+								IF(
+									date_add(C.END_DATE, INTERVAL +#offsetMin# minute) > #searchEndTime#, 
+			                        #searchEndTime#, 
+			                        date_add(IFNULL(C.END_DATE, C.START_DATE), INTERVAL +#offsetMin# minute)
+								   )
+							   ) 
+					   -
+					   to_days(
+								IF(
+									date_add(C.START_DATE, INTERVAL +#offsetMin# minute) < #searchStartTime#, 
+			                        #searchStartTime#, 
+			                        date_add(C.START_DATE, INTERVAL +#offsetMin# minute)
+								   )
+							   )
+						)
+						+
+						SUM(
+							CASE
+							   WHEN TYPE_ID = 'A11' THEN 1
+				               WHEN TYPE_ID = 'A12' THEN 0.5
+				               WHEN TYPE_ID = 'A13' THEN 0.5
+							   ELSE 0
+							END
+						)
+						), 0) as useAnnualCnt
 				FROM 
 					TBL_USERMASTER A
 				LEFT OUTER JOIN 
