@@ -574,7 +574,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndTime", searchEndTime);
 		map.put("searchGubun", searchGubun);
 		map.put("limit", limit);
-		map.put("listSize", listSize);
+		map.put("listSize", Integer.valueOf(listSize));
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
@@ -978,7 +978,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
-		map.put("listSize", listSize);
+		map.put("listSize", Integer.valueOf(listSize));
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1934,7 +1934,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
-		map.put("listSize", listSize);
+		map.put("listSize", Integer.valueOf(listSize));
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);

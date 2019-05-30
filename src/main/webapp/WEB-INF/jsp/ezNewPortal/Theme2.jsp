@@ -634,7 +634,7 @@
 			
 			var dt = document.createElement('dt');
 			var img = document.createElement('img');
-			img.src = '/images/kr/main/nodata.png';
+			img.src = '/images/kr/main/noData_sIcon.png';
 			
 			dt.appendChild(img);
 			var dd = document.createElement('dd');
