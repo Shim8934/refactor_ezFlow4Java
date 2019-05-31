@@ -751,6 +751,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strOwnerID = "";
 		String strMakeDate = "";
 		String strApproveFlag = "";
+		String strReturnFlag = "";
 		
 		if (!req.getParameter("brdID").equals("")) {
 			brdID = req.getParameter("brdID");
@@ -781,6 +782,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		strMakeDate = resBrd.getMakeDate();
 		strApproveFlag = resBrd.getApproveFlag();
+		strReturnFlag = resBrd.getReturnFlag();
 		
 		/*if (strApproveFlag.equals("1")) {
 			resp.getWriter().write("&nbsp;" + egovMessageSource.getMessage("ezQuestion.t161", locale));
@@ -802,6 +804,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("resLocation", strResLocation);
 		model.addAttribute("makeDate", strMakeDate);
 		model.addAttribute("approveFlag", strApproveFlag);
+		model.addAttribute("returnFlag", strReturnFlag);
 		
 		return "/ezResource/resViewClsItem";
 	}

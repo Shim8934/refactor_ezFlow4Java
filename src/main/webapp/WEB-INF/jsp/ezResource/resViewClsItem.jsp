@@ -92,6 +92,17 @@
 								</c:if>
           					</td>
         				</tr>
+        				<tr>
+          					<th> <spring:message code="ezResource.kmsr11"/></th>
+          					<td colspan="3">
+								<c:if test="${returnFlag eq 0}">
+									<spring:message code="ezResource.kmsr12"/>
+								</c:if>
+								<c:if test="${returnFlag eq 1}">
+									<spring:message code="ezResource.kmsr13"/>
+								</c:if>
+          					</td>
+        				</tr>
       				</table>
       				<br>
       				<h2 style="font-size:12px;margin-bottom:8px"><spring:message code="ezResource.t158"/></h2>
