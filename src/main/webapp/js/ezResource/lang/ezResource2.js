@@ -230,3 +230,6 @@ var strLang333 = "Would you like to return it?";
 var strLang334 = "Your return request has been completed.";
 var strLang335 = "Returned.";
 var strLang336 = "If the resource is set to disabled, it can not be scheduled.";
+
+//2019-05-28
+var strLang337 = "Approval has been denied."
