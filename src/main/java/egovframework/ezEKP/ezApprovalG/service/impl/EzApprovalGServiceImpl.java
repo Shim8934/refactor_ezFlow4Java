@@ -26868,7 +26868,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			result.append("<mTo>" + listXML.getElementsByTagName("MTO").item(0).getTextContent() + "</mTo>");
 
-			result.append("<Subject>" + listXML.getElementsByTagName("SUBJECT").item(0).getTextContent() + "</Subject>");
+			result.append("<Subject>" + listXML.getElementsByTagName("SUBJECT").item(0).getTextContent().replace("<", "&lt;").replace(">", "&gt;") + "</Subject>");
 			result.append("<xMailType>" + listXML.getElementsByTagName("XMAILTYPE").item(0).getTextContent() + "</xMailType>");
 			result.append("<xFromCode>" + listXML.getElementsByTagName("XFROMCODE").item(0).getTextContent() + "</xFromCode>");
 			result.append("<xToCode>" + listXML.getElementsByTagName("XTOCODE").item(0).getTextContent() + "</xToCode>");
