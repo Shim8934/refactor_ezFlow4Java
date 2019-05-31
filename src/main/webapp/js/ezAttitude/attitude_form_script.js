@@ -1,22 +1,27 @@
+function isValidDate(year, month, day) {
+    var d = new Date(year, Number(month) - 1, day);
+	var dMonth = (d.getMonth() + 1) + "";
+	dMonth = (dMonth.length == 1 ? "0" + dMonth : dMonth);
+	var dDate = d.getDate() + "";
+	dDate = (dDate.length == 1 ? "0" + dDate : dDate);
+    if (d.getFullYear() == year && dMonth == month && dDate == day) {
+        return true;
+    }
+    return false;
+}
 
-var disabledDays = new Array();
-
-//비상연락처1, 2 이벤트. - 리폼양식이라서 input가 있어야지 text를 입력할 수 있지만, mht파일로 만들어질때는 input은 없어지기 때문에 p태그를 두어, 입력 후 p태그에 입력text가 박히도록.
 function mobileKeyUp(mobileId) {
    $('#p_' + mobileId).text($('#' + mobileId).val());
 }
 
-//근태 selectbox변경
 function selectChange(contID) {
-	$('#' + contID).attr("attitudeType", $('#' + contID).val());
-	$('#' + contID + ' option').not('option[value=' + $('#' + contID).val() + "]").attr("selected", false);
-	$('#' + contID + ' option[value=' + $('#' + contID).val() + "]").attr("selected","");
-	
+    $('#' + contID).attr("attitudeType", $('#' + contID).val());
+   $('#' + contID + ' option').not('option[value=' + $('#' + contID).val() + "]").attr("selected", false);
+    $('#' + contID + ' option[value=' + $('#' + contID).val() + "]").attr("selected","");
 	eval($('#' + contID).prev("input[id^=reform-title]").attr("viewer-listener"));
-	setDocTitle();
+   setDocTitle();
 }
 
-//시작-종료일 사이 휴일+하루종일인 근태일 일수 구하기 
 function getHolidayCnt(startDate, endDate, isAjax) {
    var returnCnt = 0;
    if (isAjax) {
@@ -63,7 +68,6 @@ function getHolidayCnt(startDate, endDate, isAjax) {
    return returnCnt;
 }
 
-//datepicker 이벤트, disabledDays배열에 있는 날짜들은 비활성화 된다
 function disableSomeDay(calDate) {
    var month = (calDate.getMonth() + 1) + "";
    var date = calDate.getDate() + "";
@@ -83,7 +87,7 @@ function disableSomeDay(calDate) {
     return [true]; 
 }
 
-//비활성화 될 날짜들(휴일 + 하루종일인 근태일) 구하기
+var disabledDays = new Array();
 function getDisabledDays(searchYear, searchMonth) {
    searchMonth = searchMonth + "";
    if (searchMonth.length == 1) {
@@ -110,7 +114,6 @@ function getDisabledDays(searchYear, searchMonth) {
    })
 }
 
-//근태관리 전자결재 연동 - 기안
 function attitude_annual_conn(formType, status) {
    if (formType === "annual" && status === "0") { //휴가계 기안
       var docId = parent.parent.pDocID;
@@ -160,8 +163,8 @@ function attitude_annual_conn(formType, status) {
    }
 }
 
-//년월일 ~ 년월일 [ 일] 셋팅해주는
-function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) { 
+function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) {
+  
    if (document.getElementById(mdate1).value.split("-")[1].length < 2) {
       document.getElementById(mdate1).value = document.getElementById(mdate1).value.split("-")[0] + "-0" + document.getElementById(mdate1).value.split("-")[1] + "-" + document.getElementById(mdate1).value.split("-")[2]
       
@@ -196,7 +199,8 @@ function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) {
    if (document.getElementById(mcontrol).value == 'A18') { //산휴		  
 	   tempDate2 = new Date(document.getElementById(mdate1).value);
 	   tempDate2.setDate(tempDate2.getDate() + 89);
-	   holidayCnt = getHolidayCnt(document.getElementById(mdate1).value, tempDate2.getFullYear() + "-" + ((tempDate2.getMonth() + 1).toString().length == 1 ? "0" + (tempDate2.getMonth() + 1) : (tempDate2.getMonth() + 1)) + "-" +  (tempDate2.getDate().toString().length == 1 ? "0" + tempDate2.getDate() : tempDate2.getDate()), true);      
+	   holidayCnt = getHolidayCnt(document.getElementById(mdate1).value, tempDate2.getFullYear() + "-" + ((tempDate2.getMonth() + 1).toString().length == 1 ? "0" + (tempDate2.getMonth() + 1) : (tempDate2.getMonth() + 1)) + "-" +  (tempDate2.getDate().toString().length == 1 ? "0" + tempDate2.getDate() : tempDate2.getDate()), true);
+	      
 	   
 	   var addCnt = holidayCnt;
 	   if (addCnt > 0) {
@@ -367,6 +371,7 @@ function setDocTitle(element) {
    var totalNight = 0;
    var totalDay = 0;
    var useAnnualCnt = 0;
+   var isContinue = true;
 
    $("input[id^=reform-title]").not("input[type=checkbox]").each(function() {
 	   var titleCheckboxId = "reform-title-checkbox" + this.getAttribute("id").split("reform-title")[1];
@@ -416,10 +421,22 @@ function setDocTitle(element) {
 			+ "-" + (titleEndDate.split("-")[1].length == 1 ? "0" + titleEndDate.split("-")[1] : titleEndDate.split("-")[1]) 
 			+ "-" + (titleEndDate.split("-")[2].length == 1 ? "0" + titleEndDate.split("-")[2] : titleEndDate.split("-")[2]);
 			
+			if (!isValidDate(titleStartDate2.split("-")[0],titleStartDate2.split("-")[1],titleStartDate2.split("-")[2])) {
+				alert(titleStartDate + " 는 없는 날짜 입니다.")
+				isContinue = false;
+	            return;
+			}			
+			if (!isValidDate(titleEndDate2.split("-")[0],titleEndDate2.split("-")[1],titleEndDate2.split("-")[2])) {
+				alert(titleEndDate + " 는 없는 날짜 입니다.")
+				isContinue = false;
+	            return;
+			}
+			
 	         $("#" + $(this).attr("viewer").split(",")[0]).val(titleStartDate2);
 	         $("#" + $(this).attr("viewer").split(",")[0]).attr("value", titleStartDate2);
 	         $("#" + $(this).attr("viewer").split(",")[1]).val(titleEndDate2);
 	         $("#" + $(this).attr("viewer").split(",")[1]).attr("value", titleEndDate2);
+			 
 	            
 	         if (startDate == "") {
 	            startDate = titleStartDate;
@@ -454,18 +471,20 @@ function setDocTitle(element) {
 	   }
    })
    
-	var totalTitle = startDate.split("-")[0] + " 년 " + startDate.split("-")[1] + " 월 " + startDate.split("-")[2] + " 일 ~ " + endDate.split("-")[0] + " 년 " + endDate.split("-")[1] + " 월 " + endDate.split("-")[2] + " 일 [ " + totalDay + " 일 ]";
-	
-	$("#totalAnnualDateTD").text(totalTitle)
-	$("#totalAnnualDate").val(totalTitle);
-	$("#totalAnnualDate").attr("type","hidden");
-	
-	$("#use_annual_cnt").text(useAnnualCnt);
-	$("#remain_annual_cnt").text(Number($("#total_annual_cnt").text()) - Number($("#accum_annual_cnt").text()) - useAnnualCnt);
-	
-	try {
-	   parent.document.getElementById("doctitle").innerHTML = totalTitle;
-   } catch (ex) {}   
+   if (isContinue) {	   
+	   var totalTitle = startDate.split("-")[0] + " 년 " + startDate.split("-")[1] + " 월 " + startDate.split("-")[2] + " 일 ~ " + endDate.split("-")[0] + " 년 " + endDate.split("-")[1] + " 월 " + endDate.split("-")[2] + " 일 [ " + totalDay + " 일 ]";
+	   
+	   $("#totalAnnualDateTD").text(totalTitle)
+	   $("#totalAnnualDate").val(totalTitle);
+	   $("#totalAnnualDate").attr("type","hidden");
+	   
+	   $("#use_annual_cnt").text(useAnnualCnt);
+	   $("#remain_annual_cnt").text(Number($("#total_annual_cnt").text()) - Number($("#accum_annual_cnt").text()) - useAnnualCnt);
+	   
+	   try {
+		   parent.document.getElementById("doctitle").innerHTML = totalTitle;
+	   } catch (ex) {}   
+   }
 
    var sPosition = $("#cursorStartPosition").val();
    var ePosition = $("#cursorEndPosition").val();
