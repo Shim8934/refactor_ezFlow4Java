@@ -253,8 +253,8 @@
 					<spring:message code = 'ezAttitude.t293' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_annual_auto_gnrt" value="1" onchange="type_change('1');"/><spring:message code = 'ezAttitude.t294' />
-	            	<input type="radio" name="use_annual_auto_gnrt" value="0" onchange="type_change('0');"/><spring:message code = 'ezAttitude.t295' />
+	            	<input type="radio" name="use_annual_auto_gnrt" value="1" onchange="type_change('1');"/><spring:message code = 'ezAttitude.t36' />
+	            	<input type="radio" name="use_annual_auto_gnrt" value="0" onchange="type_change('0');"/><spring:message code = 'ezAttitude.t37' />
 	            </td>
 	        </tr>
 	        <tr id="ags" style="height:30px;">
@@ -279,8 +279,8 @@
 					<spring:message code = 'ezAttitude.t299' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_minus_annual" value="1"/><spring:message code = 'ezAttitude.t300' />
-	            	<input type="radio" name="use_minus_annual" value="0"/><spring:message code = 'ezAttitude.t301' />
+	            	<input type="radio" name="use_minus_annual" value="1"/><spring:message code = 'ezAttitude.t29' />
+	            	<input type="radio" name="use_minus_annual" value="0"/><spring:message code = 'ezAttitude.t30' />
 	            </td>
 	        </tr>
 	        <tr id="uat" style="height:30px;">
@@ -288,8 +288,8 @@
 					<spring:message code = 'ezAttitude.t302' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_annual_tmnt" value="1"/><spring:message code = 'ezAttitude.t294' />
-	            	<input type="radio" name="use_annual_tmnt" value="0"/><spring:message code = 'ezAttitude.t295' />
+	            	<input type="radio" name="use_annual_tmnt" value="1"/><spring:message code = 'ezAttitude.t36' />
+	            	<input type="radio" name="use_annual_tmnt" value="0"/><spring:message code = 'ezAttitude.t37' />
 	            </td>
 	        </tr>
 	        <tr id="ror" style="height:30px;">
