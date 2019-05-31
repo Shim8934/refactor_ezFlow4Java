@@ -17998,7 +17998,7 @@
 			SET 
 				CabinetID = #v_CABINETID#
 			WHERE 
-				RECORDID = #v_rowID3#
+				CabinetID = $v_cabList$
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
