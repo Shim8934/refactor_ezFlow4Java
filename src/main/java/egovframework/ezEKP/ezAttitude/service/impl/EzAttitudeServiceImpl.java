@@ -620,7 +620,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndTime", searchEndTime);
 		map.put("searchGubun", searchGubun);
 		map.put("limit", limit);
+<<<<<<< HEAD
 		map.put("listSize", Integer.parseInt(listSize));
+=======
+		map.put("listSize", Integer.valueOf(listSize));
+>>>>>>> origin/personalizedPortal
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
@@ -1024,7 +1028,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
+<<<<<<< HEAD
 		map.put("listSize", listSize == "" ? "" : Integer.parseInt(listSize));
+=======
+		map.put("listSize", Integer.valueOf(listSize));
+>>>>>>> origin/personalizedPortal
 		map.put("offsetMin", offsetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1980,7 +1988,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchEndDate", searchEndDate);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
+<<<<<<< HEAD
 		map.put("listSize", listSize == "" ? "" : Integer.parseInt(listSize));
+=======
+		map.put("listSize", Integer.valueOf(listSize));
+>>>>>>> origin/personalizedPortal
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
