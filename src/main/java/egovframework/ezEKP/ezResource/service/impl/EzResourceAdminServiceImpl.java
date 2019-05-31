@@ -554,13 +554,15 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 							List<String> deptIds = new ArrayList<String>();
 							Collections.addAll(deptIds, deptPath.split(","));
 							deptIds.remove(0);				// companyID 삭제
-							Collections.reverse(deptIds);
-							deptIds.remove(0);				// 부서 ID 삭제
-							
-							for(int l=0; l<deptIds.size(); l++) {
-								if(memberID.equals(deptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
-									logger.debug("dept(2) id : " + memberID + ", This dept has access privilege");
-									flag = true;
+							if(deptIds.size() > 0) {
+								Collections.reverse(deptIds);
+								deptIds.remove(0);				// 부서 ID 삭제
+								
+								for(int l=0; l<deptIds.size(); l++) {
+									if(memberID.equals(deptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
+										logger.debug("dept(2) id : " + memberID + ", This dept has access privilege");
+										flag = true;
+									}
 								}
 							}
 							
@@ -578,13 +580,15 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 								List<String> addJobDeptIds = new ArrayList<String>();
 								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 								addJobDeptIds.remove(0);				// companyID 삭제
-								Collections.reverse(addJobDeptIds);
-								addJobDeptIds.remove(0);				// 부서 ID 삭제
-								
-								for(int l=0; l<addJobDeptIds.size(); l++) {
-									if(memberID.equals(addJobDeptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
-										logger.debug("add job dept(2) id : " + memberID + ", This dept has access privilege");
-										flag = true;
+								if(addJobDeptIds.size() > 0) {
+									Collections.reverse(addJobDeptIds);
+									addJobDeptIds.remove(0);				// 부서 ID 삭제
+									
+									for(int l=0; l<addJobDeptIds.size(); l++) {
+										if(memberID.equals(addJobDeptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
+											logger.debug("add job dept(2) id : " + memberID + ", This dept has access privilege");
+											flag = true;
+										}
 									}
 								}
 							}
