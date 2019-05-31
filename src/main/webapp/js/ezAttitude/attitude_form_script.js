@@ -1,16 +1,22 @@
-//~박~일이 아닌 일만 있을 경우
+
+var disabledDays = new Array();
+
+//비상연락처1, 2 이벤트. - 리폼양식이라서 input가 있어야지 text를 입력할 수 있지만, mht파일로 만들어질때는 input은 없어지기 때문에 p태그를 두어, 입력 후 p태그에 입력text가 박히도록.
 function mobileKeyUp(mobileId) {
    $('#p_' + mobileId).text($('#' + mobileId).val());
 }
 
+//근태 selectbox변경
 function selectChange(contID) {
-    $('#' + contID).attr("attitudeType", $('#' + contID).val());
-   $('#' + contID + ' option').not('option[value=' + $('#' + contID).val() + "]").attr("selected", false);
-    $('#' + contID + ' option[value=' + $('#' + contID).val() + "]").attr("selected","");
+	$('#' + contID).attr("attitudeType", $('#' + contID).val());
+	$('#' + contID + ' option').not('option[value=' + $('#' + contID).val() + "]").attr("selected", false);
+	$('#' + contID + ' option[value=' + $('#' + contID).val() + "]").attr("selected","");
+	
 	eval($('#' + contID).prev("input[id^=reform-title]").attr("viewer-listener"));
-   setDocTitle();
+	setDocTitle();
 }
 
+//시작-종료일 사이 휴일+하루종일인 근태일 일수 구하기 
 function getHolidayCnt(startDate, endDate, isAjax) {
    var returnCnt = 0;
    if (isAjax) {
@@ -57,6 +63,7 @@ function getHolidayCnt(startDate, endDate, isAjax) {
    return returnCnt;
 }
 
+//datepicker 이벤트, disabledDays배열에 있는 날짜들은 비활성화 된다
 function disableSomeDay(calDate) {
    var month = (calDate.getMonth() + 1) + "";
    var date = calDate.getDate() + "";
@@ -76,7 +83,7 @@ function disableSomeDay(calDate) {
     return [true]; 
 }
 
-var disabledDays = new Array();
+//비활성화 될 날짜들(휴일 + 하루종일인 근태일) 구하기
 function getDisabledDays(searchYear, searchMonth) {
    searchMonth = searchMonth + "";
    if (searchMonth.length == 1) {
@@ -103,6 +110,7 @@ function getDisabledDays(searchYear, searchMonth) {
    })
 }
 
+//근태관리 전자결재 연동 - 기안
 function attitude_annual_conn(formType, status) {
    if (formType === "annual" && status === "0") { //휴가계 기안
       var docId = parent.parent.pDocID;
@@ -152,8 +160,8 @@ function attitude_annual_conn(formType, status) {
    }
 }
 
-function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) {
-  
+//년월일 ~ 년월일 [ 일] 셋팅해주는
+function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) { 
    if (document.getElementById(mdate1).value.split("-")[1].length < 2) {
       document.getElementById(mdate1).value = document.getElementById(mdate1).value.split("-")[0] + "-0" + document.getElementById(mdate1).value.split("-")[1] + "-" + document.getElementById(mdate1).value.split("-")[2]
       
@@ -188,8 +196,7 @@ function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) {
    if (document.getElementById(mcontrol).value == 'A18') { //산휴		  
 	   tempDate2 = new Date(document.getElementById(mdate1).value);
 	   tempDate2.setDate(tempDate2.getDate() + 89);
-	   holidayCnt = getHolidayCnt(document.getElementById(mdate1).value, tempDate2.getFullYear() + "-" + ((tempDate2.getMonth() + 1).toString().length == 1 ? "0" + (tempDate2.getMonth() + 1) : (tempDate2.getMonth() + 1)) + "-" +  (tempDate2.getDate().toString().length == 1 ? "0" + tempDate2.getDate() : tempDate2.getDate()), true);
-	      
+	   holidayCnt = getHolidayCnt(document.getElementById(mdate1).value, tempDate2.getFullYear() + "-" + ((tempDate2.getMonth() + 1).toString().length == 1 ? "0" + (tempDate2.getMonth() + 1) : (tempDate2.getMonth() + 1)) + "-" +  (tempDate2.getDate().toString().length == 1 ? "0" + tempDate2.getDate() : tempDate2.getDate()), true);      
 	   
 	   var addCnt = holidayCnt;
 	   if (addCnt > 0) {
