@@ -33,6 +33,7 @@
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var modAppl = "<c:out value='${attitudeInfo.modAppl}'/>";
 			var annualApprStatus = "<c:out value='${attitudeInfo.annualApprStatus}'/>";
+			var docApprStatus = "<c:out value='${attitudeInfo.docApprStatus}'/>";
 			var font = "<c:out value='${font}'/>"
 			
 			window.onload = function () {
@@ -47,7 +48,13 @@
 				if(annualApprStatus == "-1") {
 					tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t267' /></td>";
 				} else if(annualApprStatus == "0") {
-					tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t270' /></td>";
+					if(docApprStatus == '005') {
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t268' /></td>";
+    				} else if(docApprStatus == '011') {
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t269' /></td>";
+    				} else {
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t270' /></td>";
+    				}
 				} else if(annualApprStatus == "1") {
 					tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t271' /></td>";
 				}

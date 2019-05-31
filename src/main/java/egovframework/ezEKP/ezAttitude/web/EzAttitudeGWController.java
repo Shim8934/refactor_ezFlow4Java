@@ -3203,5 +3203,36 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/approvalconn/disableddays] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 근태관리 [GET] 국가,회사,근태 휴무일
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/holidays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getHoliDays(@PathVariable String userId, HttpServletRequest request) {
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/holidays] started.");
+		JSONObject result = new JSONObject();
+		
+		try{
+			String startDate = request.getParameter("startDate") == null ? "" : request.getParameter("startDate");
+			String endDate = request.getParameter("endDate") == null ? "" : request.getParameter("endDate");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<String> list = ezAttitudeService.getHoliDays(info.getPrimary(), info.getOffSet(), startDate, endDate, userId, info.getCompanyId(), info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/holidays] ended.");
+		return result;
+	}
 		
 }

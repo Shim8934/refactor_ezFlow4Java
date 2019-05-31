@@ -147,6 +147,7 @@
 		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="18"/>
 		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
 		<result  property="annualApprStatus"		column="ANNUAL_APPR_STATUS"			columnIndex="20"/>
+		<result  property="docApprStatus"		column="DOC_APPR_STATUS"			columnIndex="21"/>
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="monthlyAnnualMap">
@@ -1191,7 +1192,19 @@
 			B.IMG_PATH,
 		    C.DISPLAYNAME$lang$ AS DISPLAYNAME,
 		    C.DESCRIPTION$lang$ AS DESCRIPTION,
-		    ifnull(D.ANNUAL_APPR_STATUS, -1) as ANNUAL_APPR_STATUS
+		    ifnull(D.ANNUAL_APPR_STATUS, -1) as ANNUAL_APPR_STATUS,
+		    ifnull(
+				    (
+						SELECT
+							FUNCTIONTYPE
+						FROM
+							TBL_APRDOCINFO E
+						WHERE
+							D.ANNUAL_DOC_ID = E.DOCID
+						OR
+							D.ANNUAL_DOC_ID = E.ORGDOCID
+					)
+				, 0) AS DOC_APPR_STATUS
 		FROM   
 			tbl_attitude A 
 		INNER JOIN

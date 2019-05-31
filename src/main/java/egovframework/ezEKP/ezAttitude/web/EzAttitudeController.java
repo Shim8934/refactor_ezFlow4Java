@@ -4565,6 +4565,7 @@ public class EzAttitudeController {
 		
 		return "json";
 	}
+	
 	/** 
 	* 휴가일, 근태가 있는 날 리스트
 	*/
@@ -4678,6 +4679,48 @@ public class EzAttitudeController {
 		LOGGER.debug("getAnnualreg ended.");
 
 		return resultObject;
+	}
+	
+	/** 
+	* 휴가일, 근태가 있는 날 리스트
+	*/
+	@RequestMapping(value="/ezAttitude/getHoliDays.do" , method= RequestMethod.GET)
+	@ResponseBody
+	public JSONArray getHoliDays(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getHoliDays started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/holidays";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("startDate", request.getParameter("startDate"))
+				.queryParam("endDate", request.getParameter("endDate"));
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray data = new JSONArray();
+		
+		if(status.equals("ok")){
+			data = (JSONArray) resultBody.get("data");
+		}
+		LOGGER.debug("getHoliDays ended");
+		return data;
 	}
 
 }
