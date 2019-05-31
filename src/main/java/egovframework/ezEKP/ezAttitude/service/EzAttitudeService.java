@@ -33,7 +33,7 @@ public interface EzAttitudeService {
 	public void insertAdminAttHistory(String writerId, String deptId, String startDate, String endDate, String region,
 			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String adminId) throws Exception;
 	
-	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh, String typeId, String startDate, String endDate, String offset, String deptFlag, String lang, int tenantId) throws Exception;
+	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh, String typeId, String startDate, String endDate, String offset, String deptFlag, String lang, String companyId, int tenantId) throws Exception;
 	
 	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String deptIdList, String offset, String startDate, String endDate, int tenantId, String deptFlag) throws Exception;
 	
