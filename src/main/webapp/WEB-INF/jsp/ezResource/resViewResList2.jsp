@@ -371,7 +371,7 @@
 						$("#brdExplain").html(resbrdExc);
 						
 						if(result.attachList1 != null) {
-							document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURI(result.attachList1);
+							document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURIComponent(result.attachList1);
 							document.getElementById("preview1").width = 200;
 							document.getElementById("preview1").height = 200;
 						}
@@ -382,7 +382,7 @@
 						}
 						
 						if(result.attachList2 != null) {
-							document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURI(result.attachList2);
+							document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURIComponent(result.attachList2);
 							document.getElementById("preview2").width = 200;
 							document.getElementById("preview2").height = 200;
 						}
