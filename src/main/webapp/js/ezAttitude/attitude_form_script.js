@@ -1,4 +1,15 @@
-//~박~일이 아닌 일만 있을 경우
+function isValidDate(year, month, day) {
+    var d = new Date(year, Number(month) - 1, day);
+	var dMonth = (d.getMonth() + 1) + "";
+	dMonth = (dMonth.length == 1 ? "0" + dMonth : dMonth);
+	var dDate = d.getDate() + "";
+	dDate = (dDate.length == 1 ? "0" + dDate : dDate);
+    if (d.getFullYear() == year && dMonth == month && dDate == day) {
+        return true;
+    }
+    return false;
+}
+
 function mobileKeyUp(mobileId) {
    $('#p_' + mobileId).text($('#' + mobileId).val());
 }
@@ -344,6 +355,16 @@ function caldate(date, day){
    return caledYear+'-'+caledmonth+'-'+caledday;
 }
 
+function lastDay(year, month){
+
+	//var curDate = new Date();
+
+	var lastDate = new Date(year, month, "");
+
+	return lastDate.getDate();
+
+	}
+
 //실제 상위 프레임의 doctitle에 값 적용
 function setDocTitle(element) {
 	if (event) {
@@ -360,6 +381,7 @@ function setDocTitle(element) {
    var totalNight = 0;
    var totalDay = 0;
    var useAnnualCnt = 0;
+   var isContinue = true;
 
    $("input[id^=reform-title]").not("input[type=checkbox]").each(function() {
 	   var titleCheckboxId = "reform-title-checkbox" + this.getAttribute("id").split("reform-title")[1];
@@ -409,10 +431,26 @@ function setDocTitle(element) {
 			+ "-" + (titleEndDate.split("-")[1].length == 1 ? "0" + titleEndDate.split("-")[1] : titleEndDate.split("-")[1]) 
 			+ "-" + (titleEndDate.split("-")[2].length == 1 ? "0" + titleEndDate.split("-")[2] : titleEndDate.split("-")[2]);
 			
+			if (!isValidDate(titleStartDate2.split("-")[0],titleStartDate2.split("-")[1],titleStartDate2.split("-")[2])) {
+				alert(titleStartDate + " 는 없는 날짜 입니다.")
+//				isContinue = false;
+				titleStartDate2 = titleStartDate2.split("-")[0] + "-" + titleStartDate2.split("-")[1] + "-" +lastDay(titleStartDate2.split("-")[0],titleStartDate2.split("-")[1]);
+				titleStartDate = titleStartDate2;
+//	            return;
+			}			
+			if (!isValidDate(titleEndDate2.split("-")[0],titleEndDate2.split("-")[1],titleEndDate2.split("-")[2])) {
+				alert(titleEndDate + " 는 없는 날짜 입니다.")
+//				isContinue = false;
+				titleEndDate2 = titleEndDate2.split("-")[0] + "-" + titleEndDate2.split("-")[1] + "-" +lastDay(titleEndDate2.split("-")[0],titleEndDate2.split("-")[1]);
+				titleEndDate = titleEndDate2;
+//	            return;
+			}
+			
 	         $("#" + $(this).attr("viewer").split(",")[0]).val(titleStartDate2);
 	         $("#" + $(this).attr("viewer").split(",")[0]).attr("value", titleStartDate2);
 	         $("#" + $(this).attr("viewer").split(",")[1]).val(titleEndDate2);
 	         $("#" + $(this).attr("viewer").split(",")[1]).attr("value", titleEndDate2);
+			 
 	            
 	         if (startDate == "") {
 	            startDate = titleStartDate;
@@ -447,18 +485,20 @@ function setDocTitle(element) {
 	   }
    })
    
-	var totalTitle = startDate.split("-")[0] + " 년 " + startDate.split("-")[1] + " 월 " + startDate.split("-")[2] + " 일 ~ " + endDate.split("-")[0] + " 년 " + endDate.split("-")[1] + " 월 " + endDate.split("-")[2] + " 일 [ " + totalDay + " 일 ]";
-	
-	$("#totalAnnualDateTD").text(totalTitle)
-	$("#totalAnnualDate").val(totalTitle);
-	$("#totalAnnualDate").attr("type","hidden");
-	
-	$("#use_annual_cnt").text(useAnnualCnt);
-	$("#remain_annual_cnt").text(Number($("#total_annual_cnt").text()) - Number($("#accum_annual_cnt").text()) - useAnnualCnt);
-	
-	try {
-	   parent.document.getElementById("doctitle").innerHTML = totalTitle;
-   } catch (ex) {}   
+   if (isContinue) {	   
+	   var totalTitle = startDate.split("-")[0] + " 년 " + startDate.split("-")[1] + " 월 " + startDate.split("-")[2] + " 일 ~ " + endDate.split("-")[0] + " 년 " + endDate.split("-")[1] + " 월 " + endDate.split("-")[2] + " 일 [ " + totalDay + " 일 ]";
+	   
+	   $("#totalAnnualDateTD").text(totalTitle)
+	   $("#totalAnnualDate").val(totalTitle);
+	   $("#totalAnnualDate").attr("type","hidden");
+	   
+	   $("#use_annual_cnt").text(useAnnualCnt);
+	   $("#remain_annual_cnt").text(Number($("#total_annual_cnt").text()) - Number($("#accum_annual_cnt").text()) - useAnnualCnt);
+	   
+	   try {
+		   parent.document.getElementById("doctitle").innerHTML = totalTitle;
+	   } catch (ex) {}   
+   }
 
    var sPosition = $("#cursorStartPosition").val();
    var ePosition = $("#cursorEndPosition").val();

@@ -277,12 +277,12 @@
 	                       				<a class="imgbtn"><span onclick="deleteCancelAnnual()"><spring:message code='ezAttitude.t279' /></span></a>
 	                       			</c:if>
 		            				<c:if test="${attitudeInfo.modAppl == '4'}">
-	                       				<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t286' /></span></a>
+	                       				<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t92' /></span></a>
 	                       			</c:if>
                        			</c:if>
                        		</c:when>
                        		<c:otherwise>
-								<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t162'/></span></a>
+								<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t136'/></span></a>
                        			<a class="imgbtn"><span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span></a>
                        			<a class="imgbtn"><span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span></a>
                        		</c:otherwise>
