@@ -282,7 +282,7 @@
 					/* CalendarDataSource(chk_str, sStartDate, sEndDate); */
 				}
 			}
-				
+			
 			/* select_memorialDays(uselang); */
 
 	        document.onselectstart = function () { return false; };
@@ -368,8 +368,8 @@
 		        _funCode = v_data;
 
 		        switch (v_data) {
-		            case 2:		// Schedule
-		                window.open("/ezSchedule/scheduleMain.do?funCode=2", "right");
+		            case 2:		// Schedule		            
+		                window.open("/ezSchedule/scheduleMain.do", "right");
 		                break;
 
 		            case 3:		// Task
@@ -432,17 +432,20 @@
 	        	$(".scheduleListBox").height(window.innerHeight-105);
 	        }
 	        
+	      	//2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록 /* 2019-03-18 홍승비 - 단순 호출 기능을 POST -> GET 메서드로 수정 */
+	        function groupRefresh() {
+	        	//frm.submit();
+	        	window.location.href = "/ezSchedule/scheduleLeft.do?funCode=5";
+	        }
+	      	
+	        // 일정그룹 초대 수락 시
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
         	
-	      	//2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록
-	        function groupRefresh() {
-	        	frm.submit();
-	        } 
-	      	
 	        function leftRefresh() {
-	        	frm2.submit();
+	        	//frm2.submit();
+	        	window.location.href = "/ezSchedule/scheduleLeft.do";
 	        } 
 		</script>
 	</head>
@@ -604,7 +607,7 @@
 				</label>
 				<c:if test='${!empty groupList}'>
 					<c:forEach var="group" items="${groupList}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${group.groupName }" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t375'/><c:out value="${group.groupName }" escapeXml="true"/></span>
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="<c:out value='${group.groupName}'/>" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t375'/><c:out value="${group.groupName }" escapeXml="true"/></span>
 						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#e9de13;"></span>
 						</label>
@@ -626,10 +629,11 @@
 		</div>		
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
-	    </script> --%>
-	    
+	    </script>
+	    <%--
 	    <!-- 2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록 -->
 	    <form id="frm" action="/ezSchedule/scheduleLeft.do?funCode=5"></form>
 	    <form id="frm2" action="/ezSchedule/scheduleLeft.do?"></form>
+	    --%>
 	</body>
 </html>

@@ -77,6 +77,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -171,7 +172,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 쓰기화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailWrite.do")
+	@RequestMapping(value="/ezEmail/mailWrite.do", method = RequestMethod.GET)
 	public String mailWrite(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
@@ -415,7 +416,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
  	 			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
  	 		}
  		}
-        logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",pMailSenderNM=" + pMailSenderNM);
+ 		
+ 		String textOption = mailGeneralVO.getTextOption();
+ 		
+ 		if (textOption.equals("PLAIN")) {
+ 			bodyType = "1";
+ 		}
+ 		
+        logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",textOption=" + textOption + ",pMailSenderNM=" + pMailSenderNM);
  		
         //set mail sign
         MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
@@ -527,7 +535,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	if (_cmd.equals("docsendDotNet")) {
         		dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginInfo.getTenantId());
         	}
-    		
+        	// 결재문서 메일발송 시, PLAINTEXT로 설정되있으면 결재본문 이미지가 메일에 첨부안되는 현상 수정
+        	if (textOption.equals("PLAIN")) {
+     			bodyType = "0";
+     		}
     		/* 2017-01-26 이효민 : 필요하지 않아 주석처리
     		 * 현재 docHref가 IMAGE로만 오고있기 때문에 HolderDocSend는 항상 보이지 않는다(jsp페이지의 HolderDocSend도 주석처리해놓음)
     		if (this._DocHref.ToLower().IndexOf(".doc") == this._DocHref.Length - 4 || this._DocHref.ToLower().IndexOf(".hwp") == this._DocHref.Length - 4)
@@ -1130,9 +1141,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        			isSecureMail = orgMessage.getHeader("X-JMocha-Secure-Mail")[0];
 		        		}
 		        		
-		        		//set bodyType
-		        		bodyType = isHtmlMessage(orgMessage) ? "0" : "1";
-		        		
 		        		if (orgMessage.getHeader("Return-Receipt-To") != null) {
 		        			replySendTime = "1";
 		        		} else {
@@ -1151,6 +1159,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        		logger.debug("EDIT MODE : set mail option end");
 		        	}
+		        	
+		        	//set bodyType
+	        		bodyType = ezEmailUtil.isHtmlMessage(orgMessage) ? "0" : "1";
 				}
 				orgFolder.close(true);
 				
@@ -1357,7 +1368,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 저장 여부를 묻는 확인 다이알로그 표시
 	 */
-	@RequestMapping(value="/ezEmail/mailConfirmDialog.do")
+	@RequestMapping(value="/ezEmail/mailConfirmDialog.do", method = RequestMethod.GET)
 	public String mailConfirmDialog(
 					@CookieValue("loginCookie") String loginCookie,
 					@RequestParam("CAPTION") String caption,
@@ -1404,7 +1415,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 파일첨부 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/dragAndDrop.do")
+	@RequestMapping(value="/ezEmail/dragAndDrop.do", method = RequestMethod.GET)
 	public String dragAndDropIframe(
 			@CookieValue("loginCookie") String loginCookie, 
 			HttpServletRequest request,
@@ -1443,7 +1454,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 DragAndDrop 첨부파일 업로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailInterUploadXCK.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailInterUpload(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -1478,6 +1489,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 		if (request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")) {
 			tempFolderName = request.getParameter("STATUS");
+			tempFolderName = commonUtil.detectPathTraversal(tempFolderName);
 		} else {
 			return "NODATA";
 		}
@@ -1576,7 +1588,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 FileOutputStream fos = null;
                 
                 try {
-                	File f = new File(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt");
+                	File f = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt"));
                 	fos = new FileOutputStream(f);
                     fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
                 } catch(Exception e) {
@@ -1708,7 +1720,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * - 일반 첨부파일에만 해당됨.
 	 * </pre>
 	 */
-	@RequestMapping(value="/ezEmail/mailInterUploadCopyXCK.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailInterUploadCopyXCK.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailInterUploadCopy(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -1720,6 +1732,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
 		String isBigYN = request.getParameter("isbigyn") == null ? "" : request.getParameter("isbigyn"); //isBigYN은 항상 N
 		logger.debug("tempFolderName=" + tempFolderName + ",isBigYN=" + isBigYN);
+		
+		tempFolderName = commonUtil.detectPathTraversal(tempFolderName);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String bigMaxSizeStr = doc.getElementsByTagName("BIGMAXSIZE").item(0).getTextContent();
@@ -1773,6 +1787,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (!filePathValue.startsWith("/")) {
 				filePathValue = "/" + filePathValue;
 			}
+			filePathValue = commonUtil.detectPathTraversal(filePathValue);
 			
 			filePath[i] = realPath + filePathValue;
 			
@@ -1789,6 +1804,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// 다운로드된 파일을 저장할 로컬 파일명을 임의로 생성한다.
 						String localFilePath = pTempFileUploadPath + commonUtil.separator + UUID.randomUUID().toString();
+						localFilePath = commonUtil.detectPathTraversal(localFilePath);
+						
 						File localFile = new File(localFilePath);
 						
 						// URL로부터 다운로드를 시도한다.
@@ -1816,6 +1833,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (f.exists()) {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
 				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
+				fileName[i] = commonUtil.normalizeFileName(fileName[i]);
 				
 				if (fileName[i].lastIndexOf(".") > -1) {
 					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
@@ -1906,7 +1924,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-                	String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
+                	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
                 	
                 	file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
                 	fos = new FileOutputStream(file);
@@ -1970,9 +1988,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis = new FileInputStream(filePath[i]);
 					bis = new BufferedInputStream(fis);
 					
-					String nfcFilename = commonUtil.normalizeFileName(newFileName[i]);
-					
-					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + nfcFilename);
+					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
 					bos = new BufferedOutputStream(fos);
 					
 					int data = 0;
@@ -1992,7 +2008,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                }
 					
 					sb.append("<NODE>");
-					sb.append("<PUPLOADSN><![CDATA[" + nfcFilename + "]]></PUPLOADSN>");
+					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
 					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
 					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
 					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
@@ -2069,7 +2085,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * - 일반 첨부파일에만 해당됨.
 	 * </pre>
 	 */
-	@RequestMapping(value="/ezEmail/mailInterUploadCopyXCKFromJournal.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailInterUploadCopyXCKFromJournal.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailInterUploadCopyFromJournal(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -2079,6 +2095,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("bodyData=" + bodyData);
 		
 		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
+		tempFolderName = commonUtil.detectPathTraversal(tempFolderName);
 		String isBigYN = request.getParameter("isbigyn") == null ? "" : request.getParameter("isbigyn"); //isBigYN은 항상 N
 		logger.debug("tempFolderName=" + tempFolderName + ",isBigYN=" + isBigYN);
 		
@@ -2131,7 +2148,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //				filePathValue = "/" + filePathValue;
 //			}
 			
-			filePath[i] = journalPath + filePathValue;
+			filePath[i] = commonUtil.detectPathTraversal(journalPath + filePathValue);
 			
 			if (dotNetIntegration.equals("YES")) {
 				try {
@@ -2173,6 +2190,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (f.exists()) {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
 				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
+				fileName[i] = commonUtil.normalizeFileName(fileName[i]);
 				
 				if (fileName[i].lastIndexOf(".") > -1) {
 					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
@@ -2267,7 +2285,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					fis.close(); fis = null;
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
-					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
+					String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
 					
 					file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
 					fos = new FileOutputStream(file);
@@ -2423,8 +2441,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 	/**
      * EzHTTPTrans ActiveX Control로부터 한 개의 파일을 업로드 받아 저장하는 메소드
+     * 
+     * 사용하지 않는 코드(원래는 IE9에서 사용)여서 일단 method = RequestMethod.GET 로 수정함
      */
-    @RequestMapping(value="/ezEmail/mailInterUploadX.do", produces = "text/plain; charset=utf-8")
+    @RequestMapping(value="/ezEmail/mailInterUploadX.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
     @ResponseBody
     public String mailInterUploadX(
     		@CookieValue("loginCookie") String loginCookie, 
@@ -2443,6 +2463,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             String tempFolderName = request.getParameter("dir");
             
             logger.debug("sFileTitle=" + sFileTitle + ",sFileData=" + sFileData + ",sExt=" + sExt + ",tempFolderName=" + tempFolderName);
+            
+            sExt = commonUtil.detectPathTraversal(sExt);
+            tempFolderName = commonUtil.detectPathTraversal(tempFolderName);
             
             String pBigFileUpload = sFileData;
             String newguid = UUID.randomUUID().toString();
@@ -2642,7 +2665,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     /**
 	 * 첨부파일을 포함한 메일을 임시 보관함에 저장하는 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailInterAttachCK.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailInterAttachCK.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailInterAttach(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -2812,6 +2835,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					NodeList childNodes = subNode.getChildNodes();
 					String fileName = childNodes.item(0).getTextContent();
 					String path = childNodes.item(1).getTextContent();
+					path = commonUtil.detectPathTraversal(path);
 					String bigBool = childNodes.item(2).getTextContent();
 					
 					// 일반첨부파일의 경우
@@ -2899,7 +2923,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					NodeList childNodes = subNode.getChildNodes();
 					
 	                if (childNodes.item(2).getTextContent().equals("N")) {
-	                	File file = new File(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
+	                	String childNodeContent = commonUtil.detectPathTraversal(childNodes.item(1).getTextContent());
+	                	File file = new File(pDirTempPath + commonUtil.separator + childNodeContent);
 	                    
 	                	if (file.exists()) {
 	                    	file.delete();
@@ -2932,7 +2957,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 전송 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailInterSend.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailInterSend.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailInterSend(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -3773,9 +3798,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								else if (p.getDisposition() != null || p.isMimeType("application/*")) { 
 	    									MimeBodyPart newBodyPart = (MimeBodyPart)p;
 	    									
+	    									// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
+	    									// ContentID 없이 Content-Dispostion이 inline으로 첨부된
+	    									// 이미지가 있어 이 경우 첨부파일로서 처리하기 위해 추가함.(iPhone Mail에서 작성한 메일임.)
+	    									boolean isInlinePartWithoutContentID = false;
+
+    										if (newBodyPart.getDisposition() != null 
+    												&& newBodyPart.getDisposition().equalsIgnoreCase(Part.INLINE)
+    												&& newBodyPart.getContentID() == null) {
+    											isInlinePartWithoutContentID = true;
+    										}
+	    									
 	    									// 첨부파일 파트인 경우
 	    									if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
-	    											|| p.isMimeType("application/*")) {
+	    											|| p.isMimeType("application/*")
+	    											|| isInlinePartWithoutContentID) {
 	    										hasAttach = true;
 	    											    										
 	    										InternetHeaders newHeaders = new InternetHeaders();
@@ -4464,7 +4501,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 임시저장메일 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/delDrafts.do", produces = "text/html")
+	@RequestMapping(value="/ezEmail/delDrafts.do", produces = "text/html", method = RequestMethod.GET)
 	@ResponseBody
 	public String delDrafts(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -4534,6 +4571,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		//첨부파일 정보파일(templist) 삭제
 		String delId = request.getParameter("delid");
+		delId = commonUtil.detectPathTraversal(delId);
         String realPath = commonUtil.getRealPath(request);
         String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "templist";
         pDirPath += commonUtil.separator + delId + ".txt";
@@ -4550,7 +4588,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 첨부파일 정보파일(templist) 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/delAttachListFile.do", produces = "text/html")
+	@RequestMapping(value="/ezEmail/delAttachListFile.do", produces = "text/html", method = RequestMethod.GET)
 	@ResponseBody
 	public String delAttachListFile(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -4561,6 +4599,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String delId = request.getParameter("delid");
+		delId = commonUtil.detectPathTraversal(delId);
         String realPath = commonUtil.getRealPath(request);
         String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "templist";
         pDirPath += commonUtil.separator + delId + ".txt";
@@ -4579,7 +4618,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 첨부파일 정보(templist) 반환 함수
 	 */
-	@RequestMapping(value="/ezEmail/fileListSession.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/fileListSession.do", produces = "text/xml; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String fileListSession(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -4588,6 +4627,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("fileListSession started.");
 		
 		String fileData = request.getParameter("filedata") == null ? "" : request.getParameter("filedata");
+		fileData = commonUtil.detectPathTraversal(fileData);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
@@ -4627,7 +4667,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 일반 첨부파일 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDelInterAttach.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailDelInterAttach.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailDelInterAttach(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -4776,7 +4816,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 대용량 첨부파일 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/fileListDelete.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value="/ezEmail/fileListDelete.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String fileListDelete(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -4786,6 +4826,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String fileData = request.getParameter("filedata") != null ? request.getParameter("filedata") : "";
 		String realFileNM = request.getParameter("realFileNM") != null ? request.getParameter("realFileNM") : "";
+		
+		fileData = commonUtil.detectPathTraversal(fileData);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
@@ -4825,6 +4867,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						String fileLocation = nodeList.item(i).getChildNodes().item(4).getTextContent();
 						String[] fileLocationArray = fileLocation.split("\\|!\\|");
 						String pRealFilePath = largeFilePath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
+						pRealFilePath = commonUtil.detectPathTraversal(pRealFilePath);
+						
 						File bigAttachFile = new File(pRealFilePath);
 						
 						if (bigAttachFile.exists()) {
@@ -4861,7 +4905,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 사원 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailNameCheck.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailNameCheck.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailNameCheck(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -4954,7 +4998,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 사원 이름으로 메일 찾기 화면 호출 함수 
 	 */
-	@RequestMapping(value="/ezEmail/mailCheckName.do")
+	@RequestMapping(value="/ezEmail/mailCheckName.do", method = RequestMethod.GET)
 	public String mailCheckName(
 			@CookieValue("loginCookie") String loginCookie, 
 			Model model, 
@@ -4967,7 +5011,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 편지쓰기 창에서 입력받은 메일이 존재하는지 검색. 
 	 * 메일쓰기 창에서 받는사람 도메인 확인 메소드
 	 */
-	@RequestMapping(value="/ezEmail/mailCheck.do")
+	@RequestMapping(value="/ezEmail/mailCheck.do", method = RequestMethod.GET)
 	@ResponseBody
 	public List<String> mailCheck(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			Model model, HttpServletRequest request) throws Exception{
@@ -5015,7 +5059,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일 옵션화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/letterOption.do")
+	@RequestMapping(value="/ezEmail/letterOption.do", method = RequestMethod.GET)
 	public String mailLetterOption(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
@@ -5059,7 +5103,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 설정화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSecureOption.do")
+	@RequestMapping(value="/ezEmail/mailSecureOption.do", method = RequestMethod.GET)
 	public String mailSecureOption(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
@@ -5085,7 +5129,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일쓰기 - 조직도(받는사람,참조,숨은참조) 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailNewReceiverChoose.do")
+	@RequestMapping(value="/ezEmail/mailNewReceiverChoose.do", method = RequestMethod.GET)
 	public String mailNewReceiverChoose(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
@@ -5121,7 +5165,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일쓰기 - 공용배포그룹(받는사람,참조,숨은참조) 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetDistribution.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetDistribution.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailGetDistribution(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -5174,7 +5218,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 메일쓰기 - 공용배포그룹 구성원 보기 및 선택 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSelectDLMember.do")
+	@RequestMapping(value="/ezEmail/mailSelectDLMember.do", method = RequestMethod.GET)
 	public String mailSelectDLMember(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
@@ -5310,7 +5354,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 공유사서함 리스트 호출 함수 (수신자 설정)
 	 */
-	@RequestMapping(value="/ezEmail/getSharedMailboxList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/getSharedMailboxList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getSharedMailboxList(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -5363,7 +5407,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 공유사서함 공유자 정보 호출 함수 (수신자 설정)
 	 */
-	@RequestMapping(value="/ezEmail/getSharedMailboxMember.do")
+	@RequestMapping(value="/ezEmail/getSharedMailboxMember.do", method = RequestMethod.GET)
 	public String getSharedMailboxMember(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
@@ -5405,7 +5449,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 간편주소록 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetAddress.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetAddress.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailGetAddress(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -5437,7 +5481,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 간편주소록 정보 저장 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetAddress.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetAddress.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailSetAddress(
 			@CookieValue("loginCookie") String loginCookie, 
@@ -5675,55 +5719,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 	}
 	
-	private boolean isHtmlMessage(Message message) throws MessagingException, IOException {
-		if (message.getHeader("Content-Type") == null) {
-			return true;
-		}
-		
-		String tempBodyType = message.getHeader("Content-Type")[0];
-		String contentType = tempBodyType.split(";")[0].trim();
-
-		if (contentType.equals("text/plain")) {
-			return false;
-		} else if (contentType.equals("multipart/alternative")) {
-			return true;
-		}
-		
-		Object content = message.getContent();
-		
-		if (content instanceof Multipart) {
-			return containsHtmlMultipart((Multipart) content);
-		}
-		
-		return true;
-	}
-	
-	private boolean containsHtmlMultipart(Multipart multipart) throws MessagingException, IOException {
-		int partCount = multipart.getCount();
-		
-		Object partContent;
-
-		for (int i = 0; i < partCount; i++) {
-			BodyPart bodyPart = multipart.getBodyPart(i);
-			
-			if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
-				continue;
-			}
-			
-			partContent = bodyPart.getContent();
-			
-			if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
-				return true;
-			}
-
-			if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-	
 	/**
 	 * 메일 예약발송 처리 함수
 	 */
@@ -5733,7 +5728,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("sendDate : " + sendDate);
 		logger.debug("reservedId : " + reservedId);
 		
-		String messageId = reservedId;
+		String messageId = commonUtil.detectPathTraversal(reservedId);
 		
 		messageId = ezEmailService.setMailReserved(tenantId, messageId, subject, sendDate, userId, isReserve);
 		
@@ -5764,7 +5759,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 받는사람, 참조, 숨은참조 등 자동완성 기능
 	 */
-	@RequestMapping(value = "/ezEmail/autoCompleteList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezEmail/autoCompleteList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	public String autoCompleteList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model,
 			HttpServletRequest request) throws Exception {
 		logger.debug("autoCompleteList started.");
@@ -5895,7 +5890,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    }
 	}
 	
-	@RequestMapping(value="/ezEmail/downloadAttachInWriter.do")
+	@RequestMapping(value="/ezEmail/downloadAttachInWriter.do", method = RequestMethod.GET)
 	public void downloadAttachInWriter(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("downloadAttachInWriter started");

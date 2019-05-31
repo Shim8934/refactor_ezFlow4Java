@@ -15,11 +15,6 @@
 				text-overflow:ellipsis;
 				display:inline-block;
 			}
-			.arrowSpan {
-				width:42px;
-				height:33px;
-				display:inline-block;
-			}
 			#FromTreeView {
 				height: 100%;
 			}
@@ -44,9 +39,9 @@
 	        var SelectedBoardParentBoardID = "";
 	        var RedirectBoardGroupID = "${redirectBoardGroupID}";
 	        var RedirectBoardID = "${redirectBoardID}";
-	        var Func = "${func}";
-	        var subFunc = "${subFunc}";
-	        var qstId = "${qstId}";
+	        var Func = '<c:out value="${func}"/>';
+	        var subFunc = '<c:out value="${subFunc}"/>';
+	        var qstId = '<c:out value="${qstId}"/>';
 	        var PhotoType = "${photoType}";
 	        var g_ReadyState = "";
 	        var first = 1;
@@ -1118,10 +1113,9 @@
         		    xmlDoc = parser.parseFromString("${resultXML}","text/xml");
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
-       			        document.write("<h2 class='off'>");
+       			        document.write("<h2 class='off' onclick='spanClick(\"TreeCtr" + i + "\")'>");
            				document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
            					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
-           				document.write("<span class='arrowSpan' onclick='spanClick(\"TreeCtr" + i + "\")'></span>");
            				document.write("</h2>\n");
            				document.write("<ul class='off'>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: hidden; overflow-y: auto;'></div>\n");

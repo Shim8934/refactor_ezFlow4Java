@@ -152,7 +152,7 @@
 		            para[0] = "I";
 		            para[1] = treeNode.GetNodeData("CN");
 		            para[2] = CompanyID;
-		            para[3] = DeptID;
+		            para[3] = sDeptID;
 
 		            var url = "/admin/ezApprovalG/apprGMinsContMain.do?tCheck=DContIns";
 
@@ -186,7 +186,7 @@
 	                para[2] = selRow[0].getAttribute("DATA2");
 	                para[3] = selRow[0].getAttribute("DATA4");
 	                para[4] = CompanyID;
-	                para[5] = DeptID;
+	                para[5] = sDeptID;
 
 	                var url = "/admin/ezApprovalG/apprGMinsContMain.do?tCheck=DContUpdate";
 

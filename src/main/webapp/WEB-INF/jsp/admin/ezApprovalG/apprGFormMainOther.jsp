@@ -34,10 +34,10 @@
 			var linealt2 = "<spring:message code='ezApprovalG.t228'/>";
 			var linealt3 = "<spring:message code='ezApprovalG.t226'/>";
 			var linealt4 = "<spring:message code='ezApprovalG.t227'/>";
-			var companyID = "${companyID}";
-		    var contID = "${contID}";
-		    var formID = "${formID}";
-		    var isInsUp = "${tCheck}";
+			var companyID = "<c:out value='${companyID}'/>";
+		    var contID = "<c:out value='${contID}'/>";
+		    var formID = "<c:out value='${formID}'/>";
+		    var isInsUp = "<c:out value='${tCheck}'/>";
 		    var TreeIdx;
 		    var treeNode;
 		    var listview;
@@ -51,15 +51,15 @@
 		    var strResx436 = "<spring:message code='ezApprovalG.t445'/>";
 		    var pDocType = "";
 		    var thisSelGUID = ""; 
-		    var FormProcSpelling = "${formProcSpelling}";
+		    var FormProcSpelling = "<c:out value='${formProcSpelling}'/>";
 		    var htmlData = "";
 		    var ConnData = "";
 		    var WorkData = "";
-		    var useEditor = "${useEditor}";
+		    var useEditor = "<c:out value='${useEditor}'/>";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var realPath = "<c:out value = '${realPath}' />";
 		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
-		    var ext = "${ext}";
+		    var ext = "<c:out value='${ext}'/>";
 		    var locale = "<c:out value = '${locale}' />";
 		    // FormBuilder
 		    var useReform = "${useReform}" === "true";
@@ -102,7 +102,7 @@
 		        Tab1_SelectID = "1tab1";
 		        ChangeTab(document.getElementById("1tab1"));
 
-		        getDeptFullTree("${companyID}");
+		        getDeptFullTree("<c:out value='${companyID}'/>");
 
 		        getFormRecv();
 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
@@ -110,9 +110,9 @@
 		        MakeListXML(pDocType);
 		        
 		        if (approvalFlag == "G") {
-			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG", null, true);
+			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<c:out value='${serverName}'/>", "aprG", null, true);
 		        } else {
-			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", true);
+			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<c:out value='${serverName}'/>", true);
 		        }
 		        $("#tr_setAutoItemCode").hide();
 		        
@@ -315,7 +315,7 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
+		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${companyID}'/>");
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 		            createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 		            

@@ -30,9 +30,9 @@
 			var CurPage = "<c:out value='${qstListVO.currPage}'/>";
 			var totalPage = "<c:out value='${qstListVO.totalPage}'/>";
 		    var totalCount = "<c:out value='${qstListVO.totalCnt}'/>";
-		    var receve = "${receve}";
-		    var adminYN = "${adminYN}";
-		    var titleSearch = "${titleSearch}";
+		    var receve = "<c:out value='${receve}'/>";
+		    var adminYN = "<c:out value='${adminYN}'/>";
+		    var titleSearch = "<c:out value='${titleSearch}'/>";
 		    
 			window.onload = function() {
 				makePageSelPage();

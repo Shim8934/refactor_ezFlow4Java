@@ -40,8 +40,8 @@
 		var filelist = [];
 		var strSuccess  = "<spring:message code='ezWebFolder.t27' />";
 		var pEnd =10;
-		var folderId = "${folderId}";
-		var folderType = "${folderType}";
+		var folderId = "<c:out value='${folderId}'/>";
+		var folderType = "<c:out value='${folderType}'/>";
 		var allFileFlag = "${allFileFlag}";
 		var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
 		var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
@@ -52,6 +52,7 @@
 		var inputNameDlg_cross_dialogArguments = new Array();
 		var parentId = "${parentId}";
 		var userId = "";
+		var folderTypeCheck = "N";
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {

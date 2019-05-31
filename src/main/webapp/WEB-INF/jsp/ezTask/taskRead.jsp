@@ -77,35 +77,35 @@
 		</style>
 		
 		<script type="text/javascript">
-			var userid = "${userInfo.id }";
-			var taskid = "${taskInfoVO.taskID }";
+			var userid = "<c:out value='${userInfo.id }'/>";
+			var taskid = "<c:out value='${taskInfoVO.taskID }'/>";
 			var contentpath = "${taskInfoVO.contentPath }";
 			var personContentpath = "${taskInfoVO.personContentPath }";
-			var creatorid = "${taskInfoVO.creatorID }";
-			var taskstatus = "${taskInfoVO.taskStatus }";
-			var completerate = "${taskInfoVO.completeRate }";
+			var creatorid = "<c:out value='${taskInfoVO.creatorID }'/>";
+			var taskstatus = "<c:out value='${taskInfoVO.taskStatus }'/>";
+			var completerate = "<c:out value='${taskInfoVO.completeRate }'/>";
 			var duration = 500;
-			var delayColor = "${delayColor }";
-			var completeColor = "${completeColor }";
-		    var tasktype = "${taskInfoVO.taskType }";
+			var delayColor = "<c:out value='${delayColor }'/>";
+			var completeColor = "<c:out value='${completeColor }'/>";
+		    var tasktype = "<c:out value='${taskInfoVO.taskType }'/>";
 		    var content = "${contentPerson }";
-		    var date = "${date}";
-		    var type = "${type}";
-		    var personid = "${taskInfoVO.personID }";
-		    var taskCommentListSize = "${taskCommentListSize }";
+		    var date = "<c:out value='${date}'/>";
+		    var type = "<c:out value='${type}'/>";
+		    var personid = "<c:out value='${taskInfoVO.personID }'/>";
+		    var taskCommentListSize = "<c:out value='${taskCommentListSize }'/>";
 		    var tempbody = "";
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var AttachLimit = 5;
-		    var hasTaskAttach = "${taskInfoVO.hasAttach}";
+		    var hasTaskAttach = "<c:out value='${taskInfoVO.hasAttach}'/>";
 		    var taskAttachList = "${taskAttachList }";
-		    var hasTaskWorkAttach = "${taskInfoVO.personAttach}";
+		    var hasTaskWorkAttach = "<c:out value='${taskInfoVO.personAttach}'/>";
 		    var taskWorkAttachList = "${taskWorkAttachList }";
-		    var useTodoMemo = "${useTodoMemo }";
-		    var startdate = "${taskInfoVO.startDate}";
-		    var repeatCount = "${repeatCount}";
-		    var createDate = "${taskInfoVO.createDate}";
-		    var repetition = "${repetition}";
-		    var endDate = "${taskInfoVO.endDate}";
+		    var useTodoMemo = "<c:out value='${useTodoMemo }'/>";
+		    var startdate = "<c:out value='${taskInfoVO.startDate}'/>";
+		    var repeatCount = "<c:out value='${repeatCount}'/>";
+		    var createDate = "<c:out value='${taskInfoVO.createDate}'/>";
+		    var repetition = "<c:out value='${repetition}'/>";
+		    var endDate = "<c:out value='${taskInfoVO.endDate}'/>";
 		    var dateList = "${dateList}";
 		    var completeRateList = "${completeRateList}";
 		    var statusList = "${statusList}";
@@ -115,10 +115,10 @@
 		    var statusArray = null;
 		    var repeatCntArray = null;
 		    //var backupCount = "${repeatCount}";
-		    var selecttab = "${tab}";
+		    var selecttab = "<c:out value='${tab}'/>";
 		    /*2018-05-17 구해안 userInfoID 추가*/
-		    var userInfoID = "${userInfo.id}";
-		    var companyID = "${taskInfoVO.companyID }";
+		    var userInfoID = "<c:out value='${userInfo.id}'/>";
+		    var companyID = "<c:out value='${taskInfoVO.companyID }'/>";
 		    
 /* 			function taskReadJson() {
 				
@@ -364,7 +364,7 @@
 				}
 				
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezSchedule/scheduleGetCumDeptID.do",
@@ -606,7 +606,7 @@
 			/*2018-05-17  구해안 의견 UI 수정*/
 			function getCommentList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezTask/getTaskCommentList.do",
@@ -886,7 +886,7 @@
 			            selecttab = "4";
 			            
 /* 			            $.ajax({
-							type : "POST",
+							type : "GET",
 							dataType : "text",
 							async : false,
 							url : "/ezTask/taskRepGetList.do",
@@ -1432,7 +1432,7 @@
 			
 			function getTaskAttachList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezTask/getTaskAttachList.do",
 					dataType : "json",
 					data : {
@@ -1454,7 +1454,7 @@
 
 			function getTaskWorkAttachList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezTask/getTaskWorkAttachList.do",
 					dataType : "json",
 					data : {
@@ -1477,7 +1477,7 @@
 			function updateData(firstDayOfMonth) {
 				//Get new data from server			            		
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezTask/getRepTaskDateList.do",
@@ -1616,7 +1616,7 @@
 				//window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				//window.close();
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskRepGetList.do",

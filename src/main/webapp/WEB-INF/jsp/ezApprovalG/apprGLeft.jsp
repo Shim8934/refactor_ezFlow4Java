@@ -49,34 +49,34 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    
 		<script ID="clientEventHandlersJS" type="text/javascript">
-			var pUserID = "${userInfo.id}";
-		    var pListTypeValue = "${listType}";
+			var pUserID = "<c:out value = '${userInfo.id}'/>";
+		    var pListTypeValue = '<c:out value="${listType}"/>';
 		    var PresentOpen = "APPROVAL";
-		    var CompanyID = '${userInfo.companyID}';
-		    var CompanyName = '${userInfo.companyName}';
+		    var CompanyID = '<c:out value = '${userInfo.companyID}'/>';
+		    var CompanyName = "<c:out value = '${userInfo.companyName}'/>";
 		    var gMenuFlag = 1;
-		    var pDeptID = "${userInfo.deptID}";
+		    var pDeptID = "<c:out value = '${userInfo.deptID}'/>";
 		    var contFlag = "END";
 		    var pChackYN = "FALSE";
 		    var ContainerID;
 		    var PageSize   = 10;
-		    var szRoleInfo = "${szRoleInfo}";
+		    var szRoleInfo = "<c:out value = '${szRoleInfo}'/>";
 		    var Containers = "${containers}";
 		    var DocList_Flag="";
 		    var DocDeptYN;
-		    var DeptID = "${userInfo.deptID}";
+		    var DeptID = "<c:out value = '${userInfo.deptID}'/>";
 		    var g_bRecAdmin=false;
 		    var g_bDeptCharger=false;
 		    var AdminYN;
-		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
-		    var ViewLeftCount = "${viewLeftCount}";
-		    var primaryStr = "${userInfo.primary}";
-		    var SubContCount = "${subContCount}";
+		    var approvalFlag = "<c:out value = '${approvalFlag}'/>";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
+		    var ViewLeftCount = "<c:out value = '${viewLeftCount}'/>";
+		    var primaryStr = "<c:out value = '${userInfo.primary}'/>";
+		    var SubContCount = "<c:out value = '${subContCount}'/>";
 		    var tmpValue = "";
 		    var nodeIdx;
 		    var localValue = "";
-		    var hideSusin = "${hideSusin}";
-		    var whoKyulYN = "${whoKyulYN}";
+		    var hideSusin = "<c:out value = '${hideSusin}'/>";
+		    var whoKyulYN = "<c:out value = '${whoKyulYN}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -87,7 +87,7 @@
 	        		$(".approval").css("display","");
 	        	}
 		      	
-		        if ("${isSubTitle}" == "true")
+		        if ("<c:out value = '${isSubTitle}'/>" == "true")
 		            $("#country_id").selectbox();
 		            $(".sbHolder").each(function (index) {
 		                $(this).addClass('instance');
@@ -113,7 +113,7 @@
 		        if(approvalFlag == "S") {
 		        	Tree_setconfig();
 		            var xmlDom2 = createXmlDom();
-		            xmlDom2 = loadXMLString('${userCont}');
+		            xmlDom2 = loadXMLString("${userCont}");
 		            var treeView = new TreeView();
 		            treeView.SetID("UserContTree");
 		            treeView.SetUseAgency(true);
@@ -449,7 +449,7 @@
 				                else if (listtype == "10") {
 				                	parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
 				                	parent.frames["right"].passValLeftMenu("10");
-				                   // parent.frames["right"].checkBujaeInfo();
+				                	parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "99") {
 				                    parent.frames["right"].passValLeftMenu("99");
@@ -1036,7 +1036,7 @@
 		    var arr_userinfo = new Array();
 		    function ChangeSubtitle(obj) {
 		        var UseSelectTitle = obj.getAttribute("href").split("#")[1].split("|");
-		        if ("${userInfo.deptID}" != UseSelectTitle[0]) {
+		        if ("<c:out value = '${userInfo.deptID}'/>" != UseSelectTitle[0]) {
 		            arr_userinfo[4] = UseSelectTitle[0];
 		            arr_userinfo[5] = UseSelectTitle[1];
 		            arr_userinfo[3] = UseSelectTitle[2];

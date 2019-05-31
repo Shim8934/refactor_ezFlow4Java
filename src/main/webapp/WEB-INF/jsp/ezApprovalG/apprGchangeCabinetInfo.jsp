@@ -29,7 +29,7 @@
     var g_DisplayFlag;
     var g_SCFlag;
     var g_bRecAdmin;
-    var CompanyID = "${userInfo.companyID}";
+    var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
     var RetValue;
     var ReturnFunction;
     window.onload = function () {

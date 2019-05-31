@@ -873,7 +873,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			FileVO fileVO    = getFileByFileId(fileIDList[0], offset, tenantId);
 			String _fileName = fileVO.getFileName();
 			_fileName        = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
-			File file        = new File(realPath + fileVO.getFilePath());
+			File file        = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
 			
 			if (!file.exists()) {
 				throw new FileNotFoundException(fileVO.getFileName());
@@ -931,7 +931,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				for (int i = 0; i < fileIDList.length; i++) {
 					//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
 					FileVO fileVO    = getFileByFileId(fileIDList[i], offset, tenantId);
-					File file        = new File(realPath + fileVO.getFilePath());
+					File file        = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
 					
 					if (!file.exists()) {
 						throw new FileNotFoundException(fileVO.getFileName());
@@ -1024,7 +1024,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		zipOutputStream.closeEntry();
 		
 		for (FileVO innerFile : filesInFolder) {
-			File file = new File(realPath + innerFile.getFilePath());
+			File file = new File(realPath + commonUtil.detectPathTraversal(innerFile.getFilePath()));
 			
 			if (!file.exists()) {
 				throw new FileNotFoundException(innerFile.getFileName());
@@ -1073,6 +1073,60 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		}
 	}
 	
+	@Override
+	public boolean canDelete(String[] fileIdList, String[] folderIdList, String userId, int tenantId) throws Exception {
+		FolderVO userRootFolder = getRootFolderId(userId, "U", "000|+00:00", tenantId);
+		String userRootPath = userRootFolder.getFolderPath();
+
+		UserCapacityVO userCapacity = ezWebFolderAdminService.getCapacity(userId, "U", "1", tenantId);
+		double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+		double totalCapacity = Double.parseDouble(userCapacity.getTotalCapacity()) * 1_073_741_824;
+		double allowedSize = totalCapacity - totalUsed;
+		double deleteTotalSize = 0;
+
+		if (fileIdList != null) {
+			for (String fileId : fileIdList) {
+				if (fileId == null || fileId.isEmpty() || fileId.equals("-1")) {
+					continue;
+				}
+
+				FileVO file = getFileByFileId(fileId, "000|+00:00", tenantId);
+				FolderVO folder = getFolderByFolderId(file.getFolderId(), "000|+00:00", tenantId);
+
+				if (folder.getFolderPath().startsWith(userRootPath)) {
+					continue;
+				}
+
+				if (allowedSize < (deleteTotalSize += file.getFileSize())) {
+					return false;
+				}
+			}
+		}
+
+		if (folderIdList == null || (folderIdList.length == 1 && folderIdList[0].equals("-1"))) {
+			return true;
+		}
+
+		for (String folderId : folderIdList) {
+			if (folderId == null || folderId.isEmpty() || folderId.equals("-1")) {
+				continue;
+			}
+
+			FolderVO folder = getFolderByFolderId(folderId, "000|+00:00", tenantId);
+			String folderPath = folder.getFolderPath();
+
+			if (folderPath.startsWith(userRootPath)) {
+				continue;
+			}
+
+			if (allowedSize < (deleteTotalSize += ezWebFolderAdminService.getFolderSize(folderPath, tenantId))) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	@Override
 	public void deleteSelectedFiles(String[] fileIDList, LoginVO userInfo) throws Exception {
 		String userName1 = userInfo.getDisplayName1();
@@ -1289,8 +1343,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			updateFileName(oldFile.getFileId(), oldFile.getFileName(), currentTimeUTC, tenantId);
 			
 			// nio gazuaaaaa!!!!!
-			Path sourcePath = Paths.get(servletContext.getRealPath(newFile.getFilePath()));
-			Path destPath = Paths.get(servletContext.getRealPath(oldFile.getFilePath()));
+			Path sourcePath = Paths.get(servletContext.getRealPath(commonUtil.detectPathTraversal(newFile.getFilePath())));
+			Path destPath = Paths.get(servletContext.getRealPath(commonUtil.detectPathTraversal(oldFile.getFilePath())));
 
 			// copy file
 			Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
@@ -1369,13 +1423,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				fileVO.setUpdateDate(timeUTC);
 				
 				String fileName = fileVO.getFileName();
-				int dotPos      = fileName.lastIndexOf(".");
-				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+				int dotPos      = fileName.lastIndexOf('.');
+				String extend   = dotPos == -1 ? ".none" : commonUtil.detectPathTraversal(fileName.substring(dotPos + 1));
 				String newName  = webfolderUtil.generateFilePath(extend);
 				String newPath  = getWebFolderDirPath(userInfo.getTenantId()) + newName;
-				File srcFile    = new File(realPath + fileVO.getFilePath());
-				File destFile   = new File(realPath  + newPath);
-				destFile.getParentFile().mkdirs(); 
+				File srcFile    = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
+				File destFile   = new File(realPath + newPath);
+				destFile.getParentFile().mkdirs();
 				destFile.createNewFile();
 				
 				FileUtils.copyFile(srcFile, destFile);

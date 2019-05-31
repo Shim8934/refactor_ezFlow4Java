@@ -13,11 +13,10 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.annotation.Resource;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -25,11 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
-
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -119,7 +116,7 @@ public class EzApprovalGRelayScheduler {
          
          //receiveerr 폴더에 쌓인 XML 파일들을 접수 처리 한다.
          if (config.getProperty("USE_RECEIVEERR_FILE_MOVE_RECEIVETEMP").equals("YES")) {
-        	 File dirFile = new File(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receiveerr");
+        	 File dirFile = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receiveerr"));
         	 
         	 if (dirFile.exists()) {
         		 for (File tempFile : dirFile.listFiles()) {
@@ -130,9 +127,9 @@ public class EzApprovalGRelayScheduler {
         				 String errorfileextension = errorfilename.substring(errorfilename.indexOf("."), errorfilename.length());
         				 
         				 if (errorfileextension.toLowerCase().equals(".xml")) {
-        					 File receiveTemp = new File(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemp" + commonUtil.separator + errorfilename);
-        					 File receiveComp = new File(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receiveComp" + commonUtil.separator + errorfilename);
-        					 File receive = new File(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receive" + commonUtil.separator + errorfilename);
+        					 File receiveTemp = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemp" + commonUtil.separator + errorfilename));
+        					 File receiveComp = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receiveComp" + commonUtil.separator + errorfilename));
+        					 File receive = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receive" + commonUtil.separator + errorfilename));
         					 
         					 boolean checkresult = CheckXMLElements(errorfilepath);
         					 boolean XMLLoadTest = TryXMLLoad(errorfilepath);
@@ -156,7 +153,7 @@ public class EzApprovalGRelayScheduler {
         							 receiveerrList.add(receiveerrFileInfo);
         							 
         							 receiveerrFileInfo = null;
-        							 File fileMove = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receivetemp" + commonUtil.separator + errorfilename);
+        							 File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receivetemp" + commonUtil.separator + errorfilename));
         							 FileUtils.moveFile(tempFile, fileMove);
         							 xmlDoc = null;
         						 }
@@ -177,7 +174,7 @@ public class EzApprovalGRelayScheduler {
          }
          
          //receivetemp 폴더에 쌓인 전송용통합파일(pack.xml)을 풀어 수신처리 한다.
-         File receiveDir = new File(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemp");
+         File receiveDir = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemp"));
          
          if (receiveDir.exists()) {
         	 for (File receiveTempFile : receiveDir.listFiles()) {
@@ -200,13 +197,13 @@ public class EzApprovalGRelayScheduler {
         				 xmlparsingerrList.add(xmlParsingErrInfo);
         				 AdminMail.add(xmlparsingerrList);
         				 
-        				 File receiveTemp = new File(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemperr");
+        				 File receiveTemp = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemperr"));
         				 
         				 if (!receiveTemp.exists()){
         					 receiveTemp.mkdirs();
         				 }
         				 
-        				 File fileMove = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receivetemperr" + commonUtil.separator + strFileName);
+        				 File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receivetemperr" + commonUtil.separator + strFileName));
         				 FileUtils.moveFile(receiveDir, fileMove);
         				 
         				 logger.debug("비정상적인 XML파일, 수신처리 할 수 없습니다.", "");
@@ -322,7 +319,7 @@ public class EzApprovalGRelayScheduler {
         					 if (bGPKI) {
         						 // 암호화된 경우 해당 XML 파일을 특정 폴더로 저장한다.
         						 strCont = objXML.getElementsByTagName("content").item(0).getTextContent();                                        
-        						 File gpkFile = new File(strAprDocPath + strCompanyID + commonUtil.separator + "exDocMSG" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml");
+        						 File gpkFile = new File(commonUtil.detectPathTraversal(strAprDocPath + strCompanyID + commonUtil.separator + "exDocMSG" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml"));
         						 
         						 if (gpkFile.exists()) {
         							 gpkFile.delete();
@@ -337,9 +334,9 @@ public class EzApprovalGRelayScheduler {
         						 ezApprovalGService.fieldUpdate("emlURL", strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml", strXDocID, strReceiveID, strCompanyID, tenantID);
         						 ezApprovalGService.fieldUpdate("isPKI", "Y", strXDocID, strReceiveID, strCompanyID, tenantID);
         					 } else {
-        						 File recFile = new File(strAprDocPath + strCompanyID + commonUtil.separator +"exDocMSG" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml");
+        						 File recFile = new File(commonUtil.detectPathTraversal(strAprDocPath + strCompanyID + commonUtil.separator +"exDocMSG" + commonUtil.separator + strXDocID.replace("/", "_").replace("#", "_") + strReceiveID + ".xml"));
         						 
-        						 File recDir = new File(strAprDocPath + strCompanyID + commonUtil.separator +"exDocMSG");
+        						 File recDir = new File(commonUtil.detectPathTraversal(strAprDocPath + strCompanyID + commonUtil.separator +"exDocMSG"));
         						 
         						 if (!recDir.exists()) {
         							 recDir.mkdirs();
@@ -493,14 +490,14 @@ public class EzApprovalGRelayScheduler {
         					 break;
         				 }
         				 
-        				 File di2 = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp");
+        				 File di2 = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp"));
         				 
         				 if (di2.exists()) {
-        					 File FI2 = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp" + commonUtil.separator + strFileName);
+        					 File FI2 = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp" + commonUtil.separator + strFileName));
         					 if (FI2.exists()) {
         						 receiveTempFile.delete();
         					 } else {
-        						 File fileMove = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp" + commonUtil.separator + strFileName);
+        						 File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "receiveComp" + commonUtil.separator + strFileName));
         						 receiveTempFile.renameTo(fileMove);
         					 }
         				 } else {
@@ -514,7 +511,7 @@ public class EzApprovalGRelayScheduler {
         	 }
          }
 
-         File senderr = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderr");
+         File senderr = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderr"));
          File [] fileList = senderr.listFiles();
          
          if (fileList != null) {
@@ -544,11 +541,11 @@ public class EzApprovalGRelayScheduler {
                      
                      senderrList.add(senderrInfo);
                      
-                     File dir3 = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderrtemp");
+                     File dir3 = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderrtemp"));
                      if (!dir3.exists()) {
                     	 dir3.mkdirs();
                      }
-                     File fileMove = new File(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderrtemp" + commonUtil.separator + errorfilename);
+                     File fileMove = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator + "data" + commonUtil.separator + "senderrtemp" + commonUtil.separator + errorfilename));
 
                      dir3.renameTo(fileMove);
                  }
@@ -581,13 +578,13 @@ public class EzApprovalGRelayScheduler {
 		boolean result = false;
 		
 		try {
-			File dir = new File(pFilePath);
+			File dir = new File(commonUtil.detectPathTraversal(pFilePath));
 			
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
 			
-	        FileOutputStream fos = new FileOutputStream(pFilePath + commonUtil.separator + fileName);
+	        FileOutputStream fos = new FileOutputStream(commonUtil.detectPathTraversal(pFilePath + commonUtil.separator + fileName));
 	        fos.write(strCont.getBytes());
 	        fos.close();
 
@@ -737,13 +734,13 @@ public class EzApprovalGRelayScheduler {
 		boolean result = false;
 		byte[] content = Base64.decodeBase64(strCont);
 		try {
-			File dir = new File(pFilePath);
+			File dir = new File(commonUtil.detectPathTraversal(pFilePath));
 			
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
 			
-	        FileOutputStream fos = new FileOutputStream(pFilePath + commonUtil.separator + fileName);
+	        FileOutputStream fos = new FileOutputStream(commonUtil.detectPathTraversal(pFilePath + commonUtil.separator + fileName));
 	        fos.write(content);
 	        fos.close();
 
@@ -788,7 +785,7 @@ public class EzApprovalGRelayScheduler {
 
 	private boolean ReplaceFileText(String strFilePath, String pTargetText,	String pNewText, boolean pUseRegex, String pRegexPattern) throws Exception {
 
-		FileInputStream fis = new FileInputStream(new File(strFilePath)); 
+		FileInputStream fis = new FileInputStream(new File(commonUtil.detectPathTraversal(strFilePath))); 
 		InputStreamReader isr = new InputStreamReader(fis,"UTF-8"); 
 		BufferedReader br = new BufferedReader(isr);	
 		String text = "";
@@ -808,7 +805,7 @@ public class EzApprovalGRelayScheduler {
 				text = text.replace(pTargetText, pNewText);
 			}
 			
-			File file = new File(strFilePath);
+			File file = new File(commonUtil.detectPathTraversal(strFilePath));
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
 			fop.write(text.getBytes("UTF-8"));
@@ -838,13 +835,13 @@ public class EzApprovalGRelayScheduler {
 			
 			content = matcher.replaceAll(replaceStr);
 			
-			File dir = new File( pFilePath);
+			File dir = new File( commonUtil.detectPathTraversal(pFilePath));
 			
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
 			
-			File file = new File(pFilePath + commonUtil.separator + fileName);
+			File file = new File(commonUtil.detectPathTraversal(pFilePath + commonUtil.separator + fileName));
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
 			fop.write(content.getBytes("EUC-KR"));
@@ -878,11 +875,12 @@ public class EzApprovalGRelayScheduler {
 		String result = "";
 		try {
 	       	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//	       	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			factory.setValidating(false);
 			factory.setNamespaceAware(true);
-	
+			
 			DocumentBuilder builder = factory.newDocumentBuilder();
-	
+			
 			// the "parse" method also validates XML, will throw an exception if misformatted
 	    	builder.parse(new InputSource(strFilePath));
 	    	
@@ -898,6 +896,7 @@ public class EzApprovalGRelayScheduler {
 		boolean result = false;
 		try {
 	       	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//	       	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			factory.setValidating(false);
 			factory.setNamespaceAware(true);
 	
@@ -919,14 +918,14 @@ public class EzApprovalGRelayScheduler {
 			boolean result = false;
             try {
             	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//            	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         		factory.setValidating(false);
         		factory.setNamespaceAware(true);
-
         		DocumentBuilder builder = factory.newDocumentBuilder();
-
+        		
         		// the "parse" method also validates XML, will throw an exception if misformatted
             	Document xmlDoc = builder.parse(new InputSource(pDocPath));
-
+            	
                 if (xmlDoc.getElementsByTagName("pack") != null)
                     result = true;
                 if (xmlDoc.getElementsByTagName("header") != null)

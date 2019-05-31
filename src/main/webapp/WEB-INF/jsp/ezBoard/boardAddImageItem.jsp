@@ -33,8 +33,8 @@
 	        var pMode = "new";
 	        var bodycount = "0";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
-	        var pItemID = "${itemID}";
-	        var pBoardID = "${boardID}";
+	        var pItemID = "<c:out value='${itemID}'/>";
+	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var PhotoBoard = "N";
 	        var SSUserID = "${userInfo.id}";
 		    var SSUserName = "${userInfo.displayName1}";
@@ -177,7 +177,7 @@
 				        
 				        if (!check) {
 				        	document.getElementById("file1").files[i] = "";
-				        	alert("<spring:message code ='ezCommunity.lhj03' />");
+				        	alert("<spring:message code ='ezBoard.hsbImg01' />");
 				        	return;
 				        }
 				        else {

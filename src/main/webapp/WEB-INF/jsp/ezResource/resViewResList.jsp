@@ -162,16 +162,10 @@
 		        openwindow(openLocation, "", 880, 550);
 	    	}
 
+	    	/* 2019-02-21 홍승비 - CSRF 수정 > 단순 호출 동작이므로 get으로 수정 */
 	    	function RefreshPageDoc() {
-
 		        window.parent.left.location.href = "/ezResource/leftResource.do?flag=SELECT_NO";
-
-		        document.frmRefresh.target = "_self"
-		        document.frmRefresh.brdID.value = pBrdid
-	    	    document.frmRefresh.accessCode.value = pAccessCode
-	        	document.frmRefresh.brdNm.value = pBrdnm
-	        	document.frmRefresh.goToPage.value = pcurpage
-	        	document.frmRefresh.submit();
+		        window.location.href  = "/ezResource/viewResList.do?brdID=" + pBrdid + "&brdNm=" + encodeURI(pBrdnm) + "&accessCode=" + pAccessCode + "&goToPage=" + pcurpage;
 	    	}
 
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
@@ -337,12 +331,7 @@
 		    function movePage(newPage) {
 		        var pURL;
 		        if (parseInt(newPage) > 0 && parseInt(newPage) != "" && parseInt(newPage) <= parseInt(ptotalPage)) {
-		            document.frmRefresh.target = "_self"
-		            document.frmRefresh.brdID.value = pBrdid
-		            document.frmRefresh.accessCode.value = pAccessCode
-		            document.frmRefresh.brdNm.value = pBrdnm
-		            document.frmRefresh.goToPage.value = newPage
-		            document.frmRefresh.submit();
+		        	 window.location.href  = "/ezResource/viewResList.do?brdID=" + pBrdid + "&brdNm=" + pBrdnm + "&accessCode=" + pAccessCode + "&goToPage=" + newPage;
 		        }
 		    }
 	
@@ -358,14 +347,8 @@
 		    function Search_Set(pGoToPage) {
 		        var pURL;
 		        if (parseInt(pGoToPage) > 0 && parseInt(pGoToPage) != "" && parseInt(pGoToPage) <= parseInt(ptotalPage)) {
-		            document.frmRefresh.target = "_self"
-		            document.frmRefresh.brdID.value = pBrdid
-		            document.frmRefresh.accessCode.value = pAccessCode
-		            document.frmRefresh.brdNm.value = pBrdnm
-		            document.frmRefresh.goToPage.value = pGoToPage
-		            document.frmRefresh.submit();
+		            window.location.href  = "/ezResource/viewResList.do?brdID=" + pBrdid + "&brdNm=" + pBrdnm + "&accessCode=" + pAccessCode + "&goToPage=" + pGoToPage;
 		        }
-	
 		    }
 	
 		    function btnCcalendar_Click() {
@@ -589,12 +572,5 @@
 		</div>
 		<br/>
     	<div id="tblPageRayer"></div>
-		<form name="frmRefresh" action="/ezResource/viewResList.do" method="post">
-  			<input type="hidden" name="brdID">
-  			<input type="hidden" name="brdNm">
-  			<input type="hidden" name="accessCode">
-  			<input type="hidden" name="sortGbn">
-  			<input type="hidden" name="goToPage">
-		</form>
 	</body>
 </html>

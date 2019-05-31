@@ -129,6 +129,12 @@ public interface EzCommonService {
 	public void addComCloseCompanyId() throws Exception;
 
 	public void addWebfolderTotalLimit() throws Exception;
+	
+	public void addMsgInMailSearch() throws Exception;
+
+	public void addFormVersion() throws Exception;
+
+	public void addAddJobMasterProxy() throws Exception;
 
 }
 

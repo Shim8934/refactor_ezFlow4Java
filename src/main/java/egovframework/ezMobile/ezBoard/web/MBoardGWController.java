@@ -1047,4 +1047,77 @@ public class MBoardGWController {
 			return rtv;
 		}
     }
+	
+	/**
+	 * 2019-05-14 홍승비 - 모바일 G/W 게시판 [GET] 동영상게시물 상세정보
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/movie/boards/{boardId}/contents/{contentId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object movieBoardDetail(@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request,Locale locale) throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/contents/{contentId}] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
+			
+			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
+			
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+			
+			LOGGER.debug("serverName = " + serverName + " | userID = " + userID + " | primary = " + primary);
+			
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			
+			LOGGER.debug("deptPathCode = "+deptPathCode);
+			
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+			
+			// 동영상 게시판 타입
+			boardInfo.setType("movieBoardItem");
+			
+			// 해당 게시물 읽기권한 없다면 리턴
+			if (!accessCheck(contentId, deptPathCode, info)) {
+				result.put("status", "no");
+				return result;
+			}
+		
+			// getBoardInfo 메서드에서 rollInfo 포함하여 권한 체크+플래그 설정한다.
+			if (!boardInfo.getRead_FG().equals("true")) {
+				result.put("status", "no");
+				return result;
+			}
+			
+			List<MBoardAttachVO> movieAttachVO = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
+			
+			LOGGER.debug("movieAttachVO : " + movieAttachVO.get(0));
+			
+			mBoardService.setAsRead(info, boardId, contentId);
+			
+			data.put("boardItem", boardItem);
+			data.put("boardInfo", boardInfo);
+			data.put("movieAttachVO", movieAttachVO.get(0));
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}		
+		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/movie/boards/{boardId}/contents/{contentId}] ended.");
+		
+		return result;
+	}
 }

@@ -190,7 +190,7 @@
 		
 			    var objNode;
 			    createNodeInsert(xmlDom, objNode, "DATA");
-			    createNodeAndInsertText(xmlDom, objNode, "CN", '${userId}');
+			    createNodeAndInsertText(xmlDom, objNode, "CN", "<c:out value='${userId}'/>");
 		        objRoot = createNodeAndInsertText(xmlDom, objNode, "MAILLIST", "");
 		
 				var primarymail = "";

@@ -424,8 +424,8 @@ function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSche
 function setCountSetting(countName, count) {
 	switch (countName) {
 	case "poll" : 
-		if (count > 99) {
-			count = "99+";
+		if (count > 999) {
+			count = "999+";
 			document.getElementById("pollCount").classList.remove("iconCount_none");
 			document.getElementById("pollCount").classList.add("iconCount");
 		} else if (count == 0) {
@@ -440,8 +440,8 @@ function setCountSetting(countName, count) {
 		
 		break;
 	case "circular" :
-		if (count > 99) {
-			count = "99+";
+		if (count > 999) {
+			count = "999+";
 			document.getElementById("circularCount").classList.remove("iconCount_none");
 			document.getElementById("circularCount").classList.add("iconCount");
 		} else if (count == 0) {
@@ -456,8 +456,8 @@ function setCountSetting(countName, count) {
 		
 		break;
 	case "schedule" :  
-		if (count > 99) {
-			count = "99+";
+		if (count > 999) {
+			count = "999+";
 			document.getElementById("scheduleCount").classList.remove("iconCount_none");
 			document.getElementById("scheduleCount").classList.add("iconCount");
 		} else if (count == 0) {
@@ -472,8 +472,8 @@ function setCountSetting(countName, count) {
 		
 		break;
 	case "approval" :
-		if (count > 99) {
-			count = "99+";
+		if (count > 999) {
+			count = "999+";
 			document.getElementById("approvalCount").classList.remove("iconCount_none");
 			document.getElementById("approvalCount").classList.add("iconCount");
 		} else if (count == 0) {
@@ -488,8 +488,8 @@ function setCountSetting(countName, count) {
 		
 		break;
 	case "unreadMail" :
-		if (count > 99) {
-			count = "99+";
+		if (count > 999) {
+			count = "999+";
 			document.getElementById("unreadMailCount").classList.remove("iconCount_none");
 			document.getElementById("unreadMailCount").classList.add("iconCount");
 		} else if (count == 0) {
@@ -1135,10 +1135,19 @@ function ezWorkspaceData() {
 	if(!checkBrowser()) {
 		$("#workspaceCnt").bind("DOMSubtreeModified", function() {
 		   	var workspaceCnt = document.getElementById("workspaceCnt").innerHTML * 1;
-		   	if(workspaceCnt > 0) {
-	 	    	document.getElementById("workspaceCnt").classList.remove('iconCount_none');
-		    	document.getElementById("workspaceCnt").classList.add('iconCount');
-		    }
+		   	if (workspaceCnt > 999) {
+		   		workspaceCnt = "999+";
+				document.getElementById("workspaceCnt").classList.remove("iconCount_none");
+				document.getElementById("workspaceCnt").classList.add("iconCount");
+			} else if (workspaceCnt == 0) {
+				document.getElementById("workspaceCnt").classList.remove("iconCount");
+				document.getElementById("workspaceCnt").classList.add("iconCount_none");
+			} else {
+				document.getElementById("workspaceCnt").classList.remove("iconCount_none");
+				document.getElementById("workspaceCnt").classList.add("iconCount");
+			}
+		   	
+		   	document.getElementById("workspaceCnt").innerHTML = workspaceCnt;
 		});		    	
 	} else {
 		var target = document.getElementById('workspaceCnt');
@@ -1146,10 +1155,19 @@ function ezWorkspaceData() {
 		var observer = new MutationObserver(function(mutations) {
 			mutations.forEach(function(mutation) {
 	  		    var workspaceCnt = mutation.target.innerHTML * 1;
-				if(workspaceCnt > 0) {
-		 		   	document.getElementById("workspaceCnt").classList.remove('iconCount_none');
-				   	document.getElementById("workspaceCnt").classList.add('iconCount');
-			    }
+			   	if (workspaceCnt > 999) {
+			   		workspaceCnt = "999+";
+					document.getElementById("workspaceCnt").classList.remove("iconCount_none");
+					document.getElementById("workspaceCnt").classList.add("iconCount");
+				} else if (workspaceCnt == 0) {
+					document.getElementById("workspaceCnt").classList.remove("iconCount");
+					document.getElementById("workspaceCnt").classList.add("iconCount_none");
+				} else {
+					document.getElementById("workspaceCnt").classList.remove("iconCount_none");
+					document.getElementById("workspaceCnt").classList.add("iconCount");
+				}
+			   	
+			   	document.getElementById("workspaceCnt").innerHTML = workspaceCnt;
 			    observer.disconnect();
 			});    
 		});
@@ -1166,7 +1184,7 @@ function ezWorkspaceData() {
 
 function schedule_get_holiday() {		        
     $.ajax({
-		type : "POST",
+		type : "GET",
 		dataType : "text",
 		async : true,
 		url : "/ezSchedule/scheduleGetHoliday.do",

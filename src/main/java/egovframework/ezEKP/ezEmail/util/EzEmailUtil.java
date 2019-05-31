@@ -77,6 +77,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -129,10 +130,14 @@ public class EzEmailUtil {
 	@Autowired
 	private EzAddressService ezAddressService;
 	
+	@Value("#{cryptos['EzEmailUtil.apb']}")
+	private String apb;
+	
 	public String getInboxFolderId() {
 		return "INBOX";
 	}
-
+	
+	
 	public String getSentFolderId(Locale locale) {
 		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
 		
@@ -409,6 +414,12 @@ public class EzEmailUtil {
 			e.printStackTrace();
 		} 
 		
+		if (addressStr != null) {
+			// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+			// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+			addressStr = addressStr.replace("\\\"", "");
+		}
+		
 		return addressStr;
 	}
 	
@@ -535,7 +546,13 @@ public class EzEmailUtil {
 					} catch (UnsupportedEncodingException e) {
 					}
 					
-					addressBuilder.append(name + " <" + addressStr + ">");					
+					if (name != null) {
+						// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+						// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+						name = name.replace("\\\"", "");
+					}					
+					
+					addressBuilder.append(name + " <" + addressStr + ">");							
 				}
 				else {
 					addressBuilder.append(addressStr + " <" + addressStr + ">");
@@ -591,6 +608,12 @@ public class EzEmailUtil {
 							name = MimeUtility.decodeText(name);
 						}
 					} catch (UnsupportedEncodingException e) {
+					}
+					
+					if (name != null) {
+						// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+						// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+						name = name.replace("\\\"", "");
 					}
 					
 					addressBuilder.append(name + " <" + addressStr + ">");					
@@ -907,6 +930,19 @@ public class EzEmailUtil {
 		boolean includeInlineAsAttachment = false;
 		String shareId = null;
 		
+		// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
+		// ContentID 없이 Content-Dispostion이 inline으로 첨부된
+		// 이미지가 있어 이 경우 첨부파일로서 처리하기 위해 추가함.(iPhone Mail에서 작성한 메일임.)
+		boolean isInlinePartWithoutContentID = false;
+		
+		if (part instanceof MimePart) {
+			if (part.getDisposition() != null 
+					&& part.getDisposition().equalsIgnoreCase(Part.INLINE)
+					&& ((MimePart)part).getContentID() == null) {
+				isInlinePartWithoutContentID = true;
+			}
+		}
+		
 		if (extraMap != null) {
 			if (extraMap.get("forPrint") != null) forPrint = (boolean)extraMap.get("forPrint");
 			if (extraMap.get("mobile") != null) mobile = (boolean)extraMap.get("mobile");
@@ -952,7 +988,8 @@ public class EzEmailUtil {
 						|| (part.getContentType() != null && part.getContentType().contains("x-apple-part-url")
 						|| includeInlineAsAttachment))
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
-				|| part.isMimeType("application/*")) {
+				|| part.isMimeType("application/*")
+				|| isInlinePartWithoutContentID) {
             double size = part.getSize();
             String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
             
@@ -3397,7 +3434,9 @@ public class EzEmailUtil {
     	String credential = null;
     	
     	if (emailAddress != null && !emailAddress.equals("")) {
-	    	byte[] keyBytes = "bizmGW02".getBytes("UTF-8");
+    		
+    		
+	    	byte[] keyBytes = apb.getBytes("UTF-8");
 	    	byte[] ivBytes = "mekaGW02".getBytes("UTF-8");
 	    	byte[] input = emailAddress.getBytes("UTF-8");
 	    	
@@ -4428,6 +4467,55 @@ public class EzEmailUtil {
 	
 	public String convertSpaceToNBSP(String src) {
 		return src.replace(" ", "&nbsp;");
+	}
+	
+	public boolean isHtmlMessage(Message message) throws MessagingException, IOException {
+		if (message.getHeader("Content-Type") == null) {
+			return false;
+		}
+		
+		String tempBodyType = message.getHeader("Content-Type")[0];
+		String contentType = tempBodyType.split(";")[0].trim();
+
+		if (contentType.equals("text/plain")) {
+			return false;
+		} else if (contentType.equals("multipart/alternative")) {
+			return true;
+		}
+		
+		Object content = message.getContent();
+		
+		if (content instanceof Multipart) {
+			return containsHtmlMultipart((Multipart) content);
+		}
+		
+		return true;
+	}
+	
+	public boolean containsHtmlMultipart(Multipart multipart) throws MessagingException, IOException {
+		int partCount = multipart.getCount();
+		
+		Object partContent;
+
+		for (int i = 0; i < partCount; i++) {
+			BodyPart bodyPart = multipart.getBodyPart(i);
+			
+			if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
+				continue;
+			}
+			
+			partContent = bodyPart.getContent();
+			
+			if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
+				return true;
+			}
+
+			if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 

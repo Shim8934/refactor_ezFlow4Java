@@ -79,8 +79,8 @@
 </style>
 
 <script type="text/javascript">
-			var listType = "${listType}";
-			var typeId = "${typeId}";
+			var listType = "<c:out value='${listType}'/>";
+			var typeId = "<c:out value='${typeId}'/>";
 			var pAdminType  = "n";
 			var currentPage = 1;
 			var listCnt = "${journalEnv.listCnt}";
@@ -1241,7 +1241,7 @@
 					</tr>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.t210' />
+							<spring:message code='ezJournal.t66' />
 						</th>
 						<td>
 							<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">

@@ -532,7 +532,7 @@ function event_Mail_CopyPostSend() {
         		alert(strLang241);
         	} else {
 	        	MailListRefresh();
-	            refreshUnreadCount();
+	        	
 	            if(event_Mail_CopyPostSend.mode=="MOVE") {
 	            	prevShow_Clear();
 	            	alert(MoveMsg);
@@ -573,7 +573,7 @@ function event_xmlhttp_mailMoveDelete_Complete() {
     	}
     	else if (xmlhttp_mailMoveDelete.status >= 200 && xmlhttp_mailMoveDelete.status < 300) {
             MailListRefresh();
-            refreshUnreadCount();
+            
             if(event_xmlhttp_mailMoveDelete_Complete.mode=="MOVE")
                 alert(MoveMsg);
             else if (event_xmlhttp_mailMoveDelete_Complete.mode == "ALL") {
@@ -1069,7 +1069,7 @@ function prevShow_Clear() {
         	sentDateStr.style.display = "none";
         }
         
-        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        var innerFrame  = document.getElementById("ifrmPreViewW");
         innerFrame.onload = function () {
         	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
         	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
@@ -1086,7 +1086,7 @@ function prevShow_Clear() {
         	sentDateStr.style.display = "none";
         }
         
-        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        var innerFrame  = document.getElementById("ifrmPreViewH");
         innerFrame.onload = function () {
         	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
         	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {

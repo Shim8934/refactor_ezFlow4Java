@@ -66,14 +66,27 @@
 							AND
 								FILE.FOLDER_ID = FOLDER2.FOLDER_ID
 					WHERE
-						FOLDER2.FOLDER_PATH LIKE CONCAT(FOLDER.FOLDER_PATH, '%')
-					AND
 						FILE.TENANT_ID = FOLDER.TENANT_ID
-					AND
-						FILE.USE_STATUS = 'Y'
+					AND 
+					(
+						(
+							FOLDER2.FOLDER_PATH LIKE CONCAT(FOLDER.FOLDER_PATH, '%')
+						AND
+							FILE.USE_STATUS = 'Y'
+						)
+		]]>
+		<isEqual property="type" compareValue="U">
+		<![CDATA[
+						OR (
+							FILE.DELETER_ID = MAIN.CN
+						AND
+							FILE.USE_STATUS <> 'Y'
+						)
+		]]>
+		</isEqual>
+					)
 				) AS TOTAL_USED
 			FROM
-		]]>
 		<isEqual property="type" compareValue="C">
 				(
 					SELECT

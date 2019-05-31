@@ -18,10 +18,12 @@
 				width:158px;
 				overflow:hidden;
 				text-overflow:ellipsis;
+				display:inline-block;
 			}
+
 			#mCSB_1_container {
 				margin-right: 0px;
-			} 
+			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
@@ -420,6 +422,11 @@
 	            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 	            treeView.DataBind(obj + "obj");
 	        }
+	        
+	        /* 2019-02-14 홍승비 - 좌측 게시판리스트의 펼치기 화살표 클릭 시 하위게시판 불러오도록 수정*/
+		    function spanClick(divID) {
+		    	document.getElementById(divID).click();
+		    }
 	        
 	    </script>
 	</head>

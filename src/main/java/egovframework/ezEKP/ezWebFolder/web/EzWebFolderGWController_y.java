@@ -445,16 +445,22 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId 	= common.getTenantId();
-			String comId 	= common.getCompanyId();
-			String offset 	= common.getOffSet();
-			String timeUTC  = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
-			int result = service.deleteSubFldAFile(folderId, tenantId, comId, userId, timeUTC);
-			if (result == 1) {
-				jsonObj.put("status", "ok");
-				jsonObj.put("code", 0);
-			} else if (result == 2) {
+			
+			if (ezWebFolderService.canDelete(null, new String[] { folderId }, userId, tenantId)) {
+				String comId 	= common.getCompanyId();
+				String offset 	= common.getOffSet();
+				String timeUTC  = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+				int result = service.deleteSubFldAFile(folderId, tenantId, comId, userId, timeUTC);
+				if (result == 1) {
+					jsonObj.put("status", "ok");
+					jsonObj.put("code", 0);
+				} else if (result == 2) {
+					jsonObj.put("status", "error");
+					jsonObj.put("code", 4);
+				}
+			} else {
 				jsonObj.put("status", "error");
-				jsonObj.put("code", 4);
+				jsonObj.put("code", 5);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1148,9 +1154,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	    	String userId = requestObject.get("userid") != null ? (String)requestObject.get("userid") : "";
 	    	String pw = requestObject.get("pw") != null ? (String)requestObject.get("pw") : "";
 	    	int tenantId = 0;
-
-	    	System.out.println(webfolderUtil.encryptAES("webfolder2"));
-	    	System.out.println(webfolderUtil.encryptAES("123qwe!!"));
 	    	
 	    	userId = webfolderUtil.decryptAES(userId);
 			pw = webfolderUtil.decryptAES(pw);

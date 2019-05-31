@@ -34,10 +34,10 @@
 			var uselang = "${userInfo.lang}";
 			var userOffset = "${userOffset}";
 			var companyId = "${companyID}";
-			var date = "${date}";
+			var date = "<c:out value='${date}'/>";
 			var time = "${time}";//현재시간
 			var nowTime = time.split(":");
-			var mode = "${mode}";
+			var mode = "<c:out value='${mode}'/>";
 			var pStartDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var pEndDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";
@@ -215,7 +215,7 @@
 			
 			function getFormBody() {
 				$.ajax({
-					type : "POST",
+					type : "get",
 					url : "/ezAttitude/getFormBody.do",
 					async : false,
 					data : {
@@ -709,7 +709,7 @@
 	                </tr>
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
-	            	<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span></a>					
+	            	<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t16'/></span></a>					
 				</div>
 	        </div>
 	        <script type="text/javascript">

@@ -673,7 +673,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> CheckBoardManage(Map<String, Object> map) throws Exception{
+	public List<HashMap<String, Object>> checkBoardManage(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.CheckBoardManage", map);
 	}
 

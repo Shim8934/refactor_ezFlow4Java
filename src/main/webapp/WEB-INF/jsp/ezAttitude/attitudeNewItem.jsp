@@ -31,8 +31,8 @@
 			var uselang = "${userInfo.lang}";
 			var userOffset = "${userOffset}";
 			var companyId = "${companyId}";
-			var date = "${date}";
-			var mode = "${mode}";
+			var date = "<c:out value='${date}'/>";
+			var mode = "<c:out value='${mode}'/>";
 			var pStartDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var pEndDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";
@@ -224,7 +224,7 @@
 			
 			function getFormBody() {
 				$.ajax({
-					type : "POST",
+					type : "get",
 					url : "/ezAttitude/getFormBody.do",
 					async : true,
 					data : {
@@ -462,15 +462,15 @@
 						returnFlag = true;
 					} else if (isMemorialDay.length != 0 || isYearMemorialDay.length != 0) {//기념일체크
 						if (isMemorialDay.length != 0 ) {
-							for (var i = 0; i < isMemorialDay.length; i++) {
-								if (isMemorialDay[i].holiday ==  true) {//휴무일인 기념일일때
+							for (var j = 0; j < isMemorialDay.length; j++) {
+								if (isMemorialDay[j].holiday ==  true) {//휴무일인 기념일일때
 									returnFlag = true;
 								}
 							}
 						} 
 						if (isYearMemorialDay.length != 0) {
-							for (var i = 0; i < isYearMemorialDay.length; i++) {
-								if (isYearMemorialDay[i].holiday == true) { //휴무일인 기념일일때
+							for (var j = 0; j < isYearMemorialDay.length; j++) {
+								if (isYearMemorialDay[j].holiday == true) { //휴무일인 기념일일때
 									returnFlag = true;
 								}
 							}
@@ -778,7 +778,7 @@
 	                </tr>
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
-					<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span></a>
+					<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t16'/></span></a>
 	            </div>
 	        </div>
 	        <script type="text/javascript">

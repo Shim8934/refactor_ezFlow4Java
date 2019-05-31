@@ -17,8 +17,8 @@
 		    var ReturnFunction;
 		    //2018-02-06 김보미 - 페이징
 		    var CurPage = "";
-		    var pBoardID = "${boardID}";
-		    var itemID = "${itemID}";
+		    var pBoardID = "<c:out value='${boardID}'/>";
+		    var itemID = "<c:out value='${itemID}'/>";
 		    var perCount = 10;
 		    
 		    window.onload = function () {

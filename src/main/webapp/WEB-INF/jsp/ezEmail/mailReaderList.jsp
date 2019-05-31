@@ -13,9 +13,9 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <script>
-	        var _url = decodeURIComponent('${url}');
+	        var _url = decodeURIComponent("<c:out value='${url}'/>");
 	        var isReadDelete = "${isReadDelete}";
-	        var shareId = "${shareId}";
+	        var shareId = "<c:out value='${shareId}'/>";
 	        var docWidth = window.outerWidth;
 	        var docHeight = window.outerHeight;
 	        
@@ -331,7 +331,7 @@
 	                    </tr>
 	                </table>
 	            </table>
-	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 330px; width: 100%; overflow-y: auto;overflow-x:hidden;" onscroll="ContextMenuHidden()">
+	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 330px; width: 100%; overflow-y: auto;overflow-x:hidden;" >
 	                <table class="mainlist" style="width: 100%;" id="MailList">
 	                </table>
 	            </div>

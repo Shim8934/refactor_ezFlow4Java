@@ -32,6 +32,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -119,7 +126,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공용배포그룹관리 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailDistributionList.do")
+	@RequestMapping(value = "/admin/ezEmail/mailDistributionList.do", method = RequestMethod.GET)
 	public String mailDistributionList(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
 			Model model, HttpServletRequest request) throws Exception {
@@ -156,7 +163,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공용배포그룹 정보 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailGetDistribution.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezEmail/mailGetDistribution.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailGetDistribution(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
@@ -263,7 +270,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공용배포그룹 추가 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailAddDistributionList.do")
+	@RequestMapping(value = "/admin/ezEmail/mailAddDistributionList.do", method = RequestMethod.GET)
 	public String mailAddDistributionList(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
 			Model model, HttpServletRequest request) throws Exception {
@@ -305,7 +312,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공용배포그룹 추가 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailSaveDistributionList.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezEmail/mailSaveDistributionList.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailSaveDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale,
 			Model model, @RequestBody String bodyData) throws Exception {
@@ -441,7 +448,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공용배포그룹 구성원 정보 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailViewDistributionList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezEmail/mailViewDistributionList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailViewDistributionList(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
@@ -535,7 +542,7 @@ public class EzEmailAdminController {
 						sb.append("<CLASS>" + "distribution" + "</CLASS>");
 						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
 						sb.append("<DISPLAYNAME>"
-								+ displayName
+								+ commonUtil.cleanValue(displayName)
 								+ "</DISPLAYNAME>");
 						sb.append("<MAIL>"
 								+ commonUtil.cleanValue(cn)
@@ -607,7 +614,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공용배포그룹 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailDelDistributionList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezEmail/mailDelDistributionList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailDelDistributionList(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
@@ -688,7 +695,7 @@ public class EzEmailAdminController {
 	/**
 	 * 메일 기본설정 (관리자) 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailConfigColor.do")
+	@RequestMapping(value = "/admin/ezEmail/mailConfigColor.do", method = RequestMethod.GET)
 	public String mailConfigColor(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
 			Model model, HttpServletRequest request) throws Exception {
@@ -708,7 +715,7 @@ public class EzEmailAdminController {
 	/**
 	 * 메일 색상설정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailColor.do")
+	@RequestMapping(value = "/admin/ezEmail/mailColor.do", method = RequestMethod.GET)
 	public String mailColor(@CookieValue("loginCookie") String loginCookie,
 			Locale locale, Model model, HttpServletRequest request)
 			throws Exception {
@@ -753,7 +760,7 @@ public class EzEmailAdminController {
 	/**
 	 * 메일 색상설정 저장 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailSaveColor.do")
+	@RequestMapping(value = "/admin/ezEmail/mailSaveColor.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailSaveColor(@CookieValue("loginCookie") String loginCookie,
 			Locale locale, Model model, @RequestBody String bodyData)
@@ -797,7 +804,7 @@ public class EzEmailAdminController {
 	/**
 	 * 메일 디폴트 Quota (관리자) 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailDefaultQuota.do")
+	@RequestMapping(value = "/admin/ezEmail/mailDefaultQuota.do", method = RequestMethod.GET)
 	public String mailDefaultQuota(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
 			Model model, HttpServletRequest request) throws Exception {
@@ -826,7 +833,7 @@ public class EzEmailAdminController {
 	/**
 	 * 메일 디폴트 Quota 설정 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailSaveDefaultQuota.do")
+	@RequestMapping(value = "/admin/ezEmail/mailSaveDefaultQuota.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailSaveDefaultQuota(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
@@ -864,7 +871,7 @@ public class EzEmailAdminController {
 	/**
 	 * 회원별 메일함 사용용량 및 총용량
 	 */
-	@RequestMapping(value = "/admin/ezEmail/mailQuotaList.do")
+	@RequestMapping(value = "/admin/ezEmail/mailQuotaList.do", method = RequestMethod.GET)
 	public String showMailBoxQuotaManaged(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
 		logger.debug("showMailBoxQuotaManaged started.");
 		
@@ -944,7 +951,7 @@ public class EzEmailAdminController {
 		return "json";
 	}
 
-	@RequestMapping(value = "/admin/ezEmail/mailBoxQuotaManageList.do")
+	@RequestMapping(value = "/admin/ezEmail/mailBoxQuotaManageList.do", method = RequestMethod.POST)
 	public String mailBoxQuotaManageList( @CookieValue("loginCookie") String loginCookie,
 			Model model, HttpServletRequest req,
 			@RequestParam(required = false) String searchKeycode,
@@ -1074,7 +1081,7 @@ public class EzEmailAdminController {
 	/**
 	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/statisticsListExcelExport.do")
+	@RequestMapping(value = "/admin/ezEmail/statisticsListExcelExport.do", method = RequestMethod.GET)
 	public void mailQuotaExcelExport(@CookieValue("loginCookie") String loginCookie, Model model,
 			HttpServletRequest request, String searchKeycode, String searchKeyword,
 			HttpServletResponse response) throws Exception {
@@ -1207,7 +1214,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공유사서함관리 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/showSharedMailboxList.do")
+	@RequestMapping(value = "/admin/ezEmail/showSharedMailboxList.do", method = RequestMethod.GET)
 	public String showSharedMailboxList(
 			@CookieValue("loginCookie") String loginCookie, Locale locale,
 			Model model, HttpServletRequest request) throws Exception {
@@ -1242,7 +1249,7 @@ public class EzEmailAdminController {
 	/**
 	 * 회사별 공유사서함 리스트 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/getSharedMailboxList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezEmail/getSharedMailboxList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getSharedMailboxList(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getSharedMailboxList started.");
@@ -1300,7 +1307,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공유사서함 정보 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/getSharedMailboxInfo.do")
+	@RequestMapping(value = "/admin/ezEmail/getSharedMailboxInfo.do", method = RequestMethod.POST)
 	public String getSharedMailboxInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getSharedMailboxInfo started.");
 
@@ -1339,7 +1346,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공유사서함 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/delSharedMailbox.do")
+	@RequestMapping(value = "/admin/ezEmail/delSharedMailbox.do", method = RequestMethod.POST)
 	public String delSharedMailbox(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("delSharedMailbox started.");
 		
@@ -1439,6 +1446,7 @@ public class EzEmailAdminController {
 				String bizmekaResult = "ERROR";
 				
 				try {
+					/* 비즈메카 연동은 우선 생각하지 않는다. -> 필요할 때 논의 후 구현!
 					String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantId);
 					
 					// 비즈메카와 연동된 경우에는 비즈메카 API를 이용해 비즈메카 사용자 계정을 삭제한다.
@@ -1455,6 +1463,7 @@ public class EzEmailAdminController {
 							throw new Exception("bizmekaDeleteUser failed");
 						}						
 					}
+					*/
 										
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(shareId, "user", tenantId);
@@ -1511,7 +1520,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공유사서함 추가 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/showAddSharedMailbox.do")
+	@RequestMapping(value = "/admin/ezEmail/showAddSharedMailbox.do", method = RequestMethod.GET)
 	public String showAddSharedMailbox(
 			@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("showAddSharedMailbox started.");
@@ -1546,7 +1555,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공유사서함 추가 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/addSharedMailbox.do")
+	@RequestMapping(value = "/admin/ezEmail/addSharedMailbox.do", method = RequestMethod.POST)
 	public String addSharedMailbox(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception {
 		logger.debug("addSharedMailbox started.");
 		logger.debug("bodyData=" + bodyData);
@@ -1839,7 +1848,7 @@ public class EzEmailAdminController {
 	/**
 	 * 공유사서함 수정 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/modSharedMailbox.do")
+	@RequestMapping(value = "/admin/ezEmail/modSharedMailbox.do", method = RequestMethod.POST)
 	public String modSharedMailbox(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception {
 		logger.debug("modSharedMailbox started.");
 		logger.debug("bodyData=" + bodyData);
@@ -2023,7 +2032,7 @@ public class EzEmailAdminController {
 	 * @param String loginCookie, Model model
 	 * @return String
 	 */
-	@RequestMapping(value = "/admin/ezEmail/signatureMain.do")
+	@RequestMapping(value = "/admin/ezEmail/signatureMain.do", method = RequestMethod.GET)
 	public String signatureMainView(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("signatureMainView started.");
 
@@ -2063,7 +2072,7 @@ public class EzEmailAdminController {
 	 * @param companyId
 	 * @return : JSONArray
 	 */
-	@RequestMapping("/admin/ezEmail/readSignList.do")
+	@RequestMapping(value = "/admin/ezEmail/readSignList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONArray readSignList(@CookieValue("loginCookie") String loginCookie, String companyId, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("readSignList started.");
@@ -2090,7 +2099,7 @@ public class EzEmailAdminController {
 	 * @param companyId, search
 	 * @return : JSONArray
 	 */
-	@RequestMapping("/admin/ezEmail/searchSignList.do")
+	@RequestMapping(value = "/admin/ezEmail/searchSignList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONArray searchSignList(@CookieValue("loginCookie") String loginCookie, String companyId, String search, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("searchSignList started.");
@@ -2118,7 +2127,7 @@ public class EzEmailAdminController {
 	 * @param companyId, signNo
 	 * @return : void
 	 */
-	@RequestMapping("/admin/ezEmail/deleteSignTemplate.do")
+	@RequestMapping(value = "/admin/ezEmail/deleteSignTemplate.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void deleteSignTemplate(@CookieValue("loginCookie") String loginCookie, String signNo, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("deleteSignTemplate started.");
@@ -2140,7 +2149,7 @@ public class EzEmailAdminController {
 	 * @return : void
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/admin/ezEmail/signaturePreview.do")
+	@RequestMapping(value = "/admin/ezEmail/signaturePreview.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONArray signaturePreview(@CookieValue("loginCookie") String loginCookie, String signNo, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("signaturePreview started.");
@@ -2187,9 +2196,9 @@ public class EzEmailAdminController {
 	/**
 	 * 서명 템플릿 추가,수정 팝업 화면
 	 */
-	@RequestMapping("/admin/ezEmail/signEditPopUp.do")
+	@RequestMapping(value = "/admin/ezEmail/signEditPopUp.do", method = RequestMethod.GET)
 	public String signEditPopUp(
-			@CookieValue("loginCookie") String loginCookie, Locale locale, String paramSignNo, String type, Model model) throws Exception {
+			@CookieValue("loginCookie") String loginCookie, Locale locale, String paramSignNo, String type, String companyId, Model model) throws Exception {
 		logger.debug("signEditPopUp started.");
 		logger.debug("signNo=" + paramSignNo + ", type=" + type);
 		
@@ -2232,6 +2241,7 @@ public class EzEmailAdminController {
 		model.addAttribute("displayname", displayname);
 		model.addAttribute("displayname2", displayname2);
 		model.addAttribute("type", type);
+		model.addAttribute("companyId", companyId);
 
 		logger.debug("signNo=" + signNo + ", content=" + content + ", displayname=" + displayname + ", displayname2=" + displayname2);
 		logger.debug("signEditPopUp ended.");
@@ -2243,18 +2253,22 @@ public class EzEmailAdminController {
 	 * 
 	 * @param String loginCookie, Model model
 	 */
-	@RequestMapping(value = "/admin/ezEmail/setSignatureTemplate.do")
+	@RequestMapping(value = "/admin/ezEmail/setSignatureTemplate.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void setSignatureTemplate(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailSignatureTemplateVO signTemplate, String type) throws Exception {
+	public void setSignatureTemplate(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailSignatureTemplateVO signTemplate, String type, String companyId) throws Exception {
 		logger.debug("setSignatureTemplate started.");
 		logger.debug("signTemplate=" + signTemplate);
-		logger.debug("type=" + type);
+		logger.debug("type=" + type + ", companyId=" + companyId);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		if (companyId == null || companyId.equals("")) {
+			companyId = userInfo.getCompanyID();
+		}
+		
 		try {
 			if (type.equals("add")) {
-				signTemplate.setCompanyId(userInfo.getCompanyID());
+				signTemplate.setCompanyId(companyId);
 				signTemplate.setTenantId(Integer.toString(userInfo.getTenantId()));
 				ezEmailService.addSignatureTemplate(signTemplate);
 			} else {
@@ -2274,7 +2288,7 @@ public class EzEmailAdminController {
 	 * 
 	 * @param String loginCookie, Model model
 	 */
-	@RequestMapping(value = "/admin/ezEmail/signaturePreviewContent.do")
+	@RequestMapping(value = "/admin/ezEmail/signaturePreviewContent.do", method = RequestMethod.POST)
 	public String signaturePreviewContent(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("signaturePreviewContent started.");
 		
@@ -2326,7 +2340,7 @@ public class EzEmailAdminController {
 	/**
 	 * 조직도관리 메인화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/adminMailMain.do")
+	@RequestMapping(value = "/admin/ezEmail/adminMailMain.do", method = RequestMethod.GET)
 	public String organMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		logger.debug("adminMailMain started.");
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -2343,7 +2357,7 @@ public class EzEmailAdminController {
 	/**
 	 * 조직도관리 왼쪽화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/adminMailLeft.do")
+	@RequestMapping(value = "/admin/ezEmail/adminMailLeft.do", method = RequestMethod.GET)
 	public String organLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());

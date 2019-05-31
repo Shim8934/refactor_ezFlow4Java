@@ -46,7 +46,7 @@
 		}
 		</style>
 		<script type="text/javascript">
-			var pBoardID = "${boardID}";
+			var pBoardID = "<c:out value='${boardID}'/>";
 	    	var SSUserID = "${userInfo.id}";
 		    var SSUserName = "${userInfo.name}";
 		    var CurPage = "${boardInfo.page}";
@@ -61,7 +61,7 @@
 		    var Delete_FG = "${boardInfo.delete_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
-		    var pSortBy = "${boardInfo.sortBy}";
+		    var pSortBy = "<c:out value='${boardInfo.sortBy}'/>";
 		    var url = "${boardInfo.url}";
 		    var ShowAdjacent = "";
 		    var gubun = "${boardInfo.guBun}";
@@ -69,12 +69,12 @@
 			var lang = "${userInfo.lang}";
 		    var OrderOption = "";
 		    var OrderCell = "";
-		    var pBoardType = "${boardInfo.boardType}";
+		    var pBoardType = "<c:out value='${boardInfo.boardType}'/>";
 		    var USE_OCS = "${use_ocs}";
 		    var useRunTime = "${useRunTime}"
 		    var SQLPARADATA = "";
 		    var Use_OneLineCount = "${use_oneLineCount}";
-		    var pAdminType = "${boardInfo.adminType}";
+		    var pAdminType = "<c:out value='${boardInfo.adminType}'/>";
 		    if (url != "")
 		        window.location.href = url;
 		

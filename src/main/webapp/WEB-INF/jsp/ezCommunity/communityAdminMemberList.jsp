@@ -76,12 +76,24 @@
 				}
 			}
 	
+			/* 2019-02-20 홍승비 - 커뮤니티 CSRF 수정 (단순 호출 작동 시 get방식 사용) */
 			function sendit() {
-			    if( document.getElementById("ser").value == "" ) {
+			    if (document.getElementById("ser").value == "" ) {
 					alert("<spring:message code = 'ezCommunity.t504' />");
 					return;
 				} else {
-					document.member.submit();
+					var searchID = document.getElementById("searchID").checked;
+					var searchName = document.getElementById("searchName").checked;
+					var searchText = document.getElementById("ser").value;
+					var flag = "";
+					
+					if (searchID == true) {
+						flag = "id";
+					} else {
+						flag = "name";
+					}
+					
+					window.location.href="/ezCommunity/adminMemberList.do?code=" + '<c:out value="${code}"/>' + "&mode=${mode}&flag=" + flag + "&ser=" + searchText;
 				}
 			}
 		</script>
@@ -97,36 +109,33 @@
 				<h1><spring:message code = 'ezCommunity.t505' /></h1>
 			</c:otherwise>
 		</c:choose>
-				
-		<form method="post" name="member" action="/ezCommunity/adminMemberList.do?code=<c:out value = '${code}' />&mode=<c:out value = '${mode}' />">
-			<div class="point">
-		  
-			  	<c:choose>
-					<c:when test="${mode == 'master'}">
-						<spring:message code = 'ezCommunity.t506' />
-					</c:when>
-					
-					<c:otherwise>
-						<spring:message code = 'ezCommunity.t507' />
-					</c:otherwise>
-				</c:choose>
-		    
-		  	</div>
-		  
-		  	<table class="content" style="margin-top:10px" >
-				<tr>
-					<th><spring:message code = 'ezCommunity.t31' /></th>
-					<td>
-						<input type="radio" name="flag" value="id" style="margin:0px 0px -2px 3px">
-		        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t508' /></label>
-		        		<input type="radio" name="flag" value="name" checked style="margin:0px 0px -2px 3px">
-		        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t509' /></label>
-		        		<input style="height:22px" name="ser" id ="ser" type="text">
-		        		<a class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
-		        	</td>
-		    	</tr>
-		  	</table>
-		</form>		
+		
+		<div class="point">
+		
+		  	<c:choose>
+				<c:when test="${mode == 'master'}">
+					<spring:message code = 'ezCommunity.t506' />
+				</c:when>
+				<c:otherwise>
+					<spring:message code = 'ezCommunity.t507' />
+				</c:otherwise>
+			</c:choose>
+	    
+	  	</div>
+	  
+	  	<table class="content" style="margin-top:10px" >
+			<tr>
+				<th><spring:message code = 'ezCommunity.t31' /></th>
+				<td>
+					<input type="radio" id="searchID" value="id" style="margin:0px 0px -2px 3px">
+	        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t508' /></label>
+	        		<input type="radio" id="searchName" value="name" checked style="margin:0px 0px -2px 3px">
+	        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t509' /></label>
+	        		<input style="height:22px" id ="ser" type="text">
+	        		<a class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
+	        	</td>
+	    	</tr>
+	  	</table>
 		<br>		
 		<div>
 			▒ <spring:message code = 'ezCommunity.t510' /><span class="point"><c:out value = '${postCount}' /></span><spring:message code = 'ezCommunity.t511' />

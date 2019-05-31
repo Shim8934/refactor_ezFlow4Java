@@ -8,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,7 +22,8 @@ public class EzUCMessengerUtil {
 	
 	//AES128로 변경
 //	private static final String APB = "S0LKK1EAY021BOH1LNY3U8O3E7MI00I0";
-	private static final String APB = "S0LKK1EAY021BOH1";
+	@Value("#{cryptos['EzUCMessengerUtil.apb']}")
+	private String APB;
     private static final String IV = "S2H1S4GU5S7E7H3D";
     
 	public String encryptAES(String s) throws Exception {               	
