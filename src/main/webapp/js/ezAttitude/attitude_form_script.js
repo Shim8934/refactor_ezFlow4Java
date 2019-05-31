@@ -355,6 +355,16 @@ function caldate(date, day){
    return caledYear+'-'+caledmonth+'-'+caledday;
 }
 
+function lastDay(year, month){
+
+	//var curDate = new Date();
+
+	var lastDate = new Date(year, month, "");
+
+	return lastDate.getDate();
+
+	}
+
 //실제 상위 프레임의 doctitle에 값 적용
 function setDocTitle(element) {
 	if (event) {
@@ -423,13 +433,17 @@ function setDocTitle(element) {
 			
 			if (!isValidDate(titleStartDate2.split("-")[0],titleStartDate2.split("-")[1],titleStartDate2.split("-")[2])) {
 				alert(titleStartDate + " 는 없는 날짜 입니다.")
-				isContinue = false;
-	            return;
+//				isContinue = false;
+				titleStartDate2 = titleStartDate2.split("-")[0] + "-" + titleStartDate2.split("-")[1] + "-" +lastDay(titleStartDate2.split("-")[0],titleStartDate2.split("-")[1]);
+				titleStartDate = titleStartDate2;
+//	            return;
 			}			
 			if (!isValidDate(titleEndDate2.split("-")[0],titleEndDate2.split("-")[1],titleEndDate2.split("-")[2])) {
 				alert(titleEndDate + " 는 없는 날짜 입니다.")
-				isContinue = false;
-	            return;
+//				isContinue = false;
+				titleEndDate2 = titleEndDate2.split("-")[0] + "-" + titleEndDate2.split("-")[1] + "-" +lastDay(titleEndDate2.split("-")[0],titleEndDate2.split("-")[1]);
+				titleEndDate = titleEndDate2;
+//	            return;
 			}
 			
 	         $("#" + $(this).attr("viewer").split(",")[0]).val(titleStartDate2);
