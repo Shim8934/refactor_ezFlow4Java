@@ -117,7 +117,7 @@
 	    	var orderOption = ""; //정렬 형식(ASC, DESC)
    			var src = "";
 	    	var selAttitudeId = "";
-	    	var disabledDays = new Array();
+	    	var holiDays = new Array();
 	    
 	    	$(document).ready(function() {
     			if(joinDate == null || joinDate == "" || joinDate == "0") {
@@ -258,15 +258,15 @@
 			    	type:"GET",
 			       	dataType : "json",
 			       	async : false,
-			       	url : "/ezAttitude/getDisabledDays.do",
+			       	url : "/ezAttitude/getHoliDays.do",
 			       	data : {
 			          	startDate : startDate,
 			          	endDate : endDate
 			       	},
 			       	success : function(result) {
-			       		disabledDays = [];
+			       		holiDays = [];
 			       		result.forEach(function(resultDateStr, index) {
-			          		disabledDays.push(resultDateStr);
+			          		holiDays.push(resultDateStr);
 			       		})
 			       	},
 			       	error : function(jqXHR, textStatus, errorThrown) {
@@ -331,8 +331,8 @@
    		            	date = "0" + date;
    		         	}
    		         
-   		         	for (var j = 0; j < disabledDays.length; j++) {
-   		            	if($.inArray(year + '-' + month + '-' + date,disabledDays) != -1) {
+   		         	for (var j = 0; j < holiDays.length; j++) {
+   		            	if($.inArray(year + '-' + month + '-' + date,holiDays) != -1) {
    		               		returnCnt++;
  	  		               	break;
    			            } 

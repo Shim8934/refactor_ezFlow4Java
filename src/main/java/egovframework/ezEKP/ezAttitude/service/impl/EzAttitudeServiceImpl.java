@@ -3935,5 +3935,29 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("checkHoliday2 ended.");
 		
 		return result;
-	}	
+	}
+	
+	/**
+	 * 근태일, 휴무일  dateString List
+	 */
+	@Override
+	public List<String> getHoliDays(String primary, String offset, String paramStartDate, String paramEndDate, String userId, String companyId, int tenantId) throws Exception {		
+		LOGGER.debug("getHoliDays started");
+		
+		String startDate = "";
+		String endDate = "";
+			
+		paramStartDate = paramStartDate.split("-")[1].split("").length == 1 ? "0" + paramStartDate.split("-")[1]: paramStartDate;
+		paramStartDate = paramStartDate.split("-")[2].split("").length == 1 ? "0" + paramStartDate.split("-")[2]: paramStartDate;
+		paramEndDate = paramEndDate.split("-")[1].split("").length == 1 ? "0" + paramEndDate.split("-")[1]: paramEndDate;
+		paramEndDate = paramEndDate.split("-")[2].split("").length == 1 ? "0" + paramEndDate.split("-")[2]: paramEndDate;
+			
+		startDate = paramStartDate;
+		endDate = paramEndDate;
+
+		List<String> resultList = checkHoliday2(startDate, endDate, companyId, tenantId);
+        
+        LOGGER.debug("getHoliDays ended");
+		return resultList;
+	}
 }
