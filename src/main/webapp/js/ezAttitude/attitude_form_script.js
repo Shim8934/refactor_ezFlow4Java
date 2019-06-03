@@ -19,7 +19,7 @@ function selectChange(contID) {
    $('#' + contID + ' option').not('option[value=' + $('#' + contID).val() + "]").attr("selected", false);
     $('#' + contID + ' option[value=' + $('#' + contID).val() + "]").attr("selected","");
 	eval($('#' + contID).prev("input[id^=reform-title]").attr("viewer-listener"));
-   setDocTitle();
+   setDocTitle($('#' + contID));
 }
 
 function getHolidayCnt(startDate, endDate, isAjax) {
@@ -221,7 +221,7 @@ function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) {
 	   annualDateResult = annualDateResult.split("~")[0] + "~ " + tempDate2.getFullYear() + " 년 " + ((tempDate2.getMonth() + 1).toString().length == 1 ? "0" + (tempDate2.getMonth() + 1) : (tempDate2.getMonth() + 1)) + " 월 " + (tempDate2.getDate().toString().length == 1 ? "0" + tempDate2.getDate() : tempDate2.getDate()) + " 일";
 	   tempDate2 = tempDate2.getTime();
    } else {
-	   if (tempDate1 < tempDate2) {
+	   if (tempDate1 <= tempDate2) {
 		   if (disabledDays.length > 0 && (document.getElementById(mdate1).value.substr(0,7) == document.getElementById(mdate2).value.substr(0,7)) && (disabledDays[0].substr(0,7) == document.getElementById(mdate1).value.substr(0,7))) {
 			   holidayCnt = getHolidayCnt(document.getElementById(mdate1).value, document.getElementById(mdate2).value, false);
 		   } else {
