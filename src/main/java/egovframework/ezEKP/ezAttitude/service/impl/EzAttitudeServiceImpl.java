@@ -191,7 +191,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh,
-		String typeId, String startDate, String endDate, String offset, String deptFlag, String lang, int tenantId) throws Exception {
+		String typeId, String startDate, String endDate, String offset, String deptFlag, String lang,String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeList started");
 		
 		Map<String, Object> map = new HashMap<String,Object>();
@@ -236,8 +236,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			resultList.get(i).setRegion(commonUtil.cleanValue(resultList.get(i).getRegion()));
 		}
 		
-		if(!resultList.isEmpty() && deptFlag.equals("true") && startDate.compareTo(commonUtil.getTodayUTCTime("")) <= 0) {
-			map.put("companyId", resultList.get(0).getCompanyId());
+		if(deptFlag.equals("true") && startDate.compareTo(commonUtil.getTodayUTCTime("")) <= 0) {
+			map.put("companyId", companyId);
 			map.put("searchStartDate", startDate);
 			map.put("searchEndDate", endDate);
 			map.put("searchDeptId", deptIdList.split(",")[0]);
