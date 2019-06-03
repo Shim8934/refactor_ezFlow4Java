@@ -248,6 +248,7 @@ var annualGnrtStd = "";
 var initialDate = "";
 var joinDate = "";
 var useMinusAnnual = "";
+var holiDays = new Array();
 function setAnnualCntInfo() {
    $.ajax({
       type : "GET",
@@ -267,71 +268,139 @@ function setAnnualCntInfo() {
 }
 
 function setAnnualCntInfo_complete() {
-   var mDate = new Date()
-   var mYear = mDate.getFullYear(); //현재년도
-   var todayMonth = (mDate.getMonth() + 1); //현재월
-   var todayDate = mDate.getDate(); //현재일
-   var paramStartDate = "";
-   var paramEndDate = "";
-   var secondYear = "N";
-   if(joinDate == null || joinDate == "" || joinDate == "0") {
+	
+	var mDate = new Date()
+	var mYear = mDate.getFullYear(); //현재년도
+	var todayMonth = (mDate.getMonth() + 1); //현재월
+	var todayDate = mDate.getDate(); //현재일
+	var paramStartDate = "";
+	var paramEndDate = "";
+	var secondYear = "N";
+	if(joinDate == null || joinDate == "" || joinDate == "0") {
 		joinDate = "0000-01-01";
-   }
-   if (annualGnrtStd == 1) {
-      if(initialDate.substring(5, 7) < todayMonth || (initialDate.substring(5, 7) == todayMonth && initialDate.substring(8, 10) < todayDate)) {
-         paramStartDate = mYear + "-" + initialDate.substring(5, 10);
-         paramEndDate = caldate(new Date(mYear + 1, initialDate.substring(5, 7) - 1, initialDate.substring(8, 10)), 1);
-      } else {
-         paramStartDate = (mYear - 1) + "-" + initialDate.substring(5, 10);
-         paramEndDate = caldate(new Date(mYear, initialDate.substring(5, 7) - 1, initialDate.substring(8, 10)), 1);
-      }
-   } else {
-      if(joinDate.substring(5, 7) < todayMonth || (joinDate.substring(5, 7) == todayMonth && joinDate.substring(8, 10) < todayDate)) {
-         paramStartDate = mYear + "-" + joinDate.substring(5, 10);
-         paramEndDate = caldate(new Date(mYear + 1, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10)), 1);
-      } else {
-         paramStartDate = (mYear - 1) + "-" + joinDate.substring(5, 10);
-         paramEndDate = caldate(new Date(mYear, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10)), 1);
-      }
-   }
+	}
+	if (annualGnrtStd == 1) {
+		if(initialDate.substring(5, 7) < todayMonth || (initialDate.substring(5, 7) == todayMonth && initialDate.substring(8, 10) < todayDate)) {
+			paramStartDate = mYear + "-" + initialDate.substring(5, 10);
+			paramEndDate = caldate(new Date(mYear + 1, initialDate.substring(5, 7) - 1, initialDate.substring(8, 10)), 1);
+		} else {
+			paramStartDate = (mYear - 1) + "-" + initialDate.substring(5, 10);
+			paramEndDate = caldate(new Date(mYear, initialDate.substring(5, 7) - 1, initialDate.substring(8, 10)), 1);
+		}
+	} else {
+		if(joinDate.substring(5, 7) < todayMonth || (joinDate.substring(5, 7) == todayMonth && joinDate.substring(8, 10) < todayDate)) {
+			paramStartDate = mYear + "-" + joinDate.substring(5, 10);
+			paramEndDate = caldate(new Date(mYear + 1, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10)), 1);
+		} else {
+			paramStartDate = (mYear - 1) + "-" + joinDate.substring(5, 10);
+    	    paramEndDate = caldate(new Date(mYear, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10)), 1);
+        }
+    }
    
-   var startYear = paramStartDate.substring(0, 4);
-   var joinYear = joinDate.substring(0, 4);
+    var startYear = paramStartDate.substring(0, 4);
+    var joinYear = joinDate.substring(0, 4);
     			
-   var startDate2 = new Date(paramStartDate);
-   var endDate2 = new Date(paramEndDate);
-   var joinDate2 = new Date(Number(joinDate.substring(0, 4)) + 1, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10));
-   var joinDate3 = new Date(Number(joinDate.substring(0, 4)) + 2, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10));
-   if(annualGnrtStd == 0) {
+    var startDate2 = new Date(paramStartDate);
+    var endDate2 = new Date(paramEndDate);
+    var joinDate2 = new Date(Number(joinDate.substring(0, 4)) + 1, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10));
+    var joinDate3 = new Date(Number(joinDate.substring(0, 4)) + 2, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10));
+    if(annualGnrtStd == 0) {
 		if(startYear - joinYear == 1) {
 	   		secondYear = "Y";
 	   	}
-   } else {
+    } else {
 	   	if(startDate2 <= joinDate2 && endDate2 >= joinDate2) {
 	   		secondYear = "Y";
 	   	} else if(startDate2 <= joinDate3 && endDate2 >= joinDate3) {
 	   		secondYear = "T";
- 		}
-   }
+	   	}
+    }
+   
+    $.ajax({
+    	type:"GET",
+      	dataType : "json",
+      	async : false,
+      	url : "/ezAttitude/getHoliDays.do",
+      	data : {
+         	startDate : paramStartDate,
+         	endDate : paramEndDate
+      	},
+      	success : function(result) {
+      		holiDays = [];
+      		result.forEach(function(resultDateStr, index) {
+         		holiDays.push(resultDateStr);
+      		})
+      	},
+      	error : function(jqXHR, textStatus, errorThrown) {
+  			alert("에러발생! " + jqXHR.status + ", " + jqXHR.statusText + ", " + jqXHR.readyState);
+		}
+	})
 
-   $.ajax({
-      type : "GET",
-      url : "/ezAttitude/getAnnaulCntInfo.do",
-      dataType : "json",
-      data : {
-         "startDate" : paramStartDate,
-         "endDate" : paramEndDate,
-		 "secondYear" : secondYear
-      },
-      success : function(result) {
-         $("#total_annual_cnt").text(result.totalAnnualCnt);
-         $("#accum_annual_cnt").text(result.useAnnualCnt);
-         $("#remain_annual_cnt").text(Number(result.totalAnnualCnt) - Number(result.useAnnualCnt) - 1);
-      },
-      error : function() {
-         alert("<spring:message code='ezAttitude.t175' />");
-      }
-   });   
+    $.ajax({
+    	type : "GET",
+    	url : "/ezAttitude/getUserAnnualList.do",
+    	dataType : "json",
+    	data : {
+    		"startDate" : paramStartDate,
+    		"endDate" : paramEndDate,
+    		"secondYear" : secondYear
+    	},
+    	success : function(result) {
+    		var totalAnnualCnt = 0;
+    		var accumCnt = 0;
+    		if (Number(result.list[0].totalAnnualCnt.split(".")[1]) > 0) {
+    			totalAnnualCnt = result.list[0].totalAnnualCnt;
+    		} else {
+    			totalAnnualCnt = result.list[0].totalAnnualCnt.split(".")[0];
+    		}
+    	 
+    		if (Number(result.list[0].annualCnt) > 0) {
+    			result.list.forEach(function(vo, index) {
+    				var holidayCnt = 0;
+	    			if(vo.endDate != null) {
+		    			holidayCnt = getHolidays(vo.startDate.substr(0,10), vo.endDate.substr(0,10));
+	    			}
+	    			var useAnnualCnt = (Number(vo.annualCnt) - holidayCnt);
+		    		
+	    			//누적 연차 수
+	    			accumCnt += useAnnualCnt;
+    			});
+    		}
+    		$("#total_annual_cnt").text(totalAnnualCnt);
+    		$("#accum_annual_cnt").text(accumCnt);
+    		$("#remain_annual_cnt").text(totalAnnualCnt - accumCnt - 1);
+    	},
+    	error : function() {
+    		alert("<spring:message code='ezAttitude.t175' />");
+    	}
+    });   
+}
+
+function getHolidays(startDate, endDate) {
+	var returnCnt = 0;
+   	var subDate = calDateRange(startDate, endDate);      
+   	var betweenDate = new Date(startDate);
+   	for (var i = 0; i <= subDate; i++) {
+       	betweenDate.setDate(betweenDate.getDate() + (i == 0 ? 0 : 1));
+        
+        	var year = betweenDate.getFullYear();
+        	var month = (betweenDate.getMonth() + 1) + "";
+        	var date = betweenDate.getDate() + "";
+        	if(month.length == 1) {
+           	month = "0" + month;
+        	}
+        	if(date.length == 1) {
+           	date = "0" + date;
+        	}
+        
+        	for (var j = 0; j < holiDays.length; j++) {
+           	if($.inArray(year + '-' + month + '-' + date,holiDays) != -1) {
+              		returnCnt++;
+	               	break;
+	            } 
+	        }
+   	}
+	return returnCnt;
 }
 
 function caldate(date, day){
