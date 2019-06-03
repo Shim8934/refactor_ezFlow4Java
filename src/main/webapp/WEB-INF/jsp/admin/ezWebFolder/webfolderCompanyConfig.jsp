@@ -91,12 +91,12 @@
 					
 					if (isValid(element.value)) {
 						return false;
+					} else {
+						alert("<spring:message code='ezWebFolder.t183'/>");
+						element.focus();
+						return true;
 					}
 					
-					alert("<spring:message code='ezWebFolder.t183'/>");
-					element.focus();
-					
-					return true;
 				});
 				
 				if (notValid) {
