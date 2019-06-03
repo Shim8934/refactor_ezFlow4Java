@@ -3783,12 +3783,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 							vo1.setHolidayDate(vo1.getHolidayDate().replace(voYear, startYear));
 						}
 						
-						if (!endYear.equals(voYear)) {
-							HolidayVO vo2 = new HolidayVO();
-							vo2.setHolidayDate(vo1.getHolidayDate().replace(startYear, endYear));
+						HolidayVO vo2 = new HolidayVO();
+						vo2.setHolidayDate(vo1.getHolidayDate().replace(startYear, endYear));
 							
-							tempHolidayList.add(vo2);
-						}
+						tempHolidayList.add(vo2);
 					}
 				}
 			}

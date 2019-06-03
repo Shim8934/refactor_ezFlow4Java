@@ -375,10 +375,11 @@
 	    		
 	    		if (Number(list[0].annualCnt) > 0) {
 		    		list.forEach(function(vo, index) {
-		    			var holidatCnt = 0;
+		    			var holidayCnt = 0;
 		    			if(vo.endDate != null) {
-			    			holidatCnt = getHolidayCnt(vo.startDate.substr(0,10), vo.endDate.substr(0,10));
+			    			holidayCnt = getHolidayCnt(vo.startDate.substr(0,10), vo.endDate.substr(0,10));
 		    			}
+		    			var useAnnualCnt = (Number(vo.annualCnt) - holidayCnt);
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
 		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
@@ -386,18 +387,18 @@
 			    		html += "<a class='link attitudeView'>";
 		    			if (vo.typeId === "A11") { //연차
 			    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
-			    			annualCnt += Number(vo.annualCnt);
+			    			annualCnt += useAnnualCnt;
 		    			} else if (vo.typeId === "A12") { //오전반차
 			    			html += vo.startDate.substr(0,10);
-			    			morningCnt += Number(vo.annualCnt);
+			    			morningCnt += useAnnualCnt;
 		    			} else { //오후반차
 		    				html += vo.startDate.substr(0,10);
-		    				afternoonCnt += Number(vo.annualCnt);
+		    				afternoonCnt += useAnnualCnt;
 		    			}
 		    			html += "</a>";
 		    			html += "</td>";
 		    			html += "<td style='width:15%'>" + vo.typeName + "</td>";
-		    			html += "<td style='width:12%'>" + Number(vo.annualCnt) + "</td>";
+		    			html += "<td style='width:12%'>" + useAnnualCnt + "</td>";
 		    			html += "<td style='width:20%'>" + content + "</td>";
 		    			if(vo.annualApprStatus == -1) {
 			    			html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t267' />" + "</td>";
@@ -430,7 +431,7 @@
 			    		$("#contentlist .mainlist tbody").after(html);
 			    		
 		    			//누적 연차 수
-		    			accumCnt += Number(vo.annualCnt);
+		    			accumCnt += useAnnualCnt;
 		    			i++;
 		    		});
 	    		} else {
