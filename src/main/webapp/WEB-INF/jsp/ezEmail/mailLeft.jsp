@@ -1347,7 +1347,7 @@
 			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 			        		<li onclick="Open_Search();"><span class="sub_iconLNB tree_search"></span><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
 			        		<c:if test="${shareInfo.managePermission eq 'Y'}">
-			        			<li onclick="mail_Config('${shareInfo.shareId}')"><span class="sub_iconLNB tree_mail_config"></span><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
+			        			<li onclick="mail_Config('${shareInfo.shareId}')"><span class="sub_iconLNB tree_setting_gray"></span><span class="list_text"><spring:message code="ezEmail.t99000044" /></span></li>
 			        		</c:if>
 			        	</ul>
 			        	<script>
