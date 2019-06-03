@@ -1670,6 +1670,7 @@
 							F.ANNUAL_DOC_ID = G.DOCID
 						OR
 							F.ANNUAL_DOC_ID = G.ORGDOCID
+						LIMIT 1
 					)
 				, 0) as docApprStatus
 			FROM 
