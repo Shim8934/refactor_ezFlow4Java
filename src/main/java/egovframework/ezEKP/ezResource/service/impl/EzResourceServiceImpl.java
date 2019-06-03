@@ -2319,24 +2319,24 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         		} else {
         			if(resGetAdmSubClsTree.get(i).getApproveFlag().equals("2")) {
             			if(userAdminFlag.equals("Y")) {
-            				returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+            				strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr));
             			}
             		} 
         			else {
-        				returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+        				strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr));
         			}
         		}
         	}
-        	returnXML += "</TREEVIEWDATA>";
+        	strTreeStyle.append("</TREEVIEWDATA>");
         } else {
         	for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
         		// approveflag = 2이면서 관리자 아니면 값 빼기
         		if(resGetAdmSubClsTree.get(i).getApproveFlag().equals("2")) {
         			if(userAdminFlag.equals("Y")) {
-        				returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+        				strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr));
         			}
         		} else {
-        			returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+        			strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr));
         		}
         	}
         	strTreeStyle.append("</NODES>");
