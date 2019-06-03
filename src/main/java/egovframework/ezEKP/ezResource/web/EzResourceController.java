@@ -740,6 +740,12 @@ public class EzResourceController extends EgovFileMngUtil {
 		strMakeDate = resBrd.getMakeDate();
 		strApproveFlag = resBrd.getApproveFlag();
 		
+		List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		for(int i=0; i<attachList.size(); i++) {
+			model.addAttribute("attachList"+(i+1), attachList.get(i));
+		}
+		
 		/*if (strApproveFlag.equals("1")) {
 			resp.getWriter().write("&nbsp;" + egovMessageSource.getMessage("ezQuestion.t161", locale));
 		} else {
