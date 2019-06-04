@@ -6090,8 +6090,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId 
 				+ "useCopyright=" + useCopyright + ", copyrightText=" + copyrightText);
 
-		if (!useCopyright.equals("NO") && !(copyrightText != null && copyrightText.equals("")) ) {
-			mailBody = mailBody.replaceAll("\\p{Zs}", " "); // 유니코드 범주내에서 구분 기호, 공백을  replacAll
+		if (!useCopyright.equals("NO") && !copyrightText.trim().equals("")) {
+			mailBody = mailBody.replaceAll("\\p{Z}", " "); // 유니코드 범주내에서 구분 기호, 공백을  replacAll
 			
 			if ((!copyrightText.equals("id=\"recipientPharse\"")) || (mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
 				logger.debug("copyrightText ended.");

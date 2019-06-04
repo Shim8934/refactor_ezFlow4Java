@@ -600,7 +600,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		
 		String resultCode = "Error";
 		int reasonCode = -100; 
-		String copyrightText = null;
+		String copyrightText = "";
 		
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
@@ -616,6 +616,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 					
 					if (result != null) {
 						copyrightText = (String)result.get("copyrightText");
+						copyrightText = copyrightText == null ? "" : copyrightText;
 					}
 				}
 			}
