@@ -327,9 +327,9 @@
 	                                document.getElementById("body").innerHTML = "";
 	                            }
 	                        }
-	                        if (parent.isUsed != "reuse"){
+	                        // if (parent.isUsed != "reuse"){
 		                        Conent_contentEditable(document.getElementById('div_Content'));
-	                        }
+	                        // }
 	                        var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                        for (var i = 0; i < SelectRows.length; i++) {
 	                            SelectRows.item(i).onchange = SelectOnchange;
@@ -355,7 +355,7 @@
 	                            DocTitleObj = document.getElementById("doctitle");
 	
 	                        var EditorHeight = 500;
-	                        if (parent.isUsed != "reuse"){
+	                        // if (parent.isUsed != "reuse"){
 		                        if (document.getElementById("body") != null) {
 		                            if (BODYTag.getAttribute("tagfreeheight")) {
 		                                EditorHeight = BODYTag.getAttribute("tagfreeheight");
@@ -380,7 +380,7 @@
 		                                } catch (e) { }
 		                            }
 		                        }
-	                        }
+	                        // }
 	                    }
 	
 	
@@ -839,12 +839,11 @@
 	            try {
 
 	            	if (!isReform) {
-				iframe_content.SetEditorContent(div_BODY.innerHTML);
+						iframe_content.SetEditorContent(div_BODY.innerHTML);
 	            		// iframe_content.SetEditorContent();
-	            	} else if (parent.pDraftFlag == "REDRAFT" || parent.isUsed == 'reuse') {
-	            		iframe_content.document.body.innerHTML = div_BODY.innerHTML;
-	            	}
-
+	            	} else if (parent.pDraftFlag == "REDRAFT" || parent.isUsed == "reuse") {
+						iframe_content.document.body.innerHTML = div_BODY.innerHTML;
+					}
 	                
 	                if (isConDoc) {
 	                    parent.Conn_Initial();
@@ -876,7 +875,16 @@
 	        function Editor_ReUseContent(content) {
 	            _reUseContent = content;
 	            try{
-	            	div_BODY.innerHTML = _reUseContent;
+					div_BODY.innerHTML = _reUseContent.editorContent;
+					var elem = document.getElementById('frame_doctitle');
+					while(true) {
+						if(elem.childNodes.length > 0 && elem.childNodes.item(0).nodeName == '#text') {
+							elem.childNodes.item(0).textContent = _reUseContent.titleContent;
+							break;
+						}
+
+						elem = elem.childNodes.item(0);
+					}
 	            }
 	            catch (e) { }
 	        }
