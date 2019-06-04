@@ -931,6 +931,7 @@ public class EzEmailUtil {
 		
 		if (part instanceof MimePart) {
 			if (part.getDisposition() != null 
+					&& part.isMimeType("image/*")
 					&& part.getDisposition().equalsIgnoreCase(Part.INLINE)
 					&& ((MimePart)part).getContentID() == null) {
 				isInlinePartWithoutContentID = true;
