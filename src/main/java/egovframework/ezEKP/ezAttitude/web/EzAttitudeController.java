@@ -4682,7 +4682,7 @@ public class EzAttitudeController {
 	}
 	
 	/** 
-	* 휴가일, 근태가 있는 날 리스트
+	* 휴가일 리스트
 	*/
 	@RequestMapping(value="/ezAttitude/getHoliDays.do" , method= RequestMethod.GET)
 	@ResponseBody
@@ -4701,6 +4701,8 @@ public class EzAttitudeController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("year", request.getParameter("year"))
+				.queryParam("month", request.getParameter("month"))
 				.queryParam("startDate", request.getParameter("startDate"))
 				.queryParam("endDate", request.getParameter("endDate"));
 		

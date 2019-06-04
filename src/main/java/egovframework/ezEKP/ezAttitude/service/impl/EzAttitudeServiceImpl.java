@@ -2716,7 +2716,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map2.put("userId", userId);
 			map2.put("companyId", companyId);
 			map2.put("tenantId", tenantId);
-			map2.put("offsetMin", offset);
+			map2.put("offsetMin", commonUtil.getMinuteUTC(offset));
 			
 			if (primary.equals("1")) {
 				primary = "";
@@ -3939,20 +3939,32 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	 * 근태일, 휴무일  dateString List
 	 */
 	@Override
-	public List<String> getHoliDays(String primary, String offset, String paramStartDate, String paramEndDate, String userId, String companyId, int tenantId) throws Exception {		
+	public List<String> getHoliDays(String primary, String offset, String year, String month, String paramStartDate, String paramEndDate, String userId, String companyId, int tenantId) throws Exception {		
 		LOGGER.debug("getHoliDays started");
 		
 		String startDate = "";
 		String endDate = "";
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		if (year != null && !year.equals("")) {
+			cal.set(Integer.valueOf(year), Integer.valueOf(month) - 1, 1);
+		}
+		
+		if (paramStartDate.equals("")) {
+			startDate = year + "-" + month + "-01";
+			endDate = year + "-" + month + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		} else {
 			
-		paramStartDate = paramStartDate.split("-")[1].split("").length == 1 ? "0" + paramStartDate.split("-")[1]: paramStartDate;
-		paramStartDate = paramStartDate.split("-")[2].split("").length == 1 ? "0" + paramStartDate.split("-")[2]: paramStartDate;
-		paramEndDate = paramEndDate.split("-")[1].split("").length == 1 ? "0" + paramEndDate.split("-")[1]: paramEndDate;
-		paramEndDate = paramEndDate.split("-")[2].split("").length == 1 ? "0" + paramEndDate.split("-")[2]: paramEndDate;
+			paramStartDate = paramStartDate.split("-")[1].split("").length == 1 ? "0" + paramStartDate.split("-")[1]: paramStartDate;
+			paramStartDate = paramStartDate.split("-")[2].split("").length == 1 ? "0" + paramStartDate.split("-")[2]: paramStartDate;
+			paramEndDate = paramEndDate.split("-")[1].split("").length == 1 ? "0" + paramEndDate.split("-")[1]: paramEndDate;
+			paramEndDate = paramEndDate.split("-")[2].split("").length == 1 ? "0" + paramEndDate.split("-")[2]: paramEndDate;
 			
-		startDate = paramStartDate;
-		endDate = paramEndDate;
-
+			startDate = paramStartDate;
+			endDate = paramEndDate;
+		}
+			
 		List<String> resultList = checkHoliday2(startDate, endDate, companyId, tenantId);
         
         LOGGER.debug("getHoliDays ended");

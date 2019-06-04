@@ -3214,12 +3214,14 @@ public class EzAttitudeGWController {
 		JSONObject result = new JSONObject();
 		
 		try{
+			String year = request.getParameter("year")== null ? "" : request.getParameter("year");
+			String month = request.getParameter("month") == null ? "" : request.getParameter("month");
 			String startDate = request.getParameter("startDate") == null ? "" : request.getParameter("startDate");
 			String endDate = request.getParameter("endDate") == null ? "" : request.getParameter("endDate");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			List<String> list = ezAttitudeService.getHoliDays(info.getPrimary(), info.getOffSet(), startDate, endDate, userId, info.getCompanyId(), info.getTenantId());
+			List<String> list = ezAttitudeService.getHoliDays(info.getPrimary(), info.getOffSet(), year, month, startDate, endDate, userId, info.getCompanyId(), info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

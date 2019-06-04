@@ -29,7 +29,7 @@ function getHolidayCnt(startDate, endDate, isAjax) {
          type:"GET",
          dataType : "json",
          async : false,
-         url : "/ezAttitude/getDisabledDays.do",
+         url : "/ezAttitude/getHoliDays.do",
          data : {
             startDate : startDate,
             endDate : endDate
@@ -97,7 +97,7 @@ function getDisabledDays(searchYear, searchMonth) {
       type:"GET",
       dataType : "json",
                 async : false,
-      url : "/ezAttitude/getDisabledDays.do",
+      url : "/ezAttitude/getHoliDays.do",
       data : {
          year : searchYear,
          month : searchMonth

@@ -204,5 +204,5 @@ public interface EzAttitudeService {
 
 	public List<String> getDisabledDays(String primary, String offset, String year, String month, String startDate, String endDate, String userId, String companyId, int tenantId) throws Exception;
 	
-	public List<String> getHoliDays(String primary, String offset, String startDate, String endDate, String userId, String companyId, int tenantId) throws Exception;
+	public List<String> getHoliDays(String primary, String offset, String year, String month, String startDate, String endDate, String userId, String companyId, int tenantId) throws Exception;
 }
