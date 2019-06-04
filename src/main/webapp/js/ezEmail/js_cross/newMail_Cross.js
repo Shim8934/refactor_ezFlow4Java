@@ -1075,6 +1075,10 @@ function event_SaveonClick() {
                 else if (pRtnMessage.indexOf("Local address contains illegal character") > -1) {
                 	alert(strLangLHM22);
                 }
+                // 잘못된 도메인 주소가 있을 경우 (ex> mailtotest@tes:t.com)
+                else if (pRtnMessage.indexOf("Domain contains illegal character") > -1) { 
+                	alert(strLangLHM22);
+                }
                 // 그 외
                 else {
             		alert(pRtnMessage);
