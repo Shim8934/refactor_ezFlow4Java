@@ -816,10 +816,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				messageId = (String) jsonObject.get("messageId");
 			}
 			
-			if (jsonObject.get("textOption") != null) {
-				textOption = (String) jsonObject.get("textOption");
-			}
-			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
@@ -879,6 +875,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				if (orgMessage != null) {
 					LOGGER.debug("orgMessage not null");
+					
+					// 20190530 조진호 - 회신, 전체회신, 전달, 임시저장 일 때는 원래의 메일의 text type을 가져온다.
+					if(ezEmailUtil.isHtmlMessage(orgMessage)) { 
+						textOption = "HTML";
+					} else {
+						textOption = "PLAIN";
+					}
 					
 		        	// in case of editing a message in Drafts folder.
 		        	if (folderPath.equals(draftsFolderName) && cmd.equals("EDIT")) {		        		
@@ -1412,6 +1415,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("mUseMailAddrAutoComplete", mUseMailAddrAutoComplete); //20180712 조진호 - 모바일에서 수신자 자동완성기능 사용여부
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength); //20190114 조진호 - 첨부파일명 길이제한
 			data.put("defaultFontAndSize", defaultFontAndSize); //20190510 조진호 - 기본 글씨 속성
+			data.put("textOption", textOption); //20190530 조진호 - textMode
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
