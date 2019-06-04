@@ -68,7 +68,8 @@
 		    var opinionFlag;
 		    var includeOpinion = false;
 		    var signImageType = "<c:out value ='${signImageType}'/>";
-		    var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
+			var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
+			var docFormVersion = "<c:out value='${formVersion}' />";
 		    
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
@@ -576,43 +577,75 @@
 		    var getformcont_cross_dialogArguments = new Array();
 		    var editable = "";
 		    function btnReuse_onclick(type) {
-		    	editable = type;
-		    	
-		        if (true) {
-		            formURL = formUrl;
-		            formDocType = formDocType;
-		        }
-		        else {
-		            var parameter = new Array();
-		            parameter[0] = arr_userinfo[4];
-		            parameter[1] = "A01000";
+				$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		data : {
+		    			formID : pFormID,
+		    			companyID : orgCompanyID
+		    		},
+		    		url : "/ezApprovalG/getFormDetail.do",
+		    		success: function(xml){
+						xml = loadXMLString(xml);
+						
+						var form = {};
+			            if (xml.getElementsByTagName("FORMVERSION").length > 0) {
+			                form.currVersion = xml.getElementsByTagName("FORMVERSION").item(0).textContent;
+						} 
+						if (xml.getElementsByTagName("FORMCONNFLAG").length > 0) {
+			                form.connflag = xml.getElementsByTagName("FORMCONNFLAG").item(0).textContent;
+						}
 
-		            if (CrossYN()) {
-		            	getformcont_cross_dialogArguments[0] = parameter;
-		            	getformcont_cross_dialogArguments[1] = AprManage_B_Complete;
-		                var getFormCont = GetOpenWindow("/ezApprovalG/getFormCont.do", "getFormCont", 713, 570, "NO");
-		                try { getFormCont.focus(); } catch (e) {
-		                }
-		            }
-		            else {
-		                var url = "/ezApprovalG/getFormCont.do";
-		                var feature = "center:yes;status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no;";
-		                feature = feature + GetShowModalPosition(713, 570);
+						if(form.currVersion != docFormVersion) {
+							var pAlertContent = "양식 버전이 달라 재사용 할 수 없습니다.";
+							OpenAlertUI(pAlertContent);
+							return;
+						} else if(form.connflag == 'Y') {
+							var pAlertContent = "연동양식은 재사용 할 수 없습니다.";
+		                    OpenAlertUI(pAlertContent);
+							return;
+						}
 
-		                var ret;
-		                if (window.showModalDialog) {
-		                    ret = window.showModalDialog(url, parameter, feature);
-		                }
-		                else {
-		                    ret = GetOpenWindow(url, "", 713, 570, "NO");
-		                }
-		                formURL = ret[0];
-		                formDocType = ret[1];         
-		            }
-		        }
-		        if (formURL != "cancel") {
-		            openDraftUI("DRAFT", "");
-		        }
+						editable = type;
+						
+						if (true) {
+							formURL = formUrl;
+							formDocType = formDocType;
+						}
+						else {
+							var parameter = new Array();
+							parameter[0] = arr_userinfo[4];
+							parameter[1] = "A01000";
+
+							if (CrossYN()) {
+								getformcont_cross_dialogArguments[0] = parameter;
+								getformcont_cross_dialogArguments[1] = AprManage_B_Complete;
+								var getFormCont = GetOpenWindow("/ezApprovalG/getFormCont.do", "getFormCont", 713, 570, "NO");
+								try { getFormCont.focus(); } catch (e) {
+								}
+							}
+							else {
+								var url = "/ezApprovalG/getFormCont.do";
+								var feature = "center:yes;status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no;";
+								feature = feature + GetShowModalPosition(713, 570);
+
+								var ret;
+								if (window.showModalDialog) {
+									ret = window.showModalDialog(url, parameter, feature);
+								}
+								else {
+									ret = GetOpenWindow(url, "", 713, 570, "NO");
+								}
+								formURL = ret[0];
+								formDocType = ret[1];         
+							}
+						}
+						if (formURL != "cancel") {
+							openDraftUI("DRAFT", "");
+						}
+		    		}        			
+		    	});
+
 		    }
 		    
 		    function openDraftUI(pDraftFlag, pCurSelRow) {

@@ -6,6 +6,7 @@
 	<head>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprGContent.js')}"></script>
 		<!-- FormBuilder -->
 		<c:if test="${isReform}">
 			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/reform/reformUseProcessor.js')}"></script>
@@ -175,19 +176,19 @@
 	            else
 	                return true;
 	        }
-	        function SelectOnchange(obj) {
-	            for (var i = 0; i < obj.options.length; i++) {
-	                obj.options[i].setAttribute("check", "1");
-	            }
-	            obj.options[obj.selectedIndex].setAttribute("check", "2");
-	        }
-	        function CheckBoxOnclick(obj) {
-	            obj.removeAttribute("checked");
-	            if (obj.checked)
-	                obj.setAttribute("check", "1");
-	            else
-	                obj.setAttribute("check", "0");
-	        }
+	        // function SelectOnchange(obj) {
+	        //     for (var i = 0; i < obj.options.length; i++) {
+	        //         obj.options[i].setAttribute("check", "1");
+	        //     }
+	        //     obj.options[obj.selectedIndex].setAttribute("check", "2");
+	        // }
+	        // function CheckBoxOnclick(obj) {
+	        //     obj.removeAttribute("checked");
+	        //     if (obj.checked)
+	        //         obj.setAttribute("check", "1");
+	        //     else
+	        //         obj.setAttribute("check", "0");
+	        // }
 	        function Conent_contentEditable(obj) {
 	            try {
 	                var TDRows = obj.getElementsByTagName("TD");
@@ -327,12 +328,16 @@
 	                    
 	                    var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                    for (var i = 0; i < SelectRows.length; i++) {
-	                        SelectRows.item(i).onchange = function () { SelectOnchange(this); };
+	                        SelectRows.item(i).onchange = SelectOnchange;
 	                    }
 	                    var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                    for (var i = 0; i < CheckRows.length; i++) {
-	                        if (CheckRows.item(i).type == "checkbox")
-	                            CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
+	                        if (CheckRows.item(i).type == "checkbox") {
+								CheckRows.item(i).onchange = CheckBoxOnclick;
+								CheckRows.item(i).ondblclick = CheckBoxOnDblclick;
+							} else if (CheckRows.item(i).type == "radio") {
+								CheckRows.item(i).onchange = RadioOnClick;
+							}
 	                    }
 	                    
 	                    var Body_innerHTML = "";
