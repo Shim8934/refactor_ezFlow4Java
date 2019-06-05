@@ -11914,7 +11914,7 @@
 <!-- 	<procedure id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETDOCRECVSTATE(#v_DOCID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String">
+	<select id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String" remapResults="true">
 		SELECT 
 			CASE WHEN DOCID > 0 THEN  ( 
 										SELECT 
