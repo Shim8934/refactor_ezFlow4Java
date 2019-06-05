@@ -647,11 +647,18 @@
 				        		}
 				        		
 				        	}
-								
-							if (document.message.document.iframe_content.document.getElementById("reform-title").value == "" ) {
+				        	
+				        	var reformTitle = document.message.document.iframe_content.document.getElementById("reform-title").value;
+					        var titlePattern = /(\d{4})년(\d{1,2})월(\d{1,2})일~(\d{4})년(\d{1,2})월(\d{1,2})일\[(\d{1,2})일\]/
+							
+					        if (reformTitle == "" ) {
 								OpenAlertUI("<spring:message code='ezAttitude.t307'/>");
 								return;
-								}
+							} else if (!titlePattern.test(reformTitle.replace(/ /gi, ""))) {
+								OpenAlertUI("<spring:message code='ezAttitude.t308'/>");
+								return;
+							}
+					        
 				        }
 			            
 			            if (addLastKyulJeYN != "0") {
