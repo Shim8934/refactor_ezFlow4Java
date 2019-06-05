@@ -1069,7 +1069,7 @@ function prevShow_Clear() {
         	sentDateStr.style.display = "none";
         }
         
-        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        var innerFrame  = document.getElementById("ifrmPreViewW");
         innerFrame.onload = function () {
         	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
         	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
@@ -1086,7 +1086,7 @@ function prevShow_Clear() {
         	sentDateStr.style.display = "none";
         }
         
-        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        var innerFrame  = document.getElementById("ifrmPreViewH");
         innerFrame.onload = function () {
         	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
         	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {

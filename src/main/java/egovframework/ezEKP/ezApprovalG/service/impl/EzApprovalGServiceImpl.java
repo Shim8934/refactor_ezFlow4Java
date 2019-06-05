@@ -1591,6 +1591,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				logger.debug("fieldName = " + fieldName);
 				logger.debug("fieldValue = " + fieldValue);
 				
+				if (fieldName.equals("PROCESSDATE") && fieldValue.indexOf("0000") > -1) {
+					fieldValue = "";
+				}
 				/*if (useReceiveInfoName.equals("1")) {
 					if ((vo.getReceiptMemberName() == null || vo.getReceiptMemberName().equals("")) && !vo.getReceiptPointName().equals("") && fieldName.equals("RECEIPTPOINTNAME")) {
 						fieldValue += messageSource.getMessage("ezApprovalG.lhj18", locale);
@@ -27016,7 +27019,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			result.append("<mTo>" + listXML.getElementsByTagName("MTO").item(0).getTextContent() + "</mTo>");
 
-			result.append("<Subject>" + listXML.getElementsByTagName("SUBJECT").item(0).getTextContent() + "</Subject>");
+			result.append("<Subject>" + listXML.getElementsByTagName("SUBJECT").item(0).getTextContent().replace("<", "&lt;").replace(">", "&gt;") + "</Subject>");
 			result.append("<xMailType>" + listXML.getElementsByTagName("XMAILTYPE").item(0).getTextContent() + "</xMailType>");
 			result.append("<xFromCode>" + listXML.getElementsByTagName("XFROMCODE").item(0).getTextContent() + "</xFromCode>");
 			result.append("<xToCode>" + listXML.getElementsByTagName("XTOCODE").item(0).getTextContent() + "</xToCode>");

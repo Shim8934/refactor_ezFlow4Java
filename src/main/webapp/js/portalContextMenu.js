@@ -255,7 +255,8 @@ var setImageElement = function (parent, imgsrc, type) {
 	var imageWrap = document.createElement('div');
 	var imageElement = document.createElement('img');
 	imageElement.src = imgsrc;
-	imageElement.dataset.type = type;
+	imageElement.setAttribute('data-type', type);
+//	imageElement.dataset.type = type;
 	setImageName(type);
 	if(type !== 'memo') {
 		buttonDiv.addEventListener('click', function () {

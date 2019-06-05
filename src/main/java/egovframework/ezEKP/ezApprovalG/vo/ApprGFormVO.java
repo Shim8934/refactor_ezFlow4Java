@@ -64,6 +64,8 @@ public class ApprGFormVO {
 	
 	/** 폼빌더 */
 	private String reformFlag;
+	/** 폼버전 */
+	private String formVersion;
 	
 	public String getFormContID() {
 		return formContID;
@@ -335,6 +337,14 @@ public class ApprGFormVO {
 
 	public void setReformFlag(String reformFlag) {
 		this.reformFlag = reformFlag;
+	}
+
+	public String getFormVersion() {
+		return formVersion;
+	}
+
+	public void setFormVersion(String formVersion) {
+		this.formVersion = formVersion;
 	}
 
 }
