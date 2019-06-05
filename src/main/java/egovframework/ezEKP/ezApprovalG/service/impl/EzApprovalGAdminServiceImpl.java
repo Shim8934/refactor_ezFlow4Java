@@ -2483,6 +2483,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String tbItemName2 = "";
 		String useFlag = "";
 		String formConnFlag = "";
+		String openGovFlag = "";
 		
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
@@ -2500,6 +2501,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			useFlag = doc.getElementsByTagName("USEFLAG").item(0).getTextContent();
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
+			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
 		}
 
 		String recevGroupXML = "";
@@ -2548,6 +2550,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PFORMKIND", formKind);
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PFORMCONNFLAG", formConnFlag);
+		map.put("v_POPENGOVFLAG", openGovFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
 		// FormBuilder

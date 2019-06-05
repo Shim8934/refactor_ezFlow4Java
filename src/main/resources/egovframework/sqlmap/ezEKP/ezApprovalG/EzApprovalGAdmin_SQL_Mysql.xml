@@ -965,7 +965,8 @@
 					formdoctype,
 					formdescription,
 					formfilelocation,
-					formconnflag 
+					formconnflag,
+					opengovflag 
 				FROM
 					TBL_FORMINFO
 				WHERE
@@ -1689,7 +1690,8 @@
 				formconnflag,
 				reformflag,
 				companyid,
-				tenant_id)
+				tenant_id,
+				opengovflag)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1701,7 +1703,8 @@
 				#v_PFORMCONNFLAG#,
 				#v_PREFORMFLAG#,
 				#companyID#,
-				#tenantID#)
+				#tenantID#,
+				#v_POPENGOVFLAG#)
 		]]>
 	</insert>
 
@@ -1718,7 +1721,8 @@
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#,
 				reformflag = #v_PREFORMFLAG#,
-				formversion = formversion + 1
+				formversion = formversion + 1,
+				opengovflag = #v_POPENGOVFLAG#
 			WHERE
 				tenant_id = #tenantID#
 			AND

@@ -65,6 +65,8 @@
 		    var useReform = "${useReform}" === "true";
 		    var reformUrl = "${reformUrl}";
 		    // FormBuilder end
+		    var useOpenGov = "<c:out value = '${useOpenGov}'/>";
+		    var openGovFlag = "<c:out value = '${openGovFlag}'/>";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -271,6 +273,10 @@
 				                    document.getElementById("keepperiod").value = result.vo.keepPeriodCode;
 				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
 			                	}
+			                } else {
+								if (useOpenGov == "YES" && result.vo.openGovFlag == "Y") {
+									document.getElementById("setOpenGovFlag").checked = true;	
+								}
 			                }
 			            }
 						
@@ -1091,6 +1097,9 @@
 							<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
 						</c:if>
 						<!-- FormBuilder - end -->
+						<c:if test="${useOpenGov == 'YES' && approvalFlag == 'G'}">
+							<input type="checkbox" id="setOpenGovFlag" /> 원문정보공개
+						</c:if>
 					</td>
 				</tr>
 			</table>
