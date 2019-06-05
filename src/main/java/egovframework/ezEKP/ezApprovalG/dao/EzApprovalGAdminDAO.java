@@ -97,8 +97,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGAprDocInfoVO> searchManageAprDocList(Map<String, Object> map) throws Exception {
-		return (List<ApprGAprDocInfoVO>) list("EzApprovalGAdmin.searchManageAprDocList", map);
+	public List<ApprGDocListVO> searchManageAprDocList(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalGAdmin.searchManageAprDocList", map);
 	}
 	
 	@SuppressWarnings("unchecked")

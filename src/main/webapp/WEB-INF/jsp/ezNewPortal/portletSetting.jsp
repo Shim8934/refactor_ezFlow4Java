@@ -134,7 +134,8 @@
 					currentFrame.classList.add('select-flipster');
 					
 					// 설정된 프레임id
-					portletSetting.selectedFrame = currentFrame.dataset.frameid; 
+					portletSetting.selectedFrame = currentFrame.getAttribute("frameid");
+					/* portletSetting.selectedFrame = currentFrame.dataset.frameid;  */
 				}	
 				
 				// 프레임 리스트 출력
@@ -172,8 +173,10 @@
 									usedIndex = index;
 								}
 								
-								div.dataset.frameid = item.frameId;
-								div.dataset.themeid = item.themeId;
+								div.setAttribute("frameid", item.frameId);
+								div.setAttribute("themeid", item.themeId);
+								/* div.dataset.frameid = item.frameId;
+								div.dataset.themeid = item.themeId; */
 								// 프레임 이미지 나오면 변경하자!!
 								var img = document.createElement('img');
 								img.src = '/images/admin/theme' + item.themeId + "_frame" + item.frameId + ".png";
@@ -266,9 +269,13 @@
 								var nameSpan = document.createElement('span');
 								nameSpan.className = 'ui-portlet-span';
 								nameSpan.textContent = item.portletName;
-								nameSpan.dataset.portletid = item.portletId;
+								nameSpan.setAttribute("portletid", item.portletId);
+								nameSpan.setAttribute("portletorder", item.portletOrder);
+								nameSpan.setAttribute("menuid", item.menuId);
+								
+								/* nameSpan.dataset.portletid = item.portletId;
 								nameSpan.dataset.portletorder = item.portletOrder;
-								nameSpan.dataset.menuid = item.menuId;
+								nameSpan.dataset.menuid = item.menuId; */
 								
 								var label = document.createElement('label');
 								label.className = 'switch';
@@ -276,7 +283,8 @@
 								var input = document.createElement('input');
 								input.type = 'checkbox';
 								input.id = 'portletid_' + item.portletId;
-								input.dataset.isfixed = item.fixed;
+								input.setAttribute("isfixed", item.fixed);
+								/* input.dataset.isfixed = item.fixed; */
 			
 				 				// 사용중인 포틀릿
 				 				if (item.portletUsed === true || item.fixed === true) {
@@ -346,13 +354,15 @@
 					HTMLCollection.prototype.forEach = Array.prototype.forEach;
 					
  					classList.forEach(function (item, index) {
-						var switchBtn = document.getElementById('portletid_' + item.dataset.portletid);
+ 						var itemPortletId = item.getAttribute("portletid");
+ 						var itemMenuId = item.getAttribute("menuId");
+						var switchBtn = document.getElementById('portletid_' + itemPortletId);
 						var obj = null;
 						
 						obj = {
-							portletId: item.dataset.portletid,
+							portletId: itemPortletId,
 							portletOrder: orderCount,
-							menuId: item.dataset.menuid,
+							menuId: itemMenuId,
 							portletUsed : switchBtn.checked
 						}
 						
