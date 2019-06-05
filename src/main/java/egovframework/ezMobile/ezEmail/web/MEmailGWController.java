@@ -2436,7 +2436,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						// p태그에 기본 폰트를 적용한다.
 						textBody = textBody.replace("<p>", "<p " + defaultFontAndSize + ">");
 						
-			            content.setContent(textBody, "text/plain; charset=utf-8");
+			            content.setContent(textBody, "text/html; charset=utf-8");
 			
 			            // multipart/alternative로 구성한다.
 		                alternativePart = new MimeMultipart("alternative");
