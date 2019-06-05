@@ -3007,6 +3007,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String pass = "";
 		String formUrl = "";
 		String formDocType = "";
+		String formVersion = "";
 		if (orgDocID != null  && !orgDocID.equals("")) {
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
@@ -3051,13 +3052,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			//일반 결재 일 때 재사용 기능 사용
 			if (approvalFlag.equals("S")) {
 				if (title == null || title.equals("")) {
-					String reUseInfo = ezApprovalGService.getDocInfoS(docID, "END", "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+					String reUseInfo = ezApprovalGService.getDocInfoS(docID, "END", "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE, TBL_EXPENDAPRDOCINFO.FORMVERSION", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 					Document resultXML2 = commonUtil.convertStringToDocument(reUseInfo);
 					if (resultXML2.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
 						formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
 					}
 					if (resultXML2.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
 						formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+					}
+					if (resultXML2.getElementsByTagName("FORMVERSION").getLength() > 0) {
+						formVersion = resultXML2.getElementsByTagName("FORMVERSION").item(0).getTextContent().trim(); 
 					}
 				}
 			}
@@ -3089,6 +3093,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("ext", ext);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("formVersion", formVersion);
 
 		logger.debug("contDocView ended.");
 		
