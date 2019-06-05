@@ -240,8 +240,11 @@
 		                message.SetEditable(true);
 		            }
 		
-		            if (pDraftFlag != "REDRAFT")
-		                setFirstDrafter(isUsed, beforeDocID);
+					if (pDraftFlag != "REDRAFT")
+						if(isUsed == "reuse" && apprReuseConfig != "1") {
+							setFirstDrafter(isUsed, beforeDocID);
+						}
+						setFirstDrafter("", "");
 		            
 		            if (approvalFlag == "S" && ListType != "21") {
 			            SetAutoDocnumItem();
@@ -414,12 +417,12 @@
 		                        pDocID = createNewDoc();
 		                        
 		                     	if (isUsed == "reuse") {
-			                		getDocInfo();
-			                		// 재사용이고 문서의 모든정보를 재사용 할시
+									 // 재사용이고 문서의 모든정보를 재사용 할시
+									ClearDocCellInfo();
 				                	if( apprReuseConfig != '1' ){
+			                			getDocInfo();
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
-				                		ClearDocCellInfo();
-				                		message.SetEditable(true);
+				                		// message.SetEditable(true);
 				                	}
 			                	}
 		                    }
@@ -879,7 +882,7 @@
 		    function Complete_Deaft() {
 		        draftFlag = true;
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
-		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) { 
 		        	parent.opener.getApprovalList("reject");
 		        }
 		        
@@ -892,7 +895,7 @@
 		            RemoveTmpDoc(DocSN);
 		        }
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
-		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) {
 		        	parent.opener.getApprovalList("reject");
 		        }
 		        
@@ -1405,7 +1408,7 @@
 		                DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
-		                if (isUsed == "reuse" && apprReuseConfig != '1') {
+		                if (isUsed == "reuse") {
 		                	message.Set_EditorContentURL(beforeUrl);
 		                } else {
 							if (pFormHref != "") {
@@ -1418,9 +1421,9 @@
 									message.Set_EditorContentURL(pFormHref);
 								}
 								
-								if (beforeUrl != "") {
-									Insert_ReUse_Content();
-								}
+								// if (beforeUrl != "") {
+								// 	Insert_ReUse_Content();
+								// }
 							}
 							else {
 								DraftFlag = "DRAFT";
@@ -1743,14 +1746,18 @@
 	            var ConXmlDiv = document.createElement("DIV");
 	            ConXmlDiv.innerHTML = _DocContentHtml;
 	            var TDRows = ConXmlDiv.getElementsByTagName("TD");
-	            var reUseContent = "";
+	            var reUseContent = {};
 
-	            for (var i = 0; i < TDRows.length; i++) {
-	                if (GetAttribute(TDRows.item(i), "id") == "body") {
-	                    reUseContent = TDRows.item(i).innerHTML;
-	                    break;
-	                }
-	            }
+	            // for (var i = 0; i < TDRows.length; i++) {
+	            //     if (GetAttribute(TDRows.item(i), "id") == "body") {
+				// 		reUseContent.editorContent = TDRows.item(i).innerHTML;
+	            //         break;
+	            //     }
+				// }
+				
+				reUseContent.editorContent = TDRows.body.innerHTML;
+				reUseContent.titleContent = TDRows.doctitle.innerText;
+
 	            message.Editor_ReUseContent(reUseContent);
 	        }
 			
