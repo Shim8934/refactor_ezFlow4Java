@@ -74,7 +74,7 @@
 		            		window.opener.company_change();
 							window.close();
 	            		} else if (resultStatus == "failed") {
-	            			alert("<spring:message code='ezAttitude.t217' />");
+	            			alert("<spring:message code='ezAttitude.t223' />");
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}
