@@ -644,6 +644,11 @@
 				        		}
 				        		
 				        	}
+								
+							if (document.message.document.iframe_content.document.getElementById("reform-title").value == "" ) {
+								OpenAlertUI("<spring:message code='ezAttitude.t307'/>");
+								return;
+								}
 				        }
 			            
 			            if (addLastKyulJeYN != "0") {
