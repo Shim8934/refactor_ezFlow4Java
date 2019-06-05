@@ -1133,7 +1133,7 @@ function ezWorkspaceData() {
 	   
 	// ie 10일 경우는 다르게 해야겠음.		
 	if(!checkBrowser()) {
-		$("#workspaceCnt").bind("DOMSubtreeModified", function() {
+		$("#workspaceCnt").one("DOMSubtreeModified", function() {
 		   	var workspaceCnt = document.getElementById("workspaceCnt").innerHTML * 1;
 		   	if (workspaceCnt > 999) {
 		   		workspaceCnt = "999+";

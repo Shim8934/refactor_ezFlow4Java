@@ -46,11 +46,25 @@
 				$("body").on("dragenter dragover drop", function(e) {
 					e.preventDefault();
 				});
+				
+				imgAttach();
 			}
 			
 			window.onbeforeunload = function () {
 				btnClose_Click();
 	    	} 
+			
+			function imgAttach() {
+				var attach1 = "${attachList1}";
+				var attach2 = "${attachList2}";
+				
+				if(attach1 != "") {
+					document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?fileName=" + encodeURIComponent(attach1);
+				}
+				if(attach2 != "") {
+					document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?fileName=" + encodeURIComponent(attach2);
+				}
+			}
 
 			function btnSave_Click() {
 				/* 2018-05-02 서주연 #12554 */
@@ -349,8 +363,8 @@
 
 	            preview1.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview1.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
-	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
+	            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+	            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM1").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}
@@ -367,8 +381,8 @@
 
 	            preview2.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview2.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
-            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
+            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM2").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}
@@ -501,12 +515,7 @@
 						<tr>
         					<th><spring:message code="ezPortal.t202"/>1</th>
           					<td colspan="3" >
-          					<c:if test="${!empty attachList1 }">
-	          					<img id="preview1" name="preview" src="/ezResource/getResourceThumbnailInfo.do?fileName=${attachList1}" width="119" height="128" alt="" border="0">
-           					</c:if>
-           					<c:if test="${empty attachList1 }">
 	          					<img id="preview1" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
-           					</c:if>
            						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:5px">
            							<span onClick="btnfiledel('1')"><spring:message code="ezPortal.t990008"/></span>
            						</a>
@@ -518,12 +527,7 @@
             			<tr>
         					<th><spring:message code="ezPortal.t202"/>2</th>
           					<td colspan="3" >
-          					<c:if test="${!empty attachList2 }">
-	          					<img id="preview2" name="preview" src="/ezResource/getResourceThumbnailInfo.do?fileName=${attachList2}" width="119" height="128" alt="" border="0">
-           					</c:if>
-           					<c:if test="${empty attachList2 }">
-	          					<img id="preview2" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
-           					</c:if>
+          						<img id="preview2" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
            						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:5px">
            							<span onClick="btnfiledel('2')"><spring:message code="ezPortal.t990008"/></span>
            						</a>

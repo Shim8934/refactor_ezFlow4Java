@@ -17,6 +17,21 @@
 			var strOwnerPosition = "${ownerPosition}";
 			var strOwnerCall = "${ownerCall}";
 			var strMakeDate = "${makeDate}";
+			var attachList1 = "${attachList1}";
+			var attachList2 = "${attachList2}";
+			
+			window.onload = function() {
+				if(attachList1 != "") {
+					document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?fileName=" + encodeURIComponent(attachList1);
+					document.getElementById("preview1").style.width = "200px";
+					document.getElementById("preview1").style.height = "200px";
+				}
+				if(attachList2 != "") {
+					document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?fileName=" + encodeURIComponent(attachList2);
+					document.getElementById("preview2").style.width = "200px";
+					document.getElementById("preview2").style.height = "200px";
+				}
+			}
 			
 			function btnClose_Click(){
 				window.close();
@@ -36,7 +51,7 @@
       				<table class="content">
         				<tr>
         				<th> <spring:message code="ezResource.t153"/></th>
-          					<td name="Owner" idval="${ownerID}" nmval="${strBrdNm}">
+          					<td colspan="2"  name="Owner" idval="${ownerID}" nmval="${strBrdNm}">
 								<c:forEach var="list"  items="${ownerList}" begin="0" varStatus="value">
 									<c:if test ="${not value.last }">
 										${list.displayName }, 
@@ -53,7 +68,7 @@
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t155"/></th>
-          					<td colspan="3" name="OwnerCall" style="padding-right:15px;width:120px" nowrap> ${ownerCall}</td>
+          					<td colspan="2" name="OwnerCall" style="padding-right:15px;width:120px" nowrap> ${ownerCall}</td>
           					<%-- <th> <spring:message code="ezResource.rkms01"/></th>
           					<td colspan="3"  name="subOwner" idval="${ownerID}" nmval="${strBrdNm}">${ownerNm}(${ownerPosition}) </td>
           					<td colspan="3"  name="subOwner"  >
@@ -75,15 +90,15 @@
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>
-          					<td colspan="3" name="Brd_NM" idval="${strBrdID}"> ${strBrdNm} </td>
+          					<td colspan="2" name="Brd_NM" idval="${strBrdID}"> ${strBrdNm} </td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
-          					<td colspan="3" name="ResLocation"> ${resLocation} </td>
+          					<td colspan="2" name="ResLocation"> ${resLocation} </td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t149"/></th>
-          					<td colspan="3">
+          					<td colspan="2">
 								<c:if test="${approveFlag eq 1}">
 									<spring:message code="ezResource.t161"/>
 								</c:if>
@@ -105,6 +120,11 @@
 									<spring:message code="ezResource.kmsr13"/>
 								</c:if>
           					</td>
+        				</tr>
+        				<tr>
+          					<th style="height:200px;">이미지</th>
+          					<td style="width:50%; border-right: 0" name="preview1"><img id="preview1" src="/images/default_pic.jpg" width="120" height="120" style="margin-left: auto; margin-right: auto; display: block; border-right: 0px;"></td>
+          					<td style="border-left: 0" name="preview2"><img id="preview2" src="/images/default_pic.jpg" width="120" height="120" style="margin-left: auto; margin-right: auto; display: block; border-right: 0px;"></td>
         				</tr>
       				</table>
       				<br>
