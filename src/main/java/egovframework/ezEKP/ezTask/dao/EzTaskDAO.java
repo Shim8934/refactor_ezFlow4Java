@@ -52,7 +52,6 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	public int getStatusOfRepTask(Map<String, Object> map) throws Exception {
 		Object returnVal = select("EzTaskDAO.getStatusOfRepTask", map);
 		return returnVal == null ? 0 : (int) returnVal;
-		//return (int) select("EzTaskDAO.getStatusOfRepTask", map);
 	}
 
 	public TaskGeneralVO getTaskGeneral(Map<String, Object> map) throws Exception {
