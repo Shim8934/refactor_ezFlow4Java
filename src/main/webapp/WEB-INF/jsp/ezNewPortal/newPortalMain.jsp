@@ -319,6 +319,7 @@
 		    	$("#layer-popup").draggable("option", "scroll", false);
 	    	} else {
 	    		$(".noteBlock").css("pointer-events", "none");
+	    		$(".noteBlock").css("display", "none");
 	    	}
 	    });		
 	</script>

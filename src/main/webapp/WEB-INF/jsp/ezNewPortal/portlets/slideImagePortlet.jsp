@@ -17,11 +17,14 @@
 					<c:when test="${not empty sliderList}">
 						<c:forEach items="${sliderList}" var="slider">
 							<c:choose>
+		            			<c:when test="${slider.url eq '' }">
+									<img src="${slider.imagePath}" class="notEmptySlider noSliderUrl" onclick="portletWindowOpen('${slider.url}')" />
+		            			</c:when>
 								<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
-									<img src="${slider.imagePath}" class="notEmptySlider" onclick="window.open('${slider.url }')" />
+									<img src="${slider.imagePath}" class="notEmptySlider" onclick="portletWindowOpen('${slider.url }')" />
 								</c:when>
 								<c:otherwise>
-									<img src="${slider.imagePath}" class="notEmptySlider" onclick="window.open('http://${slider.url }')" />
+									<img src="${slider.imagePath}" class="notEmptySlider" onclick="portletWindowOpen('${slider.url }')" />
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
