@@ -3345,8 +3345,8 @@
                 }
                 
                 if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
-		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
-               		alert("<spring:message code='ezEmail.t31' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1 || strName.indexOf(";") > -1) {
+               		alert("<spring:message code='ezEmail.t31' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
                		document.getElementById("emailname").focus();
 		            return;
 		        }

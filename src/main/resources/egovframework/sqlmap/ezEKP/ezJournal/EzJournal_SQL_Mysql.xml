@@ -606,7 +606,7 @@
 			</isEqual>
 		) AA
 		ORDER BY 8 ASC, 1 ASC
-		LIMIT #curPage#, #pageSize#
+		LIMIT $curPage$, $pageSize$
 	</select>
 	
 	<!-- 해당부서의 사원수 -->
@@ -976,7 +976,7 @@
 			</isNotEmpty>
 		</isNotEmpty>
 		limit
-		#startCount#,#listCnt#
+		$startCount$,$listCnt$
 	</select>
 
 	<!-- 수신자 즐겨찾기 추가 -->
@@ -1449,7 +1449,7 @@
 		<isNotEmpty property="startCount">
 			<isNotEmpty property="listCnt">
 				limit
-				#startCount#, #listCnt#
+				$startCount$, $listCnt$
 			</isNotEmpty>
 		</isNotEmpty>
 	</select>
@@ -1529,7 +1529,7 @@
 			not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
 		order by 5 desc
 		limit
-			#startCount#, #listCnt#
+			$startCount$, $listCnt$
 	</select>
 	
 	<!-- 일지 조회가능 유무 체크 -->

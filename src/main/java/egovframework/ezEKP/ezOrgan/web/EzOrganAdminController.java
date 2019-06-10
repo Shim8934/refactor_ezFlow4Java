@@ -50,6 +50,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -108,6 +109,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUserAdminService ezEmailUserAdminService;
+	
+	@Autowired
+	private EzBoardAdminService ezBoardAdminService;
 
     @Autowired
     private EzEmailUtil ezEmailUtil;	
@@ -141,7 +145,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addUserMasterMailBoxQuota();
     	ezCommonService.addJournalFormDelFlag();
     	ezCommonService.createJmochaMailCopyright();
-		ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+    	ezCommonService.addMsgInMailSearch(); 
 		ezCommonService.addFormVersion();
     	ezCommonService.addAddJobMasterProxy();
     	
@@ -2149,6 +2154,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	            ezOrganAdminService.addJob(userID, titleInfo, jobID, tenantID);	            
 		    }		    
 		}
+		
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("saveSubTitle ended.");
 		

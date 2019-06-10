@@ -1054,6 +1054,25 @@
 				success : function(result) {
 					$("#eSubject").val("<spring:message code='ezJournal.t1' /><spring:message code='ezEmail.t674' /> : "+result.journalTitle);
 					var journalContent = "<p></p><p></p><hr>" + (result.journalContent).replace(/&#39;/gi, "\'");
+					
+					switch (mailsel) {
+		                case "0": 
+		                	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>" + journalContent;
+		                    break;
+		                case "1": 
+		                	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + journalContent;
+		                	tempvalue = "1";
+			                break;
+			            case "2": 
+			            	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + journalContent;
+			                tempvalue = "1";
+			                break;
+			            case "3": 
+			            	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + journalContent;
+			                tempvalue = "1";
+			                break;
+		            }
+						
 					message.SetEditorContent(journalContent);
 					var fileList = result.fileList;
 					
@@ -1623,7 +1642,7 @@
 						xmpTo.innerHTML = resultHtml;
 					} else {
 						//2018-10-04 배현상, 근태관리 미입력자 메일 안내문구 삭제
-						var resultHtml = "<br/><br/><br/><hr>";
+						var resultHtml = "<hr>";
 						
 						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;근태미입력자</strong></span></p><p></p>";
 						resultHtml += "<table style='border-collapse:collapse; width:800px;'>";
@@ -1645,7 +1664,23 @@
 						
 						$("#eSubject").val("[근태미입력공지] " + searchStartDate + " ~ " + searchEndDate);
 						
-						message.SetEditorContent(resultHtml);
+						switch (mailsel) {
+		                case "0": 
+			    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>" + resultHtml);
+		                    break;
+		                case "1": 
+			    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + resultHtml);
+		                	tempvalue = "1";
+			                break;
+			            case "2": 
+			    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + resultHtml);
+			                tempvalue = "1";
+			                break;
+			            case "3": 
+			    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + resultHtml);
+			                tempvalue = "1";
+			                break;
+		            	}
 					}
 				}
 			});
@@ -1701,7 +1736,23 @@
 	    			objTable.find("#bizsub").text(result.attitudeVO.bizSub);
 	    			objTable.find("#region").length == 0 ? "" : objTable.find("#region").text(result.attitudeVO.region);
 	    			objTable.find("#content").html(result.attitudeVO.content);
-	    			message.SetEditorContent("<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+	    			switch (mailsel) {
+	                case "0": 
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV><p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+	                    break;
+	                case "1": 
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+	                	tempvalue = "1";
+		                break;
+		            case "2": 
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		                tempvalue = "1";
+		                break;
+		            case "3": 
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		                tempvalue = "1";
+		                break;
+	            	}
 	    		}
 	    	});
 	    }

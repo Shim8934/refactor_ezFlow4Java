@@ -64,9 +64,10 @@
 		            nowDate2.setMonth(nowDate2.getMonth());
 		            $("#Sdatepicker").datepicker('setDate', nowDate);
 		            $("#Edatepicker").datepicker('setDate', nowDate2);
-		            document.getElementById("absentreason").value = BReason;            
 		            gIsAppoint = "1";
 		        } */
+		            document.getElementById("absentreason").value = BReason;            
+		        
 		        if (proxystartdate != "") {
 		            gIsProxyUser = true;
 		        }
@@ -384,7 +385,7 @@
 		
 		        if (gIsAppoint != '2') {
 		        	/* document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>"*/
-		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
+		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
 		                alert("<spring:message code='ezPersonal.t36'/>");
 		                return;
 		            }
@@ -615,7 +616,7 @@
 						<th><spring:message code='ezPersonal.t42'/></th>
 						<td>
 							<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
-								<OPTION selected value="<spring:message code='ezPersonal.t35'/>"></OPTION>
+								<OPTION selected value=""></OPTION>
 								<OPTION value="b1"><spring:message code='ezPersonal.b1'/></OPTION>
 								<OPTION value="b2"><spring:message code='ezPersonal.b2'/></OPTION>
 								<OPTION value="b3"><spring:message code='ezPersonal.b3'/></OPTION>

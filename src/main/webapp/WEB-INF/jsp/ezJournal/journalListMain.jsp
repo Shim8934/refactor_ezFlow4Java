@@ -392,7 +392,8 @@
 	                	return;
 					}
 					setJournalList();
-					$("#searchValue").val("");
+					//2019-06-05 김보미 - 검색후 검색어 초기화 되던것 주석처리
+// 					$("#searchValue").val("");
 				
 				} else if(searchFlag == 'journalTitle'){
 					searchTitle = $("#searchValue").val().trim();
@@ -402,7 +403,7 @@
 	                	return;
 					}
 					setJournalList();
-					$("#searchValue").val("");
+// 					$("#searchValue").val("");
 				}
 			}
 			
@@ -1250,7 +1251,7 @@
 					</tr>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.t210' />
+							<spring:message code='ezJournal.t66' />
 						</th>
 						<td>
 							<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
