@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.w3c.dom.Document;
 
@@ -138,10 +137,11 @@ public interface EzBoardService {
 	
 	public String portalPageItemEdit(String boardID, int tenantID) throws Exception;
 	
+	/* 2019-06-05 홍승비 - 사간겸직시 변경된 관리자권한(rollInfo) 전달하도록 파라미터 추가 */
 	/* 2018-10-16 홍승비 - 관리자단에서 접근했는지 판단하는 isAdminLeft 플래그를 인자로 추가 */
 	/* 2018-06-25 홍승비 - 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가 */
 	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy,
-			String pExcludeBoardID, String lang, String isAdminLeft, boolean isCompanyAdmin, int tenantID) throws Exception;
+			String pExcludeBoardID, String lang, String isAdminLeft, boolean isCompanyAdmin, String boardGroupAdmin_FG, String rollInfo, int tenantID) throws Exception;
 	
 	/* 예약게시물 카운트 표출 시 companyID 조건 추가 */
 	public int getReservedItemListCount(String userID, String companyID, int tenantID) throws Exception;
@@ -158,7 +158,8 @@ public interface EzBoardService {
 	
 	public int getNoticePostItemCount(BoardVO boardVO) throws Exception;
 
-	public int getCheckItemID(String itemID, String boardType, String userDeptPath, int tenantID) throws Exception;
+	/* 2019-05-31 홍승비 - 게시물 읽기권한 가져올 때 하위부서 허용/불가여부 체크하도록 수정 */
+	public int getCheckItemID(String itemID, String boardType, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception;
 	
 	public int getCheckApprUserList(String id, String itemID, int tenantID) throws Exception;
 	
@@ -311,5 +312,11 @@ public interface EzBoardService {
 	
 	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */
 	public List<String> getPDOAddJobDeptID(String userID, String companyID, int tenantID) throws Exception;
+	
+	/* 2019-05-15 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
+	public String getUpperDeptID(String deptID, int tenantID) throws Exception;
+	
+	/* 2019-05-29 홍승비 - 해당 ID가 부서(회사)ID인지 확인하는 기능 서비스로 분리 */
+	public int isDeptChk(String id, int tenantID) throws Exception;
 	
 }
