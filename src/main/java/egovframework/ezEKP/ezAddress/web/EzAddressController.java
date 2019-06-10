@@ -2164,8 +2164,8 @@ public class EzAddressController{
         
         if (format.equals("outlookCSV")) {
         	usedHeaderArray = new String[]{
-        		headerArray[1],  //name        
-        		headerArray[3],  //lastName    
+        		headerArray[1].replaceAll("\'", "").replaceAll("<", "").replaceAll(">", "").replaceAll("\"", "").replaceAll("&", "").replaceAll(";", ""),  //name        
+        		headerArray[3].replaceAll("\'", "").replaceAll("<", "").replaceAll(">", "").replaceAll("\"", "").replaceAll("&", "").replaceAll(";", ""),  //lastName    
         		headerArray[5],  //company     
         		headerArray[6],  //dept        
         		headerArray[7],  //title       
@@ -2182,8 +2182,8 @@ public class EzAddressController{
         	};
         } else if (format.equals("thunderbirdCSV")) {
         	usedHeaderArray = new String[]{
-        		headerArray[0],  //name        
-        		headerArray[1],  //lastName    
+        		headerArray[0].replaceAll("\'", "").replaceAll("<", "").replaceAll(">", "").replaceAll("\"", "").replaceAll("&", "").replaceAll(";", ""),  //name        
+        		headerArray[1].replaceAll("\'", "").replaceAll("<", "").replaceAll(">", "").replaceAll("\"", "").replaceAll("&", "").replaceAll(";", ""),  //lastName    
         		headerArray[26], //company     
         		headerArray[25], //dept        
         		headerArray[24], //title       
@@ -2200,7 +2200,7 @@ public class EzAddressController{
         	};
     	} else if (format.equals("googleCSV")) {
     		usedHeaderArray = new String[]{
-        		headerArray[0],  //name        
+        		headerArray[0].replaceAll("\'", "").replaceAll("<", "").replaceAll(">", "").replaceAll("\"", "").replaceAll("&", "").replaceAll(";", ""),  //name        
         		"",              //lastName    
         		headerArray[43], //company     
         		headerArray[46], //dept        
