@@ -45,11 +45,14 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	}
 	
 	public int selectCompletionOfRepTask(Map<String, Object> map) throws Exception {
-		return (int) select("EzTaskDAO.selectCompletionOfRepTask", map);
+		Object returnVal = select("EzTaskDAO.selectCompletionOfRepTask", map);
+		return returnVal == null ? 0 : (int) returnVal;
 	}
 	
 	public int getStatusOfRepTask(Map<String, Object> map) throws Exception {
-		return (int) select("EzTaskDAO.getStatusOfRepTask", map);
+		Object returnVal = select("EzTaskDAO.getStatusOfRepTask", map);
+		return returnVal == null ? 0 : (int) returnVal;
+		//return (int) select("EzTaskDAO.getStatusOfRepTask", map);
 	}
 
 	public TaskGeneralVO getTaskGeneral(Map<String, Object> map) throws Exception {
