@@ -883,7 +883,8 @@ function GetbrowserLanguage() {
 }
 
 function GetCKEditerHeader() {
-    return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
+    //return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
+    return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;} </STYLE></HEAD>";
 }
     // 사파리 버그 수정용 함수 2012.09.07
 function KeEventControl(obj) {
