@@ -92,6 +92,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
@@ -2677,6 +2678,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			// 문서 정보
 			ezApprovalGDAO.aprMakeTmp2Ing8(map);
 			
+			if (config.getProperty("config.useOpenGov").equals("YES")) { //원문정보공개 사용이면 넣어주게하기
+				ezApprovalGDAO.aprMakeTmp2Ing13(map);
+			}
+			
 			try {
 				//임시저장된 문서의 DocID를 추출한다.
 				String tmpDocID = ezApprovalGDAO.getTmpDocID(map);
@@ -3643,6 +3648,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo7(map);
 			ezApprovalGDAO.aprDeleteDocInfo8(map);
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
+			
+			map.put("v_DOCID", docID);
+			ezApprovalGDAO.deleteOpenGovAttachInfo(map);
+			
 			
 			gongramDocID = gongRamDocInfo(docID, companyID, tenantID);
 			
@@ -8830,6 +8839,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				ezApprovalGDAO.insertAprAttachInfo(map);
 				ezApprovalGDAO.updateAttachFileInfo(map);
+				// 원문공개용 
+				if (config.getProperty("config.useOpenGov").equals("YES")) {
+					ezApprovalGDAO.insertOpenGovAttachInfo(map);
+				}
 			}
 		}
 
@@ -8849,6 +8862,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		ezApprovalGDAO.deleteAttachFileInfo(map);
+		// 원문정보공개 첨부파일 삭제
+		ezApprovalGDAO.deleteOpenGovAttachInfo(map);
 		
 		int attachFile = ezApprovalGDAO.countAttachFile(map);
 		
@@ -28792,86 +28807,96 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return list2;
 	}
-	
+
 	@Override
 	public String enforceSihangDoc(String formURL, String docHref, String realPath, Locale locale, String companyID, int tenantID) throws Exception {
-		logger.debug("enforceSihangDoc started.");
+        logger.debug("enforceSihangDoc started.");
+
+        String docFileName = docHref.substring(docHref.lastIndexOf("/"), docHref.length());
+
+        String enforcePath = realPath + docHref.substring(0, docHref.lastIndexOf("/")) + commonUtil.separator;
+        String mhtImgPath = realPath + commonUtil.getUploadPath("config.LocalPath", tenantID);
+
+        String enforcedDocPath = docHref.substring(0, docHref.lastIndexOf("/")) + commonUtil.separator + "ENFORCE" + docFileName;
+
+        String loadDocMht = ezCommonService.loadMHTFile(realPath + docHref);
+        String docContent = ezCommonService.startMHT2HTML(mhtImgPath, loadDocMht, mhtImgPath, realPath, locale, "", "");
+        org.jsoup.nodes.Document docDocument = Jsoup.parse(docContent);
+
+        String loadFormMht = ezCommonService.loadMHTFile(realPath + formURL);
+        String formContent = ezCommonService.startMHT2HTML(mhtImgPath, loadFormMht, mhtImgPath, realPath, locale, "", "");
+        org.jsoup.nodes.Document formDocument = Jsoup.parse(formContent);
+
+        if (formDocument.getElementById("body") != null && docDocument.getElementById("body") != null) {
+            formDocument.getElementById("body").html(docDocument.getElementById("body").html());
+        }
+        if (formDocument.getElementById("doctitle") != null && docDocument.getElementById("doctitle") != null) {
+            formDocument.getElementById("doctitle").html(docDocument.getElementById("doctitle").html());
+        }
+        if (formDocument.getElementById("docnumber") != null && docDocument.getElementById("docnumber") != null) {
+            formDocument.getElementById("docnumber").html(docDocument.getElementById("docnumber").html());
+        }
+        if (formDocument.getElementById("draftdate") != null && docDocument.getElementById("draftdate") != null) {
+            formDocument.getElementById("draftdate").html(docDocument.getElementById("draftdate").html());
+        }
+        if (formDocument.getElementById("draftername") != null && docDocument.getElementById("draftername") != null) {
+            formDocument.getElementById("draftername").html(docDocument.getElementById("draftername").html());
+        }
+        if (formDocument.getElementById("department") != null && docDocument.getElementById("department") != null) {
+            formDocument.getElementById("department").html(docDocument.getElementById("department").html());
+        }
+        if (formDocument.getElementById("position") != null && docDocument.getElementById("position") != null) {
+            formDocument.getElementById("position").html(docDocument.getElementById("position").html());
+        }
+        if (formDocument.getElementById("telephone") != null && docDocument.getElementById("telephone") != null) {
+            formDocument.getElementById("telephone").html(docDocument.getElementById("telephone").html());
+        }
+        if (formDocument.getElementById("keepperiod") != null && docDocument.getElementById("keepperiod") != null) {
+            formDocument.getElementById("keepperiod").html(docDocument.getElementById("keepperiod").html());
+        }
+        if (formDocument.getElementById("publication") != null && docDocument.getElementById("publication") != null) {
+            formDocument.getElementById("publication").html(docDocument.getElementById("publication").html());
+        }
+        if (formDocument.getElementById("refer") != null && docDocument.getElementById("refer") != null) {
+            formDocument.getElementById("refer").html(docDocument.getElementById("refer").html());
+        }
+        if (formDocument.getElementById("recipient") != null && docDocument.getElementById("recipient") != null) {
+            formDocument.getElementById("recipient").html(docDocument.getElementById("recipient").html());
+        }
+
+        String tempHtml = formDocument.outerHtml();
+        String convertedMht = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+
+        File file = new File(enforcePath + "ENFORCE");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        OutputStream outputStream = null;
+        OutputStreamWriter outputStreamWriter = null;
+
+        try {
+            outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(enforcePath + "ENFORCE" + commonUtil.separator + docFileName)));
+            outputStreamWriter = new OutputStreamWriter(outputStream);
+            outputStreamWriter.write(convertedMht);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            outputStreamWriter.close();
+            outputStream.close();
+        }
+
+        logger.debug("enforceSihangDoc ended.");
+        return enforcedDocPath;
+    }
+
+	@Override
+	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(String docID, String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyID);
 		
-		String docFileName = docHref.substring(docHref.lastIndexOf("/"), docHref.length());
-		
-		String enforcePath = realPath + docHref.substring(0, docHref.lastIndexOf("/")) + commonUtil.separator;
-		String mhtImgPath = realPath + commonUtil.getUploadPath("config.LocalPath", tenantID);
-		
-		String enforcedDocPath = docHref.substring(0, docHref.lastIndexOf("/")) + commonUtil.separator + "ENFORCE" + docFileName;
-		
-		String loadDocMht = ezCommonService.loadMHTFile(realPath + docHref);
-		String docContent = ezCommonService.startMHT2HTML(mhtImgPath, loadDocMht, mhtImgPath, realPath, locale, "", "");
-		org.jsoup.nodes.Document docDocument = Jsoup.parse(docContent);
-		
-		String loadFormMht = ezCommonService.loadMHTFile(realPath + formURL);
-		String formContent = ezCommonService.startMHT2HTML(mhtImgPath, loadFormMht, mhtImgPath, realPath, locale, "", "");
-		org.jsoup.nodes.Document formDocument = Jsoup.parse(formContent);
-		
-		if (formDocument.getElementById("body") != null && docDocument.getElementById("body") != null) {
-			formDocument.getElementById("body").html(docDocument.getElementById("body").html());
-		}
-		if (formDocument.getElementById("doctitle") != null && docDocument.getElementById("doctitle") != null) {
-			formDocument.getElementById("doctitle").html(docDocument.getElementById("doctitle").html());
-		}
-		if (formDocument.getElementById("docnumber") != null && docDocument.getElementById("docnumber") != null) {
-			formDocument.getElementById("docnumber").html(docDocument.getElementById("docnumber").html());
-		}
-		if (formDocument.getElementById("draftdate") != null && docDocument.getElementById("draftdate") != null) {
-			formDocument.getElementById("draftdate").html(docDocument.getElementById("draftdate").html());
-		}
-		if (formDocument.getElementById("draftername") != null && docDocument.getElementById("draftername") != null) {
-			formDocument.getElementById("draftername").html(docDocument.getElementById("draftername").html());
-		}
-		if (formDocument.getElementById("department") != null && docDocument.getElementById("department") != null) {
-			formDocument.getElementById("department").html(docDocument.getElementById("department").html());
-		}
-		if (formDocument.getElementById("position") != null && docDocument.getElementById("position") != null) {
-			formDocument.getElementById("position").html(docDocument.getElementById("position").html());
-		}
-		if (formDocument.getElementById("telephone") != null && docDocument.getElementById("telephone") != null) {
-			formDocument.getElementById("telephone").html(docDocument.getElementById("telephone").html());
-		}
-		if (formDocument.getElementById("keepperiod") != null && docDocument.getElementById("keepperiod") != null) {
-			formDocument.getElementById("keepperiod").html(docDocument.getElementById("keepperiod").html());
-		}
-		if (formDocument.getElementById("publication") != null && docDocument.getElementById("publication") != null) {
-			formDocument.getElementById("publication").html(docDocument.getElementById("publication").html());
-		}
-		if (formDocument.getElementById("refer") != null && docDocument.getElementById("refer") != null) {
-			formDocument.getElementById("refer").html(docDocument.getElementById("refer").html());
-		}
-		if (formDocument.getElementById("recipient") != null && docDocument.getElementById("recipient") != null) {
-			formDocument.getElementById("recipient").html(docDocument.getElementById("recipient").html());
-		}
-		
-		String tempHtml = formDocument.outerHtml();
-		String convertedMht = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
-		
-		File file = new File(enforcePath + "ENFORCE");
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		
-		OutputStream outputStream = null;
-		OutputStreamWriter outputStreamWriter = null;
-		
-		try {
-			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(enforcePath + "ENFORCE" + commonUtil.separator + docFileName)));
-			outputStreamWriter = new OutputStreamWriter(outputStream);
-			outputStreamWriter.write(convertedMht);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			outputStreamWriter.close();
-			outputStream.close();
-		}
-		
-		logger.debug("enforceSihangDoc ended.");
-		return enforcedDocPath;
+		return ezApprovalGDAO.getAttachListForOpenGov(map); 
 	}
 }

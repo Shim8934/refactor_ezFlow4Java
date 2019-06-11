@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
@@ -3256,7 +3257,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGProxyVO> getProxyInfo_A(Map<String, Object> map) throws Exception {
 		return (List<ApprGProxyVO>) list("EzApprovalG.getProxyInfo_A", map);
 	}
-	
+
 	public int checkDocIdIsDuplicated(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.checkDocIdIsDuplicated", map);
 	}
@@ -3267,5 +3268,22 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public ApprGFormVO getFormPath(Map<String, Object> map) throws Exception {
 		return (ApprGFormVO) select("EzApprovalG.getFormPath", map);
+	}
+
+	public void insertOpenGovAttachInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertOpenGovAttachInfo", map);
+	}
+
+	public void deleteOpenGovAttachInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteOpenGovAttachInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(Map<String, Object> map) throws Exception {
+		return (List<ApprGOpenGovAttachVO>) list("EzApprovalG.getAttachListForOpenGov", map);
+	}
+
+	public void aprMakeTmp2Ing13(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.aprMakeTmp2Ing13", map);		
 	}
 }

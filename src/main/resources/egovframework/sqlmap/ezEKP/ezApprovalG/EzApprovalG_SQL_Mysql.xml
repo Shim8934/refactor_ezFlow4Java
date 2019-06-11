@@ -42,6 +42,7 @@
 	<typeAlias  alias="egovMap"                         type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
 	<typeAlias  alias="PortalTopOtherCompanyAddJobVO" 	type="egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO"/>
 	<typeAlias  alias="ApprGProxyVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO"/>
+	<typeAlias  alias="ApprGOpenGovAttachVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO"/>
 	
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
 		<result property="companyID"					column="companyID"						/>
@@ -17334,7 +17335,26 @@
 			AND
 				DOCID = #v_TMPDOCID#
 	</insert>
-	
+	<insert id="EzApprovalG.aprMakeTmp2Ing13" parameterClass="Map">
+		INSERT INTO 
+			TBL_OPENGOVFILEINFO
+     	( SELECT 
+     		  #v_PDOCID# ,
+              ATTACHFILESN AS SN,
+              FILEOPENFLAG,
+	          COMPANYID,
+	          TENANT_ID
+       	  FROM 
+       	   	  TBL_TMPATTACHINFO 
+          WHERE 
+          	  TENANT_ID = #v_TENANTID#
+          AND
+          	  COMPANYID = #companyID#
+	      AND   
+          	  OWNERID = #v_PUSERID#
+          AND 
+          	  SN = #v_PSN# )
+	</insert>
 	<select id="EzApprovalG.checkTmpDocHasGongRam" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
 			COUNT(*)
@@ -23682,45 +23702,57 @@
 			(
 				OWNERID,
 	    		SN,
-	    		ATTACHFILESN , 
-	    		ATTACHFILENAME , 
-	    		ATTACHFILEHREF , 
-	    		ATTACHFILESIZE , 
-	    		ATTACHUSERID , 
-	    		ATTACHUSERNAME , 
-	    		ATTACHUSERJOBTITLE , 
-	    		ATTACHUSERDEPTID , 
-	    		ATTACHUSERDEPTNAME , 
-	    		PAGENUM , 
-	    		DISPLAYNAME , 
-	    		BODYATTACH , 
-	    		AttachUserName2 ,  
-	    		AttachUserJobTitle2 , 
-	    		AttachUserDeptName2, 
+	    		ATTACHFILESN ,
+	    		ATTACHFILENAME ,
+	    		ATTACHFILEHREF ,
+	    		ATTACHFILESIZE ,
+	    		ATTACHUSERID ,
+	    		ATTACHUSERNAME ,
+	    		ATTACHUSERJOBTITLE ,
+	    		ATTACHUSERDEPTID ,
+	    		ATTACHUSERDEPTNAME ,
+	    		PAGENUM ,
+	    		DISPLAYNAME ,
+	    		BODYATTACH ,
+	    		AttachUserName2 ,
+	    		AttachUserJobTitle2 ,
+	    		AttachUserDeptName2,
 	    		TENANT_ID ,
-	    		COMPANYID  ) 
-	     SELECT 
-	    		#v_USERID#, 
-	    		#v_SN#, 
-	    		A.ATTACHFILESN , 
-	    		A.ATTACHFILENAME , 
-	    		A.ATTACHFILEHREF , 
-	    		A.ATTACHFILESIZE , 
-	    		A.ATTACHUSERID , 
-	    		A.ATTACHUSERNAME , 
-	    		A.ATTACHUSERJOBTITLE , 
-	    		A.ATTACHUSERDEPTID , 
-	    		A.ATTACHUSERDEPTNAME , 
-	    		A.PAGENUM , 
-	    		A.DISPLAYNAME , 
-	    		A.BODYATTACH , 
-	    		A.AttachUserName2 ,  
-	    		A.AttachUserJobTitle2 , 
-	    		A.AttachUserDeptName2, 
+	    		COMPANYID,
+                FILEOPENFLAG )
+	     SELECT
+	    		#v_USERID#,
+	    		#v_SN#,
+	    		A.ATTACHFILESN ,
+	    		A.ATTACHFILENAME ,
+	    		A.ATTACHFILEHREF ,
+	    		A.ATTACHFILESIZE ,
+	    		A.ATTACHUSERID ,
+	    		A.ATTACHUSERNAME ,
+	    		A.ATTACHUSERJOBTITLE ,
+	    		A.ATTACHUSERDEPTID ,
+	    		A.ATTACHUSERDEPTNAME ,
+	    		A.PAGENUM ,
+	    		A.DISPLAYNAME ,
+	    		A.BODYATTACH ,
+	    		A.AttachUserName2 ,
+	    		A.AttachUserJobTitle2 ,
+	    		A.AttachUserDeptName2,
 	    		A.TENANT_ID ,
-	    		A.COMPANYID  
-	      FROM 
+	    		A.COMPANYID ,
+	    		FILEOPENFLAG 
+	      FROM
 	      		TBL_APRATTACHINFO A 
+	      INNER JOIN
+	      		TBL_OPENGOVFILEINFO B
+	      ON
+	      		A.DOCID = B.DOCID
+	      AND
+	      		A.ATTACHFILESN = B.SN
+	      AND
+	      		A.TENANT_ID = B.TENANT_ID
+	      AND
+	      		A.COMPANYID = B.COMPANYID
 	      WHERE  
 	      		A.DOCID = #v_DOCID# 
 		  AND 	
@@ -30339,7 +30371,7 @@
 		  AND
 		  		proxy like '$id$:%'
 	  </select> 
-	  
+
 	<select id="EzApprovalG.checkDocIdIsDuplicated" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
 			COUNT(A.DOCID)
@@ -30370,7 +30402,8 @@
 					COMPANYID = #companyID#
 			) AS A
 	</select>
-	<select id="EzApprovalG.checkProxyAprLine" parameterClass="Map" resultClass="Integer">
+
+    <select id="EzApprovalG.checkProxyAprLine" parameterClass="Map" resultClass="Integer">
 		SELECT
 			COUNT(*)
 		FROM
@@ -30394,5 +30427,37 @@
 					AND
 						COMPANYID = #companyID#
 				)
+	</select>
+
+    <insert id="EzApprovalG.insertOpenGovAttachInfo" parameterClass="Map">
+	 	INSERT INTO                 
+	 		TBL_OPENGOVFILEINFO
+	 		(DOCID, SN, FILEOPENFLAG, TENANT_ID, COMPANYID) 
+	 	VALUES 
+	 		(#v_DOCID#, #v_ATTACHFILESN#, 'Y', #v_TENANTID#, #companyID#)
+	</insert>
+
+    <delete id="EzApprovalG.deleteOpenGovAttachInfo" parameterClass="Map">
+	  	DELETE FROM 
+	  		TBL_OPENGOVFILEINFO
+    	WHERE  
+    		DOCID = #v_DOCID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+	</delete>
+
+    <select id="EzApprovalG.getAttachListForOpenGov" parameterClass="Map" resultClass="ApprGOpenGovAttachVO">
+	    SELECT
+            cn as id,
+            deptid as dept,
+            proxy as bujaeInfo
+        FROM
+            TBL_ADDJOBMASTER
+        WHERE
+            tenant_id = #tenantId#
+        AND
+            proxy like '$id$:%'
 	</select>
 </sqlMap>

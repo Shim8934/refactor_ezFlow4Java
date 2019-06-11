@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -607,16 +608,6 @@ public interface EzApprovalGService {
 
 	boolean isReformTempDoc(String formUrl) throws Exception;
 
-	/**
-	 * 결재 문서 양식의 폼빌더 여부를 반환
-	 * 
-	 * @param formId
-	 *            양식 아이디
-	 * @param companyId
-	 *            회사 아이디
-	 * @param tenantId
-	 *            테넌트 아이디
-	 */
 	ApprGFormVO getReformInfoApprovalDocument(String docId, String userId, String companyId, int tenantId) throws Exception;
 	/* FormBuilder end */
 	
@@ -659,8 +650,10 @@ public interface EzApprovalGService {
 	public String getProxyUser2(String userID, String userLang, int tenantID, String offset) throws Exception;
 
 	public List<ApprGProxyVO> getProxyUserInfo(String userID, String userLang, int tenantID, String offSet) throws Exception;
-	
+
 	public String enforceSihangDoc(String formURL, String docHref, String realPath, Locale locale, String companyID, int tenantID) throws Exception;
 
 	ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception;
+
+	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(String docID, String companyID, int tenantId) throws Exception;
 }
