@@ -423,7 +423,7 @@
 		            showAnim: 'show',
 		            showMonthAfterYear: true
 		        };
-			    $.datepicker.setDefaults($.datepicker.regional["ko"]);
+			    $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 			    
 			    $("#Sdatepicker").datepicker('disable');
 			});
