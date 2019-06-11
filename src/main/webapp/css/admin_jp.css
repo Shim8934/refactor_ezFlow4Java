@@ -257,6 +257,28 @@ li {float:left;}
 .admin_employeeList .emBottom .emName{ margin:0px; padding:0px; font-size:16px; color:#333; font-weight:bold;}
 .admin_employeeList .emBottom .emAdd_text{ color:#666; margin:0px; padding:20px 0px 0px 0px;}
 
+/* admin slider images */
+#sliderContainer{ margin:0px; padding:0px 0px 0px 5px;}
+.sliderList{ margin:10px 20px 20px 10px; display:inline-block; background:#fff; box-sizing:border-box; position:relative; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.slider-body{ margin:0px; padding:0px; position:relative; cursor:move; border:none; width:285px; height:515px; }
+.slider-head{ margin:0px; padding:0px; cursor:move; background: rgba(0, 0, 0, 0.5); width:285px; height:40px; position:absolute; top:0px;}
+.slider-head .sliderHDT{ margin:10px 10px 0px 15px; padding:0px; float:right; cursor:pointer;}
+.slider-head .sliderHDD{ margin:10px 0px 0px 0px; padding:0px; float:right; cursor:pointer;}
+.slider-content{ width:285px; height:115px; background: rgba(0, 0, 0, 0.5); position:absolute; bottom:0px; margin:0px; padding:0px;}
+.sliderCDT{ margin-top:20px; padding:0px 15px;}
+.sliderCDT .sliderTtit{ margin:0px; padding:0px; display:inline-block; float:left; color:#fff; font-size:12px; font-weight:bold; width:28%; box-sizing:border-box; text-align:left; height:27px; line-height:27px;}
+.sliderCDT .sliderText{ margin:0px; padding:0px; display:inline-block; width:72%;}
+.sliderCDT .sliderText .admin_input{background: rgba(0, 0, 0, 0.52); border-radius:15px; border:none; color:#fff; padding:0px 0px 0px 10px;}
+.sliderCDT .sliderSwitch{ margin:14px 0px 0px 0px; padding:0px; display:inline-block;}
+
+.sliderListmodify{ margin:10px 20px 20px 0px; padding:0px; background:#fff; position:relative; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); display:inline-block;}
+.sliderModifyBody{ width:285px; height:515px; margin:0px; position:relative; cursor:move;}
+.slider-header-modify{ cursor:move; background: rgba(0, 0, 0, 0.5); margin:0px; padding:0px;width:285px; height:40px; position:absolute; top:0px;}
+.slider-header-modify .sliderHDT{ margin:10px 0px 0px 15px; padding:0px; float:left; cursor:pointer;}
+.slider-header-modify .sliderHDD{ margin:10px 15px 0px 0px; padding:0px; float:right; cursor:pointer;}
+.slider-content-modify{width:285px; height:115px; background: rgba(0, 0, 0, 0.5); position:absolute; bottom:0px; margin:0px; padding:0px;}
+.addImageBtnModify{ margin:-70px 0px 0px -33px; padding:0px; position:absolute; top:50%; left:50%; cursor:pointer;}
+
 /* ManageOrgan */
 .listview.organ {border-top: none;border-bottom:none;} 
 .OrganListView {border: 0px solid #ddd; Width: 375px; Height: 450px; overflow-x: hidden; BACKGROUND-COLOR: white;}
@@ -269,7 +291,44 @@ li {float:left;}
 .listview.organ .mainlist_free tr th {padding:0px; visibility:hidden;}
 .organHeader {width:69%;overflow:hidden;float:right;border:1px solid rgb(221, 221, 221);border-top: none;border-bottom:none;}
 .organHeader .mainlist tr th {border-bottom:none;}
+.organSearchForm {overflow:hidden;padding:0;margin-bottom:11px;height:31px;border:1px solid #d2d2d2;border-right:0px;float:right}
+.organSearchTab {width:50px;border-right:1px solid #d2d2d2; float:left; background: #f8f8fa; padding:8px;}
+.organSearchContent {float:left; padding: 2px 2px 0px 2px;}
+.organSearchKeyword {width:100px; height:27px;}
+.organSearchEnter {width:50px;float:right;padding:4px;background:#f8f8fa;border:1px solid #d2d2d2;}
+label[for="listOpt1"] { position: relative; top: -4.5px;}
+label[for="listOpt2"] { position: relative; top: -4.5px;}
 
 .admin_quicklink #AccessList {height:174px;overflow-y:auto;}
 .admin_quicklink #AccessList table td {border:0px;}
 .linkDetails {width:98%;margin:0px}
+#popupContentTb .box {background:#ffffff;}
+
+/* Manage Addjob*/
+.listview.addJob {width:99%;border-left:none;border-bottom:none;}
+.addJobPreviewTD {vertical-align:top;border:1px solid #ddd;border-right:none;border-bottom:none;}
+.addJobPreviewTD .previewmail {overflow:initial;}
+
+/* organ */
+.organList{ margin:3px; padding:0px; overflow:hidden; height:34px; line-height:34px;float:right;}
+.organList .organListDT{ margin:0px; padding:0px; float:left;}
+.organList .organListDD{ margin:0px; padding:2px 0px 0px 0px; float:right;}
+.moveWrap span.upBtn{ display:inline-block; cursor:pointer; margin:0px 0px 0px 0px; padding:0px;}
+.moveWrap span.downBtn{ display:inline-block; cursor:pointer; margin:0px 0px 0px 0px; padding:0px;}
+.concurrentUL{ margin:0px; padding:0px; list-style:none; width:100%;}
+.concurrentUL .concurrentLI{ margin:0px; padding:0px; height:67px; line-height:65px; border-bottom:1px solid #dddddd; float:none; cursor:pointer;}
+.concurrentUL .concurrentLI:hover{ background:#edf7ff;}
+.concurrentUL .concurrentLI:hover .conlistDL .conlistIcon{ border:1px solid #3d8fea;} 
+.concurrentUL .concurrentLI .conlistDL{ margin:0px; padding:0px 30px 0px 15px; float:left;}
+.concurrentUL .concurrentLI .conlistDL .conlistIcon{ margin:14px 8px 0px 0px; padding:0px; width:36px; height:36px; border:1px solid #dddddd; border-radius:30px; -webkit-border-radius:30px; -moz-border-radius:30px; box-sizing:border-box; text-align:center; float:left;}
+.concurrentUL .concurrentLI .conlistDL .conlistIcon img{ padding:6px 0px 0px 0px; margin-bottom:10px; margin-left:2px;}
+.concurrentUL .concurrentLI .conlistDL .conlistText{ margin:0px; padding:0px; float:left; font-size:14px; font-weight:bold; color:#333;}
+.concurrentUL .concurrentLI .conDelete{ margin:0px; padding:17px 0px 0px 0px; box-sizing:border-box; float:right; width:45px; height:67px; background:#fafafa; border-left:1px solid #e5e5e5; text-align:center;}
+
+.concurrentUL .concurrentLI.selectTR { background:#edf7ff;}
+.concurrentUL .concurrentLI.selectTR .conlistDL .conlistIcon { border:1px solid #3d8fea;}
+
+/* adminTop */
+.adminTopTitle {cursor:pointer;}
+.concurrentUL .concurrentLI .conlistDL {width:calc(28% - 45px);}
+.concurrentUL .concurrentLI .conlistDL .conlistText {max-width:calc(100% - 45px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
