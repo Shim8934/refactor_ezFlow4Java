@@ -1,13 +1,28 @@
-function isValidDate(year, month, day) {
-    var d = new Date(year, Number(month) - 1, day);
-	var dMonth = (d.getMonth() + 1) + "";
-	dMonth = (dMonth.length == 1 ? "0" + dMonth : dMonth);
-	var dDate = d.getDate() + "";
-	dDate = (dDate.length == 1 ? "0" + dDate : dDate);
-    if (d.getFullYear() == year && dMonth == month && dDate == day) {
-        return true;
-    }
-    return false;
+function startEndTimeCheck(id, selectYear, selectMonth, selectDay) {
+	var returnVal = true
+	selectMonth = (Number(selectMonth) + 1) + "";
+	if (selectMonth.length == 1) {
+		selectMonth = "0" + selectMonth;
+	}
+	selectDay = selectDay + "";
+	if (selectDay.length == 1) {
+		selectDay = "0" + selectDay;
+	}
+	
+	if (Number(id.split("#date")[1]) % 2 != 0) {
+		var tempDate1 = selectYear + "-" + selectMonth + "-" + selectDay;
+		var tempDate2 = document.getElementById("date" + (Number(id.split("#date")[1]) + 1)).value;
+		if (tempDate1 > tempDate2) {
+			returnVal = false;
+		}
+	} else {
+		var tempDate1 = document.getElementById("date" + (Number(id.split("#date")[1]) - 1)).value;
+		var tempDate2 = selectYear + "-" + selectMonth + "-" + selectDay;
+		if (tempDate1 > tempDate2) {
+			returnVal = false;
+		}
+	}
+	return returnVal;
 }
 
 function mobileKeyUp(mobileId) {
@@ -164,27 +179,6 @@ function attitude_annual_conn(formType, status) {
 }
 
 function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) {
-  
-   if (document.getElementById(mdate1).value.split("-")[1].length < 2) {
-      document.getElementById(mdate1).value = document.getElementById(mdate1).value.split("-")[0] + "-0" + document.getElementById(mdate1).value.split("-")[1] + "-" + document.getElementById(mdate1).value.split("-")[2]
-      
-      if (document.getElementById(mdate1).value.split("-")[2].length < 2) {
-         document.getElementById(mdate1).value = document.getElementById(mdate1).value.split("-")[0] + "-" + document.getElementById(mdate1).value.split("-")[1] + "-0" + document.getElementById(mdate1).value.split("-")[2]
-      }    
-   } else if (document.getElementById(mdate1).value.split("-")[2].length < 2) {
-      document.getElementById(mdate1).value = document.getElementById(mdate1).value.split("-")[0] + "-" + document.getElementById(mdate1).value.split("-")[1] + "-0" + document.getElementById(mdate1).value.split("-")[2]
-   }
-
-   if (document.getElementById(mdate2).value.split("-")[1].length < 2) {
-      document.getElementById(mdate2).value = document.getElementById(mdate2).value.split("-")[0] + "-0" + document.getElementById(mdate2).value.split("-")[1] + "-" +document.getElementById(mdate2).value.split("-")[2]
-      
-      if (document.getElementById(mdate2).value.split("-")[2].length < 2) {
-         document.getElementById(mdate2).value = document.getElementById(mdate2).value.split("-")[0] + "-" + document.getElementById(mdate2).value.split("-")[1] + "-0" + document.getElementById(mdate2).value.split("-")[2]
-      }
-   } else if (document.getElementById(mdate2).value.split("-")[2].length < 2) {
-      document.getElementById(mdate2).value = document.getElementById(mdate2).value.split("-")[0] + "-" + document.getElementById(mdate2).value.split("-")[1] + "-0" + document.getElementById(mdate2).value.split("-")[2]
-   }
-
    var tempDate1 = new Date(document.getElementById(mdate1).value).getTime();
    var tempDate2 = new Date(document.getElementById(mdate2).value).getTime();
    var controlVal = (document.getElementById(mcontrol).value == 'A12' || 
@@ -193,7 +187,7 @@ function setAdditional(mdate1, mdate2, mcontrol, mdateadditional) {
                   document.getElementById(mcontrol).value == 'A16') ? 2 : 1;
    var holidayCnt = 0;
    if (annualDateResult == "") {
-	document.getElementById(mdate1).value.split("-")[0] + " 년 " + document.getElementById(mdate1).value.split("-")[1] + " 월 " + document.getElementById(mdate1).value.split("-")[2] + " 일 ~ " + document.getElementById(mdate2).value.split("-")[0] + " 년 " + document.getElementById(mdate2).value.split("-")[1] + " 월 " + document.getElementById(mdate2).value.split("-")[2] + " 일";
+	   annualDateResult = document.getElementById(mdate1).value.split("-")[0] + " 년 " + document.getElementById(mdate1).value.split("-")[1] + " 월 " + document.getElementById(mdate1).value.split("-")[2] + " 일 ~ " + document.getElementById(mdate2).value.split("-")[0] + " 년 " + document.getElementById(mdate2).value.split("-")[1] + " 월 " + document.getElementById(mdate2).value.split("-")[2] + " 일";
    }
    
    if (document.getElementById(mcontrol).value == 'A18') { //산휴		  
@@ -424,16 +418,6 @@ function caldate(date, day){
    return caledYear+'-'+caledmonth+'-'+caledday;
 }
 
-function lastDay(year, month){
-
-	//var curDate = new Date();
-
-	var lastDate = new Date(year, month, "");
-
-	return lastDate.getDate();
-
-	}
-
 //실제 상위 프레임의 doctitle에 값 적용
 function setDocTitle(element) {
 	if (event) {
@@ -453,8 +437,6 @@ function setDocTitle(element) {
    var isContinue = true;
 
    $("input[id^=reform-title]").not("input[type=checkbox]").each(function() {
-	   var titleCheckboxId = "reform-title-checkbox" + this.getAttribute("id").split("reform-title")[1];
-	   if (!$("#" + titleCheckboxId).is(":checked")) {
 	        if (startDate == "") {
 	            startDate = $("#" + this.getAttribute('viewer').split(",")[0]).val();
 	        } else {
@@ -479,79 +461,7 @@ function setDocTitle(element) {
 			totalDay = totalDay + Number($("#" + dateAdditionalId).text().trim().substr($("#" + dateAdditionalId).text().trim().indexOf("[")+1, $("#" + dateAdditionalId).text().trim().indexOf("일")-1).trim());
 			if (addAnnualCnt) {
 			   useAnnualCnt = useAnnualCnt + Number($("#" + dateAdditionalId).text().trim().substr($("#" + dateAdditionalId).text().trim().indexOf("[")+1, $("#" + dateAdditionalId).text().trim().indexOf("일")-1).trim());
-		    }        
-	   } else {
-		   var titleStartDate = $(this).val().split("~")[0].split("년")[0].trim()
-	         + "-" + $(this).val().split("~")[0].split("년")[1].split("월")[0].trim()
-	         + "-" + $(this).val().split("~")[0].split("년")[1].split("월")[1].split("일")[0].trim();
-	         var titleEndDate = $(this).val().split("~")[1].split("년")[0].trim()
-	         + "-" + $(this).val().split("~")[1].split("년")[1].split("월")[0].trim()
-	         + "-" + $(this).val().split("~")[1].split("년")[1].split("월")[1].split("일")[0].trim();
-	         
-	         if (!regStr.test(titleStartDate) || !regStr.test(titleEndDate) || $(this).val().split("~")[0].split("년")[1].split("월")[0].trim() == "0" || $(this).val().split("~")[1].split("년")[1].split("월")[0].trim() == "0" || $(this).val().split("~")[0].split("년")[1].split("월")[1].split("일")[0].trim() == "0" || $(this).val().split("~")[1].split("년")[1].split("월")[1].split("일")[0].trim() == "0") {
-	            isContinue = false;
-	            return;
-	         }
-			 
-			var titleStartDate2 = titleStartDate.split("-")[0] 
-			+ "-" + (titleStartDate.split("-")[1].length == 1 ? "0" + titleStartDate.split("-")[1] : titleStartDate.split("-")[1]) 
-			+ "-" + (titleStartDate.split("-")[2].length == 1 ? "0" + titleStartDate.split("-")[2] : titleStartDate.split("-")[2]);
-	        var titleEndDate2 = titleEndDate.split("-")[0] 
-			+ "-" + (titleEndDate.split("-")[1].length == 1 ? "0" + titleEndDate.split("-")[1] : titleEndDate.split("-")[1]) 
-			+ "-" + (titleEndDate.split("-")[2].length == 1 ? "0" + titleEndDate.split("-")[2] : titleEndDate.split("-")[2]);
-			
-			if (!isValidDate(titleStartDate2.split("-")[0],titleStartDate2.split("-")[1],titleStartDate2.split("-")[2])) {
-				alert(titleStartDate + " 는 없는 날짜 입니다.")
-//				isContinue = false;
-				titleStartDate2 = titleStartDate2.split("-")[0] + "-" + titleStartDate2.split("-")[1] + "-" +lastDay(titleStartDate2.split("-")[0],titleStartDate2.split("-")[1]);
-				titleStartDate = titleStartDate2;
-//	            return;
-			}			
-			if (!isValidDate(titleEndDate2.split("-")[0],titleEndDate2.split("-")[1],titleEndDate2.split("-")[2])) {
-				alert(titleEndDate + " 는 없는 날짜 입니다.")
-//				isContinue = false;
-				titleEndDate2 = titleEndDate2.split("-")[0] + "-" + titleEndDate2.split("-")[1] + "-" +lastDay(titleEndDate2.split("-")[0],titleEndDate2.split("-")[1]);
-				titleEndDate = titleEndDate2;
-//	            return;
-			}
-			
-	         $("#" + $(this).attr("viewer").split(",")[0]).val(titleStartDate2);
-	         $("#" + $(this).attr("viewer").split(",")[0]).attr("value", titleStartDate2);
-	         $("#" + $(this).attr("viewer").split(",")[1]).val(titleEndDate2);
-	         $("#" + $(this).attr("viewer").split(",")[1]).attr("value", titleEndDate2);
-			 
-	            
-	         if (startDate == "") {
-	            startDate = titleStartDate;
-	         } else {
-	            if (startDate.split("-")[0] + "-" + (startDate.split("-")[1].length == 1 ? "0" + startDate.split("-")[1] : startDate.split("-")[1]) + "-" 
-			 + (startDate.split("-")[2].length == 1 ? "0" + startDate.split("-")[2] : startDate.split("-")[2]) > titleStartDate2) {
-	               startDate = titleStartDate;
-	            }
-	         }
-
-	         if (endDate == "") {
-	            endDate = titleEndDate;
-	         } else {
-	            if (endDate.split("-")[0] + "-" + (endDate.split("-")[1].length == 1 ? "0" + endDate.split("-")[1] : endDate.split("-")[1]) + "-" 
-			 + (endDate.split("-")[2].length == 1 ? "0" + endDate.split("-")[2] : endDate.split("-")[2]) < titleEndDate2) {
-	               endDate = titleEndDate;
-	            }
-	         }
-	         
-	         var attitudeType = $(this).siblings("select").val();
-	         var addAnnualCnt = (attitudeType == "" || attitudeType == "A11" || attitudeType == "A12" || attitudeType == "A13") ? true : false;
-	         eval($(this).attr("viewer-listener"));
-	         var dateAdditionalId = $(this).attr("viewer-listener").substring($(this).attr("viewer-listener").lastIndexOf(',')+2,$(this).attr("viewer-listener").lastIndexOf('"'));
-	         
-	     
-			totalDay = totalDay + Number($("#" + dateAdditionalId).text().trim().substr($("#" + dateAdditionalId).text().trim().indexOf("[")+1, $("#" + dateAdditionalId).text().trim().indexOf("일")-1).trim());
-			if (addAnnualCnt) {
-			   useAnnualCnt = useAnnualCnt + Number($("#" + dateAdditionalId).text().trim().substr($("#" + dateAdditionalId).text().trim().indexOf("[")+1, $("#" + dateAdditionalId).text().trim().indexOf("일")-1).trim());
-			}
-	         $(this).val(titleStartDate.split("-")[0] + " 년 " + titleStartDate.split("-")[1] + " 월 " + titleStartDate.split("-")[2] + " 일 ~ " + titleEndDate.split("-")[0] + " 년 " + titleEndDate.split("-")[1] + " 월 " + titleEndDate.split("-")[2] + " 일 [ " + Number($("#" + dateAdditionalId).text().trim().substr($("#" + dateAdditionalId).text().trim().indexOf("[")+1, $("#" + dateAdditionalId).text().trim().indexOf("일")-1).trim()) + " 일 ]" );
-	          $(this).attr("value",titleStartDate.split("-")[0] + " 년 " + titleStartDate.split("-")[1] + " 월 " + titleStartDate.split("-")[2] + " 일 ~ " + titleEndDate.split("-")[0] + " 년 " + titleEndDate.split("-")[1] + " 월 " + titleEndDate.split("-")[2] + " 일 [ " + Number($("#" + dateAdditionalId).text().trim().substr($("#" + dateAdditionalId).text().trim().indexOf("[")+1, $("#" + dateAdditionalId).text().trim().indexOf("일")-1).trim()) + " 일 ]" );
-	   }
+		    }
    })
    
    if (isContinue) {	   
@@ -696,8 +606,7 @@ $("#__reform_control_list").attr("value", controlListStr);
 
 
 
-var cssStr = "#reform-title-checkbox-div" + annualDataLength + " {display:block !important;}"
-            + "#reform-title" + annualDataLength + " {height:43px !important; padding-top: 10px;}"
+var cssStr = "#reform-title" + annualDataLength + " {height:43px !important; padding-top: 10px;}"
             + "#reform-date-title" + annualDataLength + " > p {padding-top: 5px;}";
 tag.addStyle(null, cssStr);
 

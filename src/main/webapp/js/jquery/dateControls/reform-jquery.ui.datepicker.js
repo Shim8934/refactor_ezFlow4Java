@@ -1582,8 +1582,19 @@ $.extend(Datepicker.prototype, {
 					$.datepicker._gotoToday(id);
 				},
 				selectDay: function () {
-					$.datepicker._selectDay(id, +this.getAttribute("data-month"), +this.getAttribute("data-year"), this);
-					return false;
+					if(parent.document.getElementById('attitude_annual_conn')) {//근태관리 연동양식
+						var returnVal = startEndTimeCheck(id, +this.getAttribute("data-year"), +this.getAttribute("data-month"),$("a", this).html());
+						if (!returnVal) {
+							parent.parent.OpenAlertUI("시작일을 종료일보다 빠르게 지정해 주십시오.");
+							return false;
+						} else {							
+							$.datepicker._selectDay(id, +this.getAttribute("data-month"), +this.getAttribute("data-year"), this);
+							return false;
+						}
+					} else {						
+						$.datepicker._selectDay(id, +this.getAttribute("data-month"), +this.getAttribute("data-year"), this);
+						return false;
+					}
 				},
 				selectMonth: function () {
 					$.datepicker._selectMonthYear(id, this, "M");
