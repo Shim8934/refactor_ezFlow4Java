@@ -1574,6 +1574,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void addMemoExtensionColumns() throws Exception {
+		ezCommonDAO.addMemoExtensionColumns();
+	}
+
+	@Override
 	public void addFormVersion() throws Exception {
 		ezCommonDAO.addFormVersion();
 	}
