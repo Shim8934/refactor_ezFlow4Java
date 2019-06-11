@@ -492,7 +492,14 @@
 		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
 		        	return;
 		        }
-	        		
+	        	
+                if (pQname.indexOf("&") > -1 || pQname.indexOf("<") > -1 || pQname.indexOf(">") > -1 
+   	        		 || pQname.indexOf("\"") > -1 || pQname.indexOf("'") > -1 || pQname.indexOf(";") > -1) {
+              		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+              		document.getElementById("pQname").focus();
+   	            	return;
+   	        	}
+                
 	            if (document.getElementById("qemail").value != "" && regex.test(document.getElementById("qemail").value) === false) {
 	                alert("<spring:message code='ezAddress.t1100' />");
 	                document.getElementById("qemail").focus();

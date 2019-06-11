@@ -877,30 +877,34 @@
 			            }
 					} catch (e) {
 					}
-					
-					if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
-						parent.opener.getNoticePortletList();
+					try {
+						if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
+							parent.opener.getNoticePortletList();
+						}
+						
+						// 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener != null && parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
+			            	}
+			            }
+						
+						if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
+							parent.opener.getBoardList_NewBoardSTD();
+						}
+					} catch (e) {
+						
 					}
 					
-					// 게시판 포틀릿 리스트 업데이트 되도록 수정
-		            if (parent.opener != null && parent.opener.getBoardPortletInfo != undefined) {
-		            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
-		            	var customBoardCount = customBoardList.length;
-		            	
-		            	for (var i = 0; i < customBoardCount; i++) {
-		            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
-		            		
-		            		if (boardId == pBoardID) {
-		            			var portletId = customBoardList[i].parentElement.id;
-		            			portletId = portletId.substring(0, portletId.indexOf("P"));
-		            			parent.opener.getBoardPortletInfo(portletId);
-		            		}
-		            	}
-		            }
-					
-					if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
-						parent.opener.getBoardList_NewBoardSTD();
-					}
 					
 		            window.close();
 		        } else {

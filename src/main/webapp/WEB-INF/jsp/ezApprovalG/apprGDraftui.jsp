@@ -1870,7 +1870,7 @@
 		      </div></td>
 		  </tr>
 		  <tr>
-		    <td  style="padding-bottom:10px;height:90%;" >
+		    <td  style="padding-bottom:10px;height:86%;" >
 		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do?isUsed=${isUsed}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		      </td>
 		  </tr>
