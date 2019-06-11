@@ -312,7 +312,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/ezAttitude/excelAttitudeListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&attitudeType=" + searchAttitudeType + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
+		    	exportExcelframe.location.href="/ezAttitude/excelAttitudeListExport.do?companyId=" + encodeURIComponent(pCompanyId) + "&userName=" + encodeURIComponent(searchUserName) + "&deptName=" + encodeURIComponent(searchDeptName) + "&title=" + encodeURIComponent(searchTitle) + "&startDate=" + encodeURIComponent(searchStartDate) + "&endDate=" + encodeURIComponent(searchEndDate) + "&attitudeType=" + encodeURIComponent(searchAttitudeType) + "&orderCell=" + encodeURIComponent(orderCell) + "&orderOption=" + encodeURIComponent(orderOption);
 		    	exportExcelframe.target="_blank";
 			}
 			
