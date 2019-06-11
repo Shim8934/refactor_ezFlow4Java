@@ -138,5 +138,7 @@ public interface EzCommonService {
 
 	public void addAddJobMasterProxy() throws Exception;
 
+	public void createAttitudeAnnual() throws Exception;
+
 }
 

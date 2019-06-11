@@ -167,6 +167,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addMsgInMailSearch(); 
 		ezCommonService.addFormVersion();
     	ezCommonService.addAddJobMasterProxy();
+    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
     	
     	logger.debug("init ended.");
     }
