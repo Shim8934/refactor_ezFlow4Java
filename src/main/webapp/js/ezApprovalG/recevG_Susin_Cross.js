@@ -2716,6 +2716,26 @@ function setHeSongDocInfo() {
         if (RtnVal == "TRUE") {
         	   var pAlertContent = strLang741;
                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+               
+               //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회송
+		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {       	
+					$.ajax({
+						type : 'POST',
+						dataType : 'json',
+						async : true,
+						url : '/ezAttitude/approvalGConn.do',
+						data : {
+							status : 'delete',
+							docId : pOrgDocID,
+							type : 'hesong'
+						},
+						success : function(result) {
+						},
+						error : function() {
+						}
+					});				
+		        }
+               
                return true;
         }
     }

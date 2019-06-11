@@ -36,10 +36,13 @@ function getMemoSortable() {
         			dataType : "JSON",
         			url : "/ezMemo/reOrder.do",
         			success : function(result) {
-        				if (result.status == 1) {
+        				if (result.status === 'ok') {
 	        				parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
         				}
-        			}
+        			},
+            		error : function() {
+            			alert(memoMessages.strLangMemo21);
+                	}
         		 });
         	 }
     	 }
@@ -59,7 +62,10 @@ function getMemoConfig() {
 				fontSize = result.memoConfigVO.font_size;
 				useDate = result.memoConfigVO.use_date;
 				defaultColor = result.memoConfigVO.default_color;
-			}
+			},
+    		error : function() {
+    			alert(memoMessages.strLangMemo21);
+        	}
 		});
 }
 
@@ -73,7 +79,7 @@ function getFolderList() {
 		async : false,
 			url : '/ezMemo/getMemoFoldersInfo.do',
 			success : function(result){
-				var opts = "<option value='0'>"+ strLangMemo9 +"</option>";;
+				var opts = "<option value='0'>"+ memoMessages.strLangMemo9 +"</option>";;
 				$(result.folders).each(function() {
 					var folderName = this.folder_name;
 					if (folderName.length > 11) {
@@ -83,7 +89,10 @@ function getFolderList() {
 					opts += "<option value=" + this.folder_id + ">" + folderName + "</option>";
 				})
 				$("#memoType").html(opts);
-			}
+			},
+    		error : function() {
+    			alert(memoMessages.strLangMemo21);
+        	}
 	  });
 }
 
@@ -122,9 +131,9 @@ function newMemo() {
         	setMemoCount($(".memoLay").length);
         	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
         },
-        error : function() {
-        	
-        }
+		error : function() {
+			alert(memoMessages.strLangMemo21);
+    	}
 	});
 }
 
@@ -137,20 +146,24 @@ function modifyMemoColor(obj, idx) {
 	var memoId = obj.attr("id").replace("memo", "");
 	
 	$.ajax ({
-		   	url : '/ezMemo/memoColorModify.do',
-		   	type : 'POST',
-	        dataType : 'json',
-	        data : { 
-	        	memoId : memoId,
-	        	colorId : idx
-	        },  
-	        cache: false,
-	        success: function(result) {
-	        	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
-	        },
-	        error : function() {
-	        	
-	        }
+		url : '/ezMemo/memoColorModify.do',
+		type : 'POST',
+	    dataType : 'json',
+	    data : { 
+	      	memoId : memoId,
+	      	colorId : idx
+	    },  
+	    cache: false,
+	    success: function(result) {
+	    	obj[0].setAttribute("class", "memo0" + defaultColor + " memoLay");
+        	obj.context.parentElement.style.visibility = "hidden";
+        	
+	    	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+	    	checkAndActionBigMemo(memoId, idx);
+	    },
+		error : function() {
+			alert(memoMessages.strLangMemo21);
+    	}
 	}); 
 }
 
@@ -161,26 +174,55 @@ function modifyMemoColor(obj, idx) {
 function modifyMemo(obj) {
 	var memoId = obj.getAttribute("memoid");
 	var afterContents = $(".memoText[memoid=" + memoId + "]").val();
+	var size = "small";
 
-    	$.ajax ({
-    		url : '/ezMemo/memoModify.do',
-    		type : 'POST',
-            dataType : 'json',
-            data : { 
-            	memoId : memoId,
-            	contents : afterContents
-            },  
-            cache: false,
-            success: function(result) {
-            	$("textarea[memoid=" + memoId + "]").val(result.contents);
-            	
-            	saveMemoToast(memoId);
-            	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
-            },
-            error : function() {
-            	
-            }
-		}); 
+	$.ajax ({
+		url : '/ezMemo/memoModify.do',
+		type : 'POST',
+        dataType : 'json',
+        data : { 
+        	memoId : memoId,
+        	contents : afterContents
+        },  
+        cache: false,
+        success: function(result) {
+        	//saveMemoToast(memoId);
+        	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+        	parent.parent.setContents(size, memoId, afterContents);	//큰 메모의 새로고침
+        },
+		error : function() {
+			alert(memoMessages.strLangMemo21);
+    	}
+	}); 
+}
+
+/**
+ * 메모 숨김 처리하는 메서드
+ * @param obj
+ */
+function hideMemo(obj) {
+	var memoId = obj.getAttribute("memoid");
+	
+	$.ajax ({
+		url : '/ezMemo/memo-display.do',
+		type : 'POST',
+        dataType : 'json',
+        data : { 
+        	memo_ids : memoId,
+            display : 1
+        },  
+        cache: false,
+        success: function(result) {
+        	$('#memo' + memoId).css('opacity', 0.5);
+        	obj.parentElement.querySelector('input').setAttribute('display', 1)	// display 속성 1로 변경
+        	
+        	parent.parent.getMemoList();
+        	checkAndActionBigMemo(memoId);
+        },
+	  	error : function() {
+	  			alert(memoMessages.strLangMemo21);
+	    }
+	});
 }
 
 /**
@@ -189,26 +231,30 @@ function modifyMemo(obj) {
  */
 function modalDelete(memoId) {
 	$.ajax ({  	
-        	url : '/ezMemo/memoDelete.do',
- 			type : 'POST',
-            dataType : 'json',
-            data : { 
-               	memo_ids : memoId
-            },  
-            async:false,
-            cache: false,
-            success: function(result) {
-            	$("#memo"+memoId).remove();
-            	var memoLength = $("#boardMemoList .memoLay").length;
-            	if (memoLength == 0) {
-            		addEmptyMemo();
-            	}
-            	setMemoCount(memoLength);
-            	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
-            },
-            error : function() {
-                	
-            }
+    	url : '/ezMemo/memoDelete.do',
+		type : 'POST',
+        dataType : 'json',
+        data : { 
+           	memo_ids : memoId
+        },  
+        async:false,
+        cache: false,
+        success: function(result) {
+        	$("#memo"+memoId).remove();
+        	var memoLength = $("#boardMemoList .memoLay").length;
+        	if (memoLength == 0) {
+        		addEmptyMemo();
+        	}
+        	
+        	checkAndActionBigMemo(memoId);
+        	
+        	setMemoCount(memoLength);
+        	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+        	
+        },
+		error : function() {
+			alert(memoMessages.strLangMemo21);
+    	}
 	});
 }
 
@@ -248,24 +294,24 @@ function getMemoList(type) {
 		endDate = $("#Edatepicker").val();
 
 		if(searchInput == "" && startDate == "" && endDate == "") {
-			 alert(strLangMemo10);
+			 alert(memoMessages.strLangMemo10);
              return;
 		}
 		if(startDate != "" && endDate == "") {
-			alert(strLangMemo11);	
+			alert(memoMessages.strLangMemo11);	
             return;
 		}
 		if(startDate == "" && endDate != "") {
-			alert(strLangMemo12);	
+			alert(memoMessages.strLangMemo12);	
             return;
 		}
 		if(startDate > endDate) {
-			alert(strLangMemo13);
+			alert(memoMessages.strLangMemo13);
             return;
 		}
 		
 		if (searchInput.indexOf("%") != -1) {
-            alert("'%'" + strLangMemo14);
+            alert("'%'" + memoMessages.strLangMemo14);
             return;
         }
 		
@@ -279,8 +325,8 @@ function getMemoList(type) {
 	}
 	
 	$.ajax ({
-		   	url : '/ezMemo/getMemoList.do',
-		   	type : 'POST',
+		url : '/ezMemo/getMemoList.do',
+		type : 'POST',
         dataType : 'json',
         data : { 
         	searchInput : searchInput,
@@ -296,9 +342,9 @@ function getMemoList(type) {
 			loadMemoList();
 			setMemoCount(memoList.length);
 	     },
-         error : function() {
-            	
-         }
+ 		error : function() {
+ 			alert(memoMessages.strLangMemo21);
+    	}
 	});
 }
 
@@ -322,11 +368,11 @@ function DeleteItem_onclick() {
 	});
 	
 	if (memo_ids.length == 0) {
-    	alert(strLangMemo17);
+    	alert(memoMessages.strLangMemo17);
         return;
     }
 	
-	if(confirm(strLangMemo18)) {
+	if(confirm(memoMessages.strLangMemo18)) {
     	$.ajax ({
 			url : '/ezMemo/memoDelete.do',
 			type : 'POST',
@@ -345,10 +391,13 @@ function DeleteItem_onclick() {
             	}
             	setMemoCount(memoLength);
             	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+            	for (var i = 0; i < memo_ids.length; i++) {
+                	checkAndActionBigMemo(memo_ids[i]);	// 큰 메모의 아이디값 확인 후 같은 아이디면 큰 메모 닫음
+                }
             },
-            error : function() {
-            	
-            }
+    		error : function() {
+    			alert(memoMessages.strLangMemo21);
+        	}
 		});
 	}
 }
@@ -370,26 +419,29 @@ function memoDisplayChange() {
 	});
 	
 	if (checkList.length == 0) {
-    	alert(strLangMemo17);
+    	alert(memoMessages.strLangMemo17);
         return;
     }
 	
 	if(memo_ids.length != 0) {
     	$.ajax ({
- 			  url : '/ezMemo/memo-display.do',
- 			  type : 'POST',
-              dataType : 'json',
-              data : { 
-                memo_ids : memo_ids.join(),
+    		url : '/ezMemo/memo-display.do',
+ 			type : 'POST',
+            dataType : 'json',
+            data : { 
+            	memo_ids : memo_ids.join(),
                 display : 1
-              },  
-              cache: false,
-              success: function(result) {
+            },  
+            cache: false,
+            success: function(result) {
                 parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
-              },
-              error : function() {
-            	  
-              }
+                for (var i = 0; i < memo_ids.length; i++) {
+                	checkAndActionBigMemo(memo_ids[i]);	// 큰 메모의 아이디값 확인 후 같은 아이디면 큰 메모 닫음
+                }
+            },
+    		error : function() {
+    			alert(memoMessages.strLangMemo21);
+        	}
 		}); 
 	}
 	
@@ -414,26 +466,26 @@ function memoDisplayChange2() {
 	});
 	
 	if (checkList.length == 0) {
-    	alert(strLangMemo17);
+    	alert(memoMessages.strLangMemo17);
         return;
     }
 	
 	if(memo_ids.length != 0) {
     	$.ajax ({
- 			  url : '/ezMemo/memo-display.do',
- 			  type : 'POST',
-              dataType : 'json',
-              data : { 
-                memo_ids : memo_ids.join(),
+ 			url : '/ezMemo/memo-display.do',
+ 			type : 'POST',
+            dataType : 'json',
+            data : { 
+            	memo_ids : memo_ids.join(),
                 display : 0
-              },  
-              cache: false,
-              success: function(result) {
+            },  
+            cache: false,
+            success: function(result) {
                 parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
-              },
-              error : function() {
-                	
-              }
+            },
+    		error : function() {
+    			alert(memoMessages.strLangMemo21);
+        	}
 		}); 
 	}
 	
@@ -452,7 +504,7 @@ function memoMove() {
 	});
 	
 	if (memo_ids.length == 0) {
-    	alert(strLangMemo17);
+    	alert(memoMessages.strLangMemo17);
         return;
     }
 	
@@ -463,4 +515,90 @@ function memoMove() {
 	
 	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
     try { OpenWin.focus(); } catch (e) { }
+}
+/*큰 메모 불러오기*/
+function getMemoDetail(memoId) {
+
+    $.ajax({
+    	type : 'GET',
+    	data : { 'memoId' : memoId, },
+    	url : '/ezMemo/memoDetail.do',
+    	dataType : 'JSON',
+    	success : function(result) {
+    		var portalDoc = $(top.top.document);
+    		var detail = portalDoc.find('#detailMemo');
+    		var detailContents = portalDoc.find('#dMContents');
+    		
+    		detail.css('visibility', 'hidden');								// 큰 메모 잠시 숨김
+
+    		detailContents.attr('bigMemoId', result.memo.memo_id);			// 새로 불러올 메모 id 세팅
+    		detail.removeClass().addClass('ui-resizable ui-draggable ui-draggable-handle memo0' + result.memo.color_id + 'Big');	// 새로 불러올 메모 색상 세팅
+
+    		if (useDate === 1) {					// 날짜 표시하는 경우
+    			parent.parent.addDateInfo(result.memo.write_date.substring(0,10), detail);	// 날짜 표시
+    		}
+    		detailContents.val('').val(result.memo.contents);				// 큰 메모의 내용을 지운 후 다시 세팅
+    		
+    		parent.parent.setDetailStatus(memoId);							// 더블 클릭한 메모의 id와 함께 큰 메모 열림 상태 저장
+    		
+    		parent.parent.bigMemoResize();									// 큰 메모 생성 후 리사이즈
+    		
+    		detail.css('visibility', 'visible');							// 큰 메모 관련 모든 것이 세팅 되면 큰 메모를 띄움
+    		detailContents.focus();											// 큰 메모에 포커스 생성
+    		
+    		beforeMemo = result.memo.contents;
+    		parent.parent.setBeforeMemo(beforeMemo);	// 포탈jsp에 있는 beforeMemo 변수 값 수정, 포탈에서 큰 메모 열었을 때 값 비교 때문
+    	},
+		error : function() {
+			alert(memoMessages.strLangMemo21);
+    	}
+    });
+}
+
+//작은 메모에서 삭제, 색변경, 숨김 했을 때 큰 메모 동기화
+function checkAndActionBigMemo(memoId, color) {
+	var portalDoc = $(top.top.document);
+	
+	var visibility = portalDoc.find('#detailMemo').css('visibility');
+	var bigMemoId = portalDoc.find('#dMContents').attr('bigmemoid');
+	
+	// 큰 메모가 열린 상태이면서 작은 메모와 같은 메모이면 작동
+	if (visibility === 'visible' && parseInt(memoId) === parseInt(bigMemoId)) {
+		if (color) {
+			portalDoc.find('#detailMemo').attr('class', 'ui-resizable ui-draggable ui-draggable-handle memo0' + color + 'Big');
+		} else {
+			portalDoc.find('#closeMemo').click();
+		}
+	}
+}
+
+//메모 focus 이벤트
+function memoFocusEvent(thisEl) {
+	autoSaveStop();				// 자동 저장 기능 중지
+	
+	beforeMemoId = thisEl.getAttribute('memoid');
+	beforeMemo = thisEl.value;
+	
+	autoSaveStart(thisEl);		// 자동 저장 시작
+}
+
+//일정 시간마다 자동 저장
+function autoSaveStart(param) {
+	memoInter = setInterval(function() {
+		//console.log('저장?');
+		var resultObj = compareContents(param);
+		if (resultObj.result === 'ok') {
+			//console.log('yes');
+			modifyMemo(param);
+			beforeMemo = resultObj.afterVal;
+		} else {
+			//console.log('no');
+		}
+	}, 3000);
+}
+
+//자동 저장 기능 정지
+function autoSaveStop() {
+	//console.log('정지');
+	clearInterval(memoInter);
 }

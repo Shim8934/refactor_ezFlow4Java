@@ -325,6 +325,15 @@
 					}
 				}
 				
+				//외출 등록시 출근여부 확인
+				if (selectType == 'A06') {
+					var returnValue = getIsAttitude('A01');
+					if (returnValue == 0) {
+						alert("<spring:message code='ezAttitude.t306'/>");
+						return;
+					}
+				}
+				
 				//퇴근시 출근여부 확인
 		    	if (selectType == "A03") {
 		    		var returnValue = getIsAttitude("A01");

@@ -87,7 +87,7 @@
     <h1><spring:message code='ezMemo.t001'/><spring:message code="ezBoard.t0005" /></h1>
     <div class="portlet_tabpart01">
         <div class="portlet_tabpart01_top" id="tab1">
-            <p id="BoardEnv_sub4"><span divname="BoardEnv_div4" id="1tab4"><spring:message code="ezMemo.t001" /></span></p>
+            <p id="BoardEnv_sub4"><span divname="BoardEnv_div4" id="1tab4"><spring:message code="ezMemo.t0066" /></span></p>
             <p id="BoardEnv_sub5"><span divname="BoardEnv_div5" id="1tab5"><spring:message code="ezMemo.t0040" /></span></p>
         </div>
     </div>
