@@ -10,13 +10,8 @@
 </head>
 <body>
 <article class="webFolder_portlet box_shadow">
-<!-- 
-	<input type="hidden" id="webFolderId" />
-	<input type="hidden" id="folderType" value="U" />
-	<input type="hidden" id="parentId" value="root" />
-	 -->
     <div class="layDIV">
-        <dl class="portlet_title">
+        <dl class="portlet_title sortablePortlet">
             <dt class="portletText"><c:out value="${portletName}"></c:out></dt>
             <dd class="portletPlus" onclick="openWebFolderPage()">
             	<img src="/images/ezNewPortal/portlet_Plus.png">
