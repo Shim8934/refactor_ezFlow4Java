@@ -180,9 +180,10 @@
 	                
 	                var dt = document.createElement("DT");
 	                
-	                var img = document.createElement("IMG");
+	                var img = "";
 	                
 	                if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_") <= -1) {
+	                	img = document.createElement("IMG")
 	                	img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL");
 	                }
 	                
@@ -198,7 +199,10 @@
 	                
 	                dd.appendChild(span);
 	                dd.appendChild(span2);
-	                dt.appendChild(img);
+	                
+	                if (img != "") {
+		                dt.appendChild(img);
+	                }
 	                document.getElementById("newcomm").appendChild(dt);
 	                document.getElementById("newcomm").appendChild(dd);
                 }
@@ -300,9 +304,10 @@
                 	
 	                var dt = document.createElement("DT");
 	                
-	                var img = document.createElement("IMG");
+	                var img = "";
 	                
 	                if (SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_") <= -1) {
+	                	img = document.createElement("IMG");
 	                	img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&fileName=" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL");
 	                }
 	                
@@ -318,7 +323,11 @@
 	                
 	                dd.appendChild(span);
 	                dd.appendChild(span2);
-	                dt.appendChild(img);
+	                
+	                if (img != "") {
+		                dt.appendChild(img);
+	                }
+	                
 	                document.getElementById("bestcomm").appendChild(dt);
 	                document.getElementById("bestcomm").appendChild(dd);
                 }

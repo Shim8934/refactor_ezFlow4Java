@@ -149,6 +149,10 @@ public class ApprGDocListVO {
     private String name4;
     private String ext2;
 	private String ext3;
+	
+	/** 현재문서 폼버전 */
+	private String formVersion;
+	
 	public String getDocID() {
 		return docID;
 	}
@@ -640,6 +644,12 @@ public class ApprGDocListVO {
 				+ ", docstateName=" + docstateName + ", formFileLocation=" + formFileLocation + ", formDocType="
 				+ formDocType + ", ext1=" + ext1 + ", name2=" + name2 + ", name3=" + name3 + ", name4=" + name4
 				+ ", ext2=" + ext2 + ", ext3=" + ext3 + "]";
+	}
+	public String getFormVersion() {
+		return formVersion;
+	}
+	public void setFormVersion(String formVersion) {
+		this.formVersion = formVersion;
 	}
 	
 }

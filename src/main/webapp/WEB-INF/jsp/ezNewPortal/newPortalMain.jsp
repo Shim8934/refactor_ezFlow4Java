@@ -61,6 +61,13 @@
 	    	var memoFlag = "<c:out value='${useMemo}' />";
 	    	var useMemoContextMenu = false;
 	    	
+	    	var beforeMemoId;
+	    	var beforeMemo;
+	    	var memoInter;
+	    	var memoClickTimer = 0;
+	     	var memoDelay = 200;
+	     	var memoPrevent = false;
+	     	
 			topHeight = "56";
 
 		 	window.onresize = function () {
@@ -143,7 +150,7 @@
  		<!-- memo note -->
 		<div id="noteBlock" class="noteBlock">
 			<!-- 메모 레이어 -->
-			<div id="layer-popup" class="memo_wrap layerControl" style="display:none;">
+			<div id="layer-popup" class="memo_wrap layerControl" style="visibility :hidden;">
 				<div class="memo_header_wrapper">
 					<input type="hidden" id="layerFlag" value="layer" />
 				 	<div class="memo_header">
@@ -168,6 +175,19 @@
 			     </div>
 			</div>
 			
+			<!-- 큰 메모 -->
+			<div id="detailMemo">
+		        <div class="bigTop" id='dMWrapper'>
+		            <dl class="memoTit" id='dMHeader'>
+		                <dt class="mtitText" id="dMTime"></dt>
+		                <dd class="memoIcon memoX" id='closeMemo'></dd>
+		            </dl>
+			        <textarea id="dMContents"></textarea>
+			        <div class="bigBottom_left" id='bottomLeft'></div>
+			        <div class="bigBottom_right" id='bottomRight'></div>
+		        </div>
+		    </div>
+		    
 			<%-- <div id="open-memo" class="memoBtn" style="display: none;"><span><spring:message code='ezMemo.t001'/></span></div> --%>
 		</div>
 	</body>
@@ -180,9 +200,12 @@
 		createContextMenu("${userDeptId}");
 		
 	 	$(window).resize(function() {
-	 		browserResize();
+	 		//browserResize();
+	 		memoLayerResize();
 	 		setMenuPostionResize();
-		    
+	 		// 브라우저 리사이즈시 큰 메모 리사이즈
+	 		bigMemoResize();
+	 		
 	 		clearTimeout(window.resizedFinished);
 		    window.resizedFinished = setTimeout(function(){
 		        setContextMenuGadgetPosition();
@@ -206,23 +229,75 @@
 		    	layerExpand();
 		    	memoAdd();
 		    	noteClearSelection();
-		    
+		    	
+		    	addEventInBigMemo();
+		    	
 		     	// 메모함 비어있을 시, 추가 이미지 클릭으로 새 메모 추가 
 		        $(".memo_main").on("click", "#addFirstMemo", function() {
 		        	newMemo();
 		        });
 		     	
+		     	// 클릭과 더블클릭 이벤트 구분
+		     	$('#layer-popup').on('focus', '.memoText', function(event) {	// 클릭 -> 메모 자동 저장 시작
+		     		var targetEl = event.target;
+		     		
+		     		draggableFalse();		// draggable 때문에 레이어 안에서의 blur 이벤트 안 먹혀서 잠시 죽임
+		     		
+		     		memoClickTimer = setTimeout(function() {
+		     			
+		     			if (!memoPrevent) {
+		     				memoFocusEvent(targetEl);	// 클릭했을 때의 함수 실행 -> 자동 저장
+		     			}
+		     			// memoPrevent = false;
+		     		}, memoDelay);
+		     	}).on('dblclick', '.memoText', function (event, ui) {		// 더블 클릭 -> 큰 메모 열기
+		     		var memoId = $(this).attr("memoid");
+		     		
+		     		clearTimeout(memoClickTimer);
+		     		// memoPrevent = true;
+					getMemoDetail(memoId);			// 더블 클릭했을 때의 함수 실행 -> 큰 메모 열기
+		     		// memoPrevent = false;
+		     	});
+		     	
+		     	$('#layer-popup').on('blur', '.memoText', function(evnet) {
+		     		autoSaveStop();				// 자동 저장 멈춤
+		     		draggableTrue();			// 메모 레이어 드래그 살림
+		     		modifyMemo($(this)[0]);		// 메모 내용 수정
+		     	});
+		     	
+		     	// 큰 메모  일정 간격으로 메모 자동 저장 시작, 취소
+		     	$('#dMContents').on('focus', function(event) {
+		     		var targetEl = event.target;
+		     		
+		     		draggableFalse();		// 큰 메모 열었을 때도 메모 레이어 클릭하면 blur 이벤트 실행시키기 위해 임시로 죽임
+		     		
+		     		memoFocusEvent(event.target);				// 클릭했을 때의 함수 실행 -> 자동 저장
+		     		
+		     	}).on('blur', function(evnet) {
+		     		autoSaveStop();				// 자동 저장 멈춤
+		     		draggableTrue();			// 메모 레이어 드래그 살림
+		     		modifyMemo($(this)[0]);		// 메모 내용 수정
+		     	});
+		     	
+		     	/* 위의 자동 저장 기능 추가하면서 주석처리
 		        $(document).on("click", ".saveBtn", function(){
 			    	  var obj = $(this).parent().next();
 			    	  modifyMemo(obj[0]);
 				});
-	    	
+	    		*/
+	    		
+	    		// 메모 숨김 기능
+	    		$(document).on('click', '.hidden', function(e) {
+	    			var thisEl = $(this)[0];
+	    			hideMemo(thisEl);
+	    		});
+	    		
 		    	$(document).on("click", ".color_list", function(){
-		    		   defaultColor = $(this).index()+1;
-		    	   		modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-		    	   		var obj = $(this).parent().parent();
-		    	   		obj[0].setAttribute("class", "mamo0"+defaultColor+ " memoLay");
-		    	   		$(this).parent().css("visibility", "hidden");
+		    		var thisEl = $(this);
+		    		defaultColor = thisEl.index()+1;
+		    		
+		    	   	var obj = thisEl.parent().parent();
+		    	   	modifyMemoColor(obj, defaultColor);
 		    	});
 		        
 		    	$(document).on("mouseleave", ".color_popup", function(){
@@ -244,6 +319,7 @@
 		    	$("#layer-popup").draggable("option", "scroll", false);
 	    	} else {
 	    		$(".noteBlock").css("pointer-events", "none");
+	    		$(".noteBlock").css("display", "none");
 	    	}
 	    });		
 	</script>
