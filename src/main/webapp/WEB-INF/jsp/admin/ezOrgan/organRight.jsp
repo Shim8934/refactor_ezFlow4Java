@@ -920,7 +920,7 @@
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(930, 550));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 420));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -976,7 +976,7 @@
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 420));
 			    try { OpenWin.focus(); } catch (e) { }
 			}
 			
