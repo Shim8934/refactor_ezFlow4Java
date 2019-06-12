@@ -1,54 +1,41 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix ="fn" uri = "http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>WebFolder Portlet</title>
 </head>
 <body>
 <article class="webFolder_portlet box_shadow">
+<!-- 
+	<input type="hidden" id="webFolderId" />
+	<input type="hidden" id="folderType" value="U" />
+	<input type="hidden" id="parentId" value="root" />
+	 -->
     <div class="layDIV">
         <dl class="portlet_title">
-            <dt class="portletText"><c:out value="">개인웹폴더</c:out></dt>
-            <dd class="portletPlus">
+            <dt class="portletText"><c:out value="${portletName}"></c:out></dt>
+            <dd class="portletPlus" onclick="openWebFolderPage()">
             	<img src="/images/ezNewPortal/portlet_Plus.png">
             </dd>
-            <dd class="mailGraph" id="mailGraph">
+            <dd class="mailGraph" id="webFolderGraph">
             	<p class="mGraph">
-            		<span id="mGraphSpan" style="width: 5px;"></span>
+            		<span id="usedRate"></span>
             	</p>
-           		<span class="mGraph_text" id="UseMailBox">2.0K
-           			<span>/2G</span>
+           		<span class="mGraph_text" id="usingCpacity">
+           			<span id="totalCapacity"></span>
            		</span>
             </dd>
         </dl>
-        <%-- 
-        <c:choose>
-        	<c:when test="">
-        	
-        	</c:when>
-        	<c:otherwise>
-        	
-        	</c:otherwise>
-        </c:choose>
-         --%>
-        <ul class="webFolder">
-        	<dl class="nodata">
-				<dt>
-					<img src="/images/kr/main/noData_sIcon.png">
-				</dt>
-				<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
-			</dl>
-        </ul>
+        
+        <div class="fileListWrapper">
+	        <ul class="webFolder" id = webfolderUl></ul>
+        </div>
+        <iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
     </div>    
 </article>
-<script type="text/javascript">
-$(function() {
-	
-});
-</script>
 </body>
 </html>

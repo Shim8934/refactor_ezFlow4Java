@@ -1104,6 +1104,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme3Body .aside_link .linkBtn .btnLay{ margin:0 auto; padding:4px 0px 0px 0px; height:30px; width:47px; box-sizing:border-box;}
 #theme3Body .aside_link .linkBtn .linkBtn_pre{ margin:0px 1px 0px 0px; padding:0px; display:inline-block; cursor:pointer;}
 #theme3Body .weather_icon{ height:47%}
+#theme3Body .fileListWrapper {background-color: #fff;}
 /* main media query */
 @media only screen and (min-width :1921px) {
 	#theme3Body .portlet{ width:609px; float:left; height: 252px;}

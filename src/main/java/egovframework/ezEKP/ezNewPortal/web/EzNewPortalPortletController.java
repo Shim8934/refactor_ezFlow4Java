@@ -895,6 +895,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		}
 		
 		model.addAttribute("portletId", portletId);
+		logger.debug("allValues: " + model);
 		logger.debug("portalMovieBoardPortlet End");
 		return "/ezNewPortal/portlets/movieBoardPortlet";
 	}
@@ -1055,5 +1056,57 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
         value = value.replaceAll("script", "");
 		
 		return value;
+	}
+	
+	/**
+	 * 포틀릿 - 웹폴더
+	 */
+	@RequestMapping(value = "/ezNewPortal/webFolderPortlet.do", method=RequestMethod.GET)
+	public String webFolderPortlet(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("webFolderPortlet Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String portletId = request.getParameter("portletId");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/myWebFolder";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("portletId", portletId);
+			model.addAttribute("portletName", request.getParameter("portletName"));
+			model.addAttribute("userInfo", userInfo);
+		}
+		
+		logger.debug("webFolderPortlet End");
+		return "/ezNewPortal/portlets/webFolderPortlet"; 
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/getWebFolderFileList.do", method=RequestMethod.GET)
+	public String getWebFolderFileList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getWebFolderFileList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/getWebFolderFileList";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("data", resultBody.get("data"));
+		}
+		
+		logger.debug("getWebFolderFileList End");
+		return "json"; 
 	}
 }

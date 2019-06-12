@@ -75,6 +75,8 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -126,6 +128,9 @@ public class EzNewPortalGWController {
 
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGSerivce;
+	
+	@Resource(name = "EzWebFolderService_y")
+	private EzWebFolderService_y ezWebFolderService_y; 
 
 	@Autowired
 	private Properties config;
@@ -4534,6 +4539,75 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("ezNewPortal G/W updateThemePortletUsed ended.");
+		return result;
+	}
+	
+	/**
+	 * 포탈개인화 G/W [GET] 포틀릿 - 웹폴더 포틀릿 조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezportal/portlets/myWebFolder", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getWebFolderPortlet(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+
+			String companyId = info.getCompanyID();
+			int tenantId = info.getTenantId();
+			JSONObject data = new JSONObject();
+			
+			// String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId);
+			
+			// result.put("folderId", folderId);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezportal/portlets/getWebFolderFileList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getWebFolderFileList(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			LoginVO info = commonUtil.getUserForGw(userId, serverName);
+
+			int tenantId = info.getTenantId();
+			JSONObject data = new JSONObject();
+			
+			String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId);
+			
+			List<FileVO> webFolderFileList = ezNewPortalService.getWebFolderFileList(folderId, tenantId);
+			data.put("fileList", webFolderFileList);
+			data.put("folderId", folderId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet ended.");
 		return result;
 	}
 }

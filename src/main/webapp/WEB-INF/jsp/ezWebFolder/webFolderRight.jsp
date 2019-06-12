@@ -680,6 +680,7 @@
 					folderId: folderId
 				},
 				success: function(data) {
+					console.log("data: ", data);
 					var capacity = data.capacity;
 					var usedRate = Math.min(capacity.usedRate, 100);
 					var progressColor = null;

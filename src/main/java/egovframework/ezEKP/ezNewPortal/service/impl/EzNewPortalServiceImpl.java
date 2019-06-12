@@ -54,6 +54,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzNewPortalService")
@@ -2365,5 +2366,20 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		int doingListCount = ezNewPortalDAO.getApprovalDoingListCount(map);
 		
 		return doingListCount;
+	}
+	
+	@Override
+	public List<FileVO> getWebFolderFileList(String folderId, int tenantId) throws Exception {
+		LOGGER.debug("getWebFolderFileList started.");
+		LOGGER.debug("folderId = " + folderId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("folderId", folderId);
+		map.put("tenantId", tenantId);
+		
+		List<FileVO> fileList = ezNewPortalDAO.getWebFolderFileList(map);
+		
+		LOGGER.debug("getWebFolderFileList ended.");
+		return fileList;
 	}
 }
