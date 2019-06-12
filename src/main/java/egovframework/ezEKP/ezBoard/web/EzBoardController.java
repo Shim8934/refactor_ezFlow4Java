@@ -1048,12 +1048,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					// 사원 개인에 대해 권한이 존재한다면 바로 빠져나오고 해당 권한 그대로 사용함 (최우선순위 권한)
 					if (boardInfoTemp != null) {
-						
 						boardInfoTemp.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
-						
-						logger.debug("boardInfoTemp(" + addJobDeptList.get(jl).split(",")[i].trim() + ")    ::   BoardGroupAdmin_FG=" + boardInfoTemp.getBoardGroupAdmin_FG() + " | BoardAdmin_FG=" + boardInfoTemp.getBoardAdmin_FG()  + " | Access_=" + boardInfoTemp.getAccess_()
-								+ " | ListView_FG=" + boardInfoTemp.getListView_FG() + " | Read_FG=" + boardInfoTemp.getRead_FG() + " | Write_FG=" + boardInfoTemp.getWrite_FG()
-								+ " | Reply_FG=" + boardInfoTemp.getReply_FG() + " | Delete_FG=" + boardInfoTemp.getDelete_FG());
 						
 						if (addJobDeptList.get(jl).split(",")[i].trim().equals(userInfo.getId())) {
 							boardInfo = boardInfoTemp;
@@ -1082,10 +1077,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (isUserHasACL == false) { // 개인 권한이 존재하지 않는 경우에만 권한 취합
 			boardInfo = sumBoardACL(boardACLList, boardInfo);
 		}
-		
-		logger.debug("boardInfo    ::   BoardGroupAdmin_FG=" + boardInfo.getBoardGroupAdmin_FG() + " | BoardAdmin_FG=" + boardInfo.getBoardAdmin_FG()  + " | Access_=" + boardInfo.getAccess_()
-				+ " | ListView_FG=" + boardInfo.getListView_FG() + " | Read_FG=" + boardInfo.getRead_FG() + " | Write_FG=" + boardInfo.getWrite_FG()
-				+ " | Reply_FG=" + boardInfo.getReply_FG() + " | Delete_FG=" + boardInfo.getDelete_FG());
 		
 		/* 2018-10-17 홍승비 - 해당 게시판의 모든 정보(TBL_BOARD_BOARDINFO오로부터)를 가져오는 부분을 상단으로 이동함 */
 		BoardPropertyVO strProp = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
@@ -1170,12 +1161,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setDelete_FG("false");
 		}
 		
-		
-		
 		logger.debug("boardInfo before ended    ::   BoardGroupAdmin_FG=" + boardInfo.getBoardGroupAdmin_FG() + " | BoardAdmin_FG=" + boardInfo.getBoardAdmin_FG()  + " | Access_=" + boardInfo.getAccess_()
 				+ " | ListView_FG=" + boardInfo.getListView_FG() + " | Read_FG=" + boardInfo.getRead_FG() + " | Write_FG=" + boardInfo.getWrite_FG()
 				+ " | Reply_FG=" + boardInfo.getReply_FG() + " | Delete_FG=" + boardInfo.getDelete_FG());
-		
 		logger.debug("getBoardInfo ended");
         return boardInfo;
 	}
@@ -3479,6 +3467,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					if (userInfo.getRollInfo() != null && ((userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || boardGroupAdmin_FG.equals("OK")) ||
 							(isAllGroupBoard.equals("N") && (userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)))) {
+						logger.debug("user has admin roll, accessCheck ended");
 						return true;
 					} else {
 						int result = 0;
@@ -4722,7 +4711,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		List<BoardPropertyVO> boardACLList = new ArrayList<BoardPropertyVO>();
 		boolean isUserHasACL = false;
 		String tempDeptList = addJobStr.toString();
-		logger.debug("tempDeptList in getBoardInfo   ::  " + tempDeptList);
 		int addJobDeptListSize = addJobDeptList.size();
 		
 		for (int jl = 0; jl < addJobDeptListSize; jl++) {
@@ -4743,14 +4731,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin2(boardID, addJobDeptList.get(jl).split(",")[i].trim(), userInfo.getTenantId(), isDept, isEqualDept, isBoardGroup);
 					
 					if (boardInfoTemp != null) {
-						
 						boardInfoTemp.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
-						
-						
-						logger.debug("boardInfoTemp(" + addJobDeptList.get(jl).split(",")[i].trim() + ")    ::   BoardGroupAdmin_FG=" + boardInfoTemp.getBoardGroupAdmin_FG() + " | BoardAdmin_FG=" + boardInfoTemp.getBoardAdmin_FG()  + " | Access_=" + boardInfoTemp.getAccess_()
-								+ " | ListView_FG=" + boardInfoTemp.getListView_FG() + " | Read_FG=" + boardInfoTemp.getRead_FG() + " | Write_FG=" + boardInfoTemp.getWrite_FG()
-								+ " | Reply_FG=" + boardInfoTemp.getReply_FG() + " | Delete_FG=" + boardInfoTemp.getDelete_FG());
-						
 						
 						if (addJobDeptList.get(jl).split(",")[i].trim().equals(userInfo.getId())) {
 							boardPropertyVO = boardInfoTemp;
@@ -8010,7 +7991,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			listviewTrueList = new ArrayList<String>();
 			qnaItemList = new ArrayList<String>();
 		} else if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
-			pMode = 1;
+			pMode = 1; // 게시관리자, 회사관리자일때
 			resultmap = searchBoardList(userInfo);
 			listviewTrueList = resultmap.get("listviewTrueList");
 			qnaItemList = resultmap.get("qnaItemList");
@@ -8498,11 +8479,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultACL.setDelete_FG("false");
 		
 		for (BoardPropertyVO aclList: resultACLList) {
-			
-			logger.debug("aclList(" + aclList.getAccessID() + ")    ::   BoardGroupAdmin_FG=" + aclList.getBoardGroupAdmin_FG() + " | BoardAdmin_FG=" + aclList.getBoardAdmin_FG()  + " | Access_=" + aclList.getAccess_()
-					+ " | ListView_FG=" + aclList.getListView_FG() + " | Read_FG=" + aclList.getRead_FG() + " | Write_FG=" + aclList.getWrite_FG()
-					+ " | Reply_FG=" + aclList.getReply_FG() + " | Delete_FG=" + aclList.getDelete_FG());
-			
 			if (aclList.getBoardGroupAdmin_FG() != null && aclList.getBoardGroupAdmin_FG().equals("OK")) { // 게시판 그룹 관리자 권한
 				resultACL.setBoardGroupAdmin_FG("OK");
 			}
@@ -8529,9 +8505,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
-		logger.debug("resultACL    ::   BoardGroupAdmin_FG=" + resultACL.getBoardGroupAdmin_FG() + " | BoardAdmin_FG=" + resultACL.getBoardAdmin_FG() + " | Access_=" + resultACL.getAccess_()
-				+ " | ListView_FG=" + resultACL.getListView_FG() + " | Read_FG=" + resultACL.getRead_FG() + " | Write_FG=" + resultACL.getWrite_FG()
-				+ " | Reply_FG=" + resultACL.getReply_FG() + " | Delete_FG=" + resultACL.getDelete_FG());
 		logger.debug("sumBoardACL ended");
 		return resultACL;
 	}

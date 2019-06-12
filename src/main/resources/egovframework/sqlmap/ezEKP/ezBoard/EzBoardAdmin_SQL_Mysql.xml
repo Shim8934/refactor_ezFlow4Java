@@ -225,7 +225,7 @@
 	                      <isEqual property="v_ISDEPT" compareValue="1">
 	                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
 		                      AND
-		                      	C.BoardGroupACL = 'Y'
+		                      	BoardGroupACL = 'Y'
 	                      	</isEqual>
 	                      </isEqual>
 						<![CDATA[
@@ -240,7 +240,7 @@
 	                	(A.companyid = #v_COMPANYID# OR TRIM(A.companyid) = ''	 OR A.companyid IS NULL)
 	                )
 	              	ORDER BY 
-	              		TreeViewOrder ASC
+	              		A.TreeViewOrder ASC
 				]]>
 			</isEqual>
 			<isNotEqual property="v_pSelectBy" compareValue="3">
