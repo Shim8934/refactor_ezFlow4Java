@@ -109,7 +109,7 @@
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
-		        $.datepicker.regional["ko"] = {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
 		        	closeText: "<spring:message code='main.t3' />",
 		 	        prevText: "<spring:message code='main.t0604' />",
 		 	        nextText: "<spring:message code='main.t0605' />",
