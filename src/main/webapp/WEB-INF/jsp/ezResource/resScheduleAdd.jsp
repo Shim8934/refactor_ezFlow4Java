@@ -503,15 +503,25 @@
 	    	function window_onUnload() {
 	        	if (m_Arguments == undefined) {
 		            if (window.opener != null && g_fromStr == "schedule" && trim(s_userID) != "") {
-		                window.opener.btnRefresh_onclick();
+		            	try {
+			                window.opener.btnRefresh_onclick();
+		            	} catch (e) {}
 	    	        } else if (window.opener != null && g_fromStr == "schedule2" && trim(s_userID) != "") {
-	                	window.opener.parent.main.document.location.reload();
+		            	try {
+		                	window.opener.parent.main.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "frame" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin2.document.location.reload();
+		            	try {
+		                	window.opener.document.all.iframeWin2.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "frame2" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin.document.location.reload();
+		            	try {
+		                	window.opener.document.all.iframeWin.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "todaySchedule" && trim(s_userID) != "") {
-	                	window.opener.location.reload();
+		            	try {
+		                	window.opener.location.reload();
+		            	} catch (e) {}
 	            	}
 	        	}
 	    	}
@@ -637,9 +647,9 @@
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
-	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
 	           						~
-	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
 	          				</td>
 	        			</tr>
 				        <tr>

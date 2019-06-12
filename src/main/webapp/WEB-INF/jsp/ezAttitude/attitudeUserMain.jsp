@@ -2259,7 +2259,7 @@
 		<table class="mainlist" style="width:100%; display:none;" id="ExcelAttList">
 	       	<tr>
 				<th>NO.</th>
-				<th><spring:message code='ezAttitude.t134'/></th>
+				<th><spring:message code='ezAttitude.t40'/></th>
 				<th><spring:message code='ezAttitude.t10'/></th>
 				<th><spring:message code='ezAttitude.t9'/></th>
 				<th><spring:message code='ezAttitude.t149'/></th>

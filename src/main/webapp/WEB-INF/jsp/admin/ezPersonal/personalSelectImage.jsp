@@ -140,7 +140,14 @@
 		        
 		        //var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("/files/upload_portal"));
 		        var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
-
+				
+		        if (txtDisplayName3.value.indexOf("\'") > -1 || txtDisplayName3.value.indexOf("\"") > -1) {
+				    board_alertArguments[1] = DivPopUpHidden;
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("URL에 \'나 \"가 포함될 수 없습니다.") + "&MESSAGE=" + encodeURIComponent("URL에 \'나 \"가 포함될 수 없습니다.") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					return;
+		        }
+		        
 		        var item;
 		        var mode;
 		        
