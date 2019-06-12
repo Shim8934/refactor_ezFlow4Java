@@ -14,14 +14,13 @@
         <dl class="portlet_title sortablePortlet">
             <dt class="portletText"><c:out value="${portletName}"></c:out></dt>
             <dd class="portletPlus" onclick="openWebFolderPage()">
-            	<img src="/images/ezNewPortal/portlet_Plus.png">
+            	<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme}'/>.png">
             </dd>
             <dd class="mailGraph" id="webFolderGraph">
             	<p class="mGraph">
             		<span id="usedRate"></span>
             	</p>
            		<span class="mGraph_text" id="usingCpacity">
-           			<span id="totalCapacity"></span>
            		</span>
             </dd>
         </dl>

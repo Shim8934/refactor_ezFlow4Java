@@ -180,10 +180,11 @@ function loadCapacity(webFolderId) {
 			default:
 				progressColor = "#82b9f6";
 			}
+			// 용량 세팅
 			var newSize = getFileSize(usedCapacity);
 			
 			var html = "";
-			html += newSize + "<span id='totalCapacity'>/" + totalCapacity + "GB</span>"
+			html += newSize + "<span>/" + totalCapacity + "G</span>"
 			
 			$("#usingCpacity").html(html);
 

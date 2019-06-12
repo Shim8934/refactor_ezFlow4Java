@@ -1065,28 +1065,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String webFolderPortlet(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("webFolderPortlet Start");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String portletId = request.getParameter("portletId");
-		
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userInfo.getId());
-		
-		String url = "/rest/ezportal/portlets/myWebFolder";
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
-		
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			model.addAttribute("portletId", portletId);
-			model.addAttribute("portletName", request.getParameter("portletName"));
-			model.addAttribute("userInfo", userInfo);
-		}
+		model.addAttribute("portletId", request.getParameter("portletId"));
+		model.addAttribute("portletName", request.getParameter("portletName"));
+		model.addAttribute("usedTheme", Integer.parseInt(request.getParameter("usedTheme")));
 		
 		logger.debug("webFolderPortlet End");
 		return "/ezNewPortal/portlets/webFolderPortlet"; 
 	}
 	
+	/**
+	 * 포틀릿 - 웹폴더
+	 */
 	@RequestMapping(value = "/ezNewPortal/getWebFolderFileList.do", method=RequestMethod.GET)
 	public String getWebFolderFileList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getWebFolderFileList Start");

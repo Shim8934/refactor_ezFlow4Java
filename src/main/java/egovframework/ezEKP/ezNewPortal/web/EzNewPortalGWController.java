@@ -4546,38 +4546,6 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 포틀릿 - 웹폴더 포틀릿 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezportal/portlets/myWebFolder", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getWebFolderPortlet(HttpServletRequest request) throws Exception {
-		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet started.");
-		JSONObject result = new JSONObject();
-
-		try {
-			String serverName = request.getHeader("x-user-host");
-			String userId = request.getParameter("userId");
-			LoginVO info = commonUtil.getUserForGw(userId, serverName);
-
-			String companyId = info.getCompanyID();
-			int tenantId = info.getTenantId();
-			JSONObject data = new JSONObject();
-			
-			// String folderId = ezWebFolderService_y.folderIdByUserIdAndFolderType(userId, tenantId);
-			
-			// result.put("folderId", folderId);
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", data);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		
-		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet ended.");
-		return result;
-	}
-	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezportal/portlets/getWebFolderFileList", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getWebFolderFileList(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getWebFolderPortlet started.");
