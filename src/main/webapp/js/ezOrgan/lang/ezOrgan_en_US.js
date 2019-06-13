@@ -36,3 +36,4 @@ var strLangLHM02 = "When you delete an employee, the data associated with that u
 var strLangLHM03 = "Are you sure you want to delete the selected employees?";
 var strLangKHJ01 = "사원";
 var strLangKHJ02 = "명을 복구하시겠습니까?";
+var strLangKHJ03 = "Do you want to recover %s employees?";
