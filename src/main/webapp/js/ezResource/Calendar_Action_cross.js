@@ -245,9 +245,9 @@ function datanameweek(year, month, day, contral)
     }
     else if(contral == "HEARDER")
     {
-        DateReslut = String(year) + strLang277 + " " + 
-        String(((month < 10) ? "0" + month : month)) + strLang279 + " " +
-        String(((day < 10) ? "0" + day : day)) + strLang278;
+        DateReslut = String(year) + "-" + 
+        String(((month < 10) ? "0" + month : month)) + "-" +
+        String(((day < 10) ? "0" + day : day));
     }
     else if (contral == "ADD")
     {
@@ -299,7 +299,7 @@ function tableListControl_Week()
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
         //document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
-        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " - " + weekEndDatename);
+        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
         var b = 0;

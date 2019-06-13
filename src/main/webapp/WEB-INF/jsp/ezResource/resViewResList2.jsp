@@ -456,7 +456,7 @@
                 				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">
                 					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
-					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan"></span>&nbsp;
+					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan" style="font-size:15px"></span>&nbsp;
 					                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
 				                	</div>
 				            	</td>
