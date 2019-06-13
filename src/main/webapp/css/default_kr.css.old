@@ -112,7 +112,7 @@ form{display:inline;margin:0}
 	font:12px malgun gothic;
 	letter-spacing:-1;
 	vertical-align:top;
-	line-height:18px;
+	line-height:20px;
 
 }
 
@@ -2294,7 +2294,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .volumeDL dt span{ display:inline-block; color:#959595;}
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}
 
-.imgbck {background-color: #f1f3f5; border:1px solid #e2e3e6; margin:0px !important; vertical-align:top !important;}
+.imgbck {background-color: #f1f3f5; border:1px solid #e2e3e6;}
 .leftbody .extra span{
 	border-bottom: 1px solid white;
 	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 14px #fff;
