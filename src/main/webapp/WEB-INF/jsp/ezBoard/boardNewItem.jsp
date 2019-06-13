@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html style="height: 99%;">
+<html style="height: 99%;" ondragover="bodydragover(event)">
 	<head>
 		<c:choose>
 			<c:when test="${mode == 'new' || mode == 'new1' || mode == 'boardAttach' || mode == 'boardContent' || url != ''}">
@@ -2060,7 +2060,7 @@
 			</script>
 	    </c:if>
 	</head>
-	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
+	<body class="popup" style="height: 97%;">
 	    <table class="layout" style="width: 100%;">
 	        <tr>
 	            <td style="height: 20px">
