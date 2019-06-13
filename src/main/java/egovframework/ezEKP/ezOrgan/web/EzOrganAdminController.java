@@ -158,9 +158,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addQuickLinkLinkOrder();
     	ezCommonService.addComCloseCompanyId();
     	ezCommonService.addWebfolderTotalLimit();
+    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
+		ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
     	ezCommonService.addMsgInMailSearch(); 
 		ezCommonService.addFormVersion();
     	ezCommonService.addAddJobMasterProxy();
+    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
     	
     	logger.debug("init ended.");
     }

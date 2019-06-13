@@ -148,6 +148,11 @@
 		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
 	</resultMap>
 	
+	<resultMap class="java.util.HashMap" id="monthlyAnnualMap">
+		<result property="annualCount" 					column="ANNUAL_COUNT" 					columnIndex="1"/>
+		<result property="month" 					column="MONTH" 				columnIndex="2"/>
+	</resultMap>
+	
 	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
 		<![CDATA[
 			SELECT * FROM (
@@ -1913,5 +1918,143 @@
 				APPL_CNT DESC
 		]]>
 		</isEmpty>
+	</select>
+	
+	<select id="ezAttitudeDAO.getMonthlyAnnualList" parameterClass="Map" resultMap="monthlyAnnualMap">
+		<![CDATA[
+			SELECT 
+				NVL((SUM(
+			       TRUNC(
+			        TO_DATE( 
+			            CASE
+			                WHEN END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			                THEN #endDate#
+			                ELSE TO_CHAR(NVL(END_DATE, START_DATE) + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+			            END
+			            , 'YYYY-MM-DD HH24:MI:SS')
+			           -
+			        TO_DATE(
+			            CASE
+			                WHEN START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+			                THEN #startDate#
+			                ELSE TO_CHAR(START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+			            END
+			            , 'YYYY-MM-DD HH24:MI:SS'), 0))
+			    +
+	            SUM(
+					CASE
+					   WHEN TYPE_ID = 'A11' THEN 1
+		               WHEN TYPE_ID = 'A12' THEN 0.5
+		               WHEN TYPE_ID = 'A13' THEN 0.5
+					   ELSE 0
+					END
+				)
+				), 0) AS ANNUAL_COUNT,
+			    SUBSTR(#startDate#, 6, 2) AS MONTH
+			FROM   
+				tbl_attitude
+			WHERE
+				WRITER_ID = #userId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID IN ('A11', 'A12', 'A13')
+			AND    
+				(
+					(START_DATE + #offsetMin# / (24 * 60)  >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
+					or
+					(END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE + #offsetMin# / (24 * 60) < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
+					or
+					(START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
+				)
+		]]>
+	</select>
+	
+	<select id="ezAttitudeDAO.getJoinDateUserList" parameterClass="Map" resultClass="java.util.HashMap">
+		SELECT 
+			USER_ID AS userId, 
+       		TRUNC(MONTHS_BETWEEN(CURRENT_DATE, TO_DATE(JOIN_DATE, 'yyyy-mm-dd'))) AS workingMonthCnt, 
+		    TO_DATE(JOIN_DATE, 'yyyy-mm-dd')          							  AS joinDate
+		FROM   
+			TBL_ATTITUDE_JOINDATE
+		WHERE  
+			JOIN_DATE LIKE '%-%-' || #yesterday# || '%'
+	</select>
+	
+	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="Map" resultClass="INTEGER">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_ATTITUDE
+		WHERE
+			TYPE_ID = 'A01'
+		AND 
+			WRITER_ID = #userId#
+		<isNotEmpty property="oneMonthAgo">
+			<![CDATA[
+				AND
+					START_DATE <= DATE_ADD(#oneDayAgo#, interval - 540 minute)
+				AND 
+					START_DATE > DATE_ADD(#oneMonthAgo#, interval -540 minute)
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id = "ezAttitudeDAO.getAttitudeJoinDateUserList" resultClass="java.util.HashMap">
+	
+		SELECT 
+			USER_ID AS userId, 
+       		TRUNC(MONTHS_BETWEEN(CURRENT_DATE, TO_DATE(JOIN_DATE, 'yyyy-mm-dd'))) AS workingMonthCnt, 
+		    TO_DATE(JOIN_DATE, 'yyyy-mm-dd')          							  AS joinDate
+		FROM   
+			TBL_ATTITUDE_JOINDATE 
+	
+	</select>
+	
+	<update id = "ezAttitudeDAO.updateAnnualHoliday" parameterClass="map">
+		UPDATE
+			TBL_ATTITUDE_ANNUAL
+		SET
+			<isEqual property="attendanceRateCondition" compareValue="1">
+				ANNUAL_HOLIDAY_CNT = #holidayCnt#
+			</isEqual>
+			<isEqual property="attendanceRateCondition" compareValue="2">
+				MONTHLY_HOLIDAY_CNT = #holidayCnt#
+			</isEqual>
+		WHERE
+			USER_ID = #userId#	
+	</update>
+	
+	 <select id="ezAttitude.getTenantID" resultMap="attitude">
+	  	SELECT 
+	  		TENANT_ID AS tenantId
+	  	FROM
+	  		TBL_TENANT
+	  </select>
+	
+	<select id="ezAttitudeDAO.checkAbsentDay" parameterClass="map" resultClass="INTEGER">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM 
+				TBL_ATTITUDE
+			WHERE
+				TYPE_ID = 'A17'
+			AND
+				WRITER_ID = #userid#
+			AND
+				START_DATE >= #oneMonthAgo#
+			AND
+				START_DATE < #oneDayAgo#
+		]]>
+	</select>
+	
+	<select id = "ezAttitudeDAO.getMonthlyHolidayCnt" parameterClass="map" resultClass="INTEGER">
+		SELECT
+			MONTHLY_HOLIDAY_CNT	
+		FROM
+			TBL_ATTITUDE_ANNUAL
+		WHERE
+			USER_ID = #userId#
 	</select>
 </sqlMap>

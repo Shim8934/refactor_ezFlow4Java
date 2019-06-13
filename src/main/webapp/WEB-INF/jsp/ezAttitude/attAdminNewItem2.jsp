@@ -160,7 +160,7 @@
 			            showAnim: 'show',
 			            showMonthAfterYear: true
 			        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		        
 		        if (typeId == 'A04' && dateType == 4) {
 		        	$('#Stimepicker').timepicker();
@@ -321,6 +321,15 @@
 					var returnValue = getIsAttitude('A01');
 					if (returnValue == 0) {
 						alert("<spring:message code='ezAttitude.t224'/>");
+						return;
+					}
+				}
+				
+				//외출 등록시 출근여부 확인
+				if (selectType == 'A06') {
+					var returnValue = getIsAttitude('A01');
+					if (returnValue == 0) {
+						alert("<spring:message code='ezAttitude.t306'/>");
 						return;
 					}
 				}

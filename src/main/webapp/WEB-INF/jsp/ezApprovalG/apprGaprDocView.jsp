@@ -533,6 +533,17 @@
 		            	SendMailToCancel_Function(GetCurrentlinelist);
 	                    var pAlertContent = strLang891 + "<br> " + strLang892;
 	                    OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+	                    
+	                    //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회수
+	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+	    		        	var script = document.createElement("script");
+	    					script.type = "text/javascript";
+	    					script.innerHTML = code;
+	    					document.querySelector("head").appendChild(script);
+	    					
+	    		        	attitude_annual_conn(pDocID);
+	    		        }
 		            }
 		            else if (RtnVal == "ERR01") {
 		                var pAlertContent = strLang895;

@@ -925,6 +925,17 @@
 		                    getOpinionInfo(pDocID, "END");
 		                    SendMailToDrafter();
 		                    SendMailToReceiveDept_Approv();
+		    		        
+		                    //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 수신부서 완료
+		    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-script').getAttribute("code");
+		    		        	var script = document.createElement("script");
+		    					script.type = "text/javascript";
+		    					script.innerHTML = code;
+		    					document.querySelector("head").appendChild(script);
+		    					
+		    		        	attitude_annual_conn(pOrgDocID);
+		    		        }
 		                } else {
 		                	 CurrentAprType = pAprLineType;
 		                     CurrentAprUserID = pUserID;
@@ -1091,6 +1102,17 @@
 		                SendMailBansongtoDrafter();
 		                SendAckForExch("approval", "ING");
 		                process_AfterApprove("2");
+		                
+		                //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 반송
+	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+	    		        	var script = document.createElement("script");
+	    					script.type = "text/javascript";
+	    					script.innerHTML = code;
+	    					document.querySelector("head").appendChild(script);
+	    					
+	    		        	attitude_annual_conn(pDocID);
+	    		        }
 		            }
 		        } else if (ret == "cancel") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
