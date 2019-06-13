@@ -590,6 +590,7 @@ function ListView() {
                     
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
+                    strName = "";
                 }
                 if (strColName == "IMPORTANCE") {
                 	var _HeaderSpanimg = document.createElement("IMG");
@@ -599,6 +600,7 @@ function ListView() {
                     
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
+                    strName = "";
                 }
                 if (strColName == "CONFIRMSTATUS") {
                 	var _HeaderSpanimg = document.createElement("IMG");
@@ -611,6 +613,7 @@ function ListView() {
                     objTd.appendChild(_HeaderSpanimg);
                     
                     objTd.style.textAlign = "center";
+                    strName = "";
                 }
                 if (strColName == "STATUS") {
                    	objTd.style.textAlign = "CENTER";
@@ -625,6 +628,7 @@ function ListView() {
                   
 					_HeaderSpanimg.setAttribute("align", "absmiddle");
 					objTd.appendChild(_HeaderSpanimg);
+					strName = "";
                 }
                 
                 if (strColName == "CONFIRMDATE") {

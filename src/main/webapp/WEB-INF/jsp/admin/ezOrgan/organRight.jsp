@@ -920,7 +920,7 @@
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(930, 550));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -1269,9 +1269,9 @@
 		    	var agent = navigator.userAgent.toLowerCase();
 		    	
 		    	if (agent.indexOf("chrome") != -1) {
-		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 300));
+		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 310));
 		    	} else {
-			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 300));
+			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 310));
 		    	}
 		    }
 		   

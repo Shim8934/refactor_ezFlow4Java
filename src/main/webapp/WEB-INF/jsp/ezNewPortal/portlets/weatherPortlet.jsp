@@ -15,6 +15,7 @@
 			var displayName = "${displayName}";
 			var todayHours = "${todayHours}"; 
 			var todayHoursArr = todayHours.split(";");
+			var lang = "${lang}";
 			
 			var currentWeatherArr = currentWeather.split(";");
 			
@@ -67,8 +68,11 @@
 			    			cityCode : this.value
 			    		},
 			    		success: function(data) {		
-			    			
-			    			$("#cityName").text(data.displayName);
+				    		if (lang == 2) {
+				    			$("#cityName").text(data.cityName);
+				    		} else {
+				    			$("#cityName").text(data.displayName);
+				    		}
 			    			
 			    			currentWeatherArr = data.currentWeather.split(";");
 			    			
@@ -181,11 +185,19 @@
 			    				$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".") + 2) + "℃");
 			    			}
 			    			
-			    			$("#date1").text(today1Time + "시");
-			    			$("#date2").text(today2Time + "시");
-			    			$("#date3").text(today3Time + "시");
-			    			$("#date4").text(today4Time + "시");
-			    			$("#date5").text(today5Time + "시");
+			    			if (lang == "2") {
+				    			$("#date1").text(today1Time + "h");
+				    			$("#date2").text(today2Time + "h");
+				    			$("#date3").text(today3Time + "h");
+				    			$("#date4").text(today4Time + "h");
+				    			$("#date5").text(today5Time + "h");
+			    			} else {
+				    			$("#date1").text(today1Time + "시");
+				    			$("#date2").text(today2Time + "시");
+				    			$("#date3").text(today3Time + "시");
+				    			$("#date4").text(today4Time + "시");
+				    			$("#date5").text(today5Time + "시");
+			    			}
 				        },
 				        error: function(error) {
 				        	console.log(error);
@@ -249,7 +261,7 @@
 		                    <dd><span id="date5"></span><span id="temp5"></span></dd>
 		                </dl>
 		            </div>
-					<span style="font-size:10px;margin-right:6px;margin-top:3px;float:right;">Weather from OpenWeatherMap </span>
+					<span style="font-size:10px;margin-right:6px;margin-top:3px;margin-bottom:1px;float:right;">Weather from OpenWeatherMap </span>
 		        </div>
 		    </div>
 		</article>
@@ -337,15 +349,27 @@
 				$("#temp5").text(today5Temp.substring(0,today5Temp.indexOf(".") + 2) + "℃");
 			}
 			
-			$("#date1").text(today1Time + "시");
-			$("#date2").text(today2Time + "시");
-			$("#date3").text(today3Time + "시");
-			$("#date4").text(today4Time + "시");
-			$("#date5").text(today5Time + "시");
+			if (lang == 2) {
+    			$("#date1").text(today1Time + "h");
+    			$("#date2").text(today2Time + "h");
+    			$("#date3").text(today3Time + "h");
+    			$("#date4").text(today4Time + "h");
+    			$("#date5").text(today5Time + "h");
+			} else {
+    			$("#date1").text(today1Time + "시");
+    			$("#date2").text(today2Time + "시");
+    			$("#date3").text(today3Time + "시");
+    			$("#date4").text(today4Time + "시");
+    			$("#date5").text(today5Time + "시");
+			}
 			
 			//도시목록을 셀렉트박스로 만들어줌
 			for (var i = 0; i < cityList.length; i++) {
-				$("#cityList").append("<option value='" + cityList[i].cityCode + "'>" + cityList[i].displayName + "</option>");
+				if (lang == "2") {
+					$("#cityList").append("<option value='" + cityList[i].cityCode + "'>" + cityList[i].cityName + "</option>");
+				} else {
+					$("#cityList").append("<option value='" + cityList[i].cityCode + "'>" + cityList[i].displayName + "</option>");
+				}
 			}
 			
 			$("#cityList").val(cityCode).prop("selected", true);
