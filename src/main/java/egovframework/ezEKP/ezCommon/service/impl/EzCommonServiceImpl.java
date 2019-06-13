@@ -1574,6 +1574,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void addMemoExtensionColumns() throws Exception {
+		ezCommonDAO.addMemoExtensionColumns();
+	}
+
+	@Override
 	public void addFormVersion() throws Exception {
 		ezCommonDAO.addFormVersion();
 	}
@@ -1581,5 +1586,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addAddJobMasterProxy() throws Exception {
 		ezCommonDAO.addAddJobMasterProxy();
+	}
+	
+	@Override
+	public void createAttitudeAnnual() throws Exception {
+		ezCommonDAO.createTblAttitudeAnnual();
+		ezCommonDAO.createTblAttitudeAnnualCanappl();
+		ezCommonDAO.createTblAttitudeAnnualConf();
+		ezCommonDAO.createTblAttitudeAnnualHistory();
+		ezCommonDAO.createTblAttitudeAprConn();
 	}
 }

@@ -53,6 +53,13 @@
 		var checkOpt="off";
 		var configView = "<c:out value='${configView}' />";
 		
+		var beforeMemoId;
+		var beforeMemo;
+    	var memoInter;
+		var memoClickTimer = 0;
+     	var memoDelay = 200;
+     	var memoPrevent = false;
+     	
 		window.onunload = Window_onunload;
 		
 	 	window.onresize = function () {
@@ -98,17 +105,54 @@
 	    		MailOptionHiddenOutside(e);
 	    	});
 	    	
+	    	// 클리과 더블클릭 이벤트 구분
+	     	
+	     	$(document).on('focus', '.memoText', function(event) {		// 클릭 -> 메모 자동 저장 시작
+   				var thisEl = event.target;
+	     	
+   				parent.parent.draggableFalse();		// draggable 때문에 레이어 안에서의 blur 이벤트 안 먹혀서 잠시 죽임
+	     											// (memoPortal.js에 있는 함수)
+	     		memoClickTimer = setTimeout(function() {
+	     			
+	     			if (!memoPrevent) {
+	     				memoFocusEvent(thisEl);
+	    	     		// autoSaveStart(thisEl);
+	     			}
+	     		}, memoDelay);
+	     	}).on('dblclick', '.memoText', function (event, ui) {	// 더블 클릭 -> 큰 메모 열기
+	     		var memoId = $(this).attr("memoid");
+	     		
+	     		clearTimeout(memoClickTimer);
+	     		
+	     		getMemoDetail(memoId);
+	     	});
+	     	
+	     	// 메모 자동 저장 정지
+	     	$(document).on('blur', '.memoText', function() {
+	     		autoSaveStop();					// 자동 저장 멈춤
+	     		parent.parent.draggableTrue();	// 메모 레이어 드래그 살림 (memoPortal.js에 있는 함수)
+	     		modifyMemo($(this)[0]);			// 메모 내용 수정
+	     	});
+	     	
+	    	/* 위의 자동 저장 기능 추가하면서 주석처리
 	    	$(document).on("click", ".saveBtn", function(){
 			    	  var obj = $(this).parent().next();
 			    	  modifyMemo(obj[0]);
 			});
+	    	*/
+	    	
+	    	// 메모 숨김 기능
+	    	$(document).on('click', '.hidden', function() {
+	    		var thisEl = $(this)[0];
+	    		hideMemo(thisEl);
+	    	});
 	    	
 	    	$(document).on("click", ".color_list", function(){
-	    		   defaultColor = $(this).index()+1;
-	    	   		modifyMemoColor($(this).parent().parent(), $(this).index()+1);
-	    	   		var obj = $(this).parent().parent();
-	    	   		obj[0].setAttribute("class", "mamo0"+defaultColor+ " memoLay");
-	    	   		$(this).parent().css("visibility", "hidden");
+	    		var thisEl = $(this);
+	    		defaultColor = thisEl.index()+1;
+
+	    		var obj = $(this).parent().parent();
+	    	   	modifyMemoColor(obj, defaultColor);
 	    	});
 	    	
 	    	$(document).on("mouseleave", ".color_popup", function(){
@@ -214,7 +258,7 @@
  	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
  		 <div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezMemo.t001' /><spring:message code='ezMemo.t0016' /></div>
+				<div class="title"><spring:message code='ezMemo.t0067' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
@@ -223,7 +267,7 @@
 				<table class="content">
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.garm01' />
+							<spring:message code='ezMemo.t0068' />
 						</th>
 						<td>
 							<input type="text" onfocus="this.value=''" onkeypress="if(event.keyCode==13){getMemoList('search'); return false;}" id="searchTitle" style="width: 100%;  margin-left: 0px;">
@@ -231,7 +275,7 @@
 					</tr>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.t210' />
+							<spring:message code='ezMemo.t0069' />
 						</th>
 						<td>
 							<input type="text" id="Sdatepicker" style="width: 80px; text-align: center; margin-left: 0px;" readonly="readonly">
@@ -244,8 +288,8 @@
 					<tr>
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-								<a class="imgbtn"><span onClick="getMemoList('search');"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezMemo.t0070' /></span></a>
+								<a class="imgbtn"><span onClick="getMemoList('search');"><spring:message code='ezMemo.t0016' /></span></a>
 							</div>	
 						</td>
 					</tr>

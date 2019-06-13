@@ -2817,11 +2817,14 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-
+			String lang = info.getLang();
 			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 
 			for (BoardMyFavoriteVO fvo : resultList) {
-
+				if (lang.equals("2")) {
+					fvo.setBoardName(fvo.getBoardName2());
+				}
+				
 				LOGGER.debug("resultList : " + fvo.getBoardId());
 			}
 
