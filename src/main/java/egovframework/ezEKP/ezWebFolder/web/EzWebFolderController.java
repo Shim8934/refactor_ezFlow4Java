@@ -74,6 +74,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url = gwServerUrl + "/rest/ezwebfolder/users/" +userInfo.getId() + "/checkRootFolder";
+		String folderType = req.getParameter("folderType")      != null ? req.getParameter("folderType") : "C";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -89,6 +90,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		try {
 			resultBody    = (JSONObject) jp.parse(result.getBody());
 			String status = resultBody.get("status").toString();
+			model.addAttribute("folderType", folderType);
+			model.addAttribute("status", status);
 		}
 		catch (ParseException e) {
 			e.printStackTrace();
@@ -105,6 +108,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
 		String url         = gwServerUrl + "/rest/ezwebfolder/check-wfadmin/" + userInfo.getId();
+		String folderType = request.getParameter("folderType")      != null ? request.getParameter("folderType") : "C";
 		
 		HttpHeaders headers  = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -122,6 +126,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		if (status.equals("ok")) {
 			String checkResult = (String) resultBody.get("data");
 			model.addAttribute("isWfAdmin", checkResult);
+			model.addAttribute("folderType", folderType);
 		}
 		
 		logger.debug("webfolderLeft end");
