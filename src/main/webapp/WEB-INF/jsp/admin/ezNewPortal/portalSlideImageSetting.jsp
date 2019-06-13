@@ -167,7 +167,7 @@ var getSlideImage = function () {
 					slideImageHTML += "<li>";
 					slideImageHTML += "<div id='nodata_slideImage' class='nodata'>";
 					slideImageHTML += "<dl class='nodata'>";
-					slideImageHTML += "	<dt><img src='/images/kr/main/nodata.png'></dt>";
+					slideImageHTML += "	<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
 					slideImageHTML += "	<dd>\"" + "<spring:message code='main.t00026' />" + "\"</dd>";
 					slideImageHTML += "</dl>";
 					slideImageHTML += "</div>";

@@ -631,8 +631,8 @@ function Window_onresize() {
             document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 312) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 245) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 275) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 283) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 312) + "px";
         }
     }
     else {

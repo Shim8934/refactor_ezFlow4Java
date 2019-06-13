@@ -240,8 +240,11 @@
 		                message.SetEditable(true);
 		            }
 		
-		            if (pDraftFlag != "REDRAFT")
-		                setFirstDrafter(isUsed, beforeDocID);
+					if (pDraftFlag != "REDRAFT")
+						if(isUsed == "reuse" && apprReuseConfig != "1") {
+							setFirstDrafter(isUsed, beforeDocID);
+						}
+						setFirstDrafter("", "");
 		            
 		            if (approvalFlag == "S" && ListType != "21") {
 			            SetAutoDocnumItem();
@@ -414,12 +417,12 @@
 		                        pDocID = createNewDoc();
 		                        
 		                     	if (isUsed == "reuse") {
-			                		getDocInfo();
-			                		// 재사용이고 문서의 모든정보를 재사용 할시
+									 // 재사용이고 문서의 모든정보를 재사용 할시
+									ClearDocCellInfo();
 				                	if( apprReuseConfig != '1' ){
+			                			getDocInfo();
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
-				                		ClearDocCellInfo();
-				                		message.SetEditable(true);
+				                		// message.SetEditable(true);
 				                	}
 			                	}
 		                    }
@@ -634,6 +637,29 @@
 			            	OpenInformationUI(pAlertContent, check_ReUsed);	
 			            	return;
 			            }
+			            
+				        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 마이너스 연차 사용이 허용 안함일 경우
+				        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {	
+				        	if (document.message.document.iframe_content.useMinusAnnual == "0") {
+				        		if(document.message.document.iframe_content.document.getElementById("remain_annual_cnt").innerHTML.indexOf("-") != -1) {
+				        			OpenAlertUI("<spring:message code='ezAttitude.t266'/>");
+				        			return;
+				        		}
+				        		
+				        	}
+				        	
+				        	var reformTitle = document.message.document.iframe_content.document.getElementById("reform-title").value;
+					        var titlePattern = /(\d{4})년(\d{1,2})월(\d{1,2})일~(\d{4})년(\d{1,2})월(\d{1,2})일\[(\d{1,2})일\]/
+							
+					        if (reformTitle == "" ) {
+								OpenAlertUI("<spring:message code='ezAttitude.t307'/>");
+								return;
+							} else if (!titlePattern.test(reformTitle.replace(/ /gi, ""))) {
+								OpenAlertUI("<spring:message code='ezAttitude.t308'/>");
+								return;
+							}
+					        
+				        }
 			            
 			            if (addLastKyulJeYN != "0") {
 				        	var hDocID ;
@@ -879,9 +905,13 @@
 		    function Complete_Deaft() {
 		        draftFlag = true;
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
-		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) { 
 		        	parent.opener.getApprovalList("reject");
 		        }
+		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가
+		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		        	document.getElementById('message').contentWindow.document.getElementById('iframe_content').contentWindow.attitude_annual_conn("annual", "0");
+		        }	        
 		        
 		        window.close();
 		    }
@@ -892,8 +922,12 @@
 		            RemoveTmpDoc(DocSN);
 		        }
 		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
-		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) {
 		        	parent.opener.getApprovalList("reject");
+		        }
+		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가--아직 개발중
+		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		        	document.getElementById('message').contentWindow.document.getElementById('iframe_content').contentWindow.attitude_annual_conn("annual", "0");
 		        }
 		        
 		        window.close();
@@ -1405,7 +1439,7 @@
 		                DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
-		                if (isUsed == "reuse" && apprReuseConfig != '1') {
+		                if (isUsed == "reuse") {
 		                	message.Set_EditorContentURL(beforeUrl);
 		                } else {
 							if (pFormHref != "") {
@@ -1418,9 +1452,9 @@
 									message.Set_EditorContentURL(pFormHref);
 								}
 								
-								if (beforeUrl != "") {
-									Insert_ReUse_Content();
-								}
+								// if (beforeUrl != "") {
+								// 	Insert_ReUse_Content();
+								// }
 							}
 							else {
 								DraftFlag = "DRAFT";
@@ -1743,14 +1777,18 @@
 	            var ConXmlDiv = document.createElement("DIV");
 	            ConXmlDiv.innerHTML = _DocContentHtml;
 	            var TDRows = ConXmlDiv.getElementsByTagName("TD");
-	            var reUseContent = "";
+	            var reUseContent = {};
 
-	            for (var i = 0; i < TDRows.length; i++) {
-	                if (GetAttribute(TDRows.item(i), "id") == "body") {
-	                    reUseContent = TDRows.item(i).innerHTML;
-	                    break;
-	                }
-	            }
+	            // for (var i = 0; i < TDRows.length; i++) {
+	            //     if (GetAttribute(TDRows.item(i), "id") == "body") {
+				// 		reUseContent.editorContent = TDRows.item(i).innerHTML;
+	            //         break;
+	            //     }
+				// }
+				
+				reUseContent.editorContent = TDRows.body.innerHTML;
+				reUseContent.titleContent = TDRows.doctitle.innerText;
+
 	            message.Editor_ReUseContent(reUseContent);
 	        }
 	        
@@ -1832,7 +1870,7 @@
 		      </div></td>
 		  </tr>
 		  <tr>
-		    <td  style="padding-bottom:10px;height:90%;" >
+		    <td  style="padding-bottom:10px;height:86%;" >
 		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do?isUsed=${isUsed}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		      </td>
 		  </tr>

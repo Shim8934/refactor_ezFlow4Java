@@ -37,7 +37,7 @@ $(function() {
 					<ul class="portlet_list">
 						<dl class="nodata">
 							<dt>
-								<img src="/images/ezNewPortal/nodata.png">
+								<img src="/images/kr/main/noData_sIcon.png">
 							</dt>
 							<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
 						</dl>
@@ -47,7 +47,7 @@ $(function() {
 					<ul class="portlet_list">
 						<dl class="nodata">
 							<dt>
-								<img src="/images/ezNewPortal/nodata.png">
+								<img src="/images/kr/main/noData_sIcon.png">
 							</dt>
 							<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
 						</dl>

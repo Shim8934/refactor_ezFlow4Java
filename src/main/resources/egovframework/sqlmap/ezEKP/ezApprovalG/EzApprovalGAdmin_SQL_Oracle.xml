@@ -647,7 +647,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.searchManageAprDocList"
-		parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+		parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
 			SELECT
 				*
