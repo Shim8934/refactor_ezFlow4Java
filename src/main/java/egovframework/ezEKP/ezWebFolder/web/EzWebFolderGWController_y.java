@@ -783,7 +783,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
 				usrListCnt = service.getUsrListCount(tenantId, userId);
 			} else {
-				usrListCnt = 1000;
+				usrListCnt = 10000;
 			}
 			
 			LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
