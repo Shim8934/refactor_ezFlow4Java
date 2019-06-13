@@ -21,7 +21,7 @@
 <typeAlias alias="WeatherVO" type="egovframework.ezEKP.ezNewPortal.vo.WeatherVO"/>
 <typeAlias alias="BoardListVO" type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 <typeAlias alias="OrganDeptVO" type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
-<typeAlias alias="FileVO" type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
+<typeAlias alias="webFolderFileVO" type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -153,7 +153,7 @@
 <result property="todayWeather" 				column="TODAYWEATHER" />
 </resultMap>
 
-<resultMap class="FileVO" id="FileVO">
+<resultMap class="webFolderFileVO" id="webFolderFileVO">
 <result property="fileId" column="FILE_ID" />
 <result property="fileName" column="FILE_NAME" />
 <result property="filePath" column="FILE_PATH" />
@@ -2128,7 +2128,7 @@ ORDER BY
 	]]>
 </select>
 
-<select id="ezNewPortal.getWebFolderFileList" parameterClass="Map" resultMap="FileVO">
+<select id="ezNewPortal.getWebFolderFileList" parameterClass="Map" resultMap="webFolderFileVO">
 	<![CDATA[
 		SELECT 
 			FILE_ID, FILE_NAME, FILE_PATH, FILE_SIZE, TYPE_ID, DOWN_COUNT, FILE_EXT, FOLDER_ID, USE_STATUS, CREATE_ID, 
