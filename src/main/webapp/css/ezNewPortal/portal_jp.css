@@ -1179,3 +1179,4 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index
 #theme3Body .weather{overflow:hidden}
 #theme3Body .weather_content{height:188px; padding:10px;background:#fff; margin:0px;}
 #theme3Body .weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:15px; text-align:left;}
+#theme3Body .layDIV .error_content {height:100%; background:#ffffff;}
