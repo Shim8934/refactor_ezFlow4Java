@@ -3616,8 +3616,15 @@ public class EzNewPortalGWController {
 			
 			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primLang);
 			List<WeatherVO> cityList = ezNewPortalService.getCityList(primLang);
+			data.put("lang", info.getLang());
 			data.put("cityList", cityList);
-			data.put("displayName", resultMap.get("DISPLAYCITYNAME"));
+			
+			if (info.getLang().equals("2")) {
+				data.put("displayName", resultMap.get("CITYNAME"));
+			} else {
+				data.put("displayName", resultMap.get("DISPLAYCITYNAME"));
+			}
+			
 			data.put("currentWeather", resultMap.get("CURRENTWEATHER"));
 			data.put("todayWeather", resultMap.get("TODAYWEATHER"));
 			data.put("cityCode", resultMap.get("CITYCODE"));
