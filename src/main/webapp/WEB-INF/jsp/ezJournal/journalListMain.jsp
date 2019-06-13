@@ -394,7 +394,8 @@
 	                	return;
 					}
 					setJournalList();
-					$("#searchValue").val("");
+					//2019-06-05 김보미 - 검색후 검색어 초기화 되던것 주석처리
+// 					$("#searchValue").val("");
 				
 				} else if(searchFlag == 'journalTitle'){
 					searchTitle = $("#searchValue").val().trim();
@@ -404,7 +405,7 @@
 	                	return;
 					}
 					setJournalList();
-					$("#searchValue").val("");
+// 					$("#searchValue").val("");
 				}
 			}
 			
@@ -876,7 +877,7 @@
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
-		        $.datepicker.regional["ko"] = {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
 		        	monthNames: monthStr,
 		            monthNamesShort: monthStr,
 		            dayNames: dayStr,
@@ -890,7 +891,7 @@
 		            showAnim: 'show',
 		            showMonthAfterYear: true
 		        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });			
 			
 			//정렬에 의한 리스트 셋팅

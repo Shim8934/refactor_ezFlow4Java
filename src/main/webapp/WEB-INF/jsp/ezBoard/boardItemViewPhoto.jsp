@@ -1555,7 +1555,24 @@
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
-			  	}
+				}
+				
+				function addRelatedCabinet() {
+					window.open("/ezCabinet/cabinetAddRelated.do?module=board", "addRelated", getOpenWindowfeature(480, 505));
+				}
+				
+				function getOpenWindowfeature(popUpW, popUpH) {
+					var heigth   = window.screen.availHeight;
+					var width    = window.screen.availWidth;
+					var left     = 0;
+					var top      = 0;
+					var pleftpos = parseInt(width) - popUpW;
+					heigth       = parseInt(heigth) - popUpH;
+					left         = pleftpos / 2;
+					top          = heigth / 2;
+					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+					return feature;
+				}
 			  	
 			    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
 			    function checkRefreshFlag () {
@@ -1570,7 +1587,6 @@
 			    		refreshFlag = "N";
 			    	}
 			    }
-			    
 		</script>
 	</head>
 	<body class="popup">
@@ -1612,6 +1628,9 @@
 		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.t1007'/></span></li>
 		        		</c:otherwise>
 		        	</c:choose>
+					<c:if test="${useCabinet == 'YES'}">
+						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+					</c:if>
 		        </ul>
 		      </div>
 		      <div id="close">

@@ -549,7 +549,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 */
 	@RequestMapping(value = "/ezNewPortal/portletSetting.do", method=RequestMethod.GET)
 	public String portletSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
-		
+
 		return "/ezNewPortal/portletSetting";
 	}
 	

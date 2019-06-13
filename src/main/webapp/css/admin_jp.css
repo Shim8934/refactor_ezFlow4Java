@@ -12,6 +12,8 @@ A.top:visited{COLOR: #ffffff;TEXT-DECORATION: none}
 A.top:active{COLOR: #ffffff;TEXT-DECORATION: none}
 A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 
+li {float:left;}
+
 .btn{border-width:1px;border-style:outset;padding-left:3px;padding-right:3px;BACKGROUND-COLOR: #e0e0e0;}
 .dotline{BACKGROUND-IMAGE: url(..\images\admin\line_dot.gif);WIDTH: 750px;HEIGHT: 1px}
 .subtitle{BACKGROUND-POSITION:left;    BACKGROUND-IMAGE:  url(../images/img_subtitle.gif); BACKGROUND-REPEAT:no-repeat; font-size:10pt; font-weight:bold; padding-left:15px;white-space: nowrap;}
@@ -193,64 +195,89 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .box li:nth-last-child(1) {border-bottom:0px;}
 .spanPollCount {float: right;width:50%;display:inline-block;text-align:right;}
 
-/* quick link */
-.link, .linkAdd {cursor: pointer; vertical-align: top; display: inline-block; width: 310px; border: 1px solid #d9d9d9; margin: 20px 30px 0px 0px; height: 200px; background-color: rgb(255, 255, 255);}
-.linkAdd {border: 1px dashed #aaaaaa;}
-.linkAdd dl dt {text-align: center; margin-top: 50px;}
-.linkAdd dl dd {margin-left: 120px; color: #999; font-size: 15px; line-height: 19px;}
-.link dl {margin: 10px;}
-.link dl dt, .link dl dd {font-size: 13px; line-height: 25px; margin-left: 0px;} 
-.link dl dt {float: left; width: 50px;}
-.link p {margin: 0px 10px 0px 10px; font-size: 18px; font-weight: bold; line-height: 36px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
-.link p img {vertical-align: bottom; margin-right: 4px;}
-.linkBttn {text-align: right; padding: 10px 10px 0px 0px;}
-.linkDetails {list-style: none; float: left; width: 90%; border: 1px solid black; position: relative; display: list-item; margin: 20px 0px 20px 0px;}
-.linkTitle {margin: 10px;}
-.linkTitle span {font-size: 18px; font-weight: bold;}
-.linkContent {float: left; width: 375px; min-width: 375px; display: inline-block; margin: 3px 10px 10px 10px;}
-.content, .content th, .content td {border: 0px;}
-.content th {background-color: transparent;}
-.contInput {width: 100%; -moz-box-sizing: border-box; box-sizing: border-box;}
-.primary > td {border: 0px;}
-.popInput {width:30px;}
-.type tr th, .perm tr th {vertical-align: top;}
-.perList {border-left: 1px solid #d2d2d2 !important;}
-.perList > .listview {height: 169px; overflow-y: auto; overflow-x: hidden; border-bottom: 0px; border-width: 0px; border: 1px solid #ddd; margin-left: 7px;}
-.perm tr:ntn-child(2) > td {padding:0px; border-left: 1px solid #ddd;}
-.perm tr:ntn-child(2) > td > div {text-align: right;}
-.linkType {width:280px; height: 169px; margin-left:5px; border: 1px solid #d2d2d2;}
-.linkType tr {text-align:center;} 
-.linkType tr td {width:25%;}
-.linkType tr:nth-child(odd) > td {cursor:pointer;}
-.linkType tr:nth-child(even) > td {text-align:center; margin-top:-5px;}
-.linkType img {margin-top: 5px;}
-.hideDetails {display: none;}
-.linkChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
+.Ared{color:#ff0000;}
 
-/* Employee of Month */
-.calSlider {width: 85% !important; margin: 0px auto; border-top: 2px solid; border-bottom: 1px solid #c8ccd0;}
-.slick-slide {margin: 0px 3px;}
+/* admin quicklink */
+.admin_quicklink{ margin:20px 0px 0px 0px; padding:0px;}
+.admin_quicklink .ui-sortable{ margin:0px; padding:0px; list-style:none;}
+.admin_quicklink .quickList{ margin:0px 20px 20px 0px; padding:0px; width:312px; height:190px; border:1px solid #d9d9d9; box-sizing:border-box; cursor:pointer;}
+.admin_quicklink .quickList .listTop{ margin:0px; padding:0px; height:100px; background:#e4e8ec; overflow:hidden;}
+.admin_quicklink .quickList .listTop .quickLink_icon{ margin:20px 10px 0px 15px; padding:0px; float:left; width:55px; height:55px; border-radius:50px; background:#fff; text-align:center;}
+.admin_quicklink .quickList .listTop .quickLink_icon img{ padding:12px 0px 0px 0px;}
+.admin_quicklink .quickList .listTop .quickLink_tit{ margin:0px; padding:25px 0px 0px 0px; float:left; font-size:16px; color:#333; line-height:20px; font-weight:bold; width:70%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.admin_quicklink .quickList .listTop .quickLink_url{ margin:0px; padding:0px; float:left; font-size:16px; color:#333; line-height:20px; font-weight:bold; width:70%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.admin_quicklink .quickList .listTop .quickLink_delete{ position:absolute; margin-left:288px; }
+.admin_quicklink .quickList .listBottom{ margin:0px; padding:10px 0px 0px 20px; box-sizing:border-box;}
+.admin_quicklink .quickList .listBottom .quickLink_info{ margin:0px; padding:0px; line-height:22px; color:#333; font-size:13px;}
+.admin_quicklink .linkChoice{ border:1px solid #2196f3; background:#edf7ff;}
+.admin_quicklink .linkChoice .listTop{ margin:0px; padding:0px; height:100px; background:none;}
+.admin_quicklink .linkAdd{ margin:0px 20px 20px 0px; padding:0px; width:312px; height:190px; border:1px solid #d9d9d9; box-sizing:border-box; cursor:pointer;}
+.admin_quicklink .linkAdd .listTop{ margin:0px; padding:0px; height:100px; background:#e4e8ec; overflow:hidden;}
+.admin_quicklink .linkAdd .listTop .quickLink_icon{ margin:20px auto; padding:0px; width:55px; height:55px; border-radius:50px; background:#fff; text-align:center;}
+.admin_quicklink .linkAdd .listTop .quickLink_icon img{ padding:17px 0px 0px 0px; margin:0px;}
+.admin_quicklink .linkAdd .listBottom{ margin:0px; padding:35px 0px 0px 0px; box-sizing:border-box; text-align:center;}
+.admin_quicklink .linkAdd .listBottom .quickLink_info{ font-size:13px; color:#666;}
+
+.admin_quickList{ margin:0px; padding:0px; width:926px; height:auto; font-family:Malgun Gothic;}
+.quickTable01{ margin:0px 0px 0px 0px; padding:0px; float:left; width:334px; height:171px; border:1px solid #dfdfdf; border-collapse:collapse; clear:none !important }
+.quickTable02{ margin:0px 0px 0px 10px; padding:0px; float:left; height:171px; width:275px; border:1px solid #dfdfdf; border-collapse:collapse; clear:none !important }
+.quickLinkTH{ margin:0px; padding:0px 0px 0px 10px; width:90px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:left;}
+.quickLinkTH02{margin:0px; padding:0px 0px 0px 10px; width:275px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
+.quickLinkTH02 .adminPlusBtn{ display:inline-block; float:right; padding:2px 10px 0px 0px; cursor:pointer;}
+.quickTD{ height:174px;}
+.quickIcon_link{ margin:0px; padding:0px; float:left; width:25%; text-align:center;}
+.quickIcon_link .quickIcon_linkDT{ margin:0px; padding:0px 0px 10px 0px; cursor:pointer;}
+.quickIcon_link .quickIcon_linkDD{ margin:0px; padding:0px;}
+.admin_select{ width:100%; height:27px; padding:0px 0px 0px 5px; margin:0px; text-align:left;}
+
+/* admin employee */
+.admin_employee{ margin:0px; padding:0px;}
+.calSlider {width: 97%;margin: 0px; border-bottom: 1px solid #d9d9d9;}
+.slick-slide {margin: 0px 3px;color: #666;}
 .slick-slide img {width: 100% !important;}
-.slick-center {color: red;}
+.slick-center {color: #3d8fea;font-weight: bold;border-bottom: 1px solid #3d8fea;}
 .slick-prev:before, .slick-next:before {color: black;}
-.yearDiv {height: 38px; /* border: 1px solid #c8ccd0; */ }
-.yearSpan {text-align: center; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; letter-spacing: -1px; line-height: 31px;}
-.employee {vertical-align: top; display: inline-block; width: 180px; border: 1px solid #d9d9d9; margin: 20px 60px 0px 0px; height: 240px;}
-.empBttn {text-align: right; padding: 10px 10px 0px 0px; height: 27px;}
-.empBttn > img:first-child {margin-right: 7px;}
-.empAdd dl dt {margin: 0px;}
-.empAdd dl dt img {margin: 10px 0px 20px 60px; cursor: pointer;}
-.empAdd dl dd {color: #999; font-size: 15px; line-height: 21px; text-align: center; margin: 0px;}
-.empImg dl dd {font-size: 15px; line-height: 19px; text-align: center; margin: 0px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
-.empImg dl dt img {margin-left: 40px; height: 95px; width: 95px; cursor:pointer;}
-.empInfo {border-bottom: 3px solid; margin: 0px 25px 0px 25px;}
-.empInfo p {margin: 0px; text-align: center; font-size: 20px; font-weight: bold;}
-.empCompany {font-weight: bold; font-size: 20px;}
-.calendarleft {margin: 0px;}
-.calendarright {margin: 0px;}
-.tree_delete {margin: 0px; cursor: pointer;}
-.slick-slide {outline: none !important;}
-.employeeList {margin-left: 110px;}
+.yearDiv {height: 38px;}
+.yearSpan {text-align: center; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; letter-spacing: -1px; line-height: 31px; margin-top: 6px;}
+.admin_employeeList{ margin-top:10px; padding:0px; overflow:hidden; list-style:none;}
+.admin_employeeList .employee{ margin:20px 20px 0px 0px; padding:0px; background:url(../images/admin/employee_bg.png) no-repeat left top; width:210px; height:262px; position:relative;}
+.admin_employeeList .employee_blue{ margin:20px 20px 0px 0px; padding:0px; background:url(../images/admin/employee_bg_blue.png) no-repeat left top; width:210px; height:262px; position:relative;}
+.admin_employeeList .month_num{ margin:0px; padding:5px 0px 0px 0px; text-align:center; font-size:24px; font-weight:bold; color:#fff;}
+.admin_employeeList .month_num span{ font-size:16px;}
+.admin_employeeList .emDelete{ position:absolute; top:25px; right:10px; margin:0px; padding:0px;}
+.admin_employeeList .emTop{ margin:0px; padding:0px; position:relative;}
+.admin_employeeList .emTop .emPic{ margin:28px auto 0px auto; padding:0px; background:#fff; border-radius:50px; width:84px; height:84px; border:1px solid #d7d7d7; box-sizing:border-box;}
+.admin_employeeList .emTop .emPic img{ border-radius:50px;}
+.admin_employeeList .emTop .emPic_add{ margin:28px auto 0px auto; padding:0px; background:#fff; border-radius:50px; width:84px; height:84px; border:1px solid #d7d7d7; box-sizing:border-box; text-align:center; cursor:pointer;}
+.admin_employeeList .emTop .emPic_add img{ padding:32px 0px 0px 0px;}
+.admin_employeeList .emTop .emEdit{ position:absolute; right:60px; top:65px; background:#fff; border-radius:30px; border:1px solid #d7d7d7; width:22px; height:22px; box-sizing:border-box; text-align:center; cursor:pointer;}
+.admin_employeeList .emTop .emEdit img{ padding:5px 0px 0px 0px; margin:0px;}
+.admin_employeeList .emBottom{ margin:0px; padding:25px 0px 0px 0px; text-align:center;}
+.admin_employeeList .emBottom .emTeam{ margin:0px; padding:5px 0px 10px 0px; font-size:12px; color:#333;}
+.admin_employeeList .emBottom .emName{ margin:0px; padding:0px; font-size:16px; color:#333; font-weight:bold;}
+.admin_employeeList .emBottom .emAdd_text{ color:#666; margin:0px; padding:20px 0px 0px 0px;}
+
+/* admin slider images */
+#sliderContainer{ margin:0px; padding:0px 0px 0px 5px;}
+.sliderList{ margin:10px 20px 20px 10px; display:inline-block; background:#fff; box-sizing:border-box; position:relative; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.slider-body{ margin:0px; padding:0px; position:relative; cursor:move; border:none; width:285px; height:515px; }
+.slider-head{ margin:0px; padding:0px; cursor:move; background: rgba(0, 0, 0, 0.5); width:285px; height:40px; position:absolute; top:0px;}
+.slider-head .sliderHDT{ margin:10px 10px 0px 15px; padding:0px; float:right; cursor:pointer;}
+.slider-head .sliderHDD{ margin:10px 0px 0px 0px; padding:0px; float:right; cursor:pointer;}
+.slider-content{ width:285px; height:115px; background: rgba(0, 0, 0, 0.5); position:absolute; bottom:0px; margin:0px; padding:0px;}
+.sliderCDT{ margin-top:20px; padding:0px 15px;}
+.sliderCDT .sliderTtit{ margin:0px; padding:0px; display:inline-block; float:left; color:#fff; font-size:12px; font-weight:bold; width:28%; box-sizing:border-box; text-align:left; height:27px; line-height:27px;}
+.sliderCDT .sliderText{ margin:0px; padding:0px; display:inline-block; width:72%;}
+.sliderCDT .sliderText .admin_input{background: rgba(0, 0, 0, 0.52); border-radius:15px; border:none; color:#fff; padding:0px 0px 0px 10px;}
+.sliderCDT .sliderSwitch{ margin:14px 0px 0px 0px; padding:0px; display:inline-block;}
+
+.sliderListmodify{ margin:10px 20px 20px 0px; padding:0px; background:#fff; position:relative; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); display:inline-block;}
+.sliderModifyBody{ width:285px; height:515px; margin:0px; position:relative; cursor:move;}
+.slider-header-modify{ cursor:move; background: rgba(0, 0, 0, 0.5); margin:0px; padding:0px;width:285px; height:40px; position:absolute; top:0px;}
+.slider-header-modify .sliderHDT{ margin:10px 0px 0px 15px; padding:0px; float:left; cursor:pointer;}
+.slider-header-modify .sliderHDD{ margin:10px 15px 0px 0px; padding:0px; float:right; cursor:pointer;}
+.slider-content-modify{width:285px; height:115px; background: rgba(0, 0, 0, 0.5); position:absolute; bottom:0px; margin:0px; padding:0px;}
+.addImageBtnModify{ margin:-70px 0px 0px -33px; padding:0px; position:absolute; top:50%; left:50%; cursor:pointer;}
 
 /* ManageOrgan */
 .listview.organ {border-top: none;border-bottom:none;} 
@@ -264,3 +291,44 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .listview.organ .mainlist_free tr th {padding:0px; visibility:hidden;}
 .organHeader {width:69%;overflow:hidden;float:right;border:1px solid rgb(221, 221, 221);border-top: none;border-bottom:none;}
 .organHeader .mainlist tr th {border-bottom:none;}
+.organSearchForm {overflow:hidden;padding:0;margin-bottom:11px;height:31px;border:1px solid #d2d2d2;border-right:0px;float:right}
+.organSearchTab {width:50px;border-right:1px solid #d2d2d2; float:left; background: #f8f8fa; padding:8px;}
+.organSearchContent {float:left; padding: 2px 2px 0px 2px;}
+.organSearchKeyword {width:100px; height:27px;}
+.organSearchEnter {width:50px;float:right;padding:4px;background:#f8f8fa;border:1px solid #d2d2d2;}
+label[for="listOpt1"] { position: relative; top: -4.5px;}
+label[for="listOpt2"] { position: relative; top: -4.5px;}
+
+.admin_quicklink #AccessList {height:174px;overflow-y:auto;}
+.admin_quicklink #AccessList table td {border:0px;}
+.linkDetails {width:98%;margin:0px}
+#popupContentTb .box {background:#ffffff;}
+
+/* Manage Addjob*/
+.listview.addJob {width:99%;border-left:none;border-bottom:none;}
+.addJobPreviewTD {vertical-align:top;border:1px solid #ddd;border-right:none;border-bottom:none;}
+.addJobPreviewTD .previewmail {overflow:initial;}
+
+/* organ */
+.organList{ margin:3px; padding:0px; overflow:hidden; height:34px; line-height:34px;float:right;}
+.organList .organListDT{ margin:0px; padding:0px; float:left;}
+.organList .organListDD{ margin:0px; padding:2px 0px 0px 0px; float:right;}
+.moveWrap span.upBtn{ display:inline-block; cursor:pointer; margin:0px 0px 0px 0px; padding:0px;}
+.moveWrap span.downBtn{ display:inline-block; cursor:pointer; margin:0px 0px 0px 0px; padding:0px;}
+.concurrentUL{ margin:0px; padding:0px; list-style:none; width:100%;}
+.concurrentUL .concurrentLI{ margin:0px; padding:0px; height:67px; line-height:65px; border-bottom:1px solid #dddddd; float:none; cursor:pointer;}
+.concurrentUL .concurrentLI:hover{ background:#edf7ff;}
+.concurrentUL .concurrentLI:hover .conlistDL .conlistIcon{ border:1px solid #3d8fea;} 
+.concurrentUL .concurrentLI .conlistDL{ margin:0px; padding:0px 30px 0px 15px; float:left;}
+.concurrentUL .concurrentLI .conlistDL .conlistIcon{ margin:14px 8px 0px 0px; padding:0px; width:36px; height:36px; border:1px solid #dddddd; border-radius:30px; -webkit-border-radius:30px; -moz-border-radius:30px; box-sizing:border-box; text-align:center; float:left;}
+.concurrentUL .concurrentLI .conlistDL .conlistIcon img{ padding:6px 0px 0px 0px; margin-bottom:10px; margin-left:2px;}
+.concurrentUL .concurrentLI .conlistDL .conlistText{ margin:0px; padding:0px; float:left; font-size:14px; font-weight:bold; color:#333;}
+.concurrentUL .concurrentLI .conDelete{ margin:0px; padding:17px 0px 0px 0px; box-sizing:border-box; float:right; width:45px; height:67px; background:#fafafa; border-left:1px solid #e5e5e5; text-align:center;}
+
+.concurrentUL .concurrentLI.selectTR { background:#edf7ff;}
+.concurrentUL .concurrentLI.selectTR .conlistDL .conlistIcon { border:1px solid #3d8fea;}
+
+/* adminTop */
+.adminTopTitle {cursor:pointer;}
+.concurrentUL .concurrentLI .conlistDL {width:calc(28% - 45px);}
+.concurrentUL .concurrentLI .conlistDL .conlistText {max-width:calc(100% - 45px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}

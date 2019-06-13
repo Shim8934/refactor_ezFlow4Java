@@ -109,7 +109,7 @@
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
-		        $.datepicker.regional["ko"] = {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
 		        	closeText: "<spring:message code='main.t3' />",
 		 	        prevText: "<spring:message code='main.t0604' />",
 		 	        nextText: "<spring:message code='main.t0605' />",
@@ -784,15 +784,15 @@
 	    			break;
 	    		}
 				
-		    	exportExcelframe.location.href=url + "?companyId=" + companyId 
-		    			+ "&userName=" + searchUserName 
-		    			+ "&title=" + searchTitle 
-		    			+ "&deptId="+ $('#ListDept').val()
-		    			+ "&startDate=" + searchStartDate 
-		    			+ "&endDate=" + searchEndDate 
-		    			+ "&orderCell=" + orderCell 
-		    			+ "&orderOption=" + orderOption 
-		    			+ "&attitudeType=" + searchAttitudeType
+		    	exportExcelframe.location.href=url + "?companyId=" + encodeURIComponent(companyId) 
+		    			+ "&userName=" + encodeURIComponent(searchUserName) 
+		    			+ "&title=" + encodeURIComponent(searchTitle) 
+		    			+ "&deptId="+ encodeURIComponent($('#ListDept').val())
+		    			+ "&startDate=" + encodeURIComponent(searchStartDate) 
+		    			+ "&endDate=" + encodeURIComponent(searchEndDate) 
+		    			+ "&orderCell=" + encodeURIComponent(orderCell) 
+		    			+ "&orderOption=" + encodeURIComponent(orderOption)
+		    			+ "&attitudeType=" + encodeURIComponent(searchAttitudeType)
 		    			+ "&duplicated=duplicated";
 		    	exportExcelframe.target="_blank";
 			}
