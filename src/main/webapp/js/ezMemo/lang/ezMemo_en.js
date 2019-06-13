@@ -1,9 +1,9 @@
 var memoMessages = {
-	strLangMemo4 : "Are you sure you want to delete this note?",
-	strLangMemo5 : "confrim",
-	strLangMemo6 : "cancel",
+	strLangMemo4 : "Are you sure you want to delete this memo?",
+	strLangMemo5 : "Confrim",
+	strLangMemo6 : "Cancel",
 	strLangMemo7 : "No notes available.",
-	strLangMemo9 : "all",
+	strLangMemo9 : "All",
 	strLangMemo10 : "No search criteria.",
 	strLangMemo11 : "Please specify the end date of the search term.",
 	strLangMemo12 : "Please specify the start date of the search term.",
@@ -11,6 +11,6 @@ var memoMessages = {
 	strLangMemo14 : "Can not be used as a query.",
 	strLangMemo17 : "Please select a list.",
 	strLangMemo18 : "Do you want to delete?",
-	strLangMemo20 : "All note",
+	strLangMemo20 : "All memo",
 	strLangMemo21 : "An error has occurred",
 }
