@@ -657,7 +657,7 @@
 									<tr>
 										<td>
 											<div style="margin: 20px 20px 5px; min-height: 36px;">
-												<div style="display: inline-block; width: 52px;" id= "displayUsers">
+												<div style="display: inline-block; width: 60px;" id= "displayUsers">
 													<img src="/images/kr/left/left_dot02.gif" />
 													<span id=""><spring:message code='ezWebFolder.t204'/></span>&nbsp;
 												</div>
