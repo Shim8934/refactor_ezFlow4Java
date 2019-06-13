@@ -176,7 +176,7 @@ var strLangKMS1 = "You can only repeat more than 100 times.";
 /* 2018-07-16 */
 var strLang276 = "Please select one group to view members";
 /*2018-09-27*/
-var strLang277 = "Please insert schedule";
+var strLang277 = "Insert schedule";
 //2018.10.24
 var strLangKHJ1 = "Please specify a date.";
 var strLangKHJ2 = "Please specify a start date.";
