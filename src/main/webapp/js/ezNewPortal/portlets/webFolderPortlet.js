@@ -209,18 +209,9 @@ function getFileSize(fileSize) {
 	return size;
 }
 
-// 개인 폴더 페이지로 이동 구현중
+// 개인 폴더 페이지로 이동
 function openWebFolderPage() {
-	var folderId = document.getElementById("webFolderId").value;
-	var folderType;
-	var parentId;
-	
-	if (folderId) {
-		folderType = document.getElementById("folderType").value;
-		parentId = document.getElementById("parentId").value;
-	}
-	// window.open("/ezWebFolder/main.do?folderType=" + folderType + "&folderId=" + folderId + "&allFileFlag=N&parentId=" + parentId , "main", "");
-	// window.open("/ezWebFolder/webfolderMain.do", "main", "");
+	window.open("/ezWebFolder/webfolderMain.do?folderType=" + encodeURIComponent("U"), "main", "");
 }
 
 // 파일 다운로드
