@@ -125,6 +125,24 @@
 				    window.showModalDialog("htm/attachdownload.aspx", param, feature);
 				}
 			}
+			
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=addrs", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
 		</script>
 	</head>
 	<body class="popup" >
@@ -133,8 +151,11 @@
 		    <div id="menu" style="margin-top:7px;margin-bottom:19px;">
 		      <ul style="margin:0;">
 		        <li><span onClick="modify_address()"><spring:message code='ezAddress.t174' /></span></li>
-		        <li><span class="icon16 popup_icon16_print" onClick="window.print()"></span></li>
+				<li><span class="icon16 popup_icon16_print" onClick="window.print()"></span></li>
 		        <li><span class="icon16 popup_icon16_mail_gray" onClick="send_email()"></span></li>
+		      	<c:if test="${useCabinet == 'YES'}">
+					<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+				</c:if>
 		      </ul>
 		    </div>
 		    <div id="close">

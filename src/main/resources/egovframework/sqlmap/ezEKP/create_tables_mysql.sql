@@ -4665,7 +4665,7 @@ CREATE TABLE `tbl_cabroleinfo` (
 DROP TABLE IF EXISTS `tbl_cb_admin_module`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_admin_module` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_admin_module` (
   `company_id` varchar(50) NOT NULL,
   `module_type` varchar(20) NOT NULL,
   `active_status` tinyint(4) NOT NULL,
@@ -4681,7 +4681,7 @@ CREATE TABLE `tbl_cb_admin_module` (
 DROP TABLE IF EXISTS `tbl_cb_attach_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_attach_file` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_attach_file` (
   `attach_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
   `file_path` varchar(250) NOT NULL,
@@ -4701,7 +4701,7 @@ CREATE TABLE `tbl_cb_attach_file` (
 DROP TABLE IF EXISTS `tbl_cb_cabinet`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_cabinet` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_cabinet` (
   `cabinet_id` int(11) NOT NULL AUTO_INCREMENT,
   `cabinet_name1` varchar(150) NOT NULL,
   `cabinet_name2` varchar(150) NOT NULL,
@@ -4734,7 +4734,7 @@ CREATE TABLE `tbl_cb_cabinet` (
 DROP TABLE IF EXISTS `tbl_cb_company_capacity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_company_capacity` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_company_capacity` (
   `company_id` varchar(50) NOT NULL,
   `capacity_type` tinyint(4) NOT NULL,
   `capacity_value` int(11) DEFAULT NULL,
@@ -4750,7 +4750,7 @@ CREATE TABLE `tbl_cb_company_capacity` (
 DROP TABLE IF EXISTS `tbl_cb_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_config` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_config` (
   `user_id` varchar(50) NOT NULL,
   `company_id` varchar(50) NOT NULL,
   `list_count` int(10) NOT NULL,
@@ -4769,7 +4769,7 @@ CREATE TABLE `tbl_cb_config` (
 DROP TABLE IF EXISTS `tbl_cb_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_item` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_item` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT,
   `cabinet_id` int(11) NOT NULL,
   `item_type` tinyint(4) NOT NULL,
@@ -4800,7 +4800,7 @@ CREATE TABLE `tbl_cb_item` (
 DROP TABLE IF EXISTS `tbl_cb_rel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_rel` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_rel` (
   `rel_id` varchar(50) NOT NULL,
   `item_id` int(11) NOT NULL,
   `rel_name1` varchar(80) DEFAULT NULL,
@@ -4819,7 +4819,7 @@ CREATE TABLE `tbl_cb_rel` (
 DROP TABLE IF EXISTS `tbl_cb_relation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_relation` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_relation` (
   `relation_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   `relate_item_id` int(11) NOT NULL,
@@ -4836,7 +4836,7 @@ CREATE TABLE `tbl_cb_relation` (
 DROP TABLE IF EXISTS `tbl_cb_share`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_share` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_share` (
   `share_id` int(11) NOT NULL,
   `cabinet_id` int(11) NOT NULL,
   `sharer_id` varchar(50) NOT NULL,
@@ -4861,7 +4861,7 @@ CREATE TABLE `tbl_cb_share` (
 DROP TABLE IF EXISTS `tbl_cb_user_capacity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_user_capacity` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_user_capacity` (
   `user_id` varchar(50) NOT NULL,
   `capacity_type` tinyint(4) NOT NULL,
   `capacity_value` int(11) DEFAULT NULL,
@@ -4878,7 +4878,7 @@ CREATE TABLE `tbl_cb_user_capacity` (
 DROP TABLE IF EXISTS `tbl_cb_user_module`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_user_module` (
+CREATE TABLE IF NOT EXISTS `tbl_cb_user_module` (
   `user_id` varchar(50) NOT NULL,
   `company_id` varchar(50) NOT NULL,
   `module_type` varchar(20) NOT NULL,
@@ -12509,64 +12509,6 @@ CREATE TABLE `tbl_webfolder_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용자';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `v_mailing_list`
---
-
-DROP TABLE IF EXISTS `v_mailing_list`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `v_mailing_list` (
-  `mailing_list_address` varchar(80) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  PRIMARY KEY (`mailing_list_address`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `v_mailing_list_member`
---
-
-DROP TABLE IF EXISTS `v_mailing_list_member`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `v_mailing_list_member` (
-  `mailing_list_address` varchar(80) NOT NULL,
-  `member_id` varchar(80) NOT NULL,
-  `member_name` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`mailing_list_address`,`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `v_shared_mailbox`
---
-
-DROP TABLE IF EXISTS `v_shared_mailbox`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `v_shared_mailbox` (
-  `shared_mailbox_address` varchar(80) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  PRIMARY KEY (`shared_mailbox_address`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `v_shared_mailbox_member`
---
-
-DROP TABLE IF EXISTS `v_shared_mailbox_member`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `v_shared_mailbox_member` (
-  `shared_mailbox_address` varchar(80) NOT NULL,
-  `member_id` varchar(80) NOT NULL,
-  PRIMARY KEY (`shared_mailbox_address`,`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Temporary view structure for view `vaprdoingdoclist`
 --
 

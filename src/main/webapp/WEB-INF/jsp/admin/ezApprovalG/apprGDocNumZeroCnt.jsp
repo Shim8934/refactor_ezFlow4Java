@@ -40,9 +40,9 @@
 			} else if (!target.value.match(/^\d+$/)) {
 				alert("<spring:message code='ezApprovalG.csj06'/>");
 			} else if (parseInt(target.value) >= 9) {
-				alert("8 <spring:message code='ezApprovalG.csj08'/>");
+				alert("<spring:message code='ezApprovalG.csj08'/>");
 			} else if (parseInt(target.value) < 2) {
-				alert("2 <spring:message code='ezApprovalG.csj07'/>");
+				alert("<spring:message code='ezApprovalG.csj07'/>");
 			} else {
 				resultVal = true;
 			}

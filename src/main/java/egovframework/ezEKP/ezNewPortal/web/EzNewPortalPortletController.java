@@ -698,6 +698,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (result.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
+			model.addAttribute("lang", data.get("lang"));
 			model.addAttribute("cityList", data.get("cityList"));
 			//sn이 아니라 cityCode 가 와야함
 			model.addAttribute("cityCode", data.get("cityCode"));
