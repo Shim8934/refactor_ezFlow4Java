@@ -2117,7 +2117,7 @@
 			WHERE
 				TYPE_ID = 'A17'
 			AND
-				WRITER_ID = #userid#
+				WRITER_ID = #userId#
 			AND
 				START_DATE >= DATE_ADD(#oneMonthAgo#, interval - 540 minute)
 			AND
