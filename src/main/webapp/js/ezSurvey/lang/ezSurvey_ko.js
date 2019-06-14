@@ -152,4 +152,5 @@ var SurveyMessages = {
 	strOptionAll : "보기 리스트",
 	strAttachErr : "파일 업로드가 완료될 때까지 기다려주세요.",
 	strAttUrl    : "URL",
+	strSkipQs    : "질문"
 }

@@ -117,7 +117,7 @@ var SurveyMessages = {
 	strLogic     : "Please set up logic.",
 	strSkipLogic : "Skip logic setup step?",
 	strSaveAsk   : "Do you want to register the survey?",
-	strLast      : "Completed survey",
+	strLast      : "Complete",
 	strSameNum   : "There are duplicate values. Do you want to proceed?",
 	strProcess   : "Proceeding",
 	strFinish    : "Complete",
@@ -152,4 +152,5 @@ var SurveyMessages = {
 	strOptionAll : "Option list",
 	strAttachErr : "Please wait for the file upload to complete.",
 	strAttUrl    : "URL",
+	strSkipQs    : "Qst. "
 }
