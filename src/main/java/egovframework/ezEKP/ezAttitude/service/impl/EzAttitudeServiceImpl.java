@@ -2930,13 +2930,67 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("updateAnnualHoliday ended");
 	}
 	
+	public int getExceedAnnualCnt(Map<String, Object> map) throws Exception {
+		
+		int AnnualCnt = 0;
+		
+		for (int i = 1; i < 13; i++) {
+		
+			String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date setDate = sdf.parse(today);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(setDate);
+			cal.add(Calendar.DATE, -1);
+			cal.add(Calendar.MONTH, -i+1);
+			
+			String MonthAgo1 = sdf.format(cal.getTime());
+			cal.add(Calendar.MONTH, -1);
+			String MonthAgo2 = sdf.format(cal.getTime());
+			
+			map.put("oneMonthAgo",MonthAgo2);
+			map.put("oneDayAgo", MonthAgo1);
+			
+			int workingDayCnt = checkHoliday(MonthAgo2, MonthAgo1, "1", (String)map.get("companyId"), (int)map.get("tenantId")).size();
+			int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
+			
+			if (workingDayCnt <= attendanceDay) {
+				AnnualCnt++;
+			}
+		}
+		
+		return AnnualCnt;
+	}
+	
 	@Override
 	public void updateExceedAnnualHoliday(Map<String,Object> map) throws Exception {
 		LOGGER.debug("updateExceedAnnualHoliday started");
 		
-		int workingMonthCnt = Integer.parseInt((String)map.get("workingMonthCnt"));
-		int annualHolidayCnt = defaultAnnualHolidayCnt + (int) (workingMonthCnt / 12 - 1) / 2;
-		annualHolidayCnt = annualHolidayCnt > 25 ? 25 : annualHolidayCnt;
+		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date setDate = sdf.parse(today);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(setDate);
+		cal.add(Calendar.YEAR, -1);
+		String beforeOneYear = sdf.format(cal.getTime());
+		
+		map.put("oneMonthAgo",beforeOneYear);
+		map.put("oneDayAgo", today);
+		
+		int annualHolidayCnt = 0;
+		int workingDayCnt = checkHoliday(beforeOneYear, today, "1", (String)map.get("companyId"), (int)map.get("tenantId")).size();
+		float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(map);
+		float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0);
+
+		if (attendanceRate >= 80.0) {
+			
+			int workingMonthCnt = Integer.parseInt((String)map.get("workingMonthCnt"));
+			annualHolidayCnt = defaultAnnualHolidayCnt + (int) (workingMonthCnt / 12 - 1) / 2;
+			annualHolidayCnt = annualHolidayCnt > 25 ? 25 : annualHolidayCnt;
+			
+		} else {
+			annualHolidayCnt = getExceedAnnualCnt(map);
+		}
 		
 		// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화 해준다.
 		map.put("holidayCnt", 0);
@@ -2988,17 +3042,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if(m.get("joinDate") != null && m.get("workingMonthCnt") != null) {
 				
 				int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+				SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
+				String year = sdf2.format(new Date());
+				String date1 = (String)m.get("joinDate");
+				String date2 = year + "-" + ((String)map.get("initialDate")).substring(((String)map.get("initialDate")).indexOf("-") + 1);
+				String roundOffRule = (String)map.get("roundOffRule");
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date joinDate = sdf.parse(date1);
+				Date initialDate = sdf.parse(date2);
 				
 				if (workingMonthCnt < 12) {
-					SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
-					String year = sdf2.format(new Date());
-					String date1 = (String)m.get("joinDate");
-					String date2 = year + "-" + ((String)map.get("initialDate")).substring(((String)map.get("initialDate")).indexOf("-") + 1);
-					String roundOffRule = (String)map.get("roundOffRule");
-					
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-					Date joinDate = sdf.parse(date1);
-					Date initialDate = sdf.parse(date2);
 					
 					double calDate = joinDate.getTime() - initialDate.getTime();
 					double calDatetoDays = Math.abs(calDate / (24 * 60 * 60 * 1000)); 
@@ -3023,7 +3077,24 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					setAnnualHistory(m);
 					
 				} else {
-					int annualHolidayCnt = defaultAnnualHolidayCnt + (int)(workingMonthCnt / 12 - 1) / 2;
+					
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(initialDate);
+					cal.add(Calendar.YEAR, -1);
+					String beforeOneYearInitialDate = sdf.format(cal.getTime());
+					
+					int workingDayCnt = checkHoliday(beforeOneYearInitialDate, sdf.format(initialDate), "1", (String)m.get("companyId"), (int)m.get("tenantId")).size();
+					float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(m);
+					float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0);
+					
+					int annualHolidayCnt = 0;
+
+					if (attendanceRate >= 80.0) {
+						annualHolidayCnt = defaultAnnualHolidayCnt + (int)(workingMonthCnt / 12 - 1) / 2;
+						annualHolidayCnt = annualHolidayCnt > 25 ? 25 : annualHolidayCnt;
+					} else {
+						annualHolidayCnt = getExceedAnnualCnt(m);
+					}
 					
 					if (workingMonthCnt > 24) {
 						m.put("holidayCnt", 0);

@@ -2173,8 +2173,8 @@
 	    <c:if test="${deptFlag != 'true'}">
 		    <div class="mainmenuTab">
 		        <ul class="mainmenuTabUL">
-					<li id="btnTableList"><span onClick="getAttitudeTableList()">표 보기</span></li>
-		            <li id="btnCalList"><span onClick="getAttitudeCalList()">달력보기</span></li>
+					<li id="btnTableList"><span onClick="getAttitudeTableList()"><spring:message code="ezAttitude.t309" /></span></li>
+		            <li id="btnCalList"><span onClick="getAttitudeCalList()"><spring:message code="ezAttitude.t310" /></span></li>
 		        </ul>
 		    </div>
 		    <div class="timecheck_info">
@@ -2193,24 +2193,24 @@
 		        </dl>
 		        <dl class="timeIcconDL">
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/late_icon.png"></dt>
-		            <dd class="timeIconDD">지각 <span class="timeCountR" id="FA02">0</span></dd>
+		            <dd class="timeIconDD"><spring:message code="ezAttitude.t113"/><span class="timeCountR" id="FA02">0</span></dd>
 		        </dl>
 		        <c:if test="${A11typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
-			            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
+			            <dd class="timeIconDD">${A11typeInfo.typeName }<span class="timeCountR" id="FA11">0</span></dd>
 			        </dl>
 		        </c:if>
 		        <c:if test="${A12typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
-			            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
+			            <dd class="timeIconDD">${A12typeInfo.typeName } <span class="timeCountR" id="FA12">0</span></dd>
 			        </dl>
 			    </c:if>
 			    <c:if test="${A13typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
-			            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
+			            <dd class="timeIconDD">${A13typeInfo.typeName } <span class="timeCountR" id="FA13">0</span></dd>
 			        </dl>
 			    </c:if>
 		    </div>

@@ -605,7 +605,7 @@ function ListView() {
                 if (strColName == "CONFIRMSTATUS") {
                 	var _HeaderSpanimg = document.createElement("IMG");
 //                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_unread.gif");
-                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-rd.gif");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-rd.png");
                     _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
                     
@@ -621,7 +621,7 @@ function ListView() {
                 
                 if (strColName == "COMMENTSTATUS") {
         			var _HeaderSpanimg = document.createElement("IMG");
-        			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_share2.gif");
+        			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_share2.png");
         			
         			_HeaderSpanimg.border = "0";
     				objTd.style.textAlign = "CENTER";
@@ -839,7 +839,7 @@ function ListView() {
                     	strValue = "";
                     }*/
                     if (strValue == "comment" || strValue == "share") {
-                    	titleImage = '<img src="/images/ImgIcon/circular_share2.gif"/>';
+                    	titleImage = '<img src="/images/ImgIcon/circular_share2.png"/>';
                     	strValue = "";
                     } else if(strValue == "new") {
                     	strValue = "";
@@ -855,11 +855,11 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     if (strValue == '0') {
 //                    	titleImage = '<img src="/images/ImgIcon/circular_unread.gif" />';
-                    	titleImage = '<img src="/images/ImgIcon/msg-unrd.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/msg-unrd.png" />';
                     	strValue = "";
                     } else {
 //                    	titleImage = '<img src="/images/ImgIcon/circular_read.gif" />';
-                    	titleImage = '<img src="/images/ImgIcon/msg-rd.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/msg-rd.png" />';
                     	strValue = "";
                     }
                 }

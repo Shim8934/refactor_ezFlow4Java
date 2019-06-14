@@ -786,7 +786,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 						"<div class='Pt_QstOptTitleDiv' style='width: 22%;' title='" + array_title[i+1] + "'><span class='Vnum'>" + (i+1)  + "</span><span class='Vtext'>" + array_title[i+1] +"</div>" +
 						"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
 							 "<span class='Pt_QstInfoVotes'>"+ resultDom.getElementsByTagName("COUNT").item(i).getTextContent() + "</span>" +
-							 egovMessageSource.getMessage("main.t20000", locale) + "/" ;
+							 egovMessageSource.getMessage("ezPersonal.hyh17", locale) + "/" ;
 							 if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
 								 strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + ".0</span>";
 							 } else {

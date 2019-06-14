@@ -737,6 +737,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String searchStartDate = request.getParameter("searchStartDate")	!= null ? request.getParameter("searchStartDate") 	: "" ;
 		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
 		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
+		String isExplorer = request.getParameter("isExplorer") 				!= null ? request.getParameter("isExplorer") 		: "" ;
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
 		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -776,21 +777,31 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				return jsonObj;
 			}
 			
-			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
-			int usrListCnt = service.getUsrListCount(tenantId, userId);
+			// isExplorer 탐색기가 호출한 내용이면 listCount를 가져오지 않음
+			int usrListCnt = 0;
+			if (!isExplorer.equals("YES")) {
+				// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
+				usrListCnt = service.getUsrListCount(tenantId, userId);
+			} else {
+				usrListCnt = 10000;
+			}
 			
 			LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
 			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
 			
 			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
+			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+			
 			if (listCount == 0) {
 				listCount = usrListCnt ;
 			}
-			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+			
 			int pEnd = listCount;
 			
-			if (usrListCnt != listCount) {
-				service.insertEnv(userId, tenantId, listCount);
+			if (!isExplorer.equals("YES")) {
+				if (usrListCnt != listCount) {
+					service.insertEnv(userId, tenantId, listCount);
+				}
 			}
 			
 			LOGGER.debug("listCount : " + listCount + " || currPage : " + currPage+ " || totalpages : "+ totalpages + " || pEnd : " + pEnd );

@@ -1203,7 +1203,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("themeId", themeId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("lang", lang);
+		if (lang != null) {
+			map.put("lang", Integer.parseInt(lang));
+		} else {
+			map.put("lang", 1);
+		}
+		
 		
 		themePortletList = ezNewPortalDAO.getThemePortletList(map);
 		LOGGER.debug("getThemePortletList ended.");

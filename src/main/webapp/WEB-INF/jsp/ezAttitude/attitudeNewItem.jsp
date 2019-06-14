@@ -250,6 +250,13 @@
 						}
 						$("input[name=mobile]").val(mobile);
 						$("input[name=bizsub]").val(bizSub);
+						
+						//언어
+						$("#attiTime").siblings("th").text("<spring:message code='ezAttitude.t149'/>");
+						$("#region").siblings("th").text("<spring:message code='ezAttitude.t47'/>");
+						$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
+						$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+						
 						editorResize();
 					}
 				})
