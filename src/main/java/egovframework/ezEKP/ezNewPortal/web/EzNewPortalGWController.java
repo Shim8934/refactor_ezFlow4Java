@@ -2812,11 +2812,14 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-
+			String lang = info.getLang();
 			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 
 			for (BoardMyFavoriteVO fvo : resultList) {
-
+				if (lang.equals("2")) {
+					fvo.setBoardName(fvo.getBoardName2());
+				}
+				
 				LOGGER.debug("resultList : " + fvo.getBoardId());
 			}
 
@@ -3613,8 +3616,15 @@ public class EzNewPortalGWController {
 			
 			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primLang);
 			List<WeatherVO> cityList = ezNewPortalService.getCityList(primLang);
+			data.put("lang", info.getLang());
 			data.put("cityList", cityList);
-			data.put("displayName", resultMap.get("DISPLAYCITYNAME"));
+			
+			if (info.getLang().equals("2")) {
+				data.put("displayName", resultMap.get("CITYNAME"));
+			} else {
+				data.put("displayName", resultMap.get("DISPLAYCITYNAME"));
+			}
+			
 			data.put("currentWeather", resultMap.get("CURRENTWEATHER"));
 			data.put("todayWeather", resultMap.get("TODAYWEATHER"));
 			data.put("cityCode", resultMap.get("CITYCODE"));

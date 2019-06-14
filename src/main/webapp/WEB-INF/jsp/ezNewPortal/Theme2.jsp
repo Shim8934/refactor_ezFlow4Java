@@ -560,7 +560,7 @@
 					emPic.appendChild(img);
 					
 					document.getElementById("exellentDeptName").innerText = "";
-					document.getElementById("exellentEmpName").innerText = "데이터가 없습니다.";
+					document.getElementById("exellentEmpName").innerText = '\"<spring:message code="ezNewPortal.t018" />\"';
 					
 					var nodata = document.getElementById("exellentEmpName");
 					nodata.style.color = "#c0c0c0";
