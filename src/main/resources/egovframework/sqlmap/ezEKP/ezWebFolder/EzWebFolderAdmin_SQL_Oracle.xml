@@ -78,9 +78,9 @@
 		<isEqual property="type" compareValue="U">
 		<![CDATA[
 						OR (
-							FILE.DELETER_ID = MAIN.CN
+							FILES.DELETER_ID = MAIN.CN
 						AND
-							FILE.USE_STATUS <> 'Y'
+							FILES.USE_STATUS <> 'Y'
 						)
 		]]>
 		</isEqual>
