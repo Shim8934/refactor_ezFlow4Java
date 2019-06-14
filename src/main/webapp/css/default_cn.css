@@ -3322,7 +3322,7 @@ input::-ms-clear {display: none;}
 
 /* attach file ul list */
 .survey_atchBtn{overflow:hidden; padding:0; margin:0; height:40px;}
-.survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
+.survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:37px; margin:0px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
 .survey_atchBtn li, .survey_atchBtn li.off span{margin-left:6px; margin-right:6px; line-height:36px;}
 .survey_atchBtn li span .survey_atchBtn li span.off{display: block; float: left; padding: 0px 4px; font-size:12px; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; line-height:28px; box-sizing:border-box;}
 .survey_atchBtn li span.survey_icon{margin-left:6px; margin-right:6px;}
@@ -3353,7 +3353,7 @@ input::-ms-clear {display: none;}
 
 /* drag and drop button */
 .question-panel .mvBtn {width:30px; height:39px; margin:0px auto;}
-.mvBtn li, .mvBtn li.off{border-top:0px; cursor:move;}
+.mvBtn li, .mvBtn li.off{/* border-top:0px; */ cursor:move;}
 .question-panel .mvBtn span{display:inline-block; width:16px; height:16px; margin:10px 6px 0px 6px; background-position:-64px 0px !important;}
 .mvBtn li:hover{background-color:rgb(255,255,255); border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
 
