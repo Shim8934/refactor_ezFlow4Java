@@ -132,7 +132,7 @@
 			}
 			
 			function getConfirmStatus() {
-				confirmStatus = "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";
+				confirmStatus = "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";
 				$("#circularConfirm").hide();
 				
 				$(".confirmStatus").html(confirmStatus);
@@ -343,10 +343,10 @@
             				
             				if (vo.status == 1) {
             					//확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				} else {
             					//미확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				}
             				
             				printCircularUserList += "</th>";
@@ -675,11 +675,11 @@
 		            		<td class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
-		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
+		            					<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
 		            				</c:when>
 		            				
 		            				<c:when test="${result.confirmStatus == '1'}">
-		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
+		            					<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
 		            				</c:when>
 		            			</c:choose>
 		            		</td>
@@ -832,11 +832,11 @@
 		            		<td class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
-		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
+		            					<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
 		            				</c:when>
 		            				
 		            				<c:when test="${result.confirmStatus == '1'}">
-		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
+		            					<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
 		            				</c:when>
 		            			</c:choose>
 		            		</td>

@@ -1,4 +1,4 @@
-﻿.inputText {
+﻿﻿.inputText {
 	border:1px solid #999
 }
 
@@ -1246,7 +1246,7 @@ form{display:inline;margin:0}
 .mainlist tr{height:34px}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:5px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; background-color: #f1f3f5; height:21px}
 .mainlist tr th.title{width:100%; text-align:left;}
-.mainlist tr td{padding:4px 4px 4px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #eaeaea; border-spacing:0; word-wrap:break-word;}
+.mainlist tr td{padding:4px 4px 4px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #eaeaea; border-spacing:0; word-break:break-all;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
 
@@ -1254,7 +1254,7 @@ form{display:inline;margin:0}
 .mainlist_free{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 /* fomace */
 .mainlist_free tr td{height:23px}
-.mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8; font-weight:normal; background-color: #f8f8fa;}
+.mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; font-weight:normal; background-color: #f1f3f5;}
 .mainlist_free tr th.title{width:100%; text-align:left;}
 
 .mainlist_free tr td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
@@ -1635,6 +1635,7 @@ form{display:inline;margin:0}
 
 .border_gray { border:1px solid #ddd; padding:-1px 0px 0px 0px; margin:0px;}
 .border_gray table { margin:-1px 0px 0px 0px; }
+.border_gray .popuplist { margin:-1px 0px -1px -1px; }
 
 .icon_btn {cursor:pointer;}
 .organwrap { border:1px solid #bebdbd; font-size:12px; width:400px; margin:3px 3px 0px 3px; table-layout:fixed;}
@@ -2344,14 +2345,6 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 #left h4{width:155px; margin:0px auto; border:1px solid #e0e0e0; padding:8px 15px; text-align:left; font-weight:normal; background:url('/images/kr/left/icon_adminMail.gif') no-repeat 12px 10px; cursor:pointer;}
 #left h4 span{padding:0px 0px 0px 20px; line-height:18px;}
 
-/* 20190207 조진호 - error page 추가*/
-.error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
-.error_wrap p{ margin:0px; padding:0px; font-family:Gulim; text-align:center;}
-.error_wrap dl{ margin:20px 0px 0px 40px;; padding:0px; line-height:40px; font-family:Gulim; text-align:center;}
-.error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:-1px;}
-.error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
-.error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
-
 /* lnb */
 .lnb{ width:220px; box-sizing:border-box; background-color: #e4e8ec; height:100%; }
 .lnb_btn{ background:url(../images/kr/left/lnb_btn.png) no-repeat; width:22px; height:22px; position:absolute; left:207px; top:0px; z-index:1000; cursor:pointer;}
@@ -2543,7 +2536,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 /*.confirmation {line-height:normal !important;} style 제거 */
 .node_div .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;}
 .admin_left_title { position:relative; height:52px; background:#3d8fea; font-family:Malgun Gothic, "맑은 고딕"; line-height:52px; font-size:20px; font-weight:bold; color:#fff; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
-.companySelect {margin-left:10px; height:31px; float:right; border:1px solid #bbb;}
+.companySelect {margin-left:10px; height:26px; /* float:right; */ border:1px solid #bbb;}
 
 /* icon16 */
 .icon16{ background:url(../images/ImgIcon/icon16.png) no-repeat !important; background-color: transparent !important; vertical-align: top !important; overflow: hidden; } /* icon16 통합아이콘 */
@@ -2833,9 +2826,9 @@ h2, #menu span {font-size: 12px;}
 .surveyinf-divcf.flex-cf {display: flex; align-items: center;}
 
 .user-listDiv {flex: 1; border: none; outline: none; padding: 0px 5px; max-height: 30px; height: 25px; line-height: 25px; overflow-y: auto;}
-.user-listDiv span {padding-right: 3px; font-size: 12px; word-break: break-all;}
-.user-listDiv span >u {cursor: pointer; color: rgb(128, 128, 128); text-decoration: underline; line-height: 20px;}
-/* .user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;} */
+.user-listDiv span {padding-right: 5px; font-size: 12px; word-break: break-all;}
+.user-listDiv span >u {cursor: pointer; color: #333; text-decoration: underline; line-height: 20px;}
+.user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;}
 .user-listDiv span >em {padding-right: 5px; font-style: normal;}
 .user-listDiv span >img {width: 10px; height: 10px; cursor: pointer;}
 
@@ -3491,3 +3484,25 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
+
+/* 검색 */
+.searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:17px;}
+.searchBtn{ position:absolute; right:-19px; top:-2px;}
+.searchinputBox{width:135px;}
+
+/* 유은정 - 메뉴명 개수 | 회사 선택 이미지 위치*/
+.title_bar {margin-left:5px;vertical-align:middle;}
+.title_bar img {vertical-align:sub;}
+
+/* 20190207 조진호 - error page 추가*/
+.error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
+.error_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic; text-align:center;}
+.error_wrap dl{ margin:20px 0px 0px 40px;; padding:0px; line-height:40px; font-family:Malgun Gothic; text-align:center;}
+.error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:-1px;}
+.error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
+.error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
+
+.tree_admin_dotlist{ background-position:-234px -104px; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* tree 관리자 리스트 도트아이콘 */
+.lnb h2.on + .leftList { visibility: visible; height: auto !important;}
+.lnb .leftList { visibility: hidden; height: 0px !important; list-style-type: none; padding: 0;  margin: 0; width: 100%; overflow: hidden;}
+.lnb .leftList li { padding: 4px 20px; cursor: pointer;}

@@ -216,9 +216,9 @@
 .calendar_month .td_list td.resource_no{color:#666666;}
 .calendar_month .td_list td .resource_no{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}/* 비승인 */
 
-.calendar_data_ok{background:#eaf6ff; border:1.2px solid #eaf6ff; line-height:150%; color:black; padding-left:3px}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
+.calendar_data_ok{background:rgb(250, 255, 243); border:1.2px solid #e9ffcc; line-height:150%; color:black; padding-left:3px}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
 .calendar_data_ok .resource_ok{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -260px -52px;}/* 자원관리 승인 주보기,일보기 데이터 */
-.calendar_data_ok table td{background:#eaf6ff !important;} /* 20130418_임의로 작업 추후변경 */
+.calendar_data_ok table td{background:rgb(250, 255, 243) !important;} /* 20130418_임의로 작업 추후변경 */
 .calendar_data_no{background:rgba(255, 250, 250, 1); border:1.2px solid #ffedeb; line-height:150%; color:black; padding-left:3px}/* 자원관리 비승인 백그라운드 주보기,일보기 데이터 */
 .calendar_data_no .resource_no{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}/* 자원관리 비승인 주보기,일보기 데이터 */
 .calendar_data_no table td{background:rgba(255, 250, 250, 1) !important; color:black} /* 20130418_임의로 작업 추후변경 */

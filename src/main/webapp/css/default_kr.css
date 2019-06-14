@@ -112,7 +112,7 @@ form{display:inline;margin:0}
 	font:12px malgun gothic;
 	letter-spacing:-1;
 	vertical-align:top;
-	line-height:20px;
+	line-height:18px;
 
 }
 
@@ -2294,7 +2294,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .volumeDL dt span{ display:inline-block; color:#959595;}
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}
 
-.imgbck {background-color: #f1f3f5; border:1px solid #e2e3e6;}
+.imgbck {background-color: #f1f3f5; border:1px solid #e2e3e6; margin:0px !important; vertical-align:top !important;}
 .leftbody .extra span{
 	border-bottom: 1px solid white;
 	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 14px #fff;
@@ -2826,9 +2826,9 @@ h2, #menu span {font-size: 12px;}
 .surveyinf-divcf.flex-cf {display: flex; align-items: center;}
 
 .user-listDiv {flex: 1; border: none; outline: none; padding: 0px 5px; max-height: 30px; height: 25px; line-height: 25px; overflow-y: auto;}
-.user-listDiv span {padding-right: 5px; font-size: 12px; word-break: break-all;}
-.user-listDiv span >u {cursor: pointer; color: #333; text-decoration: underline; line-height: 20px;}
-.user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;}
+.user-listDiv span {padding-right: 3px; font-size: 12px; word-break: break-all;}
+.user-listDiv span >u {cursor: pointer; color: rgb(128, 128, 128); text-decoration: underline; line-height: 20px;}
+/* .user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;} */
 .user-listDiv span >em {padding-right: 5px; font-style: normal;}
 .user-listDiv span >img {width: 10px; height: 10px; cursor: pointer;}
 
