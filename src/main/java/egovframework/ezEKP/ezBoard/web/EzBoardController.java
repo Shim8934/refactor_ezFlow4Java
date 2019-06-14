@@ -72,6 +72,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezMemo.service.EzMemoService;
@@ -135,6 +136,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+
 	@Resource(name = "EzMemoService")
 	private EzMemoService ezMemoService;
 	
@@ -3465,6 +3469,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String pReservedItem = request.getParameter("pReservedItem");
+		//2018.08.08 캐비넷 추가
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("board", userInfo);
+		}
 		
 		location = request.getParameter("location");
 		
@@ -3596,6 +3605,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isLikeChecked", isLikeChecked);
+		model.addAttribute("useCabinet", use_cabinet);
 
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
@@ -5374,6 +5384,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
 		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		//2018.08.08 캐비넷 추가
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("board", userInfo);
+		}
 		
 		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
@@ -5390,7 +5405,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isLikeChecked", isLikeChecked);
-
+		model.addAttribute("useCabinet", use_cabinet);
 		logger.debug("boardItemViewPhoto ended");
 		return "ezBoard/boardItemViewPhoto";
 	}

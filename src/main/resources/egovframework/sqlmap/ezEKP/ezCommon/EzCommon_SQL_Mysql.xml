@@ -941,4 +941,220 @@
 		SET
 			TYPE = 'U'
 	</update>
+	
+	<select id="EzCommonDAO.checkExtensionColumns">
+		SELECT
+			B_MEMO_WIDTH
+		FROM
+			TBL_MEMO_CONFIG
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addMemoExtensionColumns">
+		ALTER TABLE
+			TBL_MEMO_CONFIG
+		ADD (
+			b_memo_left SMALLINT(6) DEFAULT '0',
+			b_memo_top SMALLINT(6) DEFAULT '0',
+			b_memo_width SMALLINT(6) DEFAULT '0',
+			b_memo_height SMALLINT(6) DEFAULT '0',
+			b_memo_status TINYINT(4) DEFAULT '0',
+			memo_id BIGINT(10) DEFAULT '0'
+			)
+	</statement>
+
+	<select id="EzCommonDAO.checkMsgInMailSearch" resultClass="int" >
+		SELECT 
+			COUNT(*) 
+		FROM(
+			SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_SCHEMA = 'jmocha' 
+			AND TABLE_NAME = 'JAMES_MAIL_SEARCH' 
+			AND COLUMN_NAME = 'MESSAGE_ID'
+		) existsYN
+	</select>
+	
+	<update id="EzCommonDAO.updateMsgInMailSearch">
+		ALTER TABLE 
+			JAMES_MAIL_SEARCH
+		ADD 
+			COLUMN MESSAGE_ID VARCHAR(200) NULL DEFAULT NULL 
+	</update>
+	
+	<select id="EzCommonDAO.checkFormVersionColumnOfForminfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_FORMINFO 
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_EXPENDAPRDOCINFO
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_EXPAPRDOCINFO
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_TMPEXPAPRDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.addFormVersionColumnOfForminfo">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPENDAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo">
+		ALTER TABLE 
+			TBL_TMPEXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnual">
+		SELECT 
+			USER_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAnnual"> 
+		CREATE TABLE `tbl_attitude_annual` (
+  			`USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  			`MONTHLY_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '월차 수',
+  			`ANNUAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '연차 수',
+  			`ADDITIONAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '추가 연차 수',
+  			`JOIN_DATE` datetime DEFAULT NULL COMMENT '입사일',
+  			`COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  			`TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  			PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnualCanappl">
+		SELECT 
+			ATTITUDE_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL_CANAPPL
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAnnualCanappl"> 
+		CREATE TABLE `tbl_attitude_annual_canappl` (
+  			`ATTITUDE_ID` bigint(20) NOT NULL COMMENT '근태ID',
+  			`APPL_CNT` int(11) NOT NULL COMMENT '수정신청키',
+  			`COMPANY_ID` varchar(80) NOT NULL COMMENT '회사ID',
+  			`TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  			`WRITER_ID` varchar(80) NOT NULL COMMENT '작성자ID',
+  			`WRITER_NAME` varchar(100) DEFAULT NULL COMMENT '작성자이름',
+  			`WRITER_NAME2` varchar(100) DEFAULT NULL COMMENT '작성자이름2',
+  			`WRITER_TITLE` varchar(200) DEFAULT NULL COMMENT '작성자직위',
+  			`WRITER_TITLE2` varchar(200) DEFAULT NULL COMMENT '작성자직위2',
+  			`WRITER_DEPT_ID` varchar(80) NOT NULL COMMENT '작성자부서ID',
+  			`WRITER_DEPT_NAME` varchar(100) DEFAULT NULL COMMENT '작성자부서이름',
+  			`WRITER_DEPT_NAME2` varchar(100) DEFAULT NULL COMMENT '작성자부서이름2',
+  			`DELFLAG` char(1) DEFAULT '0',
+  			`APPR_USER_ID` varchar(80) DEFAULT NULL COMMENT '승인자ID',
+  			`APPR_DATE` datetime DEFAULT NULL COMMENT '승인일시',
+  			`APPR_STATUS` char(1) DEFAULT '0' COMMENT '승인상태',
+  			`CONTENT` varchar(3000) DEFAULT NULL COMMENT '내용',
+  			`APPR_USER_NAME` varchar(100) DEFAULT NULL COMMENT '승인자이름',
+  			`APPR_USER_NAME2` varchar(100) DEFAULT NULL COMMENT '승인자이름2',
+  			`APPL_DATE` datetime DEFAULT NULL COMMENT '수정신청일시',
+  			PRIMARY KEY (`ATTITUDE_ID`,`APPL_CNT`,`COMPANY_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnualConf">
+		SELECT 
+			COMPANY_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL_CONF
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAnnualConf"> 
+		CREATE TABLE `tbl_attitude_annual_conf` (
+		  `COMPANY_ID` varchar(80) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `ANNUAL_CANCEL_RULE` char(1) NOT NULL DEFAULT '1',
+		  `USE_ANNUAL_AUTO_GNRT` char(1) NOT NULL DEFAULT '1',
+		  `ANNUAL_GNRT_STD` char(1) NOT NULL DEFAULT '1',
+		  `INITIAL_DATE` date DEFAULT NULL,
+		  `USE_MINUS_ANNUAL` char(1) NOT NULL DEFAULT '1',
+		  `USE_ANNUAL_TMNT` char(1) NOT NULL DEFAULT '1',
+		  `ROUND_OFF_RULE` char(1) NOT NULL DEFAULT '1',
+		  `CONF_SET_DATE` date NOT NULL,
+		  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnualHistory">
+		SELECT 
+			ANNUAL_HISTORY_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL_HISTORY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAnnualHistory">
+		CREATE TABLE `tbl_attitude_annual_history` (
+		  `ANNUAL_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '연차수정기록ID',
+		  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+		  `ORIGIN_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '기존연차수',
+		  `CHANGE_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '수정연차수',
+		  `CHANGE_REASON` varchar(2000) DEFAULT NULL COMMENT '수정사유',
+		  `CHANGE_DATE` datetime NOT NULL COMMENT '수정일자',
+		  `CHANGE_USER_ID` varchar(80) NOT NULL COMMENT '수정자ID',
+		  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+		  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+		  PRIMARY KEY (`ANNUAL_HISTORY_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAprConn">
+		SELECT 
+			ATTITUDE_ID
+		FROM 
+			TBL_ATTITUDE_APR_CONN
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAprConn">
+		CREATE TABLE `tbl_attitude_apr_conn` (
+		  `ATTITUDE_ID` bigint(20) NOT NULL,
+		  `USER_ID` varchar(80) DEFAULT NULL,
+		  `ANNUAL_DOC_ID` varchar(80) NOT NULL,
+		  `CANCEL_DOC_ID` varchar(80) DEFAULT NULL,
+		  `ANNUAL_APPR_STATUS` char(1) DEFAULT NULL,
+		  `CANCEL_APPR_STATUS` char(1) DEFAULT NULL,
+		  `COMPANY_ID` varchar(80) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`ATTITUDE_ID`,`COMPANY_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
 </sqlMap>

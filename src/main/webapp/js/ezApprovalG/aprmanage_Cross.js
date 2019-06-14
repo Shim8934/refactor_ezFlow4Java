@@ -2536,6 +2536,7 @@ function doCancel(pDocID, tempListType) {
         }
         SendMailToCancel(pDocID); 
         openergetDocInfo();
+        attitude_annual_conn(pDocID);
 
         try {
             parent.frames["left"].getAprCount();
@@ -2959,4 +2960,20 @@ function RemoveTmpDoc(pDocID) {
 	        alert(pAlertContent);
 		}
 	});
+}
+
+//2019-05-03 김보미 - 근태관리 연동
+function attitude_annual_conn(docId) {		 		
+	$.ajax({ 			
+		type:'POST', 			
+		dataType : 'json', 			
+		async : true, 			
+		url : '/ezAttitude/approvalGConn.do', 			
+		data : { 				
+			status : 'delete', 				
+			docId : docId 			
+		},
+		success : function(result) { 			},
+		error : function() { 			} 		
+	});  
 }

@@ -293,7 +293,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/ezAttitude/excelAbsentedListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated";
+		    	exportExcelframe.location.href="/ezAttitude/excelAbsentedListExport.do?companyId=" + encodeURIComponent(pCompanyId) + "&userName=" + encodeURIComponent(searchUserName) + "&deptName=" + encodeURIComponent(searchDeptName) + "&title=" + encodeURIComponent(searchTitle) + "&deptId=&startDate=" + encodeURIComponent(searchStartDate) + "&endDate=" + encodeURIComponent(searchEndDate) + "&orderCell=" + encodeURIComponent(orderCell) + "&orderOption=" + encodeURIComponent(orderOption) + "&duplicated=duplicated";
 		    	exportExcelframe.target="_blank";
 			}
 			
@@ -333,7 +333,7 @@
 				var pwidth = window.screen.availWidth;
 				var pTop = (pheight - conHeight) / 2;
 				var pLeft = (pwidth - 890) / 2;
-				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&pageNum=&listSize=&orderCell=&orderOption=";
+				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + encodeURIComponent(pCompanyId) + "&userName=" + encodeURIComponent(searchUserName) + "&deptName=" + encodeURIComponent(searchDeptName) + "&title=" + encodeURIComponent(searchTitle) + "&deptId=&startDate=" + encodeURIComponent(searchStartDate) + "&endDate=" + encodeURIComponent(searchEndDate) + "&pageNum=&listSize=&orderCell=&orderOption=";
 					
 				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
 			}

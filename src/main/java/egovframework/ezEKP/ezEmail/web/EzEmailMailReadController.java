@@ -69,6 +69,7 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -134,6 +135,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	@Resource(name = "loginService")
     private LoginService loginService;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
@@ -176,6 +180,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("email", loginInfo);
+		}
 		
 		// retrieve the passed in parameters
 		String url = request.getParameter("iptURL");
@@ -627,6 +637,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("readMail ended.");
 		

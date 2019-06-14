@@ -36,3 +36,4 @@ var strLangLHM02 = "삭제 시 해당 사용자와 관련된 데이터가 삭제
 var strLangLHM03 = "정말로 삭제하시겠습니까?";
 var strLangKHJ01 = "사원";
 var strLangKHJ02 = "명을 복구하시겠습니까?";
+var strLangKHJ03 = "사원 %s명을 복구하시겠습니까?";

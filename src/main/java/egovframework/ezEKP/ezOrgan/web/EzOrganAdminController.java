@@ -23,13 +23,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -48,10 +46,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -92,7 +90,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
-			
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
@@ -110,6 +107,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUserAdminService ezEmailUserAdminService;
+	
+	@Autowired
+	private EzBoardAdminService ezBoardAdminService;
 
     @Autowired
     private EzEmailUtil ezEmailUtil;	
@@ -160,7 +160,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addQuickLinkLinkOrder();
     	ezCommonService.addComCloseCompanyId();
     	ezCommonService.addWebfolderTotalLimit();
+    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
+		ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+    	ezCommonService.addMsgInMailSearch(); 
+		ezCommonService.addFormVersion();
     	ezCommonService.addAddJobMasterProxy();
+    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
     	
     	logger.debug("init ended.");
     }
@@ -2233,6 +2238,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		    }		    
 		}
 		
+		ezBoardAdminService.trunkBoard(tenantID);
+		
 		logger.debug("saveSubTitle ended.");
 		
 		return "OK";
@@ -2324,6 +2331,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
+		
 		//2018-07-31 김보미 - 근태 추가
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId());
@@ -2342,8 +2350,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				resultList.add(j++, vo);
 			}
 		}
-
+		
 		String packageType = commonUtil.getPackageType(user.getTenantId());
+		
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);

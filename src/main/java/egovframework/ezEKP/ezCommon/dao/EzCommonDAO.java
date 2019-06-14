@@ -661,4 +661,102 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
+
+	public void addMemoExtensionColumns() {
+		try {
+			select("EzCommonDAO.checkExtensionColumns");
+		} catch (Exception e) {
+			logger.debug("tbl_memo_config addMemoextensionColumns doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMemoExtensionColumns");
+		}
+	}
+		
+	public void addMsgInMailSearch() {
+		try {
+			if ((int) select("EzCommonDAO.checkMsgInMailSearch") == 0) {
+				update("EzCommonDAO.updateMsgInMailSearch");
+			}
+		} catch (Exception e) {
+			logger.debug("addMsgInMailSearch() ERROR...");
+			e.printStackTrace();
+		}
+	}
+
+	public void addFormVersion() {
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfForminfo");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfForminfo");
+		}
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo");
+		} catch (Exception e) {
+			logger.debug("tbl_expendaprdocinfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo");
+		}
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo");
+		} catch (Exception e) {
+			logger.debug("tbl_expaprdocinfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfExpaprdocinfo");
+		}
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo");
+		} catch (Exception e) {
+			logger.debug("tbl_tmpexpaprdocinfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo");
+		}
+	}
+	
+	public void createTblAttitudeAnnual() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAnnual");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_annual doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAnnual");
+		}
+	}
+	
+	public void createTblAttitudeAnnualCanappl() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAnnualCanappl");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_annual_canappl doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAnnualCanappl");
+		}
+	}
+	
+	public void createTblAttitudeAnnualConf() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAnnualConf");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_annual_conf doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAnnualConf");
+		}
+	}
+	
+	public void createTblAttitudeAnnualHistory() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAnnualHistory");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_annual_history doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAnnualHistory");
+		}
+	}
+	
+	public void createTblAttitudeAprConn() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAprConn");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_apr_conn doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAprConn");
+		}
+	}
 }

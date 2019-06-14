@@ -154,7 +154,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String refreshInterval = mailGeneralVO.getRefreshInterval() == null ? "" : mailGeneralVO.getRefreshInterval();
 		String keepDeleteLength = mailGeneralVO.getKeepDeleteLength() == null ? "" : mailGeneralVO.getKeepDeleteLength();
 		String previewSubtree = mailGeneralVO.getPreviewSubTree() == null ? "" : mailGeneralVO.getPreviewSubTree();
-		String textOption = mailGeneralVO.getTextOption() == null ? "" : mailGeneralVO.getTextOption();
+		String textOption = mailGeneralVO.getTextOption();
 		String mailSendObject = "";
 		String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
 		String dotnetFlag = request.getParameter("dotnetFlag");
@@ -1343,7 +1343,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중 설정 저장 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do", method=RequestMethod.GET)
+	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailOutOfOfficeSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailOutOfOfficeSave started.");

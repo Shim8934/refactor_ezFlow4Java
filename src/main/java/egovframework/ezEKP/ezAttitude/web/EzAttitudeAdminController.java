@@ -1,46 +1,82 @@
 package egovframework.ezEKP.ezAttitude.web;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAttitude.util.ExcelCellRef;
+import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
+import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
+/**
+ * @author kaoni_dev1
+ *
+ */
 @Controller
 public class EzAttitudeAdminController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzAttitudeController.class);
@@ -50,7 +86,7 @@ public class EzAttitudeAdminController {
 
 	@Autowired
 	private Properties config;
-
+	
 	@Resource(name = "crypto")
 	private EgovFileScrty egovFileScrty;
 
@@ -404,6 +440,7 @@ public class EzAttitudeAdminController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
+				.queryParam("isuse", request.getParameter("isuse"))
 				.queryParam("isAdmin", "y");
 		
 		RestTemplate rest = new RestTemplate();
@@ -2062,5 +2099,929 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("attModAppDetail ended");
 		
 		return "/admin/ezAttitude/attModAppDetail";
+	}
+	
+	/**
+	 * 관리자 근태권한관리 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualManage.do")
+	public String attitudeAnnualManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("attitudeAnnualManage started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		//회사 리스트
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
+		String adminCompany = "";
+		if (status.equals("ok")) {
+		
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			adminCompany = (String) data.get("adminCompany");
+			
+			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
+		}
+		
+		LOGGER.debug("attitudeAnnualManage ended.");
+		
+		return "/admin/ezAttitude/attitudeAnnualManage";
+	}
+	
+	/**
+	 * 연차현황관리 전체연차변경 화면
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/modifyAllAnnualPop.do")
+	public String modifyAllAnnualPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("modifyAllAnnualPop started.");
+		
+		String userId = request.getParameter("userId");
+		String userName = request.getParameter("userName");
+		String companyId = request.getParameter("companyId");
+		String isAllDept = "";
+		
+		if (userId != null) {
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/attitude-auth";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("isAllDept", isAllDept)
+					.queryParam("userId", userId);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONArray authorDeptList = new JSONArray();
+			if (status.equals("ok")) {		
+				authorDeptList = (JSONArray) resultBody.get("data");
+				
+				model.addAttribute("deptList", authorDeptList);
+			}
+			
+			model.addAttribute("selectedUser", userId);
+			model.addAttribute("selectedUserName", userName);
+		}
+		
+		model.addAttribute("companyId", companyId);
+		
+		LOGGER.debug("modifyAllAnnualPop ended.");
+
+		return "/admin/ezAttitude/modifyAllAnnualPop";
+	}
+	
+	/**
+	 * 관리자 연차현황관리 조회
+	 * 연차현황관리 개인연차변경 화면
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/modifyPrsnAnnualPop.do")
+	public String modifyPrsnAnnualPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("modifyPrsnAnnualPop started.");
+		
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String userName = request.getParameter("userName");
+		String userTitle = request.getParameter("userTitle");
+		String userDeptName = request.getParameter("userDeptName");
+		String additionalAnnualCnt = request.getParameter("additionalAnnualCnt");
+				
+		model.addAttribute("userId", userId);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("userName", userName);
+		model.addAttribute("userTitle", userTitle);
+		model.addAttribute("userDeptName", userDeptName);
+		model.addAttribute("additionalAnnualCnt", additionalAnnualCnt);
+		
+		LOGGER.debug("modifyPrsnAnnualPop ended.");
+		
+		return "/admin/ezAttitude/modifyPrsnAnnualPop";
+	}
+	
+	/**
+	 * 연차현황관리 엑셀업로드팝업
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/annualExcelUploadPop.do")
+	public String annualExcelUploadPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		model.addAttribute("companyId", request.getParameter("companyId"));
+		return "/admin/ezAttitude/annualExcelUploadPop";
+	}
+	
+	/**
+	 * 연차현황관리 엑셀업로드
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/annualExcelUpload.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject annualExcelUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
+		
+		LOGGER.debug("annualExcelUpload started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId = request.getParameter("companyId");
+		String changeReason = request.getParameter("changeReason");
+		String flagCheck = request.getParameter("flagCheck");
+		
+		Map<String, MultipartFile> files = request.getFileMap();
+		MultipartFile tempFile =  files.get("excelFile");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		url = gwServerUrl + "/rest/ezattitude/annualExcelUpload";
+		
+		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+		requestFactory.setBufferRequestBody(false);
+		
+		RestTemplate restTemplate                       = new RestTemplate(requestFactory);
+		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
+		
+		for (int i = 0; i < messageConverters.size(); i++) {
+			HttpMessageConverter<?> messageConverter = messageConverters.get(i);
+			
+			if (messageConverter.getClass().equals(ResourceHttpMessageConverter.class)) {
+				messageConverters.set(i, new BnkResourceHttpMessageConverter());
+			}
+		}
+		
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		JSONObject jsonObject             = new JSONObject();
+		
+		map.add("files", new MultipartFileResource(tempFile.getInputStream(), tempFile.getOriginalFilename()));
+		
+		jsonObject.put("changeUserId", userInfo.getId());
+		jsonObject.put("companyId", companyId);
+		jsonObject.put("changeReason", changeReason);
+		jsonObject.put("flagCheck", flagCheck);
+		
+		map.add("data", jsonObject);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
+		UriComponentsBuilder builder                     = UriComponentsBuilder.fromHttpUrl(url);
+		ResponseEntity<String> result                    = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp         = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		String resultStatus = "";
+		
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else if (status.equals("failed")) {
+			resultStatus = "failed";
+		} else {
+			resultStatus = "error";
+		}
+		
+		LOGGER.debug("annualExcelUpload ended.");
+		
+		return resultBody;
+	}
+	
+	/**
+	 * 연차현황관리 개인연차변경 화면
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/annualHistoryPop.do")
+	public String annualHistoryPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("annualHistoryPop started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		
+		if (userId != null) {
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/annualHistoryPop/";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("userId", userId);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONArray list = new JSONArray();
+			if (status.equals("ok")) {		
+				list = (JSONArray) resultBody.get("data");
+				
+				model.addAttribute("resultList", list);
+			}
+			
+		}
+		
+		LOGGER.debug("annualHistoryPop ended.");
+		
+		return "/admin/ezAttitude/annualHistoryPop";
+	}
+	
+	/**
+	 * 관리자 근태입력관리 조회
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualList.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject getAttitudeAnnualList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/admin/ezAttitude/attitudeAnnualList started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String userId = userInfo.getId();
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		
+		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || pageNum = " + pageNum + " || listSize = " + listSize
+				+ " || orderCell = " + orderCell + "orderOption = " + orderOption);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/companies/" + companyId + "/annual";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject jObject = new JSONObject();
+		if(status.equals("ok")){
+			jObject = (JSONObject) resultBody.get("data");
+		}
+		
+		LOGGER.debug("/admin/ezAttitude/attitudeAnnualList ended");
+		
+		return jObject;
+	}
+	
+	/**
+	 * 근태관리 연차현황관리 전체연차 등록 ,수정
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/changeAllAnnual.do")
+	@ResponseBody
+	public String changeAllAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("changeAllAnnual started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
+		String companyId = request.getParameter("companyId");
+		String changeReason = request.getParameter("changeReason");
+		String annualCnt = request.getParameter("annualCnt");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/changeallannual/";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("changeUserId", userInfo.getId())
+				.queryParam("changeReason", changeReason)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
+				.queryParam("annualCnt", annualCnt);
+				
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<?> result;
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+		JSONObject resultBody = (JSONObject) result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		String resultStatus = "";
+		
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else if (status.equals("failed")) {
+			resultStatus = "failed";
+		} else if (status.equals("dive")) {
+			resultStatus = "dive";
+		} else {
+			resultStatus = "error";
+		}
+		
+		LOGGER.debug("changeAllAnnual ended.");
+		
+		return resultStatus;
+	}
+	
+	
+	/**
+	 * 근태관리 연차현황관리 전체연차 등록 ,수정
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/changePrsnAnnual.do")
+	@ResponseBody
+	public String changePrsnAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("changePrsnAnnual started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId = request.getParameter("companyId");
+		String userId = request.getParameter("userId");
+		String changeReason = request.getParameter("changeReason");
+		String annualCnt = request.getParameter("annualCnt");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/changePrsnAnnual/";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("changeUserId", userInfo.getId())
+				.queryParam("changeReason", changeReason)
+				.queryParam("companyId", companyId)
+				.queryParam("annualCnt", annualCnt);
+		
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<?> result;
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+		JSONObject resultBody = (JSONObject) result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		String resultStatus = "";
+		
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else if (status.equals("failed")) {
+			resultStatus = "failed";
+		} else {
+			resultStatus = "error";
+		}
+		
+		LOGGER.debug("changePrsnAnnual ended.");
+		
+		return resultStatus;
+	}
+	
+	/**
+	 * 엑셀 출력
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/excelAnnualListExport.do")
+	public void excelAnnualListExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
+		LOGGER.debug("excelAnnualListExport started."); 
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
+		String pageNum = request.getParameter("pageNum");
+		String listSize = request.getParameter("listSize");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+		String userId = userInfo.getId();
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		Locale locale = userInfo.getLocale();
+		
+		
+		LOGGER.debug("searchUserName = " + searchUserName + " || searchDeptName = " + searchDeptName + " || searchTitle = " + searchTitle + " || listSize = " + listSize
+				+ " || orderCell = " + orderCell + " || orderOption = " + orderOption);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/companies/" + companyId + "/annual";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
+				.queryParam("userId", userId)
+				.queryParam("pageNum", pageNum)
+				.queryParam("listSize", listSize)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("offsetMin", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject data = new JSONObject();
+		
+		List<AttitudeAnnualVO> annualList = new ArrayList<AttitudeAnnualVO>();
+
+		Gson gson = new Gson();
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");
+			annualList = gson.fromJson(data.get("list").toString(), new TypeToken<List<AttitudeAnnualVO>>(){}.getType()) ;
+		}
+		
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		  
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		  
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+		
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
+		
+		Row row;
+		      
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		
+		String pFileName = "";
+		pFileName = EgovDateUtil.getToday("-") +"_annualReport";
+		
+		//header
+		row.createCell(0).setCellValue("NO");
+		row.createCell(1).setCellValue("사용자 ID");
+		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
+		row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
+		row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
+		row.createCell(5).setCellValue("입사일");
+		row.createCell(6).setCellValue("기본 연차 수");
+		row.createCell(7).setCellValue("추가 연차 수");
+		row.getCell(0).setCellStyle(headerStyle);
+		row.getCell(1).setCellStyle(headerStyle);
+		row.getCell(2).setCellStyle(headerStyle);
+		row.getCell(3).setCellStyle(headerStyle);
+		row.getCell(4).setCellStyle(headerStyle);
+		row.getCell(5).setCellStyle(headerStyle);
+		row.getCell(6).setCellStyle(headerStyle);
+		row.getCell(7).setCellStyle(headerStyle);
+		
+		//body
+		for (int i = 0 ; i < annualList.size(); i++) { 
+			AttitudeAnnualVO vo = annualList.get(i);
+			row = sheet.createRow(i + 1);
+			
+			row.createCell(0).setCellValue(i + 1);
+			row.createCell(1).setCellValue(vo.getUserId());
+			row.createCell(2).setCellValue(vo.getUserName());
+			row.createCell(3).setCellValue(vo.getUserTitle());
+			row.createCell(4).setCellValue(vo.getUserDeptName());
+			row.createCell(5).setCellValue(vo.getJoinDate());
+			row.createCell(6).setCellValue(vo.getBasicAnnualCnt());
+			row.createCell(7).setCellValue(vo.getAdditionalAnnualCnt());
+			
+			row.getCell(0).setCellStyle(bodyStyle);
+			row.getCell(1).setCellStyle(bodyStyle);
+			row.getCell(2).setCellStyle(bodyStyle);
+			row.getCell(3).setCellStyle(bodyStyle);
+			row.getCell(4).setCellStyle(bodyStyle);
+			row.getCell(5).setCellStyle(bodyStyle);
+			row.getCell(6).setCellStyle(bodyStyle);
+			row.getCell(7).setCellStyle(bodyStyle);
+		}
+		//width 조정
+		sheet.autoSizeColumn(0);
+		sheet.autoSizeColumn(1);
+		sheet.autoSizeColumn(2);
+		sheet.autoSizeColumn(3);
+		sheet.autoSizeColumn(4);
+		sheet.autoSizeColumn(5);
+		sheet.autoSizeColumn(6);
+		sheet.autoSizeColumn(7);
+		sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
+		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+		sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
+		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+		sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
+		sheet.setColumnWidth(6, (sheet.getColumnWidth(5)) + 512);
+		sheet.setColumnWidth(7, (sheet.getColumnWidth(5)) + 512);
+			
+		
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+		
+		workbook.close();
+		
+		LOGGER.debug("excelAnnualListExport ended.");
+	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/useAnnualHistoryPop.do")
+	public String useAnnualHistoryPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("useAnnualHistoryPop started.");
+		//해당 사원 정보 (사원이름 직위 부서), 지각 수, 연차 수, 반차들 수, 연차 리스트
+		String userId = request.getParameter("userId");
+		String year = request.getParameter("year");
+		String companyId = request.getParameter("companyId");
+				
+		model.addAttribute("userId", userId);
+		model.addAttribute("year", year);
+		model.addAttribute("companyId", companyId);
+
+		
+		LOGGER.debug("useAnnualHistoryPop ended.");
+
+		return "/admin/ezAttitude/useAnnualHistoryPop";
+	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/useAnnualHistoryList.do")
+	public String useAnnualHistoryList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("useAnnualHistoryList started.");
+		//해당 사원 정보 (사원이름 직위 부서), 지각 수, 연차 수, 반차들 수, 연차 리스트
+		String userId = request.getParameter("userId");
+		String year = request.getParameter("year");
+		String companyId = request.getParameter("companyId");
+		
+		if (userId != null) {
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/annual";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("year", year)
+					.queryParam("userId", userId);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONArray userAnnualList = new JSONArray();
+			if (status.equals("ok")) {		
+				userAnnualList = (JSONArray) resultBody.get("data");
+				
+				model.addAttribute("list", userAnnualList);
+			}
+		}
+		
+		LOGGER.debug("useAnnualHistoryList ended.");
+		
+		return "json";
+	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/setJoinDatePop.do")
+	public String setJoinDatePop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		
+		LOGGER.debug("setJoinDatePop started.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String mode = request.getParameter("mode");
+		String date = request.getParameter("date");
+		
+		if(mode != null && mode.equals("new")) {
+			date = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[0];
+		}
+				
+		model.addAttribute("userId", userId);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("mode", mode);
+		model.addAttribute("date", date);
+		
+		LOGGER.debug("setJoinDatePop ended.");
+
+		return "/admin/ezAttitude/setJoinDatePop";
+	}
+	
+	/**
+	 * 근태관리 연차현황관리 입사일 입력
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/saveJoinDate.do")
+	@ResponseBody
+	public String saveJoinDate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("saveJoinDate started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String date = request.getParameter("date");
+		String mode = request.getParameter("mode");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/joindate";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("mode", mode)
+				.queryParam("date", date);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<?> result;
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+		JSONObject resultBody = (JSONObject) result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		String resultStatus = "";
+		
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else if (status.equals("failed")) {
+			resultStatus = "failed";
+		} else {
+			resultStatus = "error";
+		}
+		
+		LOGGER.debug("saveJoinDate ended.");
+		
+		return resultStatus;
+	}
+	
+	/**
+	 * 관리자 연차설정관리 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualConfig.do")
+	public String attitudeAnnualConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("attitudeAnnualConfig started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/companies";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray list = new JSONArray();
+		JSONObject data = new JSONObject();
+		String adminCompany = "";
+		
+		if (status.equals("ok")) {
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			adminCompany = (String) data.get("adminCompany");
+			
+			model.addAttribute("list", list);
+			model.addAttribute("adminCompany", adminCompany);
+		}
+		
+		LOGGER.debug("attitudeAnnualConfig ended.");
+		
+		return "/admin/ezAttitude/attitudeAnnualConfig";
+	}
+	
+	/**
+	 * 관리자 연차설정관리 회사별 설정 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualConfigInfo.do")
+	@ResponseBody
+	public JSONObject attitudeAnnualConfigInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("attitudeAnnualConfigInfo started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");		
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/annualreg";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject dataObject = new JSONObject();
+		
+		if (status.equals("ok")) {
+			dataObject = (JSONObject) resultBody.get("data");
+		}
+		
+		LOGGER.debug("attitudeAnnualConfigInfo ended.");
+		
+		return dataObject;
+	}
+	
+	/**
+	 * 관리자 연차설정관리 회사별 설정 수정 함수
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/updateAnnualConfInfo.do")
+	@ResponseBody
+	public String updateAnnualConfInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("updateAnnualConfInfo started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String annualCancelRule = request.getParameter("annualCancelRule");
+		String useAnnualAutoGnrt = request.getParameter("useAnnualAutoGnrt");
+		String annualGnrtStd = request.getParameter("annualGnrtStd");
+		String initialDate = request.getParameter("initialDate");
+		String useMinusAnnual = request.getParameter("useMinusAnnual");
+		String useAnnualTmnt = request.getParameter("useAnnualTmnt");
+		String roundOffRule = request.getParameter("roundOffRule");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");		
+		String url = gwServerUrl + "/rest/ezattitude/companies/" + request.getParameter("companyId") + "/annualreg";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("annualCancelRule", annualCancelRule)
+				.queryParam("useAnnualAutoGnrt", useAnnualAutoGnrt)
+				.queryParam("annualGnrtStd", annualGnrtStd)
+				.queryParam("initialDate", initialDate)
+				.queryParam("useMinusAnnual", useMinusAnnual)
+				.queryParam("useAnnualTmnt", useAnnualTmnt)
+				.queryParam("roundOffRule", roundOffRule);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		String resultStatus = "";
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else {
+			resultStatus = "error";
+		}
+		
+		LOGGER.debug("updateAnnualConfInfo ended.");
+		
+		return resultStatus;
+	}
+	
+	private class MultipartFileResource extends InputStreamResource {
+		private String filename;
+		
+		public MultipartFileResource(InputStream inputStream, String filename) {
+			super(inputStream);
+			this.filename = filename;
+		}
+		
+		@Override
+		public String getFilename() {
+			return this.filename;
+		}
+		
+		@Override
+		public long contentLength() throws IOException {
+			return -1; // Prevent read the whole stream into memory
+		}
+	}
+	
+	private class BnkResourceHttpMessageConverter extends ResourceHttpMessageConverter {
+		@Override
+		protected Long getContentLength(org.springframework.core.io.Resource resource, MediaType contentType) throws IOException {
+			Long contentLength = super.getContentLength(resource, contentType);
+			
+			return contentLength == null || contentLength < 0 ? null : contentLength;
+		}
 	}
 }

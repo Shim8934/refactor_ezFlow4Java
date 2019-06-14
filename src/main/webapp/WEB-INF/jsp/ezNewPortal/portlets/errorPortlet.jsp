@@ -16,7 +16,7 @@
 			<div class="error_content">
 				<div>
 					<dl class="nodata">
-						<dt><img src="/images/ezNewPortal/nodata.png"></dt>
+						<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
 						<dd>"<spring:message code="ezNewPortal.t135"/>"</dd>
 					</dl>
 				</div>

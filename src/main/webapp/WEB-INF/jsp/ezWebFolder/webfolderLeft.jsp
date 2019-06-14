@@ -27,7 +27,7 @@
 		    var persFolderId    = "";
 			var folderId = "";
 			var folderUpper = "";
-			var folderType = null;
+			var folderType = "${folderType}";
 	    	var $element ;
 	    	var useBottomFrameOnly = "${useBottomFrameOnly}";
 		    var firFolderId = "";
@@ -42,8 +42,12 @@
 			};
 		    
 		    $(function() { 
-				folderList('C');
-		    	folderType = 'C';
+		    	if (folderType == "D") {
+		    		openFolder('dept');	
+		    	} else if (folderType == "U") {
+		    		openFolder('personal');
+		    	} 
+				folderList(folderType);
 		    	
 		    	leftResize();
 		        $(".webfolderListBox").mCustomScrollbar({
@@ -383,9 +387,6 @@
 	    	<div class="left_title" title="<spring:message code='ezWebFolder.t10' />"><spring:message code='ezWebFolder.t10' />
 	        	<span class="sub_iconLNB tree_leftconfig" onclick="wfConfig();" title="<spring:message code="ezWebFolder.t236" />"></span>
 	        </div>
-	        <!--<div class="btn_writeBox">
-	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span>게시글 등록</p>
-	        </div>-->
 	        <div class="webfolderListBox" style="overflow:hidden; padding-right: 0;">
 		        <h2 class="on" id="companyH2">
 	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('company')"><spring:message code='ezWebFolder.t233' /></span>

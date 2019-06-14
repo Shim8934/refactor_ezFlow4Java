@@ -374,7 +374,7 @@ function processRowClick(tr) {
 
         if (DocList_Flag == "RECORD") {
             if (document.getElementById("tdGongRam")) {
-                if ((GetAttribute(tr, "DATA15") == "011" || GetAttribute(tr, "DATA15") == "001") && (arr_userinfo[1] == WriterID))
+                if ((GetAttribute(tr, "DATA15") == "011" || GetAttribute(tr, "DATA15") == "001") && (arr_userinfo[1] == WriterID) && GetAttribute(tr, "DATA8") === "00")
                     document.getElementById("tdGongRam").style.display = "";
                 else
                     document.getElementById("tdGongRam").style.display = "none";
