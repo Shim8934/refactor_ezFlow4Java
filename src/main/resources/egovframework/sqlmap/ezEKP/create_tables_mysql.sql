@@ -12330,8 +12330,13 @@ CREATE TABLE `tbl_tmpattachinfo` (
   `ATTACHUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+<<<<<<< HEAD
   `COMPANYID` varchar(20) NOT NULL COMMENT '원문정보공개 첨부파일 플래그',
   `FILEOPENFLAG` char(1) DEFAULT NULL,
+=======
+  `COMPANYID` varchar(20) NOT NULL,
+  `FILEOPENFLAG` char(1) CHARACTER SET utf8mb4 DEFAULT NULL,
+>>>>>>> e59600693e... 원문정보공개 개발중(06/14)
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`ATTACHFILESN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -13370,6 +13375,47 @@ CREATE TABLE `tbl_webfolder_share` (
   PRIMARY KEY (`SHARE_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_opengovfileinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_opengovfileinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_opengovfileinfo` (
+  `DOCID` varchar(80) NOT NULL,
+  `SN` bigint(10) NOT NULL,
+  `FILEOPENFLAG` char(1) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`,`SN`, `TENANT_ID`, `COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_opengovdocinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_opengovdocinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_opengovdocinfo` (
+  `DOCID` varchar(80) NOT NULL,
+  `OPENFLAG` char(5) DEFAULT NULL,
+  `BASIS` varchar(200) DEFAULT NULL,
+  `REASON` varchar(1000) DEFAULT NULL,
+  `OPENLIMITDATE` DATETIME DEFAULT NULL,
+  `CREATEDATE` DATETIME DEFAULT NULL,
+  `UPDATEDATE` DATETIME DEFAULT NULL,
+  `LISTOPENFLAG` char(5) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`, `TENANT_ID`, `COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 
 --
 -- Table structure for table `tbl_webfolder_share_hide`

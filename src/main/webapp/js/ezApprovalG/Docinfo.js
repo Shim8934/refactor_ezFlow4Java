@@ -199,6 +199,7 @@ function setSecurityList() {
 }
 function rdoSecType_onclick(Val) {
     if (document.getElementsByName("rdoSecType")[0].checked) {
+    	//공개
         document.getElementById("selSecLevel1").disabled = true;
         document.getElementById("selSecLevel2").disabled = true;
         document.getElementById("selSecLevel3").disabled = true;
@@ -207,16 +208,43 @@ function rdoSecType_onclick(Val) {
         document.getElementById("selSecLevel6").disabled = true;
         document.getElementById("selSecLevel7").disabled = true;
         document.getElementById("selSecLevel8").disabled = true;
+        
+        //원문정보공개 관련
+        $("#openListFlag").prop("checked", true);
+        $(".fileOpenFlagChk").prop("checked", true);
+        $(".fileOpenFlagChk").attr("disabled", true);
+        $("#txt_Reason").attr("disabled", true);
+        $("#txt_Reason").val("");
+        $(".fileOpenFlag").text("공개");
     }
-    else {
-        document.getElementById("selSecLevel1").disabled = false;
-        document.getElementById("selSecLevel2").disabled = false;
-        document.getElementById("selSecLevel3").disabled = false;
-        document.getElementById("selSecLevel4").disabled = false;
-        document.getElementById("selSecLevel5").disabled = false;
-        document.getElementById("selSecLevel6").disabled = false;
-        document.getElementById("selSecLevel7").disabled = false;
-        document.getElementById("selSecLevel8").disabled = false;
+    else if (document.getElementsByName("rdoSecType")[1].checked) {
+    	//부분공개
+    	document.getElementById("selSecLevel1").disabled = false;
+    	document.getElementById("selSecLevel2").disabled = false;
+    	document.getElementById("selSecLevel3").disabled = false;
+    	document.getElementById("selSecLevel4").disabled = false;
+    	document.getElementById("selSecLevel5").disabled = false;
+    	document.getElementById("selSecLevel6").disabled = false;
+    	document.getElementById("selSecLevel7").disabled = false;
+    	document.getElementById("selSecLevel8").disabled = false;
+    	
+    	$(".fileOpenFlagChk").attr("disabled", false);
+    	$("#txt_Reason").attr("disabled", false);
+    } else {
+    	//비공개
+    	document.getElementById("selSecLevel1").disabled = false;
+    	document.getElementById("selSecLevel2").disabled = false;
+    	document.getElementById("selSecLevel3").disabled = false;
+    	document.getElementById("selSecLevel4").disabled = false;
+    	document.getElementById("selSecLevel5").disabled = false;
+    	document.getElementById("selSecLevel6").disabled = false;
+    	document.getElementById("selSecLevel7").disabled = false;
+    	document.getElementById("selSecLevel8").disabled = false;
+    	
+    	$(".fileOpenFlagChk").prop("checked", false);
+    	$(".fileOpenFlagChk").attr("disabled", true);
+    	$("#txt_Reason").attr("disabled", false);
+    	$(".fileOpenFlag").text("비공개");
     }
 }
 var ezapralert_cross_dialogArguments = new Array();

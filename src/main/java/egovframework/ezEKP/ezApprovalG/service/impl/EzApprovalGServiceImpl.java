@@ -3651,6 +3651,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			map.put("v_DOCID", docID);
 			ezApprovalGDAO.deleteOpenGovAttachInfo(map);
+			map.put("docID", docID);
+			map.put("tenantID", tenantID);
+			ezApprovalGDAO.deleteOpenGovDocInfo(map);
 			
 			
 			gongramDocID = gongRamDocInfo(docID, companyID, tenantID);
@@ -28898,5 +28901,292 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		
 		return ezApprovalGDAO.getAttachListForOpenGov(map); 
+	}
+
+	public int GongRamDocLineInfo(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("GongRamDocLineInfo started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_docID", docID);
+		map.put("v_companyID", companyID);
+		map.put("v_tenantID", tenantID);
+		
+		int gongRamDocLineCnt = ezApprovalGDAO.checkGongRamLineCount(map);
+		
+		logger.debug("GongRamDocLineInfo ended");
+		return gongRamDocLineCnt;
+	}
+	
+	public void GongRamSend(String docID, String dirPath, String companyID, String lang,  int tenantID, String offSet) throws Exception {
+		logger.debug("GongRamSend started");
+		
+		String gongRamDocID = gongRamDocInfo(docID, companyID, tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID.trim());
+		map.put("v_TENANTID", tenantID);
+		
+		if (gongRamDocID == null || gongRamDocID.equals("") || gongRamDocID.equals("NONE")) {
+			gongRamDocID = getNewID(companyID, tenantID);
+			
+			map.put("v_FLAG", "END");
+			
+			String href = ezApprovalGDAO.getDocInfoHref(map);
+			
+			String extFileName = getExtendedFileName(href);
+			
+			boolean isEncryptedByKlib = false;
+			
+			// 2018.08.29 KLIB .ezd 확장자 처리
+			if (extFileName.endsWith(EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+				isEncryptedByKlib = true;
+				extFileName = getExtendedFileName(href.substring(0, href.lastIndexOf(".")));
+			}
+			
+			String susinDocURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + 
+					commonUtil.separator + "1000" + commonUtil.separator + getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
+			String fileURL = dirPath + href.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID), "");
+			String target = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator +
+					getDocDir(gongRamDocID) + commonUtil.separator + gongRamDocID + "." + extFileName;
+			
+			map.put("v_GONGRAMDOCID", gongRamDocID.trim());
+			map.put("v_HREF", susinDocURL.trim());
+			map.put("v_DOCSTATE", staDSGongRam);
+			map.put("v_FUNCTIONTYPE", staASJinHang);
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			
+			ezApprovalGDAO.insertGongRamAprDocInfo(map);
+			ezApprovalGDAO.insertGongRamExpAprDocInfo(map);
+			ezApprovalGDAO.insertGongRamAprOpinionInfo(map);
+			ezApprovalGDAO.insertGongRamAprDocAttachInfo(map);
+			ezApprovalGDAO.insertGongRamAprAttachInfo(map);
+			
+			copyFile(fileURL, target, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(gongRamDocID));
+			
+			// 2018.08.29 KLIB 기록물등록대장에서 공람발송 시에 복호화되도록 수정
+			if (isEncryptedByKlib) {
+				Path targetPath = Paths.get(commonUtil.detectPathTraversal(target));
+				
+				byte[] targetBytes = Files.readAllBytes(targetPath);
+				byte[] decryptBytes = klibUtil.decrypt(targetBytes);
+				
+				Files.write(targetPath, decryptBytes, StandardOpenOption.TRUNCATE_EXISTING);
+			}
+		}
+		
+		map.put("v_gongRamDocID", gongRamDocID.trim());
+		
+		ezApprovalGDAO.updateGongRamSaveAprDocInfo(map);
+		ezApprovalGDAO.updateGongRamSaveAprDocInfo2(map);
+		
+		ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+		ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
+		
+		ezApprovalGDAO.insertGongRamSendAprLineInfo(map);
+		ezApprovalGDAO.insertGongRamSendExpAprLine(map);
+		ezApprovalGDAO.deleteGongRamSendAprLineInfo(map);
+		
+		logger.debug("GongRamSend ended");
+	}
+
+	@Override
+	public String getGongRamLineInfo(String docID, String mode, String companyID, String lang, int tenantID, String offset) throws Exception {
+		logger.debug("getGongRamLineInfo started.");
+		
+		String listString = getListHeader("011", companyID, lang, tenantID);
+		StringBuffer resultXML = new StringBuffer();
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < hlength; k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			resultXML.append("</HEADER>");
+		}
+		
+		resultXML.append("</HEADERS>");
+		
+		String docList = "";
+		
+		if (docID != null && !docID.equals("")) {
+			docList = getGongRamLineInfo(docID, mode, companyID, tenantID);
+		} else {
+			docList = "<DATA></DATA>";
+		}
+		
+		Document docXML = commonUtil.convertStringToDocument(docList);
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		String langData = commonUtil.getMultiData(lang, tenantID);
+		resultXML.append("<ROWS>");
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			
+			for (int p = 0; p < hlength; p++) {
+				resultXML.append("<CELL>");
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (fieldName.equals("APRMEMBERNAME") || fieldName.equals("APRMEMBERJOBTITLE") || fieldName.equals("APRMEMBERDEPTNAME") || fieldName.equals("PROXYUSERNAME") || fieldName.equals("PROXYUSERJOBTITLE") || fieldName.equals("PROXYUSERDEPTNAME")) {
+					fieldName = fieldName + langData;
+				}
+				
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
+				
+				if (p == 0) {
+					resultXML.append("<DATA1>" + makeListField(convertDate(docXML.getElementsByTagName("PROCESSDATE").item(k).getTextContent())) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(convertDate(docXML.getElementsByTagName("RECEIVEDDATE").item(k).getTextContent())) + "</DATA2>");
+					resultXML.append("<DATA3>" + docID + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA4>");
+					resultXML.append("<DATA5>" + docXML.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent() + "</DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
+					resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("REASONDONOTAPPROV").item(k).getTextContent()) + "</DATA7>");
+					resultXML.append("<DATA8>" + docXML.getElementsByTagName("ISPROPOSERYN").item(k).getTextContent() + "</DATA8>");
+					resultXML.append("<DATA9>" + docXML.getElementsByTagName("ISBRIEFUSERYN").item(k).getTextContent() + "</DATA9>");
+					resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent()) + "</DATA10>");
+					resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("APRTYPE").item(k).getTextContent()) + "</DATA11>");
+					resultXML.append("<DATA12>" + makeListField(docXML.getElementsByTagName("APRSTATE").item(k).getTextContent()) + "</DATA12>");
+					resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent()) + "]]></DATA13>");
+					resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent()) + "]]></DATA14>");
+					resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA15>");
+					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA16>");
+					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent()) + "]]></DATA17>");
+					resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent()) + "]]></DATA18>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getGongRamLineInfo ended.");
+		
+		return resultXML.toString();
+	}
+	
+	private String getGongRamLineInfo(String docID, String mode, String companyID, int tenantID) throws Exception {
+		logger.debug("getGongRamLineInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("mode", mode);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getGongRamLineInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		
+		for (int i = 0; i < apprGAprLineVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGAprLineVOList.get(i)));
+		}
+		
+		sb.append("</DATA>");
+		
+		logger.debug("getGongRamLineInfo ended");
+		return sb.toString();
+	}
+
+	@Override
+	public String openGovInfoSave(String openGovListFlag, String fileOpenFlagList, String basis, String reason, String publicity, String docID, String companyID, int tenantId) throws Exception {
+		//openGovListFlag 가 N 이면 basis 필요 없음
+		//publicity.substring(0,1) 이 1이면 reason 필요없음
+		logger.debug("getGongRamLineInfo started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("openFlag", publicity.substring(0,1));
+		map.put("openGovListFlag", openGovListFlag);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		map.put("basis", basis);
+		map.put("reason", reason);
+		
+		
+		ezApprovalGDAO.deleteOpenGovDocInfo(map);
+		ezApprovalGDAO.insertOpenGovDocInfo(map);
+		
+		if (!publicity.substring(0,1).equals("1")) {
+			for (int i = 0 ; i <fileOpenFlagList.length(); i++) {
+				map.put("sn", i);
+				map.put("fileOpenFlag", Character.toString(fileOpenFlagList.charAt(i)));
+				ezApprovalGDAO.updateFileOpenFlag(map);
+			}
+		}
+		
+		logger.debug("getGongRamLineInfo ended");
+		return null;
+	}
+	
+	@Override
+	public String getFormId(String formUrl) throws Exception {
+		Matcher matcher = Pattern.compile("/fileroot/(\\d)/files/upload_approvalG/(.*)/form/(.*)\\..{0,3}").matcher(formUrl);
+		if (matcher.find() && matcher.groupCount() == 3) {
+			String formId = matcher.group(3);
+			return formId;
+		} else {
+			return "";
+		}
+	}
+
+	@Override
+	public String getOpenGovFlag(String formId, int tenantId, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formId", formId);
+		map.put("tenantId", tenantId);
+		map.put("companyID", companyID);
+		
+		return ezApprovalGDAO.getOpenGovFlag(map);
+	}
+
+	@Override
+	public Map<String, Object> getOpenGovInfo(String docID, int tenantId, String companyID) throws Exception {
+		//basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("tenantId", tenantId);
+		map.put("companyID", companyID);
+		
+		String basis = "";
+		String reason = "";
+		String listOpenFlag = "";
+//		String fileOpenFlagList = "";
+		
+		Map<String, Object> openGovMap = ezApprovalGDAO.getOpenGovInfo(map);
+		
+		basis = (String) openGovMap.get("BASIS");
+		reason = (String) openGovMap.get("REASON");
+		listOpenFlag = (String) openGovMap.get("LISTOPENFLAG");
+		
+//		List<String> flagList = ezApprovalGDAO.getFileOpenFlagList(map);
+//		
+//		for (String s : flagList) {
+//			fileOpenFlagList += s;
+//		}
+		
+		Map<String, Object> openGovInfoMap = new HashMap<String, Object>();
+		
+		openGovInfoMap.put("basis", basis);
+		openGovInfoMap.put("reason", reason);
+		openGovInfoMap.put("listOpenFlag", listOpenFlag);
+//		openGovInfoMap.put("fileOpenFlagList", fileOpenFlagList);
+		
+		return openGovInfoMap;
 	}
 }

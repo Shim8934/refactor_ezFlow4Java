@@ -3286,4 +3286,60 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void aprMakeTmp2Ing13(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.aprMakeTmp2Ing13", map);		
 	}
+
+	//2019-05-03 공람자지정
+	public void deleteGongRamLineInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteGongRamLineInfo", map);
+	}
+	
+	public void insertGongRamLineInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertGongRamLineInfo", map);
+	}
+	
+	public int checkGongRamLineCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.checkGongRamLineCount", map);
+	}
+	
+	public void insertGongRamSendAprLineInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertGongRamSendAprLineInfo", map);
+	}
+	
+	public void insertGongRamSendExpAprLine(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertGongRamSendExpAprLine", map);
+	}
+	
+	public void deleteGongRamSendAprLineInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteGongRamSendAprLineInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getGongRamLineInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getGongRamLineInfo", map);
+	}
+
+	public void insertOpenGovDocInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertOpenGovDocInfo", map);		
+	}
+
+	public void deleteOpenGovDocInfo(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteOpenGovDocInfo", map);		
+	}
+
+	public void updateFileOpenFlag(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateFileOpenFlag", map);
+	}
+
+	public String getOpenGovFlag(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOpenGovFlag", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getOpenGovInfo(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("EzApprovalG.getOpenGovInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getFileOpenFlagList(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getFileOpenFlagList", map);
+	}
 }

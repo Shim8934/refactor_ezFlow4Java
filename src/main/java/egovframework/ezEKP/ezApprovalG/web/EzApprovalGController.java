@@ -42,6 +42,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,9 +68,11 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
@@ -1072,6 +1076,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), userInfo.getCompanyID(), tenantID).getReformFlag());
 		}
+		
+		String formId = ezApprovalGService.getFormId(formURL);
+		String openGovFlag = ezApprovalGService.getOpenGovFlag(formId, userInfo.getTenantId(), userInfo.getCompanyID());
+		model.addAttribute("openGovFlag", openGovFlag);
 		
 		logger.debug("draftui ended.");
 
@@ -2635,6 +2643,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			result = ezApprovalGService.updateAttachFileInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = "File_NonAttach";
 		}
 		
@@ -4232,6 +4241,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("isReform", isReform);
 			model.addAttribute("formId", formId);
 		}
+		
+		//basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "";
+		Map<String, Object> openGovMap = ezApprovalGService.getOpenGovInfo(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		model.addAttribute("basis", openGovMap.get("basis"));
+		model.addAttribute("reason", openGovMap.get("reason"));
+		model.addAttribute("listOpenFlag", openGovMap.get("listOpenFlag"));
+		model.addAttribute("fileOpenFlagList", openGovMap.get("fileOpenFlagList"));
 		
 		logger.debug("approvui ended");
 		
@@ -9375,7 +9392,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 
 	 * 회송문서의 철정보를  선택한 철 정보로 변경
 	 * */
-	@SuppressWarnings("null")
 	@RequestMapping(value = "/ezApprovalG/setHesongBansongCabinetInfo.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void setHesongBansongCabinetInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
@@ -9500,9 +9516,75 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("enforceSihangDocView ended.");
 
-		return "ezApprovalG/apprGenforceSihangDocView";
+        return "ezApprovalG/apprGenforceSihangDocView";
+    }
+
+	/**
+	 * 전자결재G 수신정보 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/openGovInfoSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String openGovInfoSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("openGovInfoSave started.");
+		  
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String openGovListFlag = request.getParameter("openGovListFlag");
+		String fileOpenFlagList = request.getParameter("fileOpenFlagList");
+		String basis = request.getParameter("basis");
+		String reason = request.getParameter("reason");
+		String publicity = request.getParameter("publicity");
+		String docID = request.getParameter("docID");
+		
+		String result = ezApprovalGService.openGovInfoSave(openGovListFlag, fileOpenFlagList, basis, reason, publicity, docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("openGovInfoSave ended.");
+		
+ 		return result;
 	}
 	
+	/* 
+	 * 결재정보 첨부리스트 호출
+	 * */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezApprovalG/getAttachListForOpenGov.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONArray getAttachListForOpenGov(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getAttachListForOpenGov started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		logger.debug("docID = " + docID);
+		
+		List<ApprGOpenGovAttachVO> attachList = ezApprovalGService.getAttachListForOpenGov(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		JSONObject attachJson = null;
+		
+		JSONArray attachJsonArr = new JSONArray();
+		
+		for (ApprGOpenGovAttachVO attach : attachList) {
+			attachJson = new JSONObject();
+			attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
+			attachJson.put("sn", attach.getAttachFileSN());
+			attachJson.put("fileName", attach.getAttachFileName());
+			
+			String fileSize = attach.getAttachFileSize();
+			
+			int cnt = (int) (Math.log10(Double.parseDouble(fileSize)) / Math.log10(1024));
+			String[] unit = {"bytes", "KB", "MB", "GB"};
+			
+			double filesize = Double.parseDouble(fileSize) / Math.pow(1024, cnt);
+			fileSize = String.format("%.1f",filesize);
+			fileSize = fileSize + unit[cnt];
+			
+			attachJson.put("fileSize", fileSize);
+			
+			attachJsonArr.add(attachJson);
+		}
+		
+		logger.debug("getAttachListForOpenGov ended.");
+		return attachJsonArr;
+	}
+
 	@RequestMapping(value = "/ezApprovalG/enforceSihangSealChoose.do", method = RequestMethod.GET)
 	public String enforceSihangSealChoose(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("enforceSihangSealChoose started.");

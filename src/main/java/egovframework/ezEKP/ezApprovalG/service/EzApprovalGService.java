@@ -656,4 +656,14 @@ public interface EzApprovalGService {
 	ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception;
 
 	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(String docID, String companyID, int tenantId) throws Exception;
+
+	public String getGongRamLineInfo(String docID, String mode, String companyID, String lang, int tenantID, String offset) throws Exception;
+
+	public String openGovInfoSave(String openGovListFlag, String fileOpenFlagList, String companyID, String basis, String reason, String publicity, String docID, int tenantId) throws Exception;
+
+	public String getFormId(String formURL) throws Exception;
+
+	public String getOpenGovFlag(String formId, int tenantId, String companyID) throws Exception;
+
+	public Map<String, Object> getOpenGovInfo(String docID, int tenantId, String companyID) throws Exception;
 }

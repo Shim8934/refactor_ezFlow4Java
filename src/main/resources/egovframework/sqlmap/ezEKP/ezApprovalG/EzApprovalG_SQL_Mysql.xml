@@ -30448,16 +30448,301 @@
     		COMPANYID = #companyID#
 	</delete>
 
-    <select id="EzApprovalG.getAttachListForOpenGov" parameterClass="Map" resultClass="ApprGOpenGovAttachVO">
-	    SELECT
-            cn as id,
-            deptid as dept,
-            proxy as bujaeInfo
-        FROM
-            TBL_ADDJOBMASTER
-        WHERE
-            tenant_id = #tenantId#
-        AND
-            proxy like '$id$:%'
+	  	  <select id="EzApprovalG.getAttachListForOpenGov" parameterClass="Map" resultClass="ApprGOpenGovAttachVO">
+		  SELECT
+		   		* 
+		  FROM
+		  		 tbl_aprattachinfo a 
+		  INNER JOIN
+		  		 tbl_opengovfileinfo b 
+		  ON
+		  		 a.docid = b.docid
+		  AND
+		  		 a.tenant_id = b.tenant_id 
+		  AND
+		  		 a.attachfilesn = b.sn
+		  AND
+		  		 a.companyid = b.companyid
+		  WHERE  
+    			 a.DOCID = #docID#
+	      AND
+	    		 a.TENANT_ID = #tenantID#
+	      AND
+    			 a.COMPANYID = #companyID#
+	  </select> 
+	  	<insert id="EzApprovalG.insertOpenGovDocInfo" parameterClass="Map">
+	 	INSERT INTO                 
+	 		TBL_OPENGOVDOCINFO
+	 		(DOCID, OPENFLAG,BASIS, REASON, LISTOPENFLAG, CREATEDATE, TENANT_ID, COMPANYID) 
+	 	VALUES 
+	 		(#docID#, #openFlag#, #basis#, #reason#, #openGovListFlag#, now(), #tenantID#, #companyID#)
+		</insert>
+		<delete id="EzApprovalG.deleteOpenGovDocInfo" parameterClass="Map">
+		DELETE FROM
+			TBL_OPENGOVDOCINFO
+		WHERE
+			DOCID = #docID# 
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		</delete>
+		<update id="EzApprovalG.updateFileOpenFlag" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVFILEINFO
+		SET
+			FILEOPENFLAG = #fileOpenFlag#
+		WHERE
+			DOCID = #docID#
+		AND
+			SN = #sn#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		</update>
+		<select id="EzApprovalG.getOpenGovFlag" parameterClass="Map">
+		SELECT
+			OPENGOVFLAG
+		FROM
+			TBL_FORMINFO
+		WHERE
+			FORMID = #formId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyID#
+		</select>
+		
+		<select id="EzApprovalG.getOpenGovInfo" parameterClass="Map" resultClass="java.util.HashMap">
+		SELECT
+			BASIS, REASON, LISTOPENFLAG
+		FROM
+			TBL_OPENGOVDOCINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyID#
+		</select>
+		<select id="EzApprovalG.getFileOpenFlagList" parameterClass="Map" resultClass="String">
+		SELECT
+			FILEOPENFLAG
+		FROM
+			TBL_OPENGOVFILEINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			COMPANYID = #companyID#
+		ORDER BY
+			SN ASC
+		</select>
+		
+	
+	<delete id="EzApprovalG.deleteGongRamLineInfo" parameterClass="Map">
+		DELETE FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_docID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</delete>
+	
+	<insert id="EzApprovalG.insertGongRamLineInfo" parameterClass="Map">
+		INSERT INTO
+			TBL_GONGRAMLINEINFO
+		(DocID,     AprMemberSN,     AprType,     AprState,     AprMemberID,     AprMemberIsDeptYN,     AprMemberName,     AprMemberName2,     AprMemberJobTitle,     AprMemberJobTitle2,     AprMemberDeptID,     AprMemberDeptName,     AprMemberDeptName2,     AprMemberLDAPPath,     ReceivedDate,     ProcessDate,     ReasonDoNotApprov,     isProposerYN,     isBriefUserYN,     TENANT_ID,    COMPANYID)
+		VALUES
+		(#v_docID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, $v_ReceivedDate$, $v_ProcessDate$, #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#, #companyID#)
+	</insert>
+	
+	<select id="EzApprovalG.getGongRamId"  parameterClass="Map" resultClass="String">
+		SELECT
+			DOCID
+		FROM
+			TBL_APRDOCINFO
+		WHERE
+			DOCSTATE = '015'
+		AND
+			TENANT_ID = #v_tenantID#
+		AND
+			COMPANYID = #v_companyID#
+		AND
+			ORGDOCID = #v_docID#
+	</select>
+	
+	<select id="EzApprovalG.checkGongRamLineCount" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_docID#
+		AND
+			TENANT_ID = #v_tenantID#
+		AND
+			COMPANYID = #v_companyID#
+	</select>
+	
+	<insert id="EzApprovalG.insertGongRamSendAprLineInfo" parameterClass="Map">
+		INSERT INTO
+			TBL_APRLINEINFO
+		(DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID)
+		(SELECT
+			#v_gongRamDocID#,
+			AprMemberSN,
+			AprType,
+			'002',
+			AprMemberID,
+			AprMemberIsDeptYN,
+			AprMemberName,
+			AprMemberName2,
+			AprMemberJobTitle,
+			AprMemberJobTitle2,
+			AprMemberDeptID,
+			AprMemberDeptName,
+			AprMemberDeptName2,
+			AprMemberLDAPPath,
+			#v_SYSDATE#,
+			ProcessDate,
+			ReasonDoNotApprov,
+			isProposerYN,
+			isBriefUserYN,
+			TENANT_ID,
+			COMPANYID
+		FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#)
+	</insert>
+	
+	<insert id="EzApprovalG.insertGongRamSendExpAprLine" parameterClass="Map">
+		INSERT INTO
+			TBL_EXPAPRLINE
+		(DocID, AprMemberSN, OrgUserID, ProxyUserID, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID, COMPANYID)
+		(SELECT
+			#v_gongRamDocID#,
+			AprMemberSN,
+			AprMemberID,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			'' ,
+			TENANT_ID,
+			COMPANYID
+		FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#)
+	</insert>
+	
+	<delete id="EzApprovalG.deleteGongRamSendAprLineInfo" parameterClass="Map">
+		DELETE FROM
+			TBL_GONGRAMLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</delete>
+	
+	<select id="EzApprovalG.getGongRamLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<isEqual property="mode" compareValue="APR">
+			SELECT
+				DOCID,
+				APRMEMBERSN,
+				APRTYPE,
+				APRSTATE,
+				APRMEMBERID,
+				APRMEMBERISDEPTYN,
+				APRMEMBERNAME,
+				APRMEMBERNAME2,
+				APRMEMBERJOBTITLE,
+				APRMEMBERJOBTITLE2,
+				APRMEMBERDEPTID,
+				APRMEMBERDEPTNAME,
+				APRMEMBERDEPTNAME2,
+				APRMEMBERLDAPPATH,
+				RECEIVEDDATE,
+				PROCESSDATE,
+				ISPROPOSERYN,
+				ISBRIEFUSERYN,
+				REASONDONOTAPPROV
+			FROM
+				TBL_GONGRAMLINEINFO
+			WHERE
+				DOCID = #docID#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		</isEqual>
+		<isNotEqual property="mode" compareValue="APR">
+			SELECT
+				TBL_APRLINEINFO.DOCID,
+				TBL_APRLINEINFO.APRMEMBERSN,
+				TBL_APRLINEINFO.APRTYPE,
+				TBL_APRLINEINFO.APRSTATE,
+				TBL_APRLINEINFO.APRMEMBERID,
+				TBL_APRLINEINFO.APRMEMBERISDEPTYN,
+				TBL_APRLINEINFO.APRMEMBERNAME,
+				TBL_APRLINEINFO.APRMEMBERNAME2,
+				TBL_APRLINEINFO.APRMEMBERJOBTITLE,
+				TBL_APRLINEINFO.APRMEMBERJOBTITLE2,
+				TBL_APRLINEINFO.APRMEMBERDEPTID,
+				TBL_APRLINEINFO.APRMEMBERDEPTNAME,
+				TBL_APRLINEINFO.APRMEMBERDEPTNAME2,
+				TBL_APRLINEINFO.APRMEMBERLDAPPATH,
+				TBL_APRLINEINFO.RECEIVEDDATE,
+				TBL_APRLINEINFO.PROCESSDATE,
+				TBL_APRLINEINFO.ISPROPOSERYN,
+				TBL_APRLINEINFO.ISBRIEFUSERYN,
+				TBL_APRLINEINFO.REASONDONOTAPPROV,
+				TBL_EXPAPRLINE.ORGUSERID,
+				TBL_EXPAPRLINE.PROXYUSERID,
+				TBL_EXPAPRLINE.PROXYUSERNAME,
+				TBL_EXPAPRLINE.PROXYUSERNAME2,
+				TBL_EXPAPRLINE.PROXYUSERJOBTITLE,
+				TBL_EXPAPRLINE.PROXYUSERJOBTITLE2,
+				TBL_EXPAPRLINE.PROXYUSERDEPTID,
+				TBL_EXPAPRLINE.PROXYUSERDEPTNAME,
+				TBL_EXPAPRLINE.PROXYUSERDEPTNAME2
+			FROM
+				TBL_APRLINEINFO
+			INNER JOIN
+				TBL_EXPAPRLINE
+			ON
+				TBL_APRLINEINFO.DOCID = TBL_EXPAPRLINE.DOCID
+			AND
+				TBL_APRLINEINFO.APRMEMBERSN = TBL_EXPAPRLINE.APRMEMBERSN
+			AND
+				TBL_APRLINEINFO.TENANT_ID = TBL_EXPAPRLINE.TENANT_ID
+			AND
+				TBL_APRLINEINFO.COMPANYID = TBL_EXPAPRLINE.COMPANYID
+			WHERE
+				TBL_APRLINEINFO.DOCID = #docID#
+			AND
+				TBL_APRLINEINFO.TENANT_ID = #tenantID#
+			AND
+				TBL_APRLINEINFO.COMPANYID = #companyID#
+		</isNotEqual>
 	</select>
 </sqlMap>
