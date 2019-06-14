@@ -152,7 +152,6 @@
 <result property="currentWeather" 				column="CURRENTWEATHER" />
 <result property="todayWeather" 				column="TODAYWEATHER" />
 </resultMap>
-
 <resultMap class="webFolderFileVO" id="webFolderFileVO">
 <result property="fileId" column="FILE_ID" />
 <result property="fileName" column="FILE_NAME" />

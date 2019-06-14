@@ -21,6 +21,7 @@
 <typeAlias alias="WeatherVO" type="egovframework.ezEKP.ezNewPortal.vo.WeatherVO"/>
 <typeAlias alias="BoardListVO" type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 <typeAlias alias="OrganDeptVO" type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
+<typeAlias alias="webFolderFileVO" type="egovframework.ezEKP.ezWebFolder.vo.FileVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -156,6 +157,25 @@
 <result property="url"					column="url"/>
 <result property="size"					column="quicksize"/>
 </resultMap> -->
+<resultMap class="webFolderFileVO" id="webFolderFileVO">
+<result property="fileId" column="FILE_ID" />
+<result property="fileName" column="FILE_NAME" />
+<result property="filePath" column="FILE_PATH" />
+<result property="fileSize" column="FILE_SIZE" />
+<result property="typeId" column="TYPE_ID" />
+<result property="downloadCnt" column="DOWN_COUNT" />
+<result property="fileExt" column="FILE_EXT" />
+<result property="folderId" column="FOLDER_ID" />
+<result property="useStatus" column="USE_STATUS" />
+<result property="createId" column="CREATE_ID" />
+<result property="createName1" column="CREATE_NAME1" />
+<result property="createName2" column="CREATE_NAME2" />
+<result property="createDate" column="CREATE_DATE" />
+<result property="updateId" column="UPDATE_ID" />
+<result property="updateDate" column="UPDATE_DATE" />
+<result property="deleterId" column="DELETER_ID" />
+<result property="tenantId" column="TENANT_ID" />
+</resultMap>
 
 <!-- 공지사항 포틀릿 가져오기 -->
 <select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
@@ -2346,6 +2366,35 @@ ORDER BY
 			B.company_id IS NULL
 		AND 
 			A.cn NOT LIKE 'shared_mailbox%'
+	]]>
+</select>
+
+<select id="ezNewPortal.getWebFolderFileList" parameterClass="Map" resultMap="webFolderFileVO">
+	<![CDATA[
+		SELECT 
+	    	FILE_ID, FILE_NAME, FILE_PATH, FILE_SIZE, TYPE_ID, DOWN_COUNT, FILE_EXT, FOLDER_ID, USE_STATUS, CREATE_ID, 
+	    	CREATE_NAME1, CREATE_NAME2, CREATE_DATE, UPDATE_ID, UPDATE_DATE, DELETER_ID, TENANT_ID
+		FROM (
+		    SELECT F.*, ROWNUM AS RN
+		    FROM (
+				SELECT 
+					FILE_ID, FILE_NAME, FILE_PATH, FILE_SIZE, TYPE_ID, DOWN_COUNT, FILE_EXT, FOLDER_ID, USE_STATUS, CREATE_ID, 
+		    		CREATE_NAME1, CREATE_NAME2, CREATE_DATE, UPDATE_ID, UPDATE_DATE, DELETER_ID, TENANT_ID
+				FROM 
+				    TBL_WEBFOLDER_FILE
+				WHERE
+					FOLDER_ID = #folderId#
+				AND
+					TYPE_ID NOT IN ('21')
+				AND
+					USE_STATUS = 'Y'
+				AND
+					TENANT_ID = #tenantId#
+				ORDER BY 
+					CREATE_DATE DESC
+				) F
+	    	) P
+		WHERE P.RN <= 5
 	]]>
 </select>
 </sqlMap>
