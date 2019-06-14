@@ -841,9 +841,9 @@
 		<h1><p style="padding-left:5px"><spring:message code='ezAttitude.t73'/></p></h1>
 	    <div class="portlet_tabnew01" style="margin-bottom:16px;">
 	        <div class="portlet_tabnew01_top" id="tab1">
-	            <p><span id="modify" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t5'/></span></p>
-	            <p><span id="absent" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t6'/></span></p>
-	            <p><span id="history" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t57'/></span></p>
+	            <p><span id="modify" <c:if test="${useLang == '2'}"></c:if><c:if test="${useLang != '2'}">style="width:100px;</c:if> text-align: center;"><spring:message code='ezAttitude.t5'/></span></p>
+	            <p><span id="absent" <c:if test="${useLang == '2'}"></c:if><c:if test="${useLang != '2'}">style="width:100px;</c:if> text-align: center;"><spring:message code='ezAttitude.t6'/></span></p>
+	            <p><span id="history" <c:if test="${useLang == '2'}"></c:if><c:if test="${useLang != '2'}">style="width:100px;</c:if> text-align: center;"><spring:message code='ezAttitude.t57'/></span></p>
 	        </div>
 	    </div>
 	    <div>
