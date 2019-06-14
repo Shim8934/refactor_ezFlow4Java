@@ -418,7 +418,8 @@
 	            return;
 	        }
 	        var id = p_ListOrderObject.getAttribute("_DATA2");
-	        var dept = p_ListOrderObject.getAttribute("_DATA11");
+	       // var dept = p_ListOrderObject.getAttribute("_DATA11");
+	        var dept = document.getElementsByClassName("node_selected")[0].parentNode.getAttribute("cn");
 	        var feature = GetOpenPosition(420, 450);
 	        if (CrossYN()) {
 	            var OpenWin = window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "ShowPersonInfo_cross", GetOpenWindowfeature(420, 450));

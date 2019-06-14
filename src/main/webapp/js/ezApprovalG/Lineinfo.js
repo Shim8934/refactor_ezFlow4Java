@@ -100,7 +100,7 @@ function AprlineDel_onclick() {
 			var Event_ID = "";
 		}
 		else {
-			var Event_ID = event.target.id || event.srcElement.id;
+			var Event_ID = window.event.srcElement.id;
 		}
 		if (Event_ID.indexOf("lvAPRLINE_TR_") == -1) {
 			if (nodelUser())

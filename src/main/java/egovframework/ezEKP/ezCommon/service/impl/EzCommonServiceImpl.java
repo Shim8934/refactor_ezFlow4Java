@@ -1552,6 +1552,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void updateListOptionData() throws Exception {
 		ezCommonDAO.updateListOptionData();
 	}
+	
+	@Override
+	public void addMsgInMailSearch() throws Exception {
+		ezCommonDAO.addMsgInMailSearch();
+	}
 
 	@Override
 	public void addQuickLinkLinkOrder() throws Exception {
@@ -1567,9 +1572,28 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addWebfolderTotalLimit() throws Exception {
 		ezCommonDAO.addWebfolderTotalLimit();
 	}
+
+	@Override
+	public void addMemoExtensionColumns() throws Exception {
+		ezCommonDAO.addMemoExtensionColumns();
+	}
+
+	@Override
+	public void addFormVersion() throws Exception {
+		ezCommonDAO.addFormVersion();
+	}
 	
 	@Override
 	public void addAddJobMasterProxy() throws Exception {
 		ezCommonDAO.addAddJobMasterProxy();
+	}
+	
+	@Override
+	public void createAttitudeAnnual() throws Exception {
+		ezCommonDAO.createTblAttitudeAnnual();
+		ezCommonDAO.createTblAttitudeAnnualCanappl();
+		ezCommonDAO.createTblAttitudeAnnualConf();
+		ezCommonDAO.createTblAttitudeAnnualHistory();
+		ezCommonDAO.createTblAttitudeAprConn();
 	}
 }

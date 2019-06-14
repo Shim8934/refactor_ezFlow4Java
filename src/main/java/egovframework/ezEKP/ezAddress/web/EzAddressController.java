@@ -41,6 +41,7 @@ import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
 import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -77,6 +78,9 @@ public class EzAddressController{
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
 	
 	/**
 	 * 도로명 주소 팝업창 호출 함수 (Open API)
@@ -355,6 +359,26 @@ public class EzAddressController{
 		String userNM2 = userInfo.getDisplayName2();
 		String rootAddressSelection = "";
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		String compAdmin = "";
+		String deptAdmin = "";
+		
+		// 20190523 조진호 - url로 ownerId를 변경하여 접근하는 경우 사용자의 권한 확인
+		boolean gyumJikChk = true;
+		
+		if (userInfo.getGyumJik() != null) {
+			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) > -1 || userInfo.getGyumJik().indexOf(userInfo.getDeptID()) > -1) { 
+				gyumJikChk = false;
+			}
+		}
+
+		if (gyumJikChk) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+	        	compAdmin = "Y";
+	        	deptAdmin = "Y";
+	        } else if (userInfo.getRollInfo().indexOf("g=1") > -1) {
+	        	deptAdmin = "Y";
+	        }
+		}
 		
 		// ownerId가 없으면 디비에서 구하기(주소록수정 시 ownerId가 null이기 때문에)
 		if (ownerId.trim().equals("")) {
@@ -366,10 +390,17 @@ public class EzAddressController{
 				} else {
 					ownerId = userInfo.getId();
 				}
-			}
-			else {
+			} else {
 				AddressFolderVO folderInfo = ezAddressService.getFolderInfo(folderId);
 				ownerId = folderInfo.getOwnerId();
+			}
+		} else { // 20190523 조진호 - 사용자가 url을 바꾸어 접근 한 경우 ownerId와 실제 사용자가 다르더라도 다른 사용자의 주소록에 등록이 가능한 오류 수정
+			if (folderType.equals("P") && !ownerId.equalsIgnoreCase(userInfo.getId())) {
+				ownerId = userInfo.getId();
+			} else if (folderType.equals("D") && !ownerId.equalsIgnoreCase(userInfo.getDeptID())) {
+				ownerId = userInfo.getDeptID();
+			} else if (folderType.equals("C") && !ownerId.equalsIgnoreCase(userInfo.getCompanyID())) {
+				ownerId = userInfo.getCompanyID();
 			}
 		}
 		
@@ -407,12 +438,14 @@ public class EzAddressController{
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("deptAdmin", deptAdmin);
+		model.addAttribute("compAdmin", compAdmin);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
 				 + ",changeKey=" + changeKey + ",photoUrl=" + photoUrl + ",textEmail=" + textEmail + ",userNM=" + userNM
 				 + ",userNM2=" + userNM2 + ",rootAddressSelection=" + rootAddressSelection + ",useAddressOpenAPI=" + useAddressOpenAPI
-				 + ",primaryLang=" + primaryLang + ",useZipCodeSearch=" + useZipCodeSearch);
+				 + ",primaryLang=" + primaryLang + ",useZipCodeSearch=" + useZipCodeSearch + ",deptAdmin=" + deptAdmin + ",compAdmin=" + compAdmin);
 		
 		return "ezAddress/addressWrite";
 	}
@@ -587,6 +620,12 @@ public class EzAddressController{
 		String compAdmin = "";
 		String deptAdmin = "";
 		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("addrs", userInfo);
+		}
+		
 		String pAddressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
 		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
@@ -635,6 +674,7 @@ public class EzAddressController{
 		model.addAttribute("pFolderId", pFolderId);
 		model.addAttribute("pFolderType", pFolderType);
 		model.addAttribute("getsMemo", replaceMemo);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("addressRead ended.");
 		logger.debug("useEditor=" + useEditor + ",noneActiveX=" + noneActiveX + ",userInfo=" + userInfo
@@ -667,6 +707,30 @@ public class EzAddressController{
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
+		}
+		
+		if (ownerId.trim().equals("")) {
+			if (folderId.equals("0")) {
+				if (folderType.equals("C")) {
+					ownerId = userInfo.getCompanyID();
+				} else if (folderType.equals("D")) {
+					ownerId = userInfo.getDeptID();
+				} else {
+					ownerId = userInfo.getId();
+				}
+			} else {
+				AddressFolderVO folderInfo = ezAddressService.getFolderInfo(folderId);
+				ownerId = folderInfo.getOwnerId();
+			}
+		} else { // 20190523 조진호 - 사용자가 url을 바꾸어 접근 한 경우 ownerId와 실제 사용자가 다르더라도 다른 사용자의 주소록에 등록이
+					// 가능한 오류 수정
+			if (folderType.equals("P") && !ownerId.equalsIgnoreCase(userInfo.getId())) {
+				ownerId = userInfo.getId();
+			} else if (folderType.equals("D") && !ownerId.equalsIgnoreCase(userInfo.getDeptID())) {
+				ownerId = userInfo.getDeptID();
+			} else if (folderType.equals("C") && !ownerId.equalsIgnoreCase(userInfo.getCompanyID())) {
+				ownerId = userInfo.getCompanyID();
+			}
 		}
 		
 		model.addAttribute("addressId", addressId);
@@ -797,6 +861,12 @@ public class EzAddressController{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String noneActiveX = "YES";
 		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("addrs", userInfo);
+		}
+		
 		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			compAdmin = "Y";
 			deptAdmin = "Y";
@@ -842,6 +912,7 @@ public class EzAddressController{
 		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("addressReadGroup ended.");
 		logger.debug("pFolderType=" + pFolderType + ",pAddressId=" + pAddressId + ",userInfo=" + userInfo + ",addressInfo=" + addressInfo
@@ -2263,14 +2334,20 @@ public class EzAddressController{
 	        		csvBody[14] = csvBody[14].replaceAll("\n", "<br>");
 	        	}
 	        	
+	        	String sName = csvBody[0];
+	        	if (sName.contains("\'") || sName.contains("<") || sName.contains(">") || sName.contains("\"") || sName.contains("&") || sName.contains(";")) {
+	        		sName = csvBody[0].replaceAll("\'", "").replaceAll("<", "").replaceAll(">", "").replaceAll("\"", "").replaceAll("&", "").replaceAll(";", "");
+
+    			}
+	        	
         		if (csvBody[8].equals(groupMailStr)) {
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
-        					csvBody[0], csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
+        					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
         					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G");
         		} else {
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName(), userInfo.getDisplayName2(),
-        					csvBody[0], csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
+        					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
         					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P");
         		}

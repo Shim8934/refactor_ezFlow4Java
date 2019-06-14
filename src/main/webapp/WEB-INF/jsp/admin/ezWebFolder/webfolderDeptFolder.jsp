@@ -664,7 +664,7 @@
 									<tr>
 										<td>
 											<div style="margin: 20px 20px 5px; min-height: 36px;">
-												<div style="display: inline-block; width: 52px; line-height: 30px;" id= "displayUsers">
+												<div style="display: inline-block; width: 60px; line-height: 30px;" id= "displayUsers">
 													<img src="/images/kr/left/left_dot02.gif"/>
 													<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>
 												</div>

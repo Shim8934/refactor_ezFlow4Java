@@ -277,7 +277,7 @@ function PreviewRayerChange_photo(pGubun) {
 			}
 
             /*document.getElementById("divList").style.overflow = "auto";*/
-            document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 60) + "px";
+            document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 77) + "px";
             pPreviewShow_HOW = "H";
             pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
             pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
@@ -1052,7 +1052,7 @@ function Window_resize_photo() {
                 
                 document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
             	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
-                document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 60) + "px";
+                document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 77) + "px";
                 
                 pPreviewShow_HOW = "H";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);

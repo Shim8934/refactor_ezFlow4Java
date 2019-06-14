@@ -386,10 +386,11 @@
 	                return;
 	            }
 	        	
-	        	if (pTextName.indexOf('<') != -1 || pTextName.indexOf('>') != -1 || pTextName.indexOf(';') != -1) {
-	        		document.getElementById("TextName").focus();
-		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
-		        	return;
+	        	if (pTextName.indexOf("&") > -1 || pTextName.indexOf("<") > -1 || pTextName.indexOf(">") > -1 
+		        		 || pTextName.indexOf("\"") > -1 || pTextName.indexOf("'") > -1 || pTextName.indexOf(';') != -1) {
+	           		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+	           		document.getElementById("TextName").focus();
+		            return;
 		        }
 	        	
 	        	/* 2018-09-03 홍승비 - 그룹주소 등록 시 구성원 최소 1명 이상 확인 */

@@ -1591,6 +1591,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				logger.debug("fieldName = " + fieldName);
 				logger.debug("fieldValue = " + fieldValue);
 				
+				if (fieldName.equals("PROCESSDATE") && fieldValue.indexOf("0000") > -1) {
+					fieldValue = "";
+				}
 				/*if (useReceiveInfoName.equals("1")) {
 					if ((vo.getReceiptMemberName() == null || vo.getReceiptMemberName().equals("")) && !vo.getReceiptPointName().equals("") && fieldName.equals("RECEIPTPOINTNAME")) {
 						fieldValue += messageSource.getMessage("ezApprovalG.lhj18", locale);
@@ -9659,7 +9662,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			rtnXML.append("<DOCNUMCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim())) + "</DOCNUMCODE>");
 			rtnXML.append("<ORGDOCNUMCODE>" + makeXMLString(makeListField(docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim())) + "</ORGDOCNUMCODE>");
 			rtnXML.append("<SEPERATEATTACHXML>" + makeXMLString(makeListField(docXML.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent().trim())) + "</SEPERATEATTACHXML>");
-			rtnXML.append("<SUMMARY>" + makeXMLString(makeListField(docXML.getElementsByTagName("SUMMARY").item(0).getTextContent().trim())) + "</SUMMARY>");
+			rtnXML.append("<SUMMARY>" + makeXMLString(makeListField(docXML.getElementsByTagName("SUMMARY").item(0).getTextContent())) + "</SUMMARY>");
 			rtnXML.append("<SECURITYAPPROVAL>" + makeXMLString(makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent())) + "</SECURITYAPPROVAL>");
             rtnXML.append("<ITEMNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("ITEMNAME2").item(0).getTextContent())) + "</ITEMNAME2>");
             rtnXML.append("<WRITERNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())) + "</WRITERNAME2>");
@@ -17558,9 +17561,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (docXML.getElementsByTagName("SUMMARY").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent().trim();
+			tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
 			
-			if (!tempValue.equals("")) {
+			if (!tempValue.trim().equals("")) {
 				if (firstFlag) {
 					map.put("v_SUMMARY", tempValue);
 					map.put("v_FIRSTFLAG17", firstFlag);
@@ -24457,7 +24460,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_KEYWORD", QueryData.getElementsByTagName("KEYWORD").item(0) == null ? "" : QueryData.getElementsByTagName("KEYWORD").item(0).getTextContent());
 		map.put("v_PSTRLANG", lang);
 		map.put("v_PSTRMULTIDATA", strMultiData);
-		map.put("v_PLISTCOUNT", pPageSize);
+		map.put("v_PLISTCOUNT", Integer.parseInt(pPageSize));
 		map.put("v_PQUERYSIZEMAIN", totalCount - (Integer.parseInt(pPageSize)*(Integer.parseInt(pPageNum)-1)));
 		map.put("v_PQUERYSIZESUB", Integer.parseInt(pPageSize)*(Integer.parseInt(pPageNum)-1));
 		map.put("v_ORDEROPTION", OrderOption1);
@@ -27016,7 +27019,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			result.append("<mTo>" + listXML.getElementsByTagName("MTO").item(0).getTextContent() + "</mTo>");
 
-			result.append("<Subject>" + listXML.getElementsByTagName("SUBJECT").item(0).getTextContent() + "</Subject>");
+			result.append("<Subject>" + listXML.getElementsByTagName("SUBJECT").item(0).getTextContent().replace("<", "&lt;").replace(">", "&gt;") + "</Subject>");
 			result.append("<xMailType>" + listXML.getElementsByTagName("XMAILTYPE").item(0).getTextContent() + "</xMailType>");
 			result.append("<xFromCode>" + listXML.getElementsByTagName("XFROMCODE").item(0).getTextContent() + "</xFromCode>");
 			result.append("<xToCode>" + listXML.getElementsByTagName("XTOCODE").item(0).getTextContent() + "</xToCode>");

@@ -1777,8 +1777,8 @@
 		    }
 	    </script>
 	    <style>
-	    	.mainlist_free tr th {text-align:center}
-	    	.mainlist_free tr td {text-align:center}
+	    	/* .mainlist_free tr th {text-align:center} */
+	    	/* .mainlist_free tr td {text-align:center} */
 	    	#lvAPRTEMPLIST_TH_0 {text-align:left}
 	    	#lvAPRTEMPLIST td {text-align:left}
 	    	#lvAPRTEMPLIST_TR_noItems td {text-align:center}

@@ -164,11 +164,20 @@
 	    var journalId = '<c:out value="${journalId}"/>';
 	    //근태관리 아이디
 	    var attitudeId = '<c:out value="${attitudeId}"/>';
-	    var attitudeIncludeMe = false; 
+	    var attitudeIncludeMe = false;
 	    var searchStartDate = '<c:out value="${searchStartDate}"/>';
 	    var searchEndDate = '<c:out value="${searchEndDate}"/>';
 	    var shareId = '<c:out value="${shareId}"/>';
-	    var isMailToMe = "${isMailToMe}"; 
+	    // ezPMS 프로젝트 아이디
+	    var ezPMSProjectId = "${ezPMSProjectId}";
+	    // ezPMS 게시판 아이디
+	    var ezPMSBoardId = "${ezPMSBoardId}";
+	    var ezPMSRoleId = "${pmsRoleId}";
+	    var ezPMSType = "${pmsType}";
+	    var ezPMSToUserId = "${pmsToUserId}";
+	    var ezPMSUserIdType = "${pmsUserIdType}";
+	    var ezPMSTaskId = "${pmsTaskId}";
+	    var isMailToMe = "${isMailToMe}";
 	    var receiverCount = 0;
         var groupAddressCountMap = {};
         var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
@@ -214,6 +223,8 @@
 	        
 	        if (moduleType == "attitudeAbsented") {
 	        	getAttitudeAbsentedList("distinct");
+	        } else if (moduleType == "ezPMS") {
+	        	getPMSMemberList(ezPMSType);
 	        }
 	        
 	        if (xmpTo.innerHTML != "") {
@@ -221,6 +232,8 @@
 
 	        	if (moduleType == "attitudeAbsented") {
 		        	getAttitudeAbsentedList("distinct");
+		        } else if (moduleType == "ezPMS") {
+		        	getPMSMemberList(ezPMSType);
 		        }
 	        	
 	        	if (moduleType && moduleType == "poll") {
@@ -1009,6 +1022,15 @@
 	            	getJournalToMail();
 	            	return;
 	            }
+	            // ezPMS 게시판
+	            else if (Org_cmd == "ezPMSBoard") {
+	            	getEzPMSBoardToMail();
+	            	return;
+	            }
+	            else if (Org_cmd == "ezPMS") {
+	            	getPMSMemberList(ezPMSType);
+	            	return;
+	            }
 	            else if (Org_cmd == "attitude") {
 	            	getAttitudeToMail();
 	            	return;
@@ -1060,7 +1082,109 @@
 				success : function(result) {
 					$("#eSubject").val("<spring:message code='ezJournal.t1' /><spring:message code='ezEmail.t674' /> : "+result.journalTitle);
 					var journalContent = "<p></p><p></p><hr>" + (result.journalContent).replace(/&#39;/gi, "\'");
+					
+					switch (mailsel) {
+		                case "0": 
+		                	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>" + journalContent;
+		                    break;
+		                case "1": 
+		                	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + journalContent;
+		                	tempvalue = "1";
+			                break;
+			            case "2": 
+			            	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + journalContent;
+			                tempvalue = "1";
+			                break;
+			            case "3": 
+			            	journalContent = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + journalContent;
+			                tempvalue = "1";
+			                break;
+		            }
+						
 					message.SetEditorContent(journalContent);
+					var fileList = result.fileList;
+					
+					var pstrXML = "";
+
+					//첨부파일이 있을 경우
+			        if (fileList.length > 0) {
+			            pstrXML += "<LISTVIEWDATA><HEADERS>";
+			            pstrXML += "<HEADER><NAME>" + strLang1 + "</NAME><WIDTH>100</WIDTH></HEADER>";
+			            pstrXML += "<HEADER><NAME>" + strLang3 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+			            pstrXML += "</HEADERS><ROWS>";
+			        }
+			        for (var i = 0; i < fileList.length; i++) {
+			            var filepath = fileList[i].filePath;
+			            var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
+			            var filename = fileList[i].fileName;
+			            var filesize = fileList[i].fileSize;
+
+			            pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
+			            pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
+			            pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
+			            pstrXML += "<DATA3></DATA3>";
+			            pstrXML += "<DATA4>BOARD</DATA4>";
+			            pstrXML += "<DATA5>N</DATA5>";
+			            pstrXML += "<DATA6>" + filesize + "</DATA6>";
+			            if(filesize > BigSizeAttachSize )
+			                pstrXML += "<DATA7>Y</DATA7>";
+			            else
+			                pstrXML += "<DATA7>N</DATA7>";
+			            pstrXML += "</CELL><CELL>";
+			            pstrXML += "<VALUE>" + filesize + " Bytes" + "</VALUE>";
+			            pstrXML += "</CELL></ROW>";
+			        }
+			        if (pstrXML != "") {
+			            pstrXML += "</ROWS></LISTVIEWDATA>";
+			            objXML = loadXMLString(pstrXML);
+			            if (pAttachListXml == "") {
+			                pAttachListXml = objXML;
+			            }
+			            else {
+			                if (typeof (pAttachListXml) == "string")
+			                    Rtnxml = loadXMLString(pAttachListXml);
+			                else
+			                    Rtnxml = loadXMLString(getXmlString(pAttachListXml));
+
+			                for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+			                    var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+//			                    if (CrossYN())
+//			                        var Node = Rtnxml.importNode(objNewAttachNodes, true);
+//			                    else
+			                        GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
+			                }
+			                pAttachListXml = Rtnxml;
+			            }
+			            if (DragDropAttachObjetLoading) {
+//			            	AppendFileAttachInfo(pAttachListXml);
+			            	dadiframe.fileupload2(pAttachListXml,"/ezEmail/mailInterUploadCopyXCKFromJournal.do");
+			            }
+			        }
+				}
+			});
+	    }
+	    
+	    function getEzPMSBoardToMail(){
+	    	var journal;
+	    	$.ajax ({
+				type : "POST",
+				async : false,
+				url : "/ezPMS/boardDetailJSON.do",
+				data : {
+					projectId : ezPMSProjectId,
+					itemId : ezPMSBoardId
+				},
+				success : function(result) {
+					$("#eSubject").val("<spring:message code='ezBoard.t342' /><spring:message code='ezEmail.t674' /> : " + result.title);
+					var boardContent = "<p></p><p></p><hr>";
+					boardContent += "<p><b>" + "<spring:message code='ezPMS.t210' /> " + "</b>" + result.writeDate.substring(0, result.writeDate.length - 2) + "<br/>";
+					boardContent += "<b>" + "<spring:message code='ezPMS.t211' /> " + "</b>" + result.writerName + "<br/>";
+					boardContent += "<b>" + "<spring:message code='ezPMS.t212' /> " + "</b>" + MakeXMLString(result.title) + "</p>";
+					boardContent += "<p></p>";
+					boardContent += (result.boardContent).replace(/&#39;/gi, "\'");
+					
+					message.SetEditorContent(boardContent);
+					
 					var fileList = result.fileList;
 					
 					var pstrXML = "";
@@ -1629,7 +1753,7 @@
 						xmpTo.innerHTML = resultHtml;
 					} else {
 						//2018-10-04 배현상, 근태관리 미입력자 메일 안내문구 삭제
-						var resultHtml = "<br/><br/><br/><hr>";
+						var resultHtml = "<hr>";
 						
 						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;근태미입력자</strong></span></p><p></p>";
 						resultHtml += "<table style='border-collapse:collapse; width:800px;'>";
@@ -1651,10 +1775,73 @@
 						
 						$("#eSubject").val("[근태미입력공지] " + searchStartDate + " ~ " + searchEndDate);
 						
-						message.SetEditorContent(resultHtml);
+						switch (mailsel) {
+		                case "0": 
+			    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>" + resultHtml);
+		                    break;
+		                case "1": 
+			    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + resultHtml);
+		                	tempvalue = "1";
+			                break;
+			            case "2": 
+			    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + resultHtml);
+			                tempvalue = "1";
+			                break;
+			            case "3": 
+			    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + resultHtml);
+			                tempvalue = "1";
+			                break;
+		            	}
 					}
 				}
 			});
+	    }
+	    
+	    function getPMSMemberList(type) {
+	    	var data = {
+				projectId : ezPMSProjectId,
+				roleId : ezPMSRoleId,
+				type : ezPMSType,
+				toUserId : ezPMSToUserId,
+				userIdType : ezPMSUserIdType,
+				taskId : ezPMSTaskId
+	    	}
+	    	
+	    	$.ajax ({
+	    		type : "post",
+				dastaType : "json",
+   				contentType: "application/json; charset=UTF-8",
+				async : false,
+				url : "/ezPMS/sendMail.do",
+				data : JSON.stringify(data),
+				success : function(result) {
+					$("#eSubject").val("[" + result.project.projectName + "]");
+
+					var resultHtml = "";
+					
+					if (ezPMSType == "group") {
+						var memberList = result.list;
+						var headManagerId = result.project.headManagerId;
+						
+						for (var i = 0; i < memberList.length; i++) {
+							var userId = memberList[i].userId;
+							
+							if (headManagerId != userId) {
+					    		resultHtml += "\"" + memberList[i].userName + "\"";
+					    		resultHtml += " <" + memberList[i].userMail + ">, ";	
+							}
+						}
+						
+						resultHtml = resultHtml.slice(0, -2);
+					} else if (ezPMSType == "one") {
+						resultHtml += "\"" + result.list.userName + "\"";
+						resultHtml += " <" + result.list.userMail + ">";
+					}
+					
+					console.log(resultHtml);
+					xmpTo.innerHTML = resultHtml;
+				}
+	    	});
 	    }
 	    
 	    function getAttitudeToMail() {
@@ -1707,7 +1894,23 @@
 	    			objTable.find("#bizsub").text(result.attitudeVO.bizSub);
 	    			objTable.find("#region").length == 0 ? "" : objTable.find("#region").text(result.attitudeVO.region);
 	    			objTable.find("#content").html(result.attitudeVO.content);
-	    			message.SetEditorContent("<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+	    			switch (mailsel) {
+	                case "0": 
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV><p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+	                    break;
+	                case "1": 
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+	                	tempvalue = "1";
+		                break;
+		            case "2": 
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		                tempvalue = "1";
+		                break;
+		            case "3": 
+		    			message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML + "<p></p><p></p><hr><p></p><p><span style='font-size:18px;'><strong>&nbsp;근태보고</strong></span></p><p></p>" + objDiv.html());
+		                tempvalue = "1";
+		                break;
+	            	}
 	    		}
 	    	});
 	    }
@@ -2011,6 +2214,7 @@
 				.appendTo(ul);
 			};
 		})
+		
 		function bodydragover(evt) {
 				evt.dataTransfer.dropEffect = "none";
 				evt.stopPropagation();

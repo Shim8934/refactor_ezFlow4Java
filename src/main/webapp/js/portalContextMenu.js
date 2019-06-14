@@ -255,7 +255,8 @@ var setImageElement = function (parent, imgsrc, type) {
 	var imageWrap = document.createElement('div');
 	var imageElement = document.createElement('img');
 	imageElement.src = imgsrc;
-	imageElement.dataset.type = type;
+	imageElement.setAttribute('data-type', type);
+//	imageElement.dataset.type = type;
 	setImageName(type);
 	if(type !== 'memo') {
 		buttonDiv.addEventListener('click', function () {
@@ -265,15 +266,17 @@ var setImageElement = function (parent, imgsrc, type) {
 		imageElement.id = 'open-memo';
 		buttonDiv.addEventListener('click', function(event) {
 			event.preventDefault();
-			if(document.getElementById('layer-popup').style.display === 'none') {
+			//if(document.getElementById('layer-popup').style.display === 'none') {
+			if(document.getElementById('layer-popup').style.visibility === 'hidden') {
 				document.getElementById('noteBlock').style.visibility = 'visible';
-				document.getElementById('layer-popup').style.display = '';
+				document.getElementById('layer-popup').style.visibility = 'visible';
 				document.getElementById('contextMenuBlock').style.display = 'none';
 			} else {
-				document.getElementById('layer-popup').style.display = 'none';
+				//document.getElementById('layer-popup').style.display = 'none';
+				document.getElementById('layer-popup').style.visibility = 'hidden';
 				document.getElementById('contextMenuBlock').style.display = '';	
 			}
-			layerExpand();
+			// layerExpand();	// 컨텍스트 버튼 접었다가 열 때마다 이벤트 쌓여서 주석처리. 대신 jsp에서 이벤트 호출
 		});
 	}
 	
