@@ -57,7 +57,7 @@ function getWebFolderFileList() {
 				
 				var dtEl = document.createElement('dt');
 				var ddEl = document.createElement('dd');
-				ddEl.textContent = "\"<spring:message code='ezNewPortal.t018' />\"";
+				ddEl.innerHTML = "\"" + messages.strLang1 + "\"";
 				
 				var imgEl = setFileTypeTag("");
 				dtEl.appendChild(imgEl);
