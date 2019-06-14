@@ -2826,9 +2826,9 @@ h2, #menu span {font-size: 12px;}
 .surveyinf-divcf.flex-cf {display: flex; align-items: center;}
 
 .user-listDiv {flex: 1; border: none; outline: none; padding: 0px 5px; max-height: 30px; height: 25px; line-height: 25px; overflow-y: auto;}
-.user-listDiv span {padding-right: 5px; font-size: 12px; word-break: break-all;}
-.user-listDiv span >u {cursor: pointer; color: #333; text-decoration: underline; line-height: 20px;}
-.user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;}
+.user-listDiv span {padding-right: 3px; font-size: 12px; word-break: break-all;}
+.user-listDiv span >u {cursor: pointer; color: rgb(128, 128, 128); text-decoration: underline; line-height: 20px;}
+/* .user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;} */
 .user-listDiv span >span {padding-right: 5px; font-style: normal;}
 .user-listDiv span >img {width: 10px; height: 10px; cursor: pointer;}
 
