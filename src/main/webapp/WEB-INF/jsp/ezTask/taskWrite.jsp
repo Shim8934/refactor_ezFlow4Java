@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<HEAD>
 		<title><spring:message code='ezTask.t206' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -595,6 +595,12 @@
 					}
 				}
 			}
+
+	        function bodydragover(evt) {
+		        evt.dataTransfer.dropEffect = "none";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden;">

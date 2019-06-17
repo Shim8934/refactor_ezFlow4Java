@@ -13,7 +13,7 @@
 		<h1><spring:message code="ezSurvey.t08"/></h1>
 		<div class="portlet_tabpart01">
 			<div class="portlet_tabpart01_top" id="tab1" class="tabon">
-				<p><span role="surveyEnv_div1" id="1tab1"><spring:message code="ezSurvey.t01"/></span></p>
+				<p><span role="surveyEnv_div1" id="1tab1"><spring:message code="ezSurvey.t109"/></span></p>
 			</div>
 		</div>
 		<iframe id="surveyEnv_ifrm" class="tabIfrm"></iframe>
