@@ -2054,18 +2054,18 @@
 		<![CDATA[
 			SELECT 
 				USER_ID AS userId, 
-	       		TRUNC(MONTHS_BETWEEN(TO_DATE(JOIN_DATE, 'yyyy-mm-dd'), SYSDATE)) AS workingMonthCnt, 
-			    TO_DATE(JOIN_DATE, 'yyyy-mm-dd')          							  AS joinDate,
+	       		TRUNC(MONTHS_BETWEEN(TRUNC(SYSDATE),JOIN_DATE)) AS workingMonthCnt, 
+			    TO_CHAR(JOIN_DATE, 'yyyy-mm-dd')          							  AS joinDate,
 			    COMPANY_ID 															  AS companyId,
 			    TENANT_ID															  AS tenantId
 			FROM   
-				TBL_ATTITUDE_JOINDATE
+				TBL_ATTITUDE_ANNUAL
 			WHERE 
 				1 = 1
 		]]>
 		<isNotEmpty property="yseterday" > 
 			AND
-				JOIN_DATE LIKE '%-%-' || #yesterday# || '%'
+				TO_CHAR(JOIN_DATE,'YYYY-MM-DD') LIKE '%-%-' || #yesterday# || '%'
 		</isNotEmpty>
 		<![CDATA[
 			AND
@@ -2090,7 +2090,7 @@
 			AND 
 				WRITER_ID = #userId#
 			AND
-				START_DATE >= #joinDate#
+				START_DATE >= TO_DATE(#joinDate#,'YYYY-MM-DD')
 		]]>
 		<isNotEmpty property="oneMonthAgo">
 			<![CDATA[
