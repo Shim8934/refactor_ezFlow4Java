@@ -2358,13 +2358,13 @@
 						a.writer_id as WRITER_ID,
 						to_char(A.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPR_DATE
 				FROM 
-					jmocha.tbl_attitude_annual_canappl a 
+					TBL_ATTITUDE_ANNUAL_CANAPPL a 
 				inner 
-					join tbl_attitude b 
+					join TBL_ATTITUDE b 
 				on 
 					a.ATTITUDE_ID = b.ATTITUDE_ID
 				inner 
-					join tbl_attitude_type c 
+					join TBL_ATTITUDE_TYPE c 
 				on 
 					b.TYPE_ID = c.TYPE_ID
 				and
