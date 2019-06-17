@@ -209,7 +209,7 @@
 		            var MaxID = 0;
         		    var InitTr = listview.GetDataRows();
             		var MaxCntNum = 0;
-            		for (var j = 0  ; j < InitTr.length  ; j++) {
+            		for (var j = 0  ; j < InitTr.lewongth  ; j++) {
                 		var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
                 		if (MaxID < curnum) {
                     		MaxID = curnum;
@@ -484,12 +484,12 @@
 	        var arrRows2 = selList2.GetDataRows();
     	    if (arrRows.length + arrRows2.length > 0) {
         	    SaveRangeACL();
-            	window.opener.updateParent("setTarget", 1, "selectedIndex");
-            	window.opener.updateParent("hidTarget", "1", "value");
-            	window.opener.updateParent("selectYN", "YES", "value");
-            	window.opener.updateParent("RangeXMLStr", MakeXml_Range(), "value");
-            	window.opener.updateParent("itemNo", L_ITEMNO, "value");
-            	window.opener.closeWindow();
+               	window.opener.updateParent("setTarget", 1, "selectedIndex");
+               	window.opener.updateParent("hidTarget", "1", "value");
+               	window.opener.updateParent("selectYN", "YES", "value");
+               	window.opener.updateParent("RangeXMLStr", MakeXml_Range(), "value");
+               	window.opener.updateParent("itemNo", L_ITEMNO, "value");
+               	window.opener.closeWindow();
         	} else {
             	window.opener.updateParent("setTarget", 0, "selectedIndex");
             	window.opener.updateParent("hidTarget", "0", "value");

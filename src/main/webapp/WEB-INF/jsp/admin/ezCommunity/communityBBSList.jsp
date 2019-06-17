@@ -265,10 +265,10 @@
 	<body class="mainbody">
 		<c:choose>
 			<c:when test="${bName == 'tbl_c_notice' }">
-				<h1><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/><span id="mailBoxInfo"></span></h1>
+				<h1><spring:message code='ezCommunity.khj07'/><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:when test="${bName == 'tbl_c_board' }">
-				<h1><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/><span id="mailBoxInfo"></span></h1>
+				<h1><spring:message code='ezCommunity.khj07'/><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:otherwise>
 				<h1><c:out value = '${titleName}' /><span id="mailBoxInfo"></span></h1>

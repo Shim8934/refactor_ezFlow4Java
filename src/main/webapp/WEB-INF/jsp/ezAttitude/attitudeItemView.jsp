@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.t158'/></title>
+		<title><spring:message code='ezAttitude.t159'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -31,6 +31,9 @@
 			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
 			var startDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
+			var modAppl = "<c:out value='${attitudeInfo.modAppl}'/>";
+			var annualApprStatus = "<c:out value='${attitudeInfo.annualApprStatus}'/>";
+			var docApprStatus = "<c:out value='${attitudeInfo.docApprStatus}'/>";
 			var font = "<c:out value='${font}'/>"
 			
 			window.onload = function () {
@@ -38,9 +41,47 @@
 			}
 			
 			function setHtml() {
+				var tempHtml = "";
+				
+				tempHtml += "<tr>";
+				tempHtml += "<th><spring:message code='ezAttitude.t274' /></th>";
+				if(annualApprStatus == "-1") {
+					tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t267' /></td>";
+				} else if(annualApprStatus == "0") {
+					if(docApprStatus == '005') {
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t268' /></td>";
+    				} else if(docApprStatus == '011') {
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t269' /></td>";
+    				} else {
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t270' /></td>";
+    				}
+				} else if(annualApprStatus == "1") {
+					tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t271' /></td>";
+				}
+				tempHtml += "</tr>";
+				
+				if (modAppl != "0") {
+					tempHtml += "<tr>";
+					tempHtml += "<th><spring:message code='ezAttitude.t272' /></th>";
+					if(modAppl == "1") {
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t209' /></td>";
+					} else if(modAppl == "3") {
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t210' /></td>";
+					} else if(modAppl == "4") {
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t211' /></td>";
+					}
+					tempHtml += "</tr>";
+				}
+				
 				$("#attiInfoView").append(formHtml);
 				
 				$("#attiInfoView tr td *").remove();
+				
+				if(typeId == 'A11' || typeId == 'A12' || typeId == 'A13') {
+					$("#attiInfoView").append(tempHtml);
+					//$("#attiInfoView tr").eq(3).css("display", "none");
+					$("#attiInfoView tr").eq(4).css("display", "none");
+				}
 				
 				//유형명
             	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
@@ -49,7 +90,7 @@
 				$("#writerName").text(" " + writerName);
 				$("#region").html(" " + region);
 				$("#mobile").html(" " + mobile);
-				$("#bizsub").html(" " + bizSub);
+				//$("#bizsub").html(" " + bizsub);
 				
 				var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
@@ -144,6 +185,56 @@
 				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
 				window.close();
 			}
+			
+			/**
+			* [개인연차현황] 연차취소신청
+			*/
+			function attitudeCancelAnnual() {
+				var openWin = null;
+				if (CrossYN()) {
+					openWin = window.open("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + attitudeId + "&typeId=" + typeId, "", GetOpenWindowfeature(672, 640));
+					
+					try { openWin.focus(); } catch (e) { }
+				} else {
+					openWin = window.showModalDialog("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+					try { openWin.focus(); } catch (e) { }
+				}
+				openWin.opener = window.opener;
+				window.close();
+			}
+			
+			//취소신청삭제
+			function deleteCancelAnnual() {
+				
+				var obj = new Object();
+		    	obj.attitudeId = attitudeId; 
+		    	
+				var delFlag = confirm("<spring:message code='ezAttitude.t160'/>");
+				if (delFlag) {
+					$.ajax({
+						type : "POST",
+						async : true,
+						url : "/ezAttitude/deleteCancelAnnual.do",
+						dataType : "text",
+						data : obj,
+						error: function(xhr, status, error){
+					    	alert("<spring:message code='ezAttitude.t83'/>");
+					    },
+					    success : function(json){
+					    	if (json == "error") {
+					    		alert("<spring:message code='ezAttitude.t175'/>");
+					    	}
+				            try {
+				            	window.opener.getUserAnnualList();
+								window.opener.parent.frames["left"].getAttitudeList();
+				            } catch (e) { 
+				            }
+				            window.close();
+					    }
+					})
+				}
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -183,9 +274,26 @@
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
 	            	<c:if test="${userId == attitudeInfo.writerId}">
-						<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t136'/></span></a>
-                        <a class="imgbtn"><span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span></a>
-                        <a class="imgbtn"><span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span></a>
+	            		<c:choose>
+	            			<c:when test="${attitudeInfo.typeId == 'A11' || attitudeInfo.typeId == 'A12' || attitudeInfo.typeId == 'A13'}">
+	            				<c:if test="${attitudeInfo.annualApprStatus == '1'}">
+		            				<c:if test="${attitudeInfo.modAppl == '0'}">
+		            					<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t272' /></span></a>
+		            				</c:if>
+		            				<c:if test="${attitudeInfo.modAppl == '1'}">
+	                       				<a class="imgbtn"><span onclick="deleteCancelAnnual()"><spring:message code='ezAttitude.t279' /></span></a>
+	                       			</c:if>
+		            				<c:if test="${attitudeInfo.modAppl == '4'}">
+	                       				<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t92' /></span></a>
+	                       			</c:if>
+                       			</c:if>
+                       		</c:when>
+                       		<c:otherwise>
+								<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t136'/></span></a>
+                       			<a class="imgbtn"><span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span></a>
+                       			<a class="imgbtn"><span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span></a>
+                       		</c:otherwise>
+                        </c:choose>
 					</c:if>
 	            </div>
 	        </div>

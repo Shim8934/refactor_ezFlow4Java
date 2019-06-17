@@ -169,7 +169,7 @@
 		</script>
 	</head>
 	<!-- 2018-02-01 김보미 - 게시물 상세 테이블 컬럼 조정. -->
-	<body style="padding-top:10px; padding-left:10px; padding-right:10px;">
+	<body style="padding:10px;">
 		<table class="layout" >  
 		  <tr>
 		    <td>

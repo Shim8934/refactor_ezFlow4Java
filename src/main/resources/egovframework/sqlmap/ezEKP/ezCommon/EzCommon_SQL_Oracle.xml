@@ -1016,6 +1016,30 @@
 		ENABLE
 	</statement>
 	
+	<select id="EzCommonDAO.checkExtensionColumns">
+	<![CDATA[
+		SELECT
+			B_MEMO_WIDTH
+		FROM
+			TBL_MEMO_CONFIG
+		WHERE
+				ROWNUM <= 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addMemoExtensionColumns">
+		ALTER TABLE
+			TBL_MEMO_CONFIG
+		ADD (
+			B_MEMO_LEFT NUMBER(6, 0) DEFAULT 0,
+			B_MEMO_TOP NUMBER(6, 0) DEFAULT 0,
+			B_MEMO_WIDTH NUMBER(6, 0) DEFAULT 0,
+			B_MEMO_HEIGHT NUMBER(6, 0) DEFAULT 0,
+			B_MEMO_STATUS NUMBER(4, 0) DEFAULT 0,
+			MEMO_ID NUMBER(10, 0) DEFAULT 0
+			)
+	</statement>
+
 	<select id="EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo">
 		<![CDATA[
 			SELECT

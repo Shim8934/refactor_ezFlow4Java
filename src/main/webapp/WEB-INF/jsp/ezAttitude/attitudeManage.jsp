@@ -109,7 +109,7 @@
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
-		        $.datepicker.regional["ko"] = {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
 		        	closeText: "<spring:message code='main.t3' />",
 		 	        prevText: "<spring:message code='main.t0604' />",
 		 	        nextText: "<spring:message code='main.t0605' />",
@@ -784,15 +784,15 @@
 	    			break;
 	    		}
 				
-		    	exportExcelframe.location.href=url + "?companyId=" + companyId 
-		    			+ "&userName=" + searchUserName 
-		    			+ "&title=" + searchTitle 
-		    			+ "&deptId="+ $('#ListDept').val()
-		    			+ "&startDate=" + searchStartDate 
-		    			+ "&endDate=" + searchEndDate 
-		    			+ "&orderCell=" + orderCell 
-		    			+ "&orderOption=" + orderOption 
-		    			+ "&attitudeType=" + searchAttitudeType
+		    	exportExcelframe.location.href=url + "?companyId=" + encodeURIComponent(companyId) 
+		    			+ "&userName=" + encodeURIComponent(searchUserName) 
+		    			+ "&title=" + encodeURIComponent(searchTitle) 
+		    			+ "&deptId="+ encodeURIComponent($('#ListDept').val())
+		    			+ "&startDate=" + encodeURIComponent(searchStartDate) 
+		    			+ "&endDate=" + encodeURIComponent(searchEndDate) 
+		    			+ "&orderCell=" + encodeURIComponent(orderCell) 
+		    			+ "&orderOption=" + encodeURIComponent(orderOption)
+		    			+ "&attitudeType=" + encodeURIComponent(searchAttitudeType)
 		    			+ "&duplicated=duplicated";
 		    	exportExcelframe.target="_blank";
 			}
@@ -841,9 +841,9 @@
 		<h1><p style="padding-left:5px"><spring:message code='ezAttitude.t73'/></p></h1>
 	    <div class="portlet_tabnew01" style="margin-bottom:16px;">
 	        <div class="portlet_tabnew01_top" id="tab1">
-	            <p><span id="modify" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t5'/></span></p>
-	            <p><span id="absent" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t6'/></span></p>
-	            <p><span id="history" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t57'/></span></p>
+	            <p><span id="modify" <c:if test="${useLang == '2'}"></c:if><c:if test="${useLang != '2'}">style="width:100px;</c:if> text-align: center;"><spring:message code='ezAttitude.t5'/></span></p>
+	            <p><span id="absent" <c:if test="${useLang == '2'}"></c:if><c:if test="${useLang != '2'}">style="width:100px;</c:if> text-align: center;"><spring:message code='ezAttitude.t6'/></span></p>
+	            <p><span id="history" <c:if test="${useLang == '2'}"></c:if><c:if test="${useLang != '2'}">style="width:100px;</c:if> text-align: center;"><spring:message code='ezAttitude.t57'/></span></p>
 	        </div>
 	    </div>
 	    <div>

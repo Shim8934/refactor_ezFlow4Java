@@ -73,7 +73,8 @@
 		<![CDATA[
 			SELECT
 				USER_ID, FONT_SIZE, USE_DATE, USE_GADGET, DEFAULT_COLOR, GADGET_RIGHT, 
-				GADGET_BOTTOM, LAYER_LEFT, LAYER_TOP, LAYER_WIDTH, LAYER_HEIGHT, COMPANY_ID, TENANT_ID, FULL_MODE
+				GADGET_BOTTOM, LAYER_LEFT, LAYER_TOP, LAYER_WIDTH, LAYER_HEIGHT, COMPANY_ID, TENANT_ID, FULL_MODE,
+				B_MEMO_LEFT, B_MEMO_TOP, B_MEMO_WIDTH, B_MEMO_HEIGHT, B_MEMO_STATUS, MEMO_ID
 			FROM
 				TBL_MEMO_CONFIG
 			WHERE 
@@ -522,6 +523,53 @@
 			TBL_MEMO_CONFIG
 		SET
 			LAYER_WIDTH = #layer_width#, LAYER_HEIGHT = #layer_height#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+	</update>
+	
+	<update id="EzMemoDAO.setDetailMemoArea" parameterClass="hashmap">
+		UPDATE
+			TBL_MEMO_CONFIG
+		SET
+			B_MEMO_HEIGHT = #big_memo_height#,
+			B_MEMO_WIDTH = #big_memo_width#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+	</update>
+	
+	<update id="EzMemoDAO.setDetailMemoPostion" parameterClass="hashmap">
+		UPDATE
+			TBL_MEMO_CONFIG
+		SET
+			B_MEMO_TOP = #big_memo_top#,
+			B_MEMO_LEFT = #big_memo_left#
+		WHERE 
+			TENANT_ID = #tenant_id# 
+		AND 
+			COMPANY_ID = #company_id# 
+		AND 
+			USER_ID = #user_id#
+	</update>
+	
+	<update id="EzMemoDAO.setDetailMemoStatus" parameterClass="hashmap">
+		UPDATE
+			TBL_MEMO_CONFIG
+		<dynamic prepend="SET">
+			<isNotNull property="memo_id" prepend=",">
+				MEMO_ID = #memo_id#
+			</isNotNull>
+			<isNotNull property="b_memo_status" prepend=",">
+				B_MEMO_STATUS = #b_memo_status#
+			</isNotNull>
+		</dynamic>
 		WHERE 
 			TENANT_ID = #tenant_id# 
 		AND 

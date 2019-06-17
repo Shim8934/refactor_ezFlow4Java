@@ -84,7 +84,7 @@
 					commentCheck();				
 				}
  				getConnect();
- 				stompDisConnProcess()
+ 				stompDisConnProcess();
  				
 	            var doc = document.getElementById("message_test").contentWindow.document;	        
 				doc.open();
@@ -3128,7 +3128,7 @@
 		  			}else if(stompClient.connected === false && rightFrames == null){
 		  				window.location.reload();
 		  			}
-		  		}, 1000);
+		  		}, 10000);
 		  	}
 		  	
 		  	//목록 버튼 눌렀을 때 리스트로 이동.

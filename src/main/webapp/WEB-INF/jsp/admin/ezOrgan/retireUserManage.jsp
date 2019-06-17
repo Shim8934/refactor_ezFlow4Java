@@ -217,7 +217,8 @@
 			        return;
 			    }
 			    //var ret = confirm(CheckBoxArr.length + strLang7);
-			    var ret = confirm(strLangKHJ01 + CheckBoxArr.length + strLangKHJ02);
+			    //var ret = confirm(strLangKHJ01 + CheckBoxArr.length + strLangKHJ02);
+			    var ret = confirm(strLangKHJ03.replace("%s", CheckBoxArr.length));
 			    
 				if (ret) {
 				    //if (CrossYN()) {

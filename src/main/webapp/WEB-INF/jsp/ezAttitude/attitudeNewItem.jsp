@@ -166,7 +166,7 @@
 			            showAnim: 'show',
 			            showMonthAfterYear: true
 			        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		        
 		        if (selectType == 'A04' && dateType == 4) {
 		        	$('#Stimepicker').timepicker();
@@ -250,6 +250,13 @@
 						}
 						$("input[name=mobile]").val(mobile);
 						$("input[name=bizsub]").val(bizSub);
+						
+						//언어
+						$("#attiTime").siblings("th").text("<spring:message code='ezAttitude.t149'/>");
+						$("#region").siblings("th").text("<spring:message code='ezAttitude.t47'/>");
+						$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
+						$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+						
 						editorResize();
 					}
 				})
@@ -331,6 +338,15 @@
 					var returnValue = getIsAttitude('A01');
 					if (returnValue == 0) {
 						alert("<spring:message code='ezAttitude.t224'/>");
+						return;
+					}
+				}
+				
+				//외출 등록시 출근여부 확인
+				if (selectType == 'A06') {
+					var returnValue = getIsAttitude('A01');
+					if (returnValue == 0) {
+						alert("<spring:message code='ezAttitude.t306'/>");
 						return;
 					}
 				}
@@ -754,7 +770,7 @@
 									<td colspan="2" id="selectTD">
 										<select id="selectAtti" style="width:80px;" onchange="form_change(this)">
 											<c:forEach var="item" items="${attitudeTypeList }">
-												<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03'}">
+												<c:if test="${item.parentId ne 'A05' && item.typeId ne 'A01' && item.typeId ne 'A02' && item.typeId ne 'A03' && item.typeId ne 'A05'}">
 													<option value="<c:out value='${item.typeId }'/>"><c:out value="${item.typeName }"/></option>
 												</c:if>
 											</c:forEach>
