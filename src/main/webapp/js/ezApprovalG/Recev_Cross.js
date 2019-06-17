@@ -362,11 +362,6 @@ function GetDraftAprLineInfo(ret) {
 	  				if(field)
 	  					field.textContent  = OrderJobtitle[i];//CKEDITOR-원본 : field.Value = OrderJobtitle[i];
 		  				  			
-	  				fieldname = susinSN + "sign" + idx;
-	  				field = message.GetListItem(fields, fieldname);
-	  				if(field)
-	  					field.innerHTML  = OrderName[i] + "<br>" + OrderReason[i];//CKEDITOR-원본 : field.TagObject.innerHTML = OrderName[i] + "<br>" + OrderReason[i];
-		  				  			
 	  				idx = idx + 1;
 	  				continue;
 	  			}
@@ -376,13 +371,7 @@ function GetDraftAprLineInfo(ret) {
 	  		if(field)
 	  			field.textContent = OrderJobtitle[i];
 		  	
-	  		fieldname = susinSN + "sign" + idx;
-	  		field = message.GetListItem(fields, fieldname);
-	  		if(field)
-	  		{
-	  			field.textContent  = OrderName[i];//CKEDITOR-원본 : field.Value = OrderName[i];
-	  			idx = idx + 1;
-	  		}
+	  		idx = idx + 1;
 	  	}
 	  	
 	  	 
