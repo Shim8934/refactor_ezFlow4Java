@@ -3483,7 +3483,7 @@ var SurveyCreate     = function() {
 		
 		var htmlOption = "";
 		if (mode == "skip") {
-			htmlOption += "<option value=''>" + SurveyMessages.strSkipQs + SurveyMessages.strChoice + "</option>"; 
+			htmlOption += "<option value=''>" + SurveyMessages.strSkipQs + "</option>"; 
 			
 		} else {
 			htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 

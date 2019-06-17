@@ -1,15 +1,15 @@
 var SurveyMessages = {
 	strError     : "An error occurred.",
 	strUploadErr : "There was an error uploading the file.",
-	strPrev      : "Previous",
-	strNext      : "Next",
+//	strPrev      : "Previous",
+//	strNext      : "Next",
 	strTotal     : "Total of",
 	strItem      : "Count",
 	strSelect    : "Please select.",
 	strAdd       : "Add",
 	strPublic1   : "Open",
 	strPublic2   : "Secrete",
-	strPublic3   : "Result",
+//	strPublic3   : "Result",
 	strPublic4   : "After the survey",
 	strPublic5   : "Days",
 	strAnoynym1  : "Show name",
@@ -152,5 +152,5 @@ var SurveyMessages = {
 	strOptionAll : "Option list",
 	strAttachErr : "Please wait for the file upload to complete.",
 	strAttUrl    : "URL",
-	strSkipQs    : "Qst. "
+	strSkipQs    : "Select a question"
 }

@@ -1,15 +1,15 @@
 var SurveyMessages = {
 	strError     : "오류가 발생했습니다.",
 	strUploadErr : "파일을 업로드하는 동안 오류가 발생했습니다.",
-	strPrev      : "이전",
-	strNext      : "다음",
+//	strPrev      : "이전",
+//	strNext      : "다음",
 	strTotal     : "총",
 	strItem      : "개",
 	strSelect    : "선택해 주세요.",
 	strAdd       : "추가",
 	strPublic1   : "공개",
 	strPublic2   : "비공개",
-	strPublic3   : "조사 결과",
+//	strPublic3   : "조사 결과",
 	strPublic4   : "설문 종료 후",
 	strPublic5   : "일간",
 	strAnoynym1  : "기명",
@@ -152,5 +152,5 @@ var SurveyMessages = {
 	strOptionAll : "보기 리스트",
 	strAttachErr : "파일 업로드가 완료될 때까지 기다려주세요.",
 	strAttUrl    : "URL",
-	strSkipQs    : "질문"
+	strSkipQs    : "질문선택"
 }
