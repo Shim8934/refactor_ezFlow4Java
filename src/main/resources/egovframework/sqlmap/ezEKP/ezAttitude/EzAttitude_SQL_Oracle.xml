@@ -153,6 +153,35 @@
 		<result property="month" 					column="MONTH" 				columnIndex="2"/>
 	</resultMap>
 	
+	<resultMap id="annualCancelVO" class="AttitudeApplicationVO">
+		<result property="attitudeId"		column="ATTITUDE_ID" 		columnIndex="1"/>
+		<result property="changeDate"		column="CHANGE_DATE" 		columnIndex="2"/>
+		<result property="apprUserName"		column="APPR_USER_NAME"		columnIndex="3"/>
+		<result property="originDate"		column="START_DATE" 		columnIndex="4"/> 		
+		<result property="apprStatus"		column="APPR_STATUS" 		columnIndex="5"/>
+		<result property="typeId"			column="TYPE_ID" 			columnIndex="6"/>
+		<result property="typeName"			column="TYPE_NAME" 			columnIndex="7"/>
+		<result property="writerName"		column="WRITER_NAME" 		columnIndex="8"/>
+		<result property="writerDeptName"	column="WRITER_DEPT_NAME" 	columnIndex="9"/>
+		<result property="applCnt"			column="APPL_CNT" 			columnIndex="10"/>
+		<result property="writerId"			column="WRITER_ID" 			columnIndex="11"/>
+		<result property="applDate"			column="APPL_DATE"			columnIndex="12"/>
+	</resultMap>
+	
+	<resultMap class="java.util.HashMap" id="attitudeAprlineMap">
+		<result property="docId"		column="DOCID" 		columnIndex="1"/>
+		<result property="aprMemberSn"		column="APRMEMBERSN" 		columnIndex="2"/>
+		<result property="aprType"		column="APRTYPE"		columnIndex="3"/>
+		<result property="aprState"		column="APRSTATE" 		columnIndex="4"/> 		
+		<result property="aprMemberId"		column="APRMEMBERID" 		columnIndex="5"/>
+		<result property="aprMemberIsDeptYn"			column="APRMEMBERISDEPTYN" 			columnIndex="6"/>
+		<result property="aprMemberName"			column="APRMEMBERNAME" 			columnIndex="7"/>
+		<result property="aprMemberJobTitle"		column="APRMEMBERJOBTITLE" 		columnIndex="8"/>
+		<result property="aprMemberDeptId"	column="APRMEMBERDEPTID" 	columnIndex="9"/>
+		<result property="aprMemberDeptName"			column="APRMEMBERDEPTNAME" 			columnIndex="10"/>
+		<result property="aprMemberLdapPath"			column="APRMEMBERLDAPPATH" 			columnIndex="11"/>
+	</resultMap>
+	
 	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
 		<![CDATA[
 			SELECT * FROM (
@@ -2302,107 +2331,114 @@
 		<isEmpty prepend="" property="order">
 				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
 		</isEmpty>
-		<isNotEmpty property="startPoint" prepend="limit">
-			<isNotEmpty property="endPoint">
-				<![CDATA[
-					$startPoint$, $endPoint$
-				]]>
-			</isNotEmpty>
-		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.getUsersCancelAnn" parameterClass="Map" resultMap="annualCancelVO">
 		<![CDATA[
-			SELECT
-					a.attitude_id as ATTITUDE_ID,
-					to_char(b.end_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
-					a.appr_user_name$lang$ as APPR_USER_NAME,
-					to_char(b.start_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
-					a.appr_status as APPR_STATUS,
-					c.type_id AS TYPE_ID,
-					c.type_name$lang$ AS TYPE_NAME,
-					a.writer_name$lang$ as WRITER_NAME,
-					a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
-					a.appl_cnt AS APPL_CNT,
-					a.writer_id as WRITER_ID,
-					to_char(A.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPR_DATE
-			FROM 
-				jmocha.tbl_attitude_annual_canappl a 
-			inner 
-				join tbl_attitude b 
-			on 
-				a.ATTITUDE_ID = b.ATTITUDE_ID
-			inner 
-				join tbl_attitude_type c 
-			on 
-				b.TYPE_ID = c.TYPE_ID
-			and
-				a.COMPANY_ID = c.COMPANY_ID
-			and 
-				a.TENANT_ID = c.TENANT_ID
-			where 
-				a.COMPANY_ID = #companyId#
-			and 
-				a.TENANT_ID = #tenantId#
-			and
-				a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-		]]>
-		<isNotEmpty property="userId" prepend="and"> 
-			a.WRITER_ID = #userId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptId">
-			A.WRITER_DEPT_ID = #searchDeptId#
-		</isNotEmpty>
-		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-      		#deptIdList[]#
-		</iterate>
-		<isNotEmpty property="apprUserName" prepend="and">
-			<isNotEmpty property="apprUserName" >
-				A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerName" prepend="and">
-			<isNotEmpty property="writerName" >
-				A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerDeptName" prepend="and">
-			<isNotEmpty property="writerDeptName" >
-				A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="startDate" prepend="and">
-			<![CDATA[
-				B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+ 			SELECT
+				*
+			FROM
+			(
+				SELECT
+					T1.*,
+					ROWNUM AS RN
+				FROM
+				(
+					SELECT
+						a.attitude_id as ATTITUDE_ID,
+						to_char(b.end_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
+						a.appr_user_name$lang$ as APPR_USER_NAME,
+						to_char(b.start_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
+						a.appr_status as APPR_STATUS,
+						c.type_id AS TYPE_ID,
+						c.type_name$lang$ AS TYPE_NAME,
+						a.writer_name$lang$ as WRITER_NAME,
+						a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
+						a.appl_cnt AS APPL_CNT,
+						a.writer_id as WRITER_ID,
+						to_char(A.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPR_DATE
+				FROM 
+					jmocha.tbl_attitude_annual_canappl a 
+				inner 
+					join tbl_attitude b 
+				on 
+					a.ATTITUDE_ID = b.ATTITUDE_ID
+				inner 
+					join tbl_attitude_type c 
+				on 
+					b.TYPE_ID = c.TYPE_ID
+				and
+					a.COMPANY_ID = c.COMPANY_ID
+				and 
+					a.TENANT_ID = c.TENANT_ID
+				where 
+					a.COMPANY_ID = #companyId#
+				and 
+					a.TENANT_ID = #tenantId#
+				and
+					a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			]]>
-		</isNotEmpty>
-		<isNotEmpty property="endDate" prepend="and">
-			<![CDATA[
-				B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="type" prepend="and">
-			<![CDATA[
-			a.APPR_STATUS = #type#
-			]]>
-		</isNotEmpty>
-		<![CDATA[
-			AND
-				A.DELFLAG = 0
-		]]>
-		<isNotEmpty prepend="" property="order">
-				ORDER BY $order$, A.APPL_CNT DESC
-		</isNotEmpty>
-		<isEmpty prepend="" property="order">
-				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
-		</isEmpty>
-		<isNotEmpty property="startPoint" prepend="limit">
-			<isNotEmpty property="endPoint">
+				<isNotEmpty property="userId" prepend="and"> 
+					a.WRITER_ID = #userId#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchDeptId">
+					A.WRITER_DEPT_ID = #searchDeptId#
+				</isNotEmpty>
+				<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+		      		#deptIdList[]#
+				</iterate>
+				<isNotEmpty property="apprUserName" prepend="and">
+					<isNotEmpty property="apprUserName" >
+						A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="writerName" prepend="and">
+					<isNotEmpty property="writerName" >
+						A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="writerDeptName" prepend="and">
+					<isNotEmpty property="writerDeptName" >
+						A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="startDate" prepend="and">
+					<![CDATA[
+						B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="endDate" prepend="and">
+					<![CDATA[
+						B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="type" prepend="and">
+					<![CDATA[
+					a.APPR_STATUS = #type#
+					]]>
+				</isNotEmpty>
 				<![CDATA[
-					$startPoint$, $endPoint$
+					AND
+						A.DELFLAG = 0
 				]]>
+				<isNotEmpty prepend="" property="order">
+						ORDER BY $order$, A.APPL_CNT DESC
+				</isNotEmpty>
+				<isEmpty prepend="" property="order">
+						ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
+				</isEmpty>
+				) T1
+			)
+			<isNotEmpty property="startRow">
+				<isNotEmpty property="endRow">
+					<![CDATA[
+						WHERE
+							RN <= #endRow#
+						AND
+							RN >= #startRow#
+					]]>
+				</isNotEmpty>
 			</isNotEmpty>
-		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.annCanAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
