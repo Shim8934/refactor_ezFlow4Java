@@ -1458,9 +1458,7 @@
 				AND
 				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID
 				AND 
-				 A.CN = B.USER_ID 
-				AND
-				 B.YEAR = #searchYear#)
+				 A.CN = B.USER_ID)
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND 
@@ -1498,16 +1496,10 @@
 				    A.DISPLAYNAME$primary$ AS userName,
 				    NVL(A.TITLE$primary$, ' ') AS userTitle,
 				    NVL(A.DESCRIPTION$primary$, ' ') AS userDeptName,
-				    #searchYear# AS year,
-				    nvl(sum(
-							CASE
-							   WHEN C.TYPE_ID = 'A11' THEN TRUNC(C.END_DATE) - TRUNC(C.START_DATE)
-				               WHEN C.TYPE_ID = 'A12' THEN 0.5
-				               WHEN C.TYPE_ID = 'A13' THEN 0.5
-							   ELSE 0
-							END
-					), 0) AS useAnnualCnt,
-				    nvl(B.TOTAL_ANNUAL_CNT, 0) AS totalAnnualCnt
+				    NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) AS basicAnnualCnt,
+				    NVL(B.ADDITIONAL_HOLIDAY_CNT, 0) AS additionalAnnualCnt,
+				    NVL(B.MONTHLY_HOLIDAY_CNT, 0) + nvl(B.ANNUAL_HOLIDAY_CNT, 0) + nvl(B.ADDITIONAL_HOLIDAY_CNT, 0) AS totalAnnualCnt,
+				    NVL(TO_CHAR(B.JOIN_DATE, 'YYYY-MM-DD'), 0) AS joinDate
 				FROM 
 					TBL_USERMASTER A
 				LEFT OUTER JOIN 
@@ -1517,34 +1509,7 @@
 					AND
 					 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
 					AND
-					 A.CN = B.USER_ID
-					AND B.YEAR = #searchYear#)
-				LEFT OUTER JOIN 
-					TBL_ATTITUDE C
-				ON
-					(A.TENANT_ID = C.TENANT_ID 
-					AND 
-					 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
-					AND
-					 A.CN = C.WRITER_ID
-					AND 
-					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
-					AND 
-					 (
-						   (
-							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) <= #searchEndTime#
-							)
-						OR (
-							SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchEndTime#
-							)
-						OR (
-							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchEndTime#
-							)
-					  )
-					 )
+					 A.CN = B.USER_ID)
 				WHERE
 					A.TENANT_ID = #tenantId#
 				AND 
@@ -1566,7 +1531,11 @@
 				]]>
 			</isNotEmpty>
 			
-			GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, nvl(B.TOTAL_ANNUAL_CNT, 0)
+			GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, 
+					NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0),
+				    NVL(B.ADDITIONAL_HOLIDAY_CNT, 0),
+				    NVL(B.MONTHLY_HOLIDAY_CNT, 0) + nvl(B.ANNUAL_HOLIDAY_CNT, 0) + nvl(B.ADDITIONAL_HOLIDAY_CNT, 0),
+				    NVL(TO_CHAR(B.JOIN_DATE, 'YYYY-MM-DD'), 0)
 			
 			<isNotEmpty property="orderCell">
 				<![CDATA[
@@ -1593,7 +1562,27 @@
 			]]>
 		</isNotEmpty>
 	</select>
-
+	
+	<insert id="ezAttitudeAdminDAO.saveJoinDate" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_attitude_annual
+				(USER_ID, JOIN_DATE, COMPANY_ID, TENANT_ID)
+			VALUES
+				(#userId#, #date#, #companyId#, #tenantId#)
+		]]>
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.modifyJoinDate" parameterClass="Map">
+			UPDATE tbl_attitude_annual
+				SET JOIN_DATE = #date#
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				USER_ID = #userId#
+	</insert>
+	
 	<select id="ezAttitudeAdminDAO.getSimpleAnnualCnt" parameterClass="Map" resultClass="INTEGER">
 		<![CDATA[
 			SELECT
@@ -1604,8 +1593,6 @@
 				COMPANY_ID = #companyId#
 			AND
 				TENANT_ID = #tenantId#
-			AND
-				YEAR = #year#
 		]]>
 			<isNotEmpty prepend="AND" property="userId">
 				USER_ID = #userId#
@@ -1615,7 +1602,7 @@
 	<insert id="ezAttitudeAdminDAO.insertAnnualHistory" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO tbl_attitude_annual_history
-				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
+				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID)
 			SELECT
 				SEQ_TBL_ATTITUDE_HISTORY.NEXTVAL AS ANNUAL_HISTORY_ID,
 				CN AS USER_ID,
@@ -1625,8 +1612,7 @@
 				SYSDATE AS CHANGE_DATE,
 				'$changeUserId$' AS CHANGE_USER_ID,
 				physicaldeliveryofficename AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID,
-				'$year$' AS YEAR
+				TENANT_ID AS TENANT_ID
 			FROM
 				tbl_usermaster
 			WHERE
@@ -1641,7 +1627,7 @@
 	
 	<insert id="ezAttitudeAdminDAO.changeAnnualHistory" parameterClass="Map">
 			INSERT INTO tbl_attitude_annual_history
-				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
+				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID)
 			SELECT
 				SEQ_TBL_ATTITUDE_HISTORY.NEXTVAL AS ANNUAL_HISTORY_ID,
 				USER_ID AS USER_ID,
@@ -1656,16 +1642,13 @@
 				SYSDATE AS CHANGE_DATE,
 				'$changeUserId$' AS CHANGE_USER_ID,
 				COMPANY_ID AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID,
-				YEAR AS YEAR
+				TENANT_ID AS TENANT_ID
 			FROM
 				tbl_attitude_annual
 			WHERE
 				TENANT_ID = #tenantId#
 			AND
 				COMPANY_ID = #companyId#
-			AND
-				YEAR = #year#
 			<isNotEmpty prepend="AND" property="userId">
 				USER_ID = #userId#
 			</isNotEmpty>
@@ -1674,10 +1657,9 @@
 	<insert id="ezAttitudeAdminDAO.insertAnnual" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO tbl_attitude_annual
-				(USER_ID, YEAR, TOTAL_ANNUAL_CNT, COMPANY_ID, TENANT_ID)
+				(USER_ID, TOTAL_ANNUAL_CNT, COMPANY_ID, TENANT_ID)
 			SELECT
 				CN AS USER_ID,
-				'$year$' AS YEAR,
 				'$annualCnt$' AS TOTAL_ANNUAL_CNT,
 				physicaldeliveryofficename AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID
@@ -1705,8 +1687,6 @@
 				TENANT_ID = #tenantId#
 			AND
 				COMPANY_ID = #companyId#
-			AND
-				YEAR = #year#
 			<isNotEmpty prepend="AND" property="userId">
 				USER_ID = #userId#
 			</isNotEmpty>
