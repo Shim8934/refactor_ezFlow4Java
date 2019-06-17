@@ -3506,3 +3506,19 @@ input[type=range]::-ms-tooltip {display: none;}
 .lnb h2.on + .leftList { visibility: visible; height: auto !important;}
 .lnb .leftList { visibility: hidden; height: 0px !important; list-style-type: none; padding: 0;  margin: 0; width: 100%; overflow: hidden;}
 .lnb .leftList li { padding: 4px 20px; cursor: pointer;}
+
+/* 2019-05-17 김민성 - 자원관리 개선*/
+.mainmenuTabUL_left {  position: absolute;top: 7px;left: -10px; list-style:none; margin:0px; padding:0px; }
+.mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px;}
+.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px; cursor:default;}
+.mainmenuTabUL_left li .icon { vertical-align:middle;}
+
+.tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
+.tree_resource_unused{background-position:-338px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 미사용 아이콘 */
+
+.calendar_layer .text .td_list td.individual .resource_rental {background-image: url('/images/ezResource/state_rental.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_return {background-image: url('/images/ezResource/state_return.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_ok {background-image: url('/images/ezResource/state_approval.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_no {background-image: url('/images/ezResource/state_approvalPending.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_refuse {background-image: url('/images/ezResource/state_approvalrefuse.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_noreturn {background-image: url('/images/ezResource/state_noreturn.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
