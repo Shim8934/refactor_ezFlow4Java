@@ -2634,7 +2634,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					int isEqaulDept = 0;
 					for (int j = 0; j < tempDeptList.split(",").length; j++) {
 						// 사원ID, 부서ID, 회사ID에 대하여 해당부서 직속여부 판단
-						if(pAccessIDStr.split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+						if(addJobDeptList.get(jl).split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
 							isEqaulDept = 1;
 							break;
 						} else {
