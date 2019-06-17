@@ -3196,7 +3196,7 @@ input::-ms-clear {display: none;}
 .fileList .optUl >li {position: relative; padding: 10px 10px 0px;}
 .qstUl >li >img {position: absolute; top: 15px; left: 15px; cursor: pointer;}
 .optUl >li >img {position: absolute; top: 10px; left: 10px; cursor: pointer;}
-.attDivFile {display: flex; width: 100%; height: 100%; cursor: pointer;}
+.attDivFile {display: flex; /* width: 100%; height: 100%;  */float:left; cursor: pointer;}
 .attDivFile .attImgAva {height: 44px; width: 44px; min-width: 44px; margin: 10px;}
 .qstUl .attDivFile .attImgAva, .optUl .attDivFile .attImgAva {height: 80px; width: 80px; margin: 0px;}
 .qstUl .attDivFile .attImgAva >img, .optUl .attDivFile .attImgAva >img {height: 100%; width: auto;}
@@ -3315,7 +3315,7 @@ input::-ms-clear {display: none;}
 
 /* attach file ul list */
 .survey_atchBtn{overflow:hidden; padding:0; margin:0; height:40px;}
-.survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
+.survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:37px; margin:0px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
 .survey_atchBtn li, .survey_atchBtn li.off span{margin-left:6px; margin-right:6px; line-height:36px;}
 .survey_atchBtn li span .survey_atchBtn li span.off{display: block; float: left; padding: 0px 4px; font-size:12px; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; line-height:28px; box-sizing:border-box;}
 .survey_atchBtn li span.survey_icon{margin-left:6px; margin-right:6px;}
@@ -3346,7 +3346,7 @@ input::-ms-clear {display: none;}
 
 /* drag and drop button */
 .question-panel .mvBtn {width:30px; height:39px; margin:0px auto;}
-.mvBtn li, .mvBtn li.off{border-top:0px; cursor:move;}
+.mvBtn li, .mvBtn li.off{/* border-top:0px;  */cursor:move;}
 .question-panel .mvBtn span{display:inline-block; width:16px; height:16px; margin:10px 6px 0px 6px; background-position:-64px 0px !important;}
 .mvBtn li:hover{background-color:rgb(255,255,255); border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
 
@@ -3418,7 +3418,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .ranking-select + .ranking-select, .dropdown-select + .dropdown-select {margin-top: 10px;}
 .ranking-order, .dropdown-order {width:34px; height:22px; line-height:22px; margin:0px 10px 0px 0px; font-size:12px; color:#333; text-align:center; background:#fff; border:1px solid #2196f3; border-radius:22px;}
 .ranking-select .rank-order {width:36px; height:22px; line-height:22px; margin:0px 10px 0px 0px; font-size:16px; color:#2196f3; text-align:center; border:1px solid #2196f3; border-radius:22px;}
-.ranking-select >select, .dropdown-wrap select {width:100%; height:34px; padding:0px 10px; font-size:12px; color:#333; border:1px solid #ddd; outline:0px;}
+.ranking-select >select, .dropdown-wrap select {width:100%; height:34px; /* padding:0px 10px; */ font-size:12px; color:#333; border:1px solid #ddd; outline:0px;}
 .ranking-select >select:focus, .dropdown-wrap select:focus, .searchTblTd input[type='text']:focus, .othInput:focus, .topSearchSpan >select:focus, .survey-infrow input:focus, .survey-infrow select:focus {border-color:#66afe9; outline: 0px; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
 .textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border-bottom: 1px solid #03a9f4 !important;}
 .srvySelect{min-height:20px; -webkit-appearance: none; border:1px solid #ddd; margin: 0; padding: .1em .1em; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}

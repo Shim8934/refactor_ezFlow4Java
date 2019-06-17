@@ -157,6 +157,7 @@ public class EzAttitudeController {
 			typeList = (JSONArray) resultBody.get("data");
 		}
 		
+		model.addAttribute("useLang", userInfo.getLang());
 		model.addAttribute("typeList", typeList);
 		model.addAttribute("deptList", deptList);		
 		model.addAttribute("companyId", userInfo.getCompanyID());

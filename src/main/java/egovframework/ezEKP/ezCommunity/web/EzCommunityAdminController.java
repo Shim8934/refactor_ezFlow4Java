@@ -376,7 +376,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 폐쇄한 커뮤니티 상세정보 수정 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/closeCom.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/closeCommunityInfo.do", method = RequestMethod.GET)
 	public String closeCommunityInfo(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		logger.debug("closeCommunityInfo started.");
 
@@ -440,7 +440,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 커뮤니티 신청 관리 > 폐쇄신청 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/commCloseAll.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/commCloseAll.do", method = RequestMethod.POST)
 	public String commCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
