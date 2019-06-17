@@ -94,7 +94,7 @@ var SurveyMessages = {
 	strRow       : "Row",
 	strColumn    : "Column",
 	strRequired  : "Required",
-	strModify    : "Modified",
+	strModify    : "Modify",
 	strModifying : "You can not edit the survey with answers.",
 	strOther     : "Other",
 	strCancel    : "Cancel",
