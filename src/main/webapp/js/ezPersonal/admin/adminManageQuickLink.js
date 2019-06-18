@@ -292,16 +292,7 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "<tr><td class='quickTD'><div class='listview' id='AccessList' style='border:0px;'></div></td>";	
 	linksHTML += "</tr></table>";
 	linksHTML += "<div class='bottomBtn'>";
-	linksHTML += "<a class='btnA'><span id='btn_OK'>"; 
-	
-	if (itemId != "" && mode == "modify") {
-		linksHTML += strLangkhj8;
-	}
-	else {
-		linksHTML += strLangkhj18;
-	}
-	
-	linksHTML += "</span></a>";
+	linksHTML += "<a class='btnA'><span id='btn_OK'>" + strLangkhj18 + "</span></a>";
 	linksHTML += "</div>";
 	linksHTML += "</div>";
 	linksHTML += "</li>"; 
