@@ -1576,26 +1576,6 @@
 		</isNotEmpty>
 	</select>
 	
-	<insert id="ezAttitudeAdminDAO.saveJoinDate" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO tbl_attitude_annual
-				(USER_ID, JOIN_DATE, COMPANY_ID, TENANT_ID)
-			VALUES
-				(#userId#, #date#, #companyId#, #tenantId#)
-		]]>
-	</insert>
-	
-	<insert id="ezAttitudeAdminDAO.modifyJoinDate" parameterClass="Map">
-			UPDATE tbl_attitude_annual
-				SET JOIN_DATE = #date#
-			WHERE
-				TENANT_ID = #tenantId#
-			AND
-				COMPANY_ID = #companyId#
-			AND
-				USER_ID = #userId#
-	</insert>
-	
 	<select id="ezAttitudeAdminDAO.getSimpleAnnualCnt" parameterClass="Map" resultClass="INTEGER">
 		<![CDATA[
 			SELECT
@@ -1673,78 +1653,6 @@
 			AND
 				USER_ID = #userId#
 	</insert>
-	
-	<update id="ezAttitudeAdminDAO.updateAnnualConfig" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_ATTITUDE_ANNUAL_CONF
-			SET
-				annual_cancel_rule = #annualCancelRule#,
-				use_annual_auto_gnrt = #useAnnualAutoGnrt#,
-				annual_gnrt_std = #annualGnrtStd#,
-				initial_date = #initialDate#,
-				use_minus_annual = #useMinusAnnual#,
-				use_annual_tmnt = #useAnnualTmnt#,
-				round_off_rule = #roundOffRule#,
-				conf_set_date = TO_DATE(#confSetDate#, 'YYYY-MM-DD') 
-			WHERE
-				tenant_id = #tenantId#
-			AND
-				company_id = #companyId#
-		]]>
-	</update>
-	
-	<insert id="ezAttitudeAdminDAO.insertAnnualConfig" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_ATTITUDE_ANNUAL_CONF
-				(
-				COMPANY_ID,
-				TENANT_ID,
-				ANNUAL_CANCEL_RULE,
-				USE_ANNUAL_AUTO_GNRT,
-				ANNUAL_GNRT_STD,
-				INITIAL_DATE,
-				USE_MINUS_ANNUAL,
-				USE_ANNUAL_TMNT,
-				ROUND_OFF_RULE,
-				CONF_SET_DATE
-				)
-			VALUES
-				(
-				#companyId#,
-				#tenantId#,
-				#annualCancelRule#,
-				#useAnnualAutoGnrt#,
-				#annualGnrtStd#,
-				#initialDate#,
-				#useMinusAnnual#,
-				#useAnnualTmnt#,
-				#roundOffRule#,
-				TO_DATE(#confSetDate#, 'YYYY-MM-DD')
-				)
-		]]>
-	</insert>
-	
-	<select id="ezAttitudeAdminDAO.getAttitudeAnnualConfig" parameterClass="Map" resultMap="annualConfigMap">
-		<![CDATA[
-			SELECT
-				company_id,
-				tenant_id,
-				annual_cancel_rule,
-				use_annual_auto_gnrt,
-				annual_gnrt_std,
-				TO_CHAR(initial_date, 'YYYY-MM-DD') AS initial_date,
-				use_minus_annual,
-				use_annual_tmnt,
-				round_off_rule,
-				TO_CHAR(conf_set_date, 'YYYY-MM-DD') AS conf_set_date
-			FROM
-				TBL_ATTITUDE_ANNUAL_CONF
-			WHERE
-				tenant_id = #tenantId#
-			AND
-				company_id = #companyId#
-		]]>
-	</select>
 	
 	<insert id="ezAttitudeAdminDAO.insertAnnual" parameterClass="Map">
 		<![CDATA[
@@ -1928,8 +1836,8 @@
 					START_DATE
 			]]>
 		</isEmpty>	
-	</select>
-	
+	</select>	
+
 	<select id="ezAttitudeAdminDAO.getAnnualCnt" parameterClass="Map" resultClass="AttitudeAnnualVO">
 		<![CDATA[
 			SELECT 
@@ -2014,7 +1922,6 @@
 		GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, A.PHYSICALDELIVERYOFFICENAME, nvl(B.TOTAL_ANNUAL_CNT, 0)
 		
 	</select>
-	
 	
 	<select id="ezAttitudeAdminDAO.getAnnualHistoryList" parameterClass="Map" resultMap="annualHistMap">
 		<![CDATA[
@@ -2140,8 +2047,8 @@
 				TO_DATE(#confSetDate#, 'YYYY-MM-DD')
 				)
 		]]>
-	</insert>
-	
+	</insert>	
+		
 	<update id="ezAttitudeAdminDAO.updateAnnualConfig" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBL_ATTITUDE_ANNUAL_CONF
@@ -2153,7 +2060,7 @@
 				use_minus_annual = #useMinusAnnual#,
 				use_annual_tmnt = #useAnnualTmnt#,
 				round_off_rule = #roundOffRule#,
-				conf_set_date = TO_DATE(#confSetDate#, 'YYYY-MM-DD')
+				conf_set_date = TO_DATE(#confSetDate#, 'YYYY-MM-DD') 
 			WHERE
 				tenant_id = #tenantId#
 			AND
@@ -2184,8 +2091,7 @@
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#			
 			AND 
 				A.CN = #userId#			
-		]]>
-		
+		]]>		
 	</select>
 	
 </sqlMap>
