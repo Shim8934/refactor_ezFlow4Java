@@ -3522,7 +3522,7 @@ public class EzCommunityController extends EgovFileMngUtil{
                  String companyName = userInfo.getCompanyName1();
                  String companyId = userInfo.getCompanyID();
                  
-                 ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), reason, egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale()), userInfo.getTenantId());
+                 ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), reason, "0", userInfo.getTenantId());
                  
                  strXML = "<RETURN><VALUE>SuccessApplication</VALUE></RETURN>";
 			}
