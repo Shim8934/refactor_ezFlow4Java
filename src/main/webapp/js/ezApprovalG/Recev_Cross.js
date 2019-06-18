@@ -31,6 +31,8 @@ function GetDraftAprLineInfo(ret) {
 	var OrderStatName = new Array();    
 	var OrderJobtitle = new Array();	
 	var OrderReason = new Array();		
+	var OrderSuggester = new Array(); 
+	var OrderReporter = new Array(); 
 	
 	var xmldom = createXmlDom();
 
@@ -42,7 +44,6 @@ function GetDraftAprLineInfo(ret) {
 	    xmlReDraft = ret[5];
 	}
 
-	xmlReDraft = "R";
 	if (xmlReDraft == "C") {
 		ApplyDocCellInfo();
 	} else if (xmlReDraft == "R") {
@@ -124,7 +125,7 @@ function GetDraftAprLineInfo(ret) {
     }
 
 	 
-    if (OrderType[1] == strAprType4) {
+    if (OrderType[1] == strAprType4 || OrderType[1] == strAprType16) {
 		DraftLastFlag = true;
     }
      
@@ -146,127 +147,12 @@ function GetDraftAprLineInfo(ret) {
 	refer = "";
 
 	for(i=0;i < OrderType.length;i ++) {
-		switch (OrderType[i]) {
-			
-	  		case strAprType1:
-	  			break;
-	  		 
-	  		case strAprType2:
-	  			//기안자확인
-	  			if ((OrderName[i] == arr_userinfo[2]) && (i == 1)) IsSkipDrafter = "TRUE";
-	  		  	break;	
-	  		
-	  		case strAprType11:   //strLang51:  <== 2011.03.09  합의type이여야함. 
-	  			//재기안결재선변경
-	  			//R : 다시시작 
-	  			//C:계속진행
-	  			if(xmlReDraft == "R") {
-		  		    fieldname = "habyui" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field)
-	  					field.textContent = OrderDept[i];
-	  		    
-	  				fieldname = "habyuisign" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field)
-	  					field.textContent = OrderName[i];
-	  		    
-	  				fieldname = "habyuipositon" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field)
-	  				field.textContent = OrderJobtitle[i];
-	  			} else if(xmlReDraft == "C") {
-	  				fieldname = "habyui" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field && OrderStat[i] != strLang26)
-	  					field.textContent = OrderDept[i];
-	  		    
-	  				fieldname = "habyuisign" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field && OrderStat[i] != strLang26)
-	  					field.textContent = OrderName[i];
-	  		    
-	  				fieldname = "habyuipositon" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field && OrderStat[i] != strLang26)
-	  					field.Value = OrderJobtitle[i];
-	  				IsSkipDrafter = "TRUE";
-	  			} else {
-	  				fieldname = "habyui" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field)
-	  					field.textContent = OrderDept[i];
-	  		    
-	  				fieldname = "habyuisign" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field)
-	  					field.textContent = OrderName[i];
-	  		    
-	  				fieldname = "habyuipositon" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field)
-	  					field.textContent = OrderJobtitle[i];
-	  			}
-	  			hapyuiCnt = hapyuiCnt + 1;
-	  			break;		
-	  		  		
-	  		 
-	  		case strAprType8:
-	  			//재기안결재선변경   	  			//R : 다시시작 	//C:계속진행
-	  			if(xmlReDraft == "R") {
-	  				fieldname = "habyui" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if(field)
-	  					field.textContent = OrderDept[i];
-	  				IsSkipDrafter = "FALSE";
-	  			} else if(xmlReDraft == "C") {
-	  				fieldname = "habyui" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if (field && OrderStat[i] != "" + strLang57 + "") {
-	  				}
-	  				IsSkipDrafter = "TRUE"; 
-	  			} else {
-	  				fieldname = "habyui" + hapyuiCnt;
-	  				field = message.GetListItem(fields, fieldname);
-	  				
-	  				if (field)
-	  					field.textContent = OrderDept[i]; 
-	  			}
-	  			hapyuiCnt = hapyuiCnt + 1;
-	  			break;
-	  		
-	  		case strAprType7:
-	  			if (referCnt == 1) {
-	  				refer = "";			
-	  				refer = refer + OrderName[i];
-	  				referCnt = referCnt + 1;
-	  			} else {
-	  				refer = refer + ", "  + OrderName[i];
-	  			}
-	  			break;
-	  			
-	  		case strAprType17:   //strLang61:  <== 2011.03.09 공람에 해당하는 APRTYPE(A030177)값 매핑
-	  			fieldname = "gongram" + gongramCnt;
-	  			field = message.GetListItem(fields, fieldname);
-	  			
-	  			if(field)
-	  			{
-	  				field.textContent = OrderName[i] + " " + OrderJobtitle[i] + " " + OrderDept[i];
-	  				gongramCnt = gongramCnt + 1;
-	  			}
-	  			break;
-	  	}
+		if (OrderType[i] == strAprType4 || OrderType[i] == strAprType16) {
+			LastSignSN = i;
+			i = OrderType.length;
+		} else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 ||  OrderType[i] == strAprType1 ||  OrderType[i] == strAprType3) {
+    		LastSignSN = i;
+        }
 	}
 
 	if(refer != "")
@@ -318,73 +204,68 @@ function GetDraftAprLineInfo(ret) {
 
 	for(i=1;i < OrderJobtitle.length;i ++)
 	{
-	    if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3)
-	  	{
-//	  		if(LastSignSN == 1 ||  LastSignSN == i ) 
-//			{
-//			    //// 2012.01.31 프로세스 디자인 추가 관련
-//                //field = message.GetListItem(fields, Flag + "AprLine");
-//	  		    //var cnt = 20;
-//	  		    //if (field)
-//	  		    //    cnt = OrderType.length;
-//	  		        
-//				for(k=1;k<10;k++)
-//				{
-//				    //if(pDraftFlag == "SUSIN" || pDraftFlag == "GAMSABU") 
-//				    if (pDraftFlag == "SUSIN")
-//						signID = pSusinSN + "sign" + k;
-//					else 
-//						signID = "sign" + k;
-//	    	
-//					field = message.GetListItem(fields, signID);//CKEDITOR-원본 : field = fields.Item(signID)
-//					if(field)
-//						LastSignNo = k;
-//				}
-//				idx = LastSignNo;
-//			}
-	  		var j, chkflag;
-	  		 
-	  		if(OrderType[i] == strAprType3)
-	  		{
-	  			chkflag = false;
-	  			for(j=1;j < i;j++)
-	  			{
-	  				if(OrderType[j] == strAprType4)
-	  				{
-	  					chkflag = true;
-	  					break;   
-	  				}
-	  			}
-	  			if(!chkflag)
-	  			{
-	  				fieldname = susinSN + "jikwe" + idx;
-	  				field = message.GetListItem(fields, fieldname);
-	  				if(field)
-	  					field.textContent  = OrderJobtitle[i];//CKEDITOR-원본 : field.Value = OrderJobtitle[i];
-		  				  			
-	  				idx = idx + 1;
-	  				continue;
-	  			}
-	  		}
-	  		fieldname = susinSN + "jikwe" + idx;
-	  		field = message.GetListItem(fields, fieldname);
-	  		if(field)
-	  			field.textContent = OrderJobtitle[i];
-		  	
-	  		idx = idx + 1;
-	  	}
-	  	
-	  	 
-	  	if(OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12 )
-	  	{
-	  		fieldname =  "hjikwe" + hidx;
-	  		field = message.GetListItem(fields, fieldname);
-	  		if(field)
-	  		{
-	  			field.textContent  = OrderJobtitle[i];//CKEDITOR-원본 : field.Value = OrderJobtitle[i];
-	  			hidx = hidx + 1;
-	  		}			
-	  	}	
+		if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType16 || OrderType[i] == strAprType3) {
+            fieldname = "jikwe" + idx;
+            field = message.GetListItem(fields, fieldname);
+
+            if (field) {
+                var jikweName = trim(getNodeText(field));
+                setNodeText(field , OrderJobtitle[i]);
+
+                if (OrderSuggester[i] == "Y")
+                    setNodeText(field , strLang75 + getNodeText(field));
+
+                if (OrderReporter[i] == "Y")
+                    setNodeText(field , strLang76 + getNodeText(field));
+            }
+            idx = idx + 1;
+        }
+        else if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+            fieldname = "habyui" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+                setNodeText(field , OrderDept[i]);
+            }
+
+            fieldname = "habyuipositon" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+                var jikweName = trim(getNodeText(field));
+                setNodeText(field , OrderJobtitle[i]);
+
+                if (OrderSuggester[i] == "Y")
+                    setNodeText(field , strLang75 + getNodeText(field));
+
+                if (OrderReporter[i] == "Y")
+                    setNodeText(field , strLang76 + getNodeText(field));
+            }
+            hidx = hidx + 1;
+        }
+		
+		var field = message.GetListItem(fields, "lineapr");
+	    if (field) {
+			if (idx > 5) {
+				field.style.display = "";
+				for (i=0; i<field.childElementCount; i++)
+				    field.children[i].style.display = "";
+			} else {
+				field.style.display = "none";
+				for (i=0; i<field.childElementCount; i++)
+				    field.children[i].style.display = "none";
+			}
+		}
+	    field = message.GetListItem(fields, "linehab");
+		if (field) {
+			if (hidx > 5) {
+				field.style.display = "";
+				for (i=0; i<field.childElementCount; i++)
+				    field.children[i].style.display = "";
+			} else {
+				field.style.display = "none";
+				for (i=0; i<field.childElementCount; i++)
+				    field.children[i].style.display = "none";
+			}	
+		}		
 	}
 	
 	//setSignSlash("sign", susinSN);
