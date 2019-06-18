@@ -63,7 +63,7 @@
 	    /* 2018-10-01 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
 	    if(pAdminFg == "") {
 	    	var msg = "<spring:message code='ezResource.t58' />";
-	        window.location.href = "/ezResource/nonResList.do?msg=" + msg;
+	        window.location.href = "/ezResource/nonResList.do?msg=" + encodeURIComponent(msg);
 	    }
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";

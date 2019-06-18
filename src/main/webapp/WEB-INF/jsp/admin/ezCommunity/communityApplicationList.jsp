@@ -395,7 +395,7 @@
 				setTimeout(function() {
 					if (confirm("<spring:message code = 'ezCommunity.t61' />")) {
 						$.ajax({
-							type : "POST",
+							type : "GET",
 							dataType : "json",
 							url : "/admin/ezCommunity/commAdmitOk.do",
 							async : false,
@@ -431,7 +431,7 @@
 				setTimeout(function() {
 					if (confirm("<spring:message code = 'ezCommunity.t63' />")) {
 						$.ajax({
-							type : "POST",
+							type : "GET",
 							dataType : "json",
 							url : "/admin/ezCommunity/commAdmitOk.do",
 							async : false,
@@ -464,7 +464,7 @@
 			function closeBtnClick(code) {
 				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
 					$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "json",
 						url : "/admin/ezCommunity/commCloseAll.do",
 						async : false,
