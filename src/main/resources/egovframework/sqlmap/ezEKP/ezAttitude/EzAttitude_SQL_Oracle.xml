@@ -152,6 +152,19 @@
 		<result property="annualCount" 					column="ANNUAL_COUNT" 					columnIndex="1"/>
 		<result property="month" 					column="MONTH" 				columnIndex="2"/>
 	</resultMap>
+
+	<resultMap class="java.util.HashMap" id="tenantIdCompanyIdInfo">
+		<result property="tenantId" 					column="TENANT_ID" 					columnIndex="1"/>
+		<result property="companyId" 					column="PHYSICALDELIVERYOFFICENAME" 				columnIndex="2"/>
+	</resultMap>
+
+	<resultMap class="java.util.HashMap" id="getJoinDateUserList">
+		<result property="userId" 						column="USER_ID" 				columnIndex="5"/>
+		<result property="workingMonthCnt" 				column="WORKINGMONTHCNT" 				columnIndex="3"/>
+		<result property="joinDate" 					column="JOIN_DATE" 				columnIndex="4"/>
+		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="2"/>
+		<result property="tenantId" 					column="TENANT_ID" 					columnIndex="1"/>
+	</resultMap>
 	
 	<resultMap id="annualCancelVO" class="AttitudeApplicationVO">
 		<result property="attitudeId"		column="ATTITUDE_ID" 		columnIndex="1"/>
@@ -2050,14 +2063,14 @@
 		]]>
 	</insert>
 	
-	<select id="ezAttitudeDAO.getJoinDateUserList" parameterClass="Map" resultClass="java.util.HashMap">
+	<select id="ezAttitudeDAO.getJoinDateUserList" parameterClass="Map" resultMap="getJoinDateUserList">
 		<![CDATA[
 			SELECT 
-				USER_ID AS userId, 
-	       		TRUNC(MONTHS_BETWEEN(TRUNC(SYSDATE),JOIN_DATE)) AS workingMonthCnt, 
-			    TO_CHAR(JOIN_DATE, 'yyyy-mm-dd')          							  AS joinDate,
-			    COMPANY_ID 															  AS companyId,
-			    TENANT_ID															  AS tenantId
+				USER_ID, 
+	       		TRUNC(MONTHS_BETWEEN(TRUNC(SYSDATE),JOIN_DATE)) AS WORKINGMONTHCNT, 
+			    TO_CHAR(JOIN_DATE, 'yyyy-mm-dd') AS JOIN_DATE,
+			    COMPANY_ID,
+			    TENANT_ID															  
 			FROM   
 				TBL_ATTITUDE_ANNUAL
 			WHERE 
@@ -2132,11 +2145,11 @@
 			TENANT_ID = #tenantId#
 	</update>
 	
-	<select id="ezAttitudeDAO.getTenantCompanuId" parameterClass="map" resultClass="java.util.HashMap">
+	<select id="ezAttitudeDAO.getTenantCompanuId" parameterClass="map" resultMap = "tenantIdCompanyIdInfo">
 		SELECT
 		  	DISTINCT
-		  	A.TENANT_ID                    AS tenantId,
-			A.PHYSICALDELIVERYOFFICENAME   AS companyId
+		  	A.TENANT_ID AS TENANT_ID,
+			A.PHYSICALDELIVERYOFFICENAME   
 		FROM
 			TBL_USERMASTER A
 		JOIN

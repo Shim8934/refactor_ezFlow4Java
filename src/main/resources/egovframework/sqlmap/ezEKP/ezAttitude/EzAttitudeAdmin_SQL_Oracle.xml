@@ -34,6 +34,19 @@
 		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
 	</resultMap>
 	
+	<resultMap class="java.util.HashMap" id="annualConfigMap">
+		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="1"/>
+		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="2"/>
+		<result property="annualCancelRule"			column="ANNUAL_CANCEL_RULE"			columnIndex="3"/>
+		<result property="useAnnualAutoGnrt"				column="USE_ANNUAL_AUTO_GNRT"			columnIndex="4"/>
+		<result property="annualGnrtStd"				column="ANNUAL_GNRT_STD"				columnIndex="5"/>
+		<result property="initialDate"				column="INITIAL_DATE"				columnIndex="6"/>
+		<result property="useMinusAnnual"			column="USE_MINUS_ANNUAL"		columnIndex="7"/>
+		<result property="useAnnualTmnt"		column="USE_ANNUAL_TMNT"	columnIndex="8"/>
+		<result property="roundOffRule"		column="ROUND_OFF_RULE"	columnIndex="9"/>
+		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="10"/>
+	</resultMap>
+	
 	<resultMap class="AttitudeAuthorVO" id="userMap">
 		<result property="userName" 				column="USER_NAME" 				columnIndex="1"/>
 		<result property="userId" 					column="USER_ID" 				columnIndex="2"/>
@@ -1496,9 +1509,9 @@
 				    A.DISPLAYNAME$primary$ AS userName,
 				    NVL(A.TITLE$primary$, ' ') AS userTitle,
 				    NVL(A.DESCRIPTION$primary$, ' ') AS userDeptName,
-				    NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) AS basicAnnualCnt,
-				    NVL(B.ADDITIONAL_HOLIDAY_CNT, 0) AS additionalAnnualCnt,
-				    NVL(B.MONTHLY_HOLIDAY_CNT, 0) + nvl(B.ANNUAL_HOLIDAY_CNT, 0) + nvl(B.ADDITIONAL_HOLIDAY_CNT, 0) AS totalAnnualCnt,
+				    RTRIM(TO_CHAR(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0),'fm9990D99'),'.') AS basicAnnualCnt,
+				    RTRIM(TO_CHAR(NVL(B.ADDITIONAL_HOLIDAY_CNT, 0),'fm9990D99'),'.') AS additionalAnnualCnt,
+				    RTRIM(TO_CHAR(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + nvl(B.ANNUAL_HOLIDAY_CNT, 0) + nvl(B.ADDITIONAL_HOLIDAY_CNT, 0),'fm9990D99'),'.') AS totalAnnualCnt,
 				    NVL(TO_CHAR(B.JOIN_DATE, 'YYYY-MM-DD'), 0) AS joinDate
 				FROM 
 					TBL_USERMASTER A
@@ -1660,6 +1673,78 @@
 			AND
 				USER_ID = #userId#
 	</insert>
+	
+	<update id="ezAttitudeAdminDAO.updateAnnualConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_ANNUAL_CONF
+			SET
+				annual_cancel_rule = #annualCancelRule#,
+				use_annual_auto_gnrt = #useAnnualAutoGnrt#,
+				annual_gnrt_std = #annualGnrtStd#,
+				initial_date = #initialDate#,
+				use_minus_annual = #useMinusAnnual#,
+				use_annual_tmnt = #useAnnualTmnt#,
+				round_off_rule = #roundOffRule#,
+				conf_set_date = TO_DATE(#confSetDate#, 'YYYY-MM-DD') 
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</update>
+	
+	<insert id="ezAttitudeAdminDAO.insertAnnualConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_ANNUAL_CONF
+				(
+				COMPANY_ID,
+				TENANT_ID,
+				ANNUAL_CANCEL_RULE,
+				USE_ANNUAL_AUTO_GNRT,
+				ANNUAL_GNRT_STD,
+				INITIAL_DATE,
+				USE_MINUS_ANNUAL,
+				USE_ANNUAL_TMNT,
+				ROUND_OFF_RULE,
+				CONF_SET_DATE
+				)
+			VALUES
+				(
+				#companyId#,
+				#tenantId#,
+				#annualCancelRule#,
+				#useAnnualAutoGnrt#,
+				#annualGnrtStd#,
+				#initialDate#,
+				#useMinusAnnual#,
+				#useAnnualTmnt#,
+				#roundOffRule#,
+				TO_DATE(#confSetDate#, 'YYYY-MM-DD')
+				)
+		]]>
+	</insert>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAnnualConfig" parameterClass="Map" resultMap="annualConfigMap">
+		<![CDATA[
+			SELECT
+				company_id,
+				tenant_id,
+				annual_cancel_rule,
+				use_annual_auto_gnrt,
+				annual_gnrt_std,
+				TO_CHAR(initial_date, 'YYYY-MM-DD') AS initial_date,
+				use_minus_annual,
+				use_annual_tmnt,
+				round_off_rule,
+				TO_CHAR(conf_set_date, 'YYYY-MM-DD') AS conf_set_date
+			FROM
+				TBL_ATTITUDE_ANNUAL_CONF
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</select>
 	
 	<insert id="ezAttitudeAdminDAO.insertAnnual" parameterClass="Map">
 		<![CDATA[
