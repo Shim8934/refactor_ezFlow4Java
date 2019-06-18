@@ -1876,33 +1876,36 @@ function AprLineDeptAdd(AprLineAddIndex,AprLineRow,pSelectedRow ,selnode)
 	pparsingXML = pparsingXML + "<DATA12>" + strAprState1 + "</DATA12>";
 	
     var checkDept = false;
-    if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0], "CODE") == "011") {
-
-        var pUserList = new ListView();
-        pUserList.LoadFromID("pUserList");
-        var totalRow = pUserList.GetDataRows();
-
-        for (var j = 1; j <= totalRow.length; j++) 
-        {
-            if (GetAttribute(totalRow[1], "DATA1") == "user" && GetAttribute(totalRow[1], "DATA2") == selnode.GetNodeData("EXTENSIONATTRIBUTE9") && checkDept == false) {
-                pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(GetAttribute(totalRow[1], "DATA7")) + "</DATA13>";
-                pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(GetAttribute(totalRow[1], "DATA8")) + "</DATA14>";
-                pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(GetAttribute(totalRow[1], "DATA9")) + "</DATA15>";
-                pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(GetAttribute(totalRow[1], "DATA10")) + "</DATA16>";
-                pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(GetAttribute(totalRow[1], "DATA11")) + "</DATA17>";
-                pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(GetAttribute(totalRow[1], "DATA12")) + "</DATA18>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA4")) + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA5")) + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA6")) + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                checkDept = true;
-                break;
-            }
-        }
-    }
+    //로직이 이상해서 주석처리. totalRow는 조직도 부서원리스트의 row 인데 두번째 사람하고 만 비교함. 이미 추가된 결재선에서 최종결재자 직전의 사람이 부서장인지 비교하기 위한 로직이면 더 말이 되는듯.
+    //아래 로직대로 돌아가면 부서추가를 할 때, 조직도의 두번째 사람이 부서장이면 개인으로 추가되고 버그가 발생함.
+    //2019-06-18 홍대표
+//    if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0], "CODE") == "011") {
+//
+//        var pUserList = new ListView();
+//        pUserList.LoadFromID("pUserList");
+//        var totalRow = pUserList.GetDataRows();
+//
+//        for (var j = 1; j <= totalRow.length; j++) 
+//        {
+//            if (GetAttribute(totalRow[1], "DATA1") == "user" && GetAttribute(totalRow[1], "DATA2") == selnode.GetNodeData("EXTENSIONATTRIBUTE9") && checkDept == false) {
+//                pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(GetAttribute(totalRow[1], "DATA7")) + "</DATA13>";
+//                pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(GetAttribute(totalRow[1], "DATA8")) + "</DATA14>";
+//                pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(GetAttribute(totalRow[1], "DATA9")) + "</DATA15>";
+//                pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(GetAttribute(totalRow[1], "DATA10")) + "</DATA16>";
+//                pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(GetAttribute(totalRow[1], "DATA11")) + "</DATA17>";
+//                pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(GetAttribute(totalRow[1], "DATA12")) + "</DATA18>";
+//                pparsingXML = pparsingXML + "</CELL><CELL>";
+//                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA4")) + "</VALUE>";
+//                pparsingXML = pparsingXML + "</CELL><CELL>";
+//                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA5")) + "</VALUE>";
+//                pparsingXML = pparsingXML + "</CELL><CELL>";
+//                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(totalRow[1], "DATA6")) + "</VALUE>";
+//                pparsingXML = pparsingXML + "</CELL><CELL>";
+//                checkDept = true;
+//                break;
+//            }
+//        }
+//    }
 
     if (checkDept == false) {
         pparsingXML = pparsingXML + "<DATA13>-</DATA13>";
