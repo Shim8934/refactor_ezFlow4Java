@@ -3005,7 +3005,7 @@ h2, #menu span {font-size: 12px;}
 .usersTr .mainTd {width: 50%;}
 .usersTr .respDate {width: 120px; min-width: 120px; white-space: nowrap; padding-right: 8px;}
 .usersTr td:first-child {width: 30px;}
-.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family: Malgun Gothic, "맑은 고딕";}
+.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .response-header >div:first-child {flex: 1;}
 .response-header >div:last-child {margin-left: 10px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
 .response-users {padding: 10px; border-right: 1px solid #ddd; border-left: 1px solid #ddd;}
@@ -3086,7 +3086,7 @@ h2, #menu span {font-size: 12px;}
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
 .hiddenBttn, .hidden-tab, .searchPanel.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
-.surveydetail-header {padding-left: 10px; font-family: Malgun Gothic, "맑은 고딕";}
+.surveydetail-header {padding-left: 10px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .surveydetail-header ul {padding: 0px; margin: 0px; list-style: none;}
 .surveydetail-header ul li {display: block; float: left; margin: 0 3px 0 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
 .surveydetail-header span {display: inline-block; background: white; border-top: 1px solid #c7c7c7; border-left: 1px solid #c7c7c7; border-right: 1px solid #c7c7c7; border-bottom: 1px solid #909193; height: 25px; padding: 0px 8px 2px 8px; line-height: 25px; font-size: 12px; color: #393939;}
@@ -3234,7 +3234,7 @@ input::-ms-clear {display: none;}
 .survey-bttn-panel {width:100%; text-align: center;}
 .btnpositionSurvey{margin:20px 0px; padding:7px; text-align:center;}
 .imgbtnSurvey{white-space:nowrap; display:inline-block; background-repeat: no-repeat; padding-left:8px; vertical-align: top; cursor: pointer; margin-bottom: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height:28px;}
-.imgbtnSurvey span{display: inline-block; background-repeat: no-repeat; height: 30px; padding-right:8px; font: 14px malgun gothic; letter-spacing: -1; vertical-align: top; line-height: 28px; height: 28px; line-height: 30px; font-weight: bold; font-size: 12px; color: #000;}
+.imgbtnSurvey span{display: inline-block; background-repeat: no-repeat; height: 30px; padding-right:8px; font: 14px Meiryo UI; letter-spacing: -1; vertical-align: top; line-height: 28px; height: 28px; line-height: 30px; font-weight: bold; font-size: 12px; color: #000;}
 .imgbtnSurvey_save{border:1px solid #62aaf9; box-shadow: 0px 2px 0px 0px rgba(98, 170, 249, 0.8);}
 .imgbtnSurvey_save span{color:#0470e4;}
 /**** survey button panel end ****/
@@ -3354,7 +3354,7 @@ input::-ms-clear {display: none;}
 /* question header panel */
 .question-panel{background:#f1f6fb; padding: 10px;}
 .question-header {display:block; height:40px; line-height:40px; padding:10px 0px;}
-.question-header .question-content {float:left; padding:0px 20px; cursor: default; font-size:14px; font-family:Malgun Gothic, "맑은 고딕";}
+.question-header .question-content {float:left; padding:0px 20px; cursor: default; font-size:14px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .question-header .tooltip-bttns {float:right; padding: 0px 10px;}
 
 .question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px; float: left;}
@@ -3435,7 +3435,7 @@ input[type=range]::-ms-tooltip {display: none;}
 /* survey information, questions and logic confirm part */
 .prevQsWrapper{margin:10px 0px 0px 0px; border:1px solid #ddd; position: relative;}
 .prevQsContent{background:#f1f6fb;}
-.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family:Malgun Gothic, "맑은 고딕"; display: flex;}
+.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; display: flex;}
 .prevQsWrapper .question-header .imptt {line-height: 40px;}
 .srvyLogicbtn{display:inline-flex; margin:0px 0px 0px 10px;}
 .logicSkip{background-position:0px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}

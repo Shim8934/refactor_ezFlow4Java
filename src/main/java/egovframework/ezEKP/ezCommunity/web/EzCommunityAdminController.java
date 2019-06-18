@@ -440,7 +440,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 커뮤니티 신청 관리 > 폐쇄신청 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/commCloseAll.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/ezCommunity/commCloseAll.do", method = RequestMethod.GET)
 	public String commCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -483,8 +483,8 @@ public class EzCommunityAdminController {
 			String commName2  = clubVO.getC_ClubName2();
 			String sysopID    = clubVO.getC_SysopID();
 			
-			ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), egovMessageSource.getMessage("ezCommunity.khj01", userInfo.getLocale()), egovMessageSource.getMessage("ezCommunity.t38", userInfo.getLocale()), tenantId);
-			ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), tenantId);
+			ezCommunityAdminService.aspCommCloseAllDel(code, tenantId);
+			ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), egovMessageSource.getMessage("ezCommunity.khj01", userInfo.getLocale()), "1", tenantId);
 		}
 		
 		return "json";

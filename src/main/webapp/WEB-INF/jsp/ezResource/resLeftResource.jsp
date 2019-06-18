@@ -99,7 +99,7 @@
         		
         		if(document.getElementById("TreeView").innerText == "") {
         			var msg = "<spring:message code='ezResource.t368' />";
-        			var strUrl = "/ezResource/nonResList.do?msg="+msg;
+        			var strUrl = "/ezResource/nonResList.do?msg="+encodeURIComponent(msg);
             		locationInfo("");
             		Navigate(strUrl);
         		}

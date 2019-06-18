@@ -254,7 +254,6 @@
 	                        	<label for="checkId"><span></span>ID Save</label>
 	                        </p>
 	                        <p class="btn_login">
-	                        	<input name="LoginButton" type="submit" id="LoginButton" value="Login" border="0" tabindex="3" class="btn_login" style="display: none;">
 	                        	<label for="LoginButton" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
 	                        		<span id="LoginBtnSpan" style="font-size:24px;">LOGIN</span>
 	                        	</label>

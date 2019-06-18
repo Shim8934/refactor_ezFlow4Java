@@ -324,7 +324,8 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		return result;
 	}
 
-	private void aspCommCloseAllDel(String code, int tenantID) throws Exception {
+	@Override
+	public void aspCommCloseAllDel(String code, int tenantID) throws Exception {
 		logger.debug("aspCommCloseAllDel started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -341,7 +342,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("v_PCLOSESTATE", "1");
 		map.put("tenantID", tenantID);
 		
 		ezCommunityAdminDAO.aspCommCloseAllUpdate(map);
@@ -625,7 +626,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
-		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("v_PCLOSESTATE", "1");
 		map.put("v_STRQUERY", searchValue);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -644,7 +645,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
-		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("v_PCLOSESTATE", "1");
 		map.put("v_STRQUERY", searchValue);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
 		map.put("v_OFFSETMIN", offSetMin);
@@ -693,7 +694,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_REASON", reason);
-		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("v_PCLOSESTATE", "1");
 		map.put("tenantID", tenantId);
 		
 		ezCommunityAdminDAO.aspAdminCommCloseAllUpdate(map);
