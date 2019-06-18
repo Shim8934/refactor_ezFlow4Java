@@ -247,7 +247,7 @@ function openLinkDetail(item, itemId) {
 	}
 	
 	var linksHTML = "<li class='linkDetails' id='linkLiNew' style='display:none'>";
-	linksHTML += "<div class='admin_quickList' id='linkDetailsNew'><dl class='admin_menuDL'><dt class='admin_menuTit'>" + strLangkhj1 + " " + strLangkhj7 + " " + strLangkhj8 + "</dt><dd id='close' class='admin_menuX'></dd></dl>";	
+	linksHTML += "<div class='admin_quickList' id='linkDetailsNew'><dl class='admin_menuDL'><dt class='admin_menuTit'>" + strLangkhj1 + " " + strLangkhj7 + "/" + strLangkhj8 + "</dt><dd id='close' class='admin_menuX'></dd></dl>";	
 	linksHTML += "<div class='admin_menu_content'>";
 	linksHTML += "<table class='quickTable01' border='0' cellpadding='0' cellspacing='0'>";
 	linksHTML += "<tr>";
