@@ -12330,13 +12330,8 @@ CREATE TABLE `tbl_tmpattachinfo` (
   `ATTACHUSERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHUSERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-<<<<<<< HEAD
-  `COMPANYID` varchar(20) NOT NULL COMMENT '원문정보공개 첨부파일 플래그',
-  `FILEOPENFLAG` char(1) DEFAULT NULL,
-=======
   `COMPANYID` varchar(20) NOT NULL,
   `FILEOPENFLAG` char(1) CHARACTER SET utf8mb4 DEFAULT NULL,
->>>>>>> e59600693e... 원문정보공개 개발중(06/14)
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`ATTACHFILESN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

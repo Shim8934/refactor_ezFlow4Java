@@ -274,11 +274,11 @@ function OpenAlertUI_Complete() {
 function AprSecurity_onClick() {
     if (document.getElementById("AprSecurity").checked) {
         document.getElementById("idDatepicker").disabled = "";
-        $(".ui-datepicker-trigger").show();
+//        $(".ui-datepicker-trigger").show();
     }
     else {
         document.getElementById("idDatepicker").disabled = "disabled";
-        $(".ui-datepicker-trigger").hide();
+//        $(".ui-datepicker-trigger").hide();
     }
 }
 

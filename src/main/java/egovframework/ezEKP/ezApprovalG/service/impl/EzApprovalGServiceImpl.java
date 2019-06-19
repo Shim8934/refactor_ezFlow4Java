@@ -1,69 +1,5 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Resource;
-import javax.mail.internet.InternetAddress;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.html.HTMLCollection;
-import org.w3c.dom.html.HTMLElement;
-import org.w3c.dom.html.HTMLTableElement;
-import org.w3c.dom.html.HTMLTableRowElement;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
@@ -83,6 +19,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
@@ -133,6 +70,67 @@ import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
 import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
 import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.writer.HWPWriter;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.html.HTMLCollection;
+import org.w3c.dom.html.HTMLElement;
+import org.w3c.dom.html.HTMLTableElement;
+import org.w3c.dom.html.HTMLTableRowElement;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("EzApprovalGService")
 public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
@@ -3648,13 +3646,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo7(map);
 			ezApprovalGDAO.aprDeleteDocInfo8(map);
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
-			
-			map.put("v_DOCID", docID);
-			ezApprovalGDAO.deleteOpenGovAttachInfo(map);
-			map.put("docID", docID);
-			map.put("tenantID", tenantID);
-			ezApprovalGDAO.deleteOpenGovDocInfo(map);
-			
 			
 			gongramDocID = gongRamDocInfo(docID, companyID, tenantID);
 			
@@ -29105,7 +29096,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String openGovInfoSave(String openGovListFlag, String fileOpenFlagList, String basis, String reason, String publicity, String docID, String companyID, int tenantId) throws Exception {
+	public String openGovInfoSave(String openGovListFlag, String fileOpenFlagList, String basis, String reason, String publicity, String docID, String limitDate, String companyID, int tenantId) throws Exception {
 		//openGovListFlag 가 N 이면 basis 필요 없음
 		//publicity.substring(0,1) 이 1이면 reason 필요없음
 		logger.debug("getGongRamLineInfo started");
@@ -29117,7 +29108,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("tenantID", tenantId);
 		map.put("basis", basis);
 		map.put("reason", reason);
-		
+		if (!limitDate.equals("")) {
+			map.put("limitDate", limitDate);
+		}
 		
 		ezApprovalGDAO.deleteOpenGovDocInfo(map);
 		ezApprovalGDAO.insertOpenGovDocInfo(map);
@@ -29188,5 +29181,373 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //		openGovInfoMap.put("fileOpenFlagList", fileOpenFlagList);
 		
 		return openGovInfoMap;
+	}
+	
+	@Override
+	public String getSearchDocListForOpenGov(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR, String draftFromMONTH,
+			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
+			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
+			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String alFlag, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
+		logger.debug("getSearchDocList started");
+
+		StringBuilder resultXML = new StringBuilder();
+		String orderOption1 = "";
+		String orderOption2 = "";
+		boolean publicFlag = false;
+		boolean securityFlag = false;
+		String userSecurityCode = "";
+		
+		if (getIsUse("A22", "001", companyID, lang, tenantID).equals("1")) {
+			securityFlag = true;
+		}
+		
+		if (getIsUse("A22", "004", companyID, lang, tenantID).equals("1")) {
+			publicFlag = true;
+		}
+		
+		if (securityFlag) {
+			userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
+		}
+		
+		if (userSecurityCode == null || userSecurityCode.equals("")) {
+			userSecurityCode = "0";
+		}
+		
+		String listString = "";
+		
+		if(approvalFlag.equals("G")) {
+			if (containerID.equals("ADMIN")) {
+				listString = getListHeader("083", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("006", companyID, lang, tenantID);
+			} 
+		} else {
+			if (containerID.equals("ADMIN")) {
+				listString = getListHeader("S082", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("S006", companyID, lang, tenantID);
+			} 
+		}
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		String tmpStartDate1 = "";
+		String tmpStartDate2 = "";
+		String tmpEndDate1 = "";
+		String tmpEndDate2 = "";
+		String tmpProcessDate1 = "";
+		String tmpProcessDate2 = "";
+		
+		if (!draftToYEAR.equals("") && draftToYEAR != null) {
+			tmpStartDate1 = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftFromYEAR, draftFromMONTH, draftFromDAY, true), offset, false).trim();
+			tmpStartDate2 = commonUtil.getDateStringInUTC(commonUtil.makeDate(draftToYEAR, draftToMONTH, draftToDAY, false), offset, false).trim();
+		}
+		
+		if (!apprFromYEAR.equals("") && apprFromYEAR != null) {
+			tmpEndDate1 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprFromYEAR, apprFromMONTH, apprFromDAY, true), offset, true).trim();
+			tmpEndDate2 = commonUtil.getDateStringInUTC(commonUtil.makeDate(apprToYEAR, apprToMONTH, apprToDAY, false), offset, true).trim();
+		}
+		
+		if (!myApprFromYEAR.equals("") && myApprFromYEAR != null) {
+			tmpProcessDate1 = commonUtil.getDateStringInUTC(commonUtil.makeDate(myApprFromYEAR, myApprFromMONTH, myApprFromDAY, true), offset, false).trim();
+			tmpProcessDate2 = commonUtil.getDateStringInUTC(commonUtil.makeDate(myApprToYEAR, myApprToMONTH, myApprToDAY, false), offset, false).trim();
+		}
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		int totalCount = getSearchDocListCountForOpenGov(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
+				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, commonUtil.getMultiData(lang, tenantID), approvUser, approvalFlag, companyID, tenantID, offset);
+		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
+		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
+		int querySize3 = querySize - Integer.parseInt(pageSize) ;
+		
+		if (!alFlag.equals("1")) {
+			if (querySize2 >= Integer.parseInt(pageSize)) {
+				querySize2 = Integer.parseInt(pageSize);
+			}
+		}
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		for (int k = 0; k < hlength; k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			
+			if (!orderCell.equals("") && orderCell.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
+				if (orderOption.equals("")) {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+				} else {
+					orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
+					orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+				}
+			}
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		String docList = getSearchDocListForOpenGov(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
+				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, alFlag, lang, approvUser, companyID, tenantID, offset, approvalFlag, locale);
+		
+		Document docXML = commonUtil.convertStringToDocument(docList);
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		String langData = commonUtil.getMultiData(lang, tenantID);
+		resultXML.append("<ROWS>");
+		
+		for (int k = dlength - 1; k >= 0; k--) {
+			resultXML.append("<ROW>");
+			for (int p = 0; p < hlength; p++) {
+				resultXML.append("<CELL>");
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("FORMNAME")) {
+					fieldName = fieldName + langData;
+				}
+				
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				
+				if (fieldName.equals("OPENFLAG")) {
+					if (fieldValue.equals("1")) {
+						fieldValue = "공개";
+					} else if (fieldValue.equals("2")) {
+						fieldValue = "부분공개";
+					} else {
+						fieldValue = "비공개";
+					}
+				}
+				
+				if (fieldName.equals("LISTOPENFLAG")) {
+					if (fieldValue.equals("Y")) {
+						fieldValue = "공개";
+					} else {
+						fieldValue = "비공개";
+					}
+				}
+				
+				if (fieldName.equals("CREATEDATE")) {
+					fieldValue = fieldValue.substring(0, fieldValue.length() - 2);
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
+				} else if (fieldName.equals("OPENLIMITDATE")) {
+					if (!fieldValue.equals("")) {
+						fieldValue = fieldValue.substring(0, fieldValue.length() - 11);
+						resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
+					} else {
+						resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
+					}
+				} else {
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + " </VALUE>");
+				}
+				
+				
+				if (p == 0) {
+					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<DATA6>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA6>");
+					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA7>");
+					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent()) + "</DATA8>");
+					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
+					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
+					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
+					resultXML.append("<DATA12>" + docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent() + "</DATA12>");
+					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
+				}
+				
+				if (fieldName.equals("HASATTACHYN")) {
+					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+				}
+				if (fieldName.equals("ISPUBLIC")) {
+					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+
+		logger.debug("getSearchDocList ended");
+		
+		return resultXML.toString();
+	}
+	
+	private String getSearchDocListForOpenGov(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
+			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
+			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String alFlag, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
+		logger.debug("getSearchDocListForOpenGov started");
+		
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CONTID", containerID);
+		map.put("v_USERID", userID);
+		map.put("v_USERSECCODE", userSecurityCode);
+		if (langType.equals("")){
+			langType = "1";
+		}
+		map.put("v_PSTRLANG", langType);
+		
+		if (publicFlag) {
+			map.put("v_PUBFLAG", "Y");
+		} else {
+			map.put("v_PUBFLAG", "N");
+		}
+		map.put("v_SUBQUERY", subQuery);
+		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DOCTITLE", docTitle.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_FORMID", formID.trim());
+		map.put("v_ENDDATE1", tmpEndDate1);
+		map.put("v_ENDDATE2", tmpEndDate2);
+		map.put("v_STARTDATE1", tmpStartDate1);
+		map.put("v_STARTDATE2", tmpStartDate2);
+		map.put("v_PROCESSDATE1", tmpProcessDate1);
+		map.put("iv_APRFLAG", aprFlag);
+		map.put("alFlag", alFlag);
+		
+		if(tmpProcessDate1.length() > 0 ) {
+			map.put("iv_APRFLAG", "INMYAPPRSEARCH");
+		}
+		map.put("v_PROCESSDATE2", tmpProcessDate2);
+		
+		if(tmpProcessDate2.length() > 0 ) {
+			map.put("iv_APRFLAG", "INMYAPPRSEARCH");
+		}
+		
+		if(containerID.length() == 0 ) {
+			map.put("iv_APRFLAG", "");
+		}
+		
+		map.put("v_DOCSTATE", docState.trim());
+		map.put("v_PAGESIZE", querySize); //전체
+		map.put("v_PAGESIZE2", querySize2);
+		map.put("v_PAGESIZE3", querySize3);
+		map.put("v_ORDEROPTION", orderOption1);
+		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		
+		if(orderOption1.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0, orderOption1.trim().length()).toLowerCase());
+			if(orderOption1.length() >= 7 ) {
+				if(orderOption1.substring(0, 7).toLowerCase().equals("enddate")) {
+					map.put("v_tmp", "ORDER BY "+ orderOption1 +" DESC");
+				} else {
+					map.put("v_tmp", "ORDER BY "+ orderOption1 +" DESC , ENDDATE ASC");
+				}
+			} else {
+				map.put("v_tmp", "ORDER BY "+ orderOption1 +" DESC , ENDDATE ASC ");
+			}
+		} else {
+			map.put("v_tmp", "ORDER BY ENDDATE ASC");
+		}
+		
+		map.put("v_ORDEROPTION2", orderOption2);
+		map.put("v_ORDEROPTIONLENGTH2", orderOption2.length());
+		if (orderOption2.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE2", orderOption2.substring(0, orderOption2.trim().length()).toLowerCase());
+		}
+		map.put("approvalFlag", approvalFlag);
+		map.put("v_LANGTYPE", langType);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_APPROVUSER", approvUser.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		
+		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
+		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
+		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
+		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));
+		
+		List<ApprGDocListForOpenGovVO> apprGDocListVOList = ezApprovalGDAO.getSearchDocListForOpenGov(map);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		
+		for (int i = 0; i < apprGDocListVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
+		}
+		sb.append("</DATA>");
+
+		logger.debug("getSearchDocListForOpenGov ended");
+		
+		return sb.toString();
+	}
+
+	private int getSearchDocListCountForOpenGov(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
+			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
+			String docState, String langType, String approvUser, String approvalFlag, String companyID, int tenantID, String offset) throws Exception {
+		logger.debug("getSearchDocListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_CONTID", containerID);
+		map.put("v_USERID", userID);
+		map.put("v_USERSECCODE", userSecurityCode);
+		if (publicFlag) {
+			map.put("v_PUBFLAG", "Y");
+		} else {
+			map.put("v_PUBFLAG", "N");
+		}
+		map.put("v_offset", offset);
+		map.put("v_SUBQUERY", subQuery);
+		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DOCTITLE", docTitle.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_FORMID", formID.trim());
+		map.put("v_STARTDATE1", tmpStartDate1);
+		map.put("v_STARTDATE2", tmpStartDate2);
+		map.put("v_ENDDATE1", tmpEndDate1);
+		map.put("v_ENDDATE2", tmpEndDate2);
+		map.put("v_PROCESSDATE1", tmpProcessDate1);
+		map.put("v_PROCESSDATE2", tmpProcessDate2);
+		map.put("approvalFlag", approvalFlag);
+		if(tmpProcessDate1.length() > 0) {
+			aprFlag = "INMYAPPRSEARCH";
+		}
+		if(tmpProcessDate2.length() > 0) {
+			aprFlag = "INMYAPPRSEARCH";
+		}
+		if(containerID.length() == 0) {
+			aprFlag = "";
+		}
+		map.put("v_APRFLAG", aprFlag.toUpperCase());
+		map.put("v_DOCSTATE", docState.trim());
+		map.put("v_LANGTYPE", langType);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_APPROVUSER", approvUser.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		
+		int resultCnt = ezApprovalGDAO.getSearchDocListCountForOpenGov(map);
+
+		logger.debug("getSearchDocListCount ended");
+		
+		return resultCnt;
+	}
+	
+	@Override
+	public void deleteOpenGovDocInfo(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteOpenGovDocInfo started.");
+		logger.debug("docID = " + docID);
+		
+		Map<String, Object> map	= new HashMap<>();
+		map.put("v_DocID", docID);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		ezApprovalGDAO.deleteOpenGovAttachInfo(map);
+		map.put("docID", docID);
+		map.put("tenantID", tenantID);
+		ezApprovalGDAO.deleteOpenGovDocInfo(map);
+		logger.debug("deleteOpenGovDocInfo ended.");
 	}
 }

@@ -208,8 +208,8 @@
 	        var useConfirmParallelAgreement = "<c:out value ='${useConfirmParallelAgreement}'/>";
 	        var filterTimerId;
 	        //원문정보공개
-	        var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "";
-
+	        var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate = "";
+	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
@@ -217,7 +217,22 @@
 	        		$("#idDatepicker").attr('disabled',true);
 	        	}
 	        	
+	        	if (document.getElementById("openGovLimitDate").checked){
+	        		$("#idDatepickerForOpenGov").attr('disabled',false);
+	        	} else {
+	        		$("#idDatepickerForOpenGov").attr('disabled',true);
+	        	}
+	        	
 	        	$("#idDatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true
+		        });
+	        	
+	        	$("#idDatepickerForOpenGov").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
 		            autoSize: true,
@@ -425,6 +440,7 @@
 	            reason = RetValue[53];
 	            listOpenFlag = RetValue[54];
 	            fileOpenFlagList = RetValue[55];
+	            limitDate = RetValue[56];
 	            
 	            if (pSuSinFlag == "N" || pDocType == "002") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
@@ -1156,6 +1172,12 @@
 			                
 			                ret[29] = $("#txt_Basis").val();
 			                ret[30] = $("#txt_Reason").val();
+			                
+			                if (document.getElementById("openGovLimitDate").checked) {
+			                	ret[31] = document.getElementById("idDatepickerForOpenGov").value.substring(0, 10);
+			                } else {
+			                	ret[31] = "";
+			                }
 		                }
 		
 		                if (ReturnFunction != null) {
@@ -1447,7 +1469,7 @@
 
 		        if (vAprSecurity.trim() != "") {
 		            document.getElementById("AprSecurity").checked = true;
-		            
+		            document.getElementById("idDatepicker").disabled = "";
 		            $("#idDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			        $("#idDatepicker").datepicker('setDate', new Date(vAprSecurity));
 		        }
@@ -1457,8 +1479,14 @@
 		        }
 		        
 		        // basis, reason, listOpenFlag, fileOpenFlagList;
-	            alert("basis : " + basis + "\nreason : " + reason + "\nlistopenflag : " + listOpenFlag + "\nfileOpenFlagList : " + fileOpenFlagList);
 	            
+		        if (limitDate != "") {
+		        	document.getElementById("openGovLimitDate").checked = true;
+		        	document.getElementById("idDatepickerForOpenGov").disabled = "";
+		        	$("#idDatepickerForOpenGov").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#idDatepickerForOpenGov").datepicker('setDate', new Date(limitDate));
+		        }
+		        
 		        if (listOpenFlag != "") {
 		        	if (listOpenFlag == "Y") {
 			        	document.getElementById("openListFlag").checked = true;
@@ -1469,6 +1497,7 @@
 			        	$("#txt_Basis").val(basis);
 		        	}
 		        } else {
+		        	document.getElementById("openListFlag").checked = true;
 		        	$("#basis").hide();
 		        }
 		        
@@ -2042,6 +2071,17 @@
 		    	} else {
 		    		$("#basis").show();
 		    	}
+		    }
+		    
+		    function openGovLimitDate_onClick() {
+		        if (document.getElementById("openGovLimitDate").checked) {
+		            document.getElementById("idDatepickerForOpenGov").disabled = "";
+//		            $(".ui-datepicker-trigger").show();
+		        }
+		        else {
+		            document.getElementById("idDatepickerForOpenGov").disabled = "disabled";
+//		            $(".ui-datepicker-trigger").hide();
+		        }
 		    }
 	    </script>
 	    <style>
@@ -2720,6 +2760,13 @@
 		            </td>
 		            </tr>
 		            <tr>
+		                <th>원문공개열람제한일</th>
+		                <td>
+		                	<input type="checkbox" name="openGovLimitDate" id="openGovLimitDate" value="checkbox" onclick="openGovLimitDate_onClick()">
+		                    <input readonly="readonly" id='idDatepickerForOpenGov' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
+		                </td>
+		            </tr>
+		            <tr>
 		                <th>첨부정보</th>
 		                <td>
 		                <div style="overflow: auto; width: 100%; height: 115px;">
@@ -3261,3 +3308,4 @@
 	    }
 	</script>
 </html>
+src/main/webapp/WEB-INF/jsp/ezApprovalG/apprGezApprovalInfo.jsp

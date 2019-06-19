@@ -659,11 +659,21 @@ public interface EzApprovalGService {
 
 	public String getGongRamLineInfo(String docID, String mode, String companyID, String lang, int tenantID, String offset) throws Exception;
 
-	public String openGovInfoSave(String openGovListFlag, String fileOpenFlagList, String companyID, String basis, String reason, String publicity, String docID, int tenantId) throws Exception;
+	public String openGovInfoSave(String openGovListFlag, String fileOpenFlagList, String companyID, String basis, String reason, String publicity, String docID, String limitDate, int tenantId) throws Exception;
 
 	public String getFormId(String formURL) throws Exception;
 
 	public String getOpenGovFlag(String formId, int tenantId, String companyID) throws Exception;
 
 	public Map<String, Object> getOpenGovInfo(String docID, int tenantId, String companyID) throws Exception;
+
+	public String getSearchDocListForOpenGov(String string, String string2, String subQuery, String docNumber, String docTitle, String drafter,
+			String formID, String draftFromYear, String draftFromMonth,	String draftFromDay, String draftToYear, String draftToMonth,
+			String draftToDay, String apprFromYear, String apprFromMonth, String apprFromDay, String apprToYear, String apprToMonth,
+			String apprToDay, String string3, String string4, String string5, String string6, String string7, String string8,
+			String draftDeptName, String docState, String string9, String pageSize, String pageNum, String orderCell,
+			String orderOption, String string10, String companyID, String lang, String approvUser, int tenantId, String offset,
+			String approvalFlag, Locale locale) throws Exception;
+
+	void deleteOpenGovDocInfo(String docID, String companyID, int tenantID) throws Exception;
 }

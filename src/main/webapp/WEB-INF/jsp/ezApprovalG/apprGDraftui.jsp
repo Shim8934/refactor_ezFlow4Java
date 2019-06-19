@@ -163,7 +163,7 @@
 			var reformFlag = "${reformflag}";
 			var wAprMemberSN = "1";
 			//원문정보공개
-			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "";
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			
 		    window.onload = function ()
 		    {
@@ -1549,6 +1549,7 @@
 		        parameter[53] = reason;
 		        parameter[54] = listOpenFlag;
 		        parameter[55] = fileOpenFlagList;
+		        parameter[56] = limitDate;
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1625,25 +1626,6 @@
 		                    setRecevInfo("");
 		                }
 		                
-	                	$.ajax({
-                    		type : "POST",
-                    		dataType : "text",
-                    		async : false,
-                    		url : "/ezApprovalG/openGovInfoSave.do",
-                    		data : {
-                    				openGovListFlag : ret[27],
-                    				fileOpenFlagList : ret[28],
-                    				basis : ret[29],
-                    				reason : ret[30],
-                    				publicity : ret[11],
-                    				docID : pDocID
-                    		}
-	                	});
-	                	
-                	    listOpenFlag = ret[27];
-	       		        fileOpenFlagList = ret[28];
-	                	basis = ret[29];
-	                	reason = ret[30];
 		                
 		                if (ret[4] != undefined) {
 			                var g_SelCabXml = ret[4];
@@ -1682,6 +1664,28 @@
 			                	
 			                	setNonElecRecInfo(nonElecRecInfoXml);
 			                }
+			                
+		                	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/openGovInfoSave.do",
+	                    		data : {
+	                    				openGovListFlag : ret[27],
+	                    				fileOpenFlagList : ret[28],
+	                    				basis : ret[29],
+	                    				reason : ret[30],
+	                    				publicity : ret[11],
+	                    				docID : pDocID,
+	                    				limitDate : ret[31]
+	                    		}
+		                	});
+		                	
+	                	    listOpenFlag = ret[27];
+		       		        fileOpenFlagList = ret[28];
+		                	basis = ret[29];
+		                	reason = ret[30];
+		                	limitDate = [31];
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

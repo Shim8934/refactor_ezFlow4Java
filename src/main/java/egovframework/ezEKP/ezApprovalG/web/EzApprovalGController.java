@@ -1656,7 +1656,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.deleteDocInfo(docID, "CHECK", userInfo.getCompanyID(), userInfo.getTenantId());
-		
+		//원문정보공개 데이터 제거
+		ezApprovalGService.deleteOpenGovDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("undoDoc ended.");
 		
 		return result;
@@ -9534,8 +9535,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String reason = request.getParameter("reason");
 		String publicity = request.getParameter("publicity");
 		String docID = request.getParameter("docID");
+		String limitDate = request.getParameter("limitDate");
 		
-		String result = ezApprovalGService.openGovInfoSave(openGovListFlag, fileOpenFlagList, basis, reason, publicity, docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGService.openGovInfoSave(openGovListFlag, fileOpenFlagList, basis, reason, publicity, docID, limitDate, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("openGovInfoSave ended.");
 		

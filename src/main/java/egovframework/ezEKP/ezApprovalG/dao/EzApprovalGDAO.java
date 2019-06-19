@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -3341,5 +3342,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<String> getFileOpenFlagList(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzApprovalG.getFileOpenFlagList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListForOpenGovVO> getSearchDocListForOpenGov(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListForOpenGovVO>) list("EzApprovalG.getSearchDocListForOpenGov", map);
+	}
+
+	public int getSearchDocListCountForOpenGov(Map<String, Object> map) {
+		return (int)select("EzApprovalG.getSearchDocListCountForOpenGov", map);
 	}
 }
