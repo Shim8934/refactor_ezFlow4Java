@@ -453,8 +453,7 @@
 	            REGDATE ,
 	            MODIDATE ,
 	            REGUSERID ,
-	            U.DISPLAYNAME DISPLAYNAME  ,
-	            U.DISPLAYNAME2 DISPLAYNAME2  
+	            CASE WHEN #lang# = '1' THEN U.DISPLAYNAME ELSE U.DISPLAYNAME2 END AS DISPLAYNAME
         	FROM
         		TBL_PS_QUICKLINK Q
             JOIN

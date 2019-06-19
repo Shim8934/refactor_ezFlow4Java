@@ -1,15 +1,15 @@
 var SurveyMessages = {
 	strError     : "오류가 발생했습니다.",
 	strUploadErr : "파일을 업로드하는 동안 오류가 발생했습니다.",
-	strPrev      : "이전",
-	strNext      : "다음",
+//	strPrev      : "이전",
+//	strNext      : "다음",
 	strTotal     : "총",
 	strItem      : "개",
 	strSelect    : "선택해 주세요.",
 	strAdd       : "추가",
 	strPublic1   : "공개",
 	strPublic2   : "비공개",
-	strPublic3   : "조사 결과",
+//	strPublic3   : "조사 결과",
 	strPublic4   : "설문 종료 후",
 	strPublic5   : "일간",
 	strAnoynym1  : "기명",
@@ -66,7 +66,8 @@ var SurveyMessages = {
 	strDelete    : "설문을 삭제하시겠습니까?",
 	strPerm      : "권한이 없습니다.",
 	strDel       : "삭제 되었습니다.",
-	strCreator   : "작&nbsp;성&nbsp;자",
+//	strCreator   : "작&nbsp;성&nbsp;자",
+	strCreator   : "작성자",
 	strContent   : "보기를 입력해 주세요.",
 	strSlider1   : "최소값이 유효하지 않습니다. (유효값: 자연수)",
 	strSlider2   : "최대값이 유효하지 않습니다. (유효값: 자연수)",
@@ -152,5 +153,5 @@ var SurveyMessages = {
 	strOptionAll : "보기 리스트",
 	strAttachErr : "파일 업로드가 완료될 때까지 기다려주세요.",
 	strAttUrl    : "URL",
-	strSkipQs    : "질문"
+	strSkipQs    : "질문선택"
 }

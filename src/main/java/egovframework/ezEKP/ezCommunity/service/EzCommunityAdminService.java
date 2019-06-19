@@ -62,4 +62,6 @@ public interface EzCommunityAdminService {
 	CommunityCComCloseVO closeCommunityInfo(String multiData, String code, String offSetMin, String companyId, int tenantId) throws Exception;
 
 	void adminCommCloseAll(String code, String reason, Locale locale, int tenantId) throws Exception;
+	
+	void aspCommCloseAllDel(String code, int tenantID) throws Exception;
 }
