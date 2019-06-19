@@ -2622,7 +2622,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 #mainmenuLayout { position: relative; }
 .mainmenuLayout_calendar { position: relative; }
 .calendar_pagenav { position: absolute; left: 50%; top:50px; width: 269px; margin-left: -134px; }
-.calendar_pagenav .spanText { display: block !important; text-align: center; font-size:18px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; letter-spacing:-1px;}
+.calendar_pagenav .spanText { display: block !important; text-align: center; font-size:17px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; letter-spacing:-1px;}
 .mainmenuTab {position:relative;margin: -9px 15px 11px 15px;}
 .mainmenuTab .mainmenuTabUL { text-align: center; padding: 0px 0px 0px 1px; margin: 0px; }
 .mainmenuTab .mainmenuTabUL li { display: inline-block; }
