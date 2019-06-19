@@ -29288,4 +29288,35 @@
 		  AND
 		  		proxy like '$id$:%'
 	  </select> 
+	  
+	<select id="EzApprovalG.checkDocIdIsDuplicated" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT
+			COUNT(DOCID)
+		FROM
+			(
+				SELECT
+					DOCID
+				FROM
+					TBL_APRDOCINFO
+				WHERE
+					DOCID = #v_DOCID#
+				AND
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #companyID#
+					
+			UNION ALL
+			
+				SELECT
+					DOCID
+				FROM
+					TBL_ENDAPRDOCINFO
+				WHERE
+					DOCID = #v_DOCID#
+				AND
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #companyID#
+			)
+	</select>
 </sqlMap>
