@@ -128,6 +128,8 @@
 		    var useReceiveDocNo = "<c:out value = '${useReceiveDocNo}'/>";
 			var wAprMemberSN = "1";
 			var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
+			//원문정보공개
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -1481,6 +1483,12 @@
 			        parameter[33] = pSummery;
 			        parameter[41] = tempItemName;
 			        parameter[42] = tempItemName2;
+		        } else {
+			        parameter[52] = basis;
+			        parameter[53] = reason;
+			        parameter[54] = listOpenFlag;
+			        parameter[55] = fileOpenFlagList;
+			        parameter[56] = limitDate;
 		        }
 		        
 		        if (tempItemCode != "")
@@ -1585,6 +1593,28 @@
 				            	sepAttachCheckYN = ret[26];
 				            	setNonElecRecInfo(nonElecRecInfoXml);
 				            }
+			                
+		                	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/openGovInfoSave.do",
+	                    		data : {
+	                    				openGovListFlag : ret[27],
+	                    				fileOpenFlagList : ret[28],
+	                    				basis : ret[29],
+	                    				reason : ret[30],
+	                    				publicity : ret[11],
+	                    				docID : pDocID,
+	                    				limitDate : ret[31]
+	                    		}
+		                	});
+		                	
+	                	    listOpenFlag = ret[27];
+		       		        fileOpenFlagList = ret[28];
+		                	basis = ret[29];
+		                	reason = ret[30];
+		                	limitDate = [31];
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
