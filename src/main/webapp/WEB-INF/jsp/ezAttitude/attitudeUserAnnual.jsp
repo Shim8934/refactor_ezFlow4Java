@@ -727,7 +727,7 @@
 			            <table class="mainlist" style="width: 100%;">
 			                <tr>
 			                    <th style="width: 60px;"><span>NO.</span></th>
-			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="startDate"><span><spring:message code='ezAttitude.t107' /></span></th>
+			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="startDate"><span><spring:message code='ezAttitude.t276' /></span></th>
 			                    <th style="width: 15%; cursor: pointer;" colname="typeName"><span><spring:message code='ezAttitude.t35' /></span></th>
 			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t238' /></span></th>
 			                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t230' /></span></th>
