@@ -8,6 +8,7 @@ public class ThemeInfoVO {
 	private boolean themeUsed; //테마 사용 여부 : 사용(true), 사용 안함(false)
 	private boolean themeDefault; //기본 테마적용 여부 : 기본(true), 기본 아님(false)
 	private int frameDefault; //해당 테마의 기본 프레임 아이디
+	private boolean accessYN;
 	
 	public int getThemeId() {
 		return themeId;
@@ -45,11 +46,17 @@ public class ThemeInfoVO {
 	public void setFrameDefault(int frameDefault) {
 		this.frameDefault = frameDefault;
 	}
+	public boolean isAccessYN() {
+		return accessYN;
+	}
+	public void setAccessYN(boolean accessYN) {
+		this.accessYN = accessYN;
+	}
 	@Override
 	public String toString() {
 		return "ThemeInfoVO [themeId=" + themeId + ", themeName=" + themeName + ", themeContent=" + themeContent
 				+ ", themeUsed=" + themeUsed + ", themeDefault=" + themeDefault + ", frameDefault=" + frameDefault
-				+ "]";
+				+ ", accessYN=" + accessYN + "]";
 	}
 	
 }

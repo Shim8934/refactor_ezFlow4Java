@@ -1,0 +1,54 @@
+package egovframework.ezEKP.ezNewPortal.vo;
+
+public class PortletAuthVO {
+
+	private int portletId; // 포틀릿 아이디
+	private String userId; // 권한 관련 사용자 아이디
+	private String userName; // 사용자 이름
+	private String userDeptName; // 사용자 부서 이름
+	private boolean userType; // 사용자 or 부서 분리 -- 사용자(true), 부서(false)
+	private boolean accessYN; // 접근 가능(true), 접근 불가(false)
+	
+	public int getPortletId() {
+		return portletId;
+	}
+	public void setPortletId(int portletId) {
+		this.portletId = portletId;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserDeptName() {
+		return userDeptName;
+	}
+	public void setUserDeptName(String userDeptName) {
+		this.userDeptName = userDeptName;
+	}
+	public boolean isUserType() {
+		return userType;
+	}
+	public void setUserType(boolean userType) {
+		this.userType = userType;
+	}
+	public boolean isAccessYN() {
+		return accessYN;
+	}
+	public void setAccessYN(boolean accessYN) {
+		this.accessYN = accessYN;
+	}
+	
+	@Override
+	public String toString() {
+		return "PortletAuthVO [portletId=" + portletId + ", userId=" + userId + ", userName=" + userName
+				+ ", userDeptName=" + userDeptName + ", userType=" + userType + ", accessYN=" + accessYN + "]";
+	}
+}

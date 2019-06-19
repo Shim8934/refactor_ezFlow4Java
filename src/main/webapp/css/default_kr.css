@@ -2654,7 +2654,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .bottomBtn .btnA:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
 
 /* admin thema */
-.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:797px; height:398px; font-family:Malgun Gothic;}
+.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:1020px; height:398px; font-family:Malgun Gothic;}
 .admin_thema .menuIconTH{ margin:0px; padding:0px; width:161px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
 .admin_thema .menuIconTD{ margin:0px; padding:0px 5px 0px 5px; border:1px solid #dfdfdf; color:#393939; letter-spacing:-1px;}
 .admin_thema .menuIconTD_img{margin:0px; padding:20px 5px 20px 5px; border:1px solid #dfdfdf; color:#393939; text-align:center;}

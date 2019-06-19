@@ -142,6 +142,8 @@
 	   		
 	   		var CurPage = "1";
 	   		var totalPage = "";
+	   		//권한설정의 위치 : theme, menu, portlet
+	   		var mode = "<c:out value='${mode}'/>";
 	   		
 	   		document.onselectstart = function () { return false; };
 	   		function close_Click(){
@@ -563,8 +565,15 @@
 	   		function ok_Click() {
 	   			/* opener.selReceiver = JSON.stringify(receiverList);
 	   			opener.showReceiver(); */
+	   			
 	   			/* 내 데이터로 바꿔야 */
-	   			window.opener.menuAuths = JSON.stringify(menuAuths);
+	   			if (mode === "menu") {
+	   				window.opener.menuAuths = JSON.stringify(menuAuths);
+	   			} else if (mode === "theme") {
+	   				window.opener.themeAuths = JSON.stringify(menuAuths);
+	   			} else {
+	   				window.opener.portletAuths = JSON.stringify(menuAuths);
+	   			}
 	   			
 	   			var menuAuthsY = [];
 	   			var menuAuthsN = [];
@@ -609,13 +618,26 @@
 	   		
 	   		/** get MenuAuth data */
 	   		var getMenuAuths = function() {
-	   			
-	   			if (typeof window.opener.menuAuths == "string") {
-	   				menuAuths = JSON.parse(window.opener.menuAuths);
+	   			if (mode === "menu") {
+		   			if (typeof window.opener.menuAuths == "string") {
+	   					menuAuths = JSON.parse(window.opener.menuAuths);
+		   			} else {
+		   				menuAuths = JSON.parse(JSON.stringify(window.opener.menuAuths));
+		   			}
+	   			} else if (mode === "theme") {
+		   			if (typeof window.opener.themeAuths == "string") {
+	   					menuAuths = JSON.parse(window.opener.themeAuths);
+		   			} else {
+	   					menuAuths = JSON.parse(JSON.stringify(window.opener.themeAuths));
+		   			}
 	   			} else {
-	   				menuAuths = JSON.parse(JSON.stringify(window.opener.menuAuths));
+					if (typeof window.opener.portletAuths == "string") {
+	   					menuAuths = JSON.parse(window.opener.portletAuths);
+		   			} else {
+	   					menuAuths = JSON.parse(JSON.stringify(window.opener.portletAuths));
+		   			}
 	   			}
-				
+	   			
 				drawAuths();
 	   		};
 	   		

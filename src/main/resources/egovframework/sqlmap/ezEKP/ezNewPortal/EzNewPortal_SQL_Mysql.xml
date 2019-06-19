@@ -927,46 +927,75 @@ AND
 
 <select id="ezNewPortal.getUserThemeList" parameterClass="Map" resultMap="ThemeInfoVO">
 <![CDATA[
-SELECT
-	A.theme_id,
-	A.theme_name,
-    A.theme_content,
-    ifnull(D.is_default, 0) as theme_used,
-    B.theme_default,
-    C.frame_id as frame_default
-FROM
-	TBL_PORTAL_THEME A
-JOIN
-	TBL_PORTAL_THEME_COMP B
-ON
-	A.theme_id = B.theme_id
-JOIN
-	TBL_PORTAL_FRAME_COMP C
-ON
-	B.theme_id = C.theme_id
-LEFT OUTER JOIN
-	TBL_PORTAL_THEME_USER D
-ON
-	A.theme_id = D.used_theme
-AND
-	D.user_id = #userId#
-AND
-	D.company_id = #companyId#
-AND
-	D.tenant_id = #tenantId#
-WHERE
-	B.company_id = #companyId#
-AND
-	C.company_id = #companyId#
-AND
-	C.tenant_id = #tenantId#
-AND
-	B.tenant_id = #tenantId#
-AND
-	B.theme_used = 1
-AND
-	C.frame_default = 1
-]]>
+	SELECT
+		A.theme_id,
+		A.theme_name,
+	    A.theme_content,
+	    ifnull(D.is_default, 0) as theme_used,
+	    B.theme_default,
+	    C.frame_id as frame_default
+	FROM
+		TBL_PORTAL_THEME A
+	JOIN
+		TBL_PORTAL_THEME_COMP B
+	ON
+		A.theme_id = B.theme_id
+	AND 
+		B.company_id = #companyId#
+	AND
+		B.tenant_id = #tenantId#
+	JOIN
+		TBL_PORTAL_FRAME_COMP C
+	ON
+		B.theme_id = C.theme_id
+	AND
+		C.company_id = #companyId#
+	AND
+		C.tenant_id = #tenantId#
+	LEFT OUTER JOIN
+		TBL_PORTAL_THEME_USER D
+	ON
+		A.theme_id = D.used_theme
+	AND
+		D.user_id = #userId#
+	AND
+		D.company_id = #companyId#
+	AND
+		D.tenant_id = #tenantId#
+	LEFT JOIN
+		TBL_PORTAL_THEME_AUTH E
+	ON
+		B.company_id = E.company_id
+	AND
+		B.tenant_id = E.tenant_id
+	AND
+		E.theme_id = B.theme_id
+	]]>
+	<isEqual property="isDept" compareValue="user">
+	<![CDATA[
+		AND
+			E.user_type = 1
+		AND
+			E.user_id = #userId#
+	]]>
+	</isEqual>
+
+	<isNotEqual property="isDept" compareValue="user">
+	<![CDATA[
+		AND
+			E.user_type = 0
+		AND
+			E.user_id = #deptId#
+	]]>
+	</isNotEqual>
+	<![CDATA[
+	WHERE
+		B.theme_used = 1
+	AND
+		C.frame_default = 1
+	AND
+		E.access_yn is not null;
+	]]>
 </select>
 
 <select id="ezNewPortal.getUserStartPage" parameterClass="Map" resultClass="MenuInfoVO">

@@ -17,8 +17,10 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.ThemeAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
@@ -53,36 +55,42 @@ public interface EzNewPortalService {
 	/**
 	 * 유은정
 	 */
-	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId);
-	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId);
-	public List<PollAnswerVO> getVotePortletAnswer(int qstId, int tenantId);
-	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount);
+	public int getVotePortletCount(String userId, String companyId, String deptPath, int tenantId) throws Exception;
+	public PollQuestionVO getVotePortletInfo(String userId, String companyId, String deptPath, int tenantId) throws Exception;
+	public List<PollAnswerVO> getVotePortletAnswer(int qstId, int tenantId) throws Exception;
+	public List<BoardItemVO> getPhotoBoardPortletInfo(int tenantId, String boardId, int startRow, int photoCount) throws Exception;
 	public PortletInfoVO getCompanyPortletInfo(String companyId, int tenantId, int portletId, String portletLang) throws Exception;
-	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId);
-	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId);
+	public String getBoardAuthCheck(String boardId, String accessId, int tenantId, String companyId) throws Exception;
+	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) throws Exception;
 	public void updatePortletOrderUser(String userId, String companyId, int tenantId, JSONArray portletOrder, String portletLang, int themeId) throws Exception;
-	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow, String lang);
-	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
-	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId, String lang);
-	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId);
+	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow, String lang) throws Exception;
+	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month) throws Exception;
+	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId, String lang) throws Exception;
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId, String deptPath) throws Exception;
 	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception;
 	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) throws Exception;
-	public void deleteUserThemeSetting(String userId, int tenantId, String companyId);
-	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId);
-	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String compnyId);
+	public void deleteUserThemeSetting(String userId, int tenantId, String companyId) throws Exception;
+	public void updateUserThemeSetting(int usedTheme, int usedFrame, String userId, int tenantId, String companyId) throws Exception;
+	public List<BoardListVO> getBoardPortletInfo (int tenantId, String boardId, int itemCount, String compnyId) throws Exception;
 	//관리자부분
 	public List<PortalBoardTreeVO> getBoardTree(String parentBoardId, String companyId, int tenantId) throws Exception;
 	public void insertPortlet(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
 	public void updateCompanyPortletInfo(JSONObject portletInfo, JSONArray portletNames,  String companyId, int tenantId) throws Exception;
 	public void updateCompanyPortletOrder(JSONArray portletList, int tenantId, String companyId) throws Exception ;
 	public void deletePortlet(int portletId, int menuId, String companyId, int tenantId) throws Exception;
-	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl);
-	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId);
-	public int getTnenantIdByServerName(String serverName);
-	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId);
-	public void deleteCompanyLogo(String companyId, int tenantId, String logoType);
+	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl) throws Exception;
+	public List<PortalLogoVO> getCompanyLogoList(String companyId, int tenantId) throws Exception;
+	public int getTnenantIdByServerName(String serverName) throws Exception;
+	public void updateCompanyDefaultTheme(int themeId, String companyId, int tenantId) throws Exception;
+	public void deleteCompanyLogo(String companyId, int tenantId, String logoType) throws Exception;
 	public List<PortletInfoVO> getThemePortletList(int themeId, int tenantId, String companyId, String lang) throws Exception;
 	public void updateThemePortletUsed(int themeId, int tenantId, String companyId, JSONArray themePortletList) throws Exception;
+	//2019.06.18 테이별, 포틀릿별 권한 관리 설정
+	public Map<String, Object> getThemeAuth(String companyId, int tenantId, int themeId, String lang) throws Exception;
+	public void updateThemeAuth(JSONArray themeAuths, int menuId, String companyId, int tenantId) throws Exception;
+	public boolean checkThemeAuthNoList(String companyId, int tenantId, String userId, String deptPath, int themeId) throws Exception;
+	public Map<String, Object> getPortletAuth(String companyId, int tenantId, int portletId, String lang) throws Exception;
+	public void updatePortletAuth(JSONArray portletAuths, int menuId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 이효진
 	 */
@@ -92,7 +100,7 @@ public interface EzNewPortalService {
 	 * 테마목록조회
 	 * @param admin true(admin) false(user)
 	 */
-	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId) throws Exception;
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId, String deptPath) throws Exception;
 	/**
 	 * 유저의 테마Id 조회 -> 테마별 포틀릿 추가되면서 테마Id가 필요한 경우가 생김
 	 */

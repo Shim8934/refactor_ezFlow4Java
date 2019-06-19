@@ -38,6 +38,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import net.fortuna.ical4j.model.property.Status;
 
 @Controller
 public class EzNewPortalAdminController extends EgovFileMngUtil {
@@ -198,6 +199,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("menuId", request.getParameter("menuId"));
 		model.addAttribute("companyId", request.getParameter("companyId"));
+		model.addAttribute("mode", request.getParameter("mode"));
 		
 		LOGGER.debug("portalMenuAuth ended");
 		
@@ -288,6 +290,18 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			model.addAttribute("frameInfos", data.get("frameInfos"));
 		}
 		
+		//해당테마 권한정보요청
+		url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/authorities/companies/" + paramMap.get("companyId");
+		
+		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			//menuAuths 안에 menuAuthsY, menuAuthsN
+			model.addAttribute("themeAuths", resultBody.get("data"));
+		}
+		
 		LOGGER.debug("getPortalThemeInfo ended.");
 		
 		return "json";
@@ -317,6 +331,17 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
+		LOGGER.debug("updateThemeAuths started.");
+		//포틀릿 권한 추가
+		jsonParam = new JSONObject();
+		jsonParam.put("themeAuths", paramMap.get("themeAuths"));
+		
+		//해당포틀릿 권한정보 업데이트
+		url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/authorities/companies/" + paramMap.get("companyId");
+		
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
+		
+		LOGGER.debug("updateThemeAuths ended.");
 		LOGGER.debug("updateThemeInfo ended.");
 	}
 	
@@ -1120,6 +1145,94 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		LOGGER.debug("updateThemePortletUsed ended");
 	}
+	
+	// 2019.06.18 테마별, 포틀릿별 권한 설정 기능 추가
+	/**
+	 * 관리자 테마권한목록 조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/getThemeAuths.do", method=RequestMethod.GET)
+	@ResponseBody
+	public String getThemeAuths(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getThemeAuths started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		//해당메뉴 권한정보요청
+		String url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/authorities/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			//menuAuths 안에 menuAuthsY, menuAuthsN
+			status = resultBody.get("data").toString();
+		}
+		
+		LOGGER.debug("status : " + status);
+		LOGGER.debug("getThemeAuths ended.");
+		
+		return status;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezNewPortal/checkThemeAuths.do", method=RequestMethod.PATCH)
+	public String checkThemeAuths(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("checkThemeAuths started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("themeAuths", paramMap.get("themeAuths"));
+		
+		String url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/authorities/checks/companies/" + paramMap.get("companyId");
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("authResult", resultBody.get("data"));
+		}
+		
+		LOGGER.debug("checkThemeAuths ended.");
+		return "json";
+	}
+	/**
+	 * 관리자 포틀릿권한목록 조회
+	 */
+	@RequestMapping(value = "/admin/ezNewPortal/getPortletAuths.do", method=RequestMethod.GET)
+	public String getPortletAuths(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getPortletAuths started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		//해당메뉴 권한정보요청
+		String url = "/rest/admin/ezPortal/portlets/" + paramMap.get("themeId") + "/authorities/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			//menuAuths 안에 menuAuthsY, menuAuthsN
+			model.addAttribute("portletAuths", resultBody.get("data"));
+		}
+		
+		LOGGER.debug("getPortletAuths ended.");
+		
+		return "json";
+	}
+	
+	// -----------------------------------------------------------------------------
 	/**
 	 * 슬라이드 이미지 설정 화면
 	 * @param loginCookie

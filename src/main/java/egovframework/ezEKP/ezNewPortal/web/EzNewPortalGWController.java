@@ -18,6 +18,7 @@ import javax.mail.Message;
 import javax.mail.UIDFolder;
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -573,11 +574,16 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
+			String deptId = info.getDeptId();
+
+			// deptpath 구하기
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
+			
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
-			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId);
+			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId, deptPath);
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
 			boolean hasUserDefault = false;
 			int usedTheme = 0;
@@ -1740,7 +1746,7 @@ public class EzNewPortalGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 
-			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId);
+			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId, null);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -4544,6 +4550,195 @@ public class EzNewPortalGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("ezNewPortal G/W updateThemePortletUsed ended.");
+		return result;
+	}
+	
+	//2019-06-18 테마별, 포틀릿별 권한 설정 개발
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getThemeAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getThemeAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			String lang = userInfo.getLang();
+			
+			Map<String, Object> themeAuth = ezNewPortalService.getThemeAuth(companyId, tenantId, themeId, lang);
+
+			JSONObject data = new JSONObject();
+			
+			data.put("themeAuthsY", themeAuth.get("themeAuthsY"));
+			data.put("themeAuthsN", themeAuth.get("themeAuthsN"));
+			
+			result.put("data", data);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getThemeAuth ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updateThemeAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updateThemeAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			JSONArray themeAuths = (JSONArray) jsonParam.get("themeAuths");
+			int tenantId = userInfo.getTenantId();
+			
+			ezNewPortalService.updateThemeAuth(themeAuths, themeId, companyId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W updateThemeAuth ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/themes/{themeId}/authorities/checks/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject checkThemeAuthNoList(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezNewPortal G/W checkThemeAuthNoList started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			boolean totalCheck = true;
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			JSONArray themeAuths = (JSONArray) jsonParam.get("themeAuths");
+			
+			for (Object item : themeAuths) {
+				if (item instanceof JSONObject) {
+					JSONObject themeAuth = (JSONObject) item;
+					String authId = themeAuth.get("userId").toString();
+					boolean checkThemeAuth = true;
+					if (themeAuth.get("accessYN").toString().equals("false")) {
+						if (themeAuth.get("userType").toString().equals("true")) {
+							LoginVO authInfo = commonUtil.getUserForGw(authId, serverName);
+							String deptPath = authInfo.getDeptPathCode();
+							
+							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, authId, deptPath, themeId);
+							LOGGER.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
+						} else if (themeAuth.get("userType").toString().equals("false")) {
+							String deptPath = ezOrganService.getDeptPath(authId, tenantId);
+							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, null, deptPath, themeId);
+							LOGGER.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
+						}
+						
+						if (!checkThemeAuth) {
+							totalCheck = false;
+							break;
+						}
+					}
+					
+				}
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", totalCheck);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W checkThemeAuthNoList ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getPortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
+		LOGGER.debug("ezNewPortal G/W getPortletAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int tenantId = userInfo.getTenantId();
+			String lang = userInfo.getLang();
+			
+			Map<String, Object> portletAuth = ezNewPortalService.getPortletAuth(companyId, tenantId, themeId, lang);
+
+			JSONObject data = new JSONObject();
+			
+			data.put("portletAuthsY", portletAuth.get("portletAuthsY"));
+			data.put("portletAuthsN", portletAuth.get("portletAuthsN"));
+			
+			result.put("data", data);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W getPortletAuth ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	public JSONObject updatePortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezNewPortal G/W updatePortletAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			JSONParser jp = new JSONParser();
+			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+			JSONArray portletAuths = (JSONArray) jsonParam.get("portletAuths");
+			int tenantId = userInfo.getTenantId();
+			
+			ezNewPortalService.updatePortletAuth(portletAuths, themeId, companyId, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W updatePortletAuth ended.");
 		return result;
 	}
 }

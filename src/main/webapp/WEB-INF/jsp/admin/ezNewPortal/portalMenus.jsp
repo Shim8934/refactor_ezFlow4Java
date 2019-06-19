@@ -737,7 +737,7 @@
 		var openMenuAuth = function(event) {
 			var mode = event.data.mode;
 
-			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId;
+			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId + "&mode=menu";
 			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
 		    	try { OpenWin.focus(); } catch (e) { }
 		}

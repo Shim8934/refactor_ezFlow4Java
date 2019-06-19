@@ -19,8 +19,10 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuNameVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalBoardTreeVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
+import egovframework.ezEKP.ezNewPortal.vo.ThemeAuthVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
@@ -117,66 +119,66 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	 * 유은정
 	 */
 	//투표할 수 있는 리스트 개수 불러오기
-	public int getVotePortletCount (Map<String, Object> map) {
+	public int getVotePortletCount (Map<String, Object> map) throws Exception {
 		return (int) select("ezNewPortal.getVotePortletCount", map);
 	}
 	
 	//투표 정보 가져오기
-	public PollQuestionVO getVotePortletInfo (Map<String, Object> map) {
+	public PollQuestionVO getVotePortletInfo (Map<String, Object> map) throws Exception {
 		return (PollQuestionVO) select("ezNewPortal.getVotePortletInfo", map);
 	}
 	
 	//투표 답변 조회
 	@SuppressWarnings("unchecked")
-	public List<PollAnswerVO> getVotePortletAnswer (Map<String, Object> map) {
+	public List<PollAnswerVO> getVotePortletAnswer (Map<String, Object> map) throws Exception {
 		return (List<PollAnswerVO>) list("ezNewPortal.getVotePortletAnswer", map);
 	}
 	
 	//포토게시판 정보 가져오기
 	@SuppressWarnings("unchecked")
-	public List<BoardItemVO> getphotoBoardPortletInfo(Map<String, Object> map) {
+	public List<BoardItemVO> getphotoBoardPortletInfo(Map<String, Object> map) throws Exception {
 		return (List<BoardItemVO>) list("ezNewPortal.getPhotoBoardPortletInfo", map);
 	}
 
 	//게시판 권한 체크
-	public String getBoardAuthCheck(Map<String, Object> map) {
+	public String getBoardAuthCheck(Map<String, Object> map) throws Exception {
 		return (String) select("ezNewPortal.getBoardAuthCheck", map);
 	}
 	
 	//포틀릿 정보 가져오기
-	public PortletInfoVO getCompanyPortletInfo(Map<String, Object> map) {
+	public PortletInfoVO getCompanyPortletInfo(Map<String, Object> map) throws Exception {
 		return (PortletInfoVO) select("ezNewPortal.getCompanyPortletInfo", map);
 	}
 	
 	//사용자 포탈 설정 가져오기 (테마, 프레임)
-	public UserPortalSettingVO getUserPortalSetting(Map<String, Object> map) {
+	public UserPortalSettingVO getUserPortalSetting(Map<String, Object> map) throws Exception {
 		return (UserPortalSettingVO) select("ezNewPortal.getUserPortalSetting", map);
 	}
 
 	//사용자 포탈 설정 없을 때 회사 포탈 설정을 사용자 포탈설정으로 가져오기
-	public UserPortalSettingVO getCompPortalSetting(Map<String, Object> map) {
+	public UserPortalSettingVO getCompPortalSetting(Map<String, Object> map) throws Exception {
 		return (UserPortalSettingVO) select("ezNewPortal.getCompPortalSetting", map);
 	}
 	
-	public void deletePortletOrderUser(Map<String, Object> map) {
+	public void deletePortletOrderUser(Map<String, Object> map) throws Exception {
 		delete("ezNewPortal.deletePortletOrderUser", map);
 	}
 
-	public void insertPortletOrderUser(Map<String, Object> map) {
+	public void insertPortletOrderUser(Map<String, Object> map) throws Exception {
 		insert("ezNewPortal.insertPortletOrderUser", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(Map<String, Object> map) {
+	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(Map<String, Object> map) throws Exception {
 		return (List<PortalUserInfoVO>) list("ezNewPortal.getMonthlyBirthdayEmployees", map);
 	}
 	
-	public PortalUserInfoVO getMonthlyBestEmployee(Map<String, Object> map) {
+	public PortalUserInfoVO getMonthlyBestEmployee(Map<String, Object> map) throws Exception {
 		return (PortalUserInfoVO) select("ezNewPortal.getMonthlyBestEmployee", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ThemeInfoVO> getUserThemeList(Map<String, Object> map) {
+	public List<ThemeInfoVO> getUserThemeList(Map<String, Object> map) throws Exception {
 		return (List<ThemeInfoVO>) list("ezNewPortal.getUserThemeList", map);
 	}
 	
@@ -184,73 +186,111 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (MenuInfoVO) select("ezNewPortal.getUserStartPage", map);
 	}
 	
-	public void insertUserStartPage(Map<String, Object> map) {
+	public void insertUserStartPage(Map<String, Object> map) throws Exception {
 		insert("ezNewPortal.insertUserStartPage", map);
 	}
 	
-	public void updateUserStartPage(Map<String, Object> map) {
+	public void updateUserStartPage(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateUserStartPage", map);
 	}
 	
-	public void deleteUserThemeSetting(Map<String, Object> map) {
+	public void deleteUserThemeSetting(Map<String, Object> map) throws Exception {
 		delete("ezNewPortal.deleteUserThemeSetting", map);
 	}
 	
-	public void updateUserThemeSetting(Map<String, Object> map) {
+	public void updateUserThemeSetting(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateUserThemeSetting", map);
 	}
 	
-	public void insertUserThemeSetting(Map<String, Object> map) {
+	public void insertUserThemeSetting(Map<String, Object> map) throws Exception {
 		insert("ezNewPortal.insertUserThemeSetting", map);
 	}
 	
-	public int getTenantIdByServerName(Map<String, Object> map) {
+	public int getTenantIdByServerName(Map<String, Object> map) throws Exception {
 		return (int) select("ezNewPortal.getTenantIdByServerName", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> getPortletIdsByMenuId (Map<String, Object> map) {
+	public List<Integer> getPortletIdsByMenuId (Map<String, Object> map) throws Exception {
 		return (List<Integer>) list("ezNewPortal.getPortletIdsByMenuId", map);
 	}
 	
-	public void deleteMenuUser (Map<String, Object> map) {
+	public void deleteMenuUser (Map<String, Object> map) throws Exception {
 		delete("ezNewPortal.deleteMenuUser", map);
 	}
 	
-	public void deletePortletUser (Map<String, Object> map) {
+	public void deletePortletUser (Map<String, Object> map) throws Exception {
 		delete("ezNewPortal.deletePortletUser", map);
 	}
 	
-	public void updateCompanyDefaultTheme (Map<String, Object> map) {
+	public void updateCompanyDefaultTheme (Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateCompanyDefaultTheme", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BoardListVO> getBoardPortletInfo (Map<String, Object> map) {
+	public List<BoardListVO> getBoardPortletInfo (Map<String, Object> map) throws Exception {
 		return (List<BoardListVO>) list("ezNewPortal.getBoardPortletInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortletInfoVO> getThemePortletList(Map<String, Object> map) {
+	public List<PortletInfoVO> getThemePortletList(Map<String, Object> map) throws Exception {
 		return (List<PortletInfoVO>) list("ezNewPortal.getThemePortletList", map);
 	}
 	
-	public void updateThemePortletUsed(Map<String, Object> map) {
+	public void updateThemePortletUsed(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateThemePortletUsed", map);
 	}
 	
-	public void updatePortletOrderUser(Map<String, Object> map) {
+	public void updatePortletOrderUser(Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updatePortletOrderUser", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortletInfoVO> getPortletListNotSelected (Map<String, Object> map) {
+	public List<PortletInfoVO> getPortletListNotSelected (Map<String, Object> map) throws Exception {
 		return (List<PortletInfoVO>) list("ezNewPortal.getPortletListNotSelected", map);
 	}
 	
-	public void updateAllThemePortletOrder (Map<String, Object> map) {
+	public void updateAllThemePortletOrder (Map<String, Object> map) throws Exception {
 		update("ezNewPortal.updateAllThemePortletOrder", map);
 	}
+	
+	//테마별, 포틀릿별 권한관리 추가 개발
+	@SuppressWarnings("unchecked")
+	public List<ThemeAuthVO> getThemeAuth (Map<String, Object> map) throws Exception {
+		return (List<ThemeAuthVO>) list("ezNewPortal.getThemeAuth", map);
+	}
+	
+	public void deleteThemeAuth (Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deleteThemeAuth", map);
+	}
+	
+	public void insertThemeAuth (Map<String, Object> map) throws Exception {
+		insert("ezNewPortal.insertThemeAuth", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Integer> checkThemeAuthNoList (Map<String, Object> map) throws Exception {
+		return (List<Integer>) list("ezNewPortal.checkThemeAuthNoList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortletAuthVO> getPortletAuth (Map<String, Object> map) throws Exception {
+		return (List<PortletAuthVO>) list("ezNewPortal.getPortletAuth", map);
+	}
+	
+	public void deletePortletAuth (Map<String, Object> map) throws Exception {
+		delete("ezNewPortal.deletePortletAuth", map);
+	}
+	
+	public void insertPortletAuth (Map<String, Object> map) throws Exception {
+		insert("ezNewPortal.insertPortletAuth", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> checkThemeAuthInDept (Map<String, Object> map) throws Exception {
+		return (List<String>) list("ezNewPortal.checkThemeAuthInDept", map);
+	}
+	
 	/**
 	 * 이효진
 	 */

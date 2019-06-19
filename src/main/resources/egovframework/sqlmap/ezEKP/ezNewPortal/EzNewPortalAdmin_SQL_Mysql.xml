@@ -6,6 +6,8 @@
 	<typeAlias alias="PortalLogoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortalLogoVO"/>
 	<typeAlias alias="PortalPortletSliderImageVO" type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
 	<typeAlias alias="PortletInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO"/>
+	<typeAlias alias="ThemeAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.ThemeAuthVO"/>
+	<typeAlias alias="PortletAuthVO" type="egovframework.ezEKP.ezNewPortal.vo.PortletAuthVO"/>
 	
 	<select id="ezNewPortal.getThemeInfo" parameterClass="Map" resultClass="ThemeInfoVO">
 		<![CDATA[
@@ -976,4 +978,182 @@
 </update>
 
 	<!-- 18.12.03 테마별 포틀릿 사용여부 설정 관련 개발 ===== 끝-->
+	<!-- 테마별, 포틀릿별 권한 설정 관련 개발 -->
+	<select id="ezNewPortal.getThemeAuth" parameterClass="Map" resultClass="ThemeAuthVO">
+	<![CDATA[
+		SELECT
+			theme_id AS themeid,
+			user_id AS userid,
+			CASE
+			WHEN user_type = 1
+				THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+				ELSE ''
+			END AS username,
+			CASE WHEN user_type = 1
+				THEN (SELECT description FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+				ELSE (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+			END AS userdeptname,
+			user_type AS usertype,
+			access_yn AS accessyn
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			theme_id = #themeId#
+	]]>
+	<isNotEmpty property="accessType">
+		<![CDATA[
+		AND
+			access_yn = #accessType#
+		]]>
+	</isNotEmpty>
+	<isNotEmpty property="userId">
+		<![CDATA[
+		AND
+			user_id = #userId#
+		]]>
+	</isNotEmpty>
+		<![CDATA[
+		ORDER BY
+			user_type
+		]]>
+	</select>
+	
+	<delete id="ezNewPortal.deleteThemeAuth" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			theme_id = #themeId#
+	]]>
+	</delete>
+	
+	<insert id="ezNewPortal.insertThemeAuth" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_THEME_AUTH (
+			theme_id, company_id, tenant_id, user_id, access_YN, user_type
+		) VALUES (
+			#themeId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#
+		)
+	]]>
+	</insert>
+	
+	<select id="ezNewPortal.checkThemeAuthNoList" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT 
+			theme_id
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			access_yn = 0
+		AND
+			user_id = #userId#
+	]]>
+	<isEqual property="isDept" compareValue="dept" prepend="AND">
+	<![CDATA[
+		(user_type = 0)
+	]]>
+	</isEqual>
+	<isNotEqual property="isDept" compareValue="dept" prepend="AND">
+	<![CDATA[
+		(user_type = 1)
+	]]>
+	</isNotEqual>
+	</select>
+	
+	<select id="ezNewPortal.getPortletAuth" parameterClass="Map" resultClass="PortletAuthVO">
+	<![CDATA[
+		SELECT
+			portlet_id AS themeid,
+			user_id AS userid,
+			CASE
+			WHEN user_type = 1
+				THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+				ELSE ''
+			END AS username,
+			CASE WHEN user_type = 1
+				THEN (SELECT description FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+				ELSE (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+			END AS userdeptname,
+			user_type AS usertype,
+			access_yn AS accessyn
+		FROM
+			TBL_PORTAL_Portlet_AUTH
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			portlet_id = #portletId#
+		AND
+			access_yn = #accessType#
+		ORDER BY
+			user_type
+	]]>
+	</select>
+	
+	<delete id="ezNewPortal.deletePortletAuth" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_PORTAL_PORTLET_AUTH
+		WHERE
+			tenant_id = #tenantId#
+		AND
+			company_id = #companyId#
+		AND
+			portlet_id = #portletId#
+	]]>
+	</delete>
+	
+	<insert id="ezNewPortal.insertPortletAuth" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_PORTLET_AUTH (
+			portlet_id, company_id, tenant_id, user_id, access_YN, user_type
+		) VALUES (
+			#portletId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#
+		)
+	]]>
+	</insert>
+	
+	<select id="ezNewPortal.checkThemeAuthInDept" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			A.cn
+		FROM
+			tbl_usermaster A
+		LEFT JOIN
+			tbl_portal_theme_auth B
+		ON
+			A.physicaldeliveryofficename = B.company_id
+		AND
+			A.tenant_id = B.tenant_id
+		AND
+			A.cn = B.user_id
+		WHERE 
+			A.cn in (select user_id from tbl_portal_theme_auth where B.access_yn = 0 and B.user_type = 1)
+		AND
+			A.department = #userId#
+		AND
+			B.theme_id != #themeId#
+		AND
+			B.company_id = #companyId#
+		AND
+			B.tenant_id = #tenantId#
+		GROUP BY
+			A.cn
+		HAVING
+			COUNT(B.theme_id) > 1
+	]]>
+	</select>
 </sqlMap>
