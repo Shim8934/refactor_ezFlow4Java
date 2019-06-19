@@ -24,6 +24,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
+import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
@@ -39,10 +40,18 @@ public class EzAttitudeScheduler {
 	@Resource(name = "EzAttitudeService")
 	private EzAttitudeService ezAttitudeService;
 	
+	@Autowired
+	private EzEmailScheduler ezEmailScheduler;
 	
 	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
+		
+		//choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("attitudeAnnualGarbageClear")) {
+			logger.debug("communityGarbageClear scheduler ended.");
+			return;
+		}
 		
 		List<Map<String, Object>> tenantCompanyIdList = ezAttitudeService.getTenantCompanyId();
 		
