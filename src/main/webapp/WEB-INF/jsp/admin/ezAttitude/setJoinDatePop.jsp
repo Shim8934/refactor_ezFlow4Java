@@ -21,10 +21,15 @@
 		
 		<style>
 			.ui-datepicker {
-				width: 180px;
+				width: 220px;
 				padding: .2em .2em 0;
 				display: none;
 				margin-top: 20px;
+				font-size: 14px;
+			}
+			
+			.ui-datepicker td span, .ui-datepicker td a{
+			    font-size: 16px;
 			}
 			
 			.ui-state-click {
@@ -32,6 +37,8 @@
 			    background: rgb(241, 248, 255);
 			    color: #fff;
 			}
+			
+			
 		</style>
 		
 	    <script type="text/javascript">
@@ -62,7 +69,6 @@
 		            changeYear: true,
 		            autoSize: true,
 		        });
-		        
 		        var uploadJoinDate = date;
 		        
 		        modFirstFlag = false;
@@ -149,7 +155,7 @@
 	    <table class="content">
 	        <tr>
 	            <td>
-	            	<input type="text" id="datepicker" style="width:185px;text-align:center" readonly="readonly">
+	            	<input type="text" id="datepicker" style="width:225px;text-align:center;font-size: 15px;" readonly="readonly">
 	            </td>
 	        </tr>
 	    </table>
