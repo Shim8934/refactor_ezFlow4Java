@@ -2765,4 +2765,32 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		logger.debug("getLineMode ended");
 	return result;
 	}
+	
+	/** 원문공개정보 수정 */
+	@RequestMapping(value = "/ezApprovalG/changeOpenGovInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	public String changeOpenGovInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("changeOpenGovInfo started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("changeOpenGovInfo ended");
+		
+		return "ezApprovalG/apprGchangeOpenGovInfo";
+	}
+	
+	/** 원문공개정보 수정 상세화면 */
+	@RequestMapping(value = "/ezApprovalG/getOpenGovSimpleInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getOpenGovSimpleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model , @RequestBody String xmlPara) throws Exception{
+		logger.debug("getOpenGovSimpleInfo started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String result = ezApprovalGService.getRecordSimpleInfo(xmlDom,userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+        
+        logger.debug("getOpenGovSimpleInfo ended");
+        
+		return result;
+	}
 }
