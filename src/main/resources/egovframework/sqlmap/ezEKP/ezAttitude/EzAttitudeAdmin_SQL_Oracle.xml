@@ -1690,28 +1690,18 @@
 	<select id="ezAttitudeAdminDAO.getUserAnnual" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
 			SELECT 
-				A.cn AS userId,
-			    A.DISPLAYNAME$primary$ as userName,
-			    A.TITLE$primary$ as userTitle,
-			    A.DESCRIPTION$primary$ as deptName,
-			    A.EXTENSIONATTRIBUTE2 as imgPath,
-			    C.START_DATE + #offsetMin# / (24 * 60) as startDate,
-			    C.END_DATE + #offsetMin# / (24 * 60) as endDate,
-			    C.TYPE_ID as typeId,
-			    D.TYPE_NAME$primary$ as typeName,
-			    C.ATTITUDE_ID as attitudeId,
-			    C.CONTENT as content,
-			    C.MODAPPL as modAppl,
-			    ifnull(F.ANNUAL_APPR_STATUS, -1) as annualApprStatus,
-			    nvl( 
-						CASE
-						   WHEN C.TYPE_ID = 'A11' THEN TRUNC(C.END_DATE) - TRUNC(C.START_DATE)
-			               WHEN C.TYPE_ID = 'A12' THEN 0.5
-			               WHEN C.TYPE_ID = 'A13' THEN 0.5
-						   ELSE 0
-						END
-				, 0) as annualCnt,
-			    nvl(B.TOTAL_ANNUAL_CNT, 0) as totalAnnualCnt,
+			    A.DISPLAYNAME$primary$ AS userName,
+			    A.TITLE$primary$ AS userTitle,
+			    A.DESCRIPTION$primary$ AS deptName,
+			    A.EXTENSIONATTRIBUTE2 AS imgPath,
+			    C.START_DATE + #offsetMin# / (24 * 60) AS startDate,
+			    C.END_DATE + #offsetMin# / (24 * 60) AS endDate,
+			    C.TYPE_ID AS typeId,
+			    D.TYPE_NAME$primary$ AS typeName,
+			    C.ATTITUDE_ID AS attitudeId,
+			    C.CONTENT AS content,
+			    C.MODAPPL AS modAppl,
+			    NVL(F.ANNUAL_APPR_STATUS, -1) AS annualApprStatus,
 				NVL((SUM(
 			       TRUNC(
 			        TO_DATE( 
@@ -1732,45 +1722,43 @@
 			    +
 	            SUM(
 					CASE
-					   WHEN TYPE_ID = 'A11' THEN 1
-		               WHEN TYPE_ID = 'A12' THEN 0.5
-		               WHEN TYPE_ID = 'A13' THEN 0.5
+					   WHEN C.TYPE_ID = 'A11' THEN 1
+		               WHEN C.TYPE_ID = 'A12' THEN 0.5
+		               WHEN C.TYPE_ID = 'A13' THEN 0.5
 					   ELSE 0
 					END
-				)), 0) AS ANNUAL_COUNT,				
+				)), 0) AS annualCnt,				
 				NVL((
 						SELECT
-							CHANGE_ANNUAL_CNT
+							E.CHANGE_ANNUAL_CNT
 						FROM
 							TBL_ATTITUDE_ANNUAL_HISTORY E
 						WHERE
 							E.TENANT_ID = #tenantId#
-								AND 
+						AND 
 							E.COMPANY_ID = #companyId#
-								AND 
+						AND 
 							E.USER_ID = #userId#
-								AND
+						AND
 							(
 							E.CHANGE_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
 							AND E.CHANGE_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
 							)
-						ORDER BY
-							E.CHANGE_DATE DESC, E.ANNUAL_HISTORY_ID DESC
-						ROWNUM = 1
-					), 0) as totalAnnualCnt,				
+						AND
+							ROWNUM = 1
+					), 0) AS totalAnnualCnt,				
 				NVL((
 						SELECT
-							FUNCTIONTYPE
+							G.FUNCTIONTYPE
 						FROM
 							TBL_APRDOCINFO G
 						WHERE
-							F.ANNUAL_DOC_ID = G.DOCID
+							(F.ANNUAL_DOC_ID = G.DOCID
 						OR
-							F.ANNUAL_DOC_ID = G.ORGDOCID
-						ORDER BY
-							G.DOCID DESC
-						ROWNUM = 1
-					), 0) as docApprStatus		    
+							F.ANNUAL_DOC_ID = G.ORGDOCID)
+						AND
+							ROWNUM = 1
+					), 0) AS docApprStatus		    
 			FROM 
 				TBL_USERMASTER A
 			LEFT OUTER JOIN 
@@ -1796,16 +1784,16 @@
 				AND 
 				 (
 					   (
-						SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #startTime#
-						AND SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) <= #endTime#
+						C.START_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+						AND C.START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
 						)
 					OR (
-						SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #startTime#
-						AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #endTime#
+						C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+						AND C.END_DATE + #offsetMin# / (24 * 60) < TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
 						)
 					OR (
-						SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #startTime#
-						AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #endTime#
+						C.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+						AND C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
 						)
 				  )
 				 )
@@ -1823,6 +1811,8 @@
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND 
 				A.cn = #userId#
+			GROUP BY
+				A.DISPLAYNAME,A.TITLE,A.DESCRIPTION,A.EXTENSIONATTRIBUTE2,C.TYPE_ID,D.TYPE_NAME,C.ATTITUDE_ID,C.CONTENT,C.MODAPPL, C.START_DATE,C.END_DATE, NVL(F.ANNUAL_APPR_STATUS, -1),F.ANNUAL_DOC_ID
 		]]>
 		<isNotEmpty property="orderCell">
 			<![CDATA[
@@ -1833,7 +1823,7 @@
 		<isEmpty property="orderCell">
 			<![CDATA[
 				ORDER BY
-					START_DATE
+					startDate
 			]]>
 		</isEmpty>	
 	</select>	
@@ -1898,16 +1888,16 @@
 					AND 
 					 (
 						   (
-							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) <= #searchEndTime#
+							C.START_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND C.START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
 							)
 						OR (
-							SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchEndTime#
+							C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND C.END_DATE + #offsetMin# / (24 * 60) <TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
 							)
 						OR (
-							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchEndTime#
+							C.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
 							)
 					  )
 					 )
