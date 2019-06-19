@@ -3352,8 +3352,8 @@ input::-ms-clear {display: none;}
 .question-panel .srvyDragBtn {position:absolute; display:block; left:50%;}
 
 /* question header panel */
-.question-panel{background:#f1f6fb; padding: 10px;}
-.question-header {display:block; height:40px; line-height:40px; padding:10px 0px;}
+.question-panel{background:#f1f6fb; padding: 0px;}
+.question-header {display:block; height:40px; line-height:40px; padding:0px 0px;}
 .question-header .question-content {float:left; padding:0px 20px; cursor: default; font-size:14px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .question-header .tooltip-bttns {float:right; padding: 0px 10px;}
 
