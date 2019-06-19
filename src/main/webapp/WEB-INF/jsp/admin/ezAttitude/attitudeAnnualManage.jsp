@@ -358,7 +358,7 @@
 			//입사일 입력 팝업
 	    	function setJoinDatePop(userId, mode, date) {
 	        	var url = "/admin/ezAttitude/setJoinDatePop.do?userId=" + userId + "&mode=" + mode + "&date=" + date + "&companyId=" + encodeURIComponent($("#ListCompany").val());
-	        	window.open(url, "setJoinDatePop", GetOpenWindowfeature(210, 370));
+	        	window.open(url, "setJoinDatePop", GetOpenWindowfeature(250, 370));
 	        }
 			
 	    	//QC 끝나고 삭제 EzAttitideScheduler 수동 동작
