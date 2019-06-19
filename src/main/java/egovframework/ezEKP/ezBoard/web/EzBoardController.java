@@ -8302,22 +8302,28 @@ public class EzBoardController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
 		int intCount = 0;
-		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 		
-		myFavoriteVO.setBoardId(boardID);
-		myFavoriteVO.setUserId(userInfo.getId());
-		myFavoriteVO.setType("1");
-		myFavoriteVO.setTenantID(userInfo.getTenantId());
-		myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
-		
-		if (boardInfo.getGuBun().equals("4")) {
-			intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
-		} else if (boardInfo.getGuBun().equals("5")) {
-			myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
-			intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
+		/* 2019-06-19 홍승비 - USE_BOARD_LEFTMENU_COUNT 플래그가 NO인 경우 게시물 갯수 갱신하지 않음 */
+		if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", userInfo.getTenantId()).equals("YES")) {
+			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+			BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
+			
+			myFavoriteVO.setBoardId(boardID);
+			myFavoriteVO.setUserId(userInfo.getId());
+			myFavoriteVO.setType("1");
+			myFavoriteVO.setTenantID(userInfo.getTenantId());
+			myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+			
+			if (boardInfo.getGuBun().equals("4")) {
+				intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
+			} else if (boardInfo.getGuBun().equals("5")) {
+				myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
+				intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
+			} else {
+				intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+			}
 		} else {
-			intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+			intCount = 0;
 		}
 		
 		logger.debug("getItemCount ended.");
