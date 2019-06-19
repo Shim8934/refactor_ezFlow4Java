@@ -407,7 +407,7 @@ function show_repetition_info() {
 			
 			var resdayList = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfWeek")[0]);
 			resdayList = resdayList.substring(0, resdayList.length - 1);
-			repetition = "1|" + interval + "|" + resdayList.replace(",", "");
+			repetition = "1|" + interval + "|" + resdayList.replace(/,/g,"");
 			
 			if(interval == "1") {		// 매주
 				repeatinfo += "" + strLang124 + " ";
