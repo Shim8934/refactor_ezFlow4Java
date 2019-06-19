@@ -1479,7 +1479,7 @@
 		<isEmpty property="orderCell">
 			<![CDATA[
 				ORDER BY
-					userName
+					userName$primary$
 			]]>
 		</isEmpty>	
 		<isNotEmpty property="limit">

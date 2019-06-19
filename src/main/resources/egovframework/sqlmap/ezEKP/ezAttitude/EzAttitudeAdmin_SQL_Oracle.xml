@@ -34,6 +34,19 @@
 		<result property="formHtml"					column="FORM_HTML"				columnIndex="5"/>
 	</resultMap>
 	
+	<resultMap class="java.util.HashMap" id="annualConfigMap">
+		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="1"/>
+		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="2"/>
+		<result property="annualCancelRule"			column="ANNUAL_CANCEL_RULE"			columnIndex="3"/>
+		<result property="useAnnualAutoGnrt"				column="USE_ANNUAL_AUTO_GNRT"			columnIndex="4"/>
+		<result property="annualGnrtStd"				column="ANNUAL_GNRT_STD"				columnIndex="5"/>
+		<result property="initialDate"				column="INITIAL_DATE"				columnIndex="6"/>
+		<result property="useMinusAnnual"			column="USE_MINUS_ANNUAL"		columnIndex="7"/>
+		<result property="useAnnualTmnt"		column="USE_ANNUAL_TMNT"	columnIndex="8"/>
+		<result property="roundOffRule"		column="ROUND_OFF_RULE"	columnIndex="9"/>
+		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="10"/>
+	</resultMap>
+	
 	<resultMap class="AttitudeAuthorVO" id="userMap">
 		<result property="userName" 				column="USER_NAME" 				columnIndex="1"/>
 		<result property="userId" 					column="USER_ID" 				columnIndex="2"/>
@@ -1458,9 +1471,7 @@
 				AND
 				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID
 				AND 
-				 A.CN = B.USER_ID 
-				AND
-				 B.YEAR = #searchYear#)
+				 A.CN = B.USER_ID)
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND 
@@ -1498,16 +1509,10 @@
 				    A.DISPLAYNAME$primary$ AS userName,
 				    NVL(A.TITLE$primary$, ' ') AS userTitle,
 				    NVL(A.DESCRIPTION$primary$, ' ') AS userDeptName,
-				    #searchYear# AS year,
-				    nvl(sum(
-							CASE
-							   WHEN C.TYPE_ID = 'A11' THEN TRUNC(C.END_DATE) - TRUNC(C.START_DATE)
-				               WHEN C.TYPE_ID = 'A12' THEN 0.5
-				               WHEN C.TYPE_ID = 'A13' THEN 0.5
-							   ELSE 0
-							END
-					), 0) AS useAnnualCnt,
-				    nvl(B.TOTAL_ANNUAL_CNT, 0) AS totalAnnualCnt
+				    RTRIM(TO_CHAR(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0),'fm9990D99'),'.') AS basicAnnualCnt,
+				    RTRIM(TO_CHAR(NVL(B.ADDITIONAL_HOLIDAY_CNT, 0),'fm9990D99'),'.') AS additionalAnnualCnt,
+				    RTRIM(TO_CHAR(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + nvl(B.ANNUAL_HOLIDAY_CNT, 0) + nvl(B.ADDITIONAL_HOLIDAY_CNT, 0),'fm9990D99'),'.') AS totalAnnualCnt,
+				    NVL(TO_CHAR(B.JOIN_DATE, 'YYYY-MM-DD'), 0) AS joinDate
 				FROM 
 					TBL_USERMASTER A
 				LEFT OUTER JOIN 
@@ -1517,34 +1522,7 @@
 					AND
 					 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
 					AND
-					 A.CN = B.USER_ID
-					AND B.YEAR = #searchYear#)
-				LEFT OUTER JOIN 
-					TBL_ATTITUDE C
-				ON
-					(A.TENANT_ID = C.TENANT_ID 
-					AND 
-					 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
-					AND
-					 A.CN = C.WRITER_ID
-					AND 
-					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
-					AND 
-					 (
-						   (
-							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) <= #searchEndTime#
-							)
-						OR (
-							SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchEndTime#
-							)
-						OR (
-							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchEndTime#
-							)
-					  )
-					 )
+					 A.CN = B.USER_ID)
 				WHERE
 					A.TENANT_ID = #tenantId#
 				AND 
@@ -1566,7 +1544,11 @@
 				]]>
 			</isNotEmpty>
 			
-			GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, nvl(B.TOTAL_ANNUAL_CNT, 0)
+			GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, 
+					NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0),
+				    NVL(B.ADDITIONAL_HOLIDAY_CNT, 0),
+				    NVL(B.MONTHLY_HOLIDAY_CNT, 0) + nvl(B.ANNUAL_HOLIDAY_CNT, 0) + nvl(B.ADDITIONAL_HOLIDAY_CNT, 0),
+				    NVL(TO_CHAR(B.JOIN_DATE, 'YYYY-MM-DD'), 0)
 			
 			<isNotEmpty property="orderCell">
 				<![CDATA[
@@ -1593,7 +1575,7 @@
 			]]>
 		</isNotEmpty>
 	</select>
-
+	
 	<select id="ezAttitudeAdminDAO.getSimpleAnnualCnt" parameterClass="Map" resultClass="INTEGER">
 		<![CDATA[
 			SELECT
@@ -1604,8 +1586,6 @@
 				COMPANY_ID = #companyId#
 			AND
 				TENANT_ID = #tenantId#
-			AND
-				YEAR = #year#
 		]]>
 			<isNotEmpty prepend="AND" property="userId">
 				USER_ID = #userId#
@@ -1615,49 +1595,55 @@
 	<insert id="ezAttitudeAdminDAO.insertAnnualHistory" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO tbl_attitude_annual_history
-				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
+				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID)
 			SELECT
 				SEQ_TBL_ATTITUDE_HISTORY.NEXTVAL AS ANNUAL_HISTORY_ID,
-				CN AS USER_ID,
-				'0' AS ORIGIN_ANNUAL_CNT,
-				'$annualCnt$' AS CHANGE_ANNUAL_CNT,
+				A.CN AS USER_ID,
+				(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS ORIGIN_ANNUAL_CNT,
+				(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + '$annualCnt$') AS CHANGE_ANNUAL_CNT,
 				'$changeReason$' AS CHANGE_REASON,
 				SYSDATE AS CHANGE_DATE,
 				'$changeUserId$' AS CHANGE_USER_ID,
-				physicaldeliveryofficename AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID,
-				'$year$' AS YEAR
+				A.PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
+				A.TENANT_ID AS TENANT_ID
 			FROM
-				tbl_usermaster
+				TBL_USERMASTER A
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_ANNUAL B
+			ON
+				(A.TENANT_ID = B.TENANT_ID 
+				AND
+				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
+				AND
+				 A.CN = B.USER_ID)
 			WHERE
-				TENANT_ID = #tenantId#
+				A.TENANT_ID = #tenantId#
 			AND
-				physicaldeliveryofficename = #companyId#
+				A.PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND
+				A.CN = #userId#
 		]]>
-			<isNotEmpty prepend="AND" property="userId">
-				CN = #userId#
-			</isNotEmpty>
 	</insert>
 	
 	<insert id="ezAttitudeAdminDAO.changeAnnualHistory" parameterClass="Map">
 			INSERT INTO tbl_attitude_annual_history
-				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
+				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID)
 			SELECT
 				SEQ_TBL_ATTITUDE_HISTORY.NEXTVAL AS ANNUAL_HISTORY_ID,
 				USER_ID AS USER_ID,
-				TOTAL_ANNUAL_CNT AS ORIGIN_ANNUAL_CNT,
-					<isEqual property="flagCheck" compareValue="change">
-						'$annualCnt$' AS CHANGE_ANNUAL_CNT,
-					</isEqual>
-					<isEqual property="flagCheck" compareValue="plus">
-						TOTAL_ANNUAL_CNT + TO_NUMBER(#annualCnt#, '99.9') AS CHANGE_ANNUAL_CNT,
-					</isEqual>
+				<isNotEqual property="attendanceRateCondition" compareValue="3">
+					ANNUAL_HOLIDAY_CNT + MONTHLY_HOLIDAY_CNT + ADDITIONAL_HOLIDAY_CNT - TO_NUMBER(#annualCnt#, '99.9') AS ORIGIN_ANNUAL_CNT,
+					MONTHLY_HOLIDAY_CNT + ANNUAL_HOLIDAY_CNT + ADDITIONAL_HOLIDAY_CNT AS CHANGE_ANNUAL_CNT,
+				</isNotEqual>
+				<isEqual property="attendanceRateCondition" compareValue="3">
+					MONTHLY_HOLIDAY_CNT + ANNUAL_HOLIDAY_CNT + ADDITIONAL_HOLIDAY_CNT AS ORIGIN_ANNUAL_CNT,
+					'0' AS CHANGE_ANNUAL_CNT ,
+				</isEqual>
 				'$changeReason$' AS CHANGE_REASON,
 				SYSDATE AS CHANGE_DATE,
 				'$changeUserId$' AS CHANGE_USER_ID,
 				COMPANY_ID AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID,
-				YEAR AS YEAR
+				TENANT_ID AS TENANT_ID
 			FROM
 				tbl_attitude_annual
 			WHERE
@@ -1665,19 +1651,15 @@
 			AND
 				COMPANY_ID = #companyId#
 			AND
-				YEAR = #year#
-			<isNotEmpty prepend="AND" property="userId">
 				USER_ID = #userId#
-			</isNotEmpty>
 	</insert>
 	
 	<insert id="ezAttitudeAdminDAO.insertAnnual" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO tbl_attitude_annual
-				(USER_ID, YEAR, TOTAL_ANNUAL_CNT, COMPANY_ID, TENANT_ID)
+				(USER_ID, TOTAL_ANNUAL_CNT, COMPANY_ID, TENANT_ID)
 			SELECT
 				CN AS USER_ID,
-				'$year$' AS YEAR,
 				'$annualCnt$' AS TOTAL_ANNUAL_CNT,
 				physicaldeliveryofficename AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID
@@ -1695,18 +1677,11 @@
 	
 	<insert id="ezAttitudeAdminDAO.changeAnnual" parameterClass="Map">
 			UPDATE tbl_attitude_annual
-				<isEqual property="flagCheck" compareValue="change">
-					SET TOTAL_ANNUAL_CNT = #annualCnt#
-				</isEqual>
-				<isEqual property="flagCheck" compareValue="plus">
-					SET TOTAL_ANNUAL_CNT = TOTAL_ANNUAL_CNT + TO_NUMBER(#annualCnt#, '99.9')
-				</isEqual>
+					SET ADDITIONAL_HOLIDAY_CNT = #annualCnt#
 			WHERE
 				TENANT_ID = #tenantId#
 			AND
 				COMPANY_ID = #companyId#
-			AND
-				YEAR = #year#
 			<isNotEmpty prepend="AND" property="userId">
 				USER_ID = #userId#
 			</isNotEmpty>
@@ -1715,26 +1690,75 @@
 	<select id="ezAttitudeAdminDAO.getUserAnnual" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
 			SELECT 
-				A.cn AS userId,
-			    A.DISPLAYNAME$primary$ as userName,
-			    A.TITLE$primary$ as userTitle,
-			    A.DESCRIPTION$primary$ as deptName,
-			    A.EXTENSIONATTRIBUTE2 as imgPath,
-			    C.START_DATE + #offsetMin# / (24 * 60) as startDate,
-			    C.END_DATE + #offsetMin# / (24 * 60) as endDate,
-			    C.TYPE_ID as typeId,
-			    D.TYPE_NAME$primary$ as typeName,
-			    C.ATTITUDE_ID as attitudeId,
-			    C.CONTENT as content,
-			    nvl( 
-						CASE
-						   WHEN C.TYPE_ID = 'A11' THEN TRUNC(C.END_DATE) - TRUNC(C.START_DATE)
-			               WHEN C.TYPE_ID = 'A12' THEN 0.5
-			               WHEN C.TYPE_ID = 'A13' THEN 0.5
-						   ELSE 0
-						END
-				, 0) as annualCnt,
-			    nvl(B.TOTAL_ANNUAL_CNT, 0) as totalAnnualCnt
+			    A.DISPLAYNAME$primary$ AS userName,
+			    A.TITLE$primary$ AS userTitle,
+			    A.DESCRIPTION$primary$ AS deptName,
+			    A.EXTENSIONATTRIBUTE2 AS imgPath,
+			    C.START_DATE + #offsetMin# / (24 * 60) AS startDate,
+			    C.END_DATE + #offsetMin# / (24 * 60) AS endDate,
+			    C.TYPE_ID AS typeId,
+			    D.TYPE_NAME$primary$ AS typeName,
+			    C.ATTITUDE_ID AS attitudeId,
+			    C.CONTENT AS content,
+			    C.MODAPPL AS modAppl,
+			    NVL(F.ANNUAL_APPR_STATUS, -1) AS annualApprStatus,
+				NVL((SUM(
+			       TRUNC(
+			        TO_DATE( 
+			            CASE
+			                WHEN C.END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
+			                THEN #endTime#
+			                ELSE TO_CHAR(NVL(C.END_DATE, C.START_DATE) + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+			            END
+			            , 'YYYY-MM-DD HH24:MI:SS')
+			           -
+			        TO_DATE(
+			            CASE
+			                WHEN C.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+			                THEN #startTime#
+			                ELSE TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+			            END
+			            , 'YYYY-MM-DD HH24:MI:SS'), 0))
+			    +
+	            SUM(
+					CASE
+					   WHEN C.TYPE_ID = 'A11' THEN 1
+		               WHEN C.TYPE_ID = 'A12' THEN 0.5
+		               WHEN C.TYPE_ID = 'A13' THEN 0.5
+					   ELSE 0
+					END
+				)), 0) AS annualCnt,				
+				NVL((
+						SELECT
+							E.CHANGE_ANNUAL_CNT
+						FROM
+							TBL_ATTITUDE_ANNUAL_HISTORY E
+						WHERE
+							E.TENANT_ID = #tenantId#
+						AND 
+							E.COMPANY_ID = #companyId#
+						AND 
+							E.USER_ID = #userId#
+						AND
+							(
+							E.CHANGE_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND E.CHANGE_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
+							)
+						AND
+							ROWNUM = 1
+					), 0) AS totalAnnualCnt,				
+				NVL((
+						SELECT
+							G.FUNCTIONTYPE
+						FROM
+							TBL_APRDOCINFO G
+						WHERE
+							(F.ANNUAL_DOC_ID = G.DOCID
+						OR
+							F.ANNUAL_DOC_ID = G.ORGDOCID)
+						AND
+							ROWNUM = 1
+					), 0) AS docApprStatus		    
 			FROM 
 				TBL_USERMASTER A
 			LEFT OUTER JOIN 
@@ -1744,31 +1768,32 @@
 				AND
 				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
 				AND
-				 A.CN = B.USER_ID
-				AND B.YEAR = #year#)
+				 A.CN = B.USER_ID)
 			LEFT OUTER JOIN 
 				TBL_ATTITUDE C
 			ON
 				(A.TENANT_ID = C.TENANT_ID 
 				AND 
-				 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+					A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
 				AND
-				 A.CN = C.WRITER_ID
+					A.CN = C.WRITER_ID
 				AND 
-				 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+					(C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+				AND 
+					C.MODAPPL <> '5'
 				AND 
 				 (
 					   (
-						SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #startTime#
-						AND SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) <= #endTime#
+						C.START_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+						AND C.START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
 						)
 					OR (
-						SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #startTime#
-						AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #endTime#
+						C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+						AND C.END_DATE + #offsetMin# / (24 * 60) < TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
 						)
 					OR (
-						SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #startTime#
-						AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #endTime#
+						C.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
+						AND C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
 						)
 				  )
 				 )
@@ -1776,17 +1801,33 @@
 				TBL_ATTITUDE_TYPE D
 			ON 
 				(A.TENANT_ID = D.TENANT_ID AND A.PHYSICALDELIVERYOFFICENAME = D.COMPANY_ID AND C.TYPE_ID = D.TYPE_ID)
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_APR_CONN F
+			ON 
+				(A.TENANT_ID = F.TENANT_ID AND A.PHYSICALDELIVERYOFFICENAME = F.COMPANY_ID AND C.ATTITUDE_ID = F.ATTITUDE_ID)
 			WHERE 
 				A.TENANT_ID = #tenantId#
 			AND 
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND 
 				A.cn = #userId#
-			ORDER BY 
-				START_DATE
+			GROUP BY
+				A.DISPLAYNAME,A.TITLE,A.DESCRIPTION,A.EXTENSIONATTRIBUTE2,C.TYPE_ID,D.TYPE_NAME,C.ATTITUDE_ID,C.CONTENT,C.MODAPPL, C.START_DATE,C.END_DATE, NVL(F.ANNUAL_APPR_STATUS, -1),F.ANNUAL_DOC_ID
 		]]>
-	</select>
-	
+		<isNotEmpty property="orderCell">
+			<![CDATA[
+				ORDER BY
+					$orderCell$ $orderOption$
+			]]>
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			<![CDATA[
+				ORDER BY
+					startDate
+			]]>
+		</isEmpty>	
+	</select>	
+
 	<select id="ezAttitudeAdminDAO.getAnnualCnt" parameterClass="Map" resultClass="AttitudeAnnualVO">
 		<![CDATA[
 			SELECT 
@@ -1795,16 +1836,33 @@
 			    	A.TITLE$primary$ AS userTitle,
 			    	A.DESCRIPTION$primary$ AS userDeptName,
 			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
-				    #year# AS year,
-				    nvl(sum(
-							CASE
-							   WHEN C.TYPE_ID = 'A11' THEN TRUNC(C.END_DATE) - TRUNC(C.START_DATE)
-				               WHEN C.TYPE_ID = 'A12' THEN 0.5
-				               WHEN C.TYPE_ID = 'A13' THEN 0.5
-							   ELSE 0
-							END
-					), 0) AS useAnnualCnt,
-				    nvl(B.TOTAL_ANNUAL_CNT, 0) AS totalAnnualCnt
+			    	(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS totalAnnualCnt,
+					NVL((SUM(
+				       TRUNC(
+				        TO_DATE( 
+				            CASE
+				                WHEN C.END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
+				                THEN #searchEndTime#
+				                ELSE TO_CHAR(NVL(C.END_DATE, C.START_DATE) + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+				            END
+				            , 'YYYY-MM-DD HH24:MI:SS')
+				           -
+				        TO_DATE(
+				            CASE
+				                WHEN C.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+				                THEN #searchStartTime#
+				                ELSE TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+				            END
+				            , 'YYYY-MM-DD HH24:MI:SS'), 0))
+				    +
+		            SUM(
+						CASE
+						   WHEN TYPE_ID = 'A11' THEN 1
+			               WHEN TYPE_ID = 'A12' THEN 0.5
+			               WHEN TYPE_ID = 'A13' THEN 0.5
+						   ELSE 0
+						END
+					)), 0) AS useAnnualCnt
 				FROM 
 					TBL_USERMASTER A
 				LEFT OUTER JOIN 
@@ -1814,8 +1872,7 @@
 					AND
 					 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
 					AND
-					 A.CN = B.USER_ID
-					AND B.YEAR = #year#)
+					 A.CN = B.USER_ID)
 				LEFT OUTER JOIN 
 					TBL_ATTITUDE C
 				ON
@@ -1827,18 +1884,20 @@
 					AND 
 					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
 					AND 
+ 				 	 C.MODAPPL <> '5'
+					AND 
 					 (
 						   (
-							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) <= #searchEndTime#
+							C.START_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND C.START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
 							)
 						OR (
-							SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchEndTime#
+							C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND C.END_DATE + #offsetMin# / (24 * 60) <TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
 							)
 						OR (
-							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchStartTime#
-							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchEndTime#
+							C.START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
+							AND C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
 							)
 					  )
 					 )
@@ -1854,7 +1913,6 @@
 		
 	</select>
 	
-	
 	<select id="ezAttitudeAdminDAO.getAnnualHistoryList" parameterClass="Map" resultMap="annualHistMap">
 		<![CDATA[
 			SELECT
@@ -1866,18 +1924,15 @@
 				CHANGE_USER_ID AS CHANGE_USER_ID,
 				(SELECT DISPLAYNAME$primary$ FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
 				COMPANY_ID AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID,
-				YEAR AS YEAR
+				TENANT_ID AS TENANT_ID
 			FROM
 				tbl_attitude_annual_history
 			WHERE
 				TENANT_ID = #tenantId#
 			AND
 				USER_ID = #userId#
-			AND
-				YEAR = #year#
 			ORDER BY 
-				CHANGE_DATE DESC
+				CHANGE_DATE DESC, ANNUAL_HISTORY_ID DESC
 		]]>
 	</select>
 	
@@ -1886,7 +1941,8 @@
 			SELECT
 				CN AS USER_ID,
 				PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID
+				TENANT_ID AS TENANT_ID,
+				0 AS JOIN_DATE
 			FROM
 				tbl_usermaster
 			WHERE
@@ -1899,6 +1955,133 @@
 				CN = #userId#
 			]]>
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+				description$primary$ LIKE '%' || #searchDeptName# || '%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+				displayname$primary$ LIKE '%' || #searchUserName# || '%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+				title$primary$ LIKE '%' || #searchTitle# || '%'
+		</isNotEmpty>
+	</select>
+	
+	<insert id="ezAttitudeAdminDAO.saveJoinDate" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_attitude_annual
+				(USER_ID, JOIN_DATE, COMPANY_ID, TENANT_ID)
+			VALUES
+				(#userId#, #date#, #companyId#, #tenantId#)
+		]]>
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.modifyJoinDate" parameterClass="Map">
+			UPDATE tbl_attitude_annual
+				SET JOIN_DATE = #date#
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				USER_ID = #userId#
+	</insert>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAnnualConfig" parameterClass="Map" resultMap="annualConfigMap">
+		<![CDATA[
+			SELECT
+				company_id,
+				tenant_id,
+				annual_cancel_rule,
+				use_annual_auto_gnrt,
+				annual_gnrt_std,
+				TO_CHAR(initial_date, 'YYYY-MM-DD') AS initial_date,
+				use_minus_annual,
+				use_annual_tmnt,
+				round_off_rule,
+				TO_CHAR(conf_set_date, 'YYYY-MM-DD') AS conf_set_date
+			FROM
+				TBL_ATTITUDE_ANNUAL_CONF
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</select>
+	
+	<insert id="ezAttitudeAdminDAO.insertAnnualConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_ANNUAL_CONF
+				(
+				COMPANY_ID,
+				TENANT_ID,
+				ANNUAL_CANCEL_RULE,
+				USE_ANNUAL_AUTO_GNRT,
+				ANNUAL_GNRT_STD,
+				INITIAL_DATE,
+				USE_MINUS_ANNUAL,
+				USE_ANNUAL_TMNT,
+				ROUND_OFF_RULE,
+				CONF_SET_DATE
+				)
+			VALUES
+				(
+				#companyId#,
+				#tenantId#,
+				#annualCancelRule#,
+				#useAnnualAutoGnrt#,
+				#annualGnrtStd#,
+				#initialDate#,
+				#useMinusAnnual#,
+				#useAnnualTmnt#,
+				#roundOffRule#,
+				TO_DATE(#confSetDate#, 'YYYY-MM-DD')
+				)
+		]]>
+	</insert>	
+		
+	<update id="ezAttitudeAdminDAO.updateAnnualConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_ANNUAL_CONF
+			SET
+				annual_cancel_rule = #annualCancelRule#,
+				use_annual_auto_gnrt = #useAnnualAutoGnrt#,
+				annual_gnrt_std = #annualGnrtStd#,
+				initial_date = #initialDate#,
+				use_minus_annual = #useMinusAnnual#,
+				use_annual_tmnt = #useAnnualTmnt#,
+				round_off_rule = #roundOffRule#,
+				conf_set_date = TO_DATE(#confSetDate#, 'YYYY-MM-DD') 
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</update>
+	
+	<select id="ezAttitudeAdminDAO.getJoinDate" parameterClass="Map" resultMap="annualUserMap">
+		<![CDATA[
+			SELECT 
+				A.CN AS USER_ID,
+				A.PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
+				A.TENANT_ID AS TENANT_ID,
+			    ifnull(TO_DATE(B.JOIN_DATE, 'YYYY-MM-DD'), 0) AS JOIN_DATE
+			FROM 
+				TBL_USERMASTER A
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_ANNUAL B
+			ON
+				(A.TENANT_ID = B.TENANT_ID 
+				AND
+				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
+				AND
+				 A.CN = B.USER_ID)
+			WHERE
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.PHYSICALDELIVERYOFFICENAME = #companyId#			
+			AND 
+				A.CN = #userId#			
+		]]>		
 	</select>
 	
 </sqlMap>

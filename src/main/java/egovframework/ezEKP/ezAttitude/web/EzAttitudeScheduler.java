@@ -41,7 +41,6 @@ public class EzAttitudeScheduler {
 	
 	
 	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
-//	@Scheduled(cron = "0 * 10 * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
 		
@@ -49,7 +48,7 @@ public class EzAttitudeScheduler {
 		
 		for ( Map<String, Object> tenantCompanyMap : tenantCompanyIdList) {
 			
-			int tenantId = (int)tenantCompanyMap.get("tenantId");
+			int tenantId = Integer.parseInt(String.valueOf(tenantCompanyMap.get("tenantId")));
 			String companyId = (String)tenantCompanyMap.get("companyId");
 			Map<String, Object> annualConf = ezAttitudeService.getAttitudeAnnualConfig(tenantId, companyId);
 			
@@ -75,7 +74,7 @@ public class EzAttitudeScheduler {
 				
 				if (annualGnrtStd.equals("0")) {
 					for (Map<String, Object> m : list) {
-						int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+						int workingMonthCnt = Integer.parseInt(String.valueOf(m.get("workingMonthCnt")));
 						if (workingMonthCnt < 24) {
 							if (workingMonthCnt == 12) {
 								ezAttitudeService.updateAnnualHoliday(m);
@@ -93,7 +92,7 @@ public class EzAttitudeScheduler {
 					}
 				} else {
 					for (Map<String, Object> m : list) {
-						int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+						int workingMonthCnt = Integer.parseInt(String.valueOf(m.get("workingMonthCnt")));
 						if (workingMonthCnt < 12) {
 							ezAttitudeService.updateMonthlyHoliday(m);
 						} else if (workingMonthCnt > 12) {
