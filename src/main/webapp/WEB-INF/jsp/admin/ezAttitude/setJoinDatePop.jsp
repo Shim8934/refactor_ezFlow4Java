@@ -26,6 +26,12 @@
 				display: none;
 				margin-top: 20px;
 			}
+			
+			.ui-state-click {
+				border: 1px solid #3d8fea;
+			    background: rgb(241, 248, 255);
+			    color: #fff;
+			}
 		</style>
 		
 	    <script type="text/javascript">
@@ -70,7 +76,7 @@
 		        
 		        $("#datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#datepicker").datepicker('setDate', SDate);
-		        
+
 		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
 			        	closeText: "<spring:message code='main.t3' />",
 			            prevText: "<spring:message code='main.t0604' />",
@@ -87,7 +93,13 @@
 			            isRTL: false,
 			            duration: 200,
 			            showAnim: 'show',
-			            showMonthAfterYear: true
+			            showMonthAfterYear: true,
+			            onSelect: function (obj) {
+			                $('a.ui-state-default').removeClass('ui-state-click');
+			                $('a.ui-state-hover').addClass('ui-state-click');
+			                $('a.ui-state-default').removeClass('ui-state-hover');
+			            	
+			            }
 			        };
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		        $.datepicker._hideDatepicker = function() {};
@@ -98,7 +110,7 @@
 	    	//전체 연차 등록/수정
 	    	function saveJoinDate() {
 	    		date = $("#datepicker").val();
-
+				
 				$.ajax({
 	   				type:"post",
 	   				url:"/admin/ezAttitude/saveJoinDate.do",
