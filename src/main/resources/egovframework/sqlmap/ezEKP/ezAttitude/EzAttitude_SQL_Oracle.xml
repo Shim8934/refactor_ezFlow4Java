@@ -146,6 +146,8 @@
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="18"/>
 		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
+		<result  property="annualApprStatus"	column="ANNUAL_APPR_STATUS"		columnIndex="20"/>
+		<result  property="docApprStatus"		column="DOC_APPR_STATUS"		columnIndex="21"/>
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="monthlyAnnualMap">
@@ -1209,7 +1211,20 @@
 			B.TYPE_NAME$lang$ AS TYPE_NAME,
 			B.IMG_PATH,
 		    C.DISPLAYNAME$lang$ AS DISPLAYNAME,
-		    C.DESCRIPTION$lang$ AS DESCRIPTION
+		    C.DESCRIPTION$lang$ AS DESCRIPTION,
+		    NVL(D.ANNUAL_APPR_STATUS, -1) as ANNUAL_APPR_STATUS,
+		    NVL(
+				    (
+						SELECT
+							FUNCTIONTYPE
+						FROM
+							TBL_APRDOCINFO E
+						WHERE
+							D.ANNUAL_DOC_ID = E.DOCID
+						OR
+							D.ANNUAL_DOC_ID = E.ORGDOCID
+					)
+				, 0) AS DOC_APPR_STATUS
 		FROM   
 			tbl_attitude A 
 		INNER JOIN
@@ -1226,6 +1241,10 @@
 			A.TENANT_ID = C.TENANT_ID
 		AND 
 			A.WRITER_ID = C.CN
+		LEFT OUTER JOIN 
+			TBL_ATTITUDE_APR_CONN D
+		ON 
+			(A.TENANT_ID = D.TENANT_ID AND A.COMPANY_ID = D.COMPANY_ID AND A.ATTITUDE_ID = D.ATTITUDE_ID)
 		WHERE  
 			A.ATTITUDE_ID = #attitudeId# 
 		AND    
@@ -2015,7 +2034,7 @@
 	<insert id="ezAttitudeDAO.saveCancelAnnual" parameterClass="map">
 		<![CDATA[
 			INSERT INTO 
-				tbl_attitude_annual_canappl(
+				TBL_ATTITUDE_ANNUAL_CANAPPL(
 					ATTITUDE_ID,
 					APPL_CNT, 
 					COMPANY_ID, 
@@ -2038,7 +2057,7 @@
 					SELECT 
 						NVL(MAX(a.APPL_CNT) + 1, 0)
 					FROM
-						tbl_attitude_annual_canappl a
+						TBL_ATTITUDE_ANNUAL_CANAPPL a
 					WHERE
 						TENANT_ID = #tenantId#
 		        	AND
@@ -2058,7 +2077,7 @@
 					#writerDeptName2#,
 					#apprStatus#,
 					#content#,
-					#applDate#
+					TO_DATE(#applDate#, 'YYYY-MM-DD HH24:MI:SS')
 				)
 		]]>
 	</insert>
@@ -2225,12 +2244,12 @@
 			SELECT
 				appr_status as APPR_STATUS
 			FROM 
-				jmocha.tbl_attitude_annual_canappl
-			where 
+				TBL_ATTITUDE_ANNUAL_CANAPPL
+			WHERE 
 				COMPANY_ID = #companyId#
-			and 
+			AND 
 				TENANT_ID = #tenantId#
-			and
+			AND
 				ATTITUDE_ID = #attModId#
 		]]>
 		<!-- applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
@@ -2279,7 +2298,7 @@
 			SELECT
 				count(*)
 			FROM 
-				jmocha.tbl_attitude_annual_canappl a 
+				TBL_ATTITUDE_ANNUAL_CANAPPL a 
 			inner 
 				join tbl_attitude b 
 			on 
@@ -2369,7 +2388,7 @@
 						a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
 						a.appl_cnt AS APPL_CNT,
 						a.writer_id as WRITER_ID,
-						to_char(A.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPR_DATE
+						to_char(A.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPL_DATE
 				FROM 
 					TBL_ATTITUDE_ANNUAL_CANAPPL a 
 				inner 
@@ -2471,7 +2490,7 @@
 				a.writer_title$lang$ AS WRITER_TITLE,
 				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
 			FROM 
-				jmocha.tbl_attitude_annual_canappl a
+				TBL_ATTITUDE_ANNUAL_CANAPPL a
 			inner 
 				join tbl_attitude b 
 			on 
@@ -2518,7 +2537,7 @@
 				2
 			</isEqual>
 		<![CDATA[
-			,APPR_DATE = TO_CHAR(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,APPR_DATE = TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			,APPR_USER_ID = #userId#
 			,APPR_USER_NAME = #displayName#
 			,APPR_USER_NAME2 = #displayName2#
@@ -2557,8 +2576,8 @@
 				A.APPR_USER_NAME$lang$ AS APPR_USER_NAME,
 				A.APPR_STATUS,
 				A.CONTENT,
-				to_char(A.ORIGIN_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS ORIGIN_DATE,
-				to_char(A.CHANGE_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
+				to_char(C.START_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS ORIGIN_DATE,
+				to_char(C.END_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
 				B.TITLE$lang$ AS TITLE,
 				B.DESCRIPTION$lang$ AS DESCRIPTION,
 				C.TYPE_ID
