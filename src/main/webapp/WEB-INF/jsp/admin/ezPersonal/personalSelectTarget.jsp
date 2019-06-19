@@ -29,7 +29,7 @@
 	        var bSearch = false;
 	        var strInitList = "";
 	        var topid = "<c:out value = '${topID}' />";
-	        var userLang = "<c:out value = '${userLang}' />";
+	        var userLang = "<c:out value = '${strUserLang}' />";
 	        var ReturnFunction;
 	        var RetValue;
 	        

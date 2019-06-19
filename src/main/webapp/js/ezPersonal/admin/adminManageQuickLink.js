@@ -4,7 +4,6 @@ function makeList() {
 		url : "/admin/ezPersonal/getQuickLinkList.do",
 		async : false,
 		dataType : "JSON",
-		contentType: "application/json",
 		success : function(result) {
 			event_QuickList(result.list);
 		}
@@ -144,7 +143,6 @@ function btn_add()  {
 		async : false,
 		data : {"mode": "new"},
 		dataType : "JSON",
-		contentType: "application/json",
 		success : function(result) {
 			openLinkDetail(result, itemId);
 		}
@@ -166,7 +164,6 @@ function btn_modify(obj) {
 		async : false,
 		data : {"mode": "modify"},
 		dataType : "JSON",
-		contentType: "application/json",
 		success : function(result) {
 			openLinkDetail(result, itemId);
 		}
@@ -186,7 +183,6 @@ function btn_delete(itemId, event) {
 		async : false,
 		data : {pQuickLinkID : itemId},
 		dataType : "JSON",
-		contentType: "application/json",
 		success : function(result) {
 			if (result.result == "OK") {
 				//window.location.reload();

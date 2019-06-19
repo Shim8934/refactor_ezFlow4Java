@@ -2622,7 +2622,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 #mainmenuLayout { position: relative; }
 .mainmenuLayout_calendar { position: relative; }
 .calendar_pagenav { position: absolute; left: 50%; top:50px; width: 269px; margin-left: -134px; }
-.calendar_pagenav .spanText { display: block !important; text-align: center; font-size:18px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; letter-spacing:-1px;}
+.calendar_pagenav .spanText { display: block !important; text-align: center; font-size:17px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; letter-spacing:-1px;}
 .mainmenuTab {position:relative;margin: -9px 15px 11px 15px;}
 .mainmenuTab .mainmenuTabUL { text-align: center; padding: 0px 0px 0px 1px; margin: 0px; }
 .mainmenuTab .mainmenuTabUL li { display: inline-block; }
@@ -3001,11 +3001,11 @@ h2, #menu span {font-size: 12px;}
 .response-usercnt:hover {color: rgb(4, 112, 227);}
 .mainlist.users {width: 100%;}
 .usersTr {cursor: pointer;}
-.usersTr td >img {width: 30px; height: 30px;}
+.usersTr td >img {width: 38px; height: 38px;}
 .usersTr .mainTd {width: 50%;}
 .usersTr .respDate {width: 120px; min-width: 120px; white-space: nowrap; padding-right: 8px;}
-.usersTr td:first-child {width: 30px;}
-.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family: Malgun Gothic, "맑은 고딕";}
+.usersTr td:first-child {width: 40px;}
+.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .response-header >div:first-child {flex: 1;}
 .response-header >div:last-child {margin-left: 10px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
 .response-users {padding: 10px; border-right: 1px solid #ddd; border-left: 1px solid #ddd;}
@@ -3086,7 +3086,7 @@ h2, #menu span {font-size: 12px;}
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
 .hiddenBttn, .hidden-tab, .searchPanel.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
-.surveydetail-header {padding-left: 10px; font-family: Malgun Gothic, "맑은 고딕";}
+.surveydetail-header {padding-left: 10px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .surveydetail-header ul {padding: 0px; margin: 0px; list-style: none;}
 .surveydetail-header ul li {display: block; float: left; margin: 0 3px 0 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
 .surveydetail-header span {display: inline-block; background: white; border-top: 1px solid #c7c7c7; border-left: 1px solid #c7c7c7; border-right: 1px solid #c7c7c7; border-bottom: 1px solid #909193; height: 25px; padding: 0px 8px 2px 8px; line-height: 25px; font-size: 12px; color: #393939;}
@@ -3234,7 +3234,7 @@ input::-ms-clear {display: none;}
 .survey-bttn-panel {width:100%; text-align: center;}
 .btnpositionSurvey{margin:20px 0px; padding:7px; text-align:center;}
 .imgbtnSurvey{white-space:nowrap; display:inline-block; background-repeat: no-repeat; padding-left:8px; vertical-align: top; cursor: pointer; margin-bottom: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height:28px;}
-.imgbtnSurvey span{display: inline-block; background-repeat: no-repeat; height: 30px; padding-right:8px; font: 14px malgun gothic; letter-spacing: -1; vertical-align: top; line-height: 28px; height: 28px; line-height: 30px; font-weight: bold; font-size: 12px; color: #000;}
+.imgbtnSurvey span{display: inline-block; background-repeat: no-repeat; height: 30px; padding-right:8px; font: 14px Meiryo UI; letter-spacing: -1; vertical-align: top; line-height: 28px; height: 28px; line-height: 30px; font-weight: bold; font-size: 12px; color: #000;}
 .imgbtnSurvey_save{border:1px solid #62aaf9; box-shadow: 0px 2px 0px 0px rgba(98, 170, 249, 0.8);}
 .imgbtnSurvey_save span{color:#0470e4;}
 /**** survey button panel end ****/
@@ -3352,9 +3352,9 @@ input::-ms-clear {display: none;}
 .question-panel .srvyDragBtn {position:absolute; display:block; left:50%;}
 
 /* question header panel */
-.question-panel{background:#f1f6fb; padding: 10px;}
-.question-header {display:block; height:40px; line-height:40px; padding:10px 0px;}
-.question-header .question-content {float:left; padding:0px 20px; cursor: default; font-size:14px; font-family:Malgun Gothic, "맑은 고딕";}
+.question-panel{background:#f1f6fb; padding: 0px;}
+.question-header {display:block; height:40px; line-height:40px; padding:0px 0px;}
+.question-header .question-content {float:left; padding:0px 20px; cursor: default; font-size:14px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .question-header .tooltip-bttns {float:right; padding: 0px 10px;}
 
 .question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px; float: left;}
@@ -3435,7 +3435,7 @@ input[type=range]::-ms-tooltip {display: none;}
 /* survey information, questions and logic confirm part */
 .prevQsWrapper{margin:10px 0px 0px 0px; border:1px solid #ddd; position: relative;}
 .prevQsContent{background:#f1f6fb;}
-.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family:Malgun Gothic, "맑은 고딕"; display: flex;}
+.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; display: flex;}
 .prevQsWrapper .question-header .imptt {line-height: 40px;}
 .srvyLogicbtn{display:inline-flex; margin:0px 0px 0px 10px;}
 .logicSkip{background-position:0px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
@@ -3472,10 +3472,10 @@ input[type=range]::-ms-tooltip {display: none;}
 /* survey Info Btn */
 .srvyTitle_info{display:inline-block; float:right; cursor:pointer;}
 .srvyTitle_info img{vertical-align:middle; margin:-2px 0px 0px 0px;}
-.upage-ul {float:right; position:absolute; z-index:1000; top:104px; right:13px; width:160px; padding:0px 18px 8px 18px; background:#fff; border-radius: 10px; border: 1px solid #cccccc;}
+.upage-ul {float:right;position:absolute;z-index:1000;top:104px;right: 14px;width:160px;padding: 0px 16px 8px 16px;background:#fff;border-radius: 10px;border: 1px solid #cccccc;}
 .upage-ul:before {content: ''; position: absolute; border-bottom: 14px solid #fff; border-right: 8px solid transparent; border-left: 8px solid transparent; top: -12px; right: 26px; z-index: 2;}
 .upage-ul:after {content: ''; position: absolute; border-style: solid; border-width: 0px 7px 12px 7px; border-color: #ccc transparent; display: block; width: 0; z-index: 1; top: -12px; right: 26px;}
-.upage-ul li {float: left; list-style: none; width:140px; padding: 0px 10px; margin: 6px 0px 0px 0px;}
+.upage-ul li {float: left;list-style: none;width: 154px;padding: 0px 5px;margin: 6px 0px 0px 0px;}
 .upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
 .upage-ul li>span {line-height: 30px;}
 .upage-ul li .srvyInfo{background:url(../images/ezSurvey/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
