@@ -2017,9 +2017,9 @@
 					    		
 					    		//근무지 및 내용
 					    		if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(5)").html("<div style='max-width::810px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(5)").html("<div style='max-width::810px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
 					    		} else {
-					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(5)").html("<div style='max-width::773px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(5)").html("<div style='max-width::773px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
 					    		}
 				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(5)").attr("title",statusContent);				    			
 				    		}
