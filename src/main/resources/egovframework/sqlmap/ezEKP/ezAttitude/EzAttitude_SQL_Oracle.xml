@@ -753,6 +753,8 @@
 				WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TYPE_ID NOT IN ('A01', 'A03')
+			AND
+				MODAPPL <> '5'
 			AND    
 				(
 					(START_DATE + #offsetMin# / (24 * 60)  >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
@@ -2111,10 +2113,10 @@
 		]]>
 	</select>
 	
-	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="Map" resultClass="INTEGER">
+	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="map" resultClass="INTEGER">
 		<![CDATA[
 			SELECT
-				COUNT(*)
+				NVL(SUM(NVL(TRUNC(END_DATE-START_DATE) + 2, 1)), 0) 
 			FROM
 				TBL_ATTITUDE
 			WHERE
@@ -2122,22 +2124,22 @@
 			AND 
 				WRITER_ID = #userId#
 			AND
-				START_DATE >= TO_DATE(#joinDate#,'YYYY-MM-DD')
+				START_DATE >= #joinDate#
 		]]>
 		<isNotEmpty property="oneMonthAgo">
 			<![CDATA[
 				AND
-					START_DATE <= TO_DATE(#oneDayAgo#, 'YYYY-MM-DD HH24:MI:SS') - 540 / (24 * 60)
+					START_DATE <= DATE_ADD(#oneDayAgo#, interval - 540 minute)
 				AND 
-					START_DATE > TO_DATE(#oneMonthAgo#, 'YYYY-MM-DD HH24:MI:SS') - 540 / (24 * 60) 
+					START_DATE > DATE_ADD(#oneMonthAgo#, interval -540 minute)
 			]]>
 		</isNotEmpty>
 		<![CDATA[
 			AND
 				COMPANY_ID = #companyId#
 			AND
-				TENANT_ID = #tenantId#
-		]]>
+				TENANT_ID = #tenantId#	
+		]]>		
 	</select>
 		
 	<update id = "ezAttitudeDAO.updateAnnualHoliday" parameterClass="map">

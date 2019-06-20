@@ -81,6 +81,8 @@
 					$("#attiInfoView").append(tempHtml);
 					//$("#attiInfoView tr").eq(3).css("display", "none");
 					$("#attiInfoView tr").eq(4).css("display", "none");
+				} else {					
+					$("#bizsub").html(" " + bizSub);
 				}
 				
 				//유형명
@@ -90,7 +92,6 @@
 				$("#writerName").text(" " + writerName);
 				$("#region").html(" " + region);
 				$("#mobile").html(" " + mobile);
-				//$("#bizsub").html(" " + bizsub);
 				
 				var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
@@ -228,6 +229,8 @@
 				            try {
 				            	window.opener.getUserAnnualList();
 								window.opener.parent.frames["left"].getAttitudeList();
+								//신청갯수
+						    	window.opener.parent.frames["left"].leftAnnualCount();
 				            } catch (e) { 
 				            }
 				            window.close();

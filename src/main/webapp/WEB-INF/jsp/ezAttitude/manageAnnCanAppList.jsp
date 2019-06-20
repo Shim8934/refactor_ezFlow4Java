@@ -564,8 +564,7 @@
     			no++;
 	    	}
 	    	//신청갯수
-// 	    	leftCount();
-	    	parent.frames["left"].leftCount();
+	    	parent.frames["left"].leftAnnualCount();
 	    }
 	    
 	    function date_reset() {

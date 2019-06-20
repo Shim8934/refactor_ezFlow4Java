@@ -1238,8 +1238,7 @@
 		]]>
 	</insert>
 	
-	<select id="ezAttitudeAdminDAO.getAttitudeUserStatistics" parameterClass="Map" resultMap="userStatistics">
-<!-- 		<iterate conjunction=";"> -->
+	<select id="ezAttitudeAdminDAO.getAttitudeUserStatistics" parameterClass="Map" resultClass="AttitudeStatisVO">
 		<![CDATA[
 			SELECT 
 				NVL(
@@ -1248,33 +1247,33 @@
 			                to_date(
 			                        CASE
 			                            WHEN 
-			                                A.END_DATE + #offsetMin#/(60*24) > TO_DATE(#year# || '-' || #months# || #endTime#, 'YYYY-MM-DD HH24:MI:SS') 
+			                                A.END_DATE + #offsetMin#/(60*24) > TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
 			                            THEN 
-			                                TO_DATE(#year# || '-' || #months# || #endTime#, 'YYYY-MM-DD HH24:MI:SS') 
+			                                #endDate#
 			                            ELSE 
-			                                NVL(A.END_DATE, A.START_DATE) + #offsetMin#/(60*24)
+			                                TO_CHAR(NVL(A.END_DATE, A.START_DATE) + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI:SS')
 			                         END
 			                         , 'YYYY-MM-DD HH24:MI:SS')
 			                         -
 			                to_date(
 			                        CASE
 			                            WHEN
-			                                A.START_DATE + #offsetMin#/(60*24) < TO_DATE(#year# || '-' || #months# || #startTime#, 'YYYY-MM-DD HH24:MI:SS')
+			                                A.START_DATE + #offsetMin#/(60*24) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
 			                            THEN
-			                                TO_DATE(#year# || '-' || #months# || #startTime#, 'YYYY-MM-DD HH24:MI:SS')
+			                                #startDate#
 			                            ELSE
-			                                A.START_DATE + #offsetMin#/(60*24)
+			                                TO_CHAR(A.START_DATE + #offsetMin#/(60*24), 'YYYY-MM-DD HH24:MI:SS')
 			                         END
 			                         , 'YYYY-MM-DD HH24:MI:SS')
-			                 , 0)), 0) + COUNT(A.TYPE_ID) AS COUNT,
-			       A.TYPE_ID,
-			       #months# AS STAT_MONTH
+			                 , 0)), 0) + COUNT(A.TYPE_ID) AS COUNT
 			FROM   
 				TBL_ATTITUDE A
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND
 				A.TYPE_ID = #typeId#
+			AND
+				A.MODAPPL <> '5'
 			AND
 				A.WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
@@ -1289,16 +1288,13 @@
 		<![CDATA[
 			AND    
 				(
-					(A.START_DATE >= TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS') and A.START_DATE <= TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS')) 
+					(A.START_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and A.START_DATE <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
 					or
-					(A.END_DATE >= TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS') and A.END_DATE < TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS')) 
+					(A.END_DATE >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and A.END_DATE < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
 					or
-					(A.START_DATE < TO_DATE((#year# || '-' || #months# || #startTime#), 'YYYY-MM-DD HH24:MI:SS') and A.END_DATE >= TO_DATE((#year# || '-' || #months# || #endTime#), 'YYYY-MM-DD HH24:MI:SS'))
+					(A.START_DATE < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and A.END_DATE >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				)
-			GROUP BY
-				A.TYPE_ID, #months#
 		]]>
-<!-- 		</iterate> -->
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
