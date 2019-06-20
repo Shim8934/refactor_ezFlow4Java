@@ -291,6 +291,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 		return (List<String>) list("ezNewPortal.checkThemeAuthInDept", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PortletAuthVO> getPortletAuthUserList (Map<String, Object> map) throws Exception {
+		return (List<PortletAuthVO>) list("ezNewPortal.getPortletAuthUserList", map);
+	}
 	/**
 	 * 이효진
 	 */

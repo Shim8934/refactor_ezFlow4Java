@@ -157,13 +157,14 @@ public class EzNewPortalGWController {
 			String deptId = info.getDeptId();
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			
 			String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", info.getTenantId());
 			LOGGER.debug("primaryLang=" + primaryLang);
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
 			
 			// 사용자 설정 테마/프레임 가져오기
-			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath);
 			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
 			
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(userThemeSetting.getUsedTheme(), portletLang, userId, tenantId, companyId, deptId, false);
@@ -575,16 +576,16 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String deptId = info.getDeptId();
-
+			
 			// deptpath 구하기
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
 			
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
 			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId, deptPath);
-			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath);
 			boolean hasUserDefault = false;
 			int usedTheme = 0;
 			
@@ -4679,7 +4680,7 @@ public class EzNewPortalGWController {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getPortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId) throws Exception {
+	public JSONObject getPortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int portletId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getPortletAuth started.");
 		JSONObject result = new JSONObject();
 
@@ -4691,7 +4692,7 @@ public class EzNewPortalGWController {
 			int tenantId = userInfo.getTenantId();
 			String lang = userInfo.getLang();
 			
-			Map<String, Object> portletAuth = ezNewPortalService.getPortletAuth(companyId, tenantId, themeId, lang);
+			Map<String, Object> portletAuth = ezNewPortalService.getPortletAuth(companyId, tenantId, portletId, lang);
 
 			JSONObject data = new JSONObject();
 			
@@ -4713,7 +4714,7 @@ public class EzNewPortalGWController {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/admin/ezPortal/portlets/{portletId}/authorities/companies/{companyId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
-	public JSONObject updatePortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int themeId, @RequestBody JSONObject jsonParam) throws Exception {
+	public JSONObject updatePortletAuth(HttpServletRequest request, @PathVariable String companyId, @PathVariable int portletId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updatePortletAuth started.");
 		JSONObject result = new JSONObject();
 
@@ -4728,7 +4729,7 @@ public class EzNewPortalGWController {
 			JSONArray portletAuths = (JSONArray) jsonParam.get("portletAuths");
 			int tenantId = userInfo.getTenantId();
 			
-			ezNewPortalService.updatePortletAuth(portletAuths, themeId, companyId, tenantId);
+			ezNewPortalService.updatePortletAuth(portletAuths, portletId, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -482,58 +482,59 @@
  	
 	$(function() {
 		$("#featured").orbit();
-		
-		var portletCount = portletOrder.length;
-		var portletHTML = "";
-		
-		for (var i = 0; i < portletCount; i++) {
-			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
-		}
-		
-		//$(".portlet_area").html(portletHTML);
-		document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
- 		frameSetting(frameId);
-		
- 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
-		for (var i = 0; i < portletCount; i++) {
-			var portletId = portletOrder[i].portletId;
-			var portletUrl = portletOrder[i].portletUrl;
-			var portletName = portletOrder[i].portletName;
+		if (portletOrder != null && portletOrder.length != 0) {
+			var portletCount = portletOrder.length;
+			var portletHTML = "";
 			
-			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-		  		(function (portletId, portletUrl, portletName) {
-					$.ajax({
-						type : "GET",
-						dataType : "html",
-						data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-						url : portletUrl,
-						tryCount : 0,
-						retryLimit : 3,
-						success : function(result) {
-							$("#" + portletId + "Portlet").append(result);
-							
-							if (portletId == 6) {
-								document.getElementById(portletId + "Portlet").style.background = "none";
-							}
-							
-							eventSetting(portletId, usedTheme);
-						},
-						error : function() {
-							this.url = "/ezNewPortal/errorPortlet.do";
-							this.tryCount++;
-							
-							if (this.tryCount <= this.retryLimit) {
-								//try again
-								$.ajax(this);
+			for (var i = 0; i < portletCount; i++) {
+				portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
+			}
+			
+			//$(".portlet_area").html(portletHTML);
+			document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
+	 		frameSetting(frameId);
+			
+	 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
+			for (var i = 0; i < portletCount; i++) {
+				var portletId = portletOrder[i].portletId;
+				var portletUrl = portletOrder[i].portletUrl;
+				var portletName = portletOrder[i].portletName;
+				
+				/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
+			  		(function (portletId, portletUrl, portletName) {
+						$.ajax({
+							type : "GET",
+							dataType : "html",
+							data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
+							url : portletUrl,
+							tryCount : 0,
+							retryLimit : 3,
+							success : function(result) {
+								$("#" + portletId + "Portlet").append(result);
+								
+								if (portletId == 6) {
+									document.getElementById(portletId + "Portlet").style.background = "none";
+								}
+								
+								eventSetting(portletId, usedTheme);
+							},
+							error : function() {
+								this.url = "/ezNewPortal/errorPortlet.do";
+								this.tryCount++;
+								
+								if (this.tryCount <= this.retryLimit) {
+									//try again
+									$.ajax(this);
+									return;
+								}
+								
 								return;
 							}
-							
-							return;
-						}
-					});
-				}(portletId, portletUrl, portletName));
-			/* } */
-		}
+						});
+					}(portletId, portletUrl, portletName));
+				/* } */
+			}
+		} 
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";

@@ -416,11 +416,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//유저권한체크
 		LOGGER.debug("getPortletForUser deptId = " + userId);
+		map.put("isDept", "user");
 		List<PortletInfoVO> result = ezNewPortalDAO.getPortletForUser(map);
+		List<PortletAuthVO> authResult = ezNewPortalDAO.getPortletAuthUserList(map);
+		
 		List<PortletInfoVO> deptResult = null;
+		List<PortletAuthVO> deptAuthResult = null;
 		
 		//전체체크필요없어서 id만
 		List<Integer> portletIds = new ArrayList<Integer>();
+		List<Integer> portletAuthIds = new ArrayList<Integer>();
+		List<Integer> accessYIds = new ArrayList<Integer>();
 		
 		for (PortletInfoVO vo : result) {
 			LOGGER.debug("user portletId = " + vo.getPortletId());
@@ -428,14 +434,25 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			portletIds.add(vo.getPortletId());
 		}
 		
+		for (PortletAuthVO vo : authResult) {
+			portletAuthIds.add(vo.getPortletId());
+			
+			if (vo.isAccessYN()) {
+				accessYIds.add(vo.getPortletId());
+			}
+		}
+		
 		result.removeIf(vo -> !vo.isAccessYN());
+		authResult.removeIf(vo -> !vo.isAccessYN());
 		
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
 		for(String pathId : deptIds) {
+			map.put("isDept", "dept");
 			map.put("deptId", pathId);
 			LOGGER.debug("getPortletForUser deptId = " + pathId);
 			
 			deptResult = ezNewPortalDAO.getPortletForUser(map);
+			deptAuthResult = ezNewPortalDAO.getPortletAuthUserList(map);
 			
 			//권한잇는것들 && 기존 권한체크안된것들 추가
 			for (PortletInfoVO deptPortlet : deptResult) {
@@ -453,11 +470,43 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 					}
 				}
 			}
+			
+			for (PortletAuthVO deptAuthPortlet : deptAuthResult) {
+				LOGGER.debug("deptAuthPortlet id = " + deptAuthPortlet.getPortletId() + " || isAccessYN = " + deptAuthPortlet.isAccessYN());
+				int portletId = deptAuthPortlet.getPortletId();
+								
+				if (portletAuthIds.indexOf(portletId) == -1) {
+					LOGGER.debug("portletAuthIds.indexOf(portletId) == -1");
+					portletAuthIds.add(portletId);
+					
+					if (deptAuthPortlet.isAccessYN()) {
+						LOGGER.debug("portletAuthIds.isAccessYN()");
+						accessYIds.add(deptAuthPortlet.getPortletId());
+					}
+				}
+			}
 		}
+		
+		LOGGER.debug("portletList : " + result.toString());
+		LOGGER.debug("accessYIds : " + accessYIds.toString());
+		
+		//authResult와 메뉴권한이 있는 portletList와 비교!
+		List<PortletInfoVO> resultWithAuth = new ArrayList<PortletInfoVO>();
+		int resultSize = result.size();
+		
+		for (int i = 0; i < resultSize; i++) {
+			int resultPortletId = result.get(i).getPortletId();
+			
+			if (accessYIds.contains(resultPortletId)) {
+				resultWithAuth.add(result.get(i));
+			}
+		}
+		
+		LOGGER.debug("resultWithAuth : " + resultWithAuth.toString());
 		//여기까지가 권한체크된 모든 포틀릿 리스트
 		
 		//order에 따라 다시 소팅
-		Collections.sort(result, new Comparator<PortletInfoVO>() {
+		Collections.sort(resultWithAuth, new Comparator<PortletInfoVO>() {
 			@Override
 			public int compare(PortletInfoVO o1, PortletInfoVO o2) {
 				return Integer.compare(o1.getPortletOrder(), o2.getPortletOrder());
@@ -466,7 +515,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		LOGGER.debug("[Serivce] getUserPortletList Ended");
 		
-		return result;
+		return resultWithAuth;
 	}
 	
 	@Override
@@ -550,7 +599,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId) throws Exception {
+	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath) throws Exception {
 		LOGGER.debug("[Serivce] getUserPortalSetting Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -560,6 +609,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		UserPortalSettingVO userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
 		
 		if (userPortalSetting == null) {
+			List<ThemeInfoVO> themeList = getUserThemeList(companyId, tenantId, userId, deptPath);
 			userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
 			
 			if (userPortalSetting == null) {
@@ -568,9 +618,50 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				tempSetting.setUsedTheme(1);
 				
 				userPortalSetting = tempSetting;
+			} else {
+				boolean canAccessTheme = false;
+				int themeId = userPortalSetting.getUsedTheme();
+				
+				for (int i = 0; i < themeList.size(); i++) {
+					if (themeId == themeList.get(i).getThemeId()) {
+						canAccessTheme = true;
+					}
+				}
+				
+				if (!canAccessTheme) {
+					map.put("usedTheme", themeList.get(0).getThemeId());
+					userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
+					
+					if (userPortalSetting == null) {
+						userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+					}
+				}
+			}
+		} else {
+			List<ThemeInfoVO> themeList = getUserThemeList(companyId, tenantId, userId, deptPath);
+			boolean canAccessTheme = false;
+			int themeId = userPortalSetting.getUsedTheme();
+			
+			for (int i = 0; i < themeList.size(); i++) {
+				if (themeId == themeList.get(i).getThemeId()) {
+					canAccessTheme = true;
+				}
+			}
+			
+			LOGGER.debug("canAccessTheme : " + canAccessTheme);
+			
+			if (!canAccessTheme) {
+				map.put("usedTheme", themeList.get(0).getThemeId());
+				userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
+				
+				if (userPortalSetting == null) {
+					map.put("themeId", themeList.get(0).getThemeId());
+					userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+				}
 			}
 		}
 		
+		LOGGER.debug("final userPortalSetting : " + userPortalSetting.toString());
 		LOGGER.debug("[Serivce] getUserPortalSetting Ended");
 		return userPortalSetting;
 	}
@@ -1422,14 +1513,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public void updatePortletAuth(JSONArray portletAuths, int menuId, String companyId, int tenantId) throws Exception {
+	public void updatePortletAuth(JSONArray portletAuths, int portletId, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("updatePortletAuth started.");
 		LOGGER.debug("portletAuths = " + portletAuths.toString());
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		map.put("menuId", menuId);
+		map.put("portletId", portletId);
 		
 		//update 시 기존에 있던 메뉴 권한 삭제 후 insert
 		ezNewPortalDAO.deletePortletAuth(map);
@@ -1445,7 +1536,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
-				map.put("menuId", menuId);
+				map.put("portletId", portletId);
 				
 				ezNewPortalDAO.insertPortletAuth(map);
 			}

@@ -1232,6 +1232,71 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		return "json";
 	}
 	
+	//포틀릿 권한 창 열기
+	@RequestMapping(value = "/admin/ezNewPortal/openPortletAuthSetting.do", method=RequestMethod.GET)
+	public String openPortletAuthSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("openPortletAuthSetting started.");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			LOGGER.debug("openPortletAuthSetting accessDenied.");
+			
+			return "cmm/error/adminDenied";
+		}
+		
+		//게시판이 top인 목록 가져오기
+		String userId = userInfo.getId();
+		String companyId = request.getParameter("companyId");
+		String portletId = request.getParameter("portletId");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/admin/ezPortal/portlets/" + portletId + "/authorities/companies/" + companyId;
+
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			//menuAuths 안에 menuAuthsY, menuAuthsN
+			model.addAttribute("portletAuths", resultBody.get("data"));
+		}
+		
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("portletId", portletId);
+
+		LOGGER.debug("openPortletAuthSetting ended.");
+		return "/admin/ezNewPortal/portletAuthSetting";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezNewPortal/updatePortletAuth.do", method=RequestMethod.PATCH)
+	@ResponseBody
+	public String updatePortletAuth(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("updatePortletAuth started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		JSONObject jsonParam = new JSONObject();
+		jsonParam.put("portletAuths", paramMap.get("portletAuths"));
+		
+		//포틀릿 업데이트 
+		String url = "/rest/admin/ezPortal/portlets/" + paramMap.get("portletId") + "/authorities/companies/" + paramMap.get("companyId");
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
+		
+		String status = resultBody.get("status").toString();
+		
+		LOGGER.debug("status : " + status);
+		LOGGER.debug("updatePortletAuth ended.");
+		
+		return status;
+	}
+	
 	// -----------------------------------------------------------------------------
 	/**
 	 * 슬라이드 이미지 설정 화면
@@ -1250,9 +1315,9 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		//게시판이 top인 목록 가져오기
 		String userId = userInfo.getId();
 		String companyId = request.getParameter("companyId");
-		
+		String portletId = request.getParameter("portletId");
 		model.addAttribute("companyId", companyId);
-		model.addAttribute("portletId", request.getParameter("portletId"));
+		model.addAttribute("portletId", portletId);
 		
 		LOGGER.debug("openSlideImageSetting ended.");
 		return "/admin/ezNewPortal/portalSlideImageSetting";
