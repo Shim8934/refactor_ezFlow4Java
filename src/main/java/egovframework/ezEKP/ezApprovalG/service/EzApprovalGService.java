@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -655,7 +656,7 @@ public interface EzApprovalGService {
 
 	ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception;
 
-	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(String docID, String companyID, int tenantId) throws Exception;
+	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(String docID, String companyID, String endFlag, int tenantId) throws Exception;
 
 	public String getGongRamLineInfo(String docID, String mode, String companyID, String lang, int tenantID, String offset) throws Exception;
 
@@ -676,4 +677,9 @@ public interface EzApprovalGService {
 			String approvalFlag, Locale locale) throws Exception;
 
 	void deleteOpenGovDocInfo(String docID, String companyID, int tenantID) throws Exception;
+
+	public ApprGOpenGovInfoVO getOpenGovInfoForUpdate(String docID,String companyID, int tenantId) throws Exception;
+
+	public String updateOpenGovInfo(String openGovListFlag, String fileOpenFlagList, String basis, String reason,
+			String publicity, String docID, String limitDate, String companyID, int tenantId) throws Exception;
 }

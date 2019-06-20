@@ -73,6 +73,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
@@ -9521,7 +9522,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
     }
 
 	/**
-	 * 전자결재G 수신정보 표출 Method
+	 * 결재정보 원문공개정보 저장
 	 */
 	@RequestMapping(value = "/ezApprovalG/openGovInfoSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
@@ -9543,6 +9544,28 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
  		return result;
 	}
+	/**
+	 * 기록물등록대장 원문공개수정
+	 */
+	@RequestMapping(value = "/ezApprovalG/updateOpenGovInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateOpenGovInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("updateOpenGovInfo started.");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String openGovListFlag = request.getParameter("listOpenFlag");
+		String fileOpenFlagList = request.getParameter("fileOpenFlagList");
+		String basis = request.getParameter("basis");
+		String reason = request.getParameter("reason");
+		String publicity = request.getParameter("publicityCode");
+		String limitDate = request.getParameter("openLimitDate");
+		
+		String result = ezApprovalGService.updateOpenGovInfo(openGovListFlag, fileOpenFlagList, basis, reason, publicity, docID, limitDate, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("updateOpenGovInfo ended.");
+		
+		return result;
+	}
 	
 	/* 
 	 * 결재정보 첨부리스트 호출
@@ -9555,9 +9578,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
+		String endFlag = request.getParameter("endFlag");
 		logger.debug("docID = " + docID);
 		
-		List<ApprGOpenGovAttachVO> attachList = ezApprovalGService.getAttachListForOpenGov(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<ApprGOpenGovAttachVO> attachList = ezApprovalGService.getAttachListForOpenGov(docID, endFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		JSONObject attachJson = null;
 		
@@ -9585,6 +9609,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("getAttachListForOpenGov ended.");
 		return attachJsonArr;
+	}
+
+	/* 
+	 * 원문정보 수정
+	 * */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezApprovalG/getOpenGovInfoForUpdate.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject getOpenGovInfoForUpdate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getOpenGovInfoForUpdate started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		logger.debug("docID = " + docID);
+		
+		ApprGOpenGovInfoVO openGovInfo = ezApprovalGService.getOpenGovInfoForUpdate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		JSONObject openGovJson = new JSONObject();
+		openGovJson.put("openGovInfo", openGovInfo);
+//			attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
+//			attachJson.put("sn", attach.getAttachFileSN());
+//			attachJson.put("fileName", attach.getAttachFileName());
+//			attachJson.put("fileSize", fileSize);
+//			
+		
+		logger.debug("getOpenGovInfoForUpdate ended.");
+		return openGovJson;
 	}
 
 	@RequestMapping(value = "/ezApprovalG/enforceSihangSealChoose.do", method = RequestMethod.GET)

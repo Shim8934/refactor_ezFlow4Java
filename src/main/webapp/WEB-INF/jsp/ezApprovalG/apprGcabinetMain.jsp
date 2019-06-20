@@ -1609,6 +1609,7 @@
 			            para[2] = arr_userinfo[1];
 			            para[3] = arr_userinfo[2];
 			            para[4] = g_bRecAdmin;
+			            para[5] = tr.getAttribute("DATA1");
 			
 			            var url = "/ezApprovalG/changeOpenGovInfo.do";
 			

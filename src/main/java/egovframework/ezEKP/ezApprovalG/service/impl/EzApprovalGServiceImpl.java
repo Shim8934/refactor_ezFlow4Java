@@ -30,6 +30,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
@@ -28885,11 +28886,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     }
 
 	@Override
-	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(String docID, String companyID, int tenantId) throws Exception {
+	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(String docID, String endFlag, String companyID, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docID);
 		map.put("tenantID", tenantId);
 		map.put("companyID", companyID);
+		map.put("endFlag", endFlag);
 		
 		return ezApprovalGDAO.getAttachListForOpenGov(map); 
 	}
@@ -29117,7 +29119,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!publicity.substring(0,1).equals("1")) {
 			for (int i = 0 ; i <fileOpenFlagList.length(); i++) {
-				map.put("sn", i);
+				map.put("sn", i + 1);
 				map.put("fileOpenFlag", Character.toString(fileOpenFlagList.charAt(i)));
 				ezApprovalGDAO.updateFileOpenFlag(map);
 			}
@@ -29549,5 +29551,53 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("tenantID", tenantID);
 		ezApprovalGDAO.deleteOpenGovDocInfo(map);
 		logger.debug("deleteOpenGovDocInfo ended.");
+	}
+
+	@Override
+	public ApprGOpenGovInfoVO getOpenGovInfoForUpdate(String docID, String companyID, int tenantId) throws Exception {
+		logger.debug("getOpenGovInfoForUpdate started.");
+		Map<String, Object> map	= new HashMap<>();
+		map.put("docID", docID);
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyID);
+		
+		logger.debug("getOpenGovInfoForUpdate ended.");
+		return ezApprovalGDAO.getOpenGovInfoForUpdate(map);
+	}
+
+	@Override
+	public String updateOpenGovInfo(String openGovListFlag, String fileOpenFlagList, String basis, String reason,
+			String publicity, String docID, String limitDate, String companyID, int tenantId) throws Exception {
+			//openGovListFlag 가 N 이면 basis 필요 없음
+			//publicity.substring(0,1) 이 1이면 reason 필요없음
+			logger.debug("getGongRamLineInfo started");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("docID", docID);
+			map.put("openFlag", publicity.substring(0,1));
+			map.put("openGovListFlag", openGovListFlag);
+			map.put("companyID", companyID);
+			map.put("tenantID", tenantId);
+			map.put("basis", basis);
+			map.put("reason", reason);
+			map.put("publicityCode", publicity);
+			
+			if (!limitDate.equals("")) {
+				map.put("limitDate", limitDate);
+			}
+			
+			ezApprovalGDAO.updateOpenGovDocInfo(map);
+			
+			if (publicity.substring(0,1).equals("2")) {
+				for (int i = 0 ; i <fileOpenFlagList.length(); i++) {
+					map.put("sn", i + 1);
+					map.put("fileOpenFlag", Character.toString(fileOpenFlagList.charAt(i)));
+					ezApprovalGDAO.updateFileOpenFlag(map);
+				}
+			} else {
+				ezApprovalGDAO.updateOpenGovFileInfo(map);
+			}
+			
+			logger.debug("getGongRamLineInfo ended");
+		return null;
 	}
 }

@@ -44,6 +44,7 @@
 	<typeAlias  alias="ApprGProxyVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO"/>
 	<typeAlias  alias="ApprGOpenGovAttachVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO"/>
 	<typeAlias  alias="ApprGDocListForOpenGovVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO"/>
+	<typeAlias  alias="ApprGOpenGovInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO"/>
 	
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
 		<result property="companyID"					column="companyID"						/>
@@ -30453,7 +30454,12 @@
 		  SELECT
 		   		* 
 		  FROM
+		  <isNotEqual property="endFlag" compareValue="Y">
 		  		 tbl_aprattachinfo a 
+		  </isNotEqual>
+		  <isEqual property="endFlag" compareValue="Y">
+		  		 tbl_endattachinfo a 
+		  </isEqual>
 		  INNER JOIN
 		  		 tbl_opengovfileinfo b 
 		  ON
@@ -31348,4 +31354,89 @@
    			TBL_ENDAPRLINEINFO.APRMEMBERNAME = #v_APPROVUSER#
    		</isNotEmpty>
 	</select>
+	<select id="EzApprovalG.getOpenGovInfoForUpdate" parameterClass="Map" resultClass="ApprGOpenGovInfoVO">
+		SELECT
+			DOCTITLE, WRITERNAME, WRITERDEPTNAME, DOCNO, PUBLICITYCODE, LISTOPENFLAG, REASON, BASIS, OPENLIMITDATE
+		FROM
+			TBL_ENDAPRDOCINFO a
+		INNER JOIN
+			TBL_RECORD b
+		ON
+			a.DOCID = b.DOCID
+		AND
+			a.TENANT_ID = b.TENANT_ID
+		AND
+			a.COMPANYID = b.COMPANYID
+		INNER JOIN
+			TBL_OPENGOVDOCINFO c
+		ON
+			a.DOCID = c.DOCID
+		AND
+			a.TENANT_ID = c.TENANT_ID
+		AND
+			a.COMPANYID = c.COMPANYID
+		WHERE
+			a.DOCID = #docID#
+		AND
+			a.TENANT_ID = #tenantID#
+		AND
+			a.COMPANYID = #companyID#
+	</select>
+	<update id="EzApprovalG.updateOpenGovDocInfo_EXPENDAPRDOCINFO" parameterClass="Map">
+		UPDATE
+			TBL_EXPENDAPRDOCINFO
+		SET
+			PUBLICITYCODE = #publicityCode#
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+	<update id="EzApprovalG.updateOpenGovDocInfo_RECORD" parameterClass="Map">
+		UPDATE
+			TBL_RECORD
+		SET
+			PUBLICITYCODE = #publicityCode#
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+	<update id="EzApprovalG.updateOpenGovDocInfo_OPENGOVDOCINFO" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVDOCINFO
+		SET
+			OPENFLAG = #openFlag#,
+			BASIS = #basis#,
+			REASON = #reason#,
+			OPENLIMITDATE = #limitDate#,
+			UPDATEDATE = now()
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+	<update id="EzApprovalG.updateOpenGovDocInfo_OPENGOVFILEINFO" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVFILEINFO
+		SET
+		<isEqual property="openFlag" compareValue="1">
+			FILEOPENFLAG = 'Y'
+		</isEqual>
+		<isEqual property="openFlag" compareValue="3">
+			FILEOPENFLAG = 'N'
+		</isEqual>
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</update>
 </sqlMap>

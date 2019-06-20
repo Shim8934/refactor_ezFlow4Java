@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
@@ -3349,7 +3350,21 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGDocListForOpenGovVO>) list("EzApprovalG.getSearchDocListForOpenGov", map);
 	}
 
-	public int getSearchDocListCountForOpenGov(Map<String, Object> map) {
+	public int getSearchDocListCountForOpenGov(Map<String, Object> map) throws Exception {
 		return (int)select("EzApprovalG.getSearchDocListCountForOpenGov", map);
+	}
+
+	public ApprGOpenGovInfoVO getOpenGovInfoForUpdate(Map<String, Object> map) throws Exception {
+		return (ApprGOpenGovInfoVO) select("EzApprovalG.getOpenGovInfoForUpdate", map);
+	}
+
+	public void updateOpenGovDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpenGovDocInfo_EXPENDAPRDOCINFO", map);
+		update("EzApprovalG.updateOpenGovDocInfo_RECORD", map);
+		update("EzApprovalG.updateOpenGovDocInfo_OPENGOVDOCINFO", map);
+	}
+
+	public void updateOpenGovFileInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpenGovDocInfo_OPENGOVFILEINFO", map);
 	}
 }
