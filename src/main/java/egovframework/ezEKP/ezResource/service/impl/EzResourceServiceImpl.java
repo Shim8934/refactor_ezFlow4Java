@@ -2309,7 +2309,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         if(langStr.equals("1")) {
         	strData2 = xmlRes.getElementsByTagName("BRDNM").item(0).getTextContent();
         } else {
-        	strData2 = xmlRes.getElementsByTagName("BRDNM"+langStr).item(0).getTextContent();
+        	strData2 = commonUtil.cleanValue(xmlRes.getElementsByTagName("BRDNM"+langStr).item(0).getTextContent());
         }
         String strData3 = xmlRes.getElementsByTagName("BRDLEVEL").item(0).getTextContent();
         String strData4 = xmlRes.getElementsByTagName("BRDSTEP").item(0).getTextContent();
