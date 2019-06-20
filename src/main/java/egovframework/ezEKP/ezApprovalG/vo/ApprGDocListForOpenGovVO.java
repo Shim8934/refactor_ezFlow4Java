@@ -153,7 +153,7 @@ public class ApprGDocListForOpenGovVO {
 	private String openFlag;
 	private String listOpenFlag;
 	private String openLimitDate;
-	private String modifyDate;
+	private String updateDate;
 	private String createDate;
 	
 	public String getOpenFlag() {
@@ -174,11 +174,11 @@ public class ApprGDocListForOpenGovVO {
 	public void setOpenLimitDate(String openLimitDate) {
 		this.openLimitDate = openLimitDate;
 	}
-	public String getModifyDate() {
-		return modifyDate;
+	public String getUpdateDate() {
+		return updateDate;
 	}
-	public void setModifyDate(String modifyDate) {
-		this.modifyDate = modifyDate;
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
 	}
 	/** 현재문서 폼버전 */
 	private String formVersion;

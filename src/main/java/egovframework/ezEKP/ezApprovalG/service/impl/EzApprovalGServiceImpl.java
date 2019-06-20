@@ -29333,9 +29333,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 				
-				if (fieldName.equals("CREATEDATE")) {
-					fieldValue = fieldValue.substring(0, fieldValue.length() - 2);
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
+				if (fieldName.equals("CREATEDATE") || fieldName.equals("UPDATEDATE")) {
+					if (!fieldValue.equals("")) {
+						fieldValue = fieldValue.substring(0, fieldValue.length() - 2);
+						resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
+					} else {
+						resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
+					}
 				} else if (fieldName.equals("OPENLIMITDATE")) {
 					if (!fieldValue.equals("")) {
 						fieldValue = fieldValue.substring(0, fieldValue.length() - 11);
