@@ -1882,13 +1882,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String startTime = "-01 00:00:00";
+		String startTime = "01 00:00:00";
 		
 		map.put("userId", userId);
 		map.put("deptId", deptId);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
-		map.put("year", year);
-		map.put("startTime", startTime);
 		map.put("typeId", typeId);
 		map.put("tenantId", tenantId);
 		
@@ -1897,13 +1895,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			Calendar cal = Calendar.getInstance();
 			cal.set(Integer.parseInt(year), months - 1, 1);
 			
-			String endTime = "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
-			map.put("endTime", endTime);
-			map.put("months", months);
+			String endTime = cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
+			map.put("startDate", year + "-" + months + "-" + startTime);
+			map.put("endDate", year + "-" + months + "-" + endTime);
 			
 			AttitudeStatisVO vo = ezAttitudeDAO.getAttitudeUserStatistics(map);
 			if (vo != null) {
 				list.add(vo);
+				vo.setStatMonth(String.valueOf(months));
 			} else {
 				AttitudeStatisVO vo2 = new AttitudeStatisVO();
 				vo2.setCount("0");
@@ -1911,6 +1910,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				vo2.setStatMonth(String.valueOf(months));
 				list.add(vo2);
 			}
+			LOGGER.debug("getAttitudeUserStatistics startDate = " + year + "-" + months + "-" + startTime + ", endDate = " + year + "-" + months + "-" + endTime + ", count = " + (vo != null ? vo.getCount() : "0"));
 		}
 		
 		LOGGER.debug("getAttitudeUserStatistics ended.");
@@ -2906,7 +2906,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("updateAnnualHoliday started");
 		
 		String companyId = (String)map.get("companyId");
-		int tenantId = (int)map.get("tenantId");
+		int tenantId = Integer.parseInt(String.valueOf(map.get("tenantId")));
 		String joinDate = (String)map.get("joinDate");
 		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
 
@@ -2951,7 +2951,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("oneMonthAgo",MonthAgo2);
 			map.put("oneDayAgo", MonthAgo1);
 			
-			int workingDayCnt = checkHoliday(MonthAgo2, MonthAgo1, "1", (String)map.get("companyId"), (int)map.get("tenantId")).size();
+			int workingDayCnt = checkHoliday(MonthAgo2, MonthAgo1, "1", (String)map.get("companyId"), Integer.parseInt(String.valueOf(map.get("tenantId")))).size();
 			int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
 			
 			if (workingDayCnt <= attendanceDay) {
@@ -2978,7 +2978,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("oneDayAgo", today);
 		
 		int annualHolidayCnt = 0;
-		int workingDayCnt = checkHoliday(beforeOneYear, today, "1", (String)map.get("companyId"), (int)map.get("tenantId")).size();
+		int workingDayCnt = checkHoliday(beforeOneYear, today, "1", (String)map.get("companyId"), Integer.parseInt(String.valueOf(map.get("tenantId")))).size();
 		float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(map);
 		float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0);
 
@@ -3041,7 +3041,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			if(m.get("joinDate") != null && m.get("workingMonthCnt") != null) {
 				
-				int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+				int workingMonthCnt = Integer.parseInt(String.valueOf(m.get("workingMonthCnt")));
 				SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
 				String year = sdf2.format(new Date());
 				String date1 = (String)m.get("joinDate");
@@ -3083,7 +3083,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					cal.add(Calendar.YEAR, -1);
 					String beforeOneYearInitialDate = sdf.format(cal.getTime());
 					
-					int workingDayCnt = checkHoliday(beforeOneYearInitialDate, sdf.format(initialDate), "1", (String)m.get("companyId"), (int)m.get("tenantId")).size();
+					int workingDayCnt = checkHoliday(beforeOneYearInitialDate, sdf.format(initialDate), "1", (String)m.get("companyId"), Integer.parseInt(String.valueOf(m.get("tenantId")))).size();
 					float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(m);
 					float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0);
 					
@@ -3119,7 +3119,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("updateMonthlyHoliday started");
 		
 		String companyId = (String)map.get("companyId");
-		int tenantId = (int)map.get("tenantId");
+		int tenantId = Integer.parseInt(String.valueOf(map.get("tenantId")));
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String today = sdf.format(new Date());

@@ -6,35 +6,29 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	    
 		<style type="text/css">
-		  	.warningbox01 { width:500px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
-			.warningbox02 { width:430px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}
-			.warnintxt01 { position:relative; margin-bottom:10px;margin-top:20px}
-			.warningimg { position:absolute; top:0px; left:0px;}
-			.warningdl { padding:10px 10px 5px 115px; margin:0px; display:inline-block;}
-			.warningdl dt { height:40px; padding-left:5px; margin-left:10px; text-align:left;}
-			.warningdl dd { padding:0px 10px 0px 20px; margin:0px 0px 10px 0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left; word-break:break-all;}
-			.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}
+			.warningbox{margin:240px auto 0px auto; padding:40px 20px 0px 20px; font-family:Malgun Gothic; width:685px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
+			.warningbox .warningimg{margin:0px; padding:5px 0px 0px 40px; float:left;}
+			.warningbox .warningDL{margin:0px; padding:0px 0px 0px 30px; overflow:hidden;}
+			.warningbox .warningDL dt{margin:0px; padding:0px 0px 5px 0px; font-size:26px; font-weight:bold; color:#3d8fea; letter-spacing:-1px;}
+			.warningbox .warningDL dd{margin:0px; padding:0px; font-size:20px; color:#333; letter-spacing:-1px;}
+			.warningbox .warningDL dd span{ font-size:20px; font-weight:bold;}
 		</style>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code="ezBoard.t58" /></h1>
-		<div style="text-align:center">
+		<h1>
+			<spring:message code="ezBoard.t58" />
+		</h1>
+<!-- 		<div style="text-align: center"> -->
 			<div id="EmptyMsg">
-	    			<div class="warningbox01" style="margin-top:100px;">
-	        			<div class="warningbox02">
-	  	        			<div class="warnintxt01" style="text-align:left; display:inline-block;">
-		        				<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin:16px 0px 18px 20px;"></span>
-		        				<dl class="warningdl">
-		        				<dt><img src="/images/notify/admin.png" width="223" height="36"></dt>
-		        					<dd>
-		        					 	<spring:message code="ezBoard.t70" /><br />
-						                <spring:message code="ezBoard.t999024" />
-		        					</dd>
-		        				</dl>
-		        			</div>
-		    			</div>
-	    			</div>
+				<div class="warningbox">
+					<p class="warningimg"><img src="/images/notify/warning_resorce.png" width="105" height="89"></p>
+					<dl class="warningDL">
+						<dt>Administrator</dt>
+						<dd><spring:message code="ezBoard.t70" /><br />
+							<spring:message code="ezBoard.t999024" /></dd>
+					</dl>
 				</div>
 			</div>
+<!-- 		</div> -->
 	</body>
 </html>

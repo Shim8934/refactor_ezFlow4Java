@@ -186,6 +186,6 @@
 				</c:if>
 			</div>
 		</div>
-		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" class="progressPanel" id="progressPanel">&nbsp;</div>
 	</body>
 </html>

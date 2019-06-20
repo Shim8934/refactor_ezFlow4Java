@@ -165,8 +165,8 @@ var SurveyItem = function() {
 		
 		//Initial page navigation
 		var naviMessages = {
-			next     : SurveyMessages.strNext,
-			previous : SurveyMessages.strPrev,
+//			next     : SurveyMessages.strNext,
+//			previous : SurveyMessages.strPrev,
 			item     : SurveyMessages.strItem,
 			total    : SurveyMessages.strTotal
 		};
