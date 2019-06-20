@@ -784,6 +784,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 		}
 		
+		//Check requirements
+		List<Long> checkReceivedSurvey = getUserReceivedSurveyList(userInfo, surveyId);
+		
+		if (checkReceivedSurvey == null || checkReceivedSurvey.size() == 0) {
+			result.put("participation", "no");
+		} else {
+			result.put("participation", "yes");
+		}
+
 		result.put("status", "ok");
 		result.put("code", 0);
 		//long endTime   = System.nanoTime();
