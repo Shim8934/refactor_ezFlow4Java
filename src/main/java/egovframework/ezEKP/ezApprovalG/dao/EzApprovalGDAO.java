@@ -3252,4 +3252,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGProxyVO> getProxyInfo_A(Map<String, Object> map) throws Exception {
 		return (List<ApprGProxyVO>) list("EzApprovalG.getProxyInfo_A", map);
 	}
+	
+	public int checkDocIdIsDuplicated(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.checkDocIdIsDuplicated", map);
+	}
 }

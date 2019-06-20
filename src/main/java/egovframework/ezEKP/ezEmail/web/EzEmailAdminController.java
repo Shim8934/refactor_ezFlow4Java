@@ -2234,6 +2234,10 @@ public class EzEmailAdminController {
 				// e.printStackTrace();
 			}
 		} 
+		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR",userInfo.getTenantId()));
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("signNo", signNo);
@@ -2242,6 +2246,8 @@ public class EzEmailAdminController {
 		model.addAttribute("displayname2", displayname2);
 		model.addAttribute("type", type);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("signNo=" + signNo + ", content=" + content + ", displayname=" + displayname + ", displayname2=" + displayname2);
 		logger.debug("signEditPopUp ended.");
