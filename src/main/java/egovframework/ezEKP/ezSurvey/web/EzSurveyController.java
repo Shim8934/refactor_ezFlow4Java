@@ -249,10 +249,12 @@ public class EzSurveyController extends EgovFileMngUtil {
 		JSONObject surveyInf = surveyRestService.getSurveyInformation(request, user.getId(), itemId, "normal");
 		
 		if (((Long)surveyInf.get("code")).intValue() == 0) {
-			JSONObject survey  = (JSONObject)surveyInf.get("survey");
-			JSONObject creator = (JSONObject)surveyInf.get("creator");
+			JSONObject survey        = (JSONObject)surveyInf.get("survey");
+			JSONObject creator       = (JSONObject)surveyInf.get("creator");
+			String     participation = (String)surveyInf.get("participation");
 			model.addAttribute("survey" , survey);
 			model.addAttribute("creator", creator);
+			model.addAttribute("participation", participation);
 		}
 		else {
 			int reasonCode = ((Long)surveyInf.get("code")).intValue();
