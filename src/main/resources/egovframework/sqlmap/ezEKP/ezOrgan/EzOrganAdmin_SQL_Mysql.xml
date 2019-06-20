@@ -4210,7 +4210,7 @@
 				USERTYPE, CN
 		<isNotEmpty property="v_PAGESIZE">
 			LIMIT
-				#v_PAGENUM#, #v_PAGESIZE#
+				$v_PAGENUM$, $v_PAGESIZE$
 		</isNotEmpty>
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleListCnt" parameterClass="Map" resultClass="int" remapResults="true">

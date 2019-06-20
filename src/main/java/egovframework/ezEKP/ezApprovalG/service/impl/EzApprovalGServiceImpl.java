@@ -19463,17 +19463,36 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getNewID started");
 		
 		String rtnVal = "";
+		int whileCnt = 0;
+		boolean whileFlag = true;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		ezApprovalGDAO.aprGetNewID(map);
-		
-		rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
-		rtnVal = String.format("%020d", Integer.parseInt(rtnVal.trim()));
+		while (whileFlag) {
+			whileCnt++;
+			
+			ezApprovalGDAO.aprGetNewID(map);
+			
+			rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
+			rtnVal = String.format("%020d", Integer.parseInt(rtnVal.trim()));
+			
+			map.put("v_DOCID", rtnVal);
+			
+			if (ezApprovalGDAO.checkDocIdIsDuplicated(map) > 0) {
+				logger.debug("getNewID DocID duplicated Alert!! DocID : " + rtnVal + " whileCnt : " + whileCnt);
+				Thread.sleep(100);
+			} else {
+				whileFlag = false;
+			}
+			
+			if (whileCnt > 100) {
+				whileFlag = false;
+			}
+		}
 
-		logger.debug("getNewID newDocID : " + rtnVal);
+		logger.debug("getNewID newDocID : " + rtnVal + " whileCnt : " + whileCnt);
 		logger.debug("getNewID ended");
 
 		return rtnVal;

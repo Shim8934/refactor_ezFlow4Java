@@ -5597,7 +5597,7 @@
 	SELECT * FROM (
 		SELECT * FROM (
 			SELECT 
-				ROWNUM,
+				ROWNUM AS RNUM,
 				A.CN,
 				A.DISPLAYNAME,
 				A.DISPLAYNAME2,
@@ -5706,10 +5706,10 @@
 			<![CDATA[
 				) B
 				WHERE
-					ROWNUM <= (#v_PAGENUM# + #v_PAGESIZE#)
+					RNUM <= ($v_PAGENUM$ + $v_PAGESIZE$)
 					) X
 				 	WHERE
-				 		ROWNUM > (#v_PAGENUM#)
+				 		RNUM > ($v_PAGENUM$)
 			]]>
 				ORDER BY
 					USERTYPE, CN
@@ -5808,8 +5808,9 @@
 		</isEqual>
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleUserListCnt2" parameterClass="Map" resultClass="int" remapResults="true">
-	SELECT COUNT(*) FROM (
-		SELECT * FROM (
+		SELECT 
+			COUNT(*) 
+		FROM (
 			SELECT 
 				ROWNUM,
 				A.CN,
@@ -5917,14 +5918,7 @@
 				<isNotEmpty property="v_SUBQUERY">
 					$v_SUBQUERY$
 				</isNotEmpty>
-			<![CDATA[
 				) B
-				WHERE
-					ROWNUM <= (#v_PAGENUM# + #v_PAGESIZE#)
-					) X
-				 	WHERE
-				 		ROWNUM > (#v_PAGENUM#)
-			]]>
 	</select>
 	
 	<select id="EzOrganAdminDAO.selectTitleCnt" parameterClass="Map" resultClass="int" remapResults="true">
