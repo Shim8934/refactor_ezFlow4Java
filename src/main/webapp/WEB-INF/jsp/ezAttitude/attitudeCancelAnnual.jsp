@@ -196,6 +196,8 @@
 	            			try {
 								window.opener.getUserAnnualList();
 								window.opener.parent.frames["left"].getAttitudeList();
+								//신청갯수
+						    	window.opener.parent.frames["left"].leftAnnualCount();
 	            			} catch (e) { }
 							window.close();
 	            		} else {
