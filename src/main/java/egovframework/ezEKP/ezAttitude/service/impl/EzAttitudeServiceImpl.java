@@ -1882,13 +1882,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String startTime = "-01 00:00:00";
+		String startTime = "01 00:00:00";
 		
 		map.put("userId", userId);
 		map.put("deptId", deptId);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
-		map.put("year", year);
-		map.put("startTime", startTime);
 		map.put("typeId", typeId);
 		map.put("tenantId", tenantId);
 		
@@ -1897,13 +1895,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			Calendar cal = Calendar.getInstance();
 			cal.set(Integer.parseInt(year), months - 1, 1);
 			
-			String endTime = "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
-			map.put("endTime", endTime);
-			map.put("months", months);
+			String endTime = cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
+			map.put("startDate", year + "-" + months + "-" + startTime);
+			map.put("endDate", year + "-" + months + "-" + endTime);
 			
 			AttitudeStatisVO vo = ezAttitudeDAO.getAttitudeUserStatistics(map);
 			if (vo != null) {
 				list.add(vo);
+				vo.setStatMonth(String.valueOf(months));
 			} else {
 				AttitudeStatisVO vo2 = new AttitudeStatisVO();
 				vo2.setCount("0");
@@ -1911,6 +1910,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				vo2.setStatMonth(String.valueOf(months));
 				list.add(vo2);
 			}
+			LOGGER.debug("getAttitudeUserStatistics startDate = " + year + "-" + months + "-" + startTime + ", endDate = " + year + "-" + months + "-" + endTime + ", count = " + (vo != null ? vo.getCount() : "0"));
 		}
 		
 		LOGGER.debug("getAttitudeUserStatistics ended.");
