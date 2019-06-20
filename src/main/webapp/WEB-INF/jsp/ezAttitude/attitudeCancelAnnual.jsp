@@ -126,7 +126,7 @@
  			                	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 							}
 							result.list.forEach(function(vo, i) {
-								if(i > 0) {
+								if(userId != vo.aprMemberId) {
 									if (i == 1) {
 						            	document.getElementById("receiverlist").innerHTML = vo.aprMemberName;
 						            	document.getElementById("receiverID").innerHTML = vo.aprMemberId;

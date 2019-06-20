@@ -1205,33 +1205,32 @@
 		]]>
 	</insert>
 	
-	<select id="ezAttitudeAdminDAO.getAttitudeUserStatistics" parameterClass="Map" resultMap="userStatistics">
-<!-- 		<iterate conjunction=";"> -->
+	<select id="ezAttitudeAdminDAO.getAttitudeUserStatistics" parameterClass="Map" resultClass="AttitudeStatisVO">
 		<![CDATA[
 			SELECT ifnull(SUM(to_days(
 								IF(
-									date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T'), 
-			                        date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T'), 
+									date_add(A.END_DATE, INTERVAL +#offsetMin# minute) > date_format(#endDate#, '%Y-%m-%d %T'), 
+			                        date_format(#endDate#, '%Y-%m-%d %T'), 
 			                        date_add(IFNULL(A.END_DATE, A.START_DATE), INTERVAL +#offsetMin# minute)
 								   )
 							   ) 
 					   -
 					   to_days(
 								IF(
-									date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T'), 
-			                        date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T'), 
+									date_add(A.START_DATE, INTERVAL +#offsetMin# minute) < date_format(#startDate#, '%Y-%m-%d %T'), 
+			                        date_format(#startDate#, '%Y-%m-%d %T'), 
 			                        date_add(A.START_DATE, INTERVAL +#offsetMin# minute)
 								   )
 							   )
-						) + COUNT(A.TYPE_ID), 0) AS COUNT,
-			       A.TYPE_ID,
-			       #months# AS STAT_MONTH
+						) + COUNT(A.TYPE_ID), 0) AS COUNT
 			FROM   
 				TBL_ATTITUDE A
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND
 				A.TYPE_ID = #typeId#
+			AND
+				A.MODAPPL <> '5'
 			AND
 				A.WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
@@ -1246,16 +1245,13 @@
 		<![CDATA[
 			AND    
 				(
-					(A.START_DATE >= date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.START_DATE <= date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T')) 
+					(A.START_DATE >= date_format(#startDate#, '%Y-%m-%d %T') and A.START_DATE <= date_format(#endDate#, '%Y-%m-%d %T')) 
 					or
-					(A.END_DATE >= date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.END_DATE < date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T')) 
+					(A.END_DATE >= date_format(#startDate#, '%Y-%m-%d %T') and A.END_DATE < date_format(#endDate#, '%Y-%m-%d %T')) 
 					or
-					(A.START_DATE < date_format(CONCAT(#year#, '-', #months#, #startTime#), '%Y-%m-%d %T') and A.END_DATE >= date_format(CONCAT(#year#, '-', #months#, #endTime#), '%Y-%m-%d %T'))
+					(A.START_DATE < date_format(#startDate#, '%Y-%m-%d %T') and A.END_DATE >= date_format(#endDate#, '%Y-%m-%d %T'))
 				)
-			GROUP BY
-				A.TYPE_ID
 		]]>
-<!-- 		</iterate> -->
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyDeptList" parameterClass="Map" resultClass="AttitudeAuthorVO">
@@ -1479,7 +1475,7 @@
 		<isEmpty property="orderCell">
 			<![CDATA[
 				ORDER BY
-					userName
+					userName$primary$
 			]]>
 		</isEmpty>	
 		<isNotEmpty property="limit">

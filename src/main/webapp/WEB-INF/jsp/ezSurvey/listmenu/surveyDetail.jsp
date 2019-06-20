@@ -23,7 +23,7 @@
 	<div class="header-wrapper">
 		<div class="surveydetail-header">
 			<ul class="on">	
-				<c:if test="${survey.draftFlag ne 1}">
+				<c:if test="${(survey.draftFlag ne 1) && (participation eq 'yes')}">
 					<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
 				</c:if>
 				<c:if test="${empty mode and user == creator.id}">
@@ -106,6 +106,7 @@
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')}    "></script>
 <script type="text/javascript">
 	$(function() {
+		var participation = "<c:out value='${participation}' />"; 
 		var survey       = ${survey};
 		var surveyId     = survey.surveyId;
 		var logicmap     = null;
