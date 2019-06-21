@@ -156,6 +156,9 @@
 				for (var i = 0; i < questions.length; i++) {
 					showQuestionStatistic(questions[i]);
 				}
+				
+				var cancelBttn = document.getElementById("cancelBttn");
+				if (cancelBttn) {cancelBttn.onclick = function(e) {window.close();};}
 			}
 			
 			function setBodyHeight() {
