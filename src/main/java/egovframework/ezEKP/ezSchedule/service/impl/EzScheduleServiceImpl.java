@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
@@ -35,6 +36,8 @@ import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -51,6 +54,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzScheduleService")
@@ -70,6 +74,12 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -1917,6 +1927,61 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(defaultPath + orgFilePath)), new File(commonUtil.detectPathTraversal(defaultPath + destFilePath)));
 		}
 		logger.debug("copyAttach ended");
+	}
+	
+	@Override
+	public void scheduleSendMail(int scheduleId, String v_attendantId, String v_attendantName, String v_attendantName2, String v_attendantDeptName, String v_attendantDeptName2, String title, String startdate, String enddate, String type, LoginVO userInfo, String loginCookie) throws Exception {
+		String subject = "";
+		StringBuilder bodyContent = new StringBuilder("");
+		
+		switch(type) {
+			case "add" :	// 참석자 추가
+				subject = egovMessageSource.getMessage("ezSchedule.kmss01", userInfo.getLocale());
+				
+				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss02", userInfo.getLocale()) + " ");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=, '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + startdate + " ~ " + enddate + " ");
+				break;
+			case "del" :		// 참석자 삭제
+				subject = egovMessageSource.getMessage("ezSchedule.kmss03", userInfo.getLocale());
+				
+				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss04", userInfo.getLocale()) + " ");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + commonUtil.cleanValue(title) + "</br>");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + startdate + " ~ " + enddate + " ");
+				break;
+			case "acc" :		// 참석 수락
+				subject = egovMessageSource.getMessage("ezSchedule.kmss05", userInfo.getLocale());
+				
+				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss06", userInfo.getLocale()) + " ");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + commonUtil.cleanValue(title) + "</br>");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + startdate + " ~ " + enddate + " ");
+				break;
+			case "rej" :		// 참석 거절
+				subject = egovMessageSource.getMessage("ezSchedule.kmss07", userInfo.getLocale());
+				
+				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss08", userInfo.getLocale()) + " ");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + commonUtil.cleanValue(title) + "</br>");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + startdate + " ~ " + enddate + " ");
+				break;
+				
+			//일본어 제외한 한국어 영어는 메일 제목에 일정 제목 넣기
+		}
+
+    	String content_ = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+
+		OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(v_attendantId.trim(), userInfo.getPrimary(), userInfo.getTenantId());
+			
+		InternetAddress from = new InternetAddress();
+		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+		from.setAddress(userInfo.getEmail());
+		
+		InternetAddress to = new InternetAddress();
+		
+		to.setPersonal(v_attendantName.trim(), "UTF-8");
+		to.setAddress(AccessUserInfo.getMail());
+		
+		ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content_, false);
+		
 	}
 }
 
