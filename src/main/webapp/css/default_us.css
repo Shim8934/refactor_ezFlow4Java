@@ -3023,7 +3023,7 @@ h2, #menu span {font-size: 12px;}
 .txt-viewmore {padding: 4px 3px; margin-left: 8px; border: 1px solid #ddd; cursor: pointer;}
 .txt-viewmore:hover {color: rgb(4, 112, 227);; border-color: rgb(4, 112, 227);}
 .div-txtanswer {max-height: 405px; overflow-y: auto; overflow-x: hidden;}
-.popup-title >span {color: red;}
+.popup-title >span {color:#e04343; display:inline-block; padding:0px 3px;}
 .other-wrap {padding: 15px 20px;}
 .other-header {padding: 10px 0px;}
 .other-header >span:first-child {color: red;}

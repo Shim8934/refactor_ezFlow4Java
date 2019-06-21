@@ -3209,6 +3209,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("attitudeId", attitudeId);
 		map.put("attModId", attitudeId);
 		modAppl = ezAttitudeDAO.getAttModApp(map);
+		map.put("modappl",modAppl);
+		
 		if (modAppl == 1) {
 			map.put("modappl", "0");
 		} else if (modAppl == 2) {

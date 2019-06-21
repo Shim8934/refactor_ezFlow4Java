@@ -97,6 +97,9 @@
 			    text-overflow: ellipsis;
 			    white-space: nowrap;
 			}
+			.mainlist tr:hover{
+				background: rgb(244,245,245);
+			}
 		</style>	
 	    <script type="text/javascript">
 	    	var date = new Date()
@@ -149,7 +152,8 @@
 	    		makeoptionyear();
    			});
 	    	
-    		$(document).on('click', '.mainlist .attitudeView', function(){
+    		$(document).on('click', '.mainlist > tr', function(){
+    			console.log(this)
     			var attitudeId = $(this).closest("tr").attr("id");
     			var typeId = $(this).closest("tr").attr("typeId");
     			attitudeItemView(attitudeId , typeId);
@@ -381,7 +385,7 @@
 		    			}
 		    			var useAnnualCnt = (Number(vo.annualCnt) - holidayCnt);
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
-		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "'>";
+		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "' style='cursor:pointer;'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
 			    		html += "<td style='width:25%'>";
 			    		html += "<a class='link attitudeView'>";
