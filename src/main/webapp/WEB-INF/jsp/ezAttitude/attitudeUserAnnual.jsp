@@ -115,7 +115,7 @@
 	    	var joinDate = "<c:out value="${joinDate}" />";
 	    	var userDeptId;
 	    	var userDeptName;
-	    	var yearLength = 10;
+	    	var yearLength = Number(year) - Number(joinDate.split("-")[0]) + 1;
 	    	var orderCell = ""; //정렬 명
 	    	var orderOption = ""; //정렬 형식(ASC, DESC)
    			var src = "";
@@ -186,12 +186,17 @@
 	            var startDate = "";
 	            var endDate = "";
 	    		
+				if ($("#searchYear").val() == null && $("#searchYear").val() == "") {
+					selyear = joinDate.split("-")[0];
+	    		}
+
 	    		if ($("#searchYear").val() != null && $("#searchYear").val() != "") {
 	    			selyear = Number($("#searchYear").val());
-	    			tempyear = (selyear + 4 > year) ? year : selyear + 4;
+					// selyear = joinDate.split("-")[0];
+	    			tempyear = year;
 	    		}
-                
-	    		if (tempyear <= year || selyear == year) {
+		        
+                if (tempyear <= year || selyear == year) {
 		    		//초기화
 		    		$("#searchYear").html("");
 		    		
@@ -222,7 +227,6 @@
 	                	
 	                	tempyear--;
 	                }
-	                
 	                $("#searchYear").html(optionHtml);
 	                $("#searchYear").val(selyear);
 	    		}
