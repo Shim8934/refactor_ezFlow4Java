@@ -2090,4 +2090,55 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailGetPop3 ended.");
 	}
 	
+	
+	/**
+	 * 수신자 자동완성 및 이름 확인의 주소 순서 설정 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailAddressSearchOrder.do")
+	public String mailAddressSearchOrder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailAddressSearchOrder started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String mailAddressSearchOrder =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
+		logger.debug("mailAddressSearchOrder = " + mailAddressSearchOrder);
+		if (mailAddressSearchOrder.equals("")) {
+			mailAddressSearchOrder = "organ;address;dl;shared";
+			ezCommonService.insertUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder", "organ;address;dl;shared");
+		}
+		
+		model.addAttribute("mailAddressSearchOrder", mailAddressSearchOrder);
+		
+		logger.debug("mailAddressSearchOrder ended.");
+		
+		return "ezEmail/mailAddressSearchOrder";
+	}
+	
+	
+	/**
+	 * 수신자 자동완성 및 이름 확인의 주소 순서 수정
+	 */
+	@RequestMapping(value = "/ezEmail/setMailAddressSearchOrder.do", produces = "text/xml; charset=utf-8")
+	public String setMailAddressSearchOrder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model,
+			HttpServletRequest request) throws Exception {
+		logger.debug("setMailAddressSearchOrder started.");
+
+		String mailAddressSearchOrder = request.getParameter("mailAddressSearchOrder");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("mailAddressSearchOrder = " + mailAddressSearchOrder);
+		try {
+			if (mailAddressSearchOrder.equals("")) {
+				model.addAttribute("data", "FAIL");
+			} else {
+				ezCommonService.updateUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder", mailAddressSearchOrder);
+				model.addAttribute("data", "OK");
+			}
+		} catch (Exception e) {
+			model.addAttribute("data", "FAIL");
+		}
+
+		logger.debug("setMailAddressSearchOrder ended.");
+		return "json";
+	}
+	
 }

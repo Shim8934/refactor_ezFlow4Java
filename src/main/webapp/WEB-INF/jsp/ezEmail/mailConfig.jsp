@@ -86,7 +86,7 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOffice.do";
 	                    break;
 	                case "MailEnv_div9":
-	                    document.getElementById("MailEnv_ifrm").src = "mail_ReceiveDeny.aspx";
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAddressSearchOrder.do";
 	                    break;
 	            }
 	        }
@@ -152,6 +152,7 @@
 		                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
 		                    <p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
 		                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
+		                    <p id = "MailEnv_sub9"><span divname="MailEnv_div9" id="1tab9"><spring:message code='ezEmail.t99000084' /></span></p>
 					    </c:when>
 					    <c:when test="${flag eq 'email' && shareId != null}">
 					    	<p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab1"><spring:message code='ezEmail.t146' /></span></p>
@@ -161,7 +162,7 @@
 					    <c:otherwise>
 							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
-				    </c:choose>
+				    </c:choose>	
 	            </div>
 	        </div>
 	        <iframe id = "MailEnv_ifrm" style ="width:100%;height:100%;" frameborder="0" ></iframe>

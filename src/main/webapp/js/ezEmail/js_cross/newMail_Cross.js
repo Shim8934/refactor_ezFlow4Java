@@ -1393,84 +1393,181 @@ function GetMailAddresses(name) {
     xmlHTTP.send(xmlDOM);
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);
-    var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
-    adCount = rows.length;
-    for (count = 0; count < rows.length; count++) {
-        if (getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[1]) == "group") {
-            m_addrBook["type"][count] = "email";
-            m_addrBook["name"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
-            m_addrBook["email"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
-            m_addrBook["href"][count] = "";
-            m_addrBook["company"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[7]);
-            m_addrBook["dept"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
-            m_addrBook["title"][count] = strLang110;
+    
+    var mailAddressSearchOrder = SelectNodes(xmlDOM, "RESULT/MAILADDRESSSEARCHORDER/ROW")[0].innerHTML;
+    if (mailAddressSearchOrder != "") {
+    	var mailAddressSearchOrderSplit = mailAddressSearchOrder.split(";");
+    	
+    	for (var i = 0; i < mailAddressSearchOrderSplit.length; i++) {
+    		if (mailAddressSearchOrderSplit[i] =="organ") {
+    			var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
+    			adCount = m_addrBook.name.length;
+    	        for (count = 0; count < rows.length; count++) {
+    	            if (getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[1]) == "group") {
+    	                m_addrBook["type"][count + adCount] = "email";
+    	                m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
+    	                m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
+    	                m_addrBook["href"][count + adCount] = "";
+    	                m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[7]);
+    	                m_addrBook["dept"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
+    	                m_addrBook["title"][count + adCount] = strLang110;
+    	            }
+    	            else {
+    	                m_addrBook["type"][count + adCount] = "email";
+    	                m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
+    	                m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
+    	                m_addrBook["href"][count + adCount] = "";
+    	                m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[3]);
+    	                m_addrBook["dept"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
+    	                m_addrBook["title"][count + adCount] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[5]);
+    	            }
+    	        }
+    	        
+			} else if (mailAddressSearchOrderSplit[i] == "dl") {
+				rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
+				adCount = m_addrBook.name.length;
+		        for (var count = 0 ; count < rows.length ; count++) {
+		            m_addrBook["type"][count + adCount] = "email";
+		            m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+		            m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
+		            m_addrBook["href"][count + adCount] = "";
+		            m_addrBook["company"][count + adCount] = strLang114;
+		            m_addrBook["dept"][count + adCount] = "";
+		            m_addrBook["title"][count + adCount] = "";
+		        }
+		        
+			} else if (mailAddressSearchOrderSplit[i] == "address") {
+				var contactList = SelectNodes(xmlDOM, "RESULT/ADDRESS/ROW");
+		        var row;
+		        var idx = 0;
+		        adCount = m_addrBook.name.length;
+		        for (count = 0; count < contactList.length; count++) {
+		        	if (SelectSingleNodeValue(contactList[count], "SEMAIL") != "") {
+		        		if (SelectSingleNodeValue(contactList[count], "STYPE") == "P") {
+			                m_addrBook["type"][idx + adCount] = "email";
+			                try {
+			                    m_addrBook["name"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
+			                }
+			                catch (ex) {
+			                    m_addrBook["name"][idx + adCount] = "";
+			                }
+			                try {
+			                    m_addrBook["email"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
+			                }
+			                catch (ex) {
+			                    m_addrBook["email"][idx + adCount] = "";
+			                }
+			                m_addrBook["href"][idx + adCount] = "";
+			            }
+			            else {
+			                m_addrBook["type"][idx + adCount] = "mailgroup";
+			                m_addrBook["name"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
+			                m_addrBook["email"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
+			                m_addrBook["href"][idx + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FOLDERTYPE");
+			            }
+			            m_addrBook["company"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SCOMPANY");
+			            m_addrBook["dept"][idx + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
+			            m_addrBook["title"][idx + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
+			            idx++;
+		        	}
+		        }
+		        adCount = m_addrBook.name.length;
+			} else if (mailAddressSearchOrderSplit[i] == "shared") {
+		        rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
+		        adCount = m_addrBook.name.length;
+		        for (var count = 0 ; count < rows.length ; count++) {
+		            m_addrBook["type"][count + adCount] = "email";
+		            m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+		            m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
+		            m_addrBook["href"][count + adCount] = "";
+		            m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA4")[0]);
+		            m_addrBook["dept"][count + adCount] = strLangSharedMailbox01;
+		            m_addrBook["title"][count + adCount] = "";
+		        }
+			}
+    	}
+    } else {
+    	var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
+        adCount = rows.length;
+        for (count = 0; count < rows.length; count++) {
+            if (getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[1]) == "group") {
+                m_addrBook["type"][count] = "email";
+                m_addrBook["name"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
+                m_addrBook["email"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
+                m_addrBook["href"][count] = "";
+                m_addrBook["company"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[7]);
+                m_addrBook["dept"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
+                m_addrBook["title"][count] = strLang110;
+            }
+            else {
+                m_addrBook["type"][count] = "email";
+                m_addrBook["name"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
+                m_addrBook["email"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
+                m_addrBook["href"][count] = "";
+                m_addrBook["company"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[3]);
+                m_addrBook["dept"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
+                m_addrBook["title"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[5]);
+            }
         }
-        else {
-            m_addrBook["type"][count] = "email";
-            m_addrBook["name"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[0]);
-            m_addrBook["email"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[6]);
-            m_addrBook["href"][count] = "";
-            m_addrBook["company"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[3]);
-            m_addrBook["dept"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[4]);
-            m_addrBook["title"][count] = getNodeText(GetChildNodes(GetChildNodes(rows[count])[0])[5]);
-        }
-    }
 
-    var contactList = SelectNodes(xmlDOM, "RESULT/ADDRESS/ROW");
-    var row;
-    for (count = 0; count < contactList.length; count++) {
-        if (SelectSingleNodeValue(contactList[count], "STYPE") == "P") {
-            m_addrBook["type"][count + adCount] = "email";
-            try {
+        var contactList = SelectNodes(xmlDOM, "RESULT/ADDRESS/ROW");
+        var row;
+        for (count = 0; count < contactList.length; count++) {
+            if (SelectSingleNodeValue(contactList[count], "STYPE") == "P") {
+                m_addrBook["type"][count + adCount] = "email";
+                try {
+                    m_addrBook["name"][count + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
+                }
+                catch (ex) {
+                    m_addrBook["name"][count + adCount] = "";
+                }
+                try {
+                    m_addrBook["email"][count + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
+                }
+                catch (ex) {
+                    m_addrBook["email"][count + adCount] = "";
+                }
+                m_addrBook["href"][count + adCount] = "";
+            }
+            else {
+                m_addrBook["type"][count + adCount] = "mailgroup";
                 m_addrBook["name"][count + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
-            }
-            catch (ex) {
-                m_addrBook["name"][count + adCount] = "";
-            }
-            try {
                 m_addrBook["email"][count + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
+                m_addrBook["href"][count + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FOLDERTYPE");
             }
-            catch (ex) {
-                m_addrBook["email"][count + adCount] = "";
-            }
+            m_addrBook["company"][count + adCount] = SelectSingleNodeValue(contactList[count], "SCOMPANY");
+            m_addrBook["dept"][count + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
+            m_addrBook["title"][count + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
+        }
+        
+        rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
+        adCount += contactList.length;
+        
+        for (count = 0 ; count < rows.length ; count++) {
+            m_addrBook["type"][count + adCount] = "email";
+            m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+            m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
             m_addrBook["href"][count + adCount] = "";
+            m_addrBook["company"][count + adCount] = strLang114;
+            m_addrBook["dept"][count + adCount] = "";
+            m_addrBook["title"][count + adCount] = "";
         }
-        else {
-            m_addrBook["type"][count + adCount] = "mailgroup";
-            m_addrBook["name"][count + adCount] = SelectSingleNodeValue(contactList[count], "SNAME");
-            m_addrBook["email"][count + adCount] = SelectSingleNodeValue(contactList[count], "SEMAIL");
-            m_addrBook["href"][count + adCount] = SelectSingleNodeValue(contactList[count], "ADDRESSID") + "|!|" + SelectSingleNodeValue(contactList[count], "FOLDERTYPE");
+        
+        adCount += rows.length;
+        rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
+        
+        for (count = 0 ; count < rows.length ; count++) {
+            m_addrBook["type"][count + adCount] = "email";
+            m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+            m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
+            m_addrBook["href"][count + adCount] = "";
+            m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA4")[0]);
+            m_addrBook["dept"][count + adCount] = strLangSharedMailbox01;
+            m_addrBook["title"][count + adCount] = "";
         }
-        m_addrBook["company"][count + adCount] = SelectSingleNodeValue(contactList[count], "SCOMPANY");
-        m_addrBook["dept"][count + adCount] = SelectSingleNodeValue(contactList[count], "SDEPT");
-        m_addrBook["title"][count + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
     }
     
-    rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
-    adCount += contactList.length;
     
-    for (var count = 0 ; count < rows.length ; count++) {
-        m_addrBook["type"][count + adCount] = "email";
-        m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
-        m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
-        m_addrBook["href"][count + adCount] = "";
-        m_addrBook["company"][count + adCount] = strLang114;
-        m_addrBook["dept"][count + adCount] = "";
-        m_addrBook["title"][count + adCount] = "";
-    }
-    
-    adCount += rows.length;
-    rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
-    
-    for (var count = 0 ; count < rows.length ; count++) {
-        m_addrBook["type"][count + adCount] = "email";
-        m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
-        m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
-        m_addrBook["href"][count + adCount] = "";
-        m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA4")[0]);
-        m_addrBook["dept"][count + adCount] = strLangSharedMailbox01;
-        m_addrBook["title"][count + adCount] = "";
-    }
     
     xmlDOM = null;
     xmlHTTP = null;
