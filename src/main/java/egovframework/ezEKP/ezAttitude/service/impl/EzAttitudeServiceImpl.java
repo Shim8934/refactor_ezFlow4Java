@@ -2862,13 +2862,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		 * */
 		
 		int modAppl = ezAttitudeDAO.getAttModApp(map);
-		
-		map.put("modappl", "1");
-		
-		//신청된 항목이 존재 할 때
-		if (modAppl == 1 || modAppl == 2) {
-			return "fail";
+		if (modAppl == 0) {
+			modAppl = 1;
+		} else if (modAppl == 4){
+			modAppl = 2;
 		}
+		
+		map.put("modappl", modAppl);
 		
 		/*근태수정신청 저장*/
 		ezAttitudeDAO.saveCancelAnnual(map);
@@ -3199,11 +3199,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("attModId", attitudeId);
 		modAppl = ezAttitudeDAO.getAttModApp(map);
 		map.put("modappl",modAppl);
-		
+		//ezAttitudeDAO.getAnnCanHistory
 		if (modAppl == 1) {
 			map.put("modappl", "0");
 		} else if (modAppl == 2) {
-			map.put("modappl", "3");
+			map.put("modappl", "4");
 		}
 		String apprStatus = ezAttitudeDAO.checkCanApplStatus(map);
 		if (apprStatus != null && !apprStatus.equals("0")) {

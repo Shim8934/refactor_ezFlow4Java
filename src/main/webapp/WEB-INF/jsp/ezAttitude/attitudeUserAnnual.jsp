@@ -573,7 +573,7 @@
 				var pAttitudeId = attitudeId; 
 				var pTypeId = typeId;
 				if (CrossYN()) {
-					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "attitudeItemView", GetOpenWindowfeature(672, 640));
 					
 					try { OpenWin.focus(); } catch (e) { }
 				} else {
