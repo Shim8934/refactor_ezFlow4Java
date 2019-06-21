@@ -220,11 +220,11 @@
 			<c:when test="${type eq '001'}">
 				<tr>
 					<th rowspan="2"><spring:message code='ezOrgan.csj04' /><span style="color:red"> *</span></th>
-					<th><spring:message code='ezApprovalG.t1764'/></th>
+					<th>${primary}</th>
 					<td><input type="text" id="displayName1"/></td>
 				</tr>
 				<tr>
-					<th><spring:message code='ezApprovalG.t1765'/></th>
+					<th>${secondary}</th>
 					<td><input type="text" id="displayName2"/></td>
 				</tr>
 			</c:when>
