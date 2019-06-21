@@ -1635,6 +1635,7 @@ form{display:inline;margin:0}
 
 .border_gray { border:1px solid #ddd; padding:-1px 0px 0px 0px; margin:0px;}
 .border_gray table { margin:-1px 0px 0px 0px; }
+.border_gray .popuplist { margin:-1px 0px -1px -1px; }
 
 .icon_btn {cursor:pointer;}
 .organwrap { border:1px solid #bebdbd; font-size:12px; width:400px; margin:3px 3px 0px 3px; table-layout:fixed;}

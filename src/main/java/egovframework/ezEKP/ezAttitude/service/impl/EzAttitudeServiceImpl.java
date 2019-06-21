@@ -90,7 +90,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private EzOrganDAO ezOrganDAO;
 	
 	@Override
-	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, int tenantId) throws Exception {
+	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -104,6 +104,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		
 		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
+		AttitudeApplicationVO annualCanVO = new AttitudeApplicationVO(); 
+		if (attitudeVO.getAnnualApprStatus().equals("1") && attitudeVO.getModAppl().equals("1")) {
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("companyId", companyId);
+			map2.put("tenantId", tenantId);
+			map2.put("attModId", attitudeId);
+			map2.put("offset", commonUtil.getMinuteUTC(offset));
+			map2.put("lang", lang);
+			annualCanVO = ezAttitudeDAO.annCanAppDetail(map2);
+			attitudeVO.setContent(annualCanVO.getContent());
+		}
 		
 		LOGGER.debug("getAttitudeInfo ended");
 		
