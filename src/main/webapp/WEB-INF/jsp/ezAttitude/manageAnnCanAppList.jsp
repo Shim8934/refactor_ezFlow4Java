@@ -38,6 +38,9 @@
 			background-color: #fcfcfc;
 		}
 		#searchTable td {padding: 8px 5px;}
+		.mainlist tr:hover{
+				background: rgb(244,245,245);
+		}
 		</style>
 		<script type="text/javascript">
 		var pCompanyId = ""; //현재 선택된 회사의 아이디
