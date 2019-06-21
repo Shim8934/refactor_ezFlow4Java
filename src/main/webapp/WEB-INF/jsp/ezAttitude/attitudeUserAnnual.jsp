@@ -150,7 +150,16 @@
 	    		});
 	    		
 	    		makeoptionyear();
+	    		
+	    		var height = parseInt(document.documentElement.clientHeight - 235);
+	        	$("#contentlist").css("height", height +"px");
    			});
+	    	
+	    	$(window).on("resize", function() {        	
+	        	//테이블 리스트 resize조정.
+	        	var height = parseInt(document.documentElement.clientHeight - 235);
+	        	$("#contentlist").css("height", height +"px");
+	        });
 	    	
     		$(document).on('click', '.mainlist > tr', function(){
     			console.log(this)
