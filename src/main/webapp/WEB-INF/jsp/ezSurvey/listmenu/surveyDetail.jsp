@@ -106,7 +106,6 @@
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')}    "></script>
 <script type="text/javascript">
 	$(function() {
-		var participation = "<c:out value='${participation}' />"; 
 		var survey       = ${survey};
 		var surveyId     = survey.surveyId;
 		var logicmap     = null;

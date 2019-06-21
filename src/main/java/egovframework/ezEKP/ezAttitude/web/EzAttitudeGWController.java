@@ -2509,7 +2509,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 수정신청 개수
+	 * G/W 근태관리 [GET] 취소신청 개수
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/cancelannual/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUsersCancelAnnCount(@PathVariable String userId, HttpServletRequest request,
