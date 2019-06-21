@@ -283,7 +283,7 @@
 		            				<c:if test="${attitudeInfo.modAppl == '0'}">
 		            					<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t272' /></span></a>
 		            				</c:if>
-		            				<c:if test="${attitudeInfo.modAppl == '1'}">
+		            				<c:if test="${attitudeInfo.modAppl == '1' || attitudeInfo.modAppl == '2'}">
 	                       				<a class="imgbtn"><span onclick="deleteCancelAnnual()"><spring:message code='ezAttitude.t279' /></span></a>
 	                       			</c:if>
 		            				<c:if test="${attitudeInfo.modAppl == '4'}">
