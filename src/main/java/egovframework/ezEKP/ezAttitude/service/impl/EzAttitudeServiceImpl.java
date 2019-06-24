@@ -3277,14 +3277,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	String Subject = "";
     	StringBuffer bodyContent = new StringBuffer();
     	
-    	Subject = "[연차취소신청알림]" + " " + attitudeDate; //[연차취소신청알림] + attitudeDate
+    	Subject = "["+messageSource.getMessage("ezAttitude.t314", userInfo.getLocale())+"]" + " " + attitudeDate; //[연차취소신청알림] + attitudeDate
     	
     	bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
     	bodyContent.append("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
-    	bodyContent.append("<span style='font-size:13pt;'>" + "기간" + ": " + attitudeDate + "</span><br>");
-    	bodyContent.append("<span style='font-size:13pt;'>" + "유형" + ": " + vo.getTypeName() + "</span><br>");
-    	bodyContent.append("<span style='font-size:13pt;'>" + "신청자" + ": " + userInfo.getDisplayName() + "</span><br>");
-    	bodyContent.append("<span style='font-size:13pt;'>" + "신청일" + ": " + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false) + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t112", userInfo.getLocale()) + messageSource.getMessage("ezQuestion.t910030", userInfo.getLocale()) + ": " + attitudeDate + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t35", userInfo.getLocale()) + ": " + vo.getTypeName() + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t147", userInfo.getLocale()) + ": " + userInfo.getDisplayName() + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t108", userInfo.getLocale()) + ": " + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false) + "</span><br>");
     	bodyContent.append("</td></tr></table></DIV>");
     	
 		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
