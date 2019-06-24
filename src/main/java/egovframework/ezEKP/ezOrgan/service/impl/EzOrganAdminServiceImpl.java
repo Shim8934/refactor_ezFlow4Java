@@ -1545,9 +1545,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANTID", tenantID);
 		
 		if (!pageNum.equals("") && !pageSize.equals("")) {
-			pageNum = String.valueOf((Integer.parseInt(pageNum) * Integer.parseInt(pageSize)) - Integer.parseInt(pageSize));
-			map.put("v_PAGESIZE", pageSize);
-			map.put("v_PAGENUM", pageNum);
+			int pPageSize = Integer.parseInt(pageSize);
+			int pPageNum = Integer.parseInt(pageNum);
+			pPageNum = (pPageNum * pPageSize) - pPageSize;
+			
+			logger.debug("getTitleUserList pageSize : " + pPageSize + " pageNum : " + pPageNum);
+			
+			map.put("v_PAGESIZE", pPageSize);
+			map.put("v_PAGENUM", pPageNum);
 		}
 		
 		if (!searchType.equals("") && !searchValue.equals("")) {
