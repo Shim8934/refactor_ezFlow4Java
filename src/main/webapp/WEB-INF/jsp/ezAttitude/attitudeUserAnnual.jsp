@@ -125,6 +125,7 @@
 	    	$(document).ready(function() {
     			if(joinDate == null || joinDate == "" || joinDate == "0") {
            			joinDate = "0000-01-01";
+           			yearLength = 20;
            		}
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '.mainlist th', function(){
@@ -201,7 +202,6 @@
 
 	    		if ($("#searchYear").val() != null && $("#searchYear").val() != "") {
 	    			selyear = Number($("#searchYear").val());
-					// selyear = joinDate.split("-")[0];
 	    			tempyear = year;
 	    		}
 		        
