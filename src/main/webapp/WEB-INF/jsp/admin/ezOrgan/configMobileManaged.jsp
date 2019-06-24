@@ -118,52 +118,55 @@
 		    </a>
 		</div>
 		<br/>
-		<table class="mainlist" id="deviceTbl" style="white-space: nowrap; width:100%; overflow-x: hidden; overflow-y: auto;">
-            <tr>
-                <th width='50%'><spring:message code="ezPersonal.kyj01" /></th>
-                <th width='15%'><spring:message code="ezPersonal.t513" /></th>
-                <th width='15%'><spring:message code="ezApproval.t367" /></th>
-                <th width='15%'><spring:message code="ezPersonal.kyj02" /></th>
-            </tr>
-            <c:if test="${deviceInfo ne null}">
-	    		<c:forEach items="${deviceInfo}" var="list">
-		            <c:set var="notUsed" value="${list.notUsed}"></c:set>
-                    <c:set var="deviceType" value="${list.devType}"></c:set>
-                    <c:set var="type" value="${list.type}"></c:set>
-		            <tr height=24px bgcolor=ffffff>
-                    <td>
-                        <c:choose>
-                            <c:when test="${deviceType eq 'Andr'}">Android</c:when>
-                            <c:when test="${deviceType eq 'IPHO'}">iPhone</c:when>
-                            <c:otherwise>${deviceType}</c:otherwise>
-                        </c:choose>
-                        ${list.subType}
-                        <c:choose>
-                            <c:when test="${list.type eq 'talk'}">(<spring:message code="main.kyj01" />)</c:when>
-                            <c:otherwise>(<spring:message code="main.kyj02" />)</c:otherwise>
-                        </c:choose>
-                    </td>
-						<td>
-							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this)'>
-								<option value='0' <c:if test="${notUsed eq 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t937" /></option>
-								<option value='2' <c:if test="${notUsed ne 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t1000" /></option>
-							</select>
-						</td>
-						<td>${list.regDate}</td>
-						<td class='btnposition' style="text-align:left;">
-							<a class="imgbtn">
-								<span style='cursor:pointer;' onclick="deleteDevice('${list.devId}')"><spring:message code="ezPersonal.t99" /></span>
-							</a>
-						</td>
-					</tr>
-	    		</c:forEach>
-    		</c:if>
-    		<c:if test="${deviceInfo eq null}">
-    			<tr height=24px bgcolor=ffffff>
-    				<td colspan="4" align="center"><spring:message code='ezOrgan.kyj09' /></td>
-    			</tr>
-    		</c:if>
-        </table>
+		<!-- 20190621 김수아 : 모바일설정 스크롤 -->
+		<div style="height:84px; overflow-x: hidden; overflow-y: auto;">
+			<table class="mainlist" id="deviceTbl" style="white-space: nowrap; width:100%;">
+	            <tr>
+	                <th width='50%'><spring:message code="ezPersonal.kyj01" /></th>
+	                <th width='15%'><spring:message code="ezPersonal.t513" /></th>
+	                <th width='15%'><spring:message code="ezApproval.t367" /></th>
+	                <th width='15%'><spring:message code="ezPersonal.kyj02" /></th>
+	            </tr>
+	            <c:if test="${deviceInfo ne null}">
+		    		<c:forEach items="${deviceInfo}" var="list">
+			            <c:set var="notUsed" value="${list.notUsed}"></c:set>
+	                    <c:set var="deviceType" value="${list.devType}"></c:set>
+	                    <c:set var="type" value="${list.type}"></c:set>
+			            <tr height=24px bgcolor=ffffff>
+	                    <td>
+	                        <c:choose>
+	                            <c:when test="${deviceType eq 'Andr'}">Android</c:when>
+	                            <c:when test="${deviceType eq 'IPHO'}">iPhone</c:when>
+	                            <c:otherwise>${deviceType}</c:otherwise>
+	                        </c:choose>
+	                        ${list.subType}
+	                        <c:choose>
+	                            <c:when test="${list.type eq 'talk'}">(<spring:message code="main.kyj01" />)</c:when>
+	                            <c:otherwise>(<spring:message code="main.kyj02" />)</c:otherwise>
+	                        </c:choose>
+	                    </td>
+							<td>
+								<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this)'>
+									<option value='0' <c:if test="${notUsed eq 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t937" /></option>
+									<option value='2' <c:if test="${notUsed ne 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t1000" /></option>
+								</select>
+							</td>
+							<td>${list.regDate}</td>
+							<td class='btnposition' style="text-align:left;">
+								<a class="imgbtn">
+									<span style='cursor:pointer;' onclick="deleteDevice('${list.devId}')"><spring:message code="ezPersonal.t99" /></span>
+								</a>
+							</td>
+						</tr>
+		    		</c:forEach>
+	    		</c:if>
+	    		<c:if test="${deviceInfo eq null}">
+	    			<tr height=24px bgcolor=ffffff>
+	    				<td colspan="4" align="center"><spring:message code='ezOrgan.kyj09' /></td>
+	    			</tr>
+	    		</c:if>
+	        </table>
+	    </div>
 		<br/><br/>
 	</body>
 </html>
