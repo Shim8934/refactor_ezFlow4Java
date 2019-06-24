@@ -153,5 +153,7 @@ var SurveyMessages = {
 	strOptionAll : "보기 리스트",
 	strAttachErr : "파일 업로드가 완료될 때까지 기다려주세요.",
 	strAttUrl    : "URL",
-	strSkipQs    : "질문선택"
+	strSkipQs    : "질문선택",
+	strPrivate   : "이 설문은 결과를 공개하지 않습니다.",
+	strNpbPeriod : "공개기간이 아닙니다."
 }

@@ -3326,7 +3326,7 @@ input::-ms-clear {display: none;}
 .survey_atchBtn li.cancelLogic{margin:7px 0px 0px 0px !important;}
 .survey_atchBtn li.saveSkip{margin:7px 3px 0px 0px !important;}
 .survey_atchBtn li.cancelSkip{margin:7px 0px 0px 0px !important;}
-.survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:22px; margin:0px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
+.survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:22px; margin:10px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
 .survey_atchBtn li, .survey_atchBtn li.off span{margin-left:6px; margin-right:6px; line-height:22px;}
 .survey_atchBtn li span .survey_atchBtn li span.off{display: block; float: left; padding: 0px 4px; font-size:12px; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; line-height:28px; box-sizing:border-box;}
 .survey_atchBtn li span.survey_icon{margin-left:3px; margin-right:3px;}
