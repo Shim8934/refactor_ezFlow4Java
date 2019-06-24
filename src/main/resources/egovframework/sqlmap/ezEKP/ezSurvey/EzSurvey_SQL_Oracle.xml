@@ -949,4 +949,19 @@
 		]]>
 	</insert>
 	
+	<select id="EzSurveyDAO.checkRespondent" resultClass="Long">
+		select
+			count(*) 
+		from
+			tbl_survey_respondent
+		where
+			survey_id = #surveyId#
+		and
+			user_id = #userId#
+		and
+			company_id = #companyId#
+		and
+			tenant_id = #tenantId#
+	</select>
+	
 </sqlMap>

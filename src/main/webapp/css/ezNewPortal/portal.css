@@ -189,6 +189,9 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .portlet_list li.mail_close{ background:url(/images/ezNewPortal/mail_close.gif) no-repeat 9px center; padding:0px 5px 0px 34px; font-weight:bold;}
 .portlet_list li.mail_open{ background:url(/images/ezNewPortal/mail_open.gif) no-repeat 9px center; padding:0px 5px 0px 34px; color:#777;}
 
+/* portlet_list survey */
+.portlet_list li.survey_ing {padding: 0px 8px 0px 17px; background: url(/images/ezNewPortal/list_bul.png) no-repeat 10px 16px; color:#777;}
+
 /* portlet_list board_new */
 .boardNew{ float:left; margin:11px 4px 0px 0px; padding:0px; display:inline-block; width:14px; height:14px; font-family:Arial; font-size:10px; font-weight:bold; color:#fff; background:#ff6c00; text-align:center; line-height:13px; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px;}
 

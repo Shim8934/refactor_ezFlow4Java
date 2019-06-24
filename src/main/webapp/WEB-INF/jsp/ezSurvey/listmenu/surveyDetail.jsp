@@ -459,15 +459,15 @@
 			switch(code) {
 				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
-						 console.log('opener', window.opener);
-						 console.log('parent', parent);
+						 if (window.opener.layDiv != null) {
+							 window.opener.getPotletSurveyList();
+							 window.close();
+						 }
 						 
 						 if (window.opener.SurveyItem != null) {
 							 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
 							 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
-						 } else {
-							 window.close();
-						 }
+						 } 
 						 
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr)  ; resposeObj.responses = []; break;
