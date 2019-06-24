@@ -13,4 +13,5 @@ var memoMessages = {
 	strLangMemo18 : "삭제하시겠습니까?",
 	strLangMemo20 : "모든메모",
 	strLangMemo21 : "에러가 발생했습니다",
+	strLangMemo22 : "기본메모함",
 }
