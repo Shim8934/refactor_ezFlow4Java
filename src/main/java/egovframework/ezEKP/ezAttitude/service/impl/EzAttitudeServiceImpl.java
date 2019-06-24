@@ -3268,10 +3268,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		String attitudeDate = "";
+		String startDate = vo.getStartDate().substring(0, 10);
+		String endDate = vo.getEndDate().substring(0, 10);
 		if(vo.getTypeId().equals("A11")) {
-			attitudeDate = vo.getStartDate().substring(0, 10) + "~" + vo.getEndDate().substring(0, 10);
+			
+			attitudeDate = startDate.split("-")[0] + messageSource.getMessage("ezAttitude.t66", userInfo.getLocale()) + startDate.split("-")[1] + messageSource.getMessage("ezAttitude.t67", userInfo.getLocale()) + startDate.split("-")[2] + messageSource.getMessage("ezAttitude.t68", userInfo.getLocale()) + 
+					" ~ " + endDate.split("-")[0] + messageSource.getMessage("ezAttitude.t66", userInfo.getLocale()) + endDate.split("-")[1] + messageSource.getMessage("ezAttitude.t67", userInfo.getLocale()) + endDate.split("-")[2] + messageSource.getMessage("ezAttitude.t68", userInfo.getLocale());
 		} else  {
-			attitudeDate = vo.getStartDate().substring(0, 10);
+			attitudeDate = startDate.split("-")[0] + messageSource.getMessage("ezAttitude.t66", userInfo.getLocale()) + startDate.split("-")[1] + messageSource.getMessage("ezAttitude.t67", userInfo.getLocale()) + startDate.split("-")[2] + messageSource.getMessage("ezAttitude.t68", userInfo.getLocale());
 		}
 		
     	String Subject = "";
