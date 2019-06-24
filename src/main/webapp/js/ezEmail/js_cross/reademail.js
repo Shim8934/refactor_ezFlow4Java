@@ -1167,6 +1167,38 @@ function ViewDoc(pDocID, pURL, pWhat, pOpinionFlag, pdocState, pListSusin, podoc
     }
 }
 
+// 2019-06-24 김민성 - 일정 초대 메일 읽기
+function open_schedule(scheduleid) {
+	var wWeight = "760";
+    var wHeight = "670";
+    var heigth = window.screen.availHeight;
+    var width = window.screen.availWidth;
+    var left = (width - wWeight) / 2;
+    var top = (heigth - wHeight) / 2;
+    
+    var xmlhttp = createXMLHttpRequest();
+    xmlhttp.open("POST", "/ezSchedule/getScheduleRead.do?scheduleid=" + encodeURIComponent(scheduleid), false);
+    xmlhttp.send();
+    
+  	var xmlDoc = xmlhttp.responseText;
+    
+  	if(xmlDoc == "D") {
+  		alert(strLang166);
+  		return;
+  	}
+  	else if (xmlDoc == "N") {
+      	 alert(strLangKMSS01);
+      	 return;
+    }
+
+    if (CrossYN())
+        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&isMailNoti=Y", "",
+            "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
+    else
+        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&isMailNoti=Y", "",
+            "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
+}
+
 function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
     try {
         var heigth = window.screen.availHeight;

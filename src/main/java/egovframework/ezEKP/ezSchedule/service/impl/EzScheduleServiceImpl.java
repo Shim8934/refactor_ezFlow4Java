@@ -1930,41 +1930,42 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 	
 	@Override
-	public void scheduleSendMail(int scheduleId, String v_attendantId, String v_attendantName, String v_attendantName2, String v_attendantDeptName, String v_attendantDeptName2, String title, String startdate, String enddate, String type, LoginVO userInfo, String loginCookie) throws Exception {
+	public void scheduleSendMail(int scheduleId, String v_attendantId, String v_attendantName, String title, String period, String type, LoginVO userInfo, String loginCookie) throws Exception {
 		String subject = "";
 		StringBuilder bodyContent = new StringBuilder("");
 		
 		switch(type) {
 			case "add" :	// 참석자 추가
-				subject = egovMessageSource.getMessage("ezSchedule.kmss01", userInfo.getLocale());
+				subject = egovMessageSource.getMessage("ezSchedule.kmss01", userInfo.getLocale()) + commonUtil.cleanValue(title);
 				
-				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss02", userInfo.getLocale()) + " ");
-				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=, '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
-				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + startdate + " ~ " + enddate + " ");
+				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss02", userInfo.getLocale()) +  "</br>" + " ");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezSchedule.t318", userInfo.getLocale()) + " : " + period + " ");
+				bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2')\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
 			case "del" :		// 참석자 삭제
-				subject = egovMessageSource.getMessage("ezSchedule.kmss03", userInfo.getLocale());
+				subject = egovMessageSource.getMessage("ezSchedule.kmss03", userInfo.getLocale()) + commonUtil.cleanValue(title);
 				
-				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss04", userInfo.getLocale()) + " ");
+				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss04", userInfo.getLocale()) + "</br>" + " ");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + commonUtil.cleanValue(title) + "</br>");
-				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + startdate + " ~ " + enddate + " ");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezSchedule.t318", userInfo.getLocale()) + " : " + period + " ");
 				break;
 			case "acc" :		// 참석 수락
-				subject = egovMessageSource.getMessage("ezSchedule.kmss05", userInfo.getLocale());
+				subject = egovMessageSource.getMessage("ezSchedule.kmss05", userInfo.getLocale()) + commonUtil.cleanValue(title);
 				
-				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss06", userInfo.getLocale()) + " ");
-				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + commonUtil.cleanValue(title) + "</br>");
-				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + startdate + " ~ " + enddate + " ");
+				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss06", userInfo.getLocale()) + "</br>" + " ");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezSchedule.t318", userInfo.getLocale()) + " : " + period + " ");
+				bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2')\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
 			case "rej" :		// 참석 거절
-				subject = egovMessageSource.getMessage("ezSchedule.kmss07", userInfo.getLocale());
+				subject = egovMessageSource.getMessage("ezSchedule.kmss07", userInfo.getLocale()) + commonUtil.cleanValue(title);
 				
-				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss08", userInfo.getLocale()) + " ");
-				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + commonUtil.cleanValue(title) + "</br>");
-				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + startdate + " ~ " + enddate + " ");
+				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss08", userInfo.getLocale()) + "</br>" + " ");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezSchedule.t318", userInfo.getLocale()) + " : " + period + " ");
+				bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2')\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
-				
-			//일본어 제외한 한국어 영어는 메일 제목에 일정 제목 넣기
 		}
 
     	String content_ = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());

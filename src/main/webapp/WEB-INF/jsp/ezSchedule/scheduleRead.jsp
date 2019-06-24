@@ -596,6 +596,53 @@
 				}
 				return weekNumber;
 			}
+			
+			function accept_schedule(status) {
+				var scheduleIdList = new Array();
+				var creatorList = new Array();
+				scheduleIdList[0] = "<c:out value='${_scheduleid}' />";
+				
+				var data = new Object();
+			    data.creatorId = "<c:out value='${scheduleInfo.creatorId}' />";
+			    data.creatorName = "<c:out value='${scheduleInfo.creatorName}'/>";
+			    data.title = "<c:out value='${scheduleInfo.title}'/>";
+			    data.dateType = "<c:out value='${scheduleInfo.dateType}' />";		
+			    data.startDate = "<c:out value='${scheduleInfo.startDate}' />";
+			    data.endDate = "<c:out value='${scheduleInfo.endDate}' />";
+			    
+			    creatorList.push(data);
+			    
+				var url = "/ezSchedule/scheduleAcceptAttendant.do";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : url,
+					data : {						
+						status 	 : status,
+						displayName : "<c:out value='${userInfo.displayName1}'/>",
+						displayName2 : "<c:out value='${userInfo.displayName2}'/>",
+						scheduleIdList : scheduleIdList,
+						creatorList : JSON.stringify(creatorList)
+					},
+					success: function(result) {
+						if (status == "1") {
+							alert("<spring:message code='ezSchedule.t336' />");
+						} else {
+							alert("<spring:message code='ezSchedule.t337' />");
+						}
+					},
+					error: function() {
+						if (status == "1") {
+							alert("<spring:message code='ezSchedule.t334' />");
+						} else {
+							alert("<spring:message code='ezSchedule.t335' />");
+						}
+					}			
+				});
+				window.close();
+			}
 		</script>
 	</head>
 	
@@ -620,6 +667,14 @@
 								<c:if test="${useCabinet == 'YES'}">
 									<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 								</c:if>
+								<c:if test="${attendantCheck == 'Y'}">
+	                                <li>
+	                                	<span onclick="accept_schedule('1')"><spring:message code='ezSchedule.t338' /></span>
+	                                </li>
+	                                <li>
+	                                	<span onclick="accept_schedule('2')"><spring:message code='ezSchedule.t339' /></span>
+	                                </li>
+	                            </c:if>
 								<li>
                             		<span class="icon16 popup_icon16_print" onclick="Print_onClick()"></span>
                             	</li>                            	

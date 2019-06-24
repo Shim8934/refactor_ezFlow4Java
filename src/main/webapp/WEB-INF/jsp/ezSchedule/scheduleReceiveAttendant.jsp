@@ -42,11 +42,22 @@
 			    var checks = document.getElementById("receivelist").getElementsByTagName("input");
 				var count = 0;
 				var scheduleIdList = new Array();
+				var creatorList = new Array();
 				
 				for (var i=0; i<checks.length; i++) {
 					if (checks.item(i).checked == true)	{
-					    count++;
-					    scheduleIdList[i] = GetAttribute(checks.item(i), 'scheduleid');					    
+					    scheduleIdList[count++] = GetAttribute(checks.item(i), 'scheduleid');					    
+					    //count++;
+					    
+					    var data = new Object();
+					    data.creatorId = GetAttribute(checks.item(i), 'creatorId');	
+					    data.creatorName = GetAttribute(checks.item(i), 'creatorName');	
+					    data.title = checks.item(i).parentElement.parentElement.lastElementChild.previousElementSibling.textContent;
+					    data.dateType = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'dateType');
+					    data.startDate = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'startdate');
+					    data.endDate = GetAttribute(checks.item(i).parentElement.parentElement.lastElementChild, 'enddate');
+					    
+					    creatorList.push(data);
 					}
 				}
 	
@@ -70,7 +81,8 @@
 						status 	 : status,
 						displayName : "${userInfo.displayName1}",
 						displayName2 : "${userInfo.displayName2}",
-						scheduleIdList : scheduleIdList
+						scheduleIdList : scheduleIdList,
+						creatorList : JSON.stringify(creatorList)
 					},
 					success: function(result) {
 						if (status == "1")
@@ -390,7 +402,7 @@
 	              	<c:forEach var="item" items="${receiveList}">
 	              	<tr> 
 	                    <td style="text-align:center">
-	                    	<input type='checkbox' value="1" scheduleid='${item.scheduleId}' />
+	                    	<input type='checkbox' value="1" scheduleid='${item.scheduleId}' creatorId='${item.creatorId}' creatorName='${item.creatorName}' />
 	                    </td> 
 	                    <td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer; text-align:center;" onClick="parentwin.show_personinfo('${item.creatorId}')">
 	                    	<c:if test="${userInfo.primary == '1'}">${item.creatorName}</c:if>
