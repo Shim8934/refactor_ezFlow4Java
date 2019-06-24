@@ -97,6 +97,9 @@
 			    text-overflow: ellipsis;
 			    white-space: nowrap;
 			}
+			.mainlist tr:hover{
+				background: rgb(244,245,245);
+			}
 		</style>	
 	    <script type="text/javascript">
 	    	var date = new Date()
@@ -112,7 +115,7 @@
 	    	var joinDate = "<c:out value="${joinDate}" />";
 	    	var userDeptId;
 	    	var userDeptName;
-	    	var yearLength = 10;
+	    	var yearLength = Number(year) - Number(joinDate.split("-")[0]) + 1;
 	    	var orderCell = ""; //정렬 명
 	    	var orderOption = ""; //정렬 형식(ASC, DESC)
    			var src = "";
@@ -147,9 +150,19 @@
 	    		});
 	    		
 	    		makeoptionyear();
+	    		
+	    		var height = parseInt(document.documentElement.clientHeight - 235);
+	        	$("#contentlist").css("height", height +"px");
    			});
 	    	
-    		$(document).on('click', '.mainlist .attitudeView', function(){
+	    	$(window).on("resize", function() {        	
+	        	//테이블 리스트 resize조정.
+	        	var height = parseInt(document.documentElement.clientHeight - 235);
+	        	$("#contentlist").css("height", height +"px");
+	        });
+	    	
+    		$(document).on('click', '.mainlist > tr', function(){
+    			console.log(this)
     			var attitudeId = $(this).closest("tr").attr("id");
     			var typeId = $(this).closest("tr").attr("typeId");
     			attitudeItemView(attitudeId , typeId);
@@ -182,12 +195,17 @@
 	            var startDate = "";
 	            var endDate = "";
 	    		
+				if ($("#searchYear").val() == null && $("#searchYear").val() == "") {
+					selyear = joinDate.split("-")[0];
+	    		}
+
 	    		if ($("#searchYear").val() != null && $("#searchYear").val() != "") {
 	    			selyear = Number($("#searchYear").val());
-	    			tempyear = (selyear + 4 > year) ? year : selyear + 4;
+					// selyear = joinDate.split("-")[0];
+	    			tempyear = year;
 	    		}
-                
-	    		if (tempyear <= year || selyear == year) {
+		        
+                if (tempyear <= year || selyear == year) {
 		    		//초기화
 		    		$("#searchYear").html("");
 		    		
@@ -218,7 +236,6 @@
 	                	
 	                	tempyear--;
 	                }
-	                
 	                $("#searchYear").html(optionHtml);
 	                $("#searchYear").val(selyear);
 	    		}
@@ -381,7 +398,7 @@
 		    			}
 		    			var useAnnualCnt = (Number(vo.annualCnt) - holidayCnt);
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
-		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "'>";
+		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "' style='cursor:pointer;'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
 			    		html += "<td style='width:25%'>";
 			    		html += "<a class='link attitudeView'>";
@@ -569,7 +586,7 @@
 				var pAttitudeId = attitudeId; 
 				var pTypeId = typeId;
 				if (CrossYN()) {
-					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "attitudeItemView", GetOpenWindowfeature(672, 640));
 					
 					try { OpenWin.focus(); } catch (e) { }
 				} else {

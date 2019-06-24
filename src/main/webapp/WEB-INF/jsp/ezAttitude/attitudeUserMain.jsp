@@ -306,6 +306,10 @@
 						pMode = "new";
 						attitudeNewItem(this);
 					});
+					$(document).on('dblclick', '.td_day2', function() {//표형식
+						pMode = "new";
+						attitudeNewItem(this);
+					}); 
 				} else { //부서근태현황에서는 당일의 근태를 조회.
 					$(document).on('click', '.td_day td', function() {
 						pMode = "new";
@@ -315,6 +319,11 @@
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function() {
 					attitudeItemView(this);
+				});
+				$(document).on('dblclick', '.td_day3', function() {//표형식 상세보기
+					if($(this).attr("attitudeid")){						
+						attitudeItemView(this);
+					}
 				});
 				
 				$(window).on("resize", function() {
@@ -328,12 +337,6 @@
 		        	var height = parseInt(document.documentElement.clientHeight - 235);
 		        	$("#contentlist").css("height", height +"px");
 		        });
-				
-				//리스트형 날짜 클릭시 근태작성창
-				$(document).on('dblclick', '#contentlist .mainlist tr td:nth-child(6n - 5)', function() {
-					pMode = "new";
-					attitudeNewItem(this);
-				});
 				
 				//개인근태일경우 표보기 크롬일경우 테이블 ui틀어짐 조정
 				if (deptFlag != "true") {
@@ -1802,14 +1805,14 @@
 	    			
 	    			tbodyHtml += "<tr class='" + dayClass + "' id='" + year + "-" + month + "-" + j + "'>";
 	    			if (LunarUse) {
-    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter td_day2' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
 	    			} else {
     					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
 	    			}
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
-	    			tbodyHtml += "<td class='borderLeft textLeft' style='width:20%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textLeft td_day3' style='width:20%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textLeft'></td>";
 	    			tbodyHtml += "</tr>";
 	    		}
@@ -1894,7 +1897,7 @@
 					    			//근태유형
 					 				objTds += "<td class='borderLeft textCenter' title='" + vo.typeName + "'>" + vo.typeName + "</td>";
 					 				//일시
-					 				objTds += "<td class='borderLeft textLeft'>";
+					 				objTds += "<td attitudeid='" + vo.attitudeId + "' typeid='" + vo.typeId + "' class='borderLeft textLeft' style='cursor:pointer;'>";
 					    			if (vo.dateType == 4 && vo.typeId != 'A04') {
 						 				objTds += vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr;
 						    		}
@@ -1937,6 +1940,9 @@
 						    		//일시
 					    			if (vo.dateType == 4 && vo.typeId != 'A04') {
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr);
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").attr("attitudeid", vo.attitudeId);
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").attr("typeid", vo.typeId);
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").css("cursor", "pointer");
 						    		}
 					    			else if (vo.typeId == 'A04') {
 						    			if (vo.dateType == 4) {
@@ -1970,7 +1976,7 @@
 				    			//근태유형
 				 				objTds += "<td class='borderLeft textCenter' title='" + vo.typeName + "'>" + vo.typeName + "</td>";
 				 				//일시
-				 				objTds += "<td class='borderLeft textLeft'>";
+				 				objTds += "<td attitudeid='" + vo.attitudeId + "' typeid='" + vo.typeId + "' class='borderLeft textLeft' style='cursor:pointer;'>";
 					    		//일시
 				    			if (vo.dateType == 1 || vo.dateType == 2) {
 				    				objTds += vo.startDate.substring(0,10) + " " +  iconStr;
@@ -2014,6 +2020,9 @@
 				    			else if (vo.dateType == 3) {
 					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").html(vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>\u00a0~\u00a0<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>" + " " +  iconStr);
 					    		}
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").attr("attitudeid", vo.attitudeId);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").attr("typeid", vo.typeId);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").css("cursor", "pointer");
 					    		
 					    		//근무지 및 내용
 					    		if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {

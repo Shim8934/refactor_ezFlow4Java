@@ -30,7 +30,7 @@
 									<img src="/images/kr/main/noData_sIcon.png">
 								</dt>
 								<dd class="comTit_none">
-									"<spring:message code='main.t00026' />"
+									"<spring:message code='ezNewPortal.t018' />"
 								</dd>
 							</dl>
 							<dl class="comListDL02">
@@ -38,7 +38,7 @@
 									<img src="/images/kr/main/comImg_none.png">
 								</dt>
 								<dd class="comTit_none">
-									"<spring:message code='main.t00026' />"
+									"<spring:message code='ezNewPortal.t018' />"
 								</dd>
 							</dl>
 						</ul>

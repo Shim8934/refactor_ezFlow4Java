@@ -90,7 +90,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private EzOrganDAO ezOrganDAO;
 	
 	@Override
-	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, int tenantId) throws Exception {
+	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -104,6 +104,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		
 		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
+		AttitudeApplicationVO annualCanVO = new AttitudeApplicationVO(); 
+		if (attitudeVO.getAnnualApprStatus().equals("1") && attitudeVO.getModAppl().equals("1")) {
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("companyId", companyId);
+			map2.put("tenantId", tenantId);
+			map2.put("attModId", attitudeId);
+			map2.put("offset", commonUtil.getMinuteUTC(offset));
+			map2.put("lang", lang);
+			annualCanVO = ezAttitudeDAO.annCanAppDetail(map2);
+			attitudeVO.setContent(annualCanVO.getContent());
+		}
 		
 		LOGGER.debug("getAttitudeInfo ended");
 		
@@ -2862,13 +2873,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		 * */
 		
 		int modAppl = ezAttitudeDAO.getAttModApp(map);
-		
-		map.put("modappl", "1");
-		
-		//신청된 항목이 존재 할 때
-		if (modAppl == 1 || modAppl == 2) {
-			return "fail";
+		if (modAppl == 0) {
+			modAppl = 1;
+		} else if (modAppl == 4){
+			modAppl = 2;
 		}
+		
+		map.put("modappl", modAppl);
 		
 		/*근태수정신청 저장*/
 		ezAttitudeDAO.saveCancelAnnual(map);
@@ -3198,10 +3209,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("attitudeId", attitudeId);
 		map.put("attModId", attitudeId);
 		modAppl = ezAttitudeDAO.getAttModApp(map);
+		map.put("modappl",modAppl);
+		//ezAttitudeDAO.getAnnCanHistory
 		if (modAppl == 1) {
 			map.put("modappl", "0");
 		} else if (modAppl == 2) {
-			map.put("modappl", "3");
+			map.put("modappl", "4");
 		}
 		String apprStatus = ezAttitudeDAO.checkCanApplStatus(map);
 		if (apprStatus != null && !apprStatus.equals("0")) {
