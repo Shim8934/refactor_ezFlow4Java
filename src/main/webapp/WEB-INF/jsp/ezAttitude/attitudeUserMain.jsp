@@ -1807,7 +1807,7 @@
 	    			if (LunarUse) {
     					tbodyHtml += "<td class='borderLeft textCenter td_day2' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
 	    			} else {
-    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter td_day2' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
 	    			}
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
@@ -2207,19 +2207,19 @@
 		        <c:if test="${A11typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
-			            <dd class="timeIconDD">${A11typeInfo.typeName }<span class="timeCountR" id="FA11">0</span></dd>
+			            <dd class="timeIconDD"><spring:message code="ezAttitude.t254"/><span class="timeCountR" id="FA11">0</span></dd>
 			        </dl>
 		        </c:if>
 		        <c:if test="${A12typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
-			            <dd class="timeIconDD">${A12typeInfo.typeName } <span class="timeCountR" id="FA12">0</span></dd>
+			            <dd class="timeIconDD"><spring:message code="ezAttitude.t255"/><span class="timeCountR" id="FA12">0</span></dd>
 			        </dl>
 			    </c:if>
 			    <c:if test="${A13typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
-			            <dd class="timeIconDD">${A13typeInfo.typeName } <span class="timeCountR" id="FA13">0</span></dd>
+			            <dd class="timeIconDD"><spring:message code="ezAttitude.t256"/><span class="timeCountR" id="FA13">0</span></dd>
 			        </dl>
 			    </c:if>
 		    </div>
