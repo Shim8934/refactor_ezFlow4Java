@@ -32,6 +32,7 @@
 					<c:when test="${mode != 'draft'}">
 						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
 						<c:if test="${reuseFlag == 1}"><li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li></c:if>
+						<li id="analysisBttn" ><a><span><spring:message code='ezSurvey.t110'/></span></a></li>
 						<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
 						<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
 						<div class="sub_frameIcon" style="float: right;">
@@ -123,7 +124,6 @@
 							<th headers="an"  class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>
 							<th headers="ed"  class="endDateTh"><spring:message code='ezSurvey.t29'/></th>
 							<th headers=""    class="statusTh" ><spring:message code='ezSurvey.t81'/></th>
-							<th headers=""    class="statisTh" ><img src="/images/ezSurvey/survey_result.png"></th>
 						</tr>
 					</table>
 				</div>

@@ -90,7 +90,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private EzOrganDAO ezOrganDAO;
 	
 	@Override
-	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, int tenantId) throws Exception {
+	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -104,6 +104,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		
 		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
+		AttitudeApplicationVO annualCanVO = new AttitudeApplicationVO(); 
+		if (attitudeVO.getAnnualApprStatus().equals("1") && attitudeVO.getModAppl().equals("1")) {
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("companyId", companyId);
+			map2.put("tenantId", tenantId);
+			map2.put("attModId", attitudeId);
+			map2.put("offset", commonUtil.getMinuteUTC(offset));
+			map2.put("lang", lang);
+			annualCanVO = ezAttitudeDAO.annCanAppDetail(map2);
+			attitudeVO.setContent(annualCanVO.getContent());
+		}
 		
 		LOGGER.debug("getAttitudeInfo ended");
 		
@@ -1882,13 +1893,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String startTime = "-01 00:00:00";
+		String startTime = "01 00:00:00";
 		
 		map.put("userId", userId);
 		map.put("deptId", deptId);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
-		map.put("year", year);
-		map.put("startTime", startTime);
 		map.put("typeId", typeId);
 		map.put("tenantId", tenantId);
 		
@@ -1897,13 +1906,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			Calendar cal = Calendar.getInstance();
 			cal.set(Integer.parseInt(year), months - 1, 1);
 			
-			String endTime = "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
-			map.put("endTime", endTime);
-			map.put("months", months);
+			String endTime = cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
+			map.put("startDate", year + "-" + months + "-" + startTime);
+			map.put("endDate", year + "-" + months + "-" + endTime);
 			
 			AttitudeStatisVO vo = ezAttitudeDAO.getAttitudeUserStatistics(map);
 			if (vo != null) {
 				list.add(vo);
+				vo.setStatMonth(String.valueOf(months));
 			} else {
 				AttitudeStatisVO vo2 = new AttitudeStatisVO();
 				vo2.setCount("0");
@@ -1911,6 +1921,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				vo2.setStatMonth(String.valueOf(months));
 				list.add(vo2);
 			}
+			LOGGER.debug("getAttitudeUserStatistics startDate = " + year + "-" + months + "-" + startTime + ", endDate = " + year + "-" + months + "-" + endTime + ", count = " + (vo != null ? vo.getCount() : "0"));
 		}
 		
 		LOGGER.debug("getAttitudeUserStatistics ended.");
@@ -2862,13 +2873,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		 * */
 		
 		int modAppl = ezAttitudeDAO.getAttModApp(map);
-		
-		map.put("modappl", "1");
-		
-		//신청된 항목이 존재 할 때
-		if (modAppl == 1 || modAppl == 2) {
-			return "fail";
+		if (modAppl == 0) {
+			modAppl = 1;
+		} else if (modAppl == 4){
+			modAppl = 2;
 		}
+		
+		map.put("modappl", modAppl);
 		
 		/*근태수정신청 저장*/
 		ezAttitudeDAO.saveCancelAnnual(map);
@@ -2906,7 +2917,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("updateAnnualHoliday started");
 		
 		String companyId = (String)map.get("companyId");
-		int tenantId = (int)map.get("tenantId");
+		int tenantId = Integer.parseInt(String.valueOf(map.get("tenantId")));
 		String joinDate = (String)map.get("joinDate");
 		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
 
@@ -2951,7 +2962,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("oneMonthAgo",MonthAgo2);
 			map.put("oneDayAgo", MonthAgo1);
 			
-			int workingDayCnt = checkHoliday(MonthAgo2, MonthAgo1, "1", (String)map.get("companyId"), (int)map.get("tenantId")).size();
+			int workingDayCnt = checkHoliday(MonthAgo2, MonthAgo1, "1", (String)map.get("companyId"), Integer.parseInt(String.valueOf(map.get("tenantId")))).size();
 			int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
 			
 			if (workingDayCnt <= attendanceDay) {
@@ -2978,7 +2989,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("oneDayAgo", today);
 		
 		int annualHolidayCnt = 0;
-		int workingDayCnt = checkHoliday(beforeOneYear, today, "1", (String)map.get("companyId"), (int)map.get("tenantId")).size();
+		int workingDayCnt = checkHoliday(beforeOneYear, today, "1", (String)map.get("companyId"), Integer.parseInt(String.valueOf(map.get("tenantId")))).size();
 		float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(map);
 		float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0);
 
@@ -3041,7 +3052,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			if(m.get("joinDate") != null && m.get("workingMonthCnt") != null) {
 				
-				int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+				int workingMonthCnt = Integer.parseInt(String.valueOf(m.get("workingMonthCnt")));
 				SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
 				String year = sdf2.format(new Date());
 				String date1 = (String)m.get("joinDate");
@@ -3083,7 +3094,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					cal.add(Calendar.YEAR, -1);
 					String beforeOneYearInitialDate = sdf.format(cal.getTime());
 					
-					int workingDayCnt = checkHoliday(beforeOneYearInitialDate, sdf.format(initialDate), "1", (String)m.get("companyId"), (int)m.get("tenantId")).size();
+					int workingDayCnt = checkHoliday(beforeOneYearInitialDate, sdf.format(initialDate), "1", (String)m.get("companyId"), Integer.parseInt(String.valueOf(m.get("tenantId")))).size();
 					float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(m);
 					float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0);
 					
@@ -3119,7 +3130,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("updateMonthlyHoliday started");
 		
 		String companyId = (String)map.get("companyId");
-		int tenantId = (int)map.get("tenantId");
+		int tenantId = Integer.parseInt(String.valueOf(map.get("tenantId")));
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String today = sdf.format(new Date());
@@ -3198,10 +3209,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("attitudeId", attitudeId);
 		map.put("attModId", attitudeId);
 		modAppl = ezAttitudeDAO.getAttModApp(map);
+		map.put("modappl",modAppl);
+		//ezAttitudeDAO.getAnnCanHistory
 		if (modAppl == 1) {
 			map.put("modappl", "0");
 		} else if (modAppl == 2) {
-			map.put("modappl", "3");
+			map.put("modappl", "4");
 		}
 		String apprStatus = ezAttitudeDAO.checkCanApplStatus(map);
 		if (apprStatus != null && !apprStatus.equals("0")) {

@@ -77,7 +77,7 @@
 	                <li><span onclick="Window_Close()"></span></li>
 	            </ul>
 	        </div>
-			<div class="border_gray" id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; max-height:350px;">
+			<div class="border_gray" id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; height:350px;">
 			  <table style="width:100%;" class="popuplist" style="TABLE-LAYOUT:fixed" id="checkboxtable">
 			    <tr>
 			      <th style="width:50px;text-align:center;"><spring:message code='ezEmail.t488' /></th>

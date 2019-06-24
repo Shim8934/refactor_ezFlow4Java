@@ -3402,8 +3402,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		
 		logger.debug("jobInfoList ended.");
 		return "admin/ezOrgan/jobInfoList";
@@ -3431,11 +3436,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (mode != null && mode.equals("Add"))
 			jobCnt++;
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("jobCnt", jobCnt);
 		model.addAttribute("type", type);
 		model.addAttribute("mode", mode);
 		model.addAttribute("jobID", jobID);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";

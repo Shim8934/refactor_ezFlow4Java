@@ -95,7 +95,7 @@ var SurveyMessages = {
 	strRow       : "Row",
 	strColumn    : "Column",
 	strRequired  : "Required",
-	strModify    : "Modified",
+	strModify    : "Modify",
 	strModifying : "You can not edit the survey with answers.",
 	strOther     : "Other",
 	strCancel    : "Cancel",
@@ -153,5 +153,7 @@ var SurveyMessages = {
 	strOptionAll : "Option list",
 	strAttachErr : "Please wait for the file upload to complete.",
 	strAttUrl    : "URL",
-	strSkipQs    : "Select a question"
+	strSkipQs    : "Select a question",
+	strPrivate   : "This survey does not reveal the results.",
+	strNpbPeriod : "There is not a public period."
 }

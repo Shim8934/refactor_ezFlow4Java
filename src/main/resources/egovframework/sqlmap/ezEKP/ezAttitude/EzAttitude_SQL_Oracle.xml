@@ -146,11 +146,55 @@
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="18"/>
 		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
+		<result  property="annualApprStatus"	column="ANNUAL_APPR_STATUS"		columnIndex="20"/>
+		<result  property="docApprStatus"		column="DOC_APPR_STATUS"		columnIndex="21"/>
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="monthlyAnnualMap">
 		<result property="annualCount" 					column="ANNUAL_COUNT" 					columnIndex="1"/>
 		<result property="month" 					column="MONTH" 				columnIndex="2"/>
+	</resultMap>
+
+	<resultMap class="java.util.HashMap" id="tenantIdCompanyIdInfo">
+		<result property="tenantId" 					column="TENANT_ID" 					columnIndex="1"/>
+		<result property="companyId" 					column="PHYSICALDELIVERYOFFICENAME" 				columnIndex="2"/>
+	</resultMap>
+
+	<resultMap class="java.util.HashMap" id="getJoinDateUserList">
+		<result property="userId" 						column="USER_ID" 				columnIndex="5"/>
+		<result property="workingMonthCnt" 				column="WORKINGMONTHCNT" 				columnIndex="3"/>
+		<result property="joinDate" 					column="JOIN_DATE" 				columnIndex="4"/>
+		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="2"/>
+		<result property="tenantId" 					column="TENANT_ID" 					columnIndex="1"/>
+	</resultMap>
+	
+	<resultMap id="annualCancelVO" class="AttitudeApplicationVO">
+		<result property="attitudeId"		column="ATTITUDE_ID" 		columnIndex="1"/>
+		<result property="changeDate"		column="CHANGE_DATE" 		columnIndex="2"/>
+		<result property="apprUserName"		column="APPR_USER_NAME"		columnIndex="3"/>
+		<result property="originDate"		column="START_DATE" 		columnIndex="4"/> 		
+		<result property="apprStatus"		column="APPR_STATUS" 		columnIndex="5"/>
+		<result property="typeId"			column="TYPE_ID" 			columnIndex="6"/>
+		<result property="typeName"			column="TYPE_NAME" 			columnIndex="7"/>
+		<result property="writerName"		column="WRITER_NAME" 		columnIndex="8"/>
+		<result property="writerDeptName"	column="WRITER_DEPT_NAME" 	columnIndex="9"/>
+		<result property="applCnt"			column="APPL_CNT" 			columnIndex="10"/>
+		<result property="writerId"			column="WRITER_ID" 			columnIndex="11"/>
+		<result property="applDate"			column="APPL_DATE"			columnIndex="12"/>
+	</resultMap>
+	
+	<resultMap class="java.util.HashMap" id="attitudeAprlineMap">
+		<result property="docId"		column="DOCID" 		columnIndex="1"/>
+		<result property="aprMemberSn"		column="APRMEMBERSN" 		columnIndex="2"/>
+		<result property="aprType"		column="APRTYPE"		columnIndex="3"/>
+		<result property="aprState"		column="APRSTATE" 		columnIndex="4"/> 		
+		<result property="aprMemberId"		column="APRMEMBERID" 		columnIndex="5"/>
+		<result property="aprMemberIsDeptYn"			column="APRMEMBERISDEPTYN" 			columnIndex="6"/>
+		<result property="aprMemberName"			column="APRMEMBERNAME" 			columnIndex="7"/>
+		<result property="aprMemberJobTitle"		column="APRMEMBERJOBTITLE" 		columnIndex="8"/>
+		<result property="aprMemberDeptId"	column="APRMEMBERDEPTID" 	columnIndex="9"/>
+		<result property="aprMemberDeptName"			column="APRMEMBERDEPTNAME" 			columnIndex="10"/>
+		<result property="aprMemberLdapPath"			column="APRMEMBERLDAPPATH" 			columnIndex="11"/>
 	</resultMap>
 	
 	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
@@ -709,6 +753,8 @@
 				WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TYPE_ID NOT IN ('A01', 'A03')
+			AND
+				MODAPPL <> '5'
 			AND    
 				(
 					(START_DATE + #offsetMin# / (24 * 60)  >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
@@ -1167,7 +1213,20 @@
 			B.TYPE_NAME$lang$ AS TYPE_NAME,
 			B.IMG_PATH,
 		    C.DISPLAYNAME$lang$ AS DISPLAYNAME,
-		    C.DESCRIPTION$lang$ AS DESCRIPTION
+		    C.DESCRIPTION$lang$ AS DESCRIPTION,
+		    NVL(D.ANNUAL_APPR_STATUS, -1) as ANNUAL_APPR_STATUS,
+		    NVL(
+				    (
+						SELECT
+							FUNCTIONTYPE
+						FROM
+							TBL_APRDOCINFO E
+						WHERE
+							D.ANNUAL_DOC_ID = E.DOCID
+						OR
+							D.ANNUAL_DOC_ID = E.ORGDOCID
+					)
+				, 0) AS DOC_APPR_STATUS
 		FROM   
 			tbl_attitude A 
 		INNER JOIN
@@ -1184,6 +1243,10 @@
 			A.TENANT_ID = C.TENANT_ID
 		AND 
 			A.WRITER_ID = C.CN
+		LEFT OUTER JOIN 
+			TBL_ATTITUDE_APR_CONN D
+		ON 
+			(A.TENANT_ID = D.TENANT_ID AND A.COMPANY_ID = D.COMPANY_ID AND A.ATTITUDE_ID = D.ATTITUDE_ID)
 		WHERE  
 			A.ATTITUDE_ID = #attitudeId# 
 		AND    
@@ -1973,7 +2036,7 @@
 	<insert id="ezAttitudeDAO.saveCancelAnnual" parameterClass="map">
 		<![CDATA[
 			INSERT INTO 
-				tbl_attitude_annual_canappl(
+				TBL_ATTITUDE_ANNUAL_CANAPPL(
 					ATTITUDE_ID,
 					APPL_CNT, 
 					COMPANY_ID, 
@@ -1996,7 +2059,7 @@
 					SELECT 
 						NVL(MAX(a.APPL_CNT) + 1, 0)
 					FROM
-						tbl_attitude_annual_canappl a
+						TBL_ATTITUDE_ANNUAL_CANAPPL a
 					WHERE
 						TENANT_ID = #tenantId#
 		        	AND
@@ -2016,27 +2079,27 @@
 					#writerDeptName2#,
 					#apprStatus#,
 					#content#,
-					#applDate#
+					TO_DATE(#applDate#, 'YYYY-MM-DD HH24:MI:SS')
 				)
 		]]>
 	</insert>
 	
-	<select id="ezAttitudeDAO.getJoinDateUserList" parameterClass="Map" resultClass="java.util.HashMap">
+	<select id="ezAttitudeDAO.getJoinDateUserList" parameterClass="Map" resultMap="getJoinDateUserList">
 		<![CDATA[
 			SELECT 
-				USER_ID AS userId, 
-	       		TRUNC(MONTHS_BETWEEN(TO_DATE(JOIN_DATE, 'yyyy-mm-dd'), SYSDATE)) AS workingMonthCnt, 
-			    TO_DATE(JOIN_DATE, 'yyyy-mm-dd')          							  AS joinDate,
-			    COMPANY_ID 															  AS companyId,
-			    TENANT_ID															  AS tenantId
+				USER_ID, 
+	       		TRUNC(MONTHS_BETWEEN(TRUNC(SYSDATE),JOIN_DATE)) AS WORKINGMONTHCNT, 
+			    TO_CHAR(JOIN_DATE, 'yyyy-mm-dd') AS JOIN_DATE,
+			    COMPANY_ID,
+			    TENANT_ID															  
 			FROM   
-				TBL_ATTITUDE_JOINDATE
+				TBL_ATTITUDE_ANNUAL
 			WHERE 
 				1 = 1
 		]]>
 		<isNotEmpty property="yseterday" > 
 			AND
-				JOIN_DATE LIKE '%-%-' || #yesterday# || '%'
+				TO_CHAR(JOIN_DATE,'YYYY-MM-DD') LIKE '%-%-' || #yesterday# || '%'
 		</isNotEmpty>
 		<![CDATA[
 			AND
@@ -2050,10 +2113,10 @@
 		]]>
 	</select>
 	
-	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="Map" resultClass="INTEGER">
+	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="map" resultClass="INTEGER">
 		<![CDATA[
 			SELECT
-				COUNT(*)
+				NVL(SUM(NVL(TRUNC(END_DATE-START_DATE) + 2, 1)), 0) 
 			FROM
 				TBL_ATTITUDE
 			WHERE
@@ -2066,17 +2129,17 @@
 		<isNotEmpty property="oneMonthAgo">
 			<![CDATA[
 				AND
-					START_DATE <= TO_DATE(#oneDayAgo#, 'YYYY-MM-DD HH24:MI:SS') - 540 / (24 * 60)
+					START_DATE <= DATE_ADD(#oneDayAgo#, interval - 540 minute)
 				AND 
-					START_DATE > TO_DATE(#oneMonthAgo#, 'YYYY-MM-DD HH24:MI:SS') - 540 / (24 * 60) 
+					START_DATE > DATE_ADD(#oneMonthAgo#, interval -540 minute)
 			]]>
 		</isNotEmpty>
 		<![CDATA[
 			AND
 				COMPANY_ID = #companyId#
 			AND
-				TENANT_ID = #tenantId#
-		]]>
+				TENANT_ID = #tenantId#	
+		]]>		
 	</select>
 		
 	<update id = "ezAttitudeDAO.updateAnnualHoliday" parameterClass="map">
@@ -2103,11 +2166,11 @@
 			TENANT_ID = #tenantId#
 	</update>
 	
-	<select id="ezAttitudeDAO.getTenantCompanuId" parameterClass="map" resultClass="java.util.HashMap">
+	<select id="ezAttitudeDAO.getTenantCompanuId" parameterClass="map" resultMap = "tenantIdCompanyIdInfo">
 		SELECT
 		  	DISTINCT
-		  	A.TENANT_ID                    AS tenantId,
-			A.PHYSICALDELIVERYOFFICENAME   AS companyId
+		  	A.TENANT_ID AS TENANT_ID,
+			A.PHYSICALDELIVERYOFFICENAME   
 		FROM
 			TBL_USERMASTER A
 		JOIN
@@ -2183,12 +2246,12 @@
 			SELECT
 				appr_status as APPR_STATUS
 			FROM 
-				jmocha.tbl_attitude_annual_canappl
-			where 
+				TBL_ATTITUDE_ANNUAL_CANAPPL
+			WHERE 
 				COMPANY_ID = #companyId#
-			and 
+			AND 
 				TENANT_ID = #tenantId#
-			and
+			AND
 				ATTITUDE_ID = #attModId#
 		]]>
 		<!-- applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
@@ -2237,7 +2300,7 @@
 			SELECT
 				count(*)
 			FROM 
-				jmocha.tbl_attitude_annual_canappl a 
+				TBL_ATTITUDE_ANNUAL_CANAPPL a 
 			inner 
 				join tbl_attitude b 
 			on 
@@ -2302,107 +2365,114 @@
 		<isEmpty prepend="" property="order">
 				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
 		</isEmpty>
-		<isNotEmpty property="startPoint" prepend="limit">
-			<isNotEmpty property="endPoint">
-				<![CDATA[
-					$startPoint$, $endPoint$
-				]]>
-			</isNotEmpty>
-		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.getUsersCancelAnn" parameterClass="Map" resultMap="annualCancelVO">
 		<![CDATA[
-			SELECT
-					a.attitude_id as ATTITUDE_ID,
-					to_char(b.end_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
-					a.appr_user_name$lang$ as APPR_USER_NAME,
-					to_char(b.start_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
-					a.appr_status as APPR_STATUS,
-					c.type_id AS TYPE_ID,
-					c.type_name$lang$ AS TYPE_NAME,
-					a.writer_name$lang$ as WRITER_NAME,
-					a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
-					a.appl_cnt AS APPL_CNT,
-					a.writer_id as WRITER_ID,
-					to_char(A.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPR_DATE
-			FROM 
-				jmocha.tbl_attitude_annual_canappl a 
-			inner 
-				join tbl_attitude b 
-			on 
-				a.ATTITUDE_ID = b.ATTITUDE_ID
-			inner 
-				join tbl_attitude_type c 
-			on 
-				b.TYPE_ID = c.TYPE_ID
-			and
-				a.COMPANY_ID = c.COMPANY_ID
-			and 
-				a.TENANT_ID = c.TENANT_ID
-			where 
-				a.COMPANY_ID = #companyId#
-			and 
-				a.TENANT_ID = #tenantId#
-			and
-				a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-		]]>
-		<isNotEmpty property="userId" prepend="and"> 
-			a.WRITER_ID = #userId#
-		</isNotEmpty>
-		<isNotEmpty prepend="AND" property="searchDeptId">
-			A.WRITER_DEPT_ID = #searchDeptId#
-		</isNotEmpty>
-		<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
-      		#deptIdList[]#
-		</iterate>
-		<isNotEmpty property="apprUserName" prepend="and">
-			<isNotEmpty property="apprUserName" >
-				A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerName" prepend="and">
-			<isNotEmpty property="writerName" >
-				A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="writerDeptName" prepend="and">
-			<isNotEmpty property="writerDeptName" >
-				A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
-			</isNotEmpty>
-		</isNotEmpty>
-		<isNotEmpty property="startDate" prepend="and">
-			<![CDATA[
-				B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+ 			SELECT
+				*
+			FROM
+			(
+				SELECT
+					T1.*,
+					ROWNUM AS RN
+				FROM
+				(
+					SELECT
+						a.attitude_id as ATTITUDE_ID,
+						to_char(b.end_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
+						a.appr_user_name$lang$ as APPR_USER_NAME,
+						to_char(b.start_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE,
+						a.appr_status as APPR_STATUS,
+						c.type_id AS TYPE_ID,
+						c.type_name$lang$ AS TYPE_NAME,
+						a.writer_name$lang$ as WRITER_NAME,
+						a.writer_dept_name$lang$ as WRITER_DEPT_NAME,
+						a.appl_cnt AS APPL_CNT,
+						a.writer_id as WRITER_ID,
+						to_char(A.appl_date + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS APPL_DATE
+				FROM 
+					TBL_ATTITUDE_ANNUAL_CANAPPL a 
+				inner 
+					join TBL_ATTITUDE b 
+				on 
+					a.ATTITUDE_ID = b.ATTITUDE_ID
+				inner 
+					join TBL_ATTITUDE_TYPE c 
+				on 
+					b.TYPE_ID = c.TYPE_ID
+				and
+					a.COMPANY_ID = c.COMPANY_ID
+				and 
+					a.TENANT_ID = c.TENANT_ID
+				where 
+					a.COMPANY_ID = #companyId#
+				and 
+					a.TENANT_ID = #tenantId#
+				and
+					a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			]]>
-		</isNotEmpty>
-		<isNotEmpty property="endDate" prepend="and">
-			<![CDATA[
-				B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
-			]]>
-		</isNotEmpty>
-		<isNotEmpty property="type" prepend="and">
-			<![CDATA[
-			a.APPR_STATUS = #type#
-			]]>
-		</isNotEmpty>
-		<![CDATA[
-			AND
-				A.DELFLAG = 0
-		]]>
-		<isNotEmpty prepend="" property="order">
-				ORDER BY $order$, A.APPL_CNT DESC
-		</isNotEmpty>
-		<isEmpty prepend="" property="order">
-				ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
-		</isEmpty>
-		<isNotEmpty property="startPoint" prepend="limit">
-			<isNotEmpty property="endPoint">
+				<isNotEmpty property="userId" prepend="and"> 
+					a.WRITER_ID = #userId#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="searchDeptId">
+					A.WRITER_DEPT_ID = #searchDeptId#
+				</isNotEmpty>
+				<iterate prepend="AND A.WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
+		      		#deptIdList[]#
+				</iterate>
+				<isNotEmpty property="apprUserName" prepend="and">
+					<isNotEmpty property="apprUserName" >
+						A.APPR_USER_NAME$lang$ LIKE '%' || #apprUserName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="writerName" prepend="and">
+					<isNotEmpty property="writerName" >
+						A.WRITER_NAME$lang$ LIKE '%' || #writerName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="writerDeptName" prepend="and">
+					<isNotEmpty property="writerDeptName" >
+						A.WRITER_DEPT_NAME$lang$ LIKE '%' || #writerDeptName# || '%'
+					</isNotEmpty>
+				</isNotEmpty>
+				<isNotEmpty property="startDate" prepend="and">
+					<![CDATA[
+						B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="endDate" prepend="and">
+					<![CDATA[
+						B.START_DATE + #offset# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+					]]>
+				</isNotEmpty>
+				<isNotEmpty property="type" prepend="and">
+					<![CDATA[
+					a.APPR_STATUS = #type#
+					]]>
+				</isNotEmpty>
 				<![CDATA[
-					$startPoint$, $endPoint$
+					AND
+						A.DELFLAG = 0
 				]]>
+				<isNotEmpty prepend="" property="order">
+						ORDER BY $order$, A.APPL_CNT DESC
+				</isNotEmpty>
+				<isEmpty prepend="" property="order">
+						ORDER BY A.APPL_DATE DESC, A.APPL_CNT DESC
+				</isEmpty>
+				) T1
+			)
+			<isNotEmpty property="startRow">
+				<isNotEmpty property="endRow">
+					<![CDATA[
+						WHERE
+							RN <= #endRow#
+						AND
+							RN >= #startRow#
+					]]>
+				</isNotEmpty>
 			</isNotEmpty>
-		</isNotEmpty>
 	</select>
 	
 	<select id="ezAttitudeDAO.annCanAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
@@ -2422,7 +2492,7 @@
 				a.writer_title$lang$ AS WRITER_TITLE,
 				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
 			FROM 
-				jmocha.tbl_attitude_annual_canappl a
+				TBL_ATTITUDE_ANNUAL_CANAPPL a
 			inner 
 				join tbl_attitude b 
 			on 
@@ -2469,7 +2539,7 @@
 				2
 			</isEqual>
 		<![CDATA[
-			,APPR_DATE = TO_CHAR(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,APPR_DATE = TO_DATE(#apprDate#, 'YYYY-MM-DD HH24:MI:SS')
 			,APPR_USER_ID = #userId#
 			,APPR_USER_NAME = #displayName#
 			,APPR_USER_NAME2 = #displayName2#
@@ -2508,8 +2578,8 @@
 				A.APPR_USER_NAME$lang$ AS APPR_USER_NAME,
 				A.APPR_STATUS,
 				A.CONTENT,
-				to_char(A.ORIGIN_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS ORIGIN_DATE,
-				to_char(A.CHANGE_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
+				to_char(C.START_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS ORIGIN_DATE,
+				to_char(C.END_DATE + #offset# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
 				B.TITLE$lang$ AS TITLE,
 				B.DESCRIPTION$lang$ AS DESCRIPTION,
 				C.TYPE_ID
