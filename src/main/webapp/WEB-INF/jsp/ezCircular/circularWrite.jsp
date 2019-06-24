@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html style="height:100%"> 
+<html style="height:100%" ondragover="bodydragover(event)"> 
 	<head>
 		<c:choose>
 			<c:when test="${mode eq 'reuse'}">
@@ -366,6 +366,12 @@
 	                	alert("<spring:message code='ezCircular.t102'/>");
 	                }
 				});
+			}
+			
+			function bodydragover(evt) {
+				evt.dataTransfer.dropEffect = "none";
+				evt.stopPropagation();
+				evt.preventDefault();
 			}
 		</script>
 	</head>

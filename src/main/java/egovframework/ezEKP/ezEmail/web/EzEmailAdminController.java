@@ -1439,6 +1439,7 @@ public class EzEmailAdminController {
 				String bizmekaResult = "ERROR";
 				
 				try {
+					/* 비즈메카 연동은 우선 생각하지 않는다. -> 필요할 때 논의 후 구현!
 					String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantId);
 					
 					// 비즈메카와 연동된 경우에는 비즈메카 API를 이용해 비즈메카 사용자 계정을 삭제한다.
@@ -1455,6 +1456,7 @@ public class EzEmailAdminController {
 							throw new Exception("bizmekaDeleteUser failed");
 						}						
 					}
+					*/
 										
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(shareId, "user", tenantId);
@@ -2225,6 +2227,10 @@ public class EzEmailAdminController {
 				// e.printStackTrace();
 			}
 		} 
+		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR",userInfo.getTenantId()));
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("signNo", signNo);
@@ -2233,6 +2239,8 @@ public class EzEmailAdminController {
 		model.addAttribute("displayname2", displayname2);
 		model.addAttribute("type", type);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("signNo=" + signNo + ", content=" + content + ", displayname=" + displayname + ", displayname2=" + displayname2);
 		logger.debug("signEditPopUp ended.");

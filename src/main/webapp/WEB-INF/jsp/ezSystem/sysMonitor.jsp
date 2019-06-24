@@ -121,7 +121,7 @@
 		    	if (document.getElementById(graphId) == null) {
 		    		clearInterval(refreshIntervalID);
 		    	}				
-		    }, 2000);			
+		    }, 10000);			
 			
 			// CPU & Memory 관련 그래프
 			var cpuMemoryChart = builder ("#cpuMemInfo_" + listNum, {	

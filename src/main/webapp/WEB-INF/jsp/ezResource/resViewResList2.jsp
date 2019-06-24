@@ -371,7 +371,7 @@
 						$("#brdExplain").html(resbrdExc);
 						
 						if(result.attachList1 != null) {
-							document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURI(result.attachList1);
+							document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURIComponent(result.attachList1);
 							document.getElementById("preview1").width = 200;
 							document.getElementById("preview1").height = 200;
 						}
@@ -382,7 +382,7 @@
 						}
 						
 						if(result.attachList2 != null) {
-							document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURI(result.attachList2);
+							document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURIComponent(result.attachList2);
 							document.getElementById("preview2").width = 200;
 							document.getElementById("preview2").height = 200;
 						}
@@ -456,7 +456,7 @@
                 				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">
                 					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
-					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan"></span>&nbsp;
+					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan" style="font-size:15px"></span>&nbsp;
 					                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
 				                	</div>
 				            	</td>

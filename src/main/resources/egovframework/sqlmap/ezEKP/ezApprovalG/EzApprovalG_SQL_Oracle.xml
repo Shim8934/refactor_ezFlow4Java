@@ -11887,7 +11887,7 @@
 <!-- 	<procedure id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETDOCRECVSTATE(#v_DOCID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String">
+	<select id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String" remapResults="true">
 		SELECT 
 		   * 
 		FROM (
@@ -17961,7 +17961,7 @@
 			SET 
 				CabinetID = #v_CABINETID#
 			WHERE 
-				RECORDID = #v_rowID3#
+				CabinetID = $v_cabList$
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
@@ -29288,4 +29288,35 @@
 		  AND
 		  		proxy like '$id$:%'
 	  </select> 
+	  
+	<select id="EzApprovalG.checkDocIdIsDuplicated" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT
+			COUNT(DOCID)
+		FROM
+			(
+				SELECT
+					DOCID
+				FROM
+					TBL_APRDOCINFO
+				WHERE
+					DOCID = #v_DOCID#
+				AND
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #companyID#
+					
+			UNION ALL
+			
+				SELECT
+					DOCID
+				FROM
+					TBL_ENDAPRDOCINFO
+				WHERE
+					DOCID = #v_DOCID#
+				AND
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #companyID#
+			)
+	</select>
 </sqlMap>

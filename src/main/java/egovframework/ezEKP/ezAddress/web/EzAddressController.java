@@ -2315,14 +2315,20 @@ public class EzAddressController{
 	        		csvBody[14] = csvBody[14].replaceAll("\n", "<br>");
 	        	}
 	        	
+	        	String sName = csvBody[0];
+	        	if (sName.contains("\'") || sName.contains("<") || sName.contains(">") || sName.contains("\"") || sName.contains("&") || sName.contains(";")) {
+	        		sName = csvBody[0].replaceAll("\'", "").replaceAll("<", "").replaceAll(">", "").replaceAll("\"", "").replaceAll("&", "").replaceAll(";", "");
+
+    			}
+	        	
         		if (csvBody[8].equals(groupMailStr)) {
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
-        					csvBody[0], csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
+        					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
         					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G");
         		} else {
         			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName(), userInfo.getDisplayName2(),
-        					csvBody[0], csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
+        					sName, csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
         					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P");
         		}

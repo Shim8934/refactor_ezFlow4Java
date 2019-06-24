@@ -224,20 +224,25 @@ function GetTaskListInSubCategory(pCode, pTaskCode) {
         alert(strLang477);
     }
     else {
-
-        if (document.getElementById("TaskList").innerHTML != "") document.getElementById("TaskList").innerHTML = "";
-        var DocList = new ListView();                           
+        if (document.getElementById("TaskList").innerHTML != "") {
+        	document.getElementById("TaskList").innerHTML = "";
+        }
+        
+        var DocList = new ListView();
         DocList.SetID("DivTaskList");                               
         DocList.SetMulSelectable(false);                        
         DocList.SetRowOnClick("TaskList_rowclick");
-        //DocList.SetRowOnDblClick("Add_onclick");
+        
+        //더블클릭 함수가 프론트에 존재하지 않으면 세팅 안되도록(스크립트 오류방지)
+        if (typeof (Add_onclick) != "undefined") {
+        	DocList.SetRowOnDblClick("Add_onclick");
+        }
 
         DocList.DataSource(rtnXml);                             
         DocList.DataBind("TaskList");                          
 
         var Rows = DocList.GetDataRows();
         var len = DocList.GetRowCount();
-
 
         if (len > 0) {
             if (typeof (pTaskCode) != "undefined") {

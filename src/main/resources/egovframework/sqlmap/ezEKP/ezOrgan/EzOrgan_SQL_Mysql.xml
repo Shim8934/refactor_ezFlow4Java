@@ -1424,6 +1424,8 @@
             AND 
             	DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
             AND 
+            	DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%')
+            AND 
                 A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
             <![CDATA[
             	AND
@@ -1448,6 +1450,7 @@
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
 	            $strSQLForMySQL$ 
 	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+	            AND DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%')
 	            AND A.TENANT_ID = #v_TENANT_ID# 
 	            $strSQLAddjobCom$
 	            
@@ -1474,6 +1477,7 @@
 					TBL_DEPTMASTER 
                 $strSQLForMySQL$ 
                 AND CN NOT LIKE 'shared\_mailbox\_%' 
+                AND DEPT_CD_PATH NOT LIKE '%trash\_dept%' 
                 AND TENANT_ID = #v_TENANT_ID#
                 
                 <isNotEmpty property="companyId">
@@ -1494,6 +1498,7 @@
 	    		TBL_DEPTMASTER 
             $strSQLForMySQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' 
+            AND DEPT_CD_PATH NOT LIKE '%trash\_dept%' 
             AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
             $strSizeForMySQL$
 	    </isEqual>

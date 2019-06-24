@@ -36,6 +36,10 @@
         <property name="username" value="${Globals.UserName}"/>
         <property name="password" value="${Globals.Password}"/>
         <property name="validationQuery" value="select 1"></property>
+        <property name="validationQueryTimeout" value="5"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="300000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="testWhileIdle" value="true"/>        
         <property name="maxActive" value="200"/>
         <property name="maxWait" value="20000"/>
     </bean>
@@ -47,6 +51,10 @@
         <property name="username" value="${Globals.UserName}"/>
         <property name="password" value="${Globals.Password}"/>
         <property name="validationQuery" value="select 1 from dual"></property>
+        <property name="validationQueryTimeout" value="5"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="300000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="testWhileIdle" value="true"/>        
         <property name="maxActive" value="200"/>
         <property name="maxWait" value="20000"/>        
     </bean>
