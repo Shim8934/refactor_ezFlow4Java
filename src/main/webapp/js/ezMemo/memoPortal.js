@@ -989,7 +989,6 @@ function memoFoldersInfo(type) {
 		async : false,
 		url : "/ezMemo/getMemoFoldersInfo.do",
 		success: function(result){
-			console.log(result);
 			var folderList = result["folders"];
 			var html="";
 			html += "<option value='0'>" + memoMessages.strLangMemo9 + "</option>";
