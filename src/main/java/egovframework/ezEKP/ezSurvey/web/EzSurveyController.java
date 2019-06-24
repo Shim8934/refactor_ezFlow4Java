@@ -401,6 +401,34 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezSurvey/checkAnalysisPermission.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String jsonCheckAnalysisPermission (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonCheckAnalysisPermission start");
+
+		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
+		String itemId         = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		JSONObject result     = surveyRestService.getSurveyStatistic(request, user.getId(), itemId);
+		JSONObject resultObj  = new JSONObject();
+
+		int reasonCode  = ((Long)result.get("code")).intValue();
+		String adminYN  = ((String)result.get("adminYN"));
+		int messageCode = 0;
+		switch(reasonCode) {
+			case 1 : messageCode = 1; break; // parameter 부족합니다
+			case 2 : messageCode = 2; break; // 오류가 발생했습니다.
+			case 3 : messageCode = 3; break; // 권한이 없습니다.
+			case 6 : messageCode = 4; break; // 이 설문은 결과를 공개하지 않습니다.
+			case 7 : messageCode = 5; break; // 공개기간이 아닙니다.
+			default: messageCode = 0; break; // (결과분석)
+		}
+		if(adminYN.equals("Y")) messageCode = 0;
+		resultObj.put("code", messageCode);
+
+		logger.debug("jsonCheckAnalysisPermission end");
+		return resultObj.toString();
+	}
+	
 	@RequestMapping(value="/ezSurvey/saveSurvey.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String jsonSaveSurveyItem(@RequestBody JSONObject surveyItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
