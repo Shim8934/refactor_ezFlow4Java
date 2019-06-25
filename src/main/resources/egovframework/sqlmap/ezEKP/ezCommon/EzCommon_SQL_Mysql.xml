@@ -1120,4 +1120,71 @@
 		  PRIMARY KEY (`ATTITUDE_ID`,`COMPANY_ID`,`TENANT_ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
+	
+	<select id="EzCommonDAO.checkThemeContent2">
+		SELECT
+			THEME_CONTENT2
+		FROM
+			TBL_PORTAL_THEME
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addThemeContent2">
+		ALTER TABLE
+			TBL_PORTAL_THEME
+		ADD (
+			THEME_CONTENT2 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME2 VARCHAR(100) DEFAULT 'theme2'
+			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkThemeContent3">
+		SELECT
+			THEME_CONTENT3
+		FROM
+			TBL_PORTAL_THEME
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addThemeContent3">
+		ALTER TABLE
+			TBL_PORTAL_THEME
+		ADD (
+			THEME_CONTENT3 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME3 VARCHAR(100) DEFAULT 'theme3'
+			)
+	</statement>
+	
+	<update id="EzCommonDAO.insertThemeContent2">
+		UPDATE
+			TBL_PORTAL_THEME
+		SET
+			THEME_CONTENT3 = CASE 
+								WHEN theme_id = 1 THEN 'A theme with a fixed area on the left or right.'
+								WHEN theme_id = 2 THEN 'A theme with a fixed area on the top.'
+								WHEN theme_id = 3 THEN 'A theme that consists of only portlets without fixed areas.'
+							END ,
+			THEME_NAME2 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
+				
+	</update>
+	
+	<update id="EzCommonDAO.insertThemeContent3">
+		UPDATE
+			TBL_PORTAL_THEME
+		SET
+			THEME_CONTENT2 = CASE 
+								WHEN theme_id = 1 THEN '고정 영역이 왼쪽 혹은 오른쪽에 위치해 있는 테마입니다.'
+								WHEN theme_id = 2 THEN '고정 영역이 상단에 위치해 있는 테마입니다.'
+								WHEN theme_id = 3 THEN '고정 영역 없이 포틀릿으로만 이루어져있는 테마입니다.'
+							END ,
+			THEME_NAME3 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
+	</update>
 </sqlMap>

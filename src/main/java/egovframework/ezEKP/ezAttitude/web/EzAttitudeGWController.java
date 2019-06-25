@@ -180,7 +180,7 @@ public class EzAttitudeGWController {
 				checkAttitude = "dupl";
 			} else {
 				if (!checkAttitude.equals("") && !checkAttitude.equals("0") && typeId.equals("A03")) { //이미 퇴근이 있는 경우
-					AttitudeVO attVO = ezAttitudeService.getAttitudeInfo(checkAttitude, info.getOffSet(), info.getPrimary(), info.getTenantId());
+					AttitudeVO attVO = ezAttitudeService.getAttitudeInfo(checkAttitude, info.getOffSet(), info.getPrimary(), info.getCompanyId(), info.getTenantId());
 					if (startDate == null || startDate.equals("")) {
 						startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), info.getOffSet(), false);						
 					}
@@ -217,7 +217,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), info.getTenantId());
+			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(),info.getCompanyId(), info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -256,7 +256,7 @@ public class EzAttitudeGWController {
 			String checkAttitude = "";
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), info.getTenantId());
+			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), info.getCompanyId(), info.getTenantId());
 			
 			//1. startDate로 attitudeID 끌어와서 기존에 있던건지 검사를 먼저
 			//2. 똑같은 attitudeVO를 가져와서 비교할 수 는 없어 시작일 변경??
@@ -302,7 +302,7 @@ public class EzAttitudeGWController {
 				mode = "";
 			}
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), info.getTenantId());
+			AttitudeVO attitudeVO = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), info.getCompanyId(), info.getTenantId());
 			MCommonVO userInfo = mOptionService.commonInfoWeb(serverName, attitudeVO.getWriterId()); 
 			
 			ezAttitudeService.deleteAttitude(attitudeId, info.getTenantId(), mode, attitudeVO, info.getOffSet(), info, userInfo);
@@ -2452,7 +2452,7 @@ public class EzAttitudeGWController {
 					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
 					info.getDeptName2(), "0", content, offset);
 			
-			AttitudeVO vo = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), tenantId);
+			AttitudeVO vo = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), companyId, tenantId);
 			
 			if(idList != null && !idList.equals("")) {
 				ezAttitudeService.sendMailToReference(vo, attitudeId, idList, request, loginCookie, userInfo, companyId, tenantId);
@@ -2509,7 +2509,7 @@ public class EzAttitudeGWController {
 	}
 	
 	/**
-	 * G/W 근태관리 [GET] 수정신청 개수
+	 * G/W 근태관리 [GET] 취소신청 개수
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/cancelannual/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUsersCancelAnnCount(@PathVariable String userId, HttpServletRequest request,

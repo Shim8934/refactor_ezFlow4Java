@@ -69,7 +69,7 @@
 			function btnSave_Click() {
 				/* 2018-05-02 서주연 #12554 */
 				var re = /[\\/:*?\"<>&|]/gi;
-				if( re.test(document.getElementById("Brd_NM").value)){
+				if( re.test(document.getElementById("Brd_NM").value) || re.test(document.getElementById("Brd_NM2").value)){
 					alert("<spring:message code='ezResource.kms1' />");
 					return;
 				}

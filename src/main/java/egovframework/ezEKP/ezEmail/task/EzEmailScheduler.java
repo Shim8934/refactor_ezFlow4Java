@@ -886,6 +886,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	public void broadcastQuotaWarning() throws Exception {
 		logger.debug("broadcastQuotaWarning started.");
 		
+		//choose scheduler running server
+		if (!preScheduler("broadcastQuotaWarning")) {
+			logger.debug("broadcastQuotaWarning scheduler ended.");
+			return;
+		}
+		
 		List<String> emailArray = new ArrayList<>();
 		
 		try {

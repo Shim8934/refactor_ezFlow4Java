@@ -378,7 +378,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .sscheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:13px; color:#333; width:97%; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;}
 .sscheduleUL .scheduleLi_nodata{margin:0px;padding: 8px 0px 10px 14px;border-bottom: 1px dashed #e7e7e7; height:35px; line-height:34px;}
 .sscheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 35px; float:left; font-size:12px; color:#b2b2b2; background:url(/images/ezNewPortal/schedule_nodataIcon.png) no-repeat left center;}
-.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 17px 0px 0px; padding:0px; float:right; cursor:pointer;}
+.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 12px 0px 0px; padding:0px; float:right; cursor:pointer;}
 .schedule_calendar{float:left; width:calc(46% - 11px); margin-right:5px; background:#fff;}
 .schedule_scheduleList{float:right; width:54%;border-left: 1px solid #e7e7e7;}
 .portlet_schedule{background:#ffffff;}

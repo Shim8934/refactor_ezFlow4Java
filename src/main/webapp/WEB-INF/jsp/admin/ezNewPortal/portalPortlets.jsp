@@ -407,7 +407,12 @@
 						portletNameListCnt = portletNameList.length;
 						
 						listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "' data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;") + "'>";
-						listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[arrayLang].portletName) + "</div>";
+						
+						if (usePrimaryLangOnly == "YES") {
+							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[0].portletName) + "</div>";
+						} else {
+							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[arrayLang].portletName) + "</div>";
+						}
 						
 						if (!result[i].general) {
 							listHTML += "<a class='deletePortletBtn'>";

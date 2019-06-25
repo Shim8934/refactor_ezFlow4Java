@@ -156,6 +156,9 @@
 				for (var i = 0; i < questions.length; i++) {
 					showQuestionStatistic(questions[i]);
 				}
+				
+				var cancelBttn = document.getElementById("cancelBttn");
+				if (cancelBttn) {cancelBttn.onclick = function(e) {window.close();};}
 			}
 			
 			function setBodyHeight() {
@@ -244,7 +247,7 @@
 					
 					if (surveyStatistic["annoynymous"] == 0) {
 						var userAva     = document.createElement("img");
-						userAva.src     = responses[i]["image"] ? responses[i]["image"] : "/images/default_pic.jpg";
+						userAva.src     = responses[i]["image"] ? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + responses[i]["image"] : "/images/default_pic.jpg";
 						userAva.onclick = (function(userId) {return function() {showUserInfoFromId(userId);};})(responses[i]["responsorId"]);
 						liResp.appendChild(userAva);
 					}
@@ -392,7 +395,7 @@
 					var tdElmt3 = document.createElement("td");
 					var tdElmt4 = document.createElement("td");
 					var imgElmt = document.createElement("img");
-					imgElmt.src = userList[i][userImage] ? userList[i][userImage] : "/images/default_pic.jpg";
+					imgElmt.src = userList[i][userImage] ?  "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userList[i][userImage] : "/images/default_pic.jpg";
 					tdElmt1.appendChild(imgElmt);
 					tdElmt2.textContent = userList[i][userName];
 					tdElmt3.textContent = userList[i][deptName];

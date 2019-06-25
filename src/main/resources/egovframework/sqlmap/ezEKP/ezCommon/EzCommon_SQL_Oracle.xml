@@ -1084,4 +1084,196 @@
 		ADD COLUMN 
 			FORMVERSION NUMBER(10,0) DEFAULT 0 
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnual">
+		SELECT 
+			USER_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL
+		WHERE 
+			ROWNUM = 1
+	</select>	
+	<statement id="EzCommonDAO.createTblAttitudeAnnual"> 
+    CREATE TABLE "TBL_ATTITUDE_ANNUAL" 
+	   ("USER_ID" NVARCHAR2(80), 
+		"YEAR" NVARCHAR2(8), 
+		"TOTAL_ANNUAL_CNT" NUMBER(3,1), 
+		"COMPANY_ID" NVARCHAR2(200), 
+		"TENANT_ID" NUMBER(5,0),
+		CONSTRAINT "TBL_ATTITUDE_ANNUAL_PK" PRIMARY KEY ("TENANT_ID", "USER_ID")
+	   )
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnualCanappl">
+		SELECT 
+			ATTITUDE_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL_CANAPPL
+		WHERE 
+			ROWNUM = 1
+	</select>	
+	<statement id="EzCommonDAO.createTblAttitudeAnnualCanappl"> 
+   		CREATE TABLE "TBL_ATTITUDE_ANNUAL_CANAPPL" (
+  			"ATTITUDE_ID" NUMBER(20,0) NOT NULL,
+  			"APPL_CNT" NUMBER(11,0) NOT NULL,
+  			"COMPANY_ID" NVARCHAR2(80) NOT NULL,
+  			"TENANT_ID" NUMBER(5,0) NOT NULL,
+  			"WRITER_ID" NVARCHAR2(80) NOT NULL,
+  			"WRITER_NAME" NVARCHAR2(100) DEFAULT NULL,
+  			"WRITER_NAME2" NVARCHAR2(100) DEFAULT NULL,
+  			"WRITER_TITLE" NVARCHAR2(200) DEFAULT NULL,
+  			"WRITER_TITLE2" NVARCHAR2(200) DEFAULT NULL,
+  			"WRITER_DEPT_ID" NVARCHAR2(80) NOT NULL,
+  			"WRITER_DEPT_NAME" NVARCHAR2(100) DEFAULT NULL,
+  			"WRITER_DEPT_NAME2" NVARCHAR2(100) DEFAULT NULL,
+  			"DELFLAG" CHAR(1) DEFAULT '0',
+  			"APPR_USER_ID" NVARCHAR2(80) DEFAULT NULL,
+  			"APPR_DATE" DATE DEFAULT NULL,
+  			"APPR_STATUS" CHAR(1) DEFAULT '0',
+  			"CONTENT" NVARCHAR2(2000) DEFAULT NULL ,
+  			"APPR_USER_NAME" NVARCHAR2(100) DEFAULT NULL,
+  			"APPR_USER_NAME2" NVARCHAR2(100) DEFAULT NULL ,
+  			"APPL_DATE" DATE DEFAULT NULL,
+  			CONSTRAINT "TBL_ATTITUDE_ANNUAL_CANAPPL_PK" PRIMARY KEY ("ATTITUDE_ID","APPL_CNT","COMPANY_ID","TENANT_ID")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnualConf">
+		SELECT 
+			COMPANY_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL_CONF
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAnnualConf"> 
+       CREATE TABLE "TBL_ATTITUDE_ANNUAL_CONF" (
+		  "COMPANY_ID" NVARCHAR2(80) NOT NULL,
+		  "TENANT_ID" NUMBER(5,0) NOT NULL,
+		  "ANNUAL_CANCEL_RULE" CHAR(1) DEFAULT '1' NOT NULL ,
+		  "USE_ANNUAL_AUTO_GNRT" CHAR(1) DEFAULT '1' NOT NULL,
+		  "ANNUAL_GNRT_STD" CHAR(1) DEFAULT '1' NOT NULL,
+		  "INITIAL_DATE" DATE DEFAULT NULL,
+		  "USE_MINUS_ANNUAL" CHAR(1)DEFAULT '1' NOT NULL,
+		  "USE_ANNUAL_TMNT" CHAR(1) DEFAULT '1' NOT NULL,
+		  "ROUND_OFF_RULE" CHAR(1) DEFAULT '1' NOT NULL,
+		  "CONF_SET_DATE" DATE NOT NULL,
+		  CONSTRAINT "TBL_ATTITUDE_ANNUAL_CONF_PK" PRIMARY KEY ("COMPANY_ID","TENANT_ID")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnualHistory">
+		SELECT 
+			ANNUAL_HISTORY_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL_HISTORY
+		WHERE 
+			ROWNUM = 1
+	</select>	
+	<statement id="EzCommonDAO.createTblAttitudeAnnualHistory">
+	CREATE TABLE "TBL_ATTITUDE_ANNUAL_HISTORY" 
+	   ("ANNUAL_HISTORY_ID" NUMBER(20,0), 
+		"USER_ID" NVARCHAR2(80), 
+		"ORIGIN_ANNUAL_CNT" NUMBER(3,1), 
+		"CHANGE_ANNUAL_CNT" NUMBER(3,1), 
+		"CHANGE_REASON" NVARCHAR2(2000), 
+		"CHANGE_DATE" DATE, 
+		"CHANGE_USER_ID" NVARCHAR2(80), 
+		"COMPANY_ID" NVARCHAR2(200), 
+		"TENANT_ID" NUMBER(5,0), 
+		CONSTRAINT "TBL_ATTITUDE_ANNUAL_HISTORY_PK" PRIMARY KEY ("ANNUAL_HISTORY_ID")
+	   )
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAprConn">
+		SELECT 
+			ATTITUDE_ID
+		FROM 
+			TBL_ATTITUDE_APR_CONN
+		WHERE 
+			ROWNUM = 1
+	</select>	
+	<statement id="EzCommonDAO.createTblAttitudeAprConn">		
+		CREATE TABLE "TBL_ATTITUDE_APR_CONN" (
+		  "ATTITUDE_ID" NUMBER(20,0) NOT NULL,
+		  "USER_ID" NVARCHAR2(80) DEFAULT NULL,
+		  "ANNUAL_DOC_ID" NVARCHAR2(80) NOT NULL,
+		  "CANCEL_DOC_ID" NVARCHAR2(80) DEFAULT NULL,
+		  "ANNUAL_APPR_STATUS" CHAR(1) DEFAULT NULL,
+		  "CANCEL_APPR_STATUS" CHAR(1) DEFAULT NULL,
+		  "COMPANY_ID" NVARCHAR2(80) NOT NULL,
+		  "TENANT_ID" NUMBER(5,0) NOT NULL,
+		  CONSTRAINT "TBL_ATTITUDE_APR_CONN_PK" PRIMARY KEY ("ATTITUDE_ID","COMPANY_ID","TENANT_ID")
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkThemeContent2">
+		SELECT
+			THEME_CONTENT2
+		FROM
+			TBL_PORTAL_THEME
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addThemeContent2">
+		ALTER TABLE
+			TBL_PORTAL_THEME
+		ADD (
+			THEME_CONTENT2 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME2 VARCHAR(100) DEFAULT 'theme2'
+			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkThemeContent3">
+		SELECT
+			THEME_CONTENT3
+		FROM
+			TBL_PORTAL_THEME
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addThemeContent3">
+		ALTER TABLE
+			TBL_PORTAL_THEME
+		ADD (
+			THEME_CONTENT3 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME3 VARCHAR(100) DEFAULT 'theme3'
+			)
+	</statement>
+	
+	<update id="EzCommonDAO.insertThemeContent2">
+		UPDATE
+			TBL_PORTAL_THEME
+		SET
+			THEME_CONTENT2 = CASE 
+								WHEN theme_id = 1 THEN 'A theme with a fixed area on the left or right.'
+								WHEN theme_id = 2 THEN 'A theme with a fixed area on the top.'
+								WHEN theme_id = 3 THEN 'A theme that consists of only portlets without fixed areas.'
+							END,
+			THEME_NAME2 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
+				
+	</update>
+	
+	<update id="EzCommonDAO.insertThemeContent3">
+		UPDATE
+			TBL_PORTAL_THEME
+		SET
+			THEME_CONTENT3 = CASE 
+								WHEN theme_id = 1 THEN '고정 영역이 왼쪽 혹은 오른쪽에 위치해 있는 테마입니다.'
+								WHEN theme_id = 2 THEN '고정 영역이 상단에 위치해 있는 테마입니다.'
+								WHEN theme_id = 3 THEN '고정 영역 없이 포틀릿으로만 이루어져있는 테마입니다.'
+							END ,
+			THEME_NAME3 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
+	</update>
 </sqlMap>

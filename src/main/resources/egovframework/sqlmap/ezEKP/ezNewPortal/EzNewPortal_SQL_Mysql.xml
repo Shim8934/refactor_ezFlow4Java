@@ -929,8 +929,26 @@ AND
 <![CDATA[
 SELECT
 	A.theme_id,
+]]>
+<isEqual property="lang" compareValue="1">
+<![CDATA[
 	A.theme_name,
-    A.theme_content,
+	A.theme_content AS theme_content,
+]]>
+</isEqual>
+<isEqual property="lang" compareValue="2">
+<![CDATA[
+	A.theme_name2 AS theme_name,
+	A.theme_content2 AS theme_content,
+]]>
+</isEqual>
+<isEqual property="lang" compareValue="3">
+<![CDATA[
+	A.theme_name3 AS theme_name,
+	A.theme_content3 AS theme_content,
+]]>
+</isEqual>
+<![CDATA[
     ifnull(D.is_default, 0) as theme_used,
     B.theme_default,
     C.frame_id as frame_default
@@ -1594,8 +1612,26 @@ LIMIT
 		<![CDATA[
 			SELECT
 			    B.theme_id AS themeid,
-				B.theme_name AS themename,
-			    B.theme_content AS themecontent,
+		]]>
+		<isEqual property="lang" compareValue="1">
+		<![CDATA[
+			B.theme_name AS themename,
+			B.theme_content AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="2">
+		<![CDATA[
+			B.theme_name2 AS themename,
+			B.theme_content2 AS themecontent,
+		]]>
+		</isEqual>
+		<isEqual property="lang" compareValue="3">
+		<![CDATA[
+			B.theme_name3 AS themename,
+			B.theme_content3 AS themecontent,
+		]]>
+		</isEqual>
+		<![CDATA[
 			    A.theme_used AS themeused,
 			    A.theme_default AS themedefault
 			FROM

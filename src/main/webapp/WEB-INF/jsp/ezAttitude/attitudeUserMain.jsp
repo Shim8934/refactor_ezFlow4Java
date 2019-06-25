@@ -306,6 +306,10 @@
 						pMode = "new";
 						attitudeNewItem(this);
 					});
+					$(document).on('dblclick', '.td_day2', function() {//표형식
+						pMode = "new";
+						attitudeNewItem(this);
+					}); 
 				} else { //부서근태현황에서는 당일의 근태를 조회.
 					$(document).on('click', '.td_day td', function() {
 						pMode = "new";
@@ -315,6 +319,11 @@
 				
 				$('#attiCalendar').on('dblclick', 'tr td[typeid]:not(td[typeid=A01], td[typeid=A02], td[typeid=A03])', function() {
 					attitudeItemView(this);
+				});
+				$(document).on('dblclick', '.td_day3', function() {//표형식 상세보기
+					if($(this).attr("attitudeid")){						
+						attitudeItemView(this);
+					}
 				});
 				
 				$(window).on("resize", function() {
@@ -328,12 +337,6 @@
 		        	var height = parseInt(document.documentElement.clientHeight - 235);
 		        	$("#contentlist").css("height", height +"px");
 		        });
-				
-				//리스트형 날짜 클릭시 근태작성창
-				$(document).on('dblclick', '#contentlist .mainlist tr td:nth-child(6n - 5)', function() {
-					pMode = "new";
-					attitudeNewItem(this);
-				});
 				
 				//개인근태일경우 표보기 크롬일경우 테이블 ui틀어짐 조정
 				if (deptFlag != "true") {
@@ -1563,6 +1566,7 @@
 						}
 					}
 				});
+				
 			}
 			
 			/**
@@ -1802,14 +1806,14 @@
 	    			
 	    			tbodyHtml += "<tr class='" + dayClass + "' id='" + year + "-" + month + "-" + j + "'>";
 	    			if (LunarUse) {
-    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter td_day2' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
 	    			} else {
-    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter td_day2' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
 	    			}
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
-	    			tbodyHtml += "<td class='borderLeft textLeft' style='width:20%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textLeft td_day3' style='width:20%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textLeft'></td>";
 	    			tbodyHtml += "</tr>";
 	    		}
@@ -1837,9 +1841,63 @@
 		    			if (vo.typeId == "A01") { //출근리스트
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", "<spring:message code='ezAttitude.t231' />");
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html("<spring:message code='ezAttitude.t231' />");
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr({typeid : vo.typeId, attitudeid : vo.attitudeId, modappl : vo.modAppl, style : "cursor:pointer"});
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").on('dblclick',function(){
+			    				var typeid = $(this).attr('typeid');
+								var modappl = $(this).attr('modappl');
+								var attitudeid = $(this).attr('attitudeid');
+								if (deptFlag != "true") {
+									if (attitudeModAppl && modappl == 0 && typeid == 'A02') {
+										attitudeModItem(this);	
+									}
+									if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+										mod_detail(attitudeid);
+									}
+								} else {
+									if (modappl == 0 && typeid == 'A02') {
+					 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+				 							attitudeItemDetail(this);
+				 						}	
+									} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+					 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+				 							attitudeItemDetail(this);
+				 						} else {
+											mod_detail(attitudeid);
+				 						}
+									}
+								}
+			    			});
+
 		    			} else if (vo.typeId == "A02") { //지각
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='AttRedText " + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
-
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr({typeid : vo.typeId, attitudeid : vo.attitudeId, modappl : vo.modAppl, style : "cursor:pointer"});
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").on('dblclick',function(){
+			    				var typeid = $(this).attr('typeid');
+								var modappl = $(this).attr('modappl');
+								var attitudeid = $(this).attr('attitudeid');
+								if (deptFlag != "true") {
+									if (attitudeModAppl && modappl == 0 && typeid == 'A02') {
+										attitudeModItem(this);	
+									}
+									if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+										mod_detail(attitudeid);
+									}
+								} else {
+									if (modappl == 0 && typeid == 'A02') {
+					 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+				 							attitudeItemDetail(this);
+				 						}	
+									} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+					 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+				 							attitudeItemDetail(this);
+				 						} else {
+											mod_detail(attitudeid);
+				 						}
+									}
+								}
+			    			});
+			    			
 			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1) {//조퇴면 "지각,조퇴" 형태로 되게끔.
 			    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(vo.typeName + ", " + typeText);
 				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName + ", " + typeText);
@@ -1894,7 +1952,7 @@
 					    			//근태유형
 					 				objTds += "<td class='borderLeft textCenter' title='" + vo.typeName + "'>" + vo.typeName + "</td>";
 					 				//일시
-					 				objTds += "<td class='borderLeft textLeft'>";
+					 				objTds += "<td attitudeid='" + vo.attitudeId + "' typeid='" + vo.typeId + "' class='borderLeft textLeft' style='cursor:pointer;'>";
 					    			if (vo.dateType == 4 && vo.typeId != 'A04') {
 						 				objTds += vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr;
 						    		}
@@ -1937,6 +1995,9 @@
 						    		//일시
 					    			if (vo.dateType == 4 && vo.typeId != 'A04') {
 						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr);
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").attr("attitudeid", vo.attitudeId);
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").attr("typeid", vo.typeId);
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").css("cursor", "pointer");
 						    		}
 					    			else if (vo.typeId == 'A04') {
 						    			if (vo.dateType == 4) {
@@ -1970,7 +2031,7 @@
 				    			//근태유형
 				 				objTds += "<td class='borderLeft textCenter' title='" + vo.typeName + "'>" + vo.typeName + "</td>";
 				 				//일시
-				 				objTds += "<td class='borderLeft textLeft'>";
+				 				objTds += "<td attitudeid='" + vo.attitudeId + "' typeid='" + vo.typeId + "' class='borderLeft textLeft' style='cursor:pointer;'>";
 					    		//일시
 				    			if (vo.dateType == 1 || vo.dateType == 2) {
 				    				objTds += vo.startDate.substring(0,10) + " " +  iconStr;
@@ -2014,12 +2075,15 @@
 				    			else if (vo.dateType == 3) {
 					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").html(vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>\u00a0~\u00a0<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>" + " " +  iconStr);
 					    		}
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").attr("attitudeid", vo.attitudeId);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").attr("typeid", vo.typeId);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").css("cursor", "pointer");
 					    		
 					    		//근무지 및 내용
 					    		if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(5)").html("<div style='max-width::810px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(5)").html("<div style='max-width::810px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
 					    		} else {
-					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(5)").html("<div style='max-width::773px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(5)").html("<div style='max-width::773px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
 					    		}
 				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(5)").attr("title",statusContent);				    			
 				    		}
@@ -2198,19 +2262,19 @@
 		        <c:if test="${A11typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
-			            <dd class="timeIconDD">${A11typeInfo.typeName }<span class="timeCountR" id="FA11">0</span></dd>
+			            <dd class="timeIconDD"><spring:message code="ezAttitude.t254"/><span class="timeCountR" id="FA11">0</span></dd>
 			        </dl>
 		        </c:if>
 		        <c:if test="${A12typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
-			            <dd class="timeIconDD">${A12typeInfo.typeName } <span class="timeCountR" id="FA12">0</span></dd>
+			            <dd class="timeIconDD"><spring:message code="ezAttitude.t255"/><span class="timeCountR" id="FA12">0</span></dd>
 			        </dl>
 			    </c:if>
 			    <c:if test="${A13typeInfo.isuse eq '1' }">
 			        <dl class="timeIcconDL">
 			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
-			            <dd class="timeIconDD">${A13typeInfo.typeName } <span class="timeCountR" id="FA13">0</span></dd>
+			            <dd class="timeIconDD"><spring:message code="ezAttitude.t256"/><span class="timeCountR" id="FA13">0</span></dd>
 			        </dl>
 			    </c:if>
 		    </div>

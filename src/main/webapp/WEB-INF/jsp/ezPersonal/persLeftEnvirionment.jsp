@@ -244,10 +244,10 @@
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="AddressEnv" name="AddressEnv" onClick="address_Config()"><spring:message code='ezAddress.hyh001' /></span></li>
                     </c:if>
                     <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}">
-       					<c:if test="${isScheduleUsed == 'Y'}">
+       					<%-- <c:if test="${isScheduleUsed == 'Y'}"> --%>
                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezPersonal.t999900007' /></span></li>
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="TaskEnv" name="TaskEnv" onClick="Task_Config()"><spring:message code='ezTask.hyh001' /></span></li>
-	                    </c:if>
+	                    <%-- </c:if> --%>
 	                    <c:if test="${packageType == 'standard'}">
 	                    	<c:if test="${isApprUsed == 'Y'}">
                             	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()"><spring:message code='ezPersonal.t999900008' /></span></li>
@@ -259,12 +259,12 @@
 	                    <c:if test="${isCircularUsed == 'Y'}">
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)"><spring:message code='ezPersonal.t999900031' /></span></li>
 	                    </c:if>
-	                    <c:if test="${isJournalUsed == 'Y'}">
+	                    <%-- <c:if test="${isJournalUsed == 'Y'}"> --%>
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="journalEnv" onClick="Open_Func(this)"><spring:message code='ezJournal.t150' /></span></li>
-	                    </c:if>
-	                    <c:if test="${isWebfolderUsed == 'Y'}">	
+	                    <%-- </c:if> --%>
+	                    <%-- <c:if test="${isWebfolderUsed == 'Y'}"> --%>	
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="webfolder" name="webfolder" onClick="Open_Func(this)"><spring:message code='ezWebFolder.t31' /></span></li>
-	                    </c:if>
+	                    <%-- </c:if> --%>
 					</c:if>
 		        </ul>
 	        </div>
