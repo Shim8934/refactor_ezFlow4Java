@@ -1008,7 +1008,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			model.addAttribute("pollCount", data.get("pollCount"));
+			// model.addAttribute("pollCount", data.get("pollCount"));
+			model.addAttribute("surveyCnt", data.get("surveyCnt"));
 			model.addAttribute("circularCount", data.get("circularCount"));
 			model.addAttribute("scheduleCount", data.get("scheduleCount"));
 			model.addAttribute("approvalCount", data.get("approvalCount"));

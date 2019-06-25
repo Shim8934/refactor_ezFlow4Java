@@ -100,14 +100,14 @@
 			                     	 <dt class="iconCircle iconcVote"><span class="iconCommon iconVote"></span></dt>
 			                         <dt class="iconText"><spring:message code='ezNewPortal.gu4' /></dt>
 			                         <c:choose>
-					                 	<c:when test="${pollCount eq 0}">
+					                 	<c:when test="${surveyCnt eq 0}">
 					                 		<dd class="count countZero">0</dd>
 					                 	</c:when>
-					                 	<c:when test="${pollCount > 999}">
+					                 	<c:when test="${surveyCnt > 999}">
 					                 		<dd class="count">999+</dd>
 					                 	</c:when>
 					                 	<c:otherwise>
-							            	<dd class="count">${pollCount }</dd>
+							            	<dd class="count">${surveyCnt }</dd>
 					                 	</c:otherwise>
 					                 </c:choose>
 	                         	</c:otherwise>

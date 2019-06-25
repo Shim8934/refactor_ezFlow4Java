@@ -189,4 +189,8 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (long)select("EzSurveyDAO.checkRespondent", map);
 	}
 
+	public int getNoAnsweredIngSurveyList(Map<String, Object> map) {
+		return (int)select("EzSurveyDAO.getNoAnsweredIngSurveyList", map);
+	}
+
 }

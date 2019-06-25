@@ -75,6 +75,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -126,6 +127,9 @@ public class EzNewPortalGWController {
 
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGSerivce;
+	
+	@Autowired
+	private EzSurveyService ezSurveyService; 
 
 	@Autowired
 	private Properties config;
@@ -1457,9 +1461,11 @@ public class EzNewPortalGWController {
 
 			// 전자 설문 개수 불러오기
 			if (useQuestion.equals("YES")) {
-				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
-
-				data.put("pollCount", pollCount);
+//				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
+//				data.put("pollCount", pollCount);
+				
+				int surveyCnt = ezSurveyService.getSurveyIngCnt(info);
+				data.put("surveyCnt", surveyCnt);
 			}
 
 			// 오늘 일정 개수 불러오기
@@ -3938,9 +3944,12 @@ public class EzNewPortalGWController {
 
 			// 전자 설문 개수 불러오기
 			if (useQuestion.equals("YES")) {
+				/*
 				int pollCount = ezQuestionService.wpCountPollCount(userId, tenantId, offset, companyId);
-
 				data.put("pollCount", pollCount);
+				*/
+				int surveyCnt = ezSurveyService.getSurveyIngCnt(info);
+				data.put("surveyCnt", surveyCnt);
 			}
 
 			// 오늘 일정 개수 불러오기

@@ -49,6 +49,7 @@ import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1385,5 +1386,27 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		}
 		return result;
 	}
+
+	@Override
+	public int getSurveyIngCnt(MCommonVO userInfo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("deptId", userInfo.getDeptId());
+		map.put("companyId", userInfo.getCompanyId());
+		map.put("userId", userInfo.getUserId());
+		
+		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
+		map.put("deptList", userDeptList);
+
+		String offset = userInfo.getOffSet();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+		map.put("today", timeUTC);
+		
+		int result = ezSurveyDAO.getNoAnsweredIngSurveyList(map);
+		
+		return result;
+	}
+	
 	
 }

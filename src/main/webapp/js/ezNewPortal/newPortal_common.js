@@ -415,7 +415,8 @@ function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSche
 		dataType : "json",
 		success : function(result) {
 			if (useQuestion === "YES") {
-				setCountSetting("poll", result.pollCount);
+//				setCountSetting("poll", result.pollCount);
+				setCountSetting("survey", result.surveyCnt);
 			}
 			
 			if (useCircular === "YES") {
@@ -440,6 +441,7 @@ function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSche
 //읽지않은 메일, 설문조사, 회람판, 결재할 문서, 오늘일정 개수 setting
 function setCountSetting(countName, count) {
 	switch (countName) {
+	/*
 	case "poll" : 
 		if (count > 999) {
 			count = "999+";
@@ -453,6 +455,23 @@ function setCountSetting(countName, count) {
 			document.getElementById("pollCount").classList.add("iconCount");
 		}
 
+		document.getElementById("pollCount").textContent = count;
+		
+		break;
+	*/
+	case "survey" : 
+		if (count > 999) {
+			count = "999+";
+			document.getElementById("pollCount").classList.remove("iconCount_none");
+			document.getElementById("pollCount").classList.add("iconCount");
+		} else if (count == 0) {
+			document.getElementById("pollCount").classList.remove("iconCount");
+			document.getElementById("pollCount").classList.add("iconCount_none");
+		} else {
+			document.getElementById("pollCount").classList.remove("iconCount_none");
+			document.getElementById("pollCount").classList.add("iconCount");
+		}
+		
 		document.getElementById("pollCount").textContent = count;
 		
 		break;

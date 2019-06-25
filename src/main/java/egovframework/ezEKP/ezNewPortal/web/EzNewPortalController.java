@@ -569,7 +569,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			unreadCounts.put("pollCount", data.get("pollCount"));
+//			unreadCounts.put("pollCount", data.get("pollCount"));
+			unreadCounts.put("surveyCnt", data.get("surveyCnt"));
 			unreadCounts.put("circularCount", data.get("circularCount"));
 			unreadCounts.put("scheduleCount", data.get("scheduleCount"));
 			unreadCounts.put("approvalCount", data.get("approvalCount"));
