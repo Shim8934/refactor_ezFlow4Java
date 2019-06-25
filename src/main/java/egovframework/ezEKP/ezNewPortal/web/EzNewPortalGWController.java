@@ -1774,7 +1774,7 @@ public class EzNewPortalGWController {
 			String lang = userInfo.getLang();
 			
 			if (lang == null || lang.equals("")) {
-				lang = 1;
+				lang = "1";
 			}
 			
 			ThemeInfoVO themeInfo = ezNewPortalService.getThemeInfo(themeId, companyId, tenantId, lang);
