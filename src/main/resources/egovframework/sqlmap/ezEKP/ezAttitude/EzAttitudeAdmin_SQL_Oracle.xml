@@ -1555,7 +1555,7 @@
 			<isEmpty property="orderCell">
 				<![CDATA[
 					ORDER BY
-						userName$primary$
+						userName
 				]]>
 			</isEmpty>	
 		<![CDATA[

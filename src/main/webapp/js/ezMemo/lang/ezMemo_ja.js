@@ -13,4 +13,5 @@ var memoMessages = {
 	strLangMemo18 : "選択したメモを削除してよろしいですか？",
 	strLangMemo20 : "すべてのメモ",
 	strLangMemo21 : "エラーが発生しました。",
+	strLangMemo22 : "基本フォルダ",
 }

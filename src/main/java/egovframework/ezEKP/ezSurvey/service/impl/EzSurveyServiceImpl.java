@@ -1287,7 +1287,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getSurveyStatistic(Long surveyId, String realPath, LoginVO userInfo) throws Exception {
+	public JSONObject getSurveyStatistic(Long surveyId, String realPath, LoginVO userInfo, String adminYN) throws Exception {
 		JSONObject result               = new JSONObject();
 		JSONObject data                 = new JSONObject();
 		Map<String, Object> map         = new HashMap<String, Object>();
@@ -1305,7 +1305,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		if (!survey.getCreatorId().equals(userInfo.getId())) {
 			//Check public date
-			if (survey.getResultPublicFlag() == 0) {
+			if (adminYN.equals("N") && survey.getResultPublicFlag() == 0) {
 				result.put("status", "error");
 				result.put("code", 6);
 				return result;
@@ -1331,7 +1331,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				calendar.add(Calendar.DATE, openDays);
 				Date endPublicDate         = calendar.getTime();
 				
-				if (today.compareTo(endDate) < 0 || today.compareTo(endPublicDate) > 0) {
+				if (adminYN.equals("N") && (today.compareTo(endDate) < 0 || today.compareTo(endPublicDate) > 0)) {
 					result.put("status", "error");
 					result.put("code", 7);
 					return result;

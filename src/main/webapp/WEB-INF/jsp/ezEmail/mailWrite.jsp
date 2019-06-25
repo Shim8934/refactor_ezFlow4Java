@@ -1773,7 +1773,7 @@
 						
 						resultHtml += "</tbody></table>";
 						
-						$("#eSubject").val("[근태미입력공지] " + searchStartDate + " ~ " + searchEndDate);
+						$("#eSubject").val("[<spring:message code='ezAttitude.t313'/>] " + searchStartDate + " ~ " + searchEndDate);
 						
 						switch (mailsel) {
 		                case "0": 
