@@ -398,7 +398,7 @@
 		    			}
 		    			var useAnnualCnt = (Number(vo.annualCnt) - holidayCnt);
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
-		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "' ondblclick='attitudeItemView(this.id, this.typeId)' style='background-color:;'>";
+		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "' ondblclick=attitudeItemView('" + vo.attitudeId + "','" + vo.typeId + "') style='background-color:;'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
 			    		html += "<td style='width:25%'>";
 		 	    		html += "<a class='link attitudeView'>";
@@ -439,9 +439,11 @@
 			    			//html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"openDraftUI('DRAFT', '" + vo.attitudeId + "')\"><span>취소신청</span></a>" +"</td>";
 		    			} else if(vo.modAppl == "4") {
 		    				html += "<td style='width:12%'><spring:message code='ezAttitude.t211' /></td>";
-		    			} else if(vo.modAppl == "3") {
+		    			} 
+						else if(vo.modAppl == "3") {
 		    				html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span><spring:message code='ezAttitude.t272' /></span></a>" +"</td>";
-		    			} else {
+		    			} 
+						else {
 		    				html += "<td style='width:12%'><spring:message code='ezAttitude.t209' /></td>";
 		    			}
 		    			html += "</tr>";

@@ -3450,11 +3450,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else if (changeStatus.equals("ret")) {
 			int modAppl = ezAttitudeDAO.getAttModApp(map);
 			
-			if (modAppl == 1) {
+			if (modAppl == 1 || modAppl == 2) {
 				map.put("modappl", 4);
-			} else if (modAppl == 2) {
-				map.put("modappl", 3);
-			}
+			} 
+//			else if (modAppl == 2) {
+//				map.put("modappl", 3);
+//			}
 			ezAttitudeDAO.setAttModApp(map);
 		}
 		LOGGER.debug("changeUsersCancelAnn ended.");
