@@ -54,6 +54,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -1376,6 +1377,41 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		return sList;
 	}
+	
+	@Override
+	public ScheduleMailConfigVO getScheduleMailNotiConfig(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userId);		
+		map.put("v_TENANTID", tenantId);
+		
+		return ezScheduleDAO.getScheduleMailNotiConfig(map);
+	}
+	
+	@Override
+	public void setScheduleMailNotiConfig(String userMailNoti, String userId, int tenantId) throws Exception {
+		String[] userMailNotiList = userMailNoti.split(";");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userId);		
+		map.put("v_TENANTID", tenantId);
+		map.put("v_INVITATIONMAIL", userMailNotiList[0]);
+		map.put("v_CANCELLATIONMAIL", userMailNotiList[1]);
+		map.put("v_ATTENDANCEMAIL", userMailNotiList[2]);
+		map.put("v_REJECTEDMAIL", userMailNotiList[3]);
+		
+		if(ezScheduleDAO.getUserScheduleConfig(map) == null) {			
+			map.put("v_DEFAULTVIEW", "2");
+			map.put("v_STARTDAY", "7");
+			map.put("v_STARTTIME", "540");
+			map.put("v_ENDTIME", "1080");
+			map.put("v_AUTODELETE", "0");
+			
+			ezScheduleDAO.insertScheduleConfig(map);
+		}
+		else {
+			ezScheduleDAO.setScheduleMailNotiConfig(map);
+		}
+	}
 
 	@Override
 	public void deleteScheduleConfig(String userID, int tenantID) throws Exception {
@@ -1407,7 +1443,18 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_AUTODELETE", autoDelete);
 		map.put("v_TENANTID", tenantID);
 		
-		ezScheduleDAO.insertScheduleConfig(map);
+		if(ezScheduleDAO.getUserScheduleConfig(map) == null) {			
+			map.put("v_INVITATIONMAIL", "Y");
+			map.put("v_CANCELLATIONMAIL", "Y");
+			map.put("v_ATTENDANCEMAIL", "Y");
+			map.put("v_REJECTEDMAIL", "Y");
+			
+			ezScheduleDAO.insertScheduleConfig(map);
+		}
+		else {
+			ezScheduleDAO.modifyScheduleConfig(map);
+		}
+		
 	}
 
 	@Override
@@ -1941,7 +1988,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss02", userInfo.getLocale()) +  "</br>" + " ");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezSchedule.t318", userInfo.getLocale()) + " : " + period + " ");
-				bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2')\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
+				bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2', '', 'width=1400px, height=900px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=0' )\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
 			case "del" :		// 참석자 삭제
 				subject = egovMessageSource.getMessage("ezSchedule.kmss03", userInfo.getLocale()) + commonUtil.cleanValue(title);
@@ -1956,7 +2003,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss06", userInfo.getLocale()) + "</br>" + " ");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezSchedule.t318", userInfo.getLocale()) + " : " + period + " ");
-				bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2')\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
+				bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2', '', 'width=1400px, height=900px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=0' )\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
 			case "rej" :		// 참석 거절
 				subject = egovMessageSource.getMessage("ezSchedule.kmss07", userInfo.getLocale()) + commonUtil.cleanValue(title);
@@ -1964,7 +2011,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				bodyContent.append(" " + userInfo.getDisplayName() + egovMessageSource.getMessage("ezSchedule.kmss08", userInfo.getLocale()) + "</br>" + " ");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:open_schedule('" + scheduleId + "')\">" + commonUtil.cleanValue(title) + "</span></br>");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezSchedule.t318", userInfo.getLocale()) + " : " + period + " ");
-				bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2')\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
+				bodyContent.append("<br><br>" + "<span id='schedule_read' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezSchedule/scheduleIndex.do?funCode=2', '', 'width=1400px, height=900px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=0' )\">" + egovMessageSource.getMessage("ezEmail.t805", userInfo.getLocale()) + "</span></br>");
 				break;
 		}
 

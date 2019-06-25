@@ -15,6 +15,7 @@
 	<typeAlias  alias="OrganUserVO" 		type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias  alias="ResGetScheduleVO" 	type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
 	<typeAlias  alias="ScheduleGroupVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupVO"/>
+	<typeAlias  alias="ScheduleMailConfigVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO"/>
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
 		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
@@ -154,6 +155,13 @@
 		<result property="title"				column="TITLE"				columnIndex="6"/>
 		<result property="title2"				column="TITLE2"				columnIndex="7"/>
 		<result property="telephoneNumber"		column="TELEPHONENUMBER"	columnIndex="8"/>
+	</resultMap>
+	
+	<resultMap class="ScheduleMailConfigVO" id="getScheduleMailConfigVO">
+		<result property="invitationMail"		column="INVITATIONMAIL"		columnIndex="1"/>
+		<result property="cancellationMail"			column="CANCELLATIONMAIL"			columnIndex="2"/>
+		<result property="attendanceMail"		column="ATTENDANCEMAIL"			columnIndex="3"/>
+		<result property="rejectedMail"			column="REJECTEDMAIL"			columnIndex="4"/>
 	</resultMap>
 	
 	<!-- checked -->			
@@ -1167,6 +1175,39 @@
 			
 		]]>
 	</select>
+
+	<select id="EzScheduleDAO.getUserScheduleConfig" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			 SELECT
+			 	1
+	         FROM
+	         	DUAL
+	         WHERE
+	         	EXISTS ( SELECT
+	         				* 
+	                     FROM
+	                     	TBL_SCHEDULECONFIG
+	                     WHERE  
+	                     	USERID = #v_USERID#
+	                     AND
+	                     	TENANT_ID = #v_TENANTID#
+	                   )
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getScheduleMailNotiConfig" parameterClass="Map" resultMap="getScheduleMailConfigVO">
+		<![CDATA[
+			 SELECT
+			 	INVITATIONMAIL, CANCELLATIONMAIL, ATTENDANCEMAIL, REJECTEDMAIL
+	         FROM
+	         	TBL_SCHEDULECONFIG
+	         WHERE
+	         	USERID = #v_USERID#
+	         AND
+	             TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
 	<!-- checked -->	
 	<insert id="EzScheduleDAO.insertSchedule" parameterClass="map">
 		<![CDATA[
@@ -1270,9 +1311,9 @@
 	<insert id="EzScheduleDAO.insertScheduleConfig" parameterClass="map">
 		<![CDATA[
 			insert into tbl_scheduleconfig(
-				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			autodelete,			tenant_id		
+				userid, 			defaultview, 			startday, 				starttime, 				endtime, 			InvitationMail, CancellationMail, AttendanceMail, RejectedMail, autodelete,			tenant_id		
 			) values (
-				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_AUTODELETE#,		#v_TENANTID#
+				#v_USERID#,			#v_DEFAULTVIEW#,		#v_STARTDAY#,			#v_STARTTIME#,			#v_ENDTIME#,		#v_INVITATIONMAIL#, #v_CANCELLATIONMAIL#, #v_ATTENDANCEMAIL#, #v_REJECTEDMAIL#, #v_AUTODELETE#,		#v_TENANTID#
 			)
    		]]>
 	</insert>
@@ -1379,6 +1420,40 @@
 	   			tenant_id = #v_TENANTID#
 		]]>	
 	</update>
+	
+	<update id="EzScheduleDAO.modifyScheduleConfig" parameterClass="map">
+		<![CDATA[
+			update 
+				tbl_scheduleconfig
+			set
+				defaultview = #v_DEFAULTVIEW#,
+				startday = #v_STARTDAY#,
+				starttime = #v_STARTTIME#,
+				endtime = #v_ENDTIME#,
+				autodelete = #v_AUTODELETE#
+	   		where  
+	   			userid = #v_USERID#
+	   		and	
+	   			tenant_id = #v_TENANTID#
+		]]>	
+	</update>
+	
+	<update id="EzScheduleDAO.setScheduleMailNotiConfig" parameterClass="map">
+		<![CDATA[
+			update 
+				tbl_scheduleconfig
+			set
+				InvitationMail = #v_INVITATIONMAIL#,
+				CancellationMail = #v_CANCELLATIONMAIL#,
+				AttendanceMail = #v_ATTENDANCEMAIL#,
+				RejectedMail = #v_REJECTEDMAIL#
+	   		where  
+	   			userid = #v_USERID#
+	   		and	
+	   			tenant_id = #v_TENANTID#
+		]]>	
+	</update>
+	
 	<!-- checked -->
 	<delete id="EzScheduleDAO.deleteScheduleGroup" parameterClass="map">
 		<![CDATA[

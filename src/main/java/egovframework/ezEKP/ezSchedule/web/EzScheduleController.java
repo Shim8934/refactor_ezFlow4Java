@@ -68,6 +68,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleMailConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.let.user.login.service.LoginService;
@@ -1656,12 +1657,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 		JSONParser parser = new JSONParser();
 		JSONArray jsonArray = (JSONArray)parser.parse(listSecretary);
 				
-		//기존 환경설정 정보 삭제
-		ezScheduleService.deleteScheduleConfig(userID, tenantID);
+		/*//기존 환경설정 정보 삭제
+		ezScheduleService.deleteScheduleConfig(userID, tenantID); */
+		//새로운 환경설정 정보 등록
+		ezScheduleService.insertScheduleConfig(userID, defaultView, startDay, startTime, endTime, autoDelete, tenantID);	
 		//기존 비서정보 삭제
 		ezScheduleService.deleteSecretary(userID, tenantID, companyID);
-		//새로운 환경설정 정보 등록
-		ezScheduleService.insertScheduleConfig(userID, defaultView, startDay, startTime, endTime, autoDelete, tenantID);		
 		
 		for (int i = 0; i < jsonArray.size(); i++) {
 			JSONObject obj = (JSONObject) jsonArray.get(i);
@@ -1672,6 +1673,41 @@ public class EzScheduleController extends EgovFileMngUtil {
 			ezScheduleService.insertSecretary(userID, displayName, displayName2, secretaryID, secretaryName, tenantID, companyID);
 		}			
 	}
+	
+	/**
+	 * 환경설정 알림메일설정
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleMailNotiConfig.do")
+	public String scheduleMailNotiConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		logger.debug("============ scheduleMailNotiConfig started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		// 사용자 설정 정보 가져오기
+		ScheduleMailConfigVO mailConfig = ezScheduleService.getScheduleMailNotiConfig(loginSimpleVO.getId(), loginSimpleVO.getTenantId());	
+		
+		model.addAttribute("mailConfig", mailConfig);
+		
+		return "/ezSchedule/scheduleSetNoticeMail";
+	}
+	
+	/**
+	 * 환경설정 알림메일설정
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleSaveMailNotiConfig.do")
+	@ResponseBody
+	public void scheduleSaveMailNotiConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		logger.debug("============ scheduleSaveMailNotiConfig started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		// 사용자 설정 정보 가져오기
+		String userMailNoti = request.getParameter("config");
+		
+		//새로운 환경설정 정보 등록
+		ezScheduleService.setScheduleMailNotiConfig(userMailNoti, loginSimpleVO.getId(), loginSimpleVO.getTenantId());	
+	}
+		
 	
 	/**
 	 * 일정작성
@@ -2169,7 +2205,10 @@ public class EzScheduleController extends EgovFileMngUtil {
      		        	period = startdate.substring(0,16) + " ~ " + enddate.substring(0,16);
      		        }
      				
-     				ezScheduleService.scheduleSendMail(result, v_attendantId, v_attendantName, title, period, "add", loginVO, loginCookie);
+     				ScheduleMailConfigVO attendantMailNotiConfig = ezScheduleService.getScheduleMailNotiConfig(v_attendantId, loginVO.getTenantId());
+     				if(attendantMailNotiConfig == null || attendantMailNotiConfig.getInvitationMail().equals("Y")) {
+     					ezScheduleService.scheduleSendMail(result, v_attendantId, v_attendantName, title, period, "add", loginVO, loginCookie);
+     				}
      			}
         	 }
 	    } else {
@@ -2749,7 +2788,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	        	period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
 	        }
 			
-			ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleId), attendantId, attendantName, vo.getTitle(), period, "add", loginVO, loginCookie);
+			ScheduleMailConfigVO attendantMailNotiConfig = ezScheduleService.getScheduleMailNotiConfig(attendantId, loginVO.getTenantId());
+			if(attendantMailNotiConfig == null || attendantMailNotiConfig.getInvitationMail().equals("Y")) {
+				ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleId), attendantId, attendantName, vo.getTitle(), period, "add", loginVO, loginCookie);
+			}
 		}
 	}
 	
@@ -2791,7 +2833,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	        	period = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
 	        }
 			
-			ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleId), attendantId, attendantName, vo.getTitle(), period, "del", loginVO, loginCookie);
+			ScheduleMailConfigVO attendantMailNotiConfig = ezScheduleService.getScheduleMailNotiConfig(attendantId, loginVO.getTenantId());
+			if(attendantMailNotiConfig == null || attendantMailNotiConfig.getCancellationMail().equals("Y")) {
+				ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleId), attendantId, attendantName, vo.getTitle(), period, "del", loginVO, loginCookie);
+			}
 		}
 	}
 	
@@ -2860,10 +2905,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 	        }
 			
 			if(status.equals("1")) {
-				ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, period, "acc", loginVO, loginCookie);
+				ScheduleMailConfigVO attendantMailNotiConfig = ezScheduleService.getScheduleMailNotiConfig(attendantId, loginVO.getTenantId());
+				if(attendantMailNotiConfig == null || attendantMailNotiConfig.getAttendanceMail().equals("Y")) {
+					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, period, "acc", loginVO, loginCookie);
+				}
 			}
 			else {
-				ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, period, "rej", loginVO, loginCookie);
+				ScheduleMailConfigVO attendantMailNotiConfig = ezScheduleService.getScheduleMailNotiConfig(attendantId, loginVO.getTenantId());
+				if(attendantMailNotiConfig == null || attendantMailNotiConfig.getRejectedMail().equals("Y")) {
+					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, period, "rej", loginVO, loginCookie);
+				}
 			}
 		}	
 	}
