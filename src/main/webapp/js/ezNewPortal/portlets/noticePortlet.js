@@ -63,7 +63,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 			str += "<dt>";
 			str += "<img src='/images/kr/main/noData_sIcon.png'>";
 			str += "</dt>";
-			str += "<dd>&#34;" + messages.strLang1 + "&#34;</dd>";
+			str += "<dd>" + messages.strLang1 + "</dd>";
 			str += "</dl>";
 		}
 	} else {
@@ -73,7 +73,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 			str += "<dt>";
 			str += "<img src='/images/kr/main/noData_sIcon.png'>";
 			str += "</dt>";
-			str += "<dd>&#34;" + messages.strLang17 + "&#34;</dd>";
+			str += "<dd>" + messages.strLang17 + "</dd>";
 			str += "</dl>";
 		} else {
 			str += "<ul class='portlet_list'>";
@@ -81,7 +81,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 			str += "<dt>";
 			str += "<img src='/images/kr/main/noData_sIcon.png'>";
 			str += "</dt>";
-			str += "<dd>&#34;" + messages.strLang14 + "&#34;</dd>";
+			str += "<dd>" + messages.strLang14 + "</dd>";
 			str += "</dl>";
 		} 
 	}

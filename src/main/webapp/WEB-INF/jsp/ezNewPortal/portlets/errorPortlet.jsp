@@ -17,7 +17,7 @@
 				<div>
 					<dl class="nodata">
 						<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-						<dd>"<spring:message code="ezNewPortal.t135"/>"</dd>
+						<dd><spring:message code="ezNewPortal.t135"/></dd>
 					</dl>
 				</div>
 			</div>

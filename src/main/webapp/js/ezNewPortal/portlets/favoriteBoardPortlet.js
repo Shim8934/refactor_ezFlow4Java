@@ -56,7 +56,7 @@ function getTabList() {
     			var listHTML = "";
     			listHTML += "<dl class='nodata'>";
     	    	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-    	    	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
+    	    	listHTML += '<dd>' + strLang1_NewBoardSTD + '</dd>';
     	    	listHTML += "</dl>";
     	    	
     	    	document.getElementById("BoardList").innerHTML = listHTML;
@@ -120,7 +120,7 @@ function getBoardList_NewBoardSTD() {
         	var listHTML = "";
 			listHTML += "<dl class='nodata'>";
         	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-        	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
+        	listHTML += '<dd>' + strLang1_NewBoardSTD + '</dd>';
         	listHTML += "</dl>";
         	
         	document.getElementById("BoardList").innerHTML = listHTML;

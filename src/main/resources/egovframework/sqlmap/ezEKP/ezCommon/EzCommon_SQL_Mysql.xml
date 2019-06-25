@@ -1133,7 +1133,8 @@
 		ALTER TABLE
 			TBL_PORTAL_THEME
 		ADD (
-			THEME_CONTENT2 VARCHAR2(400) DEFAULT 'theme content'
+			THEME_CONTENT2 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME2 VARCHAR(100) DEFAULT 'theme2'
 			)
 	</statement>
 	
@@ -1149,7 +1150,8 @@
 		ALTER TABLE
 			TBL_PORTAL_THEME
 		ADD (
-			THEME_CONTENT3 VARCHAR2(400) DEFAULT 'theme content'
+			THEME_CONTENT3 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME3 VARCHAR(100) DEFAULT 'theme3'
 			)
 	</statement>
 	
@@ -1161,7 +1163,12 @@
 								WHEN theme_id = 1 THEN 'A theme with a fixed area on the left or right.'
 								WHEN theme_id = 2 THEN 'A theme with a fixed area on the top.'
 								WHEN theme_id = 3 THEN 'A theme that consists of only portlets without fixed areas.'
-							END 
+							END ,
+			THEME_NAME2 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
 				
 	</update>
 	
@@ -1173,6 +1180,11 @@
 								WHEN theme_id = 1 THEN '고정 영역이 왼쪽 혹은 오른쪽에 위치해 있는 테마입니다.'
 								WHEN theme_id = 2 THEN '고정 영역이 상단에 위치해 있는 테마입니다.'
 								WHEN theme_id = 3 THEN '고정 영역 없이 포틀릿으로만 이루어져있는 테마입니다.'
-							END 
+							END ,
+			THEME_NAME3 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
 	</update>
 </sqlMap>
