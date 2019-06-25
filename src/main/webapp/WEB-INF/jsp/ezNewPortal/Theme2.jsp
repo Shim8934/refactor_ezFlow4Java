@@ -560,7 +560,7 @@
 					emPic.appendChild(img);
 					
 					document.getElementById("exellentDeptName").innerText = "";
-					document.getElementById("exellentEmpName").innerText = '\"<spring:message code="ezNewPortal.t018" />\"';
+					document.getElementById("exellentEmpName").innerText = '<spring:message code="ezNewPortal.t018" />';
 					
 					var nodata = document.getElementById("exellentEmpName");
 					nodata.style.color = "#c0c0c0";
@@ -638,7 +638,7 @@
 			
 			dt.appendChild(img);
 			var dd = document.createElement('dd');
-			dd.textContent = '\"<spring:message code="ezNewPortal.t018" />\"';
+			dd.textContent = '<spring:message code="ezNewPortal.t018" />';
 			
 			dl.appendChild(dt);
 			dl.appendChild(dd);

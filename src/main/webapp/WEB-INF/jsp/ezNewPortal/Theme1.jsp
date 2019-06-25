@@ -227,7 +227,7 @@
             		<div id="nodata_NewBirth" style="">
             			<dl class="nodata">
 	            			<dt style="padding-top:33px"><img src="/images/kr/main/noData_sIcon.png"></dt>
-	            			<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
+	            			<dd><spring:message code='ezNewPortal.t018' /></dd>
             			</dl>
             		</div>
 				</article>
