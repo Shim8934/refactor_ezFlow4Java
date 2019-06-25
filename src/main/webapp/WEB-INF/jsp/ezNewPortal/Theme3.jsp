@@ -311,14 +311,20 @@
 		}
 		
 		var useQuestion = "<c:out value='${useQuestion}'/>";
+		var useSurvey = "<c:out value='${useSurvey}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
 		var useSchedule = "<c:out value='${useSchedule}'/>";
 		
 		//권한에 없는거는 보여주지 않기
+		/* 
 		if (useQuestion === "NO") {
 			$("#Poll").css("display", "none");
+		}
+		 */
+		if (useSurvey === "NO") {
+			$("#Survey").css("display", "none");
 		}
 		
 		if (useCircular === "NO") {

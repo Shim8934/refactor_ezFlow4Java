@@ -90,9 +90,34 @@
 	                     </dl>
 	                 </li>	                 
 	                 <li>
+	                 	<%-- 
 	                 	<dl id="Poll3" class="writebannerIcon">
 	                         <c:choose>
 	                         	<c:when test="${useQuestion eq 'NO'}">
+	                     			<dt class="iconCircle"><span class="iconCommon"></span></dt>
+	                        		<dt class="iconText"></dt>
+	                     		</c:when>
+	                         	<c:otherwise>
+			                     	 <dt class="iconCircle iconcVote"><span class="iconCommon iconVote"></span></dt>
+			                         <dt class="iconText"><spring:message code='ezNewPortal.gu4' /></dt>
+			                         <c:choose>
+					                 	<c:when test="${pollCount eq 0}">
+					                 		<dd class="count countZero">0</dd>
+					                 	</c:when>
+					                 	<c:when test="${pollCount > 999}">
+					                 		<dd class="count">999+</dd>
+					                 	</c:when>
+					                 	<c:otherwise>
+							            	<dd class="count">${pollCount }</dd>
+					                 	</c:otherwise>
+					                 </c:choose>
+	                         	</c:otherwise>
+	                         </c:choose>
+	                     </dl>
+	                      --%>
+	                 	<dl id="Survey3" class="writebannerIcon">
+	                         <c:choose>
+	                         	<c:when test="${useSurvey eq 'NO'}">
 	                     			<dt class="iconCircle"><span class="iconCommon"></span></dt>
 	                        		<dt class="iconText"></dt>
 	                     		</c:when>
@@ -113,6 +138,7 @@
 	                         	</c:otherwise>
 	                         </c:choose>
 	                     </dl>
+	                     
 	                 </li>
 	             	<li>
 	                 	<dl id="Circular3" class="writebannerIcon">

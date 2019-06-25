@@ -398,9 +398,11 @@ function viewPersonalEnv() {
 }
 
 //읽지않은 메일, 설문조사, 회람판, 결재할 문서, 오늘일정 개수 ajax가져오기
-function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule) {
+//function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule) {
+function getUnreadCounts(useSurvey, useCircular, useMail, useApproval, useSchedule) {
 	var data = {
-		"useQuestion" : useQuestion,
+//		"useQuestion" : useQuestion,
+		"useSurvey" : useSurvey,
 		"useCircular" : useCircular,
 		"useMail"  : useMail,
 		"useApproval" : useApproval,
@@ -414,8 +416,10 @@ function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSche
 		contentType : "application/json",
 		dataType : "json",
 		success : function(result) {
-			if (useQuestion === "YES") {
-//				setCountSetting("poll", result.pollCount);
+			/*if (useQuestion === "YES") {
+				setCountSetting("poll", result.pollCount);
+			}*/
+			if (useSurvey === "YES") {
 				setCountSetting("survey", result.surveyCnt);
 			}
 			
@@ -462,17 +466,17 @@ function setCountSetting(countName, count) {
 	case "survey" : 
 		if (count > 999) {
 			count = "999+";
-			document.getElementById("pollCount").classList.remove("iconCount_none");
-			document.getElementById("pollCount").classList.add("iconCount");
+			document.getElementById("surveyCount").classList.remove("iconCount_none");
+			document.getElementById("surveyCount").classList.add("iconCount");
 		} else if (count == 0) {
-			document.getElementById("pollCount").classList.remove("iconCount");
-			document.getElementById("pollCount").classList.add("iconCount_none");
+			document.getElementById("surveyCount").classList.remove("iconCount");
+			document.getElementById("surveyCount").classList.add("iconCount_none");
 		} else {
-			document.getElementById("pollCount").classList.remove("iconCount_none");
-			document.getElementById("pollCount").classList.add("iconCount");
+			document.getElementById("surveyCount").classList.remove("iconCount_none");
+			document.getElementById("surveyCount").classList.add("iconCount");
 		}
 		
-		document.getElementById("pollCount").textContent = count;
+		document.getElementById("surveyCount").textContent = count;
 		
 		break;
 	case "circular" :
@@ -975,8 +979,14 @@ function quickMenuOpen(menu) {
 			url = "/ezSchedule/scheduleIndex.do?funCode=2";
 			location = "main";
 			break;
+		/*
 		case "Poll" :
 			url = "/ezQuestion/qstMain.do";
+			location = "main";
+			break;
+		*/
+		case "Survey" :
+			url = "/ezSurvey/surveyMain.do";
 			location = "main";
 			break;
 	    case "Circular":

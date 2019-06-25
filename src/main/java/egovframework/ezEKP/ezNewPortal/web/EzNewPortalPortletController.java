@@ -1018,7 +1018,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("approvalDeptSusinCount", data.get("approvalDeptSusinCount"));
 			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
 			model.addAttribute("useCircular", data.get("useCircular"));
-			model.addAttribute("useQuestion", data.get("useQuestion"));
+			// model.addAttribute("useQuestion", data.get("useQuestion"));
+			model.addAttribute("useSurvey", data.get("useSurvey"));
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
@@ -1072,6 +1073,5 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalSurveyPortlet End");
 		return "/ezNewPortal/portlets/surveyPortlet";
 	}
-	
 	
 }
