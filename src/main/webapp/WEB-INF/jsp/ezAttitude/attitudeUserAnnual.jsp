@@ -98,7 +98,8 @@
 			    white-space: nowrap;
 			}
 			.mainlist tr:hover{
-				background: rgb(244,245,245);
+				background : rgb(244,245,245);
+				cursor : pointer;
 			}
 		</style>	
 	    <script type="text/javascript">
@@ -163,12 +164,11 @@
 	        });
 	    	
     		$(document).on('click', '.mainlist > tr', function(){
-    			console.log(this)
-    			var attitudeId = $(this).closest("tr").attr("id");
-    			var typeId = $(this).closest("tr").attr("typeId");
-    			attitudeItemView(attitudeId , typeId);
+    			$(".mainlist > tr").attr("style","background-color:;");
+    			$(this).attr("style","background-color:rgb(241,245,255);");
+    			
     		})
-	    	
+    		
     		function caldate(date, day){
  
  				var caledmonth, caledday, caledYear;
@@ -398,10 +398,10 @@
 		    			}
 		    			var useAnnualCnt = (Number(vo.annualCnt) - holidayCnt);
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
-		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "' style='cursor:pointer;'>";
+		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "' ondblclick='attitudeItemView(this.id, this.typeId)' style='background-color:;'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
 			    		html += "<td style='width:25%'>";
-			    		html += "<a class='link attitudeView'>";
+		 	    		html += "<a class='link attitudeView'>";
 		    			if (vo.typeId === "A11") { //연차
 			    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
 			    			annualCnt += useAnnualCnt;
