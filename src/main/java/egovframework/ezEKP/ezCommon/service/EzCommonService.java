@@ -140,5 +140,7 @@ public interface EzCommonService {
 
 	public void createAttitudeAnnual() throws Exception;
 
+	public void addThemeContentLang() throws Exception;
+
 }
 
