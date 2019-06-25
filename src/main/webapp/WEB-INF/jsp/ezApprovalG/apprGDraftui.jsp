@@ -250,11 +250,12 @@
 		                message.SetEditable(true);
 		            }
 		
-					if (pDraftFlag != "REDRAFT")
+					if (pDraftFlag != "REDRAFT") {
 						if(isUsed == "reuse" && apprReuseConfig != "1") {
 							setFirstDrafter(isUsed, beforeDocID);
 						}
 						setFirstDrafter("", "");
+					}
 		            
 		            if (approvalFlag == "S" && ListType != "21") {
 			            SetAutoDocnumItem();
