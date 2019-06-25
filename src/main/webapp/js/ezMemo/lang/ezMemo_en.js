@@ -13,4 +13,5 @@ var memoMessages = {
 	strLangMemo18 : "Do you want to delete?",
 	strLangMemo20 : "All memo",
 	strLangMemo21 : "An error has occurred",
+	strLangMemo22 : "Default notes box",
 }
