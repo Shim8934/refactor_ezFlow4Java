@@ -1596,4 +1596,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createTblAttitudeAnnualHistory();
 		ezCommonDAO.createTblAttitudeAprConn();
 	}
+
+	@Override
+	public void addThemeContentLang() throws Exception {
+		ezCommonDAO.addThemeContent2();
+		ezCommonDAO.addThemeContent3();
+	}
 }
