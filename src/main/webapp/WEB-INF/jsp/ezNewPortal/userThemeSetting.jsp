@@ -106,7 +106,7 @@ function updateUserThemeSetting(event) {
 </style>
 </head>
 <body class="mainbody">
-	<h1><spring:message code='ezNewPortal.t034' /></h1>
+	<h1><spring:message code='ezPersonal.t999900002' /></h1>
 	<%-- <div id="mainmenu">
 		<ul>
 			<li id="themeInit"><span><spring:message code='ezNewPortal.t035' /></span></li>

@@ -21,4 +21,5 @@ var messages = {
 	strLang20 : "Create schedule",
 	strLang21 : "Find Employee",
 	strLang22 : "Write notes",	
+	strLang23 : "New BoardItem"
 }

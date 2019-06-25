@@ -2823,7 +2823,7 @@ public class EzNewPortalGWController {
 			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 
 			for (BoardMyFavoriteVO fvo : resultList) {
-				if (lang.equals("2")) {
+				if (!lang.equals("1")) {
 					fvo.setBoardName(fvo.getBoardName2());
 				}
 				
