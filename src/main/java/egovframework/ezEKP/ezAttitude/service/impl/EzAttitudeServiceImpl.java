@@ -3450,11 +3450,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else if (changeStatus.equals("ret")) {
 			int modAppl = ezAttitudeDAO.getAttModApp(map);
 			
-			if (modAppl == 1) {
+			if (modAppl == 1 || modAppl == 2) {
 				map.put("modappl", 4);
-			} else if (modAppl == 2) {
-				map.put("modappl", 3);
-			}
+			} 
+//			else if (modAppl == 2) {
+//				map.put("modappl", 3);
+//			}
 			ezAttitudeDAO.setAttModApp(map);
 		}
 		LOGGER.debug("changeUsersCancelAnn ended.");
@@ -3499,6 +3500,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Override
 	public int approvalGConn(String userId, String deptId, String content, String mobile, String attitudeTypeList, String startDateList, String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("approvalGConn started");
+		
 		String[] attitudeTypeList2 = attitudeTypeList.split(",");
 		String[] startDateList2 = startDateList.split(",");
 		String[] endDateList2 = endDateList.split(",");
@@ -3536,10 +3539,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			//연동테이블에 insert
 			insertApprovalGConnInfo(String.valueOf(attitudeId), userId, docId, aprStatus, companyId, tenantId);
 		}
+		LOGGER.debug("approvalGConn ended");
 		return 0;
 	}
 	
 	private void insertApprovalGConnInfo(String attitudeId, String userId, String docId, String aprStatus, String companyId, int tenantId) throws Exception  {
+		LOGGER.debug("insertApprovalGConnInfo started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("attitudeId", attitudeId);
 		map.put("userId", userId);
@@ -3549,10 +3554,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		
 		ezAttitudeDAO.insertApprovalGConnInfo(map);
+		LOGGER.debug("insertApprovalGConnInfo ended");
 	}
 
 	@Override
 	public int updateApprovalGConnInfo(String aprStatus, String userId, String docId,	String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateApprovalGConnInfo started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("docId", docId);
@@ -3560,12 +3567,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		ezAttitudeDAO.updateApprovalGConnInfo(map);
+		List<String> attitudeIdList = ezAttitudeDAO.getApprovalGConnAttitudeList(map);
+		if (attitudeIdList != null) {			
+			ezAttitudeDAO.updateApprovalGConnInfo(map);
+		}
+		LOGGER.debug("updateApprovalGConnInfo ended");
 		return 0;
 	}
 
 	@Override
 	public int deleteApprovalGConnInfo(String userId, String type, String docId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("deleteApprovalGConnInfo started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("docId", docId);
@@ -3596,6 +3608,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				}			
 			}
 		}
+		LOGGER.debug("deleteApprovalGConnInfo ended");
 		return 0;
 	}
 	

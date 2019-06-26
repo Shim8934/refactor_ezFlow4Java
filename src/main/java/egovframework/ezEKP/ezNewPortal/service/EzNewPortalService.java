@@ -64,7 +64,7 @@ public interface EzNewPortalService {
 	public List<PortalUserInfoVO> getMonthlyBirthdayEmployees(String companyId, int tenantId, int month, int count, int startRow, String lang);
 	public int getMonthlyBirthdayEmployeesCount(String companyId, int tenantId, int month);
 	public PortalUserInfoVO getMonthlyBestEmployee(String yearAndMonth, String companyId, int tenantId, String lang);
-	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId);
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId, String lang);
 	public MenuInfoVO getUserStartPage (String userId, int tenantId, String companyId) throws Exception;
 	public void updateUserStartPage(int menuId, String userId, int tenantId, String companyId) throws Exception;
 	public void deleteUserThemeSetting(String userId, int tenantId, String companyId);
@@ -91,16 +91,18 @@ public interface EzNewPortalService {
 	/**
 	 * 테마목록조회
 	 * @param admin true(admin) false(user)
+	 * @param lang 
 	 */
-	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId) throws Exception;
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId, String lang) throws Exception;
 	/**
 	 * 유저의 테마Id 조회 -> 테마별 포틀릿 추가되면서 테마Id가 필요한 경우가 생김
 	 */
 	public int getThemeId(String userId, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 테마상세정보조회
+	 * @param lang 
 	 */
-	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId) throws Exception;
+	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId, String lang) throws Exception;
 	/**
 	 * 관리자 테마별 프레임목록 및 정보 조회 
 	 */

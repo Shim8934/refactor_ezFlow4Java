@@ -40,6 +40,10 @@ function getTabList() {
     		        guBun = result[i].guBun;
     		        BoardName = result[i].boardName;
     		        
+    		        if (boardId == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+    		        	BoardName = messages.strLang23;
+    		        }
+    		        
     	            if (i == 0) {
     	                listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "'" + classon + " data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
     	                boardType = guBun;
@@ -56,7 +60,7 @@ function getTabList() {
     			var listHTML = "";
     			listHTML += "<dl class='nodata'>";
     	    	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-    	    	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
+    	    	listHTML += '<dd>' + strLang1_NewBoardSTD + '</dd>';
     	    	listHTML += "</dl>";
     	    	
     	    	document.getElementById("BoardList").innerHTML = listHTML;
@@ -120,7 +124,7 @@ function getBoardList_NewBoardSTD() {
         	var listHTML = "";
 			listHTML += "<dl class='nodata'>";
         	listHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-        	listHTML += '<dd>"' + strLang1_NewBoardSTD + '"</dd>';
+        	listHTML += '<dd>' + strLang1_NewBoardSTD + '</dd>';
         	listHTML += "</dl>";
         	
         	document.getElementById("BoardList").innerHTML = listHTML;

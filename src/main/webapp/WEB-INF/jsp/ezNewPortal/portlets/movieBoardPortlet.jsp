@@ -98,7 +98,7 @@
 									<dt>
 										<img src="/images/kr/main/noData_sIcon.png">
 									</dt>
-									<dd>"<spring:message code='ezNewPortal.t129' />"</dd>
+									<dd><spring:message code='ezNewPortal.t129' /></dd>
 								</dl>
 							</ul>
 						</c:when>
@@ -108,7 +108,7 @@
 									<dt>
 										<img src="/images/kr/main/noData_sIcon.png">
 									</dt>
-									<dd>"<spring:message code='ezNewPortal.t039' />"</dd>
+									<dd><spring:message code='ezNewPortal.t039' /></dd>
 								</dl>
 							</ul>
 						</c:otherwise>
@@ -125,7 +125,7 @@
 							<dt>
 								<img src="/images/kr/main/noData_sIcon.png">
 							</dt>
-							<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
+							<dd><spring:message code='ezNewPortal.t018' /></dd>
 						</dl>
 					</ul>
 				</c:otherwise>

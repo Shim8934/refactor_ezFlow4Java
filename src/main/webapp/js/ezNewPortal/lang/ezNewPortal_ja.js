@@ -21,4 +21,6 @@ var messages = {
 	strLang20 : "日程作成",
 	strLang21 : "従業員検索",
 	strLang22 : "メモ作成",
+	strLang23 : "新着",
+	strLang24 : "参加",
 }

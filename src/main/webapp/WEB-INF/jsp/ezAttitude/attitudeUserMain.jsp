@@ -1566,6 +1566,7 @@
 						}
 					}
 				});
+				
 			}
 			
 			/**
@@ -1840,9 +1841,63 @@
 		    			if (vo.typeId == "A01") { //출근리스트
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", "<spring:message code='ezAttitude.t231' />");
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html("<spring:message code='ezAttitude.t231' />");
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr({typeid : vo.typeId, attitudeid : vo.attitudeId, modappl : vo.modAppl, style : "cursor:pointer"});
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").on('dblclick',function(){
+			    				var typeid = $(this).attr('typeid');
+								var modappl = $(this).attr('modappl');
+								var attitudeid = $(this).attr('attitudeid');
+								if (deptFlag != "true") {
+									if (attitudeModAppl && modappl == 0 && typeid == 'A02') {
+										attitudeModItem(this);	
+									}
+									if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+										mod_detail(attitudeid);
+									}
+								} else {
+									if (modappl == 0 && typeid == 'A02') {
+					 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+				 							attitudeItemDetail(this);
+				 						}	
+									} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+					 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+				 							attitudeItemDetail(this);
+				 						} else {
+											mod_detail(attitudeid);
+				 						}
+									}
+								}
+			    			});
+
 		    			} else if (vo.typeId == "A02") { //지각
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='AttRedText " + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
-
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr({typeid : vo.typeId, attitudeid : vo.attitudeId, modappl : vo.modAppl, style : "cursor:pointer"});
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").on('dblclick',function(){
+			    				var typeid = $(this).attr('typeid');
+								var modappl = $(this).attr('modappl');
+								var attitudeid = $(this).attr('attitudeid');
+								if (deptFlag != "true") {
+									if (attitudeModAppl && modappl == 0 && typeid == 'A02') {
+										attitudeModItem(this);	
+									}
+									if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+										mod_detail(attitudeid);
+									}
+								} else {
+									if (modappl == 0 && typeid == 'A02') {
+					 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+				 							attitudeItemDetail(this);
+				 						}	
+									} else if (modappl == 1 || modappl == 2 || modappl == 3 || modappl == 4) {
+					 					if ($("#authDeptList option:selected").attr("authtype") == "M") { //관리자의 경우 지각인 근태는 수정할 수 있도록
+				 							attitudeItemDetail(this);
+				 						} else {
+											mod_detail(attitudeid);
+				 						}
+									}
+								}
+			    			});
+			    			
 			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1) {//조퇴면 "지각,조퇴" 형태로 되게끔.
 			    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(vo.typeName + ", " + typeText);
 				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName + ", " + typeText);

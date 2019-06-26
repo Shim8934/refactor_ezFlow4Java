@@ -26,7 +26,7 @@
 					<p class="voteTitle">
 						"<c:out value="${title }" />"
 					</p>
-					<p class="voteBtn votePortlet" id="V<c:out value='${qstId }'/>">참여</p>
+					<p class="voteBtn votePortlet" id="V<c:out value='${qstId }'/>"><spring:message code="main.t2001"/></p>
 					<ul class="voteList">
 						<c:forEach items="${pollAnswer }" var="poll" varStatus="status">
 							<c:if test="${status.index lt 4 }">
@@ -67,7 +67,7 @@
 								<img src="/images/kr/main/noData_sIcon.png">
 							</dt>
 							<dd>
-								"<spring:message code='ezNewPortal.t018' />"
+								<spring:message code='ezNewPortal.t018' />
 							</dd>
 						</dl>
 					</ul>
