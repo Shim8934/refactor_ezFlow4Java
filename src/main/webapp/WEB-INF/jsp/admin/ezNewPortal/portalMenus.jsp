@@ -180,6 +180,7 @@
 						//handle : ".menuSortable",
 						items: "li.menu",
 						scroll: false,
+					    helper: 'clone',
 						start : function(event, ui) {
 							//$(".menuDetails").css("display", "none");
 							$(".menuDetails").remove();
