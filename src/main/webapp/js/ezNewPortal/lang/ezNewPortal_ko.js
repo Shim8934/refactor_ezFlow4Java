@@ -22,4 +22,5 @@ var messages = {
 	strLang21 : "직원조회",
 	strLang22 : "메모작성",
 	strLang23 : "새게시물",
+	strLang24 : "참여",
 }
