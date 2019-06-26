@@ -439,6 +439,7 @@
 				// 드래그앤드롭
 				$('#toggleMenu').sortable({
 					scroll: false,
+				    helper: 'clone',
 					activate: function () {
 						$("li.ui-sortable-placeholder").css("visibility", "visible");
 						$("li.ui-sortable-placeholder").css("border-right", "1px dashed #898989");
@@ -455,7 +456,7 @@
 					}
 				});
 				$('#toggleMenu').sortable("option", "disabled", false);
-				$('#toggleMenu').disableSelection();	
+				/* $('#toggleMenu').disableSelection(); */	
 				var sortedMenu = document.getElementById('toggleMenu');
 				sortedMenu.className = 'full_menu_toggleUL_edit';
 				
