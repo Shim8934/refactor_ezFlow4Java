@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -1312,7 +1313,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public int getCheckItemID(String itemID, String boardType, String userDeptPath, int tenantID) throws Exception {
+	public int getCheckItemID(String itemID, String boardType, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception {
 		logger.debug("getCheckItemID started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1321,6 +1322,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_BOARDTYPE", boardType);
 		map.put("v_ACCESSID", userDeptPath);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
 
 		logger.debug("getCheckItemID ended");
 		return ezBoardDAO.getCheckItemID(map);
@@ -2543,38 +2546,64 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	/**
 	 * 게시판 트리 표출 Method
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, String isAdminLeft, boolean isCompanyAdmin, int tenantID) throws Exception {
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, String isAdminLeft, boolean isCompanyAdmin, String boardGroupAdmin_FG, String rollInfo, int tenantID) throws Exception {
 		logger.debug("getBoardTree started");
 		int count = 0;
-		String strForbiddenBoardIDList = "";
 		String showAllGroupBoard = "";
+		boolean isNormalAdmin = false; // 전체관리자가 아닌 관리자 플래그 (게시관리자, 회사관리자)
 		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft, tenantID);
 		
 		if (retValue != null && retValue.length() > 30) {
 			return retValue;
 		}
 		
-		/* 2019-04-16 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 권한체크에 포함하도록 수정 */
+		StringJoiner pAccessID = new StringJoiner(",");
+		pAccessID.add(pUserID);
+		String[] reverseDeptPath = ezOrganService.getDeptFullPath(pDeptID, tenantID).split(",");
+		List<String> addJobDeptList = new ArrayList<String>();
+		
+		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
+			pAccessID.add(reverseDeptPath[i]);
+		}
+		
+		String pAccessIDStr = pAccessID.toString();
+		addJobDeptList.add(pAccessIDStr);
+		
+		/* 2019-05-28 홍승비 - 현재 소속 회사의 사내겸직이 존재하면 사내겸직부서ID와 그 상위부서ID까지 권한체크에 포함하도록 수정 */
 		List<String> addJobList = getPDOAddJobDeptID(pUserID, pCompanyID, tenantID);
-		String addJobStr = "";
+		StringJoiner addJobStr = new StringJoiner(",");
+		addJobStr.add(pDeptID);
 		if (addJobList != null && addJobList.size() > 0) {
 			for (int i = 0; i < addJobList.size(); i++) {
-				addJobStr += addJobList.get(i) + ",";
+				addJobStr.add(addJobList.get(i));
+				String upperDept = getUpperDeptID(addJobList.get(i), tenantID);
+				
+				if (upperDept != null && !upperDept.equals("")) {
+					boolean loopContinue = true;
+					StringJoiner upperDeptStr = new StringJoiner(",");
+					upperDeptStr.add(upperDept);
+					
+					while (loopContinue) {
+						String upperDeptLoop = getUpperDeptID(upperDept, tenantID);
+						if (upperDeptLoop != null && !upperDeptLoop.equals("")) {
+							upperDeptStr.add(upperDeptLoop);
+							upperDept = upperDeptLoop;
+						} else {
+							loopContinue = false;
+						}
+					}
+					addJobDeptList.add(addJobList.get(i) + "," + upperDeptStr.toString());
+				}
 			}
 		}
 		
-		String pAccessID = pUserID;
-		String[] reverseDeptPath = ezOrganService.getDeptFullPath(pDeptID, tenantID).split(",");
-		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
-			pAccessID += "," + reverseDeptPath[i];
-			if (i == 0) {
-				pAccessID += ",everyone"; 
-			} else if (i == 3 && !addJobStr.equals("")) {
-				pAccessID += "," + addJobStr.substring(0, addJobStr.length() - 1);
-			}
+		/* 2019-06-05 홍승비 - 사간겸직으로 회사변경 시 변경된 관리자 권한 반영되도록 수정 */
+		// 전체관리자가 아닌 회사관리자/게시판관리자 플래그 추가
+		if (rollInfo != null && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+			isNormalAdmin = true;
 		}
-		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
 		
 		/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 설정 */
 		if (!isAdminLeft.equals("Y") || (isAdminLeft.equals("Y") && isCompanyAdmin == true)) {
@@ -2584,63 +2613,91 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
+		List<HashSet<String>> strBanBoardIDListSetDept = new ArrayList<HashSet<String>>();
+		HashSet<String> strBanBoardIDListSetUser = new HashSet<String>();
+		String tempDeptList = addJobStr.toString();
 		
-		for (int i = 0; i < pAccessID.split(",").length; i++) {
-			String boardID = "";
+		/* 2019-06-03 홍승비 - 전체관리자와 해당 게시판/게시판그룹 관리자(해당 pRootBoardID에 대하여 관리자권한 설정됨)의 게시판 트리 생성 분기를 for 바깥으로 분리 (그룹사게시판을 포함하여 모든 게시판 접근 가능) */
+		if ((pMode == 0 && isCompanyAdmin == true) || boardGroupAdmin_FG.equals("OK")) {
+			brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0, showAllGroupBoard, isCompanyAdmin, boardGroupAdmin_FG);
+		} else {
 			
-			if (pMode == 0) {
-				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0, showAllGroupBoard);            
-			} else {
-				// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
-				/* 2019-04-16 홍승비 - 원회사의 사내겸직도 isEqaulDept값을 체크하도록 수정 */
-				int isEqaulDept = 0;
-				String tempDeptList = addJobStr + pDeptID;
-				for (int j = 0; j < tempDeptList.split(",").length; j++) {
-					if(pAccessID.split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
-						isEqaulDept = 1;
-						break;
-					} else {
-						isEqaulDept = 0;
+			/* 2019-06-05 홍승비 - 게시판 트리 생성 시 사내겸직 부서경로 각각에 대해 게시판 가져오고, 접근불가 게시판 제거하도록 수정 */
+			int addJobDeptListSize = addJobDeptList.size();
+			for (int jl = 0; jl < addJobDeptListSize; jl++) {
+				HashSet<String> strBanBoardIDListSetTemp = new HashSet<String>();
+				int addJobDeptListPathSize = addJobDeptList.get(jl).split(",").length;
+				for (int i = 0; i < addJobDeptListPathSize; i++) {
+					String boardID = "";
+					// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
+					/* 2019-05-30 홍승비 - 현재 소속 회사의 사내겸직도 isEqaulDept값을 체크하도록 수정 */
+					int isEqaulDept = 0;
+					for (int j = 0; j < tempDeptList.split(",").length; j++) {
+						// 사원ID, 부서ID, 회사ID에 대하여 해당부서 직속여부 판단
+						if(addJobDeptList.get(jl).split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+							isEqaulDept = 1;
+							break;
+						} else {
+							isEqaulDept = 0;
+						}
 					}
-				}
-				
-				int isDept = ezBoardDAO.isDeptChk(pAccessID.split(",")[i].trim(), tenantID);
-				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, isDept, isEqaulDept, showAllGroupBoard);
-
-				if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
-					for (BoardTreeVO k : tempBrdBoardTreeList) {
-						if (brdBoardTreeList.size() > 0) {
-							int tempCnt = 0;
-							
-							for (BoardTreeVO h : brdBoardTreeList) {
-								if (h.equals(k)) {
-									tempCnt++;
+					
+					int isDept = isDeptChk(addJobDeptList.get(jl).split(",")[i].trim(), tenantID);
+					List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, addJobDeptList.get(jl).split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, isDept, isEqaulDept, showAllGroupBoard, isCompanyAdmin, boardGroupAdmin_FG);
+					
+					if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
+						for (BoardTreeVO k : tempBrdBoardTreeList) {
+							if (brdBoardTreeList.size() > 0) {
+								int tempCnt = 0;
+								
+								for (BoardTreeVO h : brdBoardTreeList) {
+									if (h.equals(k)) {
+										tempCnt++;
+									}
 								}
-							}
-							
-							if (tempCnt == 0) {
+								
+								if (tempCnt == 0) {
+									brdBoardTreeList.add(k);
+								}
+							} else {
 								brdBoardTreeList.add(k);
 							}
-						} else {
-							brdBoardTreeList.add(k);
+						}
+					}
+					
+					/* 2019-06-04 홍승비 - 전체관리자가 아닌 관리자라면(isNormalAdmin), 그룹사게시판의 경우에만 불가/허용여부 판단용 게시판ID와 accessID를 가져오도록 수정 */
+					List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(addJobDeptList.get(jl).split(",")[i].trim(), pRootBoardID, tenantID, isNormalAdmin, isDept, isEqaulDept);
+					if (boardTreeList.size() > 0) {
+						for (int r = 0; r < boardTreeList.size(); r++) {
+							boardID = boardTreeList.get(r).getBoardId();
+							
+							if (addJobDeptList.get(jl).split(",")[i].equals(pUserID)) { // 개인권한은 따로 저장 (맨 처음 한 번만 동작)
+								strBanBoardIDListSetUser.add(boardID);
+							} else {
+								if (strBanBoardIDListSetTemp.contains(boardID.substring(0, boardID.indexOf("|")) + "|0;") || 
+										strBanBoardIDListSetTemp.contains(boardID.substring(0, boardID.indexOf("|")) + "|1;")) {
+									continue;
+								} else {
+									strBanBoardIDListSetTemp.add(boardID);
+								}
+							}
 						}
 					}
 				}
-			}
-			
-			if (pMode != 0) {
-				List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
 				
-				if (boardTreeList.size() > 0) {
-					for (int r = 0; r < boardTreeList.size(); r++) {
-						boardID = boardTreeList.get(r).getBoardId();
-						if (strForbiddenBoardIDList.indexOf(boardID.split(",")[0]) == -1) {
-							strForbiddenBoardIDList += boardID.trim();
-						}
-					}
+				if (!strBanBoardIDListSetTemp.isEmpty()) {
+					strBanBoardIDListSetDept.add((HashSet<String>)strBanBoardIDListSetTemp.clone());
 				}
+				
+				strBanBoardIDListSetTemp.clear();
 			}
 		}
+		
+		HashSet<String> strBanBoardIDListSet = new HashSet<String>();
+		for (int i = 0; i < strBanBoardIDListSetDept.size(); i++) {
+			strBanBoardIDListSet.addAll(strBanBoardIDListSetDept.get(i));
+		}
+		
 		StringBuilder result = new StringBuilder();
 		
 		if (pSubFlag == 1) {
@@ -2657,14 +2714,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		});
 		
+		/* 2019-06-04 홍승비 - 접근 불가한 게시판 체크 시 전체관리자가 아닌 관리자도 해당 분기 타도록 수정 */
 		for (int i = 0; i < brdBoardTreeList.size(); i++) {
-			if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
-				if (strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()) > -1) {
-					//boardID의 accessID를 가져옴 (boardID1,access_;boardID2,access_;)
-					int boardAccessIndex = strForbiddenBoardIDList.indexOf(",", strForbiddenBoardIDList.indexOf(brdBoardTreeList.get(i).getBoardId()));
-					if (strForbiddenBoardIDList.substring(boardAccessIndex + 1, boardAccessIndex + 2).equals("0")) {
-						continue;
-					}
+			if (!isCompanyAdmin) {
+				// 개인권한 최우선 확인 (strBanBoardIDListSetUser 직접 사용)
+				if (strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") ||
+						(strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|1;"))) {
+					continue;
 				}
 			}
 			
@@ -4222,6 +4278,34 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getPDOAddJobDeptID ended.");
 		return ezBoardDAO.getPDOAddJobDeptID(map);
+	}
+	
+	/* 2019-05-15 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
+	@Override
+	public String getUpperDeptID(String deptID, int tenantID) throws Exception {
+		logger.debug("getUpperDeptID started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_DEPTID", deptID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getUpperDeptID ended.");
+		return ezBoardDAO.getUpperDeptID(map);
+	}
+	
+	/* 2019-05-29 홍승비 - 해당 ID가 부서(회사)ID인지 확인하는 기능 서비스로 분리 */
+	@Override
+	public int isDeptChk(String id, int tenantID) throws Exception {
+		logger.debug("isDeptChk started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("id", id);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("isDeptChk ended.");
+		return ezBoardDAO.isDeptChk(map);
 	}
 	
 }

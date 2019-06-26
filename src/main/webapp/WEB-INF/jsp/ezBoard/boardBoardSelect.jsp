@@ -27,7 +27,6 @@
 			var SS_ServerName = "${serverName}";
 			var xmlDom_treeview = createXmlDom();
 			var pUse_Editor = "${useEditor}";
-			var pNoneActiveX = "${noneActiveX}";
 			var isAdminLeft = "${isAdminLeft}";
 			var ReturnFunction;
 			
