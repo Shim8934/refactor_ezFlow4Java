@@ -390,6 +390,7 @@
 		var closeMenuDetail = function(event) {
 			//그냥 모든 메뉴디테일을 닫아버린다
 			$(".menuDetails").slideUp();
+			$(".menuDetails").remove();
 		}
 		
 		$('html').click(function(e) {
