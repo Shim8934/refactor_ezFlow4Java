@@ -219,21 +219,21 @@
 						<c:if test="${firstScreen_Mail != 'YES'}">
 							<c:choose>
 								<c:when test="${portalEnv == '0'}">
-	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span></li>
-	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span></li>
+	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li>
+	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t136' /></span></li>
 			                    </c:when>
 			                    <c:when test="${portalEnv == '1'}">
-	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900002' /></span></li>
+	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub1" name="Portal_sub1"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t034' /></span></li>
 			                    </c:when>
 			                    <c:when test="${portalEnv == '2'}">
-	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezPersonal.t999900005' /></span></li>
+	                            	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)"><spring:message code='ezNewPortal.t136' /></span></li>
 			                    </c:when>
 								<c:otherwise></c:otherwise>
 							</c:choose>
 						</c:if>
 		            </c:if>
                    	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="UserInfo" name="UserInfo" onClick="Open_Func(this)"><spring:message code='ezPersonal.t172' /></span></li>
-                   	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.t999900010' /></span></li>
+                   	<li><span class="sub_iconLNB tree_env_myPortal"></span><span class="list_text" id="TimeZone" name="TimeZone" onClick="Open_Func(this)"><spring:message code='ezPersonal.s3' /></span></li>
 		        </ul>
 		        <h2 class="on">
 	            	<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPersonal.jjh02' /></span>
@@ -244,10 +244,10 @@
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="AddressEnv" name="AddressEnv" onClick="address_Config()"><spring:message code='ezAddress.hyh001' /></span></li>
                     </c:if>
                     <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}">
-       					<%-- <c:if test="${isScheduleUsed == 'Y'}"> --%>
+       					<c:if test="${isScheduleUsed == 'Y'}">
                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezPersonal.t999900007' /></span></li>
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="TaskEnv" name="TaskEnv" onClick="Task_Config()"><spring:message code='ezTask.hyh001' /></span></li>
-	                    <%-- </c:if> --%>
+	                   </c:if>
 	                    <c:if test="${packageType == 'standard'}">
 	                    	<c:if test="${isApprUsed == 'Y'}">
                             	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()"><spring:message code='ezPersonal.t999900008' /></span></li>
@@ -259,12 +259,12 @@
 	                    <c:if test="${isCircularUsed == 'Y'}">
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)"><spring:message code='ezPersonal.t999900031' /></span></li>
 	                    </c:if>
-	                    <%-- <c:if test="${isJournalUsed == 'Y'}"> --%>
+	                    <c:if test="${isJournalUsed == 'Y'}">
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="journalEnv" onClick="Open_Func(this)"><spring:message code='ezJournal.t150' /></span></li>
-	                    <%-- </c:if> --%>
-	                    <%-- <c:if test="${isWebfolderUsed == 'Y'}"> --%>	
+	                    </c:if>
+	                    <c:if test="${isWebfolderUsed == 'Y'}">
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="webfolder" name="webfolder" onClick="Open_Func(this)"><spring:message code='ezWebFolder.t31' /></span></li>
-	                    <%-- </c:if> --%>
+	                    </c:if>
 					</c:if>
 		        </ul>
 	        </div>
@@ -278,7 +278,7 @@
 							<h2><span  id="Portal" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
 							<ul>
 								<li><span id="Portal_sub1"  name="Portal_sub1"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900002' /></span></li>
-								<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900005' /></span></li>
+								<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezNewPortal.t136' /></span></li>
 							</ul>
 						</c:when>
 						<c:when test="${portalEnv == '1'}">
@@ -290,7 +290,7 @@
 						<c:when test="${portalEnv == '2'}">
 							<h2><span  id="Portal_sub4" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
 							<ul>
-								<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900005' /></span></li>
+								<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezNewPortal.t136' /></span></li>
 							</ul>
 						</c:when>
 						<c:otherwise>
@@ -327,7 +327,7 @@
 			<c:if test="${isWebfolderUsed == 'Y'}">
 				<h2><span id="webfolder" name="webfolder" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezWebFolder.t31' /></span><ul></ul></h2>
    			</c:if>
-			<h2><span id="TimeZone" name="TimeZone" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900010' /></span><ul></ul></h2>
+			<h2><span id="TimeZone" name="TimeZone" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.s3' /></span><ul></ul></h2>
 		</div> --%>
 	</body>
 	<script type="text/javascript">
