@@ -862,7 +862,7 @@
 			}
 		});
 		
-		$(".portlet_area").disableSelection();
+		/* $(".portlet_area").disableSelection(); */
 		
 		//CalendarMiniView_Top("CalendarMini_Top");
 		getScheduleList_Top(nowDay, "P");
