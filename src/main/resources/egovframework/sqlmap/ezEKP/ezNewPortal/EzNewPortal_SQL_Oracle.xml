@@ -1548,7 +1548,63 @@ AND
 				P.RNUM <= 5
 		]]>
 	</select>
-
+	
+	<select id="ezNewPortal.getApprovalDoingListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(DOCINFO.docid)
+			FROM
+				TBL_APRDOCINFO DOCINFO
+			JOIN
+				TBL_APRLINEINFO LINEINFO
+			ON
+				DOCINFO.tenant_id = LINEINFO.tenant_id
+			AND
+				DOCINFO.companyid = LINEINFO.companyid
+			AND
+				DOCINFO.docid = LINEINFO.docid
+			WHERE
+				DOCINFO.tenant_id = #tenantId#
+			AND
+				DOCINFO.companyid IN (SELECT
+										extensionattribute2
+									FROM
+										TBL_DEPTMASTER
+									JOIN
+										TBL_ADDJOBMASTER
+									ON
+										TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+									AND
+										TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid
+									WHERE
+										TBL_ADDJOBMASTER.tenant_id = #tenantId#
+									AND
+										TBL_ADDJOBMASTER.cn = #userId#
+									UNION ALL
+									SELECT
+										physicaldeliveryofficename
+									FROM
+										TBL_USERMASTER
+									WHERE
+										cn = #userId#
+									AND
+										tenant_id = #tenantId#
+									)
+			AND
+				LINEINFO.aprmemberid in ($userIDs$)
+			AND
+				DOCINFO.functiontype = '002'
+			AND
+				LINEINFO.aprstate = '002'
+			AND
+				DOCINFO.docstate not in ('015')   
+			AND
+				DOCINFO.startdate >= ADD_MONTHS(SYSDATE,-12)
+			ORDER BY
+				DOCINFO.startdate DESC
+		]]>
+	</select>
+	
 	<select id="ezNewPortal.getFavoriteForms" parameterClass="Map" resultClass="ApprGFormVO">
 		<![CDATA[
 		SELECT
