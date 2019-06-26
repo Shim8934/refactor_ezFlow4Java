@@ -67,7 +67,7 @@
 						} else {
 							docsHTML += "<dl class='nodata'>";
 							docsHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-							docsHTML += "<dd><spring:message code='ezNewPortal.t018' /></dd>";
+							docsHTML += '<dd><spring:message code='ezNewPortal.t018' /></dd>';
 							docsHTML += "</dl>";
 						}
 						
