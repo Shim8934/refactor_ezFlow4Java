@@ -8749,7 +8749,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		mode = request.getParameter("mode");
 		
-		if (!accessCheck(itemID, location, userInfo)) {
+		if (!accessCheck(boardID, itemID, location, userInfo)) {
 			return "main/warning";
 		}
 		
