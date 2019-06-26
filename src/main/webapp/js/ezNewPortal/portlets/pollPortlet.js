@@ -63,7 +63,7 @@ var assemblePollList = function (poll) {
 	var itemSeq = poll.pollInfo.itemSeq;
 	
 	str += '<p class="pollTitle" id="pollTitle"></p>';
-	str += '<p class="pollBtn" id="pollBtn" data1="' + itemSeq +'">참여</p>';	
+	str += '<p class="pollBtn" id="pollBtn" data1="' + itemSeq +'">' + messages.strLang24 + '</p>';	
 	str += '<div class="pollList">';
 	for (var i=0; i<answerList.length; i++) {
 		if(answerList[i].answer.trim() !== '') {
