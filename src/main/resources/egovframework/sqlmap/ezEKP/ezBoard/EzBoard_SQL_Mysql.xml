@@ -3202,6 +3202,12 @@
 								AND  
 									ITEMID = #v_ITEMID# )
 			]]>
+			<isEqual property="v_ISDEPT" compareValue="1">
+				<isEqual property="v_ISEQUALDEPT" compareValue="0">
+					AND
+						BoardGroupACL = 'Y'
+				</isEqual>
+			</isEqual>
 		</isNotEqual>
 		<isEqual property="v_BOARDTYPE" compareValue="TEMP">
 			<![CDATA[
@@ -5344,8 +5350,6 @@
 				UM.CN = AM.CN
 			AND
 				UM.CN = #v_pUserID#
-			AND
-				UM.PHYSICALDELIVERYOFFICENAME = #v_pCompanyID#
 			INNER JOIN
 				TBL_DEPTMASTER DM
 			ON
@@ -5358,4 +5362,18 @@
 				UM.TENANT_ID = #v_TENANTID# 
 		]]>
 	</select>
+	
+	<select id="EzBoardDAO.getUpperDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				EXTENSIONATTRIBUTE1
+			FROM
+				tbl_deptmaster
+			WHERE
+				CN = #v_DEPTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
 </sqlMap>
