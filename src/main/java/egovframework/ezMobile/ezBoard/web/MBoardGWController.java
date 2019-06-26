@@ -10,9 +10,13 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -165,7 +169,7 @@ public class MBoardGWController {
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
 			LOGGER.debug("serverName = " + serverName + " | userID = " + userID + " | lastDate = " + lastDate + " | add = " + add + " | parentWriteDate = " + parentWriteDate + 
-					"upperitemidtree = " + upperitemidtree + " | pSearchText = " + pSearchText + " | primary = " + primary);
+					" | upperitemidtree = " + upperitemidtree + " | pSearchText = " + pSearchText + " | primary = " + primary);
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
@@ -288,7 +292,7 @@ public class MBoardGWController {
 			boardInfo.setType("boardItem");
 			
 			// 해당 게시물 읽기권한 없다면 리턴
-			if (!accessCheck(contentId, deptPathCode, info)) {
+			if (!accessCheck(boardId, contentId, deptPathCode, info)) {
 				result.put("status", "no");
 				return result;
 			}
@@ -377,7 +381,7 @@ public class MBoardGWController {
 			boardInfo.setType("photoBoardItem");
 			
 			// 해당 게시물 읽기권한 없다면 리턴
-			if (!accessCheck(contentId, deptPathCode, info)) {
+			if (!accessCheck(boardId, contentId, deptPathCode, info)) {
 				result.put("status", "no");
 				return result;
 			}
@@ -979,73 +983,136 @@ public class MBoardGWController {
     /**
 	 * 게시판 게시판권한체크 표출 Method(EzBoardController 참고)
 	 */
-	public boolean accessCheck(String contentID, String deptPath, MCommonVO info) throws Exception {
+	public boolean accessCheck(String boardID, String contentID, String deptPath, MCommonVO info) throws Exception {
 		LOGGER.debug("accessCheck started");
 		
-		String rootBoardID = "top";
-		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
 		String rollInfo = info.getRollInfo();
+		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(boardID, info.getTenantId());
+		String boardGroupID = "";
+		String isAllGroupBoard = "N";
 		
-		LOGGER.debug("rootBoardID = " + rootBoardID + " | boardGroupAdmin_FG = " + boardGroupAdmin_FG);
-		
-		// 전체/회사/게시관리자 권한이 있다면 바로 true 리턴한다.
-		if (rollInfo != null && (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
-			LOGGER.debug("rollInfo = " + rollInfo);
-			LOGGER.debug("accessCheck ended1");
-			return true;
-		} else {
-			int result = 0;
-			boolean rtv = false;
-			
-			String deptPathOrgan = "";
-			/* 2019-04-10 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 관리자 권한체크에 포함하도록 수정 */
-			List<String> addJobList = ezBoardService.getPDOAddJobDeptID(info.getUserId(), info.getCompanyId(), info.getTenantId());
-			String addJobStr = "";
-			if (addJobList != null && addJobList.size() > 0) {
-				for (int i = 0; i < addJobList.size(); i++) {
-					addJobStr += addJobList.get(i) + ",";
-				}
+		/* 2019-06-10 홍승비 - 게시판그룹의 관리자권한 체크를 위한 쿼리 파라미터 추가(게시판그룹의 관리자권한과 하위게시판의 관리자권한 혼용 방지) */
+		boolean isBoardGroup = false;
+		if (boardProp.getBoardGroupID() != null) { // 하위게시판
+			boardGroupID = boardProp.getBoardGroupID();
+			BoardPropertyVO strGroupProp = ezBoardService.getBoardProperty(boardGroupID, info.getTenantId());
+			if (strGroupProp.getGuBun() != null && strGroupProp.getGuBun().equals("99")) {
+				isAllGroupBoard = "Y";
 			}
-			
-			for (int ch = 0; ch < deptPath.split(",").length; ch++) {
-				if (ch == 0) {
-					deptPathOrgan += deptPath.split(",")[ch].trim();
-				} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
-					deptPathOrgan += "," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
-				} else {
-					deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
-				}
-			}
-			
-			String userDeptPath = deptPathOrgan + ",everyone";
-			
-			LOGGER.debug("userDeptPath in accessCheck = " + userDeptPath);
-			
-			for (int i = 0; i < userDeptPath.split(",").length; i++) {
-				result = ezBoardService.getCheckItemID(contentID, "GENERAL", userDeptPath.split(",")[i].trim(), info.getTenantId());
-				
-				LOGGER.debug(userDeptPath.split(",")[i].trim() + " result = " + result);
-				
-				/* 2018-10-04 홍승비 - 변경된 게시판권한 스펙 모바일에도 적용(개인>부서>회사) */
-				//2018-09-19 배현상, result가 999인 경우는 해당 ACCESSID가 권한설정이 안되어 있는 경우
-				if (result != 999) {
-					//2018-09-19 배현상, result > 0(읽기권한이 비허용인 경우)
-					if (result > 0) {
-						rtv = false;
-						break;
-					} else {
-						rtv = true;
-						break;
-					}
-				} else {
-					rtv = false;
-				}
-			}
-			
-			LOGGER.debug("rtv = " + rtv);
-			LOGGER.debug("accessCheck ended2");
-			return rtv;
+			isBoardGroup = false;
+		} else { // 게시판그룹
+			isBoardGroup = true;
 		}
+		
+		StringBuilder deptPathOrgan = new StringBuilder();
+		List<String> addJobDeptList = new ArrayList<String>();
+		
+		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+			if (ch == 0) { // 0 : userID
+				deptPathOrgan.append(deptPath.split(",")[ch].trim());
+			} else {
+				deptPathOrgan.append(",").append(deptPath.split(",")[deptPath.split(",").length - (ch)].trim());
+			}
+		}
+		
+		String userDeptPath = deptPathOrgan.toString();
+		addJobDeptList.add(userDeptPath);
+		
+		LOGGER.debug("accessCheck userDeptPath in mobile    ::    " + userDeptPath);
+		
+		List<String> addJobList = ezBoardService.getPDOAddJobDeptID(info.getUserId(), info.getCompanyId(), info.getTenantId());
+		StringJoiner addJobStr = new StringJoiner(",");
+		addJobStr.add(info.getDeptId());
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr.add(addJobList.get(i));
+				String upperDept = ezBoardService.getUpperDeptID(addJobList.get(i), info.getTenantId());
+				
+				if (upperDept != null && !upperDept.equals("")) {
+					boolean loopContinue = true;
+					StringJoiner upperDeptStr = new StringJoiner(",");
+					upperDeptStr.add(upperDept);
+					
+					while (loopContinue) {
+						String upperDeptLoop = ezBoardService.getUpperDeptID(upperDept, info.getTenantId());
+						if (upperDeptLoop != null && !upperDeptLoop.equals("")) {
+							upperDeptStr.add(upperDeptLoop);
+							upperDept = upperDeptLoop;
+						} else {
+							loopContinue = false;
+						}
+					}
+					addJobDeptList.add(addJobList.get(i) + "," + upperDeptStr.toString());
+				}
+			}
+		}
+		
+		Set<String> readFGSet = new HashSet<String>();
+		boolean rtv = false;
+		boolean isUserHasACL = false;
+		String tempDeptList = addJobStr.toString();
+		int addJobDeptListSize = addJobDeptList.size();
+		for (int jl = 0; jl < addJobDeptListSize; jl++) {
+			if (isUserHasACL == false) {
+				int addJobDeptListPathSize = addJobDeptList.get(jl).split(",").length;
+				for (int i = 0; i < addJobDeptListPathSize; i++) {
+					int isEqualDept = 0;
+					for (int j = 0; j < tempDeptList.split(",").length; j++) {
+						if(addJobDeptList.get(jl).split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+							isEqualDept = 1;
+							break;
+						} else {
+							isEqualDept = 0;
+						}
+					}
+					
+					int isDept = ezBoardService.isDeptChk(addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId());
+					
+					/* 2019-05-31 홍승비 - 게시판그룹의 관리자 권한 체크 시 하위부서 허용여부 (부서 직속여부) 확인 */
+					String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin2(boardID, addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept, isBoardGroup);
+					
+					if (rollInfo != null && ((rollInfo.toLowerCase().indexOf("c=1") > -1 || boardGroupAdmin_FG.equals("OK")) ||
+							(isAllGroupBoard.equals("N") && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)))) {
+						LOGGER.debug("user has admin roll, accessCheck ended");
+						return true;
+					} else {
+						int result = 0;
+						/* 2019-05-31 홍승비 - getCheckItemID메서드에 isDept와 isEqualDept 조건 추가, 게시물의 READ_FG 확인 시 하위부서 허용여부를 체크하도록 수정 */
+						result = ezBoardService.getCheckItemID(contentID, "GENERAL", addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept);
+						//2018-09-19 배현상, result가 999인 경우는 해당 ACCESSID가 권한설정이 안되어 있는 경우
+						if (result != 999) {
+							if (addJobDeptList.get(jl).split(",")[i].equals(info.getUserId())) {
+								//2018-09-19 배현상, result > 0(읽기권한이 비허용인 경우)
+								if (result > 0) {
+									rtv = false;
+								} else {
+									rtv = true;
+								}
+								isUserHasACL = true;
+							} else {
+								if (result > 0) {
+									readFGSet.add("false");
+								} else {
+									readFGSet.add("true");
+								}
+							}
+							break;
+						} else {
+							readFGSet.add("false");
+						}
+					}
+				}
+			}
+		}
+		
+		// 개인권한이 존재하지 않고, 각 사내겸직의 부서경로에 대하여 가져온 읽기권한 중 하나라도 true이면 true 리턴
+		if (isUserHasACL == false && readFGSet.contains("true")) {
+			rtv = true;
+		}
+		
+		LOGGER.debug("rtv = " + rtv);
+		LOGGER.debug("accessCheck ended2");
+		return rtv;
     }
 	
 	/**

@@ -227,7 +227,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception {
+	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID, boolean isNormalAdmin, int isDept, int isEqualDept) throws Exception {
 		logger.debug("getBoardTree_Get2 started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -235,7 +235,11 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PACCESSID", pAccessID);
 		map.put("v_PROOTBOARDID", pRootBoardID);
 		map.put("v_TENANTID", tenantID);
-
+		/* 2019-06-05 홍승비 - 게시판 접근불가 id리스트 가져올때도 하위부서 허용여부 체크하도록 수정 */
+		map.put("v_isNormalAdmin", isNormalAdmin);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
+		
 		logger.debug("getBoardTree_Get2 ended");
 		return ezBoardAdminDAO.getBoardTree_Get2(map);
 	}
@@ -243,7 +247,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 추가  */
 	/* 2018-06-25 홍승비 - 게시판 트리캐시 생성 시  companyID로 제한 걸어주기 */
 	@Override
-	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID, int isDept, int isEqualDept, String showAllGroupBoard) throws Exception {
+	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, String companyID, int tenantID, int isDept, int isEqualDept, String showAllGroupBoard, boolean isCompanyAdmin, String boardGroupAdmin_FG) throws Exception {
 		logger.debug("brdBoardTree started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -260,6 +264,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ISDEPT", isDept);
 		map.put("v_ISEQUALDEPT", isEqualDept);
 		map.put("v_showAllGroupBoard", showAllGroupBoard);
+		map.put("v_isCompanyAdmin", isCompanyAdmin);
+		/* 2019-06-04 홍승비 - 게시판그룹에 관리자권한 존재하는 경우, 해당 게시판그룹의 하위게시판 전부 가져오도록 수정 */
+		map.put("v_boardGroupAdmin_FG", boardGroupAdmin_FG);
 		
 		logger.debug("brdBoardTree ended");
 		logger.debug("map.toString() : " + map.toString());
@@ -1155,5 +1162,53 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		ezBoardAdminDAO.setBoardForm(map);
 
 		logger.debug("setBoardForm ended");
+	}
+	
+	/* 2019-05-29 홍승비 - 하위부서 허용/불가여부 체크하여 권한 가져오는 쿼리 추가 (파라미터 오버로딩) */
+	@Override
+	public BoardPropertyVO getACL(String pBoardID, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception {
+		logger.debug("getACL started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("pBoardID", pBoardID);
+		map.put("userDeptPath", userDeptPath);
+		map.put("tenantID", tenantID);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
+		
+		logger.debug("map in getACL  ::  " + map.toString());
+		logger.debug("getACL ended");
+		return ezBoardAdminDAO.getACL(map);
+	}
+	
+	/* 2019-05-29 홍승비 - 하위부서 허용/불가여부 체크하여 게시판그룹의 관리자 권한 가져오는 쿼리 추가 */
+	public String checkIfBoardGroupAdmin2(String pRootBoardID, String accessID, int tenantID, int isDept, int isEqualDept, boolean isBoardGroup) throws Exception {
+		logger.debug("checkIfBoardGroupAdmin2 started");
+		
+		if (pRootBoardID.equalsIgnoreCase("top") || pRootBoardID.equalsIgnoreCase("all")) {
+			logger.debug("checkIfBoardGroupAdmin2 : pRootBoardID is '" + pRootBoardID + "', return empty String");
+			return "";
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		String result = "";
+		
+		map.put("v_pBoardID", pRootBoardID);
+		map.put("v_pAccessID", accessID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
+		map.put("isBoardGroup", isBoardGroup);
+
+		logger.debug("map in checkIfBoardGroupAdmin2  ::  " + map.toString());
+		result = ezBoardAdminDAO.checkIfBoardGroupAdmin2(map);
+		
+		if (result == null) {
+			result = "";
+		}
+		
+		logger.debug("checkIfBoardGroupAdmin2 ended");
+		return result;
 	}
 }
