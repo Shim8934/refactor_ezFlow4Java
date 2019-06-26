@@ -2554,9 +2554,9 @@ INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARY
 INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('2','6697514','Asahi','旭市','3',NULL,NULL);
 
 -- 포탈 개인화
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_content) VALUES (1, 'Theme1', '왼쪽 혹은 오른쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.');
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_content) VALUES (2, 'Theme2', '위쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.');
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_content) VALUES (3, 'Theme3', '기본 정보관련 영역이 없이 포틀릿에 집중할 수 있는 테마 입니다.');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3) VALUES (1, '테마1', 'Theme1', 'Theme1', '왼쪽 혹은 오른쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.', 'A theme with a fixed area on the left or right.', '固定領域を画面の右または左に配置できるテーマです。');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3) VALUES (2, '테마2', 'Theme2', 'Theme2', '위쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.', 'A theme with a fixed area on the top.', '固定領域が画面の上部に表示されるテーマです。');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3) VALUES (3, '테마3', 'Theme3', 'Theme3', '기본 정보관련 영역이 없이 포틀릿에 집중할 수 있는 테마 입니다.', 'A theme that consists of only portlets without fixed areas.', '固定領域がなく、すべてのポートレットを自由に配置できるテーマです。');
 
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (0, '/ezNewPortal/newPortalPortalPage.do', 'G', '', 0);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (1, '/ezEmail/mailMain.do', 'G', 'icon_topmenu icon_nav_mail', 1);
