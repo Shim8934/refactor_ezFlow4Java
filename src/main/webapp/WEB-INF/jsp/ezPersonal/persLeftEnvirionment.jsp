@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring:message code='ezPersonal.t999900011' /></title>
+		<title><spring:message code='ezNewPortal.t006' /></title>
 		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style type="text/css">
@@ -207,7 +207,7 @@
 		<div id="left" class="lnb" style="overflow: auto">
 		<!-- <div class="lnb_btn"></div> -->
         <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->        
-	    	<div class="left_title" title="<spring:message code='ezBoard.t0005' />"><spring:message code='ezBoard.t0005' />
+	    	<div class="left_title" title="<spring:message code='ezNewPortal.t006' />"><spring:message code='ezNewPortal.t006' />
 	        	<!--<span class="sub_iconLNB tree_leftconfig" title="환경설정"></span>-->
 	        </div>
 	        <div class="envListBox" style="overflow:hidden; padding-right: 0;">
