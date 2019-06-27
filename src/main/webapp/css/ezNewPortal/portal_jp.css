@@ -746,7 +746,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index
 	.section_main .mainLayout_right{ clear:both; width:50%;}
 	.section_main .mainLayout_left{ width:50%;}
 	.section_main .mainLayout_middle{ width:50%;}
-	.portlet{width:47.7%; float:left;}
+	.portlet{width:47.5%; float:left;}
 	.vote{ margin:0px 2px; float:left; overflow:hidden;}
 	.stats_graph{ float:left; overflow:hidden;}
 	.groupware_banner{ float:left; margin-top:0px;}
@@ -758,7 +758,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index
 }
 
 @media only screen and (max-width : 1279px) {
-	.portlet {width:47.7%; float:left;}
+	.portlet {width:47.5%; float:left;}
 	.box_shadow.info_left {display:none;}
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }
