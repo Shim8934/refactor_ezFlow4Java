@@ -1276,4 +1276,23 @@
 								WHEN theme_id = 3 THEN 'Theme3'
 							END
 	</update>
+	
+	<select id="EzCommonDAO.checkSurveyTenantConfig" resultClass="String">
+		select
+			property_value
+		from
+			tbl_tenant_config
+		where
+			property_name = 'useSurvey'
+		and
+			tenant_id = 0
+	</select>
+	
+	<insert id="EzCommonDAO.insertSurveyTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regDate#) 
+	</insert>
+	
 </sqlMap>
