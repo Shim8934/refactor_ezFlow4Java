@@ -516,7 +516,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.insertCircularAttach(attachMap);
 
 				// mode = modify -> 회람수정 일 때이므로 수정 시 Temp 폴더에서 첨부파일 이동
-				if (mode.equals("modify")) {
+				if (mode.equals("modify") || mode.equals("temp")) {
 					String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + fileName;
 					String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + fileName;
 					
