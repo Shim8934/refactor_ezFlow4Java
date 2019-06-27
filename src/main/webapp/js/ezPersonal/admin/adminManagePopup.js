@@ -600,6 +600,7 @@ function showPreview(isPreview, itemseq) {
 	if(itemseq == 0) {
 		doc.getElementById('Preview_HeaderH').style.visibility ="hidden";
 		//doc.getElementById("ifrmPreViewH").style.display = "none";
+		doc.getElementById("ifrmPreViewH").style.width = "96%";
 		doc.getElementById("ifrmPreViewH").style.height = "96%";
 		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm";
 		
