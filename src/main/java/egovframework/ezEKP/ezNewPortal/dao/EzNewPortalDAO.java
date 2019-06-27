@@ -269,8 +269,8 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Integer> checkThemeAuthNoList (Map<String, Object> map) throws Exception {
-		return (List<Integer>) list("ezNewPortal.checkThemeAuthNoList", map);
+	public List<ThemeAuthVO> checkThemeAuthNoList (Map<String, Object> map) throws Exception {
+		return (List<ThemeAuthVO>) list("ezNewPortal.checkThemeAuthNoList", map);
 	}
 	
 	@SuppressWarnings("unchecked")

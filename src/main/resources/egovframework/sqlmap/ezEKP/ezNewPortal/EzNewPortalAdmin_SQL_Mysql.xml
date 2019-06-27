@@ -1063,18 +1063,17 @@
 	]]>
 	</insert>
 	
-	<select id="ezNewPortal.checkThemeAuthNoList" parameterClass="Map" resultClass="Integer">
+	<select id="ezNewPortal.checkThemeAuthNoList" parameterClass="Map" resultClass="ThemeAuthVO">
 	<![CDATA[
 		SELECT 
-			theme_id
+			theme_id AS themeId,
+			access_yn as accessYn
 		FROM
 			TBL_PORTAL_THEME_AUTH
 		WHERE
 			company_id = #companyId#
 		AND
 			tenant_id = #tenantId#
-		AND
-			access_yn = 0
 		AND
 			user_id = #userId#
 	]]>

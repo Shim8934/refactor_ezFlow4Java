@@ -1442,7 +1442,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 		
 		themeList.removeIf(vo -> (vo.getThemeId() == themeId));
-		List<Integer> userThemeDeniedList = new ArrayList<Integer>();
+		List<ThemeAuthVO> userThemeDeniedList = new ArrayList<ThemeAuthVO>();
+		List<Integer> themeAuthList = new ArrayList<Integer>();
 		
 		//먼저 사용자 권한 체크
 		if (userId != null) {
@@ -1451,8 +1452,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			userThemeDeniedList = ezNewPortalDAO.checkThemeAuthNoList(map);
 			
 			if (userThemeDeniedList != null && userThemeDeniedList.size() != 0) {
-				for (int deniedId : userThemeDeniedList) {
-					themeList.removeIf(vo -> (vo.getThemeId() == deniedId));
+				for (ThemeAuthVO themeAuth : userThemeDeniedList) {
+					themeAuthList.add(themeAuth.getThemeId());
+					
+					if (!themeAuth.isAccessYN()) {
+						themeList.removeIf(vo -> (vo.getThemeId() == themeAuth.getThemeId()));
+					}
+					
+					LOGGER.debug("themeAuth : " + themeAuth.getThemeId());
+					LOGGER.debug("themeAuthList : " + themeAuthList.toString());
+					LOGGER.debug("themeList : " + themeList.toString());
 				}
 			}
 		}
@@ -1479,8 +1488,19 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				userThemeDeniedList = ezNewPortalDAO.checkThemeAuthNoList(map);
 				
 				if (userThemeDeniedList != null && userThemeDeniedList.size() != 0) {
-					for (int deniedId : userThemeDeniedList) {
-						themeList.removeIf(vo -> (vo.getThemeId() == deniedId));
+					for (ThemeAuthVO themeAuth : userThemeDeniedList) {
+						if (themeAuthList.indexOf(themeAuth.getThemeId()) == -1) {
+							themeAuthList.add(themeAuth.getThemeId());
+							
+							if (!themeAuth.isAccessYN()) {
+								themeList.removeIf(vo -> (vo.getThemeId() == themeAuth.getThemeId()));
+							}
+							
+							
+							LOGGER.debug("themeAuth : " + themeAuth.getThemeId());
+							LOGGER.debug("themeAuthList : " + themeAuthList.toString());
+							LOGGER.debug("themeList : " + themeList.toString());
+						}
 					}
 					
 					if (themeList.size() == 0) {

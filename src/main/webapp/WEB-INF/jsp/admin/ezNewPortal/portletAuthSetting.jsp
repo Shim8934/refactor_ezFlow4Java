@@ -124,7 +124,7 @@
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
-				var result = JSON.parse(request.responseText);
+				var result = request.responseText;
 				
 				if (result == "ok") {
 					alert("저장하였습니다.");
