@@ -775,10 +775,10 @@
 	                                </div>
 	                            </td>
 	                            <td class="pos2">	                                
-	                                <a class="imgbtn imgbck">
+	                                <a href="#" class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
 	                                </a><br/>	                                
-	                                <a class="imgbtn imgbck">
+	                                <a href="#" class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
 	                                </a>
 	                            </td>

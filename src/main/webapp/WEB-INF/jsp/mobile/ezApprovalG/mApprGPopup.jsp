@@ -11,13 +11,13 @@
 	<body>	    
 		<!-- layer popup -->	   
 	    <div id="popupAlert" class="ui-content" style="min-width: 255px; max-width: 285px; height:70px; text-align:center" data-role="popup" data-overlay-theme="b" data-transition="pop">
-		    <a data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
 		    <p>
-				<a id="popupContent" data-rel="back" data-icon="alert" data-theme="a" data-role="button" style="max-width:95%;min-height:30px;font-weight:normal;background-color:#f2f2f2;font-size:12px;padding-top:20px"><spring:message code='main.jjs02'/></a>
+				<a href="#" id="popupContent" data-rel="back" data-icon="alert" data-theme="a" data-role="button" style="max-width:95%;min-height:30px;font-weight:normal;background-color:#f2f2f2;font-size:12px;padding-top:20px"><spring:message code='main.jjs02'/></a>
 			</p>			
 		</div>
 		<div id="popupMailSearch" class="ui-content" style="min-width: 255px; max-width: 285px; text-align:center" data-role="popup" data-overlay-theme="b" data-transition="pop">
-		    <a data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
 		    <div>		    	
 				<input name="search-1" id="search-1" type="search" placeholder="search mail..">
 				<a class="ui-btn" href="#">검 색</a>
