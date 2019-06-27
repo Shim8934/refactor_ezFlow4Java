@@ -21,12 +21,16 @@
 </style>
 </head>
 <body class="popup">
-	<h1>포틀릿 권한</h1>
+	<h1><spring:message code="ezNewPortal.yej05"/></h1>
 	<div id="close"><ul><li><span></span></ul></div>
 	<div class="admin_menu" id="portletAuthList"></div>
 	<div class="btnpositionNew" id="menuTable">
-		<a class="imgbtn" id="openPortletAuth"><span>권한 설정</span></a>
-		<a class="imgbtn" id="savePortletAuth"><span>저장</span></a>
+		<a class="imgbtn" id="openPortletAuth"><span><spring:message code="ezNewPortal.t086"/></span></a>
+		<a class="imgbtn" id="savePortletAuth"><span><spring:message code="ezNewPortal.t002"/></span></a>
+	</div>
+	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+   		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
 	<script type="text/javascript">
 		var portletAuths = JSON.parse('${portletAuths}');
@@ -116,6 +120,8 @@
 		    	try { OpenWin.focus(); } catch (e) { }
 		}
 		
+		var board_alertArguments = new Array();
+		
 		var savePortletAuthSetting = function() {
 			var companyValue = "<c:out value='${companyId}'/>";
 			var portletId = "<c:out value='${portletId}'/>";
@@ -125,11 +131,16 @@
 			
 			request.onload = function() { 
 				var result = request.responseText;
+				board_alertArguments[1] = DivPopUpHidden;
 				
 				if (result == "ok") {
-					alert("저장하였습니다.");
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.yej06' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.yej06'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					return;
 				} else {
-					alert("저장에 실패하였습니다.");
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.t032' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.t032'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					return;
 				}
 				
 				return;

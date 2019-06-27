@@ -64,7 +64,7 @@
 	        .admin_menuX span img {margin-right:5px; vertical-align:text-bottom;}
 	        /*2019.06.18 테마별권한 디자인 추가 */
 	        .admin_thema .frameList {float:left;border-right:none;}
-	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:360px;} 
+	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:359px;} 
 	        .admin_thema .authList th {width:90px; border-left:none;} 
 		</style>
 	</head>
