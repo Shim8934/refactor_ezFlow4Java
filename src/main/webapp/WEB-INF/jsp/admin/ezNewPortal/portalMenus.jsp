@@ -180,6 +180,7 @@
 						//handle : ".menuSortable",
 						items: "li.menu",
 						scroll: false,
+					    helper: 'clone',
 						start : function(event, ui) {
 							//$(".menuDetails").css("display", "none");
 							$(".menuDetails").remove();
@@ -390,6 +391,7 @@
 		var closeMenuDetail = function(event) {
 			//그냥 모든 메뉴디테일을 닫아버린다
 			$(".menuDetails").slideUp();
+			$(".menuDetails").remove();
 		}
 		
 		$('html').click(function(e) {

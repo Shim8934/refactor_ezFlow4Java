@@ -21,9 +21,6 @@
 		width : 36px;
 		height : 36px;
 	}
-	.mainbg {
-		min-width : 1280px;
-	}
 	
 	#userList li {
 		cursor : pointer;
@@ -376,7 +373,7 @@
 			}
 		});
 		
-		$(".portlet_area").disableSelection();
+		/* $(".portlet_area").disableSelection(); */
 		
 	});
 	

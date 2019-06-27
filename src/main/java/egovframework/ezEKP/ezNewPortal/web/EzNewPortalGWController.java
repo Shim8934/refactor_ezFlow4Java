@@ -164,7 +164,7 @@ public class EzNewPortalGWController {
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + "portletLang : " + portletLang);
 			
 			// 사용자 설정 테마/프레임 가져오기
-			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath);
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, portletLang);
 			LOGGER.debug("usedTheme : " + userThemeSetting.getUsedTheme() + ", usedFrame : " + userThemeSetting.getUsedFrame());
 			
 			List<PortletInfoVO> portletOrder = ezNewPortalService.getUserPortletList(userThemeSetting.getUsedTheme(), portletLang, userId, tenantId, companyId, deptId, false);
@@ -576,16 +576,18 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			String deptId = info.getDeptId();
+			String lang = info.getLang();
 			
 			// deptpath 구하기
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", deptPath : " + deptPath + ", lang : " + lang);
 			
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
-			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId, deptPath);
-			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath);
+			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId, deptPath, lang);
+			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId, deptPath, lang);
+			
 			boolean hasUserDefault = false;
 			int usedTheme = 0;
 			
@@ -1746,9 +1748,10 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-
-			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId, null);
-
+			String lang = userInfo.getLang();
+			
+			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId, null, lang);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", themeList);
@@ -1776,8 +1779,13 @@ public class EzNewPortalGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
+			String lang = userInfo.getLang();
 			
-			ThemeInfoVO themeInfo = ezNewPortalService.getThemeInfo(themeId, companyId, tenantId);
+			if (lang == null || lang.equals("")) {
+				lang = "1";
+			}
+			
+			ThemeInfoVO themeInfo = ezNewPortalService.getThemeInfo(themeId, companyId, tenantId, lang);
 			List<FrameInfoVO> frameInfos = ezNewPortalService.getFrames(themeId, companyId, tenantId);
 			
 			JSONObject data = new JSONObject();
@@ -2823,7 +2831,7 @@ public class EzNewPortalGWController {
 			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 
 			for (BoardMyFavoriteVO fvo : resultList) {
-				if (lang.equals("2")) {
+				if (!lang.equals("1")) {
 					fvo.setBoardName(fvo.getBoardName2());
 				}
 				
@@ -4633,6 +4641,7 @@ public class EzNewPortalGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
 			boolean totalCheck = true;
+			String lang = userInfo.getLang();
 			
 			JSONParser jp = new JSONParser();
 			jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
@@ -4648,11 +4657,11 @@ public class EzNewPortalGWController {
 							LoginVO authInfo = commonUtil.getUserForGw(authId, serverName);
 							String deptPath = authInfo.getDeptPathCode();
 							
-							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, authId, deptPath, themeId);
+							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, authId, deptPath, themeId, lang);
 							LOGGER.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
 						} else if (themeAuth.get("userType").toString().equals("false")) {
 							String deptPath = ezOrganService.getDeptPath(authId, tenantId);
-							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, null, deptPath, themeId);
+							checkThemeAuth = ezNewPortalService.checkThemeAuthNoList(companyId, tenantId, null, deptPath, themeId, lang);
 							LOGGER.debug("checkThemeAuth : " + checkThemeAuth + ", authId : " + authId + ", tenantId : " + tenantId + ", deptPath : " + deptPath);
 						}
 						

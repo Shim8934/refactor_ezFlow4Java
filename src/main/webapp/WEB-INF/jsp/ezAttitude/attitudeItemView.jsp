@@ -63,7 +63,7 @@
 				if (modAppl != "0") {
 					tempHtml += "<tr>";
 					tempHtml += "<th><spring:message code='ezAttitude.t272' /></th>";
-					if(modAppl == "1") {
+					if(modAppl == "1" || modAppl == "2") {
 						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t209' /></td>";
 					} else if(modAppl == "3") {
 						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t210' /></td>";
@@ -229,6 +229,8 @@
 				            try {
 				            	window.opener.getUserAnnualList();
 								window.opener.parent.frames["left"].getAttitudeList();
+								//신청갯수
+						    	window.opener.parent.frames["left"].leftAnnualCount();
 				            } catch (e) { 
 				            }
 				            window.close();
@@ -281,7 +283,7 @@
 		            				<c:if test="${attitudeInfo.modAppl == '0'}">
 		            					<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t272' /></span></a>
 		            				</c:if>
-		            				<c:if test="${attitudeInfo.modAppl == '1'}">
+		            				<c:if test="${attitudeInfo.modAppl == '1' || attitudeInfo.modAppl == '2'}">
 	                       				<a class="imgbtn"><span onclick="deleteCancelAnnual()"><spring:message code='ezAttitude.t279' /></span></a>
 	                       			</c:if>
 		            				<c:if test="${attitudeInfo.modAppl == '4'}">

@@ -466,8 +466,28 @@
 			    		result = "&nbsp;" + result;
 			    	}
 			    	try {
-						document.getElementsByClassName("attCount")[0].innerHTML = result;
-						document.getElementsByClassName("attCount")[1].innerHTML = result;
+						document.getElementById("attCount").innerHTML = result;
+// 						document.getElementsByClassName("attCount")[1].innerHTML = result;
+					} catch (e) {	}
+			    }
+	    	})
+	    }
+    	function leftAnnualCount() {
+	    	$.ajax({
+				type : 'get',
+			    url : '/ezAttitude/getTotalAnnualCount.do',
+			    dataType : "text",
+			    error: function(xhr, status, error){
+			    	alert("<spring:message code='ezAttitude.t175'/>");
+			    },
+			    success : function(result){
+			    	if (result == "0") { 
+			    		result = "";
+			    	} else {
+			    		result = "&nbsp;" + result;
+			    	}
+			    	try {
+						document.getElementById("annualCount").innerHTML = result;
 					} catch (e) {	}
 			    }
 	    	})
@@ -511,10 +531,13 @@
                    	<c:if test="${attitudeAdminCheck == true}">
                    		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t7'/>
                    			<c:if test="${totalAtt != 0 }">
-								<span class="attCount">&nbsp;${totalAtt}</span>
+								<span id="attCount" class="attCount">&nbsp;${totalAtt}</span>
 							</c:if>
                    		</span></li>
                    		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t275'/>
+	                   		<c:if test="${totalAnnual != '0' }">
+								<span id="annualCount" class="attCount">&nbsp;${totalAnnual}</span>
+							</c:if>
                    		</span></li>
                     </c:if>
 		        </ul>

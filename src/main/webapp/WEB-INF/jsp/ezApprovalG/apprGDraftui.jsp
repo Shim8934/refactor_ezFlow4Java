@@ -250,11 +250,12 @@
 		                message.SetEditable(true);
 		            }
 		
-					if (pDraftFlag != "REDRAFT")
+					if (pDraftFlag != "REDRAFT") {
 						if(isUsed == "reuse" && apprReuseConfig != "1") {
 							setFirstDrafter(isUsed, beforeDocID);
 						}
 						setFirstDrafter("", "");
+					}
 		            
 		            if (approvalFlag == "S" && ListType != "21") {
 			            SetAutoDocnumItem();
@@ -659,15 +660,16 @@
 				        	}
 				        	
 				        	var reformTitle = document.message.document.iframe_content.document.getElementById("reform-title").value;
-					        var titlePattern = /(\d{4})년(\d{1,2})월(\d{1,2})일~(\d{4})년(\d{1,2})월(\d{1,2})일\[(\d{1,2})일\]/
+// 					        var titlePattern = /(\d{4})년(\d{1,2})월(\d{1,2})일~(\d{4})년(\d{1,2})월(\d{1,2})일\[(\d{1,2})일\]/
 							
 					        if (reformTitle == "" ) {
 								OpenAlertUI("<spring:message code='ezAttitude.t307'/>");
 								return;
-							} else if (!titlePattern.test(reformTitle.replace(/ /gi, ""))) {
-								OpenAlertUI("<spring:message code='ezAttitude.t308'/>");
-								return;
-							}
+							} 
+// 					        else if (!titlePattern.test(reformTitle.replace(/ /gi, ""))) {
+// 								OpenAlertUI("<spring:message code='ezAttitude.t308'/>");
+// 								return;
+// 							}
 					        
 				        }
 			            

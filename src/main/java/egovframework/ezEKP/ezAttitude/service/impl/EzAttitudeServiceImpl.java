@@ -90,7 +90,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private EzOrganDAO ezOrganDAO;
 	
 	@Override
-	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, int tenantId) throws Exception {
+	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeInfo started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -104,6 +104,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		
 		AttitudeVO attitudeVO = ezAttitudeDAO.getAttitudeInfo(map);
+		AttitudeApplicationVO annualCanVO = new AttitudeApplicationVO(); 
+		if (attitudeVO.getAnnualApprStatus().equals("1") && attitudeVO.getModAppl().equals("1")) {
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("companyId", companyId);
+			map2.put("tenantId", tenantId);
+			map2.put("attModId", attitudeId);
+			map2.put("offset", commonUtil.getMinuteUTC(offset));
+			map2.put("lang", lang);
+			annualCanVO = ezAttitudeDAO.annCanAppDetail(map2);
+			attitudeVO.setContent(annualCanVO.getContent());
+		}
 		
 		LOGGER.debug("getAttitudeInfo ended");
 		
@@ -2862,13 +2873,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		 * */
 		
 		int modAppl = ezAttitudeDAO.getAttModApp(map);
-		
-		map.put("modappl", "1");
-		
-		//신청된 항목이 존재 할 때
-		if (modAppl == 1 || modAppl == 2) {
-			return "fail";
+		if (modAppl == 0) {
+			modAppl = 1;
+		} else if (modAppl == 4){
+			modAppl = 2;
 		}
+		
+		map.put("modappl", modAppl);
 		
 		/*근태수정신청 저장*/
 		ezAttitudeDAO.saveCancelAnnual(map);
@@ -3198,10 +3209,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("attitudeId", attitudeId);
 		map.put("attModId", attitudeId);
 		modAppl = ezAttitudeDAO.getAttModApp(map);
+		map.put("modappl",modAppl);
+		//ezAttitudeDAO.getAnnCanHistory
 		if (modAppl == 1) {
 			map.put("modappl", "0");
 		} else if (modAppl == 2) {
-			map.put("modappl", "3");
+			map.put("modappl", "4");
 		}
 		String apprStatus = ezAttitudeDAO.checkCanApplStatus(map);
 		if (apprStatus != null && !apprStatus.equals("0")) {
@@ -3255,23 +3268,27 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		String attitudeDate = "";
+		String startDate = vo.getStartDate().substring(0, 10);
+		String endDate = vo.getEndDate().substring(0, 10);
 		if(vo.getTypeId().equals("A11")) {
-			attitudeDate = vo.getStartDate().substring(0, 10) + "~" + vo.getEndDate().substring(0, 10);
+			
+			attitudeDate = startDate.split("-")[0] + messageSource.getMessage("ezAttitude.t66", userInfo.getLocale()) + startDate.split("-")[1] + messageSource.getMessage("ezAttitude.t67", userInfo.getLocale()) + startDate.split("-")[2] + messageSource.getMessage("ezAttitude.t68", userInfo.getLocale()) + 
+					" ~ " + endDate.split("-")[0] + messageSource.getMessage("ezAttitude.t66", userInfo.getLocale()) + endDate.split("-")[1] + messageSource.getMessage("ezAttitude.t67", userInfo.getLocale()) + endDate.split("-")[2] + messageSource.getMessage("ezAttitude.t68", userInfo.getLocale());
 		} else  {
-			attitudeDate = vo.getStartDate().substring(0, 10);
+			attitudeDate = startDate.split("-")[0] + messageSource.getMessage("ezAttitude.t66", userInfo.getLocale()) + startDate.split("-")[1] + messageSource.getMessage("ezAttitude.t67", userInfo.getLocale()) + startDate.split("-")[2] + messageSource.getMessage("ezAttitude.t68", userInfo.getLocale());
 		}
 		
     	String Subject = "";
     	StringBuffer bodyContent = new StringBuffer();
     	
-    	Subject = "[연차취소신청알림]" + " " + attitudeDate; //[연차취소신청알림] + attitudeDate
+    	Subject = "["+messageSource.getMessage("ezAttitude.t314", userInfo.getLocale())+"]" + " " + attitudeDate; //[연차취소신청알림] + attitudeDate
     	
     	bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
     	bodyContent.append("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
-    	bodyContent.append("<span style='font-size:13pt;'>" + "기간" + ": " + attitudeDate + "</span><br>");
-    	bodyContent.append("<span style='font-size:13pt;'>" + "유형" + ": " + vo.getTypeName() + "</span><br>");
-    	bodyContent.append("<span style='font-size:13pt;'>" + "신청자" + ": " + userInfo.getDisplayName() + "</span><br>");
-    	bodyContent.append("<span style='font-size:13pt;'>" + "신청일" + ": " + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false) + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t112", userInfo.getLocale()) + messageSource.getMessage("ezQuestion.t910030", userInfo.getLocale()) + ": " + attitudeDate + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t35", userInfo.getLocale()) + ": " + vo.getTypeName() + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t147", userInfo.getLocale()) + ": " + userInfo.getDisplayName() + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezAttitude.t108", userInfo.getLocale()) + ": " + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false) + "</span><br>");
     	bodyContent.append("</td></tr></table></DIV>");
     	
 		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
@@ -3433,11 +3450,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		} else if (changeStatus.equals("ret")) {
 			int modAppl = ezAttitudeDAO.getAttModApp(map);
 			
-			if (modAppl == 1) {
+			if (modAppl == 1 || modAppl == 2) {
 				map.put("modappl", 4);
-			} else if (modAppl == 2) {
-				map.put("modappl", 3);
-			}
+			} 
+//			else if (modAppl == 2) {
+//				map.put("modappl", 3);
+//			}
 			ezAttitudeDAO.setAttModApp(map);
 		}
 		LOGGER.debug("changeUsersCancelAnn ended.");
@@ -3482,6 +3500,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Override
 	public int approvalGConn(String userId, String deptId, String content, String mobile, String attitudeTypeList, String startDateList, String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("approvalGConn started");
+		
 		String[] attitudeTypeList2 = attitudeTypeList.split(",");
 		String[] startDateList2 = startDateList.split(",");
 		String[] endDateList2 = endDateList.split(",");
@@ -3519,10 +3539,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			//연동테이블에 insert
 			insertApprovalGConnInfo(String.valueOf(attitudeId), userId, docId, aprStatus, companyId, tenantId);
 		}
+		LOGGER.debug("approvalGConn ended");
 		return 0;
 	}
 	
 	private void insertApprovalGConnInfo(String attitudeId, String userId, String docId, String aprStatus, String companyId, int tenantId) throws Exception  {
+		LOGGER.debug("insertApprovalGConnInfo started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("attitudeId", attitudeId);
 		map.put("userId", userId);
@@ -3532,10 +3554,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		
 		ezAttitudeDAO.insertApprovalGConnInfo(map);
+		LOGGER.debug("insertApprovalGConnInfo ended");
 	}
 
 	@Override
 	public int updateApprovalGConnInfo(String aprStatus, String userId, String docId,	String companyId, int tenantId) throws Exception {
+		LOGGER.debug("updateApprovalGConnInfo started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("docId", docId);
@@ -3543,12 +3567,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		ezAttitudeDAO.updateApprovalGConnInfo(map);
+		List<String> attitudeIdList = ezAttitudeDAO.getApprovalGConnAttitudeList(map);
+		if (attitudeIdList != null) {			
+			ezAttitudeDAO.updateApprovalGConnInfo(map);
+		}
+		LOGGER.debug("updateApprovalGConnInfo ended");
 		return 0;
 	}
 
 	@Override
 	public int deleteApprovalGConnInfo(String userId, String type, String docId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("deleteApprovalGConnInfo started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("docId", docId);
@@ -3579,6 +3608,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				}			
 			}
 		}
+		LOGGER.debug("deleteApprovalGConnInfo ended");
 		return 0;
 	}
 	

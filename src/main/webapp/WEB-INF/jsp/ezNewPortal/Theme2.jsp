@@ -12,7 +12,6 @@
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <style type="text/css">
 	#theme2Body .two_column{width:48%;}
-	.mainbg {min-width:1280px;}
 	#main_portletEnv {position:absolute;top:0px;right:30px;display:inline-block;cursor:pointer;}
 	.top_two_column {margin : 0px 0px 25px 0px;}
 	.orbit-wrapper .timer {display:none;}
@@ -560,7 +559,7 @@
 					emPic.appendChild(img);
 					
 					document.getElementById("exellentDeptName").innerText = "";
-					document.getElementById("exellentEmpName").innerText = '\"<spring:message code="ezNewPortal.t018" />\"';
+					document.getElementById("exellentEmpName").innerText = '<spring:message code="ezNewPortal.t018" />';
 					
 					var nodata = document.getElementById("exellentEmpName");
 					nodata.style.color = "#c0c0c0";
@@ -638,7 +637,7 @@
 			
 			dt.appendChild(img);
 			var dd = document.createElement('dd');
-			dd.textContent = '\"<spring:message code="ezNewPortal.t018" />\"';
+			dd.textContent = '<spring:message code="ezNewPortal.t018" />';
 			
 			dl.appendChild(dt);
 			dl.appendChild(dd);
@@ -863,7 +862,7 @@
 			}
 		});
 		
-		$(".portlet_area").disableSelection();
+		/* $(".portlet_area").disableSelection(); */
 		
 		//CalendarMiniView_Top("CalendarMini_Top");
 		getScheduleList_Top(nowDay, "P");

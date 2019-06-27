@@ -599,17 +599,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath) throws Exception {
+	public UserPortalSettingVO getUserPortalSetting(String userId, String companyId, int tenantId, String deptPath, String portletLang) throws Exception {
 		LOGGER.debug("[Serivce] getUserPortalSetting Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", portletLang);
 		
 		UserPortalSettingVO userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
 		
 		if (userPortalSetting == null) {
-			List<ThemeInfoVO> themeList = getUserThemeList(companyId, tenantId, userId, deptPath);
+			List<ThemeInfoVO> themeList = getUserThemeList(companyId, tenantId, userId, deptPath, portletLang);
 			userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
 			
 			if (userPortalSetting == null) {
@@ -638,7 +639,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				}
 			}
 		} else {
-			List<ThemeInfoVO> themeList = getUserThemeList(companyId, tenantId, userId, deptPath);
+			List<ThemeInfoVO> themeList = getUserThemeList(companyId, tenantId, userId, deptPath, portletLang);
 			boolean canAccessTheme = false;
 			int themeId = userPortalSetting.getUsedTheme();
 			
@@ -928,7 +929,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId, String deptPath) throws Exception {
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId, String deptPath, String lang) throws Exception {
 		LOGGER.debug("getUserThemeList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -940,6 +941,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//path 거꾸로 돌려야해서
 		List<String> deptIds = Arrays.asList(deptPath.split(","));
 		Collections.reverse(deptIds);
+		
+		map.put("lang", lang);
 		
 		//유저권한체크
 		List<ThemeInfoVO> result = ezNewPortalDAO.getUserThemeList(map);
@@ -1427,12 +1430,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("updateThemeAuth ended.");
 	}
 	@Override
-	public boolean checkThemeAuthNoList(String companyId, int tenantId, String userId, String deptPath, int themeId) throws Exception {
+	public boolean checkThemeAuthNoList(String companyId, int tenantId, String userId, String deptPath, int themeId, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		List<ThemeInfoVO> themeList = getThemes(true, companyId, tenantId, "", null);
+		List<ThemeInfoVO> themeList = getThemes(true, companyId, tenantId, "", null, lang);
 		
 		if (themeList == null || themeList.size() == 0) {
 			return false;
@@ -1654,15 +1657,19 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId, String deptPath) throws Exception {
-		LOGGER.debug("getThemes started. admin = " + admin + " || companyId = " + companyId + " || tenantId = " + tenantId + " || deptPath = " + deptPath);
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId, String deptPath, String lang) throws Exception {
+		LOGGER.debug("getThemes started. admin = " + admin + " || companyId = " + companyId + " || tenantId = " + tenantId + " || deptPath = " + deptPath + " || lang = " + lang);
 		
 		List<ThemeInfoVO> list = null;
 		
+		if (lang == null || lang.equals("")) {
+			lang = "1";
+		}
+		
 		if (admin) {
-			list = getCompanyThemes(companyId, tenantId);
+			list = getCompanyThemes(companyId, tenantId, lang);
 		} else {
-			list = getUserThemeList(companyId, tenantId, userId, deptPath);
+			list = getUserThemeList(companyId, tenantId, userId, deptPath, lang);
 		}
 		
 		LOGGER.debug("getThemes ended.");
@@ -1670,12 +1677,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return list;
 	}
 	
-	private List<ThemeInfoVO> getCompanyThemes(String companyId, int tenantId) throws Exception {
+	private List<ThemeInfoVO> getCompanyThemes(String companyId, int tenantId, String lang) throws Exception {
 		LOGGER.debug("getComapnyThemes started.");
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 		
 		List<ThemeInfoVO> list = ezNewPortalDAO.getCompanyThemes(map);
 		
@@ -1685,13 +1693,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getThemeInfo started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId, String lang) throws Exception {
+		LOGGER.debug("getThemeInfo started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("themeId", themeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 		
 		ThemeInfoVO vo = ezNewPortalDAO.getThemeInfo(map);
 		

@@ -1,14 +1,22 @@
 function startEndTimeCheck(id, selectYear, selectMonth, selectDay) {
-	var returnVal = true
+	var returnVal = true;
+	selectMonth = (Number(selectMonth) + 1) + "";
+	if (selectMonth.length == 1) {
+		selectMonth = "0" + selectMonth;
+	}
+	selectDay = selectDay + "";
+	if (selectDay.length == 1) {
+		selectDay = "0" + selectDay;
+	}
 	if (Number(id.split("#date")[1]) % 2 != 0) {
-		var tempDate1 = new Date(selectYear + "-" + (Number(selectMonth) + 1) + "-" + selectDay).getTime();
+		var tempDate1 = new Date(selectYear + "-" + selectMonth + "-" + selectDay).getTime();
 		var tempDate2 = new Date(document.getElementById("date" + (Number(id.split("#date")[1]) + 1)).value).getTime();
 		if (tempDate1 > tempDate2) {
 			returnVal = false;
 		}
 	} else {
 		var tempDate1 = new Date(document.getElementById("date" + (Number(id.split("#date")[1]) - 1)).value).getTime();
-		var tempDate2 = new Date(selectYear + "-" + (Number(selectMonth) + 1) + "-" + selectDay).getTime();
+		var tempDate2 = new Date(selectYear + "-" + selectMonth + "-" + selectDay).getTime();
 		if (tempDate1 > tempDate2) {
 			returnVal = false;
 		}

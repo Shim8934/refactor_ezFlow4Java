@@ -59,6 +59,8 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -140,6 +142,9 @@ public class EzPersonalController extends EgovFileMngUtil {
     @Autowired
     private EzEmailUserAdminService ezEmailUserAdminService;
     // dhlee - end
+
+	@Resource(name = "EzNewPortalService")
+	private EzNewPortalService ezNewPortalService;
 	
 	public void setLocaleResolver(LocaleResolver localeResolver) {
     	this.localeResolver = localeResolver;
@@ -935,22 +940,44 @@ public class EzPersonalController extends EgovFileMngUtil {
 		moduleList.put("/ezCircular/circularIndex.do", "circular");
 		moduleList.put("/ezJournal/journalMain.do", "journal");
 		moduleList.put("/ezWebFolder/webfolderMain.do", "webfolder");
-
-		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
+		
+		String companyId = userInfo.getCompanyID();
+		int tenantId = userInfo.getTenantId();
+		String portletLang = userInfo.getLang();
+		String userId = userInfo.getId();
+		String deptId = userInfo.getDeptID();
+		
+		List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+		/*HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);*/
 		
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
 		 */
+		int menuListCount = menuList.size();
 		
-		model.addAttribute("isMailUsed", usedList.get("mail"));
-		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
-		model.addAttribute("isApprUsed", usedList.get("appr"));
-		model.addAttribute("isBoardUsed", usedList.get("board"));
-		model.addAttribute("isCommunityUsed", usedList.get("community"));
-		model.addAttribute("isResUsed", usedList.get("res"));
-		model.addAttribute("isCircularUsed", usedList.get("circular"));
-		model.addAttribute("isJournalUsed", usedList.get("journal"));
-		model.addAttribute("isWebfolderUsed", usedList.get("webfolder"));
+		for (int i = 0; i < menuListCount; i++) {
+			int menuId = menuList.get(i).getMenuId();
+			
+			if (menuId == 1) {
+				model.addAttribute("isMailUsed", "Y");
+			} else if (menuId == 3) {
+				model.addAttribute("isApprUsed", "Y");
+			} else if (menuId == 2) {
+				model.addAttribute("isScheduleUsed", "Y");
+			} else if (menuId == 4) {
+				model.addAttribute("isBoardUsed", "Y");
+			} else if (menuId == 5) {
+				model.addAttribute("isCommunityUsed", "Y");
+			} else if (menuId == 6) {
+				model.addAttribute("isResUsed", "Y");
+			} else if (menuId == 7) {
+				model.addAttribute("isCircularUsed", "Y");
+			} else if (menuId == 8) {
+				model.addAttribute("isJournalUsed", "Y");
+			} else if (menuId == 10) {
+				model.addAttribute("isWebfolderUsed", "Y");
+			}
+		}
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
