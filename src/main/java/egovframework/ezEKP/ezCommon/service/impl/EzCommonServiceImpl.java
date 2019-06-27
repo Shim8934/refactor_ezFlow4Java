@@ -1612,10 +1612,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
 		map.put("configName", "전자설문 리뉴얼 모듈 사용여부");
 		map.put("configType", "기타모듈");
-		
-		String regdate = commonUtil.getTodayUTCTime("");
-		map.put("regdate", regdate);
+		map.put("regdate", "2019-06-25 00:00:00");
 
 		ezCommonDAO.insertSurveyTenantConfig(map);
 	}
+
 }

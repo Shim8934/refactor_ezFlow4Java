@@ -2578,7 +2578,7 @@ INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_ord
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (16, '/ezLadder/ladderMainPage.do', 'G', 'icon_topmenu icon_nav_laddergame', 16);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (17, '/ezTask/taskIndex.do', 'G', 'icon_topmenu icon_nav_work', 17);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (18, '/ezMemo/memoMainPage.do', 'G', 'icon_topmenu icon_nav_memo', 18);
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (42, '/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 19);
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (42, '/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 25);
 UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE default_order = 0;
 
 INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (1, 'Frame1', 1);
@@ -2607,7 +2607,7 @@ INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, 
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order) VALUES (36, 0, '/ezNewPortal/userInfoPortlet.do', 'G', 16);
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order) VALUES (47, 4, '/ezNewPortal/movieBoardPortlet.do', 'G', 17);
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order) VALUES (49, 0, '/ezNewPortal/countPortlet.do', 'G', 19);
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order) VALUES (73, 0, '/ezNewPortal/surveyPortlet.do', 'G', 20);
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order) VALUES (73, 42, '/ezNewPortal/surveyPortlet.do', 'G', 20);
 
 -- Top이 회사인 이닛데이터
 INSERT INTO TBL_PORTAL_THEME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, THEME_USED, THEME_DEFAULT) VALUES ('Top', 0, 1, 1, 1);
@@ -2739,6 +2739,7 @@ INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID,
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 36, 0, 1, 16, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 47, 4, 1, 17, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 49, 0, 1, 18, null);
+INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top', 0, 73, 42, 1, 18, null);
                 
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 1, 0, 'Top', '받은 메일');
 INSERT INTO TBL_PORTAL_PORTLET_NAME (PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) VALUES (1, 1, 2, 0, 'Top', 'Received Mail');

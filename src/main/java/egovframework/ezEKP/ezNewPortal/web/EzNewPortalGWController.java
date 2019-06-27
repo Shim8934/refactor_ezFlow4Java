@@ -1918,6 +1918,7 @@ public class EzNewPortalGWController {
 			//		 useBallotSystem(투표), USE_JOURNAL(업무일지), USE_CIRCULAR(회람판), USE_ATTITUDE(근태관리)
 			//		 useWebfolder(웹폴더),  USE_ezPMS(프로젝트관리), USE_COMMUNITY(커뮤니티)
 			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
 			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
 			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
@@ -1962,6 +1963,10 @@ public class EzNewPortalGWController {
 				useQuestion = "NO";
 			}
 			
+			if (useSurvey == null || useSurvey.equals("")) {
+				useSurvey = "NO";
+			}
+			
 			if (useWebfolder == null || useWebfolder.equals("")) {
 				useWebfolder = "NO";
 			}
@@ -1976,6 +1981,10 @@ public class EzNewPortalGWController {
 			
 			if (useQuestion.equals("NO")) {
 				menuInfos.removeIf(vo -> (vo.getMenuId() == 14));
+			}
+			
+			if (useSurvey.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 42));
 			}
 			
 			if (useMemo.equals("NO")) {
