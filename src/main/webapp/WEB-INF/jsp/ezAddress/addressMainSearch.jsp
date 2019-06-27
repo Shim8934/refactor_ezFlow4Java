@@ -7,6 +7,15 @@
 	    <title>address_search</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+	    <style>
+	    	.emptyDiv {
+	    		height: 140px;
+	    		padding-top: 60px;
+	    		color : #d0d0d0;
+	    		font-size : 12px;
+	    		font-weight: bold;
+	    	}
+	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
@@ -395,7 +404,7 @@
 	                    <option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
 	                </select>
 	                <input type="text" name="search_text" id="search_text" class="textarea" onkeypress="return search_keypress()" onmousedown="Search_Clear();" style="height:22px;">
-	                <a href="#" class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
+	                <a class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
 	        </tr>
 	    </table>
 	    <br>	    

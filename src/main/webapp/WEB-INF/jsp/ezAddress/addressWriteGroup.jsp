@@ -388,7 +388,7 @@
 	        	
 	        	if (pTextName.indexOf("&") > -1 || pTextName.indexOf("<") > -1 || pTextName.indexOf(">") > -1 
 		        		 || pTextName.indexOf("\"") > -1 || pTextName.indexOf("'") > -1 || pTextName.indexOf(';') != -1) {
-	           		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+	           		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
 	           		document.getElementById("TextName").focus();
 		            return;
 		        }
@@ -1075,7 +1075,7 @@
 	        
 	        if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
 	        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1 || strName.indexOf(";") > -1) {
-           		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+           		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
            		document.getElementById("emailname").focus();
 	            return;
 	        }
@@ -2135,7 +2135,7 @@
 	                        </table>
 	                        <div style="text-align: center">
 	                        	<div class="btnpositionJsp">
-	                        		<a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a>
+	                        		<a class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a>
 	                        	</div>	
 	                        </div>
 	                    </div>

@@ -169,8 +169,8 @@
 	                    <tr>
 	                        <td colspan="4" style="border:1px solid rgb(182, 182, 182);">
 	                            <div class="btnposition btnpositionNew" style="position:static;margin:0px 0px 0px 0px;">
-	                                <a href="#" class="imgbtn" onclick ="filesearch()"><span><spring:message code='main.t4004'/></span></a>
-	                                <a href="#" class="imgbtn"><span onclick="fileupload()"><spring:message code='main.t4005'/></span></a>
+	                                <a class="imgbtn" onclick ="filesearch()"><span><spring:message code='main.t4004'/></span></a>
+	                                <a class="imgbtn"><span onclick="fileupload()"><spring:message code='main.t4005'/></span></a>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -193,7 +193,7 @@
 			</tr>
 		</table>
 	    <div class="btnposition btnpositionNew">
-	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code='main.t4008'/></span></a>
+	        <a class="imgbtn"><span onclick="btnSave_click();"><spring:message code='main.t4008'/></span></a>
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">

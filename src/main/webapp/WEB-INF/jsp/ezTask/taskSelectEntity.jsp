@@ -1314,7 +1314,7 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px; position:relative;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezTask.t1004' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezTask.t1004' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>

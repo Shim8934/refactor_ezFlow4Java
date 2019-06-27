@@ -486,16 +486,10 @@
 	                alert("<spring:message code='ezAddress.t220' />");
 	                return;
                 } 
-                
-                if (pQname.indexOf('<') != -1 || pQname.indexOf('>') != -1 || pQname.indexOf(';') != -1) {
-	        		document.getElementById("qname").focus();
-		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
-		        	return;
-		        }
 	        	
                 if (pQname.indexOf("&") > -1 || pQname.indexOf("<") > -1 || pQname.indexOf(">") > -1 
    	        		 || pQname.indexOf("\"") > -1 || pQname.indexOf("'") > -1 || pQname.indexOf(";") > -1) {
-              		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+              		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
               		document.getElementById("pQname").focus();
    	            	return;
    	        	}
@@ -600,6 +594,7 @@
 	        	$("#srarchpopup").modal();
 	        }	        
 	        function SearchOptionHidden() {
+	        	quick_add_close();
 	        	$.modal.close();
 	        }	        
 	        function ShowQuickAddres() {

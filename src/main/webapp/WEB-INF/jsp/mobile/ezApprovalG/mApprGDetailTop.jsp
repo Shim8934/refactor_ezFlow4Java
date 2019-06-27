@@ -52,7 +52,7 @@
 		    <div data-role="header" data-theme="a">
 				<h1>의견보기</h1>
 			</div>
-		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		    <a data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
 			<div style="height: 260px; overflow: auto">
 			    <div data-role="collapsibleset" data-content-theme="a" data-iconpos="right" id="popupCommentSet">
 			    </div>
@@ -64,7 +64,7 @@
 				<h1>의견쓰기</h1>
 				<a class="ui-btn ui-btn-icon-left ui-btn-b ui-btn-inline" href="javascript:commentSave('${docID}')">save</a>
 			</div>
-		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		    <a data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
 			<div style="height: 260px; overflow: auto">
 				<form>
 					<textarea name="writeComment" id="writeComment" placeholder="의견을 작성해주세요."></textarea>

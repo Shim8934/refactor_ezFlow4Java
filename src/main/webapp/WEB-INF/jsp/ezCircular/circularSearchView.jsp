@@ -38,6 +38,7 @@
             //2018-07-17 김보미 - 프로그래스바
             var startTime = "";
             var endTime = "";
+            var isSearchPage = true;
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -580,7 +581,7 @@
 		          			<option value="writer"><spring:message code='ezCircular.t166' /></option>
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" style="height:22px" /> 
-		        		<a href="#" class="imgbtn imgbck"><span onClick="search('new')"><spring:message code='ezCircular.t85' /></span></a>
+		        		<a class="imgbtn imgbck"><span onClick="search('new')"><spring:message code='ezCircular.t85' /></span></a>
 		        	</td> 
 		    	</tr> 
 		    	<tr> 

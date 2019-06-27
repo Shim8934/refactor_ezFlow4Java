@@ -224,7 +224,7 @@
 						            	</a>
 						            </li>						            
 						            <li data-icon="false">
-						            	<a href="#" onclick="boardItemList(this)" type = "favoriteBoardItemList" boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}" style="text-align:center">
+						            	<a onclick="boardItemList(this)" type = "favoriteBoardItemList" boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}" style="text-align:center">
 						            		<i class="fa fa-caret-down " style="font-size:15px"></i>
 						            	</a>
 						            </li>						            						          					            

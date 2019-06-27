@@ -124,14 +124,14 @@
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t141' /></th>
 	            <td>
 	                <input id="txtuser" value="" type="text" style="width:350px" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn imgbck"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <a class="imgbtn imgbck"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
 	            <td>
 	                <textarea rows="3" id="txtdept" style="margin-top:2px; margin-bottom:2px; width:338px; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
-	                <a href="#" class="imgbtn imgbck" style="margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <a class="imgbtn imgbck" style="margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	    </table>
