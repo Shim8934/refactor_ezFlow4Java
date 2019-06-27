@@ -51,7 +51,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden; background: none;">
-		<table id="popupContentTb" align="center" style="margin-top:25px;">
+		<table id="popupContentTb" style="margin:0px auto; margin-top:25px;">
 			<tr>
 				<td>
 					<div class="question">
