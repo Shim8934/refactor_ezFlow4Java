@@ -498,6 +498,8 @@
 		}
 		
 		var openMenuAdd = function() {
+			$(".menuChoice").removeClass("menuChoice");
+			
 			menuAuths = [];
 			
 			var menusHTML = "<li class='menuDetails' id='menuLiNew'>";
