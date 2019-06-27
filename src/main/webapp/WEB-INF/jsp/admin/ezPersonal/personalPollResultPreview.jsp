@@ -54,9 +54,12 @@
 		<table id="popupContentTb" style="margin:0px auto; margin-top:25px;">
 			<tr>
 				<td>
-					<div class="question">
-						<span class="spanPollTitle" title='${subject}'>"${subject}"</span>
-						<span class="spanPollCount">${subjectCont}</span>
+					<div class="question" style="width:433px;">
+						<span class="spanPollTitle" title='${subject}' style="width: <c:if test="${subjectCont == ''}">97</c:if><c:if test="${subjectCont != ''}">80</c:if>%;">
+							<c:if test="${subjectContent == '' }">"${subject}"</c:if>
+							<c:if test="${subjectContent != '' }">"${subjectContent }"</c:if>
+						</span>
+						<span class="spanPollCount" style="width: 15%;">${subjectCont}</span>
 					</div>
 				</td>
 			</tr>

@@ -687,7 +687,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		int totalCount = 0;
 		String subject = "";
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-		String subjectCont = "";
+		String subjectContent = "";
+		String subjectCnt = "";
 		
 		String itemSeq = req.getParameter("itemSeq");
 		
@@ -755,16 +756,16 @@ public class EzPersonalController extends EgovFileMngUtil {
 				
 				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.format("%.1f", temp));
 			}
-			//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-			if (subject.length() > 86) {
-				subjectCont = subject.substring(0, 86) + "...";
-			}
 			//subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
-			subjectCont +=  egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+			subjectCnt +=  egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
 		}
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
 		else {
-			subjectCont = "";
+			subjectCnt = "";
+		}
+		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+		if (subject.length() > 86) {
+			subjectContent = subject.substring(0, 86) + "...";
 		}
 		
 		String strHtml = "";
@@ -814,7 +815,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("strHtml", strHtml);
 		model.addAttribute("title", title);
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-		model.addAttribute("subjectCont", subjectCont);
+		model.addAttribute("subjectContent", subjectContent);
+		model.addAttribute("subjectCont", subjectCnt);
 		
 		logger.debug("pollResult ended");
 		if(flag.equals("preview")) {
