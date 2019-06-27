@@ -992,7 +992,7 @@
                                             </td>
                                             <td>
                                                 <div style="float: right; margin-right: 5px;">
-                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezPortal.t47'/></span></a>
+                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezPortal.t47'/></span></a>
                                                 </div>
                                             </td>
                                         </tr>

@@ -894,7 +894,7 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a onclick="start(<c:out value="${vo.ladderId}" />); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:20px" /></a>
+											<a href="#" onclick="start(<c:out value="${vo.ladderId}" />); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:20px" /></a>
 										</div>
 									</c:when>
 									<c:otherwise>

@@ -50,7 +50,7 @@
      		<!-- layer Popup import -->
      		
      		<div id="test" class="ui-content" style="min-width: 255px; max-width: 285px; text-align:center" data-role="popup" data-overlay-theme="b" data-transition="slidedown">
-		    <a data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
 		    <div>		    	
 				<input name="search-1" id="search-1" type="search" placeholder="search approve..">
 				<a class="ui-btn" href="#">검 색</a>
