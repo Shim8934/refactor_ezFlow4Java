@@ -165,7 +165,7 @@
 							<a href="#popupInfo" data-rel="popup" data-transition="pop" class=" ui-btn-right  ui-icon-info ui-shadow ui-corner-all ui-btn-icon-notext" title="Learn more">Learn more</a>														
 						</div> 
 							<div data-role="popup" id="popupInfo" class="ui-content" data-theme="a" style="max-width:350px;">
-	  							<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
+	  							<a data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
 								<p>게시판의 갯수를 몇개 보여줄지 정함</p>
 							</div>
 					  </div>
@@ -182,7 +182,7 @@
 						</div>    
 					  </div>
 					<div data-role="popup" id="popupInfo3" class="ui-content" data-theme="a" style="max-width:350px;">
-	  							<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
+	  							<a data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
 								<p>메인화면에서 직원검색 기능의 사용여부 선택</p>
 					</div>
 					<div class="ui-body ui-body-a">
@@ -206,7 +206,7 @@
 						</div>    
 					  </div>
 					<div data-role="popup" id="popupInfo4" class="ui-content" data-theme="a" style="max-width:350px;">
-	  							<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
+	  							<a data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
 								<p>전자결재시 보안기능의 사용여부 선택</p>
 					</div>
 					<div class="ui-body ui-body-a">
@@ -239,7 +239,7 @@
      		<!-- layer Popup import -->
      		
      		<div id="test" class="ui-content" style="min-width: 255px; max-width: 285px; text-align:center" data-role="popup" data-overlay-theme="b" data-transition="slidedown">
-		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		    <a data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
 		    <div>		    	
 				<input name="search-1" id="search-1" type="search" placeholder="search mail..">
 				<a class="ui-btn" href="#">검 색</a>

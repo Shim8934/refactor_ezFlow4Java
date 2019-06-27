@@ -733,7 +733,7 @@
 		                <th id="btn_Attach" style="font-weight: normal; text-align: left; padding-right: 58px;"><spring:message code='ezApprovalG.t65'/></th>
 		                <td style="border-right: 0px;"><div id="lstAttachLink"></div></td>
 	                    <td style="border-left: 0px;">
-                            <a href="#" class="imgbtn imgbck" style="height: 44px; margin: 0px;">
+                            <a class="imgbtn imgbck" style="height: 44px; margin: 0px;">
                                 <span onclick="return btnFileAttach_onclick()" style="line-height: 45px;"><spring:message code='ezApprovalG.t268'/></span>
                             </a>
                         </td>

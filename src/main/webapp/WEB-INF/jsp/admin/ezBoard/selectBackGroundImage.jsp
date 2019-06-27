@@ -151,7 +151,7 @@
 					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px; display:none;" onchange="btn_AttachAdd_onclick()"/>
 					<input type="text" name="filetxt" id="filetxt" style="width:78%;cursor:default;"
 					 readonly onclick="SliderImage()"/>
-					<a href="#" class="imgbtn imgbck" style="height:22px"><span onclick="SliderImage();"><spring:message code="ezBoard.t5010"/></span></a>
+					<a class="imgbtn imgbck" style="height:22px"><span onclick="SliderImage();"><spring:message code="ezBoard.t5010"/></span></a>
 					<input type="hidden" name="backgroundID" id="backgroundID" value="<c:out value='${backgroundID}'/>"/>
 					<input type="hidden" name="saveFileName" id="saveFileName" />
 					<input type="hidden" name="guid" />
@@ -167,7 +167,7 @@
 	        </form>	
 		</table>
 	    <div class="btnpositionNew">	    	
-	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code="ezBoard.t98"/></span></a>
+	        <a class="imgbtn"><span onclick="btnSave_click();"><spring:message code="ezBoard.t98"/></span></a>
 	    </div>	    
 	</body>
 </html>

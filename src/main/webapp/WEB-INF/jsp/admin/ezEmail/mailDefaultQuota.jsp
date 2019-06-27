@@ -174,7 +174,7 @@
 		    </table>
 	    </div>
 	    <div class="btnpositionJsp">
-		    <a href="#" class="imgbtn"><span onClick="Save('')"><spring:message code='main.sp09' /></span></a>
+		    <a class="imgbtn"><span onClick="Save('')"><spring:message code='main.sp09' /></span></a>
 	    </div>
     </div>
   </body>
