@@ -2905,13 +2905,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 	        }
 			
 			if(status.equals("1")) {
-				ScheduleMailConfigVO attendantMailNotiConfig = ezScheduleService.getScheduleMailNotiConfig(attendantId, loginVO.getTenantId());
+				ScheduleMailConfigVO attendantMailNotiConfig = ezScheduleService.getScheduleMailNotiConfig(creatorId, loginVO.getTenantId());
 				if(attendantMailNotiConfig == null || attendantMailNotiConfig.getAttendanceMail().equals("Y")) {
 					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, period, "acc", loginVO, loginCookie);
 				}
 			}
 			else {
-				ScheduleMailConfigVO attendantMailNotiConfig = ezScheduleService.getScheduleMailNotiConfig(attendantId, loginVO.getTenantId());
+				ScheduleMailConfigVO attendantMailNotiConfig = ezScheduleService.getScheduleMailNotiConfig(creatorId, loginVO.getTenantId());
 				if(attendantMailNotiConfig == null || attendantMailNotiConfig.getRejectedMail().equals("Y")) {
 					ezScheduleService.scheduleSendMail(Integer.parseInt(scheduleIdList[i]), creatorId, creatorName, title, period, "rej", loginVO, loginCookie);
 				}
