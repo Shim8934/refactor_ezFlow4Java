@@ -9,10 +9,13 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
@@ -4138,7 +4142,90 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("userResPermissionCheck end");
 		return result;
 	}
-	
+
+	@Override
+	public List<ResBrdVO> getResourcePortlet(@CookieValue("loginCookie") String loginCookie, String date) throws Exception {
+		logger.debug("Service getResourePortlet started");
+		
+		LoginVO userInfo  = commonUtil.userInfo(loginCookie);
+		String  id        = userInfo.getId();
+		String  companyID = userInfo.getCompanyID();
+		String  offset    = userInfo.getOffset();
+		String  deptID    = userInfo.getDeptID();
+		int     tenantID  = userInfo.getTenantId();
+		
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn",          id);
+		map.put("tenant_id",   tenantID);
+		map.put("brd_company", companyID);
+		List<ResBrdVO> resources = ezResourceDAO.getResourcePortlet(map);
+
+		int cnt = resources.size();
+		for(int i=0; i<cnt; i++) {
+			// 접근 권한이 없을 경우 삭제
+			if(getACL(companyID, resources.get(i).getBrdID(), id, "everyone", tenantID, deptID).equals("")) {
+				resources.remove(i);
+				i--;
+				cnt--;
+			} else {// 접근 권한이 있을 경우
+				// date 조회가 필요할 경우
+				if(date != null && !date.equals("")) {
+					StringBuilder sb       = new StringBuilder();
+					StringBuilder number   = new StringBuilder();
+					StringBuilder ownName  = new StringBuilder();
+					StringBuilder deptName = new StringBuilder();
+					String retVal = getScheduleXML(date, resources.get(i).getBrdID(), companyID, "", "P", "", "",  "", tenantID, offset);
+					Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
+					for (int j=0; j<xmlDom2.getDocumentElement().getChildNodes().getLength(); j++) {
+						
+						String sDate = xmlDom2.getElementsByTagName("dtstart").item(j).getTextContent().substring(11, 16);
+						String eDate = xmlDom2.getElementsByTagName("dtend").item(j).getTextContent().substring(11, 16);
+						String num   = xmlDom2.getElementsByTagName("number").item(j).getTextContent();
+						String own   = xmlDom2.getElementsByTagName("owner_nm").item(j).getTextContent();
+						String dept  = xmlDom2.getElementsByTagName("dept_name").item(j).getTextContent();
+						sb.append(sDate + "~" + eDate + ";");
+						number.append(num + ";" );
+						ownName.append(own + ";");
+						deptName.append(dept + ";");
+					}
+					resources.get(i).setMakeDate(sb.toString());
+					resources.get(i).setBrdExplain(number.toString());
+					resources.get(i).setOwnerNm(ownName.toString());
+					resources.get(i).setOwnDeptNm(deptName.toString());
+				}
+			}
+		}
+		
+		logger.debug("Service getResourePortlet ended");
+		return resources;
+	}
+
+	@Override
+	public String saveResourcePortlet(@CookieValue("loginCookie") String loginCookie, String resources) throws Exception {
+		logger.debug("Service saveResourcePortlet started");
+		
+		LoginVO   userInfo   = commonUtil.userInfo(loginCookie);
+		String[]  resourceId = resources.split(",");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cn", userInfo.getId());
+		map.put("tenant_id", userInfo.getTenantId());
+		map.put("brd_company", userInfo.getCompanyID());
+		ezResourceDAO.cleanResourcePortlet(map);
+		
+		// len > 0 일때 insert
+		if(!resourceId[0].equals("")) {
+			for(String id:resourceId) {
+				map.put("brd_id", id);
+				ezResourceDAO.insertResourcePortlet(map);
+			}
+		}
+		
+		logger.debug("service saveResourcePortlet ended");
+		return "ok";
+	}
+
 	@Override
 	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception {
 		logger.debug("getAttachList start");
@@ -4153,4 +4240,3 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 	}
 }
-

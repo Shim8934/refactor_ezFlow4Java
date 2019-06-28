@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -1242,7 +1243,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원 일정 상세정보 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleRead.do", method = RequestMethod.GET)
+	@RequestMapping(value = {"/ezResource/scheduleRead.do", "/ezResource/persPortletRead.do"}, method = RequestMethod.GET)
 	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		logger.debug("scheduleRead Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1472,13 +1473,18 @@ public class EzResourceController extends EgovFileMngUtil {
 			model.addAttribute("strIReFlagVal", reFlag);
 		}
 		
+		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
+		requestURL = requestURL.substring(1, requestURL.length() - 3);
+		
+		if(requestURL.contains("persPortletRead"))	return "/ezResource/resPortletRead";
 		return "/ezResource/resScheduleRead";
 	}
 	
 	/**
 	 * 자원관리 자원 예약 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleAdd.do", method = RequestMethod.GET)
+	@RequestMapping(value = {"/ezResource/scheduleAdd.do", "/ezResource/persPortletAdd.do" }, method = RequestMethod.GET)
 	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String editor = config.getProperty("EDITOR");
@@ -1730,6 +1736,12 @@ public class EzResourceController extends EgovFileMngUtil {
 			model.addAttribute("strIReFlagVal", reFlag);
 		}
 		
+		
+		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
+		requestURL = requestURL.substring(1, requestURL.length() - 3);
+		
+		if(requestURL.contains("persPortletAdd"))	return "/ezResource/resPortletAdd";
 		return "/ezResource/resScheduleAdd";
 	}
 	
@@ -1926,7 +1938,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원예약 자원선택 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleAddSelect.do", method = RequestMethod.GET)
+	@RequestMapping(value = {"/ezResource/scheduleAddSelect.do", "/ezResource/resPersPortlet.do"}, method = RequestMethod.GET)
 	public String scheduleAddSelect(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1971,6 +1983,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
 				
+		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
+		requestURL = requestURL.substring(1, requestURL.length() - 3);
+		
+		if(requestURL.contains("resPersPortlet"))	return "/ezResource/resPersPortlet";
 		return "/ezResource/resScheduleAddSelect";
 	}
 	
@@ -2364,6 +2381,40 @@ public class EzResourceController extends EgovFileMngUtil {
         logger.debug("sendMailToUser ended");
 	}
 	
+
+	@RequestMapping(value = "/ezResource/getResourcePortlet.do", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject getResoucePortlet(@CookieValue("loginCookie") String loginCookie, String date) throws Exception {
+		logger.debug("============ getResoucePortlet started ============");
+
+		List<ResBrdVO> list = ezResourceService.getResourcePortlet(loginCookie, date);
+		JSONObject jObject = new JSONObject();
+		jObject.put("status", "ok");
+		jObject.put("list", list);
+		logger.debug("============ getResoucePortlet ended ============");
+		return jObject;
+	}
+	
+	/**
+	 * 포틀릿 자원 목록 저장
+	 * @param loginCookie
+	 * @param request
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezResource/saveResourcePortlet.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject saveResoucePortlet(@CookieValue("loginCookie") String loginCookie, String resources) throws Exception {
+		logger.debug("============ saveResourcePortlet started ============");
+		
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		String result = ezResourceService.saveResourcePortlet(loginCookie, resources);
+
+		JSONObject jObject = new JSONObject();
+		jObject.put("status", result);
+		logger.debug("============ saveResourcePortlet ended ============");
+		return jObject;
+	}
+
 	@RequestMapping(value = "/ezResource/changeResourceOrder.do", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public void changeResourceOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {

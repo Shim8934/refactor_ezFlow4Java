@@ -2324,6 +2324,65 @@
 		]]>
 	</select>
 	
+	<select id="EzResourceDAO.getResourcePortlet" parameterClass="Map" resultMap="resBrdVO">
+		<![CDATA[
+			SELECT 
+				A.BRD_ID , 
+				A.BRD_NM ,
+				A.BRD_NM2 ,
+             	A.BRD_EXPLAIN ,
+             	A.OWNDEPTID ,
+             	A.OWNDEPTNM ,
+             	A.OWNDEPTNM2 ,
+             	A.OWNERID ,
+             	A.OWNERNM ,
+             	A.OWNERNM2 ,
+             	A.OWNERPOSITION ,
+             	A.OWNERPOSITION2 ,
+             	A.OWNERCALL ,
+             	NVL(A.RESLOCATION, ' ') RESLOCATION  ,
+             	SUBSTR(A.MAKEDATE, 1, 4) || '-' || SUBSTR(A.MAKEDATE, 5, 2) || '-' || SUBSTR(A.MAKEDATE, 7, 2) MAKEDATE  ,
+             	NVL(A.APPROVEFLAG, '0') APPROVEFLAG ,
+             	A.BRD_ACCESS
+			FROM 
+				TBL_RS_BRD A
+			JOIN
+				TBL_RS_PERSPORTLET B
+			ON
+				A.BRD_ID = B.BRD_ID
+			WHERE
+				B.CN = #cn#
+			AND
+				B.TENANT_ID = #tenant_id#
+			AND
+				B.BRD_COMPANY = #brd_company#
+			AND
+				A.BRD_COMPANY = B.BRD_COMPANY;
+		]]>
+	</select>
+
+	<delete id="EzResourceDAO.cleanResourcePortlet" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_PERSPORTLET
+			WHERE
+				CN = #cn#
+			AND
+				TENANT_ID = #tenant_id#	
+		]]>
+	</delete>
+	
+	<insert id="EzResourceDAO.insertResourcePortlet" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_PERSPORTLET ( 
+				CN, BRD_ID, BRD_COMPANY, TENANT_ID
+			)
+			VALUES ( 
+				#cn#, #brd_id#, #brd_company#, #tenant_id#
+			)
+		]]>		
+	</insert>
+	
 	<select id="EzResourceDAO.userResPermissionCheck" parameterClass="map" resultClass="String">
 		<![CDATA[
 			select 
@@ -2355,4 +2414,3 @@
 			 ]]>
 	</select>
 </sqlMap>
-

@@ -900,6 +900,22 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalMovieBoardPortlet End");
 		return "/ezNewPortal/portlets/movieBoardPortlet";
 	}
+	
+	
+	/**
+	 * 포틀릿 - 자원관리
+	 */
+	@RequestMapping(value = "/ezNewPortal/resourcePortlet.do", method=RequestMethod.GET)
+	public String portalResourcePortlet(HttpServletRequest req, Model model) throws Exception {
+		logger.debug("portalResourcePortlet Start");
+		
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
+		model.addAttribute("portletName", req.getParameter("portletName"));
+
+		logger.debug("portalResourcePortlet End");
+		return "/ezNewPortal/portlets/resourcePortlet";
+	}
+	
 	/**
 	 * 포틀릿 - 협업 포틀릿
 	 */

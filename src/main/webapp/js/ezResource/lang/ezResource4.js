@@ -233,7 +233,23 @@ var strLang583 = "结束时间比今天时间早。";
 
 var strLang584 = "它被批准。";
 var strLang585 = "认证已被取消。";
-
+var strLang586 = "1월";
+var strLang587 = "2월";
+var strLang588 = "3월";
+var strLang589 = "4월";
+var strLang590 = "5월";
+var strLang591 = "6월";
+var strLang592 = "7월";
+var strLang593 = "8월";
+var strLang594 = "9월";
+var strLang595 = "10월";
+var strLang596 = "11월";
+var strLang597 = "12월";
+var strLang598 = "오늘";
+var strLang599 = "이전달";
+var strLang600 = "다음달";
+var strLang601 = "닫기";
+var strLang602 = "ko";
 //추가
 var strLangLHM01 = "default_cn";
 var strLangLHM02 = "인쇄 미리보기";

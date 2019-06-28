@@ -343,10 +343,21 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public String userResPermissionCheck(Map<String, Object> map) throws Exception {
 		return (String) select("EzResourceDAO.userResPermissionCheck", map);
 	}
+
+	public List<ResBrdVO> getResourcePortlet(Map<String, Object> map) throws Exception {
+		return (List<ResBrdVO>) list("EzResourceDAO.getResourcePortlet", map);
+	}
 	
+	public void cleanResourcePortlet(Map<String, Object> map) throws Exception {
+		delete("EzResourceDAO.cleanResourcePortlet", map);
+	}
+
+	public void insertResourcePortlet(Map<String, Object> map) throws Exception {
+		insert("EzResourceDAO.insertResourcePortlet", map);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<ResGetClsAclListVO> getDeptAcl(Map<String, Object> map) {
 		return (List<ResGetClsAclListVO>) list("EzResourceDAO.getDeptAcl", map);
 	}
 }
-
