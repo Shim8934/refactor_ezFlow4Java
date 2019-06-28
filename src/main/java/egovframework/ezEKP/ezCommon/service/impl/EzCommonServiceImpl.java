@@ -1601,4 +1601,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createResourcePortlet() throws Exception {
 		ezCommonDAO.createTblResourcePortlet();
 	}
+	
+	@Override
+	public void addThemeContentLang() throws Exception {
+		ezCommonDAO.addThemeContent2();
+		ezCommonDAO.addThemeContent3();
+	}
 }

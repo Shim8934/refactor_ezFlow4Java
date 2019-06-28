@@ -12,8 +12,7 @@
 		<input type="hidden" id="nowMonth" value="${nowMonth}">
 		<dl class="portlet_title photo_board sortablePortlet">
 			<dt class="portletText">
-				<span id="curMonth"><c:out value="${nowMonth }" /></span>
-				<spring:message code='main.t00049'/> <c:out value='${portletName }'/>
+				<span id="curMonth"><c:out value="${nowMonth }" /></span><spring:message code='ezNewPortal.yej04'/><c:out value='${portletName }'/>
 			</dt>
 			<!-- 		<dd class="portletPlus"><img src="/images/ezNewPortal/portlet_Plus.png"></dd> -->
 			<dd id="birthNext" class="nextBtn">
@@ -44,7 +43,7 @@
 			<div id="nodata_NewBirthday" class="nodata_newBirthday" style="padding-top: 15px;display:none;">
 				<dl class='nodata'>
 					<dt><img src='/images/kr/main/noData_sIcon.png'></dt>
-					<dd>"<spring:message code='main.t00026' />"</dd>
+					<dd><spring:message code='ezNewPortal.t018' /></dd>
 				</dl>
 			</div>
 		</div>

@@ -25,9 +25,6 @@
 		width : 36px;
 		height : 36px;
 	}
-	.mainbg {
-		min-width : 1280px;
-	}
 	
 	#userList li {
 		cursor : pointer;
@@ -227,7 +224,7 @@
             		<div id="nodata_NewBirth" style="">
             			<dl class="nodata">
 	            			<dt style="padding-top:33px"><img src="/images/kr/main/noData_sIcon.png"></dt>
-	            			<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
+	            			<dd><spring:message code='ezNewPortal.t018' /></dd>
             			</dl>
             		</div>
 				</article>
@@ -637,7 +634,7 @@
 			}
 		});
 		
-		$(".portlet_area").disableSelection();
+		/* $(".portlet_area").disableSelection(); */
 
 		leftResize();
 	});

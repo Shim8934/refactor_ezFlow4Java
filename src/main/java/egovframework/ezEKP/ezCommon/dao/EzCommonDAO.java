@@ -749,4 +749,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblResourcePortlet");
 		}
 	}
+
+	public void addThemeContent2() {
+		try {
+			select("EzCommonDAO.checkThemeContent2");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme themeContent2 doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addThemeContent2");
+			update("EzCommonDAO.insertThemeContent2");
+		}
+	}
+
+	public void addThemeContent3() {
+		try {
+			select("EzCommonDAO.checkThemeContent3");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme themeContent3 doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addThemeContent3");
+			update("EzCommonDAO.insertThemeContent3");
+		}
+	}
 }

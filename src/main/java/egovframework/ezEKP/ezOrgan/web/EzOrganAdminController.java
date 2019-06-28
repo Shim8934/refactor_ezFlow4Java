@@ -165,6 +165,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addAddJobMasterProxy();
     	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
     	ezCommonService.createResourcePortlet(); // 2019-06-28 황윤호 -자원관리 포틀릿 테이블 추가
+    	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
     	
     	logger.debug("init ended.");
     }
@@ -3403,8 +3404,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		
 		logger.debug("jobInfoList ended.");
 		return "admin/ezOrgan/jobInfoList";
@@ -3432,11 +3438,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (mode != null && mode.equals("Add"))
 			jobCnt++;
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("jobCnt", jobCnt);
 		model.addAttribute("type", type);
 		model.addAttribute("mode", mode);
 		model.addAttribute("jobID", jobID);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";

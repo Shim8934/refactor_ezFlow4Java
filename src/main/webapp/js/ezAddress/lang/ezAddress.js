@@ -13,3 +13,4 @@ var strLang91003 = "데이터가 지정되지 않았습니다.";
 var strLang91004 = "트리뷰의 ID가 지정되지 않았습니다.";
 var strLangGroupMemberCount01 = "멤버 수는 최대 ";
 var strLangGroupMemberCount02 = "명까지 가능합니다.";
+var strLangNoSearchData = "검색 결과가 없습니다";

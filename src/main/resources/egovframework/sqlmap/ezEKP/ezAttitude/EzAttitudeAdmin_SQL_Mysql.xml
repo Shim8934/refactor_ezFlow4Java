@@ -1475,7 +1475,7 @@
 		<isEmpty property="orderCell">
 			<![CDATA[
 				ORDER BY
-					userName$primary$
+					userName
 			]]>
 		</isEmpty>	
 		<isNotEmpty property="limit">
@@ -1732,7 +1732,7 @@
 		<isEmpty property="orderCell">
 			<![CDATA[
 				ORDER BY
-					START_DATE
+					START_DATE, TYPENAME, CONTENT
 			]]>
 		</isEmpty>	
 	</select>
@@ -1974,7 +1974,8 @@
 				A.CN AS USER_ID,
 				A.PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
 				A.TENANT_ID AS TENANT_ID,
-			    ifnull(DATE_FORMAT(B.JOIN_DATE, '%Y-%m-%d'), 0) AS JOIN_DATE
+			    IFNULL(DATE_FORMAT(B.JOIN_DATE, '%Y-%m-%d'), 
+			    IFNULL((SELECT CONCAT(YEAR(START_DATE),'-01-01') FROM TBL_ATTITUDE WHERE COMPANY_ID = A.PHYSICALDELIVERYOFFICENAME AND TENANT_ID = A.TENANT_ID AND WRITER_ID = A.CN ORDER BY START_DATE ASC LIMIT 1),0)) AS JOIN_DATE
 			FROM 
 				TBL_USERMASTER A
 			LEFT OUTER JOIN 

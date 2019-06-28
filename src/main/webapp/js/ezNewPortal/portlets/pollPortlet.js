@@ -48,7 +48,7 @@ var pollPlus = function () {
 }
 
 var nodata = function () {
-	var str = '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>&#34;'+ messages.strLang1 +'&#34;</dd></dl>';
+	var str = '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>'+ messages.strLang1 +'</dd></dl>';
 	document.getElementById('pollInfo').innerHTML = str;
 	document.getElementById('pollPlus').addEventListener('click', pollPlus);
 }
@@ -63,7 +63,7 @@ var assemblePollList = function (poll) {
 	var itemSeq = poll.pollInfo.itemSeq;
 	
 	str += '<p class="pollTitle" id="pollTitle"></p>';
-	str += '<p class="pollBtn" id="pollBtn" data1="' + itemSeq +'">참여</p>';	
+	str += '<p class="pollBtn" id="pollBtn" data1="' + itemSeq +'">' + messages.strLang24 + '</p>';	
 	str += '<div class="pollList">';
 	for (var i=0; i<answerList.length; i++) {
 		if(answerList[i].answer.trim() !== '') {

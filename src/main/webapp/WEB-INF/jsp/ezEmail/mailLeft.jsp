@@ -1371,13 +1371,8 @@
 				var totalUnreadCountElem = document.getElementById(totalUnreadCountId);
 				
 				if (totalUnreadCountElem != null) {
-					if (totalUnreadCount == 0) {
-						totalUnreadCountElem.innerHTML = "";
-	        			totalUnreadCountElem.previousSibling.style.maxWidth = "80%";
-					} else {
-						totalUnreadCountElem.innerHTML = " " + totalUnreadCount;
-	        			totalUnreadCountElem.previousSibling.style.maxWidth = (155 - totalUnreadCountElem.offsetWidth) + "px";
-					}
+					totalUnreadCountElem.innerHTML = "&nbsp;(" + totalUnreadCount + ")";
+	        		totalUnreadCountElem.previousSibling.style.maxWidth = (155 - totalUnreadCountElem.offsetWidth) + "px";
 				}
 			}
 	    </script>
