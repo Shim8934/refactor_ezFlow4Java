@@ -250,6 +250,7 @@ var strLang599 = "이전달";
 var strLang600 = "다음달";
 var strLang601 = "닫기";
 var strLang602 = "ko";
+var strLang603 = "자원목록은 최대 5개까지 등록 가능합니다.";
 //추가
 var strLangLHM01 = "default_cn";
 var strLangLHM02 = "인쇄 미리보기";

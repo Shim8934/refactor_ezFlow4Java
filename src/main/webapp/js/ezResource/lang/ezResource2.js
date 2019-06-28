@@ -218,6 +218,7 @@ var strLang599 = "p.month";
 var strLang600 = "n.month";
 var strLang601 = "close";
 var strLang602 = "en";
+var strLang603 = "Up to five resource lists can be registered.";
 var strLangLHM01 = "default_us";
 var strLangLHM02 = "Print Preview";
 var strLangLHM03 = "Print";

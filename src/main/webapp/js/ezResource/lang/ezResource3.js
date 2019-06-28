@@ -218,6 +218,7 @@ var strLang599 = "<前";
 var strLang600 = "次>";
 var strLang601 = "閉じる";
 var strLang602 = "ja";
+var strLang603 = "資源リストは最大5個まで登録可能です。";
 var strLangLHM01 = "default_jp";
 var strLangLHM02 = "印刷プレビュー";
 var strLangLHM03 = "印刷";

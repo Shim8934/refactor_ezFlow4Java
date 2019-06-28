@@ -241,7 +241,7 @@
       function InsertReceiver() {
     	  
     	  if(pListView.listlength()>=5) {
-				alert("5개까지 선택이 가능합니다.");
+				alert(strLang603);
 				return;
     	  }
           nodeIdx = TreeView.selectedIndex();
