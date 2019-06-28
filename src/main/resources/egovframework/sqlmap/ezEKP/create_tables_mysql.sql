@@ -8629,6 +8629,10 @@ CREATE TABLE `tbl_portal_theme` (
   `theme_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '테마아이디',
   `theme_name` varchar(100) DEFAULT NULL COMMENT '테마 이름',
   `theme_content` varchar(400) DEFAULT NULL COMMENT '테마 설명(내용)',
+  `theme_content2` varchar(400) DEFAULT NULL,
+  `theme_content3` varchar(400) DEFAULT NULL,
+  `THEME_NAME2` varchar(100) DEFAULT 'theme2',
+  `THEME_NAME3` varchar(100) DEFAULT 'theme3',
   PRIMARY KEY (`theme_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='테마 정보 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
