@@ -292,7 +292,7 @@ function LineAprTyepSetAll() {
 				ProSn = CurrentSn;
 			}
 			
-			if (pTotalRows[i].getAttribute("DATA12") == "004")
+			if (pTotalRows[i].getAttribute("DATA12") == "004" || GetAttribute(pTotalRows[i], "DATA12") == "015")
 				p_RejectFlag = true;
 			
 			
