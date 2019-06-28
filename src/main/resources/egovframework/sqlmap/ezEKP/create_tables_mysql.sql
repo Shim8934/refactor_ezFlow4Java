@@ -8632,6 +8632,41 @@ CREATE TABLE `tbl_portal_theme` (
   PRIMARY KEY (`theme_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='테마 정보 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
+--
+-- Table structure for table `tbl_portal_portlet_auth`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_portlet_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_portlet_auth` (
+  `portlet_id` int(11) NOT NULL COMMENT '포틀릿 아이디',
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
+  `user_id` varchar(100) NOT NULL DEFAULT '' COMMENT '사용자/부서 아이디',
+  `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
+  `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
+  PRIMARY KEY (`portlet_id`,`company_id`,`tenant_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_portal_theme_auth`
+--
+
+DROP TABLE IF EXISTS `tbl_portal_theme_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_portal_theme_auth` (
+  `theme_id` int(11) NOT NULL COMMENT '테마 아이디',
+  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+  `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
+  `user_id` varchar(100) NOT NULL DEFAULT '' COMMENT '사용자/부서 아이디',
+  `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
+  `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
+  PRIMARY KEY (`theme_id`,`company_id`,`tenant_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `tbl_portal_theme_comp`

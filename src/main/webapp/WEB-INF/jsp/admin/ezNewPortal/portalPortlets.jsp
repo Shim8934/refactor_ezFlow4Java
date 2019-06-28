@@ -444,7 +444,7 @@
 						if (portletId == 34) { //슬라이드 이미지 포틀릿의 경우
 							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
 							listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div>";
-							listHTML += "<div class='portletAuthSetting'><a><img src='/images/account.jpg'></a></div>";
+							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span>권한</span></a></div>";
 							listHTML += "</td>";
 						} else {
 							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";

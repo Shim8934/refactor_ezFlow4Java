@@ -740,7 +740,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public void addThemeContent2() {
+	public void addThemeContent2() throws Exception {
 		try {
 			select("EzCommonDAO.checkThemeContent2");
 		} catch (Exception e) {
@@ -751,7 +751,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public void addThemeContent3() {
+	public void addThemeContent3() throws Exception {
 		try {
 			select("EzCommonDAO.checkThemeContent3");
 		} catch (Exception e) {
@@ -759,6 +759,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			
 			update("EzCommonDAO.addThemeContent3");
 			update("EzCommonDAO.insertThemeContent3");
+		}
+	}
+
+	public void createTblThemeAuth() {
+		try {
+			select("EzCommonDAO.checkTblThemeAuth");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_auth doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblThemeAuth");
+		}
+	}
+
+	public void createTblPortletAuth() {
+		try {
+			select("EzCommonDAO.checkTblPortletAuth");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_auth doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblPortletAuth");
 		}
 	}
 }

@@ -165,6 +165,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addAddJobMasterProxy();
     	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
     	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
+    	ezCommonService.createThemeAndPortletAuth();
     	
     	logger.debug("init ended.");
     }

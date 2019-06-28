@@ -3056,6 +3056,42 @@
 	    		(3, #tenantID#, #companyID#, 49, 1, 18, 0, 0)
   		]]>
     </insert>
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I31" parameterClass="Map">
+  		<![CDATA[
+	    INSERT INTO 
+	    	TBL_PORTAL_THEME_AUTH 
+	    		(THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
+	    VALUES 
+	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(3, #companyID#, #tenantID#, #companyID#, 1, 0)
+  		]]>
+    </insert>
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I32" parameterClass="Map">
+  		<![CDATA[
+	    INSERT INTO 
+	    	TBL_PORTAL_PORTLET_AUTH 
+	    		(PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
+	    VALUES 
+	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(4, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(5, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(6, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(7, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(8, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(9, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(10, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(11, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(12, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(14, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(26, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(34, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(36, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(47, #companyID#, #tenantID#, #companyID#, 1, 0),
+	    		(49, #companyID#, #tenantID#, #companyID#, 1, 0)
+  		]]>
+    </insert>
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM

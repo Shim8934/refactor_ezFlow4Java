@@ -1187,4 +1187,44 @@
 								WHEN theme_id = 3 THEN 'Theme3'
 							END
 	</update>
+	
+	<select id="EzCommonDAO.checkTblThemeAuth">
+		SELECT 
+			THEME_ID
+		FROM 
+			TBL_PORTAL_THEME_AUTH
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblThemeAuth">
+		CREATE TABLE `tbl_portal_theme_auth` (
+		  `theme_id` int(11) NOT NULL COMMENT '테마 아이디',
+		  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+		  `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
+		  `user_id` varchar(100) NOT NULL DEFAULT '' COMMENT '사용자/부서 아이디',
+		  `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
+		  `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
+		  PRIMARY KEY (`theme_id`,`company_id`,`tenant_id`,`user_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblPortletAuth">
+		SELECT 
+			PORTLET_ID
+		FROM 
+			TBL_PORTAL_PORTLET_AUTH
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPortletAuth">
+		CREATE TABLE `tbl_portal_portlet_auth` (
+		  `portlet_id` int(11) NOT NULL COMMENT '포틀릿 아이디',
+		  `company_id` varchar(100) NOT NULL DEFAULT '' COMMENT '회사 아이디',
+		  `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
+		  `user_id` varchar(100) NOT NULL DEFAULT '' COMMENT '사용자/부서 아이디',
+		  `access_YN` int(11) DEFAULT NULL COMMENT '접근 가능(1), 접근 불가(0)',
+		  `user_type` int(11) DEFAULT NULL COMMENT '사용자(U), 부서(D)',
+		  PRIMARY KEY (`portlet_id`,`company_id`,`tenant_id`,`user_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
 </sqlMap>

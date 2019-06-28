@@ -1209,12 +1209,14 @@
 	</statement>
 	
 	<select id="EzCommonDAO.checkThemeContent2">
+	<![CDATA[
 		SELECT
 			THEME_CONTENT2
 		FROM
 			TBL_PORTAL_THEME
 		WHERE 
-			ROWNUM = 1
+			ROWNUM <= 1
+	]]>
 	</select>
 	
 	<statement id="EzCommonDAO.addThemeContent2">
@@ -1227,12 +1229,14 @@
 	</statement>
 	
 	<select id="EzCommonDAO.checkThemeContent3">
+	<![CDATA[
 		SELECT
 			THEME_CONTENT3
 		FROM
 			TBL_PORTAL_THEME
 		WHERE 
-			ROWNUM = 1
+			ROWNUM <= 1
+	]]>
 	</select>
 	
 	<statement id="EzCommonDAO.addThemeContent3">
@@ -1276,4 +1280,50 @@
 								WHEN theme_id = 3 THEN 'Theme3'
 							END
 	</update>
+	
+	<select id="EzCommonDAO.checkTblThemeAuth" resultClass="String">
+	<![CDATA[
+		SELECT 
+			theme_id
+		FROM 
+			TBL_PORTAL_THEME_AUTH
+		where 
+			ROWNUM <= 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblThemeAuth">
+	CREATE TABLE "EZEKP2017"."TBL_PORTAL_THEME_AUTH" (
+		"THEME_ID" NUMBER(10,0), 
+		"COMPANY_ID" VARCHAR2(100), 
+		"TENANT_ID" NUMBER(5,0), 
+		"USER_ID" VARCHAR2(100), 
+		"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
+		"USER_TYPE" NUMBER(5,0),
+		PRIMARY KEY ("THEME_ID","COMPANY_ID", "TENANT_ID", "USER_ID")
+	);
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblPortletAuth" resultClass="String">
+	<![CDATA[
+		SELECT 
+			theme_id
+		FROM 
+			TBL_PORTAL_PORTLET_AUTH
+		where 
+			ROWNUM <= 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPortletAuth">
+	CREATE TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_AUTH" (
+		"PORTLET_ID" NUMBER(10,0), 
+		"COMPANY_ID" VARCHAR2(100), 
+		"TENANT_ID" NUMBER(5,0), 
+		"USER_ID" VARCHAR2(100), 
+		"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
+		"USER_TYPE" NUMBER(5,0),
+		PRIMARY KEY ("PORTLET_ID","COMPANY_ID", "TENANT_ID", "USER_ID")
+	);
+	</statement>
 </sqlMap>
