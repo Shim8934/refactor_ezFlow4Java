@@ -282,6 +282,7 @@
 				document.getElementById("bodyType").options[1].selected = true;
 	        	document.getElementById("SelMailSign").disabled = true;
 	        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+	        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
 			} else {
 				document.getElementById("tbContentElement").style.display = "";
 			}
@@ -1176,6 +1177,7 @@
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 		        	document.getElementById("SelMailSign").disabled = true;
 		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+		        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
 	        	} else {
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
@@ -1186,6 +1188,7 @@
 				document.getElementById("plainTextArea").style.display = "none";
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
+	        	document.getElementById("SelMailSign").classList.remove("disabled"); // plainTextDisable style remove
         		if(totBigSizeAttachMBSize == 0){
 	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
         		} else {
