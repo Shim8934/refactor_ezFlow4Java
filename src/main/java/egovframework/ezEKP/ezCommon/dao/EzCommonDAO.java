@@ -739,4 +739,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblAttitudeAprConn");
 		}
 	}
+	
+	public void createTblResourcePortlet() throws Exception {
+		try {
+			select("EzCommonDAO.checkResourcePortlet");
+		} catch (Exception e) {
+			logger.debug("tbl_rs_persportlet doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblResourcePortlet");
+		}
+	}
 }

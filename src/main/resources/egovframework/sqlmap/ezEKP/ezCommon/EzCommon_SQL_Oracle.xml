@@ -1207,4 +1207,23 @@
 		  CONSTRAINT "TBL_ATTITUDE_APR_CONN_PK" PRIMARY KEY ("ATTITUDE_ID","COMPANY_ID","TENANT_ID")
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkResourcePortlet">
+		SELECT 
+			BRD_ID
+		FROM 
+			TBL_RS_PERSPORTLET
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblResourcePortlet">
+		CREATE TABLE "TBL_RS_PERSPORTLET" (
+		  "CN" NVARCHAR2(80) NOT NULL,
+		  "BRD_ID" NUMBER(10,0) NOT NULL,
+		  "BRD_COMPANY" NVARCHAR2(80) NOT NULL,
+		  "TENANT_ID" NUMBER(5,0) NOT NULL,
+		  CONSTRAINT "TBL_RS_PERSPORTLET_PK" PRIMARY KEY ("TENANT_ID","CN","BRD_COMPANY","BRD_ID")
+		) 
+	</statement>
 </sqlMap>

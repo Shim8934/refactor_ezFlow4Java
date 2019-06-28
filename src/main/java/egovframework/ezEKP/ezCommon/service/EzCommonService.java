@@ -140,5 +140,6 @@ public interface EzCommonService {
 
 	public void createAttitudeAnnual() throws Exception;
 
+	public void createResourcePortlet() throws Exception;
 }
 

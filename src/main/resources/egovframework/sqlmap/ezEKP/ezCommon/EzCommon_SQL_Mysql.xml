@@ -1120,4 +1120,22 @@
 		  PRIMARY KEY (`ATTITUDE_ID`,`COMPANY_ID`,`TENANT_ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
+	
+	<select id="EzCommonDAO.checkResourcePortlet">
+		SELECT 
+			BRD_ID
+		FROM 
+			TBL_RS_PERSPORTLET
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblResourcePortlet">
+		CREATE TABLE `TBL_RS_PERSPORTLET` (
+		  `CN` VARCHAR(80) NOT NULL COMMENT 'id',
+		  `BRD_ID` DECIMAL(22,0) NOT NULL COMMENT '자원관리 id',
+		  `BRD_COMPANY` VARCHAR(40) NOT NULL COMMENT 'company id',
+		  `TENANT_ID` MEDIUMINT(5) NOT NULL DEFAULT 0 COMMENT '테넌트 id',
+		  PRIMARY KEY (`TENANT_ID`,`CN`,`BRD_COMPANY`,`BRD_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
 </sqlMap>

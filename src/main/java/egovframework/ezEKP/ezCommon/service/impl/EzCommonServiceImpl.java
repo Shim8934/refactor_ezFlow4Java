@@ -1596,4 +1596,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createTblAttitudeAnnualHistory();
 		ezCommonDAO.createTblAttitudeAprConn();
 	}
+
+	@Override
+	public void createResourcePortlet() throws Exception {
+		ezCommonDAO.createTblResourcePortlet();
+	}
 }
