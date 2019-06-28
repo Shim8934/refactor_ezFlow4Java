@@ -1152,7 +1152,7 @@ public class MBoardGWController {
 			boardInfo.setType("movieBoardItem");
 			
 			// 해당 게시물 읽기권한 없다면 리턴
-			if (!accessCheck(contentId, deptPathCode, info)) {
+			if (!accessCheck(boardId, contentId, deptPathCode, info)) {
 				result.put("status", "no");
 				return result;
 			}

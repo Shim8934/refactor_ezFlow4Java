@@ -672,14 +672,14 @@
 				$("#portlet" + portletId).find(".portlet-header").css("border", "");
 				$("#portlet" + portletId).find(".portlet-header").css("color", "");
 				$("#portlet" + portletId).find(".portlet-header").find("span").attr("class", "spanOn");
-				var changedName = $("#portlet" + portletId).find(".portletName[data1='1']").val();
+				var changedName = $("#portlet" + portletId).find(".portletName[data1='" + lang + "']").val();
 				$("#portlet" + portletId).find(".portlet-header").find(".portlet_header_name").text(changedName);
 			} else {
 				$("#portlet" + portletId).find(".portlet-header").css("background-color", "rgb(244,244,244)");
 				$("#portlet" + portletId).find(".portlet-header").css("border", "1px solid rgb(231, 231, 231)");
 				$("#portlet" + portletId).find(".portlet-header").css("color", "rgb(177, 177, 177)");
 				$("#portlet" + portletId).find(".portlet-header").find("span").attr("class", "spanOff");
-				var changedName = $("#portlet" + portletId).find(".portletName[data1='1']").val();
+				var changedName = $("#portlet" + portletId).find(".portletName[data1='" + lang + "']").val();
 				$("#portlet" + portletId).find(".portlet-header").find(".portlet_header_name").text(changedName);
 			}
 			
