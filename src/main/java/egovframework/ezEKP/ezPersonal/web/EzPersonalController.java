@@ -59,6 +59,8 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
+import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -140,6 +142,9 @@ public class EzPersonalController extends EgovFileMngUtil {
     @Autowired
     private EzEmailUserAdminService ezEmailUserAdminService;
     // dhlee - end
+
+	@Resource(name = "EzNewPortalService")
+	private EzNewPortalService ezNewPortalService;
 	
 	public void setLocaleResolver(LocaleResolver localeResolver) {
     	this.localeResolver = localeResolver;
@@ -682,7 +687,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		int totalCount = 0;
 		String subject = "";
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-		String subjectCont = "";
+		String subjectContent = "";
+		String subjectCnt = "";
 		
 		String itemSeq = req.getParameter("itemSeq");
 		
@@ -750,16 +756,16 @@ public class EzPersonalController extends EgovFileMngUtil {
 				
 				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.format("%.1f", temp));
 			}
-			//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-			if (subject.length() > 86) {
-				subjectCont = subject.substring(0, 86) + "...";
-			}
 			//subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
-			subjectCont +=  egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+			subjectCnt +=  egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
 		}
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
 		else {
-			subjectCont = "";
+			subjectCnt = "";
+		}
+		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+		if (subject.length() > 86) {
+			subjectContent = subject.substring(0, 86) + "...";
 		}
 		
 		String strHtml = "";
@@ -786,7 +792,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 						"<div class='Pt_QstOptTitleDiv' style='width: 22%;' title='" + array_title[i+1] + "'><span class='Vnum'>" + (i+1)  + "</span><span class='Vtext'>" + array_title[i+1] +"</div>" +
 						"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
 							 "<span class='Pt_QstInfoVotes'>"+ resultDom.getElementsByTagName("COUNT").item(i).getTextContent() + "</span>" +
-							 egovMessageSource.getMessage("main.t20000", locale) + "/" ;
+							 egovMessageSource.getMessage("ezPersonal.hyh17", locale) + "/" ;
 							 if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
 								 strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + ".0</span>";
 							 } else {
@@ -809,7 +815,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("strHtml", strHtml);
 		model.addAttribute("title", title);
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-		model.addAttribute("subjectCont", subjectCont);
+		model.addAttribute("subjectContent", subjectContent);
+		model.addAttribute("subjectCont", subjectCnt);
 		
 		logger.debug("pollResult ended");
 		if(flag.equals("preview")) {
@@ -935,22 +942,44 @@ public class EzPersonalController extends EgovFileMngUtil {
 		moduleList.put("/ezCircular/circularIndex.do", "circular");
 		moduleList.put("/ezJournal/journalMain.do", "journal");
 		moduleList.put("/ezWebFolder/webfolderMain.do", "webfolder");
-
-		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
+		
+		String companyId = userInfo.getCompanyID();
+		int tenantId = userInfo.getTenantId();
+		String portletLang = userInfo.getLang();
+		String userId = userInfo.getId();
+		String deptId = userInfo.getDeptID();
+		
+		List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+		/*HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);*/
 		
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
 		 */
+		int menuListCount = menuList.size();
 		
-		model.addAttribute("isMailUsed", usedList.get("mail"));
-		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
-		model.addAttribute("isApprUsed", usedList.get("appr"));
-		model.addAttribute("isBoardUsed", usedList.get("board"));
-		model.addAttribute("isCommunityUsed", usedList.get("community"));
-		model.addAttribute("isResUsed", usedList.get("res"));
-		model.addAttribute("isCircularUsed", usedList.get("circular"));
-		model.addAttribute("isJournalUsed", usedList.get("journal"));
-		model.addAttribute("isWebfolderUsed", usedList.get("webfolder"));
+		for (int i = 0; i < menuListCount; i++) {
+			int menuId = menuList.get(i).getMenuId();
+			
+			if (menuId == 1) {
+				model.addAttribute("isMailUsed", "Y");
+			} else if (menuId == 3) {
+				model.addAttribute("isApprUsed", "Y");
+			} else if (menuId == 2) {
+				model.addAttribute("isScheduleUsed", "Y");
+			} else if (menuId == 4) {
+				model.addAttribute("isBoardUsed", "Y");
+			} else if (menuId == 5) {
+				model.addAttribute("isCommunityUsed", "Y");
+			} else if (menuId == 6) {
+				model.addAttribute("isResUsed", "Y");
+			} else if (menuId == 7) {
+				model.addAttribute("isCircularUsed", "Y");
+			} else if (menuId == 8) {
+				model.addAttribute("isJournalUsed", "Y");
+			} else if (menuId == 10) {
+				model.addAttribute("isWebfolderUsed", "Y");
+			}
+		}
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);

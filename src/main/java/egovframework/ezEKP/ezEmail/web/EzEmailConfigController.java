@@ -1615,7 +1615,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중 설정 저장 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do", method=RequestMethod.GET)
+	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailOutOfOfficeSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailOutOfOfficeSave started.");

@@ -227,6 +227,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//업무일지 아이디
 		String journalId = "";
 		
+		// ezPMS 프로젝트 아이디
+		String ezPMSProjectId = "";
+		String ezPMSRoleId = "";
+		// ezPMS 게시판 아이디
+		String ezPMSBoardId = "";
+		
 		//근태관리
 		String attitudeId = "";
 		
@@ -250,7 +256,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
 				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
 				|| tempStr.equals("RESEND") || tempStr.equals("BOARDDOTNET") || tempStr.equals("DOCSENDDOTNET")
-				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL") || tempStr.equals("ATTITUDE") || tempStr.equals("ATTITUDEABSENTED")
+				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL") || tempStr.equals("EZPMSBOARD") || tempStr.equals("EZPMS") || tempStr.equals("ATTITUDE") || tempStr.equals("ATTITUDEABSENTED")
 				/* 아직 이 값으로는 받는 부분 없음
 				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
 			)) {
@@ -1186,6 +1192,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         else if(_cmd.equals("journal")){
         	journalId = request.getParameter("journalId");
         }
+        // ezPMS 게시판이면 작동
+        else if(_cmd.equals("ezPMSBoard")){
+        	ezPMSProjectId = request.getParameter("ezPMSProjectId");
+        	ezPMSBoardId = request.getParameter("ezPMSBoardId");
+        } 
+        // ezPMS
+        else if(_cmd.equals("ezPMS")) {
+        	ezPMSProjectId = request.getParameter("projectId");
+        	model.addAttribute("pmsRoleId", request.getParameter("roleId"));
+        	model.addAttribute("pmsType", request.getParameter("type"));
+        	model.addAttribute("moduleType", "ezPMS");
+        	model.addAttribute("pmsToUserId", request.getParameter("toUserId"));
+        	model.addAttribute("pmsUserIdType", request.getParameter("userIdType"));
+        	model.addAttribute("pmsTaskId", request.getParameter("taskId"));
+        }
         //근태관리
         else if(_cmd.equals("attitude")) {
         	attitudeId = request.getParameter("attitudeId");        			
@@ -1361,6 +1382,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
 		
+		// ezPMS 프로젝트 아이디
+		model.addAttribute("ezPMSProjectId", ezPMSProjectId);
+		// ezPMS 게시판 아이디
+		model.addAttribute("ezPMSBoardId", ezPMSBoardId);
 		//근태관리
 		model.addAttribute("attitudeId", attitudeId);
 		
@@ -2125,6 +2150,352 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String realPath = commonUtil.getRealPath(request);
 		
+		String ezPMSPath = realPath + commonUtil.getUploadPath("upload_project.ROOT", userInfo.getTenantId())+ commonUtil.separator +"uploadFile";
+		
+		String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
+		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
+		
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		
+		int fileCnt = doc.getElementsByTagName("ROW").getLength();
+		String[] fileName = new String[fileCnt];
+		String[] filePath = new String[fileCnt];
+		long[] fileSize = new long[fileCnt];
+		String[] fileExt = new String[fileCnt];
+		String[] newFileName = new String[fileCnt];
+		boolean[] downloadedFlags = new boolean[fileCnt];
+		
+		int totalFileSize = 0;
+		
+		if (tempFolderName.equals("")) {
+			logger.debug("tempFolderName is EMPTY. Return NODATA.");
+			logger.debug("mailInterUploadCopy ended.");
+			
+			return "NODATA";
+		}
+		
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", userInfo.getTenantId());
+		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", userInfo.getTenantId());
+		
+		for (int i = 0; i < fileCnt; i++) {
+			String filePathValue = doc.getElementsByTagName("DATA2").item(i).getTextContent();		
+			filePathValue = filePathValue != null ? filePathValue : "";
+			
+//			if (!filePathValue.startsWith("/")) {
+//				filePathValue = "/" + filePathValue;
+//			}
+			
+			filePath[i] = ezPMSPath + filePathValue;
+			
+			if (dotNetIntegration.equals("YES")) {
+				try {
+					File f = new File(filePath[i]);
+					
+					// 닷넷 연동 시 첨부 파일이 존재하지 않으면 암호화된 파일일 수 있으므로 복호화 URL을 호출하여 다운로드를 시도해 본다.
+					if (!f.exists()) {						
+						String downloadUrl = dotNetUrl + "/myoffice/Common/DownloadAttach_java.aspx?filename=placeholder"
+								+ "&filepath=" + URLEncoder.encode(filePathValue, "UTF-8");
+						
+						logger.debug("downloadUrl=" + downloadUrl);
+						
+						// 다운로드된 파일을 저장할 로컬 파일명을 임의로 생성한다.
+						String localFilePath = pTempFileUploadPath + commonUtil.separator + UUID.randomUUID().toString();
+						File localFile = new File(localFilePath);
+						
+						// URL로부터 다운로드를 시도한다.
+						FileUtils.copyURLToFile(new URL(downloadUrl), localFile);
+						
+						logger.debug("downloaded File Size is " + localFile.length());
+						
+						if (localFile.length() != 0) {
+							// 다운로드한 파일의 Path로 filePath를 변경한다.
+							filePath[i] = localFilePath;
+							// 다운로드한 파일을 사용 후 삭제하기 위해 다운로드한 파일임을 표시한다.
+							downloadedFlags[i] = true;
+							// 파일 크기가 0인 경우는 다운로드가 되지 않은 경우이므로 생성된 파일을 삭제한다.
+						} else {
+							localFile.delete();
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			File f = new File(filePath[i]);
+			
+			if (f.exists()) {
+				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
+				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
+				
+				if (fileName[i].lastIndexOf(".") > -1) {
+					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
+					newFileName[i] = UUID.randomUUID().toString() + "." + fileExt[i];
+				} else {
+					fileExt[i] = "";
+					newFileName[i] = UUID.randomUUID().toString();
+				}
+//				newFileName[i] = newFileName[i].substring(newFileName[i].lastIndexOf(";")+1);
+				
+				fileSize[i] = f.length();
+				totalFileSize += fileSize[i];
+			} else {
+				logger.debug("Cannot find the file : " + filePath[i]);
+				filePath[i] = "NOFILE";
+			}
+		}
+		
+		// 총 파일의 크기가 대용량첨부 제한크기를 넘는지 체크한다.
+		if (bigMaxSize != 0 && totalFileSize > bigMaxSize) {
+			logger.debug("totalFileSize is over bigMaxSize. Return OVERFLOW.");
+			
+			if (dotNetIntegration.equals("YES")) {
+				for (int i = 0; i < fileCnt; i++) {
+					// 복호화 URL을 통해 다운로드한 임시 파일들을 삭제한다.
+					if (downloadedFlags[i]) {
+						logger.debug("deleting " + filePath[i]);
+						
+						File localFile = new File(filePath[i]);
+						
+						localFile.delete();
+					}
+				}
+			}
+			
+			logger.debug("mailInterUploadCopy ended.");
+			
+			return "OVERSIZE";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<ROOT><NODES>");
+		
+		if (totalFileSize > changeSize) { // 대용량첨부의 경우
+			logger.debug("In case of big attachment.");
+			
+			// 현재 날짜의 폴더가 없으면 생성한다.
+			String folderDate = EgovDateUtil.getToday("");
+			String bigAttachFolderPath = uploadMailRootPath + commonUtil.separator + folderDate;
+			File file = new File(bigAttachFolderPath);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			for (int i = 0; i < fileCnt; i++) {
+				if (filePath[i].equals("NOFILE")) {
+					continue;
+				}
+				
+				FileInputStream fis = null;
+				FileOutputStream fos = null;
+				BufferedInputStream bis = null;
+				BufferedOutputStream bos = null;
+				
+				try {
+					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
+					fis = new FileInputStream(filePath[i]);
+					bis = new BufferedInputStream(fis);
+					
+					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+					bos = new BufferedOutputStream(fos);
+					
+					int data = 0;
+					byte[] buffer = new byte[BUFF_SIZE];
+					
+					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+						bos.write(buffer, 0, data);
+					}
+					
+					bos.close(); bos = null;
+					bis.close(); bis = null;
+					fos.close(); fos = null;
+					fis.close(); fis = null;
+					
+					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
+					String base64OrgFileName = Base64.encodeBase64String(newFileName[i].getBytes("UTF-8"));
+					
+					file = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
+					fos = new FileOutputStream(file);
+					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
+					
+					//첨부파일 정보를 XML data로 만든다.
+					String resultUpload = "";
+					
+					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+						resultUpload = "denied";
+					} else {
+						resultUpload = "true";
+					}
+					
+					sb.append("<NODE>");
+					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
+					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
+					sb.append("<FILELOCATION><![CDATA[" + folderDate + "|!|" + newFileName[i] + "]]></FILELOCATION>");
+					sb.append("<PBIGFILEUPLOAD>Y</PBIGFILEUPLOAD>");
+					sb.append("</NODE>");					
+				} catch(Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (bos != null) {
+						try { bos.close(); } catch(Exception e) {}
+					}
+					if (bis != null) {
+						try { bis.close(); } catch(Exception e) {}
+					}
+					if (fos != null) {
+						try { fos.close(); } catch(Exception e) {}
+					}
+					if (fis != null) {
+						try { fis.close(); } catch(Exception e) {}
+					}
+				}                
+			}            
+		} else { // 일반첨부의 경우
+			logger.debug("In case of common attachment.");
+			
+			File file = new File(pTempFileUploadPath);
+			
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			for (int i = 0; i < fileCnt; i++) {
+				if (filePath[i].equals("NOFILE")) {
+					continue;
+				}
+				
+				FileInputStream fis = null;
+				FileOutputStream fos = null;
+				BufferedInputStream bis = null;
+				BufferedOutputStream bos = null;
+				
+				try {
+					// 게시판의 첨부파일을 메일 첨부파일 임시폴더쪽으로 복사한다.
+					fis = new FileInputStream(filePath[i]);
+					bis = new BufferedInputStream(fis);
+					
+					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
+					bos = new BufferedOutputStream(fos);
+					
+					int data = 0;
+					byte[] buffer = new byte[BUFF_SIZE];
+					
+					while ((data = bis.read(buffer, 0, BUFF_SIZE)) != -1) {
+						bos.write(buffer, 0, data);
+					}
+					
+					//첨부파일 정보를 XML data로 만든다.
+					String resultUpload = "";
+					
+					if (useExtension.toLowerCase().indexOf(fileExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
+						resultUpload = "denied";
+					} else {
+						resultUpload = "true";
+					}
+					
+				//	fileName[i] = fileName[i].substring(fileName[i].lastIndexOf(";")+1);
+					sb.append("<NODE>");
+					sb.append("<PUPLOADSN><![CDATA[" + newFileName[i] + "]]></PUPLOADSN>");
+					sb.append("<RESULTUPLOADA><![CDATA[" + resultUpload + "]]></RESULTUPLOADA>");
+					sb.append("<PFILENAME><![CDATA[" + fileName[i] + "]]></PFILENAME>");
+					sb.append("<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>");
+					sb.append("<FILELOCATION><![CDATA[" + newFileName[i] + "]]></FILELOCATION>");
+					sb.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");
+					sb.append("</NODE>");					
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					if (bos != null) {
+						try { bos.close(); } catch(Exception e) {}
+					}
+					if (bis != null) {
+						try { bis.close(); } catch(Exception e) {}
+					}
+					if (fos != null) {
+						try { fos.close(); } catch(Exception e){}
+					}
+					if (fis != null) {
+						try { fis.close(); } catch(Exception e){}
+					}
+				}
+			}			
+		}
+		
+		sb.append("</NODES></ROOT>");
+		
+		if (dotNetIntegration.equals("YES")) {
+			for (int i = 0; i < fileCnt; i++) {
+				// 복호화 URL을 통해 다운로드한 임시 파일들을 삭제한다.
+				if (downloadedFlags[i]) {
+					logger.debug("deleting " + filePath[i]);
+					
+					File localFile = new File(filePath[i]);
+					
+					localFile.delete();
+				}
+			}
+		}
+		
+		// templist폴더에 메일에 대한 첨부파일 정보를 가지고있는 txt파일 생성한다.
+		File f = new File(pTempListPath);
+		
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		
+		f = new File(pTempListPath + commonUtil.separator + tempFolderName + ".txt");
+		OutputStreamWriter outWrite = null;
+		
+		try {
+			outWrite = new OutputStreamWriter(new FileOutputStream(f));
+			outWrite.write(sb.toString());
+			String crlf = System.getProperty("line.separator");
+			outWrite.append(crlf+crlf);
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (outWrite != null) {
+				try { outWrite.close(); } catch (Exception e) {}
+			}
+		}
+		
+		logger.debug("mailInterUploadCopy ended.");
+		
+		return sb.toString();
+	}
+	
+	
+	
+	@RequestMapping(value="/ezEmail/mailInterUploadCopyXCKFromEzPMSBoard.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailInterUploadCopyFromEzPMSBoard(
+			@CookieValue("loginCookie") String loginCookie, 
+			@RequestBody String bodyData,
+			HttpServletRequest request) throws Exception {
+		logger.debug("mailInterUploadCopyFromEzPMSBoard started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
+		String isBigYN = request.getParameter("isbigyn") == null ? "" : request.getParameter("isbigyn"); //isBigYN은 항상 N
+		logger.debug("tempFolderName=" + tempFolderName + ",isBigYN=" + isBigYN);
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String bigMaxSizeStr = doc.getElementsByTagName("BIGMAXSIZE").item(0).getTextContent();
+		long bigMaxSize = Long.parseLong(bigMaxSizeStr);
+		
+		String changeSizeStr = doc.getElementsByTagName("CHANGESIZE").item(0).getTextContent();	
+		int changeSize = Integer.parseInt(changeSizeStr);
+		
+		String endDate = doc.getElementsByTagName("ENDDAY").item(0).getTextContent();	
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String realPath = commonUtil.getRealPath(request);
+		
 		String journalPath = realPath + commonUtil.getUploadPath("upload_journal.ROOT", userInfo.getTenantId())+ commonUtil.separator +"uploadFile";
 		
 		String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
@@ -2447,7 +2818,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("mailInterUploadCopy ended.");
+		logger.debug("mailInterUploadCopyFromEzPMSBoard ended.");
 		
 		return sb.toString();
 	}

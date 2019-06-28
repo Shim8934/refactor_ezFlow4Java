@@ -2834,9 +2834,9 @@ h2, #menu span {font-size: 12px;}
 .surveyinf-divcf.flex-cf {display: flex; align-items: center;}
 
 .user-listDiv {flex: 1; border: none; outline: none; padding: 0px 5px; max-height: 30px; height: 25px; line-height: 25px; overflow-y: auto;}
-.user-listDiv span {padding-right: 5px; font-size: 12px; word-break: break-all;}
-.user-listDiv span >u {cursor: pointer; color: #333; text-decoration: underline; line-height: 20px;}
-.user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;}
+.user-listDiv span {padding-right: 3px; font-size: 12px; word-break: break-all;}
+.user-listDiv span >u {cursor: pointer; color: rgb(128, 128, 128); text-decoration: underline; line-height: 20px;}
+/* .user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;} */
 .user-listDiv span >em {padding-right: 5px; font-style: normal;}
 .user-listDiv span >img {width: 10px; height: 10px; cursor: pointer;}
 
@@ -3265,9 +3265,9 @@ input::-ms-clear {display: none;}
 .optUl >li >img {position: absolute; top: 10px; left: 10px; cursor: pointer;}
 
 /* tooltip buttons part */
-.tooltip-bttns .modifyBtn {display:inline-block; width:16px; height:16px; margin:11px 0px; background-position:0px -78px !important;}
-.tooltip-bttns .copyBtn {display:inline-block; width:16px; height:16px; margin:11px 0px; background-position:-16px -78px !important;}
-.tooltip-bttns .deleteBtn {display:inline-block; width:16px; height:16px; margin:11px 0px; background-position:-32px -78px !important;}
+.tooltip-bttns .modifyBtn {display:inline-block; width:16px; height:16px; margin:3px 0px 0px 0px; background-position:0px -78px !important;}
+.tooltip-bttns .copyBtn {display:inline-block; width:16px; height:16px; margin:3px 0px 0px 0px; background-position:-16px -78px !important;}
+.tooltip-bttns .deleteBtn {display:inline-block; width:16px; height:16px; margin:3px 0px 0px 0px; background-position:-32px -78px !important;}
 
 /* select && multiple select question */
 .questnTitle:focus {border:none !important; border-bottom: 1px solid #03a9f4 !important; font-size:14px; font-weight:bold; color:#1f1f1f !important; outline:none !important; /*webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6); box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);*/}
@@ -3323,21 +3323,33 @@ input::-ms-clear {display: none;}
 
 /* attach file ul list */
 .survey_atchBtn{overflow:hidden; padding:0; margin:0; height:40px;}
-.survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
-.survey_atchBtn li, .survey_atchBtn li.off span{margin-left:6px; margin-right:6px; line-height:36px;}
+.survey_atchBtn{overflow:hidden; padding:0; margin:0; height:40px;}
+.survey_atchBtn li.atchLiImg{ margin:9px 3px 0px 0px !important;}
+.survey_atchBtn li.atchLiUrl{ margin:9px 0px 0px 0px !important;}
+.survey_atchBtn li.modifyBtnLi{margin:7px 3px 0px 0px !important;}
+.survey_atchBtn li.copyBtnLi{margin:7px 3px 0px 0px !important;}
+.survey_atchBtn li.deleteBtnLi{margin:7px 0px 0px 0px !important;}
+.survey_atchBtn li.addSkip{margin:7px 3px 0px 0px !important;}
+.survey_atchBtn li.addLogic{margin:7px 0px 0px 0px !important;}
+.survey_atchBtn li.saveLogic{margin:7px 3px 0px 0px !important;}
+.survey_atchBtn li.cancelLogic{margin:7px 0px 0px 0px !important;}
+.survey_atchBtn li.saveSkip{margin:7px 3px 0px 0px !important;}
+.survey_atchBtn li.cancelSkip{margin:7px 0px 0px 0px !important;}
+.survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:22px; margin:10px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
+.survey_atchBtn li, .survey_atchBtn li.off span{margin-left:6px; margin-right:6px; line-height:22px;}
 .survey_atchBtn li span .survey_atchBtn li span.off{display: block; float: left; padding: 0px 4px; font-size:12px; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; line-height:28px; box-sizing:border-box;}
-.survey_atchBtn li span.survey_icon{margin-left:6px; margin-right:6px;}
+.survey_atchBtn li span.survey_icon{margin-left:3px; margin-right:3px;}
 .survey_text{padding:0px 4px; line-height:38px; font-size:12px; color:#333;}
 .survey_icon{background:url(/images/ezSurvey/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
-.atchImg{background-position:0px 0px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.atchImg{background-position:0px 0px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:pointer;}
 .atchVdo{background-position:-16px 0px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
 .atchMsic{background-position:-32px 0px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
 .atchUrl{background-position:-48px 0px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
-.srvyDel{background-position:-48px -78px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.srvyDel{background-position:-48px -78px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:pointer;}
 .survey_atchBtn li.on:hover{color:rgb(4, 112, 227); border-color: rgb(4, 112, 227); background:#f1f8ff;}
 .survey_atchBtn li:hover{color:rgb(4, 112, 227); border-color: rgb(4, 112, 227); background:#f1f8ff;}
 .srvyAddBtn{margin:10px 0px 0px 0px;}
-.srvyAddFile{background-position:-64px -78px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.srvyAddFile{background-position:-64px -78px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:pointer;}
 
 /* required checkbox label*/
 .required{margin:0px 10px 0px 0px; padding:0px;}
@@ -3354,11 +3366,11 @@ input::-ms-clear {display: none;}
 
 /* drag and drop button */
 .question-panel .mvBtn {width:30px; height:39px; margin:0px auto;}
-.mvBtn li, .mvBtn li.off{border-top:0px; cursor:move;}
-.question-panel .mvBtn span{display:inline-block; width:16px; height:16px; margin:10px 6px 0px 6px; background-position:-64px 0px !important;}
+.mvBtn li, .mvBtn li.off{/* border-top:0px; */ cursor:move;}
+.question-panel .mvBtn span{display:inline-block; width:16px; height:16px; margin:3px 6px 0px 6px; background-position:-64px 0px !important;}
 .mvBtn li:hover{background-color:rgb(255,255,255); border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
 
-.question-panel .srvyDragBtn {position:absolute; display:block; left:50%;}
+.question-panel .srvyDragBtn {position:absolute; display:block; left:50%; margin:0px 0px 0px 0px;}
 
 /* question header panel */
 .question-panel{background:#f1f6fb; padding: 10px;}
@@ -3421,7 +3433,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .silder-unit {text-align: center;}
 
 /* ranking and dropdown part */
-.delOption {width: 30px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 30px 30px; background-position: center; background-image: url('/images/ezSurvey/minus.png');}
+.delOption {width: 22px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 30px 30px; background-position: center; background-image: url('/images/ezSurvey/minus.png');}
 .ranking-select, .dropdown-select {display: flex; align-items: center;}
 .ranking-select + .ranking-select, .dropdown-select + .dropdown-select {margin-top: 10px;}
 .ranking-order, .dropdown-order {width:34px; height:22px; line-height:22px; margin:0px 10px 0px 0px; font-size:12px; color:#333; text-align:center; background:#fff; border:1px solid #2196f3; border-radius:22px;}
@@ -3447,11 +3459,11 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family:Malgun Gothic, "맑은 고딕"; display: flex;}
 .prevQsWrapper .question-header .imptt {line-height: 40px;}
 .srvyLogicbtn{display:inline-flex; margin:0px 0px 0px 10px;}
-.logicSkip{background-position:0px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
-.logicShuffle{background-position:-16px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
-.logicCancel{background-position:-80px -78px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
-.logicArrow{background-position:-32px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:default;}
-.logicDel{background-position:-32px -78px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.logicSkip{background-position:0px -94px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:pointer;}
+.logicShuffle{background-position:-16px -94px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:pointer;}
+.logicCancel{background-position:-80px -78px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:pointer;}
+.logicArrow{background-position:-32px -94px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:default;}
+.logicDel{background-position:-32px -78px !important; width:16px; height:16px; display:inline-block; margin:3px 0px 0px 0px; cursor:pointer;}
 .survey_atchBtn li.srvyLogicArrow{background:none; border:1px solid #f1f6fb; cursor:default;}
 
 .prevQsOpt .sltLogicArea {display: flex;}

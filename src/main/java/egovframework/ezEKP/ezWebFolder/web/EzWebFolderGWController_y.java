@@ -737,6 +737,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String searchStartDate = request.getParameter("searchStartDate")	!= null ? request.getParameter("searchStartDate") 	: "" ;
 		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
 		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
+		String isExplorer = request.getParameter("isExplorer") 				!= null ? request.getParameter("isExplorer") 		: "" ;
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
 		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -776,21 +777,31 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				return jsonObj;
 			}
 			
-			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
-			int usrListCnt = service.getUsrListCount(tenantId, userId);
+			// isExplorer 탐색기가 호출한 내용이면 listCount를 가져오지 않음
+			int usrListCnt = 0;
+			if (!isExplorer.equals("YES")) {
+				// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
+				usrListCnt = service.getUsrListCount(tenantId, userId);
+			} else {
+				usrListCnt = 10000;
+			}
 			
 			LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
 			LOGGER.debug("usrListCnt : " + usrListCnt + " ||  tenantId : " +tenantId + " || userId : " + userId);
 			
 			int listCount = request.getParameter("listCount") 	!= null ? Integer.parseInt(request.getParameter("listCount")) 	: usrListCnt;
+			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+			
 			if (listCount == 0) {
 				listCount = usrListCnt ;
 			}
-			int pStart = request.getParameter("pStart")			!= null ? Integer.parseInt(request.getParameter("pStart"))		: 0;
+			
 			int pEnd = listCount;
 			
-			if (usrListCnt != listCount) {
-				service.insertEnv(userId, tenantId, listCount);
+			if (!isExplorer.equals("YES")) {
+				if (usrListCnt != listCount) {
+					service.insertEnv(userId, tenantId, listCount);
+				}
 			}
 			
 			LOGGER.debug("listCount : " + listCount + " || currPage : " + currPage+ " || totalpages : "+ totalpages + " || pEnd : " + pEnd );
@@ -1153,7 +1164,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	    	
 	    	String userId = requestObject.get("userid") != null ? (String)requestObject.get("userid") : "";
 	    	String pw = requestObject.get("pw") != null ? (String)requestObject.get("pw") : "";
+	    	// String userIde = requestObject.get("useride") != null ? (String)requestObject.get("useride") : "";
+	    	// String pwe = requestObject.get("pwe") != null ? (String)requestObject.get("pwe") : "";
 	    	int tenantId = 0;
+	    	
+	    	// postMan으로 원하는 encrypt를 원할시 테스트하기 위함.  
+	    	// LOGGER.debug(webfolderUtil.encryptAES(userIde));
+	    	// LOGGER.debug(webfolderUtil.encryptAES(pwe));
 	    	
 	    	userId = webfolderUtil.decryptAES(userId);
 			pw = webfolderUtil.decryptAES(pw);
@@ -1185,9 +1202,17 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			if (resultToken == null) {
 				throw new Exception("resultToken is null");
 			} else {
-				result.put("status", "ok");
-				result.put("code", 0);
-				result.put("ltoken", createdToken);
+				// 웹폴더로 로그인을 시도할 시 토큰값을 return 해주면서 권한이 있는 개인, 부서, 회사 폴더를 생성하도록한다. 
+				// 단, 폴더 생성시는 웹으로 접근한적이 한번도 없을때, 폴더가 존재 하지 않을때 사용하기 위함.
+				if(checkRootFolder(userId, request).get("status").equals("ok")){
+					result.put("status", "ok");
+					result.put("code", 0);
+					result.put("ltoken", createdToken);
+				} else {
+					// 개인, 부서, 회사 폴더가 존재하지 않으면 
+					result.put("status", "error");
+					result.put("code", 3);
+				}
 			}
 		} catch (Exception e) {
 			result.put("status", "error");

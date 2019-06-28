@@ -856,6 +856,24 @@ var SurveyCreate     = function() {
 		bnk.on('mouseout' , 'node', function(e){$('#logicMap').css('cursor', 'default');});
 		bnk.on('mouseover', 'edge', function(e){$('#logicMap').css('cursor', 'pointer');});
 		bnk.on('mouseout' , 'edge', function(e){$('#logicMap').css('cursor', 'default');});
+		// cytoscape 범위 블락 초기화
+		bnk.on('mouseup', function(event) {
+			
+			var len      = bnk.elements().size()*50;
+			var curPan   = bnk.pan();
+			var initFlag = false;
+			
+			if(len*(-1) > curPan.x) initFlag = true;
+			if(len*(-1) > curPan.y) initFlag = true;
+			if(len < curPan.x) initFlag = true;
+			if(len < curPan.y) initFlag = true;
+			
+			if(initFlag) {
+				bnk.resize();
+				bnk.fit();
+				bnk.center();
+			}
+		});
 		
 		bnk.elements('node').qtip({
 			content: {
@@ -3483,7 +3501,7 @@ var SurveyCreate     = function() {
 		
 		var htmlOption = "";
 		if (mode == "skip") {
-			htmlOption += "<option value=''>" + SurveyMessages.strQs + " "+ SurveyMessages.strChoice + "</option>"; 
+			htmlOption += "<option value=''>" + SurveyMessages.strSkipQs + "</option>"; 
 			
 		} else {
 			htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 

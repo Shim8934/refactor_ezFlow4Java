@@ -573,11 +573,12 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
+			String lang = info.getLang();
+			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId + ", lang : " + lang);
 			
 			// List<ThemeInfoVO> userThemeList =
 			// ezNewPortalService.getUserThemeListr(companyId, tenantId);
-			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId);
+			List<ThemeInfoVO> userThemeList = ezNewPortalService.getThemes(false, companyId, tenantId, userId, lang);
 			UserPortalSettingVO userThemeSetting = ezNewPortalService.getUserPortalSetting(userId, companyId, tenantId);
 			boolean hasUserDefault = false;
 			int usedTheme = 0;
@@ -1739,8 +1740,9 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String lang = userInfo.getLang();
 
-			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId);
+			List<ThemeInfoVO> themeList = ezNewPortalService.getThemes(true, companyId, userInfo.getTenantId(), userId, lang);
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1769,8 +1771,13 @@ public class EzNewPortalGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
+			String lang = userInfo.getLang();
 			
-			ThemeInfoVO themeInfo = ezNewPortalService.getThemeInfo(themeId, companyId, tenantId);
+			if (lang == null || lang.equals("")) {
+				lang = "1";
+			}
+			
+			ThemeInfoVO themeInfo = ezNewPortalService.getThemeInfo(themeId, companyId, tenantId, lang);
 			List<FrameInfoVO> frameInfos = ezNewPortalService.getFrames(themeId, companyId, tenantId);
 			
 			JSONObject data = new JSONObject();
@@ -2812,11 +2819,14 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-
+			String lang = info.getLang();
 			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 
 			for (BoardMyFavoriteVO fvo : resultList) {
-
+				if (!lang.equals("1")) {
+					fvo.setBoardName(fvo.getBoardName2());
+				}
+				
 				LOGGER.debug("resultList : " + fvo.getBoardId());
 			}
 
@@ -3613,8 +3623,15 @@ public class EzNewPortalGWController {
 			
 			Map<String, Object> resultMap = ezNewPortalService.getWeather(cityCode, primLang);
 			List<WeatherVO> cityList = ezNewPortalService.getCityList(primLang);
+			data.put("lang", info.getLang());
 			data.put("cityList", cityList);
-			data.put("displayName", resultMap.get("DISPLAYCITYNAME"));
+			
+			if (info.getLang().equals("2")) {
+				data.put("displayName", resultMap.get("CITYNAME"));
+			} else {
+				data.put("displayName", resultMap.get("DISPLAYCITYNAME"));
+			}
+			
 			data.put("currentWeather", resultMap.get("CURRENTWEATHER"));
 			data.put("todayWeather", resultMap.get("TODAYWEATHER"));
 			data.put("cityCode", resultMap.get("CITYCODE"));

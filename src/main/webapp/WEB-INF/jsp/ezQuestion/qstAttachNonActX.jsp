@@ -319,7 +319,7 @@
 			       	}
 			        
 			        if (CrossYN()) {
-			            document.all("txt_AttachPath").value = input.value;
+			            /* document.all("txt_AttachPath").value = input.value; */
 			        } else {
 			        	thisObj.select();
 				        var selectionRange = document.selection.createRangeCollection()[0];
@@ -354,6 +354,9 @@
 			        	document.all.AttachPath.value = FilePath;
 			            //document.all.AttachPath.value = FilePath.target.responseText
 			        }
+			        
+		            document.all("txt_AttachPath").value = document.getElementById("cmuds").value;
+		            
 			        fileup = true;
 			    }
 		</script>

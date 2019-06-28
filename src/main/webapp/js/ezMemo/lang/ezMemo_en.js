@@ -1,20 +1,17 @@
-var strLangMemo1 = "선택된 영역이 없습니다.";
-var strLangMemo2 = "메모를 추가하였습니다.";
-var strLangMemo3 = "메모 추가에 실패하였습니다.";
-var strLangMemo4 = "메모를 삭제하시겠습니까?";
-var strLangMemo5 = "확인";
-var strLangMemo6 = "취소";
-var strLangMemo7 = "메모가 없습니다.";
-var strLangMemo8 = "저장했습니다";
-var strLangMemo9 = "전체";
-var strLangMemo10 = "검색 조건이 없습니다.";
-var strLangMemo11 = "검색기간의 종료일을 지정해 주세요.";
-var strLangMemo12 = "검색기간의 시작일을 지정해 주세요.";
-var strLangMemo13 = "검색 시작일을 종료일보다 빠르게 지정해 주십시오.";
-var strLangMemo14 = "는 검색어로 사용할 수 없습니다.";
-var strLangMemo15 = "총";
-var strLangMemo16 = "개";
-var strLangMemo17 = "리스트를 선택해 주세요.";
-var strLangMemo18 = "삭제하시겠습니까?";
-var strLangMemo19 = "복사되었습니다.";
-var strLangMemo20 = "모든메모";
+var memoMessages = {
+	strLangMemo4 : "Are you sure you want to delete this memo?",
+	strLangMemo5 : "Confrim",
+	strLangMemo6 : "Cancel",
+	strLangMemo7 : "No notes available.",
+	strLangMemo9 : "All",
+	strLangMemo10 : "No search criteria.",
+	strLangMemo11 : "Please specify the end date of the search term.",
+	strLangMemo12 : "Please specify the start date of the search term.",
+	strLangMemo13 : "Please specify the search start date earlier than the end date.",
+	strLangMemo14 : "Can not be used as a query.",
+	strLangMemo17 : "Please select a list.",
+	strLangMemo18 : "Do you want to delete?",
+	strLangMemo20 : "All memo",
+	strLangMemo21 : "An error has occurred",
+	strLangMemo22 : "Default notes box",
+}

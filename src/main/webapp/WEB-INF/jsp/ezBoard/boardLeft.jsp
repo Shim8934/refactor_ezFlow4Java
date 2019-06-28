@@ -1022,7 +1022,7 @@
 	        	<span onclick="boardConfig()" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezBoard.t0005" />"></span>
 	        </div>
 	        <div class="btn_writeBox">
-	        	<p class="btn_write01" onclick="boardWrite();"><span class="sub_iconLNB tree_write"></span>게시글 등록</p>
+	        	<p class="btn_write01" onclick="boardWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezBoard.t999073" /></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 		        <div class="lnb_lay">

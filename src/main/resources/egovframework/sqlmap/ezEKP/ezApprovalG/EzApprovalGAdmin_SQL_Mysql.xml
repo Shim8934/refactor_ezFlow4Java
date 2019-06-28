@@ -647,7 +647,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.searchManageAprDocList"
-		parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+		parameterClass="Map" resultClass="ApprGDocListVO">
 		
 		<![CDATA[
 			SELECT
@@ -1717,7 +1717,8 @@
 				formdescription = #v_PFORMDESCRIPT#,
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#,
-				reformflag = #v_PREFORMFLAG#
+				reformflag = #v_PREFORMFLAG#,
+				formversion = formversion + 1
 			WHERE
 				tenant_id = #tenantID#
 			AND

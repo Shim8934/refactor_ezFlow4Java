@@ -112,7 +112,7 @@ header {height:56px; background-color:#ffffff; border-top:1px solid #cecece; bor
 .util li:hover .util_frame{background-position: -186px -124px; }/* 프레임아이콘 */
 .util li span {margin-top:17px;}
 
-.topmenulayout { min-width: 1300px; }
+.topmenulayout { min-width: 1280px; }
 
 .topmenu {}
 .topmenu .contentlayout_right div { width: 56px; height: 54px; padding:15px 0px; border-left: 1px solid #cecece; border-right: 1px solid #cecece; text-align: center; box-sizing: border-box; cursor: pointer; }
@@ -378,7 +378,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .sscheduleUL .scheduleLi .scheduleText{margin:0px; padding:0px; font-size:13px; color:#333; width:97%; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;}
 .sscheduleUL .scheduleLi_nodata{margin:0px;padding: 8px 0px 10px 14px;border-bottom: 1px dashed #e7e7e7; height:35px; line-height:34px;}
 .sscheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 35px; float:left; font-size:12px; color:#b2b2b2; background:url(/images/ezNewPortal/schedule_nodataIcon.png) no-repeat left center;}
-.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 17px 0px 0px; padding:0px; float:right; cursor:pointer;}
+.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 12px 0px 0px; padding:0px; float:right; cursor:pointer;}
 .schedule_calendar{float:left; width:calc(46% - 11px); margin-right:5px; background:#fff;}
 .schedule_scheduleList{float:right; width:54%;border-left: 1px solid #e7e7e7;}
 .portlet_schedule{background:#ffffff;}
@@ -530,13 +530,13 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .bannerText dd.bannerBtn{margin:12px 0px 0px 0px; padding:6px 12px 6px 12px; display:inline-block; text-align:center; background:#0470e4; border:1px solid #0163cc; border-radius:3px; -webkit-border-radius:3px; -moz-border-radius:3px; font-size:12px; color:#fff; float:right; cursor:pointer;}
 
 /* aside */
-aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index:9; overflow:visible; background: #fff; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index:9; overflow:visible; background: #fff; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 .linkBtn_open{ margin:0px; padding:0px; position:absolute; right:82px; top:-10px; cursor:pointer;}
 #linkBtn_open img{margin-top: 18px; position: relative; z-index: 1000;}
 .linkBtn_close{margin:0px; padding:0px; position:absolute; right:0px; top:-10px; cursor:pointer;}
 .aside_quick{ margin:0px; padding:0px; overflow:hidden;}
 .aside_quick .quickmenu_title{ margin:0px; padding:0px; width:100px; height:46px; background:#0470e4; line-height:44px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
-.aside_quick .quickmenu {width:100px; margin:0px; padding:0px; list-style:none; background:#fff; height:292px; box-sizing:border-box;}
+.aside_quick .quickmenu {width:100px; margin:0px; padding:0px; list-style:none; background:#fff; height:471px; box-sizing:border-box;}
 .aside_quick .quickmenu li { display:block; cursor:pointer;width:100px; border-bottom:1px solid #e7e7e7; text-align:center;}
 .aside_quick .quickmenu li .icon {display:block; margin:0 auto; padding:9px 0px 5px 0px;}
 .aside_quick .quickmenu li .txt {display:block; width:78px ;text-align:center; color:#333; font-size:12px; height:30px;letter-spacing:0px; overflow:hidden; margin:0 auto; padding:2px 0px 0px 0px; word-break: break-all;line-height:15px;}
@@ -695,8 +695,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 11px 0px 0px; padding:0px; float:right; cursor:pointer;}
 }
 @media only screen and (max-width :1799px) and (min-width :1686px) {
-	.sscheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 31px; float:left; font-size:11px; color:#b2b2b2; background:url(/images/ezNewPortal/schedule_nodataIcon.png) no-repeat left center;}
-	.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 4px 0px 0px; padding:0px; float:right; cursor:pointer;}
+	.sscheduleUL .scheduleLi_nodata .sNodataText{ margin:0px; padding:0px 0px 0px 28px; float:left; font-size:11px; color:#b2b2b2; background:url(/images/ezNewPortal/schedule_nodataIcon.png) no-repeat left center;}
+	.sscheduleUL .scheduleLi_nodata .sNodataPlus{ margin:10px 0px 0px 0px; padding:0px; float:right; cursor:pointer;}
 }
 @media only screen and (max-width :1685px) and (min-width :1590px) {
 	.box_shadow.info_left{display:inline-block;float:left; width:187px; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
@@ -746,7 +746,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 	.section_main .mainLayout_right{ clear:both; width:50%;}
 	.section_main .mainLayout_left{ width:50%;}
 	.section_main .mainLayout_middle{ width:50%;}
-	.portlet{width:47.7%; float:left;}
+	.portlet{width:47.5%; float:left;}
 	.vote{ margin:0px 2px; float:left; overflow:hidden;}
 	.stats_graph{ float:left; overflow:hidden;}
 	.groupware_banner{ float:left; margin-top:0px;}
@@ -758,7 +758,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 }
 
 @media only screen and (max-width : 1279px) {
-	.portlet {width:47.7%; float:left;}
+	.portlet {width:47.5%; float:left;}
 	.box_shadow.info_left {display:none;}
 	.box_shadow.info_right {width:100%; margin-left:0px !important;}
 }
@@ -795,7 +795,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 /* section1 영역 */
 #theme2Body .section1_bg{width:100%; height:280px; margin:0px; padding:0px; background:#d8f1fb;}
-#theme2Body .section1{margin:0px; padding:0px; vertical-align:top; overflow:hidden; padding-bottom:14px; padding-top:14px; float:none; min-width:1170px; max-width:1920px; box-sizing:border-box;}
+#theme2Body .section1{margin:0px; padding:0px; vertical-align:top; overflow:hidden; padding-bottom:14px; padding-top:14px; float:none; min-width:1150px; max-width:1920px; box-sizing:border-box;}
 #theme2Body .section1 .sec1Layout_left{overflow:hidden; float:left; padding:0px 0px 0px 20px; box-sizing:border-box;}
 #theme2Body .section1 .sec1Layout_middle{overflow:hidden; float:left; padding:0px 0px 0px 20px; box-sizing:border-box;}
 #theme2Body .section1 .sec1Layout_right{overflow:hidden; float:left; padding:0px 0px 0px 20px; box-sizing:border-box;}
@@ -869,7 +869,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme2Body .event p{width:100%; height:100%; margin:0px; padding:0px; background:url(/images/ezNewPortal/theme2Img/event_pic02.png) #effaff center center no-repeat;}
 #theme2Body .exellentEmployee{float:right; width:calc(40% - 42px); height:210px; margin:20px 20px 20px 20px; padding:0px; background:#fff; border:1px solid #cddee6; border-radius:3px}
 #theme2Body .exellentEmployee .title{margin:0px 10px; padding:10px 0px; border-bottom:1px solid #cddee6; text-align:center;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-#theme2Body .exellentEmployee .title span{display:inline-block; margin:0px 5px; color:#555; font-size:14px; font-weight:bold;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
+#theme2Body .exellentEmployee .title span{display:inline-block; margin:0px; color:#555; font-size:14px; font-weight:bold;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 #theme2Body .exellentEmployee .title span.color{color:#0470e4; font-size:15px; margin:0px;}
 #theme2Body .excellent_info{position:relative; margin:0px; padding:0px;}
 #theme2Body .excellent_info dt{margin:0px; padding:0px; text-align:center; color:#212121; font-size:14px; font-weight:bold; line-height:18px;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
@@ -915,7 +915,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 
 
 #theme2Body{ background:#fff;}
-#theme2Body .section_main{ overflow:hidden; padding:0px 0px 20px 0px; float:none; min-width:1170px; max-width:1920px; box-sizing:border-box; background:#fff;}
+#theme2Body .section_main{ overflow:hidden; padding:0px 0px 20px 0px; float:none; min-width:1150px; max-width:1920px; box-sizing:border-box; background:#fff;}
 #theme2Body .box_shadow{background: #fff; padding:0px; margin:0px;  box-shadow:none; border:1px solid #d6d6d6; border-radius:3px; width:410px; height:250px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; overflow: hidden;} /*장진혁 */
 #theme2Body .info_left{float:left; width:181px !important; margin-right:5px; background:url(/images/ezNewPortal/theme3Img/info_background.png) center center no-repeat;}
 #theme2Body .info_right{width:calc(100% - 192px) !important; background:#ffffff;}
@@ -1179,3 +1179,4 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme3Body .weather{overflow:hidden}
 #theme3Body .weather_content{height:188px; padding:10px;background:#fff; margin:0px;}
 #theme3Body .weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:15px; text-align:left;}
+#theme3Body .layDIV .error_content {height:100%; background:#ffffff;}

@@ -4,7 +4,6 @@ function makeList() {
 		url : "/admin/ezPersonal/getQuickLinkList.do",
 		async : false,
 		dataType : "JSON",
-		contentType: "application/json",
 		success : function(result) {
 			event_QuickList(result.list);
 		}
@@ -92,7 +91,7 @@ function event_QuickList(result) {
 	dlElmt.appendChild(dtElmt);
 	dlElmt.className = "listTop";
 	
-	dtElmt2.textContent = strLangkhj5 + strLangkhj6;
+	dtElmt2.textContent = strLangkhj5 + " " +strLangkhj6;
 	dtElmt2.className = "quickLink_info";
 	dlElmt2.appendChild(dtElmt2);
 	dlElmt2.className = "listBottom";
@@ -144,7 +143,6 @@ function btn_add()  {
 		async : false,
 		data : {"mode": "new"},
 		dataType : "JSON",
-		contentType: "application/json",
 		success : function(result) {
 			openLinkDetail(result, itemId);
 		}
@@ -166,7 +164,6 @@ function btn_modify(obj) {
 		async : false,
 		data : {"mode": "modify"},
 		dataType : "JSON",
-		contentType: "application/json",
 		success : function(result) {
 			openLinkDetail(result, itemId);
 		}
@@ -186,7 +183,6 @@ function btn_delete(itemId, event) {
 		async : false,
 		data : {pQuickLinkID : itemId},
 		dataType : "JSON",
-		contentType: "application/json",
 		success : function(result) {
 			if (result.result == "OK") {
 				//window.location.reload();
@@ -247,7 +243,7 @@ function openLinkDetail(item, itemId) {
 	}
 	
 	var linksHTML = "<li class='linkDetails' id='linkLiNew' style='display:none'>";
-	linksHTML += "<div class='admin_quickList' id='linkDetailsNew'><dl class='admin_menuDL'><dt class='admin_menuTit'>" + strLangkhj1 + " " + strLangkhj7 + " " + strLangkhj8 + "</dt><dd id='close' class='admin_menuX'></dd></dl>";	
+	linksHTML += "<div class='admin_quickList' id='linkDetailsNew'><dl class='admin_menuDL'><dt class='admin_menuTit'>" + strLangkhj1 + " " + strLangkhj7 + "/" + strLangkhj8 + "</dt><dd id='close' class='admin_menuX'></dd></dl>";	
 	linksHTML += "<div class='admin_menu_content'>";
 	linksHTML += "<table class='quickTable01' border='0' cellpadding='0' cellspacing='0'>";
 	linksHTML += "<tr>";
@@ -292,16 +288,7 @@ function openLinkDetail(item, itemId) {
 	linksHTML += "<tr><td class='quickTD'><div class='listview' id='AccessList' style='border:0px;'></div></td>";	
 	linksHTML += "</tr></table>";
 	linksHTML += "<div class='bottomBtn'>";
-	linksHTML += "<a class='btnA'><span id='btn_OK'>"; 
-	
-	if (itemId != "" && mode == "modify") {
-		linksHTML += strLangkhj8;
-	}
-	else {
-		linksHTML += strLangkhj18;
-	}
-	
-	linksHTML += "</span></a>";
+	linksHTML += "<a class='btnA'><span id='btn_OK'>" + strLangkhj18 + "</span></a>";
 	linksHTML += "</div>";
 	linksHTML += "</div>";
 	linksHTML += "</li>"; 

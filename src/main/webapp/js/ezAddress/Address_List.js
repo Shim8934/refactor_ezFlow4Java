@@ -485,13 +485,19 @@ function MakeNoDateList() {
         _TR.appendChild(_TD);
         document.getElementById("MailList").appendChild(_TR);
     }
-    else {
+    else if(searchFlag){
         var DivLayer = document.createElement("DIV");
         DivLayer.style.textAlign = "center";
         DivLayer.className = "emptyDiv";
         /*DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";*/
-        DivLayer.innerHTML = "<dl class='nodata_sIcon'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + strLang100 + "</dd></dl>";
+        DivLayer.innerHTML = "<dl class='nodata_sIcon'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + strLangNoSearchData + "</dd></dl>";
         document.getElementById("MailListCard").appendChild(DivLayer);
+    } else{
+    	var DivLayer = document.createElement("DIV");
+    	DivLayer.style.textAlign = "center";
+    	DivLayer.className = "emptyDiv";
+    	DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
+    	document.getElementById("MailListCard").appendChild(DivLayer);
     }
 }
 function OderbyOptionExpression(obj) {
@@ -631,8 +637,8 @@ function Window_onresize() {
             document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 312) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 245) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 275) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 283) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 312) + "px";
         }
     }
     else {

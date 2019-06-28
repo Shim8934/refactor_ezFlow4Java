@@ -13,7 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/admin/adminManagePoll.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezPersonal.h1', 'msg')}"></script>
-		<link rel="stylesheet" href="${util.addVer('/css/admin.css')}">
+		<link rel="stylesheet" href="${util.addVer('main.e4', 'msg')}" type="text/css" />
 		<script type="text/javascript">
 			var totalCount = "";
 			var progressPollFlag = "";
@@ -144,7 +144,7 @@
 								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; visibility: hidden;">
 									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 6px 0px 1px 0px; height: 24px; line-height: 35px;">
 										<span class="icon_btn" style="margin-left:8px;"><span onclick="showPollPage();" style="cursor: pointer; padding-right: 5px;">
-											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
+											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute;margin-top:-6px;width: 430px;display: inline-block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" class="title_blodtxt"></span></span>
 										<span class="mail_date" style="margin-right: 10px; display: inline-block; float:right;margin-top:-7px;"><span id="PreH_date" style="font-weight:normal;"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 									</p>
 								</div>

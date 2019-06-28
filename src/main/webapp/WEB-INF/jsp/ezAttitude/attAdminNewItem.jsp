@@ -159,7 +159,7 @@
 			            showAnim: 'show',
 			            showMonthAfterYear: true
 			        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		        
 		        if (typeId == 'A04' && dateType == 4) {
 		        	$('#Stimepicker').timepicker();
@@ -245,6 +245,14 @@
 						}
 						$("input[name=mobile]").val(mobile);
 						$("input[name=bizsub]").val(bizSub);
+						
+						//언어
+						if (uselang != "1") {							
+							$("#attiTime").siblings("th").text("<spring:message code='ezAttitude.t149'/>");
+							$("#region").siblings("th").text("<spring:message code='ezAttitude.t47'/>");
+							$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
+							$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+						}
 						editorResize();
 					}
 				})
@@ -619,7 +627,7 @@
 	                </tr>
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
-	            	<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span></a>
+	            	<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t16'/></span></a>
 	            </div>
 	        </div>
 	        <script type="text/javascript">

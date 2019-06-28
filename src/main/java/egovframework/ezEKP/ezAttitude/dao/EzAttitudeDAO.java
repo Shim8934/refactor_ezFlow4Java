@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
@@ -352,5 +353,186 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public List<AttitudeAuthorVO> getDeptUserList(HashMap<String, Object> map) throws Exception {
 		return (List<AttitudeAuthorVO>) list("ezAttitudeAdminDAO.getDeptUserList", map);
 	}
+
+	public String getAttitudeAnnualListCount(Map<String, Object> map) {
+		return (String) select("ezAttitudeAdminDAO.getAttitudeAnnualListCount", map);
+	}
+
+	public List<AttitudeAnnualVO> getAttitudeAnnualList(Map<String, Object> map) {
+		return (List<AttitudeAnnualVO>) list("ezAttitudeAdminDAO.getAttitudeAnnualList", map);
+	}
     
+    @SuppressWarnings("unchecked")
+    public int getSimpleAnnualCnt(Map<String, Object> map) throws Exception {
+    	return (int) select("ezAttitudeAdminDAO.getSimpleAnnualCnt", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void insertAnnualHistory(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.insertAnnualHistory", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void changeAnnualHistory(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.changeAnnualHistory", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void insertAnnual(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.insertAnnual", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void changeAnnual(Map<String, Object> map) throws Exception {
+    	update("ezAttitudeAdminDAO.changeAnnual", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception {
+    	return (AttitudeAnnualVO) select("ezAttitudeAdminDAO.getAnnualCnt", map);
+    }
+
+	public List<AdminAttitudeVO> getUserAnnual(Map<String, Object> map) {
+		return (List<AdminAttitudeVO>) list("ezAttitudeAdminDAO.getUserAnnual", map);
+	}
+    
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getAnnualHistoryList(Map<String, Object> map) throws Exception {
+    	return (List<Map<String, Object>>) list("ezAttitudeAdminDAO.getAnnualHistoryList", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getUserList(Map<String, Object> map) throws Exception {
+    	return (List<Map<String, Object>>) list("ezAttitudeAdminDAO.getUserList", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getAttitudeJoinDateUserList(Map<String, Object> map) throws Exception {
+    	return (List<Map<String, Object>>) list("ezAttitudeDAO.getAttitudeJoinDateUserList", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getMonthlyAnnualList(Map<String, Object> map) throws Exception {
+    	return (Map<String, Object>) select("ezAttitudeDAO.getMonthlyAnnualList", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void saveCancelAnnual(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeDAO.saveCancelAnnual", map);
+	}
+    
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getJoinDateUserList(Map<String, Object> map) throws Exception {
+    	return (List<Map<String, Object>>)list("ezAttitudeDAO.getJoinDateUserList", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public int getAttendanceDay(Map<String, Object> map) throws Exception {
+    	return (int) select("ezAttitudeDAO.getAttendanceDay", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getTenantCompanuId() throws Exception {
+    	return (List<Map<String, Object>>) list("ezAttitudeDAO.getTenantCompanuId");
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void updateAnnualHoliday(Map<String, Object> map) throws Exception {
+    	update("ezAttitudeDAO.updateAnnualHoliday", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getuserAnnualCnt(Map<String, Object> map) throws Exception {
+    	return (List<Map<String, Object>>) list("ezAttitudeDAO.getuserAnnualCnt", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    public int checkAbsentDay(Map<String, Object> map) throws Exception {
+    	return (int)select("ezAttitudeDAO.checkAbsentDay", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    public int getMonthlyHolidayCnt(Map<String, Object> map) throws Exception {
+    	return (int)select("ezAttitudeDAO.getMonthlyHolidayCnt", map);
+    }
+    
+    public String checkCanApplStatus(Map<String, Object> map) throws Exception {
+    	return (String) select("ezAttitudeDAO.checkCanApplStatus", map);
+    }
+    
+    public void delCanAppl(Map<String, Object> map) throws Exception {
+		delete("ezAttitudeDAO.delCanAppl", map);
+	}
+    
+    public int getUsersCancelAnnCount(Map<String, Object> map) throws Exception {
+		return (int) select("ezAttitudeDAO.getUsersCancelAnnCount", map);
+	}
+    
+    @SuppressWarnings("unchecked")
+	public List<AttitudeApplicationVO> getUsersCancelAnn(Map<String, Object> map) throws Exception {
+		return (List<AttitudeApplicationVO>) list("ezAttitudeDAO.getUsersCancelAnn", map);
+	}
+    
+    @SuppressWarnings("unchecked")
+	public AttitudeApplicationVO annCanAppDetail(Map<String, Object> map) throws Exception {
+		return (AttitudeApplicationVO) select("ezAttitudeDAO.annCanAppDetail", map);
+	}
+    
+    public void changeUsersCancelAnn(Map<String, Object> map) throws Exception {		
+		update("ezAttitudeDAO.changeUsersCancelAnn", map);
+	}
+    
+    @SuppressWarnings("unchecked")
+	public List<AttitudeApplicationVO> getAnnCanHistory(Map<String, Object> map) throws Exception {
+		return (List<AttitudeApplicationVO>) list("ezAttitudeDAO.getAnnCanHistory", map);
+	}
+    
+    @SuppressWarnings("unchecked")
+    public void saveJoinDate(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.saveJoinDate", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void modifyJoinDate(Map<String, Object> map) throws Exception {
+    	update("ezAttitudeAdminDAO.modifyJoinDate", map);
+    }
+
+	public void insertApprovalGConnInfo(Map<String, Object> map) {
+		insert("ezAttitudeDAO.insertApprovalGConnInfo", map);
+	}
+
+	public void updateApprovalGConnInfo(Map<String, Object> map) {
+		update("ezAttitudeDAO.updateApprovalGConnInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getApprovalGConnAttitudeList(Map<String, Object> map) {
+		return (List<String>) list("ezAttitudeDAO.getApprovalGConnAttitudeList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getAttitudeAnnualConfig(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("ezAttitudeAdminDAO.getAttitudeAnnualConfig", map);
+	}
+	
+	public void insertAnnualConfig(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeAdminDAO.insertAnnualConfig", map);
+	}
+	
+	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
+		update("ezAttitudeAdminDAO.updateAnnualConfig", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getJoinDate(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("ezAttitudeAdminDAO.getJoinDate", map);
+	}
+	
+	public List<Map<String, Object>> getAttitudeAprInfo(Map<String, Object> map) throws Exception {
+		return (List<Map<String, Object>>) list("ezAttitudeDAO.getAttitudeAprInfo", map);
+	}
+
+	public List<AttitudeVO> getDisabledAttitudeList(Map<String, Object> map) {
+		return (List<AttitudeVO>) list("ezAttitudeDAO.getDisabledAttitudeList", map);
+	}
 }

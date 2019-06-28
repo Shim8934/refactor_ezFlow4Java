@@ -440,7 +440,7 @@
             		var _MSIE = 'MSIE';
             		var useragentstr = navigator.userAgent;
             		if (useragentstr.indexOf(_MSIE) != -1) {
-		                if (Ques_Answer.txtQuestion.AnsInfo != null) {
+		                /* if (Ques_Answer.txtQuestion.AnsInfo != null) {
         		            attachQ = GetAttachList_ie(Ques_Answer.txtQuestion.AnsInfo);
                 		    xmlDoc.documentElement.appendChild(SelectSingleNode(attachQ, "ATTACH"))
                 		}
@@ -455,7 +455,9 @@
 
                         		attach += "^";
                     		}
-                		}
+                		} */
+                		var xmlDom_Attach = loadXMLString(Ques_Answer.txtQuestion.AnsInfo);
+                		xmlDoc.documentElement.appendChild(xmlDoc.importNode(SelectSingleNode(xmlDom_Attach, "ATTACH"), true));
             		} else{
                 		var xmlDom_Attach = loadXMLString(Ques_Answer.txtQuestion.AnsInfo);
                 		xmlDoc.documentElement.appendChild(xmlDoc.importNode(SelectSingleNode(xmlDom_Attach, "ATTACH"), true));
@@ -739,7 +741,7 @@
         		var _MSIE = 'MSIE';
         		var useragentstr = navigator.userAgent;
         		if (useragentstr.indexOf(_MSIE) != -1) {
-            		var szParam = "dialogHeight:370px; dialogWidth:500px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(500, 370);
+            		/* var szParam = "dialogHeight:370px; dialogWidth:500px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(500, 370);
             		var szUrl = "/ezQuestion/qstAttachNonActX.do?idName=" + pID;
             		var rv = window.showModalDialog(szUrl, rgParams, szParam);
             		if (rgParams["m_Return"] == "OK") {
@@ -776,6 +778,19 @@
                 		}
                 		
                 		g_DelAttachList = rgParams["m_DelAttach"];
+            		} */
+
+            		if ((g_windowReference == null) || (g_windowReference.closed == true)) {
+                		var szUrl = "/ezQuestion/qstAttachNonActX.do?idName=" + pID;
+                		g_windowReference = window.open("","AttachAdd","height=370px,width=500px,resizable=no,center=yes" + GetOpenPosition(500, 370));                
+                		document.AttachAdd.m_AttachInfo.value = rgParams["m_AttachInfo"];
+                		document.AttachAdd.m_AttachType.value = pID;
+                		document.AttachAdd.m_AttachMode.value = pCmd;
+                		document.AttachAdd.m_AttachModIndex.value = index;
+                		document.AttachAdd.method="post";
+                		document.AttachAdd.action=szUrl;
+                		document.AttachAdd.target="AttachAdd";
+                		document.AttachAdd.submit();
             		}
         		} else {
             		if ((g_windowReference == null) || (g_windowReference.closed == true)) {
