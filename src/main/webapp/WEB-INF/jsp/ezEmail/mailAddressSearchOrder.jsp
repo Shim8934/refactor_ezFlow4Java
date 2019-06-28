@@ -130,7 +130,7 @@
 			<span class="txt">▒&nbsp;<spring:message code='ezEmail.t802' /></span><br />
 			<span class="txt">▒&nbsp;<spring:message code='ezEmail.t803' /></span><br />
 			 --%>
-			<span class="txt">▒ <img src="/images/ImgIcon/prev.gif"   height="16" style="margin-top:-3px;vertical-align:middle;text-align:center;" alt="<spring:message code='ezEmail.t833' />"/><img src="/images/ImgIcon/next.gif" align="absmiddle"  height="16" style="margin-top:-3px;" alt="<spring:message code='ezEmail.t834' />" /><spring:message code='ezEmail.t807' /></span><br /><br /><br />
+			<span class="txt">▒ <img src="/images/ImgIcon/prev.gif"   height="16" style="margin-top:-3px;vertical-align:middle;text-align:center;" alt="<spring:message code='ezEmail.t833' />"/><img src="/images/ImgIcon/next.gif" align="absmiddle"  height="16" style="margin-top:-3px;" alt="<spring:message code='ezEmail.t834' />" /><spring:message code='ezEmail.t99000085' /></span><br /><br /><br />
 		    <div id="mainmenu">
 		        <ul id="tb_Parent">
 		          <li class="prevLi"><span onclick="priority_UpDown('UP')"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t833' />"/></span></li>
