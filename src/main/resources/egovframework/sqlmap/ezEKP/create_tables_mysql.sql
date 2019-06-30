@@ -430,7 +430,6 @@ CREATE TABLE `james_mail_blob` (
   PRIMARY KEY (`MAIL_BLOB_ID`),
   KEY `INDEX_MESSAGE_BLOB_MSG_ID` (`MAIL_BLOB_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
-  CONSTRAINT `james_mail_blob_ibfk_1` FOREIGN KEY (`MAILBOX_ID`, `MAIL_UID`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
