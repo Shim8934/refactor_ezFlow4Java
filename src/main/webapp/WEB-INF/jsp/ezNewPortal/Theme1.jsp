@@ -553,7 +553,7 @@
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
 		var useSchedule = "<c:out value='${useSchedule}'/>";
-		
+		console.log('theme1 -> ', useQuestion, useSurvey, useCircular, useMail, useApproval, useSchedule);
 		//메뉴 이동(왼쪽)
 		if (useMail !== "NO") {
 			document.getElementById("NewMail").addEventListener('click', function(){quickMenuOpen('NewMail');}, false);

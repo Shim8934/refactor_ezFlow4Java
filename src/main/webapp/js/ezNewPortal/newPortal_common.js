@@ -437,6 +437,7 @@ function viewPersonalEnv() {
 //읽지않은 메일, 설문조사, 회람판, 결재할 문서, 오늘일정 개수 ajax가져오기
 //function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule) {
 function getUnreadCounts(useSurvey, useCircular, useMail, useApproval, useSchedule) {
+	console.log("getUnreadCounts-> ", useSurvey, useCircular, useMail, useApproval, useSchedule);
 	var data = {
 //		"useQuestion" : useQuestion,
 		"useSurvey" : useSurvey,

@@ -1041,7 +1041,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
 		}
-		
+		logger.debug("portlet count -> " + model);
 		logger.debug("portalCountPortlet End");
 		return "/ezNewPortal/portlets/cntPortlet"; 
 	}
