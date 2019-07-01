@@ -133,8 +133,9 @@ public interface EzNewPortalService {
 	public List<MenuNameVO> getMenuNames(int menuId, String usePrimaryLangOnly, String primaryLang, String companyId, int tenantId) throws Exception;
 	/**
 	 * 관리자 메뉴별 권한목록조회
+	 * @param lang 
 	 */
-	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId) throws Exception;
+	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId, String lang) throws Exception;
 	/**
 	 * 관리자 메뉴정보 및 메뉴이름 수정
 	 */
