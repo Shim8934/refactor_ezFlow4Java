@@ -126,14 +126,14 @@
 			                     	 <dt class="iconCircle iconcVote"><span class="iconCommon iconVote"></span></dt>
 			                         <dt class="iconText"><spring:message code='ezNewPortal.gu4' /></dt>
 			                         <c:choose>
-					                 	<c:when test="${surveyCnt eq 0}">
+					                 	<c:when test="${unResponseIngSurveyCnt eq 0}">
 					                 		<dd class="count countZero">0</dd>
 					                 	</c:when>
-					                 	<c:when test="${surveyCnt > 999}">
+					                 	<c:when test="${unResponseIngSurveyCnt > 999}">
 					                 		<dd class="count">999+</dd>
 					                 	</c:when>
 					                 	<c:otherwise>
-							            	<dd class="count">${surveyCnt }</dd>
+							            	<dd class="count">${unResponseIngSurveyCnt }</dd>
 					                 	</c:otherwise>
 					                 </c:choose>
 	                         	</c:otherwise>
