@@ -1217,6 +1217,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index
 
 /* webFolder 포틀릿*/
 .webFolder_portlet .portlet_title .portletText {width:34%;}
+.webFolder_portlet .portlet_title .mailGraph {margin:0px; padding:0px; width:206px; border-left:1px solid #e7e7e7; overflow:hidden; float:right; height: 100%;}
 
 .webFolder{ overflow:hidden; margin:0 auto; padding:16px 0px; list-style:none; box-sizing:border-box; display:table; overflow:hidden;}
 .webFolder .webFolderLi{ margin:2px 2px; padding:0px; width:75px; box-sizing:border-box; border:1px solid #e7e7e7; height:168px; font-size:12px; color:#555; text-align:center; float:left; display:table-row; cursor:pointer;}
