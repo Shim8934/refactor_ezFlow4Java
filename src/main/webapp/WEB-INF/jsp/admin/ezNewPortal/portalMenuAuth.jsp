@@ -598,7 +598,7 @@
 					}
 				});
 					
-				window.opener.$(".accessOK").text(menuAuthsYList.substring(1));
+				window.opener.$(".accessOK").find("div").text(menuAuthsYList.substring(1));
 	   			
 				var menuAuthsNList = "";
 				
@@ -611,7 +611,7 @@
 					}
 				});
 					
-				window.opener.$(".accessNO").text(menuAuthsNList.substring(1));
+				window.opener.$(".accessNO").find("div").text(menuAuthsNList.substring(1));
 
 	   			window.close();
 	   		}
