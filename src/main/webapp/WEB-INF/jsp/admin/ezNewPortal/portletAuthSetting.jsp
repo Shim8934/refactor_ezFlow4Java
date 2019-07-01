@@ -16,8 +16,10 @@
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <style type="text/css">
 #portletAuthList {width:381px;height:223px;}
-#portletAuthList .menuIconTH {height:100px;}
+#portletAuthList .menuIconTH, #portletAuthList .menuIconTD {height:100px;}
 #portletAuthList .menuIconTD {border:1px solid #dfdfdf; width:278px;}
+#portletAuthList .menuIconTD {padding:0px;}
+#portletAuthList .menuIconTD div {height:100%; overflow:auto; padding:5px;}
 </style>
 </head>
 <body class="popup">
@@ -49,6 +51,9 @@
 			var authYTD = document.createElement("td");
 			var authNTD = document.createElement("td");
 			
+			var authYDIV = document.createElement("div");
+			var authNDIV = document.createElement("div");
+			
 			authYTH.className = "menuIconTH";
 			authYTH.textContent = "<spring:message code='ezNewPortal.t081' />";
 			authYTD.className = "menuIconTD accessOK";
@@ -65,7 +70,7 @@
 					}
 				});
 				
-				authYTD.textContent = portletAuthsYList.substring(1);
+				authYDIV.textContent = portletAuthsYList.substring(1);
 			}
 			
 			authNTH.className = "menuIconTH";
@@ -84,8 +89,11 @@
 					}
 				});
 				
-				authNTD.textContent = portletAuthsNList.substring(1);
+				authNDIV.textContent = portletAuthsNList.substring(1);
 			}
+			
+			authYTD.appendChild(authYDIV);
+			authNTD.appendChild(authNDIV);
 			
 			authYTR.appendChild(authYTH);
 			authYTR.appendChild(authYTD);

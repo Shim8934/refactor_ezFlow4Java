@@ -66,6 +66,8 @@
 	        .admin_thema .frameList {float:left;border-right:none;}
 	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:359px;} 
 	        .admin_thema .authList th {width:90px; border-left:none;} 
+	        .admin_thema .menuIconTD {padding:0px;}
+	        .admin_thema .menuIconTD div {height:100%; overflow:auto; padding:5px;}
 		</style>
 	</head>
 	
@@ -296,7 +298,7 @@
 					themesHTML += "</table>";
 					themesHTML += "<table class='themaTable frameList' border='0' cellpadding='0' cellspacing='0' width='100%' style='margin:20px 0px 0px 0px;'></table>";
 					themesHTML += "<table class='themaTable iconTable02 authList' border='0' cellpadding='0' cellspacing='0'>";
-					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'>";
+					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
 					
 					if (themeAuthsY != null && themeAuthsY.length != 0) {
 						var themeAuthsYList = "";
@@ -310,10 +312,10 @@
 							}
 						});
 						
-						themesHTML += themeAuthsYList.substring(1) + "</td></tr>";
+						themesHTML += themeAuthsYList.substring(1) + "</div></td></tr>";
 					}
 					
-					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'>";
+					themesHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div>";
 					
 					if (themeAuthsN != null && themeAuthsN.length != 0) {
 						var themeAuthsNList = "";
@@ -327,7 +329,7 @@
 							}
 						});
 						
-						themesHTML += themeAuthsNList.substring(1) + "</td></tr>";
+						themesHTML += themeAuthsNList.substring(1) + "</div></td></tr>";
 					}
 					
 					themesHTML += "</table>";

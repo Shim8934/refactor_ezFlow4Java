@@ -45,8 +45,10 @@
 			dt img {width:21px;height:21px;margin-top:20px;}
 			.menuIcon img {width:21px;height:21px;}
 			.deleteMenu {display:inline-block;margin-left:50px;vertical-align:top;margin-top:-3px;}
-			.accessOK div, .accessNO div {margin-left:15px;display:inline-block;}
+			.accessOK div, .accessNO div {display:inline-block;}
 			.menuChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
+	        .admin_menu .menuIconTD {padding:0px;}
+	        .admin_menu .menuIconTD div {height:100%; overflow:auto; padding:5px;}
 		</style>
 	</head>
 	
@@ -282,7 +284,7 @@
 					
 					menusHTML += "</table>";
 					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
 					
 					if (menuAuthsY != null && menuAuthsY.length != 0) {
 						var menuAuthsYList = "";
@@ -296,10 +298,10 @@
 							}
 						});
 						
-						menusHTML += menuAuthsYList.substring(1) + "</td></tr>";
+						menusHTML += menuAuthsYList.substring(1) + "</div></td></tr>";
 					}
 					
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div>";
 					
 					if (menuAuthsN != null && menuAuthsN.length != 0) {
 						var menuAuthsNList = "";
@@ -313,7 +315,7 @@
 							}
 						});
 						
-						menusHTML += menuAuthsNList.substring(1) + "</td></tr>";
+						menusHTML += menuAuthsNList.substring(1) + "</div></td></tr>";
 					}
 					
 					menusHTML += "</table>";
