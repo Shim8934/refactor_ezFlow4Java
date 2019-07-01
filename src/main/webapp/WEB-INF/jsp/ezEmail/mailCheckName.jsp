@@ -178,7 +178,7 @@
 				}
 			    var emailExistsCnt = 0;
 			    for (count1 = 0; count1 < listCount; count1++) {
-			        var isexists = arrRows[count1].getAttribute("data2") != "" && arrRows[count1].getAttribute("data2").lastIndexOf("@") > 1 || trim(arrRows[count1].getAttribute("data3")) == "mailgroup"; 
+			        var isexists = arrRows[count1].getAttribute("data2") != "" && arrRows[count1].getAttribute("data2").lastIndexOf("@") >= 1 || trim(arrRows[count1].getAttribute("data3")) == "mailgroup"; 
 		            if (isexists)
 		            {
 		                if (ReturnFunction!=null) {
