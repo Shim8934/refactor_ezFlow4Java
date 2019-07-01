@@ -13,3 +13,4 @@ var strLang91003 = "ツリービューのデータが指定されていません
 var strLang91004 = "ツリービューのIDが指定されていません。";
 var strLangGroupMemberCount01 = "グループメンバーは";
 var strLangGroupMemberCount02 = "人まで追加可能です。";
+var strLangNoSearchData = "検索結果がありません";

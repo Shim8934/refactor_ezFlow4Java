@@ -652,14 +652,25 @@
 				if (CrossYN()) {
 				    ezStatisticsSearch_Cross_dialogArguments[0] = para;
 				    ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
-				
-				    var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 350));
+				    var ezStatisticsSearch_Cross;
+				    if (approvalFlag == "S") {
+					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 260));
+				    } else {
+					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 350));
+				    }
 
 				    try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 				    }
 				} else {
 				    var url = "ezStatisticsSearch_Cross.aspx?INGFLAG=END";
-				    var feature = "dialogWidth:500px;dialogHeight:340px;status:no;scroll:no;edge:sunken";
+				    var feature = "";
+				    
+				    if (approvalFlag == "S") {
+					    feature = "dialogWidth:500px;dialogHeight:260px;status:no;scroll:no;edge:sunken";
+				    } else {
+					    feature = "dialogWidth:500px;dialogHeight:340px;status:no;scroll:no;edge:sunken";
+				    }
+				    
 				    var condition = window.showModalDialog(url, para, feature);
 				    
 				    if (condition) {

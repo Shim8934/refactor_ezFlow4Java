@@ -40,6 +40,10 @@ function getTabList() {
     		        guBun = result[i].guBun;
     		        BoardName = result[i].boardName;
     		        
+    		        if (boardId == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+    		        	BoardName = messages.strLang23;
+    		        }
+    		        
     	            if (i == 0) {
     	                listHTML += "<dt id='Board" + i + "' onclick='boardChangeTab(this)' data1='" + boardId + "'" + classon + " data2='" + guBun + "'><span> " + BoardName + " </span></dt>";
     	                boardType = guBun;

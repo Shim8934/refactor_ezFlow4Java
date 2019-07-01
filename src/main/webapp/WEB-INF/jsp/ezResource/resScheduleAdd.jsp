@@ -496,8 +496,10 @@
 
 	        	if (check == true) {
 	            	// 일정관리 동시 등록
-	            	if(document.getElementById("useSchedule").checked = true) {
-	            		SaveScheduleId = saveSchedule();
+	            	if (cmd == "add") {
+		            	if(document.getElementById("useSchedule").checked = true) {
+		            		SaveScheduleId = saveSchedule();
+		            	}
 	            	}
 	            	
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
