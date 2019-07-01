@@ -4,7 +4,8 @@
 
 var useMail = document.getElementById("useMailValue").value;
 var useSchedule = document.getElementById("useScheduleValue").value;
-var useQuestion = document.getElementById("useQuestionValue").value;
+//var useQuestion = document.getElementById("useQuestionValue").value;
+var useSurvey = document.getElementById("useSurveyValue").value;
 var useApproval = document.getElementById("useApprovalValue").value;
 var useCircular = document.getElementById("useCircularValue").value;
 
@@ -15,9 +16,13 @@ if (useMail === "YES") {
 if (useSchedule === "YES") {
 	document.getElementById("Schedule3").addEventListener("click", function(){quickMenuOpen('Schedule');});
 } 
-
+/*
 if (useQuestion === "YES") {
 	document.getElementById("Poll3").addEventListener("click", function(){quickMenuOpen('Poll');});
+}
+*/
+if (useSurvey === "YES") {
+	document.getElementById("Survey3").addEventListener("click", function(){quickMenuOpen('Survey');});
 }
 
 if (useCircular === 'YES') {

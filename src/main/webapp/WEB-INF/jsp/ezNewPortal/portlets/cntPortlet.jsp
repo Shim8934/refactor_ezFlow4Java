@@ -11,7 +11,8 @@
 <input type="hidden" id="useMailValue" value="${useMail}">
 <input type="hidden" id="useApprovalValue" value="${useApproval}">
 <input type="hidden" id="useScheduleValue" value="${useSchedule}">
-<input type="hidden" id="useQuestionValue" value="${useQuestion}">
+<%-- <input type="hidden" id="useQuestionValue" value="${useQuestion}"> --%>
+<input type="hidden" id="useSurveyValue" value="${useSurvey}">
 	<article class="writebanner box_shadow">
 		<div class="layDIV">
 	     	<div class="writebanner_leftContents">
