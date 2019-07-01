@@ -1093,7 +1093,7 @@
 	<select id="ezNewPortal.getPortletAuth" parameterClass="Map" resultClass="PortletAuthVO">
 	<![CDATA[
 		SELECT
-			portlet_id AS themeid,
+			portlet_id AS portletid,
 			user_id AS userid,
 			CASE
 			WHEN user_type = 1

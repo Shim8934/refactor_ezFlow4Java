@@ -175,25 +175,30 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) result.get("data");
+			JSONArray resultList = new JSONArray();
 			
 			for (int i = 0; i < deptList.size(); i++) {
 				JSONObject dept = (JSONObject) deptList.get(i);
 				
-				if (dept.get("isComp").equals("comp")) {
-					dept.put("icon", "icon-company");
-				} else {
-					dept.put("icon", "icon-dept");
-				}
-				
-				if (dept.get("myDept").equals("yes")) {
-					JSONObject state = new JSONObject();
-					state.put("selected", "true");
-					state.put("opened", "true");
-					dept.put("state", state);
+				if (dept.get("parent") != null) {
+					if (dept.get("isComp").equals("comp")) {
+						dept.put("icon", "icon-company");
+					} else {
+						dept.put("icon", "icon-dept");
+					}
+					
+					if (dept.get("myDept").equals("yes")) {
+						JSONObject state = new JSONObject();
+						state.put("selected", "true");
+						state.put("opened", "true");
+						dept.put("state", state);
+					}
+					
+					resultList.add(dept);
 				}
 			}
 			
-			model.addAttribute("deptList", deptList);
+			model.addAttribute("deptList", resultList);
 			model.addAttribute("userId", userInfo.getId());
 		}
 		

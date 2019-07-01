@@ -1424,7 +1424,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject themeAuth = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(themeAuth.toJSONString(), Map.class);
-				map.put("userName", commonUtil.stripScriptTags(map.get("userName").toString()));
+				
+				if (map.get("userName") == null) {
+					map.put("userName", "");
+				} else {
+					map.put("userName", commonUtil.stripScriptTags(map.get("userName").toString()));
+				}
+				
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
 				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
 				
@@ -1529,10 +1535,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("portletId", portletId);
 		map.put("lang", lang);
 
-		map.put("accessType", "1");
+		map.put("accessType", 1);
 		List<PortletAuthVO> portletAuthsY = ezNewPortalDAO.getPortletAuth(map);
 		
-		map.put("accessType", "0");		
+		map.put("accessType", 0);		
 		List<PortletAuthVO> portletAuthsN = ezNewPortalDAO.getPortletAuth(map);
 		
 		Map<String, Object> resultMap = new HashMap<>();
@@ -1561,7 +1567,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject portletAuth = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(portletAuth.toJSONString(), Map.class);
-				map.put("userName", commonUtil.stripScriptTags(map.get("userName").toString()));
+				
+				if (map.get("userName") == null) {
+					map.put("userName", "");
+				} else {
+					map.put("userName", commonUtil.stripScriptTags(map.get("userName").toString()));
+				}
+				
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
 				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
 				
@@ -1984,7 +1996,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject menuAuth = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(menuAuth.toJSONString(), Map.class);
-				map.put("userName", commonUtil.stripScriptTags(map.get("userName").toString()));
+				
+				if (map.get("userName") == null) {
+					map.put("userName", "");
+				} else {
+					map.put("userName", commonUtil.stripScriptTags(map.get("userName").toString()));
+				}
+				
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
 				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
 				

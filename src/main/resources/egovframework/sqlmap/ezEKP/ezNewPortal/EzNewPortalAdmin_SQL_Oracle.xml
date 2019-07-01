@@ -1080,12 +1080,13 @@
 			user_id AS userid,
 			CASE
 			WHEN user_type = 1
-				THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+				THEN (SELECT TO_CHAR(displayname) FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
 				ELSE ''
 			END AS username,
 			CASE WHEN user_type = 1
-				THEN (SELECT description FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
-				ELSE (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+				THEN NVL((SELECT TO_CHAR(description) FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
+						(SELECT TO_CHAR(displayname) FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# AND ROWNUM = 1))
+				ELSE (SELECT TO_CHAR(displayname) FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
 			access_yn AS accessyn
@@ -1168,21 +1169,22 @@
 	<select id="ezNewPortal.getPortletAuth" parameterClass="Map" resultClass="PortletAuthVO">
 	<![CDATA[
 		SELECT
-			portlet_id AS themeid,
+			portlet_id AS portletid,
 			user_id AS userid,
 			CASE
 			WHEN user_type = 1
-				THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+				THEN (SELECT TO_CHAR(displayname) FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
 				ELSE ''
 			END AS username,
 			CASE WHEN user_type = 1
-				THEN (SELECT description FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
-				ELSE (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+				THEN NVL((SELECT TO_CHAR(description) FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
+						(SELECT TO_CHAR(displayname) FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) AND extensionattribute2 = #companyId# AND ROWNUM = 1))
+				ELSE (SELECT TO_CHAR(displayname) FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
 			access_yn AS accessyn
 		FROM
-			TBL_PORTAL_Portlet_AUTH
+			TBL_PORTAL_PORTLET_AUTH
 		WHERE
 			tenant_id = #tenantId#
 		AND
