@@ -27,3 +27,4 @@ var strLang26 = "작성자에게 의견을 남겨주세요.";
 var strLang27 = "의견을 남겨주세요.";
 var strLang28 = "선택된 회람이 없습니다.";
 var strLang29 = "/blank_kr.htm";
+var strLang30 = "회람이 없습니다.";

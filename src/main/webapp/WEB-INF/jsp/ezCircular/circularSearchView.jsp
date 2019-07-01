@@ -39,6 +39,7 @@
             var startTime = "";
             var endTime = "";
             var listHeader = "<c:out value='${listHeader}'/>";
+            var isSearchPage = true;
 		    
 		    document.onselectstart = function () { return false; };
 		    
