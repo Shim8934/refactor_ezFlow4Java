@@ -659,4 +659,14 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<OrganDeptVO> getInitCompanyList() {
 		return (List<OrganDeptVO>) list("ezNewPortal.getInitCompanyList");
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getInitCompanyListThemeAuth() {
+		return (List<OrganDeptVO>) list("ezNewPortal.getInitCompanyListThemeAuth");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getInitCompanyListPortletAuth() {
+		return (List<OrganDeptVO>) list("ezNewPortal.getInitCompanyListPortletAuth");
+	}
 }

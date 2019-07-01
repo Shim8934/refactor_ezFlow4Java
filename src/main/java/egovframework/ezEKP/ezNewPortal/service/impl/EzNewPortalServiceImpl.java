@@ -652,12 +652,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			LOGGER.debug("canAccessTheme : " + canAccessTheme);
 			
 			if (!canAccessTheme) {
-				map.put("usedTheme", themeList.get(0).getThemeId());
-				userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
-				
-				if (userPortalSetting == null) {
+				if (themeList == null || themeList.size() == 0) {
 					map.put("themeId", themeList.get(0).getThemeId());
 					userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+				}  else {
+					map.put("usedTheme", themeList.get(0).getThemeId());
+					userPortalSetting = ezNewPortalDAO.getUserPortalSetting(map);
+					
+					if (userPortalSetting == null) {
+						map.put("themeId", themeList.get(0).getThemeId());
+						userPortalSetting = ezNewPortalDAO.getCompPortalSetting(map);
+					}
 				}
 			}
 		}
@@ -956,13 +961,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		}
 		
 		result.removeIf(vo -> !vo.isAccessYN());
-		
+		System.out.println("themeList for user : " + result);
 		map.put("isDept", "dept");
 		//부서 및 상위부서권한체크(유저 나 하위부서에서 권한체크걸린건 추가안함
 		for(String pathId : deptIds) {
 			map.put("userId", pathId);
 			
 			deptResult = ezNewPortalDAO.getUserThemeList(map);
+			System.out.println("pathId : " + pathId);
+			System.out.println("themeList for dept : " + deptResult);
 			
 			//권한잇는것들 && 기존 권한체크안된것들 추가
 			for (ThemeInfoVO depTheme : deptResult) {

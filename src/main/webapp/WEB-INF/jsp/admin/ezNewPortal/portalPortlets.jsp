@@ -81,7 +81,7 @@
 	}
 	.slideImageSetting {
 		position: absolute;
-	    right: 45px;
+	    right: 78px;
 	    top: 57px;
         cursor: pointer;
         display: inline-block;
@@ -99,7 +99,7 @@
 	.portletAuthSetting {
 		position: absolute;
 	    right: 20px;
-	    top: 55px;
+	    top: 53px;
         cursor: pointer;
         display: inline-block;
 	}
@@ -444,11 +444,11 @@
 						if (portletId == 34) { //슬라이드 이미지 포틀릿의 경우
 							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
 							listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div>";
-							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span>권한</span></a></div>";
+							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
 							listHTML += "</td>";
 						} else {
 							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
-							listHTML += "<div class='portletAuthSetting'><a><img src='/images/account.jpg'></a></div>";
+							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
 							listHTML += "</td>";
 						}
 						listHTML += "</tr>";

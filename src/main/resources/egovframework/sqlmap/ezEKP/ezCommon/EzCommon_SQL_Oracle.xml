@@ -1270,9 +1270,9 @@
 			TBL_PORTAL_THEME
 		SET
 			THEME_CONTENT3 = CASE 
-								WHEN theme_id = 1 THEN '고정 영역이 왼쪽 혹은 오른쪽에 위치해 있는 테마입니다.'
-								WHEN theme_id = 2 THEN '고정 영역이 상단에 위치해 있는 테마입니다.'
-								WHEN theme_id = 3 THEN '고정 영역 없이 포틀릿으로만 이루어져있는 테마입니다.'
+								WHEN theme_id = 1 THEN '固定領域を画面の右または左に配置できるテーマです。'
+								WHEN theme_id = 2 THEN '固定領域が画面の上部に表示されるテーマです。'
+								WHEN theme_id = 3 THEN '固定領域がなく、すべてのポートレットを自由に配置できるテーマです。'
 							END ,
 			THEME_NAME3 = CASE 
 								WHEN theme_id = 1 THEN 'Theme1'
@@ -1293,21 +1293,21 @@
 	</select>
 	
 	<statement id="EzCommonDAO.createTblThemeAuth">
-	CREATE TABLE "EZEKP2017"."TBL_PORTAL_THEME_AUTH" (
-		"THEME_ID" NUMBER(10,0), 
-		"COMPANY_ID" VARCHAR2(100), 
-		"TENANT_ID" NUMBER(5,0), 
-		"USER_ID" VARCHAR2(100), 
+	CREATE TABLE "TBL_PORTAL_THEME_AUTH" (
+		"THEME_ID" NUMBER(10,0) DEFAULT 0, 
+		"COMPANY_ID" VARCHAR2(100) DEFAULT NULL, 
+		"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
+		"USER_ID" VARCHAR2(100) DEFAULT NULL, 
 		"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
-		"USER_TYPE" NUMBER(5,0),
-		PRIMARY KEY ("THEME_ID","COMPANY_ID", "TENANT_ID", "USER_ID")
-	);
+		"USER_TYPE" NUMBER(5,0) DEFAULT 0,
+		CONSTRAINT "TBL_PORTAL_THEME_AUTH_PK" PRIMARY KEY ("THEME_ID","COMPANY_ID", "TENANT_ID", "USER_ID")
+	)
 	</statement>
 	
 	<select id="EzCommonDAO.checkTblPortletAuth" resultClass="String">
 	<![CDATA[
 		SELECT 
-			theme_id
+			portlet_id
 		FROM 
 			TBL_PORTAL_PORTLET_AUTH
 		where 
@@ -1323,7 +1323,7 @@
 		"USER_ID" VARCHAR2(100), 
 		"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
 		"USER_TYPE" NUMBER(5,0),
-		PRIMARY KEY ("PORTLET_ID","COMPANY_ID", "TENANT_ID", "USER_ID")
-	);
+		CONSTRAINT "TBL_PORTAL_PORTLET_AUTH_PK" PRIMARY KEY ("PORTLET_ID","COMPANY_ID", "TENANT_ID", "USER_ID")
+	)
 	</statement>
 </sqlMap>

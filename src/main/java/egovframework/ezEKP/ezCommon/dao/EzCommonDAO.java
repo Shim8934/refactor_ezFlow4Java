@@ -769,6 +769,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_portal_theme_auth doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createTblThemeAuth");
+			
+			List<OrganDeptVO> initList = ezNewPortalDAO.getInitCompanyListThemeAuth();
+			
+			if (initList != null ) {
+				int initListCount = initList.size();
+				logger.debug("initListCount : " + initListCount);
+				
+				for (int i = 0; i < initListCount; i++) {
+					int tenantId = initList.get(i).getTenantId();
+					String companyId = initList.get(i).getCn();
+					
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("tenantID", tenantId);
+					map.put("companyID", companyId);
+					
+					try {
+						ezOrganAdminDAO.insertCompanyInfo_I31(map);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
 		}
 	}
 
@@ -779,6 +801,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_portal_portlet_auth doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createTblPortletAuth");
+			
+			List<OrganDeptVO> initList = ezNewPortalDAO.getInitCompanyListPortletAuth();
+			
+			if (initList != null ) {
+				int initListCount = initList.size();
+				logger.debug("initListCount : " + initListCount);
+				
+				for (int i = 0; i < initListCount; i++) {
+					int tenantId = initList.get(i).getTenantId();
+					String companyId = initList.get(i).getCn();
+					
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("tenantID", tenantId);
+					map.put("companyID", companyId);
+					
+					try {
+						ezOrganAdminDAO.insertCompanyInfo_I32(map);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
 		}
 	}
 }

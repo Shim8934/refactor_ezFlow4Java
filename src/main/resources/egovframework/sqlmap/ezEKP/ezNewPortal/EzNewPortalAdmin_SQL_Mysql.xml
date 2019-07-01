@@ -446,7 +446,7 @@
 			AND
 				A.tenant_id = #tenantId#
 			ORDER BY
-				A.treevieworder;
+				A.treevieworder
 		]]>
 	</select>
 	
@@ -792,7 +792,7 @@
 		AND 
 			tenant_id = #tenantId#
 		AND
-			used_theme = #themeId#;	
+			used_theme = #themeId#	
 	]]>
 	</update>
 	
