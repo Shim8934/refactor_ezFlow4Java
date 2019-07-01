@@ -1526,13 +1526,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId, String lang) throws Exception {
+		LOGGER.debug("getMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("menuId", menuId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 //		나중에 쪼갤수도 rest 호출할때 arg받아서 처리해야할수도잇을거같은데
 //		map.put("accessType", "Y","N","TOTAL")
 		map.put("accessType", "1");

@@ -2119,8 +2119,9 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 			
-			Map<String, Object> resultMap = ezNewPortalService.getMenuAuth(menuId, companyId, userInfo.getTenantId());
+			Map<String, Object> resultMap = ezNewPortalService.getMenuAuth(menuId, companyId, userInfo.getTenantId(), lang);
 			
 			JSONObject data = new JSONObject();
 			
