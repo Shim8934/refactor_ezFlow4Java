@@ -174,6 +174,7 @@
 						</c:otherwise>
 					</c:choose>
 					<c:choose>
+						<%-- 
 						<c:when test="${useQuestion eq 'NO'}"> <!-- 전자설문 권한이 없을 때 disable 아이콘 나타남 -->
 							<dl id="Poll" class="icon_disabled">
 								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
@@ -185,6 +186,20 @@
                     			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
                     			<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
                     			<dd id="pollCount" class="iconCount_none">0</dd>
+                			</dl>
+						</c:otherwise>
+						 --%>
+						<c:when test="${useSurvey eq 'NO'}"> <!-- 전자설문 권한이 없을 때 disable 아이콘 나타남 -->
+							<dl id="Survey" class="icon_disabled">
+								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+								<dd class="iconText"></dd>
+							</dl>
+						</c:when>
+						<c:otherwise>
+            				<dl id="Survey">
+                    			<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon05.png"></dt>
+                    			<dd class="iconText"><spring:message code='ezNewPortal.gu4' /></dd>                        
+                    			<dd id="surveyCount" class="iconCount_none">0</dd>
                 			</dl>
 						</c:otherwise>
 					</c:choose>
@@ -533,6 +548,7 @@
 		}
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";
+		var useSurvey = "<c:out value='${useSurvey}'/>";
 		var useCircular = "<c:out value='${useCircular}'/>";
 		var useMail = "<c:out value='${useMail}'/>";
 		var useApproval = "<c:out value='${useApproval}'/>";
@@ -546,9 +562,13 @@
 		if (useSchedule !== "NO") {
 			document.getElementById("Schedule").addEventListener('click', function(){quickMenuOpen('Schedule');}, false);
 		}
-		
+		/* 
 		if (useQuestion !== "NO") {
 			document.getElementById("Poll").addEventListener('click', function(){quickMenuOpen('Poll');}, false);
+		}
+		 */
+		if (useSurvey !== "NO") {
+			document.getElementById("Survey").addEventListener('click', function(){quickMenuOpen('Survey');}, false);
 		}
 		
 		if (useCircular !== "NO") {
@@ -560,7 +580,8 @@
 		}
 		
 		//ajax로 count 불러오기
-		getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
+		//getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
+		getUnreadCounts(useSurvey, useCircular, useMail, useApproval, useSchedule);
 		
 		//근태관리 연동
 		var useAttitude = "<c:out value='${useAttitude}'/>";

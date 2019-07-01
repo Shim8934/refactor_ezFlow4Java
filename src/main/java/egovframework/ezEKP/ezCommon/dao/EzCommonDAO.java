@@ -771,4 +771,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.insertThemeContent3");
 		}
 	}
+	
+	public void insertSurveyTenantConfig(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkSurveyTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("survey tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig",map);
+		}
+	}
 }

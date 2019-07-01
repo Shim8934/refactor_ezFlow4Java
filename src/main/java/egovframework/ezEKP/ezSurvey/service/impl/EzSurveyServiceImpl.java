@@ -17,9 +17,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -46,6 +49,7 @@ import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1358,4 +1362,51 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return ezSurveyDAO.getAllMembersOfCompany(map);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject checkRespondent(Long surveyId, LoginVO userInfo) {
+		JSONObject result      = new JSONObject();
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  userInfo.getTenantId());
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("userId",    userInfo.getId());
+		map.put("surveyId",  surveyId);
+		
+		long responseCnt = ezSurveyDAO.checkRespondent(map);
+		
+		if (responseCnt > -1) {
+			result.put("status", "ok");
+			result.put("responseCnt", responseCnt);
+			result.put("code", 0);
+		} else {
+			result.put("status", "no");
+			result.put("code", 1);
+		}
+		return result;
+	}
+
+	@Override
+	public int getSurveyIngCnt(MCommonVO userInfo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("deptId", userInfo.getDeptId());
+		map.put("companyId", userInfo.getCompanyId());
+		map.put("userId", userInfo.getUserId());
+		
+		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
+		map.put("deptList", userDeptList);
+
+		String offset = userInfo.getOffSet();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+		map.put("today", timeUTC);
+		
+		int result = ezSurveyDAO.getNoAnsweredIngSurveyList(map);
+		
+		return result;
+	}
+	
+	
 }

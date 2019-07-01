@@ -1607,4 +1607,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addThemeContent2();
 		ezCommonDAO.addThemeContent3();
 	}
+	
+	@Override
+	public void insertSurveyTenantConfig() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useSurvey");
+		map.put("propertyValue", "YES");
+		map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
+		map.put("configName", "전자설문 리뉴얼 모듈 사용여부");
+		map.put("configType", "기타모듈");
+		map.put("regdate", "2019-06-25 00:00:00");
+
+		ezCommonDAO.insertSurveyTenantConfig(map);
+	}
+
 }

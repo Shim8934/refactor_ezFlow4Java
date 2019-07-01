@@ -11,7 +11,8 @@
 <input type="hidden" id="useMailValue" value="${useMail}">
 <input type="hidden" id="useApprovalValue" value="${useApproval}">
 <input type="hidden" id="useScheduleValue" value="${useSchedule}">
-<input type="hidden" id="useQuestionValue" value="${useQuestion}">
+<%-- <input type="hidden" id="useQuestionValue" value="${useQuestion}"> --%>
+<input type="hidden" id="useSurveyValue" value="${useSurvey}">
 	<article class="writebanner box_shadow">
 		<div class="layDIV">
 	     	<div class="writebanner_leftContents">
@@ -90,6 +91,7 @@
 	                     </dl>
 	                 </li>	                 
 	                 <li>
+	                 	<%-- 
 	                 	<dl id="Poll3" class="writebannerIcon">
 	                         <c:choose>
 	                         	<c:when test="${useQuestion eq 'NO'}">
@@ -113,6 +115,31 @@
 	                         	</c:otherwise>
 	                         </c:choose>
 	                     </dl>
+	                      --%>
+	                 	<dl id="Survey3" class="writebannerIcon">
+	                         <c:choose>
+	                         	<c:when test="${useSurvey eq 'NO'}">
+	                     			<dt class="iconCircle"><span class="iconCommon"></span></dt>
+	                        		<dt class="iconText"></dt>
+	                     		</c:when>
+	                         	<c:otherwise>
+			                     	 <dt class="iconCircle iconcVote"><span class="iconCommon iconVote"></span></dt>
+			                         <dt class="iconText"><spring:message code='ezNewPortal.gu4' /></dt>
+			                         <c:choose>
+					                 	<c:when test="${unResponseIngSurveyCnt eq 0}">
+					                 		<dd class="count countZero">0</dd>
+					                 	</c:when>
+					                 	<c:when test="${unResponseIngSurveyCnt > 999}">
+					                 		<dd class="count">999+</dd>
+					                 	</c:when>
+					                 	<c:otherwise>
+							            	<dd class="count">${unResponseIngSurveyCnt }</dd>
+					                 	</c:otherwise>
+					                 </c:choose>
+	                         	</c:otherwise>
+	                         </c:choose>
+	                     </dl>
+	                     
 	                 </li>
 	             	<li>
 	                 	<dl id="Circular3" class="writebannerIcon">

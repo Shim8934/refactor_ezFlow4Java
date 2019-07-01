@@ -1025,7 +1025,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			model.addAttribute("pollCount", data.get("pollCount"));
+			// model.addAttribute("pollCount", data.get("pollCount"));
+			model.addAttribute("unResponseIngSurveyCnt", data.get("surveyCnt"));
 			model.addAttribute("circularCount", data.get("circularCount"));
 			model.addAttribute("scheduleCount", data.get("scheduleCount"));
 			model.addAttribute("approvalCount", data.get("approvalCount"));
@@ -1034,7 +1035,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("approvalDeptSusinCount", data.get("approvalDeptSusinCount"));
 			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
 			model.addAttribute("useCircular", data.get("useCircular"));
-			model.addAttribute("useQuestion", data.get("useQuestion"));
+			// model.addAttribute("useQuestion", data.get("useQuestion"));
+			model.addAttribute("useSurvey", data.get("useSurvey"));
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
@@ -1115,4 +1117,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("getWebFolderFileList End");
 		return "json"; 
 	}
+	
+	/**
+	 * 포틀릿 - 전자설문
+	 */
+	@RequestMapping(value = "/ezNewPortal/surveyPortlet.do", method=RequestMethod.GET)
+	public String portalSurveyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("portalSurveyPortlet Start");
+		
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
+		
+		logger.debug("portalSurveyPortlet End");
+		return "/ezNewPortal/portlets/surveyPortlet";
+	}
+	
 }
