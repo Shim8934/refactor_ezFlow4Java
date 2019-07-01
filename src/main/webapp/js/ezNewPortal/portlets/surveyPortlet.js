@@ -101,7 +101,7 @@ function setListByDataList(surveys) {
 		imgEl.src = '/images/kr/main/noData_sIcon.png';
 		
 		var ddEl = document.createElement('dd');
-		ddEl.innerHTML = "\"" + messages.strLang1 + "\"";
+		ddEl.innerHTML = messages.strLang1;
 		
 		dtEl.appendChild(imgEl);
 		
