@@ -2936,11 +2936,17 @@ h2, #menu span {font-size: 12px;}
 .divPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
 .mainPrevH {width: 100%; position: relative; padding-top: 5px;}
 .mainPrevH >div {height: 100%; display: flex; flex-flow: column;}
-.prevHeaderW >div, .prevHeaderH >div {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
+.prevHeaderW .prevHeaderWwrapper, .prevHeaderH .prevHeaderWwrapper {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
 .prevHeaderW >span, .prevHeaderH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
-.prevHeaderW {border-top: 1px solid #ddd;}
+/* .prevHeaderW {border-top: 1px solid #ddd;} */
+
+.prevHeaderW .nodataDiv {vertical-align: middle; text-align: center; width: 100%; height: 100%; margin-top: 70px;}
+.prevHeaderW .nodataDiv dl {margin: 0px; padding: 0px;text-align: center;margin-top: 20px;}
+.prevHeaderW .nodataDiv dl dt {margin: 0px; padding: 20px 0px 20px 0px;}
+.prevHeaderW .nodataDiv dl dd {margin: 0px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
+
 .divPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex; margin-left: 5px;}
-.mainPrevW {height: 100%; width: 100%; position: relative;}
+.mainPrevW {height: 100%; width: 100%; position: relative; border-top: 1px solid #ddd;}
 .mainPrevW >div {width: 100%; height: 100%; display: flex; flex-flow: column;}
 .prevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px; clear: both; padding: 0px; height: 36px; line-height: 36px; display: flex;}
 .prevTitle .prevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; padding-right: 5px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}

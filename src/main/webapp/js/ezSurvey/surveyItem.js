@@ -829,6 +829,7 @@ var SurveyItem = function() {
 		var pSpanElmt1 = document.createElement("span");
 		var pSpanElmt2 = document.createElement("span");
 		
+		divChild.className   = "prevHeaderWwrapper";
 		pElmt.className      = "prevTitle";
 		spanElmt.className   = "preDate";
 		dlElmt.className     = "prevItem";
@@ -852,7 +853,8 @@ var SurveyItem = function() {
 		
 		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
 		var divElmt     = document.getElementById(divPrevId);
-		var noDataSpan  = divElmt.querySelector("span[class='notSelected']");
+//		var noDataSpan  = divElmt.querySelector("span[class='notSelected']");
+		var noDataSpan  = divElmt.querySelector("div[class='nodataDiv']");
 		
 		if (noDataSpan) {divElmt.removeChild(noDataSpan); generatePreviewElmt(divElmt);}
 		
