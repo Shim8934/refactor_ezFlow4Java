@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 <script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
@@ -47,6 +48,44 @@
 	var dThu = "<spring:message code='main.t0625' />";
 	var dFri = "<spring:message code='main.t0626' />";
 	var dSat = "<spring:message code='main.t0627' />";
+	
+	$("#Sdatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ezNewPortal/calIcon.png",
+		buttonImageOnly: true
+	});
+	
+	
+	var SDate = new Date();
+	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	$("#Sdatepicker").datepicker('setDate', SDate);
+
+	$.datepicker.regional[strLang602] = {
+		closeText: strLang601,
+		prevText: strLang599,
+		nextText: strLang600,
+		currentText: strLang598,
+		monthNames: [strLang586, strLang587, strLang588, strLang589, strLang590, strLang591, strLang592, strLang593, strLang594, strLang595, strLang596, strLang597],
+		monthNamesShort: [strLang586, strLang587, strLang588, strLang589, strLang590, strLang591, strLang592, strLang593, strLang594, strLang595, strLang596, strLang597],
+		dayNames: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		dayNamesShort: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		dayNamesMin: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
+		weekHeader: "Wk",
+		dateFormat: "yy-mm-dd",
+		firstDay: 0,
+		isRTL: false,
+		duration: 200,
+		showAnim: "show",
+		showMonthAfterYear: true,
+		onSelect: function(dateText, inst) {
+			var date = $(this).val();
+			getPersPortlet();
+		}
+	};
+	$.datepicker.setDefaults($.datepicker.regional[strLang602]);
 </script>
 </body>
 </html>

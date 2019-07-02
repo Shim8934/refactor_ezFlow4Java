@@ -1,49 +1,3 @@
-// init
-function initResource() {
-	dateMapping();
-	getPersPortlet();
-}
-
-// 날짜 매핑
-function dateMapping() {
-	$("#Sdatepicker").datepicker({
-		changeMonth: true,
-		changeYear: true,
-		autoSize: true,
-		showOn: "both",
-		buttonImage: "/images/ezNewPortal/calIcon.png",
-		buttonImageOnly: true
-	});
-	
-	var SDate = new Date();
-	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-	$("#Sdatepicker").datepicker('setDate', SDate);
-
-	$.datepicker.regional[strLang602] = {
-		closeText: strLang601,
-		prevText: strLang599,
-		nextText: strLang600,
-		currentText: strLang598,
-		monthNames: [strLang586, strLang587, strLang588, strLang589, strLang590, strLang591, strLang592, strLang593, strLang594, strLang595, strLang596, strLang597],
-		monthNamesShort: [strLang586, strLang587, strLang588, strLang589, strLang590, strLang591, strLang592, strLang593, strLang594, strLang595, strLang596, strLang597],
-		dayNames: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
-		dayNamesShort: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
-		dayNamesMin: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
-		weekHeader: "Wk",
-		dateFormat: "yy-mm-dd",
-		firstDay: 0,
-		isRTL: false,
-		duration: 200,
-		showAnim: "show",
-		showMonthAfterYear: true,
-		onSelect: function(dateText, inst) {
-			var date = $(this).val();
-			getPersPortlet();
-		}
-	};
-	$.datepicker.setDefaults($.datepicker.regional[strLang602]);
-}
-
 // date -> string (parse yyyy-mm-dd)
 function DateFormat(obj) {
 
@@ -128,8 +82,8 @@ function getPersPortlet(){
 }
 
 function mappingResourcePortlet(vo){
-	var timeTable = vo.makeDate.split(";");
-	var num       = vo.brdExplain.split(";");
+	var timeTable = vo.rsPortletTime.split(";");
+	var num       = vo.rsPortletNum.split(";");
 	var cnt       = timeTable.length; 
 	if(cnt>4)     {cnt=4;} // 포틀릿 스크롤바 때문에 최대 3개로 고정
 	
@@ -148,24 +102,26 @@ function mappingResourcePortlet(vo){
 	else if(vo.approveFlag == 0) { spanImg.setAttribute("class", "sub_iconLNB tree_resource_standard");}
 	else { spanImg.setAttribute("class", "sub_iconLNB tree_resource_no");}
 	spanTxt.setAttribute("class", "resource_list_text");
-	spanTxt.addEventListener('click', function(event) {reserveSavePopup(vo.brdID)});
+	spanTxt.addEventListener('click', function(event) {reserveInfoPopup(vo.brdID)});
 	spanTxt.textContent = vo.brdNm;
-	if(cnt==1) {	// 예약이 없을 경우
-		p.setAttribute("class", "resource_list_add");
-		spanIcon.setAttribute("class", "icon_resource_add");
-		p.appendChild(spanIcon);
-		p.addEventListener('click', function(event) {reserveSavePopup(vo.brdID)});
+	if(cnt==1) { // 예약이 없을 경우 
+		p = makeEmptyList(vo.brdID);
 		dd.appendChild(p);
 	} else {		// 예약 있음
 		for(var i=0; i<cnt-1; i++) {
 			var span = document.createElement('span');
 			var arr  = new Array();
-			arr[0] = num[i];
-			arr[1] = vo.brdID;
 			span.setAttribute("class", "resource_list_item");
+			span.setAttribute("num", num[i]);
+			span.setAttribute("ownerID", vo.brdID);
+			span.style.float = 'left';
 			span.textContent = timeTable[i];
-			span.addEventListener('click', function(event) {reserveViewPopup(arr)});
+			span.addEventListener('click', function(event) {reserveViewPopup()});
 			dd.appendChild(span);
+		}
+		if(cnt<4) {
+			p = makeEmptyList(vo.brdID);
+			dd.appendChild(p);
 		}
 	}
 
@@ -176,6 +132,18 @@ function mappingResourcePortlet(vo){
 	li.appendChild(dl);
 
 	document.getElementById("Resource_Portlet_List").appendChild(li);
+}
+
+// 
+function makeEmptyList(brdID) {
+	var p        = document.createElement("p");
+	var spanIcon = document.createElement("span");
+	
+	p.setAttribute("class", "resource_list_add");
+	spanIcon.setAttribute("class", "icon_resource_add");
+	p.appendChild(spanIcon);
+	p.addEventListener('click', function(event) {reserveSavePopup(brdID)});
+	return p;
 }
 
 // 사용하는 자원이 없음
@@ -196,18 +164,31 @@ function resourceNodata() {
 	document.getElementById("Resource_Portlet_List").appendChild(dl);
 }
 
+//예약 등록 팝업
+function reserveInfoPopup(id) {
+	 var url = "/ezResource/portletResourceInfo.do?ownerID=" + id;
+     var feature = "status:no;dialogWidth:700px;dialogHeight:650px;help:no;scroll:no;edge:sunken;resizable:no";
+     feature = feature + GetShowModalPosition(700, 700);
+     window.showModalDialog(url, "", feature);
+}
+
 // 예약 등록 팝업
 function reserveSavePopup(id) {
 	 var url = "/ezResource/persPortletAdd.do?cmd=add&from=schedule&selsd=" + Sdatepicker.value + "&seled=" + Sdatepicker.value + "&dayView=&ownerID=" + id;
-     var feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
+     var feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken;resizable:no";
      feature = feature + GetShowModalPosition(700, 700);
      window.showModalDialog(url, "", feature);
 }
 
 // 예약 보기/수정 팝업
-function reserveViewPopup(arr) {//0 num //1 id
-	var url = "/ezResource/persPortletRead.do?cmd=mod&from=schedule&num=" + arr[0] + "&ownerID=" + arr[1] + "&type=Master&startDate=" + Sdatepicker.value+ "&endDate=" + Sdatepicker.value
-    var feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
-    feature = feature + GetShowModalPosition(700, 700);
+function reserveViewPopup() {//0 num //1 id
+	var _this    = event.target;
+	var _num     = _this.getAttribute('num');
+	var _ownerID = _this.getAttribute('ownerID');
+	
+	var url     = "/ezResource/persPortletRead.do?cmd=mod&from=schedule&num=" + _num + "&ownerID=" + _ownerID + "&type=Master&startDate=" + Sdatepicker.value+ "&endDate=" + Sdatepicker.value
+    var feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken;resizable:no";
+    
+	feature = feature + GetShowModalPosition(700, 700);
     window.showModalDialog(url, "", feature);
 }

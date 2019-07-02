@@ -1243,6 +1243,20 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원 일정 상세정보 화면 호출 함수
 	 */
+	@RequestMapping(value = "/ezResource/portletResourceInfo.do", method = RequestMethod.GET)
+	public String portletResourceInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
+		logger.debug("portletResourceInfo Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String ownerID = req.getParameter("ownerID");
+		
+		model.addAttribute("ownerID", ownerID);
+		logger.debug("portletResourceInfo Start");
+		return "/ezResource/resPortletInfo";
+	}
+	
+	/**
+	 * 자원관리 자원 일정 상세정보 화면 호출 함수
+	 */
 	@RequestMapping(value = {"/ezResource/scheduleRead.do", "/ezResource/persPortletRead.do"}, method = RequestMethod.GET)
 	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		logger.debug("scheduleRead Start");

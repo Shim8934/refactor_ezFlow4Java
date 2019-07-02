@@ -1233,11 +1233,11 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index
 .resources_portlet .portlet_title .portletText{ width:34%;}
 .resources_portlet .resources_calendal{ margin:0px; padding:7px 10px 0px 10px; float:right; overflow:hidden; border-left:1px solid #e7e7e7; height:45px;}
 .resources_portlet .resources_calendal .DatePicker_class{ height:30px; margin:0px 0px 0px 0px; width:100px; text-align:center; vertical-align:top;}
-.resources_portlet .resources_calendal img{ margin:-18px 0px 0px 0px; padding:0px 0px 0px 0px; cursor:pointer;}
+.resources_portlet .resources_calendal img{ margin:-19px 0px 0px 0px; padding:0px 0px 0px 0px; cursor:pointer;}
 .resources_portlet .resources_setting{ margin:0px; padding:0px; float:right; cursor:pointer;}
 
 
-.resource_listBox { clear: both; height: 204px; margin: 0px 0px 0px 0px; padding: 0px 0px; overflow-x: auto; overflow-y:hidden; box-sizing: border-box; background:#fff;}
+.resource_listBox { clear: both; height: 204px; margin: 0px 0px 0px 0px; padding: 0px 0px; overflow-x: hidden; overflow-y:hidden; box-sizing: border-box; background:#fff;}
 .resource_listBoxUL { list-style: none; margin: 0px;  padding:17px 0px 15px 15px; box-sizing:border-box;}
 .resource_listBoxUL li{margin-bottom:10px;}
 .resource_listBoxUL .resource_listBoxDL { margin: 0px; padding: 0px; }

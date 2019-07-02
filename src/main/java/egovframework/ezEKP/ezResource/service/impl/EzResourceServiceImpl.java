@@ -4171,14 +4171,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			} else {// 접근 권한이 있을 경우
 				// date 조회가 필요할 경우
 				if(date != null && !date.equals("")) {
-					StringBuilder sb       = new StringBuilder();
-					StringBuilder number   = new StringBuilder();
-					StringBuilder ownName  = new StringBuilder();
-					StringBuilder deptName = new StringBuilder();
+					StringBuilder sb       = new StringBuilder();	// 자원1의시작시간~종료시간;자원2의시작시간~종료시간;....
+					StringBuilder number   = new StringBuilder();	// 자원1의번호;자원2의번호;....
+					StringBuilder ownName  = new StringBuilder();	// 소유자1의이름;소유자2의이름;...
+					StringBuilder deptName = new StringBuilder();	// 소유자1부서;소유자2의부서
 					String retVal = getScheduleXML(date, resources.get(i).getBrdID(), companyID, "", "P", "", "",  "", tenantID, offset);
 					Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
 					for (int j=0; j<xmlDom2.getDocumentElement().getChildNodes().getLength(); j++) {
-						
+						// 허가되지 않은 자원의 리스트는 skip 비승인0 승인1 
+						if(xmlDom2.getElementsByTagName("approveFlag").item(j).getTextContent().equals("0")) continue;
 						String sDate = xmlDom2.getElementsByTagName("dtstart").item(j).getTextContent().substring(11, 16);
 						String eDate = xmlDom2.getElementsByTagName("dtend").item(j).getTextContent().substring(11, 16);
 						String num   = xmlDom2.getElementsByTagName("number").item(j).getTextContent();
@@ -4189,10 +4190,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						ownName.append(own + ";");
 						deptName.append(dept + ";");
 					}
-					resources.get(i).setMakeDate(sb.toString());
-					resources.get(i).setBrdExplain(number.toString());
-					resources.get(i).setOwnerNm(ownName.toString());
-					resources.get(i).setOwnDeptNm(deptName.toString());
+					resources.get(i).setRsPortletTime(sb.toString());
+					resources.get(i).setRsPortletNum(number.toString());
+					resources.get(i).setRsPortletOwnName(ownName.toString());
+					resources.get(i).setRsPortletDeptName(deptName.toString());
 				}
 			}
 		}

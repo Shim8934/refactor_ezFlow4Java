@@ -35,7 +35,40 @@ public class ResBrdVO {
 	private String approveFlag;
 	/** 게시판 접근 거부 메시지*/
 	private String brdAccess;
+	/** 자원관리 포틀릿 시간*/
+	private String rsPortletTime;
+	/** 자원관리 포틀릿 번호*/
+	private String rsPortletNum;
+	/** 자원관리 포틀릿 소유자*/
+	private String rsPortletOwnName;
+	/** 자원관리 포틀릿 소유자부서*/
+	private String rsPortletDeptName;
 	
+	
+	public String getRsPortletTime() {
+		return rsPortletTime;
+	}
+	public void setRsPortletTime(String rsPortletTime) {
+		this.rsPortletTime = rsPortletTime;
+	}
+	public String getRsPortletNum() {
+		return rsPortletNum;
+	}
+	public void setRsPortletNum(String rsPortletNum) {
+		this.rsPortletNum = rsPortletNum;
+	}
+	public String getRsPortletOwnName() {
+		return rsPortletOwnName;
+	}
+	public void setRsPortletOwnName(String rsPortletOwnName) {
+		this.rsPortletOwnName = rsPortletOwnName;
+	}
+	public String getRsPortletDeptName() {
+		return rsPortletDeptName;
+	}
+	public void setRsPortletDeptName(String rsPortletDeptName) {
+		this.rsPortletDeptName = rsPortletDeptName;
+	}
 	public String getBrdID() {
 		return brdID;
 	}
