@@ -504,9 +504,16 @@
 			                return;
 			            } 
 		        	}
-					if (confirm("<spring:message code = 'ezApprovalG.t787' />\r\n<spring:message code = 'ezApprovalG.t786' />")) {
-						btnDelItem_onclick_Complete(true);
-					}
+		        	
+		        	if (approvalFlag == 'S') {
+						if (confirm("<spring:message code = 'ezApprovalG.t775' />\r\n<spring:message code = 'ezApprovalG.garm07' />")) {
+							btnDelItem_onclick_Complete(true);
+						}
+                	} else {
+						if (confirm("<spring:message code = 'ezApprovalG.t787' />\r\n<spring:message code = 'ezApprovalG.t786' />")) {
+							btnDelItem_onclick_Complete(true);
+						}
+                	}
 		            /* ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t786' />\n<spring:message code = 'ezApprovalG.t787' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelItem_onclick_Complete;
 		            
