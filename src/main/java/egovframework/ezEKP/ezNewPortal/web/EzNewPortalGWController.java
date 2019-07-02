@@ -2119,8 +2119,9 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 			
-			Map<String, Object> resultMap = ezNewPortalService.getMenuAuth(menuId, companyId, userInfo.getTenantId());
+			Map<String, Object> resultMap = ezNewPortalService.getMenuAuth(menuId, companyId, userInfo.getTenantId(), lang);
 			
 			JSONObject data = new JSONObject();
 			
@@ -2571,7 +2572,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String parentBoardId = request.getParameter("parentBoardId");
-			String lang = info.getLang();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
 			List<PortalBoardTreeVO> boardTree = ezNewPortalService.getBoardTree(parentBoardId, companyId, tenantId);
 			
@@ -2580,7 +2581,7 @@ public class EzNewPortalGWController {
 			for (int i = 0; i < boardTreeCount; i++) {
 				PortalBoardTreeVO boardInfo= boardTree.get(i);
 				
-				if (lang.equals("1")) {
+				if (lang.equals("")) {
 					boardInfo.setText(commonUtil.cleanValue(boardInfo.getBoardName1()));
 				} else {
 					boardInfo.setText(commonUtil.cleanValue(boardInfo.getBoardName2()));

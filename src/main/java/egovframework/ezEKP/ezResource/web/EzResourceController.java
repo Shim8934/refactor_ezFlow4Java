@@ -2321,12 +2321,15 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 권한없는 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/nonResList.do", method = RequestMethod.GET)
-	public String nonResList(HttpServletRequest req, Model model) throws Exception {
+	public String nonResList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String accMessage = "";
 		if (req.getParameter("msg") != null && !req.getParameter("msg").equals("")) {
 			accMessage = req.getParameter("msg");
 		}
 		model.addAttribute("accMessage", commonUtil.cleanScriptValue(accMessage, "clean"));
+		model.addAttribute("userInfo", userInfo); 
 		return "/ezResource/resNonResList";
 	}
 	

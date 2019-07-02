@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwBoardsInfo.js')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
 		<style type="text/css">
-			.warningbox{margin:50px auto 0px auto; padding:40px 20px 0px 20px; font-family:Malgun Gothic; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
+			.warningbox{margin:50px auto 0px auto; padding:40px 20px 0px 20px; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
 			.warningbox .warningimg{margin:0px; padding:0px 0px 0px 40px; float:left;}
 			.warningbox .warningDL{margin:0px; padding:0px 0px 0px 30px; float:left; overflow:hidden;}
 			.warningbox .warningDL dt{margin:0px; padding:12px 0px 5px 0px; font-size:24px; font-weight:bold; color:#3d8fea; letter-spacing:-1px;}
