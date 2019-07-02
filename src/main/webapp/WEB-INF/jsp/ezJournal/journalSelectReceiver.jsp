@@ -250,7 +250,7 @@
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length == 0 && key != "DEPARTMENT"){
-	   						alert("<spring:message code='ezCommunity.t1379'/>");
+	   						alert("<spring:message code='ezJournal.t207'/>");
 	   						issearch = false;
 	   					}
 	   					$("#orglistView").empty();
@@ -270,7 +270,7 @@
 	   			var value = $("#keyword").val().trim();
 	   			
 	   			if (value == '' || value == undefined) {
-	   				alert("<spring:message code='ezSchedule.t8'/>");	
+	   				alert("<spring:message code='ezJournal.t208'/>");	
 	   			} else {
 	   				search_click(type);	
 	   			}
@@ -292,7 +292,7 @@
 	   				}
 		   			setUserList(key, searchKey);
 	   			} else {
-	   				alert("<spring:message code='ezSchedule.t8'/>")
+	   				alert("<spring:message code='ezJournal.t208'/>")
 	   			}
 	   		}
 	   		
@@ -581,7 +581,7 @@
 	   		
 	   		function infoview_click() { 
 	            if (selUserId == null || selUserId == "") {
-	                alert("<spring:message code='ezCircular.t148' />");
+	                alert("<spring:message code='ezJournal.t209' />");
 	                return;
 	            }
 	            var pheight = window.screen.availHeight;
@@ -649,24 +649,24 @@
 				                                <td>
 				                                    <div style="float: left; margin-left: 5px;">
 				                                        <select id="search_type" style="height:22px">
-				                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
-								                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
-								                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
-								                            <option value="title"><spring:message code='ezOrgan.t69'/></option>
-								                            <option value="telephonenumber"><spring:message code='ezOrgan.t95'/></option>
-								                            <option value="mobile"><spring:message code='ezOrgan.t96'/></option>
-								                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
-								                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
-								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
-								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
+				                                            <option selected value="displayname"><spring:message code='ezJournal.t38'/></option>
+								                            <option value="cn"><spring:message code='ezJournal.t210'/></option>
+								                            <option value="description"><spring:message code='ezJournal.t40'/></option>
+								                            <option value="title"><spring:message code='ezJournal.t39'/></option>
+								                            <option value="telephonenumber"><spring:message code='ezJournal.t46'/></option>
+								                            <option value="mobile"><spring:message code='ezJournal.t211'/></option>
+								                            <option value="HomePhone"><spring:message code='ezJournal.t212'/></option>
+								                            <option value="facsimileTelephoneNumber"><spring:message code='ezJournal.t213'/></option>
+								                            <option value="mail"><spring:message code='ezJournal.t214'/></option>
+								                            <option value="streetAddress"><spring:message code='ezJournal.t215'/></option>
 				                                        </select>
 				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" value="" style="width: 130px; margin: 0px;height:22px" />
-				                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezOrgan.t101'/></span></a>
+				                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezJournal.t43'/></span></a>
 				                                    </div>
 				                                </td>
 				                                <td>
 				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>  
+				                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezJournal.t216' /></span></a>  
 				                                    </div>
 				                                </td> 
 				                                <td></td>   
