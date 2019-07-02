@@ -2939,12 +2939,14 @@ h2, #menu span {font-size: 12px;}
 .prevHeaderW .prevHeaderWwrapper, .prevHeaderH .prevHeaderWwrapper {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
 .prevHeaderW >span, .prevHeaderH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
 /* .prevHeaderW {border-top: 1px solid #ddd;} */
-
 .prevHeaderW .nodataDiv {vertical-align: middle; text-align: center; width: 100%; height: 100%; margin-top: 70px;}
 .prevHeaderW .nodataDiv dl {margin: 0px; padding: 0px;text-align: center;margin-top: 20px;}
 .prevHeaderW .nodataDiv dl dt {margin: 0px; padding: 20px 0px 20px 0px;}
 .prevHeaderW .nodataDiv dl dd {margin: 0px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
-
+.prevHeaderH .nodataDiv {vertical-align: middle; text-align: center; width: 100%; height: 100%; margin-top: 70px;}
+.prevHeaderH .nodataDiv dl {margin: 0px; padding: 0px;text-align: center;margin-top: 20px;}
+.prevHeaderH .nodataDiv dl dt {margin: 0px; padding: 20px 0px 20px 0px;}
+.prevHeaderH .nodataDiv dl dd {margin: 0px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
 .divPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex; margin-left: 5px;}
 .mainPrevW {height: 100%; width: 100%; position: relative; border-top: 1px solid #ddd;}
 .mainPrevW >div {width: 100%; height: 100%; display: flex; flex-flow: column;}
