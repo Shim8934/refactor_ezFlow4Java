@@ -465,12 +465,14 @@ var SurveyCreate     = function() {
 		var surveyTtl  = document.getElementById("info-input-ttl");
 		var surveyPp   = document.getElementById("info-input-pp").contentWindow;
 		var ppContent  = surveyPp.GetEditorContent();
+		
 		var sDate      = document.getElementById("startDate").value;
 		var eDate      = document.getElementById("endDate").value;
 		var publicFlag = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
 		var userFlag   = parseInt(document.querySelector('input[name="targetSpan"]:checked').value);
 		var userList   = surveyObj["infor"]["users"];
-		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
+//		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
+		ppContent      = replaceAll(ppContent, '<p style="font-size:13px;font-family:맑은 고딕"><br></p>', '');
 		var ttlValue   = replaceAll(surveyTtl.value, " ", "");
 		
 		if (!ttlValue)     {returnObj["error"] = SurveyMessages.strTitle  ; surveyTtl.value = ""; surveyTtl.focus(); return returnObj;}
@@ -2172,7 +2174,7 @@ var SurveyCreate     = function() {
 		
 		var sliderUp = $("<input type='input' class='slider-up' value='" + highest + "'/>");
 		
-		var lwUpDiv = $("<div><span class='slider-lwExp'>최소값</span><span class='slider-upExp'>최대값</span></div>")
+		var lwUpDiv = $("<div><span class='slider-lwExp'>" + SurveyMessages.strSlider8 + "</span><span class='slider-upExp'>" + SurveyMessages.strSlider9 + "</span></div>")
 		
 		slidWrap.append(sliderUp);
 		divWrap.append(slidWrap);

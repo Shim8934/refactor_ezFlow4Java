@@ -48,7 +48,7 @@
 				</span>
 			</div>
 			
-			<div class="draft-survey" id="draftBttn"><span>임시 저장</span></div>
+			<div class="draft-survey" id="draftBttn"><span><spring:message code='ezSurvey.t111'/></span></div>
 		</div>
 		
 		<div id="bodyPanel">
