@@ -3113,7 +3113,7 @@ h2, #menu span {font-size: 12px;}
 .headpanel .crust {position:relative; clear:none; display:inline-block; zoom:1; width:25%; margin:0px; padding:6px 0px;}
 .headpanel .crust a.crumb>span {display:inline-block; vertical-align:middle; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:100%; font-size:14px;}
 .headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {color:#0470e4;}
-.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 38px; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; align-items: center; text-align:center;}
+.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 38px; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; align-items: center; text-align:center; min-width: 110px;}
 
 .headpanel .crust{background:url(../images/ezSurvey/survey_progressBG.png) top center no-repeat;}
 .headpanel .crust.selected{background:url(../images/ezSurvey/survey_progressBG_on.png) top center no-repeat;}
@@ -3351,7 +3351,7 @@ input::-ms-clear {display: none;}
 
 /* 수정, 취소 버튼 */
 .survey_qsbtn{overflow:hidden; margin:20px 0px 10px 0px; padding:0px; height:40px;}
-.survey_qsbtn li{display:inline-block; width:52px; height:38px; line-height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; font-size:12px; font-weight:bold; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
+.survey_qsbtn li{display:inline-block; width:65px; height:38px; line-height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; font-size:12px; font-weight:bold; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
 .survey_qsbtn li.modify, .survey_qsbtn li.save {color:#0470e4; border:1px solid #2196f3; border-bottom:1px solid #0470e4;}
 .survey_qsbtn li:hover{background:#f1f8ff; border:1px solid #2196f3; border-bottom:1px solid #0470e4; color:#0470e4;}
 .survey_qsbtn li span{display:inline-block; padding:0px 4px;}
@@ -3362,7 +3362,7 @@ input::-ms-clear {display: none;}
 .question-panel .mvBtn span{display:inline-block; width:16px; height:16px; margin:3px 6px 0px 6px; background-position:-64px 0px !important;}
 .mvBtn li:hover{background-color:rgb(255,255,255); border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
 
-.question-panel .srvyDragBtn {position:absolute; display:block; left:50%; margin:0px 0px 0px 0px;}
+.question-panel .srvyDragBtn {position:absolute; display:block; left: calc(50% - 12px); margin:0px 0px 0px 0px;}
 
 /* question header panel */
 .question-panel{background:#f1f6fb; padding: 0px;}
@@ -3513,3 +3513,6 @@ input[type=range]::-ms-tooltip {display: none;}
 .error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:-1px;}
 .error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
 .error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
+
+/* 2019-07-02 김민성 자원관리 warning 관련 수정*/
+.warningbox{font-family:Meiryo UI;  }

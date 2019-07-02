@@ -616,7 +616,7 @@ function tableListControl_Week()
 
                     var _mtd2 = document.createElement("TD");
                    // _mtd2.style.width = "14.2%";
-                    if(weekdatename[i] == today) { 							// 날짜가 오늘이면
+                    if(weekdatename[i-1] == today) { 							// 날짜가 오늘이면
                     	_mtd2.setAttribute("class", "weektd_02 today");
                     }
                     else {
