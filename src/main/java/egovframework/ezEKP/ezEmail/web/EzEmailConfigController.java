@@ -2103,8 +2103,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String mailAddressSearchOrder =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
 		logger.debug("mailAddressSearchOrder = " + mailAddressSearchOrder);
 		if (mailAddressSearchOrder.equals("")) {
-			mailAddressSearchOrder = "organ;address;dl;shared";
-			ezCommonService.insertUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder", "organ;address;dl;shared");
+			mailAddressSearchOrder = "organ;address;shared";
+			ezCommonService.insertUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder", mailAddressSearchOrder);
 		}
 		
 		model.addAttribute("mailAddressSearchOrder", mailAddressSearchOrder);
