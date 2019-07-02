@@ -3527,3 +3527,6 @@ input[type=range]::-ms-tooltip {display: none;}
 .lnb h2.on + .leftList { visibility: visible; height: auto !important;}
 .lnb .leftList { visibility: hidden; height: 0px !important; list-style-type: none; padding: 0;  margin: 0; width: 100%; overflow: hidden;}
 .lnb .leftList li { padding: 4px 20px; cursor: pointer;}
+
+/* 2019-07-02 김민성 자원관리 warning 관련 수정*/
+.warningbox{font-family:Malgun Gothic; }
