@@ -2174,7 +2174,7 @@ var SurveyCreate     = function() {
 		
 		var sliderUp = $("<input type='input' class='slider-up' value='" + highest + "'/>");
 		
-		var lwUpDiv = $("<div><span class='slider-lwExp'>최소값</span><span class='slider-upExp'>최대값</span></div>")
+		var lwUpDiv = $("<div><span class='slider-lwExp'>" + SurveyMessages.strSlider8 + "</span><span class='slider-upExp'>" + SurveyMessages.strSlider9 + "</span></div>")
 		
 		slidWrap.append(sliderUp);
 		divWrap.append(slidWrap);
