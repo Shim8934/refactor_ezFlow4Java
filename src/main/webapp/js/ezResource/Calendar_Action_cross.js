@@ -685,15 +685,18 @@ function tableListControl_Week()
                 var _tr = document.createElement("TR");
                 var _td = document.createElement("TD");
                 var _span = document.createElement("SPAN");
+                var _span2 = document.createElement("SPAN");
 
                 _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin-bottom:5px; white-space:nowrap; overflow:hidden;");
 
                 _td.rowSpan = "2";
-                var tdwidth = 3;
+                var tdwidth = 22;
                 if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
                     tdwidth = 18;
                 _td.style.width = tdwidth + "px";
-                _td.setAttribute("class", approveflag_name);
+                _td.style.verticalAlign = "top";
+                _span2.setAttribute("class", approveflag_name);
+                _td.appendChild(_span2);
                 _tr.appendChild(_td);
 
                 _td = document.createElement("TD");
@@ -821,15 +824,18 @@ function makeTable(xmldom, pNum, dayType) {
     var _tr = document.createElement("TR");
     var _td = document.createElement("TD");
     var _span = document.createElement("SPAN");
+    var _span2 = document.createElement("SPAN");
 
     _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin:0; white-space:nowrap; overflow:hidden;");
 
     _td.rowSpan = "2";
-    var tdwidth = 3;
+    var tdwidth = 22;
     if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
         tdwidth = 18;
     _td.style.width = tdwidth + "px";
-    _td.setAttribute("class", approveflag_name);
+    _td.style.verticalAlign = "top";
+    _span2.setAttribute("class", approveflag_name);
+    _td.appendChild(_span2);
     _tr.appendChild(_td);
 
     _td = document.createElement("TD");
