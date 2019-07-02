@@ -3369,7 +3369,7 @@ input::-ms-clear {display: none;}
 .question-panel .mvBtn span{display:inline-block; width:16px; height:16px; margin:3px 6px 0px 6px; background-position:-64px 0px !important;}
 .mvBtn li:hover{background-color:rgb(255,255,255); border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
 
-.question-panel .srvyDragBtn {position:absolute; display:block; left:50%; margin:0px 0px 0px 0px;}
+.question-panel .srvyDragBtn {position:absolute; display:block; left: calc(50% - 12px); margin:0px 0px 0px 0px;}
 
 /* question header panel */
 .question-panel{background:#f1f6fb; padding: 10px;}
