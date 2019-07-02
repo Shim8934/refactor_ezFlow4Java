@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<title><spring:message code='ezCircular.t10'/></title>
+	<title><spring:message code='ezJournal.t53'/></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
     <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
@@ -49,7 +49,7 @@
 		   			lpDepts.push(lpDeptId);
 		   			lpDeptNames.push(lpDeptName);
 				} else {
-	   				alert("<spring:message code='ezApprovalG.t2000'/>");
+	   				alert("<spring:message code='ezJournal.t178'/>");
 				}
 			} 
    		}
@@ -63,7 +63,7 @@
    				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName),1);
    				$(".selectTR").remove();
    			} else {
-   				alert("<spring:message code='ezOrgan.t249'/>");
+   				alert("<spring:message code='ezJournal.t168'/>");
    			}
    		}
     	
@@ -315,7 +315,7 @@
        	<br />    
        	<table class="content" style="width: 480px;margin-top:5px">
            	<tr>
-               	<th><spring:message code="ezCircular.t18" /></th>
+               	<th><spring:message code="ezJournal.t68" /></th>
               		<td>               
                   		<select id="listcount" name="pListCount" style="WIDTH: 100px">
                				<option value='10' ${journalEnv.listCnt == '10' ? 'selected' : ''}>10</option>
@@ -324,25 +324,25 @@
                    			<option value='40' ${journalEnv.listCnt == '40' ? 'selected' : ''}>40</option>
                    			<option value='50' ${journalEnv.listCnt == '50' ? 'selected' : ''}>50</option>                        
                   		</select>
-                   	<spring:message code="ezCircular.t104" />
+                   	<spring:message code="ezJournal.t55" />
                    </td>
            	</tr>
            	<tr>
-               	<th><spring:message code="ezCircular.t19" /></th>
+               	<th><spring:message code="ezJournal.t69" /></th>
            		<td>
                		<select id="PreviewMode" name="pPreview" style="WIDTH: 100px" onchange="PreviewOption(this.value);">
-               			<option value='NONE' ${journalEnv.viewenv == 'NONE' ? 'selected' : ''}><spring:message code="ezCircular.t20" /></option>
-               			<option value='H' ${journalEnv.viewenv == 'H' ? 'selected' : ''}><spring:message code="ezCircular.t21" /></option>
-               			<option value='W' ${journalEnv.viewenv == 'W' ? 'selected' : ''}><spring:message code="ezCircular.t22" /></option>             					                     
+               			<option value='NONE' ${journalEnv.viewenv == 'NONE' ? 'selected' : ''}><spring:message code="ezJournal.t118" /></option>
+               			<option value='H' ${journalEnv.viewenv == 'H' ? 'selected' : ''}><spring:message code="ezJournal.t119" /></option>
+               			<option value='W' ${journalEnv.viewenv == 'W' ? 'selected' : ''}><spring:message code="ezJournal.t120" /></option>             					                     
                		</select>
                		<span id="PreviewWDiv" style="${journalEnv.viewenv ne 'W' ? 'display: none;' : ''}">                   			
-               			&nbsp;<spring:message code="ezCircular.t23" /> :
+               			&nbsp;<spring:message code="ezJournal.t179" /> :
 						<select id="WList" name="pPreviewWList" style="width: 50px;" onchange="changePreviewVal(this);">
 							<c:forEach var="item" begin="25" end="65">
 	   							<option value='${item}' ${item == 100-journalEnv.previewWcontent ? 'selected' : '' }>${item}</option>
 							</c:forEach>
 						</select>
-      					&nbsp;<spring:message code="ezCircular.t24" /> :
+      					&nbsp;<spring:message code="ezJournal.t180" /> :
 						<select id="WContent" name="pPreviewWContent" style="width: 50px;" onchange="changePreviewVal(this);">
 							<c:forEach var="item" begin="35" end="75">
 	  							<option value='${item}' ${item == journalEnv.previewWcontent ? 'selected' : '' }>${item}</option>
@@ -350,13 +350,13 @@
 						</select>		
 					</span>
                		<span id="PreviewHDiv" style="${journalEnv.viewenv ne 'H' ? 'display: none;' : ''}">                   			
-	       				&nbsp;<spring:message code="ezCircular.t23" /> :
+	       				&nbsp;<spring:message code="ezJournal.t179" /> :
 						<select id="HList" name="pPreviewHList" style="width: 50px;" onchange="changePreviewVal(this);">
 							<c:forEach var="item" begin="39" end="64">
 	   							<option value='${item}' ${item == 100-journalEnv.previewHcontent ? 'selected' : '' }>${item}</option>
 							</c:forEach>
 						</select>
-	       				&nbsp;<spring:message code="ezCircular.t24" /> :
+	       				&nbsp;<spring:message code="ezJournal.t180" /> :
 						<select id="HContent" name="pPreviewHContent" style="width: 50px;" onchange="changePreviewVal(this);">
 							<c:forEach var="item" begin="36" end="61">
 	   							<option value='${item}' ${item == journalEnv.previewHcontent ? 'selected' : '' }>${item}</option>
@@ -367,8 +367,8 @@
            	</tr>
        	</table>
    		<div style="width:466px;" class="btnpositionJsp">      
-       		<a class="imgbtn" onclick="saveListEnv()"><span><spring:message code="ezCircular.t25" /></span></a>
-       		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezCircular.t26" /></span></a>
+       		<a class="imgbtn" onclick="saveListEnv()"><span><spring:message code="ezJournal.t26" /></span></a>
+       		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezJournal.t16" /></span></a>
    		</div>
 	</div>		
     <div id="JournalEnv_content2" style="margin-left:10px; width:100%;height:90%; padding-top:10px; display:none">
@@ -399,7 +399,7 @@
     		</tr>
     	</table>
     	<div style="width:466px;" class="btnpositionJsp">      
-       		<a class="imgbtn" onclick="saveMailAlert()"><span><spring:message code="ezCircular.t25" /></span></a>
+       		<a class="imgbtn" onclick="saveMailAlert()"><span><spring:message code="ezJournal.t26" /></span></a>
    		</div>
 	</div>	
 	<c:if test="${fn:length(deptList) ne 0}">
@@ -447,8 +447,8 @@
 				</tr>
 			</table>		 	
 			<div style="width:650px;" class="btnpositionJsp">      
-				<a class="imgbtn" onclick="saveAuthEnv();"><span><spring:message code="ezCircular.t25" /></span></a>
-	       		<a class="imgbtn" onclick="authCancel();"><span><spring:message code="ezCircular.t26" /></span></a>
+				<a class="imgbtn" onclick="saveAuthEnv();"><span><spring:message code="ezJournal.t26" /></span></a>
+	       		<a class="imgbtn" onclick="authCancel();"><span><spring:message code="ezJournal.t16" /></span></a>
 			</div>
 		</div>		
 	</c:if>	
