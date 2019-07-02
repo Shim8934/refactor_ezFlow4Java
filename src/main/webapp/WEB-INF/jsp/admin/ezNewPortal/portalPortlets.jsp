@@ -113,7 +113,8 @@
 		<select class="companySelect" id="ListCompany"></select>
 	</h1>
 		
-	<ul id="portletListContainer" class="col-container"></ul>
+	<ul id="portletListContainer" class="col-container" style="overflow: auto"></ul>
+
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>

@@ -57,7 +57,9 @@
 			<spring:message code='ezNewPortal.t055' />
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
+			<span><spring:message code='ezNewPortal.garm07' /></span>
 		</h1>
+		
 		
 		<%-- <div id="mainmenu">
 			<ul style="margin-top: 15px;">
