@@ -2719,7 +2719,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (!isCompanyAdmin) {
 				// 개인권한 최우선 확인 (strBanBoardIDListSetUser 직접 사용)
 				if (strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") ||
-						(strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|1;"))) {
+						(!strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|1;") && strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|1;"))) {
 					continue;
 				}
 			}

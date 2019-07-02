@@ -139,7 +139,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		MailGeneralVO mailGeneral = new MailGeneralVO();
         		String textOption = (String)obj.get("textOption");
         		
-        		if (textOption == null) {
+        		if (textOption == null || textOption.trim().equals("")) {
         			if (usePlainForDefaultTextOption.equalsIgnoreCase("YES")) {
         				textOption = "PLAIN";
         			} else {

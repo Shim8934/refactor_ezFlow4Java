@@ -1121,7 +1121,7 @@ public class MBoardServiceImpl implements MBoardService {
 					int isEqaulDept = 0;
 					for (int j = 0; j < tempDeptList.split(",").length; j++) {
 						// 사원ID, 부서ID, 회사ID에 대하여 해당부서 직속여부 판단
-						if(pAccessIDStr.split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+						if(addJobDeptList.get(jl).split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
 							isEqaulDept = 1;
 							break;
 						} else {
@@ -1201,7 +1201,7 @@ public class MBoardServiceImpl implements MBoardService {
 	    	if (!isCompanyAdmin) {
 	    		// 개인권한 최우선 확인 (strBanBoardIDListSetUser 직접 사용)
 				if (strBanBoardIDListSetUser.contains(tempMBoardTree.getBoardId() + "|0;") ||
-						(strBanBoardIDListSet.contains(tempMBoardTree.getBoardId() + "|0;") && !strBanBoardIDListSet.contains(tempMBoardTree.getBoardId() + "|1;"))) {
+						(!strBanBoardIDListSetUser.contains(tempMBoardTree.getBoardId() + "|1;") && strBanBoardIDListSet.contains(tempMBoardTree.getBoardId() + "|0;") && !strBanBoardIDListSet.contains(tempMBoardTree.getBoardId() + "|1;"))) {
 					// 접근권한이 없는(표출되지 않는) 게시판은 리스트에서 제거하고, 다음 루프로 간다.
 					it.remove();
 					brdBoardTreeList.remove(tempMBoardTree);
