@@ -3513,3 +3513,6 @@ input[type=range]::-ms-tooltip {display: none;}
 .error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:-1px;}
 .error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
 .error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
+
+/* 2019-07-02 김민성 자원관리 warning 관련 수정*/
+.warningbox{font-family:Meiryo UI;  }
