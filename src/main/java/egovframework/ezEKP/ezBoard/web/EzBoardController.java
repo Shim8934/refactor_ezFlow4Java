@@ -1876,7 +1876,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<CELL>");
 					fieldName = headerList.get(i).getColName().toUpperCase();
 					
-					if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+					if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 						fieldName = fieldName + strMultiData;
 					}
 					
@@ -1973,7 +1973,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				
@@ -2152,7 +2152,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				if (fieldName.equals("WRITEDATE")) {
@@ -2578,7 +2578,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				if (fieldName.equals("WRITEDATE")) {
@@ -2728,7 +2728,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("BOARDNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("BOARDNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				if (fieldName.equals("WRITEDATE")) {
@@ -3042,7 +3042,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<CELL>");
 					fieldName = headerList.get(i).getColName().toUpperCase();
 					
-					if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+					if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 						fieldName = fieldName + strMultiData;
 					}
 					if (fieldName.equals("WRITEDATE")) {
@@ -3151,7 +3151,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				
