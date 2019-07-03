@@ -118,8 +118,8 @@
 	            		span2.setAttribute("class", "node_selected");
 	            		span2.setAttribute("onclick", "memoClick(this);");
 	            		span2.setAttribute("folderId", "0");
-	            		span2.setAttribute("folderName", strLangMemo20);
-	            		span2.innerHTML = strLangMemo20;
+	            		span2.setAttribute("folderName", memoMessages.strLangMemo20);
+	            		span2.innerHTML = memoMessages.strLangMemo20;
 	            		
 	            		li.appendChild(span1);
 	            		li.appendChild(span2);
@@ -136,8 +136,13 @@
 	            			span4.setAttribute("class", "node_normal");
 	            			span4.setAttribute("onclick", "memoClick(this)");
 	            			span4.setAttribute("folderId", folders[i].folder_id);
-	            			span4.setAttribute("folderName", folders[i].folder_name);
-	            			span4.innerHTML = folders[i].folder_name;
+	            			if (i === 0 && folders[i].orders === 0) {
+		            			span4.setAttribute("folderName", memoMessages.strLangMemo22);
+		            			span4.innerHTML = memoMessages.strLangMemo22;
+	            			} else {
+		            			span4.setAttribute("folderName", folders[i].folder_name);
+		            			span4.innerHTML = folders[i].folder_name;
+	            			}
 	            			
 	            			li2.appendChild(span3);
 	            			li2.appendChild(span4);

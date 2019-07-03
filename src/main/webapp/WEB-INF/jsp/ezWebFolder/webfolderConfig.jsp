@@ -85,7 +85,7 @@
 	</script>
 </head>
 <body class="mainbody">
-	<h1><spring:message code="ezWebFolder.t237" /></h1>
+	<h1><spring:message code="ezWebFolder.t31" /></h1>
 	<div class="portlet_tabpart01">
 		<div class="portlet_tabpart01_top" id="tab1">
 			<p ><span divname="wfEnv_div1" id="1tab1"><spring:message code="ezWebFolder.t238" /></span></p>

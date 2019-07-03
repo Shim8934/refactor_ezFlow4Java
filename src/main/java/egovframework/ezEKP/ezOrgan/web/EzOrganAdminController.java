@@ -23,13 +23,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -48,7 +46,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
@@ -93,7 +90,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
-			
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
@@ -162,9 +158,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addQuickLinkLinkOrder();
     	ezCommonService.addComCloseCompanyId();
     	ezCommonService.addWebfolderTotalLimit();
+    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
+		ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
     	ezCommonService.addMsgInMailSearch(); 
 		ezCommonService.addFormVersion();
     	ezCommonService.addAddJobMasterProxy();
+    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
+    	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
     	
     	logger.debug("init ended.");
     }
@@ -887,6 +887,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	        logger.debug("moveEntry result=" + result);
 		}
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
         
 		logger.debug("movDept ended.");
 		
@@ -1248,6 +1251,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
+		
 		logger.debug("movUser ended.");
 		
 		return result;
@@ -1436,6 +1442,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 			// dhlee - end
 		}		
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("delUser ended. result=" + result);
 		
@@ -2330,6 +2339,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
+		
 		//2018-07-31 김보미 - 근태 추가
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId());
@@ -2348,8 +2358,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				resultList.add(j++, vo);
 			}
 		}
-
+		
 		String packageType = commonUtil.getPackageType(user.getTenantId());
+		
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
@@ -2685,7 +2696,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 			}
 			// dhlee - end			
-		}		
+		}	
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("restoreRetireUser ended. result=" + result);
 		
@@ -3401,8 +3415,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		
 		logger.debug("jobInfoList ended.");
 		return "admin/ezOrgan/jobInfoList";
@@ -3430,11 +3449,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (mode != null && mode.equals("Add"))
 			jobCnt++;
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("jobCnt", jobCnt);
 		model.addAttribute("type", type);
 		model.addAttribute("mode", mode);
 		model.addAttribute("jobID", jobID);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";

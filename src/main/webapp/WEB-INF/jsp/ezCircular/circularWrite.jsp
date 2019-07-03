@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html style="height:100%"> 
+<html style="height:100%" ondragover="bodydragover(event)"> 
 	<head>
 		<c:choose>
 			<c:when test="${mode eq 'reuse'}">
@@ -40,7 +40,7 @@
 	    	var userMyName2 = "<c:out value='${userMyName2}'/>";
 	    	var listSize = "<c:out value='${listSize}'/>";
 	    	var defaultFontAndSize  = "<c:out value='${defaultFontAndSize}'/>";
-	    	var strAttach = "<c:out value='${strAttach}'/>";
+	    	var strAttach = "${strAttach}'";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -64,7 +64,7 @@
 		        	document.getElementById("receiverID").innerHTML = "<c:out value='${userID}'/>";
 
 		        	//hasFie구분
-		        	setAttachFileInfo("<c:out value='${strAttach}'/>");
+		        	setAttachFileInfo(strAttach);
 			        
 		        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 		        	
@@ -370,6 +370,12 @@
 	                	alert("<spring:message code='ezCircular.t102'/>");
 	                }
 				});
+			}
+			
+			function bodydragover(evt) {
+				evt.dataTransfer.dropEffect = "none";
+				evt.stopPropagation();
+				evt.preventDefault();
 			}
 		</script>
 	</head>

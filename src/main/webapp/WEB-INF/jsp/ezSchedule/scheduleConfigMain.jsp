@@ -121,10 +121,10 @@
        		<div class="portlet_tabpart01_top" id="tab1">
        			<c:choose>
        				<c:when test="${flag eq 'schedule'}">
-       					<p><span id="1tab1" divname="scheduleTab"><spring:message code='ezSchedule.t133' /></span></p>		
+       					<p><span id="1tab1" divname="scheduleTab"><spring:message code='ezPersonal.yej01' /></span></p>		
        				</c:when>
        				<c:otherwise>
-       					<p><span id="1tab3" divname="taskTab"><spring:message code='ezSchedule.t1005' /></span></p>	
+       					<p><span id="1tab3" divname="taskTab"><spring:message code='ezPersonal.yej01' /></span></p>	
        				</c:otherwise>
        			</c:choose>
            		<%-- 구글캘린더 --%>

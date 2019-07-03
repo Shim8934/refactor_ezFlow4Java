@@ -299,7 +299,7 @@ function tableListControl_Week()
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
         //document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
-        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " - " + weekEndDatename);
+        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
         var b = 0;
@@ -616,7 +616,7 @@ function tableListControl_Week()
 
                     var _mtd2 = document.createElement("TD");
                    // _mtd2.style.width = "14.2%";
-                    if(weekdatename[i] == today) { 							// 날짜가 오늘이면
+                    if(weekdatename[i-1] == today) { 							// 날짜가 오늘이면
                     	_mtd2.setAttribute("class", "weektd_02 today");
                     }
                     else {

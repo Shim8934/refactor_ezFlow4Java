@@ -40,7 +40,7 @@
                 changeYear: true,
                 autoSize: true,
                 showOn: "both",
-                buttonImage: "/images/calendar-month.gif",
+                buttonImage: "/images/ImgIcon/calendar-month.png",
                 buttonImageOnly: true,
 	            onClose: function (selectedDate) {
 	            	$("#Edatepicker").datepicker("option", "minDate", selectedDate);
@@ -51,7 +51,7 @@
                 changeYear: true,
                 autoSize: true,
                 showOn: "both",
-                buttonImage: "/images/calendar-month.gif",
+                buttonImage: "/images/ImgIcon/calendar-month.png",
                 buttonImageOnly: true,
 	            onClose: function (selectedDate) {
 	            	$("#Sdatepicker").datepicker("option", "maxDate", selectedDate);
@@ -227,7 +227,7 @@
     }
     </script>
 </head>
-<body class="popup" style="margin-left: 0px; margin-top: 0px;">
+<body class="popup">
     <h1 style="height: 33px;"><spring:message code='ezApprovalG.t1774'/></h1>
     <div id="close">
         <ul>

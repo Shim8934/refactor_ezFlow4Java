@@ -106,6 +106,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
+import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -176,6 +177,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Resource(name = "EzEmailService")
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzAttitudeService ezAttitudeService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGServiceImpl.class);
 	
@@ -1591,6 +1595,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				logger.debug("fieldName = " + fieldName);
 				logger.debug("fieldValue = " + fieldValue);
 				
+				if (fieldName.equals("PROCESSDATE") && fieldValue.indexOf("0000") > -1) {
+					fieldValue = "";
+				}
 				/*if (useReceiveInfoName.equals("1")) {
 					if ((vo.getReceiptMemberName() == null || vo.getReceiptMemberName().equals("")) && !vo.getReceiptPointName().equals("") && fieldName.equals("RECEIPTPOINTNAME")) {
 						fieldValue += messageSource.getMessage("ezApprovalG.lhj18", locale);
@@ -7236,12 +7243,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						// 2018-06-18 황윤호. G버전 > 일괄결재 > 날짜 날인(sign필드 -> seumyungdate필드로) 이동
 						strSeumyungDate = signAdd + "seumyungdate" + tmps;
 						
-						doc.getElementById(strSign).html(lastCnt + "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						
 						// 2018-06-19 황윤호. G버전 > 일괄결재 > 시행문, 협조문은 서명 필드 제외
 						if (doc.getElementById(strSeumyungDate) != null) {	
 							// 2018-06-18 황윤호. G버전 > 일괄결재 > 날짜 날인(sign필드 -> seumyungdate필드로) 이동
 							doc.getElementById(strSeumyungDate).html(lastCnt2);
+							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
+						} else {
+							doc.getElementById(strSign).html(lastCnt + "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						}
 					} else {
 						int tmps = signCnt - refResult;
@@ -7249,11 +7258,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						// 2018-06-18 황윤호. G버전 > 일괄결재 > 날짜 날인(sign필드 -> seumyungdate필드로) 이동
 						strSeumyungDate = signAdd + "seumyungdate" + tmps;
 						
-						doc.getElementById(strSign).html(lastCnt + "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						// 2018-06-19 황윤호. G버전 > 일괄결재 > 시행문, 협조문은 서명 필드 제외
 						if (doc.getElementById(strSeumyungDate) != null) {	
 							// 2018-06-18 황윤호. G버전 > 일괄결재 > 날짜 날인(sign필드 -> seumyungdate필드로) 이동
 							doc.getElementById(strSeumyungDate).html(lastCnt2);
+							doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
+						} else {
+							doc.getElementById(strSign).html(lastCnt + "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						}
 					}
 					
@@ -7622,6 +7633,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if (aprStateSign.equals("011")) {
 						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfo("LAST_END_AFTER", "SUSIN", doc, docID, userID, formURL);
+							if (linkCheck) { //근태관리 연동양식 관련된 docId면 근태관리 연동양식 함수 태움.
+								ezAttitudeService.updateApprovalGConnInfo("1", userID, tempXmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent(), companyID, userInfo.getTenantId());
+							}
 						} else {
 							linkCheck = excuteInfo("MIDDLE_END_AFTER", "SUSIN", doc, docID, userID, formURL);
 						}
@@ -19459,17 +19473,36 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getNewID started");
 		
 		String rtnVal = "";
+		int whileCnt = 0;
+		boolean whileFlag = true;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		ezApprovalGDAO.aprGetNewID(map);
-		
-		rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
-		rtnVal = String.format("%020d", Integer.parseInt(rtnVal.trim()));
+		while (whileFlag) {
+			whileCnt++;
+			
+			ezApprovalGDAO.aprGetNewID(map);
+			
+			rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
+			rtnVal = String.format("%020d", Integer.parseInt(rtnVal.trim()));
+			
+			map.put("v_DOCID", rtnVal);
+			
+			if (ezApprovalGDAO.checkDocIdIsDuplicated(map) > 0) {
+				logger.debug("getNewID DocID duplicated Alert!! DocID : " + rtnVal + " whileCnt : " + whileCnt);
+				Thread.sleep(100);
+			} else {
+				whileFlag = false;
+			}
+			
+			if (whileCnt > 100) {
+				whileFlag = false;
+			}
+		}
 
-		logger.debug("getNewID newDocID : " + rtnVal);
+		logger.debug("getNewID newDocID : " + rtnVal + " whileCnt : " + whileCnt);
 		logger.debug("getNewID ended");
 
 		return rtnVal;
@@ -27016,7 +27049,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			result.append("<mTo>" + listXML.getElementsByTagName("MTO").item(0).getTextContent() + "</mTo>");
 
-			result.append("<Subject>" + listXML.getElementsByTagName("SUBJECT").item(0).getTextContent() + "</Subject>");
+			result.append("<Subject>" + listXML.getElementsByTagName("SUBJECT").item(0).getTextContent().replace("<", "&lt;").replace(">", "&gt;") + "</Subject>");
 			result.append("<xMailType>" + listXML.getElementsByTagName("XMAILTYPE").item(0).getTextContent() + "</xMailType>");
 			result.append("<xFromCode>" + listXML.getElementsByTagName("XFROMCODE").item(0).getTextContent() + "</xFromCode>");
 			result.append("<xToCode>" + listXML.getElementsByTagName("XTOCODE").item(0).getTextContent() + "</xToCode>");

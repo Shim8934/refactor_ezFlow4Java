@@ -835,15 +835,18 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 
 	@Override
-	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId) {
+	public List<ThemeInfoVO> getUserThemeList(String companyId, int tenantId, String userId, String lang) {
 		LOGGER.debug("getUserThemeList started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("userId", userId);
+		map.put("lang", lang);
+		
+		List<ThemeInfoVO> themeList = ezNewPortalDAO.getUserThemeList(map);
 		
 		LOGGER.debug("getUserThemeList ended.");
-		return ezNewPortalDAO.getUserThemeList(map);
+		return themeList;
 	}
 	
 
@@ -1203,7 +1206,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("themeId", themeId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("lang", lang);
+		if (lang != null) {
+			map.put("lang", Integer.parseInt(lang));
+		} else {
+			map.put("lang", 1);
+		}
+		
 		
 		themePortletList = ezNewPortalDAO.getThemePortletList(map);
 		LOGGER.debug("getThemePortletList ended.");
@@ -1342,15 +1350,19 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId) throws Exception {
-		LOGGER.debug("getThemes started. admin = " + admin + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	public List<ThemeInfoVO> getThemes(boolean admin, String companyId, int tenantId, String userId, String lang) throws Exception {
+		LOGGER.debug("getThemes started. admin = " + admin + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
 		
 		List<ThemeInfoVO> list = null;
 		
+		if (lang == null || lang.equals("")) {
+			lang = "1";
+		}
+		
 		if (admin) {
-			list = getCompanyThemes(companyId, tenantId);
+			list = getCompanyThemes(companyId, tenantId, lang);
 		} else {
-			list = getUserThemeList(companyId, tenantId, userId);
+			list = getUserThemeList(companyId, tenantId, userId, lang);
 		}
 		
 		LOGGER.debug("getThemes ended.");
@@ -1358,12 +1370,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return list;
 	}
 	
-	private List<ThemeInfoVO> getCompanyThemes(String companyId, int tenantId) throws Exception {
+	private List<ThemeInfoVO> getCompanyThemes(String companyId, int tenantId, String lang) throws Exception {
 		LOGGER.debug("getComapnyThemes started.");
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 		
 		List<ThemeInfoVO> list = ezNewPortalDAO.getCompanyThemes(map);
 		
@@ -1373,13 +1386,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getThemeInfo started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	public ThemeInfoVO getThemeInfo(int themeId, String companyId, int tenantId, String lang) throws Exception {
+		LOGGER.debug("getThemeInfo started. themeId = " + themeId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("themeId", themeId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 		
 		ThemeInfoVO vo = ezNewPortalDAO.getThemeInfo(map);
 		
@@ -1512,13 +1526,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId, String lang) throws Exception {
+		LOGGER.debug("getMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("menuId", menuId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 //		나중에 쪼갤수도 rest 호출할때 arg받아서 처리해야할수도잇을거같은데
 //		map.put("accessType", "Y","N","TOTAL")
 		map.put("accessType", "1");
@@ -1954,7 +1969,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				break;
 			}
 			String primaryLang = primaryLangList.get(i);
-			
+			LOGGER.debug("primaryLang = " + primaryLang);
 			cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLang);
 			
 			StringBuffer buffer = new StringBuffer();
@@ -2330,7 +2345,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		value = value.replaceAll(";", "");
 		value = value.replaceAll("%", "");
 		value = value.replaceAll("#", "");
-		value = value.replaceAll(":", "");
         value = value.replaceAll("<", "& lt;").replaceAll(">", "& gt;");
         value = value.replaceAll("\\(", "& #40;").replaceAll("\\)", "& #41;");
         value = value.replaceAll("'", "& #39;");

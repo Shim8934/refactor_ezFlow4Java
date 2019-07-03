@@ -134,7 +134,13 @@ public interface EzCommonService {
 
 	public void addFormVersion() throws Exception;
 
+	public void addMemoExtensionColumns() throws Exception;
+
 	public void addAddJobMasterProxy() throws Exception;
+
+	public void createAttitudeAnnual() throws Exception;
+
+	public void addThemeContentLang() throws Exception;
 
 }
 

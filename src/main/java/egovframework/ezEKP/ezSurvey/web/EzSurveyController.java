@@ -249,10 +249,12 @@ public class EzSurveyController extends EgovFileMngUtil {
 		JSONObject surveyInf = surveyRestService.getSurveyInformation(request, user.getId(), itemId, "normal");
 		
 		if (((Long)surveyInf.get("code")).intValue() == 0) {
-			JSONObject survey  = (JSONObject)surveyInf.get("survey");
-			JSONObject creator = (JSONObject)surveyInf.get("creator");
+			JSONObject survey        = (JSONObject)surveyInf.get("survey");
+			JSONObject creator       = (JSONObject)surveyInf.get("creator");
+			String     participation = (String)surveyInf.get("participation");
 			model.addAttribute("survey" , survey);
 			model.addAttribute("creator", creator);
+			model.addAttribute("participation", participation);
 		}
 		else {
 			int reasonCode = ((Long)surveyInf.get("code")).intValue();
@@ -396,6 +398,34 @@ public class EzSurveyController extends EgovFileMngUtil {
 		resultObj = surveyRestService.checkProcessingSurvey(request, user.getId(), itemId);
 		
 		logger.debug("jsonCheckItems end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/checkAnalysisPermission.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String jsonCheckAnalysisPermission (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonCheckAnalysisPermission start");
+
+		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
+		String itemId         = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		JSONObject result     = surveyRestService.getSurveyStatistic(request, user.getId(), itemId);
+		JSONObject resultObj  = new JSONObject();
+
+		int reasonCode  = ((Long)result.get("code")).intValue();
+		String adminYN  = ((String)result.get("adminYN"));
+		int messageCode = 0;
+		switch(reasonCode) {
+			case 1 : messageCode = 1; break; // parameter 부족합니다
+			case 2 : messageCode = 2; break; // 오류가 발생했습니다.
+			case 3 : messageCode = 3; break; // 권한이 없습니다.
+			case 6 : messageCode = 4; break; // 이 설문은 결과를 공개하지 않습니다.
+			case 7 : messageCode = 5; break; // 공개기간이 아닙니다.
+			default: messageCode = 0; break; // (결과분석)
+		}
+		if(adminYN.equals("Y")) messageCode = 0;
+		resultObj.put("code", messageCode);
+
+		logger.debug("jsonCheckAnalysisPermission end");
 		return resultObj.toString();
 	}
 	

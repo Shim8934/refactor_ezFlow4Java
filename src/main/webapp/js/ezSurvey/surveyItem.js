@@ -165,8 +165,8 @@ var SurveyItem = function() {
 		
 		//Initial page navigation
 		var naviMessages = {
-			next     : SurveyMessages.strNext,
-			previous : SurveyMessages.strPrev,
+//			next     : SurveyMessages.strNext,
+//			previous : SurveyMessages.strPrev,
 			item     : SurveyMessages.strItem,
 			total    : SurveyMessages.strTotal
 		};
@@ -228,15 +228,17 @@ var SurveyItem = function() {
 		listBttns[1].onclick    = function(e) {onMainSearch();};
 		listBttns[2].onclick    = function(e) {toggleSearchPanel();};
 		
-		var delBttn   = document.getElementById("deleteBttn");
-		var reuseBttn = document.getElementById("reuseBttn");
-		var srchBttn  = document.getElementById("searchBttn");
-		var modifyBttn  = document.getElementById("modifyBttn");
+		var delBttn      = document.getElementById("deleteBttn");
+		var reuseBttn    = document.getElementById("reuseBttn");
+		var analysisBttn = document.getElementById("analysisBttn");
+		var srchBttn     = document.getElementById("searchBttn");
+		var modifyBttn   = document.getElementById("modifyBttn");
 		
-		if (delBttn)    {delBttn.firstElementChild.onclick    = function(e) {deleteFileConfirm()  ;};}
-		if (reuseBttn)  {reuseBttn.firstElementChild.onclick  = function(e) {reuseSurveyConfirm() ;};}
-		if (srchBttn)   {srchBttn.firstElementChild.onclick   = function(e) {toggleSearchPanel()  ;};}
-		if (modifyBttn) {modifyBttn.firstElementChild.onclick = function(e) {modifySurveyConfirm();};}
+		if (delBttn)      {delBttn.firstElementChild.onclick      = function(e) {deleteFileConfirm()     ;};}
+		if (reuseBttn)    {reuseBttn.firstElementChild.onclick    = function(e) {reuseSurveyConfirm()    ;};}
+		if (analysisBttn) {analysisBttn.firstElementChild.onclick = function(e) {analysisSurveyConfirm() ;};}
+		if (srchBttn)     {srchBttn.firstElementChild.onclick     = function(e) {toggleSearchPanel()     ;};}
+		if (modifyBttn)   {modifyBttn.firstElementChild.onclick   = function(e) {modifySurveyConfirm()   ;};}
 		
 		$("#Sdatepicker").datepicker(datepickerSt);
 		$("#Edatepicker").datepicker(datepickerSt);
@@ -462,7 +464,7 @@ var SurveyItem = function() {
 				var tdElmt8    = document.createElement("td");
 				var tdElmt9    = document.createElement("td");
 				var tdElmt10   = document.createElement("td");
-				var tdElmt11   = document.createElement("td");
+//				var tdElmt11   = document.createElement("td");
 				var endDateStr = itemList[i]["endDate"].substring(0, 10);
 				var today      = new Date();
 				var todayStr   = getStringFormatForDate(today);
@@ -491,7 +493,7 @@ var SurveyItem = function() {
 				tdElmt3.textContent  = itemList[i]["title"];
 				tdElmt4.textContent  = itemList[i]["creatorName"];
 				tdElmt5.textContent  = itemList[i]["createDate"].substring(0, 10);
-				tdElmt6.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
+				tdElmt6.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser2    : SurveyMessages.strUser8;
 				tdElmt7.textContent  = itemList[i]["resultPublicFlag"] == 1 ? SurveyMessages.strPublic1  : SurveyMessages.strPublic2;
 				tdElmt8.textContent  = itemList[i]["anonymousFlag"]    == 0 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
 				tdElmt9.textContent  = endDateStr;
@@ -507,7 +509,7 @@ var SurveyItem = function() {
 						var statImg     = document.createElement("img");
 						statImg.src     = "/images/ezSurvey/survey_result.png";
 						statImg.onclick = function(e) {openSurveyStatistic(e);}
-						tdElmt11.appendChild(statImg);
+//						tdElmt11.appendChild(statImg);
 					}
 				}
 				else {
@@ -522,7 +524,7 @@ var SurveyItem = function() {
 							var statImg     = document.createElement("img");
 							statImg.src     = "/images/ezSurvey/survey_result.png";
 							statImg.onclick = function(e) {openSurveyStatistic(e);}
-							tdElmt11.appendChild(statImg);
+//							tdElmt11.appendChild(statImg);
 						}
 					}
 				}
@@ -567,7 +569,7 @@ var SurveyItem = function() {
 				tdElmt8.className    = "anoynmTh";
 				tdElmt9.className    = "endDateTh";
 				tdElmt10.className   = "statusTh";
-				tdElmt11.className   = "statisTh";
+//				tdElmt11.className   = "statisTh";
 				
 				trElmt.appendChild(tdElmt1);
 				trElmt.appendChild(tdElmt2);
@@ -579,7 +581,7 @@ var SurveyItem = function() {
 				trElmt.appendChild(tdElmt8);
 				trElmt.appendChild(tdElmt9);
 				trElmt.appendChild(tdElmt10);
-				trElmt.appendChild(tdElmt11);
+//				trElmt.appendChild(tdElmt11);
 				
 				tableDataElmt.appendChild(trElmt);
 			}
@@ -725,6 +727,33 @@ var SurveyItem = function() {
 		makeAjaxCall({}, "POST", "/ezSurvey/checkReusePermission.do", afterCheckReusePermission, null, true, itemArr[0]);
 	}
 	
+	function analysisSurveyConfirm() {
+		var itemArr = getSelectedItems();
+		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr) ; return;}
+		if (itemArr.length > 1)  {alert(SurveyMessages.strItemErr1); return;}
+
+		var url  = "/ezSurvey/checkAnalysisPermission.do";
+		var data = {surveyId : itemArr[0]};
+		makeAjaxCall(data, "GET", url, afterCheckAnalysisItem, null, true, itemArr[0]);
+	}
+	
+	function afterCheckAnalysisItem(data, itemId) {
+		var code = data.code;
+		switch(code) {
+			case 1 : alert(SurveyMessages.strParamErr) ; break;
+			case 2 : alert(SurveyMessages.strError)    ; break;
+			case 3 : alert(SurveyMessages.strPerm)     ; break;
+			case 4 : alert(SurveyMessages.strPrivate)  ; break;
+			case 5 : alert(SurveyMessages.strNpbPeriod); break;
+			case 0 : analysisPopup(itemId);
+		}
+	}
+
+	function analysisPopup(itemId) {
+		if(statisticWd) {statisticWd.close();}
+		statisticWd  = window.open("/ezSurvey/showStatisticInfo.do?surveyId=" + itemId, "statisticInfo", getOpenWindowfeature(780, 750));		
+	}
+	
 	function modifySurveyConfirm() {
 		var itemArr = getSelectedItems();
 		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr) ; return;}
@@ -800,6 +829,7 @@ var SurveyItem = function() {
 		var pSpanElmt1 = document.createElement("span");
 		var pSpanElmt2 = document.createElement("span");
 		
+		divChild.className   = "prevHeaderWwrapper";
 		pElmt.className      = "prevTitle";
 		spanElmt.className   = "preDate";
 		dlElmt.className     = "prevItem";
@@ -823,7 +853,8 @@ var SurveyItem = function() {
 		
 		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
 		var divElmt     = document.getElementById(divPrevId);
-		var noDataSpan  = divElmt.querySelector("span[class='notSelected']");
+//		var noDataSpan  = divElmt.querySelector("span[class='notSelected']");
+		var noDataSpan  = divElmt.querySelector("div[class='nodataDiv']");
 		
 		if (noDataSpan) {divElmt.removeChild(noDataSpan); generatePreviewElmt(divElmt);}
 		

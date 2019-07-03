@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +46,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
@@ -104,6 +106,9 @@ public class EzCircularController extends EgovFileMngUtil {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
 	
 	/**
 	 * 회람판 메인화면 호출 Method
@@ -1142,7 +1147,12 @@ public class EzCircularController extends EgovFileMngUtil {
 				strAttach.append("<DATA5><![CDATA[OK]]></DATA5>");
 
 				if (mode.equals("reuse")) {
-					ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
+					String fileName = attach.getFilePath().split("/")[2];
+					String originFile = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName; // 복사할 파일의 경로
+					String copyFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + fileName;
+					
+					Files.copy(new File(originFile).toPath(), new File(copyFilePath).toPath());
+					//ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
 				}
 			}
 
@@ -1422,15 +1432,19 @@ public class EzCircularController extends EgovFileMngUtil {
 	        	
 	        	model.addAttribute("attachList", aList);
 	        }
-	        
+	        //2018.08.08 캐비넷 추가
+	        String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+	        if (use_cabinet.equals("YES")) {
+				use_cabinet = cabinetAdminService.checkModuleActive("option", userInfo);
+			}
 	        // 2019-03-21 김민성 - secure coding(XSS)
 	        //result.setContent(commonUtil.stripScriptTags(result.getContent()));
-	
 			model.addAttribute("userInfo", userInfo);
 			model.addAttribute("result", result);
 			model.addAttribute("totalCommentCount", totalCommentCount);
 			model.addAttribute("myCommentCount", myCommentCount);
 			model.addAttribute("type", type);
+			model.addAttribute("useCabinet", use_cabinet);
 			model.addAttribute("deptID", companyInfo.getDepartment());
 			model.addAttribute("company", companyInfo.getCompany());
 		}

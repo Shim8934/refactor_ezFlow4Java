@@ -15,6 +15,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminFile.js')}"></script>
@@ -37,6 +38,10 @@
 			var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 			var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 			var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+			
+			capacity.setFolderIdProvider(function() {
+				return "<c:out value='${folderId}'/>";
+			});
 			
 			$(function () {
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
@@ -116,49 +121,6 @@
 		   	    }
 		   	}
 			
-			function loadCapacity() {
-				$.ajax({
-					type: "POST",
-					async: true,
-					url: "/ezWebFolder/getCapacity.do",
-					data: {
-						folderId: "<c:out value='${folderId}'/>"
-					},
-					success: function(data) {
-						var capacity = data.capacity;
-						var usedRate = Math.min(capacity.usedRate, 100);
-						var progressColor = null;
-						var progressElement = document.getElementById("capacity-bar");
-						
-						if (progressElement.style.width === usedRate + "%") {
-							return;
-						}
-						
-						switch (true) {
-						case usedRate >= 80:
-							progressColor = "#ff4040";
-							break;
-						case usedRate >= 70:
-							progressColor = "#ffb600";
-							break;
-						default:
-							progressColor = "#82b9f6";
-						}
-						
-						$("#capacity-wrapper").css("display", "inline");
-						$("#capacity-bar").css("backgroundColor", progressColor);
-						$("#capacity-bar").stop().animate({width: usedRate + "%"},
-							{
-								step: function(x) {
-									$("#capacity-percent").text(Math.round(x) + "%");
-								},
-								duration: 500
-							}
-						);
-					}
-				});
-			}
-			
 	        function leftFolderCPMV(functionType, folderList, toTargetId) {
 				closeAllPopup();
 				window.close();
@@ -169,11 +131,11 @@
 		<h1>
 			<spring:message code='ezWebFolder.t127'/>
 			<span id="mailBoxInfo"></span>
-			<div id="capacity-wrapper" style="display: none;">
-				<div class="progressbar" style="float: inherit; width: 150px; display: inline-block; vertical-align: middle; margin-left: 15px; border-radius: 15px;">
-					<div id="capacity-bar" class="proggress" style="background-color: #82b9f6; height: 15px; border-radius: 15px; width: 0px;"></div>
+			<div id="capacity-wrapper">
+				<div class="progressbar">
+					<div id="capacity-bar" class="proggress"></div>
 				</div>
-				<span id="capacity-percent" style="width: 15px; display: inline-block; text-align: right; border-radius: 15px;"></span>
+				<span id="capacity-percent"></span>
 			</div>
 		</h1>
 		<div id="companySelect" style="margin-left: 5px;">

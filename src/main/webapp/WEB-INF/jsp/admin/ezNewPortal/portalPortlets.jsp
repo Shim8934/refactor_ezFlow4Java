@@ -96,7 +96,8 @@
 		<select class="companySelect" id="ListCompany"></select>
 	</h1>
 		
-	<ul id="portletListContainer" class="col-container"></ul>
+	<ul id="portletListContainer" class="col-container" style="overflow: auto"></ul>
+
 	
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -407,7 +408,12 @@
 						portletNameListCnt = portletNameList.length;
 						
 						listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder + "' data2='" + menuId + "' data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;") + "'>";
-						listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[arrayLang].portletName) + "</div>";
+						
+						if (usePrimaryLangOnly == "YES") {
+							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[0].portletName) + "</div>";
+						} else {
+							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[arrayLang].portletName) + "</div>";
+						}
 						
 						if (!result[i].general) {
 							listHTML += "<a class='deletePortletBtn'>";
@@ -667,14 +673,14 @@
 				$("#portlet" + portletId).find(".portlet-header").css("border", "");
 				$("#portlet" + portletId).find(".portlet-header").css("color", "");
 				$("#portlet" + portletId).find(".portlet-header").find("span").attr("class", "spanOn");
-				var changedName = $("#portlet" + portletId).find(".portletName[data1='1']").val();
+				var changedName = $("#portlet" + portletId).find(".portletName[data1='" + lang + "']").val();
 				$("#portlet" + portletId).find(".portlet-header").find(".portlet_header_name").text(changedName);
 			} else {
 				$("#portlet" + portletId).find(".portlet-header").css("background-color", "rgb(244,244,244)");
 				$("#portlet" + portletId).find(".portlet-header").css("border", "1px solid rgb(231, 231, 231)");
 				$("#portlet" + portletId).find(".portlet-header").css("color", "rgb(177, 177, 177)");
 				$("#portlet" + portletId).find(".portlet-header").find("span").attr("class", "spanOff");
-				var changedName = $("#portlet" + portletId).find(".portletName[data1='1']").val();
+				var changedName = $("#portlet" + portletId).find(".portletName[data1='" + lang + "']").val();
 				$("#portlet" + portletId).find(".portlet-header").find(".portlet_header_name").text(changedName);
 			}
 			

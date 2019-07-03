@@ -104,14 +104,17 @@
     	</script>
 	</head>
 		<body style="margin-left: 10px; margin-right: 10px;">
+			<%-- 
 			<br/>	
-    		<span class="txt">▒ <spring:message code="ezMemo.t002" /></span>   
+    		<span class="txt">▒ <spring:message code="ezMemo.t002" /></span>
+    		 --%>   
     		<br />
     		<span class="txt">▒ <spring:message code="ezMemo.t003" /></span>
         	<br />
         	<span class="txt">▒ <spring:message code="ezMemo.t004" /></span>
         	<br />
         	<table class="content">
+            	<%-- 
             	<tr>
                 	<th><spring:message code="ezMemo.t005" /></th>
                 	<td> 
@@ -121,6 +124,7 @@
 						</select>
                    	</td>                   	
             	</tr>
+            	 --%>
             	<tr>
                 	<th><spring:message code="ezMemo.t006" /></th>
                 	<td>

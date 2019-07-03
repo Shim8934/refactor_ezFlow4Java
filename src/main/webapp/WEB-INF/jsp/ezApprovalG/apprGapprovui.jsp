@@ -753,7 +753,7 @@
 		        		// 1 : 결재, 4 : 전결, 16 : 대결
 			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
-			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			                    var rtnval;
 			                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
 			                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
@@ -925,6 +925,17 @@
 		                    getOpinionInfo(pDocID, "END");
 		                    SendMailToDrafter();
 		                    SendMailToReceiveDept_Approv();
+		    		        
+		                    //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 수신부서 완료
+		    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-script').getAttribute("code");
+		    		        	var script = document.createElement("script");
+		    					script.type = "text/javascript";
+		    					script.innerHTML = code;
+		    					document.querySelector("head").appendChild(script);
+		    					
+		    		        	attitude_annual_conn(pOrgDocID);
+		    		        }
 		                } else {
 		                	 CurrentAprType = pAprLineType;
 		                     CurrentAprUserID = pUserID;
@@ -1091,6 +1102,17 @@
 		                SendMailBansongtoDrafter();
 		                SendAckForExch("approval", "ING");
 		                process_AfterApprove("2");
+		                
+		                //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 반송
+	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+	    		        	var script = document.createElement("script");
+	    					script.type = "text/javascript";
+	    					script.innerHTML = code;
+	    					document.querySelector("head").appendChild(script);
+	    					
+	    		        	attitude_annual_conn(pDocID);
+	    		        }
 		            }
 		        } else if (ret == "cancel") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
@@ -1854,6 +1876,24 @@
 		        var SN = getNodeText(dataNodes[0]);
 		    	return SN;
 		    }
+			
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
 		    
 		    function checkAprState() {
 		    	editedFlag = false;
@@ -2030,8 +2070,11 @@
 		                  <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
 		                  <li id="btnConn" style="display:none"><span onClick="return btnConn_onclick()"><spring:message code='ezApprovalG.t63'/></span></li>
 		                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		                  <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
+						  <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
 		                  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
+		                  <c:if test="${useCabinet == 'YES'}">
+								<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+						  </c:if>
 		              </ul>
 				</div>
 			<div id="close"><ul><li><span id="btnClose" onClick="return btnClose_onclick()" ></span></li></ul></div>

@@ -339,7 +339,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 		
 		// 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가
-		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, user.getTenantId());
+		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, "", user.getRollInfo(), user.getTenantId());
 
 		logger.debug("getSubBoards ended");
 		return boardTree;
@@ -365,7 +365,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, user.getTenantId());
 		
-		String boardTree = ezBoardService.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, user.getTenantId());
+		String boardTree = ezBoardService.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, "", user.getRollInfo(), user.getTenantId());
 		if (boardTree.trim().equals("<NODES></NODES>")) {
 			model.addAttribute("hasSubBoard", 0);
 		} else {

@@ -41,6 +41,7 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -111,6 +112,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
 	
 	@Resource(name="EzResourceAdminService")
 	private EzResourceAdminService ezResourceAdminService;
@@ -736,6 +740,12 @@ public class EzResourceController extends EgovFileMngUtil {
 		strMakeDate = resBrd.getMakeDate();
 		strApproveFlag = resBrd.getApproveFlag();
 		
+		List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		for(int i=0; i<attachList.size(); i++) {
+			model.addAttribute("attachList"+(i+1), attachList.get(i));
+		}
+		
 		/*if (strApproveFlag.equals("1")) {
 			resp.getWriter().write("&nbsp;" + egovMessageSource.getMessage("ezQuestion.t161", locale));
 		} else {
@@ -1279,8 +1289,15 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("brdName") != null) {
 			brdName = req.getParameter("brdName");
 		}
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("resrc", userInfo);
+		}
 
 		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId(), userInfo.getDeptID());
+
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (req.getParameter("cmd") != null) {
@@ -1436,6 +1453,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("entryList", entryList);
 		model.addAttribute("checkSDT", checkSDT);
 		model.addAttribute("checkEDT", checkEDT);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		model.addAttribute("deptID", deptID);
 		
 		if (reFlag.equals("1")) {
@@ -2215,12 +2233,15 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 권한없는 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/nonResList.do", method = RequestMethod.GET)
-	public String nonResList(HttpServletRequest req, Model model) throws Exception {
+	public String nonResList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String accMessage = "";
 		if (req.getParameter("msg") != null && !req.getParameter("msg").equals("")) {
 			accMessage = req.getParameter("msg");
 		}
 		model.addAttribute("accMessage", commonUtil.cleanScriptValue(accMessage, "clean"));
+		model.addAttribute("userInfo", userInfo); 
 		return "/ezResource/resNonResList";
 	}
 	

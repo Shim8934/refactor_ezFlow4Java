@@ -590,6 +590,7 @@ function ListView() {
                     
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
+                    strName = "";
                 }
                 if (strColName == "IMPORTANCE") {
                 	var _HeaderSpanimg = document.createElement("IMG");
@@ -599,11 +600,12 @@ function ListView() {
                     
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
+                    strName = "";
                 }
                 if (strColName == "CONFIRMSTATUS") {
                 	var _HeaderSpanimg = document.createElement("IMG");
 //                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_unread.gif");
-                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-rd.gif");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-rd.png");
                     _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
                     
@@ -611,6 +613,7 @@ function ListView() {
                     objTd.appendChild(_HeaderSpanimg);
                     
                     objTd.style.textAlign = "center";
+                    strName = "";
                 }
                 if (strColName == "STATUS") {
                    	objTd.style.textAlign = "CENTER";
@@ -618,13 +621,14 @@ function ListView() {
                 
                 if (strColName == "COMMENTSTATUS") {
         			var _HeaderSpanimg = document.createElement("IMG");
-        			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_share2.gif");
+        			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_share2.png");
         			
         			_HeaderSpanimg.border = "0";
     				objTd.style.textAlign = "CENTER";
                   
 					_HeaderSpanimg.setAttribute("align", "absmiddle");
 					objTd.appendChild(_HeaderSpanimg);
+					strName = "";
                 }
                 
                 if (strColName == "CONFIRMDATE") {
@@ -694,6 +698,9 @@ function ListView() {
             objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
             oTbody.appendChild(objTr);
             var oText = document.createTextNode(strLang21);
+            if(typeof isSearchPage != "undefined" && isSearchPage){
+            	oText = document.createTextNode(strLang30);
+            }
             var objTd = document.createElement("TD");
             objTd.align = "center";
             objTd.colSpan = colCount;
@@ -835,7 +842,7 @@ function ListView() {
                     	strValue = "";
                     }*/
                     if (strValue == "comment" || strValue == "share") {
-                    	titleImage = '<img src="/images/ImgIcon/circular_share2.gif"/>';
+                    	titleImage = '<img src="/images/ImgIcon/circular_share2.png"/>';
                     	strValue = "";
                     } else if(strValue == "new") {
                     	strValue = "";
@@ -851,11 +858,11 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     if (strValue == '0') {
 //                    	titleImage = '<img src="/images/ImgIcon/circular_unread.gif" />';
-                    	titleImage = '<img src="/images/ImgIcon/msg-unrd.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/msg-unrd.png" />';
                     	strValue = "";
                     } else {
 //                    	titleImage = '<img src="/images/ImgIcon/circular_read.gif" />';
-                    	titleImage = '<img src="/images/ImgIcon/msg-rd.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/msg-rd.png" />';
                     	strValue = "";
                     }
                 }

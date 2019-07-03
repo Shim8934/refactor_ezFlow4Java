@@ -2752,7 +2752,7 @@
 						#v_LANGFILE# AS ATTACHTYPE, 
 						'file' AS ATTACHTYPECODE, 
 						ATTACHFILESN AS ATTACHSN, 
-         				ATTACHFILENAME AS ATTACHNAME, 
+         				DISPLAYNAME AS ATTACHNAME, 
          				ATTACHFILEHREF AS ATTACHHREF, 
          				ATTACHUSERNAME$v_STRLANG$  AS ATTACHUSERNAME, 
          				ATTACHUSERJOBTITLE$v_STRLANG$  AS ATTACHUSERJOBTITLE, 
@@ -4826,9 +4826,7 @@
 		    TBL_CABINET.TRANSDELAYFLAG,
 		    TBL_CABINET.TITLE,
 		    TBL_CABINET.TITLE2,
-		    <!--  단위업무가 아닌 기록물철 자체의 보존연한을 가져오게 수정 2019-03-22 임민석 -->
-		    TBL_CABINET.KEEPINGPERIOD,
-		    <!-- VTASKCLASS.KEEPINGPERIOD, -->
+		    NVL(TBL_CABINET.KEEPINGPERIOD, VTASKCLASS.KEEPINGPERIOD) KEEPINGPERIOD,
 		    VTASKCLASS.DISPLAYRECFLAG,
 		    VTASKCLASS.DISPLAYRECTRASTIME,
 		    VTASKCLASS.SC1,
@@ -11887,7 +11885,7 @@
 <!-- 	<procedure id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETDOCRECVSTATE(#v_DOCID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String">
+	<select id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String" remapResults="true">
 		SELECT 
 		   * 
 		FROM (
@@ -17961,7 +17959,7 @@
 			SET 
 				CabinetID = #v_CABINETID#
 			WHERE 
-				RECORDID = #v_rowID3#
+				CabinetID = $v_cabList$
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
@@ -29335,4 +29333,35 @@
 		  AND
 		  		proxy like '$id$:%'
 	  </select> 
+	  
+	<select id="EzApprovalG.checkDocIdIsDuplicated" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT
+			COUNT(DOCID)
+		FROM
+			(
+				SELECT
+					DOCID
+				FROM
+					TBL_APRDOCINFO
+				WHERE
+					DOCID = #v_DOCID#
+				AND
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #companyID#
+					
+			UNION ALL
+			
+				SELECT
+					DOCID
+				FROM
+					TBL_ENDAPRDOCINFO
+				WHERE
+					DOCID = #v_DOCID#
+				AND
+					TENANT_ID = #v_TENANTID#
+				AND
+					COMPANYID = #companyID#
+			)
+	</select>
 </sqlMap>

@@ -1031,36 +1031,30 @@
 	<select id="EzTaskDAO.selectCompletionOfRepTask" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL ( (SELECT COMPLETERATE
-						  	FROM
-								TBL_TASKINSTANCESTATUS
-							WHERE
-								TASKID = #taskID#
-							AND
-								STARTDATE = #date#
-							AND
-								TENANTID = #tenantID#
-				), 0)	
-			FROM DUAL
-	
+				COMPLETERATE
+			FROM
+				TBL_TASKINSTANCESTATUS
+			WHERE
+				TASKID = #taskID#
+			AND
+				STARTDATE = #date#
+			AND
+				TENANTID = #tenantID#
 		]]>
 	</select>
 
 	<select id="EzTaskDAO.getStatusOfRepTask" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL ( (SELECT TASKSTATUS
-						  	FROM
-								TBL_TASKINSTANCESTATUS
-							WHERE
-								TASKID = #taskID#
-							AND
-								STARTDATE = #date#
-							AND
-								TENANTID = #tenantID#
-				), 0)
-			FROM DUAL
-	
+				TASKSTATUS
+			FROM
+				TBL_TASKINSTANCESTATUS
+			WHERE
+				TASKID = #taskID#
+			AND
+				STARTDATE = #date#
+			AND
+				TENANTID = #tenantID#
 		]]>
 	</select>
 

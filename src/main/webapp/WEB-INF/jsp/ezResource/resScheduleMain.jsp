@@ -63,7 +63,7 @@
 	    /* 2018-10-01 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
 	    if(pAdminFg == "") {
 	    	var msg = "<spring:message code='ezResource.t58' />";
-	        window.location.href = "/ezResource/nonResList.do?msg=" + msg;
+	        window.location.href = "/ezResource/nonResList.do?msg=" + encodeURIComponent(msg);
 	    }
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";
@@ -530,13 +530,13 @@
 					$("#brdExplain").html(resbrdExc);
 					
 					if(result.attachList1 != null) {
-						document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURI(result.attachList1);
+						document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURIComponent(result.attachList1);
 						document.getElementById("preview1").width = 200;
 						document.getElementById("preview1").height = 200;
 					}
 					
 					if(result.attachList2 != null) {
-						document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURI(result.attachList2);
+						document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURIComponent(result.attachList2);
 						document.getElementById("preview2").width = 200;
 						document.getElementById("preview2").height = 200;
 					}

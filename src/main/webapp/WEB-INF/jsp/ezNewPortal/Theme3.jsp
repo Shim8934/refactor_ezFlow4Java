@@ -21,9 +21,6 @@
 		width : 36px;
 		height : 36px;
 	}
-	.mainbg {
-		min-width : 1280px;
-	}
 	
 	#userList li {
 		cursor : pointer;
@@ -49,7 +46,7 @@
 <body class="mainbg" id="theme3Body">
 	<div id="Center">
 	<div style="position:relative;">
-		<aside id="quickSide" style="width:0px">
+		<aside id="quickSide" style="width:0px;height:100%">
 			<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/theme3Img/linkBtn_open.png"></p>
 			<div class="aside_quick">
 				<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
@@ -376,7 +373,7 @@
 			}
 		});
 		
-		$(".portlet_area").disableSelection();
+		/* $(".portlet_area").disableSelection(); */
 		
 	});
 	

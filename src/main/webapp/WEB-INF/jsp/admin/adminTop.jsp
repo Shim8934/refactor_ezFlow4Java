@@ -102,10 +102,19 @@
 				    case "menu20":
 				        parent.frames["bottom"].location.href = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
 				        break;
-					//20120725 모바일 기기 관리자 메뉴 추가	end
+					//20120725 모바일 기기 관리자 메뉴 추가	end	
+					
+					// ezPMS 관리자페이지 추가
+				    case "menu21":
+				    	parent.frames["bottom"].location.href = "/admin/ezPMS/pmsMain.do";
+						break;
 				    //근태관리 관리자 메뉴 추가
 				    case "menu30":
 				    	parent.frames["bottom"].location.href = "/admin/ezAttitude/attitudeMain.do";
+				    	break;
+				    // 캐비넷 관리자 메뉴 추가
+				    case "menu40":
+				    	parent.frames["bottom"].location.href = "/admin/ezCabinet/cabinetAdminMain.do";
 				    	break;
 					// 메일관리
 					case "menu31":
@@ -194,8 +203,15 @@
 		      				<c:if test="${use_attitude == 'YES'}">
 		      					<li><span id="menu30" onClick="menu_change(690, event)"><spring:message code="ezAttitude.t1" /></span></li>
 		      				</c:if>
+		      				<%-- ezPMS --%>
+		      				<c:if test="${use_ezPMS == 'YES'}">
+		      				<li><span id="menu21" onClick="menu_change(690, event)"><spring:message code="ezPMS.t8" /></span></li>
+		      				</c:if>
 		      			</c:if>
-                    	
+						<%-- 캐비넷 --%>
+						<c:if test="${useCabinet == 'YES'}">
+							<li><span id="menu40" onClick="menu_change(690, event)"><spring:message code="ezCabinet.t154" /></span></li>
+						</c:if>
 		      			<%-- 시스템 --%>          
 		      			<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
 		      			<%-- 통계 --%>

@@ -376,7 +376,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 폐쇄한 커뮤니티 상세정보 수정 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/closeCom.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/closeCommunityInfo.do", method = RequestMethod.GET)
 	public String closeCommunityInfo(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		logger.debug("closeCommunityInfo started.");
 
@@ -483,8 +483,8 @@ public class EzCommunityAdminController {
 			String commName2  = clubVO.getC_ClubName2();
 			String sysopID    = clubVO.getC_SysopID();
 			
-			ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), egovMessageSource.getMessage("ezCommunity.khj01", userInfo.getLocale()), egovMessageSource.getMessage("ezCommunity.t38", userInfo.getLocale()), tenantId);
-			ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), tenantId);
+			ezCommunityAdminService.aspCommCloseAllDel(code, tenantId);
+			ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), egovMessageSource.getMessage("ezCommunity.khj01", userInfo.getLocale()), "1", tenantId);
 		}
 		
 		return "json";

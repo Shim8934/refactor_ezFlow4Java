@@ -17,12 +17,13 @@
 		cursor : pointer;
 	} 
 	
+	.notEmptySlider.noSliderUrl {
+		cursor : default;
+	}
+	
 	#myImg {
 		width : 36px;
 		height : 36px;
-	}
-	.mainbg {
-		min-width : 1280px;
 	}
 	
 	#userList li {
@@ -63,11 +64,14 @@
 	            	<c:when test="${not empty sliderList}">
 	            		<c:forEach items="${sliderList}" var="slider">
 		            		<c:choose>
+		            			<c:when test="${slider.url eq '' }">
+									<img src="${slider.imagePath}" class="notEmptySlider noSliderUrl" onclick="windowOpen('${slider.url}')" />
+		            			</c:when>
 		            			<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
-		            				<img src="${slider.imagePath}" class="notEmptySlider" onclick="window.open('${slider.url }')" />
+		            				<img src="${slider.imagePath}" class="notEmptySlider" onclick="windowOpen('${slider.url}')" />
 		            			</c:when>
 		           		 		<c:otherwise> 
-									<img src="${slider.imagePath}" class="notEmptySlider" onclick="window.open('http://${slider.url }')" />
+									<img src="${slider.imagePath}" class="notEmptySlider" onclick="windowOpen('${slider.url}')" />
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
@@ -220,7 +224,7 @@
             		<div id="nodata_NewBirth" style="">
             			<dl class="nodata">
 	            			<dt style="padding-top:33px"><img src="/images/kr/main/noData_sIcon.png"></dt>
-	            			<dd>"<spring:message code='ezNewPortal.t018' />"</dd>
+	            			<dd><spring:message code='ezNewPortal.t018' /></dd>
             			</dl>
             		</div>
 				</article>
@@ -498,7 +502,7 @@
 					$.ajax({
 						type : "GET",
 						dataType : "html",
-						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
+						data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 						url : portletUrl,
 						tryCount : 0,
 						retryLimit : 3,
@@ -630,7 +634,7 @@
 			}
 		});
 		
-		$(".portlet_area").disableSelection();
+		/* $(".portlet_area").disableSelection(); */
 
 		leftResize();
 	});
@@ -760,6 +764,16 @@
 					infoRight[index].style.marginLeft = "0px !important";
 					infoRight[index].style.width = "100%";
 				});
+			}
+		}
+	}
+	
+	var windowOpen = function(url) {
+		if (url != "") {
+			if (url.substring(0, 4) === 'http') {
+				window.open(url);
+			} else {
+				window.open("http://" + url);
 			}
 		}
 	}

@@ -83,12 +83,12 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	@Override
 	public void saveConfig(String companyLimit, String departmentLimit, String userLimit, String uploadLimit, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("companyLimit", companyLimit);
-		map.put("departmentLimit", departmentLimit);
-		map.put("userLimit", userLimit);
-		map.put("uploadLimit",   uploadLimit);
-		map.put("companyId",     companyId);
-		map.put("tenantId",      tenantId);
+		map.put("companyLimit", emptyToNull(companyLimit));
+		map.put("departmentLimit", emptyToNull(departmentLimit));
+		map.put("userLimit", emptyToNull(userLimit));
+		map.put("uploadLimit", emptyToNull(uploadLimit));
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
 
 		if (!companyId.equals("*")) {
 			checkExistCompany(map);
@@ -97,22 +97,37 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		ezWebFolderAdminDAO.saveConfig(map);
 	}
 
+	private String emptyToNull(String str) {
+		if (str == null) {
+			return null;
+		}
+
+		if (str.isEmpty()) {
+			return null;
+		}
+
+		return str;
+	}
+	
 	@Override
 	public WebfolderConfigVO getEveryCompanyConfig(int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId",  tenantId);
 
 		WebfolderConfigVO result = ezWebFolderAdminDAO.getEveryCompanyConfig(map);
-		
+
 		if (result == null) {
-			result = new WebfolderConfigVO();
-			result.setTenantId(tenantId);
-			result.setCompanyTotalLimit("0");
-			result.setDepartmentTotalLimit("0");
-			result.setUserTotalLimit("0");
-			result.setUploadLimit("0");
+			map.put("companyLimit", "1");
+			map.put("departmentLimit", "1");
+			map.put("userLimit", "1");
+			map.put("uploadLimit", "1");
+			map.put("companyId", "*");
+
+			ezWebFolderAdminDAO.saveConfig(map);
+
+			return ezWebFolderAdminDAO.getEveryCompanyConfig(map);
 		}
-		
+
 		return result;
 	}
 
@@ -126,13 +141,17 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		WebfolderConfigVO result = ezWebFolderAdminDAO.getWebfolderConfig(map);
 		
 		if (result == null) {
-			result = new WebfolderConfigVO();
-			result.setCompanyId(companyId);
-			result.setTenantId(tenantId);
-			result.setCompanyTotalLimit("0");
-			result.setDepartmentTotalLimit("0");
-			result.setUserTotalLimit("0");
-			result.setUploadLimit("0");
+			Map<String, Object> everyMap = new HashMap<>();
+			everyMap.put("companyLimit", "1");
+			everyMap.put("departmentLimit", "1");
+			everyMap.put("userLimit", "1");
+			everyMap.put("uploadLimit", "1");
+			everyMap.put("companyId", "*");
+			everyMap.put("tenantId", tenantId);
+
+			ezWebFolderAdminDAO.saveConfig(everyMap);
+
+			return ezWebFolderAdminDAO.getWebfolderConfig(map);
 		}
 		
 		return result;

@@ -840,21 +840,15 @@
 		                }
 		            }
 		            else {
-		            	var agent = navigator.userAgent.toLowerCase();
+		            	/* 2019-07-03 홍승비 - 포토/썸네일게시물 사진수정 시 팝업창 크기 조정 */
+						swidth = 460;
 		            	
-		            	if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
-		            		if (gubun != 4) {
-		            			swidth = 440;
-			               		sheight = 460;
-		            		} else {
-			            		swidth = 460;
-				                sheight = 380;
-		            		}
-		            	} else {
-		               		swidth = 460;
-		                	sheight = 380;
-		            	}
-		                
+						if (gubun == 3) { // 포토게시판 (메인이미지 사용 안함)
+							sheight = 360;
+						} else { // 썸네일게시판 (메인이미지 사용함)
+							sheight = 380;
+						}
+						
 			            pleft = (pwidth - swidth) / 2;
 			            ptop = (pheight - sheight) / 2;
 			            //2019.03.04 유은정 - 게시판 포틀릿 리스트 업데이트 되도록 수정
@@ -1555,7 +1549,24 @@
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
-			  	}
+				}
+				
+				function addRelatedCabinet() {
+					window.open("/ezCabinet/cabinetAddRelated.do?module=board", "addRelated", getOpenWindowfeature(480, 505));
+				}
+				
+				function getOpenWindowfeature(popUpW, popUpH) {
+					var heigth   = window.screen.availHeight;
+					var width    = window.screen.availWidth;
+					var left     = 0;
+					var top      = 0;
+					var pleftpos = parseInt(width) - popUpW;
+					heigth       = parseInt(heigth) - popUpH;
+					left         = pleftpos / 2;
+					top          = heigth / 2;
+					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+					return feature;
+				}
 			  	
 			    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
 			    function checkRefreshFlag () {
@@ -1570,7 +1581,6 @@
 			    		refreshFlag = "N";
 			    	}
 			    }
-			    
 		</script>
 	</head>
 	<body class="popup">
@@ -1612,6 +1622,9 @@
 		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.t1007'/></span></li>
 		        		</c:otherwise>
 		        	</c:choose>
+					<c:if test="${useCabinet == 'YES'}">
+						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+					</c:if>
 		        </ul>
 		      </div>
 		      <div id="close">

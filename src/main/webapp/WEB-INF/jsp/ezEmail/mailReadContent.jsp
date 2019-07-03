@@ -362,6 +362,12 @@
 		        	});
 		        }
 		        
+
+		        function goProjectDetails(projectId) {
+		        	parent.window.open("/ezPMS/getProjectDetails.do?projectId=" + projectId, "right");
+		        	parent.window.open("/ezPMS/pmsLeft.do?mode=mail", "left");
+		        }
+
 		     	// 전달, 회신 시 보낸 시간
 		        function sentDateView(msg) {
 					var sendDateStrApp = $(".content", parent.document).parent();

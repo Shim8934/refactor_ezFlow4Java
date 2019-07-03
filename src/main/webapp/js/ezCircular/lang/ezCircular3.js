@@ -27,3 +27,4 @@ var strLang26 = "作成者にコメントを書いてください。";
 var strLang27 = "コメントを書いてください。";
 var strLang28 = "選択した回覧がありません";
 var strLang29 = "/blank_jp.htm";
+var strLang30 = "検索結果がありません";

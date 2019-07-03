@@ -151,7 +151,7 @@
 								html += "<tr ondblclick=open_info('" + item.c_ClubNo + "')>";
 								html += "<td style='width: 35px;'>" + itemNum +"</td>";
 								html += "<td style='width: 105px;'>" + getCategorySpan(item.c_name) + "</td>";
-								html += "<td style='width: 43%;'>" + MakeXMLString(item.c_ClubName) +"</td>";
+								html += "<td style='width: 21%;'>" + MakeXMLString(item.c_ClubName) +"</td>";
 								
 								if (item.c_ClubConfirmType == "2") { //유형
 									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t13' /></td>";
@@ -395,7 +395,7 @@
 				setTimeout(function() {
 					if (confirm("<spring:message code = 'ezCommunity.t61' />")) {
 						$.ajax({
-							type : "POST",
+							type : "GET",
 							dataType : "json",
 							url : "/admin/ezCommunity/commAdmitOk.do",
 							async : false,
@@ -431,7 +431,7 @@
 				setTimeout(function() {
 					if (confirm("<spring:message code = 'ezCommunity.t63' />")) {
 						$.ajax({
-							type : "POST",
+							type : "GET",
 							dataType : "json",
 							url : "/admin/ezCommunity/commAdmitOk.do",
 							async : false,
@@ -464,7 +464,7 @@
 			function closeBtnClick(code) {
 				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
 					$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "json",
 						url : "/admin/ezCommunity/commCloseAll.do",
 						async : false,
@@ -610,7 +610,7 @@
 				<tr id="mainListHeaderTr">
 					<th style="width: 35px;"><spring:message code = 'ezCommunity.t32' /></th>
 					<th style="width: 105px;"><spring:message code = 'ezCommunity.t11' /></th>
-					<th style="width: 43%;"><spring:message code = 'ezCommunity.t9991' /></th>
+					<th style="width: 21%;"><spring:message code = 'ezCommunity.t9991' /></th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t65' /></th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t15' /></th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
