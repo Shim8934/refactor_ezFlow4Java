@@ -28,6 +28,7 @@
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
+		<div>&nbsp;*&nbsp;<spring:message code='ezNewPortal.garm08' /></div>
 		<div class="loginLogo" style="margin-top:30px">
 			<div class="logoInfo">
 				<div class='logoIconInfo'>
