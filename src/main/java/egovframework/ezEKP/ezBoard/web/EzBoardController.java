@@ -6383,6 +6383,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			
+			/* 2019-07-02 홍승비 - 사진 다운로드 시 원본 사진 저장(s_{...}는 썸네일용 이미지) */
+			filePath = filePath.replace("s_", "");
+			
 			if (photoViewList.get(k).getImageName().split("/").length > 1) {
 				fileName += photoViewList.get(k).getImageName().split("/")[3] + "|";
 				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + URLEncoder.encode(filePath, "UTF-8") + "&fileName=" + URLEncoder.encode((g_ImageUrl.split("/")[7]).replace("s_", ""), "UTF-8") +

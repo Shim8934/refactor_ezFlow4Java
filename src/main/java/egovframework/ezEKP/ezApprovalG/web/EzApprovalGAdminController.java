@@ -967,7 +967,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/reform/reformPreview";
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/reformPreviewContent.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/ezApprovalG/reformPreviewContent.do", method = RequestMethod.GET)
 	public String reformPreviewContent(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("reformPreviewContent started.");
 		

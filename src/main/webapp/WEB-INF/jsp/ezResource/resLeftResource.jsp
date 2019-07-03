@@ -130,6 +130,7 @@
                 		var brdID = TreeView.getvalue(nodeIdx, "DATA1");
                 		var brdNm = TreeView.getvalue(nodeIdx, "DATA2");
                 		var boardGubun = TreeView.getvalue(nodeIdx, "DATA7");
+                		document.getElementById(TreeView.gnodeid() + nodeIdx).className = "node_selected";
 		
         		        if (boardGubun == "1") {
                     		if ((!chkVal && i == 2) || (chkVal && i == 3)) {

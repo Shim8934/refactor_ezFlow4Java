@@ -1,7 +1,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -1957,41 +1957,42 @@ CREATE TABLE `search_index_board` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Temporary view structure for view `svtaskclass`
+-- Temporary table structure for view `svtaskclass`
 --
 
 DROP TABLE IF EXISTS `svtaskclass`;
 /*!50001 DROP VIEW IF EXISTS `svtaskclass`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `svtaskclass` AS SELECT 
- 1 AS `CATEGORYCODE`,
- 1 AS `CNAME`,
- 1 AS `CNAME2`,
- 1 AS `MCATEGORYCODE`,
- 1 AS `MCNAME`,
- 1 AS `MCNAME2`,
- 1 AS `SUBCATEGORYCODE`,
- 1 AS `SCNAME`,
- 1 AS `SCNAME2`,
- 1 AS `TASKCODE`,
- 1 AS `TASKNAME`,
- 1 AS `TASKNAME2`,
- 1 AS `KEEPINGPERIOD`,
- 1 AS `DISPLAYRECFLAG`,
- 1 AS `SPECIALCATALOGFLAG`,
- 1 AS `TEMPFLAG`,
- 1 AS `COMPANYID`,
- 1 AS `TENANT_ID`,
- 1 AS `PROCESSDEPTCODE`,
- 1 AS `PROCESSDEPTNAME`,
- 1 AS `PROCESSDEPTNAME2`,
- 1 AS `KEEPINGMETHOD`,
- 1 AS `KEEPINGPLACE`,
- 1 AS `DISPLAYRECTRASTIME`,
- 1 AS `ISPUBLIC`,
- 1 AS `ITEMSECURITY`,
- 1 AS `DELFLAG`*/;
+/*!50001 CREATE TABLE `svtaskclass` (
+  `CATEGORYCODE` tinyint NOT NULL,
+  `CNAME` tinyint NOT NULL,
+  `CNAME2` tinyint NOT NULL,
+  `MCATEGORYCODE` tinyint NOT NULL,
+  `MCNAME` tinyint NOT NULL,
+  `MCNAME2` tinyint NOT NULL,
+  `SUBCATEGORYCODE` tinyint NOT NULL,
+  `SCNAME` tinyint NOT NULL,
+  `SCNAME2` tinyint NOT NULL,
+  `TASKCODE` tinyint NOT NULL,
+  `TASKNAME` tinyint NOT NULL,
+  `TASKNAME2` tinyint NOT NULL,
+  `KEEPINGPERIOD` tinyint NOT NULL,
+  `DISPLAYRECFLAG` tinyint NOT NULL,
+  `SPECIALCATALOGFLAG` tinyint NOT NULL,
+  `TEMPFLAG` tinyint NOT NULL,
+  `COMPANYID` tinyint NOT NULL,
+  `TENANT_ID` tinyint NOT NULL,
+  `PROCESSDEPTCODE` tinyint NOT NULL,
+  `PROCESSDEPTNAME` tinyint NOT NULL,
+  `PROCESSDEPTNAME2` tinyint NOT NULL,
+  `KEEPINGMETHOD` tinyint NOT NULL,
+  `KEEPINGPLACE` tinyint NOT NULL,
+  `DISPLAYRECTRASTIME` tinyint NOT NULL,
+  `ISPUBLIC` tinyint NOT NULL,
+  `ITEMSECURITY` tinyint NOT NULL,
+  `DELFLAG` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -3736,6 +3737,63 @@ CREATE TABLE `tbl_board_item` (
   KEY `writedate1` (`WRITEDATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`ezEKP2017`@`%`*/ /*!50003 TRIGGER tbl_board_item_insert 
+AFTER INSERT ON TBL_BOARD_ITEM
+FOR EACH ROW
+INSERT INTO search_index_board(ITEMID, GUBUN, INSERTDATE, STATUS, TENANT_ID) 
+VALUES(NEW.ITEMID, 'I', now(), 'N', NEW.TENANT_ID ) */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`ezEKP2017`@`%`*/ /*!50003 TRIGGER tbl_board_item_update
+AFTER UPDATE ON TBL_BOARD_ITEM
+FOR EACH ROW
+INSERT INTO search_index_board(ITEMID, GUBUN, INSERTDATE, STATUS, tenant_id) 
+VALUES(NEW.ITEMID, 'U', now(), 'N', NEW.TENANT_ID ) */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`ezEKP2017`@`%`*/ /*!50003 TRIGGER tbl_board_item_delete 
+AFTER DELETE ON TBL_BOARD_ITEM
+FOR EACH ROW
+INSERT INTO search_index_board(ITEMID, GUBUN, INSERTDATE, STATUS, TENANT_ID) 
+VALUES(OLD.ITEMID, 'D', now(), 'N', OLD.TENANT_ID ) */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `tbl_board_item_attachments`
@@ -6003,6 +6061,81 @@ DROP TABLE IF EXISTS `tbl_endaprdocinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endaprdocinfo` (
+  `DOCID` varchar(80) NOT NULL,
+  `ORGDOCID` varchar(80) DEFAULT NULL,
+  `DOCTYPE` varchar(12) DEFAULT NULL,
+  `DOCSTATE` varchar(12) DEFAULT NULL,
+  `FUNCTIONTYPE` varchar(12) DEFAULT NULL,
+  `HREF` varchar(1020) DEFAULT NULL,
+  `DOCTITLE` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DOCNO` varchar(200) DEFAULT NULL,
+  `HASATTACHYN` varchar(4) DEFAULT NULL,
+  `HASOPINIONYN` varchar(4) DEFAULT NULL,
+  `STARTDATE` datetime DEFAULT NULL,
+  `ENDDATE` datetime DEFAULT NULL,
+  `WRITERID` varchar(400) DEFAULT NULL,
+  `WRITERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `WRITERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `WRITERDEPTID` varchar(400) DEFAULT NULL,
+  `WRITERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `FORMID` varchar(40) DEFAULT NULL,
+  `CONTAINERID` varchar(40) DEFAULT NULL,
+  `ISPUBLIC` varchar(4) DEFAULT NULL COMMENT '공개여부(Y/N)',
+  `WRITERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `WRITERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `WRITERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`ezEKP2017`@`%`*/ /*!50003 TRIGGER tbl_endpardocinfo_insert 
+AFTER INSERT ON TBL_ENDAPRDOCINFO
+FOR EACH ROW
+INSERT INTO search_index_approval(DOCID, GUBUN, INSERTDATE, STATUS, TENANT_ID, COMPANYID) 
+VALUES(NEW.DOCID, 'I', now(), 'N', NEW.TENANT_ID, NEW.COMPANYID ) */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`ezEKP2017`@`%`*/ /*!50003 TRIGGER tbl_endpardocinfo_delete 
+AFTER DELETE ON TBL_ENDAPRDOCINFO
+FOR EACH ROW
+INSERT INTO search_index_approval(DOCID, GUBUN, INSERTDATE, STATUS, TENANT_ID, COMPANYID) 
+VALUES(OLD.DOCID, 'D', now(), 'N', OLD.TENANT_ID, OLD.COMPANYID ) */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `tbl_endaprdocinfo_old`
+--
+
+DROP TABLE IF EXISTS `tbl_endaprdocinfo_old`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_endaprdocinfo_old` (
   `DOCID` varchar(80) NOT NULL,
   `ORGDOCID` varchar(80) DEFAULT NULL,
   `DOCTYPE` varchar(12) DEFAULT NULL,
@@ -10232,7 +10365,7 @@ CREATE TABLE `tbl_rgstbook_announcement_history` (
   `location` varchar(100) DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `deptid` varchar(80) DEFAULT NULL,
-  `deptname` varchar(120) DEFAULT NULL,
+  `deptname1` varchar(120) DEFAULT NULL,
   `deptname2` varchar(120) DEFAULT NULL,
   `manager` varchar(120) DEFAULT NULL,
   `create_id` varchar(80) NOT NULL,
@@ -10253,17 +10386,47 @@ CREATE TABLE `tbl_rgstbook_certificate` (
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   `company_id` varchar(50) NOT NULL,
-  `date` datetime DEFAULT NULL,
+  `cer_date` date DEFAULT NULL,
   `gubun` tinyint(4) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `number` int(11) DEFAULT NULL,
   `purpose` varchar(200) DEFAULT NULL,
   `deptid` varchar(80) DEFAULT NULL,
-  `deptname` varchar(120) DEFAULT NULL,
+  `deptname1` varchar(120) DEFAULT NULL,
   `deptname2` varchar(120) DEFAULT NULL,
   `manager` varchar(120) DEFAULT NULL,
   `create_id` varchar(80) NOT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `update_date` datetime DEFAULT NULL,
   PRIMARY KEY (`item_id`,`tenant_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_rgstbook_certificatet_history`
+--
+
+DROP TABLE IF EXISTS `tbl_rgstbook_certificatet_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_rgstbook_certificatet_history` (
+  `log_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `tenant_id` int(11) NOT NULL,
+  `company_id` varchar(50) NOT NULL,
+  `cer_date` datetime DEFAULT NULL,
+  `gubun` tinyint(4) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `number` int(11) DEFAULT NULL,
+  `purpose` varchar(200) DEFAULT NULL,
+  `deptid` varchar(80) DEFAULT NULL,
+  `deptname1` varchar(120) DEFAULT NULL,
+  `deptname2` varchar(120) DEFAULT NULL,
+  `manager` varchar(120) DEFAULT NULL,
+  `create_id` varchar(80) NOT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `update_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`log_id`,`item_id`,`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -13108,313 +13271,321 @@ CREATE TABLE `tbl_webfolder_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Temporary view structure for view `vaprdoingdoclist`
+-- Temporary table structure for view `vaprdoingdoclist`
 --
 
 DROP TABLE IF EXISTS `vaprdoingdoclist`;
 /*!50001 DROP VIEW IF EXISTS `vaprdoingdoclist`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vaprdoingdoclist` AS SELECT 
- 1 AS `DOCID`,
- 1 AS `FORMID`,
- 1 AS `ORGDOCID`,
- 1 AS `DOCTYPE`,
- 1 AS `DOCSTATE`,
- 1 AS `FUNCTIONTYPE`,
- 1 AS `HREF`,
- 1 AS `DOCTITLE`,
- 1 AS `DOCNO`,
- 1 AS `HASATTACHYN`,
- 1 AS `HASOPINIONYN`,
- 1 AS `STARTDATE`,
- 1 AS `ENDDATE`,
- 1 AS `WRITERID`,
- 1 AS `WRITERNAME`,
- 1 AS `WRITERJOBTITLE`,
- 1 AS `WRITERDEPTID`,
- 1 AS `WRITERDEPTNAME`,
- 1 AS `ISPUBLIC`,
- 1 AS `WRITERNAME2`,
- 1 AS `WRITERJOBTITLE2`,
- 1 AS `WRITERDEPTNAME2`,
- 1 AS `TENANT_ID`,
- 1 AS `COMPANYID`,
- 1 AS `APRMEMBERSN`,
- 1 AS `APRTYPE`,
- 1 AS `APRSTATE`,
- 1 AS `APRMEMBERID`,
- 1 AS `APRMEMBERNAME`,
- 1 AS `APRMEMBERNAME2`,
- 1 AS `APRMEMBERJOBTITLE`,
- 1 AS `APRMEMBERJOBTITLE2`,
- 1 AS `APRMEMBERDEPTID`,
- 1 AS `APRMEMBERDEPTNAME`,
- 1 AS `APRMEMBERDEPTNAME2`,
- 1 AS `RECEIVEDDATE`,
- 1 AS `FORMNAME`,
- 1 AS `FORMNAME2`,
- 1 AS `URGENTAPPROVAL`,
- 1 AS `companyName`,
- 1 AS `companyName2`*/;
+/*!50001 CREATE TABLE `vaprdoingdoclist` (
+  `DOCID` tinyint NOT NULL,
+  `FORMID` tinyint NOT NULL,
+  `ORGDOCID` tinyint NOT NULL,
+  `DOCTYPE` tinyint NOT NULL,
+  `DOCSTATE` tinyint NOT NULL,
+  `FUNCTIONTYPE` tinyint NOT NULL,
+  `HREF` tinyint NOT NULL,
+  `DOCTITLE` tinyint NOT NULL,
+  `DOCNO` tinyint NOT NULL,
+  `HASATTACHYN` tinyint NOT NULL,
+  `HASOPINIONYN` tinyint NOT NULL,
+  `STARTDATE` tinyint NOT NULL,
+  `ENDDATE` tinyint NOT NULL,
+  `WRITERID` tinyint NOT NULL,
+  `WRITERNAME` tinyint NOT NULL,
+  `WRITERJOBTITLE` tinyint NOT NULL,
+  `WRITERDEPTID` tinyint NOT NULL,
+  `WRITERDEPTNAME` tinyint NOT NULL,
+  `ISPUBLIC` tinyint NOT NULL,
+  `WRITERNAME2` tinyint NOT NULL,
+  `WRITERJOBTITLE2` tinyint NOT NULL,
+  `WRITERDEPTNAME2` tinyint NOT NULL,
+  `TENANT_ID` tinyint NOT NULL,
+  `COMPANYID` tinyint NOT NULL,
+  `APRMEMBERSN` tinyint NOT NULL,
+  `APRTYPE` tinyint NOT NULL,
+  `APRSTATE` tinyint NOT NULL,
+  `APRMEMBERID` tinyint NOT NULL,
+  `APRMEMBERNAME` tinyint NOT NULL,
+  `APRMEMBERNAME2` tinyint NOT NULL,
+  `APRMEMBERJOBTITLE` tinyint NOT NULL,
+  `APRMEMBERJOBTITLE2` tinyint NOT NULL,
+  `APRMEMBERDEPTID` tinyint NOT NULL,
+  `APRMEMBERDEPTNAME` tinyint NOT NULL,
+  `APRMEMBERDEPTNAME2` tinyint NOT NULL,
+  `RECEIVEDDATE` tinyint NOT NULL,
+  `FORMNAME` tinyint NOT NULL,
+  `FORMNAME2` tinyint NOT NULL,
+  `URGENTAPPROVAL` tinyint NOT NULL,
+  `companyName` tinyint NOT NULL,
+  `companyName2` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `vaprwilldoclist`
+-- Temporary table structure for view `vaprwilldoclist`
 --
 
 DROP TABLE IF EXISTS `vaprwilldoclist`;
 /*!50001 DROP VIEW IF EXISTS `vaprwilldoclist`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vaprwilldoclist` AS SELECT 
- 1 AS `DOCID`,
- 1 AS `FORMID`,
- 1 AS `ORGDOCID`,
- 1 AS `DOCTYPE`,
- 1 AS `DOCSTATE`,
- 1 AS `FUNCTIONTYPE`,
- 1 AS `HREF`,
- 1 AS `DOCTITLE`,
- 1 AS `DOCNO`,
- 1 AS `HASATTACHYN`,
- 1 AS `HASOPINIONYN`,
- 1 AS `STARTDATE`,
- 1 AS `ENDDATE`,
- 1 AS `WRITERID`,
- 1 AS `WRITERNAME`,
- 1 AS `WRITERJOBTITLE`,
- 1 AS `WRITERDEPTID`,
- 1 AS `WRITERDEPTNAME`,
- 1 AS `ISPUBLIC`,
- 1 AS `WRITERNAME2`,
- 1 AS `WRITERJOBTITLE2`,
- 1 AS `WRITERDEPTNAME2`,
- 1 AS `TENANT_ID`,
- 1 AS `COMPANYID`,
- 1 AS `APRMEMBERSN`,
- 1 AS `APRTYPE`,
- 1 AS `APRSTATE`,
- 1 AS `APRMEMBERID`,
- 1 AS `APRMEMBERNAME`,
- 1 AS `APRMEMBERNAME2`,
- 1 AS `APRMEMBERJOBTITLE`,
- 1 AS `APRMEMBERJOBTITLE2`,
- 1 AS `APRMEMBERDEPTID`,
- 1 AS `APRMEMBERDEPTNAME`,
- 1 AS `APRMEMBERDEPTNAME2`,
- 1 AS `FORMNAME`,
- 1 AS `FORMNAME2`,
- 1 AS `URGENTAPPROVAL`,
- 1 AS `companyName`,
- 1 AS `companyName2`*/;
+/*!50001 CREATE TABLE `vaprwilldoclist` (
+  `DOCID` tinyint NOT NULL,
+  `FORMID` tinyint NOT NULL,
+  `ORGDOCID` tinyint NOT NULL,
+  `DOCTYPE` tinyint NOT NULL,
+  `DOCSTATE` tinyint NOT NULL,
+  `FUNCTIONTYPE` tinyint NOT NULL,
+  `HREF` tinyint NOT NULL,
+  `DOCTITLE` tinyint NOT NULL,
+  `DOCNO` tinyint NOT NULL,
+  `HASATTACHYN` tinyint NOT NULL,
+  `HASOPINIONYN` tinyint NOT NULL,
+  `STARTDATE` tinyint NOT NULL,
+  `ENDDATE` tinyint NOT NULL,
+  `WRITERID` tinyint NOT NULL,
+  `WRITERNAME` tinyint NOT NULL,
+  `WRITERJOBTITLE` tinyint NOT NULL,
+  `WRITERDEPTID` tinyint NOT NULL,
+  `WRITERDEPTNAME` tinyint NOT NULL,
+  `ISPUBLIC` tinyint NOT NULL,
+  `WRITERNAME2` tinyint NOT NULL,
+  `WRITERJOBTITLE2` tinyint NOT NULL,
+  `WRITERDEPTNAME2` tinyint NOT NULL,
+  `TENANT_ID` tinyint NOT NULL,
+  `COMPANYID` tinyint NOT NULL,
+  `APRMEMBERSN` tinyint NOT NULL,
+  `APRTYPE` tinyint NOT NULL,
+  `APRSTATE` tinyint NOT NULL,
+  `APRMEMBERID` tinyint NOT NULL,
+  `APRMEMBERNAME` tinyint NOT NULL,
+  `APRMEMBERNAME2` tinyint NOT NULL,
+  `APRMEMBERJOBTITLE` tinyint NOT NULL,
+  `APRMEMBERJOBTITLE2` tinyint NOT NULL,
+  `APRMEMBERDEPTID` tinyint NOT NULL,
+  `APRMEMBERDEPTNAME` tinyint NOT NULL,
+  `APRMEMBERDEPTNAME2` tinyint NOT NULL,
+  `FORMNAME` tinyint NOT NULL,
+  `FORMNAME2` tinyint NOT NULL,
+  `URGENTAPPROVAL` tinyint NOT NULL,
+  `companyName` tinyint NOT NULL,
+  `companyName2` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `vendchamjodocinfo`
+-- Temporary table structure for view `vendchamjodocinfo`
 --
 
 DROP TABLE IF EXISTS `vendchamjodocinfo`;
 /*!50001 DROP VIEW IF EXISTS `vendchamjodocinfo`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vendchamjodocinfo` AS SELECT 
- 1 AS `DOCID`,
- 1 AS `FORMID`,
- 1 AS `ORGDOCID`,
- 1 AS `DOCTYPE`,
- 1 AS `DOCSTATE`,
- 1 AS `FUNCTIONTYPE`,
- 1 AS `HREF`,
- 1 AS `DOCTITLE`,
- 1 AS `DOCNO`,
- 1 AS `HASATTACHYN`,
- 1 AS `HASOPINIONYN`,
- 1 AS `STARTDATE`,
- 1 AS `ENDDATE`,
- 1 AS `WRITERID`,
- 1 AS `WRITERNAME`,
- 1 AS `WRITERJOBTITLE`,
- 1 AS `WRITERDEPTID`,
- 1 AS `WRITERDEPTNAME`,
- 1 AS `ISPUBLIC`,
- 1 AS `WRITERNAME2`,
- 1 AS `WRITERJOBTITLE2`,
- 1 AS `WRITERDEPTNAME2`,
- 1 AS `TENANT_ID`,
- 1 AS `COMPANYID`,
- 1 AS `APRMEMBERSN`,
- 1 AS `APRTYPE`,
- 1 AS `APRSTATE`,
- 1 AS `APRMEMBERID`,
- 1 AS `APRMEMBERNAME`,
- 1 AS `APRMEMBERNAME2`,
- 1 AS `APRMEMBERJOBTITLE`,
- 1 AS `APRMEMBERJOBTITLE2`,
- 1 AS `APRMEMBERDEPTID`,
- 1 AS `APRMEMBERDEPTNAME`,
- 1 AS `APRMEMBERDEPTNAME2`,
- 1 AS `RECEIVEDDATE`,
- 1 AS `FORMNAME`,
- 1 AS `FORMNAME2`,
- 1 AS `URGENTAPPROVAL`,
- 1 AS `companyName`,
- 1 AS `companyName2`*/;
+/*!50001 CREATE TABLE `vendchamjodocinfo` (
+  `DOCID` tinyint NOT NULL,
+  `FORMID` tinyint NOT NULL,
+  `ORGDOCID` tinyint NOT NULL,
+  `DOCTYPE` tinyint NOT NULL,
+  `DOCSTATE` tinyint NOT NULL,
+  `FUNCTIONTYPE` tinyint NOT NULL,
+  `HREF` tinyint NOT NULL,
+  `DOCTITLE` tinyint NOT NULL,
+  `DOCNO` tinyint NOT NULL,
+  `HASATTACHYN` tinyint NOT NULL,
+  `HASOPINIONYN` tinyint NOT NULL,
+  `STARTDATE` tinyint NOT NULL,
+  `ENDDATE` tinyint NOT NULL,
+  `WRITERID` tinyint NOT NULL,
+  `WRITERNAME` tinyint NOT NULL,
+  `WRITERJOBTITLE` tinyint NOT NULL,
+  `WRITERDEPTID` tinyint NOT NULL,
+  `WRITERDEPTNAME` tinyint NOT NULL,
+  `ISPUBLIC` tinyint NOT NULL,
+  `WRITERNAME2` tinyint NOT NULL,
+  `WRITERJOBTITLE2` tinyint NOT NULL,
+  `WRITERDEPTNAME2` tinyint NOT NULL,
+  `TENANT_ID` tinyint NOT NULL,
+  `COMPANYID` tinyint NOT NULL,
+  `APRMEMBERSN` tinyint NOT NULL,
+  `APRTYPE` tinyint NOT NULL,
+  `APRSTATE` tinyint NOT NULL,
+  `APRMEMBERID` tinyint NOT NULL,
+  `APRMEMBERNAME` tinyint NOT NULL,
+  `APRMEMBERNAME2` tinyint NOT NULL,
+  `APRMEMBERJOBTITLE` tinyint NOT NULL,
+  `APRMEMBERJOBTITLE2` tinyint NOT NULL,
+  `APRMEMBERDEPTID` tinyint NOT NULL,
+  `APRMEMBERDEPTNAME` tinyint NOT NULL,
+  `APRMEMBERDEPTNAME2` tinyint NOT NULL,
+  `RECEIVEDDATE` tinyint NOT NULL,
+  `FORMNAME` tinyint NOT NULL,
+  `FORMNAME2` tinyint NOT NULL,
+  `URGENTAPPROVAL` tinyint NOT NULL,
+  `companyName` tinyint NOT NULL,
+  `companyName2` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `vgongramaprdoingdoclist`
+-- Temporary table structure for view `vgongramaprdoingdoclist`
 --
 
 DROP TABLE IF EXISTS `vgongramaprdoingdoclist`;
 /*!50001 DROP VIEW IF EXISTS `vgongramaprdoingdoclist`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vgongramaprdoingdoclist` AS SELECT 
- 1 AS `DOCID`,
- 1 AS `FORMID`,
- 1 AS `ORGDOCID`,
- 1 AS `DOCTYPE`,
- 1 AS `DOCSTATE`,
- 1 AS `FUNCTIONTYPE`,
- 1 AS `HREF`,
- 1 AS `DOCTITLE`,
- 1 AS `DOCNO`,
- 1 AS `HASATTACHYN`,
- 1 AS `HASOPINIONYN`,
- 1 AS `STARTDATE`,
- 1 AS `ENDDATE`,
- 1 AS `WRITERID`,
- 1 AS `WRITERNAME`,
- 1 AS `WRITERJOBTITLE`,
- 1 AS `WRITERDEPTID`,
- 1 AS `WRITERDEPTNAME`,
- 1 AS `ISPUBLIC`,
- 1 AS `WRITERNAME2`,
- 1 AS `WRITERJOBTITLE2`,
- 1 AS `WRITERDEPTNAME2`,
- 1 AS `TENANT_ID`,
- 1 AS `COMPANYID`,
- 1 AS `APRMEMBERSN`,
- 1 AS `APRTYPE`,
- 1 AS `APRSTATE`,
- 1 AS `APRMEMBERID`,
- 1 AS `APRMEMBERNAME`,
- 1 AS `APRMEMBERNAME2`,
- 1 AS `APRMEMBERJOBTITLE`,
- 1 AS `APRMEMBERJOBTITLE2`,
- 1 AS `APRMEMBERDEPTID`,
- 1 AS `APRMEMBERDEPTNAME`,
- 1 AS `APRMEMBERDEPTNAME2`,
- 1 AS `RECEIVEDDATE`,
- 1 AS `FORMNAME`,
- 1 AS `FORMNAME2`,
- 1 AS `URGENTAPPROVAL`,
- 1 AS `companyName`,
- 1 AS `companyName2`*/;
+/*!50001 CREATE TABLE `vgongramaprdoingdoclist` (
+  `DOCID` tinyint NOT NULL,
+  `FORMID` tinyint NOT NULL,
+  `ORGDOCID` tinyint NOT NULL,
+  `DOCTYPE` tinyint NOT NULL,
+  `DOCSTATE` tinyint NOT NULL,
+  `FUNCTIONTYPE` tinyint NOT NULL,
+  `HREF` tinyint NOT NULL,
+  `DOCTITLE` tinyint NOT NULL,
+  `DOCNO` tinyint NOT NULL,
+  `HASATTACHYN` tinyint NOT NULL,
+  `HASOPINIONYN` tinyint NOT NULL,
+  `STARTDATE` tinyint NOT NULL,
+  `ENDDATE` tinyint NOT NULL,
+  `WRITERID` tinyint NOT NULL,
+  `WRITERNAME` tinyint NOT NULL,
+  `WRITERJOBTITLE` tinyint NOT NULL,
+  `WRITERDEPTID` tinyint NOT NULL,
+  `WRITERDEPTNAME` tinyint NOT NULL,
+  `ISPUBLIC` tinyint NOT NULL,
+  `WRITERNAME2` tinyint NOT NULL,
+  `WRITERJOBTITLE2` tinyint NOT NULL,
+  `WRITERDEPTNAME2` tinyint NOT NULL,
+  `TENANT_ID` tinyint NOT NULL,
+  `COMPANYID` tinyint NOT NULL,
+  `APRMEMBERSN` tinyint NOT NULL,
+  `APRTYPE` tinyint NOT NULL,
+  `APRSTATE` tinyint NOT NULL,
+  `APRMEMBERID` tinyint NOT NULL,
+  `APRMEMBERNAME` tinyint NOT NULL,
+  `APRMEMBERNAME2` tinyint NOT NULL,
+  `APRMEMBERJOBTITLE` tinyint NOT NULL,
+  `APRMEMBERJOBTITLE2` tinyint NOT NULL,
+  `APRMEMBERDEPTID` tinyint NOT NULL,
+  `APRMEMBERDEPTNAME` tinyint NOT NULL,
+  `APRMEMBERDEPTNAME2` tinyint NOT NULL,
+  `RECEIVEDDATE` tinyint NOT NULL,
+  `FORMNAME` tinyint NOT NULL,
+  `FORMNAME2` tinyint NOT NULL,
+  `URGENTAPPROVAL` tinyint NOT NULL,
+  `companyName` tinyint NOT NULL,
+  `companyName2` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `view_ezapprovalg`
+-- Temporary table structure for view `view_ezapprovalg`
 --
 
 DROP TABLE IF EXISTS `view_ezapprovalg`;
 /*!50001 DROP VIEW IF EXISTS `view_ezapprovalg`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `view_ezapprovalg` AS SELECT 
- 1 AS `docid`,
- 1 AS `docno`,
- 1 AS `doctitle`,
- 1 AS `writerdeptname`,
- 1 AS `writerdeptname2`,
- 1 AS `writername`,
- 1 AS `writername2`,
- 1 AS `StartDate`,
- 1 AS `EndDate`,
- 1 AS `hasattachyn`,
- 1 AS `ContentsPath`,
- 1 AS `href`,
- 1 AS `formid`,
- 1 AS `formname`,
- 1 AS `formname2`,
- 1 AS `containerid`,
- 1 AS `KeyWord`,
- 1 AS `WriterDeptID`,
- 1 AS `TENANT_ID`,
- 1 AS `COMPANYID`*/;
+/*!50001 CREATE TABLE `view_ezapprovalg` (
+  `docid` tinyint NOT NULL,
+  `docno` tinyint NOT NULL,
+  `doctitle` tinyint NOT NULL,
+  `writerdeptname` tinyint NOT NULL,
+  `writerdeptname2` tinyint NOT NULL,
+  `writername` tinyint NOT NULL,
+  `writername2` tinyint NOT NULL,
+  `StartDate` tinyint NOT NULL,
+  `EndDate` tinyint NOT NULL,
+  `hasattachyn` tinyint NOT NULL,
+  `ContentsPath` tinyint NOT NULL,
+  `href` tinyint NOT NULL,
+  `formid` tinyint NOT NULL,
+  `formname` tinyint NOT NULL,
+  `formname2` tinyint NOT NULL,
+  `containerid` tinyint NOT NULL,
+  `KeyWord` tinyint NOT NULL,
+  `WriterDeptID` tinyint NOT NULL,
+  `TENANT_ID` tinyint NOT NULL,
+  `COMPANYID` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `view_ezboardstd`
+-- Temporary table structure for view `view_ezboardstd`
 --
 
 DROP TABLE IF EXISTS `view_ezboardstd`;
 /*!50001 DROP VIEW IF EXISTS `view_ezboardstd`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `view_ezboardstd` AS SELECT 
- 1 AS `ITEMID`,
- 1 AS `BOARDNAME`,
- 1 AS `BOARDNAME2`,
- 1 AS `GUBUN`,
- 1 AS `title`,
- 1 AS `WRITERDEPTNAME`,
- 1 AS `WRITERNAME`,
- 1 AS `WRITEDATE`,
- 1 AS `ATTACHMENTS`,
- 1 AS `BOARDID`,
- 1 AS `WRITERID`,
- 1 AS `Herf`,
- 1 AS `CONTENTLOCATION`,
- 1 AS `WRITERDEPTID`,
- 1 AS `TENANT_ID`,
- 1 AS `COMPANYID`*/;
+/*!50001 CREATE TABLE `view_ezboardstd` (
+  `ITEMID` tinyint NOT NULL,
+  `BOARDNAME` tinyint NOT NULL,
+  `BOARDNAME2` tinyint NOT NULL,
+  `GUBUN` tinyint NOT NULL,
+  `title` tinyint NOT NULL,
+  `WRITERDEPTNAME` tinyint NOT NULL,
+  `WRITERNAME` tinyint NOT NULL,
+  `WRITEDATE` tinyint NOT NULL,
+  `ATTACHMENTS` tinyint NOT NULL,
+  `BOARDID` tinyint NOT NULL,
+  `WRITERID` tinyint NOT NULL,
+  `Herf` tinyint NOT NULL,
+  `CONTENTLOCATION` tinyint NOT NULL,
+  `WRITERDEPTID` tinyint NOT NULL,
+  `TENANT_ID` tinyint NOT NULL,
+  `COMPANYID` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
--- Temporary view structure for view `vtaskclass`
+-- Temporary table structure for view `vtaskclass`
 --
 
 DROP TABLE IF EXISTS `vtaskclass`;
 /*!50001 DROP VIEW IF EXISTS `vtaskclass`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE VIEW `vtaskclass` AS SELECT 
- 1 AS `CATEGORYCODE`,
- 1 AS `CNAME`,
- 1 AS `CNAME2`,
- 1 AS `MCATEGORYCODE`,
- 1 AS `MCNAME`,
- 1 AS `MCNAME2`,
- 1 AS `SUBCATEGORYCODE`,
- 1 AS `SCNAME`,
- 1 AS `SCNAME2`,
- 1 AS `TASKCODE`,
- 1 AS `TASKNAME`,
- 1 AS `TASKNAME2`,
- 1 AS `KEEPINGPERIOD`,
- 1 AS `DISPLAYRECFLAG`,
- 1 AS `SPECIALCATALOGFLAG`,
- 1 AS `SC1`,
- 1 AS `SC2`,
- 1 AS `SC3`,
- 1 AS `TEMPFLAG`,
- 1 AS `COMPANYID`,
- 1 AS `TENANT_ID`,
- 1 AS `PROCESSDEPTCODE`,
- 1 AS `PROCESSDEPTNAME`,
- 1 AS `PROCESSDEPTNAME2`,
- 1 AS `KEEPINGMETHOD`,
- 1 AS `KEEPINGPLACE`,
- 1 AS `DISPLAYRECTRASTIME`,
- 1 AS `DELFLAG`*/;
+/*!50001 CREATE TABLE `vtaskclass` (
+  `CATEGORYCODE` tinyint NOT NULL,
+  `CNAME` tinyint NOT NULL,
+  `CNAME2` tinyint NOT NULL,
+  `MCATEGORYCODE` tinyint NOT NULL,
+  `MCNAME` tinyint NOT NULL,
+  `MCNAME2` tinyint NOT NULL,
+  `SUBCATEGORYCODE` tinyint NOT NULL,
+  `SCNAME` tinyint NOT NULL,
+  `SCNAME2` tinyint NOT NULL,
+  `TASKCODE` tinyint NOT NULL,
+  `TASKNAME` tinyint NOT NULL,
+  `TASKNAME2` tinyint NOT NULL,
+  `KEEPINGPERIOD` tinyint NOT NULL,
+  `DISPLAYRECFLAG` tinyint NOT NULL,
+  `SPECIALCATALOGFLAG` tinyint NOT NULL,
+  `SC1` tinyint NOT NULL,
+  `SC2` tinyint NOT NULL,
+  `SC3` tinyint NOT NULL,
+  `TEMPFLAG` tinyint NOT NULL,
+  `COMPANYID` tinyint NOT NULL,
+  `TENANT_ID` tinyint NOT NULL,
+  `PROCESSDEPTCODE` tinyint NOT NULL,
+  `PROCESSDEPTNAME` tinyint NOT NULL,
+  `PROCESSDEPTNAME2` tinyint NOT NULL,
+  `KEEPINGMETHOD` tinyint NOT NULL,
+  `KEEPINGPLACE` tinyint NOT NULL,
+  `DISPLAYRECTRASTIME` tinyint NOT NULL,
+  `DELFLAG` tinyint NOT NULL
+) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
 
 --
 -- Final view structure for view `svtaskclass`
 --
 
+/*!50001 DROP TABLE IF EXISTS `svtaskclass`*/;
 /*!50001 DROP VIEW IF EXISTS `svtaskclass`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -13433,6 +13604,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `vaprdoingdoclist`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vaprdoingdoclist`*/;
 /*!50001 DROP VIEW IF EXISTS `vaprdoingdoclist`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -13451,6 +13623,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `vaprwilldoclist`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vaprwilldoclist`*/;
 /*!50001 DROP VIEW IF EXISTS `vaprwilldoclist`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -13469,6 +13642,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `vendchamjodocinfo`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vendchamjodocinfo`*/;
 /*!50001 DROP VIEW IF EXISTS `vendchamjodocinfo`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -13487,6 +13661,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `vgongramaprdoingdoclist`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vgongramaprdoingdoclist`*/;
 /*!50001 DROP VIEW IF EXISTS `vgongramaprdoingdoclist`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -13505,6 +13680,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `view_ezapprovalg`
 --
 
+/*!50001 DROP TABLE IF EXISTS `view_ezapprovalg`*/;
 /*!50001 DROP VIEW IF EXISTS `view_ezapprovalg`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -13523,6 +13699,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `view_ezboardstd`
 --
 
+/*!50001 DROP TABLE IF EXISTS `view_ezboardstd`*/;
 /*!50001 DROP VIEW IF EXISTS `view_ezboardstd`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -13541,6 +13718,7 @@ SET character_set_client = @saved_cs_client;
 -- Final view structure for view `vtaskclass`
 --
 
+/*!50001 DROP TABLE IF EXISTS `vtaskclass`*/;
 /*!50001 DROP VIEW IF EXISTS `vtaskclass`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;

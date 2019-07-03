@@ -18,6 +18,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -149,7 +151,7 @@ public class EzWebFolderGWController {
 
 		logger.debug("uploadLimit: {}, companyLimit: {}, departmentLimit: {}, userLimit: {}, companyId: {}, serverName: {}", uploadLimit, companyLimit, departmentLimit, userLimit, companyId, serverName);
 
-		if (containsNull(uploadLimit, companyLimit, departmentLimit, userLimit, serverName)) {
+		if (serverName == null || Stream.of(uploadLimit, companyLimit, departmentLimit, userLimit).allMatch(param -> param == null)) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
