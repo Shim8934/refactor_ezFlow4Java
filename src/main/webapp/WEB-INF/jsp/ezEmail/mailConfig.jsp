@@ -117,7 +117,7 @@
 	<body class="mainbody" style="min-width: 835px">
 		<c:choose>
 			<c:when test="${flag eq 'email'}">
-		    	<h1><spring:message code='ezEmail.t10010' /></h1>
+		    	<h1><spring:message code='ezEmail.t904' /></h1>
 		    </c:when>
 		    <c:otherwise>
 				<h1><spring:message code='ezAddress.hyh001' /></h1>
@@ -127,7 +127,7 @@
 		        <div class="portlet_tabpart01_top" id="tab1">
 		        	<c:choose>
 						<c:when test="${flag eq 'email'}">
-					    	<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t177' /></span></p>
+					    	<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 		                    <c:if test="${useOnlyInnerMail != 'YES'}">
 		                    <p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t238' /></span></p>
 		                    </c:if>
@@ -138,7 +138,7 @@
 		                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
 					    </c:when>
 					    <c:otherwise>
-							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t99000041' /></span></p>
+							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
 				    </c:choose>
 	            </div>

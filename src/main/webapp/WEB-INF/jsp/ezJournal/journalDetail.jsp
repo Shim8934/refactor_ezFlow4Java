@@ -108,10 +108,10 @@
 								<li><span onclick='journalModify()'> <spring:message code='ezJournal.t107' /></span></li>
 							</c:if>
 							<!-- 		        	조회자정보 -->
-							<li><span onclick='journalViewerList();'> <spring:message code='ezBoard.t1006' /></span></li>
+							<li><span onclick='journalViewerList();'> <spring:message code='ezJournal.t182' /></span></li>
 							<c:if test="${journal.mine eq 'yes' }">	
 								<!-- 		        	재사용 -->
-								<li><span onclick='journalReuse()'> <spring:message code='ezQuestion.t700' /></span></li>
+								<li><span onclick='journalReuse()'> <spring:message code='ezJournal.t181' /></span></li>
 								<!-- 	        		삭제 -->
 								<li><span class="icon16 popup_icon16_delete" onclick='journalDelete()'></span></li>
 							</c:if>
@@ -127,10 +127,6 @@
 								<li><span onclick='addRelatedCabinet()'><spring:message code='ezCabinet.t125' /></span></li>
 							</c:if>
 							<c:set var="userAgentInfo" value="${fn:toLowerCase(header['User-Agent'])}" />
-<%-- 							<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}"> --%>
-<!-- 									        		엑셀저장 -->
-<%-- 								<li><a onclick='convertToExcel(this);' href="download" target="_blank"><span> <spring:message code='ezJournal.t104' /></span></a></li> --%>
-<%-- 							</c:if> --%>
 						</ul>
 					</div>
 					<div id="close">
@@ -180,7 +176,7 @@
 						</tr>
 						<!-- 제목 -->
 						<tr>
-							<th><spring:message code='ezBoard.t323' /></th>
+							<th><spring:message code='ezJournal.t184' /></th>
 							<td width="100%" id="cTitle" style="WORD-WRAP: break-word; word-break: break-all; line-height: 16px;" colspan=3>
 								<div id="journalTitle" style="overflow-y: auto; vertical-align: middle">
 									<c:out value=" ${journal.journalTitle}" />
@@ -248,9 +244,9 @@
 							</div>
 						</td>
 						<td class="pos2" style="white-space: normal; overflow: hidden;">
-							<a class="imgbtn imgbck"><span style="width: 57px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a>
+							<a class="imgbtn imgbck"><span style="width: 57px;" onClick="attach_SelectAll()"><spring:message code='ezJournal.t106' /></span></a>
 							<br /> 
-							<a class="imgbtn imgbck"><span style="width: 57px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+							<a class="imgbtn imgbck"><span style="width: 57px;" onClick="attach_Download()"><spring:message code='ezJournal.t26' /></span></a>
 						</td>
 					</tr>
 				</table>

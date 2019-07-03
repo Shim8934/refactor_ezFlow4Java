@@ -24,6 +24,7 @@
 	<!-- module -->
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
@@ -86,6 +87,10 @@
 			
 			pagination.setPageChangeEventHandler(function() {
 				getFileList(folderId);
+			});
+			
+			capacity.setFolderIdProvider(function() {
+				return folderId;
 			});
 			
 			window.onresize();
@@ -251,7 +256,7 @@
 			 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
 				+ fileCnt +" </span>";
 			$("#listcount").val(result.listCount).prop("selected", true);
-			loadCapacity();
+			capacity.load();
 			scroll();
 		} 
 		
@@ -671,49 +676,6 @@
         	}
         }
         
-		function loadCapacity() {
-			$.ajax({
-				type: "POST",
-				async: true,
-				url: "/ezWebFolder/getCapacity.do",
-				data: {
-					folderId: folderId
-				},
-				success: function(data) {
-					var capacity = data.capacity;
-					var usedRate = Math.min(capacity.usedRate, 100);
-					var progressColor = null;
-					var progressElement = document.getElementById("capacity-bar");
-					
-					if (progressElement.style.width === usedRate + "%") {
-						return;
-					}
-					
-					switch (true) {
-					case usedRate >= 80:
-						progressColor = "#ff4040";
-						break;
-					case usedRate >= 70:
-						progressColor = "#ffb600";
-						break;
-					default:
-						progressColor = "#82b9f6";
-					}
-					
-					$("#capacity-wrapper").css("display", "inline");
-					$("#capacity-bar").css("backgroundColor", progressColor);
-					$("#capacity-bar").stop().animate({width: usedRate + "%"},
-						{
-							step: function(x) {
-								$("#capacity-percent").text(Math.round(x) + "%");
-							},
-							duration: 500
-						}
-					);
-				}
-			});
-		}
-        
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
@@ -730,11 +692,11 @@
 			</c:when>
 		</c:choose>
 		<span id="mailBoxInfo"></span>
-		<div id="capacity-wrapper" style="display: none;">
-			<div class="progressbar" style="float: inherit; width: 150px; display: inline-block; vertical-align: middle; margin-left: 15px; border-radius: 15px;">
-				<div id="capacity-bar" class="proggress" style="background-color: #82b9f6; height: 15px; border-radius: 15px; width: 0px;"></div>
+		<div id="capacity-wrapper">
+			<div class="progressbar">
+				<div id="capacity-bar" class="proggress"></div>
 			</div>
-			<span id="capacity-percent" style="width: 15px; display: inline-block; text-align: right; border-radius: 15px;"></span>
+			<span id="capacity-percent"></span>
 		</div>
 	</h1>
 	<div id="pageArea">

@@ -2322,7 +2322,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				break;
 			}
 			String primaryLang = primaryLangList.get(i);
-			
+			LOGGER.debug("primaryLang = " + primaryLang);
 			cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLang);
 			
 			StringBuffer buffer = new StringBuffer();

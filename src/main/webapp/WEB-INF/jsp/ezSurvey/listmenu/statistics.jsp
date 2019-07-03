@@ -187,7 +187,7 @@
 					var noDataImg = document.createElement("img");
 					noDataImg.src = "/images/ezSurvey/nodata.png";
 					childElmt1.appendChild(noDataImg);
-					childElmt2.textContent = "데이터가 없습니다";
+					childElmt2.textContent = SurveyMessages.strNoData;
 					childElmt1.className   = "no-data-img";
 					childElmt2.className   = "no-data-txt";
 					noDataElmt.className   = "no-data";
