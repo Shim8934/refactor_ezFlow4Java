@@ -1698,7 +1698,7 @@ public class EzNewPortalGWController {
 				primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			} else {
 				userInfo = commonUtil.getUserForGw(userId, serverName);
-				primary = userInfo.getPrimary();
+				primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 				tenantId = userInfo.getTenantId();
 				result.put("userCompany", userInfo.getCompanyID());
 				result.put("lang", userInfo.getLang());
