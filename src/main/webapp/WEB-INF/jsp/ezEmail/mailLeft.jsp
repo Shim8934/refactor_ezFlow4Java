@@ -271,7 +271,7 @@
                  	       "width" : percent + "%"
                  	   });                 	                   
                  	   //$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
-                 	   $("#usePer").text(percent+"%");
+                 	   $("#usePer").text(percent+"% " + "(" + useVolume + " / " + totalVolume + ")");
                  	   
                  	   //용량 체크(색깔로)
                  	   if (percent >= 80) {
