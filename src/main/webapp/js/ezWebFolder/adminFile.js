@@ -201,8 +201,8 @@ function search_Set(pPage) {
 					makePageSelPage();
 					renderData(result);
 					
-					if (window.loadCapacity) {
-						loadCapacity();
+					if (window.capacity) {
+						capacity.load();
 					}
 					break;
 				case 1:
