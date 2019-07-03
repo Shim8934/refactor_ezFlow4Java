@@ -137,7 +137,7 @@
 						 	if (result == "Y") {
 								for (var i = 0; i < itemIDs.length - 1 ;i++) {
 				                    xmlhttp = createXMLHttpRequest();
-				                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pDestBoardID + "&itemID=" + itemIDs[i], true);
+				                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
 				                    xmlhttp.send();
 				                    xmlhttp = null;
 								}
