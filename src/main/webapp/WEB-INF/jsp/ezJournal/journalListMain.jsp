@@ -1088,7 +1088,7 @@
 			</c:if>
 			<!-- 		  	읽음표시 -->
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li><span onClick="doViewJournal();"><spring:message code='ezJournal.t200' /></span></li>
+				<li><span onClick="doViewJournal();"><spring:message code='ezJournal.t58' /></span></li>
 			</c:if>
 			<!-- 		  	수정 -->
 			<c:if test="${listType eq 'temp' }">

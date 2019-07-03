@@ -187,13 +187,9 @@
 	    					"deptId" : deptId},
 	    			success : function(result) {
 	    				var str = "";
-	    				if (result.length > 0) {
-		    				$(result).each(function() {
-		    					str += "<option value=" + this.formId + ">" + this.formName + "</option>";
-		    				});
-	    				} else {
-	    					str += "<option><spring:message code='ezJournal.t134'/></option>";
-	    				}
+	    				$(result).each(function() {
+	    					str += "<option value=" + this.formId + ">" + this.formName + "</option>";
+	    				});
 	    				$("#optForm").html(str);
 	    			}
 	    		});

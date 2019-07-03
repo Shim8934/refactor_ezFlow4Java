@@ -127,10 +127,6 @@
 								<li><span onclick='addRelatedCabinet()'><spring:message code='ezCabinet.t125' /></span></li>
 							</c:if>
 							<c:set var="userAgentInfo" value="${fn:toLowerCase(header['User-Agent'])}" />
-<%-- 							<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}"> --%>
-<!-- 									        		엑셀저장 -->
-<%-- 								<li><a onclick='convertToExcel(this);' href="download" target="_blank"><span> <spring:message code='ezJournal.t104' /></span></a></li> --%>
-<%-- 							</c:if> --%>
 						</ul>
 					</div>
 					<div id="close">

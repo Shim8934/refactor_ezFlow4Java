@@ -282,7 +282,7 @@
 	   					var deptList = $("#authorDeptList tr").length;
 	   					var mineList = $("tr[mine]").length;
 	   					if(deptList - mineList == 0) {
-	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezJournal.t222"/></td></tr>');
+	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezJournal.t125"/></td></tr>');
 		   					$("#authorDeptList tr").each(function(){
 		   						if($(this).attr("mine") == 'Y'){
 		   							userDeptId = $(this).attr("targetId");
