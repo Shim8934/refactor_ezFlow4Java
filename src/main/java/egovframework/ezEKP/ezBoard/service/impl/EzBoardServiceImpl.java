@@ -3571,6 +3571,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String destItemID = "";
 		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
+		String useAppr = "N";
+		StringBuilder destItemIDStr = new StringBuilder();
+		StringBuilder resultStr = new StringBuilder();
+		
+		// 목표 게시판이 승인을 사용하는지 체크
+		BoardPropertyVO destBoardProp = getBoardProperty(destBoardID, userInfo.getTenantId());
+		if (destBoardProp != null && destBoardProp.getApprFlag() != null) {
+			useAppr = destBoardProp.getApprFlag();
+		}
 		
 		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 		
@@ -3660,6 +3669,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>M</GUBUN>");
 	        sb.append("<DOCCONTENT>" + commonUtil.cleanValue(boardListVO.getContent()) + "</DOCCONTENT>");
+	        
+	        if (useAppr.equals("Y")) {
+	        	sb.append("<APPRFLAG>N</APPRFLAG>");
+	        }
+	        
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -3667,11 +3681,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        
 	        if (result.equals("OK")) {
 	        	updateMoveItem(destItemID, orgItemID, userInfo.getTenantId());
+	        	destItemIDStr.append(destItemID).append(";");
+	        	resultStr.append(result).append("|");
 	        }
 		}
 
 		logger.debug("moveItem ended");
-		return result;
+		return destItemIDStr.toString() + resultStr.toString();
 	}
 
 	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception {
@@ -3892,6 +3908,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("copyFiles ended");
 	}
 
+	/* 2019-07-02 홍승비 - 게시물 복사 후 복사한 게시물의 ItemID를 문자열로 리턴하도록 수정 */
 	@Override
 	public String copyItem(String orgItemIDList, String orgBoardIDList, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("copyItem started");
@@ -3900,13 +3917,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String destItemID = "";
 		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
+		String useAppr = "N";
+		StringBuilder destItemIDStr = new StringBuilder();
+		StringBuilder resultStr = new StringBuilder();
+		
+		// 목표 게시판이 승인을 사용하는지 체크
+		BoardPropertyVO destBoardProp = getBoardProperty(destBoardID, userInfo.getTenantId());
+		if (destBoardProp != null && destBoardProp.getApprFlag() != null) {
+			useAppr = destBoardProp.getApprFlag();
+		}
 		
 		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
-			destItemID = "{" + UUID.randomUUID() + "}";		
+			destItemID = "{" + UUID.randomUUID() + "}";
 
 			BoardListVO boardLisitVO = getCopyItem(orgItemID, userInfo.getTenantId());
 			
@@ -3984,6 +4010,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>C</GUBUN>");
+	        
+	        if (useAppr.equals("Y")) {
+	        	sb.append("<APPRFLAG>N</APPRFLAG>");
+	        }
+	        
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -3991,11 +4022,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        
 	        if (result.equals("OK")) {
 	        	updateCopyItem(destItemID, userInfo.getTenantId());
+	        	destItemIDStr.append(destItemID).append(";");
+	        	resultStr.append(result).append("|");
 	        }
 		}
-
+		
 		logger.debug("copyItem ended");
-		return result;
+		return destItemIDStr.toString() + resultStr.toString();
 	}
 
 	//baonk added

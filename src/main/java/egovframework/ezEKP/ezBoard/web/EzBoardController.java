@@ -4841,9 +4841,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		orgBoardID = request.getParameter("orgBoardID");
 		destBoardID = request.getParameter("destBoardID");
 		result = ezBoardService.copyItem(orgItemIDList, orgBoardID, destBoardID, uploadFilePath, realPath, userInfo);
-
+		
+		/* 2019-07-02 홍승비 - 게시물 복사 후 복사한 게시물의 ItemID 리턴하도록 수정 */
 		logger.debug("boardCopyItem ended");
-		return "<RESULT>" + result + "</RESULT>";
+		return result;
 	}
 
 	/**
@@ -4897,8 +4898,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		result = ezBoardService.moveItem(orgItemIDList, orgBoardIDList, destBoardID, userInfo, uploadFilePath, realPath);
 
+		/* 2019-07-03 홍승비 - 게시물 이동 후 이동한 게시물의 ItemID 리턴하도록 수정 */
 		logger.debug("boardMoveItem ended");
-		return "<RESULT>" + result + "</RESULT>";
+		return result;
 	}
 
 	/**
@@ -8611,6 +8613,27 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("result in checkIfBoardGroupAdmin   ::   " + result);
 		logger.debug("checkIfBoardGroupAdmin ended");
 		return result;
+	}
+	
+	/**
+	 * 2019-07-02 홍승비 - 게시판의 승인 사용 여부를 리턴 (Y/N)
+	 * */
+	@RequestMapping(value = "/ezBoard/getBoardApprProperty.do")
+	@ResponseBody
+	public String getBoardApprProperty(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getBoardApprProperty started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String pBoardID = request.getParameter("boardID");
+		String useAppr = "N";
+		
+		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
+		if (boardProp != null && boardProp.getApprFlag() != null) {
+			useAppr = boardProp.getApprFlag();
+		}
+		
+		logger.debug("getBoardApprProperty ended.");
+		return useAppr;
 	}
 }
 

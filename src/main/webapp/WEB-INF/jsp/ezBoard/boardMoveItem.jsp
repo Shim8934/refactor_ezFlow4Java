@@ -107,18 +107,43 @@
 		        if (ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
 		        return false;
 		    }
+		    
 		    var rtnVal = "";
 		    function MoveItem(pDestBoardID) {
 		        var destItemIDList = "";
 		        xmlhttp.open("POST", "/ezBoard/moveItem.do?orgItemIDList=" + ItemIDList + "&orgBoardID=" + BoardIDList + "&destItemIDList=" + destItemIDList + "&destBoardID=" + pDestBoardID, false);
 		        xmlhttp.send();
-		        if (xmlhttp.responseText.indexOf("OK") > -1) {
+		        
+		        var returnItemIDStr = xmlhttp.responseText;
+		        if (returnItemIDStr != null && returnItemIDStr.indexOf("OK") > -1) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t126' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t126'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 					board_alertArguments[1] = window.close;
 // 		            alert("<spring:message code='ezBoard.t126'/>");
 		            rtnVal = "OK";
 // 		            window.close();
+		            
+			        /* 2019-07-02 홍승비 - 승인게시판에 게시물 복사, 이동 시에도 승인메일 보내도록 수정 */
+			        $.ajax({
+    					type : "GET",
+    					dataType : "text",
+    					async : true,
+    					url : "/ezBoard/getBoardApprProperty.do",
+    					data : {
+    						boardID : pDestBoardID
+						},
+    					success: function(result){
+    						var itemIDs = returnItemIDStr.split(";");
+						 	if (result == "Y") {
+								for (var i = 0; i < itemIDs.length - 1 ;i++) {
+				                    xmlhttp = createXMLHttpRequest();
+				                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pDestBoardID + "&itemID=" + itemIDs[i], true);
+				                    xmlhttp.send();
+				                    xmlhttp = null;
+								}
+							}
+    					}
+    				});
 		        } 
 		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
 		        	//var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t497' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t497'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
