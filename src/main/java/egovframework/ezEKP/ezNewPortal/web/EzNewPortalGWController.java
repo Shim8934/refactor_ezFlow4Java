@@ -274,7 +274,7 @@ public class EzNewPortalGWController {
 			
 			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
 			String useInternet = config.getProperty("config.useInternet");
-			
+			LOGGER.debug("useInternet=" + useInternet);
 			if (useInternet.equals("NO")) {
 				portletOrder.removeIf(vo -> (vo.getPortletId() == 14));
 			}
