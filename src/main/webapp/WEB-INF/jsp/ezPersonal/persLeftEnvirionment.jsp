@@ -240,12 +240,12 @@
 		        </h2>
 		        <ul class="lnbUL">
                		<c:if test="${isMailUsed == 'Y'}">
-                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="MailEnv" name="MailEnv" onClick="mail_Config()"><spring:message code='ezPersonal.t999900006' /></span></li>
+                       	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="MailEnv" name="MailEnv" onClick="mail_Config()"><spring:message code='ezEmail.t904' /></span></li>
                        	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="AddressEnv" name="AddressEnv" onClick="address_Config()"><spring:message code='ezAddress.hyh001' /></span></li>
                     </c:if>
                     <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}">
        					<c:if test="${isScheduleUsed == 'Y'}">
-                          	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezPersonal.t999900007' /></span></li>
+                          	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezSchedule.t00010' /></span></li>
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="TaskEnv" name="TaskEnv" onClick="Task_Config()"><spring:message code='ezTask.hyh001' /></span></li>
 	                   </c:if>
 	                    <c:if test="${packageType == 'standard'}">
@@ -254,10 +254,10 @@
 		                    </c:if>
 		                </c:if>
 		                <c:if test="${isBoardUsed == 'Y'}">    	
-                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)"><spring:message code='ezPersonal.t999900030' /></span></li>
+                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)"><spring:message code='ezBoard.t10010' /></span></li>
 	                    </c:if>
 	                    <c:if test="${isCircularUsed == 'Y'}">
-                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)"><spring:message code='ezPersonal.t999900031' /></span></li>
+                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)"><spring:message code='ezCircular.t17' /></span></li>
 	                    </c:if>
 	                    <c:if test="${isJournalUsed == 'Y'}">
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="journalEnv" onClick="Open_Func(this)"><spring:message code='ezJournal.t150' /></span></li>
