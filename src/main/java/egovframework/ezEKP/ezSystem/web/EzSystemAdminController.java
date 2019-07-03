@@ -46,12 +46,14 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -83,6 +85,9 @@ public class EzSystemAdminController {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	
 	@Resource
 	private EgovMessageSource egovMessageSource;
@@ -676,14 +681,36 @@ public class EzSystemAdminController {
 		
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", userInfo.getTenantId());
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		
+
+		model.addAttribute("useIPAccess", useIPAccess);
 		logger.debug("systemIPManager ended");
 		 
 		return "/ezSystem/systemIPManager";
+	}
+	
+	@RequestMapping(value="/ezSystem/systemIPCountryAccessList.do", method=RequestMethod.GET)
+	public String systemIPCountryAccessList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("systemIPCountryAccessList started");
+		
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String realPath = request.getSession().getServletContext().getRealPath("/");
+		List<CountryVO> countryList = ezSystemAdminService.getCountryList(userInfo.getLang(), realPath);
+		
+		model.addAttribute("countryList", countryList);
+		logger.debug("systemIPCountryAccessList ended");
+		 
+		return "/ezSystem/systemIPCountryAccessList";
 	}
 	
 	@RequestMapping(value="/ezSystem/systemIPBand.do", method=RequestMethod.GET)

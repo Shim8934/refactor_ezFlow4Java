@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -38,6 +40,7 @@ import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.DataForModulesEnum;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
@@ -58,6 +61,9 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+    private Properties config;
 	
 	@Override
 	public List<SysParamVO> getSysParam(int tenantID) throws Exception {	
@@ -701,5 +707,61 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		ezSystemAdminDAO.updateMenuChange(paramMap);
 		
 		logger.debug("updateNewPortalMenuByPackageType end.");
+	}
+	
+	/*
+	 * 국가 리스트
+	 */
+	@Override
+	public List<CountryVO> getCountryList(String userLang, String realPath)
+			throws Exception {
+		logger.debug("getCountryList started");
+		
+		List<CountryVO> countryList = new ArrayList<CountryVO>();
+		String countryIconFolder = "/images/countryIcon32/";
+		String countryQuestionIcon = countryIconFolder + "qm.png";
+		String lang = "";
+		
+		switch (userLang) {
+			case "1":
+				lang = "ko";
+				break;
+			case "3":
+				lang = "ja";
+				break;
+			default:
+				break;
+		}
+
+		String[] countries = Locale.getISOCountries();
+		logger.debug("countries Count=" + countries.length);
+		
+		for (String country : countries) {
+			Locale locale = new Locale(lang, country);
+
+			// 국기가 없으면 물음표 국기 표시
+			String printImage = countryQuestionIcon;
+			try {
+				String countryIconPath = countryIconFolder + country.toLowerCase() + ".png";
+				File f = new File(realPath + countryIconPath);
+				printImage = f.exists() ? countryIconPath : printImage; 
+				logger.debug("printImage=" + printImage);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			CountryVO countryVO = new CountryVO();
+			countryVO.setCountryCode(country); // 국가코드
+			countryVO.setImagePath(printImage); // 이미지 경로
+			countryVO.setCountryName(locale.getDisplayCountry(locale));
+			
+			countryList.add(countryVO);
+			
+			// logger.debug(countryVO.toString());
+		}
+		
+		
+		logger.debug("getCountryList ended");
+		return countryList;
 	}
 }

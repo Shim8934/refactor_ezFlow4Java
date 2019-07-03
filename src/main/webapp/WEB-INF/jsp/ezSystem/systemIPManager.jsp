@@ -11,8 +11,15 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
+			var useIPAccess = "${useIPAccess}";
 	    	
 	        window.onload = function () {
+	        	if (useIPAccess === "NO") {
+					document.getElementById("ipRadio0").checked = true;
+				} else {
+					document.getElementById("ipRadio1").checked = true;
+				}
+	        	
 	        	Tab_init_select(document.getElementById("tagsub1"));
 	        	Tab1_NewTabIni("tab1");
 	        };
@@ -78,6 +85,9 @@
 		            case "tagsub2":
 		            	document.getElementById("ipManager_ifrm").src = "/ezSystem/systemIPAccessList.do";
 		            	break;
+		            case "tagsub3":
+		            	document.getElementById("ipManager_ifrm").src = "/ezSystem/systemIPCountryAccessList.do";
+		            	break;
 		        }
 	        }
 	        
@@ -137,14 +147,33 @@
 	        }
 	    </script>
 	</head>
-	<body class="mainbody" style="height: 95%; overflow:hidden;">
-	    <h1><spring:message code='ezSystem.jje1' /></h1>
+	<body class="mainbody" style="height: 95%;">
+	    <h1><spring:message code='ezSystem.ksa02' /></h1>
+	    <span class="txt">▒ <spring:message code='ezSystem.jje6'/></span><br><br>
+		
+		<table class="content" style="width:600px;">
+			<tr>
+				<th rowspan="2" style="width: 60px;"><spring:message code='ezSystem.jje4'/></th>
+				<td>&nbsp;<label id="radioFalse"><input name="ipRadio" type="radio" id="ipRadio0"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezEmail.t99000009'/></span></label></td>
+		    </tr>
+		    <tr>
+				<td>&nbsp;<label id="radioTrue"><input name="ipRadio" type="radio" id="ipRadio1"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezBoard.t162'/></span></label></td>
+			</tr>
+		</table>
+		<div style="width:600px;">
+			<div class="btnpositionJsp">
+		    	<a id="btn1" class="imgbtn" onClick="saveBtn()"><span><spring:message code='main.sp09'/></span></a>
+		    	<a id="btn2" class="imgbtn" onClick="cancleBtn()"><span><spring:message code='main.t135'/></span></a>
+		    </div>
+		</div>
+	
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	        	<p><span id="tagsub1"><spring:message code='ezSystem.jje1' /></span></p>
-			    <p><span id="tagsub2"><spring:message code='ezSystem.jje2' /></span></p>
+			    <p><span id="tagsub3"><spring:message code='ezSystem.ksa01' /></span></p>
+			    <p><span id="tagsub2"><spring:message code='ezSystem.ksa03' /></span></p>
 	        </div>
 	    </div>
-	    <iframe id="ipManager_ifrm" style="width: 100%; height:780px;" frameborder="0"></iframe> 
+	    <iframe id="ipManager_ifrm" style="width: 100%; height:350px; max-height: 650px;" frameborder="0"></iframe> 
 	</body>
 </html>

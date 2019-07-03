@@ -25,12 +25,6 @@
 		}
 		
 		window.onload = function () {
-			if (useIPAccess === "NO") {
-				document.getElementById("ipRadio0").checked = true;
-			} else {
-				document.getElementById("ipRadio1").checked = true;
-			}
-			
 			if (rollInfo.indexOf("c=1") == -1) {
 				permission = false;
 				var btnList = $("body [id^=btn]");
@@ -336,25 +330,8 @@
 		
 	</script>
 </head>
-<body class="mainbody" style="overflow:hidden;" >
-	<br><span class="txt">▒ <spring:message code='ezSystem.jje6'/></span><br><br>
-	
-	<table class="content" style="width:600px;">
-		<tr>
-			<th rowspan="2" style="width: 60px;"><spring:message code='ezSystem.jje4'/></th>
-			<td>&nbsp;<label id="radioFalse"><input name="ipRadio" type="radio" id="ipRadio0"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezEmail.t99000009'/></span></label></td>
-	    </tr>
-	    <tr>
-			<td>&nbsp;<label id="radioTrue"><input name="ipRadio" type="radio" id="ipRadio1"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezBoard.t162'/></span></label></td>
-		</tr>
-	</table>
-	
-	<div style="width:600px;">
-		<div class="btnpositionJsp">
-	    	<a id="btn1" class="imgbtn" onClick="saveBtn()"><span><spring:message code='main.sp09'/></span></a>
-	    	<a id="btn2" class="imgbtn" onClick="cancleBtn()"><span><spring:message code='main.t135'/></span></a>
-	    </div>
-	</div> 
+<body class="mainbody" style="overflow:hidden; margin:0;" >
+	<br>
 	<div id="mainmenu">
 	    <ul class="on">
 	        <li class="important"><span id="btn3" onclick="ipBandEidtPopUp('add')"><spring:message code='ezBoard.t602'/></span></li>
