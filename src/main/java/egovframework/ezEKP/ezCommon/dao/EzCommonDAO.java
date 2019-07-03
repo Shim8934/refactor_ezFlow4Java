@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
@@ -780,4 +781,76 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertSurveyTenantConfig",map);
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<CompanyInfoVO> getAllCompanyIds() {
+		return (List<CompanyInfoVO>) list("EzCommonDAO.getAllCompanyIds");
+	}
+	
+	public void insertPortletInfo(Map<String, Object> map) {
+		String url = checkPortlet(map);
+
+		if (url == null) {
+			try {
+					insert("EzCommonDAO.insertPortlet",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private String checkPortlet(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkPortlet", map);
+	}
+	
+	public void insertRsPortletInfo(Map<String, Object> map) {
+		String companyId = checkPortletForComapny(map);
+
+		if (companyId == null) {
+			try {
+				logger.debug("insert resource portlet data");
+				insert("EzCommonDAO.insertPortletComp",map);
+				insert("EzCommonDAO.insertRsPortletName",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void insertWfPortletInfo(Map<String, Object> map) {
+		String companyId = checkPortletForComapny(map);
+		
+		if (companyId == null) {
+			try {
+				logger.debug("insert webfolder portlet data");
+				insert("EzCommonDAO.insertPortletComp",map);
+				insert("EzCommonDAO.insertWfPortletName",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void insertSvPortletInfo(Map<String, Object> map) {
+		String companyId = checkPortletForComapny(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("insert survey portlet data");
+				insert("EzCommonDAO.insertPortletComp",map);
+				insert("EzCommonDAO.insertSvPortletName",map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private String checkPortletForComapny(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkPortletForComapny", map);
+	}
+
+	
 }

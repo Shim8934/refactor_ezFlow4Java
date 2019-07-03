@@ -51,6 +51,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
@@ -1620,6 +1621,62 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("regdate", "2019-06-25 00:00:00");
 
 		ezCommonDAO.insertSurveyTenantConfig(map);
+	}
+
+	@Override
+	public void insertPortletInfo() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		int[] portletIds = {51, 70, 73};
+		
+		Map<String, Object> rsMap = new HashMap<String, Object>();
+		rsMap.put("portletId", portletIds[0]);
+		rsMap.put("menuId", 6);
+		rsMap.put("portletUrl", "/ezNewPortal/resourcePortlet.do");
+		rsMap.put("portletType", "G");
+		rsMap.put("defaultOrder", 21);
+		rsMap.put("portletUsed", 1);
+		rsMap.put("portletOrder", 21);
+		rsMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(rsMap);
+		
+		Map<String, Object> wfMap = new HashMap<String, Object>();
+		wfMap.put("portletId", portletIds[1]);
+		wfMap.put("menuId", 10);
+		wfMap.put("portletUrl", "/ezNewPortal/webFolderPortlet.do");
+		wfMap.put("portletType", "G");
+		wfMap.put("defaultOrder", 22);
+		wfMap.put("portletUsed", 1);
+		wfMap.put("portletOrder", 22);
+		wfMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(wfMap);
+		
+		Map<String, Object> svMap = new HashMap<String, Object>();
+		svMap.put("portletId", portletIds[2]);
+		svMap.put("menuId", 42);
+		svMap.put("portletUrl", "/ezNewPortal/surveyPortlet.do");
+		svMap.put("portletType", "G");
+		svMap.put("defaultOrder", 20);
+		svMap.put("portletUsed", 1);
+		svMap.put("portletOrder", 20);
+		svMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(svMap);
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				rsMap.put("companyId", company.getCompanyId());
+				rsMap.put("tenantId", company.getTenant_id());
+				ezCommonDAO.insertRsPortletInfo(rsMap); // 자원관리 포틀릿 유무 확인 후 insert
+				
+				wfMap.put("companyId", company.getCompanyId());
+				wfMap.put("tenantId", company.getTenant_id());
+				ezCommonDAO.insertWfPortletInfo(wfMap); // 웹폴더 포틀릿 유무 확인 후 insert
+				
+				svMap.put("companyId", company.getCompanyId());
+				svMap.put("tenantId", company.getTenant_id());
+				ezCommonDAO.insertSvPortletInfo(svMap); // 전자설문 포틀릿 유무 확인 후 insert
+				
+			}
+		}
 	}
 
 }

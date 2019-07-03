@@ -7,6 +7,7 @@
 	<typeAlias  alias="ApprovPWDVO" 				type="egovframework.ezEKP.ezCommon.vo.ApprovPWDVO"/>
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
+	<typeAlias  alias="CompanyInfoVO" 				type="egovframework.ezEKP.ezCommon.vo.CompanyInfoVO"/>
 	
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
@@ -1207,13 +1208,13 @@
 	</update>
 	
 	<select id="EzCommonDAO.checkSurveyTenantConfig" resultClass="String">
-		select
+		SELECT
 			property_value
-		from
+		FROM
 			tbl_tenant_config
-		where
+		WHERE
 			property_name = 'useSurvey'
-		and
+		AND
 			tenant_id = 0
 	</select>
 	
@@ -1222,6 +1223,78 @@
 			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 		VALUES
 			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regDate#, #configType#) 
+	</insert>
+	
+	<select id="EzCommonDAO.getAllCompanyIds" resultClass="CompanyInfoVO">
+		SELECT
+			DISTINCT(PHYSICALDELIVERYOFFICENAME) as companyId
+			, TENANT_ID as tenantId
+		FROM
+			TBL_USERMASTER
+		ORDER BY 
+			PHYSICALDELIVERYOFFICENAME
+	</select>
+	<select id="EzCommonDAO.checkPortlet" resultClass="String">
+		SELECT
+			PORTLET_URL
+		FROM
+			TBL_PORTAL_PORTLET
+		WHERE
+			PORTLET_ID = #portletId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertPortlet">
+		INSERT INTO TBL_PORTAL_PORTLET 
+			(PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER)
+		VALUES 
+			(#portletId#, #menuId#, #portletUrl#, #portletType#, #defaultOrder#)
+	</insert>
+	
+	<select id="EzCommonDAO.checkPortletForComapny" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_PORTAL_PORTLET_COMP
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			PORTLET_ID = #portletId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertPortletComp">
+		INSERT INTO TBL_PORTAL_PORTLET_COMP 
+			(COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
+		VALUES 
+			(#companyId#, #tenantId#, #portletId#, #menuId#, #portletUsed#, #portletOrder#, #boardId#)
+	</insert>
+	
+	<insert id="EzCommonDAO.insertRsPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '자원관리'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Resource'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, '設備管理')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertWfPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '개인폴더'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Personal Folder'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, 'Webフォルダ')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSvPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '전자설문'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Survey'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, '電子アンケート')
 	</insert>
 	
 </sqlMap>

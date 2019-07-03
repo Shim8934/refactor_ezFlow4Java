@@ -2910,9 +2910,9 @@
 	    		(18, 1, #companyID#, #tenantID#, '메모'),
 	    		(18, 2, #companyID#, #tenantID#, 'Memo'),
 	    		(18, 3, #companyID#, #tenantID#, 'メモ'),
-	    		(18, 1, #companyID#, #tenantID#, '전자설문'),
-	    		(18, 2, #companyID#, #tenantID#, 'Survey'),
-	    		(18, 3, #companyID#, #tenantID#, '電子アンケート')
+	    		(42, 1, #companyID#, #tenantID#, '전자설문'),
+	    		(42, 2, #companyID#, #tenantID#, 'Survey'),
+	    		(42, 3, #companyID#, #tenantID#, '電子アンケート')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I28" parameterClass="Map">
@@ -2937,7 +2937,10 @@
 	    		(#companyID#, #tenantID#, 34, 0, 1, 15, null),
 	    		(#companyID#, #tenantID#, 36, 0, 1, 16, null),
 	    		(#companyID#, #tenantID#, 47, 4, 1, 17, null),
-	    		(#companyID#, #tenantID#, 49, 0, 1, 18, null)
+	    		(#companyID#, #tenantID#, 49, 0, 1, 18, null),
+	    		(#companyID#, #tenantID#, 51, 6, 1, 21, null),
+	    		(#companyID#, #tenantID#, 70, 10, 1, 22, null),
+	    		(#companyID#, #tenantID#, 73, 42, 1, 20, null)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I29" parameterClass="Map">
@@ -2955,9 +2958,9 @@
 	    		(4, 15, 1, #tenantID#, #companyID#, '투표'),
 	    		(4, 15, 2, #tenantID#, #companyID#, 'Vote'),
 	    		(4, 15, 3, #tenantID#, #companyID#, '投票'),
-	    		(5, 14, 1, #tenantID#, #companyID#, '전자설문'),
-	    		(5, 14, 2, #tenantID#, #companyID#, 'Poll'),
-	    		(5, 14, 3, #tenantID#, #companyID#, '電子アンケート'),
+	    		(5, 14, 1, #tenantID#, #companyID#, '빠른 설문'),
+	    		(5, 14, 2, #tenantID#, #companyID#, 'Quick Poll'),
+	    		(5, 14, 3, #tenantID#, #companyID#, '簡単アンケート'),
 	    		(6, 2, 1, #tenantID#, #companyID#, '일정'),
 	    		(6, 2, 2, #tenantID#, #companyID#, 'Schedule'),
 	    		(6, 2, 3, #tenantID#, #companyID#, '日程'),
@@ -2997,9 +3000,15 @@
 	    		(49, 0, 1, #tenantID#, #companyID#, '카운트'),
 	    		(49, 0, 2, #tenantID#, #companyID#, 'Count'),
 	    		(49, 0, 3, #tenantID#, #companyID#, 'カウント'),
-	    		(49, 0, 1, #tenantID#, #companyID#, '전자설문'),
-	    		(49, 0, 2, #tenantID#, #companyID#, 'Survey'),
-	    		(49, 0, 3, #tenantID#, #companyID#, '電子アンケート')
+	    		(51, 6, 1, #tenantID#, #companyID#, '자원관리'),
+	    		(51, 6, 2, #tenantID#, #companyID#, 'Resource'),
+	    		(51, 6, 3, #tenantID#, #companyID#, '設備管理'),
+	    		(70, 10, 1, #tenantID#, #companyID#, '개인폴더'),
+	    		(70, 10, 2, #tenantID#, #companyID#, 'Personal Folder'),
+	    		(70, 10, 3, #tenantID#, #companyID#, 'Webフォルダ'),
+	    		(73, 42, 1, #tenantID#, #companyID#, '전자설문'),
+	    		(73, 42, 2, #tenantID#, #companyID#, 'Survey'),
+	    		(73, 42, 3, #tenantID#, #companyID#, '電子アンケート')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I30" parameterClass="Map">
@@ -3026,6 +3035,8 @@
 	    		(1, #tenantID#, #companyID#, 47, 1, 16, 4, 0),
 	    		(1, #tenantID#, #companyID#, 48, 1, 17, 4, 0),
 	    		(1, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
+	    		(1, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
+	    		(1, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
 	    		(1, #tenantID#, #companyID#, 73, 1, 20, 42, 0),
 	    		(2, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(2, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
@@ -3046,6 +3057,8 @@
 	    		(2, #tenantID#, #companyID#, 48, 1, 17, 4, 0),
 	    		(2, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
 	    		(2, #tenantID#, #companyID#, 73, 1, 20, 42, 0),
+	    		(2, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
+	    		(2, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
 	    		(3, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(3, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(3, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
@@ -3064,7 +3077,9 @@
 	    		(3, #tenantID#, #companyID#, 47, 1, 16, 4, 0),
 	    		(3, #tenantID#, #companyID#, 48, 1, 17, 4, 0),
 	    		(3, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
-	    		(3, #tenantID#, #companyID#, 73, 1, 20, 42, 0),
+	    		(3, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
+	    		(3, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
+	    		(3, #tenantID#, #companyID#, 73, 1, 20, 42, 0)
   		]]>
     </insert>
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">

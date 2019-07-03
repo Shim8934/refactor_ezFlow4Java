@@ -145,5 +145,7 @@ public interface EzCommonService {
 	public void insertSurveyTenantConfig() throws Exception;
 
 	public void addThemeContentLang() throws Exception;
+
+	public void insertPortletInfo() throws Exception;
 }
 
