@@ -1614,7 +1614,7 @@
 		       		        fileOpenFlagList = ret[28];
 		                	basis = ret[29];
 		                	reason = ret[30];
-		                	limitDate = [31];
+		                	limitDate = ret[31];
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
