@@ -966,41 +966,40 @@
 	
 	<select id="EzSurveyDAO.getNoAnsweredIngSurveyList" resultClass="Integer">
 		select
-			count(distinct(A.survey_id))
-		from
-		(	
-			select
-				P.survey_id, R.response_id as rspnId
-			from
-				tbl_survey_participant P
-			left outer join
-				tbl_survey S
-			on
-				S.survey_id = P.survey_id
-			left outer join
-				tbl_survey_respondent R
-			on
-				P.survey_id = R.survey_id
-			where
-				(
-					(P.user_id = 'shlee904' and P.user_type = 'user')
-					or
-					(P.user_id in
-					<iterate property="deptList" open="(" close=")" conjunction=",">
-						#deptList[]#
-					</iterate>
-							and
-						(P.user_type = 'dept' or P.user_type = 'comp')
-					)
+			count(distinct(P.survey_id))
+		from 
+			tbl_survey_participant P
+		inner join
+			tbl_survey S
+		on
+			P.survey_id = S.survey_id
+		where
+			(
+				(P.user_id = #userId# and P.user_type = 'user')
+				or 
+				(P.user_id in
+				<iterate property="deptList" open="(" close=")" conjunction=",">
+					#deptList[]#
+				</iterate>
+				and 
+				(P.user_type = 'dept' or P.user_type = 'comp')
 				)
-			<![CDATA[
-				and S.start_date <= #today# and S.end_date >= #today#
-			]]>
-		    and S.use_status = 1
-			and P.tenant_id = #tenantId# 
-			and P.company_id = #companyId#
-		) A
-		where rspnId is null
+			)
+		and 
+			P.survey_id not in (select 
+									survey_id 
+								from 
+									tbl_survey_respondent 
+								where 
+									user_id = #userId#)
+		and
+			P.tenant_id = #tenantId#
+		and 
+			P.company_id = #companyId#
+		<![CDATA[
+		and
+			S.start_date <= #today# and S.end_date >= #today#
+		]]>
 	</select>
 	
 </sqlMap>

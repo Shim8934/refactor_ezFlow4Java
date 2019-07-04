@@ -3915,7 +3915,7 @@ public class EzNewPortalGWController {
 			String deptId = info.getDeptId();
 			
 			// 메일, 결재, 일정, 전자설문, 회람판, 근태관리 권한이 있는지 확인
-			String useQuestion = "NO";
+//			String useQuestion = "NO";
 			String useSurvey = "NO";
 			String useCircular = "NO";
 			String useMail = "NO";
@@ -3924,14 +3924,14 @@ public class EzNewPortalGWController {
 
 			// 1. tenantConfig가 YES인지 -- 회람판(USE_CIRCULAR), 근태관리(USE_ATTITUDE),
 			// 전자설문(useQuestion)
-			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
+//			useQuestion = ezCommonService.getTenantConfig("useQuestion", info.getTenantId());
 			useSurvey = ezCommonService.getTenantConfig("useSurvey", info.getTenantId());
 			useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", info.getTenantId());
 			
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
-			if (useQuestion == null || useQuestion.equals("")) {
-				useQuestion = "NO";
-			}
+//			if (useQuestion == null || useQuestion.equals("")) {
+//				useQuestion = "NO";
+//			}
 			
 			if (useSurvey == null || useSurvey.equals("")) {
 				useSurvey = "NO";
@@ -3943,7 +3943,7 @@ public class EzNewPortalGWController {
 			
 			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 			
-			boolean isUseQuestionAuth = false;
+//			boolean isUseQuestionAuth = false;
 			boolean isUseSurveyAuth = false;
 			
 			for (MenuInfoVO mVO : menuList) {
@@ -3951,9 +3951,9 @@ public class EzNewPortalGWController {
 					useApproval = "YES";
 				} 
 				
-				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
-					isUseQuestionAuth = true;
-				}
+//				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
+//					isUseQuestionAuth = true;
+//				}
 				
 				if (mVO.getMenuId()==42 && useSurvey.equals("YES")) {
 					isUseSurveyAuth = true;
@@ -3968,11 +3968,11 @@ public class EzNewPortalGWController {
 				}
 			}
 			
-			if (isUseQuestionAuth) {
-				useQuestion = "YES";
-			} else {
-				useQuestion = "NO";
-			}
+//			if (isUseQuestionAuth) {
+//				useQuestion = "YES";
+//			} else {
+//				useQuestion = "NO";
+//			}
 			
 			if (isUseSurveyAuth) {
 				useSurvey = "YES";
@@ -4182,7 +4182,7 @@ public class EzNewPortalGWController {
 			}
 			
 			data.put("useCircular", useCircular);
-			data.put("useQuestion", useQuestion);
+//			data.put("useQuestion", useQuestion);
 			data.put("useSurvey", useSurvey);
 			data.put("useMail", useMail);
 			data.put("useApproval", useApproval);
