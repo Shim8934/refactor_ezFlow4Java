@@ -23,6 +23,7 @@
 		<!-- module -->
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
@@ -78,6 +79,14 @@
 				pagination.setPageChangeEventHandler(function() {
 					getFileList();
 				});
+				
+				capacity.setFolderIdProvider(function() {
+					return folderId;
+				});
+				
+				capacity.setOnLoadEventListener(function(data) {
+					$("#capacity-folder-type").text(progressSubject[data.type]);
+				})
 				
 				getFileList();
 				window.onresize();
@@ -303,7 +312,7 @@
 						renderList2(result.fileList);
 						setNamePath(result.folderPath, result.originalPath);
 						setMailBoxInfo(result.fldCnt, result.fileCnt);
-						loadCapacity();
+						capacity.load();
 					},
 					error : function(error) {
 						hideProgress();
@@ -1011,51 +1020,6 @@
 				refreshView();
 			}
 			
-			function loadCapacity() {
-				$.ajax({
-					type: "POST",
-					async: true,
-					url: "/ezWebFolder/getCapacity.do",
-					data: {
-						folderId: folderId
-					},
-					success: function(data) {
-						var capacity = data.capacity;
-						var usedRate = Math.min(capacity.usedRate, 100);
-						var progressColor = null;
-						var progressElement = document.getElementById("capacity-bar");
-						
-						$("#capacity-folder-type").text(progressSubject[capacity.type]);
-						
-						if (progressElement.style.width === usedRate + "%") {
-							return;
-						}
-						
-						switch (true) {
-						case usedRate >= 80:
-							progressColor = "#ff4040";
-							break;
-						case usedRate >= 70:
-							progressColor = "#ffb600";
-							break;
-						default:
-							progressColor = "#82b9f6";
-						}
-						
-						$("#capacity-wrapper").css("display", "inline");
-						$("#capacity-bar").css("backgroundColor", progressColor);
-						$("#capacity-bar").stop().animate({width: usedRate + "%"},
-							{
-								step: function(x) {
-									$("#capacity-percent").text(Math.round(x) + "%");
-								},
-								duration: 500
-							}
-						);
-					}
-				});
-			}
-			
 			function disableCapacity() {
 				$("#capacity-wrapper").css("display", "none");
 				$("#capacity-folder-type").text("");
@@ -1066,12 +1030,12 @@
 		<h1>
 			<spring:message code='ezWebFolder.t266'/>
 			<span id="mailBoxInfo"></span>
-			<div id="capacity-wrapper" style="display: none;">
-				<span id="capacity-folder-type" style="display: inline-block; margin-left: 15px;"></span>
-				<div class="progressbar" style="float: inherit; width: 150px; display: inline-block; vertical-align: middle; margin-left: 15px; border-radius: 15px;">
-					<div id="capacity-bar" class="proggress" style="background-color: #82b9f6; height: 15px; border-radius: 15px; width: 0px;"></div>
+			<div id="capacity-wrapper">
+				<span id="capacity-folder-type"></span>
+				<div class="progressbar">
+					<div id="capacity-bar" class="proggress"></div>
 				</div>
-				<span id="capacity-percent" style="width: 15px; display: inline-block; text-align: right; border-radius: 15px;"></span>
+				<span id="capacity-percent"></span>
 			</div>
 		</h1>
 		

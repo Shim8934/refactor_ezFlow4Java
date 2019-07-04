@@ -570,6 +570,7 @@ form{display:inline;margin:0}
     vertical-align: middle;
 }
 
+#menu select.disabled {background-color: #EEE;}
 
 #menu ul{margin:0; padding:0;}
 #menu ul.on{padding-left:0px;}

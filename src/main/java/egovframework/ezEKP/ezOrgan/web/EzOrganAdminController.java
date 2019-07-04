@@ -890,6 +890,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	        logger.debug("moveEntry result=" + result);
 		}
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
         
 		logger.debug("movDept ended.");
 		
@@ -1251,6 +1254,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
+		
 		logger.debug("movUser ended.");
 		
 		return result;
@@ -1439,6 +1445,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 			// dhlee - end
 		}		
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("delUser ended. result=" + result);
 		
@@ -2690,7 +2699,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 			}
 			// dhlee - end			
-		}		
+		}	
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("restoreRetireUser ended. result=" + result);
 		

@@ -108,7 +108,7 @@
 	        	<span class="sub_iconLNB tree_leftconfig" onClick="journalConfig()" title="<spring:message code='ezJournal.t53'/>"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="writejournal()">
-	        	<p class="btn_write01"><span class="sub_iconLNB tree_write" ></span>일지작성</p>
+	        	<p class="btn_write01"><span class="sub_iconLNB tree_write" ></span><spring:message code='ezJournal.t57'/></p>
 	        </div>
 	        <div class="journalListBox" style="overflow:hidden; padding-right: 0;">
 		        <h2 class="on" id="deptFolderH2">
