@@ -1297,4 +1297,13 @@
 			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, '電子アンケート')
 	</insert>
 	
+	<insert id="EzCommonDAO.insertRsPortalThemePortlet">
+		INSERT INTO TBL_PORTAL_THEME_PORTLET
+			(THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		VALUES
+			(1, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
+			(2, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
+			(3, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0)
+	</insert>
+	
 </sqlMap>

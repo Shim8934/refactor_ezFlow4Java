@@ -811,6 +811,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				logger.debug("insert resource portlet data");
 				insert("EzCommonDAO.insertPortletComp",map);
 				insert("EzCommonDAO.insertRsPortletName",map);
+				insert("EzCommonDAO.insertPortalThemePortlet",map);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -826,6 +827,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				logger.debug("insert webfolder portlet data");
 				insert("EzCommonDAO.insertPortletComp",map);
 				insert("EzCommonDAO.insertWfPortletName",map);
+				insert("EzCommonDAO.insertPortalThemePortlet",map);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -841,6 +843,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				logger.debug("insert survey portlet data");
 				insert("EzCommonDAO.insertPortletComp",map);
 				insert("EzCommonDAO.insertSvPortletName",map);
+				insert("EzCommonDAO.insertPortalThemePortlet",map);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
