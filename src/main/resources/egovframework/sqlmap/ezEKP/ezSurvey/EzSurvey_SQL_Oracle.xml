@@ -993,6 +993,8 @@
 								where 
 									user_id = #userId#)
 		and
+			S.use_status = 1
+		and
 			P.tenant_id = #tenantId#
 		and 
 			P.company_id = #companyId#
