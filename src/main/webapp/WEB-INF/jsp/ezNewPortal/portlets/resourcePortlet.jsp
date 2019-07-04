@@ -31,7 +31,6 @@
 		<IMG align="absmiddle" border="0" height="16" id="img_StartTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative; display:none;" width="16">
 
 
-<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 <script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>

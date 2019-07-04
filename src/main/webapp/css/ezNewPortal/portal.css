@@ -1233,6 +1233,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index
 .resources_portlet .portlet_title .portletText{ width:34%;}
 .resources_portlet .resources_calendal{ margin:0px; padding:7px 10px 0px 10px; float:right; overflow:hidden; border-left:1px solid #e7e7e7; height:45px;}
 .resources_portlet .resources_calendal .DatePicker_class{ height:30px; margin:0px 0px 0px 0px; width:100px; text-align:center; vertical-align:top;}
+.resources_portlet input {box-sizing: border-box; border: 1px solid #dedede; font-family: 'malgun gothic', 'arial', 'verdana'; font-size: 12px; color: #393939; text-decoration: none; outline: none;}
 .resources_portlet .resources_calendal img{ margin:-19px 0px 0px 0px; padding:0px 0px 0px 0px; cursor:pointer;}
 .resources_portlet .resources_setting{ margin:0px; padding:0px; float:right; cursor:pointer;}
 
