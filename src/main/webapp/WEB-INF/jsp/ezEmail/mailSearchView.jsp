@@ -41,7 +41,8 @@
 		    var keywordFromList = "<c:out value='${keywordFromList}'/>";
 			var searchCheck = "<c:out value='${searchCheck}'/>";
 			var searchFromList = "<c:out value='${searchFromList}'/>";
-		    
+			var searchCArray = new Array();
+			var searchKArray = new Array();
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -142,30 +143,72 @@
 		       		setTimeout(set_searchKey, 1000);
 		    	}
 		        
-		        document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 300) + "px";
+		        if($("#moreSearch").css("display") == "none"){   
+			    	document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 359) + "px";
+				} else {
+				    if (document.documentElement.clientWidth < 837) {
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 418) + "px";
+					} else {
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 391) + "px";
+					}
+				}
+				
 		        makePageSelPage();
 		    }
 		    
 		    window.onresize = function () {
-		    	document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 300) + "px";
+		    	if($("#moreSearch").css("display") == "none"){   
+			    	document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 359) + "px";
+				} else {
+					if (document.documentElement.clientWidth < 837) {
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 418) + "px";
+					} else {
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 391) + "px";
+					}
+				}
 		    }
 		    
 		    function search_keypress(evt)
 			{	
-		        var curevent = (typeof event == 'undefined' ? evt : event)
+		        var curevent = (typeof event == 'undefined' ? evt  : event)
 		        if (curevent.keyCode == "13") {
 					set_searchKey();
 		        }
 			}
 		    function set_searchKey() {
-		    	if (TrimText(prekeyword.value) == null || TrimText(prekeyword.value) == "") {
-		    		alert(strLang254);
-		            return;
+		    	searchCArray = [];
+		    	searchKArray = [];
+		    	if (!TrimText(ALL.value)) {
+		    		if( $("#moreSearch").css("display") != "none"){
+			    		if (!TrimText(prekeywordDetail1.value) && !TrimText(prekeywordDetail2.value) && !TrimText(prekeywordDetail3.value) ) {
+				    		alert(strLang254);
+				            return;
+			    		} 
+		    		} else {
+			    		alert(strLang254);
+			            return;
+		    		}
 		        } else {
-		        	keyword.value = prekeyword.value;
+	        		searchCArray.push("ALL");
+	    			searchKArray.push(TrimText(ALL.value));
 		        	document.getElementById("resultTD").setAttribute("curPage", 1);
-			    	start_search();
 		        }
+		    	
+        		if( $("#moreSearch").css("display") != "none"){
+		        	if (prekeywordDetail1.value) {
+		        		searchCArray.push(TrimText(selectDetail1.value));
+		    			searchKArray.push(TrimText(prekeywordDetail1.value));
+		        	} 
+		        	if (prekeywordDetail2.value) {
+		        		searchCArray.push(TrimText(selectDetail2.value));
+		    			searchKArray.push(TrimText(prekeywordDetail2.value));
+		        	} 
+		        	if (prekeywordDetail3.value) {
+		        		searchCArray.push(TrimText(selectDetail3.value));
+		    			searchKArray.push(TrimText(prekeywordDetail3.value));
+		        	} 
+	        	}
+	        	start_search();
 		    }
 			function document_onselectstart()
 			{
@@ -799,6 +842,21 @@
 		        if (!FirstClick)
 		            start_search();
 		    }
+		    
+		    function addSearch() {
+				if($("#moreSearch").css("display") == "none"){   
+				    $("#moreSearch").css("display", "block");   
+				    if (document.documentElement.clientWidth < 837) {
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 418) + "px";
+					} else {
+					    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 391) + "px";
+					}
+				} else {  
+				    $("#moreSearch").css("display", "none");   
+				    document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 359) + "px";
+				} 
+		    }
+		    
 		</script>
 	</head>
 	
@@ -818,57 +876,94 @@
 			  <li><span class="icon16 icon16_delete" onClick="deleteWork()"></span></li>
 			</ul>
 		</div>  
-		<table class="content"> 
-			<tr> 
-				<th nowrap><spring:message code="ezEmail.t642" /></th> 
-				<td width="100%">
-				    <select id="select2" style="height: 22px">
-				    <option value="ALL"><spring:message code="ezEmail.t643" /></option>      
-				    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
-				    <option value="${folderName}">
-						<c:choose>
-							<c:when test="${folderName eq 'INBOX'}">
-								<spring:message code="ezEmail.t644" />
-							</c:when>
-							<c:when test="${folderName eq 'Sent'}">
-								<spring:message code="ezEmail.t645" />
-							</c:when>
-							<c:when test="${folderName eq 'Drafts'}">
-								<spring:message code="ezEmail.t646" />
-							</c:when>
-							<c:when test="${folderName eq 'Trash'}">
-								<spring:message code="ezEmail.t647" />
-							</c:when>
-							<c:when test="${folderName eq 'Personal folder'}">
-								<spring:message code="ezEmail.t648" />
-							</c:when>
-							<c:otherwise>
-								${folderName}
-							</c:otherwise>
-						</c:choose>      	
-				    </option>
-				    </c:forEach>
-				    </select>
-				    <select name="select" class="text" id="select" style="height: 22px;">
-						<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
-						<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
-						<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
-						<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
-						<option value="ALL"><spring:message code="ezEmail.t588" /></option> 
-				    </select>
-				    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;height:22px"onkeyup="return search_keypress(event)" />
-			    	<input name="keyword" id = "keyword" style="vertical-align: top; display: none;"onkeyup="return search_keypress(event)" />
-			    	<a class="imgbtn imgbck"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
+		<table class="content" style="min-width:632px"> 
+			<tbody><tr style="height:100%;"> 
+				<th nowrap><spring:message code="ezEmail.t642" /></th>
+				<td style="width:100%, padding:8px;">
+					<div style="margin: 5px 5px 0px 5px;padding: 3px;">
+					    <select id="select2" style="height: 25px;margin-right: 5px;width: 86px;">
+					    	<option value="ALL"><spring:message code="ezEmail.t643" /></option>      
+						    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
+						    <option value="${folderName}">
+								<c:choose>
+									<c:when test="${folderName eq 'INBOX'}">
+										<spring:message code="ezEmail.t644" />
+									</c:when>
+									<c:when test="${folderName eq 'Sent'}">
+										<spring:message code="ezEmail.t645" />
+									</c:when>
+									<c:when test="${folderName eq 'Drafts'}">
+										<spring:message code="ezEmail.t646" />
+									</c:when>
+									<c:when test="${folderName eq 'Trash'}">
+										<spring:message code="ezEmail.t647" />
+									</c:when>
+									<c:when test="${folderName eq 'Personal folder'}">
+										<spring:message code="ezEmail.t648" />
+									</c:when>
+									<c:otherwise>
+										${folderName}
+									</c:otherwise>
+								</c:choose>      	
+						    </option>
+						    </c:forEach>
+					    </select>
+				    	<input name="keyword" id="keyword" style="vertical-align: top; display: none;" onkeyup="return search_keypress(event)">
+				    	<input name="prekeyword" id="ALL" style="vertical-align: top;height:25px" onkeyup="return search_keypress(event)" placeholder=<spring:message code="ezEmail.t641" />>
+				    	<a class="imgbtn imgbck" style="margin-left: 4px; height: 25px; vertical-align: middle;">
+					    	<span onclick="addSearch()" style="line-height: 25px; vertical-align: middle; height: 25px;"><spring:message code="ezEmail.pyy02" /></span>
+				    	</a>
+			    	</div>
+			    	<div style="margin-bottom: 2px;margin-left: 5px; display: none; padding: 0px 3px 3px 3px;" id="moreSearch">
+						<div style="display: inline-block; margin-right: 5px; margin-top:2px;">
+							<select name="select" class="text" id="selectDetail1" style="height: 25px;margin-right: 5px;width: 86px;">
+								<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+								<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+								<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
+								<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+							</select>
+							<input name="prekeyword" id="prekeywordDetail1" style="vertical-align: top;height: 25px;" onkeyup="return search_keypress(event)">
+						</div>
+						<div style="display: inline-block; margin-right: 5px; margin-top:2px;">
+							<select name="select" class="text" id="selectDetail2" style="height: 25px;margin-right: 3px;width: 86px;">
+								<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+								<option selected value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+								<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
+								<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+	 						</select>
+	 						<input name="prekeyword" id="prekeywordDetail2" style="vertical-align: top;height:25px" onkeyup="return search_keypress(event)">
+	 					</div>
+	 					<div style="display: inline-block;margin-right: 5px; margin-top:2px;">
+	 						<select name="select" class="text" id="selectDetail3" style="height: 25px;margin-right: 3px;width: 86px;">
+								<option value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+								<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+								<option selected value="FROM"><spring:message code="ezEmail.t161" /></option> 
+								<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+						    </select>
+						    <input name="prekeyword" id="prekeywordDetail3" style="vertical-align: top;height:25px" onkeyup="return search_keypress(event)">
+						</div>
+				    </div>
 			    </td> 
 			</tr> 
 			<tr>
-			    <th><spring:message code="ezEmail.t653" /></th>
-			    <td><input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code="ezEmail.t654" /></label>
+		     	<th><spring:message code="ezEmail.t653" /></th>	
+			    <td style="height: 40px;">
+			    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code="ezEmail.t654" /></label>
 			    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
 			    </td>
 			</tr>
-		</table> 
-		<br>
+		</tbody></table>
+		<div class="btnposition">
+			<ul class="btnpositionUL" style="list-style: none;">
+				<li class="on">
+					<a class="imgbtn" style="height: 30px; vertical-align: middle;">
+						<span onclick="set_searchKey()" style="height: 30px; vertical-align: middle; line-height: 30px;" onkeyup="return search_keypress(event)">
+							<spring:message code="ezEmail.t37" />
+						</span>
+					</a>
+				</li>
+			</ul>
+		</div>
 		<h2 class="h2_dot"><spring:message code="ezEmail.t655" /><span id="resultCount"></span></h2>
 		    
 		<div id="printblock"> 

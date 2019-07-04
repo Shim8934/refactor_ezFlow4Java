@@ -898,8 +898,8 @@
 	                    	</c:otherwise>
 	                    </c:choose>
                     
-		                    <p><strong id="mastername"></strong></p>
-		                    <p id="master"></p>
+		                    <p style="height:18px;"><strong id="mastername" style="width:93px; display:inline-block; text-overflow:ellipsis; white-space: nowrap; overflow:hidden;"></strong></p>
+		                    <p id="master" style="width:93px; display:inline-block; text-overflow:ellipsis; white-space: nowrap; overflow:hidden;"></p>
 		                </div>
 		                
 		                <c:if test="${checkSysop }">
