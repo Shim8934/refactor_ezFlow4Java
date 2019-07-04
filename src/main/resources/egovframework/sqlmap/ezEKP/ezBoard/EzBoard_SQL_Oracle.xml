@@ -1173,7 +1173,8 @@
 	      					A.DOCNO,
 	      					'' AS NOTICE,
 	      					P.GUBUN,
-	      					A.MAINCONTENT
+	      					A.MAINCONTENT,
+	      					P.BOARDGROUPID
 	      			  	FROM 
 	      			  		TBL_BOARD_ITEM A 
 	      			  	INNER JOIN 
