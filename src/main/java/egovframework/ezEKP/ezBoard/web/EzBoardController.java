@@ -1862,7 +1862,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<CELL>");
 					fieldName = headerList.get(i).getColName().toUpperCase();
 					
-					if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+					if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 						fieldName = fieldName + strMultiData;
 					}
 					
@@ -1959,7 +1959,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				
@@ -2138,7 +2138,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				if (fieldName.equals("WRITEDATE")) {
@@ -2566,7 +2566,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				if (fieldName.equals("WRITEDATE")) {
@@ -2716,7 +2716,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("BOARDNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("BOARDNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				if (fieldName.equals("WRITEDATE")) {
@@ -3030,7 +3030,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<CELL>");
 					fieldName = headerList.get(i).getColName().toUpperCase();
 					
-					if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+					if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 						fieldName = fieldName + strMultiData;
 					}
 					if (fieldName.equals("WRITEDATE")) {
@@ -3139,7 +3139,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
 				
-				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERCOMPANYNAME")) {
 					fieldName = fieldName + strMultiData;
 				}
 				
@@ -3685,7 +3685,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("setAsRead ended");
 	}
 	/**
-	 * 게시판 읽음표시 실행//새게시물 전용
+	 * 게시판 읽음표시 실행 // 새게시물 전용
 	 */
 	@RequestMapping(value="/ezBoard/setReadNew.do", method = RequestMethod.POST)
 	public void setAsReadNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO userInfo) throws Exception {
@@ -3693,13 +3693,9 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String pBoardID = "";
 		String pBoardIDList = "";
 		String pItemIDList = "";
 		
-		if (request.getParameter("boardID") != null) {
-			pBoardID = request.getParameter("boardID");
-		}
 		if (request.getParameter("pBoardIDList") != null) {
 			pBoardIDList = request.getParameter("pBoardIDList");
 		}
@@ -3711,9 +3707,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String[] boardIDs = pBoardIDList.split(";");
 		String[] itemIDs = pItemIDList.split(";");
 		
+		/* 2019-07-04 홍승비 - 새게시물의 게시판ID를 읽음표시 기능에서 사용하지 않도록 수정 */
 		for (int k = 0; k < itemIDs.length; k++) {
-			ezBoardService.setAsRead(userInfo, pBoardID, itemIDs[k]);
-			ezBoardService.setAsReadNew(userInfo, boardIDs[k], itemIDs[k]);
+			ezBoardService.setAsRead(userInfo, boardIDs[k], itemIDs[k]);
 		}
 
 		logger.debug("setAsReadNew ended");
@@ -4838,9 +4834,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		orgBoardID = request.getParameter("orgBoardID");
 		destBoardID = request.getParameter("destBoardID");
 		result = ezBoardService.copyItem(orgItemIDList, orgBoardID, destBoardID, uploadFilePath, realPath, userInfo);
-
+		
+		/* 2019-07-02 홍승비 - 게시물 복사 후 복사한 게시물의 ItemID 리턴하도록 수정 */
 		logger.debug("boardCopyItem ended");
-		return "<RESULT>" + result + "</RESULT>";
+		return result;
 	}
 
 	/**
@@ -4894,8 +4891,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		result = ezBoardService.moveItem(orgItemIDList, orgBoardIDList, destBoardID, userInfo, uploadFilePath, realPath);
 
+		/* 2019-07-03 홍승비 - 게시물 이동 후 이동한 게시물의 ItemID 리턴하도록 수정 */
 		logger.debug("boardMoveItem ended");
-		return "<RESULT>" + result + "</RESULT>";
+		return result;
 	}
 
 	/**
@@ -9159,6 +9157,27 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("result in checkIfBoardGroupAdmin   ::   " + result);
 		logger.debug("checkIfBoardGroupAdmin ended");
 		return result;
+	}
+	
+	/**
+	 * 2019-07-02 홍승비 - 게시판의 승인 사용 여부를 리턴 (Y/N)
+	 * */
+	@RequestMapping(value = "/ezBoard/getBoardApprProperty.do")
+	@ResponseBody
+	public String getBoardApprProperty(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getBoardApprProperty started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String pBoardID = request.getParameter("boardID");
+		String useAppr = "N";
+		
+		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
+		if (boardProp != null && boardProp.getApprFlag() != null) {
+			useAppr = boardProp.getApprFlag();
+		}
+		
+		logger.debug("getBoardApprProperty ended.");
+		return useAppr;
 	}
 }
 

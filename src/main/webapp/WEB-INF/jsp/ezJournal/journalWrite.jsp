@@ -187,13 +187,9 @@
 	    					"deptId" : deptId},
 	    			success : function(result) {
 	    				var str = "";
-	    				if (result.length > 0) {
-		    				$(result).each(function() {
-		    					str += "<option value=" + this.formId + ">" + this.formName + "</option>";
-		    				});
-	    				} else {
-	    					str += "<option><spring:message code='ezJournal.t134'/></option>";
-	    				}
+	    				$(result).each(function() {
+	    					str += "<option value=" + this.formId + ">" + this.formName + "</option>";
+	    				});
 	    				$("#optForm").html(str);
 	    			}
 	    		});
@@ -387,14 +383,14 @@
 	        	var content = message.GetEditorContent();
 	
 				if ($("#title").val() == "") {
-					alert("<spring:message code='ezCircular.t52'/>");
+					alert("<spring:message code='ezJournal.t217'/>");
 					doubleSubmitFlag = false;
 					
 					return;
 				}
 	
 				if ($.trim($("#title").val()) == "") {
-		        	alert("<spring:message code='ezCircular.t190' />");
+		        	alert("<spring:message code='ezJournal.t218' />");
 		        	doubleSubmitFlag = false;
 	
 		        	return;
@@ -488,14 +484,14 @@
 	        	}
 	
 				if ($("#title").val() == "") {
-					alert("<spring:message code='ezCircular.t52'/>");
+					alert("<spring:message code='ezJournal.t217'/>");
 					doubleSubmitFlag = false;
 					
 					return;
 				}
 	
 				if ($.trim($("#title").val()) == "") {
-		        	alert("<spring:message code='ezCircular.t190' />");
+		        	alert("<spring:message code='ezJournal.t218' />");
 		        	doubleSubmitFlag = false;
 	
 		        	return;
@@ -711,7 +707,7 @@
 	    	<span id="loading"><img id="loading-image" src="/images/ProgressBar.gif" alt="Loading..."></span>
 	    </c:if>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	        <iframe src="<spring:message code='ezJournal.t185' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 
 		<script>

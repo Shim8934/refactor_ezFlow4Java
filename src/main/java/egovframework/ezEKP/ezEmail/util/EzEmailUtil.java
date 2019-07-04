@@ -1860,10 +1860,18 @@ public class EzEmailUtil {
     public Message[] searchFolder(IMAPAccess ia, String userAccount, Folder folder, String searchField, String searchValue, 
     		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 
     		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId) throws Exception {
+
+    	return searchFolder(ia, userAccount, folder, new String[]{searchField}, new String[]{searchValue}, startDate, endDate, searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, isFromMobile, extraMap, tenantId);
+    	
+    }
+    
+    public Message[] searchFolder(IMAPAccess ia, String userAccount, Folder folder, String[] searchField, String[] searchValue, 
+    		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 
+    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId) throws Exception {
     	logger.debug("userAccount=" + userAccount + ",folder=" + folder + ",searchField=" + searchField + ",searchValue=" + searchValue
-    			 + ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly
-    			 + ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
-    			 + ",listCount=" + listCount + ",isFromMobile=" + isFromMobile + ",extraMap=" + extraMap + ",tenantId=" + tenantId);
+    			+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly
+    			+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
+    			+ ",listCount=" + listCount + ",isFromMobile=" + isFromMobile + ",extraMap=" + extraMap + ",tenantId=" + tenantId);
     	
     	String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", tenantId);
     	logger.debug("useAdvancedMailSearch=" + useAdvancedMailSearch);
@@ -1885,22 +1893,22 @@ public class EzEmailUtil {
     		
     		// pre-fetch
     		if (messages.length > 0) {
-        		Folder fetchFolder = messages[0].getFolder();
-        	
-	        	FetchProfile fp = new FetchProfile();
-				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("X-Priority");
-				fp.add(FetchProfile.Item.CONTENT_INFO);
-				fp.add(FetchProfile.Item.ENVELOPE);
-				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-				fp.add(FetchProfile.Item.SIZE);
-				fp.add(FetchProfile.Item.FLAGS);
-				fp.add("Subject");
-				fp.add("From");
-				fp.add("To");
-				
-				fetchFolder.fetch(messages, fp);
-        	}
+    			Folder fetchFolder = messages[0].getFolder();
+    			
+    			FetchProfile fp = new FetchProfile();
+    			fp.add(UIDFolder.FetchProfileItem.UID);
+    			fp.add("X-Priority");
+    			fp.add(FetchProfile.Item.CONTENT_INFO);
+    			fp.add(FetchProfile.Item.ENVELOPE);
+    			fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+    			fp.add(FetchProfile.Item.SIZE);
+    			fp.add(FetchProfile.Item.FLAGS);
+    			fp.add("Subject");
+    			fp.add("From");
+    			fp.add("To");
+    			
+    			fetchFolder.fetch(messages, fp);
+    		}
     		
     	} else {
     		if (folder == null) { // searching all folder
@@ -1908,125 +1916,125 @@ public class EzEmailUtil {
 				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
 				
 				List<Folder> topLevelFolders = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);		
-				
-				List<String> topLevelFolderNames = new ArrayList<String>();
-				int maxFolderCount = Math.min(5, topLevelFolders.size());
-				
-				for (int i = 0; i < maxFolderCount; i++) {
-					Folder tmpFolder = topLevelFolders.get(i);
-					
-					topLevelFolderNames.add(tmpFolder.getName());
-				}
-				
-				logger.debug("topLevelFolderNames=" + topLevelFolderNames);	
-				
-				for (String folderName : topLevelFolderNames) {
-					Folder tmpFolder = ia.getFolder(folderName);
-					
-					if (folder == null) {
-						folder = tmpFolder;
-					}
-					
-					tmpFolder.open(Folder.READ_ONLY);
-					
-					Message[] subMessages = searchFolder(tmpFolder, searchField, searchValue, startDate, endDate, true, null, isUnreadOnly, isImportantOnly, isFromMobile);
-					
-					if (messages == null) {
-						messages = subMessages;
-					}
-					else if (subMessages.length > 0) {
-					   int mainLen = messages.length;
-					   int subLen = subMessages.length;
-					   Message[] combined = new Message[mainLen + subLen];
-					   System.arraycopy(messages, 0, combined, 0, mainLen);
-					   System.arraycopy(subMessages, 0, combined, mainLen, subLen);	
-					   
-					   messages = combined;
-					}				
-					
-					FetchProfile fp = new FetchProfile();
-					
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);
-					
-					tmpFolder.fetch(messages, fp);		
-				}
-				
+    			
+    			List<String> topLevelFolderNames = new ArrayList<String>();
+    			int maxFolderCount = Math.min(5, topLevelFolders.size());
+    			
+    			for (int i = 0; i < maxFolderCount; i++) {
+    				Folder tmpFolder = topLevelFolders.get(i);
+    				
+    				topLevelFolderNames.add(tmpFolder.getName());
+    			}
+    			
+    			logger.debug("topLevelFolderNames=" + topLevelFolderNames);	
+    			
+    			for (String folderName : topLevelFolderNames) {
+    				Folder tmpFolder = ia.getFolder(folderName);
+    				
+    				if (folder == null) {
+    					folder = tmpFolder;
+    				}
+    				
+    				tmpFolder.open(Folder.READ_ONLY);
+    				
+    				Message[] subMessages = searchFolder(tmpFolder, searchField[0], searchValue[0], startDate, endDate, true, null, isUnreadOnly, isImportantOnly, isFromMobile);
+    				
+    				if (messages == null) {
+    					messages = subMessages;
+    				}
+    				else if (subMessages.length > 0) {
+    					int mainLen = messages.length;
+    					int subLen = subMessages.length;
+    					Message[] combined = new Message[mainLen + subLen];
+    					System.arraycopy(messages, 0, combined, 0, mainLen);
+    					System.arraycopy(subMessages, 0, combined, mainLen, subLen);	
+    					
+    					messages = combined;
+    				}				
+    				
+    				FetchProfile fp = new FetchProfile();
+    				
+    				fp.add(UIDFolder.FetchProfileItem.UID);
+    				fp.add("X-Priority");
+    				fp.add(FetchProfile.Item.CONTENT_INFO);
+    				fp.add(FetchProfile.Item.ENVELOPE);
+    				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+    				fp.add(FetchProfile.Item.SIZE);
+    				fp.add(FetchProfile.Item.FLAGS);
+    				
+    				tmpFolder.fetch(messages, fp);		
+    			}
+    			
     		} else {
     			if (!searchField.equals("") || startDate != null || endDate != null || searchSubFolder || isUnreadOnly || isImportantOnly) {
-        			messages = searchFolder(folder, searchField, searchValue, startDate, endDate, searchSubFolder, null, isUnreadOnly, isImportantOnly, isFromMobile);
-        		} else {
-        			logger.debug("get all message.");
-        			messages = folder.getMessages();
-        		}
+    				messages = searchFolder(folder, searchField[0], searchValue[0], startDate, endDate, searchSubFolder, null, isUnreadOnly, isImportantOnly, isFromMobile);
+    			} else {
+    				logger.debug("get all message.");
+    				messages = folder.getMessages();
+    			}
     		}
-			
+    		
     		// sort the messages
-			if (sortType != null) {
-				sortMessages(folder, messages, sortType, isAscending);
-			}
-			
-			if (extraMap != null) {
-				extraMap.put("totalCount", messages.length);
-			}
-			
-			if (startIndex > messages.length || listCount < 0) {
-				messages = new Message[0];
-			} else {
-				// split messages
-				listCount = Math.min(messages.length - startIndex, listCount);
-				messages = Arrays.copyOfRange(messages, startIndex, startIndex + listCount);
-				
-				// pre-fetch
-				FetchProfile fp = new FetchProfile();
-				
-				if (sortType.equals("importance") || sortType.equals("receivedDate")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);								
-				}
-				else if (sortType.equals("readFlag") || sortType.equals("flag")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);								
-				}
-				else if (sortType.equals("attachment")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);								
-				}
-				else if (sortType.equals("sender") || sortType.equals("subject")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.FLAGS);								
-				}
-				else if (sortType.equals("size")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.FLAGS);								
-				}
-				
-				fp.add("Subject");
-				fp.add("From");
-				fp.add("To");
-				
-				folder.fetch(messages, fp);
-			}
+    		if (sortType != null) {
+    			sortMessages(folder, messages, sortType, isAscending);
+    		}
+    		
+    		if (extraMap != null) {
+    			extraMap.put("totalCount", messages.length);
+    		}
+    		
+    		if (startIndex > messages.length || listCount < 0) {
+    			messages = new Message[0];
+    		} else {
+    			// split messages
+    			listCount = Math.min(messages.length - startIndex, listCount);
+    			messages = Arrays.copyOfRange(messages, startIndex, startIndex + listCount);
+    			
+    			// pre-fetch
+    			FetchProfile fp = new FetchProfile();
+    			
+    			if (sortType.equals("importance") || sortType.equals("receivedDate")) {
+    				fp.add(UIDFolder.FetchProfileItem.UID);
+    				fp.add("X-Priority");
+    				fp.add(FetchProfile.Item.CONTENT_INFO);
+    				fp.add(FetchProfile.Item.ENVELOPE);
+    				fp.add(FetchProfile.Item.SIZE);
+    				fp.add(FetchProfile.Item.FLAGS);								
+    			}
+    			else if (sortType.equals("readFlag") || sortType.equals("flag")) {
+    				fp.add(UIDFolder.FetchProfileItem.UID);
+    				fp.add("X-Priority");
+    				fp.add(FetchProfile.Item.CONTENT_INFO);
+    				fp.add(FetchProfile.Item.ENVELOPE);
+    				fp.add(FetchProfile.Item.SIZE);								
+    			}
+    			else if (sortType.equals("attachment")) {
+    				fp.add(UIDFolder.FetchProfileItem.UID);
+    				fp.add("X-Priority");
+    				fp.add(FetchProfile.Item.ENVELOPE);
+    				fp.add(FetchProfile.Item.SIZE);
+    				fp.add(FetchProfile.Item.FLAGS);								
+    			}
+    			else if (sortType.equals("sender") || sortType.equals("subject")) {
+    				fp.add(UIDFolder.FetchProfileItem.UID);
+    				fp.add("X-Priority");
+    				fp.add(FetchProfile.Item.CONTENT_INFO);
+    				fp.add(FetchProfile.Item.FLAGS);								
+    			}
+    			else if (sortType.equals("size")) {
+    				fp.add(UIDFolder.FetchProfileItem.UID);
+    				fp.add("X-Priority");
+    				fp.add(FetchProfile.Item.CONTENT_INFO);
+    				fp.add(FetchProfile.Item.ENVELOPE);
+    				fp.add(FetchProfile.Item.FLAGS);								
+    			}
+    			
+    			fp.add("Subject");
+    			fp.add("From");
+    			fp.add("To");
+    			
+    			folder.fetch(messages, fp);
+    		}
     	}
     	
     	logger.debug("messagesLength=" + messages.length);
@@ -2376,8 +2384,8 @@ public class EzEmailUtil {
 			IMAPAccess ia,
 			String userAccount,
 			String folderPath, 
-			String searchField, 
-			final String searchValue,
+			String[] searchField, 
+			final String[] searchValue,
 			Date startDate,
 			Date endDate,
 			boolean searchSubFolder,
@@ -2441,8 +2449,8 @@ public class EzEmailUtil {
 	public Map<String, Object> getMailListFromJGw(
 			String userAccount,
 			String folderPath, 
-			String searchField, 
-			String searchValue, 
+			String searchField[], 
+			String searchValue[], 
 			Date startDate, 
 			Date endDate, 
 			boolean isUnreadOnly, 
@@ -2463,8 +2471,6 @@ public class EzEmailUtil {
 		
 		String userAccountParam = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
 		String folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
-		String searchFieldParam = "searchField=" + URLEncoder.encode(searchField == null ? "" : searchField, "UTF-8");
-		String searchValueParam = "searchValue=" + URLEncoder.encode(searchValue == null ? "" : searchValue, "UTF-8");
 		String startDateParam = "startDate=" + URLEncoder.encode(startDate == null ? "" : sdf.format(startDate), "UTF-8");
 		String endDateParam = "endDate=" + URLEncoder.encode(endDate == null ? "" : sdf.format(endDate), "UTF-8");
 		String isUnreadOnlyParam = "isUnreadOnly=" + isUnreadOnly;
@@ -2476,8 +2482,26 @@ public class EzEmailUtil {
 		String startIndexParam = "startIndex=" + startIndex;
 		String listCountParam = "listCount=" + listCount;
 		
-		String inputParams = userAccountParam + "&" + folderPathParam + "&" + searchFieldParam 
-				+ "&" + searchValueParam + "&" + startDateParam + "&" + endDateParam 
+		String searchFieldParam = "";
+		String searchValueParam = "";
+		if (searchField != null ) {
+			for ( int i= 0 ; i < searchField.length ; i++ ) {
+				searchFieldParam += "&searchField=" + URLEncoder.encode(searchField[i], "UTF-8");
+			}
+		} else {
+			searchFieldParam += "&searchField=" + URLEncoder.encode("", "UTF-8");
+		}
+		
+		if (searchValue != null ) {
+			for ( int i= 0 ; i < searchValue.length ; i++ ) {
+				searchValueParam += "&searchValue=" + URLEncoder.encode(searchValue[i], "UTF-8");
+			}
+		} else {
+			searchValueParam = "&searchValue=" + URLEncoder.encode("", "UTF-8");
+		}
+		
+		String inputParams = userAccountParam + "&" + folderPathParam + searchFieldParam // searchFieldParam , searchValueParam 여러개 보낸다는 가정에 위에서 처리
+				+ searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
 				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam;
 		
