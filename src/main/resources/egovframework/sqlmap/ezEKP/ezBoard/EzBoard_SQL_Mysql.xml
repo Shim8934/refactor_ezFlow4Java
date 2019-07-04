@@ -3525,7 +3525,7 @@
 	       	AND
 	       		itemid = #itemID#
 	       	ORDER BY
-	       		GUID
+	       		GUID * 1
        	]]>
 	</select>
 	

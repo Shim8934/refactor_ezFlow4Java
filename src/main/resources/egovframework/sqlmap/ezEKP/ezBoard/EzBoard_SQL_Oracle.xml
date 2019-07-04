@@ -3681,7 +3681,7 @@
 	       	AND
 	       		itemid = #itemID#
 	       	ORDER BY
-	       		GUID
+	       		TO_NUMBER(GUID)
        	]]>
 	</select>
 	
