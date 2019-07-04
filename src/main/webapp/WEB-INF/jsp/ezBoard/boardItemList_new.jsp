@@ -538,43 +538,37 @@
 		
 		        window.location.href = "/ezBoard/boardItemList_new.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType;
 		    }
+		    
+		    /* 2019-07-04 홍승비 - 읽음표시 시 strListInfo가 아닌 실시간 체크박스를 확인하도록 수정 */
 		    var SetReadCheckCnt = 0;
 		    var setReadFlag = false;
-		    //FFFF...의 새게시물 boardID가 아닌, 게시물의 원래 boardID로 한 번 더 읽음표시를 실행한다.
 		    function SetReadNew_onclick() {
 		        if (Read_FG != "true") {
 		            alert(strLang175);
 					return;
 				}
-		        if (strListInfo == "" || strBoardListInfo == "") {
+		        
+		        var checkedItemChkBox = $("#BoardListDiv").find("input:checkbox:checked");
+		        var checkedBoxLength = checkedItemChkBox.length;
+		        
+		        if (checkedBoxLength <= 0) {
 		            alert(strLang177);
 					return;
 				}
+		        
 		        var ret = confirm(strLang178);
 				if (ret) {
-					 //게시물의  Item ID
-				    var arrList = new Array();
-				    var strItemList = "";
-				    var i = 0;
-				    arrList = strListInfo.split(";");
-				    for (i = 0; i < arrList.length - 1; i++) {
-				    	SetReadCheckCnt++;
-				        strItemList += arrList[i].split(",")[0] + ";";
-				    }
-				    
-				    //게시물의 기존 Board ID
-				    var arrList2 = new Array();
-				    var strBoardList = "";
-				    var j = 0;
-				    arrList2 = strBoardListInfo.split(";");
-				    for (j = 0; j < arrList2.length - 1; j++) {
-				        strBoardList += arrList2[j].split(",")[0] + ";";
-				    }
-				    
-				    arrList = null;   
-				    arrList2 = null;
+					var checkedItemTR = checkedItemChkBox.parent().parent();
+				 	var strItemIDList = "";
+				 	var strBoardIDList = "";
+				 	
+				 	for (var i = 0; i < checkedBoxLength; i++) {
+				 		strItemIDList += (checkedItemTR.get(i).getAttribute("data2") + ";");
+				 		strBoardIDList += (checkedItemTR.get(i).getAttribute("data1") + ";");
+				 	}
+				 	
 				    var xmlhttp = createXMLHttpRequest();
-				    xmlhttp.open("POST", "/ezBoard/setReadNew.do?boardID=" + encodeURIComponent(pBoardID) + "&pBoardIDList=" + encodeURIComponent(strBoardList) + "&itemIDList=" + encodeURIComponent(strItemList), false);		    
+				    xmlhttp.open("POST", "/ezBoard/setReadNew.do?pBoardIDList=" + encodeURIComponent(strBoardIDList) + "&itemIDList=" + encodeURIComponent(strItemIDList), false);		    
 				    xmlhttp.send();
 				    xmlhttp = null;
 				    setReadFlag = true;

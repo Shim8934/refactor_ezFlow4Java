@@ -840,21 +840,15 @@
 		                }
 		            }
 		            else {
-		            	var agent = navigator.userAgent.toLowerCase();
+		            	/* 2019-07-03 홍승비 - 포토/썸네일게시물 사진수정 시 팝업창 크기 조정 */
+						swidth = 460;
 		            	
-		            	if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
-		            		if (gubun != 4) {
-		            			swidth = 440;
-			               		sheight = 460;
-		            		} else {
-			            		swidth = 460;
-				                sheight = 380;
-		            		}
-		            	} else {
-		               		swidth = 460;
-		                	sheight = 380;
-		            	}
-		                
+						if (gubun == 3) { // 포토게시판 (메인이미지 사용 안함)
+							sheight = 360;
+						} else { // 썸네일게시판 (메인이미지 사용함)
+							sheight = 380;
+						}
+						
 			            pleft = (pwidth - swidth) / 2;
 			            ptop = (pheight - sheight) / 2;
 			            //2019.03.04 유은정 - 게시판 포틀릿 리스트 업데이트 되도록 수정

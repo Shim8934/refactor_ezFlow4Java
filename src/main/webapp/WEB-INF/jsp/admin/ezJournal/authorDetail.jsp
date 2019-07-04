@@ -250,7 +250,7 @@
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length == 0 && key != "DEPARTMENT"){
-	   						alert("<spring:message code='ezCommunity.t1379'/>");
+	   						alert("<spring:message code='ezJournal.t207'/>");
 	   						issearch = false;
 	   					}
 	   					$("#orglistView").empty();
@@ -282,7 +282,7 @@
 	   					var deptList = $("#authorDeptList tr").length;
 	   					var mineList = $("tr[mine]").length;
 	   					if(deptList - mineList == 0) {
-	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezApprovalG.t431"/></td></tr>');
+	   						$(".mainlist_free").append('<tr><td align="center" style="width:250px;"><spring:message code="ezJournal.t125"/></td></tr>');
 		   					$("#authorDeptList tr").each(function(){
 		   						if($(this).attr("mine") == 'Y'){
 		   							userDeptId = $(this).attr("targetId");
@@ -312,7 +312,7 @@
 	   			var value = $("#keyword").val().trim();
 	   			
 	   			if (value == '' || value == undefined) {
-	   				alert("<spring:message code='ezSchedule.t8'/>");	
+	   				alert("<spring:message code='ezJournal.t208'/>");	
 	   			} else {
 	   				search_click(type);	
 	   			}
@@ -335,7 +335,7 @@
 	   				}	   				
 		   			setUserList(key, searchKey);
 	   			} else {
-	   				alert("<spring:message code='ezSchedule.t8'/>")
+	   				alert("<spring:message code='ezJournal.t208'/>")
 	   			}
 	   		}
 	   		
@@ -356,7 +356,7 @@
 					}
 					window.close();
 				} else {
-					alert("<spring:message code='ezPortal.t85' />");
+					alert("<spring:message code='ezJournal.t219' />");
 				}
 	   		}
 	   		
@@ -393,19 +393,19 @@
 	                                <td>
 	                                    <div style="float:left; margin-left:5px;">
 	                                        <select id="search_type" style="height:22px;">
-	                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
-					                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
-					                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
-					                            <option value="title"><spring:message code='ezOrgan.t69'/></option>
-					                            <option value="telephonenumber"><spring:message code='ezOrgan.t95'/></option>
-					                            <option value="mobile"><spring:message code='ezOrgan.t96'/></option>
-					                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
-					                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
-					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
-					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
+	                                            <option selected value="displayname"><spring:message code='ezJournal.t38'/></option>
+					                            <option value="cn"><spring:message code='ezJournal.t210'/></option>
+					                            <option value="description"><spring:message code='ezJournal.t40'/></option>
+					                            <option value="title"><spring:message code='ezJournal.t39'/></option>
+					                            <option value="telephonenumber"><spring:message code='ezJournal.t46'/></option>
+					                            <option value="mobile"><spring:message code='ezJournal.t211'/></option>
+					                            <option value="HomePhone"><spring:message code='ezJournal.t212'/></option>
+					                            <option value="facsimileTelephoneNumber"><spring:message code='ezJournal.t213'/></option>
+					                            <option value="mail"><spring:message code='ezJournal.t214'/></option>
+					                            <option value="streetAddress"><spring:message code='ezJournal.t215'/></option>
 	                                        </select>
 	                                        <input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" id="keyword" value="" style="width: 130px; height:22px; margin: 0px;" />
-	                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezOrgan.t101'/></span></a>
+	                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezJournal.t43'/></span></a>
 	                                    </div>
 	                                </td>    
 	                                <td></td>
@@ -444,7 +444,7 @@
 			</tr>
         </table>
         <div class="btnpositionNew">
-		    <a class="imgbtn" onClick="setAuthorViewUser()" ><span><spring:message code='main.t4008'/></span></a>
+		    <a class="imgbtn" onClick="setAuthorViewUser()" ><span><spring:message code='ezJournal.t15'/></span></a>
 		</div>
 	</body>
 </html>
