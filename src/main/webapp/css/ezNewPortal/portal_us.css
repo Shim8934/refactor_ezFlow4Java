@@ -1235,16 +1235,20 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 .resource_listBoxUL { list-style: none; margin: 0px;  padding:17px 0px 15px 15px; box-sizing:border-box;}
 .resource_listBoxUL li{margin-bottom:10px;}
 .resource_listBoxUL .resource_listBoxDL { margin: 0px; padding: 0px; }
-.resource_listBoxUL .resource_listBoxDL dt { position: relative; float: left; width: 130px; height: 22px; margin: 0px; padding: 0px 9px 0px 0px; cursor: pointer; z-index:100;}
+.resource_listBoxUL .resource_listBoxDL dt { position: relative; float: left; width: 130px; height: 25px; margin: 0px; padding: 0px 9px 0px 0px; cursor: pointer; z-index:100; text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 .resource_listBoxUL .resource_listBoxDL dt .icon_tree {float:left; margin-top:3px; margin-right:5px;}
-.resource_listBoxUL .resource_listBoxDL dt .resource_list_text {float:none; display:inline-block; font-size:13px; color:#555; padding:8px 0px 0px 8px; box-sizing: border-box; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.resource_listBoxUL .resource_listBoxDL dt .resource_list_text {float:none; font-size:13px; color:#555; padding:8px 0px 0px 8px; box-sizing: border-box; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; vertical-align: middle; position: relative; top: 3px;}
 .resource_listBoxUL .resource_listBoxDL dt:hover .resource_list_text {font-weight:bold;}
 .resource_listBoxUL .resource_listBoxDL dd {position:relative; float: none; margin: 0px; height: 22px; padding: 0px 0px 0px 0px; white-space:nowrap;}
-.resource_listBoxUL .resource_listBoxDL dd > .resource_list_item { position: relative; display: inline-block; width: 90px; height: 22px; line-height: 20px; margin: 8px -4px 0px 10px; padding: 0px 8px; border-radius: 22px; background-color: #0470e4; border: 1px solid #0470e4; color: #ffffff; text-align: center; box-sizing: border-box; cursor: pointer; }
+.resource_listBoxUL .resource_listBoxDL dd > .resource_list_item { position: relative; display: inline-block; width: 90px; height: 22px; line-height: 20px; margin: 8px -4px 0px 10px; padding: 0px 8px; border-radius: 22px; background-color: #0470e4; border: 1px solid #0470e4; color: #ffffff; text-align: center; box-sizing: border-box; cursor: pointer; font-size:12px;}
 .resource_listBoxUL .resource_listBoxDL dd > .resource_list_item:hover { background-color: #0470e4; border: 1px solid #0470e4; color: #fff; }
 .resource_listBoxUL .resource_listBoxDL dd .resource_list_add { display: inline-block; width: 90px; height: 22px; margin: 8px -4px 0px 10px; padding: 0px; border: 1px solid #afd7f9; border-radius: 22px; text-align:center; box-sizing: border-box; cursor:pointer;}
 .resource_listBoxUL .resource_listBoxDL dd .resource_list_add:hover { border: 1px solid #0470e4; }
 .resource_listBoxUL .resource_listBoxDL dd .resource_list_add .icon_resource_add { background:url(/images/ezNewPortal/resourcePlus.png) no-repeat  center; width:15px; height:15px; display:inline-block; margin:3px 0px 0px 0px;}
+.sub_iconLNB {background: url(/images/kr/left/sub_iconLNB.png) no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden;}
+.tree_resource_standard { background-position: -234px -52px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;}
+.tree_resource_ok {background-position: -260px -52px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;}
+
 
 /* 20190626 class mainbg 옮김 */
 .mainbg {min-width : 1260px;}

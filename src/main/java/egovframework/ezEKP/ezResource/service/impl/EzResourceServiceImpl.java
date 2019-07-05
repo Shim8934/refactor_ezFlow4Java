@@ -4227,7 +4227,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					StringBuilder number   = new StringBuilder();	// 자원1의번호;자원2의번호;....
 					StringBuilder ownName  = new StringBuilder();	// 소유자1의이름;소유자2의이름;...
 					StringBuilder deptName = new StringBuilder();	// 소유자1부서;소유자2의부서
-					String retVal = getScheduleXML(date, resources.get(i).getBrdID(), companyID, "", "P", "", "",  "", tenantID, offset);
+					String retVal = getScheduleXML(date, resources.get(i).getBrdID(), companyID, "", "P", "", "",  "", "", tenantID, offset);
 					Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
 					for (int j=0; j<xmlDom2.getDocumentElement().getChildNodes().getLength(); j++) {
 						// 허가되지 않은 자원의 리스트는 skip 비승인0 승인1 

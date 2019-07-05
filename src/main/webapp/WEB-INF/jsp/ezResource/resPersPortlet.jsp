@@ -137,6 +137,7 @@
              createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "0");
              createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
              createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
+             createNodeAndInsertText(xmlpara, objNode, "ADMIN_CHECK", "N");
    
              xmlhttp.open("POST", "/ezResource/callNodeTreeData.do?flag=" + selectNo, false);
              xmlhttp.send(xmlpara);
@@ -217,6 +218,7 @@
                  createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "0");
                  createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
                  createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
+                 createNodeAndInsertText(xmlpara, objNode, "ADMIN_CHECK", "N");
 
                  xmlhttp.open("POST", "/ezResource/callNodeTreeData.do", false);
                  xmlhttp.send(xmlpara);
