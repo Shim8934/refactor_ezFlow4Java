@@ -582,8 +582,9 @@
 
 	        } else {
 	            if (p_ListOrderObject == "") {
-	                alert("<spring:message code='ezResource.t169' />");
-	                        return;
+	            	dept_select();
+	                /* alert("<spring:message code='ezResource.t169' />");
+	                        return; */
 	                    }
 	                    if (p_ListOrderObject != "") {
 	                        var strId = p_ListOrderObject.getAttribute("_data2");
