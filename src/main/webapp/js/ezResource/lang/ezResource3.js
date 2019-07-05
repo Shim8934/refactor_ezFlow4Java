@@ -232,3 +232,22 @@ var strLangkmsr01 = "既に追加されている権限者です。";
 
 //2019-04-08 김민성
 var strLangkmsr02 = "設備管理者は管理権限があるため、削除できません。";
+
+//2019-05-14
+var strLangkmsr03 = "ご承認をお拒みになりますか"
+var strLang321 = "승인대기";
+var strLang322 = "승인거부";
+var strLang323 = "승인";
+var strLang324 = "대여중";
+var strLang325 = "반납";
+var strLang326 = "미반납";
+var strLang327 = "종료";
+var strLang331 = "반납 요청을 하시겠습니까?";
+var strLang332 = "반납 요청을 승인하시겠습니까?";
+var strLang333 = "반납하시겠습니까?";
+var strLang334 = "반납 요청이 완료되었습니다.";
+var strLang335 = "반납되었습니다.";
+var strLang336 = "자원이 사용안함으로 설정된 경우 예약할 수 없습니다.";
+
+//2019-05-28
+var strLang337 = "승인거부 되었습니다."
