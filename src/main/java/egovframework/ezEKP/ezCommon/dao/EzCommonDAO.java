@@ -812,6 +812,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertPortletComp",map);
 				insert("EzCommonDAO.insertRsPortletName",map);
 				insert("EzCommonDAO.insertPortalThemePortlet",map);
+				insert("EzCommonDAO.insertPortalPortletAuth",map);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -828,6 +829,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertPortletComp",map);
 				insert("EzCommonDAO.insertWfPortletName",map);
 				insert("EzCommonDAO.insertPortalThemePortlet",map);
+				insert("EzCommonDAO.insertPortalPortletAuth",map);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -844,6 +846,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				insert("EzCommonDAO.insertPortletComp",map);
 				insert("EzCommonDAO.insertSvPortletName",map);
 				insert("EzCommonDAO.insertPortalThemePortlet",map);
+				insert("EzCommonDAO.insertPortalPortletAuth",map);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
