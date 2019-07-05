@@ -100,7 +100,7 @@
 	    			return;
 	    		}
 	        	//시간
-	        	if( $("#endTime").val() < $("#startTime").val() ) {
+	        	if( $("#endTime").val() <= $("#startTime").val() ) {
 	        		alert("<spring:message code='ezAttitude.t131' />");
 	        		return;
 	        	}
