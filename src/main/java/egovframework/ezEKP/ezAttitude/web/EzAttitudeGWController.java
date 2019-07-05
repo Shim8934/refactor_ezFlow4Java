@@ -1034,7 +1034,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 			
 			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "", info.getPrimary());
 				
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
@@ -1117,7 +1117,7 @@ public class EzAttitudeGWController {
 //				}
 //			}
 			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "", info.getPrimary());
 	
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
@@ -1394,7 +1394,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "", info.getPrimary());
 				
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
@@ -1462,7 +1462,7 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "", info.getPrimary());
 				
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
@@ -1758,7 +1758,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, userId, info.getRollInfo(), userAuthType, listAuthType, comFlag);
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, userId, info.getRollInfo(), userAuthType, listAuthType, comFlag, info.getPrimary());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1903,7 +1903,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 			
 			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "", info.getPrimary());
 				
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
@@ -1972,7 +1972,7 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(userInfo.getTenantId(), companyID, userInfo.getUserId(), userInfo.getRollInfo(), "", "M", "");
+			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(userInfo.getTenantId(), companyID, userInfo.getUserId(), userInfo.getRollInfo(), "", "M", "", userInfo.getPrimary());
 			
 			for (AttitudeAuthorVO vo : authDeptlist) {
 				deptIdList.add(vo.getDeptId());
@@ -2562,7 +2562,7 @@ public class EzAttitudeGWController {
 //				}
 //			}
 			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "", info.getPrimary());
 	
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
@@ -2652,7 +2652,7 @@ public class EzAttitudeGWController {
 			List<String> deptIdList = new ArrayList<>();
 			
 			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
-				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "", info.getPrimary());
 				
 				for (AttitudeAuthorVO vo : authDeptlist) {
 					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
