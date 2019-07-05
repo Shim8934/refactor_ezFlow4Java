@@ -642,16 +642,11 @@ public class EzJournalAdminController {
 //				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
 				keyword = request.getParameter("deptName");
 			} else{
-				keyword = egovMessageSource.getMessage("ezJournal.t43", userInfo.getLocale());
+				keyword = egovMessageSource.getMessage("ezJournal.t170", userInfo.getLocale());
 			}
 			int userCount = 0;
-			if (userList.size() == 0 && !key.equals("DEPARTMENT")) {
-				keyword = egovMessageSource.getMessage("ezJournal.t170", userInfo.getLocale());
-			} else {
-				userCount = userList.size();
-			}
+			
 			model.addAttribute("keyword",keyword);
-			model.addAttribute("userCount",userCount);
 			model.addAttribute("key", key);
 			model.addAttribute("totalCount", resultBody.get("totalCount"));
 			model.addAttribute("totalCount2", resultBody.get("totalCount2"));

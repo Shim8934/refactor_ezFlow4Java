@@ -274,7 +274,7 @@ public class EzNewPortalGWController {
 			
 			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
 			String useInternet = config.getProperty("config.useInternet");
-			
+			LOGGER.debug("useInternet=" + useInternet);
 			if (useInternet.equals("NO")) {
 				portletOrder.removeIf(vo -> (vo.getPortletId() == 14));
 			}
@@ -1698,7 +1698,7 @@ public class EzNewPortalGWController {
 				primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			} else {
 				userInfo = commonUtil.getUserForGw(userId, serverName);
-				primary = userInfo.getPrimary();
+				primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 				tenantId = userInfo.getTenantId();
 				result.put("userCompany", userInfo.getCompanyID());
 				result.put("lang", userInfo.getLang());
@@ -2119,8 +2119,9 @@ public class EzNewPortalGWController {
 			String userId = request.getParameter("userId");
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 			
-			Map<String, Object> resultMap = ezNewPortalService.getMenuAuth(menuId, companyId, userInfo.getTenantId());
+			Map<String, Object> resultMap = ezNewPortalService.getMenuAuth(menuId, companyId, userInfo.getTenantId(), lang);
 			
 			JSONObject data = new JSONObject();
 			
@@ -2571,7 +2572,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String parentBoardId = request.getParameter("parentBoardId");
-			String lang = info.getLang();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			
 			List<PortalBoardTreeVO> boardTree = ezNewPortalService.getBoardTree(parentBoardId, companyId, tenantId);
 			
@@ -2580,7 +2581,7 @@ public class EzNewPortalGWController {
 			for (int i = 0; i < boardTreeCount; i++) {
 				PortalBoardTreeVO boardInfo= boardTree.get(i);
 				
-				if (lang.equals("1")) {
+				if (lang.equals("")) {
 					boardInfo.setText(commonUtil.cleanValue(boardInfo.getBoardName1()));
 				} else {
 					boardInfo.setText(commonUtil.cleanValue(boardInfo.getBoardName2()));
@@ -2819,11 +2820,12 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
-			String lang = info.getLang();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			
 			List<BoardMyFavoriteVO> resultList = ezBoardService.get_favoriteList(userId, mode, companyId, tenantId);
 
 			for (BoardMyFavoriteVO fvo : resultList) {
-				if (!lang.equals("1")) {
+				if (!lang.equals("")) {
 					fvo.setBoardName(fvo.getBoardName2());
 				}
 				

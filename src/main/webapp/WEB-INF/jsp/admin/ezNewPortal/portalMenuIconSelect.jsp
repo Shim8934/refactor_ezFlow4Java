@@ -30,7 +30,7 @@
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_collaboration"></span></div><input type="radio" name="selIcon"></div>
 	</div>
 	<div id="addIcon" class="btnposition btnpositionNew">
-		<a class="imgbtn"><span><spring:message code='ezNewPortal.t058' /></span></a>
+		<a class="imgbtn"><span><spring:message code='main.sp09' /></span></a>
 	</div>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>

@@ -135,7 +135,16 @@
 				<div id="preContentH" class="mainPrevH">
 					<div>
 						<div class="prevHeaderH" id="previewHeaderH">
-							<span class="notSelected"><spring:message code='ezSurvey.t28'/></span>
+							<%-- <span class="notSelected"><spring:message code='ezSurvey.t28'/></span> --%>
+							
+							<div class="nodataDiv">
+								<dl>
+									<dt>
+										<img src="/images/kr/main/noData_sIcon.png">
+									</dt>
+									<dd><spring:message code='ezSurvey.t28'/></dd>
+								</dl>
+							</div>
 						</div>
 						<div id="itemContentH" class="itemContentH">
 							<iframe id="mainContentIframeH" class="pr-frame"></iframe>
@@ -148,7 +157,16 @@
 				<div id="preContentW" class="mainPrevW">
 					<div>
 						<div class="prevHeaderW" id="previewHeaderW">
-							<span class="notSelected"><spring:message code='ezSurvey.t28'/></span>
+							<%-- <span class="notSelected"><spring:message code='ezSurvey.t28'/></span> --%> 
+
+							<div class="nodataDiv">
+								<dl>
+									<dt>
+										<img src="/images/kr/main/noData_sIcon.png">
+									</dt>
+									<dd><spring:message code='ezSurvey.t28'/></dd>
+								</dl>
+							</div>
 						</div>
 						<div id="itemContentW" class="itemContentW">
 							<iframe id="mainContentIframeW" class="pr-frame"></iframe>

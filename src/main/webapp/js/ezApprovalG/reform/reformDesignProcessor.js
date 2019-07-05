@@ -1346,7 +1346,14 @@ function addSelectBox() {
 	var controlID = getNextAutoID();
 	controlElement.setAttribute("id", controlID);
 	var optionElement = webEditorDocument.createElement("OPTION");
-	optionElement.text = "";
+
+	if (isKukudocs) {
+		optionElement.text = "선택하세요";
+		controlElement.setAttribute("data-reform_header", "선택하세요");
+	} else {
+		optionElement.text = "";
+	}
+
 	optionElement.value = kNullIndexValue;
 	controlElement.add(optionElement);
 	
