@@ -1664,15 +1664,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		for (CompanyInfoVO company : companyList) {
 			if (company.getCompanyId() != null) {
 				rsMap.put("companyId", company.getCompanyId());
-				rsMap.put("tenantId", company.getTenant_id());
+				rsMap.put("tenantId", company.getTenantId());
 				ezCommonDAO.insertRsPortletInfo(rsMap); // 자원관리 포틀릿 유무 확인 후 insert
 				
 				wfMap.put("companyId", company.getCompanyId());
-				wfMap.put("tenantId", company.getTenant_id());
+				wfMap.put("tenantId", company.getTenantId());
 				ezCommonDAO.insertWfPortletInfo(wfMap); // 웹폴더 포틀릿 유무 확인 후 insert
 				
 				svMap.put("companyId", company.getCompanyId());
-				svMap.put("tenantId", company.getTenant_id());
+				svMap.put("tenantId", company.getTenantId());
 				ezCommonDAO.insertSvPortletInfo(svMap); // 전자설문 포틀릿 유무 확인 후 insert
 				
 			}
