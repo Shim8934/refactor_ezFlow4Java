@@ -116,4 +116,16 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		update("EzSystemAdminDAO.updateMenuChange", paramMap);
 	}
 	
+	public String getAccessCountryList(Map<String, Object> paramMap) throws Exception {
+		return (String) select("EzSystemAdminDAO.getAccessCountryList", paramMap);
+	}
+		
+	public void setAccessCountry(Map<String, Object> paramMap) throws Exception {
+		insert("EzSystemAdminDAO.setAccessCountry", paramMap);
+	}
+	
+	public int updateAccessCountry(Map<String, Object> paramMap) throws Exception {
+		return update("EzSystemAdminDAO.updateAccessCountry", paramMap);
+	}
+
 }

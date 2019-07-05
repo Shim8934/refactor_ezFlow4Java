@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezSystem.vo;
 
-public class CountryVO {
+public class CountryVO implements Comparable<CountryVO>{
 	
 	private String countryCode;
 	private String countryCode2;
@@ -68,4 +68,8 @@ public class CountryVO {
 				+ endIPNumber + ", countryName=" + countryName + ", imagePath=" + imagePath +"]";
 	}
 	
+	@Override
+	public int compareTo(CountryVO o) {
+		return this.countryName.compareTo(o.countryName);
+	}
 }

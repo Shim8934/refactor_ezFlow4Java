@@ -1,9 +1,11 @@
 package egovframework.ezEKP.ezSystem.web;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -705,13 +707,68 @@ public class EzSystemAdminController {
 		}
 
 		String realPath = request.getSession().getServletContext().getRealPath("/");
-		List<CountryVO> countryList = ezSystemAdminService.getCountryList(userInfo.getLang(), realPath);
+		List<CountryVO> countryList = countryVOList(null, userInfo.getLang(), realPath);
 		
 		model.addAttribute("countryList", countryList);
 		logger.debug("systemIPCountryAccessList ended");
 		 
 		return "/ezSystem/systemIPCountryAccessList";
 	}
+	
+	/*
+	 * 접속 허용 국가 리스트
+	 */
+	@RequestMapping(value="/ezSystem/getAccessCountryList.do", method=RequestMethod.POST)
+	public String getAccessCountryList(@CookieValue("loginCookie") String loginCookie, Model model, 
+			HttpServletRequest request) throws Exception {
+		logger.debug("getAccessCountryList started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String realPath = request.getSession().getServletContext().getRealPath("/");
+
+		String countryCodeList = ezSystemAdminService.getAccessCountryList(userInfo.getTenantId()); // 허용 국가코드 리스트
+		String [] countryCodeArr = countryCodeList.split(";");
+		logger.debug("countryCodeList=" + countryCodeList + ", countryCodeArrLen=" + countryCodeArr.length);
+
+		List<CountryVO> countryList = countryVOList(countryCodeArr, userInfo.getLang(), realPath);
+		logger.debug("countryList= " + countryList.size());
+		
+		JSONArray returnJsonArr = new JSONArray();
+		for (CountryVO vo : countryList) {
+			JSONObject putObj = new JSONObject();
+			putObj.put("countryCode", vo.getCountryCode()); // 국가코드
+			putObj.put("countryName", vo.getCountryName()); // 국가명
+			putObj.put("imagePath", vo.getImagePath()); // 이미지
+			
+			returnJsonArr.add(putObj);
+		}
+		logger.debug("returnJsonArr=" + returnJsonArr.toString());
+		
+		model.addAttribute("data", returnJsonArr);
+		logger.debug("getAccessCountryList ended");
+		
+		return "json";
+	}
+	
+	/*
+	 * 접속 허용 국가 저장
+	 */
+	@RequestMapping(value="/ezSystem/saveAccessCountryList.do", method=RequestMethod.POST)
+	public String saveAccessCountryList(@CookieValue("loginCookie") String loginCookie, Model model, 
+			HttpServletRequest request) throws Exception {
+		logger.debug("saveAccessCountryList started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String saveCountryList = request.getParameter("saveList");
+		logger.debug("saveCountryList=" + saveCountryList);
+		
+		ezSystemAdminService.setAccessCountry(userInfo.getTenantId(), saveCountryList);
+		
+		logger.debug("saveAccessCountryList ended");
+		return "json";
+	}
+	
 	
 	@RequestMapping(value="/ezSystem/systemIPBand.do", method=RequestMethod.GET)
 	public String systemIPBand(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
@@ -1127,6 +1184,65 @@ public class EzSystemAdminController {
 		
 		return ResponseEntity.ok()
 				.body("");
+	}
+	
+	private List<CountryVO> countryVOList(String[] countryCodeList, String userLang, String realPath)
+			throws Exception {
+		logger.debug("CountryVOList started");
+		
+		List<CountryVO> countryList = new ArrayList<CountryVO>();
+		String countryIconFolder = "/images/countryIcon32/";
+		String countryQuestionIcon = countryIconFolder + "qm.png";
+		String lang = "";
+		
+		switch (userLang) {
+			case "1":
+				lang = "ko";
+				break;
+			case "3":
+				lang = "ja";
+				break;
+			default:
+				break;
+		}
+		
+		String[] countries = Locale.getISOCountries();
+		if (countryCodeList != null && countryCodeList.length != 0) {
+			countries = countryCodeList;
+		}
+		logger.debug("countries Count=" + countries.length);
+		
+		for (String country : countries) {
+			Locale locale = new Locale(lang, country);
+
+			CountryVO countryVO = new CountryVO();
+			countryVO.setCountryCode(country); // 국가코드
+			countryVO.setCountryName(locale.getDisplayCountry(locale));
+			
+			if (realPath != null || !realPath.equals("")) { // path 없으면 이미지 경로 X
+				// 국기가 없으면 물음표 국기 표시
+				String printImage = countryQuestionIcon;
+				try {
+					String countryIconPath = countryIconFolder + country.toLowerCase() + ".png";
+					File f = new File(realPath + countryIconPath);
+					printImage = f.exists() ? countryIconPath : printImage; 
+					//logger.debug("printImage=" + printImage);
+					
+					countryVO.setImagePath(printImage); // 이미지 경로
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			countryList.add(countryVO);
+			// logger.debug(countryVO.toString());
+		}
+		
+		
+		Collections.sort(countryList);
+		
+		logger.debug("CountryVOList ended");
+		return countryList;
 	}
 
 }

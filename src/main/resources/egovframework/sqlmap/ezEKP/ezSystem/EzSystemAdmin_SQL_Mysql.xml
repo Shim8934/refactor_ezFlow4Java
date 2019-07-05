@@ -6,6 +6,7 @@
 	<typeAlias alias="ConnectionInfoVO" type="egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO"/>
 	<typeAlias alias="IPBandVO" type="egovframework.ezEKP.ezSystem.vo.IPBandVO"/>
 	<typeAlias alias="AccessIdVO" type="egovframework.ezEKP.ezSystem.vo.AccessIdVO"/>
+	<typeAlias alias="CountryVO" type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -333,6 +334,36 @@
 				</iterate>
 			</isNotEqual>
 		</isNotEqual>
+	</update>
+	
+	<select id="EzSystemAdminDAO.getAccessCountryList" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT 
+			COUNTRY_CODE COUNTRYCODE
+		FROM 
+			TBL_ACCESS_COUNTRY 
+		WHERE 
+			TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<insert id="EzSystemAdminDAO.setAccessCountry" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO 
+			TBL_ACCESS_COUNTRY (TENANT_ID, COUNTRY_CODE) 
+			VALUES (#tenantId#, #countryCode#)
+		]]>
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateAccessCountry" parameterClass="Map">
+		<![CDATA[
+		UPDATE
+			TBL_ACCESS_COUNTRY
+		SET 
+			COUNTRY_CODE = #countryCode#
+		WHERE 
+			TENANT_ID = #tenantId#;
+		]]>
 	</update>
 	
 </sqlMap>

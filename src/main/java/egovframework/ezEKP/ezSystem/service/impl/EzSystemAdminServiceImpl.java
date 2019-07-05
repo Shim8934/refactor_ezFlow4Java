@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -710,58 +711,40 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 	
 	/*
-	 * 국가 리스트
+	 * 접속 허용 국가 리스트
 	 */
 	@Override
-	public List<CountryVO> getCountryList(String userLang, String realPath)
-			throws Exception {
-		logger.debug("getCountryList started");
+	public String getAccessCountryList(int tenantId)throws Exception {
+		logger.debug("getAccessCountryList started");
 		
-		List<CountryVO> countryList = new ArrayList<CountryVO>();
-		String countryIconFolder = "/images/countryIcon32/";
-		String countryQuestionIcon = countryIconFolder + "qm.png";
-		String lang = "";
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantId", tenantId);
 		
-		switch (userLang) {
-			case "1":
-				lang = "ko";
-				break;
-			case "3":
-				lang = "ja";
-				break;
-			default:
-				break;
-		}
+		String accessCountryList = ezSystemAdminDAO.getAccessCountryList(paramMap);
+		accessCountryList = accessCountryList == null ? "" : accessCountryList;
 
-		String[] countries = Locale.getISOCountries();
-		logger.debug("countries Count=" + countries.length);
-		
-		for (String country : countries) {
-			Locale locale = new Locale(lang, country);
-
-			// 국기가 없으면 물음표 국기 표시
-			String printImage = countryQuestionIcon;
-			try {
-				String countryIconPath = countryIconFolder + country.toLowerCase() + ".png";
-				File f = new File(realPath + countryIconPath);
-				printImage = f.exists() ? countryIconPath : printImage; 
-				logger.debug("printImage=" + printImage);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			CountryVO countryVO = new CountryVO();
-			countryVO.setCountryCode(country); // 국가코드
-			countryVO.setImagePath(printImage); // 이미지 경로
-			countryVO.setCountryName(locale.getDisplayCountry(locale));
-			
-			countryList.add(countryVO);
-			
-			// logger.debug(countryVO.toString());
-		}
-		
-		
-		logger.debug("getCountryList ended");
-		return countryList;
+		logger.debug("getAccessCountryList ended");
+		return accessCountryList;
 	}
+
+	/*
+	 * 접속 허용 국가 추가
+	 */
+	@Override
+	public void setAccessCountry(int tenantId, String countryCode) throws Exception {
+		logger.debug("setAccessCountry started");
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("tenantId", tenantId);
+		paramMap.put("countryCode", countryCode);
+		
+		int updateResult = ezSystemAdminDAO.updateAccessCountry(paramMap);
+		if (updateResult == 0) {
+			logger.debug("update failed. insert AccessCountry");
+			ezSystemAdminDAO.setAccessCountry(paramMap);
+		}
+		
+		logger.debug("setAccessCountry ended");
+	}
+	
 }

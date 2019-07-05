@@ -32,13 +32,16 @@
 		.arrDiv div { top: 50%; transform: translateY(-50%); position: absolute; left: 32%; }
 		.arrDiv  img {  display: block; margin: 10px 0; }
 		.countryBtn { width: 100%; float:left; box-sizing: border-box; }
+		
+		.counntryTRSelect { background: rgb(241, 248, 255); }
+		.counntryTRHover { background-color: rgb(244, 245, 245); }
 	</style>
 <body style="overflow:hidden; ">
 	<br>
 	<div class="countryWrap">
 		<div class="countryDiv">
 		    <div class="listview">
-		        <div  class="countryDivSec">
+		        <div class="countryDivSec countryList">
 			        <table class="mainlist_free" width="100%">
 			        	<colspan>
 			        		<col width="50"/>
@@ -51,7 +54,7 @@
 				        </thead>
 				        <tbody>
 				        	<c:forEach items="${countryList }" var="item">
-								<tr>
+								<tr data-name="${item.countryName }" data-code="${item.countryCode }">
 							        <td align="left">
 							        	<img src="${item.imagePath}" alt="" title="" width="32">
 							        </td>
@@ -73,7 +76,7 @@
         
 		<div class="countryDiv">
 		    <div class="listview">
-		        <div class="countryDivSec">
+		        <div class="countryDivSec countryAccessList">
 			        <table class="mainlist_free" width="100%">
 			        	<colspan>
 			        		<col width="50"/>
@@ -101,12 +104,44 @@
 </body>
 	
 <script>
-
+	var countryAccessList = [];
+	
 	window.onload = function () {
 		iframeHeight();
+		getAccessCountryList();
 	}
 	window.parent.onresize = function () {
 		iframeHeight();
+	}
+	
+	function getAccessCountryList() {
+		var printTR = "<tr data-name=\"{countryName}\" data-code=\"{countryCode}\">";
+			printTR += "<td align=\"left\"><img src=\"{imagePath}\" alt=\"\" title=\"\" width=\"32\"></td>"; 
+			printTR += "<td align=\"left\">{countryName}</td></tr>"; 
+		
+		$.ajax({
+			type : "post",
+			url : "/ezSystem/getAccessCountryList.do",
+			dataType : "json",
+			success : function(data) {
+				var appendHTML = "";
+				countryAccessList = [];
+				
+				data.data.forEach(function (ele, index) {
+					var tempTR = printTR;
+					
+					countryAccessList.push(ele.countryCode);
+					
+					tempTR = tempTR.replace(/{countryName}/gi, ele.countryName);
+					tempTR = tempTR.replace(/{countryCode}/gi, ele.countryCode);
+					tempTR = tempTR.replace(/{imagePath}/gi, ele.imagePath);
+					appendHTML += tempTR;
+				});
+				
+				$(".countryAccessList tbody").empty();
+				$(".countryAccessList tbody").append(appendHTML);
+			}
+		});
 	}
 	
 	function iframeHeight() {
@@ -125,29 +160,55 @@
 	}
 	
 	function btn_Add_onclick() {
-		
+		$(".countryList").find(".counntryTRSelect").each(function(index, ele) {
+			var selectCountryTR = $(ele).clone(true);
+			var thisCountryCode = $(selectCountryTR).attr("data-code");
+			
+			if (countryAccessList.indexOf(thisCountryCode) == -1) {
+				countryAccessList.push(thisCountryCode);
+				
+				var printCountryTR = $(selectCountryTR).removeClass("counntryTRSelect");
+				$(".countryAccessList tbody").append(printCountryTR);
+			}
+		});
 	}
 	
 	function DeleteReceiver() {
-		
+		$(".countryAccessList").find(".counntryTRSelect").each(function(index, ele) {
+			var thisCountryCode = $(ele).attr("data-code");
+			var countryAccessListIndex = countryAccessList.indexOf(thisCountryCode);
+
+			if (countryAccessListIndex > -1) {
+				countryAccessList.splice(countryAccessListIndex, 1);
+			}
+			
+			$(ele).remove();
+		});
 	}
 	
 	function saveBtn() {
-		
+		$.ajax({
+			type : "post",
+			url : "/ezSystem/saveAccessCountryList.do",
+			data : { "saveList" : countryAccessList.join(";")},
+			success : function(data) {
+				alert("<spring:message code='ezSystem.ksa06' />");				
+			}, error : function () {
+				alert("<spring:message code='ezSystem.ksa07' />");	
+			}
+		});
 	}
 	
 	function cancleBtn() {
-		
+		getAccessCountryList();
 	}
 	
 
-	$(".countryDivSec tr").on("click", function() {
-		if ($(this).css("background").indexOf("rgb(241, 248, 255)") > -1) {
-			$(this).css("background", "");
-		} else {
-			$(this).css("background", "rgb(241, 248, 255)");	
+	$(document).on("click", ".countryDivSec tr", function() {
+		if ($(this).hasClass("counntryTRHover")){
+			$(this).removeClass("counntryTRHover");
 		}
-		
+		$(this).toggleClass("counntryTRSelect");
 	});
 	
 </script>

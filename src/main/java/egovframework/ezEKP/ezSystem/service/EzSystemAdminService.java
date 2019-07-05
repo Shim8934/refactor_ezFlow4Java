@@ -38,5 +38,6 @@ public interface EzSystemAdminService {
 	public void deleteWebfolderLog (int keepLogPeriod, int tenantID) throws Exception;
 	public void setMultiLoginType(String multiLoginType, int tenantID, String companyID, String editType) throws Exception;
 	public void updateNewPortalMenuByPackageType(String newPackageType, int tenantID, String companyID) throws Exception;
-	public List<CountryVO> getCountryList(String userLang, String realPath) throws Exception;
+	public String getAccessCountryList(int tenantId) throws Exception;
+	public void setAccessCountry(int tenantId, String countryCode) throws Exception;
 }
