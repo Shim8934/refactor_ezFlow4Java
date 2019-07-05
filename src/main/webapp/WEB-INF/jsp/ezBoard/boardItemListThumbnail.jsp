@@ -105,6 +105,9 @@
 		    var starttime;
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var useNotReadCnt = "${useNotReadCnt}";
+		    var BoardGroupID = "${boardInfo.boardGroupID}";
+		    
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		    
@@ -924,6 +927,22 @@
 		            xmlhttp.send();
 		            xmlhttp = null;
 		            getBoardList();
+		            
+		            /* 2019-07-03 홍승비 - 게시물 읽음표시 할 경우 좌측메뉴의 미독건수 갱신하도록 수정 */
+		            if (useNotReadCnt == "YES") {
+			            var boardLeftFrame;
+			            
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) { // 즐겨찾기에서 읽기창 진입
+							boardLeftFrame = window.parent.parent.frames["left"];
+						} else { // 해당 게시판 내부에서 읽기창 진입
+			        		boardLeftFrame = window.parent.frames["left"];
+			        	}
+			            
+			            if (boardLeftFrame != null && boardLeftFrame != undefined && boardLeftFrame.location.href.indexOf("/ezBoard/boardLeft.do")> -1) {
+			     			boardLeftFrame.getBoardNotReadCountByID(BoardGroupID, "", "GROUP");
+			     			boardLeftFrame.getBoardNotReadCountByID(pBoardID, gubun, "SUB");
+				    	}
+		            }
 		        }
 		    }
 		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */

@@ -1847,7 +1847,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag) throws Exception {
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag, String primary) throws Exception {
 		LOGGER.debug("getAttitudeAuthDeptList started.");
 		
 		if (userAuthType == null || userAuthType.equals("")) {
@@ -1877,6 +1877,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userAuthType", userAuthType);
 		map.put("listAuthType", listAuthType);
 		map.put("comFlag", comFlag);
+		map.put("primary", primary);
 		
 		List<AttitudeAuthorVO> list = ezAttitudeDAO.getAttitudeAuthDeptList_hyo(map);
 		
