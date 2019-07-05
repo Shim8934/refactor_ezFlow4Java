@@ -761,4 +761,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.insertThemeContent3");
 		}
 	}
+
+	public void createTblAccessCountry() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAccessCountry");
+		} catch (Exception e) {
+			logger.debug("tbl_Access_Country doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAccessCountry");
+		}
+	}
+	
 }

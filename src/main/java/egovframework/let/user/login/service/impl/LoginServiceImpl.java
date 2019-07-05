@@ -18,6 +18,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 
 import javax.annotation.Resource;
 
@@ -346,6 +347,22 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		
 		logger.debug("updateDeviceInfo ended.");
 
+		return result;
+	}
+	
+	/**
+	 *
+	 */
+	@Override
+	public CountryVO getLoginIPCountry(long loginIP) throws Exception {
+		logger.debug("getLoginIPCountry started.");
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("loginIP", loginIP);
+		
+		CountryVO result = loginDAO.getLoginIPCountry(paramMap);
+		
+		logger.debug("getLoginIPCountry ended.");
 		return result;
 	}
 	

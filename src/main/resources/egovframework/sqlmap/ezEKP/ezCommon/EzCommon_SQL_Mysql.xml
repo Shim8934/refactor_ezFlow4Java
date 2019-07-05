@@ -1187,4 +1187,20 @@
 								WHEN theme_id = 3 THEN 'Theme3'
 							END
 	</update>
+	
+	<select id="EzCommonDAO.checkTblAccessCountry">
+		SELECT 
+			TENANT_ID
+		FROM 
+			TBL_ACCESS_COUNTRY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAccessCountry">
+		CREATE TABLE `TBL_ACCESS_COUNTRY` (
+		  `TENANT_ID` int(11) NOT NULL,
+		  `COUNTRY_CODE` varchar(800) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
 </sqlMap>

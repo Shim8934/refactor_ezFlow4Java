@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -660,13 +661,32 @@ public class LoginController {
         			if (checkCnt == 4 && getAccess.equals("NO")) {
         				return false;
         			} else if (checkCnt == 4){
-        				returnValue = true;
+        				//returnValue = true;
         			}
         			checkCnt = 0;
         		}
         		
-        	} else { // 대역이 등록 안돼있으면 무조건 false (useIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
+        	} /*else { // 대역이 등록 안돼있으면 무조건 false (useIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
         		return false;
+        	}*/
+        	
+        	String countryCodeList = ezSystemAdminService.getAccessCountryList(loginVO.getTenantId());
+        	if (!countryCodeList.trim().equals("")) {
+        		long changeIP = changeIPtoInteger(loginVO.getIp());
+        		logger.debug("changeIP=" + changeIP);
+        		
+        		CountryVO countryVo = loginService.getLoginIPCountry(changeIP);
+
+        		if (countryVo != null){
+        			String loginCountryCode = countryVo.getCountryCode();
+        			String loginCountryName = countryVo.getCountryName();
+        			logger.debug("countryCodeList=" + countryCodeList);
+        			logger.debug("LoginIpCountry=" + loginCountryCode + ":" + loginCountryName);
+        			
+        			if (countryCodeList.indexOf(loginCountryCode) > -1){
+        				returnValue = true;
+        			}
+        		}
         	}
         	
         	logger.debug("ipAccessCheck ended");
@@ -975,5 +995,19 @@ public class LoginController {
         	}
         } 
     }   
+    
+    private long changeIPtoInteger(String changeIP) throws Exception {
+    	String[] iparr = changeIP.split("\\.");
+    	long returnChangeIp = 0;
+    	
+		if (iparr.length == 4) {
+			returnChangeIp = (long) Math.pow(256, 3) * Integer.parseInt(iparr[0])
+					+ (long) Math.pow(256, 2) * Integer.parseInt(iparr[1])
+					+ (long) Math.pow(256, 1) * Integer.parseInt(iparr[2])
+					+ (long) Math.pow(256, 0) * Integer.parseInt(iparr[3]);
+		}
+		
+		return returnChangeIp;
+    }
 
 }

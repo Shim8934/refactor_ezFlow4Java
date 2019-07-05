@@ -142,5 +142,7 @@ public interface EzCommonService {
 
 	public void addThemeContentLang() throws Exception;
 
+	public void createAccessCountry() throws Exception;
+
 }
 

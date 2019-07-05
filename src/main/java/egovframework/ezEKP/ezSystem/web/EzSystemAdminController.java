@@ -727,24 +727,28 @@ public class EzSystemAdminController {
 		String realPath = request.getSession().getServletContext().getRealPath("/");
 
 		String countryCodeList = ezSystemAdminService.getAccessCountryList(userInfo.getTenantId()); // 허용 국가코드 리스트
-		String [] countryCodeArr = countryCodeList.split(";");
-		logger.debug("countryCodeList=" + countryCodeList + ", countryCodeArrLen=" + countryCodeArr.length);
+		
+		if (!countryCodeList.trim().equals("")) {
+			String [] countryCodeArr = countryCodeList.split(";");
+			logger.debug("countryCodeList=" + countryCodeList + ", countryCodeArrLen=" + countryCodeArr.length);
 
-		List<CountryVO> countryList = countryVOList(countryCodeArr, userInfo.getLang(), realPath);
-		logger.debug("countryList= " + countryList.size());
-		
-		JSONArray returnJsonArr = new JSONArray();
-		for (CountryVO vo : countryList) {
-			JSONObject putObj = new JSONObject();
-			putObj.put("countryCode", vo.getCountryCode()); // 국가코드
-			putObj.put("countryName", vo.getCountryName()); // 국가명
-			putObj.put("imagePath", vo.getImagePath()); // 이미지
+			List<CountryVO> countryList = countryVOList(countryCodeArr, userInfo.getLang(), realPath);
+			logger.debug("countryList= " + countryList.size());
 			
-			returnJsonArr.add(putObj);
-		}
-		logger.debug("returnJsonArr=" + returnJsonArr.toString());
+			JSONArray returnJsonArr = new JSONArray();
+			for (CountryVO vo : countryList) {
+				JSONObject putObj = new JSONObject();
+				putObj.put("countryCode", vo.getCountryCode()); // 국가코드
+				putObj.put("countryName", vo.getCountryName()); // 국가명
+				putObj.put("imagePath", vo.getImagePath()); // 이미지
+				
+				returnJsonArr.add(putObj);
+			}
+			logger.debug("returnJsonArr=" + returnJsonArr.toString());
+			
+			model.addAttribute("data", returnJsonArr);
+		} 
 		
-		model.addAttribute("data", returnJsonArr);
 		logger.debug("getAccessCountryList ended");
 		
 		return "json";

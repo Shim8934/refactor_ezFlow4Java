@@ -1602,4 +1602,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addThemeContent2();
 		ezCommonDAO.addThemeContent3();
 	}
+	
+	@Override
+	public void createAccessCountry() throws Exception {
+		ezCommonDAO.createTblAccessCountry();
+	}
+	
 }

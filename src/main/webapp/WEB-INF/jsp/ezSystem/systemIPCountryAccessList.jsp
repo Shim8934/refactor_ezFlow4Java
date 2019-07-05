@@ -124,22 +124,24 @@
 			url : "/ezSystem/getAccessCountryList.do",
 			dataType : "json",
 			success : function(data) {
-				var appendHTML = "";
-				countryAccessList = [];
-				
-				data.data.forEach(function (ele, index) {
-					var tempTR = printTR;
+				if (typeof data.data != "undefined") {
+					var appendHTML = "";
+					countryAccessList = [];
 					
-					countryAccessList.push(ele.countryCode);
+					data.data.forEach(function (ele, index) {
+						var tempTR = printTR;
+						
+						countryAccessList.push(ele.countryCode);
+						
+						tempTR = tempTR.replace(/{countryName}/gi, ele.countryName);
+						tempTR = tempTR.replace(/{countryCode}/gi, ele.countryCode);
+						tempTR = tempTR.replace(/{imagePath}/gi, ele.imagePath);
+						appendHTML += tempTR;
+					});
 					
-					tempTR = tempTR.replace(/{countryName}/gi, ele.countryName);
-					tempTR = tempTR.replace(/{countryCode}/gi, ele.countryCode);
-					tempTR = tempTR.replace(/{imagePath}/gi, ele.imagePath);
-					appendHTML += tempTR;
-				});
-				
-				$(".countryAccessList tbody").empty();
-				$(".countryAccessList tbody").append(appendHTML);
+					$(".countryAccessList tbody").empty();
+					$(".countryAccessList tbody").append(appendHTML);
+				} //if end
 			}
 		});
 	}
