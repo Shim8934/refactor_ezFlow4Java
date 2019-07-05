@@ -100,7 +100,7 @@
 	    			return;
 	    		}
 	        	//시간
-	        	if( $("#endTime").val() < $("#startTime").val() ) {
+	        	if( $("#endTime").val() <= $("#startTime").val() ) {
 	        		alert("<spring:message code='ezAttitude.t131' />");
 	        		return;
 	        	}
@@ -228,7 +228,8 @@
 	            	<input type="checkbox"/><spring:message code='ezAttitude.t27' />
 	            </td>
 	        </tr>
-	        <tr style="height:30px;">
+	        <!-- 2019.07.05 연차관리 기능 추가로 인해 사용하는곳이 없으므로 display none으로 해둠. -->
+	        <tr style="height:30px;display: none;">
 	        	<th style="width: 70px; text-align:center">
 					<spring:message code='ezAttitude.t31' />
 	            </th>
