@@ -43,6 +43,7 @@ function getPotletSurveyList() {
 // 위에서 가져온 데이터로 리스트 생성
 function setListByDataList(surveys) {
 	var ulEl = document.getElementById("surveyUl");
+	ulEl.innerHTML = "";
 	
 	if (surveys.length > 0) {
 		var title;
@@ -50,8 +51,6 @@ function setListByDataList(surveys) {
 		var creator;
 		var responseCnt;
 		
-		
-		ulEl.innerHTML = "";
 		for (var i = 0, leng = surveys.length; i < leng; i++) {
 			var survey = surveys[i];
 			
