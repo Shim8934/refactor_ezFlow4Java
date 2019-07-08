@@ -2097,7 +2097,7 @@
 			WHERE 
 				1 = 1
 		]]>
-		<isNotEmpty property="yseterday" > 
+		<isNotEmpty property="yesterday" > 
 			AND
 				TO_CHAR(JOIN_DATE,'YYYY-MM-DD') LIKE '%-%-' || #yesterday# || '%'
 		</isNotEmpty>
