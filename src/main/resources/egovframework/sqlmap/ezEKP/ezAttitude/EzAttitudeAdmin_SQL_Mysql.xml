@@ -976,7 +976,7 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList_hyo" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<isEqual property="userAuthType" compareValue="all">
 			SELECT
-				displayname AS deptname,
+				displayname$primary$ AS deptname,
 				cn AS deptid,
 				'no' AS mine,
 				'M' AS authtype
@@ -998,7 +998,7 @@
 			UNION
 			
 			SELECT
-				displayname AS deptname,
+				displayname$primary$ AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
 				'M' AS authtype
@@ -1023,7 +1023,7 @@
 		
 		<isEqual property="userAuthType" compareValue="dept">
 			SELECT
-				TBL_DEPTMASTER.displayname AS deptname,
+				TBL_DEPTMASTER.displayname$primary$ AS deptname,
 				TBL_DEPTMASTER.cn AS deptid,
 				'no' AS mine,
 				TBL_ATTITUDE_AUTH.auth_type AS authtype
@@ -1055,7 +1055,7 @@
 			</isEqual>
 			UNION
 			SELECT
-				displayname AS deptname,
+				displayname$primary$ AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
 				'M' AS authtype
@@ -1076,7 +1076,7 @@
 							TBL_USERMASTER.cn = #userId#)
 			UNION
 			SELECT
-				D.DISPLAYNAME AS dept_name,
+				D.DISPLAYNAME$primary$ AS dept_name,
 				D.CN AS dept_id,
 				'add' AS mine,
 				'M' AS authtype
@@ -1093,7 +1093,7 @@
 		
 		<isEqual property="userAuthType" compareValue="">
 			SELECT
-				TBL_DEPTMASTER.displayname AS deptname,
+				TBL_DEPTMASTER.displayname$primary$ AS deptname,
 				TBL_DEPTMASTER.cn AS deptid,
 				'no' AS mine,
 				TBL_ATTITUDE_AUTH.auth_type AS authtype
@@ -1127,7 +1127,7 @@
 			</isEqual>
 			UNION
 			SELECT
-				displayname AS deptname,
+				displayname$primary$ AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
 				IFNULL((SELECT
@@ -1166,7 +1166,7 @@
 							TBL_USERMASTER.cn = #userId#)
 			UNION
 			SELECT
-				D.DISPLAYNAME AS dept_name,
+				D.DISPLAYNAME$primary$ AS dept_name,
 				D.CN AS dept_id,
 				'add' AS mine,
 				IFNULL((SELECT

@@ -278,7 +278,10 @@
                  		  $("#myBar").addClass("danger");
                  	   } else if (percent >= 70) {
                  		  $("#myBar").addClass("warning");
-                 	   }                		   
+                 	   } else {
+							$("#myBar").removeClass();
+							$("#myBar").addClass("mailBar");
+                 	   }               		   
                     }
                 });        	    
 	        }	        

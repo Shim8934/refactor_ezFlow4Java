@@ -69,8 +69,9 @@
 		    var pButtonHidden = '<c:out value="${boardInfo.buttonHidden}"/>';
 		    var pNoneActiveX = "YES";
 		    var useRunTime = "${useRunTime}"
+		    var useNotReadCnt = "${useNotReadCnt}";
+		    	
 			var window_onunload_Event = false;
-		    
 			window.onunload = Window_onunload;
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
@@ -573,6 +574,24 @@
 				    xmlhttp = null;
 				    setReadFlag = true;
 				    refresh_onclick();
+				    
+				    /* 2019-07-04 홍승비 -  게시물 읽음표시 할 경우 좌측메뉴의 미독건수 갱신하도록 수정 */
+				    if (useNotReadCnt == "YES") {
+						var boardLeftFrame;
+						
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) { // 즐겨찾기에서 읽기창 진입
+							boardLeftFrame = window.parent.parent.frames["left"];
+						} else { // 해당 게시판 내부에서 읽기창 진입
+			        		boardLeftFrame = window.parent.frames["left"];
+			        	}
+			            
+			            if (boardLeftFrame != null && boardLeftFrame != undefined && boardLeftFrame.location.href.indexOf("/ezBoard/boardLeft.do")> -1) {
+			            	for (var i = 0; i < checkedBoxLength; i++) {
+			     				boardLeftFrame.getBoardNotReadCountByID(checkedItemTR.get(i).getAttribute("boardgroupid"), "", "GROUP");
+			     				boardLeftFrame.getBoardNotReadCountByID(checkedItemTR.get(i).getAttribute("data1"), checkedItemTR.get(i).getAttribute("data10"), "SUB");
+			            	}
+				    	}
+				    }
 				}
 			}
 		    

@@ -79,7 +79,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t475' /></h1>
+		<h1><spring:message code = 'ezCommunity.t475' /></h1>
 		<table class="content" style="margin-top:10px">
 			<tr>
 			    <th><spring:message code = 'ezCommunity.t9' /></th>
