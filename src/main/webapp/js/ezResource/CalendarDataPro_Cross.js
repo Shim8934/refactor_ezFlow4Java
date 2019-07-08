@@ -1,4 +1,4 @@
-﻿var wTable;
+﻿﻿var wTable;
 var xmlhttp;
 var delFlag = false;
 
@@ -388,6 +388,7 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.oGroupflag = SelectSingleNodeValue(objNodes, "groupflag");
     pTempData.oImportance = SelectSingleNodeValue(objNodes, "importance");
     pTempData.oApproveFlag = SelectSingleNodeValue(objNodes, "approveFlag");
+    pTempData.oReturnFlag = SelectSingleNodeValue(objNodes, "returnFlag");
     if (uselang == "1") {
         pTempData.oOwner_nm = SelectSingleNodeValue(objNodes, "owner_nm");
         pTempData.oDept_name = SelectSingleNodeValue(objNodes, "dept_name");
@@ -630,16 +631,54 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
         var oTr = document.createElement("TR");
         var oTd = document.createElement("TD");
         var oSpan = document.createElement("SPAN");
-
-        if (oAppointment.oApproveFlag == 1) {  //승인된 자원
-            oTd.className = "company";
-            oSpan.className = "resource_ok";
-        }
-        else { // 비승인된 자원
-            oTd.className = "department";
-            oSpan.className = "resource_no";
-        }
-
+        
+        var d = new Date();
+        
+       // 승인자원
+       if(oAppointment.oApproveFlag == 1) {
+    	   // 대여중
+    	   if(oAppointment.o_start <= d && oAppointment.o_end >= d) {
+    		   oTd.className = "company";
+    		   oSpan.className = "resource_rental";
+    	   }
+    	   // 대여종료
+    	   else if(oAppointment.o_end < d) {		
+    		// 자원 반납 상태(0 : 자동반납 1 : 담당확인)
+    		   if(returnFlag == 0) {
+		        	oTd.className = "company";
+		            oSpan.className = "resource_return";
+	        	}
+	        	else {
+	        		if(oAppointment.oReturnFlag == 0) {		// 반납 자원
+	        			oTd.className = "company";
+	        			oSpan.className = "resource_return";
+	        		}
+	        		else {													// 미반납 자원
+	        			oTd.className = "company";
+	        			oSpan.className = "resource_noreturn";
+	        		}
+	        	}
+    	   }
+    	   else {
+    		   if(returnFlag == 1 && oAppointment.oReturnFlag == 0) {	// 이미 반납한 자원
+    			   	oTd.className = "company";
+       				oSpan.className = "resource_return";
+    		   }
+    		   else {
+	    		   oTd.className = "company";
+	    		   oSpan.className = "resource_ok";
+    		   }
+    	   }
+       }
+       else if(oAppointment.oApproveFlag == 2) {	// 승인거부
+    		   oTd.className = "department";
+    		   oSpan.className = "resource_refuse";
+       }
+       else {
+    	   oTd.className = "department";
+    	   oSpan.className = "resource_no";
+       }
+        
         oTd.appendChild(oSpan);
 
         var pTime = "";
@@ -706,6 +745,7 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
 
         oTd.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
 
+        oTd.setAttribute("returnFlag", oAppointment.oReturnFlag);
 //        var oText = document.createTextNode(pSubject);
         oTd.appendChild(pSubject);
         oTr.appendChild(oTd);
@@ -734,15 +774,54 @@ function CalWeekDataBind(oAppointment, order, oAppointment2) {
         oTd.style.overflow = "hidden";
         oTd.style.textOverflow = "ellipsis";
         var oSpan = document.createElement("SPAN");
+        
+        var d = new Date();
 
-        if (oAppointment.oApproveFlag == 1) {  //승인된 자원
-            oDiv.className = "calendar_data_ok";
-            oSpan.className = "resource_ok";
+        // 승인자원
+        if(oAppointment.oApproveFlag == 1) {
+     	   // 대여중
+     	   if(oAppointment.o_start <= d && oAppointment.o_end >= d) {
+     		   oDiv.className = "calendar_data_ok";
+     		   oSpan.className = "resource_rental";
+     	   }
+     	   // 대여종료
+     	   else if(oAppointment.o_end < d) {		
+     		// 자원 반납 상태(0 : 자동반납 1 : 담당확인)
+     		   if(returnFlag == 0) {
+     			    oDiv.className = "calendar_data_ok";
+ 		            oSpan.className = "resource_return";
+ 	        	}
+ 	        	else {
+ 	        		if(oAppointment.oReturnFlag == 0) {		// 반납 자원
+ 	        			oDiv.className = "calendar_data_ok";
+ 	        			oSpan.className = "resource_return";
+ 	        		}
+ 	        		else {													// 미반납 자원
+ 	        			oDiv.className = "calendar_data_ok";
+ 	        			oSpan.className = "resource_noreturn";
+ 	        		}
+ 	        	}
+     	   }
+     	   else {
+     		   if(returnFlag == 1 && oAppointment.oReturnFlag == 0) {	// 이미 반납한 자원
+     			    oDiv.className = "calendar_data_ok";
+        			oSpan.className = "resource_return";
+     		   }
+     		   else {
+     			   oDiv.className = "calendar_data_ok";
+ 	    		   oSpan.className = "resource_ok";
+     		   }
+     	   }
         }
-        else { // 비승인된 자원
-            oDiv.className = "calendar_data_no";
-            oSpan.className = "resource_no";
+        else if(oAppointment.oApproveFlag == 2) {	// 승인거부
+        	   oDiv.className = "calendar_data_no";
+     		   oSpan.className = "resource_refuse";
         }
+        else {
+        	oDiv.className = "calendar_data_no";
+     	   oSpan.className = "resource_no";
+        }
+        
         oTd.appendChild(oSpan);
 
         var pTime = "";
@@ -802,7 +881,8 @@ function CalWeekDataBind(oAppointment, order, oAppointment2) {
         oDiv.setAttribute("onmouseout", "hideTooltip()");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
-
+        oDiv.setAttribute("returnFlag", oAppointment.oReturnFlag);
+        
         if (objDivE) {
             var DivSRect = objDivS.getBoundingClientRect();
             var DivERect = objDivE.getBoundingClientRect();
@@ -843,14 +923,53 @@ function CalWeekAllDataBind(oAppointment, order) {
         var oDiv = document.createElement("DIV");
         var oSpan = document.createElement("SPAN");
 
-        if (oAppointment.oApproveFlag == 1) {  //승인된 자원
-            oDiv.className = "calendar_data_ok";
-            oSpan.className = "resource_ok";
+        var d = new Date();
+        
+        // 승인자원
+        if(oAppointment.oApproveFlag == 1) {
+     	   // 대여중
+     	   if(oAppointment.o_start <= d && oAppointment.o_end >= d) {
+     		   oTd.className = "company";
+     		   oSpan.className = "resource_rental";
+     	   }
+     	   // 대여종료
+     	   else if(oAppointment.o_end < d) {		
+     		// 자원 반납 상태(0 : 자동반납 1 : 담당확인)
+     		   if(returnFlag == 0) {
+ 		        	oTd.className = "company";
+ 		            oSpan.className = "resource_return";
+ 	        	}
+ 	        	else {
+ 	        		if(oAppointment.oReturnFlag == 0) {		// 반납 자원
+ 	        			oTd.className = "company";
+ 	        			oSpan.className = "resource_return";
+ 	        		}
+ 	        		else {													// 미반납 자원
+ 	        			oTd.className = "company";
+ 	        			oSpan.className = "resource_noreturn";
+ 	        		}
+ 	        	}
+     	   }
+     	   else {
+     		   if(returnFlag == 1 && oAppointment.oReturnFlag == 0) {	// 이미 반납한 자원
+     			   	oTd.className = "company";
+        				oSpan.className = "resource_return";
+     		   }
+     		   else {
+ 	    		   oTd.className = "company";
+ 	    		   oSpan.className = "resource_ok";
+     		   }
+     	   }
         }
-        else { // 비승인된 자원
-            oDiv.className = "calendar_data_no";
-            oSpan.className = "resource_no";
+        else if(oAppointment.oApproveFlag == 2) {	// 승인거부
+     		   oTd.className = "department";
+     		   oSpan.className = "resource_refuse";
         }
+        else {
+     	   oTd.className = "department";
+     	   oSpan.className = "resource_no";
+        }
+        
         oDiv.appendChild(oSpan);
 
         var pTime = "";
@@ -904,7 +1023,8 @@ function CalWeekAllDataBind(oAppointment, order) {
         oDiv.setAttribute("onmouseout", "hideTooltip()");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
-
+        oDiv.setAttribute("returnFlag", oAppointment.oReturnFlag);
+        
         objElm.appendChild(oDiv);
 
     }
@@ -931,15 +1051,54 @@ function CalDayDataBind(oAppointment, order, oAppointment2) {
         oTd.style.overflow = "hidden";
         oTd.style.textOverflow = "ellipsis";
         var oSpan = document.createElement("SPAN");
+        
+        var d = new Date();
 
-        if (oAppointment.oApproveFlag == 1) {  //승인된 자원
-            oDiv.className = "calendar_data_ok";
-            oSpan.className = "resource_ok";
+        // 승인자원
+        if(oAppointment.oApproveFlag == 1) {
+     	   // 대여중
+     	   if(oAppointment.o_start <= d && oAppointment.o_end >= d) {
+     		   oDiv.className = "calendar_data_ok";
+     		   oSpan.className = "resource_rental";
+     	   }
+     	   // 대여종료
+     	   else if(oAppointment.o_end < d) {		
+     		// 자원 반납 상태(0 : 자동반납 1 : 담당확인)
+     		   if(returnFlag == 0) {
+     			    oDiv.className = "calendar_data_ok";
+ 		            oSpan.className = "resource_return";
+ 	        	}
+ 	        	else {
+ 	        		if(oAppointment.oReturnFlag == 0) {		// 반납 자원
+ 	        			oDiv.className = "calendar_data_ok";
+ 	        			oSpan.className = "resource_return";
+ 	        		}
+ 	        		else {													// 미반납 자원
+ 	        			oDiv.className = "calendar_data_ok";
+ 	        			oSpan.className = "resource_noreturn";
+ 	        		}
+ 	        	}
+     	   }
+     	   else {
+     		   if(returnFlag == 1 && oAppointment.oReturnFlag == 0) {	// 이미 반납한 자원
+ 			   		oDiv.className = "calendar_data_ok";
+    				oSpan.className = "resource_return";
+     		   }
+     		   else {
+     			   oDiv.className = "calendar_data_ok";
+ 	    		   oSpan.className = "resource_ok";
+     		   }
+     	   }
         }
-        else { // 비승인된 자원
-            oDiv.className = "calendar_data_no";
-            oSpan.className = "resource_no";
+        else if(oAppointment.oApproveFlag == 2) {	// 승인거부
+        		oDiv.className = "calendar_data_no";
+     		   oSpan.className = "resource_refuse";
         }
+        else {
+        	oDiv.className = "calendar_data_no";
+     	   oSpan.className = "resource_no";
+        }
+        
         oTd.appendChild(oSpan);
 
         var pTime = "";
@@ -1000,6 +1159,7 @@ function CalDayDataBind(oAppointment, order, oAppointment2) {
         oDiv.setAttribute("onmouseout", "hideTooltip()");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
+        oDiv.setAttribute("returnFlag", oAppointment.oReturnFlag);
 
         oDiv.style.top = "0";
         oDiv.style.overflow = "hidden";
@@ -1042,14 +1202,52 @@ function CalDayAllDataBind(oAppointment, order) {
 
         var oDiv = document.createElement("DIV");
         var oSpan = document.createElement("SPAN");
+        
+        var d = new Date();
 
-        if (oAppointment.oApproveFlag == 1) {  //승인된 자원
-            oDiv.className = "calendar_data_ok";
-            oSpan.className = "resource_ok";
+        // 승인자원
+        if(oAppointment.oApproveFlag == 1) {
+     	   // 대여중
+     	   if(oAppointment.o_start <= d && oAppointment.o_end >= d) {
+     		   oDiv.className = "calendar_data_ok";
+     		   oSpan.className = "resource_rental";
+     	   }
+     	   // 대여종료
+     	   else if(oAppointment.o_end < d) {		
+     		// 자원 반납 상태(0 : 자동반납 1 : 담당확인)
+     		   if(returnFlag == 0) {
+     			    oDiv.className = "calendar_data_ok";
+ 		            oSpan.className = "resource_return";
+ 	        	}
+ 	        	else {
+ 	        		if(oAppointment.oReturnFlag == 0) {		// 반납 자원
+ 	        			oDiv.className = "calendar_data_ok";
+ 	        			oSpan.className = "resource_return";
+ 	        		}
+ 	        		else {													// 미반납 자원
+ 	        			oDiv.className = "calendar_data_ok";
+ 	        			oSpan.className = "resource_noreturn";
+ 	        		}
+ 	        	}
+     	   }
+     	   else {
+     		   if(returnFlag == 1 && oAppointment.oReturnFlag == 0) {	// 이미 반납한 자원
+     			   		oDiv.className = "calendar_data_ok";
+        				oSpan.className = "resource_return";
+     		   }
+     		   else {
+     			   oDiv.className = "calendar_data_ok";
+ 	    		   oSpan.className = "resource_ok";
+     		   }
+     	   }
         }
-        else { // 비승인된 자원
-            oDiv.className = "calendar_data_no";
-            oSpan.className = "resource_no";
+        else if(oAppointment.oApproveFlag == 2) {	// 승인거부
+        		oDiv.className = "calendar_data_no";
+        		oSpan.className = "resource_refuse";
+        }
+        else {
+        	oDiv.className = "calendar_data_no";
+     	   	oSpan.className = "resource_no";
         }
         oDiv.appendChild(oSpan);
 
@@ -1104,6 +1302,8 @@ function CalDayAllDataBind(oAppointment, order) {
         oDiv.setAttribute("onmouseout", "hideTooltip()");
         oDiv.setAttribute("ondblclick", "event.cancelBubble=true;OnDoubleClickAppointment(this);");
         oDiv.setAttribute("titletext", oAppointment.oOwner_nm + "(" + oAppointment.oDept_name + ")");
+        oDiv.setAttribute("returnFlag", oAppointment.oReturnFlag);
+
         objElm.appendChild(oDiv);
 
     }
@@ -1143,17 +1343,53 @@ function showTooltip(nextTo, e, pTime, pSubject, pApproveFlag) {
     sTable.setAttribute("border", "0");
     sTable.setAttribute("width", "100%");
     sTd.className = "individual";
+    
+    var d = new Date();
 
     var sSpan = document.createElement("SPAN");
-    if (pApproveFlag == "1") {
-        sSpan.className = "resource_ok";
-        sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang307;
+    // 승인자원
+    if(oAppointment.oApproveFlag == 1) {
+ 	   // 대여중
+ 	   if(oAppointment.o_start <= d && oAppointment.o_end >= d) {
+ 		   oTd.className = "rent";
+ 		   oSpan.className = "resource_rental";
+ 	   }
+ 	   // 대여종료
+ 	   else if(oAppointment.o_end < d) {		
+ 		// 자원 반납 상태(0 : 자동반납 1 : 담당확인)
+ 		   if(returnFlag == 0) {
+		        	oTd.className = "rent_end";
+		            oSpan.className = "resource_return";
+	        	}
+	        	else {
+	        		if(oAppointment.oReturnFlag == 0) {		// 반납 자원
+	        			oTd.className = "return_ok";
+	        			oSpan.className = "resource_return";
+	        		}
+	        		else {													// 미반납 자원
+	        			oTd.className = "return_no";
+	        			oSpan.className = "resource_noreturn";
+	        		}
+	        	}
+ 	   }
+ 	   else {
+ 		   if(returnFlag == 1 && oAppointment.oReturnFlag == 0) {	// 이미 반납한 자원
+ 			   	oTd.className = "return_ok";
+    				oSpan.className = "resource_return";
+ 		   }
+ 		   else {
+	    		   oTd.className = "company";
+	    		   oSpan.className = "resource_ok";
+ 		   }
+ 	   }
+    }
+    else if(oAppointment.oApproveFlag == 2) {	// 승인거부
+ 		   oTd.className = "person";
+ 		   oSpan.className = "resource_refuse";
     }
     else {
-        sSpan.className = "resource_no";
-        sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang308;
+ 	   oTd.className = "department";
+ 	   oSpan.className = "resource_no";
     }
 
     sTr.appendChild(sTd);
@@ -1629,10 +1865,23 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     sTable.setAttribute("border", "0");
     sTable.setAttribute("width", "100%");
     sTd.className = "individual";
-
+    
+    var sTime;
+    var eTime;
+    
+    if (pTime == strLang126) {
+    	sTime = new Date(GetAttribute(nextTo, "_start"));
+        eTime = new Date(GetAttribute(nextTo, "_end"));
+    }
+    else {
+	    sTime = new Date(pTime.split(" - ")[0].replace(" ", "T"));
+	    eTime = new Date(pTime.split(" - ")[1].replace(" ", "T"));
+    }
+    var nTime = new Date();
+    
     var sSpan = document.createElement("SPAN");
     //var _img = document.createElement("IMG");
-    if (pApproveFlag == "1") {
+    /* if (pApproveFlag == "1") {
         //_img.src = "/images/calendar/icon_resource_ok.png"
         //_img.style.verticalAlign = "bottom";
         //sSpan.appendChild(_img);
@@ -1651,6 +1900,75 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang308;
+    } */
+    
+    // 승인자원
+    if(pApproveFlag == "1") {
+ 	   // 대여중
+ 	   if(sTime <= nTime && eTime >= nTime) {
+		  sSpan.className = "resource_rental";
+		  sSpan.style.marginTop = "0px";
+		  sSpan.style.marginRight = "3px";
+		  sTd.appendChild(sSpan);
+		  sTd.innerHTML += strLang324;
+ 	   }
+ 	   // 대여종료
+ 	   else if(eTime < nTime) {		
+ 		// 자원 반납 상태(0 : 자동반납 1 : 담당확인)
+ 		   if(returnFlag == 0) {
+ 			    sSpan.className = "resource_return";
+		    	sSpan.style.marginTop = "0px";
+		    	sSpan.style.marginRight = "3px";
+		        sTd.appendChild(sSpan);
+		        sTd.innerHTML += strLang327;
+        	}
+        	else {
+        		if(GetAttribute(nextTo,"returnFlag") == "0") {		// 반납 자원
+        			sSpan.className = "resource_return";
+	    	    	sSpan.style.marginTop = "0px";
+	    	    	sSpan.style.marginRight = "3px";
+	    	        sTd.appendChild(sSpan);
+	    	        sTd.innerHTML += strLang325;
+        		}
+        		else {													// 미반납 자원
+        			sSpan.className = "resource_noreturn";
+	    	    	sSpan.style.marginTop = "0px";
+	    	    	sSpan.style.marginRight = "3px";
+	    	        sTd.appendChild(sSpan);
+	    	        sTd.innerHTML += strLang326;
+        		}
+        	}
+ 	   }
+ 	   else {
+ 		   if(returnFlag == 1 && GetAttribute(nextTo,"returnFlag") == "0") {	// 이미 반납한 자원
+ 			    sSpan.className = "resource_return";
+ 		    	sSpan.style.marginTop = "0px";
+ 		    	sSpan.style.marginRight = "3px";
+ 		        sTd.appendChild(sSpan);
+ 		        sTd.innerHTML += strLang325;
+ 		   }
+ 		   else {
+ 			    sSpan.className = "resource_ok";
+	        	sSpan.style.marginTop = "0px";
+	        	sSpan.style.marginRight = "3px";
+	            sTd.appendChild(sSpan);
+	            sTd.innerHTML += strLang323;
+ 		   }
+ 	   }
+    }
+    else if(pApproveFlag == "2") {	// 승인거부
+    	sSpan.className = "resource_refuse";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
+        sTd.appendChild(sSpan);
+        sTd.innerHTML += strLang322;
+    }
+    else {
+    	sSpan.className = "resource_no";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
+        sTd.appendChild(sSpan);
+        sTd.innerHTML += strLang321;
     }
 
     sTr.appendChild(sTd);

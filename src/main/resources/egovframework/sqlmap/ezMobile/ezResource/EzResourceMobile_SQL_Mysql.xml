@@ -706,6 +706,8 @@
 				A.BRD_COMPANY = #v_PBRDCOMPANY#
 			AND 
 				A.BRD_GB = '2'
+			AND
+					A.APPROVEFLAG <> '2'
 			]]>	
 			<isNotEqual property="v_PAUTHYN" compareValue="A">			
       		AND
@@ -911,6 +913,8 @@
 				A.TENANT_ID = #tenantID#
 			AND 
 				A.RESCOMPANY = #v_PCOMPANYID#
+			AND
+				B.APPROVEFLAG <> '2'
       	   ORDER BY
            C.BRD_UPPER, C.BRD_STEP, B.BRD_STEP	
 		]]>
@@ -1052,6 +1056,8 @@
 			</isEmpty>	
 			<![CDATA[   	
 			AND
+				C.APPROVEFLAG <> '2'
+			AND
 				A.TENANT_ID = #tenantID#	
 			GROUP BY
 				A.NUM
@@ -1140,6 +1146,8 @@
 			<![CDATA[    
 			AND 
 				A.TENANT_ID = #tenantID#	
+			AND
+				D.APPROVEFLAG <> '2'
         	ORDER BY
         		STARTDATE ASC,
                 ENDDATE DESC
