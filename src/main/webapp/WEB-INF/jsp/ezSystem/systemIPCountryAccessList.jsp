@@ -15,16 +15,15 @@
 	<style>
 		.countryWrap { width: 720px; height: 550px; }
 		.countryWrap .countryDiv { float:left; width: 47%; }
-		.countryDiv {height: 80%;}
+		.countryDiv {height: 90%;}
 		.listview, .countryDivSec  { height: 100%; }
 		.countryWrap .countryDiv .countryDivSec { overflow: auto; }
 		.countryDivSec tbody > tr { cursor: pointer; vertical-align: middle; }   
-		.countryDivSec tbody > tr:hover { background-color: rgba(244, 245, 245, 1); } 
 		.countryDivSec tbody > tr img {  display: block; }
 		.arrDiv {
 			float:left; 
 			width: 6%;
-			height: 80%;
+			height: 90%;
 			box-sizing: border-box;
 		    padding: 0 9px;
 		    position: relative;
@@ -36,7 +35,7 @@
 		.counntryTRSelect { background: rgb(241, 248, 255); }
 		.counntryTRHover { background-color: rgb(244, 245, 245); }
 	</style>
-<body style="overflow:hidden; ">
+<body style="overflow:hidden; " onselectstart="return false" ondragstart="return false">
 	<br>
 	<div class="countryWrap">
 		<div class="countryDiv">
@@ -70,7 +69,7 @@
 		<div class="arrDiv">
 			<div>
             	<img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="btn_Add_onclick()"/>
-            	<img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()"/>
+            	<img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="btn_Del_onclick()"/>
             </div>
         </div>
         
@@ -115,7 +114,7 @@
 	}
 	
 	function getAccessCountryList() {
-		var printTR = "<tr data-name=\"{countryName}\" data-code=\"{countryCode}\">";
+		var printTR = "<tr data-name=\"{countryName}\" data-code=\"{countryCode}\" >";
 			printTR += "<td align=\"left\"><img src=\"{imagePath}\" alt=\"\" title=\"\" width=\"32\"></td>"; 
 			printTR += "<td align=\"left\">{countryName}</td></tr>"; 
 		
@@ -151,7 +150,6 @@
 		var bodyH = document.body.offsetHeight;
 		var iframeMH = parent.document.getElementById("ipManager_ifrm").style.maxHeight.split("px")[0];
 		
-		console.log("iframeH = " + iframeH + ", bodyH = " + bodyH + ", iframeMH = " + iframeMH);
 		if (iframeH <= bodyH) {
 			if (iframeMH < bodyH) {
 				parent.document.getElementById("ipManager_ifrm").style.height = iframeMH + "px";
@@ -163,29 +161,37 @@
 	
 	function btn_Add_onclick() {
 		$(".countryList").find(".counntryTRSelect").each(function(index, ele) {
-			var selectCountryTR = $(ele).clone(true);
-			var thisCountryCode = $(selectCountryTR).attr("data-code");
-			
-			if (countryAccessList.indexOf(thisCountryCode) == -1) {
-				countryAccessList.push(thisCountryCode);
-				
-				var printCountryTR = $(selectCountryTR).removeClass("counntryTRSelect");
-				$(".countryAccessList tbody").append(printCountryTR);
-			}
+			addFunction(ele);
 		});
 	}
 	
-	function DeleteReceiver() {
+	function btn_Del_onclick() {
 		$(".countryAccessList").find(".counntryTRSelect").each(function(index, ele) {
-			var thisCountryCode = $(ele).attr("data-code");
-			var countryAccessListIndex = countryAccessList.indexOf(thisCountryCode);
-
-			if (countryAccessListIndex > -1) {
-				countryAccessList.splice(countryAccessListIndex, 1);
-			}
-			
-			$(ele).remove();
+			delFuntion(ele);
 		});
+	}
+	
+	function addFunction(thisEle) {
+		var selectCountryTR = $(thisEle).clone(true);
+		var thisCountryCode = $(selectCountryTR).attr("data-code");
+		
+		if (countryAccessList.indexOf(thisCountryCode) == -1) {
+			countryAccessList.push(thisCountryCode);
+			
+			var printCountryTR = $(selectCountryTR).removeClass("counntryTRSelect");
+			$(".countryAccessList tbody").append(printCountryTR);
+		}
+	}
+	
+	function delFuntion(thisEle) {
+		var thisCountryCode = $(thisEle).attr("data-code");
+		var countryAccessListIndex = countryAccessList.indexOf(thisCountryCode);
+
+		if (countryAccessListIndex > -1) {
+			countryAccessList.splice(countryAccessListIndex, 1);
+		}
+		
+		$(thisEle).remove();
 	}
 	
 	function saveBtn() {
@@ -205,12 +211,29 @@
 		getAccessCountryList();
 	}
 	
-
-	$(document).on("click", ".countryDivSec tr", function() {
+ 	$(document).on("click", ".countryDivSec tbody > tr", function() {
 		if ($(this).hasClass("counntryTRHover")){
 			$(this).removeClass("counntryTRHover");
 		}
 		$(this).toggleClass("counntryTRSelect");
+	}); 
+	
+	$(document).on("mouseover", ".countryDivSec tbody > tr", function() {
+		if (!$(this).hasClass("counntryTRSelect")){
+			$(this).addClass("counntryTRHover");
+		}
+	});
+	
+	$(document).on("mouseleave", ".countryDivSec tbody > tr", function() {
+		$(this).removeClass("counntryTRHover");
+	});
+	
+	$(document).on("dblclick", ".countryDivSec tbody > tr", function() {
+		if ($(this).parents(".countryList").length == 1) {
+			addFunction(this);
+		} else if ($(this).parents(".countryAccessList").length == 1) {
+			delFuntion(this);
+		}
 	});
 	
 </script>

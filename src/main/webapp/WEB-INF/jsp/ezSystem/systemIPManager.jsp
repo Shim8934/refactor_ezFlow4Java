@@ -145,9 +145,46 @@
 	                }
 	            }
 	        }
+	        
+	     	// 사용여부 저장 버튼 클릭
+			function saveBtn() {
+				var allowResult = false;
+				if (!document.getElementById("ipRadio0").checked) {
+					allowResult = true;
+				}
+				
+				$.ajax({
+					type : "POST",
+					url : "/ezSystem/setUseIPAccess.do?allowResult=" + allowResult,
+					cache : false,
+					error : function(data) {
+						console.log(data);
+						alert("<spring:message code='ezCommunity.t283'/>");
+					},
+					complete : function(data) {
+						alert("<spring:message code='ezCommunity.t282'/>");
+						
+						if (useIPAccess == "NO") {
+							useIPAccess = "YES";
+						} else {
+							useIPAccess = "NO";
+						}
+						
+					}
+				});
+			}
+	     	
+			function cancleBtn() {
+				if (useIPAccess === "NO") {
+					document.getElementById("ipRadio0").checked = true;
+				} else {
+					document.getElementById("ipRadio1").checked = true;
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody" style="height: 95%;">
+		<div>
 	    <h1><spring:message code='ezSystem.ksa02' /></h1>
 	    <span class="txt">▒ <spring:message code='ezSystem.jje6'/></span><br><br>
 		
@@ -173,6 +210,7 @@
 			    <p><span id="tagsub3"><spring:message code='ezSystem.ksa01' /></span></p>
 			    <p><span id="tagsub2"><spring:message code='ezSystem.ksa03' /></span></p>
 	        </div>
+	    </div>
 	    </div>
 	    <iframe id="ipManager_ifrm" style="width: 100%; height:350px; max-height: 650px;" frameborder="0"></iframe> 
 	</body>
