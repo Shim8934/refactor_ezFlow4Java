@@ -1146,9 +1146,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			BufferedImage outputImage = null;
 			Graphics2D saveImage = null;
 			
-			outputImage= new BufferedImage(467, 200, BufferedImage.TYPE_INT_RGB);
+			outputImage= new BufferedImage(280, 515, BufferedImage.TYPE_INT_RGB);
 			saveImage = outputImage.createGraphics();
-			saveImage.drawImage(inputImage, 0, 0, 467, 200, null);
+			saveImage.drawImage(inputImage, 0, 0, 280, 515, null);
 			saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 			
 			File newFile = new File(commonUtil.detectPathTraversal(realPath + serverPath + saveName));

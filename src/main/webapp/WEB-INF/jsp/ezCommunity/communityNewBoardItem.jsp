@@ -787,7 +787,7 @@
 						
             function InitializeSettings() {
             	
-                document.getElementById('tdBoardName').innerHTML = "${boardInfo.boardName}";
+                document.getElementById('tdBoardName').innerHTML = userInfo.primary == "1"? "${boardInfo.boardName}" : "${boardInfo.boardName2}";
                 
                 if (ExpireDays == "-1" && strEndDate.substring(0,4) == "9999" || ExpireDays == "-1" && pMode == "new") {
                     document.getElementById('ChkPermanence').checked = true;

@@ -1868,6 +1868,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			listAuthType = "all";
 		}
 		
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		
 		LOGGER.debug("userId = " + userId + " || userAuthType = " + userAuthType + " || listAuthType = " + listAuthType + " || comFlag = " + comFlag);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3129,7 +3133,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception {
 		LOGGER.debug("updateMonthlyHoliday started");
-		
+		LOGGER.debug("userId = " + map.get("userId") + " || joinDate = " + map.get("joinDate"));
 		String companyId = (String)map.get("companyId");
 		int tenantId = Integer.parseInt(String.valueOf(map.get("tenantId")));
 		
