@@ -94,7 +94,7 @@
 			}
 			
 			function menuQst_List() {
-	            var szUrl = "/ezQuestion/qstList.do?brdID="+pBrdID+"&currPage="+pCurrPage;
+	            var szUrl = "/ezQuestion/qstList.do?brdID="+pBrdID;
 			    window.location.href = szUrl;
 			}
 		    function menu_AnalyStart() {

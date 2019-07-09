@@ -47,6 +47,7 @@
 	        var first = 1;
 	        var items = "${resultCount}";
 	        var rightFrame = "";
+	        var useLeftCnt = "${useLeftCnt}";
 	        
 		    window.onresize = function () {
 		        var menuSize = (parseInt(items) + 2) * 30;
@@ -484,13 +485,6 @@
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-		            var orgBoardTitle = treeNode.GetNodeData("DATA2"); // personalizedPortal용 변수 설정
-		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
-				    var orgItemCount = orgBoardName.substring(orgBoardTitle.length + 1, orgBoardName.length);
-				    
-				    if (orgBoardTitle == orgBoardName) {
-				    	orgItemCount = 0;
-				    }
 				    
 		            /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
 				  	if (typeof window.parent.frames["right"] == "undefined") {
@@ -526,30 +520,8 @@
 			           }
 					}
 		            
-		            /* 2019-04-23 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신(personalizedPortal 게시판용 수정) */
-			    	$.ajax({
-						type : "GET",
-						dataType : "text",
-						async : false,
-						url : "/ezBoard/getItemCount.do",
-						data : {
-							boardID : SelectedBoardID
-						},
-						success: function(resultCount) {
-							if (orgItemCount != resultCount) {
-								var newNodeName = "";
-								if (resultCount > 0) {
-									newNodeName = orgBoardTitle + " " + resultCount;
-								} else {
-									newNodeName = orgBoardTitle;
-								}
-								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
-							}
-						},
-						error: function() {
-							return;
-						}
-					});
+				    /* 2019-07-08 홍승비 - 게시물 카운트 갱신 동작 함수로 분리 */
+				  	refreshItemCnt(pNodeID);
 		        }
 		        catch (e) {
 		            alert(e.description);
@@ -1011,6 +983,51 @@
 		    /* function spanClick(divID) {
 		    	document.getElementById(divID).click();
 		    } */
+		    
+		    /* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 게시물 개수 갱신 함수 추가 */
+		    function refreshItemCnt(pNodeID) {
+		       	if (useLeftCnt == "YES") {
+			    	var SelectedBoardID = "";
+			    	if(document.getElementById(pNodeID).id.indexOf("FromTreeView") > -1) {
+			    		SelectedBoardID = document.getElementById(pNodeID).getAttribute("data3");
+			    	} else {
+			    		SelectedBoardID = document.getElementById(pNodeID).getAttribute("data1");
+			    	}
+		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+		            var orgBoardTitle = document.getElementById(pNodeID).getAttribute("data2"); // personalizedPortal용 변수 설정
+				    var orgItemCount = orgBoardName.substring(orgBoardTitle.length + 1, orgBoardName.length);
+			    	
+				    if (orgBoardTitle == orgBoardName) {
+				    	orgItemCount = 0;
+				    }
+				    
+			    	 /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getItemCount.do",
+						data : {
+							boardID : SelectedBoardID
+						},
+						success: function(resultCount) {
+							if (orgItemCount != resultCount) {
+								var newNodeName = "";
+								if (resultCount > 0) {
+									newNodeName = orgBoardTitle + " " + resultCount;
+								} else {
+									newNodeName = orgBoardTitle;
+								}
+								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
+							}
+						},
+						error: function() {
+							return;
+						}
+					});
+		       	}
+		    }
+
 	    </script>
 	</head>
 	<body class="newLeft">
