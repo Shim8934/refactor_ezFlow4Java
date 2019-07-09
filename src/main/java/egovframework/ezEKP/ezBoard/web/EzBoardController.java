@@ -250,7 +250,13 @@ public class EzBoardController extends EgovFileMngUtil{
         } else {
         	memoFlag = "NO";
         }
-		
+        
+        /* 2019-07-09 홍승비 - 게시판 좌측메뉴 게시물 개수 표출 사용여부 플래그 추가 */
+        String useLeftCnt = "";
+        if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", tenantID) != null) {
+        	useLeftCnt = ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", tenantID);
+        }
+        
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
 		}
@@ -353,6 +359,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("pollFlag", pollFlag);
         modelMap.addAttribute("ladderFlag", ladderFlag);
         modelMap.addAttribute("memoFlag", memoFlag);
+        modelMap.addAttribute("useLeftCnt", useLeftCnt);
         
 		logger.debug("boardLeft ended");
 
@@ -8441,19 +8448,21 @@ public class EzBoardController extends EgovFileMngUtil{
 			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 			BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 			
-			myFavoriteVO.setBoardId(boardID);
-			myFavoriteVO.setUserId(userInfo.getId());
-			myFavoriteVO.setType("1");
-			myFavoriteVO.setTenantID(userInfo.getTenantId());
-			myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
-			
-			if (boardInfo.getGuBun().equals("4")) {
-				intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
-			} else if (boardInfo.getGuBun().equals("5")) {
-				myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
-				intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
-			} else {
-				intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+			if(boardInfo != null && boardInfo.getGuBun() != null) { // 마이게시판 트리의 boardID 전달 시 NullPointer 에러 방지
+				myFavoriteVO.setBoardId(boardID);
+				myFavoriteVO.setUserId(userInfo.getId());
+				myFavoriteVO.setType("1");
+				myFavoriteVO.setTenantID(userInfo.getTenantId());
+				myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+				
+				if (boardInfo.getGuBun().equals("4")) {
+					intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
+				} else if (boardInfo.getGuBun().equals("5")) {
+					myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
+					intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
+				} else {
+					intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+				}
 			}
 		} else {
 			intCount = 0;

@@ -120,7 +120,7 @@
 					DivPopUpShow(330, 205, pUrl);
 					board_alertArguments[1] = window.close;
 // 		            alert("<spring:message code='ezBoard.t126'/>");
-		            rtnVal = "OK";
+		            rtnVal = pDestBoardID;
 // 		            window.close();
 		            
 			        /* 2019-07-02 홍승비 - 승인게시판에 게시물 복사, 이동 시에도 승인메일 보내도록 수정 */
