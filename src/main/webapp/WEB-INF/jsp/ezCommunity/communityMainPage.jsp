@@ -480,7 +480,7 @@
 	                
 	                var span2 = document.createElement("SPAN");
 	                span2.className = "kind";
-	                var clubname = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME");
+	                var clubname = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], primary == "1" ? "C_CLUBNAME" : "C_CLUBNAME2");
 	                if(clubname.length > 9) {
 	                	clubname = clubname.substring(0,8) + "...";
 	                }
@@ -1183,7 +1183,7 @@
                 	
                 	var dd = document.createElement("DD");
                 	dd.className = "title";
-                	dd.innerHTML = MakeXMLString(clubVO.c_ClubName);
+                	dd.innerHTML = MakeXMLString(primary == "1" ? clubVO.c_ClubName : clubVO.c_ClubName2);
                 	
                 	var dd2 = document.createElement("DD");
                 	dd2.className = "categoryInfo_count";

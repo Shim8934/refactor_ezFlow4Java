@@ -300,6 +300,7 @@ function tableListControl_Week()
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
         //document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
         setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
+        document.getElementById("divViewHeader").style.color = "";
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
         var b = 0;
@@ -672,8 +673,10 @@ function tableListControl_Week()
                 var approveflag_name = "";
                 if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 1)
                     approveflag_name = "icon_02";
-                else
+                else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 0)
                     approveflag_name = "icon_01";
+                else 
+                	approveflag_name = "icon_03";
 
                 var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[1].split(":");
                 var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[1].split(":");
@@ -683,15 +686,18 @@ function tableListControl_Week()
                 var _tr = document.createElement("TR");
                 var _td = document.createElement("TD");
                 var _span = document.createElement("SPAN");
+                var _span2 = document.createElement("SPAN");
 
                 _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin-bottom:5px; white-space:nowrap; overflow:hidden;");
 
                 _td.rowSpan = "2";
-                var tdwidth = 3;
+                var tdwidth = 22;
                 if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
                     tdwidth = 18;
                 _td.style.width = tdwidth + "px";
-                _td.setAttribute("class", approveflag_name);
+                _td.style.verticalAlign = "top";
+                _span2.setAttribute("class", approveflag_name);
+                _td.appendChild(_span2);
                 _tr.appendChild(_td);
 
                 _td = document.createElement("TD");
@@ -807,8 +813,10 @@ function makeTable(xmldom, pNum, dayType) {
     var approveflag_name = "";
     if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 1)
         approveflag_name = "icon_02";
-    else
+    else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 0)
         approveflag_name = "icon_01";
+    else
+    	approveflag_name = "icon_03";
 
     var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[1].split(":");
     var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[1].split(":");
@@ -817,15 +825,18 @@ function makeTable(xmldom, pNum, dayType) {
     var _tr = document.createElement("TR");
     var _td = document.createElement("TD");
     var _span = document.createElement("SPAN");
+    var _span2 = document.createElement("SPAN");
 
     _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin:0; white-space:nowrap; overflow:hidden;");
 
     _td.rowSpan = "2";
-    var tdwidth = 3;
+    var tdwidth = 22;
     if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
         tdwidth = 18;
     _td.style.width = tdwidth + "px";
-    _td.setAttribute("class", approveflag_name);
+    _td.style.verticalAlign = "top";
+    _span2.setAttribute("class", approveflag_name);
+    _td.appendChild(_span2);
     _tr.appendChild(_td);
 
     _td = document.createElement("TD");
@@ -1073,7 +1084,7 @@ function tableListControl_today() {
             	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
                 //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
-            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_no' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
@@ -1246,7 +1257,7 @@ function tableListControl_today() {
             _tr.appendChild(_th);
         }
         _table.appendChild(_tr);
-
+        tdcount = 0;
         for (var k = 0; k < title_name.length; k++) {
             for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
                 var s_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0]);
@@ -1581,8 +1592,8 @@ function showTooltip_MouseOver(obj, e) {
     	sSpan.style.marginTop = "0px";
     	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang307;
-    } else {
+        sTd.innerHTML += strLang323;
+    } else if (GetAttribute(obj,"approveFlag") == "0") {
         //_img.src = "/images/calendar/icon_resource_no.png"
         //_img.style.verticalAlign = "bottm";
         //sSpan.appendChild(_img);
@@ -1590,7 +1601,16 @@ function showTooltip_MouseOver(obj, e) {
     	sSpan.style.marginTop = "0px";
     	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang308;
+        sTd.innerHTML += strLang321;
+    } else {
+    	 //_img.src = "/images/calendar/icon_resource_no.png"
+        //_img.style.verticalAlign = "bottm";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_refuse";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
+        sTd.appendChild(sSpan);
+        sTd.innerHTML += strLang322;
     }
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);

@@ -2909,6 +2909,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					}
 
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardList.get(j).get("TITLE")) + "</TITLE>");
+					/* 2019-07-04 홍승비 - 게시판 미독건수 읽음표시 처리용 boardGroupID 추가 */
+					resultXML.append("<BOARDGROUPID>" + boardList.get(j).get("BOARDGROUPID") + "</BOARDGROUPID>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -3685,7 +3687,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("setAsRead ended");
 	}
 	/**
-	 * 게시판 읽음표시 실행//새게시물 전용
+	 * 게시판 읽음표시 실행 // 새게시물 전용
 	 */
 	@RequestMapping(value="/ezBoard/setReadNew.do", method = RequestMethod.POST)
 	public void setAsReadNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO userInfo) throws Exception {
@@ -3693,13 +3695,9 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String pBoardID = "";
 		String pBoardIDList = "";
 		String pItemIDList = "";
 		
-		if (request.getParameter("boardID") != null) {
-			pBoardID = request.getParameter("boardID");
-		}
 		if (request.getParameter("pBoardIDList") != null) {
 			pBoardIDList = request.getParameter("pBoardIDList");
 		}
@@ -3711,9 +3709,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String[] boardIDs = pBoardIDList.split(";");
 		String[] itemIDs = pItemIDList.split(";");
 		
+		/* 2019-07-04 홍승비 - 새게시물의 게시판ID를 읽음표시 기능에서 사용하지 않도록 수정 */
 		for (int k = 0; k < itemIDs.length; k++) {
-			ezBoardService.setAsRead(userInfo, pBoardID, itemIDs[k]);
-			ezBoardService.setAsReadNew(userInfo, boardIDs[k], itemIDs[k]);
+			ezBoardService.setAsRead(userInfo, boardIDs[k], itemIDs[k]);
 		}
 
 		logger.debug("setAsReadNew ended");

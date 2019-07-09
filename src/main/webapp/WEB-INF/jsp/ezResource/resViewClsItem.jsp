@@ -105,6 +105,20 @@
 								<c:if test="${approveFlag eq 0}">
 									<spring:message code="ezResource.t162"/>
 								</c:if>
+								<c:if test="${approveFlag eq 2}">
+									<spring:message code="ezSchedule.t404"/>
+								</c:if>
+          					</td>
+        				</tr>
+        				<tr>
+          					<th> <spring:message code="ezResource.kmsr11"/></th>
+          					<td colspan="3">
+								<c:if test="${returnFlag eq 0}">
+									<spring:message code="ezResource.kmsr12"/>
+								</c:if>
+								<c:if test="${returnFlag eq 1}">
+									<spring:message code="ezResource.kmsr13"/>
+								</c:if>
           					</td>
         				</tr>
         				<tr>

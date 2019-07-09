@@ -33,6 +33,8 @@ public class ResBrdVO {
 	private String makeDate;
 	/** 사용 허가 유무*/
 	private String approveFlag;
+	/** 반납 절차*/
+	private String returnFlag;
 	/** 게시판 접근 거부 메시지*/
 	private String brdAccess;
 	
@@ -131,6 +133,12 @@ public class ResBrdVO {
 	}
 	public void setApproveFlag(String approveFlag) {
 		this.approveFlag = approveFlag;
+	}
+	public String getReturnFlag() {
+		return returnFlag;
+	}
+	public void setReturnFlag(String returnFlag) {
+		this.returnFlag = returnFlag;
 	}
 	public String getBrdAccess() {
 		return brdAccess;

@@ -106,7 +106,7 @@
 			</c:when>
 			
 			<c:otherwise>
-				<h1><spring:message code = 'ezCommunity.t505' /></h1>
+				<h1><spring:message code = 'ezCommunity.t493' /></h1>
 			</c:otherwise>
 		</c:choose>
 		

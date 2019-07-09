@@ -390,8 +390,18 @@
 						
 						if (approveFlag == "1") {
 							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
-						} else {
+						} else if (approveFlag == "0") {
 							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+						} else {
+							$("#approveFlag").html("<spring:message code='ezSchedule.t404'/>");
+						}
+						
+						var returnFlag = result.resBrd.returnFlag;
+						
+						if (returnFlag == "0") {
+							$("#returnFlag").html("<spring:message code='ezResource.kmsr12'/>");
+						} else {
+							$("#returnFlag").html("<spring:message code='ezResource.kmsr13'/>");
 						}
 						
 						$("#resDate").html(result.resBrd.makeDate);
@@ -474,6 +484,7 @@
 	    </div>
 
 	    <div class="mainmenuTab" id="noResListSpan">
+	    	<ul class="mainmenuTabUL_left">  <li><span class="sub_iconLNB tree_resource_ok"></span><spring:message code='ezResource.t191'/></li><li><span class="sub_iconLNB tree_resource_no"></span><spring:message code='ezResource.kmsr21'/></li> <li><span class="sub_iconLNB tree_resource_refuse"></span><spring:message code='ezResource.kmsr22'/></li> </ul>
 	        <ul class="mainmenuTabUL">
 	            <li id="ToDaybtn" class="off"><span onClick="setweek_onload('TODAY');"><spring:message code='ezSchedule.t140'/></span></li><li id="Weekbtn" class="on"><span onClick="setweek_onload('WEEK');"><spring:message code='ezSchedule.t141'/></span></li>
 	        </ul>
@@ -585,6 +596,10 @@
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
 						<td colspan="2" id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.kmsr11'/></th>
+						<td colspan="2" id="returnFlag"></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezBoard.t5007'/></th>

@@ -1847,7 +1847,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag) throws Exception {
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag, String primary) throws Exception {
 		LOGGER.debug("getAttitudeAuthDeptList started.");
 		
 		if (userAuthType == null || userAuthType.equals("")) {
@@ -1868,6 +1868,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			listAuthType = "all";
 		}
 		
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		
 		LOGGER.debug("userId = " + userId + " || userAuthType = " + userAuthType + " || listAuthType = " + listAuthType + " || comFlag = " + comFlag);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1877,6 +1881,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userAuthType", userAuthType);
 		map.put("listAuthType", listAuthType);
 		map.put("comFlag", comFlag);
+		map.put("primary", primary);
 		
 		List<AttitudeAuthorVO> list = ezAttitudeDAO.getAttitudeAuthDeptList_hyo(map);
 		
@@ -3128,7 +3133,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception {
 		LOGGER.debug("updateMonthlyHoliday started");
-		
+		LOGGER.debug("userId = " + map.get("userId") + " || joinDate = " + map.get("joinDate"));
 		String companyId = (String)map.get("companyId");
 		int tenantId = Integer.parseInt(String.valueOf(map.get("tenantId")));
 		
