@@ -170,7 +170,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pollEndDate = request.getParameter("pollEndDate");
 			pollEndDate = commonUtil.makeDate(pollEndDate.substring(0,4), pollEndDate.substring(5,7), pollEndDate.substring(8,10), false);
 		}
-		if(request.getParameter("currPage") != null){
+		if(request.getParameter("currPage") != null && !request.getParameter("currPage").equals("")){
 			currPage = request.getParameter("currPage");
 		}
 		
