@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
@@ -760,5 +761,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addThemeContent3");
 			update("EzCommonDAO.insertThemeContent3");
 		}
+	}
+
+	public List<CountryVO> getCountryInfo(Map<String, Object> map) {
+		return (List<CountryVO>) list("EzCommonDAO.getCountryInfo",map);
 	}
 }
