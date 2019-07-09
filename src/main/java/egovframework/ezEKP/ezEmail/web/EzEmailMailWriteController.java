@@ -2139,6 +2139,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //			if (!filePathValue.startsWith("/")) {
 //				filePathValue = "/" + filePathValue;
 //			}
+			//19.07.09 첨부파일 경로가 인코딩되어서 파일을 찾지 못해 오류가 나므로 decode처리.
+			filePathValue = URLDecoder.decode(filePathValue, "UTF-8");
 			
 			filePath[i] = journalPath + filePathValue;
 			
