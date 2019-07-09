@@ -23,7 +23,8 @@
 		    }
 		    function Change_Click() {
 		    	var formData = $("form.journalForm").serialize();
-		    	
+		    	var companyId = $("select[name='companyId']").val();
+		    	formData += "&companyId="+companyId;
 		        $.ajax({
 		    		type : "POST",
 		    		url : "/admin/ezJournal/updatreFormType.do",

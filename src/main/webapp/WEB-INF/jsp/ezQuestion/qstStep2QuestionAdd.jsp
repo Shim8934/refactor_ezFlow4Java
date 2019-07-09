@@ -462,6 +462,17 @@
                 		var xmlDom_Attach = loadXMLString(Ques_Answer.txtQuestion.AnsInfo);
                 		xmlDoc.documentElement.appendChild(xmlDoc.importNode(SelectSingleNode(xmlDom_Attach, "ATTACH"), true));
             		}
+        		} else if(Ques_Answer.txtQuestion.getAttribute("AnsInfo") != null) {
+        			var _MSIE = 'MSIE';
+            		var useragentstr = navigator.userAgent;
+            		if (useragentstr.indexOf(_MSIE) != -1) {
+                		var xmlDom_Attach = loadXMLString(Ques_Answer.txtQuestion.getAttribute("AnsInfo"));
+                		xmlDoc.documentElement.appendChild(xmlDoc.importNode(SelectSingleNode(xmlDom_Attach, "ATTACH"), true));
+                		
+            		} else{
+                		var xmlDom_Attach = loadXMLString(Ques_Answer.txtQuestion.getAttribute("AnsInfo"));
+                		xmlDoc.documentElement.appendChild(xmlDoc.importNode(SelectSingleNode(xmlDom_Attach, "ATTACH"), true));
+            		}
         		}
         		if (document.Ques_Answer.selView[2].checked && Ques_Answer.selType[0].checked) {
             		sviewno = trim_Cross(document.Ques_Answer.sNum.value);

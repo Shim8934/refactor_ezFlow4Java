@@ -88,7 +88,7 @@
 		  	<tr>
 			    <th><spring:message code = 'ezCommunity.t9991' /></th>			    
 			    <c:choose>
-			    	<c:when test="${userInfo.lang == '2' }">
+			    	<c:when test="${userInfo.primary == '2' }">
 			    		<td><c:out value = '${club.c_ClubName2}' /></td>
 			    	</c:when>
 			    	
