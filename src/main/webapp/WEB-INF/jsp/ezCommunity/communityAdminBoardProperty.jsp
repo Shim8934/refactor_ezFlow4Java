@@ -426,7 +426,14 @@
 		<table class="content" style="margin-top:10px">
 			<tr>
 				<th><spring:message code = 'ezCommunity.t306' /></th>
-				<td>&nbsp;&nbsp;${boardInfo.boardName}</td>
+				<c:choose>
+					<c:when test="${userInfo.primary == '1' }">
+						<td>&nbsp;&nbsp;${boardInfo.boardName}</td>
+					</c:when>
+					<c:otherwise>
+						<td>&nbsp;&nbsp;${boardInfo.boardName2}</td>
+					</c:otherwise>
+				</c:choose>
 			</tr>
 			<tr>
 				<th><spring:message code = 'ezCommunity.t381' /></th>
