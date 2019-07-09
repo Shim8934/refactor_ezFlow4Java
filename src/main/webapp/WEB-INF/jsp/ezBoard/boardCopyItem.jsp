@@ -110,8 +110,8 @@
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t355'/>");
 					board_alertArguments[1] = window.close;
-		            window.returnValue = "OK";
-		            rtnVal = "OK";
+		            window.returnValue = pDestBoardID;
+		            rtnVal = pDestBoardID;
 		            
 			        /* 2019-07-02 홍승비 - 승인게시판에 게시물 복사, 이동 시에도 승인메일 보내도록 수정 */
 			        $.ajax({
@@ -135,10 +135,6 @@
     					}
     				});
 			        
-		            try {
-				        window.opener.leftCountRf();
-					} catch (e) {
-					}
 // 		            window.close();
 		        } 
 		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
