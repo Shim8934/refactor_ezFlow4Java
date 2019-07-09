@@ -1267,6 +1267,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			mailMaxReceiverCount = "200";
 		}
 		
+		// 20190708 조진호 - 결재, 게시판, 커뮤니티에서 메일로 발송 시에는 textOption 무시
+		if (_cmd.equalsIgnoreCase("board") || _cmd.equalsIgnoreCase("boardDotNet") 
+ 				|| _cmd.equalsIgnoreCase("Community") || _cmd.equalsIgnoreCase("CommunityDotNet")
+ 				|| _cmd.equalsIgnoreCase("docsend") || _cmd.equalsIgnoreCase("docsendDotNet")) {
+			bodyType = "0";
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
