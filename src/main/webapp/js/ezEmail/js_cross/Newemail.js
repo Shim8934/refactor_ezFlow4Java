@@ -846,6 +846,9 @@ function event_xmlhttp_mailPreview_Complete() {
             var pItemid = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/ITEMID")[0]);
             var pContentClass = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/CONTENTCLASS")[0]);
             var senderProfileImageName = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/SENDERPROFILEIMAGENAME")[0]);
+            var pCountryCode = getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYCODE")[0]);
+            var pMailIP =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYIP")[0]);
+            var pCountryName =  getNodeText(SelectNodes(xmlhttp_mailPreview.responseXML, "DATA/COUNTRYNAME")[0]);
             
             if (pPreviewShow_HOW == "H") {
                 PrevViewFormH.iptURL.value = pItemid;
@@ -977,9 +980,36 @@ function event_xmlhttp_mailPreview_Complete() {
             }
             
             if(pFromname == ""){
-            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;" + pFromname + "</span>";
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;" + pFromname + " " + "</span>";
             } else {
-            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + "\"</span>";
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname +" " + "\"</span>";
+            	
+            	if (useCountryIP == "YES" ) {
+            		pMailSenderHtml += "<span title=" + pCountryName + ">"
+            		if (useShowSystemCountry == "YES") {
+            			if (pCountryCode != "") {
+            				if (pCountryCode == "unknown") {
+            					pCountryCode = "qm";
+            				}
+            				pMailSenderHtml += "<img src='/images/countryIcon/" + pCountryCode.toLowerCase() + ".png' style='vertical-align: middle; padding: 0px 0px 3px;'> " ;  
+            			}
+                		         		
+            		} else {
+            			if (pCountryCode != "") {
+            				if (systemCountryCode != pCountryCode) {
+            					if (pCountryCode == "unknown") {
+            						pCountryCode = "qm";
+            					}
+            					pMailSenderHtml += "<img src='/images/countryIcon/" + pCountryCode.toLowerCase() + ".png' style='vertical-align: middle; padding: 0px 0px 3px;'> " ;  
+            				}
+            			}
+            		}
+            		if (pMailIP != null && pMailIP != "") {
+            			pMailSenderHtml += "<span> ( " + pMailIP + " ) </span>";
+            		}
+            		pMailSenderHtml += "</span>";
+            		
+            	} 
             }
 
             //pMailSenderHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromname) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + ConvertStringForHTML(pFromname) + "\"</span>";

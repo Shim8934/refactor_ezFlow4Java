@@ -241,6 +241,8 @@ function MakeListInfoHTML(ConentObject) {
                 var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
                 var p_RecipientCount = SelectSingleNodeValue(XmlRows[Cnt], "recipientCount");
                 var p_countryCode = SelectSingleNodeValue(XmlRows[Cnt], "countryCode");
+                var p_mailIP = SelectSingleNodeValue(XmlRows[Cnt], "mailIP");
+                var p_countryName = SelectSingleNodeValue(XmlRows[Cnt], "countryName");
                 var recipients = [];
             	var recipientsLen = 1;
                 
@@ -442,6 +444,15 @@ function MakeListInfoHTML(ConentObject) {
                     	var _TDColumSpan = document.createElement("span");
                     	_TDColumSpan.style.padding = "7px 3px";
                     	_TDColumSpan.innerHTML = innerHTML;
+                    	var countryTitle = "";
+                    	
+                    	if (useCountryIP == "YES") {
+                    		countryTitle = p_countryName;
+                    		if (p_mailIP != "") {
+                    			countryTitle += "( " + p_mailIP + " )";
+                    		}
+                    		_TDColumSpan.title = countryTitle;
+                    	}
                     	
                     	if (useMailWriteSenderClick == "YES") {
                     		if (shareId == "" || (shareId != "" && sendPermission == "Y")) {
@@ -468,9 +479,10 @@ function MakeListInfoHTML(ConentObject) {
             					}
             					
             					_img.src = "/images/countryIcon/" + p_countryCode + ".png";
+            					_img.title = countryTitle;
             					_TR.lastChild.appendChild(_img);
             				} else {
-            					// 본인국가 표시 안함 
+            					// 본인국가 표시 안함 p_mailIP p_countryName
             					if ( p_countryCode != systemCountryCode.toLowerCase() ) {
             						var _img = document.createElement("img");
             						_img.style.verticalAlign = "middle";
@@ -481,6 +493,7 @@ function MakeListInfoHTML(ConentObject) {
             						}
             						
             						_img.src = "/images/countryIcon/" + p_countryCode + ".png";
+            						_img.title = countryTitle;
             						_TR.lastChild.appendChild(_img);
             					}
             				}
