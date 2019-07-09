@@ -661,7 +661,7 @@ public class LoginController {
         			if (checkCnt == 4 && getAccess.equals("NO")) {
         				return false;
         			} else if (checkCnt == 4){
-        				//returnValue = true;
+        				returnValue = true;
         			}
         			checkCnt = 0;
         		}
@@ -670,23 +670,32 @@ public class LoginController {
         		return false;
         	}*/
         	
+        	// 허용 국가 리스트
         	String countryCodeList = ezSystemAdminService.getAccessCountryList(loginVO.getTenantId());
         	if (!countryCodeList.trim().equals("")) {
-        		long changeIP = changeIPtoInteger(loginVO.getIp());
-        		logger.debug("changeIP=" + changeIP);
+        		String loginCountryCode = "";
+        		String loginCountryName = "";
+        		Boolean localIpChk = commonUtil.checkLocalIP(loginVO.getIp());
         		
-        		CountryVO countryVo = loginService.getLoginIPCountry(changeIP);
+        		if (localIpChk) {
+        			loginCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginVO.getTenantId());
+        		} else { 
+            		long changeIP = changeIPtoInteger(loginVO.getIp());
+            		logger.debug("changeIP=" + changeIP);
+            		
+            		CountryVO countryVo = loginService.getLoginIPCountry(changeIP);
+            		if (countryVo != null){
+            			loginCountryCode = countryVo.getCountryCode();
+            			loginCountryName = countryVo.getCountryName();
+            		}
+        		} // localIPChk end
 
-        		if (countryVo != null){
-        			String loginCountryCode = countryVo.getCountryCode();
-        			String loginCountryName = countryVo.getCountryName();
-        			logger.debug("countryCodeList=" + countryCodeList);
-        			logger.debug("LoginIpCountry=" + loginCountryCode + ":" + loginCountryName);
-        			
-        			if (countryCodeList.indexOf(loginCountryCode) > -1){
-        				returnValue = true;
-        			}
-        		}
+    			logger.debug("countryCodeList=" + countryCodeList);
+    			logger.debug("LoginIpCountry=" + loginCountryCode + ":" + loginCountryName);
+    			
+    			if (countryCodeList.indexOf(loginCountryCode) > -1){
+    				returnValue = true;
+    			}
         	}
         	
         	logger.debug("ipAccessCheck ended");
