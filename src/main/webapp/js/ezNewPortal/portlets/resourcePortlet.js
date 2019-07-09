@@ -155,7 +155,7 @@ function resourceNodata() {
 
 	img.setAttribute("src", "/images/kr/main/noData_sIcon.png");
 	dl.setAttribute("class", "nodata");
-	dd.textContent = "\"" + strLang500 + "\"";
+	dd.textContent = messages.strLang1;
 	
 	dt.appendChild(img);
 	dl.appendChild(dt);
