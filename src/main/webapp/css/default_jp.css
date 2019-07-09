@@ -3542,3 +3542,10 @@ input[type=range]::-ms-tooltip {display: none;}
 /* 2019-07-02 김민성 자원관리 warning 관련 수정*/
 .warningbox{font-family:Meiryo UI;  }
 
+/* 20190709 메일분류추가 */
+.mailRule_select{-webkit-appearance: none;border:1px solid #dedede;min-height:30px;margin:0px 0px 3px 0px;padding-left: 5px;background: url(/images/next.gif) no-repeat right 1px center; background-color: #fff;}
+.mailRule_title{font-size:14px; font-weight:bold; color:#333; margin:0px 0px 5px 0px; padding:0px; display:inline-block;}
+.mailRule_tit{ margin: 10px 0px 0px 0px; padding: 10px 0px 0px 0px; border-top: 1px solid #d6d6d6;}
+#RuleDisplayName{ height:30px;}
+.mailRule_txt{ font-size:13px; color:#333; background:url(/images/ImgIcon/mailRule_dot.gif) no-repeat left center; padding:0px 0px 0px 10px;}
+.mailRule_selectDIV{ margin:10px 0px;}
