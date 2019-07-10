@@ -1143,9 +1143,16 @@ function leftCountRf(pDestBoardIDs) {
 	    	for (var d = 0; d < destBoardLength; d++) {
 	    		if (destBoardIDs[d] != null && destBoardIDs[d].trim() != "") {
 			    	for (var i = 0; i < tempLength; i++) {
-			    		if (tempDestBoardDiv[i].getAttribute("data1") == destBoardIDs[d]) {
-			    			leftFrame.refreshItemCnt(tempDestBoardDiv[i].id);
-			    			break;
+			    		if (tempDestBoardDiv[i].id.indexOf("FromTreeView") > -1) { // 마이게시판에 등록된 하위게시판
+			    			if (tempDestBoardDiv[i].getAttribute("data3") == destBoardIDs[d]) {
+			    				leftFrame.refreshItemCnt(tempDestBoardDiv[i].id);
+			    				break;
+			    			}
+			    		} else { // 일반 하위게시판
+				    		if (tempDestBoardDiv[i].getAttribute("data1") == destBoardIDs[d]) {
+				    			leftFrame.refreshItemCnt(tempDestBoardDiv[i].id);
+			    	    		break;
+				    		}
 			    		}
 			    	}
 	    		} else {

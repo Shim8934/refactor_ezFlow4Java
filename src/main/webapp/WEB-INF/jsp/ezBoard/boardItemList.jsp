@@ -1032,7 +1032,7 @@
 		            if (typeof (ret) != "undefined") {
 		                if (ret != "ERROR" && ret != "") {
 		                	try {
-								leftCountRf(ret);
+								leftCountRf(ret + ";" + pBoardID);
 							} catch (e) {}
 							
 		                    window.location.reload();
@@ -1045,7 +1045,7 @@
 		        if (typeof (ret) != "undefined") {
 		            if (ret != "ERROR" && ret != "") {
 			            try {
-							leftCountRf(ret);
+							leftCountRf(ret + ";" + pBoardID);
 						} catch (e) {}
 		                window.location.reload();
 		                window.close();
