@@ -421,8 +421,8 @@
 				<select id="searchType" style="height: 26px; width: 120px;">
 					<option value="displayname"><spring:message code='ezEmail.sharedMailbox18' /></option> <!-- 공유사서함 이름 -->
 					<option value="groupID"><spring:message code='ezEmail.sharedMailbox19' /></option> <!-- 공유사서함 ID -->
-					<option value="memberName"><spring:message code='ezEmail.sharedMailbox25' /></option> <!-- 공유자 이름 -->
-					<option value="memberID"><spring:message code='ezEmail.sharedMailbox26' /></option> <!-- 공유자 ID -->
+					<option value="memberName"><spring:message code='ezEmail.ksaSharedMailbox25' /></option> <!-- 공유자 이름 -->
+					<option value="memberID"><spring:message code='ezEmail.ksaSharedMailbox26' /></option> <!-- 공유자 ID -->
 				</select>
 				<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
 				<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>

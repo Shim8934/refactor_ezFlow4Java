@@ -356,8 +356,8 @@
 				<select id="searchType" style="height: 26px; width: 120px;">
 					<option value="displayName"><spring:message code='ezEmail.t710' /></option> <!-- 그룹이름 -->
 					<option value="groupID"><spring:message code='ezEmail.lhm09' /></option> <!-- 그룹아이디 -->
-					<option value="memberName"><spring:message code='ezEmail.distribution01' /></option> <!-- 구성원이름 -->
-					<option value="memberID"><spring:message code='ezEmail.distribution02' /></option> <!-- 구성원아이디 -->
+					<option value="memberName"><spring:message code='ezEmail.ksaDistribution01' /></option> <!-- 구성원이름 -->
+					<option value="memberID"><spring:message code='ezEmail.ksaDistribution02' /></option> <!-- 구성원아이디 -->
 				</select>
 				<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
 				<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
