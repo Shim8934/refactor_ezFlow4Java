@@ -35,7 +35,7 @@
 		    var titleSearch = "<c:out value='${titleSearch}'/>";
 		    
 			window.onload = function() {
-				//<c:out /> 태그로 감싸버려, url을 제대로 읽지 못하여 수정
+				//url을 제대로 읽지 못하여 수정
 				receve = ReplaceText(receve, "&amp;", "&");
 				makePageSelPage();
 				var height = parseInt(document.documentElement.clientHeight - 170);
