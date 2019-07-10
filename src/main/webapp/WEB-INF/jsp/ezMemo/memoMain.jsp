@@ -207,7 +207,7 @@
 			$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			$("#Edatepicker").datepicker('setDate', "");
 			
-			$.datepicker.regional["ko"] = {
+			$.datepicker.regional[memoMessages.strLangMemo23] = {
 		        	monthNames: monthStr,
 		            monthNamesShort: monthStr,
 		            dayNames: dayStr,
@@ -221,7 +221,7 @@
 		            showAnim: 'show',
 		            showMonthAfterYear: true
 		        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional[memoMessages.strLangMemo23]);
 		});
 		
 		var inputNameDlg_cross_dialogArguments = new Array();

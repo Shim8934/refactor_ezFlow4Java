@@ -14,4 +14,5 @@ var memoMessages = {
 	strLangMemo20 : "すべてのメモ",
 	strLangMemo21 : "エラーが発生しました。",
 	strLangMemo22 : "基本フォルダ",
+	strLangMemo22 : "'ja'",
 }

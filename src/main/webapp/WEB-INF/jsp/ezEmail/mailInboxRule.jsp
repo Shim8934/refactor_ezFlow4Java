@@ -490,7 +490,7 @@
 		    var mail_newinboxrule_cross_dialogArguments = new Array();
 		    function New_InboxRule() {
 		        mail_newinboxrule_cross_dialogArguments[1] = New_InboxRule_Complete;
-		        var OpenWin = window.open("/ezEmail/mailNewInboxRule.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(620, 550));
+		        var OpenWin = window.open("/ezEmail/mailNewInboxRule.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(605, 580));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function New_InboxRule_Complete(newWin) {
@@ -532,7 +532,7 @@
 		        }
 		        mail_detailinboxrule_cross_dialogArguments[0] = _RowObject;
 		        mail_detailinboxrule_cross_dialogArguments[1] = Detail_InboxRule_Complete;
-		        var OpenWin = window.open("/ezEmail/mailDetailInboxRule.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(620, 550));
+		        var OpenWin = window.open("/ezEmail/mailDetailInboxRule.do", "mail_NewInboxRule_cross", GetOpenWindowfeature(605, 580));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function Detail_InboxRule_Complete(newWin) {

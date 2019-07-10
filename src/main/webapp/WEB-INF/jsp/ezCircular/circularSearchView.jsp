@@ -56,7 +56,7 @@
 
 		        var height = parseInt(document.documentElement.clientHeight - 234);
 		        document.getElementById("divList").style.height = height + "px";
-		        getSearchList_after(loadXMLString(listHeader));
+		        getSearchList_after(loadXMLString(ReplaceText(ReplaceText(listHeader, "&lt;", "<"), "&gt;", ">")));
 		    }
 		    
 		    window.onresize = function () {

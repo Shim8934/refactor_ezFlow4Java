@@ -686,7 +686,7 @@
 		        }
 		        
 		        try {
-                	leftCountRf();
+                	leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		    }
@@ -723,7 +723,7 @@
                     getBoardList();
                     
                     try {
-                    	leftCountRf();
+                    	leftCountRf(pBoardID);
     				} catch (e) {
     				}
                 }
