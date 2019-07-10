@@ -1868,6 +1868,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			listAuthType = "all";
 		}
 		
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		
 		LOGGER.debug("userId = " + userId + " || userAuthType = " + userAuthType + " || listAuthType = " + listAuthType + " || comFlag = " + comFlag);
 		
 		Map<String, Object> map = new HashMap<String, Object>();

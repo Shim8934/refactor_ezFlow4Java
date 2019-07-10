@@ -373,9 +373,9 @@
 		                	var pAlertContent = "";
 		                	
 		                	if (approvalFlag == 'S') {
-		                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />";
+		                		pAlertContent = "<spring:message code = 'ezApprovalG.kes10' />";
 		                	} else {
-		                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+		                		pAlertContent = "<spring:message code = 'ezApprovalG.kes10' />\n<spring:message code = 'ezApprovalG.t781' />";
 		                	}
 		                    
  		                    alert(pAlertContent);
@@ -399,9 +399,9 @@
 		        	var pAlertContent = "";
                 	
                 	if (approvalFlag == 'S') {
-                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />";
+                		pAlertContent = "<spring:message code = 'ezApprovalG.kes10' />";
                 	} else {
-                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+                		pAlertContent = "<spring:message code = 'ezApprovalG.kes10' />\n<spring:message code = 'ezApprovalG.t781' />";
                 	}
 		            
  		            alert(pAlertContent);
@@ -454,7 +454,7 @@
 		                    }
 		                    
 		                    if (retVal == "TRUE") {
-		                        var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
+		                        var pAlertContent = "<spring:message code = 'ezApprovalG.kes11' />";
  		                        alert(pAlertContent);
 	
 		                        TreeView_onNodeSelect();
@@ -480,7 +480,7 @@
 	
 		    function btnEditItem_onclick_Complete(retVal) {
 		        if (retVal == "TRUE") {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
+		            var pAlertContent = "<spring:message code = 'ezApprovalG.kes11' />";
  		            alert(pAlertContent);
 	
 		            TreeView_onNodeSelect();
@@ -542,7 +542,7 @@
 		            			},
 		            	success : function(result) {
 		            		if (result == "TRUE") {
-								var pAlertContent = "<spring:message code = 'ezApprovalG.t788' />";
+								var pAlertContent = "<spring:message code = 'ezApprovalG.kes12' />";
 		  	                    alert(pAlertContent);
 
 		 	                    TreeView_onNodeSelect();
