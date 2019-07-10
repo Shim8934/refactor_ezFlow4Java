@@ -4607,6 +4607,7 @@
 	          	Attachments = #hasAttach#,
 	          	WriterName = #writerName#,
 	          	WriterName2 = #writerName2#,
+	          	WRITERID = #writerID#,
 	          	WRITERDEPTID = #writerDeptID#,
 	          	WRITERDEPTNAME = #writerDeptName#,
 	          	WRITERDEPTNAME2 = #writerDeptName2#,
