@@ -993,14 +993,7 @@
 			    	} else {
 			    		SelectedBoardID = document.getElementById(pNodeID).getAttribute("data1");
 			    	}
-		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
-		            var orgBoardTitle = document.getElementById(pNodeID).getAttribute("data2"); // personalizedPortal용 변수 설정
-				    var orgItemCount = orgBoardName.substring(orgBoardTitle.length + 1, orgBoardName.length);
 			    	
-				    if (orgBoardTitle == orgBoardName) {
-				    	orgItemCount = 0;
-				    }
-				    
 			    	 /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
 			    	$.ajax({
 						type : "GET",
@@ -1011,15 +1004,23 @@
 							boardID : SelectedBoardID
 						},
 						success: function(resultCount) {
-							if (orgItemCount != resultCount) {
-								var newNodeName = "";
-								if (resultCount > 0) {
-									newNodeName = orgBoardTitle + " " + resultCount;
-								} else {
-									newNodeName = orgBoardTitle;
-								}
-								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
+							var subBoardDiv = $('.node_div[data1="' +  SelectedBoardID + '"]');
+							var subBoardDivMy = $('#TreeCtrl_MyBoardTree_ul').find('.node_div[data3="' +  SelectedBoardID + '"]');
+							
+							var subBoardSpan = subBoardDiv.children('span').last();
+							var subBoardSpanMy = subBoardDivMy.children('span[id^="spn_"]'); // 마이게시판에는 동일한 하위게시판 중복 등록 가능
+							var subBoardName = subBoardDiv.attr("data2");
+							
+							if (subBoardName == undefined || subBoardName.length < 0) {
+								subBoardName = subBoardDivMy.attr("data2");
 							}
+							
+							if (resultCount > 0) {
+								subBoardName += (" " + resultCount);
+							}
+							
+							subBoardSpanMy.text(subBoardName);
+							subBoardSpan.text(subBoardName);
 						},
 						error: function() {
 							return;
