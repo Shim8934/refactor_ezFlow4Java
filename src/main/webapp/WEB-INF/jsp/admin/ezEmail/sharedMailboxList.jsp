@@ -410,8 +410,9 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
+		<div style="width:825px;">
 		<!-- 검색 -->
-		<div style="border: 1px solid #e8e8e8; WIDTH:825px; border-bottom: 0px; height: 30px;">
+		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box;">
 			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
 				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC;" id="listCount"></span><spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
@@ -426,20 +427,25 @@
 				<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
 			</div>
 		</div>
-		<table class="mainlist">
+		<table class="mainlist" style="width:100%;">
+	    	<colgroup>
+	    		<col width="37%"/>
+	    		<col width="63%"/>
+	    	</colgroup>
 			<tr>
 				<td style="vertical-align:top; border-bottom:0;">
-					<div style="width:300px; height:400px; overflow-y:auto; border-color:#dbdbda; border-width:1px; border-style:solid;">
+					<div style="width:100%; height:400px; overflow-y:auto; border-color:#dbdbda; border-width:1px; border-style:solid;">
 						<div id="sharedMailboxList"></div>      
 					</div>
 				</td>
 				<td style="vertical-align:top; border-bottom:0;">
-					<div style="margin-left:5px; width:500px; height:380px;">
-						<div id="sharedMailboxUser" style="width:100%; height:100%; padding:10px; overflow-y:auto; border-color:#dbdbda; border-width:1px; border-style:solid;"></div>
+					<div style="margin-left:5px; height:400px; border-color:#dbdbda; border-width:1px; border-style:solid; ">
+						<div id="sharedMailboxUser" style="width:100%; height:100%; padding:10px; overflow-y:auto; box-sizing: border-box;"></div>
 					</div>
 				</td>
 			</tr>
 		</table>
+		</div>
 	</body>
 </html>
 
