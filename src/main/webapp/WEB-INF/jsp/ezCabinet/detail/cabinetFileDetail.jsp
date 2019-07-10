@@ -119,7 +119,7 @@
 					}
 					else {
 						listBttns[0].onclick = function(e) {filePrint();};
-						listBttns[1].onclick = function(e) {closeWindow();};
+						//listBttns[1].onclick = function(e) {closeWindow();};
 					}
 					
 					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
