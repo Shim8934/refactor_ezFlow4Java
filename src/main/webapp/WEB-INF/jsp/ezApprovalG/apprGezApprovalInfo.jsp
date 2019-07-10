@@ -435,6 +435,14 @@
 	                    document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	                }
 	            } catch (e) { alert(e.description); }
+	            
+	            if (approvalFlag == "S") {
+	            	//(재)기안, 수신접수, 합의접수가 아닌 구분 상태에서는 결재선 즐겨찾기(탭, 버튼) 숨김처리
+		            if (pIniGubun != "1" && pIniGubun != "9" && pIniGubun != "11") {
+		            	document.getElementById("2tab2").style.display = "none";
+		            	document.getElementById("SaveAprLineTemplet").style.display = "none";
+		            }
+	            }
 	        }
 	        function CheckGubunInit() {
 	            if (pIniGubun == "1") {
