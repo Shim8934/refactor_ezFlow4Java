@@ -1870,7 +1870,7 @@
 			<input type="hidden" id="regNum1" value="">
 		<table  class="layout" ID="Table1">
 		  <tr>
-		    <td style="height:20px;">
+		    <td style="height:20px; vertical-align: top;">
 		        <div id="menu">
 		            <ul>
 		                <li id="btnSelForm"><span  onClick="return btnSelForm_onclick()"><spring:message code='ezApprovalG.t152'/></span></li>
