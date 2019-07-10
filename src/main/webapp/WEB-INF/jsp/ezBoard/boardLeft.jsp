@@ -850,11 +850,13 @@
 		    /* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 게시물 개수 갱신 함수 추가 */
 		    function refreshItemCnt(pNodeID) {
 		       	if (useLeftCnt == "YES") {
-			    	var SelectedBoardID = document.getElementById(pNodeID).getAttribute("data1");
-		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
-		            var orgBoardTitle = document.getElementById("spn_" + pNodeID).title;
-				    var orgItemCount = orgBoardName.substring(orgBoardName.lastIndexOf("(") + 1, orgBoardName.length - 1);
-			    	
+		       		var SelectedBoardID = "";
+		       	    if(document.getElementById(pNodeID).id.indexOf("FromTreeView") > -1) {
+		       	    	SelectedBoardID = document.getElementById(pNodeID).getAttribute("data3");
+		       	    } else{
+		       	    	SelectedBoardID = document.getElementById(pNodeID).getAttribute("data1");
+		       	    }
+		       	    
 			    	 /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
 			    	$.ajax({
 						type : "GET",
@@ -865,15 +867,22 @@
 							boardID : SelectedBoardID
 						},
 						success: function(resultCount) {
-							if (orgItemCount != resultCount) {
-								var newNodeName = "";
-								if (resultCount > 0) {
-									newNodeName =  orgBoardTitle + "(" + resultCount + ")";
-								} else {
-									newNodeName =  orgBoardTitle;
-								}
-								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
+							var subBoardDiv = $('.node_div[data1="' +  SelectedBoardID + '"]');
+							var subBoardDivMy = $('#TreeCtrl_MyBoardTree_ul').find('.node_div[data3="' +  SelectedBoardID + '"]');
+							
+							var subBoardSpan = subBoardDiv.children('span');
+							var subBoardSpanMy = subBoardDivMy.children('span');
+							var subBoardName = subBoardSpan.attr("title");
+							if (subBoardName == undefined || subBoardName.length < 0) {
+								subBoardName = subBoardSpanMy.attr("title");
 							}
+							
+							if (resultCount > 0) {
+								subBoardName += ("(" + resultCount + ")");
+							}
+							
+							subBoardSpanMy.text(subBoardName);
+							subBoardSpan.text(subBoardName);
 						},
 						error: function() {
 							return;
