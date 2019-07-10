@@ -50,6 +50,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -108,6 +109,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUserAdminService ezEmailUserAdminService;
+	
+	@Autowired
+	private EzBoardAdminService ezBoardAdminService;
 
     @Autowired
     private EzEmailUtil ezEmailUtil;	
@@ -141,6 +145,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addUserMasterMailBoxQuota();
     	ezCommonService.addJournalFormDelFlag();
     	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+    	ezCommonService.addMsgInMailSearch(); 
+		ezCommonService.addFormVersion();
+    	ezCommonService.addAddJobMasterProxy();
     	
     	logger.debug("init ended.");
     }
@@ -852,6 +859,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	        logger.debug("moveEntry result=" + result);
 		}
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
         
 		logger.debug("movDept ended.");
 		
@@ -1213,6 +1223,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
+		
 		logger.debug("movUser ended.");
 		
 		return result;
@@ -1380,6 +1393,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 			// dhlee - end
 		}		
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("delUser ended. result=" + result);
 		
@@ -2140,6 +2156,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		    }		    
 		}
 		
+		ezBoardAdminService.trunkBoard(tenantID);
+		
 		logger.debug("saveSubTitle ended.");
 		
 		return "OK";
@@ -2574,7 +2592,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 			}
 			// dhlee - end			
-		}		
+		}	
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("restoreRetireUser ended. result=" + result);
 		
@@ -3290,8 +3311,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		
 		logger.debug("jobInfoList ended.");
 		return "admin/ezOrgan/jobInfoList";
@@ -3319,11 +3345,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (mode != null && mode.equals("Add"))
 			jobCnt++;
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("jobCnt", jobCnt);
 		model.addAttribute("type", type);
 		model.addAttribute("mode", mode);
 		model.addAttribute("jobID", jobID);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";

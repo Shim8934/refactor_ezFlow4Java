@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<head>
 	    <title></title>
 	    <script  type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -323,7 +323,8 @@
 	                                CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
 	                        }
 	                        if (document.getElementById("body") != null) {
-	                            if (document.getElementById("body").getAttribute("class") == "FIELD") {
+	                        	// class가 FIELD를 포함한 두 개 이상일 때도 조건문에 포함되어야 함 2019-05-14 임민석
+	                        	if (document.getElementById("body").getAttribute("class").indexOf("FIELD") != -1) {
 	                                document.getElementById("body").innerHTML = Body_innerHTML;
 	                                BODYTag = document.getElementById("body");
 	                            }
@@ -791,6 +792,12 @@
 	            }
 	            catch (e) { }
 	        }
+
+	        function bodydragover(evt) {
+		        evt.dataTransfer.dropEffect = "none";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
 	    </script>
 	</head>
 	<body>

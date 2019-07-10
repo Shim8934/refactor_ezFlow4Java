@@ -34,12 +34,13 @@ var 	strLang48	=	"アルバムを削除してよろしいですか？"
 var 	strLang49	=	"一つだけ選択してください。";
 var 	strLang50	=	"画像を変更しました。";
 var 	strLang51	=	"画像を変更中にエラーが発生しました。";
-var 	strLang53	=	"データが存在しません。";
+var 	strLang53	=	"データが存在しません";
 var 	strLang54	=	"アップロードが制限されている拡張子のファイルがあります。";
 var 	strLang55	=	"移動または削除されたスクラップは、プレビューすることができません。";
 var 	strLang60	=	"承認";
 var 	strLang61	=	"承認待ち";
 var 	strLang62	=	"差し戻し";
+var 	strLang63 	=	"検索結果がありません";
 
 
 //2016 추가

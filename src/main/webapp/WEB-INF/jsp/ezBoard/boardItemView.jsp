@@ -291,10 +291,11 @@
 //	 				            document.getElementById("pad1").style.height = contentHeight + "PX";
 //	 				        }
 //	 				    } else {
+							/* 2019-05-08 홍승비 - 익명게시판에 확장컬럼 존재 시 세로 리사이즈 오류 수정 */
 					        if (pAttributeYN == "Y") {
 					            var contentHeight;
 					            if (gubun == "2") {
-					                contentHeight = document.documentElement.clientHeight - 243;
+					                contentHeight = document.documentElement.clientHeight - 239 - addheight;
 					            } else {
 					                contentHeight = document.documentElement.clientHeight - 268 - addheight;
 					            }
@@ -385,7 +386,7 @@
 		
 		                    xmlhttp = null;
 		                    try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 		                    try {
@@ -415,7 +416,7 @@
 		
 		                xmlhttp = null;
 		                try {
-		                	window.opener.leftCountRf();
+		                	window.opener.leftCountRf(pBoardID);
 						} catch (e) {
 						}
 		                try {
@@ -457,7 +458,7 @@
 		
 		        xmlhttp = null;
 		        try {
-                	window.opener.leftCountRf();
+                	window.opener.leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		        try {
@@ -530,6 +531,7 @@
 		    }
 		    
 		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
+			var copyboarditem_cross_dialogArguments = new Array();
 		    function btn_Copy_Onclick() {
 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
 		            alert("<spring:message code='ezBoard.t202' />");
@@ -549,7 +551,18 @@
 		        pwidth = pwidth - 127;
 		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature + GetOpenPosition(355,600);
+		        copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", feature, "");
+		    }
+		    /* 2019-07-09 홍승비 - 게시물 읽기창에서 복사 후 좌측 게시물카운트 갱신 */
+		    function CopyItem_onclick_Complete(ret) {
+		        if (typeof (ret) != "undefined" && ret != "") {
+		            if (ret != "ERROR") {
+			            try {
+			            	window.opener.leftCountRf(ret);
+						} catch (e) {}
+		            }
+		        }
 		    }
 		
 		    /* 2018-07-11 홍승비 - 게시물 이동 시 guBun 파라미터 추가 */
@@ -583,8 +596,9 @@
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
 		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
-		            if (typeof (ret) != "undefined") {
-		                if (ret == "OK") {
+		            if (typeof (ret) != "undefined" && ret != "") {
+		                if (ret != "ERROR") {
+		                	window.opener.leftCountRf(pBoardID + ";" + ret); // 기존 게시판과 이동 목표 게시판의 카운트를 갱신
 		                    window.opener.location.reload();
 		                    window.close();
 		                }
@@ -592,8 +606,9 @@
 		        }
 		    }
 		    function btn_Move_Onclick_Complete(ret) {
-		        if (typeof (ret) != "undefined") {
-		            if (ret == "OK") {
+		        if (typeof (ret) != "undefined" && ret != "") {
+		            if (ret != "ERROR") {
+		            	window.opener.leftCountRf(pBoardID + ";" + ret);
 		                window.opener.location.reload();
 		                window.close();
 		            }
@@ -1081,7 +1096,7 @@
 		                    alert("<spring:message code='ezBoard.t999009' />");
 		            }
 		            try {
-						window.opener.leftCountRf();
+						window.opener.leftCountRf(pBoardID);
 					} catch (e) {}
 		
 		            try {

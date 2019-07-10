@@ -270,11 +270,11 @@
   			<artifactId>opencsv</artifactId>
   			<version>3.8</version>
 		</dependency>
-        <dependency>
+		<dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>1.5.7</version>
-        </dependency>  
+            <version>2.4.1</version>
+        </dependency> 
 		<dependency>
 		    <groupId>net.htmlparser.jericho</groupId>
 		    <artifactId>jericho-html</artifactId>
@@ -423,6 +423,11 @@
 			<groupId>org.mnode.ical4j</groupId>
 			<artifactId>ical4j-extensions</artifactId>
 			<version>1.0.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.samaxes.filter</groupId>
+		    <artifactId>cachefilter</artifactId>
+		    <version>2.0</version>
 		</dependency>
 	</dependencies>
 

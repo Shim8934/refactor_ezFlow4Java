@@ -194,6 +194,16 @@
 		                alert("<spring:message code='ezApprovalG.pjj30'/>");
 		                return false;
 		            }
+		            
+		            var html = document.getElementsByTagName('html')[0];
+		            html.ondragover = function (e) {
+		            	if (e.target.id == 'lstAttachLink') { return false; }
+		            	
+		            	e.dataTransfer.dropEffect = "none";
+				        e.stopPropagation();
+				        e.preventDefault();
+		            }
+		            
 		        }
 		        catch(e)
 		        {
@@ -242,7 +252,7 @@
 		            if (pDraftFlag != "REDRAFT")
 		                setFirstDrafter(isUsed, beforeDocID);
 		            
-		            if (approvalFlag == "S") {
+		            if (approvalFlag == "S" && ListType != "21") {
 			            SetAutoDocnumItem();
 		            }
 		        }

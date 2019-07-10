@@ -558,12 +558,12 @@
 	<LISTVIEWDATA>
 	   	<HEADERS>
 			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
+			<NAME><spring:message code='ezOrgan.csj04' />(${primary})</NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1765'/>)</NAME>
+			<NAME><spring:message code='ezOrgan.csj04' />(${secondary})</NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>

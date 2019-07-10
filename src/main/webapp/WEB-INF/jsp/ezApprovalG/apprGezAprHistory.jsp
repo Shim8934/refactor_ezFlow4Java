@@ -93,10 +93,29 @@
 		    function lvAttachList_DBSelChange() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvAttachList");
-		        var href = listview.GetSelectedRows()[0].getAttribute("DATA1");
-		        var rep = /'/g;
-		        href = "/ezApprovalG/downloadAttach.do?fileName=" + encodeURIComponent(listview.GetSelectedRows()[0].getAttribute("DATA3")) + "&filePath=" + encodeURIComponent(listview.GetSelectedRows()[0].getAttribute("DATA4"));
-		        document.getElementById("filedown").src = href;
+
+		        var oSelRow = listview.GetSelectedRows();
+		        if (oSelRow.length > 0) {
+		        	var pFileModifyFlag = oSelRow[0].getAttribute("DATA7");	//001(ADD), 002(DELETE), 003(MODIFY), 004(ADD_CONTENT)
+		        	if (pFileModifyFlag == strModifyFlag2) {
+			            OpenAlertUI(strLang167);
+			            return;
+		        	} else {
+		        		var oRows = listview.GetDataRows();
+		        		for (var i = 0; i < oRows.length; i++) {
+		        			if (oRows[i].getAttribute("DATA9") == oSelRow[0].getAttribute("DATA9") && oRows[i].getAttribute("DATA7") == strModifyFlag2) {
+					            OpenAlertUI(strLang167);
+					            return;
+		        			}
+		        		}
+		        		
+			        	var pFileName = oSelRow[0].getAttribute("DATA3");
+			        	var pFilePath = oSelRow[0].getAttribute("DATA4");
+			        	var href = "/ezApprovalG/downloadAttach.do?fileName=" + encodeURIComponent(pFileName) + "&filePath=" + encodeURIComponent(pFilePath);
+			        	
+			        	document.getElementById("filedown").src = href;
+		        	}
+		        }
 		    }
 		    function btnrecovery_onclick() {
 		        var rtnVal = new Array();
@@ -313,6 +332,35 @@
 	        	}
 	        }
 	        
+	        /*
+	         * Layer Alert
+	         * parameter : String, function
+	         */
+	        var ezapralert_cross_dialogArguments = new Array();
+	        function OpenAlertUI(pAlertContent, CompleteFunction) {
+	            var parameter = pAlertContent;
+	            var url = "/ezApprovalG/ezAprAlert.do";
+
+	            if (CrossYN()) {
+	                ezapralert_cross_dialogArguments[0] = parameter;
+	                if (CompleteFunction != undefined)
+	                    ezapralert_cross_dialogArguments[1] = CompleteFunction;
+	                else
+	                    ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+	                DivPopUpShow(330, 205, url);
+	            }
+	            else {
+	                var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+	                feature = feature + GetShowModalPosition(330, 205);
+	                var RtnVal = window.showModalDialog(url, parameter, feature);
+	            }
+	        }
+	        /*
+	         * Layer Alert Complete
+	         */
+	        function OpenAlertUI_Complete() {
+	            DivPopUpHidden();
+	        }
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -354,6 +402,10 @@
 			</td>
 		  </tr>
 		</table>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 		<iframe id="filedown" style="display:none"></iframe>
 	</body>
 </html>

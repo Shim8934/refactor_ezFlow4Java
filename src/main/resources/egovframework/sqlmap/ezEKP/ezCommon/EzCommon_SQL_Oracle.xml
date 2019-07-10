@@ -279,6 +279,24 @@
 			ORDERBY NVARCHAR2(200) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkAddAddJobMasterProxy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ORDERBY
+			FROM 
+				TBL_ADDJOBMASTER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterProxy"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			PROXY NVARCHAR2(200) DEFAULT NULL
+	</statement>
+	
 	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -593,4 +611,90 @@
 		AND 
 			COLNAME = 'FunctionTypeName'
 	</update>
+
+	<select id="EzCommonDAO.checkMsgInMailSearch" resultClass="int" >
+		select 
+			count(*) 
+		from (
+			select 
+				column_name
+			from 
+				ALL_TAB_COLUMNS
+			where
+				COLUMN_NAME LIKE 'MESSAGE_ID' 
+			AND 
+				TABLE_NAME = 'JAMES_MAIL_SEARCH')
+	</select>
+	
+	<update id="EzCommonDAO.updateMsgInMailSearch">
+		ALTER TABLE 
+			JAMES_MAIL_SEARCH
+		ADD 
+			MESSAGE_ID VARCHAR(200)
+	</update>
+
+	<select id="EzCommonDAO.checkFormVersionColumnOfForminfo">
+		<![CDATA[
+			SELECT
+				FORMVERSION
+			FROM 
+				TBL_FORMINFO 
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo">
+		<![CDATA[
+			SELECT
+				FORMVERSION
+			FROM 
+				TBL_EXPENDAPRDOCINFO 
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo">
+		<![CDATA[
+			SELECT
+				FORMVERSION
+			FROM 
+				TBL_EXPAPRDOCINFO 
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo">
+		<![CDATA[
+			SELECT
+				FORMVERSION
+			FROM 
+				TBL_TMPEXPAPRDOCINFO 
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.addFormVersionColumnOfForminfo">
+		ALTER TABLE 
+			TBL_FORMINFO 
+		ADD 
+			FORMVERSION NUMBER(10,0) DEFAULT 0
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPENDAPRDOCINFO 
+		ADD 
+			FORMVERSION NUMBER(10,0) DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION NUMBER(10,0) DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo">
+		ALTER TABLE 
+			TBL_TMPEXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION NUMBER(10,0) DEFAULT 0 
+	</statement>
 </sqlMap>

@@ -16,6 +16,7 @@
 				width:158px;
 				overflow:hidden;
 				text-overflow:ellipsis;
+				display:inline-block;
 			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -38,9 +39,9 @@
 	        var curMenuIndex = 1;
 	        var TopBoardID_01;
 	        var TreeCtrl_onNodeClick_01;
-    
 	        var RedirectBoardGroupID = "<c:out value='${redirectBoardGroupID}'/>";
 	        var RedirectBoardID = "<c:out value='${redirectBoardID}'/>";	   
+	        var useLeftCnt = "${useLeftCnt}";
 	        
 	        window.onload = function () {
 	            if (RedirectBoardID != "") {
@@ -237,10 +238,7 @@
 	                SelectedBoardID = treeNode.GetNodeData("DATA1");
 	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");	                
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-	                var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
-		            var orgBoardTitle = document.getElementById("spn_" + pNodeID).title;
-				    var orgItemCount = orgBoardName.substring(orgBoardName.lastIndexOf("(") + 1, orgBoardName.length - 1);
-
+	                
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
 	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + SelectedBoardParentBoardID + "&tabID=1tab2";
@@ -250,29 +248,7 @@
 	                }
 	                
 	                /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
-			    	$.ajax({
-						type : "GET",
-						dataType : "text",
-						async : false,
-						url : "/ezBoard/getItemCount.do",
-						data : {
-							boardID : SelectedBoardID
-						},
-						success: function(resultCount) {
-							if (orgItemCount != resultCount) {
-								var newNodeName = "";
-								if (resultCount > 0) {
-									newNodeName =  orgBoardTitle + "(" + resultCount + ")";
-								} else {
-									newNodeName =  orgBoardTitle;
-								}
-								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
-							}
-						},
-						error: function() {
-							return;
-						}
-					});
+	                refreshItemCnt(pNodeID);
 	            }
 	            catch (e) {
 	                alert(e.description);
@@ -334,7 +310,48 @@
 	            }else{
 	                return document.getElementById(parentNodeid).childNodes.length;
 	            }
-	        }	        
+	        }
+	        
+	        /* 2019-02-14 홍승비 - 좌측 게시판리스트의 펼치기 화살표 클릭 시 하위게시판 불러오도록 수정*/
+		    function spanClick(divID) {
+		    	document.getElementById(divID).click();
+		    }
+	        
+		    /* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 게시물 개수 갱신 함수 추가 */
+		    function refreshItemCnt(pNodeID) {
+		       	if (useLeftCnt == "YES") {
+			    	var SelectedBoardID = document.getElementById(pNodeID).getAttribute("data1");
+		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+		            var orgBoardTitle = document.getElementById("spn_" + pNodeID).title;
+				    var orgItemCount = orgBoardName.substring(orgBoardName.lastIndexOf("(") + 1, orgBoardName.length - 1);
+			    	
+			    	 /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getItemCount.do",
+						data : {
+							boardID : SelectedBoardID
+						},
+						success: function(resultCount) {
+							if (orgItemCount != resultCount) {
+								var newNodeName = "";
+								if (resultCount > 0) {
+									newNodeName =  orgBoardTitle + "(" + resultCount + ")";
+								} else {
+									newNodeName =  orgBoardTitle;
+								}
+								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
+							}
+						},
+						error: function() {
+							return;
+						}
+					});
+		       	}
+		    }
+		    
 	    </script>
 	</head>
 	<body class="leftbody">
@@ -363,7 +380,7 @@
 				success: function(result){
 					$.each(result, function(idx, item){	        					
 						$.each(item, function(idx, i){
-							strHTML += "<h2><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
+							strHTML += "<h2 onclick='spanClick(\"TreeCtr" + idx + "\")'><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
 	                        strHTML += i.boardName + "</div></h2>";
 	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow-x: hidden; overflow-y: auto; padding-left: 10px; padding-bottom: 20px;'>";

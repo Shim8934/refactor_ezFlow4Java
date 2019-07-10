@@ -160,7 +160,7 @@
 			            showAnim: 'show',
 			            showMonthAfterYear: true
 			        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		        
 		        if (typeId == 'A01' || typeId == 'A02') {
 					$("#Sdatepicker").datepicker('disable');
@@ -567,7 +567,7 @@
 	                </tr>
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
-	            	<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span></a>
+	            	<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t16'/></span></a>
 				</div>
 	        </div>
 	        <script type="text/javascript">

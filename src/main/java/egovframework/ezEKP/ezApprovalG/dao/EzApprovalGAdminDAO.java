@@ -97,8 +97,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGAprDocInfoVO> searchManageAprDocList(Map<String, Object> map) throws Exception {
-		return (List<ApprGAprDocInfoVO>) list("EzApprovalGAdmin.searchManageAprDocList", map);
+	public List<ApprGDocListVO> searchManageAprDocList(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalGAdmin.searchManageAprDocList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -484,8 +484,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdminDAO.changeSpecialContSN3", vo);
 	}
 
-	public String checkContainer(Map<String, Object> map) throws Exception {
-		return (String) select("EzApprovalGAdminDAO.checkContainer", map);
+	public int checkContainer(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalGAdminDAO.checkContainer", map);
 	}
 
 	@SuppressWarnings("unchecked")

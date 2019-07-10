@@ -46,16 +46,30 @@
 				$("body").on("dragenter dragover drop", function(e) {
 					e.preventDefault();
 				});
+				
+				imgAttach();
 			}
 			
 			window.onbeforeunload = function () {
 				btnClose_Click();
 	    	} 
+			
+			function imgAttach() {
+				var attach1 = "${attachList1}";
+				var attach2 = "${attachList2}";
+				
+				if(attach1 != "") {
+					document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?fileName=" + encodeURIComponent(attach1);
+				}
+				if(attach2 != "") {
+					document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?fileName=" + encodeURIComponent(attach2);
+				}
+			}
 
 			function btnSave_Click() {
 				/* 2018-05-02 서주연 #12554 */
 				var re = /[\\/:*?\"<>&|]/gi;
-				if( re.test(document.getElementById("Brd_NM").value)){
+				if( re.test(document.getElementById("Brd_NM").value) || re.test(document.getElementById("Brd_NM2").value)){
 					alert("<spring:message code='ezResource.kms1' />");
 					return;
 				}
@@ -236,9 +250,6 @@
 			
 			var xhr = new XMLHttpRequest();
 			function btn_AttachAdd_onclick() {
-				if(document.getElementById("hdnfileNM1").value != "") {
-					btnfiledel(1);
-				}
 				var extension = document.getElementById("file1").value;
 	            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
 				var check = false;
@@ -246,7 +257,7 @@
 		        
 		        // 첨부파일 확장자 체크(이미지만 가능)
 		        if (!check) {
-		        	document.getElementById("file1").value = "";
+		        	document.getElementById("file1").files[0] = "";
 		        	alert("<spring:message code='ezCommunity.lhj03'/>");
 		        	return;
 		        }
@@ -271,6 +282,11 @@
 	        		
 	        		return;
 	            }
+	            
+	         // 기존 temp 파일 삭제
+				if(document.getElementById("hdnfileNM1").value != "") {
+					btnfiledel(1);
+				}
 		        
 	            fd.append("fileToUpload", filelist[0]);
 
@@ -281,9 +297,6 @@
 			
 			var xhr2 = new XMLHttpRequest();
 			function btn_AttachAdd_onclick2() {
-				if(document.getElementById("hdnfileNM2").value != "") {
-					btnfiledel(2);
-				}
 				var extension = document.getElementById("file2").value;
 	            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
 				var check = false;
@@ -291,7 +304,7 @@
 		        
 		        // 첨부파일 확장자 체크(이미지만 가능)
 		        if (!check) {
-		        	document.getElementById("file2").value = "";
+		        	document.getElementById("file2").files[0] = "";
 		        	alert("<spring:message code='ezCommunity.lhj03'/>");
 		        	return;
 		        }
@@ -316,6 +329,10 @@
 	        		
 	        		return;
 	            }
+	            
+	            if(document.getElementById("hdnfileNM2").value != "") {
+					btnfiledel(2);
+				}
 		        
 	            fd.append("fileToUpload", filelist[0]);
 
@@ -325,37 +342,37 @@
 			}
 			
 			function uploadComplete() {
-	            if (CrossYN()) {
+	           /*  if (CrossYN()) {
 	                document.getElementById("file1").value = "";
 	            }
-	            else {
+	            else { */
 	                document.getElementById("file1").type = "text";
 	                document.getElementById("file1").type = "file";
-	            }
+	            //}
 	            var xml = loadXMLString(xhr.responseText);
 
 	            preview1.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview1.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-	            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0])
-	            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+	            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+	            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM1").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}
 			
 			function uploadComplete2() {
-	            if (CrossYN()) {
+	           /*  if (CrossYN()) {
 	                document.getElementById("file2").value = "";
 	            }
-	            else {
+	            else { */
 	                document.getElementById("file2").type = "text";
 	                document.getElementById("file2").type = "file";
-	            }
+	            //}
 	            var xml = loadXMLString(xhr2.responseText);
 
 	            preview2.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview2.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0])
-            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM2").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}
@@ -486,12 +503,7 @@
 						<tr>
         					<th><spring:message code="ezPortal.t202"/>1</th>
           					<td colspan="3" >
-          					<c:if test="${!empty attachList1 }">
-	          					<img id="preview1" name="preview" src="/ezResource/getResourceThumbnailInfo.do?fileName=${attachList1}" width="119" height="128" alt="" border="0">
-           					</c:if>
-           					<c:if test="${empty attachList1 }">
 	          					<img id="preview1" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
-           					</c:if>
            						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:5px">
            							<span onClick="btnfiledel('1')"><spring:message code="ezPortal.t990008"/></span>
            						</a>
@@ -503,12 +515,7 @@
             			<tr>
         					<th><spring:message code="ezPortal.t202"/>2</th>
           					<td colspan="3" >
-          					<c:if test="${!empty attachList2 }">
-	          					<img id="preview2" name="preview" src="/ezResource/getResourceThumbnailInfo.do?fileName=${attachList2}" width="119" height="128" alt="" border="0">
-           					</c:if>
-           					<c:if test="${empty attachList2 }">
-	          					<img id="preview2" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
-           					</c:if>
+          						<img id="preview2" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
            						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:5px">
            							<span onClick="btnfiledel('2')"><spring:message code="ezPortal.t990008"/></span>
            						</a>

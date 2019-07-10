@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.t158'/></title>
+		<title><spring:message code='ezAttitude.t159'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -183,7 +183,7 @@
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
 	            	<c:if test="${userId == attitudeInfo.writerId}">
-						<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t162'/></span></a>
+						<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t136'/></span></a>
                         <a class="imgbtn"><span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span></a>
                         <a class="imgbtn"><span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span></a>
 					</c:if>

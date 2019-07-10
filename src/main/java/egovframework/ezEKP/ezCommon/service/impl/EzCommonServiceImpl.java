@@ -1426,4 +1426,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void updateListOptionData() throws Exception {
 		ezCommonDAO.updateListOptionData();
 	}
+	
+	@Override
+	public void addMsgInMailSearch() throws Exception {
+		ezCommonDAO.addMsgInMailSearch();
+	}
+
+	@Override
+	public void addFormVersion() throws Exception {
+		ezCommonDAO.addFormVersion();
+	}
+	
+	@Override
+	public void addAddJobMasterProxy() throws Exception {
+		ezCommonDAO.addAddJobMasterProxy();
+	}
 }

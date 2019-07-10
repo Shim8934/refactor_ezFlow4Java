@@ -660,36 +660,40 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						List<String> deptIds = new ArrayList<String>();
 						Collections.addAll(deptIds, deptPath.split(","));
 						deptIds.remove(0);				// companyID 삭제
-						Collections.reverse(deptIds);
 						
-						map.put("v_PUSERID", deptIds.get(0));
-						accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
-							
-						if(accessLvl != null && accessLvl.trim().equals("1")) {
-							logger.debug("user dept accessLvl = admin");
-							return "Y";
-						}
-						else {
-							if (accessLvl != null && accessLvl.trim().equals("2")) {
-								logger.debug("user dept accessLvl = user");
-								result = "U";
+						if(deptIds.size() > 0) {
+							Collections.reverse(deptIds);
+							map.put("v_PUSERID", deptIds.get(0));
+							accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
+								
+							if(accessLvl != null && accessLvl.trim().equals("1")) {
+								logger.debug("user dept accessLvl = admin");
+								return "Y";
 							}
-							// 부서 상위 권한 체크
-							deptIds.remove(0);				// 현재 부서ID 삭제
-							String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
-							
-							map.put("v_PUSERID", newDeptPath);
-							List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-
-							if(deptAclList != null) {
-								for(int i=0; i<deptAclList.size(); i++) {
-									if(deptAclList.get(i).getAccessLvl().equals("1")) {
-										logger.debug("user upper dept accessLvl = admin");
-										return "Y";
-									}
-									else {
-										logger.debug("user upper dept accessLvl = user");
-										result = "U";
+							else {
+								if (accessLvl != null && accessLvl.trim().equals("2")) {
+									logger.debug("user dept accessLvl = user");
+									result = "U";
+								}
+								// 부서 상위 권한 체크
+								deptIds.remove(0);				// 현재 부서ID 삭제
+								if(deptIds.size() > 0) {
+									String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+									
+									map.put("v_PUSERID", newDeptPath);
+									List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+		
+									if(deptAclList != null) {
+										for(int i=0; i<deptAclList.size(); i++) {
+											if(deptAclList.get(i).getAccessLvl().equals("1")) {
+												logger.debug("user upper dept accessLvl = admin");
+												return "Y";
+											}
+											else {
+												logger.debug("user upper dept accessLvl = user");
+												result = "U";
+											}
+										}
 									}
 								}
 							}
@@ -704,36 +708,40 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								List<String> addJobDeptIds = new ArrayList<String>();
 								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 								addJobDeptIds.remove(0);				// companyID 삭제
-								Collections.reverse(addJobDeptIds);
 								
-								map.put("v_PUSERID", addJobDeptIds.get(0));
-								accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
+								if(addJobDeptIds.size() > 0) {
+									Collections.reverse(addJobDeptIds);
+									map.put("v_PUSERID", addJobDeptIds.get(0));
+									accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
 									
-								if(accessLvl != null && accessLvl.trim().equals("1")) {
-									logger.debug("user addjob dept accessLvl = admin");
-									return "Y";
-								}
-								else {
-									if (accessLvl != null && accessLvl.trim().equals("2")) {
-										logger.debug("user addjob dept accessLvl = user");
-										result = "U";
-									} 
-									// 부서 상위 권한 체크
-									addJobDeptIds.remove(0);				// 현재 부서ID 삭제
-									String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
-									
-									map.put("v_PUSERID", newDeptPath);
-									List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-									
-									if(deptAclList != null) {
-										for(int j=0; j<deptAclList.size(); j++) {
-											if(deptAclList.get(j).getAccessLvl().equals("1")) {
-												logger.debug("user addjob upper dept accessLvl = admin");
-												return "Y";
-											}
-											else {
-												logger.debug("user addjob upper dept accessLvl = user");
-												result = "U";
+									if(accessLvl != null && accessLvl.trim().equals("1")) {
+										logger.debug("user addjob dept accessLvl = admin");
+										return "Y";
+									}
+									else {
+										if (accessLvl != null && accessLvl.trim().equals("2")) {
+											logger.debug("user addjob dept accessLvl = user");
+											result = "U";
+										} 
+										// 부서 상위 권한 체크
+										addJobDeptIds.remove(0);				// 현재 부서ID 삭제
+										if(addJobDeptIds.size() > 0) {
+											String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+											
+											map.put("v_PUSERID", newDeptPath);
+											List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+											
+											if(deptAclList != null) {
+												for(int j=0; j<deptAclList.size(); j++) {
+													if(deptAclList.get(j).getAccessLvl().equals("1")) {
+														logger.debug("user addjob upper dept accessLvl = admin");
+														return "Y";
+													}
+													else {
+														logger.debug("user addjob upper dept accessLvl = user");
+														result = "U";
+													}
+												}
 											}
 										}
 									}
@@ -2064,36 +2072,40 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			List<String> deptIds = new ArrayList<String>();
 			Collections.addAll(deptIds, deptPath.split(","));
 			deptIds.remove(0);				// companyID 삭제
-			Collections.reverse(deptIds);
-			
-			map.put("v_PUSERID", deptIds.get(0));
-			String deptAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+			if(deptIds.size() > 0) {
+				Collections.reverse(deptIds);
 				
-			if(deptAccLvl != null && deptAccLvl.trim().equals("1")) {
-				logger.debug("user dept accessLvl = admin");
-				return "Y";
-			}
-			else {
-				if (deptAccLvl != null && deptAccLvl.trim().equals("2")) {
-					logger.debug("user dept accessLvl = user");
-					accessLvl = "2";
+				map.put("v_PUSERID", deptIds.get(0));
+				String deptAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+					
+				if(deptAccLvl != null && deptAccLvl.trim().equals("1")) {
+					logger.debug("user dept accessLvl = admin");
+					return "Y";
 				}
-				// 부서 상위 권한 체크
-				deptIds.remove(0);				// 현재 부서ID 삭제
-				String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
-				
-				map.put("v_PUSERID", newDeptPath);
-				List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-
-				if(deptAclList != null) {
-					for(int i=0; i<deptAclList.size(); i++) {
-						if(deptAclList.get(i).getAccessLvl().equals("1")) {
-							logger.debug("user upper dept accessLvl = admin");
-							return "Y";
-						}
-						else {
-							logger.debug("user upper dept accessLvl = user");
-							accessLvl = "2";
+				else {
+					if (deptAccLvl != null && deptAccLvl.trim().equals("2")) {
+						logger.debug("user dept accessLvl = user");
+						accessLvl = "2";
+					}
+					// 부서 상위 권한 체크
+					deptIds.remove(0);				// 현재 부서ID 삭제
+					if(deptIds.size() > 0) {
+						String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+						
+						map.put("v_PUSERID", newDeptPath);
+						List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+		
+						if(deptAclList != null) {
+							for(int i=0; i<deptAclList.size(); i++) {
+								if(deptAclList.get(i).getAccessLvl().equals("1")) {
+									logger.debug("user upper dept accessLvl = admin");
+									return "Y";
+								}
+								else {
+									logger.debug("user upper dept accessLvl = user");
+									accessLvl = "2";
+								}
+							}
 						}
 					}
 				}
@@ -2108,36 +2120,40 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					List<String> addJobDeptIds = new ArrayList<String>();
 					Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 					addJobDeptIds.remove(0);				// companyID 삭제
-					Collections.reverse(addJobDeptIds);
-					
-					map.put("v_PUSERID", addJobDeptIds.get(0));
-					String addJobAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+					if(addJobDeptIds.size() > 0) {
+						Collections.reverse(addJobDeptIds);
 						
-					if(addJobAccLvl != null && addJobAccLvl.trim().equals("1")) {
-						logger.debug("user addjob dept accessLvl = admin");
-						return "Y";
-					}
-					else {
-						if (addJobAccLvl != null && addJobAccLvl.trim().equals("2")) {
-							logger.debug("user addjob dept accessLvl = user");
-							accessLvl = "2";
-						} 
-						// 부서 상위 권한 체크
-						addJobDeptIds.remove(0);				// 현재 부서ID 삭제
-						String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
-						
-						map.put("v_PUSERID", newDeptPath);
-						List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-						
-						if(deptAclList != null) {
-							for(int j=0; j<deptAclList.size(); j++) {
-								if(deptAclList.get(j).getAccessLvl().equals("1")) {
-									logger.debug("user addjob upper dept accessLvl = admin");
-									return "Y";
-								}
-								else {
-									logger.debug("user addjob upper dept accessLvl = user");
-									accessLvl = "2";
+						map.put("v_PUSERID", addJobDeptIds.get(0));
+						String addJobAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+							
+						if(addJobAccLvl != null && addJobAccLvl.trim().equals("1")) {
+							logger.debug("user addjob dept accessLvl = admin");
+							return "Y";
+						}
+						else {
+							if (addJobAccLvl != null && addJobAccLvl.trim().equals("2")) {
+								logger.debug("user addjob dept accessLvl = user");
+								accessLvl = "2";
+							} 
+							// 부서 상위 권한 체크
+							addJobDeptIds.remove(0);				// 현재 부서ID 삭제
+							if(addJobDeptIds.size() > 0) {
+								String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+								
+								map.put("v_PUSERID", newDeptPath);
+								List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+								
+								if(deptAclList != null) {
+									for(int j=0; j<deptAclList.size(); j++) {
+										if(deptAclList.get(j).getAccessLvl().equals("1")) {
+											logger.debug("user addjob upper dept accessLvl = admin");
+											return "Y";
+										}
+										else {
+											logger.debug("user addjob upper dept accessLvl = user");
+											accessLvl = "2";
+										}
+									}
 								}
 							}
 						}
@@ -2301,7 +2317,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         if(langStr.equals("1")) {
         	strData2 = xmlRes.getElementsByTagName("BRDNM").item(0).getTextContent();
         } else {
-        	strData2 = xmlRes.getElementsByTagName("BRDNM"+langStr).item(0).getTextContent();
+        	strData2 = commonUtil.cleanValue(xmlRes.getElementsByTagName("BRDNM"+langStr).item(0).getTextContent());
         }
         String strData3 = xmlRes.getElementsByTagName("BRDLEVEL").item(0).getTextContent();
         String strData4 = xmlRes.getElementsByTagName("BRDSTEP").item(0).getTextContent();
@@ -4075,22 +4091,24 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		List<String> deptIds = new ArrayList<String>();
 		Collections.addAll(deptIds, deptPath.split(","));
 		deptIds.remove(0);				// companyID 삭제
-		Collections.reverse(deptIds);
-		deptIds.remove(0);				// 부서 ID 삭제
-		
-		// 상위 부서 권한 체크
-		String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
-		
-		map.put("v_BRD_UPPER", brdID);
-		map.put("v_PCOMPANYID", companyID);
-		
-		map.put("v_PUSERID", newDeptPath);
-		List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-		
-		if(deptAclList.size() > 0) {
-			for(int i=0; i<deptAclList.size(); i++) {
-				if(deptAclList.get(i).getSdaYn().equals("Y")) {
-					return "1";
+		if(deptIds.size() > 1) {
+			Collections.reverse(deptIds);
+			deptIds.remove(0);				// 부서 ID 삭제
+			
+			// 상위 부서 권한 체크
+			String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+			
+			map.put("v_BRD_UPPER", brdID);
+			map.put("v_PCOMPANYID", companyID);
+			
+			map.put("v_PUSERID", newDeptPath);
+			List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+			
+			if(deptAclList.size() > 0) {
+				for(int i=0; i<deptAclList.size(); i++) {
+					if(deptAclList.get(i).getSdaYn().equals("Y")) {
+						return "1";
+					}
 				}
 			}
 		}
@@ -4105,27 +4123,32 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				List<String> addJobDeptIds = new ArrayList<String>();
 				Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 				addJobDeptIds.remove(0);				// companyID 삭제
-				Collections.reverse(addJobDeptIds);
 				
-				map.put("deptID", addJobDeptIds.get(0));
-				
-				String result2 = ezResourceDAO.userResPermissionCheck(map);	
-				
-				if(result2.equals("1")) {
-					return result2;
-				}
-				
-				addJobDeptIds.remove(0);			// deptID 삭제
-
-				String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+				if(addJobDeptIds.size() > 0) {
+					Collections.reverse(addJobDeptIds);
 					
-				map.put("v_PUSERID", newDeptPath2);
-				List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
-				
-				if(deptAclList2.size() > 0) {
-					for(int j=0; j<deptAclList.size(); j++) {
-						if(deptAclList2.get(j).getSdaYn().equals("Y")) {
-							return "1";
+					map.put("deptID", addJobDeptIds.get(0));
+					
+					String result2 = ezResourceDAO.userResPermissionCheck(map);	
+					
+					if(result2.equals("1")) {
+						return result2;
+					}
+					
+					addJobDeptIds.remove(0);			// deptID 삭제
+	
+					if(addJobDeptIds.size() > 0) {
+						String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+							
+						map.put("v_PUSERID", newDeptPath2);
+						List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
+						
+						if(deptAclList2.size() > 0) {
+							for(int j=0; j<deptAclList2.size(); j++) {
+								if(deptAclList2.get(j).getSdaYn().equals("Y")) {
+									return "1";
+								}
+							}
 						}
 					}
 				}

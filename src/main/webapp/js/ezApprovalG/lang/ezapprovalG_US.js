@@ -821,9 +821,11 @@ var strLangOpinionType4 = "Return opinion";
 var strModifyFlag1 = "001";
 var strModifyFlag2 = "002";
 var strModifyFlag3 = "003";
-var strLangModifyFlag1 = "Delete";
-var strLangModifyFlag2 = "Add";
+var strModifyFlag4 = "004";
+var strLangModifyFlag1 = "Add";
+var strLangModifyFlag2 = "Delete";
 var strLangModifyFlag3 = "Update";
+var strLangModifyFlag4 = "Add content";
 
 // Etc
 var strLangEtcAprType4 = "Decide arbitrarily"; // 문서 싸인칸에 표시하는 전결문자

@@ -55,31 +55,27 @@
 	        }
 			
 			function GetEditorTextContent() {
-	            try {
-            	    var resultStr = xfe.getBodyValue();
-            	    
-            	    resultStr = resultStr.replace(/\r\n/gi, "");
-            	    resultStr = resultStr.replace(/\n/gi, "");
-            	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
-            	    resultStr = resultStr.replace(/<p><br>/gi, "\n");
-            	    resultStr = resultStr.replace(/<p>/gi, "\n");
-            	    resultStr = resultStr.replace(/<br .*?>/gi, "\n");
-            	    resultStr = resultStr.replace(/<br>/gi, "\n");
-            	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
-            	    resultStr = resultStr.replace(/<hr>/gi, "\n----------------------------------------------------------------------------------------------------");
-            	    resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
-            	    resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
-            	    resultStr = resultStr.replace(/<.*?>/gi, "");
-            	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
-            	    resultStr = resultStr.replace(/&lt;/gi, "<");
-            	    resultStr = resultStr.replace(/&gt;/gi, ">");
-            	    resultStr = resultStr.replace(/&quot;/gi, "\"");
-            	    resultStr = resultStr.replace(/&#39;/gi, "'");
-            	    resultStr = resultStr.replace(/&amp;/gi, "&");
-            	    resultStr = resultStr.replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, "");
-					
-            	    return  resultStr;
-	            } catch (e) { return ""; }
+                var resultStr = xfe.getBodyValue();
+                
+                resultStr = resultStr.replace(/\r\n/gi, "\n");
+                resultStr = resultStr.replace(/\n/gi, "");
+                resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+                resultStr = resultStr.replace(/<br .*?>/gi, "<br>");
+                resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+                resultStr = resultStr.replace(/<p>/gi, "\r\n");
+                resultStr = resultStr.replace(/<br>/gi, "\r\n");
+                resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+                resultStr = resultStr.replace(/<style .*?>/gi, "<style>");
+                resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+                resultStr = resultStr.replace(/<script .*?>/gi, "<script>");
+                resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
+                resultStr = resultStr.replace(/<.*?>/gi, "");
+                
+                var tempTextarea = document.createElement("textarea");
+                tempTextarea.innerHTML = resultStr;
+                resultStr = tempTextarea.value;
+                
+                return  resultStr;
 	        }
 			
 			function GetBodyValue() {

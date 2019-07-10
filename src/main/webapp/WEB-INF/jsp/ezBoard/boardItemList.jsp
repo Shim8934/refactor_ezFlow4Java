@@ -790,7 +790,7 @@
 		        }
 		        
 		        try {
-					leftCountRf();
+					leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		    }
@@ -840,7 +840,7 @@
                     getBoardList();
                     
                     try {
-    			        leftCountRf();
+    			        leftCountRf(pBoardID);
     				} catch (e) {
     				}
                 }
@@ -972,10 +972,10 @@
 		    }
 		    /* 2019-04-17 홍승비 - 복사 후 좌측 게시물카운트 갱신 */
 		    function CopyItem_onclick_Complete(ret) {
-		        if (typeof (ret) != "undefined") {
-		            if (ret == "OK") {
+		        if (typeof (ret) != "undefined" && ret != "") {
+		            if (ret != "ERROR") {
 			            try {
-							leftCountRf();
+							leftCountRf(ret);
 						} catch (e) {}
 		                window.location.reload();
 		                window.close();
@@ -1030,9 +1030,9 @@
 		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 		
 		            if (typeof (ret) != "undefined") {
-		                if (ret == "OK") {
+		                if (ret != "ERROR" && ret != "") {
 		                	try {
-								leftCountRf();
+								leftCountRf(ret);
 							} catch (e) {}
 							
 		                    window.location.reload();
@@ -1043,9 +1043,9 @@
 		    }
 		    function MoveItem_onclick_Complete(ret) {
 		        if (typeof (ret) != "undefined") {
-		            if (ret == "OK") {
+		            if (ret != "ERROR" && ret != "") {
 			            try {
-							leftCountRf();
+							leftCountRf(ret);
 						} catch (e) {}
 		                window.location.reload();
 		                window.close();

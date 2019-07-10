@@ -114,10 +114,10 @@
 		            return true;
 		    };
 		    function checkBujaeInfo() {
-		    	if (pListTypeValue == "10") {
-		    		checkBujaeInfo_Complete(true);
-		    		return;
-	            }
+//		    	if (pListTypeValue == "10") {
+//		    		checkBujaeInfo_Complete(true);
+//		    		return;
+//	            }
 		        var BString = "${buJaeInfo}";
 		        
 		        if (BString != "") {
@@ -223,21 +223,21 @@
 		        }
 		        else if (pListTypeValue == "10") {
 		            getDocList();
-		            var result = "";
+// 		            var result = "";
 			    	
-			        $.ajax({
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		url : "/ezPersonal/saveBujae.do",
-			    		data : {
-			    				buJae  : bujaeVal,
-			    				proxy  : ""
-			    				},
-			    		success: function(xml){
-			    			result = xml;
-			    		}        			
-			    	});
+// 			        $.ajax({
+// 			    		type : "POST",
+// 			    		dataType : "text",
+// 			    		async : false,
+// 			    		url : "/ezPersonal/saveBujae.do",
+// 			    		data : {
+// 			    				buJae  : bujaeVal,
+// 			    				proxy  : ""
+// 			    				},
+// 			    		success: function(xml){
+// 			    			result = xml;
+// 			    		}        			
+// 			    	});
 		        }
 		        else if (pListTypeValue == "21") {
 		            getDocList();
@@ -260,17 +260,18 @@
 		    function setBujaeOff() {
 		    	var result = "";
 		    	
-		    	if(pListTypeValue != "10") {
-		    		bujaeVal = "";
-		    	}
+// 		    	if(pListTypeValue != "10") {
+// 		    		bujaeVal = "";
+// 		    	}
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezPersonal/saveBujae.do",
 		    		data : {
-		    				buJae  : bujaeVal,
-		    				proxy  : ""
+		    				buJae  : "",
+		    				proxy  : "",
+		    				dept : arr_userinfo[4]
 		    				},
 		    		success: function(xml){
 		    			result = xml;
@@ -279,6 +280,26 @@
 		        
 		        bujaeVal = arr_userinfo[7];
 		        arr_userinfo[7] = "";
+		       
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezPersonal/getBujaeInfo.do",
+		    		data : {
+		    				buJae  : bujaeVal,
+		    				proxy  : "",
+		    				dept : arr_userinfo[4]
+		    				},
+		    		success: function(xml){
+		    			result = xml;
+		    			if (result != "") {
+		    				window.location.reload();
+		    			}
+		    		}        			
+		    	});
+		        
+		        
 		    }
 		
 		    $(function () {
@@ -1586,31 +1607,48 @@
 		    function TotalSave_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
+		        
 		        var tr = DocList.GetSelectedRows();
-		
 		        if (tr.length == 0) {
-		        	//팝업창에서 알럿창으로 변경
-// 		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>", "", "OPEN");
 					var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
 					alert(pAlertContent);
 		            return;
 		        }
-		        else {
-		            pDocID = tr[0].getAttribute("DATA1");
-		            orgCompanyID = tr[0].getAttribute("orgCompanyID");
-		        }
-				
-		        //직인의뢰함에서 타입을 END로 주기위해
-		        var url;
-		        if (pListTypeValue == 7 || pListTypeValue == 8 || pListTypeValue == 9) {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;	
-		        } else {
-		        	url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID;
-		        }
 		        
+	            pDocID = tr[0].getAttribute("DATA1");
+	            orgCompanyID = tr[0].getAttribute("orgCompanyID");
+		        
+	            if (orgCompanyID == null)
+	            	orgCompanyID = companyID;
+	            
+		        var mode = getDocMode(pDocID, orgCompanyID);
+				var url = "totalSaveFileInfo.do?docID=" + pDocID + "&type=" + mode + "&orgCompanyID=" + orgCompanyID;
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
+		        
 		        feature = feature + GetOpenPosition(580, 480);
 		        window.open(url, "", feature);
+		    }
+		    function getDocMode(pDocID, pOrgCompanyID) {
+		    	var rtnVal = "APR";
+		    	try {
+		    		$.ajax({
+		     			type : "POST",
+		     			dataType : "text",
+		     			async : false,
+		     			url : "/ezApprovalG/getLineMode.do",
+		     			data : {
+		     					docID : pDocID,
+		     					orgCompanyID : pOrgCompanyID
+		     					},
+		     			success: function(result) {
+		     				rtnVal = result;
+		     			}
+		            });
+		    	} catch (e) {
+		    		alert("getDocMode() :: " + e.description);
+		    	}
+		    	
+		    	return rtnVal;
 		    }
 		
 		    var setsearchinfo_cross_dialogArguments = new Array();

@@ -535,7 +535,7 @@ public class EzEmailAdminController {
 						sb.append("<CLASS>" + "distribution" + "</CLASS>");
 						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
 						sb.append("<DISPLAYNAME>"
-								+ displayName
+								+ commonUtil.cleanValue(displayName)
 								+ "</DISPLAYNAME>");
 						sb.append("<MAIL>"
 								+ commonUtil.cleanValue(cn)
@@ -1513,6 +1513,7 @@ public class EzEmailAdminController {
 				String bizmekaResult = "ERROR";
 				
 				try {
+					/* 비즈메카 연동은 우선 생각하지 않는다. -> 필요할 때 논의 후 구현!
 					String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantId);
 					
 					// 비즈메카와 연동된 경우에는 비즈메카 API를 이용해 비즈메카 사용자 계정을 삭제한다.
@@ -1529,6 +1530,7 @@ public class EzEmailAdminController {
 							throw new Exception("bizmekaDeleteUser failed");
 						}						
 					}
+					*/
 										
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(shareId, "user", tenantId);
@@ -2324,7 +2326,7 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping("/admin/ezEmail/signEditPopUp.do")
 	public String signEditPopUp(
-			@CookieValue("loginCookie") String loginCookie, Locale locale, String paramSignNo, String type, Model model) throws Exception {
+			@CookieValue("loginCookie") String loginCookie, Locale locale, String paramSignNo, String type, String companyId, Model model) throws Exception {
 		logger.debug("signEditPopUp started.");
 		logger.debug("signNo=" + paramSignNo + ", type=" + type);
 		
@@ -2360,6 +2362,10 @@ public class EzEmailAdminController {
 				// e.printStackTrace();
 			}
 		} 
+		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR",userInfo.getTenantId()));
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("signNo", signNo);
@@ -2367,6 +2373,9 @@ public class EzEmailAdminController {
 		model.addAttribute("displayname", displayname);
 		model.addAttribute("displayname2", displayname2);
 		model.addAttribute("type", type);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("signNo=" + signNo + ", content=" + content + ", displayname=" + displayname + ", displayname2=" + displayname2);
 		logger.debug("signEditPopUp ended.");
@@ -2380,16 +2389,20 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezEmail/setSignatureTemplate.do")
 	@ResponseBody
-	public void setSignatureTemplate(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailSignatureTemplateVO signTemplate, String type) throws Exception {
+	public void setSignatureTemplate(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailSignatureTemplateVO signTemplate, String type, String companyId) throws Exception {
 		logger.debug("setSignatureTemplate started.");
 		logger.debug("signTemplate=" + signTemplate);
-		logger.debug("type=" + type);
+		logger.debug("type=" + type + ", companyId=" + companyId);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		if (companyId == null || companyId.equals("")) {
+			companyId = userInfo.getCompanyID();
+		}
+		
 		try {
 			if (type.equals("add")) {
-				signTemplate.setCompanyId(userInfo.getCompanyID());
+				signTemplate.setCompanyId(companyId);
 				signTemplate.setTenantId(Integer.toString(userInfo.getTenantId()));
 				ezEmailService.addSignatureTemplate(signTemplate);
 			} else {

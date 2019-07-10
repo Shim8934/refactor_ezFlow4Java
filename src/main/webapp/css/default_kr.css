@@ -55,6 +55,8 @@ select::-ms-expand {
 
 #menu select {height:27px;}
 
+#menu select.disabled {background-color: #EEE;}
+
 #menu select, #menu input {border:1px solid #829dc7;}
 
 textarea {

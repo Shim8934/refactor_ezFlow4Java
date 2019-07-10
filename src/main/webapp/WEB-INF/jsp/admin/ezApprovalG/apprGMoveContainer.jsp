@@ -39,7 +39,10 @@
 			 border-top: 1px dotted #eee;
 			 background-color: #fcfcfc;
 		}
-		.mainlist tr th {border-top:0px}
+		.mainlist tr th {
+			border-top:0px;
+			border-bottom:1.5px solid #e2e3e6;
+		}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -692,8 +695,12 @@
 						else {
 						    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
 						    if (Ans) {
-						        ContMove();
-						        getDocListjson(CurPage);
+						    	if (popupselTContName == $("select[name=selSContName]").val()) {
+						    		alert("<spring:message code='ezCircular.t109'/>");
+						    	} else {
+							    	ContMove();
+									getDocListjson(CurPage);
+						    	}
 						    }
 						}
 			        } else {
@@ -740,8 +747,12 @@
 				else {
 				    var Ans = confirm("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1677'/>");
 				    if (Ans) {
-				        ContMove();
-				        getDocListjson(1);
+				    	if (popupselTContName == $("select[name=selSContName]").val()) {
+				    		alert("<spring:message code='ezCircular.t109'/>");
+				    	} else {
+					        ContMove();
+					        getDocListjson(1);
+				    	}
 				    }
 				}
 				        

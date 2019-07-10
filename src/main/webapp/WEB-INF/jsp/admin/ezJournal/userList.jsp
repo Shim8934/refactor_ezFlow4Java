@@ -74,12 +74,12 @@
 					var expanded = $("li[aria-selected=true]").eq(0).attr("aria-expanded");
 
 					if (expanded != null && expanded != "") { //하위가 있으면
-						html += "-[<span style='color:#017BEC;'>" + totalCount + "<spring:message code='main.t20000'/></span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + totalCount2 + "<spring:message code='main.t20000'/></span>]";
+						html += "-[<span style='color:#017BEC;'>" + totalCount + "<spring:message code='ezJournal.t45'/></span>/<spring:message code='ezJournal.t227' /> <span style='color:#017BEC;'>" + totalCount2 + "<spring:message code='ezJournal.t45'/></span>]";
 	        		} else { //하위가 없으면
-	        			html += "-[<span style='color:#017BEC;'>" + totalCount +"<spring:message code='main.t20000'/></span>]";
+	        			html += "-[<span style='color:#017BEC;'>" + totalCount +"<spring:message code='ezJournal.t45'/></span>]";
 	        		}
 				} else {
-					html += "-[<span style='color:#017BEC;'>" + totalCount + "<spring:message code='main.t20000'/></span>]";
+					html += "-[<span style='color:#017BEC;'>" + totalCount + "<spring:message code='ezJournal.t45'/></span>]";
 				}
 				$("#selectDeptNM").html(html);
 	        }
@@ -131,9 +131,9 @@
 					<c:choose>
 						<c:when test="${key eq 'DEPARTMENT' }">
 							<tr>
-								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-								<td style="width: 50%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='main.t78'/></td>
+								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t38'/></td>
+								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t39'/></td>
+								<td style="width: 50%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t214'/></td>
 					        </tr>
 					        <c:forEach items="${userList}" var="user">
 						        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
@@ -146,9 +146,9 @@
 				        <c:otherwise>
 				        	<tr>
 								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t40'/></td>
-								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='main.t78'/></td>
+								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t38'/></td>
+								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t39'/></td>
+								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t214'/></td>
 					        </tr>
 					        <c:forEach items="${userList}" var="user">
 						        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
@@ -195,9 +195,9 @@
 					<c:choose>
 						<c:when test="${key eq 'DEPARTMENT' }">
 							<tr>
-								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-								<td style="width: 50%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='main.t78'/></td>
+								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t38'/></td>
+								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t39'/></td>
+								<td style="width: 50%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t214'/></td>
 					        </tr>
 					        <c:forEach items="${userList}" var="user">
 						        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
@@ -210,9 +210,9 @@
 				        <c:otherwise>
 				        	<tr>
 								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t40'/></td>
-								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
-								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='main.t78'/></td>
+								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t38'/></td>      
+								<td style="width: 20%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t39'/></td>      
+								<td style="width: 30%; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezJournal.t214'/></td>     
 					        </tr>
 					        <c:forEach items="${userList}" var="user">
 						        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">

@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html style="height: 99%;">
+<html style="height: 99%;" ondragover="bodydragover(event)">
 	<head>
 		<c:choose>
 			<c:when test="${mode == 'new' || mode == 'new1' || mode == 'boardAttach' || mode == 'boardContent' || url != ''}">
@@ -811,15 +811,10 @@
 		                    alert("<spring:message code='ezBoard.t400' />" + pStartDate.substr(0, 16) + "<spring:message code='ezBoard.t401' />");
 		                }
 		                
-		                if ("${boardInfo.apprMail_FG}" == "Y") {
+		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+		                if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 		                    xmlhttp = createXMLHttpRequest();
-		
-		                    if (pMode != "modify") {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
-		                    } else {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
-		                    }
-		                        
+		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
 		                }
@@ -829,7 +824,7 @@
 		            }
 		            
 		            try {
-						window.opener.leftCountRf();
+						window.opener.leftCountRf(pBoardID);
 					} catch (e) {
 					}
 					
@@ -1295,19 +1290,24 @@
 		                }
 		                attachxml = strRet;
 		            } else {
-		            	    var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
-			                    var temppath = pUrl;
-			                    temppath = temppath.substring(34, temppath.length);
-			                    var orgfile = temppath.split("/");
-			                    orgfile = orgfile[orgfile.length - 1];
-			                    xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
-			                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
-			                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
-			                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
-			                        xmlstring += "<TYPE>APPROVAL</TYPE>";
-			                    else
-			                        xmlstring += "<TYPE>APPROVALG</TYPE>";
-			                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
+		            	var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+	                    var temppath = pUrl;
+	                    temppath = temppath.substring(34, temppath.length);
+	                    var orgfile = temppath.split("/");
+	                    orgfile = orgfile[orgfile.length - 1];
+	                    
+	                    var orgFileList = orgfile.split(".");
+	                    var orgFileType = orgFileList[orgFileList.length - 1];
+		                    
+		               if (orgFileType == "hwp"){
+		            	   	xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
+		                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+		                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
+		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
+		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
+		                    else
+		                        xmlstring += "<TYPE>APPROVALG</TYPE>";
+		                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
 			               
 			                xmlstring += "</ROWS></DATA>";
 			                xmldom2 = loadXMLString(xmlstring);
@@ -1321,13 +1321,16 @@
 			                for (i = 0; i < nodes.length; i++) {
 			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 			                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
-			                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
-			                    	filepath = filepath + ".ezd";
-			                    }
+			                    //if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
+			                    //	filepath = filepath + ".ezd";
+			                    //}
 			                    
 			                    strRet += "tempUploadFile/" + filepath + "|";
+				                attachxml = strRet;
 			                }
-			                attachxml = strRet;
+		               } else {
+			                xmlstring += "</ROWS></DATA>";
+		               }
 		            }
 		        }
 		    }
@@ -2057,7 +2060,7 @@
 			</script>
 	    </c:if>
 	</head>
-	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
+	<body class="popup" style="height: 97%;">
 	    <table class="layout" style="width: 100%;">
 	        <tr>
 	            <td style="height: 20px">

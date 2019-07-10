@@ -41,7 +41,7 @@
 		            evt.preventDefault();
 		        }
 		        if (isfileup) {
-		            alert("<spring:message code='ezCircular.t93'/>");
+		            alert("<spring:message code='ezJournal.t186'/>");
 		            return;
 		        }
 		        var filelist;
@@ -112,7 +112,7 @@
 	
 		        var objTh2 = document.createElement("TH");
 		        objTh2.style.width = "87%";
-		        setNodeText(objTh2, "<spring:message code='ezBoard.t5008'/>");
+		        setNodeText(objTh2, "<spring:message code='ezJournal.t187'/>");
 		        objTr.appendChild(objTh2);
 	
 		        var objTh3 = document.createElement("TH");
@@ -272,7 +272,7 @@
 	                success: function() {
 	                },
 	                error: function() {
-	                	alert("<spring:message code='ezCircular.t102'/>");	
+	                	alert("<spring:message code='ezJournal.t149'/>");	
 	                }
 				});
 		    }
@@ -298,7 +298,7 @@
 					var fnl = file[i].name.length;
 		        	
 		        	if (fnl > attachFileNameMaxLength) {
-		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+		        		alert("<spring:message code='ezJournal.t188' />" + attachFileNameMaxLength + "<spring:message code='ezJournal.t189' />");
 		        		isfileup = false;		        		
 		        		
 		        		return;
@@ -328,8 +328,8 @@
     <body style ="width:100%;height:100%;overflow:hidden">   
         <div style="width:100%;white-space:nowrap;display:inline-block;height:22px">
             <div style="float:left">
-                <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezSchedule.t370'/></span></a>
-                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezSchedule.t371'/></span></a>
+                <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezJournal.t82'/></span></a>
+                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezJournal.t83'/></span></a>
             </div>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>

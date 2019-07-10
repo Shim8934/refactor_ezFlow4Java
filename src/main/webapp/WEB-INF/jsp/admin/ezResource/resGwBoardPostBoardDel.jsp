@@ -91,7 +91,7 @@
 	        					<dt style="margin-top:0px; padding-left:90px;">
 	        					<img src="/images/notify/warning01.gif" width="183" height="27">
 	        					</dt>
-	        					<dd style="font-weight: normal; text-align:center; padding-top:15px; padding-left:0px; height:30px;">
+	        					<dd style="font-weight: normal; text-align:center; padding-top:15px; padding-left:55px; height:30px;">
 	        					 ${pWrnMsg}
 	        					</dd>
 	        				</dl>

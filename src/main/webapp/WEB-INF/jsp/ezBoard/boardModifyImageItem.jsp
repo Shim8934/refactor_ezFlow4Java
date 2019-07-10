@@ -106,15 +106,17 @@
 	            }
 	        }
 	
+	        /* 2019-07-05 홍승비 - 사진수정 시 확장자 체크 오류 수정 */
 	        function imgtemp_onclick() {
 	        	if (document.form.file1.value != "") {
-		            var extension = document.getElementById("file1").value.split('.');
+					var exIndex = document.getElementById("file1").value.lastIndexOf('.');
+					var extension = document.getElementById("file1").value.substring(exIndex+1, document.getElementById("file1").value.length);
 		            var check = false;
-		            check = compareExtension(check, extension[1]);
-
+		            check = compareExtension(check, extension);
+		            
 		            if (!check) {
 		                document.getElementById("file1").value = "";
-		                alert("<spring:message code ='ezCommunity.lhj03' />");
+		                alert("<spring:message code ='ezBoard.hsbImg01' />");
 		                return;
 		            }
 		            
@@ -458,7 +460,7 @@
 		                        <tr>
 		                            <td style="text-align:center">
 		                                <span id='imagechange1' class='preView' style='display:none;' value=""></span>
-		                                <img src='${res}' id='image${vs.count}' name='zb_target_resize' style='cursor:pointer;max-height:230px;'/>
+		                                <img src='${res}' id='image${vs.count}' name='zb_target_resize' style='cursor:pointer; max-height:230px; max-width:429px;'/>
 		                            </td>
 		                        </tr>
 		                    </table>

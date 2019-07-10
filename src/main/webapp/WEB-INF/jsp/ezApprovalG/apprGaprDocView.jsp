@@ -410,8 +410,13 @@
 		    function btnDocInfo_onclick() {
 		        ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
-		
-		        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + DocID + "&ingFlag=APR");
+		        
+				if (ListTypeValue == "21") {
+			        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=TMP");
+				} else {
+			        var mode = getDocMode();
+			        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoView.do?docID=" + DocID + "&ingFlag=" + mode);
+				}
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
@@ -428,11 +433,35 @@
 		        if (ListTypeValue == "21") { //2019-02-08 천성준 - #14965 임시보관함문서 > 문서보기 > 통합PC저장 시, 첨부 및 문서파일을 내려받을수 없던 문제해결
 			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=TMP&orgCompanyID=" + orgCompanyID);
 		        } else {
-			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID=" + orgCompanyID);
+		        	var mode = getDocMode();
+			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + mode + "&orgCompanyID=" + orgCompanyID);
 		        }
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
+		    }
+		    function getDocMode() {
+		    	var rtnVal = "APR";
+		    	
+		    	try {
+		    		$.ajax({
+		     			type : "POST",
+		     			dataType : "text",
+		     			async : false,
+		     			url : "/ezApprovalG/getLineMode.do",
+		     			data : {
+		     					docID : pDocID,
+		     					orgCompanyID : orgCompanyID
+		     					},
+		     			success: function(result) {
+		     				rtnVal = result;
+		     			}        			
+		            });
+		    	} catch (e) {
+		    		alert("getDocMode() :: " + e.description);
+		    	}
+		    	
+		    	return rtnVal;
 		    }
 		    
 		    function btncallback_onclick() {

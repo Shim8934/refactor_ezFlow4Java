@@ -353,105 +353,106 @@
 	    	var schedule_repetition_del_cross_dialogArguments = new Array();
 	    	var selrow;
 	    	function btn_Delete() {
-	        
-	        	var listview = new ListView();
-	        	listview.LoadFromID("ApprovListView");
-	        	selrow = listview.GetSelectedRows();
-
-	        	var isRepetition = false;
-	        	for (var i = 0; i < selrow.length; i++) {
-		            var reFlagVal = selrow[i].getAttribute("DATA7");
-	            	if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {
-		                isRepetition = true;
-	                	break;
-	            	}
-	        	}
-	        
-	        	var szType;
-	        	if (isRepetition) {
-		            if (CrossYN()) {
-	                	var rgParams = new Array();
-	                	rgParams["CancelOpen"] = false;
-	                	rgParams["InstanceType"] = "";
-	                	schedule_repetition_del_cross_dialogArguments[0] = rgParams;
-	                	schedule_repetition_del_cross_dialogArguments[1] = btn_Delete_Complete;
-
-		                DivPopUpShow(390, 175, "/ezResource/scheduleRepetitionDel.do");
-		            } else {
-	                	var rgParams = new Array();
-	                	rgParams["CancelOpen"] = false;
-	                	rgParams["InstanceType"] = "";
-
-	                	var feature = "dialogHeight:175px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
-	                	feature = feature + GetShowModalPosition(390, 175);
-	                	var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
-
-	                	if (false != rgParams["CancelOpen"]) return (false);
-	                	szType = rgParams["InstanceType"];
-	            	}
-	        	}
-	        
-	        	if ((!isRepetition && CrossYN()) || !CrossYN()) {
-	            	var issdelete = false;
-	            	for (var i = 0; i < selrow.length; i++) {
-		                var reFlagVal = selrow[i].getAttribute("DATA7");
-
-		                var xmlHttp = createXMLHttpRequest();
-		                var xmlDoc = createXmlDom();
-	    	            var objNode;
-
-	        	        createNodeInsert(xmlDoc, objNode, "PARAMETER");
-
-	            	    var num = selrow[i].getAttribute("DATA1");
-	                	var ownerID = selrow[i].getAttribute("DATA2");
-	                	var pnumVal = selrow[i].getAttribute("DATA8");
-	                	var gFlagVal = selrow[i].getAttribute("DATA9");
-	                	var startDateVal = selrow[i].getAttribute("DATA3");
-	                	var endDateVal = selrow[i].getAttribute("DATA4");
-	                	var writerIDVal = "";
-
-		                if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {
-		                    if (parseInt(reFlagVal) == 1) {
-	    	                    if (szType == "Instance") {
-	        	                    pnumVal = num;
-	            	                writerIDVal = ownerID;
-	                	            num = "0";
-	                    	        reFlagVal = "3";
-	                        	}
-	                    	} else if (parseInt(reFlagVal) == 3) {
-	                        	if (szType == "Master") {
-		                            num = pnumVal;
-		                            ownerID = writerIDVal;
-	    	                        reFlagVal = "1";
-	        	                }
-	            	        }
-	                	}
-	                	createNodeAndInsertText(xmlDoc, objNode, "NUM", num);
-	                	createNodeAndInsertText(xmlDoc, objNode, "OWNERID", ownerID);
-	                	createNodeAndInsertText(xmlDoc, objNode, "PNUM", pnumVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "WRITERID", writerIDVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "INSTYPE", reFlagVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "GFLAG", gFlagVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", startDateVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", endDateVal);
-
-		                xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
-		                xmlHttp.send(xmlDoc);
-
-	    	            var res = xmlHttp.responseText;
-
-	        	        if (res.trim() == "OK") {
-	            	        issdelete = true;
-	                	} else {
-	                    	issdelete = false;
-	                    	alert("" + strLang149 + "");
-	                    	return;
-		                }
-		            }
-	    	        getCalendarList();
-	        	    if (issdelete)
-	            	    alert("" + strLang259 + "");
-	        	}
+	    		if(confirm(strLang90)) {
+		        	var listview = new ListView();
+		        	listview.LoadFromID("ApprovListView");
+		        	selrow = listview.GetSelectedRows();
+	
+		        	var isRepetition = false;
+		        	for (var i = 0; i < selrow.length; i++) {
+			            var reFlagVal = selrow[i].getAttribute("DATA7");
+		            	if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {
+			                isRepetition = true;
+		                	break;
+		            	}
+		        	}
+		        
+		        	var szType;
+		        	if (isRepetition) {
+			            if (CrossYN()) {
+		                	var rgParams = new Array();
+		                	rgParams["CancelOpen"] = false;
+		                	rgParams["InstanceType"] = "";
+		                	schedule_repetition_del_cross_dialogArguments[0] = rgParams;
+		                	schedule_repetition_del_cross_dialogArguments[1] = btn_Delete_Complete;
+	
+			                DivPopUpShow(390, 175, "/ezResource/scheduleRepetitionDel.do");
+			            } else {
+		                	var rgParams = new Array();
+		                	rgParams["CancelOpen"] = false;
+		                	rgParams["InstanceType"] = "";
+	
+		                	var feature = "dialogHeight:175px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
+		                	feature = feature + GetShowModalPosition(390, 175);
+		                	var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
+	
+		                	if (false != rgParams["CancelOpen"]) return (false);
+		                	szType = rgParams["InstanceType"];
+		            	}
+		        	}
+		        
+		        	if ((!isRepetition && CrossYN()) || !CrossYN()) {
+		            	var issdelete = false;
+		            	for (var i = 0; i < selrow.length; i++) {
+			                var reFlagVal = selrow[i].getAttribute("DATA7");
+	
+			                var xmlHttp = createXMLHttpRequest();
+			                var xmlDoc = createXmlDom();
+		    	            var objNode;
+	
+		        	        createNodeInsert(xmlDoc, objNode, "PARAMETER");
+	
+		            	    var num = selrow[i].getAttribute("DATA1");
+		                	var ownerID = selrow[i].getAttribute("DATA2");
+		                	var pnumVal = selrow[i].getAttribute("DATA8");
+		                	var gFlagVal = selrow[i].getAttribute("DATA9");
+		                	var startDateVal = selrow[i].getAttribute("DATA3");
+		                	var endDateVal = selrow[i].getAttribute("DATA4");
+		                	var writerIDVal = "";
+	
+			                if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {
+			                    if (parseInt(reFlagVal) == 1) {
+		    	                    if (szType == "Instance") {
+		        	                    pnumVal = num;
+		            	                writerIDVal = ownerID;
+		                	            num = "0";
+		                    	        reFlagVal = "3";
+		                        	}
+		                    	} else if (parseInt(reFlagVal) == 3) {
+		                        	if (szType == "Master") {
+			                            num = pnumVal;
+			                            ownerID = writerIDVal;
+		    	                        reFlagVal = "1";
+		        	                }
+		            	        }
+		                	}
+		                	createNodeAndInsertText(xmlDoc, objNode, "NUM", num);
+		                	createNodeAndInsertText(xmlDoc, objNode, "OWNERID", ownerID);
+		                	createNodeAndInsertText(xmlDoc, objNode, "PNUM", pnumVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "WRITERID", writerIDVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "INSTYPE", reFlagVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "GFLAG", gFlagVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", startDateVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", endDateVal);
+	
+			                xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
+			                xmlHttp.send(xmlDoc);
+	
+		    	            var res = xmlHttp.responseText;
+	
+		        	        if (res.trim() == "OK") {
+		            	        issdelete = true;
+		                	} else {
+		                    	issdelete = false;
+		                    	alert("" + strLang149 + "");
+		                    	return;
+			                }
+			            }
+		    	        getCalendarList();
+		        	    if (issdelete)
+		            	    alert("" + strLang259 + "");
+		        	}
+	    		}
 	    	}
 
 	    	function btn_Delete_Complete(retVal) {
@@ -859,7 +860,7 @@
     		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
     		<input id="writerdept" type="text" style="width: 120px" />
     		<a class="imgbtn" style="padding-top:2px"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
-    		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center">
+    		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" readonly="readonly">
        		<a class="imgbtn" style="padding-top:2px"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>
 		<div id="ApprovList" style ="BORDER:0;WIDTH:100%; height:100%;border-top:0px;"></div>

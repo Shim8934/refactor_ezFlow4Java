@@ -166,7 +166,7 @@
 			            showAnim: 'show',
 			            showMonthAfterYear: true
 			        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		        
 		        if (selectType == 'A04' && dateType == 4) {
 		        	$('#Stimepicker').timepicker();
@@ -425,15 +425,15 @@
 						returnFlag = true;
 					} else if (isMemorialDay.length != 0 || isYearMemorialDay.length != 0) {//기념일체크
 						if (isMemorialDay.length != 0 ) {
-							for (var i = 0; i < isMemorialDay.length; i++) {
-								if (isMemorialDay[i].holiday ==  true) {//휴무일인 기념일일때
+							for (var j = 0; j < isMemorialDay.length; j++) {
+								if (isMemorialDay[j].holiday ==  true) {//휴무일인 기념일일때
 									returnFlag = true;
 								}
 							}
 						} 
 						if (isYearMemorialDay.length != 0) {
-							for (var i = 0; i < isYearMemorialDay.length; i++) {
-								if (isYearMemorialDay[i].holiday == true) { //휴무일인 기념일일때
+							for (var j = 0; j < isYearMemorialDay.length; j++) {
+								if (isYearMemorialDay[j].holiday == true) { //휴무일인 기념일일때
 									returnFlag = true;
 								}
 							}
@@ -741,7 +741,7 @@
 	                </tr>
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
-					<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span></a>
+					<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t16'/></span></a>
 	            </div>
 	        </div>
 	        <script type="text/javascript">

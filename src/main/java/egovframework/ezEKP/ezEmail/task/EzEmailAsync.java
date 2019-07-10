@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezEmail.task;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -11,14 +10,17 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.mail.search.SearchTerm;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+
+import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -49,7 +51,7 @@ public class EzEmailAsync {
 	private String jspw;
 
 	@Async
-	public void cancelMailDelete(String num, int tenantID) {
+	public void cancelMailDelete(String num, int tenantID, Locale locale) {
 		logger.debug("cancelMailDelete async methoed started.");
 		logger.debug("num=" + num);
 		
@@ -63,7 +65,6 @@ public class EzEmailAsync {
 			
 			String password = jspw;
 			List<String> addresses = ezEmailService.getMailReceiveAddress(num);
-			Locale locale = Locale.getDefault();
 						
 			String isReadDeleteStr = ezCommonService.getTenantConfig("IS_READ_DELETE", tenantID);
 			boolean isReadDelete = false;
@@ -72,60 +73,7 @@ public class EzEmailAsync {
 				isReadDelete = true;
 			}
 			
-			SearchTerm searchTerm = new SearchTerm() {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public boolean match(Message message) {
-					try {
-						String thisMessageId = ((MimeMessage) message).getMessageID();
-
-						if (thisMessageId != null && thisMessageId.contains(messageId)) {
-							return true;
-						}
-					} catch (MessagingException e) {
-						e.printStackTrace();
-					}
-					
-					return false;
-				}
-			};
-			
-			for (String address : addresses) {
-				// jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
-				// config.IS_READ_DELETE가 YES이면 읽은 메일도 삭제 (jobCode=1)
-				int jobCode = 3;
-				IMAPAccess ia = null;
-				
-				try {
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"),
-							config.getProperty("config.IMAPPort"), address, password, egovMessageSource, locale, ezEmailUtil);
-					
-					List<String> folderNameList = ia.getAllTopLevelFolderNames();
-										
-					for (String folderName : folderNameList) {
-						Folder folder = ia.getFolder(folderName);
-						jobCode = recursiveCancelMailSearch(ia, folder,searchTerm, isReadDelete);
-						 
-						if (jobCode != 3) {
-							break; 
-						}							 
-					}
-					
-					ia.close();
-					ia = null;
-				} catch (Exception e) {
-					e.printStackTrace();
-					jobCode = 3;
-				} finally {					
-					if (ia != null) {
-						ia.close();
-					}
-				}
-				
-				ezEmailService.updateMailReceiveDetailInfo(num, new String[] {address, String.valueOf(jobCode)});
-				logger.debug("address=" + address + ",jobCode=" + jobCode);
-			}
+			recallMailByMessageId(addresses, password, messageId, num, locale, isReadDelete);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -134,61 +82,94 @@ public class EzEmailAsync {
 		logger.debug("cancelMailDelete async methoed ended.");
 	}
 	
-	/**
-	 * 메일 회수시 받은 편지함, 지운편지함, 개인편지함, 정크메일함과 각 편지함의 하위폴더에서도 회수가 가능하도록 개선.
-	 */
-	private int recursiveCancelMailSearch(IMAPAccess ia, Folder folder, 
-					SearchTerm searchTerm, boolean isReadDelete) throws Exception {
-		logger.debug("folderName=" + folder.getFullName());
+	private void recallMailByMessageId(List<String> recallMailList, String password, String messageId, String num, Locale locale, boolean isReadDelete) {
+		IMAPAccess ia = null;
+		JSONObject recallMailInfo = null;
+		String senderEmail = null;
+		JSONArray mailList = null;
+		JSONObject mailInfo = null;
+		String folderName = null;
+		long mailUid = 0;
 		
-		int jobCode = 3;
+		String senderSentMailBoxName = ezEmailUtil.getSentFolderId(locale);
+		String senderDraftMailBoxName = ezEmailUtil.getDraftsFolderId(locale);
 		
-		if (folder.exists()) {
-			folder.open(Folder.READ_WRITE);
-			String folderPath = folder.getFullName();
-			Message[] messages = folder.getMessages();
-			
-			// pre-fetch fields needed for searching
-			FetchProfile fp = new FetchProfile();
-			fp.add(FetchProfile.Item.ENVELOPE);
-			folder.fetch(messages, fp);
-
-			messages = folder.search(searchTerm);
-			
-			if (messages.length > 0) { // 메일 발견
-				if (messages[0].isSet(Flags.Flag.SEEN)) { // 메일 읽음
-					if (isReadDelete) { // 읽어도 지움
-						messages[0].setFlag(Flags.Flag.DELETED, true);
-						jobCode = 1;
-					} else { // 읽으면 안지움
-						jobCode = 2;
-					}
-				} else { // 메일 안읽음
-					messages[0].setFlag(Flags.Flag.DELETED, true);
-					jobCode = 1;
-				}
-
-				logger.debug("folderPath=" + folder.getFullName());
+		for (String address : recallMailList) {
+			try {
+				int jobCode = 3; // jobCode (1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함)
 				
-				folder.close(true);
-			} else {
-				folder.close(true);
-				List<Folder> subfolderList = ia.getSubFolders(folderPath, false);
-
-				for (Folder subFolder : subfolderList) {
-					int subJobCode = recursiveCancelMailSearch(ia, subFolder, searchTerm, isReadDelete);
-
-					if (subJobCode != 3) {
-						jobCode = subJobCode;
-						break;
+				recallMailInfo = ezEmailService.recallMailByMessageId(address, messageId);
+				
+				if (recallMailInfo == null) {
+					logger.debug("Get recallMailInfo failed. Move to the next user...");
+					continue;
+				}
+				
+				senderEmail = (String) recallMailInfo.get("senderEmail");
+				mailList = (JSONArray) recallMailInfo.get("mailList");
+				
+				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"),
+						config.getProperty("config.IMAPPort"), address, password, egovMessageSource, locale, ezEmailUtil);
+					        	
+				for (int i = 0; i < mailList.size(); i++) {
+					mailInfo = (JSONObject) mailList.get(i);
+					folderName = (String) mailInfo.get("mailboxName");
+					mailUid = (long) mailInfo.get("mailUid");
+					
+					if (senderEmail.equals(address) && (folderName.equals(senderDraftMailBoxName) || folderName.equals(senderSentMailBoxName))) {
+						logger.debug("This mailbox is sender mailbox Draft or Sent.");
+						continue;
 					}
+					
+					Folder folder = ia.getFolder(folderName);
+					
+					try {
+						if (folder.exists()) {
+							folder.open(Folder.READ_WRITE);
+							Message message = ((IMAPFolder)folder).getMessageByUID(mailUid);
+							
+							// 사용자가 메일을 복사하여 같은 메일이 여러개 있고 isReadDelete가 true일 경우(읽어도 회수)
+							// 읽은 메일은 회수하지 않고, 읽지 않은 메일은 모두 회수한다.
+							// 읽은 메일이 하나라도 있을 경우 읽음으로 처리한다.
+							if (message.isSet(Flags.Flag.SEEN)) {               // 사용자가 메일을 읽었을 경우
+								if (isReadDelete) {                             // 읽어도 회수할 경우
+									message.setFlag(Flags.Flag.DELETED, true);  // 메일 삭제
+									jobCode = 1;                                // 회수 처리
+								} else {                                        // 읽은 메일 회수하지 않을 경우
+									jobCode = 2;                                // 읽음 처리
+								}
+							} else {                                            // 사용자가 메일을 읽지 않았을 경우
+								message.setFlag(Flags.Flag.DELETED, true);      // 메일 삭제
+								
+								if (jobCode != 2) {                             // 읽음 처리가 안되었을 경우
+									jobCode = 1;                                // 회수 처리
+								}
+							}
+							
+							folder.close(true);
+						}
+					} catch (MessagingException e) {
+						e.printStackTrace();
+						logger.debug("mail Flags update error. so move the next mailbox.");
+						continue;
+					}
+				}
+				
+				logger.debug("address=" + address + ",jobCode=" + jobCode + ",messageId=" + messageId + ",num=" + num);
+				ezEmailService.updateMailReceiveDetailInfo(num, new String[] {address, String.valueOf(jobCode)});
+				
+				ia.close();
+				ia = null;
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
 				}
 			}
 		}
-		
-		return jobCode;
 	}
-	
 }
 
 

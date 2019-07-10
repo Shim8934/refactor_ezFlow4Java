@@ -245,9 +245,9 @@ function datanameweek(year, month, day, contral)
     }
     else if(contral == "HEARDER")
     {
-        DateReslut = String(year) + strLang277 + " " + 
-        String(((month < 10) ? "0" + month : month)) + strLang279 + " " +
-        String(((day < 10) ? "0" + day : day)) + strLang278;
+        DateReslut = String(year) + "-" + 
+        String(((month < 10) ? "0" + month : month)) + "-" +
+        String(((day < 10) ? "0" + day : day));
     }
     else if (contral == "ADD")
     {
@@ -299,7 +299,8 @@ function tableListControl_Week()
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
         //document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
-        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " - " + weekEndDatename);
+        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
+        document.getElementById("divViewHeader").style.color = "";
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
         var b = 0;
@@ -615,7 +616,7 @@ function tableListControl_Week()
 
                     var _mtd2 = document.createElement("TD");
                    // _mtd2.style.width = "14.2%";
-                    if(weekdatename[i] == today) { 							// 날짜가 오늘이면
+                    if(weekdatename[i-1] == today) { 							// 날짜가 오늘이면
                     	_mtd2.setAttribute("class", "weektd_02 today");
                     }
                     else {
@@ -1244,7 +1245,7 @@ function tableListControl_today() {
             _tr.appendChild(_th);
         }
         _table.appendChild(_tr);
-
+        tdcount = 0;
         for (var k = 0; k < title_name.length; k++) {
             for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
                 var s_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0]);

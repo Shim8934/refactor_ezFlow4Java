@@ -168,7 +168,7 @@ var strLang310 = "時";
 var strLang311 = "分";
 var strLang400 = "人";
 var strLang401 = "検索結果";
-var strLang500 = "データが存在しません。";
+var strLang500 = "データが存在しません";
 var strLang550 = "日ごとに";
 var strLang551 = "毎日(平日)";
 var strLang552 = "週ごとに";
@@ -194,7 +194,7 @@ var strLang570 = "終了時間";
 var strLang571 = "予約者";
 var strLang572 = "繰り返し";
 var strLang573 = "時間";
-var strLang535 = "データが存在しません。";
+var strLang535 = "データが存在しません";
 var strLang580 = "期間 : ";
 var strLang581 = "終了日を指定しない";
 var strLang582 = "回";
@@ -213,4 +213,4 @@ var strLangKMS1 = "繰り返し設定は100回まで可能です。";
 var strLangkmsr01 = "既に追加されている権限者です。";
 
 //2019-04-08 김민성
-var strLangkmsr02 = "자원관리자는 사용자 또는 관리자 권한이 있어야 합니다.";
+var strLangkmsr02 = "設備管理者は管理権限があるため、削除できません。";

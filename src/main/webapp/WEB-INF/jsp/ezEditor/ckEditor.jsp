@@ -93,37 +93,36 @@
  	            		textData += "<p " + defaultFontAndSize + ">" + line[i] + " " + "</p>";
 	 	            }
 	            	
-	            	CKEDITOR.instances.editor1.setData(textData);
+					if (CKEDITOR.instances.editor1.mode === "source") {
+						CKEDITOR.instances.editor1.setData(textData);
+					} else {
+						CKEDITOR.instances.editor1.editable().setHtml(textData);
+					}
 	            } catch (e) { }
 	        }
 			
 			function GetEditorTextContent() {
-	            try {
-            	    var resultStr = CKEDITOR.instances.editor1.getData();
-            	    
-            	    resultStr = resultStr.replace(/\r\n/gi, "");
-            	    resultStr = resultStr.replace(/\n/gi, "");
-            	    resultStr = resultStr.replace(/\s+/gi, " ");
-            	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
-            	    resultStr = resultStr.replace(/<p>/gi, "\n");
-            	    resultStr = resultStr.replace(/<br .*?>/gi, "\n");
-            	    resultStr = resultStr.replace(/<br>/gi, "\n");
-            	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
-            	    resultStr = resultStr.replace(/<hr>/gi, "\n----------------------------------------------------------------------------------------------------");
-            	    resultStr = resultStr.replace(/<.*?>/gi, "");
-            	    //resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
-            	    //resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
-            	    resultStr = resultStr.replace(/ +/gi, " ");
-            	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
-            	    resultStr = resultStr.replace(/&lt;/gi, "<");
-            	    resultStr = resultStr.replace(/&gt;/gi, ">");
-            	    resultStr = resultStr.replace(/&quot;/gi, "\"");
-            	    resultStr = resultStr.replace(/&#39;/gi, "'");
-            	    resultStr = resultStr.replace(/&amp;/gi, "&");
-            	    resultStr = resultStr.replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, "");
-					
-            	    return  resultStr;
-	            } catch (e) { return ""; }
+           	    var resultStr = CKEDITOR.instances.editor1.getData();
+           	    
+           	    resultStr = resultStr.replace(/\r\n/gi, "\n");
+        	    resultStr = resultStr.replace(/\n/gi, "");
+        	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+        	    resultStr = resultStr.replace(/<br .*?>/gi, "<br>");
+        	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+        	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
+        	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
+        	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+        	    resultStr = resultStr.replace(/<style .*?>/gi, "<style>");
+        	    resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+        	    resultStr = resultStr.replace(/<script .*?>/gi, "<script>");
+        	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
+        	    resultStr = resultStr.replace(/<.*?>/gi, "");
+        	    
+        	    var tempTextarea = document.createElement("textarea");
+        	    tempTextarea.innerHTML = resultStr;
+        	    resultStr = tempTextarea.value;
+        	    
+        	    return  resultStr;
 	        }
 			
 			function GetBodyValue() {
@@ -141,7 +140,13 @@
 	
 // 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-	            CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
+	            //CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
+
+	            if (CKEDITOR.instances.editor1.mode === "source") {
+					CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
+				} else {
+					CKEDITOR.instances.editor1.editable().setHtml(getNodeText(XmlBodyDATA));
+				}
 	        }
 			
 			function GetEditorContentURL(url) {

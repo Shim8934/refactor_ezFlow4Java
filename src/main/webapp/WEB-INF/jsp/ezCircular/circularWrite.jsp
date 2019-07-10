@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html style="height:100%"> 
+<html style="height:100%" ondragover="bodydragover(event)"> 
 	<head>
 		<c:choose>
 			<c:when test="${mode eq 'reuse'}">
@@ -367,6 +367,12 @@
 	                }
 				});
 			}
+			
+			function bodydragover(evt) {
+				evt.dataTransfer.dropEffect = "none";
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
 		</script>
 	</head>
 	
@@ -391,7 +397,7 @@
         						</c:when>
         						<c:otherwise>
         							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezCircular.t28 => t25 -->
-		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t25"/></span></li>	
+		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.kbm01"/></span></li>	
 		          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>       						
         						</c:otherwise>
         					</c:choose>

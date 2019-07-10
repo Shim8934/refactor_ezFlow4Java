@@ -402,4 +402,12 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getUserOrgDeptId(Map<String, Object> map) throws Exception {
 		return (String) select("EzOrganDAO.getUserOrgDeptId", map);
 	}
+
+	public void updateAddJobProxy(Map<String, Object> map) throws Exception {
+		update("EzOrganDAO.updateAddJobProxy", map);
+	}
+
+	public String getAddJobProxy(Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.getAddJobProxy", map);
+	}
 }

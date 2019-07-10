@@ -106,10 +106,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			redirectBoardGroupID = leftBoardList.get(0).getBoardGroupId();
 		}
 		
+		/* 2019-07-09 홍승비 - 게시판 좌측메뉴 게시물 개수 표출 사용여부 플래그 추가 */
+        String useLeftCnt = "";
+        if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", user.getTenantId()) != null) {
+        	useLeftCnt = ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", user.getTenantId());
+        }
+		
 		model.addAttribute("redirectBoardID", redirectBoardID);
 		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID);
 		model.addAttribute("user", user);
 		model.addAttribute("serverName", serverName);
+		model.addAttribute("useLeftCnt", useLeftCnt);
 		
 		logger.debug("boardLeft ended");
 		return "admin/ezBoard/boardLeft";
@@ -339,7 +346,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 		
 		// 자신의 회사에 속한 게시판만 표출하도록 compamyID 조건 추가
-		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, user.getTenantId());
+		String boardTree = ezBoardService.getBoardTree(upperBoardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, "", user.getRollInfo(), user.getTenantId());
 
 		logger.debug("getSubBoards ended");
 		return boardTree;
@@ -365,7 +372,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, user.getTenantId());
 		
-		String boardTree = ezBoardService.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, user.getTenantId());
+		String boardTree = ezBoardService.getBoardTree(boardID, user.getId(), user.getDeptID(), user.getCompanyID(), 0, 1, 0, " ", "", isAdminLeft, isCompanyAdmin, "", user.getRollInfo(), user.getTenantId());
 		if (boardTree.trim().equals("<NODES></NODES>")) {
 			model.addAttribute("hasSubBoard", 0);
 		} else {

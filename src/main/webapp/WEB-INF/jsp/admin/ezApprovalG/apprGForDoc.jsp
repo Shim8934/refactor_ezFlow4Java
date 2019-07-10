@@ -706,7 +706,7 @@
 				    	type : "POST",
 				    	url : "/admin/ezApprovalG/setContainerIDForDoc.do",
 				    	async : false,
-				    	data : {docID : DocID, deptID : GetAttribute(tr, "DATA4"), containerType : '999', companyID : pCompanyID},
+				    	data : {docID : DocID, deptID : GetAttribute(tr, "DATA12"), orgContainerID : GetAttribute(tr, "DATA4"), containerType : '999', companyID : pCompanyID},
 				    	dataType : 'text',
 				    	success : function (result) {
 				    		if (result == 'OK') {
@@ -873,7 +873,8 @@
 			</c:if>
 	        <ul>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
-	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>	            
+	            <!-- 폐기버튼 숨김처리 -->
+<%-- 	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>	             --%>
 	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
 	        </ul>
 	    </div>

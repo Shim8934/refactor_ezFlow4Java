@@ -550,7 +550,7 @@
 			function event_newmailcount() {
 			    if (xmlHttp_getnewmailcount_total != null && xmlHttp_getnewmailcount_total.readyState == 4) {
 			        if (xmlHttp_getnewmailcount_total.status > 199 && xmlHttp_getnewmailcount_total.status < 300) {
-			        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "DATA")[0]);
+			        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "FOLDERUNREADCOUNT")[0]);
 			        	
 			        	if (unreadcount.length > 2) {
 			        		unreadcount = "99+";
@@ -1011,13 +1011,7 @@
 		    	
 		    	beforeAlertDate = new Date();
 		    	var dateAlert = nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + (nowAttiTime.getMonth() + 1) + "<spring:message code='ezAttitude.t67'/> " + (nowAttiTime.getDate()) + "<spring:message code='ezAttitude.t68'/> " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
-// 		    	var saveFlag = confirm("<spring:message code='ezAttitude.t69'/> " + dateAlert + "<spring:message code='ezAttitude.t70'/>");
-// 		    	if (!saveFlag) {
-// 		    		afterAlertDate = new Date();
-// 		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
-// 		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
-// 		    		return;
-// 		    	} 
+
 		    	$.ajax({
 		    		type : "POST",
 		    		async : true,

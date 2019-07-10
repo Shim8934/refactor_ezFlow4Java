@@ -38,6 +38,7 @@
             //2018-07-17 김보미 - 프로그래스바
             var startTime = "";
             var endTime = "";
+            var isSearchPage = true;
 		    
 		    document.onselectstart = function () { return false; };
 		    

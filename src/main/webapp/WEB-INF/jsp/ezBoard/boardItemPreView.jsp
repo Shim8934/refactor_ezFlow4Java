@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/previewBoard.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 		
 		var curFontSize = 1;
@@ -123,10 +124,13 @@
 		                document.getElementById("extensionAttribute" + (i + 6)).innerHTML = WriterValue;
 		            }
 		        }
-		        
-		        /* 2018-11-27 홍승비 - 미리보기 시 본문 div의 세로 리사이즈 추가 */
-				ResizeDiv();
 		    };
+		    
+		    /* 2019-05-16 홍승비 - 처음 리사이즈 동작을 ready  시점으로 변경 */
+		    $(document).ready(function() {
+		    	ResizeDiv();
+		    });
+		    
 		    function MakeXMLString(str) {
 		        str = ReplaceText(str, "&", "&amp;");
 		        str = ReplaceText(str, "<", "&lt;");
@@ -166,8 +170,11 @@
 		        }
 		        document.getElementById('txtContent').style.fontSize = fontSize[curFontSize];
 		    }
+		    
+		    /* 2019-05-16 홍승비 - 미리보기 시 가로 리사이즈 추가 */
 		    function ResizeDiv() {
  		        document.getElementById("ItemOverflow").style.height = (window.innerHeight - document.getElementById("topTable").clientHeight - 124) + "px";
+				document.getElementById("ItemOverflow").style.width = (document.documentElement.clientWidth - 40) + "px";
 		    }
 		</script>
 	</head>

@@ -481,7 +481,7 @@
 
 								if (res.totalcnt < 1) {
 									if (res.pSelectTab == "completedoclist") {
-										html += "<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>";
+										html += "<tr><td colspan='10' style='text-align:center;'>"+text1+"</td></tr>";
 									} else {
 										html += "<tr><td colspan='12' style='text-align:center;'>"+text1+"</td></tr>";
 									}

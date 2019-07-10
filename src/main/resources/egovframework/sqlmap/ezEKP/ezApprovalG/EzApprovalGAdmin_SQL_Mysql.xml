@@ -647,7 +647,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.searchManageAprDocList"
-		parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+		parameterClass="Map" resultClass="ApprGDocListVO">
 		
 		<![CDATA[
 			SELECT
@@ -1907,7 +1907,7 @@
 			AND
 				containertypeid = #v_CONTTYPEID#
 			AND
-				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND tenant_id = #tenantID#)
+				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND tenant_id = #tenantID# AND companyid = #companyID#)
 		]]>
 	</select>
 
@@ -4168,7 +4168,7 @@
 		]]>
 	</update>
 	
-	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="String">
+	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				count(*)

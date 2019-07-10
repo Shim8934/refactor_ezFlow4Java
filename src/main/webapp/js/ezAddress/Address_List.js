@@ -2,15 +2,18 @@
 var ListXML = null;
 function View_Change() {
     listContentArry = new Array();
+    var listType = "";
     if (document.getElementById("ListViewType").value == "list") {
         document.getElementById("MailList").style.display = "";
         document.getElementById("MailListCard").style.display = "none";
         document.getElementById("DetailList_header").style.display = "";
+        listType = "list";
     }
     else {
         document.getElementById("MailList").style.display = "none";
         document.getElementById("MailListCard").style.display = "";
         document.getElementById("DetailList_header").style.display = "none";
+        listType = "card";
     }
     if (ListXML != null)
         MakeAddressList();
@@ -21,6 +24,15 @@ function View_Change() {
         else
             Get_AddressList();
     }*/
+    var xmlDom = createXmlDom();
+	var xmlHTTP = createXMLHttpRequest();
+	var objRoot;
+	createNodeInsert(xmlDom, objRoot, "DATA");
+	createNodeAndInsertText(xmlDom, objRoot, "USERID", pOwerID);
+	createNodeAndInsertText(xmlDom, objRoot, "LISTCNT", pPageSize);
+	createNodeAndInsertText(xmlDom, objRoot, "LISTTYPE", listType);
+	xmlHTTP.open("POST", "/ezAddress/addressSaveConfig.do", false);
+	xmlHTTP.send(xmlDom);
 }
 function Get_AddressList() {
     searchFlag = false;
@@ -151,8 +163,8 @@ function MakeAddressList() {
                 document.getElementById("FolderType").style.display = "";
                 _TR.setAttribute("_FolderType", FolderType);
                 _TR.setAttribute("_FolderID", FolderID);
-                document.getElementById("width1").style.width = "20%";
-                document.getElementById("width2").style.width = "20%";
+                document.getElementById("width1").style.width = "15%";
+                document.getElementById("width2").style.width = "15%";
             } else {
                 document.getElementById("FolderType").style.display = "none";
                 document.getElementById("width1").style.width = "20%";
@@ -229,10 +241,10 @@ function MakeAddressList() {
 
             var _TD5 = document.createElement("TD");
             if (searchFlag) {
-                _TD5.style.width = "20%";
+                _TD5.style.width = "15%";
             }
             else
-                _TD5.style.width = "20%";
+            _TD5.style.width = "20%";
             _TD5.style.margin = "0px";
             _TD5.style.padding = "0px";
             _TD5.style.whiteSpace = "nowrap";
@@ -247,7 +259,7 @@ function MakeAddressList() {
 
             var _TD6 = document.createElement("TD");
             if (searchFlag) {
-            	_TD6.style.width = "20%";
+            	_TD6.style.width = "15%";
             }
             else
             	_TD6.style.width = "20%";
@@ -473,12 +485,18 @@ function MakeNoDateList() {
         _TR.appendChild(_TD);
         document.getElementById("MailList").appendChild(_TR);
     }
-    else {
+    else if(searchFlag){
         var DivLayer = document.createElement("DIV");
         DivLayer.style.textAlign = "center";
         DivLayer.className = "emptyDiv";
-        DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
+        DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLangNoSearchData + "</div>";
         document.getElementById("MailListCard").appendChild(DivLayer);
+    } else{
+    	var DivLayer = document.createElement("DIV");
+    	DivLayer.style.textAlign = "center";
+    	DivLayer.className = "emptyDiv";
+    	DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
+    	document.getElementById("MailListCard").appendChild(DivLayer);
     }
 }
 function OderbyOptionExpression(obj) {

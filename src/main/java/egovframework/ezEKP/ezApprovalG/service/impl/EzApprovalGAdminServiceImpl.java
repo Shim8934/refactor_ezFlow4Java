@@ -430,13 +430,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("contType", pContType);
 		map.put("deptID", pOwnDeptID);
 		
-		String duplicated = ezApprovalGAdminDAO.checkContainer(map);
-		
-		if (duplicated == null) {
-			duplicated = "";
+		int duplicated = ezApprovalGAdminDAO.checkContainer(map);
+		if (duplicated > 0) {
 			logger.debug("insertContainer duplicated.");
+			return "DUPLICATE";
 			
-			return "FALSE";
 		} else {
 			logger.debug("insertContainer started.");
 			ezApprovalGAdminDAO.insertContainer(map);
@@ -465,6 +463,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String pContID = xmlData.getDocumentElement().getChildNodes().item(0).getTextContent().trim();
 		String pContType = xmlData.getDocumentElement().getChildNodes().item(1).getTextContent().trim();
 		String pOwnDeptID = xmlData.getDocumentElement().getChildNodes().item(2).getTextContent().trim();
+		String pModFlag = xmlData.getDocumentElement().getChildNodes().item(3).getTextContent().trim();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("contID", pContID);		
@@ -473,25 +472,38 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("updateContainer started.");
-		ezApprovalGAdminDAO.updateContainer(map);
-		logger.debug("updateContainer ended.");
+		try {
+			if (pModFlag != null && pModFlag.equals("Y")) {
+				int duplicated = ezApprovalGAdminDAO.checkContainer(map);
+				if (duplicated > 0) {
+					logger.debug("updateContainer duplicated.");
+					return "DUPLICATE";
+				}
+			}
 		
-		logger.debug("deleteContainerUseDep started.");
-		ezApprovalGAdminDAO.deleteContainerUseDep(map);
-		logger.debug("deleteContainerUseDep ended.");
-		
-		int cnt = xmlData.getDocumentElement().getChildNodes().getLength();		
-	
-	    for (int i = 3; i < cnt - 1; i++) {
-	    	map.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
+			logger.debug("updateContainer started.");
+			ezApprovalGAdminDAO.updateContainer(map);
+			logger.debug("updateContainer ended.");
 			
-			logger.debug("insertContainerUseDep started.");
-	    	ezApprovalGAdminDAO.insertContainerUseDep(map);
-	    	logger.debug("insertContainerUseDep ended.");
-	    }
-	    
-	    return "TRUE";
+			logger.debug("deleteContainerUseDep started.");
+			ezApprovalGAdminDAO.deleteContainerUseDep(map);
+			logger.debug("deleteContainerUseDep ended.");
+			
+			int cnt = xmlData.getDocumentElement().getChildNodes().getLength();		
+			
+			for (int i = 4; i < cnt - 1; i++) {
+				map.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
+				
+				logger.debug("insertContainerUseDep started.");
+				ezApprovalGAdminDAO.insertContainerUseDep(map);
+				logger.debug("insertContainerUseDep ended.");
+			}
+			
+			return "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "FALSE";
+		}
 	}
 
 	@Override
@@ -1971,7 +1983,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 		}
 		
-		sb.append("</HEADERS><ROWS>");
+		sb.append("</HEADERS>");
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_SUBQUERY", subQuery);
@@ -2040,57 +2052,74 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("draftDeptName2=" + draftDeptName2);
 		logger.debug("formID=" + formID);
 		logger.debug("docState=" + docState);
-		List<ApprGAprDocInfoVO> listBody = ezApprovalGAdminDAO.searchManageAprDocList(map2);
-		logger.debug("searchManageAprDocList ended. listBodysize=" + listBody.size());
 		
-		for(int i = 0; i < listBody.size(); i ++) {
-			ApprGAprDocInfoVO bodyVo = listBody.get(i);
+		List<ApprGDocListVO> listBody = ezApprovalGAdminDAO.searchManageAprDocList(map2);
+		
+		StringBuffer docList = new StringBuffer();
+		docList.append("<DATA>");
+		
+		for (int i = 0; i < listBody.size(); i++) {
+			docList.append(commonUtil.getQueryResult(listBody.get(i)));
+		}
+		
+		docList.append("</DATA>");
+		
+		Document docXml = commonUtil.convertStringToDocument(docList.toString());
+		
+		String fieldName = "";
+		String fieldValue = "";
+		
+		sb.append("<ROWS>");
+		
+		for (int j = 0; j < docXml.getElementsByTagName("ROW").getLength(); j++) {
+			
 			sb.append("<ROW>");
 			
-			for (int j = 0; j < listHeader.size(); j++) {
-				ApprGListHeaderVO headerVo = listHeader.get(j);				
-				String fieldName = headerVo.getColName();
-				String fieldValue = "";
-
-				if (fieldName.toUpperCase().equals("WRITERNAME") || fieldName.toUpperCase().equals("WRITERDEPTNAME") || fieldName.toUpperCase().equals("FORMNAME")){
+			for (int k = 0; k < listHeader.size(); k++) {
+				
+				fieldName = listHeader.get(k).getColName().toUpperCase();
+				
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("FORMNAME")) {
 					fieldName = fieldName + multiData;
 				}
 				
-				for (Field field : bodyVo.getClass().getDeclaredFields()) {
-			        field.setAccessible(true);
-										
-					if (field.getName().toUpperCase().equals(fieldName.toUpperCase())) {
-						fieldValue = String.valueOf(field.get(bodyVo));
-					}
-			    }
+				fieldValue = docXml.getElementsByTagName(fieldName).item(j).getTextContent();
 				
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
-
-				if (j == 0) {
-					sb.append("<DATA1>" + bodyVo.getDocID() + "</DATA1>");
-					sb.append("<DATA2>" + bodyVo.getOrgDocID() + "</DATA2>");
-					sb.append("<DATA3>" + bodyVo.getHref() + "</DATA3>");
-					sb.append("<DATA4>" + "" + "</DATA4>");
-					sb.append("<DATA5>" + "" + "</DATA5>");
-					sb.append("<DATA6>" + "" + "</DATA6>");
-					sb.append("<DATA7>" + "" + "</DATA7>");
-					sb.append("<DATA8>" + "" + "</DATA8>");
-					sb.append("<DATA9>" + "0" + "</DATA9>");
-					sb.append("<DATA10>" + bodyVo.getFunctionType() + "</DATA10>");
-					sb.append("<DATA11>" + bodyVo.getHasOptionYN() + "</DATA11>");
-					sb.append("<DATA12>" + bodyVo.getDocState() + "</DATA12>");
-					sb.append("<DATA13>" + bodyVo.getWriterDeptID() + "</DATA13>");
-					sb.append("<DATA14>" + bodyVo.getUrgentApproval() + "</DATA14>");
+				sb.append("<CELL>");
+				sb.append("<VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
+				
+				if (k == 0) {
+					sb.append("<DATA1>" + docXml.getElementsByTagName("DOCID").item(j).getTextContent() + "</DATA1>");
+					sb.append("<DATA2>" + docXml.getElementsByTagName("ORGDOCID").item(j).getTextContent() + "</DATA2>");
+					sb.append("<DATA3>" + docXml.getElementsByTagName("HREF").item(j).getTextContent() + "</DATA3>");
+					sb.append("<DATA4></DATA4>");
+					sb.append("<DATA5></DATA5>");
+					sb.append("<DATA6></DATA6>");
+					sb.append("<DATA7></DATA7>");
+					sb.append("<DATA8></DATA8>");
+					sb.append("<DATA9>0</DATA9>");
+					sb.append("<DATA10>" + docXml.getElementsByTagName("FUNCTIONTYPE").item(j).getTextContent() + "</DATA10>");
+					sb.append("<DATA11>" + docXml.getElementsByTagName("HASOPINIONYN").item(j).getTextContent() + "</DATA11>");
+					sb.append("<DATA12>" + docXml.getElementsByTagName("DOCSTATE").item(j).getTextContent() + "</DATA12>");
+					sb.append("<DATA13>" + docXml.getElementsByTagName("WRITERDEPTID").item(j).getTextContent() + "</DATA13>");
+					sb.append("<DATA14>" + docXml.getElementsByTagName("URGENTAPPROVAL").item(j).getTextContent() + "</DATA14>");
 				}
 				
+				if (fieldName.equals("HASATTACHYN")) {
+					sb.append("<HASATTACHYN>" + docXml.getElementsByTagName("HASATTACHYN").item(j).getTextContent() + "</HASATTACHYN>");
+				}
+				
+				if (fieldName.equals("ISPUBLIC")) {
+					sb.append("<ISPUBLIC>" + docXml.getElementsByTagName("ISPUBLIC").item(j).getTextContent() + "</ISPUBLIC>");
+				}
 				sb.append("</CELL>");
 			}
-			
 			sb.append("</ROW>");
 		}
+		sb.append("</ROWS>");
+		sb.append("</LISTVIEWDATA><TOTALCNT>" + totalCount + "</TOTALCNT></DOCLIST>");
 		
-		sb.append("</ROWS></LISTVIEWDATA><TOTALCNT>" + totalCount + "</TOTALCNT></DOCLIST>");
-		
+		logger.debug("searchManageAprDocList ended.");
 		return sb.toString();
 	}
 

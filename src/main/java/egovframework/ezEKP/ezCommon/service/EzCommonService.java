@@ -93,5 +93,12 @@ public interface EzCommonService {
 	public void addJournalFormDelFlag() throws Exception;
 
 	public void updateListOptionData() throws Exception;
+
+	public void addMsgInMailSearch() throws Exception;
+
+	public void addFormVersion() throws Exception;
+
+	public void addAddJobMasterProxy() throws Exception;
+
 }
 
