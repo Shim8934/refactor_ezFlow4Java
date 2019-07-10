@@ -330,7 +330,8 @@
 		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
 		    	
 		    	if (searchValue == "") {
-		    		companyChange();
+		    		//companyChange();
+		    		alert("<spring:message code='ezEmail.t10' />");
 		    		return;
 		    	}
 		    	

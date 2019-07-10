@@ -260,7 +260,12 @@
 				var searchType = document.getElementById("searchType").value;
 		    	var searchValue = document.getElementById("searchValue").value;
 		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
-		
+
+		    	if (searchValue == "") {
+		    		alert("<spring:message code='ezEmail.t10' />");
+		    		return;
+		    	}
+		    	
 		        var xmlDom = createXmlDom();
 		        var xmlHTTP = createXMLHttpRequest();
 		        var objRoot;
