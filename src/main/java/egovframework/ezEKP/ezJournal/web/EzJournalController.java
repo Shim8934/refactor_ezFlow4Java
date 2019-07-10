@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -399,7 +400,7 @@ public class EzJournalController extends EgovFileMngUtil {
 						JSONObject file = (JSONObject) fileList.get(i);
 						file.put("pFileName", file.get("fileName"));
 					//	file.put("fileName", file.get("fileName"));
-						String filePath = file.get("filePath").toString();
+						String filePath = URLDecoder.decode(file.get("filePath").toString(), "UTF-8");
 						
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
@@ -1186,7 +1187,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("filePath", filePath);
+		param.put("filePath", URLDecoder.decode(filePath, "UTF-8"));
 	//	param.put("fileName", fileName);
 		
 		String restUrl = "/rest/ezjournal/journals/" + journalId + "/attachfiles";
@@ -1227,7 +1228,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 업무일지 모든 첨부파일 다운로드
 	 */
-	@RequestMapping(value = "/ezJournal/journalAllAttachDown.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezJournal/journalAllAttachDown.do", method = RequestMethod.POST)
 	public void journalAllAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("journalAllAttachDown started");
 		
