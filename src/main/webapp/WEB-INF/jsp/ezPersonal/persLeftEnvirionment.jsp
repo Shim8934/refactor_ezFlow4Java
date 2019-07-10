@@ -175,6 +175,9 @@
 				        break;
 					case "webfolder":
 						window.parent.frames.right.document.location.href = "/ezWebFolder/webfolderConfig.do";
+						break;
+					case "LOGINHIST":
+						window.parent.frames.right.document.location.href = "/ezSystem/systemLoginHist.do";
 					default: 
 						break;
 				}
@@ -267,6 +270,7 @@
 	                    </c:if>
 					</c:if>
 		        </ul>
+		        <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="Open_Func(this)"><spring:message code='ezSystem.x0021' /></span></h2>
 	        </div>
 	    </div>    
 		<%-- <div id="left">

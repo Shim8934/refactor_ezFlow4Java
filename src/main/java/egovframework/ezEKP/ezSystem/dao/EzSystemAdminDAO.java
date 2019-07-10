@@ -28,11 +28,19 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public List<ConnectionInfoVO> getLoginHist(Map<String, Object> map) throws Exception {
 		return (List<ConnectionInfoVO>) list("EzSystemAdminDAO.getLoginHist", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ConnectionInfoVO> getLoginHistNotAdmin(Map<String, Object> map) throws Exception {
+		return (List<ConnectionInfoVO>) list("EzSystemAdminDAO.getLoginHistNotAdmin", map);
+	}
 	
 	public int getLoginHistCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzSystemAdminDAO.getLoginHistCount", map); 
 	}
 
+	public int getLoginHistCountNotAdmin(Map<String, Object> map) throws Exception {
+		return (int) select("EzSystemAdminDAO.getLoginHistCountNotAdmin", map); 
+	}
 	
 	public void deleteLoginHist(Map<String, Object> map) throws Exception {
         delete("EzSystemAdminDAO.deleteLoginHist", map);

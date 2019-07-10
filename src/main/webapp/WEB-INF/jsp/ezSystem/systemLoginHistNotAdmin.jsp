@@ -49,11 +49,11 @@
 			var startTime = "";
             var endTime = "";
 			
-			var companyID = "";
+			var companyID = "${companyId}";
 			
 			// 화면 호출시 실행 함수
 			window.onload = function(){
-				companyID = document.getElementById("ListCompany").value;
+				document.getElementById("searchKeycode").value = '3';
 				getTime();
 				getLoginHist(1, searchStartTime, searchEndTime);
 				makePageSelPage();
@@ -132,7 +132,6 @@
 	    				std = $('#startDatepicker').val();
 		    		}
 		    	});    	
-		    	
 		    });
 		    
 		   	function compareDateStart() {
@@ -386,11 +385,12 @@
 					var pageSize = "-1";
 					var params = 'startDate=' + searchStartTime	+ '&endDate=' + searchEndTime;
 					params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
-					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID +'&config=a';
+					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID +'&config=u';
 					var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
 					saveExcel.location.href = pURL;
+					
 				} else {
-					var pURL = "/admin/ezSystem/systemLoginHistList.do";
+					var pURL = "/ezSystem/systemLoginHistList.do";
 
 					$.ajax({
 							url : pURL,
@@ -477,15 +477,6 @@
 				getLoginHist(pageNum, searchStartTime, searchEndTime);
 			}
 			
-			function selectCompanyID() {
-				if (companyID != document.getElementById("ListCompany").value) {
-		            companyID = document.getElementById("ListCompany").value
-	
-					getLoginHist(1, searchStartTime, searchEndTime);
-					makePageSelPage();
-		        }
-			}
-			
 	        //2018-08-06 김보미 - 페이지 위치 고정
 		    $(window).on("resize", function(){
 	            windowResize();
@@ -523,36 +514,18 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezSystem.x0021"></spring:message><span id="listInfo"></span></h1>
-		<%-- <div id=""> <!-- mainmenu -->
-		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			    <select id="ListCompany" onChange="selectCompanyID()">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-			    </select><br /><br />
-		    </span>
-		</div> --%>
 		<table style="width: 100%; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-					<span id="topmenu" style="width: 500px">&nbsp;<spring:message code='ezStatistics.t195'/> :
-		            <select style="height:24px" id="ListCompany" name="SCompID" onchange="selectCompanyID()">
-		           		<c:if test="${isMasterAdmin eq 'y'}">
-		           			<option value="Top/organ"><spring:message code="ezPoll.t237"/></option>
-		           		</c:if>
-		           		<c:forEach var="item" items="${list}">
-			            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-		            </select>&nbsp;
 					<span id="topmenu" style="width: 500px"><spring:message code='ezSystem.x0032'/> : &nbsp; 
 						<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
 						<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
 					</span> 
 					&nbsp;&nbsp;
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message> : &nbsp; 
-					<select id="searchKeycode"> 
-						<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option>
-						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
+						<select id="searchKeycode"> 
+						<option value="1" style='display:none;'><spring:message code="ezStatistics.t1068"></spring:message></option>
+						<option value="2" style='display:none;'><spring:message code="ezSystem.x0023"></spring:message></option>
 						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
 						<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>
 						<option value="5"><spring:message code="ezSystem.x0027"></spring:message></option>
@@ -603,7 +576,11 @@
 				<tbody id="loginHistListBody" style="overflow: auto;"></tbody> 
 			</table>
 		</div>
+		<iframe id=saveExcel name=saveExcel style="display:none">
+			<script type="text/javascript">
+				
+			</script>
+		</iframe>
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
-		<iframe id="saveExcel" name="saveExcel" style="display:none"></iframe>
 	</body>
 </html>

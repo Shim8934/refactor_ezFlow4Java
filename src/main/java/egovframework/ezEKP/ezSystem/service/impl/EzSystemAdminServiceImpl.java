@@ -210,6 +210,37 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return list;
 	}
+	
+	@Override
+	public List<ConnectionInfoVO> getLoginHistNotAdmin(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, 
+			String keyword, String lang, String startDate, String endDate, String companyId, String userId) throws Exception {
+		
+		logger.debug("getLoginHist started. tenantID : " + tenantID);
+		
+		String companyOracleStr = "";
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang); // primary:기본명 / 1:영문명
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+		params.put("userId", userId);
+		
+		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHistNotAdmin(params);
+		logger.debug("getLoginHist ended.");
+		
+		return list;
+	}
 
 	@Override
 	public int getLoginHistCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate, String companyId) throws Exception {
@@ -235,6 +266,34 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("getLoginHistCount ended.");
 		
 		return ezSystemAdminDAO.getLoginHistCount(params);
+	}
+	
+	@Override
+	public int getLoginHistCountNotAdmin(int tenantID, String offset, String keycode, String keyword, String lang, 
+			String startDate, String endDate, String companyId, String userId) throws Exception {
+		
+		logger.debug("getLoginHistCount started. tenantID : " + tenantID);
+		
+		String companyOracleStr = "";
+		if (companyId != null && !companyId.equals("Top/organ")) {
+			companyOracleStr = " AND C.COMPANYID ='" + companyId + "'";
+		}
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		params.put("companyId", companyId);
+		params.put("companyOracleStr", companyOracleStr);
+		params.put("userId", userId);
+		
+		logger.debug("getLoginHistCount ended.");
+		
+		return ezSystemAdminDAO.getLoginHistCountNotAdmin(params);
 	}
 
 	/**

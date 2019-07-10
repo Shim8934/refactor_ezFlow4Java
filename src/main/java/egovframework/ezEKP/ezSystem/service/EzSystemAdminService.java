@@ -17,8 +17,12 @@ public interface EzSystemAdminService {
 	public void updateSysParam(int tenantId, List<Map<String, String>> list, Locale locale, String companyID) throws Exception;
 	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, 
 			String keyword, String keycode, String lang, String startDate, String endDate, String companyId) throws Exception;
+	public List<ConnectionInfoVO> getLoginHistNotAdmin(int tenantID, String offset, int startPage, int maxItemPerPage, 
+			String keyword, String keycode, String lang, String startDate, String endDate, String companyId, String userId) throws Exception;
 	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, 
 			String lang, String startDate, String endDate, String companyId) throws Exception;
+	public int getLoginHistCountNotAdmin(int tenantID, String offset, String keyword, String keycode, 
+			String lang, String startDate, String endDate, String companyId, String userId) throws Exception;
 	public ArrayList<String> getServerInfo(String ip, String curServer, String serverName, ArrayList<String> getServerList) throws Exception;
 	public String getSysMonitorInfo(String ip, String serverName, String address, boolean chkServer) throws Exception;
 	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception;
