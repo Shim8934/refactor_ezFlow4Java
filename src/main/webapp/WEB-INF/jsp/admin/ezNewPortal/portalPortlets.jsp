@@ -87,8 +87,8 @@
         display: inline-block;
 	}
 	.slideImageSetting img {
-		width : 15px;
-		height: 15px;
+		width : 12px;
+		height: 12px;
 	}
 	
 	.portletAuthSetting img {
