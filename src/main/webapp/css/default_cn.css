@@ -3512,3 +3512,11 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
+
+/* 20190709 메일분류추가 */
+.mailRule_select{-webkit-appearance: none;border:1px solid #dedede;min-height:30px;margin:0px 0px 3px 0px;padding-left: 5px;background: url(/images/next.gif) no-repeat right 1px center; background-color: #fff;}
+.mailRule_title{font-size:14px; font-weight:bold; color:#333; margin:0px 0px 5px 0px; padding:0px; display:inline-block;}
+.mailRule_tit{ margin: 10px 0px 0px 0px; padding: 10px 0px 0px 0px; border-top: 1px solid #d6d6d6;}
+#RuleDisplayName{ height:30px;}
+.mailRule_txt{ font-size:13px; color:#333; background:url(/images/ImgIcon/mailRule_dot.gif) no-repeat left center; padding:0px 0px 0px 10px;}
+.mailRule_selectDIV{ margin:10px 0px;}

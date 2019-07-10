@@ -462,7 +462,7 @@
                 		var xmlDom_Attach = loadXMLString(Ques_Answer.txtQuestion.AnsInfo);
                 		xmlDoc.documentElement.appendChild(xmlDoc.importNode(SelectSingleNode(xmlDom_Attach, "ATTACH"), true));
             		}
-        		} else if(Ques_Answer.txtQuestion.getAttribute("AnsInfo") != null) {
+        		} else if(Ques_Answer.txtQuestion.getAttribute("AnsInfo") != "" && Ques_Answer.txtQuestion.getAttribute("AnsInfo") != null) {
         			var _MSIE = 'MSIE';
             		var useragentstr = navigator.userAgent;
             		if (useragentstr.indexOf(_MSIE) != -1) {
