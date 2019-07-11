@@ -19,7 +19,7 @@
             }
 
             var xmlhttpAppr = createXMLHttpRequest();
-            xmlhttpAppr.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + ItemList + "&mode=" + pMod, false);
+            xmlhttpAppr.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + encodeURIComponent(ItemList) + "&mode=" + pMod, false);
             xmlhttpAppr.send();
 
             if (xmlhttpAppr.responseText == "OK") {

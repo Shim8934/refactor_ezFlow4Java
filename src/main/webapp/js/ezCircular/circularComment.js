@@ -21,9 +21,9 @@ function getCircularComment() {
 					circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 					
 					if (vo.status == 1) {
-						circularUserList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+						circularUserList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 					} else {
-						circularUserList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+						circularUserList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 					}
 					
 					if (status == 0 && (option == 1 || option == 3)) {
@@ -53,10 +53,10 @@ function getCircularComment() {
 				commentList.forEach(function(vo, index) {
 					circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
 					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle; margin-bottom:9px'/>&nbsp;" + vo.memberName + "</td>";
-					circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + MakeXMLString(vo.circularComment) + "&nbsp;&nbsp;";
+					circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
 					
 					if (vo.memberID == userInfoID && vo.status == 0) {
-						circularCommentList += "<img src='/images/ImgIcon/circular_share2.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";
+						circularCommentList += "<img src='/images/ImgIcon/circular_share2.png' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";
 					}
 					
 					if (vo.memberID == userInfoID) {
@@ -111,9 +111,9 @@ function getCircularComment() {
 					circularCommentList += "<td style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 					
 					if (vo.confirmStatus == 1) {
-						circularCommentList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName;
+						circularCommentList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName;
 					} else if (vo.confirmStatus == 0) {
-						circularCommentList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName;
+						circularCommentList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName;
 					}
 					
 					circularCommentList += "</td>";

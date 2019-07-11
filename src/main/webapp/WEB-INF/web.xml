@@ -4,7 +4,7 @@
 		 xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 	<display-name>egovframework.sht</display-name>
-	<filter>
+	<!-- <filter>
 		<filter-name>ExpiresFilter</filter-name>
 		<filter-class>com.samaxes.filter.CacheFilter</filter-class>
 		<init-param>
@@ -15,7 +15,7 @@
 	<filter-mapping>
 		<filter-name>ExpiresFilter</filter-name>
 		<url-pattern>/js/ezEditor/tfxEditor/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping>-->
 	
 	<filter>
         <filter-name>encodingFilter</filter-name>

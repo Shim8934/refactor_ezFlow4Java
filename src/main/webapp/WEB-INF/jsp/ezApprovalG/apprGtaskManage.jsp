@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -29,28 +30,28 @@
 		    var PageFlag="0";
 		    var g_ListFlag="1";
 		    var PageSize, Block_Size, curpage, ListView, NodeList2, NodeListLen;
-		    var UserID = "${userInfo.id}";
-		    var CompanyID = "${userInfo.companyID}";
-		    var DeptID = "${userInfo.deptID}";
-		    var deptName = "${userInfo.deptName}";
+		    var UserID = "<c:out value='${userInfo.id}'/>";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    var DeptID = "<c:out value='${userInfo.deptID}'/>";
+		    var deptName = "<c:out value='${userInfo.deptName}'/>";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";								
-		    arr_userinfo[1]  = "${userInfo.id}";              
-		    arr_userinfo[2]  = "${userInfo.displayName}";         
-		    arr_userinfo[3]  = "${userInfo.title}";               
-		    arr_userinfo[4]  = "${userInfo.deptID}";              
-		    arr_userinfo[5]  = "${userInfo.deptName}";            
-		    arr_userinfo[6]  = "${userInfo.jikChek}";                         
-		    arr_userinfo[8]  = "${userInfo.email}";               
+		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";              
+		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";         
+		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";               
+		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";              
+		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";            
+		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";                         
+		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";               
 		    arr_userinfo[9]  = CompanyID;
 		    arr_userinfo[10] = "";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";		
-		    arr_userinfo[12]  = "${userInfo.displayName2}";		
-		    arr_userinfo[13]  = "${userInfo.title1}";				
-		    arr_userinfo[14]  = "${userInfo.title2}";				
-		    arr_userinfo[15]  = "${userInfo.deptName1}";			
-		    arr_userinfo[16]  = "${userInfo.deptName2}";			
-		    var UserLang = "${userInfo.lang}";
+		    arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";		
+		    arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";		
+		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";				
+		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";				
+		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";			
+		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";			
+		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -67,7 +68,15 @@
 		        totalPage = 0;
 		        OrganID = CompanyID;
 		        GetTaskFullList();
+		        DocList_Resizer();
 		    };
+		    window.onresize = function () {
+		    	DocList_Resizer();
+		    };
+		    function DocList_Resizer() {
+		    	var CurrentHeight = document.documentElement.clientHeight;
+		    	document.getElementById("divList").style.height = (CurrentHeight - 105) + "px";
+		    }
 		    function lvtDoclist_onselchanged() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -114,6 +123,7 @@
 		            }
 		        }
 		    }
+		    
 		</script>
 	</head>
 	<body class="mainbody">
@@ -130,7 +140,7 @@
 			<li id=btnUpdateTaskReq style="display:none"><span onClick="return btnUpdateTaskReq_onclick()" ><spring:message code='ezApprovalG.t815'/></span></li>
 			<li id=istat ><span onClick="return btnViewTaskInfo_onclick()" ><spring:message code='ezApprovalG.t527'/></span></li>
 			<li id=iViewHist ><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
-			<li id=istat2 ><span onClick="return btnFindTaskFullList_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
+			<li id=istat2 ><span class="icon16 icon16_search" onClick="return btnFindTaskFullList_onclick()"></span></li>
 		</ul>
 		</div>
 		<div class="div_scroll"  style="width:100%;HEIGHT:100%; overflow:AUTO" id="divList">

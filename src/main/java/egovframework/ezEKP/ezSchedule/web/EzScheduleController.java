@@ -54,6 +54,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,6 +66,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -129,6 +131,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
@@ -141,7 +145,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정관리 인덱스화면 호출함수
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleIndex.do")
+	@RequestMapping(value="/ezSchedule/scheduleIndex.do", method = RequestMethod.GET)
 	public String  main(HttpServletRequest request, Model model) throws Exception {
 
 		logger.debug("============ scheduleIndex started ============");
@@ -161,7 +165,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         	subCode = "1";
         }
         
-		model.addAttribute("funCode", funCode);
+		model.addAttribute("funCode", commonUtil.stripScriptTags(funCode));
 		model.addAttribute("subCode", subCode);		
 		
 		return "/ezSchedule/scheduleIndex";
@@ -170,7 +174,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정관리 왼쪽화면 호출함수
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleLeft.do")
+	@RequestMapping(value="/ezSchedule/scheduleLeft.do", method = RequestMethod.GET)
 	public String  scheduleLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleLeft started ============");
@@ -242,7 +246,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정관리 휴일 함수 호출 함수
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleGetHoliday.do", produces = "text/html; charset=utf-8")
+	@RequestMapping(value = "/ezSchedule/scheduleGetHoliday.do", method = RequestMethod.GET, produces = "text/html; charset=utf-8")
 	@ResponseBody
 	public String scheduleGetHoliday(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		
@@ -252,8 +256,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String cID = request.getParameter("COMPANYID");
 		StringBuilder returnXML = new StringBuilder();
+		String isRest = "normal";
 		
-		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId(), isRest);
 				
 		for (int i=0; i<getHoliday.size(); i++ ) {
 			returnXML.append(commonUtil.getQueryResult(getHoliday.get(i)));
@@ -263,9 +268,64 @@ public class EzScheduleController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 일정관리 휴일 함수 호출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGetHolidayJson.do", produces = "application/json; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public List<ScheGetHolidayVO> scheduleGetHolidayText(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		logger.debug("============ scheduleGetHolidayText started ============");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<ScheGetHolidayVO> getHoliday = null;
+		String isRest = "normal";
+		String holidayType = request.getParameter("holidayType");
+		
+		if (holidayType.equals("a")) {
+			String cID = request.getParameter("COMPANYID");
+			getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId(), isRest);
+		} else {
+			getHoliday = ezScheduleService.getTholiday("STATUTORY", userInfo.getCompanyID(), userInfo.getTenantId(), isRest);
+		}
+		
+		logger.debug("============ scheduleGetHolidayText ended ============");
+		
+		return getHoliday;
+	}
+	
+	/**
+	 * 일정관리 년도별 휴일 함수 호출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGetHolidayJsonYear.do", produces = "application/json; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public List<ScheGetHolidayVO> scheduleGetHolidayYear(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		logger.debug("============ scheduleGetHolidayYear started ============");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<ScheGetHolidayVO> getHoliday = null;
+		String isRest = "normal";
+		String holidayType = request.getParameter("holidayType");
+		String holidayYear = request.getParameter("holidayYear");		
+		String cID = request.getParameter("COMPANYID");
+		
+		if (holidayType.equals("a")) {
+			if (holidayYear.equals("ALL")) {
+				getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId(), isRest);
+			} else {
+				getHoliday = ezScheduleService.getTholidayYear(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId(), isRest, holidayYear);
+			}
+		}
+		
+		logger.debug("============ scheduleGetHolidayYear ended ============");
+		
+		return getHoliday;
+	}
+	
+	/**
 	 * 일정관리 일정 데이터 표출 함수
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleGetList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezSchedule/scheduleGetList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleGetList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		
@@ -299,7 +359,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 메인화면 일정 데이터 표출 함수
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleNewWebPartList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezSchedule/scheduleNewWebPartList.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleNewWebPartList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		
@@ -461,7 +521,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정관리 메인화면 호출함수
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleMain.do")
+	@RequestMapping(value="/ezSchedule/scheduleMain.do", method = RequestMethod.GET)
 	public String  scheduleMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleMain started ============");
@@ -639,7 +699,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 메인화면
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleManageGroup.do")
+	@RequestMapping(value="/ezSchedule/scheduleManageGroup.do", method = RequestMethod.GET)
 	public String scheduleManageGroup(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
 		
 		logger.debug("============ scheduleManageGroup started ============");
@@ -655,7 +715,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 그리드 리스트
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleGroupList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezSchedule/scheduleGroupList.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleGroupList(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception {
 		
@@ -701,7 +761,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 리스트 상세화면
 	 */
-	@RequestMapping(value="/ezSchedule/getGroupDetail.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezSchedule/getGroupDetail.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getGroupDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
 		
@@ -718,7 +778,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 리스트 삭제
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleDelGroup.do")	
+	@RequestMapping(value="/ezSchedule/scheduleDelGroup.do", method = RequestMethod.POST)	
 	public void scheduleDelGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginSimpleVO loginSimpleVO) throws Exception {
 		
 		logger.debug("============ scheduleDelGroup started ============");
@@ -736,7 +796,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 멤버 팝업
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleGroupMember.do")	
+	@RequestMapping(value="/ezSchedule/scheduleGroupMember.do", method = RequestMethod.GET)	
 	public String scheduleGroupMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleGroupMember started ============");
@@ -758,7 +818,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 멤버 제외 버튼 클릭 시
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleDelMember.do")
+	@RequestMapping(value="/ezSchedule/scheduleDelMember.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void scheduleDelMember(@RequestParam(value="memberID[]") String[] member, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
 		
@@ -776,7 +836,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 멤버 재요청 버튼 클릭 시
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleUpdateMember.do")
+	@RequestMapping(value="/ezSchedule/scheduleUpdateMember.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void scheduleUpdateMember(@RequestParam(value="memberID[]") String[] member, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
 		
@@ -792,7 +852,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 	}
 	
-	@RequestMapping(value="/ezSchedule/scheduleUpdateAttendant.do")
+	@RequestMapping(value="/ezSchedule/scheduleUpdateAttendant.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void scheduleUpdateAttendant(@RequestParam(value="memberID[]") String[] member, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
 		
@@ -811,7 +871,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 멤버 선택 팝업 창
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleSelectAttendant.do")
+	@RequestMapping(value = "/ezSchedule/scheduleSelectAttendant.do", method = RequestMethod.GET)
 	public String scheduleSelectAttendant(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleSelectAttendant started ============");
@@ -854,7 +914,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 멤버 추가 
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleAddMember.do", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/ezSchedule/scheduleAddMember.do", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public void scheduleAddMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
 		
@@ -937,7 +997,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 그룹 추가 팝업
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleGroupWrite.do")
+	@RequestMapping(value="/ezSchedule/scheduleGroupWrite.do", method = RequestMethod.GET)
 	public String scheduleGroupWrite(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleGroupWrite started ============");
@@ -955,7 +1015,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 그룹 추가 팝업 > 부서선택 클릭 시
 	 */
-	@RequestMapping(value="/ezSchedule/getDeptUserList.do", produces = "text/xml;charset=UTF-8")
+	@RequestMapping(value="/ezSchedule/getDeptUserList.do", method = RequestMethod.GET, produces = "text/xml;charset=UTF-8")
 	@ResponseBody
 	public String getDeptUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
 		
@@ -974,7 +1034,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정그룹관리 그룹 추가 팝업 > 그룹등록 확인 클릭 시
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleSaveGroup.do")
+	@RequestMapping(value="/ezSchedule/scheduleSaveGroup.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void scheduleSaveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
 		
@@ -1061,7 +1121,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정검색
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleSearch.do")	
+	@RequestMapping(value="/ezSchedule/scheduleSearch.do", method = RequestMethod.GET)	
 	public String scheduleSearch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleSearch started ============");
@@ -1198,7 +1258,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 공개일정검색
 	 */
-	@RequestMapping(value="/ezSchedule/schedulePublicSearch.do")	
+	@RequestMapping(value="/ezSchedule/schedulePublicSearch.do", method = RequestMethod.GET)	
 	public String schedulePulbicSearch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ schedulePulbicSearch started ============");
@@ -1263,7 +1323,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 공개일정검색 > 대상자선택
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleSelectEntity.do")
+	@RequestMapping(value="/ezSchedule/scheduleSelectEntity.do", method = RequestMethod.GET)
 	public String scheduleSelectEntity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleSelectEntity started ============");
@@ -1295,7 +1355,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 공통 > 공유자 지정 팝업
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleSelectSecretary.do")
+	@RequestMapping(value="/ezSchedule/scheduleSelectSecretary.do", method = RequestMethod.GET)
 	public String scheduleSelectSecretary(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleSelectSecretary started ============");
@@ -1310,7 +1370,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 공통 > 공유부서 지정 팝업
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleSelectShareDept.do")
+	@RequestMapping(value="/ezSchedule/scheduleSelectShareDept.do", method = RequestMethod.GET)
 	public String scheduleSelectShareDept(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleSelectShareDept started ============");
@@ -1325,7 +1385,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 공통 > 음력날짜 사용여부 데이터
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleGetLunarUse.do", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value="/ezSchedule/scheduleGetLunarUse.do", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String scheduleGetLunarUse(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
 		
@@ -1347,7 +1407,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 공통 > 클릭한 유저정보 겸직된 회사정보로 호출
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleGetCumDeptID.do", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value="/ezSchedule/scheduleGetCumDeptID.do", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String scheduleGetCumDeptID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
 		
@@ -1373,7 +1433,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 공통 > 이전날짜 등록관리 데이터
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleGetRegi.do", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value="/ezSchedule/scheduleGetRegi.do", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String scheduleGetRegi(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
 		
@@ -1399,18 +1459,21 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 환경설정 메인
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleConfigMain.do")
-	public String scheduleConfigMain() throws Exception {
-		
+	@RequestMapping(value="/ezSchedule/scheduleConfigMain.do", method = RequestMethod.GET)
+	public String scheduleConfigMain(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleConfigMain started ============");
 		
+		String flag = request.getParameter("flag") == null ? "" : request.getParameter("flag");
+		model.addAttribute("flag", flag);
+		
+		logger.debug("============ scheduleConfigMain ended ============");
 		return "/ezSchedule/scheduleConfigMain";
 	}
 	
 	/**
 	 * 환경설정 일정관리
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleConfig.do")	
+	@RequestMapping(value="/ezSchedule/scheduleConfig.do", method = RequestMethod.GET)	
 	public String scheduleConfig(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO, ScheduleConfigVO scheduleConfigVO, OrganUserVO organUserVO) throws Exception {
 		
 		logger.debug("============ scheduleConfig started ============");
@@ -1447,7 +1510,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 환경설정 일정관리 저장
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleSaveConfig.do")
+	@RequestMapping(value="/ezSchedule/scheduleSaveConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void scheduleSaveConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
 		
@@ -1490,7 +1553,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleWrite.do")
+	@RequestMapping(value="/ezSchedule/scheduleWrite.do", method = RequestMethod.GET)
 	public String scheduleWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleWrite started ============");
@@ -1815,7 +1878,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 반복일정 선택
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleRepetition.do")
+	@RequestMapping(value="/ezSchedule/scheduleRepetition.do", method = RequestMethod.GET)
 	public String scheduleRepetition(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
 		
 		logger.debug("============ scheduleRepetition started ============");
@@ -1830,7 +1893,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 반복일정 선택
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleSelectResource.do")
+	@RequestMapping(value="/ezSchedule/scheduleSelectResource.do", method = RequestMethod.GET)
 	public String scheduleSelectResource(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleSelectResource started ============");
@@ -1856,7 +1919,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정관리 Schedule 저장 호출 Method
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleSave.do")
+	@RequestMapping(value = "/ezSchedule/scheduleSave.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String scheduleSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String requestXML, HttpServletRequest request, HttpServletResponse response, LoginVO loginVO) throws Exception {
 		
@@ -1949,6 +2012,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    } else {
 	    	defaultPath = commonUtil.getRealPath(request) + contentPath;
 	    }
+	    defaultPath = commonUtil.detectPathTraversal(defaultPath);
+	    
 	    if (scheduleid == null || scheduleid.equals("")) {
         	//insertSchedule
         	result = ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
@@ -2024,7 +2089,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 참석자 일정조회 팝업
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleAddUser.do")
+	@RequestMapping(value="/ezSchedule/scheduleAddUser.do", method = RequestMethod.GET)
 	public String scheduleAddUser(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
 		
 		logger.debug("============ scheduleAddUser started ============");
@@ -2039,7 +2104,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 참석자 일정조회 데이터 
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleAttendantList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezSchedule/scheduleAttendantList.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleAttendantList(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -2095,7 +2160,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 자원 현황 조회 
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleResourceInfo.do")	
+	@RequestMapping(value="/ezSchedule/scheduleResourceInfo.do", method = RequestMethod.GET)	
 	public String scheduleResourceInfo(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
 		
 		logger.debug("============ scheduleResourceInfo started ============");
@@ -2110,7 +2175,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 이름확인 조회
 	 */
-	@RequestMapping(value = "/ezSchedule/checkName.do")
+	@RequestMapping(value = "/ezSchedule/checkName.do", method = RequestMethod.GET)
 	public String checkName() throws Exception {
 		
 		logger.debug("============ checkName started ============");
@@ -2121,7 +2186,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정 메인화면 > 인쇄
 	 */
-	@RequestMapping(value = "/ezSchedule/schedulePrint.do")
+	@RequestMapping(value = "/ezSchedule/schedulePrint.do", method = RequestMethod.GET)
 	public String schedulePrint(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, LoginVO loginVO, Locale locale) throws Exception {
 		
 		logger.debug("============ schedulePrint started ============");
@@ -2186,7 +2251,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 인쇄
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleContentsPrint.do")
+	@RequestMapping(value = "/ezSchedule/scheduleContentsPrint.do", method = RequestMethod.POST)
 	public String scheduleContentsPrint(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleContentsPrint started ============");
@@ -2229,7 +2294,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 일정상세 팝업
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleRead.do")
+	@RequestMapping(value = "/ezSchedule/scheduleRead.do", method = RequestMethod.GET)
 	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, LoginVO loginVO, Locale locale) throws Exception {
 		
 		logger.debug("============ scheduleRead started ============");
@@ -2246,6 +2311,12 @@ public class EzScheduleController extends EgovFileMngUtil {
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
+        
+        //baonk 추가 2018-08-08
+        String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginVO.getTenantId());
+        if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("schedl", loginVO);
+		}
         
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId, companyID);
@@ -2358,6 +2429,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("resourceCnt", resourceCnt);
         model.addAttribute("_admin", _admin);
         model.addAttribute("_editPosible", _editPosible);
+        model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
         
 		return "ezSchedule/scheduleRead";
 	}
@@ -2365,7 +2437,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정보기 > 반복일정 선택 후 삭제시 팝업 
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleDeleteConfirm.do")	
+	@RequestMapping(value="/ezSchedule/scheduleDeleteConfirm.do", method = RequestMethod.GET)	
 	public String scheduleDeleteConfirm(Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleDeleteConfirm started ============");
 		
@@ -2380,7 +2452,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정보기 > 모든 반복 일정삭제 (일반삭제) 
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleDelete.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezSchedule/scheduleDelete.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public void scheduleDelete(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -2409,7 +2481,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정보기 > 해당 일정만 삭제
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleOnceDelete.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezSchedule/scheduleOnceDelete.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public void scheduleOnceDelete(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -2431,7 +2503,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 인쇄
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleManageAttendant.do")
+	@RequestMapping(value = "/ezSchedule/scheduleManageAttendant.do", method = RequestMethod.GET)
 	public String scheduleManageAttendant(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleManageAttendant started ============");
@@ -2459,7 +2531,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정보기 > 참석자관리 > 참석자추가
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleAddAttendant.do", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/ezSchedule/scheduleAddAttendant.do", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public void scheduleAddAttendant(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
 		
@@ -2490,7 +2562,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정보기 > 참석자관리 > 참석자제외
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleDelAttendant.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezSchedule/scheduleDelAttendant.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public void scheduleDelAttendant(@RequestParam(value="attendantIdList[]") String[] attendantIdList, @CookieValue("loginCookie") String loginCookie,LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -2508,7 +2580,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정메인 > 참석자 초대 팝업
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleReceiveAttendant.do")	
+	@RequestMapping(value="/ezSchedule/scheduleReceiveAttendant.do", method = RequestMethod.GET)	
 	public String scheduleReceiveAttendant(@CookieValue("loginCookie") String loginCookie,LoginVO loginVO, Model model, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleReceiveAttendant started ============");
@@ -2531,7 +2603,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정보기 > 참석자관리 > 참석수락
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleAcceptAttendant.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezSchedule/scheduleAcceptAttendant.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public void scheduleAcceptAttendant(@RequestParam(value="scheduleIdList[]") String[] scheduleIdList, @CookieValue("loginCookie") String loginCookie,LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -2552,7 +2624,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정메인 > 그룹 초대 팝업
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleReceiveMember.do")	
+	@RequestMapping(value="/ezSchedule/scheduleReceiveMember.do", method = RequestMethod.GET)	
 	public String scheduleReceiveMember(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, Model model, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleReceiveMember started ============");
@@ -2575,7 +2647,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정보기 > 그룹 초대 > 수락 or 거절
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleAcceptMember.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezSchedule/scheduleAcceptMember.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public void scheduleAcceptMember(@RequestParam(value="groupIdList[]") String[] groupIdList, @CookieValue("loginCookie") String loginCookie,LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -2594,7 +2666,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정보기 > 반복일정 보기 방식 선택
 	 */	
-	@RequestMapping(value="/ezSchedule/scheduleReadConfirm.do")
+	@RequestMapping(value="/ezSchedule/scheduleReadConfirm.do", method = RequestMethod.GET)
 	public String scheduleReadConfirm() throws Exception {
 		
 		logger.debug("============ scheduleReadConfirm started ============");
@@ -2605,7 +2677,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 첨부파일 리스트 호출 
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleDragAndDrop.do")
+	@RequestMapping(value = "/ezSchedule/scheduleDragAndDrop.do", method = RequestMethod.GET)
 	public String scheduleDragAndDrop(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleDragAndDrop started ============");
@@ -2627,7 +2699,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 첨부파일 업로드
 	 */
-	@RequestMapping(value = "/ezSchedule/uploadScheduleAttach.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezSchedule/uploadScheduleAttach.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String uploadScheduleAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception{
 		
@@ -2674,7 +2746,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-        File file = new File(pDirPath + "uploadFile");
+        File file = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile"));
 
         if (!file.exists()) {
         	file.mkdir();        
@@ -2707,7 +2779,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정보기 > 첨부파일 다운로드
 	 */
-	@RequestMapping(value = "/ezSchedule/downloadAttach.do")
+	@RequestMapping(value = "/ezSchedule/downloadAttach.do", method = RequestMethod.GET)
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		logger.debug("============ downloadAttach started ============");
@@ -2723,7 +2795,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			fileName = filePath; 
 		}
 		
-		String fullFilePath = realPath + uploadFilePath + filePath;
+		String fullFilePath = commonUtil.detectPathTraversal(realPath + uploadFilePath + filePath);
 
 		downFile(request, response, fullFilePath, fileName);	
 	}
@@ -2732,7 +2804,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > 자원예약을 위한 반복일정 첫날 구하기
 	 */
-	@RequestMapping(value = "/ezSchedule/getFirstScheduleDate.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezSchedule/getFirstScheduleDate.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String getFirstScheduleDate(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, @RequestBody String requestXML) throws Exception{
 		
@@ -2955,7 +3027,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정작성 > icalendar import
 	 */
-	@RequestMapping(value = "/ezSchedule/icsImport.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezSchedule/icsImport.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	public String icsImport(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO loginVO, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("icsImport start");
 		
@@ -3280,7 +3352,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		return "/ezSchedule/scheduleImportComplete";
 	}
 	
-	@RequestMapping(value = "/ezSchedule/scheduleDragSave.do")
+	@RequestMapping(value = "/ezSchedule/scheduleDragSave.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String scheduleDragSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
 		logger.debug("scheduleDragSave started.");
@@ -3327,7 +3399,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		//반복일정
 		if (info.getDateType().equals("3")) {
-			String defaultPath  = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId);
+			String defaultPath  = commonUtil.detectPathTraversal(commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId));
 			String delStartDate;
 			
 			if (typeCal.equals("0")) { 

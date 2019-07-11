@@ -19,6 +19,7 @@ import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpRequest;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -63,9 +65,11 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -118,6 +122,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+	
 	@Autowired
 	private EgovMessageSource messageSource;
 	
@@ -129,7 +136,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 메인화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/apprGMain.do")
+	@RequestMapping(value = "/ezApprovalG/apprGMain.do", method = RequestMethod.GET)
 	public String apprGMain(HttpServletRequest request, Model model, HttpServletResponse response){
 		logger.debug("apprGMain Started");
 		
@@ -149,7 +156,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G LEFT화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/apprGLeft.do")
+	@RequestMapping(value = "/ezApprovalG/apprGLeft.do", method = RequestMethod.GET)
 	public String apprGLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
         logger.debug("apprGLeft Started");
         
@@ -226,7 +233,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("apprGLeftVOList", apprGLeftVOList);
-		model.addAttribute("listType", listType);
+		model.addAttribute("listType", commonUtil.stripScriptTags(listType));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("containers", containers.toString());
 		model.addAttribute("viewLeftCount", viewLeftCount);
@@ -362,7 +369,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 우측리스트 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprManage.do")
+	@RequestMapping(value = "/ezApprovalG/aprManage.do", method = RequestMethod.GET)
 	public String aprManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("aprManage started.");
 		
@@ -397,7 +404,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(result);
 		
-		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		String userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		if (userInfo.getDeptID().equals(userRealDeptId)) {
+			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		} else {
+			buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
+		}
+		
+		
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userInfo", userInfo);
@@ -409,12 +424,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useMobile", useMobile);
-		model.addAttribute("listType", listType);
+		model.addAttribute("listType", commonUtil.stripScriptTags(listType));
 		model.addAttribute("proxyInfo", proxyInfo);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		model.addAttribute("relayG_type", relayG_type);
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("companyList", companyList);
+		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		
 		logger.debug("aprManage ended.");
 		
@@ -424,7 +440,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getAprDocList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getAprDocList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getAprDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception {
 		logger.debug("getAprDocList started.");
@@ -432,7 +448,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String listType = request.getParameter("listType");
 		String userID = request.getParameter("userID");
-		String deptID = request.getParameter("deptID");
+//		쓰는곳 없어서 내가 씀
+//		String deptID = request.getParameter("deptID");
+		String deptID = userInfo.getDeptID();
 		String pageSize = request.getParameter("pageSize");
 		String pageNum = request.getParameter("pageNum");
 		String companyID = request.getParameter("companyID");
@@ -442,7 +460,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String searchCompanyID = request.getParameter("searchCompanyID");
 		String searchStatus = request.getParameter("searchStatus");
 
-		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID = " + deptID);
+		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID(AddJob) = " + deptID);
 		
  		String userLang = userInfo.getLang();
 		Document domSub = null;
@@ -570,7 +588,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재라인리스트 호출 Method
 	 */
-	@RequestMapping(value = {"/ezApprovalG/getLineList.do","/ezApprovalG/getTotalAttachInfo.do","/ezApprovalG/getReceiptinfo.do","/ezApprovalG/getOpinionInfo.do", "/ezApprovalG/getCirculationinfo.do"}, produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = {"/ezApprovalG/getLineList.do","/ezApprovalG/getTotalAttachInfo.do","/ezApprovalG/getReceiptinfo.do","/ezApprovalG/getOpinionInfo.do", "/ezApprovalG/getCirculationinfo.do"}, produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getLineList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception {
 		logger.debug("getLineList started.");
@@ -608,13 +626,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
         }
     
+        if (mode == null) {
+        	mode = "APR";
+        }
      
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
 		// c=1 : 전체관리자, k=1 : 회사관리자, f=1 : 문서조회관리자
 		if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("k=1") && !userInfo.getRollInfo().contains("ff=1")) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
-					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
+//					String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
+					String proxyUser = ezApprovalGService.getProxyUser2(userInfo.getId(), "1", tenantID, userInfo.getOffset());
 					String[] proxyUserArray = proxyUser.split(",");
 					boolean checkPermission = true;
 					
@@ -728,7 +750,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 레프트메뉴카운트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getListCount.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getListCount.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, @RequestBody String docXml) throws Exception{
 		logger.debug("getListCount started.");
@@ -759,7 +781,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안양식 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getFormCont.do")
+	@RequestMapping(value = "/ezApprovalG/getFormCont.do", method = RequestMethod.GET)
 	public String getFormCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("getFormCont started.");
 		
@@ -787,7 +809,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안양식 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getForm.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getForm.do", produces="text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		logger.debug("getForm started.");
@@ -807,7 +829,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안양식함 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getFormContainer.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getFormContainer.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFormContainer(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		logger.debug("getFormContainer started.");
@@ -826,7 +848,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 양식즐겨찾기등록 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/setFormUserInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/setFormUserInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String setFormUserInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		logger.debug("setFormUserInfo started.");
@@ -843,7 +865,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 양식즐겨찾기삭제 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/delFormUserInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/delFormUserInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String delFormUserInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		logger.debug("delFormUserInfo started.");
@@ -859,7 +881,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 얼러트 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezAprAlert.do")
+	@RequestMapping(value = "/ezApprovalG/ezAprAlert.do", method = RequestMethod.GET)
 	public String ezAPRALERT() throws Exception{
 		return "ezApprovalG/apprGezAPRALERT";
 	}
@@ -867,7 +889,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안하기 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/draftui.do")
+	@RequestMapping(value = "/ezApprovalG/draftui.do", method = RequestMethod.GET)
 	public String draftui(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("draftui started.");
 		
@@ -886,6 +908,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isTmpDoc = request.getParameter("isTmpDoc");
 		String isUsed = request.getParameter("isUsed");
 		String nonElecRec = request.getParameter("nonElecRec");
+		// FormBuilder
+		// String reformflag = request.getParameter("reformflag");
 		
 		if (nonElecRec == null) {
 			nonElecRec = "";
@@ -904,6 +928,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String apprReuseConfig = ezCommonService.getTenantConfig("apprReuseConfig", userInfo.getTenantId());
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
+		}
 		
 		String docSN = "";
 		String beforeUrl = "";
@@ -929,7 +959,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = "APR";
 		String docID = isTmpDoc;
 		
-		File file = new File (dirPath);
+		File file = new File (commonUtil.detectPathTraversal(dirPath));
 		
 		if(!file.exists()) {
 			file.mkdirs();
@@ -1023,18 +1053,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("beforeUrl", beforeUrl);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		model.addAttribute("apprReuseConfig", apprReuseConfig);
 		model.addAttribute("nonElecRec", nonElecRec);
+		// FormBuilder
+		if (docID == null || docID.isEmpty()) {
+			model.addAttribute("reformflag", ezApprovalGService.isReform(formURL) ? "Y" : "N");
+		} else if (listType.equals("21") ) {
+			model.addAttribute("reformflag", ezApprovalGService.isReformTempDoc(docSN, userInfo.getCompanyID(), tenantID) ? "Y" : "N");
+		} else {
+			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), tenantID).getReformFlag());
+		}
 		
 		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";
 	}
 	
+	@RequestMapping(value = "/ezApprovalG/getReformFlag.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getReformFlag(String formHref, HttpServletRequest request) throws Exception {
+		return ezApprovalGService.isReform(formHref) ? "Y" : "N";
+	}
+	
 	/**
 	 * 전자결재G 패스워드 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getApprovalPWD.do", produces = "text/plain;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getApprovalPWD.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getApprovalPWD(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		logger.debug("getApprovalPWD started.");
@@ -1050,7 +1095,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안내용 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/draftContent.do")
+	@RequestMapping(value = "/ezApprovalG/draftContent.do", method = RequestMethod.GET)
 	public String draftContent(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		logger.debug("draftContent started.");
 		
@@ -1073,9 +1118,83 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 전자결재G 기안시 리폼 HTML
+	 */
+	@RequestMapping(value = "/ezApprovalG/reform/draftHtml.do", method = RequestMethod.GET)
+	public String reformDraftHtml(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws IOException {
+		logger.debug("reformDraftHtml started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String formId = request.getParameter("formID");
+		String reformBody = "";
+		
+		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String reformDirectoryPathStr = String.join(commonUtil.separator, approvalUploadPath, userInfo.getCompanyID(), "form", "reform", formId);
+		
+		String reformFilePrefix = reformDirectoryPathStr + commonUtil.separator + formId;
+		String reformHtmlRelativePathStr = reformFilePrefix +  "_FORMBuilder.html";
+		String reformFunctionRelativePathStr = reformFilePrefix + "_FORMBuilder.js";
+		
+		Path realPath = Paths.get(request.getServletContext().getRealPath(""));
+		Path reformHtmlRelativePath = realPath.resolve("." + reformHtmlRelativePathStr);
+				
+		if (Files.exists(reformHtmlRelativePath)) {
+			reformBody = new String(Files.readAllBytes(reformHtmlRelativePath));
+		}
+		
+		if (Files.exists(realPath.resolve("." + reformFunctionRelativePathStr))) {
+			model.addAttribute("reformFunctionUrl", reformFunctionRelativePathStr);
+		}
+		
+		model.addAttribute("reformBody", reformBody);
+		
+		logger.debug("reformDraftHtml ended.");
+		
+		return "ezApprovalG/reform/draftHtml";
+	}
+	
+	/**
+	 * 전자결재G 결재 리폼 HTML
+	 */
+	@RequestMapping(value = "/ezApprovalG/reform/approveHtml.do", method = RequestMethod.GET)
+	public String reformApproveHtml(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws IOException {
+		logger.debug("reformApproveHtml started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String formId = request.getParameter("formId");
+		
+		// 전자결재 업로드 폴더 경로에서 앞부분 경로구분자를 없앰
+		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String reformFunctionRelativePath = String.join(commonUtil.separator, approvalUploadPath, userInfo.getCompanyID(), "form", "reform", formId, formId + "_FORMBuilder.js");
+		
+		Path realPath = Paths.get(request.getServletContext().getRealPath(""));
+		
+		if (Files.exists(realPath.resolve("." + reformFunctionRelativePath))) {
+			model.addAttribute("reformFunctionUrl", reformFunctionRelativePath);
+		}
+		
+		logger.debug("reformApproveHtml ended.");
+		
+		return "ezApprovalG/reform/approveHtml";
+	}
+	
+	/**
+	 * 전자결재G 폼빌더 useProcessor selectionDialog 페이지
+	 */
+	@RequestMapping(value = "/ezApprovalG/reform/selectionDialog.do", method = RequestMethod.GET)
+	public String reformStyleDialog() throws Exception {
+		logger.debug("selectionDialog started.");
+		logger.debug("selectionDialog ended.");
+
+		return "ezApprovalG/reform/selectionDialog";
+	}
+	
+	/**
 	 * 전자결재G code 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getCodeData.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getCodeData.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCodeData(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getCodeData started.");
@@ -1103,7 +1222,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재정보 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezApprovalInfo.do")
+	@RequestMapping(value = "/ezApprovalG/ezApprovalInfo.do", method = RequestMethod.GET)
 	public String ezApprovalInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezApprovalInfo started.");
 		
@@ -1211,7 +1330,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재라인 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprLineRequest.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/aprLineRequest.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String aprLineRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("aprLineRequest started.");
@@ -1252,7 +1371,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/getLineTemplist.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getLineTemplist.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getLineTemplist(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("getLineTemplist started.");
@@ -1272,7 +1391,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 양식체크 얼러트 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/formCheckUI.do")
+	@RequestMapping(value = "/ezApprovalG/formCheckUI.do", method = RequestMethod.GET)
 	public String formCheckUI(){
 		return "ezApprovalG/apprGFormCheckUI";
 	}
@@ -1280,22 +1399,38 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 의견얼러트 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezAprOpinion.do")
-	public String ezAprOpinion(){
+	@RequestMapping(value = "/ezApprovalG/ezAprOpinion.do", method = RequestMethod.GET)
+	public String ezAprOpinion(HttpServletRequest req, Model model){
+		
+		if (req.getParameter("type") != null) {
+			String type = req.getParameter("type");
+			model.addAttribute("type", type);
+		}
+		
+		if (req.getParameter("formURL") != null) {
+			String formURL = req.getParameter("formURL");
+			model.addAttribute("formURL", formURL);
+		}
+		
+		if (req.getParameter("formDocType") != null) {
+			String formDocType = req.getParameter("formDocType");
+			model.addAttribute("formDocType", formDocType);
+		}
+		
 		return "ezApprovalG/apprGezAprOpinion";
 	}
 	
 	/**
 	 * 전자결재G 메일발송 선택 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezAprOpinionSend.do")
+	@RequestMapping(value = "/ezApprovalG/ezAprOpinionSend.do", method = RequestMethod.GET)
 	public String ezAprOpinionSend(){
 		return "ezApprovalG/apprGezAprOpinionSend";
 	}
 	/**
 	 * 전자결재G 결재라인저장 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprLineSave.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/aprLineSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String aprLineSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("aprLineSave started.");
@@ -1322,7 +1457,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDeptSave.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/aprDeptSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String aprDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("aprDeptSave started.");
@@ -1348,7 +1483,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선저장 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprLineTempletName.do")
+	@RequestMapping(value = "/ezApprovalG/aprLineTempletName.do", method = RequestMethod.GET)
 	public String aprLineTempletName(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("aprLineTempletName started.");
 		
@@ -1366,7 +1501,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprLineTempletList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/aprLineTempletList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String aprLineTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("aprLineTempletList started.");
@@ -1384,7 +1519,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선리스트 정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprLineTempletListInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/aprLineTempletListInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String aprLineTempletListInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("aprLineTempletListInfo started.");
@@ -1404,7 +1539,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 양식세부사항 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getFormDetail.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getFormDetail.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFormDetail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
 		logger.debug("getFormDetail started.");
@@ -1422,7 +1557,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안하기 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getFormRecv.do", produces = "text/plain;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getFormRecv.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFormRecv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getFormRecv started.");
@@ -1443,7 +1578,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 새문서만들기 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/createNewDoc.do", produces = "text/plain;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/createNewDoc.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String createNewDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("createNewDoc started.");
@@ -1460,7 +1595,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 현재날짜(시분초까지) 표출 Method
 	 * @throws Exception 
 	 */
-	@RequestMapping(value = "/ezApprovalG/getFullDate.do", produces = "text/plain;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getFullDate.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFullDate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		logger.debug("getFullDate started.");
@@ -1478,7 +1613,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 현재날짜 표출 Method
 	 * @throws Exception 
 	 */
-	@RequestMapping(value = "/ezApprovalG/getDate.do", produces = "text/plain;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getDate.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getDate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		logger.debug("getDate started.");
@@ -1495,7 +1630,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안취소시 언두 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/undoDoc.do", produces = "text/plain;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/undoDoc.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String undoDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("undoDoc started.");
@@ -1513,7 +1648,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선저장하기 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/createAprLineTemplet.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/createAprLineTemplet.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String createAprLineTemplet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String aprLineXml) throws Exception{
 		logger.debug("createAprLineTemplet started.");
@@ -1531,7 +1666,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선 삭제 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/delAprLineTempletList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/delAprLineTempletList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String delAprLineTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("delAprLineTempletList started.");
@@ -1551,7 +1686,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선적용하기 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/addToAprLine.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/addToAprLine.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String addToAprLine(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("addToAprLine started.");
@@ -1571,7 +1706,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신자정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDeptRequest.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/aprDeptRequest.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String aprDeptRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("aprDeptRequest started.");
@@ -1608,7 +1743,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처저장얼러트 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDeptTempletName.do")
+	@RequestMapping(value = "/ezApprovalG/aprDeptTempletName.do", method = RequestMethod.GET)
 	public String aprDeptTempletName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("aprDeptTempletName started.");
 		
@@ -1624,7 +1759,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처저장리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getAprDeptTempletList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getAprDeptTempletList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getAprDeptTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getAprDeptTempletList started.");
@@ -1644,7 +1779,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 즐겨찾기 리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getReceptTemplist.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getReceptTemplist.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getReceptTemplist(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("getReceptTemplist started.");
@@ -1664,7 +1799,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 즐겨찾기 리스트디테일 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getAprDeptTempletListInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getAprDeptTempletListInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getAprDeptTempletListInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getAprDeptTempletListInfo started.");
@@ -1686,7 +1821,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 그룹 리스트 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getReceptGroupList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getReceptGroupList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getReceptGroupList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale) throws Exception{
 		logger.debug("getReceptGroupList started.");
@@ -1704,7 +1839,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 그룹 추가 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getReceptGroupADDTo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getReceptGroupADDTo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getReceptGroupADDTo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getReceptGroupADDTo started.");
@@ -1724,7 +1859,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 그룹 리스트디테일 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getReceptGroupDetailList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getReceptGroupDetailList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getReceptGroupDetailList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale, HttpServletRequest request) throws Exception{
 		logger.debug("getReceptGroupDetailList started.");
@@ -1743,7 +1878,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 즐겨찾기 적용 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/addToAprDept.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/addToAprDept.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String addToAprDept(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("addToAprDept started.");
@@ -1765,7 +1900,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 즐겨찾기 삭제 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/delAprDeptTempletList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/delAprDeptTempletList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String delAprDeptTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("delAprDeptTempletList started.");
@@ -1785,7 +1920,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 즐겨찾기 추가 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/createAprDeptTemplet.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/createAprDeptTemplet.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String createAprDeptTemplet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom) throws Exception{
 		logger.debug("createAprDeptTemplet started.");
@@ -1805,7 +1940,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 대기능 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getTaskCategory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getTaskCategory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTaskCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getTaskCategory started.");
@@ -1825,7 +1960,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 중기능 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getTaskMiddleCategory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getTaskMiddleCategory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTaskMiddleCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getTaskMiddleCategory started.");
@@ -1845,7 +1980,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 소기능 이하 모두 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getTaskSubCategoryAll.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getTaskSubCategoryAll.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTaskSubCategoryAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getTaskSubCategoryAll started.");
@@ -1868,7 +2003,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 소기능 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getTaskSubCategory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getTaskSubCategory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTaskSubCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getTaskSubCategory started.");
@@ -1889,7 +2024,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 소기능(소분류) 별 단위업무정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getTaskInSubCategory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getTaskInSubCategory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTaskInSubCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getTaskInSubCategory started.");
@@ -1910,7 +2045,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getCabinetSimpleList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getCabinetSimpleList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCabinetSimpleList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getCabinetSimpleList started.");
@@ -1933,7 +2068,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 단위업무 검색 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/findTask.do")
+	@RequestMapping(value = "/ezApprovalG/findTask.do", method = RequestMethod.GET)
 	public String findTask() throws Exception{
 		return "ezApprovalG/apprGFindTask";
 	}
@@ -1941,7 +2076,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 단위업무 검색 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/findTaskList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/findTaskList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String findTaskList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("findTaskList started.");
@@ -1976,7 +2111,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 의견버튼 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprOpinion.do")
+	@RequestMapping(value = "/ezApprovalG/aprOpinion.do", method = RequestMethod.GET)
 	public String aprOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("aprOpinion started.");
 		
@@ -2034,7 +2169,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 의견리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/opinionRequest.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/opinionRequest.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String opinionRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("opinionRequest started.");
@@ -2059,7 +2194,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 의견삭제 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/opinionDel.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/opinionDel.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String opinionDel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("opinionDel started.");
@@ -2079,7 +2214,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 의견저장 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/opinionSave.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/opinionSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String opinionSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom, HttpServletRequest request) throws Exception{
 		logger.debug("opinionSave Start");
@@ -2101,7 +2236,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 첨부 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprAttach.do")
+	@RequestMapping(value = "/ezApprovalG/aprAttach.do", method = RequestMethod.GET)
 	public String aprAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("aprAttach Started");
 		
@@ -2168,7 +2303,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 기안 첨부 업로드(멀티) 호출 Method
 	 * 2017-11-08 장진혁 구현
 	 */
-	@RequestMapping(value = "/ezApprovalG/multiUpload.do")	
+	@RequestMapping(value = "/ezApprovalG/multiUpload.do", method = RequestMethod.POST)	
 	public String multiUpload(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, MultipartHttpServletRequest request, Model model) throws Exception{
 		logger.debug("multiUpload started");
 		
@@ -2183,8 +2318,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// uploadFile, tempUploadFile 디렉토리 경로
 		String upd = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
 		String tempUpd = dirPath + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator;
-		File uFile = new File(upd);
-		File tFile = new File(tempUpd);
+		File uFile = new File(commonUtil.detectPathTraversal(upd));
+		File tFile = new File(commonUtil.detectPathTraversal(tempUpd));
 		
 		if (uFile.isDirectory()) {
 			uFile.mkdir();
@@ -2259,7 +2394,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 첨부업로드 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/upload.do")
+	@RequestMapping(value = "/ezApprovalG/upload.do", method = RequestMethod.POST)
 	public String upload(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, MultipartHttpServletRequest request, Model model) throws Exception{
 		logger.debug("upload started");
 		
@@ -2284,8 +2419,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// uploadFile, tempUploadFile 디렉토리 경로
 		String upd = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
 		String tempUpd = dirPath + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator;
-		File uFile = new File(upd);
-		File tFile = new File(tempUpd);
+		File uFile = new File(commonUtil.detectPathTraversal(upd));
+		File tFile = new File(commonUtil.detectPathTraversal(tempUpd));
 		
 		if (uFile.isDirectory()) {
 			uFile.mkdir();
@@ -2335,7 +2470,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 기안 첨부명,쪽수 호출 Method
 	 * @throws Exception s
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprAttachName.do")
+	@RequestMapping(value = "/ezApprovalG/aprAttachName.do", method = RequestMethod.GET)
 	public String aprAttachName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("aprAttachName started");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -2349,7 +2484,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 첨부리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/attachRequest.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/attachRequest.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String attachRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("attachRequest started");
@@ -2372,7 +2507,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 첨부삭제 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/deleteServerFile.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/deleteServerFile.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteServerFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("deleteServerFile started");
@@ -2396,7 +2531,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (ezApprovalGService.isLinkedAttachFile(attachHref)) {
 			rtnVal = "TRUE";
 			logger.debug("is linked attach file: {}", attachHref);
-		} else if (new File(fileSpec).exists()) {
+		} else if (new File(commonUtil.detectPathTraversal(fileSpec)).exists()) {
 			deleteFile(fileSpec);
 			rtnVal = "TRUE";
 		} else {
@@ -2411,7 +2546,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 첨부히스토리 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/updateAttachHistory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/updateAttachHistory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateAttachHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("updateAttachHistory started");
@@ -2448,7 +2583,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 첨부저장 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprAttachSave.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/aprAttachSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String aprAttachSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("aprAttachSave started");
@@ -2470,17 +2605,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator;
 			String fileName = xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/")[xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/").length - 1];
 			
-			File filePath = new File(dirPath);
+			File filePath = new File(commonUtil.detectPathTraversal(dirPath));
 			
 	        if (!filePath.exists()) {
 	        	filePath.mkdirs();
 	        }
         
-			File file = new File(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName);
+			File file = new File(commonUtil.detectPathTraversal(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName));
 			
 			if (file.isFile()) {
 				if (file.exists()) {
-					FileUtils.copyFile(file, new File(upd + fileName));
+					FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(upd + fileName)));
 				}  
 			}
 			
@@ -2502,7 +2637,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 첨부삭제 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/attachRemove.do", produces = "text/plain;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/attachRemove.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String attachRemove(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("attachRemove started");
@@ -2527,7 +2662,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 첨부다운 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/downloadAttach.do")
+	@RequestMapping(value = "/ezApprovalG/downloadAttach.do", method = RequestMethod.GET)
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started.");
 		
@@ -2609,7 +2744,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 통합pc 저장 리스트 더블클릭 다운
 	 */
-	@RequestMapping(value = "/ezApprovalG/downloadAttachDbClick.do")
+	@RequestMapping(value = "/ezApprovalG/downloadAttachDbClick.do", method = RequestMethod.GET)
 	public void downloadAttachDbClick(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttachDbClick started.");
 		
@@ -2639,7 +2774,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprCabinetAttach.do")
+	@RequestMapping(value = "/ezApprovalG/aprCabinetAttach.do", method = RequestMethod.GET)
 	public String aprCabinetAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("aprCabinetAttach started.");
 		
@@ -2660,7 +2795,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 헤더정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getLVHeaderInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getLVHeaderInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getLVHeaderInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getLVHeaderInfo started.");
@@ -2680,7 +2815,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 진행율 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/showProgress.do")
+	@RequestMapping(value = "/ezApprovalG/showProgress.do", method = RequestMethod.GET)
 	public String showProgress(HttpServletRequest request, Model model){
 		logger.debug("showProgress started.");
 		
@@ -2693,7 +2828,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGshowProgress";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/getTransList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getTransList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTransList() throws Exception{
 		//TODO: 닷net버전이 미구현 된거같음 미구현 + 사용안함
@@ -2703,7 +2838,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 문서리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getRecordList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getRecordList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getRecordList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody String xmlDom) throws Exception{
 		logger.debug("getRecordList started.");
@@ -2721,7 +2856,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 검색 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/searchRec.do")
+	@RequestMapping(value = "/ezApprovalG/searchRec.do", method = RequestMethod.GET)
 	public String searchRec(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("searchRec started.");
 		
@@ -2737,7 +2872,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 코드리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getCodeList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getCodeList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCodeList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getCodeList started.");
@@ -2755,7 +2890,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 업무담당자 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/selectUser.do")
+	@RequestMapping(value = "/ezApprovalG/selectUser.do", method = RequestMethod.GET)
 	public String selectUser() throws Exception{
 		return "ezApprovalG/apprGselectUser";
 	}
@@ -2763,7 +2898,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 문서첨부정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getAttachInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getAttachInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getAttachInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getAttachInfo started.");
@@ -2789,7 +2924,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 업무담당자여부 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/iSCabCharger.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/iSCabCharger.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String iSCabCharger(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
 		logger.debug("iSCabCharger started.");
@@ -2808,7 +2943,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 업데이트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/updateDocAttach.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/updateDocAttach.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateDocattach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom, HttpServletRequest request) throws Exception{
 		logger.debug("updateDocAttach started.");
@@ -2834,7 +2969,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 삭제 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/delAttachDoc.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/delAttachDoc.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String delAttachDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("delAttachDoc started.");
@@ -2852,7 +2987,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 문서보기 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/contDocView.do")
+	@RequestMapping(value = "/ezApprovalG/contDocView.do", method = RequestMethod.GET)
 	public String contDocView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("contDocView started.");
 		
@@ -2864,7 +2999,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signCheck = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
-
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
+		}
+		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -2883,6 +3024,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String pass = "";
 		String formUrl = "";
 		String formDocType = "";
+		String formVersion = "";
 		if (orgDocID != null  && !orgDocID.equals("")) {
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
@@ -2927,13 +3069,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			//일반 결재 일 때 재사용 기능 사용
 			if (approvalFlag.equals("S")) {
 				if (title == null || title.equals("")) {
-					String reUseInfo = ezApprovalGService.getDocInfoS(docID, "END", "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+					String reUseInfo = ezApprovalGService.getDocInfoS(docID, "END", "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE, TBL_EXPENDAPRDOCINFO.FORMVERSION", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 					Document resultXML2 = commonUtil.convertStringToDocument(reUseInfo);
 					if (resultXML2.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
 						formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
 					}
 					if (resultXML2.getElementsByTagName("FORMDOCTYPE").getLength() > 0) {
 						formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+					}
+					if (resultXML2.getElementsByTagName("FORMVERSION").getLength() > 0) {
+						formVersion = resultXML2.getElementsByTagName("FORMVERSION").item(0).getTextContent().trim(); 
 					}
 				}
 			}
@@ -2964,7 +3109,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("checkPwdFlag", checkPwdFlag);
 		model.addAttribute("ext", ext);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("formVersion", formVersion);
 
 		logger.debug("contDocView ended.");
 		
@@ -2978,7 +3125,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 부서에수발신담당자체크 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/receiverChk.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/receiverChk.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String receiverChk(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("receiverChk started.");
@@ -2996,7 +3143,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 대결재자정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/checkAprPerson.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/checkAprPerson.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkAprPerson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("checkAprPerson started.");
@@ -3028,7 +3175,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 기록물철 즐겨찾기 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getMyTaskCode.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getMyTaskCode.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getMyTaskCode(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getMyTaskCode started.");
@@ -3047,7 +3194,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 분리첨부 추가 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/insSepAttach.do")
+	@RequestMapping(value = "/ezApprovalG/insSepAttach.do", method = RequestMethod.GET)
 	public String insSepAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("insSepAttach started.");
 		
@@ -3062,7 +3209,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 즐겨찾기 추가 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/setMyTaskCode.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/setMyTaskCode.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String setMyTaskCode(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("setMyTaskCode started.");
@@ -3085,7 +3232,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 철정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getCabinetInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getCabinetInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getCabinetInfo started.");
@@ -3137,7 +3284,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 인쇄 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezApprovalPrint.do")
+	@RequestMapping(value = "/ezApprovalG/ezApprovalPrint.do", method = RequestMethod.GET)
 	public String ezApprovalPrint() throws Exception{
 		return "ezApprovalG/apprGezApprovalPrint";
 	}
@@ -3145,7 +3292,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 인쇄상세질문 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezprtQuestion.do")
+	@RequestMapping(value = "/ezApprovalG/ezprtQuestion.do", method = RequestMethod.GET)
 	public String ezprtQuestion(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezprtQuestion started");
 		
@@ -3163,7 +3310,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 변경내역 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezAprHistory.do")
+	@RequestMapping(value = "/ezApprovalG/ezAprHistory.do", method = RequestMethod.GET)
 	public String ezAprHistory(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezAprHistory started");
 		
@@ -3180,7 +3327,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 변경내역 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getDocHistory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getDocHistory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getDocHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getDocHistory started");
@@ -3205,7 +3352,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 변경내역 결재선탭 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getLineHistory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getLineHistory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getLineHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getLineHistory started");
@@ -3230,7 +3377,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 변경내역 첨부탭 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getAttachHistory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getAttachHistory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getAttachHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getAttachHistory started");
@@ -3246,7 +3393,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String result = ezApprovalGService.getHistoryForAttach(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		String result = ezApprovalGService.getHistoryForAttach(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
 		logger.debug("getAttachHistory ended");
 		
@@ -3256,7 +3403,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 변경내역 결재문서탭 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getLineHistoryDetail.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getLineHistoryDetail.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getLineHistoryDetail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getLineHistoryDetail started");
@@ -3283,7 +3430,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 임시보관 삭제 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/removeTMPDocInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/removeTMPDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String removeTMPDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("removeTMPDocInfo started.");
@@ -3308,7 +3455,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 임시보관 저장 표출 Method
 	 */
-	@RequestMapping(value = {"/ezApprovalG/saveTmpFile.do", "/ezApprovalG/saveTmpFileHWP.do"}, produces = "text/xml;charset=utf8")
+	@RequestMapping(value = {"/ezApprovalG/saveTmpFile.do", "/ezApprovalG/saveTmpFileHWP.do"}, produces = "text/xml;charset=utf8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveTmpFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("saveTmpFile started");
@@ -3331,8 +3478,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		OutputStream bos = null;
 		
 		try {
-			File file = new File(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000");
-			File file1 = new File(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+			File file = new File(commonUtil.detectPathTraversal(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000"));
+			File file1 = new File(commonUtil.detectPathTraversal(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
 	
 			if (!file.exists()) {
 				file.mkdirs();
@@ -3344,7 +3491,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			String tmpPath = path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 			
-			File file2 = new File(tmpPath + commonUtil.separator + "TMP");
+			File file2 = new File(commonUtil.detectPathTraversal(tmpPath + commonUtil.separator + "TMP"));
 			
 			if (!file2.exists()) {
 				file2.mkdirs();
@@ -3358,7 +3505,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			}
 			
-			bos = new FileOutputStream(saveFileName);
+			bos = new FileOutputStream(commonUtil.detectPathTraversal(saveFileName));
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
@@ -3369,6 +3516,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			ret ="TRUE";
 		} catch (Exception e) {
+			e.printStackTrace();
 			ret = "FALSE";
 		} finally {
 		   if (bos != null) {
@@ -3395,7 +3543,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 표출 Method
 	 */
-	@RequestMapping(value = {"/ezApprovalG/doDraft.do", "/ezApprovalG/doDraftHWP.do"}, produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = {"/ezApprovalG/doDraft.do", "/ezApprovalG/doDraftHWP.do"}, produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doDraft(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("doDraft started.");
@@ -3442,7 +3590,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 첨부사이즈 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getExtTotalAttachSize.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getExtTotalAttachSize.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getExtTotalAttachSize(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getExtTotalAttachSize started.");
@@ -3461,7 +3609,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선 체크 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/checkAprLines.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/checkAprLines.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkAprLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("checkAprLines started.");
@@ -3479,7 +3627,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선 체크 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/checkDeptLines.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/checkDeptLines.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkDeptLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("checkDeptLines started.");
@@ -3497,7 +3645,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 얼럿트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezAprAlertLong.do")
+	@RequestMapping(value = "/ezApprovalG/ezAprAlertLong.do", method = RequestMethod.GET)
 	public String ezAprAlertLong() throws Exception{
 		return "ezApprovalG/apprGezAprAlertLong";
 	}
@@ -3505,7 +3653,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 서명 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getSignRequest.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getSignRequest.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getSignRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("getSignRequest started.");
@@ -3546,7 +3694,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 서명 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprSign.do")
+	@RequestMapping(value = "/ezApprovalG/aprSign.do", method = RequestMethod.GET)
 	public String aprSign(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("aprSign started.");
 		
@@ -3565,7 +3713,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 서명저장 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/approvalGSign.do")
+	@RequestMapping(value = "/ezApprovalG/approvalGSign.do", method = RequestMethod.GET)
 	public void approvalGSign(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("approvalGSign started");
 
@@ -3587,7 +3735,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 파일저장 표출 Method
 	 */
-	@RequestMapping(value = {"/ezApprovalG/saveFile.do", "/ezApprovalG/saveFileHWP.do"}, produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = {"/ezApprovalG/saveFile.do", "/ezApprovalG/saveFileHWP.do"}, produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("saveFile started");
@@ -3626,7 +3774,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("<<<saveDir : " + saveDir);
 		
 		try {
-			File file = new File(saveDir);
+			File file = new File(commonUtil.detectPathTraversal(saveDir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
@@ -3638,7 +3786,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			}
 
-			bos = new FileOutputStream(saveFileName);
+			bos = new FileOutputStream(commonUtil.detectPathTraversal(saveFileName));
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
@@ -3678,7 +3826,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선이력 업뎃 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/updateLineHistory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/updateLineHistory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateLineHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("updateLineHistory started");
@@ -3714,7 +3862,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재시 암호입력 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezchkPasswd.do")
+	@RequestMapping(value = "/ezApprovalG/ezchkPasswd.do", method = RequestMethod.GET)
 	public String ezchkPasswd(Model model) throws Exception {
 		logger.debug("ezchkPasswd started");
 
@@ -3732,7 +3880,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재시 암호입력 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezchkPasswdall.do")
+	@RequestMapping(value = "/ezApprovalG/ezchkPasswdall.do", method = RequestMethod.GET)
 	public String ezchkPasswdall(Model model) throws Exception {
 		logger.debug("ezchkPasswdall started");
 		
@@ -3750,7 +3898,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재시 암호입력 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/chkPasswd.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/chkPasswd.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String chkPasswd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("chkPasswd started");
@@ -3773,9 +3921,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		if (flag != null) {
 			if (flag.equals("Y")) {
-				String pwdType = ezApprovalGService.getApprovalPWD2(dUserID, userInfo.getTenantId(), userInfo.getCompanyID());
+				String pType = ezApprovalGService.getApprovalPWD2(dUserID, userInfo.getTenantId(), userInfo.getCompanyID());
 				
-				if (pwdType.equals("L")) {
+				if (pType.equals("L")) {
 					orgPassword = ezOrganService.getEncPassword(dUserID, userInfo.getTenantId());
 					
 					if (orgPassword.trim().equals(password)) {
@@ -3815,7 +3963,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/approvui.do")
+	@RequestMapping(value = "/ezApprovalG/approvui.do", method = RequestMethod.GET)
 	public String approvui(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("approvui started");
 		
@@ -3830,6 +3978,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String susinAdmin = "";
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
+		}
+		
 		// a=1 수발신담당자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -3845,7 +4000,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String tempUserID = userInfo.getId();
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator;
-		String docDir = docID.substring(docID.length() - 3);
 		String approvalPWD = ezApprovalGService.getApprovalPWD(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
@@ -3856,6 +4010,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
+		String functionType = request.getParameter("functionType");
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -3863,6 +4018,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		String orgDocID = request.getParameter("orgDocID");
+		String formId = "";
+		boolean isReform = false;
+		
+		// FormBuilder
+		ApprGFormVO reformInfo = ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), tenantID);
+		if (reformInfo != null) {
+			formId = reformInfo.getFormID();
+			isReform = "Y".equals(reformInfo.getReformFlag());
+		}
+		
+		if (docID == null) {
+			docID = "";
+		}
 		
 		if (orgDocID == null) {
 			orgDocID = "";
@@ -3871,6 +4039,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (mailChk == null) {
 			mailChk = "";
 		}
+		
+		String docDir = docID.substring(docID.length() - 3);
 
 		if (docDir.substring(0, 1).equals("0")) {
 			docDir = docDir.substring(docDir.length() - 2);
@@ -3899,11 +4069,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optJunKyulInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE"); //전결 처리 방법
 		
 		if (docID != null && !docID.equals("")) {
-			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
+//			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
+			String proxyUser = ezApprovalGService.getProxyUser2(userInfo.getId(), "1", tenantID, userInfo.getOffset());
 			String[] proxyUserArray = proxyUser.split(",");
 			boolean checkPermission = true;
 			
 			if (proxyUserArray.length > 1) {
+				if (mode == null || mode == "") {
+					mode = "APR";
+				}
 				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode);
 				
 				Document docXML = commonUtil.convertStringToDocument(docList);
@@ -3966,8 +4140,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("agreeReturnType", agreeReturnType);
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("docState", docState);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("functionType", functionType);
+		
+		// FormBuilder
+		if (isReform) {
+			model.addAttribute("isReform", isReform);
+			model.addAttribute("formId", formId);
+		}
 		
 		logger.debug("approvui ended");
 		
@@ -3977,13 +4159,28 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재화면 결재내용 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/approvUIcontent.do")
-	public String approvUIcontent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	@RequestMapping(value = "/ezApprovalG/approvUIcontent.do", method = RequestMethod.GET)
+	public String approvUIcontent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("approvUIcontent started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useAllowTextSelection = ezCommonService.getTenantConfig("useAllowTextSelection", userInfo.getTenantId());
+		
+		// FormBuilder
+		if (Boolean.valueOf(request.getParameter("isReform"))) {
+			model.addAttribute("isReform", true);
+			
+			String formId = request.getParameter("formId");
+			String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+			String reformFunctionRelativePath = String.join(commonUtil.separator, approvalUploadPath, userInfo.getCompanyID(), "form", "reform", formId, formId + "_FORMBuilder.js");
+			
+			Path realPath = Paths.get(request.getServletContext().getRealPath(""));
+			
+			if (Files.exists(realPath.resolve("." + reformFunctionRelativePath))) {
+				model.addAttribute("reformFunctionUrl", reformFunctionRelativePath);
+			}
+		}
 		
 		model.addAttribute("editor", editor);
 		model.addAttribute("useAllowTextSelection", useAllowTextSelection);
@@ -3996,7 +4193,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getApproveDocInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getApproveDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getApproveDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getApproveDocInfo started");
@@ -4024,7 +4221,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재문서정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getDocInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getDocInfo started");
@@ -4053,7 +4250,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 마지막의견내용 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getLastOpinonCotent.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getLastOpinonCotent.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getLastOpinonCotent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getLastOpinonCotent started");
@@ -4071,7 +4268,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 사인정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getSignInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getSignInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getSignInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("getSignInfo started");
@@ -4089,7 +4286,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물번호 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getCabinetSN.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getCabinetSN.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCabinetSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getCabinetSN started");
@@ -4116,7 +4313,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물번호롤백 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/rollbackCabinetSN.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/rollbackCabinetSN.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String rollbackCabinetSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("rollbackCabinetSN started");
@@ -4136,7 +4333,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 사인날짜 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getSignDate.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getSignDate.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getSignDate() throws Exception {
 		logger.debug("getSignDate started");
@@ -4152,7 +4349,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 사인정보 저장 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/setSignInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/setSignInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String setSignInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("setSignInfo started.");
@@ -4170,7 +4367,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/doApprov.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/doApprov.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doApprov(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("doApprov started.");
@@ -4199,7 +4396,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 반송 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/doBansongApprov.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/doBansongApprov.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doBansongApprov(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("doBansongApprov started.");
@@ -4228,7 +4425,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 보류 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/doBoryuApprov.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/doBoryuApprov.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doBoryuApprov(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("doBoryuApprov started.");
@@ -4254,7 +4451,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/sendAckforExch.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/sendAckforExch.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String sendAckforExch() throws Exception{
 		//TODO: aspx 파일 존재안함
@@ -4264,7 +4461,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 회수 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/doCanCelYN.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/doCanCelYN.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doCanCelYN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("doCanCelYN started.");
@@ -4289,7 +4486,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 강제회수 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/doForceCancelYN.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/doForceCancelYN.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doForceCancelYN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("doForceCancelYN started.");
@@ -4309,7 +4506,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 문서보기 내용 호출 Method
 	 * 
 	 */
-	@RequestMapping(value = "/ezApprovalG/ConDocViewContent.do")
+	@RequestMapping(value = "/ezApprovalG/ConDocViewContent.do", method = RequestMethod.GET)
 	public String ConDocViewContent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("ConDocViewContent started.");
 		
@@ -4326,7 +4523,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 첨부파일정보 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/totalSaveFileInfo.do")
+	@RequestMapping(value = "/ezApprovalG/totalSaveFileInfo.do", method = RequestMethod.GET)
 	public String totalSaveFileInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("totalSaveFileInfo started.");
 		
@@ -4359,7 +4556,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 통합문서다운 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getTotalDoc.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getTotalDoc.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTotalDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getTotalDoc started.");
@@ -4385,7 +4582,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 통합문서다운 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/saveTotalDoc.do", produces = "text/plain;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/saveTotalDoc.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveTotalDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("saveTotalDoc started.");
@@ -4408,7 +4605,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		InputStream inpStream = null;
 		String zipFilePath = null;
 		try{
-			File sourceDir = new File(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID);
+			File sourceDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID));
 			
 			if (sourceDir.exists()) {
 				//2019.03.26 천성준 - 폴더경로 하위에 파일이 존재하면 File삭제 함수가 안돌아서 해당경로에 파일먼저 삭제 후 폴더삭제하도록 로직추가
@@ -4487,16 +4684,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				targetPath = path2 + targetPath.replace(commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()), "");
 				
 				String dir = targetPath.substring(0, targetPath.lastIndexOf(commonUtil.separator));
-				File file1 = new File(dir);
+				File file1 = new File(commonUtil.detectPathTraversal(dir));
 	
 				if (!file1.exists()) {
 					file1.mkdirs();
 				}
 	
-				File file2 = new File(targetPath);
+				File file2 = new File(commonUtil.detectPathTraversal(targetPath));
 	
 				if (!file2.exists()) {
-					File file3 = new File(sourcePath);
+					File file3 = new File(commonUtil.detectPathTraversal(sourcePath));
 					FileUtils.copyFile(file3, file2);
 				}
 			}
@@ -4505,7 +4702,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 			byte[] buffer = new byte[1024];
 	
-			zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
+			zout = new ZipOutputStream(new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + zipFilePath))));
 			
 			for (int k = 0; k < filePaths.length; k++) {
 				String fileName = fileNames[k];
@@ -4517,12 +4714,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					fileExt = filePaths[k].substring(0, filePaths[k].lastIndexOf("."));
 					fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
 					// 암호화된 파일의 바이트를 읽어온 후 복호화
-					byte[] encryptedFileBytes = Files.readAllBytes(new File(realPath + filePaths[k]).toPath());
+					byte[] encryptedFileBytes = Files.readAllBytes(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])).toPath());
 					// 인풋스트림에서 복호화한 바이트 배열을 쓰도록 한다.
 					inpStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedFileBytes));
 				} else {
 					// ezd 확장자가 아니라면 FileInputStream 으로 파일 자체를 읽도록 한다.
-					inpStream = new FileInputStream(new File(realPath + filePaths[k]));
+					inpStream = new FileInputStream(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])));
 				}
 				
 				if (fileName.indexOf("." + fileExt) == -1) {
@@ -4571,7 +4768,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getReceivedDocList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getReceivedDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getReceivedDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getReceivedDocList started.");
@@ -4707,7 +4904,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 공람정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/gongRamDocInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/gongRamDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String gongRamDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("gongRamDocInfo started.");
@@ -4732,7 +4929,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/recevGSusin.do")
+	@RequestMapping(value = "/ezApprovalG/recevGSusin.do", method = RequestMethod.GET)
 	public String recevGSusin(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("recevGSusin started.");
 		
@@ -4753,6 +4950,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
 		String optisSplit = "";
+		int isReceived = 0;
 		
 		if (approvalFlag.equals("S")) {
 			optisSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
@@ -4776,16 +4974,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
@@ -4803,12 +5001,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 				return "main/warning";
 			}
+			
+			// 접수된 문서인지 확인하기.
+			// return 값이 1 이상이면 접수된 문서로 판단.
+			isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		}
-		
-		// 접수된 문서인지 확인하기.
-		// return 값이 1 이상이면 접수된 문서로 판단.
-		
-		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String isNonElecRec = "";
 		if (approvalFlag.equals("G")) {
@@ -4847,7 +5044,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 접수된 문서인지 확인하는 Method
 	 * */
-	@RequestMapping(value = "/ezApprovalG/isReceivedDoc.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/isReceivedDoc.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String isReceivedDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("isReceivedDoc started.");
@@ -4869,7 +5066,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처내용 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/recevEndContent.do")
+	@RequestMapping(value = "/ezApprovalG/recevEndContent.do", method = RequestMethod.GET)
 	public String recevEndContent() {
 		return "ezApprovalG/apprGrecevEndContent";
 	}
@@ -4877,7 +5074,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처문서 정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getReceiveDocInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getReceiveDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getReceiveDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getReceiveDocInfo started.");
@@ -4895,7 +5092,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 문서정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getDocData.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getDocData.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getDocData(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getDocData started.");
@@ -4915,7 +5112,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물선택 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/selectCabinet.do")
+	@RequestMapping(value = "/ezApprovalG/selectCabinet.do", method = RequestMethod.GET)
 	public String selectCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("selectCabinet started.");
 		
@@ -4945,7 +5142,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 문서상태 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getDocState.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getDocState.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getDocState(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getDocState started.");
@@ -4964,7 +5161,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신수락 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezReceiveAssignUI.do")
+	@RequestMapping(value = "/ezApprovalG/ezReceiveAssignUI.do", method = RequestMethod.GET)
 	public String ezReceiveAssignUI(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("ezReceiveAssignUI started.");
 		
@@ -4993,7 +5190,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 지정 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/setJijung.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/setJijung.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String setJijung(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("setJijung started.");
@@ -5019,8 +5216,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+
 	//mht 문서유통 중계문서 수신에 쓰임
-	@RequestMapping(value = "/ezApprovalG/recevG.do")
+	@RequestMapping(value = "/ezApprovalG/recevG.do", method = RequestMethod.GET)
 	public String recevG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("recevG started.");
 		
@@ -5063,16 +5261,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				
 				FileUtils.copyFile(orgFile, newFile);
 			}
@@ -5117,7 +5315,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재라인 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprLine.do")
+	@RequestMapping(value = "/ezApprovalG/aprLine.do", method = RequestMethod.GET)
 	public String aprLine(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("aprLine started.");
 		
@@ -5154,7 +5352,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 업데이트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/setSusinUpdateDocID.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/setSusinUpdateDocID.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String setSusinUpdateDocID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("setSusinUpdateDocID started.");
@@ -5174,7 +5372,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처 얼러트 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezReceiveDistributeUI.do")
+	@RequestMapping(value = "/ezApprovalG/ezReceiveDistributeUI.do", method = RequestMethod.GET)
 	public String ezReceiveDistributeUI(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezReceiveDistributeUI started.");
 		
@@ -5222,7 +5420,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 문서보기 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDocView.do")
+	@RequestMapping(value = "/ezApprovalG/aprDocView.do", method = RequestMethod.GET)
 	public String aprDocView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("aprDocView started.");
 		
@@ -5232,7 +5430,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId());
-
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
+		}
+		
 		String susinAdmin = "";
 		String hasOpinionYN = "";
 		String realPath = commonUtil.getRealPath(request);
@@ -5256,6 +5460,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String ext = request.getParameter("ext");
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
+		String pageType = request.getParameter("pageType");
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -5291,16 +5496,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator, "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				
 				FileUtils.copyFile(orgFile, newFile);
 			}
@@ -5335,6 +5540,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
 					
 					if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+						model.addAttribute("chk", "no");
 						return "main/warning";
 					}
 					if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals(userInfo.getId()) && !doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("NULL")) {
@@ -5348,10 +5554,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			}
 		} else {
-			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
-			
-			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-				return "main/warning";
+			if (pageType != null && pageType.equals("admin")) {
+				//do nothing..
+			} else {
+				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+				
+				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+					model.addAttribute("chk", "no");
+					return "main/warning";
+				}
 			}
 		}
 		
@@ -5372,6 +5583,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		model.addAttribute("ext", ext);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		
@@ -5383,7 +5595,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 문서보기내용 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDocViewContent.do")
+	@RequestMapping(value = "/ezApprovalG/aprDocViewContent.do", method = RequestMethod.GET)
 	public String aprDocViewContent() throws Exception{
 		logger.debug("aprDocViewContent started.");
 		logger.debug("aprDocViewContent ended.");
@@ -5393,7 +5605,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 모두결재 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezAprAllAlert.do")
+	@RequestMapping(value = "/ezApprovalG/ezAprAllAlert.do", method = RequestMethod.GET)
 	public String ezAprAllAlert() throws Exception{
 		logger.debug("ezAprAllAlert started.");
 		logger.debug("ezAprAllAlert ended.");
@@ -5403,7 +5615,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 모두결재 다음문서 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getNextDocInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getNextDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getNextDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getNextDocInfo started.");
@@ -5431,7 +5643,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 반송,회수문서 삭제 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/delDocInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/delDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String delDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("delDocInfo started.");
@@ -5456,7 +5668,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재리스트 검색 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/setSearchInfo.do")
+	@RequestMapping(value = "/ezApprovalG/setSearchInfo.do", method = RequestMethod.GET)
 	public String setSearchInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setSearchInfo started");
 		
@@ -5494,7 +5706,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 대결정보 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/secondApprovalInfo.do")
+	@RequestMapping(value = "/ezApprovalG/secondApprovalInfo.do", method = RequestMethod.GET)
 	public String secondApprovalInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("secondApprovalInfo started");
 		
@@ -5513,7 +5725,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 철생성 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/createCabinet.do")
+	@RequestMapping(value = "/ezApprovalG/createCabinet.do", method = RequestMethod.GET)
 	public String createCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("createCabinet started");
 		
@@ -5528,7 +5740,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 특수목록위치 추가 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/insSpecialList.do")
+	@RequestMapping(value = "/ezApprovalG/insSpecialList.do", method = RequestMethod.GET)
 	public String insSpecialList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,Model model) throws Exception{
 		logger.debug("insSpecialList started");
 		
@@ -5543,7 +5755,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 철생성 등록 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/registerCabinet.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/registerCabinet.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String registerCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("registerCabinet started");
@@ -5562,7 +5774,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 철생성 권호수등록 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/addVolume.do")
+	@RequestMapping(value = "/ezApprovalG/addVolume.do", method = RequestMethod.GET)
 	public String addVolume(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("addVolume started");
 		
@@ -5577,7 +5789,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 철생성 권호수등록 새호수 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getNewVolNo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getNewVolNo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getNewVolNo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getNewVolNo started");
@@ -5596,7 +5808,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 철생성 권호수등록 저장 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/addNewVolume.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/addNewVolume.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String addNewVolume(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("addNewVolume started");
@@ -5616,7 +5828,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 검색 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/searchCabinet.do")
+	@RequestMapping(value = "/ezApprovalG/searchCabinet.do", method = RequestMethod.GET)
 	public String searchCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("searchCabinet started");
 		
@@ -5631,7 +5843,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 검색 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getCabinetSearch.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getCabinetSearch.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCabinetSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
 		logger.debug("getCabinetSearch started");
@@ -5654,7 +5866,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 검색 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getCabinetSearchAll.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getCabinetSearchAll.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCabinetSearchAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getCabinetSearchAll started.");
@@ -5677,7 +5889,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 접수 배부 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/setBebu.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/setBebu.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String setBebu(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("setBebu started");
@@ -5697,7 +5909,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 접수 회송 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/setHeSongDocInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/setHeSongDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String setHeSongDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("setHeSongDocInfo started");
@@ -5728,16 +5940,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 				
 				String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-				File file = new File(dir);
+				File file = new File(commonUtil.detectPathTraversal(dir));
 				
 				if (!file.exists()) {
 					file.mkdirs();
 				}
 				
-				File newFile = new File(docFile);
+				File newFile = new File(commonUtil.detectPathTraversal(docFile));
 				
 				if (!newFile.exists()) {
-					File orgFile = new File(orgDocFile);
+					File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 					
 					FileUtils.copyFile(orgFile, newFile);
 				}
@@ -5754,7 +5966,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 일괄결재 호출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/doApprovAllselect.do")
+	@RequestMapping(value = "/ezApprovalG/doApprovAllselect.do", method = RequestMethod.POST)
 	public String doApprovAllselect(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("doApprovAllselect started");
 		
@@ -5960,7 +6172,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 회수 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/doCancel.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/doCancel.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doCancel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("doCancel started");
@@ -5979,7 +6191,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 재기안 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getFormConnFlag.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getFormConnFlag.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFormConnFlag(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getFormConnFlag started");
@@ -5998,7 +6210,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 양식아이디 가져오기 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getAprDocFormID.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getAprDocFormID.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getAprDocFormID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getAprDocFormID started");
@@ -6015,7 +6227,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 공람정보 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezLineInfo.do")
+	@RequestMapping(value = "/ezApprovalG/ezLineInfo.do", method = RequestMethod.GET)
 	public String ezLineInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezLineInfo started");
 		
@@ -6040,7 +6252,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGezLineInfo";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/getContainerInfo.do")
+	@RequestMapping(value = "/ezApprovalG/getContainerInfo.do", method = RequestMethod.GET)
 	public String getContainerInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("getContainerInfo started");
 		
@@ -6108,7 +6320,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGgetContainerInfo";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/getFormSearchDocListS.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getFormSearchDocListS.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFormSearchDocListS(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getFormSearchDocListS started");
@@ -6199,7 +6411,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/getFormSearchDocList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getFormSearchDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFormSearchDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getFormSearchDocList started");
@@ -6253,7 +6465,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/ezReceiptHistoryInfo.do")
+	@RequestMapping(value = "/ezApprovalG/ezReceiptHistoryInfo.do", method = RequestMethod.GET)
 	public String ezReceiptHistoryInfo(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezReceiptHistoryInfo started");
 		
@@ -6367,7 +6579,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGezDocInfoView";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/ezDocInfoGView.do")
+	@RequestMapping(value = "/ezApprovalG/ezDocInfoGView.do", method = RequestMethod.GET)
 	public String ezDocInfoGView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezDocInfoGView started");
 		
@@ -6442,7 +6654,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGezDocInfoGView";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/getEndOpinionInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getEndOpinionInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getEndOpinionInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getEndOpinionInfo started");
@@ -6463,14 +6675,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/aprEndOpinion.do")
+	@RequestMapping(value = "/ezApprovalG/aprEndOpinion.do", method = RequestMethod.GET)
 	public String aprEndOpinion() throws Exception{
 		logger.debug("aprEndOpinion started");  
 		logger.debug("aprEndOpinion ended");  
 		return "ezApprovalG/apprGaprEndOpinion";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/updateSignCheck.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/updateSignCheck.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateSignCheck(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("updateSignCheck started");  
@@ -6486,7 +6698,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/aprAttachMail.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/aprAttachMail.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String aprAttachMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("aprAttachMail started");   
@@ -6549,7 +6761,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 내보내기, 전체내보내기 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/excelExportOut.do")
+	@RequestMapping(value = "/ezApprovalG/excelExportOut.do", method = {RequestMethod.POST, RequestMethod.GET})
 	/*
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
 		logger.debug("excelExportOut started"); 
@@ -6858,7 +7070,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재함 감사함 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getGamSaSearchDocList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getGamSaSearchDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getGamSaSearchDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getGamSaSearchDocList started");
@@ -6915,7 +7127,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 단위업무관리 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/taskManage.do")
+	@RequestMapping(value = "/ezApprovalG/taskManage.do", method = RequestMethod.GET)
 	public String taskManage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("taskManage started");
 		
@@ -6930,7 +7142,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철인계 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/cabTransfer.do")
+	@RequestMapping(value = "/ezApprovalG/cabTransfer.do", method = RequestMethod.GET)
 	public String cabTransfer(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("cabTransfer started");
 		
@@ -6945,7 +7157,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철인계 단위업무코드 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/selectTask.do")
+	@RequestMapping(value = "/ezApprovalG/selectTask.do", method = RequestMethod.GET)
 	public String selectTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("selectTask started");
 		
@@ -6981,7 +7193,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철인계 인수부서 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/selectDept.do")
+	@RequestMapping(value = "/ezApprovalG/selectDept.do", method = RequestMethod.GET)
 	public String selectDept(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("selectDept started");
 		
@@ -6996,7 +7208,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철인계 인계가능여부확인 표출 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getUncompleteDocCount.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getUncompleteDocCount.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getUncompleteDocCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getUncompleteDocCount started");
@@ -7014,7 +7226,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철인계 인계버튼 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/transferCab.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/transferCab.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String transferCab(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("transferCab started");
@@ -7031,7 +7243,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 관리자 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/adminPage.do")
+	@RequestMapping(value = "/ezApprovalG/adminPage.do", method = RequestMethod.GET)
 	public String adminPage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale, Model model) throws Exception{
 		logger.debug("adminPage started");
 		
@@ -7085,7 +7297,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 분리첨부 철변경 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/selectCabinetInTask.do")
+	@RequestMapping(value = "/ezApprovalG/selectCabinetInTask.do", method = RequestMethod.GET)
 	public String selectCabinetInTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) {
 		logger.debug("gongRamUpdate started");
 		
@@ -7100,7 +7312,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 공람문서 공람승인 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/gongRamUpdate.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/gongRamUpdate.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String gongRamUpdate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("gongRamUpdate started");
@@ -7126,7 +7338,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 종료연기 신청,취소 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/delayCabEndY.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/delayCabEndY.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String delayCabEndY(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
 		logger.debug("delayCabEndY started");
@@ -7148,7 +7360,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 관리자 편철확정 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getUncabinetedDocCount.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getUncabinetedDocCount.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getUncabinetedDocCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getUncabinetedDocCount started");
@@ -7168,7 +7380,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 관리자 편철확정 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/chkIfNotArrangedCabExist.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/chkIfNotArrangedCabExist.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String chkIfNotArrangedCabExist(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("chkIfNotArrangedCabExist started");
@@ -7187,7 +7399,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 관리자 편철확정 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/confirmClassfy.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/confirmClassfy.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String confirmClassfy(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("confirmClassfy started");
@@ -7206,7 +7418,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 전자결재 발송대장 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getSendOutDocList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getSendOutDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getSendOutDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getSendOutDocList started");
@@ -7380,7 +7592,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 포틀릿 결재리스트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getPortletAprDocList.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getPortletAprDocList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getPortletAprDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		logger.debug("getPortletAprDocList started");
@@ -7397,19 +7609,62 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
 		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
 		String result = ezApprovalGService.getAprDocList(pListType, pUserID, pUserDeptID, pPageSize, pPageNum, orderCell, orderOption, companyID, searchQuery, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 
 		logger.debug("getPortletAprDocList ended");
 
 		return result;
 	}
+	
+	/**
+	 * 전자결재G 포틀릿 결재리스트 표출 Method - 수정버전
+	 * 박종균
+	 */
+	@RequestMapping(value = "/ezApprovalG/getPortletAprList.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Object getPortletAprList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramData, LoginVO userInfo) throws Exception{
+		logger.debug("getPortletAprList is started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String imgPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + "/";
+		String lang = userInfo.getLang().equalsIgnoreCase("1") ? "" : userInfo.getLang();
+		
+		logger.debug("paramData : " + paramData.toString());
+		paramData.put("tenantID", userInfo.getTenantId());                         
+		paramData.put("approvalFlag", approvalFlag);
+		paramData.put("imgPath", imgPath);
+		paramData.put("lang", lang);
+		
+		Map<String, Object> portletList = ezApprovalGService.getPortletAprList(paramData, userInfo.getOffset());
+		logger.debug("getPortletAprList is ended");
+		
+		logger.debug("portletList : " + portletList.toString());
+
+		return portletList;
+	}
+	
+	/**
+	 * 전자결재 포틀릿 결재할 문서 시간 표시 Method
+	 * */
+	@RequestMapping(value = "/ezApprovalG/getPortletApprGapTime.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Object getPortletApprGapTime(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramData, LoginVO userInfo) throws Exception {
+		logger.debug("getPortletApprGapTime is started.");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		paramData.put("tenantID", userInfo.getTenantId());     
+		
+		Map<String, Object> ret = ezApprovalGService.getPortletApprGapTime(paramData);
+		logger.debug("ret.toString() " + ret.toString());
+		logger.debug("getPortletApprGapTime is ended.");
+		return ret;
+	}
 
 	/**
 	 * 전자결재G 철생성 비치기록물 변경 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/insDisplayInfo.do")
+	@RequestMapping(value = "/ezApprovalG/insDisplayInfo.do", method = RequestMethod.GET)
 	public String insDisplayInfo() throws Exception{
 		logger.debug("insDisplayInfo started");
 		logger.debug("insDisplayInfo ended");
@@ -7419,7 +7674,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재 일괄결재 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/doApprovAllG.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/doApprovAllG.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doApprovAllG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
 		logger.debug("doApprovAllG started.");
@@ -7509,7 +7764,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 종료연기 종료연기신청 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/reqDelayCabEndY.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/reqDelayCabEndY.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String reqDelayCabEndY(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("reqDelayCabEndY started");
@@ -7530,7 +7785,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezSimsaG.do")
+	@RequestMapping(value = "/ezApprovalG/ezSimsaG.do", method = RequestMethod.GET)
 	public String ezSimsaG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezSimsaG started");
 
@@ -7583,7 +7838,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송컨텐츠 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/enforceContent.do")
+	@RequestMapping(value = "/ezApprovalG/enforceContent.do", method = RequestMethod.GET)
 	public String enforceContent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		logger.debug("enforceContent started");
 		
@@ -7599,11 +7854,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송 수신자 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezReceiptInfo.do")
+	@RequestMapping(value = "/ezApprovalG/ezReceiptInfo.do", method = RequestMethod.GET)
 	public String ezReceiptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezReceiptInfo started");
 		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		//userInfo = commonUtil.aprUserInfo(loginCookie); //2019.03.25 천성준 - 사용안해서 일단 주석
 		String docID = request.getParameter("docID");
 		String ext = request.getParameter("ext");
 		
@@ -7618,7 +7873,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송 발송 저장 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/saveEndFile.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/saveEndFile.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("saveEndFile started");
@@ -7633,7 +7888,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		OutputStream bos = null;
 		
 		try {
-		File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+		File file = new File(commonUtil.detectPathTraversal(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -7643,7 +7898,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			
-			bos = new FileOutputStream(saveFileName);
+			bos = new FileOutputStream(commonUtil.detectPathTraversal(saveFileName));
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
@@ -7678,7 +7933,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송 발송 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/sendOfferAprove.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/sendOfferAprove.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String sendOfferAprove(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("sendOfferAprove started");
@@ -7703,7 +7958,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송 반송 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/sendOfferReject.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/sendOfferReject.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String sendOfferReject(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("sendOfferReject started");
@@ -7722,7 +7977,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물 열람권한 확인 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getUserRecRight.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getUserRecRight.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getUserRecRight(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getUserRecRight started");
@@ -7743,7 +7998,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 겸직 쿠키 생성 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ChangeUserInfo.do")
+	@RequestMapping(value = "/ezApprovalG/ChangeUserInfo.do", method = RequestMethod.POST)
 	public void changeUserInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		logger.debug("ChangeUserInfo started");
@@ -7757,7 +8012,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String companyName = request.getParameter("companyName");
 		String companyName2 = request.getParameter("companyName2");
 		
-		Cookie cookieID0 = new Cookie("APRUI0", deptID);
+		Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(deptID, "utf-8"));
     	cookieID0.setPath("/");
     	response.addCookie(cookieID0);
     	
@@ -7785,7 +8040,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
     	cookieID6.setPath("/");
     	response.addCookie(cookieID6);
     	
-    	Cookie cookieID7 = new Cookie("APRUI7", companyID);
+    	Cookie cookieID7 = new Cookie("APRUI7", URLEncoder.encode(companyID, "utf-8"));
     	cookieID7.setPath("/");
     	response.addCookie(cookieID7);
     	
@@ -7795,7 +8050,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 회송후 대장등록  Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/removeDocCabinetInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/removeDocCabinetInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String removeDocCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("removeDocCabinetInfo Started");
@@ -7825,7 +8080,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물등록대장 공람발송 호출  Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprGongRamLine.do")
+	@RequestMapping(value = "/ezApprovalG/aprGongRamLine.do", method = RequestMethod.GET)
 	public String aprGongRamLine(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("aprGongRamLine started");
 		
@@ -7852,7 +8107,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물등록대장 공람발송 등록  Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/gongRamSave.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/gongRamSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String gongRamSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody String xmlPara) throws Exception{
 		logger.debug("gongRamSave started");
@@ -7892,7 +8147,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 임시저장 재기안 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/makeTmp2Ing.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/makeTmp2Ing.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String makeTmp2Ing(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("makeTmp2Ing started");
@@ -7912,7 +8167,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 메일보내기 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/sendToMailApproval.do")
+	@RequestMapping(value = "/ezApprovalG/sendToMailApproval.do", method = RequestMethod.GET)
 	public String sendToMailApproval(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("sendToMailApproval started");
 		
@@ -7939,7 +8194,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 메일보내기 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/createMailImg.do" )
+	@RequestMapping(value = "/ezApprovalG/createMailImg.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String createMailImg(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("createMailImg started");
@@ -8008,7 +8263,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,10).replace("-", "") ;
 		FileOutputStream stream = null;
 		try{
-		File file = new File(strPath);
+		File file = new File(commonUtil.detectPathTraversal(strPath));
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -8023,7 +8278,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	     
 	    
 //	     stream = new FileOutputStream("E:\\test2\\aaaaa.png");
-	     stream = new FileOutputStream(strPath+commonUtil.separator+docID+".png");
+	     stream = new FileOutputStream(commonUtil.detectPathTraversal(strPath+commonUtil.separator+docID+".png"));
 	     stream.write(file2);
 		}  catch (FileNotFoundException fnfe) {
 			logger.debug("fnfe: {}", fnfe);
@@ -8049,7 +8304,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 부서(병렬,순차)합의 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/recev.do")
+	@RequestMapping(value = "/ezApprovalG/recev.do", method = RequestMethod.GET)
 	public String recev(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("recev started");
 
@@ -8111,7 +8366,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재정보 수신처 민원인주소입력 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDeptAddressUserName.do")
+	@RequestMapping(value = "/ezApprovalG/aprDeptAddressUserName.do", method = RequestMethod.GET)
 	public String aprDeptAddressUserName() throws Exception{
 		logger.debug("aprDeptAddressUserName started");
 		logger.debug("aprDeptAddressUserName ended");
@@ -8121,7 +8376,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재정보 수신처 민원인상세주소입력 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDeptAddressName.do")
+	@RequestMapping(value = "/ezApprovalG/aprDeptAddressName.do", method = RequestMethod.GET)
 	public String aprDeptAddressName() throws Exception{
 		logger.debug("aprDeptAddressName started");
 		logger.debug("aprDeptAddressName ended");
@@ -8131,7 +8386,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 부서병렬합의 접수 컨텐츠 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/recevContent.do")
+	@RequestMapping(value = "/ezApprovalG/recevContent.do", method = RequestMethod.GET)
 	public String recevContent() throws Exception{
 		logger.debug("recevContent started");
 		logger.debug("recevContent ended");
@@ -8141,7 +8396,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 부서병렬합의 접수 컨텐츠2 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/recevContent2.do")
+	@RequestMapping(value = "/ezApprovalG/recevContent2.do", method = RequestMethod.GET)
 	public String recevContent2() throws Exception{
 		logger.debug("recevContent2 started");
 		logger.debug("recevContent2 ended");
@@ -8151,7 +8406,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재선 사용자 포함여부 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/checkAprLineUser.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/checkAprLineUser.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkAprLineUser(@CookieValue("loginCookie") String loginCookie,  LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("checkAprLineUser started");
@@ -8171,7 +8426,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신순번 겟 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getSusinSN.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getSusinSN.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getSusinSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getSusinSN started");
@@ -8191,7 +8446,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재할문서 개수 가져오기 Method
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getWebPartCount.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getWebPartCount.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getWebPartCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getWebPartCount started");
@@ -8211,7 +8466,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 강제회수
 	 */	
-	@RequestMapping(value = "/ezApprovalG/doCancelForce.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/doCancelForce.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String doCancelForce(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,  HttpServletRequest request) throws Exception{
 		logger.debug("doCancelForce started");
@@ -8240,7 +8495,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	
-	@RequestMapping(value = "/ezApprovalG/uploadDocHistory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/uploadDocHistory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String uploadDocHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,  HttpServletRequest request ,@RequestBody String xmlPara) throws Exception{
 		logger.debug("uploadDocHistory started");
@@ -8277,12 +8532,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		try {
-			File file = new File(realPath + dirPath2);
+			File file = new File(commonUtil.detectPathTraversal(realPath + dirPath2));
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 
-			File file2 = new File(realPath + dirPath);
+			File file2 = new File(commonUtil.detectPathTraversal(realPath + dirPath));
 			if (!file2.exists()) {
 				file2.mkdirs();
 			}
@@ -8306,7 +8561,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				fileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
-			Path outputFile = Paths.get(realPath + dirPath + commonUtil.separator + fileName);
+			Path outputFile = Paths.get(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + fileName));
 			Files.write(outputFile, fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -8319,7 +8574,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 문서 내용 변경 이력
 	 */	
-	@RequestMapping(value = "/ezApprovalG/updateDocHistory.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/updateDocHistory.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateDocHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,  HttpServletRequest request ,@RequestBody String xmlPara) throws Exception{
 		logger.debug("updateDocHistory started");
@@ -8352,7 +8607,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재S 결재정보 분류코드탭
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getCodeTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getCodeTreeInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCodeTreeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getCodeTreeInfo started");
@@ -8377,7 +8632,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재S 결재정보 분류코드탭 서브트리
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getCodeSubTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getCodeSubTreeInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCodeSubTreeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getCodeSubTreeInfo started");
@@ -8397,7 +8652,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재S 결재정보 분류코드 즐겨찾기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getFrequencyClassList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getFrequencyClassList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFrequencyClassList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getFrequencyClassList started");
@@ -8414,7 +8669,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 문서정보이력 상세보기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/docViewerCK.do")
+	@RequestMapping(value = "/ezApprovalG/docViewerCK.do", method = RequestMethod.GET)
 	public String docViewerCK(HttpServletRequest request, Model model) throws Exception {
 		logger.debug("docViewerCK started");
 
@@ -8430,7 +8685,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 문서정보이력에서 상세내역 저장하기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/savePCTmpFile.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/savePCTmpFile.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String savePCTmpFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("savePCTmpFile started");
@@ -8446,7 +8701,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		path += commonUtil.separator + subFolder + commonUtil.separator;
 		
-		File file = new File(realPath + path);
+		File file = new File(commonUtil.detectPathTraversal(realPath + path));
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -8458,7 +8713,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String saveFilePath = path + docTitle + ".mht";
 		
-		FileUtils.copyFile(new File(realPath + docHref), new File(realPath + saveFilePath));
+		FileUtils.copyFile(new File(commonUtil.detectPathTraversal(realPath + docHref)), new File(commonUtil.detectPathTraversal(realPath + saveFilePath)));
 
 		logger.debug("savePCTmpFile ended");
 		
@@ -8468,7 +8723,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재S 양식 자동분류코드 겟
 	 */	
-	@RequestMapping(value = "/ezApprovalG/getAutoDocNumItemCode.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getAutoDocNumItemCode.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getAutoDocNumItemCode(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getAutoDocNumItemCode started");
@@ -8486,7 +8741,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재S 재발송 페이지 커몬
 	 */	
-	@RequestMapping(value = "/ezApprovalG/docReSend.do")
+	@RequestMapping(value = "/ezApprovalG/docReSend.do", method = RequestMethod.GET)
 	public String docReSend(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("docReSend started");
 
@@ -8534,7 +8789,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재S 재발송 
 	 */	
-	@RequestMapping(value = "/ezApprovalG/sendOffer.do", produces ="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/sendOffer.do", produces ="text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String sendOffer(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
 		logger.debug("sendOffer started");
@@ -8552,7 +8807,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재S 유저 주소 가져오기 
 	 */
-	@RequestMapping(value = "/ezApprovalG/getAddress.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getAddress.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getAddress(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getAddress started");
@@ -8582,7 +8837,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재S 라스트합의 APRMEMBERSN 가져오기
 	 */
-	@RequestMapping(value = "/ezApprovalG/getSameOrgHAPYUIDoc.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getSameOrgHAPYUIDoc.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getSameOrgHAPYUIDoc(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSameOrgHAPYUIDoc started");
@@ -8597,7 +8852,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/checkResend.do", produces = "text/plain;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/checkResend.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkResend(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
 		logger.debug("checkResend started");
@@ -8615,7 +8870,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/setHeSongHapyuiDocInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/setHeSongHapyuiDocInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String setHeSongHapyuiDocInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody String xmlPara) throws Exception {
 		logger.debug("setHeSongHapyuiDocInfo started");
@@ -8634,7 +8889,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/deleteSignInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/deleteSignInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteSignInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteSignInfo started");
@@ -8650,7 +8905,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/delCirculation.do")
+	@RequestMapping(value = "/ezApprovalG/delCirculation.do", method = RequestMethod.POST)
 	public void delCirculation(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("delCirculation started");
 
@@ -8666,7 +8921,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * @return  전자결재G 문서유통 재발송 요청한 문서에 요청 시 의견 표출
 	 */
-	@RequestMapping(value = "/ezApprovalG/getRelayReqOpinion.do")
+	@RequestMapping(value = "/ezApprovalG/getRelayReqOpinion.do", method = RequestMethod.POST)
 	public String getRelayReqOpinion(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getRelayReqOpinion started");
 
@@ -8682,7 +8937,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			//기관명 명시해주기 
 			sb.append(deptID.split(":")[1] + " : ");
 			
-			try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
+			try (BufferedReader br = new BufferedReader(new FileReader(new File(commonUtil.detectPathTraversal(filePath))))) {
 				String readLine = "";
 				
 				while ((readLine = br.readLine()) != null) {
@@ -8712,7 +8967,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * @return 중계문서 재전송 요청 의견 호출
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezRetOpinon.do")
+	@RequestMapping(value = "/ezApprovalG/ezRetOpinon.do", method = RequestMethod.GET)
 	public String ezRetOpinon() throws Exception {
 		logger.debug("ezRetOpinon started");
 
@@ -8724,7 +8979,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기록물철 삭제
 	 */
-	@RequestMapping(value = "/ezApprovalG/deleteCabInfo.do")
+	@RequestMapping(value = "/ezApprovalG/deleteCabInfo.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteCabInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
 		logger.debug("deleteCabInfo started");
@@ -8747,7 +9002,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "TRUE";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/selectExpCabDocInfo.do")
+	@RequestMapping(value = "/ezApprovalG/selectExpCabDocInfo.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String selectExpCabDocInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
 		logger.debug("selectExpCabDocInfo started");
@@ -8758,7 +9013,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/deleteOpinionTypeInfo.do")
+	@RequestMapping(value = "/ezApprovalG/deleteOpinionTypeInfo.do", method = RequestMethod.POST)
 	public String deleteOpinionTypeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("deleteOpinionTypeInfo started.");
 		
@@ -8776,7 +9031,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 직인의뢰접수화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezConvOut.do")
+	@RequestMapping(value = "/ezApprovalG/ezConvOut.do", method = RequestMethod.GET)
 	public String ezConvOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ezConvOut started.");
 		
@@ -8800,7 +9055,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 직인의뢰 접수 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/updateSusinState.do")
+	@RequestMapping(value = "/ezApprovalG/updateSusinState.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateSusinState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("updateSusinState started.");
@@ -8821,7 +9076,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 민원인주소 우편번호검색 사용 여부 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getUseZipCodeSearchInApr.do")
+	@RequestMapping(value = "/ezApprovalG/getUseZipCodeSearchInApr.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String getUseZipCodeSearchInApr(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getUseZipCodeSearchInApr started.");
@@ -8833,13 +9088,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getUseZipCodeSearchInApr ended.");
 		
 		return result;
-	}
-	
-	
+	}	
 	/*
 	 * 2018-05-14 강민수92 문서의 확장자 체크
 	 */
-	@RequestMapping(value="/ezApprovalG/checkDocExt.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value="/ezApprovalG/checkDocExt.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkDocExt(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("checkDocExt started");
@@ -8857,7 +9110,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 비전자문서 부서수신함에서 문서를 열었을때 호출됨.
 	 * return 비전자문서XML
 	 * */
-	@RequestMapping(value="/ezApprovalG/getNonElecInfoSusinInit.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value="/ezApprovalG/getNonElecInfoSusinInit.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getNonElecInfoSusinInit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getNonElecInfoSusinInit started.");
@@ -8875,7 +9128,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 2018-06-18 천성준
 	 * 비전자문서 수신처 등록 메소드
 	 * */
-	@RequestMapping(value = "/ezApprovalG/nonElecRecSusinInit.do")
+	@RequestMapping(value = "/ezApprovalG/nonElecRecSusinInit.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void nonElecRecSusinInit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("nonElecRecSusinInit started.");
@@ -8891,7 +9144,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 2018-06-21 천성준
 	 * 비전자문서 접수 후, 임시 캐비넷 아이디 선택 캐비넷 아이디로 바꿈
 	 * */
-	@RequestMapping(value = "/ezApprovalG/nonElecRecTempCabSwitch.do")
+	@RequestMapping(value = "/ezApprovalG/nonElecRecTempCabSwitch.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void nonElecRecTempCabSwitch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("nonElecRecTempCabSwitch started.");
@@ -8909,7 +9162,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 2018-07-17 천성준
 	 * 비전자문서 등록 후, 바로 기안자 문서함에서 삭제
 	 * */
-	@RequestMapping(value = "/ezApprovalG/setNonElecRecDocDel.do")
+	@RequestMapping(value = "/ezApprovalG/setNonElecRecDocDel.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void setNonElecRecDocDel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setNonElecRecDocDel started.");
@@ -8925,7 +9178,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 2018-07-18 천성준
 	 * 수신된 비전자문서 삭제 버튼 Action
 	 * */
-	@RequestMapping(value = "/ezApprovalG/susinNonElecRecDocDel.do")
+	@RequestMapping(value = "/ezApprovalG/susinNonElecRecDocDel.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String susinNonElecRecDocDel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("susinNonElecRecDocDel started.");
@@ -8943,7 +9196,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 2018-07-18 천성준
 	 * 비전자문서 여부
 	 * */
-	@RequestMapping(value = "/ezApprovalG/checkNonElecRec.do")
+	@RequestMapping(value = "/ezApprovalG/checkNonElecRec.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkNonElecRec(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("checkNonElecRec started.");
@@ -8968,7 +9221,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 2018-10-24 배현상
 	 * 결재상태 여부(진행, 보류인지 검사), 중복결재를 방지하기 위한 검사
 	 */
-	@RequestMapping(value = "/ezApprovalG/checkAprState.do")
+	@RequestMapping(value = "/ezApprovalG/checkAprState.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkAprState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("checkAprState started.");
@@ -8998,7 +9251,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return retValue;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/checkHabYuiState.do")
+	@RequestMapping(value = "/ezApprovalG/checkHabYuiState.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkHabYuiState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("checkHabYuiState started.");
@@ -9015,7 +9268,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 
 	 * 회송문서의 철정보를 원문서 정보로 변경
 	 * */
-	@RequestMapping(value = "/ezApprovalG/setHesongCabinetInfo.do")
+	@RequestMapping(value = "/ezApprovalG/setHesongCabinetInfo.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void setHesongCabinetInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setHesongCabinetInfo started.");
@@ -9032,7 +9285,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 회송문서의 철정보를  선택한 철 정보로 변경
 	 * */
 	@SuppressWarnings("null")
-	@RequestMapping(value = "/ezApprovalG/setHesongBansongCabinetInfo.do")
+	@RequestMapping(value = "/ezApprovalG/setHesongBansongCabinetInfo.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void setHesongBansongCabinetInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setHesongBansongCabinetInfo started.");
@@ -9045,7 +9298,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		//철정보 변경을 못하면 에러처리하기위해
 		if (docID == null || cabinetID == null || taskCode == null) {
-			Exception Exception = null;
+			Exception Exception = new Exception();
 			throw Exception;
 		}
 		
@@ -9057,7 +9310,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 
 	 * 기안창 기안자 부서 정보와 현재 사용자의 부서 정보가 같은지 체크
 	 * */
-	@RequestMapping(value = "/ezApprovalG/checkDeptAndCabinetId.do")
+	@RequestMapping(value = "/ezApprovalG/checkDeptAndCabinetId.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkDeptAndCabinetId(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("checkDeptAndCabinetId started.");
@@ -9133,3 +9386,4 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGaprOpinionPopup";
 	}
 }
+

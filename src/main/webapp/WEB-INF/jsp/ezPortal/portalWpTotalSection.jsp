@@ -215,8 +215,7 @@
 		</section>
 			
 		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
 		<style>
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
@@ -225,38 +224,6 @@
 			select::-ms-expand {
 			    display: none;
 			}
-			
-			#atti_area span{
-				width:35px;
-				margin-left:7px;
-				display:block;
-				float:left;
-				padding: 5px 4px;
-				font: 12px gulim;
-				padding-top: 7px;
- 				border: 1px solid #ddd;
- 				color: #666;
-				border-radius:3px;						
-			}
-			
-			.btn_hover{
-				cursor: pointer;
-				color: rgb(4, 112, 227) !important;
-				border-color: rgb(4, 112, 227) !important;
-			}
-			
-			.btn_disabled{
-				background-color: transparent !important;
-				border: 1px solid #ddd !important;
-				color: #aaa !important;
-			}
-			
-			#inAttiClock, #outAttiClock {
-				background: url("/images/clock.png") no-repeat 0 3px;
-				background-size: 13px;
-				height:20px;
-				font-family: Malgun Gothic, Meiryo UI;
-			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
@@ -264,7 +231,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
 		<c:choose>
 			<c:when test="${checkBrowser == true}">
 				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_IEEIP.js')}"></script>
@@ -273,9 +242,7 @@
 				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_EIP.js')}"></script>
 			</c:otherwise>
 		</c:choose>
-		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var UserOffset = "${userOffset}";
 		    var pMode = "P";
@@ -284,16 +251,34 @@
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 			var isCircularUsed = "${isCircularUsed}";
-		    var year = sDate.getFullYear();
-		 	var mon = leadingZeros((sDate.getMonth() + 1), 2);
-		 	var day = sDate.getDate();		 	
-		 	/*근태관리 추가*/
+			var month = "${curMon}";
+	    	var totalCnt = 0;
+	    	var totalPage = 0;
+	    	var curPage = 0;
+	    	var EndCnt = 6;
+	    	var timer;
+	    	/*근태관리 추가*/
 		 	var serverTime = "${serverTime}";
 		 	var nowAttiTime = "";
 		 	var beforeAlertDate = "";
 			var afterAlertDate = "";
 			var overTime = "";
 			var isUseAttMenuItem = "${isUseAttMenuItem}";
+	    	
+	    	document.onselectstart = function () { return false; };
+		    
+			$(document).ready(function(){
+				$('#featured').orbit();
+				
+				window_onload_total();
+
+				if (isCircularUsed != 'Y') {
+					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
+					$(".personal_content a ul:last").attr("class","last");
+					$(".personal_content").show();
+				}
+			});
+
 			var timeDiff;
 			
 		    function window_onload_total() {
@@ -305,12 +290,17 @@
 			        document.body.style.UserSelect = 'none';
 			    }
 			    
-			    CalendarMiniView("CalendarMini");
+			    if (month < 10 && String(month).length == 1)
+		            month = "0" + month;
+		        
+        	    document.getElementById("curMon").innerHTML = month;
+
+	        	try { top.onresize() } catch (e) { }
+	        	
+	        	getbirthUserList();
+			    /* CalendarMiniView("CalendarMini"); */
 				
-			    if (isUseAttMenuItem == "N") {
-				    draw_clock();
-				    yourClock();
-			    } else {
+			    if ("${use_attitude}" == "YES") {
 			    	parseDate();
 			    	attiClock();
 					setAttiBtnHover();
@@ -318,7 +308,8 @@
 					getHolidayList();
 			    }
 
-			    CalendarMiniDataSource();
+			    /* CalendarMiniDataSource(); */
+			    schedule_get_holiday();
 
 		        try { top.onresize() } catch (e) { }
 
@@ -382,7 +373,7 @@
 			    selDate = date;			    
 
 			    $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleNewWebPartList.do",
@@ -396,9 +387,8 @@
 			}
 
 			function getScheduleList_after(text, mode, date) {
-			    try {
-			        var listHTML = "<ul class=\"schedule_list \">";
-			        var xmldom = createXmlDom();
+			   if (date == nowDay) {
+		        	var xmldom = createXmlDom();
 			        xmldom = loadXMLString(text);
 			        
 			        var count = 0;
@@ -426,8 +416,8 @@
 				            var enddate = new Date(ENDDATE.split(' ')[0].split('-')[0], ENDDATE.split(' ')[0].split('-')[1], ENDDATE.split(' ')[0].split('-')[2]);
 				            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
 			                
-			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
-			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\" title='" + TITLE + "'>";
+			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px; white-space: pre;'>";
+			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\" title='" + MakeXMLString(TITLE) + "'>";
 			                listHTML += "&nbsp;"
 			                if(SCHEDULETYPE == 1) {
 			                	listHTML += "";
@@ -447,69 +437,22 @@
 			        }
 			        
 			        listHTML += "</ul>";
+			        
+		        	var cnt = xmldom.getElementsByTagName("ROW").length;
 
-			        if (date == nowDay) {
-			        	var cnt = xmldom.getElementsByTagName("ROW").length;
-	
-			        	if (cnt > 99) {
-			        		cnt = "99+";	
-			        	}			        	
-			        	document.getElementById("schedulenum").innerHTML = cnt;
-			        }
+		        	if (cnt > 99) {
+		        		cnt = "99+";	
+		        	}
+		        	
+		        	document.getElementById("schedulenum").innerHTML = cnt;
+		        	
+		        	if (cnt == "0") {
+	                	$("#schedulenum").attr("class", "iconCount_none");
+	                } else {
+	                	$("#schedulenum").attr("class", "iconCount");
+	                }
+		        }
 
-			        if (count > 0)
-			            document.getElementById("ScheduleList").innerHTML = listHTML;			        	
-			        else {
-			            var nodata = "<div class='nodata_schedule'>";
-			            nodata += "<p style='margin-left:10px'><img src='/images/" + strLang1_total + "/main/nodata_plan.png' width='92' height='84' style='margin:10px 0px 0px'></p>";
-			            nodata += "<p style='margin-left:10px'>" + strLang2_total + "</p></div>";
-
-			            var scrollbox = {};
-			            scrollbox.content1 = new Scrollbox();
-			            scrollbox.best = new Scrollbox();
-			            scrollbox.player = new Scrollbox();
-
-			            var pulldown = {};
-			            pulldown.choose = new Pulldown();
-			            document.onselectstart = function () { return false; };
-			          	//scroll 초기화
-			            document.getElementById("ScheduleList").style.top = "0px";
-
-			            scrollbox.content1.touch("content1-scrbox", {
-			                overflowY: "auto" // auto, scroll 
-			            });
-			            scrollbox.best.touch("best-scrbox", {
-			                overflowY: "scroll" // auto, scroll 
-			            });
-			            scrollbox.player.touch("player-scrbox", {
-			                overflowY: "scroll" // auto, scroll 
-			            });
-			            
-			            document.getElementById("ScheduleList").innerHTML = nodata;
-			            return;
-			        }
-
-			        var scrollbox = {};
-			        scrollbox.content1 = new Scrollbox();
-			        scrollbox.best = new Scrollbox();
-			        scrollbox.player = new Scrollbox();
-
-			        var pulldown = {};
-			        pulldown.choose = new Pulldown();
-			        document.onselectstart = function () { return false; };
-			        //scroll 초기화
-			        document.getElementById("ScheduleList").style.top = "0px";
-
-			        scrollbox.content1.touch("content1-scrbox", {
-			            overflowY: "auto" // auto, scroll 
-			        });
-			        scrollbox.best.touch("best-scrbox", {
-			            overflowY: "scroll" // auto, scroll 
-			        });
-			        scrollbox.player.touch("player-scrbox", {
-			            overflowY: "scroll" // auto, scroll 
-			        });
-			    } catch (e) {}
 			}
 			
 			//회람판 신규 갯수 가져오기 2018-03-05 강민수92
@@ -529,6 +472,12 @@
 							cirCnt = "99+";		
 						}						
 						$("#circularCnt").html(cirCnt);
+
+						if (cirCnt == "0") {
+		                	$("#circularCnt").attr("class", "iconCount_none");
+		                } else {
+		                	$("#circularCnt").attr("class", "iconCount");
+		                }
 					}
 				});
 	        }
@@ -550,7 +499,7 @@
 			function event_newmailcount() {
 			    if (xmlHttp_getnewmailcount_total != null && xmlHttp_getnewmailcount_total.readyState == 4) {
 			        if (xmlHttp_getnewmailcount_total.status > 199 && xmlHttp_getnewmailcount_total.status < 300) {
-			        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "DATA")[0]);
+			        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "FOLDERUNREADCOUNT")[0]);
 			        	
 			        	if (unreadcount.length > 2) {
 			        		unreadcount = "99+";
@@ -561,6 +510,12 @@
 		                }
 		                else {
 		                    document.getElementById("mailnum").innerText = unreadcount;
+		                }
+
+		                if (unreadcount == "0") {
+		                	$("#mailnum").attr("class", "iconCount_none");
+		                } else {
+		                	$("#mailnum").attr("class", "iconCount");
 		                }
 			        }
 			        xmlHttp_getnewmailcount_total = null;
@@ -607,6 +562,13 @@
 		                    	}
 		                        document.getElementById("aprnum").innerText = aprnumCnt;		                        
 		                    }
+
+		                    if (aprnumCnt == "0") {
+			                	$("#aprnum").attr("class", "iconCount_none");
+			                } else {
+			                	$("#aprnum").attr("class", "iconCount");
+			                }
+		                    
 		                    xmlHttp_getnewapprovalcount_total = null;
 						} catch(e) {
 						    xmlHttp_getnewapprovalcount_total = null;
@@ -655,6 +617,9 @@
 					}
 				} else if (objThis.id == "ModInfo") {
 					window.open("/ezPortal/environmentMain.do?funCode=1", "main");
+				} else if (objThis.id == "Workspace") {
+					window.open("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO", "main");
+					//OpenWindow(event, "http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO", "main", "")
 				} else {
 					ifrw.topMenuToggle(objThis.id);
 				}
@@ -1011,13 +976,7 @@
 		    	
 		    	beforeAlertDate = new Date();
 		    	var dateAlert = nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + (nowAttiTime.getMonth() + 1) + "<spring:message code='ezAttitude.t67'/> " + (nowAttiTime.getDate()) + "<spring:message code='ezAttitude.t68'/> " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
-// 		    	var saveFlag = confirm("<spring:message code='ezAttitude.t69'/> " + dateAlert + "<spring:message code='ezAttitude.t70'/>");
-// 		    	if (!saveFlag) {
-// 		    		afterAlertDate = new Date();
-// 		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
-// 		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
-// 		    		return;
-// 		    	} 
+
 		    	$.ajax({
 		    		type : "POST",
 		    		async : true,
@@ -1040,26 +999,50 @@
 		    
 		    function getHolidayList() {
 				$.ajax({
-					type:"POST",
+					type:"GET",
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
 					data : {
-						isRest : "rest"
+						//isRest : "rest"
 					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
-							if (result.holidayList[i].holidayDate != null) {
-								if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
-									memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
-																	  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																	  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
-								} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
-									yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
-																			  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																			  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
-																			  result.holidayList[i].isRest == 1 ? true : false));
-								}
+							var isSolar = "";
+							var holidayFlag = "";
+							var repetition = "";
+							
+							if (result.holidayList[i].isSolar == "1") {
+								isSolar = "1";
+							} else {
+								isSolar = "2";
+							}
+							
+							if (result.holidayList[i].holidayDate == null) {
+								result.holidayList[i].holidayDate = '';
+							}
+							
+							if (result.holidayList[i].holidayRepeat == null) {
+								repetition = '';
+							} else {
+								repetition = result.holidayList[i].holidayRepeat;
+							}
+							
+							if (result.holidayList[i].holidayFlag == 'Y') {
+								holidayFlag = "Y";			                    
+			                } else {
+			                    holidayFlag = "D";
+			                }
+							
+							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																  isSolar, result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
+							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																		  result.holidayList[i].holidayDate.substring(8,10), isSolar,
+																		  result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
 							}
 						}
 						closedDay = result.attitudeConfigVO.closedDay.split(",");
@@ -1178,19 +1161,401 @@
 		        time = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2) + ':' + leadingZeros(nowServerTime.getSeconds(), 2);
 		        document.getElementById("timeFlow").innerHTML = time;
 		        if (time == "00:00:00") {
-		        	$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+		        	//$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
 		        }
 		        gizmo = setTimeout("attiClock()", 500);
 		        
 		    }
 		    
-		    window_onload_total();
+		    function goEnv() {
+		    	window.open("/ezPortal/environmentMain.do?topMenuID=F3633607-8E8B-42A1-B777-6E2969072E58", "main", "");
+		    }
+	    	
+	    	function getbirthUserList() {
+	    		window.clearTimeout(timer);
+
+	        	$.ajax({
+    	        	type : "POST",
+    	        	dataType : "text",
+    	        	url : "/ezPersonal/mainBirthUserList.do",
+    	        	data : {
+    	        		mon   : month, 
+    	        	},
+    	        	success : function(xml){		        		
+    	        		getbirthUserList_after(loadXMLString(xml));
+    	        	},
+    	        	error : function(error){
+    	        		console.log(error);	
+    	        	}
+	    	    });
+	    	}
+	    	
+	    	var userPrimary = "${userInfo.primary}";
+	    	
+	    	function getbirthUserList_after(xml) {
+		        if (xml == null) return;
+
+		        if (document.getElementById("userlist").innerHTML != "") document.getElementById("userlist").innerHTML = "";
+
+	    	    if (SelectSingleNodeNew(xml, "DATA/ROW") != null) {
+	        	    totalCnt = GetChildNodes(SelectSingleNodeNew(xml, "DATA")).length;
+	            	totalPage = Math.ceil(totalCnt / EndCnt);
+
+	            	document.getElementById("birthcont").style.display = "";
+	            	document.getElementById("nodata_NewBirth").style.display = "none";
+	            	
+	            	for (var i = 0; i < totalCnt; i++) {
+		                var cn = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "CN");
+	                    
+		                var birthType = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTHTYPE");
+	    	            var birthDate = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTH");
+	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
+	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
+	        	        var userPic = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "EXTENSIONATTRIBUTE2");
+	        	        
+	            	    if (userPrimary != "1")
+	                	    userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME2");
+
+	                	/* var userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE");	                	
+	                	
+	                	if (userPrimary != "1")
+		                    userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE2"); */
+	                	
+	                	var userDesc = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DESCRIPTION");
+	                	
+	                	if (userPrimary != "1")
+	                		userDesc = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DESCRIPTION2");
+	                	
+	                	/* <li>
+	                   	<dl class="birthListDL">
+	                       	<dt class="birthPic"><img src="/images/kr/main/birth01.png"></dt>
+	                        <dd class="birthName">[08.07] 김영미</dd>
+	                        <dd class="birthTeam">오픈솔루션팀</dd>
+	                    </dl>
+	                </li> */
+		                var _li = document.createElement("li");
+		                _li.style.display = "none";
+	    	            _li.style.cursor = "pointer";
+	        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
+	        	        
+	        	        if (userPic == "") {
+	                    	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/images/kr/main/birth_none.png' width='32' height='32'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	        	        } else {
+	        	        	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/admin/ezOrgan/getPersonalInfo.do?fileName="+ userPic +"' width='32' height='32'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
+	        	        }
+	            	    
+	                	document.getElementById("userlist").appendChild(_li);
+
+	                	if (i >= (curPage * 6) && i < (curPage + 1) * 6) {
+		                    document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'block';
+	                	} else {
+	                    	document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'none';
+	                	}
+		            }
+		            curPage++;
+		            
+	    	        if (curPage >= totalPage) {
+	        	        curPage = 0;
+	            	}
+	    	        
+	            	if (totalCnt > EndCnt) {
+		                timer = window.setInterval("intervalList()", 5000);
+		            }
+	    	    } else {
+	            	document.getElementById("birthcont").style.display = "none";
+	            	document.getElementById("nodata_NewBirth").style.display = "";
+	        	}
+		    }
+
+		    function intervalList() {
+	    	    for (var i = 0; i < totalCnt; i++) {
+	        	    if (i >= (curPage * 6) && i < (curPage + 1) * 6) {
+	            	    document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'block';
+	            	} else {
+	                	document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'none';
+	            	}
+	        	}
+	    	    
+	        	curPage++;
+	        	
+	        	if (curPage >= totalPage) {
+		            curPage = 0;
+		        }
+	    	}
+
+	    	function moveBirth(page) {
+		        switch (page) {
+		            case "PREV":
+	    	            if (month != 1)
+	        	            month = month - 1;
+	            	    else
+	                	    month = 12;
+	                	break;
+	            	case "NEXT":
+		                if (month != 12)
+		                    month = Number(month) + 1;
+	    	            else
+	        	            month = 1;
+	            	    break;
+	        	}
+		        
+	        	if (month < 10 && String(month).length == 1)
+		            month = "0" + month;
+
+	        	if(CrossYN())
+		            document.getElementById("curMon").textContent = month;
+	        	else
+		            document.getElementById("curMon").innerText = month;
+	        	
+	        	curPage = 0;
+	        	getbirthUserList();
+	    	}
+	    	
+	    	function OpenUserInfo(pUserID) {
+		        var heigth = window.screen.availHeight;
+	        	var width = window.screen.availWidth;
+	        	var left = (width - 500) / 2;
+	        	var top = (heigth - 400) / 2;
+	        	
+	        	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	    	}
 		    
 		    function changeCompany(){
 		    	var TcompanyID = $("#selectCompany option:selected").attr("companyID");
 		    	var TdeptID = $("#selectCompany option:selected").val();
 		    	window.parent.parent.changeCompany(TcompanyID,TdeptID);
 		    }
+		    
+		    function schedule_get_holiday() {
+		        $.ajax({
+		    		type : "GET",
+		    		dataType : "text",
+		    		async : true,
+		    		url : "/ezSchedule/scheduleGetHoliday.do",
+		    		data : {
+		    			COMPANYID  : "VIEW"		    			
+		    		},
+		    		success: function(text){
+		    			XmlNodeText = text;
+			            XmlNode = loadXMLString(XmlNodeText);
+			            
+			            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+			                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
+			                    var issolar;
+			                    var holiday;
+			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+			                        issolar = "1";
+			                    else
+			                        issolar = "2";
+			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
+			                        holiday = true;			                    
+			                    else
+			                        holiday = false;
+			                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
+			                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+			                    }
+			                    else {                   	
+			                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+			                    }
+			                }
+			            }			            
+			            CalendarMiniView("CalendarMini");
+			            CalendarMiniDataSource(XmlNode);
+		    		}
+		    	});
+		    } 
 		</script>
 	</head>
+	<body style="background-color: white">	
+		<article class="rolling_info">
+        	<div class="rolling" id="featured">
+            	<c:choose>
+	            	<c:when test="${not empty sliderList}">
+	            		<c:forEach items="${sliderList}" var="slider">
+		            		<c:choose>
+		            			<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
+		            				<img src="${slider.imagePath}" style="width:280px;height:515px;cursor:pointer;" onclick="window.open('${slider.url }')" />
+		            			</c:when>
+		            			<c:otherwise> 
+									<img src="${slider.imagePath}" style="width:280px;height:515px;cursor:pointer;" onclick="window.open('http://${slider.url }')" />
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+	            	</c:when>
+	            	<c:otherwise>
+		            	<img src="/images/kr/main/rolling01.png" width="280" height="515" />
+		            	<img src="/images/kr/main/rolling02.png" width="280" height="515" />
+	            	</c:otherwise>
+	            </c:choose>
+            </div>
+            <dl class="info">
+            	<dt class="infoImg"><c:if test='${userPhoto == ""}'><img src="/images/kr/main/info_pic_none.png"  width="36px" height="36px" /></c:if><c:if test='${userPhoto != ""}'>${userPhoto}</c:if></dt>
+                <dd class="infoName">${displayName} ${title}</dd>
+                <dd class="infoTeam">${department}</dd>
+                <%-- <dd class="infoTeam"><spring:message code="main.t00016" /> ${lastLogin }</dd> --%>
+                <dd class="infoSet" onclick='goEnv();'><img src="/images/kr/main/info_set.png"></dd>
+            </dl>
+        </article>
+        <c:if test="${use_attitude == 'YES'}">
+			<article class="time_check">
+	           	<div id="timeinput" class="presentTime">
+	               	<p class="timeTit" id="todayTime"><spring:message code="main.t00023" /></p>
+					<div id="timeFlow" class="timeText"></div>
+			    </div>
+	            <div id="atti_area" class="main_time">
+	            	<dl class="timeCheckIn">
+	                	<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)"><spring:message code="ezPortal.pjg04" /></dd>
+	                </dl>
+	                <dl class="timeCheckOut">
+	                   	<dd id="outAttiBtn" class="out" type="A03" datetype="2" onClick="checkHoliday(this)"><spring:message code="ezPortal.pjg05" /></dd>
+	                </dl>
+		    	</div>
+			</article>
+        </c:if>
+        <!-- //time_check -->
+        <!-- countingIcon -->
+        <article class="countingIcon">
+          	<div class="countingIcon01">
+				<dl id="NewMail" onClick="btnSumming_click(this)">
+                	<dt class="iconImg"><img src="/images/kr/main/countingIcon01.png"></dt>
+                    <dd class="iconText"><spring:message code="main.t00017" /></dd>
+                    <dd class="iconCount_none" id="mailnum">0</dd>
+                </dl>
+                <dl id="AprSign" onClick="btnSumming_click(this)">
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon03.png"></dt>
+                    <%-- <dd class="iconText"><spring:message code="main.t00018" /></dd> --%>
+                    <dd class="iconText"><spring:message code="ezPortal.pgj03" /></dd>
+                    <dd class="iconCount_none" id="aprnum">0</dd>
+                </dl>
+                <dl id="Schedule" onClick="btnSumming_click(this)">
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon02.png"></dt>
+                    <dd class="iconText"><spring:message code="main.t00019" /></dd>
+                    <dd class="iconCount_none" id="schedulenum">0</dd>
+                </dl>
+			</div>
+            <div class="countingIcon02" ${hasWorkspace == true ? "style='width:258px'" : "" }>
+            	<dl id="Poll" onClick="btnSumming_click(this)">
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon05.png"></dt>
+                    <dd class="iconText"><spring:message code="main.t00020" /></dd>                        
+                    <dd class="${pollNum == 0 ? 'iconCount_none' : 'iconCount' }"><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></dd>
+                </dl>
+            	<c:if test="${isCircularUsed == 'Y'}">
+                <dl id="Circular" onClick="btnSumming_click(this)"> 
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon04.png"></dt>
+                    <dd class="iconText"><spring:message code="ezCircular.t1" /></dd>
+                    <dd class="iconCount_none" id="circularCnt">0</dd>
+                </dl>
+                </c:if>    
+                <!-- 협업 추가 --> 
+            	<c:if test="${hasWorkspace == true}">
+                <dl id="Workspace" onClick="btnSumming_click(this)"> 
+                    <dt class="iconImg"><img src="/images/kr/main/countingIcon04.png"></dt>
+                    <dd class="iconText">협업</dd>
+                    <dd class="iconCount_none" id="workspaceCnt">0</dd>
+                </dl>
+                </c:if>                                  
+            </div>    
+        </article>
+        <article class="birthday">
+			<div class="birthTit">
+               	<p class="birthText"><span id="curMon"></span><spring:message code='main.t1002' /></p>
+           	    <span class="birthRighttbtn" onclick="moveBirth('NEXT')"><img src="/images/kr/main/birthday_next.png"></span>
+                <span class="birthLeftbtn" onclick="moveBirth('PREV')"><img src="/images/kr/main/birthday_pre.png"></span>
+            </div>
+            <div id="birthcont">
+            	<ul class="birthList" id="userlist"></ul>
+            </div>
+            <div id="nodata_NewBirth" style="display:none;">
+            	<dl class="nodata">
+	            	<dt style="padding-top:33px"><img src="/images/kr/main/nodata.png"></dt>
+	            	<dd>"<spring:message code="main.t00026" />"</dd>
+            	</dl>
+            </div>
+		</article>
+		
+		<article class="bestEmployee">
+        	<p class="emPic"><img src="${filePath}"></p>
+            <dl class="emDL">
+            	<dt class="emTit"><spring:message code='main.t68' /></dt>
+            	<c:if test="${displayNameBirth != ''}">
+	                <dd class="emName">"${displayNameBirth}
+		                <c:choose>
+							<c:when test = "${!empty displayNameBirth && empty titleBirth}">"</c:when>
+							<c:when test = "${!empty titleBirth && displayNameBirth != ''}">${titleBirth}"</c:when>
+						    <c:otherwise></c:otherwise>
+						</c:choose>
+	                </dd>                
+	                <dd class="emTeam">${description}</dd>
+                </c:if>
+                <c:if test="${displayNameBirth == ''}">
+                	<dl class="nodata" style="margin-top:8px">
+		            	<dd>"<spring:message code="main.t00026" />"</dd>
+	            	</dl>
+                </c:if>
+            </dl>
+        </article>
+	</body>
+	<!-- 협업 연동 script -->
+	<c:if test="${hasWorkspace == true }">
+	    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js?ver=20180828150036"></script>
+	    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js?ver=20180828150036"></script>
+	    <script type="text/javascript">
+		    var g_UserID = "${userInfo.id}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
+		    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+		    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
+		    var feedListCount = 10;
+		    var g_bRayful = false;
+		    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
+		    
+		    //협업 카운트
+		    if (typeof (GetWorkspaceUserActLogCount) === "function") {
+		        GetWorkspaceUserActLogCount("workspaceCnt", 1);
+		    }
+		    
+		    var checkBrowser = function () {
+		    	var agent = navigator.userAgent.toLowerCase();
+		    	
+		    	if(agent.indexOf('msie') !== -1) {
+		    		return false;
+		    	} else {
+		    		return true;
+		    	}
+		    };
+		    
+			// ie 10일 경우는 다르게 해야겠음.		
+		    if(!checkBrowser()) {
+		    	console.log('in the bind Function.');
+				$("#workspaceCnt").bind("DOMSubtreeModified", function() {
+			    	var workspaceCnt = document.getElementById("workspaceCnt").innerHTML * 1;
+			    	if(workspaceCnt > 0) {
+		 		    	document.getElementById("workspaceCnt").classList.remove('iconCount_none');
+				    	document.getElementById("workspaceCnt").classList.add('iconCount');
+				    }
+			    });		    	
+		    } else {
+		    	console.log('in the MutationObserver.');
+			    var target = document.getElementById('workspaceCnt');
+			    
+				var observer = new MutationObserver(function(mutations) {
+					mutations.forEach(function(mutation) {
+	  			    var workspaceCnt = mutation.target.innerHTML * 1;
+			    	if(workspaceCnt > 0) {
+		 		    	document.getElementById("workspaceCnt").classList.remove('iconCount_none');
+				    	document.getElementById("workspaceCnt").classList.add('iconCount');
+			    	}
+			    	observer.disconnect();
+				  });    
+				});
+				
+				var config = { attributes: true, childList: true, characterData: true };
+				observer.observe(target, config);		    	
+		    }
+
+		</script>		
+	</c:if>	
 </html>

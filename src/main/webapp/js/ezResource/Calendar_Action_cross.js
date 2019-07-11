@@ -245,9 +245,9 @@ function datanameweek(year, month, day, contral)
     }
     else if(contral == "HEARDER")
     {
-        DateReslut = String(year) + strLang277 + " " + 
-        String(((month < 10) ? "0" + month : month)) + strLang279 + " " +
-        String(((day < 10) ? "0" + day : day)) + strLang278;
+        DateReslut = String(year) + "-" + 
+        String(((month < 10) ? "0" + month : month)) + "-" +
+        String(((day < 10) ? "0" + day : day));
     }
     else if (contral == "ADD")
     {
@@ -299,7 +299,8 @@ function tableListControl_Week()
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
         //document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
-        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " - " + weekEndDatename);
+        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
+        document.getElementById("divViewHeader").style.color = "";
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
         var b = 0;
@@ -582,9 +583,10 @@ function tableListControl_Week()
             	_mtd.style.borderTop = "0px";
             }
             if(title_name[k].split("/")[2] == "1")
-                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+                //_mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+            	_mtd.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
-                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작
@@ -615,7 +617,7 @@ function tableListControl_Week()
 
                     var _mtd2 = document.createElement("TD");
                    // _mtd2.style.width = "14.2%";
-                    if(weekdatename[i] == today) { 							// 날짜가 오늘이면
+                    if(weekdatename[i-1] == today) { 							// 날짜가 오늘이면
                     	_mtd2.setAttribute("class", "weektd_02 today");
                     }
                     else {
@@ -671,8 +673,10 @@ function tableListControl_Week()
                 var approveflag_name = "";
                 if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 1)
                     approveflag_name = "icon_02";
-                else
+                else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 0)
                     approveflag_name = "icon_01";
+                else 
+                	approveflag_name = "icon_03";
 
                 var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[1].split(":");
                 var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[1].split(":");
@@ -682,15 +686,18 @@ function tableListControl_Week()
                 var _tr = document.createElement("TR");
                 var _td = document.createElement("TD");
                 var _span = document.createElement("SPAN");
+                var _span2 = document.createElement("SPAN");
 
                 _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin-bottom:5px; white-space:nowrap; overflow:hidden;");
 
                 _td.rowSpan = "2";
-                var tdwidth = 3;
+                var tdwidth = 22;
                 if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
                     tdwidth = 18;
                 _td.style.width = tdwidth + "px";
-                _td.setAttribute("class", approveflag_name);
+                _td.style.verticalAlign = "top";
+                _span2.setAttribute("class", approveflag_name);
+                _td.appendChild(_span2);
                 _tr.appendChild(_td);
 
                 _td = document.createElement("TD");
@@ -806,8 +813,10 @@ function makeTable(xmldom, pNum, dayType) {
     var approveflag_name = "";
     if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 1)
         approveflag_name = "icon_02";
-    else
+    else if (getNodeText(xmldom.getElementsByTagName("approveFlag")[pNum]) == 0)
         approveflag_name = "icon_01";
+    else
+    	approveflag_name = "icon_03";
 
     var Content_Sp_Start = getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[1].split(":");
     var Content_Sp_End = getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[1].split(":");
@@ -816,15 +825,18 @@ function makeTable(xmldom, pNum, dayType) {
     var _tr = document.createElement("TR");
     var _td = document.createElement("TD");
     var _span = document.createElement("SPAN");
+    var _span2 = document.createElement("SPAN");
 
     _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin:0; white-space:nowrap; overflow:hidden;");
 
     _td.rowSpan = "2";
-    var tdwidth = 3;
+    var tdwidth = 22;
     if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
         tdwidth = 18;
     _td.style.width = tdwidth + "px";
-    _td.setAttribute("class", approveflag_name);
+    _td.style.verticalAlign = "top";
+    _span2.setAttribute("class", approveflag_name);
+    _td.appendChild(_span2);
     _tr.appendChild(_td);
 
     _td = document.createElement("TD");
@@ -995,12 +1007,7 @@ function tableListControl_today() {
         var TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "YES");
 
         var current_day = new Date(TodayDatename);
-        if (current_day.getDay() == "6")
-            document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
-        else if (current_day.getDay() == "0")
-            document.getElementById("divViewHeader").style.color = "#ee1c25";
-        else
-            document.getElementById("divViewHeader").style.color = "";
+        
 
        //baonk added    
         if (current_day.getFullYear() > 1800 && current_day.getFullYear() <= 2101) {               	                                             
@@ -1022,13 +1029,17 @@ function tableListControl_today() {
                     isholiday = true;                    
                 }
             }
-            if (isholiday) {            	
+            if (current_day.getDay() == "0" || isholiday)
             	document.getElementById("divViewHeader").style.color = "#ee1c25";
-            }
+            	//document.getElementById("divViewHeader").style.color = "";
+            else if (current_day.getDay() == "6")
+            	document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
+            	//document.getElementById("divViewHeader").style.color = "";
+            else
+                document.getElementById("divViewHeader").style.color = "black";
         }                
         //end
         
-
         setNodeText(document.getElementById("divViewHeader"),datanameweek(sz_Year, sz_Month + 1, sz_Date, "HEARDER"));
         var _Table = document.createElement("TABLE");
         _Table.setAttribute("class", "table_layout");
@@ -1069,9 +1080,11 @@ function tableListControl_today() {
             _TD.onselectstart = function () { return false; };
 
             if (title_name[k].split("/")[2] == "1")
-                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+                //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
-                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
@@ -1244,7 +1257,7 @@ function tableListControl_today() {
             _tr.appendChild(_th);
         }
         _table.appendChild(_tr);
-
+        tdcount = 0;
         for (var k = 0; k < title_name.length; k++) {
             for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
                 var s_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0]);
@@ -1264,9 +1277,11 @@ function tableListControl_today() {
                         _TD.onselectstart = function () { return false; };
 
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                            //_TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                        	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_no' style='margin-top:0px'></span>&nbsp;" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         else
-                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                            //_TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                        	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px'></span>&nbsp;" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);
@@ -1543,7 +1558,7 @@ function showTooltip_MouseOver(obj, e) {
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
-    tTh.style.background = "#edf4fd";
+    tTh.style.background = "#f1f8ff";
     tTh.style.border = "1px solid #d1ddec";
     setNodeText(tTh,GetAttribute(obj,"subject").split("&apos;").join("'"));
     tTr.appendChild(tTh);
@@ -1568,19 +1583,34 @@ function showTooltip_MouseOver(obj, e) {
     sTd.className = "individual";
 
     var sSpan = document.createElement("SPAN");
-    var _img = document.createElement("IMG");
+    //var _img = document.createElement("IMG");
     if (GetAttribute(obj,"approveFlag") == "1") {
-        _img.src = "/images/calendar/icon_resource_ok.png"
-        _img.style.verticalAlign = "bottom";
-        sSpan.appendChild(_img);
+        //_img.src = "/images/calendar/icon_resource_ok.png"
+        //_img.style.verticalAlign = "bottom";
+    	//sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_ok";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang307;
+        sTd.innerHTML += strLang323;
+    } else if (GetAttribute(obj,"approveFlag") == "0") {
+        //_img.src = "/images/calendar/icon_resource_no.png"
+        //_img.style.verticalAlign = "bottm";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_no";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
+        sTd.appendChild(sSpan);
+        sTd.innerHTML += strLang321;
     } else {
-        _img.src = "/images/calendar/icon_resource_no.png"
-        _img.style.verticalAlign = "bottm";
-        sSpan.appendChild(_img);
+    	 //_img.src = "/images/calendar/icon_resource_no.png"
+        //_img.style.verticalAlign = "bottm";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_refuse";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += strLang308;
+        sTd.innerHTML += strLang322;
     }
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);

@@ -26,7 +26,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezTask/jquery.lineProgressbar.js')}"></script>
 		
 		<style type="text/css">
-			   .ui-datepicker { font-size:9.5pt !important}
+			   .ui-datepicker { font-size:9.5pt !important;}
+			   .ui-widget-content {border:0px; border-left: 1px solid #eee; border-bottom: 1px solid #eee;}
+			   .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {border-color:#dedede; text-align: center; font-size:11px;}
+			   .ui-widget-header { border:0px; }
+			   .ui-datepicker td span, .ui-datepicker td a { padding-top:4px;}
 			   
 			   .css-class-to-highlight a{
 			   		color: black !important;
@@ -73,35 +77,35 @@
 		</style>
 		
 		<script type="text/javascript">
-			var userid = "${userInfo.id }";
-			var taskid = "${taskInfoVO.taskID }";
+			var userid = "<c:out value='${userInfo.id }'/>";
+			var taskid = "<c:out value='${taskInfoVO.taskID }'/>";
 			var contentpath = "${taskInfoVO.contentPath }";
 			var personContentpath = "${taskInfoVO.personContentPath }";
-			var creatorid = "${taskInfoVO.creatorID }";
-			var taskstatus = "${taskInfoVO.taskStatus }";
-			var completerate = "${taskInfoVO.completeRate }";
+			var creatorid = "<c:out value='${taskInfoVO.creatorID }'/>";
+			var taskstatus = "<c:out value='${taskInfoVO.taskStatus }'/>";
+			var completerate = "<c:out value='${taskInfoVO.completeRate }'/>";
 			var duration = 500;
-			var delayColor = "${delayColor }";
-			var completeColor = "${completeColor }";
-		    var tasktype = "${taskInfoVO.taskType }";
+			var delayColor = "<c:out value='${delayColor }'/>";
+			var completeColor = "<c:out value='${completeColor }'/>";
+		    var tasktype = "<c:out value='${taskInfoVO.taskType }'/>";
 		    var content = "${contentPerson }";
-		    var date = "${date}";
-		    var type = "${type}";
-		    var personid = "${taskInfoVO.personID }";
-		    var taskCommentListSize = "${taskCommentListSize }";
+		    var date = "<c:out value='${date}'/>";
+		    var type = "<c:out value='${type}'/>";
+		    var personid = "<c:out value='${taskInfoVO.personID }'/>";
+		    var taskCommentListSize = "<c:out value='${taskCommentListSize }'/>";
 		    var tempbody = "";
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var AttachLimit = 5;
-		    var hasTaskAttach = "${taskInfoVO.hasAttach}";
+		    var hasTaskAttach = "<c:out value='${taskInfoVO.hasAttach}'/>";
 		    var taskAttachList = "${taskAttachList }";
-		    var hasTaskWorkAttach = "${taskInfoVO.personAttach}";
+		    var hasTaskWorkAttach = "<c:out value='${taskInfoVO.personAttach}'/>";
 		    var taskWorkAttachList = "${taskWorkAttachList }";
-		    var useTodoMemo = "${useTodoMemo }";
-		    var startdate = "${taskInfoVO.startDate}";
-		    var repeatCount = "${repeatCount}";
-		    var createDate = "${taskInfoVO.createDate}";
-		    var repetition = "${repetition}";
-		    var endDate = "${taskInfoVO.endDate}";
+		    var useTodoMemo = "<c:out value='${useTodoMemo }'/>";
+		    var startdate = "<c:out value='${taskInfoVO.startDate}'/>";
+		    var repeatCount = "<c:out value='${repeatCount}'/>";
+		    var createDate = "<c:out value='${taskInfoVO.createDate}'/>";
+		    var repetition = "<c:out value='${repetition}'/>";
+		    var endDate = "<c:out value='${taskInfoVO.endDate}'/>";
 		    var dateList = "${dateList}";
 		    var completeRateList = "${completeRateList}";
 		    var statusList = "${statusList}";
@@ -111,10 +115,10 @@
 		    var statusArray = null;
 		    var repeatCntArray = null;
 		    //var backupCount = "${repeatCount}";
-		    var selecttab = "${tab}";
+		    var selecttab = "<c:out value='${tab}'/>";
 		    /*2018-05-17 구해안 userInfoID 추가*/
-		    var userInfoID = "${userInfo.id}";
-		    var companyID = "${taskInfoVO.companyID }";
+		    var userInfoID = "<c:out value='${userInfo.id}'/>";
+		    var companyID = "<c:out value='${taskInfoVO.companyID }'/>";
 		    
 /* 			function taskReadJson() {
 				
@@ -360,7 +364,7 @@
 				}
 				
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezSchedule/scheduleGetCumDeptID.do",
@@ -602,7 +606,7 @@
 			/*2018-05-17  구해안 의견 UI 수정*/
 			function getCommentList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezTask/getTaskCommentList.do",
@@ -668,8 +672,8 @@
 						taskCommentList += "<colgroup><col width='7%' /><col width='35%' /><col width='57%' /></colgroup>";
 						taskCommentList += "<tr style='height:58px'>";
 						taskCommentList += "<th style='font-weight: bold;'><spring:message code='ezTask.t2012' /></th>";
-						taskCommentList += "<td class='pos1' style='border:0px;padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;width: 84%;border-bottom:0px;'><textarea id='TextComment' maxlength='500' style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>";
-						taskCommentList += "<td style='border:0px;text-align:center;'><a class='imgbtn imgbck' style='vertical-align: middle;'><span onClick='add_comment()'><spring:message code='ezBoard.t321' /></span></a>";
+						taskCommentList += "<td class='pos1' style='border:0px;padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;width: 84%;border-bottom:0px;'><textarea id='TextComment' maxlength='500' style='width:98%;resize:none;overflow:auto;padding:7px;'></textarea></td>";
+						taskCommentList += "<td style='border:0px;text-align:center;'><a class='imgbtn imgbck' style='vertical-align: middle; height:44px;'><span onClick='add_comment()' style='height:100%; line-height:40px;'><spring:message code='ezBoard.t321' /></span></a>";
 						taskCommentList += "</td></tr>";
 						taskCommentList += "</table>";
 						taskCommentList += "</td>";
@@ -882,7 +886,7 @@
 			            selecttab = "4";
 			            
 /* 			            $.ajax({
-							type : "POST",
+							type : "GET",
 							dataType : "text",
 							async : false,
 							url : "/ezTask/taskRepGetList.do",
@@ -1428,7 +1432,7 @@
 			
 			function getTaskAttachList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezTask/getTaskAttachList.do",
 					dataType : "json",
 					data : {
@@ -1450,7 +1454,7 @@
 
 			function getTaskWorkAttachList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezTask/getTaskWorkAttachList.do",
 					dataType : "json",
 					data : {
@@ -1473,7 +1477,7 @@
 			function updateData(firstDayOfMonth) {
 				//Get new data from server			            		
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezTask/getRepTaskDateList.do",
@@ -1612,7 +1616,7 @@
 				//window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				//window.close();
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskRepGetList.do",
@@ -1736,9 +1740,9 @@
 		<div id="menu" style="margin-bottom:10px;">
 			<ul>
 				<c:if test="${userInfo.id == taskInfoVO.creatorID }">
-					<li id="delete"><SPAN onClick="check_delete()"><spring:message code='ezTask.t115' /></SPAN></li>
+					<li id="delete"><SPAN class="icon16 popup_icon16_delete" onClick="check_delete()"></SPAN></li>
 				</c:if>
-				<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
+				<li><span class="icon16 popup_icon16_print" onClick="beforeprint()"></span></li>
 			</ul>
 		</div>
 		<div id="close">
@@ -1751,7 +1755,7 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		</script>
 		
-		<div class="wrap_progress" style="height:245px;">
+		<div class="wrap_progress" style="height:245px;margin-top:14px">
 			<h4 style="-webkit-print-color-adjust:exact;print-color-adjust: exact;" title="${taskInfoVO.title }">${taskInfoVO.title }</h4>
 			<div style="">
 				<div class="circle progress_graph" style="width:30%; margin: 10px 20px; top:15px;">
@@ -1810,7 +1814,7 @@
 		<table id="taskInfo" class="layout">
 		 	<tr>
 				<td style="height:20px">
-					<table class="content">
+					<table class="content" style="margin-top:3px">
 						<tr>
 							<th><spring:message code='ezTask.t117' /></th>
 							<td style="white-space:nowrap">
@@ -1945,7 +1949,7 @@
 		 	<tr>
 				<td>
 					<div id="new_div_body" style="height: 450px; overflow-y: auto;">
-						<table class="content" id="new_list_body" style="text-align: center;">
+						<table class="content" id="new_list_body" style="text-align: center; margin-top:3px">
 							<tr >
 								<th style="width:  100px; text-align: center;"><spring:message code='ezTask.t1221' /></th>
 								<th style="width: 320px; text-align: center;"><spring:message code='ezTask.t200914' /></th>

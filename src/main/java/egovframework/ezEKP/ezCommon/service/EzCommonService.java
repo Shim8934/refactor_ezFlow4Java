@@ -52,6 +52,8 @@ public interface EzCommonService {
 	
 	public void createTblCompanyConfig() throws Exception;
 	
+	public void createReformFlagColumn() throws Exception;
+	
 	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception;
 
 	public void insertCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception;
@@ -59,6 +61,14 @@ public interface EzCommonService {
 	public void updateCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception;
 
 	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
+	
+	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception;
+	
+	public String selectMultiLoginTime(int tenantID, String userID) throws Exception;
+	
+	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception;
+	
+	public void createTblUserMultiLogin() throws Exception;
 
 	public void addMailToJMochaDistribution() throws Exception;
 	
@@ -85,13 +95,52 @@ public interface EzCommonService {
 	public void addJobMasterJobID() throws Exception;
 
 	public void createWebfolderToken() throws Exception;
+	
+	public void addJmochaMailGenenalPreviewMailImage() throws Exception;
 
 	public void addUserMasterPasswordUpdateDT() throws Exception;
 	
 	public void addUserMasterMailBoxQuota() throws Exception;
 
+	public void addPortalThemePortletIsFixed() throws Exception;
+
+	public void addHolidayFlag() throws Exception;
+	
+	public void addHolidayRepeat() throws Exception;
+	
+	public void createPortalThemePortlet() throws Exception;
+	
+	public void insertPortalThemePortletInitdata() throws Exception;
+	
 	public void addJournalFormDelFlag() throws Exception;
 
+	public void updateTaskUrl() throws Exception;
+
+	public void addPortalPortletUserPortletUsed() throws Exception;
+
+	public void addPortalPortletUserThemeId() throws Exception;
+	
+	public void addTblPortalThemeUserIsDefault() throws Exception;
+
 	public void updateListOptionData() throws Exception;
+
+	public void addQuickLinkLinkOrder() throws Exception;
+	
+	public void addComCloseCompanyId() throws Exception;
+
+	public void addWebfolderTotalLimit() throws Exception;
+	
+	public void addMsgInMailSearch() throws Exception;
+
+	public void addFormVersion() throws Exception;
+
+	public void addMemoExtensionColumns() throws Exception;
+
+	public void addAddJobMasterProxy() throws Exception;
+
+	public void createAttitudeAnnual() throws Exception;
+
+	public void addThemeContentLang() throws Exception;
+
 }
 

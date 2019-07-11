@@ -405,7 +405,9 @@ function save_schedule(pageFrom)
 	    alert(strLang18);
 	    if(pageFrom == 'Portal'){
 	    	try { window.opener.location.reload(); } catch (e) { }
-	    }else{
+	    } else if (pageFrom == 'left'){
+	    	try { window.opener.parent.frames['right'].RefreshView(); } catch (e) { }
+	    } else{
 	    	try { window.opener.RefreshView() } catch (e) { }
 	    }
 	    
@@ -417,7 +419,7 @@ function CheckPreviously(timeCheck) {
     var rtv = false;
 
     $.ajax({
-		type : "POST",
+		type : "GET",
 		dataType : "text",
 		async : false,
 		url : "/ezSchedule/scheduleGetRegi.do",
@@ -451,7 +453,7 @@ function checkFontInfo(str)
 		
     if((str.substring(0,3)).toUpperCase() == "<P>")
     {
-        str = "<FONT size=2 face=굴림>" + str + "</FONT>";
+        str = "<FONT size=2 face=malgun gothic>" + str + "</FONT>";
     }
     return str;
 }

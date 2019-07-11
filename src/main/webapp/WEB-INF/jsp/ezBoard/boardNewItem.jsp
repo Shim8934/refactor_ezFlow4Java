@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html style="height: 99%;">
+<html style="height: 99%;" ondragover="bodydragover(event)">
 	<head>
 		<c:choose>
 			<c:when test="${mode == 'new' || mode == 'new1' || mode == 'boardAttach' || mode == 'boardContent' || url != ''}">
@@ -53,10 +53,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 	    <script type="text/javascript">
 		    var pUploadFilePath = "${uploadFilePath}";
-		    var pBoardID = "${boardID}";
+		    var pBoardID = "<c:out value='${boardID}'/>";
 		    var pBoardName = "${boardInfo.boardName}";
-		    var pMode = "${mode}";
-		    var orgMode = "${mode}";
+		    var pMode = "<c:out value='${mode}'/>";
+		    var orgMode = "<c:out value='${mode}'/>";
 		    var pModeOld = "";
 		    var MHTLoadComplete = "";
 		    var SSUserID = "${userInfo.id}";
@@ -86,7 +86,7 @@
 		    var strWriterFakeName = "${strWriterFakeName}";
 		    var pAttachListXml = "";
 		    var AttachLimit = "${boardInfo.attachSizeLimit}";
-			var pReservedItem = "${reservedItem}";
+			var pReservedItem = "<c:out value='${reservedItem}'/>";
 		    var strUserRank = "${userInfo.title1}";
 		    var strUserRank2 = "${userInfo.title2}";
 		    var strUserPhone = "${userInfo.phone}";
@@ -293,7 +293,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var settime = "${startDateTime}";
@@ -311,7 +311,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
        			
@@ -796,13 +796,13 @@
 		                if (document.getElementById("chk_reservation").checked == false) {
 		                    if (strItemID == "") {
 		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }
 		                    if (pMode == "reply") {
 		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID + "&itemTreeID=" + strUpperItemIDTree, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + strUpperItemIDTree, false);
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }
@@ -814,7 +814,7 @@
 		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
 		                if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 		                    xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
 		                }
@@ -824,7 +824,7 @@
 		            }
 		            
 		            try {
-						window.opener.leftCountRf();
+						window.opener.leftCountRf(pBoardID);
 					} catch (e) {
 					}
 					
@@ -877,7 +877,35 @@
 			            }
 					} catch (e) {
 					}
-
+					try {
+						if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
+							parent.opener.getNoticePortletList();
+						}
+						
+						// 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener != null && parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
+			            	}
+			            }
+						
+						if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
+							parent.opener.getBoardList_NewBoardSTD();
+						}
+					} catch (e) {
+						
+					}
+					
+					
 		            window.close();
 		        } else {
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS")
@@ -910,7 +938,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var settime = "${startDateTime}";
@@ -945,7 +973,7 @@
 		                            changeYear: true,
 		                            autoSize: true,
 		                            showOn: "both",
-		                            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		                            buttonImage: "/images/ImgIcon/calendar-month.png",
 		                            buttonImageOnly: true
 		                        });
 		                        var NowDate2 = new Date();
@@ -976,14 +1004,14 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		        if (gubun != "2")
-		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		            else {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }
@@ -1290,19 +1318,24 @@
 		                }
 		                attachxml = strRet;
 		            } else {
-		            	    var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
-			                    var temppath = pUrl;
-			                    temppath = temppath.substring(34, temppath.length);
-			                    var orgfile = temppath.split("/");
-			                    orgfile = orgfile[orgfile.length - 1];
-			                    xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
-			                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
-			                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
-			                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
-			                        xmlstring += "<TYPE>APPROVAL</TYPE>";
-			                    else
-			                        xmlstring += "<TYPE>APPROVALG</TYPE>";
-			                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
+		            	var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+	                    var temppath = pUrl;
+	                    temppath = temppath.substring(34, temppath.length);
+	                    var orgfile = temppath.split("/");
+	                    orgfile = orgfile[orgfile.length - 1];
+	                    
+	                    var orgFileList = orgfile.split(".");
+	                    var orgFileType = orgFileList[orgFileList.length - 1];
+		                    
+		               if (orgFileType == "hwp"){
+		            	   	xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
+		                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+		                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
+		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
+		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
+		                    else
+		                        xmlstring += "<TYPE>APPROVALG</TYPE>";
+		                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
 			               
 			                xmlstring += "</ROWS></DATA>";
 			                xmldom2 = loadXMLString(xmlstring);
@@ -1321,14 +1354,17 @@
 			                    //}
 			                    
 			                    strRet += "tempUploadFile/" + filepath + "|";
+				                attachxml = strRet;
 			                }
-			                attachxml = strRet;
+		               } else {
+			                xmlstring += "</ROWS></DATA>";
+		               }
 		            }
 		        }
 		    }
 		    function GetBoardInfo() {
 		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
+		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp_boardinfo.send();
 		        if (xmlhttp_boardinfo.status == 200) {
 		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);
@@ -1636,7 +1672,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
+		                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&bType=SELECT";
 		                        return;
 		                    }
 		                }
@@ -1644,7 +1680,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "/ezBoard/newBoardItem.do?boardID=" + ret[0] + "&mode=new&boardNM=" + ret[1] + "&bType=SELECT";
+		                        document.location.href = "/ezBoard/newBoardItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardNM=" + ret[1] + "&bType=SELECT";
 		                        return;
 		                    }
 		                }
@@ -1697,7 +1733,7 @@
 	                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
 	                        return;
 	                    else {
-	                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
+	                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&bType=SELECT";
 	                        return;
 	                    }
 	                }
@@ -1705,7 +1741,7 @@
 	                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
 	                        return;
 	                    else {
-	                        document.location.href = "/ezBoard/NewBoardItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+	                        document.location.href = "/ezBoard/NewBoardItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
 	                        return;
 	                    }
 	                }
@@ -2052,7 +2088,7 @@
 			</script>
 	    </c:if>
 	</head>
-	<body class="popup" style="height: 97%;" ondragover="bodydragover(event)">
+	<body class="popup" style="height: 97%;">
 	    <table class="layout" style="width: 100%;">
 	        <tr>
 	            <td style="height: 20px">
@@ -2064,7 +2100,7 @@
 			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t98' /></span></li>
+			                        <li><span onclick="SaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    	<c:if test="${boardInfo.guBun != '3'}">

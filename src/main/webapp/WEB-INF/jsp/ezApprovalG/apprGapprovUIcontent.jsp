@@ -1,10 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprGContent.js')}"></script>
+		<!-- FormBuilder -->
+		<c:if test="${isReform}">
+			<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/reform/reformUseProcessor.js')}"></script>
+			<c:if test="${!empty reformFunctionUrl}">
+				<script type="text/javascript" src="${util.addVer(reformFunctionUrl)}"></script>
+			</c:if>
+		</c:if>
+		<!-- FormBuilder end -->
 	    <style>
 	        P { margin-top: 0px;margin-bottom: 0px; }
 	        .viewbox {
@@ -23,7 +33,7 @@
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
-	            var useAllowTextSelection = "${useAllowTextSelection}";
+	            var useAllowTextSelection = "<c:out value ='${useAllowTextSelection}'/>";
 	            
 	            try {
 	            	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
@@ -58,9 +68,14 @@
 	            return ret;
 	        };
 // 	        var XmlBodyATT = createXmlDom();
-	        var pEditor = "${editor}";
+	        var pEditor = "<c:out value ='${editor}'/>";
 	        var isConDoc = false;
 	        var isEditor = false;
+	        
+			// FormBuilder
+			var bodyInnerHtml = "";
+			// FormBuilder end
+	        
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
@@ -70,10 +85,22 @@
 	            {}
 	            
 	            try {
+	            	reformUseProc.onLoadHandler();
+	            } catch (e) {}
+	            
+	            try {
 // 		        	$('#div_Content #body').css('overflow', 'auto');
 		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
 		        } catch (e)
 		        { }
+		        
+	            try {
+			        if (document.getElementById('attitude_annual_conn')) { //근태관리 연동양식일 경우
+						parent.document.getElementById('btnEdit').style.display = "none";
+			        }
+	            } catch (e)
+	            { }
+		        
 	        };
 	        
 	        function onKeyDownEvent(e, obj, Maxlength) {
@@ -149,19 +176,19 @@
 	            else
 	                return true;
 	        }
-	        function SelectOnchange(obj) {
-	            for (var i = 0; i < obj.options.length; i++) {
-	                obj.options[i].setAttribute("check", "1");
-	            }
-	            obj.options[obj.selectedIndex].setAttribute("check", "2");
-	        }
-	        function CheckBoxOnclick(obj) {
-	            obj.removeAttribute("checked");
-	            if (obj.checked)
-	                obj.setAttribute("check", "1");
-	            else
-	                obj.setAttribute("check", "0");
-	        }
+	        // function SelectOnchange(obj) {
+	        //     for (var i = 0; i < obj.options.length; i++) {
+	        //         obj.options[i].setAttribute("check", "1");
+	        //     }
+	        //     obj.options[obj.selectedIndex].setAttribute("check", "2");
+	        // }
+	        // function CheckBoxOnclick(obj) {
+	        //     obj.removeAttribute("checked");
+	        //     if (obj.checked)
+	        //         obj.setAttribute("check", "1");
+	        //     else
+	        //         obj.setAttribute("check", "0");
+	        // }
 	        function Conent_contentEditable(obj) {
 	            try {
 	                var TDRows = obj.getElementsByTagName("TD");
@@ -280,6 +307,10 @@
 	                    parent.OrgHtml = _htmlcontent;
  	                    BodyTagsDisabled(document.getElementById('div_Content'));
  	                    parent.FieldsAvailable();
+ 	                    
+ 						<c:if test="${isReform}">
+ 							validateAllTextArea(document.getElementById('div_Content'));
+ 						</c:if>
 	                }
 	            } catch (e)
 	            { }
@@ -297,12 +328,16 @@
 	                    
 	                    var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                    for (var i = 0; i < SelectRows.length; i++) {
-	                        SelectRows.item(i).onchange = function () { SelectOnchange(this); };
+	                        SelectRows.item(i).onchange = SelectOnchange;
 	                    }
 	                    var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                    for (var i = 0; i < CheckRows.length; i++) {
-	                        if (CheckRows.item(i).type == "checkbox")
-	                            CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
+	                        if (CheckRows.item(i).type == "checkbox") {
+								CheckRows.item(i).onchange = CheckBoxOnclick;
+								CheckRows.item(i).ondblclick = CheckBoxOnDblclick;
+							} else if (CheckRows.item(i).type == "radio") {
+								CheckRows.item(i).onchange = RadioOnClick;
+							}
 	                    }
 	                    
 	                    var Body_innerHTML = "";
@@ -333,18 +368,33 @@
 	                        parent.modifiOrgBody = BODYTag.innerHTML;
 	                    }
 	                    if (document.getElementById("body") != null) {
-	                        if (BODYTag.getAttribute("editor") == null) {
-	                            isEditor = true;
-	                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                        }
-	                        else {
-	                            try {
-	                                Conent_contentEditable(document.getElementById('body'));
-	                            } catch (e) { }
-	                        }
+	                    	<c:choose>
+	                    		<c:when test="${isReform}">
+	                    			validateAllTextArea(BODYTag);
+	                    			bodyInnerHtml = BODYTag.innerHTML;
+	                    			BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/approveHtml.do?formId=" + parent.pFormID + "' frameborder='0'></ifrmae>";
+	                    			
+	                    			
+	                    		</c:when>
+	                    		<c:otherwise>
+			                    	if (BODYTag.getAttribute("editor") == null) {
+			                            isEditor = true;
+			                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
+			                        }
+			                        else {
+			                            try {
+			                                Conent_contentEditable(document.getElementById('body'));
+			                            } catch (e) { }
+			                        }
+		                    	</c:otherwise>
+	                    	</c:choose>
 	                    }
 	                }
 	                else {
+	                	<c:if test="${isReform}">
+		                	iframe_content.editComplete();
+	                	</c:if>
+	                	
 	                    DocTitleObj.innerHTML = ConvertCharToEntityReference(GetDocTitle());
 	                    if (document.getElementById("body") != null) {
 // 	                        var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
@@ -362,14 +412,38 @@
 	                                     _checkbox[i].removeAttribute("checked");
 	                             }
 	                         }
-	                         var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
+	                    	 
+	                    	 var HtmlContent = "";
+	                    	 
+							<c:choose>
+								<c:when test="${isReform}">
+									var documentCloneNode = iframe_content.document.cloneNode(true);
+									var datepickerDivElement = documentCloneNode.getElementById("ui-datepicker-div");
+									
+									if (datepickerDivElement != null) {
+										datepickerDivElement.parentNode.removeChild(datepickerDivElement);
+									}
+									
+									HtmlContent = documentCloneNode.body.innerHTML;
+								</c:when>
+								<c:otherwise>
+									HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
+								</c:otherwise>
+							</c:choose>
+	                    	 
 	                         BODYTag.innerHTML = HtmlContent;
-	                         document.getElementById("body").style.paddingLeft = "10px";
-	                         document.getElementById("body").style.paddingRight = "15px";
+	                         // 기존 편집모드에 있던게 줄어들거나 하여 삭제
+	                         // 그리고 패딩을 고정으로 박는 방법은 좀 아닌거같음
+	                         //document.getElementById("body").style.paddingLeft = "10px";
+	                         //document.getElementById("body").style.paddingRight = "15px";
 	                         document.getElementById("body").innerHTML = BODYTag.innerHTML;
 	                     }
 	                     BodyTagsDisabled(document.getElementById('div_Content'));
 	                     document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
+	                     
+	                     <c:if test="${isReform}">
+		                     validateAllTextArea(document.getElementById('div_Content'));
+	                     </c:if>
 	                }
 	            }
 	            catch (e) {
@@ -573,6 +647,18 @@
 	                if (inputRows.item(i).disabled)
 	                    inputRows.item(i).disabled = false;
 	            }
+	            
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (element.disabled) {
+						element.disabled = false;
+					}
+				}
+	            
 	            return HtmlObject;
 	        }
 	
@@ -587,8 +673,37 @@
 	                if (!inputRows.item(i).disabled)
 	                    inputRows.item(i).disabled = true;
 	            }
+	            
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (!element.disabled) {
+						element.disabled = true;
+					}
+				}
+	            
 	            return HtmlObject;
 	        }
+	        
+	        // FormBuilder textarea 제대로 나오도록 수정
+	        function validateAllTextArea(targetElement) {
+            	var textAreaElements = targetElement.getElementsByTagName("textarea");
+            	
+            	for (var i = 0; i < textAreaElements.length; i++) {
+            		validateTextArea(textAreaElements[i]);
+            	}
+	        }
+	        
+	        function validateTextArea(element) {
+	        	if (element.hasAttribute("value")) {
+        			element.value = element.getAttribute("value");
+        			element.innerHTML = element.value;
+        		}
+	        }
+			// FormBuilder - end
 	
 	        function DocumentBodySetAttribute(AttributeName, AttributeValue) {
 	            try {

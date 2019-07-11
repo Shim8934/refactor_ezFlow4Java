@@ -17,6 +17,11 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<style>
+			.selectedTR td:not(:first-child), .unselectedTR td:not(:first-child) {overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+			.selectedTR {background-color: #f1f8ff; cursor:pointer;}
+			.unselectedTR:hover {background-color: #f4f5f5; cursor:pointer;}
+		</style>
 		<script type="text/javascript" language="javascript">
 			var CurPage = 1;
 			var totalPage = "${totalPage}";
@@ -44,7 +49,7 @@
 						changeYear: true,
 						autoSize: true,
 						showOn: "both",
-						buttonImage: "/images/ImgIcon/calendar-month.gif",
+						buttonImage: "/images/ImgIcon/calendar-month.png",
 						buttonImageOnly: true,
 						maxDate: 0,
 						onSelect: function(selected) {
@@ -56,13 +61,19 @@
 						changeYear: true,
 						autoSize: true,
 						showOn: "both",
-						buttonImage: "/images/ImgIcon/calendar-month.gif",
+						buttonImage: "/images/ImgIcon/calendar-month.png",
 						buttonImageOnly: true,
 						maxDate: 0,
 						onSelect: function(selected) {
 							$('#startDatepicker').datepicker("option", "maxDate", selected)
 						}
-					});    	    	
+					});
+					
+					var nowDate = new Date();
+					$("#startDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+					$("#startDatepicker").datepicker('setDate', nowDate);
+					$("#endDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+					$("#endDatepicker").datepicker('setDate', nowDate);
 				});
 				
 				
@@ -187,8 +198,10 @@
 			        for (var i = 0 ; i < document.getElementsByName("chk").length ; i++) {
 			            if (document.getElementsByName('checkbox').item(0).checked == true) {
 			                document.getElementsByName("chk").item(i).checked = true;
+			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "selectedTR";
 			            } else {
 			                document.getElementsByName("chk").item(i).checked = false;
+			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "unselectedTR";
 			            }
 			        }
 			    }
@@ -203,7 +216,9 @@
 			        alert(strLang6); 
 			        return;
 			    }
-			    var ret = confirm(CheckBoxArr.length + strLang7);
+			    //var ret = confirm(CheckBoxArr.length + strLang7);
+			    //var ret = confirm(strLangKHJ01 + CheckBoxArr.length + strLangKHJ02);
+			    var ret = confirm(strLangKHJ03.replace("%s", CheckBoxArr.length));
 			    
 				if (ret) {
 				    //if (CrossYN()) {
@@ -263,7 +278,7 @@
 			    
 		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
 		        try { OpenWin.focus(); } catch (e) { }			    
 			}
 			
@@ -301,7 +316,8 @@
 			}
 			
 			function ShowUserInfo(UserID) {
-			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=600px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
+				event.stopPropagation();
+			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=800px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
 			}
 			
 			function selectCompanyID() {
@@ -322,7 +338,7 @@
                 var strtext;
                 var PagingHTML = "";
                 document.getElementById("tblPageRayer").innerHTML = "";
-                document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang23 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang24 + "]";
+                document.getElementById("TitleInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
                 strtext = "<div class='pagenavi'>";
                 PagingHTML += strtext;
                 var pageNum = CurPage;
@@ -401,6 +417,7 @@
             }
             
             function goToPageByNum(Value) {
+            	document.getElementById("checkAll").checked = false;
             	CurPage = Value;
             	retireUserList();
             }
@@ -456,6 +473,8 @@
 			
 			//검색 버튼 클릭시 이벤트
 		    function search() {
+				CurPage = 1;
+				
 				if ($('#startDatepicker').val() == "" && $('#endDatepicker').val() == "" && $('#searchKeyword').val() == "") {
  					alert("<spring:message code='ezOrgan.0hun04' />");
  					return ;
@@ -474,31 +493,31 @@
 				 retireUserList();
 		    }
 			
-			//**/ 초기화버튼
+			//**/ 날짜 초기화버튼
 			function reset() {
 				$('#startDatepicker').val('');				
 				$('#endDatepicker').val('');				
-				$('#searchKeyword').val('');
 			}
 			
 			 //**/ 새로고침 클릭시 이벤트
 		    function reload() {
-		    	retireUserList();
+				document.getElementById("checkAll").checked = false;
+				retireUserList();
 		    }
 			 
 			 //**/ 퇴직자 검색
 			function retireUserList() {
-				 $.ajax ({
+				$.ajax ({
 					 type : "POST",
 					 async : false,
 					 dataType : "json",
 					 url : "/admin/ezOrgan/getRetireUserList.do",
 					 data : {
 						 "page" : CurPage,						 
-						 "searchStartDate" : $('#startDatepicker').val(),
-						 "searchEndDate" : $('#endDatepicker').val(),
-						 "searchKeycode" : $('#searchKeycode').val(),
-						 "searchKeyword" : $('#searchKeyword').val(),
+						 "searchStartDate" : $('#startDatepicker').is(":enabled")? $('#startDatepicker').val() : "",
+						 "searchEndDate"   : $('#endDatepicker').is(":enabled")? $('#endDatepicker').val() : "",
+						 "searchKeycode"   : $('#searchKeycode').val(),
+						 "searchKeyword"   : $('#searchKeyword').val(),
 						 "searchCompanyID" : $("#ListCompany").val()
 					 },
 					 success : function(data) {
@@ -516,31 +535,35 @@
 							 html += "</tr>";
 						 } else {
 							 data.list.forEach(function(i,v){
-								html += "<tr>";
-								html += "    <td width='20' style='padding:0'>";
-								html += "        <input type='checkbox' name='chk' id='chk' value='" + i.cn + "'/>";
+								html += "<tr class='unselectedTR' onclick='clickRow(event)' ondblclick=ShowUserInfo('" + i.cn + "')>";
+								html += "    <td width='30px'>";
+								html += "        <input type='checkbox' onclick='selectCheckBox()' name='chk' id='chk' value='" + i.cn + "'/>";
 								html += "    </td>";
 								
 								if (lang == '' || lang == 1) {
+									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
+									html += "<td style='cursor:pointer'>" + i.displayName + "</td>";
 									html += "<td>" + (i.description != null ? i.description : " ") + "</td>";
-									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName + "</td>";
 									html += "<td>" + (i.title  != null ? i.title : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute10  != null ? i.extensionAttribute10 : " ")+ "</td>";
 								} 
 								
 								else if (lang != '' || lang != 1) {
+									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
+									html += "<td style='cursor:pointer'>" + i.displayName2 + "</td>";
 									html += "<td>" + (i.description2 != null ? i.description2 : " ") + "</td>";
-									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName2 + "</td>";
 									html += "<td>" + (i.title2  != null ? i.title2 : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute102  != null ? i.extensionAttribute102 : " ")+ "</td>";
 								}
 								
+								html += "<td>" + (i.mobile != null ? i.mobile : " ") + "</td>";
 								html += "<td>" + i.updateDT + "</td>";
 								html += "</tr>";
 							 });
 						 }
 						 
 	    				$("#mainListBody").empty().append(html);
+						scroll();
 					 },
 					 error : function(error) {
 						 alert("<spring:message code='ezOrgan.0hun08' />");
@@ -554,92 +577,158 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 244;
-
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+		    	/* var height = document.documentElement.clientHeight - 244;
+		    	
+		    	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
 	        	
 	        	document.getElementById("contentlist").style.height = height + "px";
+	        	 */
+	        	document.getElementById("ListBody").style.height = (document.documentElement.clientHeight - 300) + "px"; 
 	        }
 		    
 		    $(function(){
 	    		windowResize();
 		    });
-
+			
+			var usepostDate = false;
+			function dateSearch() {
+				if (usepostDate){
+					usepostDate = false;
+						$("#startDatepicker").datepicker('disable');
+						$("#endDatepicker").datepicker('disable');
+				} else {
+					usepostDate = true;
+						$("#startDatepicker").datepicker('enable');
+						$("#endDatepicker").datepicker('enable');
+				}
+			}
+			
+			function clickRow(event) {
+				var currentRow = event.currentTarget;
+				var crrClass   = currentRow.className;
+				
+				var tableList  = document.getElementById("mainListBody");
+				var length = tableList.rows.length;
+				
+				for (var i = 0; i < length; i++) {
+					tableList.rows[i].className = "unselectedTR";
+					tableList.rows[i].firstElementChild.firstElementChild.checked = false;
+				}
+					
+				currentRow.className = "selectedTR";
+				currentRow.firstElementChild.firstElementChild.checked = true;
+			}
+			
+			function selectCheckBox() {
+				event.stopPropagation();
+				
+				var checkboxElmt = event.currentTarget;
+				var currentRow   = checkboxElmt.parentElement.parentElement;
+				
+				if (checkboxElmt.checked) {
+					currentRow.className = "selectedTR";
+				}
+				else {
+					currentRow.className = "unselectedTR";
+				}
+			}
+			
+			function scroll() {
+				var headerWidth = document.getElementById("mainListHeader").clientWidth;
+				var bodyWidth   = document.getElementById("mainListBody").clientWidth;
+				var scrollWidth = headerWidth - bodyWidth;
+				
+				var scrollElmt = document.getElementById("forScroll");
+				if (scrollElmt) {
+					scrollElmt.parentNode.removeChild(scrollElmt);
+				}
+				
+				if (scrollWidth > 0) {
+					var headerTr = document.getElementById("mainListHeaderTr");
+					var thElmt   = document.createElement("th");
+					thElmt.setAttribute("id", "forScroll");
+					thElmt.style.width = "8px";
+					
+					headerTr.appendChild(thElmt);
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezOrgan.t311'/><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
-		<div id="mainmenu"> <!-- mainmenu -->    
-   		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-   			    <select id="ListCompany" onChange="selectCompanyID()">
-   		        	<c:forEach var="item" items="${companylist}">
-   	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-   	            	</c:forEach>
-   			    </select><br /><br />
-   		    </span>
-   		</div>
+		<h1>
+			<spring:message code='ezOrgan.t311'/><span id="TitleInfo"></span>
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+	        	<c:forEach var="item" items="${companylist}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+		    </select>
+		</h1>
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${dotNetIntegration != 'YES'}">
-		    	<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
-		    	</c:if>
-		        <li><span onClick="Delete_onclick()"><spring:message code='ezOrgan.t142'/></span></li>
+		    		<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
+		    	</c:if>		        
 		        <c:if test="${dotNetIntegration != 'YES'}">
-                <li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
+                	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
                 </c:if>
+                <li><span class="icon16 icon16_delete" onClick="Delete_onclick()"></span></li>
+                <li><span class="icon16 icon16_refresh" onClick="reload()"></span></li>
 		  	</ul>
 		</div>
-		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
-		<tr>
-			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-				<span id="topmenu" style="width: 500px"><spring:message code='ezOrgan.0hun01'/> : &nbsp;
-					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
-					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
-				</span> 
-				&nbsp;&nbsp;
-				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/>: &nbsp;
-					<select id="searchKeycode" style="height:24px"> 
+		<table class="content">
+			<tr>
+				<th><spring:message code='ezStatistics.t1062'/></th>
+				<td>
+					<select id="searchKeycode" style="height:24px; margin-top: 2px; vertical-align: middle;"> 
 						<option value="userName"><spring:message code='ezOrgan.t67'/></option>
 						<option value="deptName"><spring:message code='ezOrgan.t68'/></option>
 						<option value="userId"><spring:message code='ezOrgan.t218'/></option>
 					</select>
-					<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
-					<a class="imgbtn" style="height:22px">
+					<input type="text" id="searchKeyword" style="width: 150px; margin-top: 2px; vertical-align: middle;" onKeyDown="return keyword_onkeydown(event)"/>
+					<a class="imgbtn imgbck" style="height:22px; margin-top: 2px;">
 						<span onclick="search();"><spring:message code='ezOrgan.t101'/></span>
 					</a>
-					<a class="imgbtn" style="height:22px">
-						<span onclick="reset();"><spring:message code='ezOrgan.0hun02'/></span>
-					</a>
-					<a class="imgbtn" style="height:22px">
-						<span onclick="reload();"><spring:message code='ezOrgan.0hun03'/></span>
-					</a>
-				</span> 
-			</td>
-		</tr>
+				</td>
+			</tr>
+			<tr>
+				<th><spring:message code='ezOrgan.0hun01'/></th>
+				<td>
+					<input type="checkbox" id="usepostdate" onclick="dateSearch()"><label for="usepostdate" style="margin-top: 2px; line-height: 26px;"><spring:message code='ezEmail.t654'/></label>
+					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/> ~ 
+					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/>
+				</td>
+			</tr>
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<div id="contentlist" style="width:100%; height: 653px; overflow: auto;">
-			<div>
-				<table class="mainlist" style="width:100%">
-					<thead style> 
-				    	<tr>
-				      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick="funCheckBox('set','a')" /></th>
-				      		<th style="width:150px;"><spring:message code='ezOrgan.t68'/></th>
-				      		<th style="width:100px;"><spring:message code='ezOrgan.t67'/></th>
-				      		<th style="width:100px;"><spring:message code='ezOrgan.t69'/></th>
-				      		<th style="width:100px;"><spring:message code='ezOrgan.t1500'/></th>
-				      		<th><spring:message code='ezOrgan.t313'/></th>
-				   		</tr>
-			   		</thead>
-				   	<!-- list -->
-			   		<tbody id="mainListBody" style="overflow: auto;"></tbody>
+		
+		<div id="contentlist" style="width: 100%; margin-top: 5px; overflow: hidden;">
+			<div id="ListHeader">
+				<table id="mainListHeader" class="mainlist" style="width:100%">
+					<thead>
+						<tr id="mainListHeaderTr">
+							<th style="width: 30px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t218'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t67'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t68'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t69'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t1500'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t96'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t313'/></th>
+						</tr>
+					</thead>
 				</table>
-			</div>		
+			</div>
+			
+			<div id="ListBody" style="height: 600px; overflow-y:auto;">
+				<table id="mainListBody" class="mainlist" style="width:100%;"></table>
+			</div>
 		</div>
+		
      	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
      	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
 <!--      	<br/> -->

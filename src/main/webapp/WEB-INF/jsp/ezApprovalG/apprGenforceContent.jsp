@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
 	    <title></title>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprGContent.js')}"></script>
 	    <style>
 	    	.viewbox {
 				border:0;
@@ -50,7 +52,7 @@
 	        var DocTitleObj;
 	        var DocTitleHTML;
 	        var _htmlcontent;
-	        var pEditor = "${editor}";
+	        var pEditor = "<c:out value ='${editor}'/>";
 	        var isEditor = false;
 	
 	        window.onload = function () {
@@ -142,20 +144,20 @@
 	                return true;
 	        }
 	
-	        function SelectOnchange(obj) {
-	            for (var i = 0; i < obj.childNodes.length; i++) {
-	                obj.childNodes.item(i).setAttribute("check", "1");
-	            }
-	            obj.childNodes.item(obj.selectedIndex).setAttribute("check", "2");
-	        }
+	        // function SelectOnchange(obj) {
+	        //     for (var i = 0; i < obj.childNodes.length; i++) {
+	        //         obj.childNodes.item(i).setAttribute("check", "1");
+	        //     }
+	        //     obj.childNodes.item(obj.selectedIndex).setAttribute("check", "2");
+	        // }
 	
-	        function CheckBoxOnclick(obj) {
-	            obj.removeAttribute("checked");
-	            if (obj.checked)
-	                obj.setAttribute("check", "1");
-	            else
-	                obj.setAttribute("check", "0");
-	        }
+	        // function CheckBoxOnclick(obj) {
+	        //     obj.removeAttribute("checked");
+	        //     if (obj.checked)
+	        //         obj.setAttribute("check", "1");
+	        //     else
+	        //         obj.setAttribute("check", "0");
+	        // }
 	
 	        function Conent_contentEditable(obj) {
 	            try {
@@ -396,12 +398,16 @@
 	                    Conent_contentEditable(document.getElementById('div_Content'));
 	                    var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                    for (var i = 0; i < SelectRows.length; i++) {
-	                        SelectRows.item(i).onchange = function () { SelectOnchange(this); };
+	                        SelectRows.item(i).onchange = SelectOnchange;
 	                    }
 	                    var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                    for (var i = 0; i < CheckRows.length; i++) {
-	                        if (CheckRows.item(i).type == "checkbox")
-	                            CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
+	                        if (CheckRows.item(i).type == "checkbox") {
+								CheckRows.item(i).onchange = CheckBoxOnclick;
+								CheckRows.item(i).ondblclick = CheckBoxOnDblclick;
+							} else if (CheckRows.item(i).type == "radio") {
+								CheckRows.item(i).onchange = RadioOnClick;
+							}
 	                    }
 	                    if (document.getElementById("body") != null) {
 	                        if (document.getElementById("body").getAttribute("class") == "FIELD") {

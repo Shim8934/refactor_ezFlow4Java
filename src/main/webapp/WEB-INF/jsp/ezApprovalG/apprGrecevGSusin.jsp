@@ -29,11 +29,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pWriterDeptID;
-		    var pDocID = '${docID}';
+		    var pDocID = "<c:out value = '${docID}'/>";
 		    var pFormHref = new String("");
 		    var pFormID = new String();
 		    var zFormID = new String();
-		    var pUserID = "${userInfo.id}";
+		    var pUserID = "<c:out value = '${userInfo.id}'/>";
 		    var pHasAttachYN = new String("N");
 		    var pHasOpinionYN = new String("N");
 		    var FormProc = null;
@@ -62,36 +62,36 @@
 		    var docAccess = false;
 		    var pCurSelRow;
 		    var pSusinDocURL = "";
-		    var pOrg_orgDocID = '${orgDocID}';
+		    var pOrg_orgDocID = "<c:out value = '${orgDocID}'/>";
 		    var chkOK = false;
-		    var isReDraft = '${isReDraft}';
+		    var isReDraft = "<c:out value = '${isReDraft}'/>";
 		    var LastSignNo;
 		    var AppendFileAttach = "";
 		    var AppenAprDocAttachList = "";
 		    var btnSendDraftEnable = "false";
 		    var gPublic = "";
 		    var s_nCallCnt = false;
-		    var sCompanyID   = '${userInfo.companyID}';
+		    var sCompanyID   = "<c:out value = '${userInfo.companyID}'/>";
 		    var CurAprType = "";
 		    var NextAprType = "";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
 		    arr_userinfo[9]  = sCompanyID;
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
-		    arr_userinfo[17]  = "${userInfo.primary}";
-		    var pCompanyID = "${userInfo.companyID}";
+		    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
+		    arr_userinfo[17]  = "<c:out value = '${userInfo.primary}'/>";
+		    var pCompanyID = "<c:out value = '${userInfo.companyID}'/>";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
@@ -101,33 +101,33 @@
 		    var pDocNumCode, pOrgDocNumCode, pDocNo;
 		    var maxwidth = 659;
 		    var KuyjeType = "002";
-		    var signDateFormat = "${optSignDateFormat}";
-		    var isSplit = "${optIsSplit}";
-		    var SplitKind = "${optSplitKind}";
-		    var sihangURL = "${sihangURL}";
-		    var g_DraftFlag = "${draftFlag}";
-		    var g_RetFlag = "${retFlag}";
+		    var signDateFormat = "<c:out value = '${optSignDateFormat}'/>";
+		    var isSplit = "<c:out value = '${optIsSplit}'/>";
+		    var SplitKind = "<c:out value = '${optSplitKind}'/>";
+		    var sihangURL = "<c:out value = '${sihangURL}'/>";
+		    var g_DraftFlag = "<c:out value = '${draftFlag}'/>";
+		    var g_RetFlag = "<c:out value = '${retFlag}'/>";
 		    var SignType = new Array();
 		    var SignName = new Array();
 		    var SignContent = new Array();
 		    var isExtDoc = "N";
 		    var pGubun;
-		    var pMailEditor = "${crossEditor}";
+		    var pMailEditor = "<c:out value = '${crossEditor}'/>";
 		    var pPageType = "SUSIN";
-		    var approvalFlag = "${approvalFlag}";
-		    var junGyulFlag = "${junGyulFlag}";
-		    var pSignImage_Size = "${signImageSize}";
+		    var approvalFlag = "<c:out value = '${approvalFlag}'/>";
+		    var junGyulFlag = "<c:out value = '${junGyulFlag}'/>";
+		    var pSignImage_Size = "<c:out value = '${signImageSize}'/>";
 		    var pADMIN = "N";
-		    var signImageType = "${signImageType}";
+		    var signImageType = "<c:out value = '${signImageType}'/>";
 		    var curDocNum = "";
-		    var isReceived = "${isReceived}";
+		    var isReceived = "<c:out value = '${isReceived}'/>";
 		    var orgCompanyID = "";
 		    var ext = "mht";
-		    var nonElecRec = "${isNonElecRec}";
+		    var nonElecRec = "<c:out value = '${isNonElecRec}'/>";
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
-		    var useReceiveDocNo = "${useReceiveDocNo}";
+		    var useReceiveDocNo = "<c:out value = '${useReceiveDocNo}'/>";
 			var wAprMemberSN = "1";
-			var docNumZeroCnt = "${docNumZeroCnt}";
+			var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -654,6 +654,16 @@
 		                    }
 		                    if (LastSignSN == 1)
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
+		                      	//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 접수자 전결
+		                        if (CurAprType == "전결" && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+			    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-script').getAttribute("code");
+			    		        	var script = document.createElement("script");
+			    					script.type = "text/javascript";
+			    					script.innerHTML = code;
+			    					document.querySelector("head").appendChild(script);
+			    					
+			    		        	attitude_annual_conn(pOrgDocID);
+			    		        }
 		                    else
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1698'/>";
 		                    OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
@@ -1108,12 +1118,12 @@
 		
 		        var Resultxml;
 		
-		        var UserID = '${userInfo.id}';
-		        var DisplayName = '${userInfo.displayName}';
-		        var DepID = '${userInfo.deptID}';
-		        var DeptName = '${userInfo.deptName}';
-		        var Position = '${userInfo.title}';
-		        var CompanyID = '${userInfo.companyID}';
+		        var UserID = "<c:out value = '${userInfo.id}'/>";
+		        var DisplayName = "<c:out value = '${userInfo.displayName}'/>";
+		        var DepID = "<c:out value = '${userInfo.deptID}'/>";
+		        var DeptName = "<c:out value = '${userInfo.deptName}'/>";
+		        var Position = "<c:out value = '${userInfo.title}'/>";
+		        var CompanyID = "<c:out value = '${userInfo.companyID}'/>";
 		        var d = new Date();
 		        var RecieveDay = d.getFullYear() + "." + (d.getMonth() + 1) + "." + d.getDate();
 		        Resultxml = "<LISTVIEWDATA><HEADERS>";
@@ -1666,28 +1676,28 @@
 		  <tr>
 		    <td style="height:20px;">
 			<div id="menu">
-			<ul>
-		    <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>        
-			<span style ="display:none" ><li id="btnSetAprLine"><span onClick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li></span>
-			<span style ="display:none" ><li id="btnSetReceivLine" style="display:none"><span  onClick="return btnSetReceivLine_onclick()"><spring:message code='ezApprovalG.t154'/></span></li></span>
-			<li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
-<%-- 			<li id="btnRJunkyul" class = 'approvalG'><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li> --%>
-			<li id="btnRJunkyul"><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
-			<span style ="display:none" ><li id="btnSetTaskCode"><span onClick="btnSetTaskCode_onclick()"  ><spring:message code='ezApprovalG.t51'/></span></li></span>
-			<span style ="display:none" ><li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li></span>
-			<li id="btnOpinion"><span onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
-			<li id="btnFileAttach"style="display:none" ><span onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
-			<li id="btnAprDocAttach" style="display:none"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
-			<c:if test="${approvalFlag == 'G'}">
-				<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
-			</c:if>
-			<li id="btnAssign" ><span  onClick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
-			<li id="btnDistribute"><span  onClick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
-			<li id="btnReturn"><span  onClick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
-			<li id="btnEdit"><span  onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
-			<li id="btnPrint"><span  onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
-			<li id="btnMail"><span  onClick="return btnMail_onclick()"><spring:message code='ezApprovalG.t1513'/></span></li>
-			</ul>
+				<ul>
+				    <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo()" ><spring:message code='ezApprovalG.t1742'/></span></li>        
+					<span style ="display:none" ><li id="btnSetAprLine"><span onClick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li></span>
+					<span style ="display:none" ><li id="btnSetReceivLine" style="display:none"><span  onClick="return btnSetReceivLine_onclick()"><spring:message code='ezApprovalG.t154'/></span></li></span>
+					<li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
+		<%-- 			<li id="btnRJunkyul" class = 'approvalG'><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li> --%>
+					<li id="btnRJunkyul"><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
+					<span style ="display:none" ><li id="btnSetTaskCode"><span onClick="btnSetTaskCode_onclick()"  ><spring:message code='ezApprovalG.t51'/></span></li></span>
+					<span style ="display:none" ><li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li></span>
+					<li id="btnOpinion"><span onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+					<li id="btnFileAttach"style="display:none" ><span onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
+					<li id="btnAprDocAttach" style="display:none"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
+					<c:if test="${approvalFlag == 'G'}">
+						<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
+					</c:if>
+					<li id="btnAssign" ><span  onClick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
+					<li id="btnDistribute"><span  onClick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
+					<li id="btnReturn"><span  onClick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
+					<li id="btnEdit"><span  onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
+					<li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
+					<li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
+				</ul>
 			</div>
 			<div id="close">
 		        <ul>

@@ -14,7 +14,6 @@
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th {
@@ -374,9 +373,9 @@
 		                	var pAlertContent = "";
 		                	
 		                	if (approvalFlag == 'S') {
-		                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />";
+		                		pAlertContent = "<spring:message code = 'ezApprovalG.kes10' />";
 		                	} else {
-		                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+		                		pAlertContent = "<spring:message code = 'ezApprovalG.kes10' />\n<spring:message code = 'ezApprovalG.t781' />";
 		                	}
 		                    
  		                    alert(pAlertContent);
@@ -400,9 +399,9 @@
 		        	var pAlertContent = "";
                 	
                 	if (approvalFlag == 'S') {
-                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />";
+                		pAlertContent = "<spring:message code = 'ezApprovalG.kes10' />";
                 	} else {
-                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+                		pAlertContent = "<spring:message code = 'ezApprovalG.kes10' />\n<spring:message code = 'ezApprovalG.t781' />";
                 	}
 		            
  		            alert(pAlertContent);
@@ -455,7 +454,7 @@
 		                    }
 		                    
 		                    if (retVal == "TRUE") {
-		                        var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
+		                        var pAlertContent = "<spring:message code = 'ezApprovalG.kes11' />";
  		                        alert(pAlertContent);
 	
 		                        TreeView_onNodeSelect();
@@ -481,7 +480,7 @@
 	
 		    function btnEditItem_onclick_Complete(retVal) {
 		        if (retVal == "TRUE") {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
+		            var pAlertContent = "<spring:message code = 'ezApprovalG.kes11' />";
  		            alert(pAlertContent);
 	
 		            TreeView_onNodeSelect();
@@ -504,9 +503,16 @@
 			                return;
 			            } 
 		        	}
-					if (confirm("<spring:message code = 'ezApprovalG.t787' />\r\n<spring:message code = 'ezApprovalG.t786' />")) {
-						btnDelItem_onclick_Complete(true);
-					}
+		        	
+		        	if (approvalFlag == 'S') {
+						if (confirm("<spring:message code = 'ezApprovalG.t775' />\r\n<spring:message code = 'ezApprovalG.garm07' />")) {
+							btnDelItem_onclick_Complete(true);
+						}
+                	} else {
+						if (confirm("<spring:message code = 'ezApprovalG.t787' />\r\n<spring:message code = 'ezApprovalG.t786' />")) {
+							btnDelItem_onclick_Complete(true);
+						}
+                	}
 		            /* ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t786' />\n<spring:message code = 'ezApprovalG.t787' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelItem_onclick_Complete;
 		            
@@ -536,7 +542,7 @@
 		            			},
 		            	success : function(result) {
 		            		if (result == "TRUE") {
-								var pAlertContent = "<spring:message code = 'ezApprovalG.t788' />";
+								var pAlertContent = "<spring:message code = 'ezApprovalG.kes12' />";
 		  	                    alert(pAlertContent);
 
 		 	                    TreeView_onNodeSelect();
@@ -716,23 +722,23 @@
 			<ul>		        
 		        <c:choose>
 		        	<c:when test="${approvalFlag == 'S'}">
-		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApproval.t708' /></span></li>
+		        		<li class="important"><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApproval.t708' /></span></li>
 						<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApproval.t709' /></span></li>
 						<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApproval.t710' /></span></li>
 						<!-- <li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li> -->
-						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
+						<li class="important"><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
 						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApprovalG.t796' /></span></li>
 						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>
 		        	</c:when>
 		        	<c:otherwise>
-		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApprovalG.t790' /></span></li>
+		        		<li class="important"><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApprovalG.t790' /></span></li>
 						<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApprovalG.t791' /></span></li>
 						<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApprovalG.t792' /></span></li>
 						<!-- <li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li> -->
 						<li><span onClick="return btnViewTaskInfo_onclick()"><spring:message code = 'ezApprovalG.t793' /></span></li>
 						<li><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code = 'ezApprovalG.t794' /></span></li>
 						<!-- <li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li> -->
-						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
+						<li class="important"><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
 						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApprovalG.t796' /></span></li>
 						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>
 						<li><span onClick="return btnConItem_onclick()"><spring:message code = 'ezApprovalG.t798' /></span></li>

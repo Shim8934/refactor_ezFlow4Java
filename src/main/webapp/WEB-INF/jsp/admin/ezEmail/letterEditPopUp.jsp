@@ -31,11 +31,11 @@
 							<col width="">
 						</colgroup>
 						<tr>
-							<th style="font-weight: normal"><spring:message code='ezEmail.letter37'/></th>
+							<th style="font-weight: normal"><spring:message code='ezEmail.letter8'/> (${primary})</th>
 							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
 						</tr>
 						<tr>
-							<th style="font-weight: normal"><spring:message code='ezEmail.letter38'/></th>
+							<th style="font-weight: normal"><spring:message code='ezEmail.letter8'/> (${secondary})</th>
 							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
 						</tr>
 					</table>
@@ -62,10 +62,10 @@
 			</div> <!-- leLetter End -->
 		</div>
 		<script>
-			var popUpType = "${popUpType}"; // add 작성, modify 수정
-			var popLetterBoxNo = "${letterBoxNo}";
+			var popUpType = "<c:out value='${popUpType}'/>"; // add 작성, modify 수정
+			var popLetterBoxNo = "<c:out value='${letterBoxNo}'/>";
 			var popLetterId = "${letterId}"; // 수정일 경우  처음에는 null 이후 modifyLoad()에서 저장됨
-			var popLetterNo = "${letterNo}"; // 저장일 경우 -1
+			var popLetterNo = "<c:out value='${letterNo}'/>"; // 저장일 경우 -1
 			var modifyData = ""; // modifyLoad()에서 저장
 			var specialMsg = "<spring:message code='ezEmail.kyj17'/>"; // 해당 특수문자는 입력할 수 없습니다.
 			var specialMsg2 = "<spring:message code='ezEmail.letter9'/>"; //

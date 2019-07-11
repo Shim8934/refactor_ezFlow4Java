@@ -34,10 +34,10 @@
 			var uselang = "${userInfo.lang}";
 			var userOffset = "${userOffset}";
 			var companyId = "${companyID}";
-			var date = "${date}";
+			var date = "<c:out value='${date}'/>";
 			var time = "${time}";//현재시간
 			var nowTime = time.split(":");
-			var mode = "${mode}";
+			var mode = "<c:out value='${mode}'/>";
 			var pStartDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var pEndDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";
@@ -60,7 +60,7 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-				select_memorialDays(uselang);
+				/* select_memorialDays(uselang); */
 				setHoliday();
 				setTypeName();
 			}
@@ -80,7 +80,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -88,7 +88,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        
@@ -160,7 +160,7 @@
 			            showAnim: 'show',
 			            showMonthAfterYear: true
 			        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		        
 		        if (typeId == 'A04' && dateType == 4) {
 		        	$('#Stimepicker').timepicker();
@@ -215,7 +215,7 @@
 			
 			function getFormBody() {
 				$.ajax({
-					type : "POST",
+					type : "get",
 					url : "/ezAttitude/getFormBody.do",
 					async : false,
 					data : {
@@ -247,6 +247,14 @@
 						}
 						$("input[name=mobile]").val(mobile);
 						$("input[name=bizsub]").val(bizSub);
+						
+						//언어
+						if (uselang != "1") {							
+							$("#attiTime").siblings("th").text("<spring:message code='ezAttitude.t149'/>");
+							$("#region").siblings("th").text("<spring:message code='ezAttitude.t47'/>");
+							$("#mobile").siblings("th").text("<spring:message code='ezOrgan.t285'/>");
+							$("#bizsub").siblings("th").text("<spring:message code='ezAttitude.t311'/>");
+						}
 						editorResize();
 					}
 				})
@@ -325,6 +333,15 @@
 					}
 				}
 				
+				//외출 등록시 출근여부 확인
+				if (selectType == 'A06') {
+					var returnValue = getIsAttitude('A01');
+					if (returnValue == 0) {
+						alert("<spring:message code='ezAttitude.t306'/>");
+						return;
+					}
+				}
+				
 				//퇴근시 출근여부 확인
 		    	if (selectType == "A03") {
 		    		var returnValue = getIsAttitude("A01");
@@ -375,7 +392,7 @@
 			
 			function setHoliday() {
 				$.ajax({
-					type:"POST",
+					type:"GET",
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
@@ -386,17 +403,41 @@
 						holidayAttReg = result.attitudeConfigVO.closedDateAttitude;
 						closedDay = result.attitudeConfigVO.closedDay.split(",");
 						for (var i = 0; i < result.holidayList.length; i++) {
-							if (result.holidayList[i].holidayDate != null) {
-								if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
-									memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
-																	  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																	  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
-								} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
-									yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
-																			  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																			  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
-																			  result.holidayList[i].isRest == 1 ? true : false));
-								}
+							var isSolar = "";
+							var holidayFlag = "";
+							var repetition = "";
+							
+							if (result.holidayList[i].isSolar == "1") {
+								isSolar = "1";
+							} else {
+								isSolar = "2";
+							}
+							
+							if (result.holidayList[i].holidayDate == null) {
+								result.holidayList[i].holidayDate = '';
+							}
+							
+							if (result.holidayList[i].holidayRepeat == null) {
+								repetition = '';
+							} else {
+								repetition = result.holidayList[i].holidayRepeat;
+							}
+							
+							if (result.holidayList[i].holidayFlag == 'Y') {
+								holidayFlag = "Y";			                    
+			                } else {
+			                    holidayFlag = "D";
+			                }
+							
+							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																  isSolar, result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
+							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																		  result.holidayList[i].holidayDate.substring(8,10), isSolar,
+																		  result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
 							}
 						}
 						form_change();
@@ -649,7 +690,7 @@
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content" style="margin-top:5px">
 	                        	<tr id="userName" fixed="fix">
-	                        		<th><a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 35px; text-align: center;"><spring:message code='ezAttitude.t219'/></span></a></th>
+	                        		<th><a class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 35px; text-align: center;"><spring:message code='ezAttitude.t219'/></span></a></th>
 	                        		<td id="forName"></td>
 	                        	</tr>
 	                        	<tr id="userId" fixed="fix" style="display:none;">
@@ -685,7 +726,7 @@
 	                </tr>
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
-	            	<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span></a>					
+	            	<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t16'/></span></a>					
 				</div>
 	        </div>
 	        <script type="text/javascript">

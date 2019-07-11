@@ -68,7 +68,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true,
 		            beforeShow: function(input) {
 		    		    var i_offset= $(input).offset();
@@ -83,7 +83,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true,
 		            beforeShow: function(input) {
 		    		    var i_offset= $(input).offset();
@@ -139,7 +139,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 				
@@ -148,7 +148,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 

@@ -29,6 +29,8 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+	<!-- module -->
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
    		var lang = ${userInfo.lang};
@@ -115,7 +117,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImage: "/images/ImgIcon/calendar-month.png",
 	            buttonImageOnly: true
 	        });
 	
@@ -199,8 +201,8 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = " - [ 폴더 " + "<span style='color:#017BEC;'>" 
-					+ folderCnt +" </span>"+ strLang42 +" / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>" + strLang42 + "]";
+					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; 폴더 " + "<span style='color:#017BEC;'>" 
+					+ folderCnt +" </span> / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>";
 					hideProgress();
 				},
 				error : function(error) {
@@ -336,7 +338,6 @@
          
 		function refreshView() {
 			renderFileList();
-			window.parent.frames["left"].drawVolume();
 		}
        
 		function filePermanentDelete() {
@@ -432,8 +433,19 @@
 					   alert("<spring:message code = 'ezWebFolder.t292'/>");
 					} else if (data.code == 3) {
 						alert("<spring:message code = 'ezWebFolder.t28'/>");
-					} else if (data.code == 4) {
-						alert("<spring:message code = 'ezWebFolder.t290'/>");
+					} else {
+						if (data.code == 4) {
+							alert("<spring:message code = 'ezWebFolder.t290'/>");
+						}
+						
+						// 중복된 정보가 존재한다면 알림
+						if (data.duplicateInfoArray && data.duplicateInfoArray.length > 0) {
+							alert("<spring:message code = 'webfolder.duplicate.restore.error'/>");
+						}
+						
+						if (data.hasExceededCapacities) {
+							alert("<spring:message code = 'webfolder.trash.restore.error.capacity'/>");
+						}
 					}
 				},
 				error : function(error) {
@@ -488,11 +500,27 @@
 						
 				}
 			}
-			 
 			/*var lastTh = $("#BoardList_TH th").last();
 			if (lastTh.attr("id") == null) {
 				lastTh.css("display", "none");
 			}*/
+		}
+		
+		function openLeftPanel() {
+			var leftFrame = window.parent.frames["left"].document;
+			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
+			var height    = Math.max(leftFrame.documentElement.clientHeight, leftFrame.documentElement.scrollHeight);
+			leftFrame.body.style.overflow = "hidden";
+			blockLeft.style.height        = height + "px";
+			blockLeft.style.display       = "";
+		}
+
+		function closeLeftPanel() {
+			var leftFrame = window.parent.frames["left"].document;
+			var blockLeft = leftFrame.getElementById("bnkBlockLeft");
+			leftFrame.body.style.overflow = "auto";
+			blockLeft.style.height        = "100%";
+			blockLeft.style.display       = "none";
 		}
     </script>
 </head>
@@ -503,10 +531,14 @@
 			<li><span onClick="restoreTrashCan()"><spring:message code='ezWebFolder.t287'/></span></li>
 			<li><span onClick="moveTraschCan()"><spring:message code='ezWebFolder.t282'/></span></li>
 			<li><span onClick="filePermanentDelete()"><spring:message code='ezWebFolder.t19'/></span></li>
-			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-			<li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-			<!-- <li><img src="/images/i_bar.gif"></li> -->
-			<li id="right" style="float:left; height: 28px;">
+			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span class="icon16 icon16_search"></span></li>
+			<!-- <li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li> -->
+			<div class="sub_frameIcon" style="float:right">
+				<div class="sub_frameIconUL02">
+				  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+				</div>
+			</div>
+			<li>
 				<select class="select" id="idSelect" onchange="changeValue(this.value);">
 					<option value=""><spring:message code='ezWebFolder.t191'/></option>
 					<option value="document"><spring:message code='ezWebFolder.t192'/></option>

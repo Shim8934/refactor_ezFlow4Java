@@ -24,13 +24,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 	    <script type="text/javascript">
-	        var OrgAprUserID = "${orgAprUserID}";
-	        var OrgAprUserName = "${orgAprUserName}";
+	        var OrgAprUserID = "<c:out value ='${orgAprUserID}'/>";
+	        var OrgAprUserName = "<c:out value ='${orgAprUserName}'/>";
 	        var OrgAprUserName2 = "";
-	        var OrgAprUserDeptID = "${orgAprUserDeptID}";
-	        var pEndDocHref = "${dirPath}";
-	        var pDocID = "${docID}";
-	        var pingUserID = "${tempUserID}";
+	        var OrgAprUserDeptID = "<c:out value ='${orgAprUserDeptID}'/>";
+	        var pEndDocHref = "<c:out value ='${dirPath}'/>";
+	        var pDocID = "<c:out value ='${docID}'/>";
+	        var pingUserID = "<c:out value ='${tempUserID}'/>";
 	        var pDocInfo = null;
 	        var pDocHref = new String("");
 	        var pUserID = new String("");
@@ -89,29 +89,29 @@
 	
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
+	        arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
 	        arr_userinfo[7] = "N";
-	        arr_userinfo[8]  = "${userInfo.email}";
+	        arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
-	        var pCompanyID = "${userInfo.companyID}";
-	        var companyID = "${userInfo.companyID}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
+	        var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
+	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var KuyjeType = "002";
-	        var signDateFormat = "${optSignDateFormat}";
-		    var isSplit = "${optisSplit}";
-	        var SplitKind = "${optSplitKind}";
-	        var junKyukInfo = "${optjunKyukInfo}";
+	        var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
+		    var isSplit = "<c:out value ='${optisSplit}'/>";
+	        var SplitKind = "<c:out value ='${optSplitKind}'/>";
+	        var junKyukInfo = "<c:out value ='${optjunKyukInfo}'/>";
 	        var FirstHtml = "";
 	        var beforeHtml;
 	        var beforeHwp = "";
@@ -119,26 +119,26 @@
 	        var cabinetID = "";
 	        var TaskCode = "";
 	        var DocNumCode = "";
-	        var allFlag = "${allFlag}";
+	        var allFlag = "<c:out value ='${allFlag}'/>";
 		    var selectedDocID = "";
 		    var OpinionAction = "";
-		    var CurrYear = "${oldYear}";
+		    var CurrYear = "<c:out value ='${oldYear}'/>";
 		    var SummaryFlag = true;
 		    var pGubun;
 		    var isExtDoc;
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value ='${useEditor}'/>";
 	        var g_szUserID = arr_userinfo[8];
-	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
-	        var isHWP = "${isHWP}";
-	        var approvalFlag = "${approvalFlag}";
+	        var g_senderinfo = "<c:out value ='${userInfo.companyName}'/>" + ", " + "<c:out value ='${userInfo.deptName}'/>" + ", " + "<c:out value ='${userInfo.title}'/>";
+	        var isHWP = "<c:out value ='${isHWP}'/>";
+	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 	        var ext = "hwp";
 	        var aprDocTimeStamp = "";
-	        var docState = "${docState}";
-	        var nonElecRec = "${nonElecRec}";
+	        var docState = "<c:out value ='${docState}'/>";
+	        var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
-	        var useReceiveDocNo = "${useReceiveDocNo}";
+	        var useReceiveDocNo = "<c:out value ='${useReceiveDocNo}'/>";
 	        var orgCompanyID = "<c:out value='${orgCompanyID}' />";
-	        var docNumZeroCnt = "${docNumZeroCnt}";
+	        var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -178,7 +178,8 @@
 		        else if (RtnVal == "1") {
 		
 		            if (allFlag == "1")
-		                btnStay_onclick();
+		                //btnStay_onclick();
+		            	LoadNextDocument("\n<spring:message code='ezApprovalG.t2'/>");
 		            else if (allFlag == "2")
 		                LoadNextDocument("\n<spring:message code='ezApprovalG.t2'/>");
 			    }
@@ -411,6 +412,11 @@
 				        btnClose_onclick();
 				        Btnflag = "false";
 				        ChangeBtnState();
+				        
+				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				        	parent.opener.getApprovalList("doing");
+				        }
 				        return;
 				    }
 		        }
@@ -424,6 +430,11 @@
 				        btnClose_onclick();
 				        Btnflag = "false";
 				        ChangeBtnState();
+				        
+				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				        	parent.opener.getApprovalList("doing");
+				        }
 				        return;
 				    }
 		        }
@@ -437,6 +448,11 @@
 				        btnClose_onclick();
 				        Btnflag = "false";
 				        ChangeBtnState();
+				        
+				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				        	parent.opener.getApprovalList("doing");
+				        }
 				        return;
 				    }
 		        }
@@ -1037,6 +1053,10 @@
 			
 			        try {
 			            window.opener.Refresh_Window();
+			        } catch (e) { }
+			        
+			        try {
+			            window.opener.getApprGraph("appr");
 			        } catch (e) { }
 			    }
 	

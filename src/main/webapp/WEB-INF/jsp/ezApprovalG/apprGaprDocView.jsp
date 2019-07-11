@@ -20,14 +20,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var	DocID = '${docID}';
-		    var	DocHref = '${docHref}';
-		    var	OpinionFlag = '${opinionFlag}';
-		    var	ListTypeValue = '${listType}';
-		    var	ListSusin = '${listSusin}';
-		    var pDocState =  '${docState}';
-		    var pOrgDocID = '${orgDocID}';
-		    var isOpinion = '${isOpinion}';
+		    var	DocID = "<c:out value ='${docID}'/>";
+		    var	DocHref = "<c:out value ='${docHref}'/>";
+		    var	OpinionFlag = "<c:out value ='${opinionFlag}'/>";
+		    var	ListTypeValue = "<c:out value ='${listType}'/>";
+		    var	ListSusin = "<c:out value ='${listSusin}'/>";
+		    var pDocState =  "<c:out value ='${docState}'/>";
+		    var pOrgDocID = "<c:out value ='${orgDocID}'/>";
+		    var isOpinion = "<c:out value ='${isOpinion}'/>";
 		    var pDocID;
 		    var pDocHref;
 		    var pOpinionFlag;
@@ -42,32 +42,32 @@
 		    var AppenAprDocAttachList = "";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
 		    pUserID = arr_userinfo[1];
-		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
-	        var callBackType = "${callBackType}";
-		    var pHasOpinion = "${hasOpinionYN}";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
+	        var callBackType = "<c:out value ='${callBackType}'/>";
+		    var pHasOpinion = "<c:out value ='${hasOpinionYN}'/>";
 		    var pOpinionType = "Show";
-		    var pMailEditor = "${crossEditor}";
-		    var signImageType = "${signImageType}";
-		    var pMode = "${mode}";
-		    var forceCallBackYN = "${forceCallBackYN}";
-		    var ext = "${ext}";
-		    var orgCompanyID = "${orgCompanyID}";
+		    var pMailEditor = "<c:out value ='${crossEditor}'/>";
+		    var signImageType = "<c:out value ='${signImageType}'/>";
+		    var pMode = "<c:out value ='${mode}'/>";
+		    var forceCallBackYN = "<c:out value ='${forceCallBackYN}'/>";
+		    var ext = "<c:out value ='${ext}'/>";
+		    var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -91,7 +91,7 @@
 		                btnClose_onclick();
 		                return;
 		            }
-		            if (pDocState == "015" && pOrgDocID.length >= 20 && "${listType}" == "99") {
+		            if (pDocState == "015" && pOrgDocID.length >= 20 && "<c:out value ='${listType}'/>" == "99") {
 		                document.getElementById("btnGongRam").style.display = "";
 		                pOpinionType = "";
 		            }
@@ -395,6 +395,11 @@
 		        }
 		    }
 		    function OpenAlertUI_Close() {
+				//2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				  parent.opener.getApprovalList("draft");
+				}
+		    
 		        window.close();
 		    }
 		    window.onbeforeunload = function () {
@@ -479,6 +484,25 @@
 	            	doCancel();
 	            }
 	        }
+	        
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
+	        
 	        function doCancel(ans) {
 	        	DivPopUpHidden();
 	        	if (ans) {
@@ -509,6 +533,17 @@
 		            	SendMailToCancel_Function(GetCurrentlinelist);
 	                    var pAlertContent = strLang891 + "<br> " + strLang892;
 	                    OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+	                    
+	                    //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 회수
+	    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+	    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-del-script').getAttribute("code");
+	    		        	var script = document.createElement("script");
+	    					script.type = "text/javascript";
+	    					script.innerHTML = code;
+	    					document.querySelector("head").appendChild(script);
+	    					
+	    		        	attitude_annual_conn(pDocID);
+	    		        }
 		            }
 		            else if (RtnVal == "ERR01") {
 		                var pAlertContent = strLang895;
@@ -659,14 +694,17 @@
 				  <c:if test="${approvalFlag != 'G'}">
 			          <li id="btnGongRam" style="display:none"><span onclick ="return btnGongRam_onclick()" ><spring:message code='ezApprovalG.hyj22'/></span></li>
 				  </c:if>
-		          <li id="btnMail"><span onClick="return btnMail_onclick()" ><spring:message code='ezApprovalG.t1513'/></span></li>
+				  <li id="tbtncallback" style="display: none;"><span id="btncallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t66'/></span></li>
+                  <li id="tbtnforcecallback" style="display: none;"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 		          <li id="btnOpinion"><span onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
-		          <li id="btnPrint" ><span  onClick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
 		          <li id="btnDocInfo" class="approvalG"><span onClick="return btnDocInfo_onclick()" ><spring:message code='ezApprovalG.t54'/></span></li>
 		          <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		          <li id="tbtncallback" style="display: none;"><span id="btncallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t66'/></span></li>
-                  <li id="tbtnforcecallback" style="display: none;"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
+				  <li id="btnPrint" ><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()" ></span></li>
+                  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()" ></span></li>
+				  <c:if test="${useCabinet == 'YES'}">
+					<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+				  </c:if>
 		        </ul>
 		      </div>
 		      <div id="close">

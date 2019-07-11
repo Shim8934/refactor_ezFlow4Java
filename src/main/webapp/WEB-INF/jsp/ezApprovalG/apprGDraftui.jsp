@@ -27,14 +27,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var FormHref	=	"${formURL}";
-		    var DraftFlag	=	"${draftFlag}";
-		    var DocType		=	"${formDocType}";
-		    var SusinSN		=	"${susinSN}";
-		    var DocState	=	"${docState}";
-		    var ListType	=	"${listType}";
-		    var AprState    =   "${aprState}";
-		    var pEndDocHref	=   "${dirPath}";
+		    var FormHref	=	"<c:out value ='${formURL}'/>";
+		    var DraftFlag	=	"<c:out value ='${draftFlag}'/>";
+		    var DocType		=	"<c:out value ='${formDocType}'/>";
+		    var SusinSN		=	"<c:out value ='${susinSN}'/>";
+		    var DocState	=	"<c:out value ='${docState}'/>";
+		    var ListType	=	"<c:out value ='${listType}'/>";
+		    var AprState    =   "<c:out value ='${aprState}'/>";
+		    var pEndDocHref	=   "<c:out value ='${dirPath}'/>";
 		    var pFormHref = new String("");
 		    var pFormID = new String();
 		    var pDocID = new String("");
@@ -73,7 +73,7 @@
 		    var pDocTitle;
 		    var pMaxFileSize ='5';
 		    var isExtDoc = "N";
-		    var isTmpDocID = "${isTmpDoc}";
+		    var isTmpDocID = "<c:out value ='${isTmpDoc}'/>";
 		    var gPublic = "";
 		    var draftFlag = false;
 		    var btnSendDraftEnable = "false";
@@ -86,33 +86,33 @@
 		    var pLClass = "";
 		    var pMClass = "";
 		    var pLCasn, pMCasn, pPer, pLClsn, pMClsn;
-		    var approvalFlag = "${approvalFlag}";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
 		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
 		    arr_userinfo[7] = "N";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
-		    arr_userinfo[17]  = "${userInfo.primary}";
-		    var pCompanyID = "${userInfo.companyID}";
+		    arr_userinfo[17]  = "<c:out value ='${userInfo.primary}'/>";
+		    var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 		    var pUserID = arr_userinfo[1];
 		    var KuyjeType = "002";
-		    var signDateFormat = "${optSignDateFormat}";
-		    var isSplit = "${optisSplit}";
-		    var SplitKind = "${optSplitKind}";
-		    var sihangURL = "${sihangURL}";
+		    var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
+		    var isSplit = "<c:out value ='${optisSplit}'/>";
+		    var SplitKind = "<c:out value ='${optSplitKind}'/>";
+		    var sihangURL = "<c:out value ='${sihangURL}'/>";
 		    var CurAprType = "";
 		    var NextAprType = "";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "";
@@ -129,37 +129,38 @@
 		    var HapyuiArea = 0;
 		    var AprLineArea = 0;
 		    var CheckGubun = "1";
-		    var DocSN = "${docSN}";
+		    var DocSN = "<c:out value ='${docSN}'/>";
 		    var AutoSave = "save";//자동임시저장
 		    var Saveflag = false;//임시저장Flag
 		    var pPageType = "DRAFTUI";
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value ='${useEditor}'/>";
 		    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		    var SummaryOuterReceiverList = "";
 		    var checkdocinfo = false;
-		    var junGyulFlag = "${junGyulFlag}";
-		    var draftJunGyulFlag = "${draftJunGyulFlag}";
-		    var pSignImage_Size = "${signImageSize}";
-		    var docNumZeroCnt = "${docNumZeroCnt}";
-			var beforeUrl = "${beforeUrl}";
+		    var junGyulFlag = "<c:out value ='${junGyulFlag}'/>";
+		    var draftJunGyulFlag = "<c:out value ='${draftJunGyulFlag}'/>";
+		    var pSignImage_Size = "<c:out value ='${signImageSize}'/>";
+		    var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
+			var beforeUrl = "<c:out value ='${beforeUrl}'/>";
 			//회람
 			var type = "ING";
 			var pGongRamDocID = "";
-			var signImageType = "${signImageType}";
-			var isUsed = "${isUsed}";
-			var beforeDocID = "${beforeDocID}";
-			var addLastKyulJeYN = "${addLastKyulJeYN}";
+			var signImageType = "<c:out value ='${signImageType}'/>";
+			var isUsed = "<c:out value ='${isUsed}'/>";
+			var beforeDocID = "<c:out value ='${beforeDocID}'/>";
+			var addLastKyulJeYN = "<c:out value ='${addLastKyulJeYN}'/>";
 			var totalMemSN = "0";
-			var apprReuseConfig = "${apprReuseConfig}";
-			var agreeResultType = "${agreeResultType}";
+			var apprReuseConfig = "<c:out value ='${apprReuseConfig}'/>";
+			var agreeResultType = "<c:out value ='${agreeResultType}'/>";
 			var curDocNum = "";
 			var isEditorComplete = false;
-			var orgCompanyID = "${userInfo.companyID}";
+			var orgCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 			var isHWP = "";
 			var ext = "mht";
-			var nonElecRec = "${nonElecRec}";
+			var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 			var nonElecRecInfoXml = "";
 			var nonSepAttachLVXml = "";
+			var reformFlag = "${reformflag}";
 			var wAprMemberSN = "1";
 			
 		    window.onload = function ()
@@ -194,6 +195,16 @@
 		                alert("<spring:message code='ezApprovalG.pjj30'/>");
 		                return false;
 		            }
+		            
+		            var html = document.getElementsByTagName('html')[0];
+		            html.ondragover = function (e) {
+		            	if (e.target.id == 'lstAttachLink') { return false; }
+		            	
+		            	e.dataTransfer.dropEffect = "none";
+				        e.stopPropagation();
+				        e.preventDefault();
+		            }
+		            
 		        }
 		        catch(e)
 		        {
@@ -239,8 +250,12 @@
 		                message.SetEditable(true);
 		            }
 		
-		            if (pDraftFlag != "REDRAFT")
-		                setFirstDrafter(isUsed, beforeDocID);
+					if (pDraftFlag != "REDRAFT") {
+						if(isUsed == "reuse" && apprReuseConfig != "1") {
+							setFirstDrafter(isUsed, beforeDocID);
+						}
+						setFirstDrafter("", "");
+					}
 		            
 		            if (approvalFlag == "S" && ListType != "21") {
 			            SetAutoDocnumItem();
@@ -413,12 +428,12 @@
 		                        pDocID = createNewDoc();
 		                        
 		                     	if (isUsed == "reuse") {
-			                		getDocInfo();
-			                		// 재사용이고 문서의 모든정보를 재사용 할시
+									 // 재사용이고 문서의 모든정보를 재사용 할시
+									ClearDocCellInfo();
 				                	if( apprReuseConfig != '1' ){
+			                			getDocInfo();
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
-				                		ClearDocCellInfo();
-				                		message.SetEditable(true);
+				                		// message.SetEditable(true);
 				                	}
 			                	}
 		                    }
@@ -500,13 +515,13 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + strLanggarm05);
 					return;
 				} else if (deptCheckFlag == "2") {
-					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + replaceEntityCodeToStr(arr_userinfo[5]) + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
 		    	
@@ -557,7 +572,7 @@
 			            var fields = message.GetFieldsList();
 			            pDocTitle = trim_Cross(message.GetDocTitle());
 			            
-			            var mustField = message.getMustFieldsInsert("${userInfo.lang}");
+			            var mustField = message.getMustFieldsInsert("<c:out value ='${userInfo.lang}'/>");
 			            if (mustField && mustField != ""){
  			            	var pAlertContent = "<spring:message code='ezApprovalG.psb131'/>";
  			            	pAlertContent = pAlertContent.replace("@@", mustField);
@@ -633,6 +648,30 @@
 			            	OpenInformationUI(pAlertContent, check_ReUsed);	
 			            	return;
 			            }
+			            
+				        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 마이너스 연차 사용이 허용 안함일 경우
+				        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {	
+				        	if (document.message.document.iframe_content.useMinusAnnual == "0") {
+				        		if(document.message.document.iframe_content.document.getElementById("remain_annual_cnt").innerHTML.indexOf("-") != -1) {
+				        			OpenAlertUI("<spring:message code='ezAttitude.t266'/>");
+				        			return;
+				        		}
+				        		
+				        	}
+				        	
+				        	var reformTitle = document.message.document.iframe_content.document.getElementById("reform-title").value;
+// 					        var titlePattern = /(\d{4})년(\d{1,2})월(\d{1,2})일~(\d{4})년(\d{1,2})월(\d{1,2})일\[(\d{1,2})일\]/
+							
+					        if (reformTitle == "" ) {
+								OpenAlertUI("<spring:message code='ezAttitude.t307'/>");
+								return;
+							} 
+// 					        else if (!titlePattern.test(reformTitle.replace(/ /gi, ""))) {
+// 								OpenAlertUI("<spring:message code='ezAttitude.t308'/>");
+// 								return;
+// 							}
+					        
+				        }
 			            
 			            if (addLastKyulJeYN != "0") {
 				        	var hDocID ;
@@ -877,6 +916,15 @@
 		
 		    function Complete_Deaft() {
 		        draftFlag = true;
+		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) { 
+		        	parent.opener.getApprovalList("reject");
+		        }
+		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가
+		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		        	document.getElementById('message').contentWindow.document.getElementById('iframe_content').contentWindow.attitude_annual_conn("annual", "0");
+		        }	        
+		        
 		        window.close();
 		    }
 		
@@ -885,6 +933,15 @@
 		        if (ListType == "21") {
 		            RemoveTmpDoc(DocSN);
 		        }
+		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+		        if (parent.opener != null && typeof(parent.opener.getApprovalList) != 'unknown' && parent.opener.getApprovalList != undefined) {
+		        	parent.opener.getApprovalList("reject");
+		        }
+		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가--아직 개발중
+		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		        	document.getElementById('message').contentWindow.document.getElementById('iframe_content').contentWindow.attitude_annual_conn("annual", "0");
+		        }
+		        
 		        window.close();
 		    }
 		
@@ -1006,10 +1063,10 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + strLanggarm05);
 					return;
 				}
 				
@@ -1091,9 +1148,17 @@
 		        catch (e)
 		        { }
 		        try {
+		        	if (bAttachProcess == false)
+		        		window.opener.parent.frames["right"].openergetDocInfo();
+		        } catch (e) 
+		        { }
+		        try {
 		            bAttachProcess = true;
 		        }
 		        catch (e) { }
+		        try {
+		            window.opener.getApprGraph("appr");
+		        } catch (e) { }
 		    }
 		    function btnConn_onclick() {
 		        var pIdx = FormProc.editor.DOM.body.getAttribute("processkey");
@@ -1303,10 +1368,10 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + strLanggarm05);
 					return;
 				}
 				
@@ -1383,29 +1448,31 @@
 		            if (flag == false) {
 		                flag = true;
 		                IsSkipDrafter = "FALSE";
-		                DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+		                DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
-		                //재사용이고 문서의 모든정보를 재사용하는 옵션일때
-		                if (isUsed == "reuse" && apprReuseConfig != '1') {
+		                if (isUsed == "reuse") {
 		                	message.Set_EditorContentURL(beforeUrl);
 		                } else {
-			                if (pFormHref != "") {
-			                    if (pFormHref == "PC") {
-			                        pReadPC = true;
-			                    } else {
-			                        message.Set_EditorContentURL(pFormHref);
-			                    }
-			                    
-			                    if (beforeUrl != "") {
-		                            Insert_ReUse_Content();
-		                        }
-			                }
-			                else {
-			                    DraftFlag = "DRAFT";
-			                    pDraftFlag = "DRAFT";
-			                    message.Set_EditorContentURL(sihangURL);
-			                }
+							if (pFormHref != "") {
+								if (pFormHref == "PC") {
+									pReadPC = true;
+								} else {
+									var len;
+									len = FormHref.lastIndexOf("/");
+									pFormID = FormHref.substr(len + 1, 10);
+									message.Set_EditorContentURL(pFormHref);
+								}
+								
+								// if (beforeUrl != "") {
+								// 	Insert_ReUse_Content();
+								// }
+							}
+							else {
+								DraftFlag = "DRAFT";
+								pDraftFlag = "DRAFT";
+								message.Set_EditorContentURL(sihangURL);
+							}
 		                }
 		            }
 		        }
@@ -1419,10 +1486,10 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + strLanggarm05);
 					return;
 				}
 				
@@ -1722,16 +1789,38 @@
 	            var ConXmlDiv = document.createElement("DIV");
 	            ConXmlDiv.innerHTML = _DocContentHtml;
 	            var TDRows = ConXmlDiv.getElementsByTagName("TD");
-	            var reUseContent = "";
+	            var reUseContent = {};
 
-	            for (var i = 0; i < TDRows.length; i++) {
-	                if (GetAttribute(TDRows.item(i), "id") == "body") {
-	                    reUseContent = TDRows.item(i).innerHTML;
-	                    break;
-	                }
-	            }
+	            // for (var i = 0; i < TDRows.length; i++) {
+	            //     if (GetAttribute(TDRows.item(i), "id") == "body") {
+				// 		reUseContent.editorContent = TDRows.item(i).innerHTML;
+	            //         break;
+	            //     }
+				// }
+				
+				reUseContent.editorContent = TDRows.body.innerHTML;
+				reUseContent.titleContent = TDRows.doctitle.innerText;
+
 	            message.Editor_ReUseContent(reUseContent);
 	        }
+			
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=resrc", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
 	        
 	        function checkAprState() {
 		    	var result = "";
@@ -1781,7 +1870,7 @@
 			<input type="hidden" id="regNum1" value="">
 		<table  class="layout" ID="Table1">
 		  <tr>
-		    <td style="height:20px;">
+		    <td style="height:20px; vertical-align: top;">
 		        <div id="menu">
 		            <ul>
 		                <li id="btnSelForm"><span  onClick="return btnSelForm_onclick()"><spring:message code='ezApprovalG.t152'/></span></li>
@@ -1798,10 +1887,13 @@
 		                <li id="btnAddSepAttach" style="display:none"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
 		                <li id="btnSave" style="display:none"><span  onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 		                <li id="btnConn" style="display:none"><span  onClick="return btnConn_onclick()"  ><spring:message code='ezApprovalG.t157'/></span></li>
-		                <li id="btnPrint"><span  onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 		                <li id="btnhistory"><span  onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		                <li id="btnHelper" style="display:none"><span  onClick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t158'/></span></li>
 		                <li id="btnSaveServer" <c:if test ="${approvalFlag == 'S'}">style="display:none"</c:if>><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
+						<li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
+		            	<c:if test="${useCabinet == 'YES'}">
+							<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+						</c:if>
 		            </ul>
 		        </div>        
 		      <div id="close">
@@ -1811,7 +1903,7 @@
 		      </div></td>
 		  </tr>
 		  <tr>
-		    <td  style="padding-bottom:10px;height:90%;" >
+		    <td  style="padding-bottom:10px;height:86%;" >
 		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do?isUsed=${isUsed}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		      </td>
 		  </tr>

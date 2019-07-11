@@ -5,11 +5,22 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript">
+			var folderType = "${folderType}";
+			window.onload = function() {
+				if(folderType == "") {
+					folderType = "C"
+				}
+				var url = "/ezWebFolder/webfolderLeft.do?folderType=" + folderType;
+				document.getElementById("left").src = url;
+			}
+		</script>
 	</head>
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
 		    <frameset cols="220,*" frameborder="0" border="0">
-			    <frame src="/ezWebFolder/webfolderLeft.do" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
+			    <frame id="left" name="left" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" noresize>
 	            <frame name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize>
 		    </frameset>
     </frameset>

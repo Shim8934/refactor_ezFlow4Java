@@ -13,10 +13,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
-			var code = "${code}";
-	        var ParentBoardID = "${parentBoardID}";
-	        var BoardGroupID = "${boardGroupID}";
-	        var BoardID = "${boardID}";
+			var code = '<c:out value="${code}"/>';
+	        var ParentBoardID = '<c:out value="${parentBoardID}"/>';
+	        var BoardGroupID = '<c:out value="${boardGroupID}"/>';
+	        var BoardID = '<c:out value="${boardID}"/>';
 	        var iMenuNum = 9;
 
 	        function hasSpecialCharacters(str) {
@@ -84,7 +84,7 @@
 	
 			    if (CrossYN()) {
 			        parent.window.frames.left.location.reload();
-			        parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=${code}";
+			        parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=" + '<c:out value="${code}"/>';
 	            }
 	            else
 	                window.parent.frames.item(0).location.reload();
@@ -110,33 +110,33 @@
 	
 	            switch (pIndex) {
 	                case 1:
-	                    window.location.href = "/ezCommunity/boardProperty.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+	                    window.location.href = "/ezCommunity/boardProperty.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 	                    break;
 	                case 2:
-	                    window.location.href = "/ezCommunity/boardCreate.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+	                    window.location.href = "/ezCommunity/boardCreate.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 	                    break;
 	                case 3:
-	                    window.location.href = "/ezCommunityboardACL.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+	                    window.location.href = "/ezCommunityboardACL.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 	                    break;
 	                case 4:
-	                    window.location.href = "/ezCommunity/boardOrder.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+	                    window.location.href = "/ezCommunity/boardOrder.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 	                    break;
 	                case 5:
 	                    if (BoardID == BoardGroupID) {
 	                        alert("<spring:message code = 'ezCommunity.t377' />");
 				        }
 				        else {
-				            window.location.href = "/ezCommunity/boardMove.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+				            window.location.href = "/ezCommunity/boardMove.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 				        }
 	                    break;
 	                case 6:
-	                    window.location.href = "/ezCommunity/boardDelete.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+	                    window.location.href = "/ezCommunity/boardDelete.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 	                    break;
 	                case 7:
-	                    window.location.href = "/ezCommunity/adminSearchBoardItem.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+	                    window.location.href = "/ezCommunity/adminSearchBoardItem.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 	                    break;
 	                case 9:
-	                    window.location.href = "/ezCommunity/boardGroupCreate.do?boardID=" + BoardID + "&parentBoardID=" + ParentBoardID + "&BoardGroupID=" + BoardGroupID + "&code=" + code;
+	                    window.location.href = "/ezCommunity/boardGroupCreate.do?boardID=" + encodeURIComponent(BoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&BoardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 	                    break;
 	
 	                default:

@@ -647,7 +647,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.searchManageAprDocList"
-		parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+		parameterClass="Map" resultClass="ApprGDocListVO">
 		
 		<![CDATA[
 			SELECT
@@ -1687,6 +1687,7 @@
 				formdescription,
 				formfilelocation,
 				formconnflag,
+				reformflag,
 				companyid,
 				tenant_id)
 			VALUES
@@ -1698,6 +1699,7 @@
 				#v_PFORMDESCRIPT#,
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
+				#v_PREFORMFLAG#,
 				#companyID#,
 				#tenantID#)
 		]]>
@@ -1714,7 +1716,9 @@
 				formdoctype = #v_PFORMKIND#,
 				formdescription = #v_PFORMDESCRIPT#,
 				formfilelocation = #v_PURL#,
-				formconnflag = #v_PFORMCONNFLAG#
+				formconnflag = #v_PFORMCONNFLAG#,
+				reformflag = #v_PREFORMFLAG#,
+				formversion = formversion + 1
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -4196,8 +4200,10 @@
 	
 	<select id="EzApprovalGAdminDAO.getParentContName" parameterClass="Map" resultClass="String">
 		SELECT
-			FORMCONTNAME,
-			FORMCONTNAME
+			CASE 
+				$v_LANG$ WHEN '1' THEN FORMCONTNAME
+						 WHEN '2' THEN FORMCONTNAME2
+			END AS FORMCONTNAME
 		FROM
 			TBL_FORMCONTAINER
 		WHERE

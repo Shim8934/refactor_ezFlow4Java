@@ -23,15 +23,15 @@
 		<script type="text/javascript">
 			var g_SelectedObj = null;
 			var g_UID = "";
-			var g_SearchString = "${pSearchString}";
-			var g_PortalGubun = "${portalGubun}";
+			var g_SearchString = "<c:out value = '${pSearchString}' />";
+			var g_PortalGubun = "<c:out value = '${portalGubun}' />";
 			var g_intPage  = "${intPage}";
 			var g_totalPage= "${totalPage}";
 			var BlockSize = 10;
 			var pageNum = 1;
 			var g_PortletCategoryXML = "${portletCategoryXML}";
 			var g_PortalPageCategoryXML = "${portalPageCategoryXML}";
-			var g_PortalPageGubun = "${portalPageGubun}";   // 포탈페이지 구분
+			var g_PortalPageGubun = "<c:out value = '${portalPageGubun}' />"; // 포탈페이지 구분
 			var pNoneActiveX = "${noneActiveX}";
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -75,12 +75,12 @@
 				// 선택된 개체가 없는 경우
 				if( g_SelectedObj == null )
 				{
-				    pObj.style.backgroundColor = "#edf4fd";
+				    pObj.style.backgroundColor = "#e4e8ec";
 					g_SelectedObj = pObj;
 				}
 				else
 				{
-				    pObj.style.backgroundColor = "#edf4fd";
+				    pObj.style.backgroundColor = "#e4e8ec";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;

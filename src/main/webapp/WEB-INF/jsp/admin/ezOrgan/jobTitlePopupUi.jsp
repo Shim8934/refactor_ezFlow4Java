@@ -16,12 +16,11 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript">
-//  	var cn = "";
  		var jobID = "";
-		var mode = "${mode}";
-		var type = "${type}";
-		var jobCnt = "${jobCnt}";
-		var companyID = "${companyID}";
+		var mode = "<c:out value='${mode}'/>";
+		var type = "<c:out value='${type}'/>";
+		var jobCnt = "<c:out value='${jobCnt}'/>";
+		var companyID = "<c:out value='${companyID}'/>";
 		var ReturnFunction;
 		var displayName1, displayName2, code, sort, useFlag;
 		
@@ -37,7 +36,6 @@
 		        document.getElementById("companyName").value = RetValue[0]; 
 	        }
 	        if (RetValue[1] != "") {
-// 	        	cn = RetValue[1];
 	        	jobID = RetValue[1];
 	        }
 	        if (type == "001") {
@@ -70,14 +68,12 @@
 		function ValidationValues() {
 			var rtnVal = false;
 			
-// 			cn = document.getElementById("cn").value;
 			sort = document.getElementById("sort").value;
 			useFlag = document.getElementById("useFlag").value;
 			displayName1 = document.getElementById("displayName1").value;
 			displayName2 = document.getElementById("displayName2").value;
 			
 			if (type == "001") {
-// 				if (cn.trim() == "" || displayName1.trim() == "" || displayName2.trim() == "") {
 				if (displayName1.trim() == "" || displayName2.trim() == "") {
 					alert("<spring:message code='ezOrgan.csj09' />");
 				} else if (!sort.match(/^\d+$/)) {
@@ -92,7 +88,6 @@
 					rtnVal = true;
 				}
 			} else if (type == "002") {
-// 				if (cn.trim() == "" || displayName1.trim() == "" || displayName2.trim() == "") {
 				if (displayName1.trim() == "" || displayName2.trim() == "") {
 					alert("<spring:message code='ezOrgan.csj09' />");
 				} else if (!sort.match(/^\d+$/)) {
@@ -119,7 +114,6 @@
             	async : false,
             	data : 
             	{
-//             		cn : cn,
             		jobID : jobID,
             		type : type,
             		mode : mode,
@@ -133,7 +127,6 @@
             		var ReturnArray = new Array();
 	            		ReturnArray[0] = result;
 	            		ReturnArray[1] = mode;
-// 	            		ReturnArray[2] = cn;
 	            		ReturnArray[2] = jobID;
 	            		ReturnArray[3] = type;
 	            		
@@ -157,7 +150,6 @@
             	async : false,
             	data : 
             	{
-//             		cn : cn,
             		jobID : jobID,
             		type : type,
             		mode : mode,
@@ -170,10 +162,7 @@
             	}
             });
 			
-// 			if (SelectNodes(xmlDom, "DATA/CN").length > 0) {
 			if (SelectNodes(xmlDom, "DATA/JOBID").length > 0) {
-// 				document.getElementById("cn").value = SelectSingleNodeValueNew(xmlDom, "DATA/CN").trim();
-// 				document.getElementById("cn").disabled = true;
 				document.getElementById("displayName1").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME").trim();
 				document.getElementById("displayName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
 				document.getElementById("useFlag").value = SelectSingleNodeValueNew(xmlDom, "DATA/USEFLAG").trim();
@@ -229,25 +218,17 @@
 		</tr>
 		<c:choose>
 			<c:when test="${type eq '001'}">
-				<%-- <tr>
-					<th><spring:message code='ezOrgan.csj03' /><span style="color:red"> *</span></th>
-					<td colspan="2"><input type="text" id="cn"/></td>
-				</tr> --%>
 				<tr>
 					<th rowspan="2"><spring:message code='ezOrgan.csj04' /><span style="color:red"> *</span></th>
-					<th><spring:message code='ezApprovalG.t1764'/></th>
+					<th>${primary}</th>
 					<td><input type="text" id="displayName1"/></td>
 				</tr>
 				<tr>
-					<th><spring:message code='ezApprovalG.t1765'/></th>
+					<th>${secondary}</th>
 					<td><input type="text" id="displayName2"/></td>
 				</tr>
 			</c:when>
 			<c:when test="${type eq '002'}">
-				<%-- <tr>
-					<th><spring:message code='ezOrgan.csj16' /><span style="color:red"> *</span></th>
-					<td colspan="2"><input type="text" id="cn"/></td>
-				</tr> --%>
 				<tr>
 					<th rowspan="2"><spring:message code='ezOrgan.csj17' /><span style="color:red"> *</span></th>
 					<th><spring:message code='ezApprovalG.t1764'/></th>

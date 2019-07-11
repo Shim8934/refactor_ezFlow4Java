@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -13,8 +14,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
 	    <script type="text/javascript">
 	        var treeView = new TreeView();
-	        var pSelID = "${selID}";
-	        var pNodeTreeID = "${nodeID}";
+	        var pSelID = "<c:out value='${selID}'/>";
+	        var pNodeTreeID = "<c:out value='${nodeID}'/>";
 	        var ReturnFunction;
 	        
 	        window.onload = function () {
@@ -30,7 +31,7 @@
 	        };
 	        function GetMyBoardItem(pRootTreeID) {
 	            var xmlhttp4 = createXMLHttpRequest();
-	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + pRootTreeID, false);
+	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + encodeURIComponent(pRootTreeID), false);
 	            xmlhttp4.send();
 	            var ret = xmlhttp4.responseXML;
 	            xmlhttp4 = null;
@@ -152,7 +153,7 @@
 	        </tr>
 	    </table>
 	    <div class="btnpositionNew">
-	    	<a href="#" class="imgbtn"><span onClick="return btn_MoveCopy_onclick('MOVE')"><spring:message code='ezBoard.t134'/></span></a>
+	    	<a class="imgbtn"><span onClick="return btn_MoveCopy_onclick('MOVE')"><spring:message code='ezBoard.t134'/></span></a>
 	    </div>	
 	</body>
 </html>

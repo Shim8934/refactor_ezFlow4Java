@@ -60,8 +60,9 @@
 		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="18"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="21"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" id="resGetScheduleListMainVO">
@@ -84,9 +85,10 @@
 		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="18"		nullValue="0"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="21"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="22"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="23"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
@@ -150,7 +152,8 @@
 		<result property="resLocation"			column="RESLOCATION"			columnIndex="14"/>
 		<result property="makeDate"				column="MAKEDATE"				columnIndex="15"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="16"/>
-		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="17"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="17"/>
+		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="18"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleVO">
@@ -178,7 +181,8 @@
 		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="22"/>
 		<result property="publicFlag"				column="PUBLICFLAG"				columnIndex="23"		nullValue=""/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="24"/>
-		<result property="scheduleID"			column="SCHEDULEID"			columnIndex="25"		nullValue=""/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="25"/>
+		<result property="scheduleID"			column="SCHEDULEID"			columnIndex="26"		nullValue=""/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleRepetitionVO" 		id="resGetScheduleRepetitionVO">
@@ -224,8 +228,9 @@
 		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="18"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="21"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="22"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		id="resGetRepResourceVO">
@@ -570,6 +575,8 @@
 				BRD_GB = '2'
 			AND
 				TENANT_ID = #tenantID#	
+			AND
+				APPROVEFLAG <> '2'
            	ORDER BY
 				BRD_GB,
 				BRD_STEP 
@@ -598,6 +605,7 @@
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
+                RETURNFLAG,
             	OWNERNM  ,
                 DEPTNM  
            	FROM
@@ -612,6 +620,12 @@
 				A.OWNERID = #v_POWNERID# 
 			AND
 				REFLAG = '0'
+			]]>
+			<isNotEmpty property="v_TITLE">
+			AND 
+                ( A.TITLE LIKE '%' || #v_TITLE# || '%' )
+            </isNotEmpty>
+            <![CDATA[
 			AND
                 ( OWNERNM LIKE '%' || #v_WRITERNAME# || '%' )
 			AND
@@ -675,6 +689,7 @@
             	ATTACHFLAG ,
             	CHARACTERID ,
             	SCH.APPROVEFLAG ,
+            	SCH.RETURNFLAG,
             	SCH.OWNERNM ,
             	DEPTNM ,
             	SCH.COMPANYID 
@@ -700,6 +715,8 @@
 				BRD.BRD_UPPER = #v_pOwnerID#
 			AND
 				SCH.TENANT_ID = #tenantID#	
+			AND
+				BRD.APPROVEFLAG <> '2'
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC
@@ -729,6 +746,7 @@
             	A.companyID ,
             	CHARACTERID ,
             	APPROVEFLAG ,
+            	RETURNFLAG ,
             	OWNERNM , 
                 DEPTNM  
 			FROM
@@ -751,6 +769,12 @@
 				REFLAG = '1'
 			AND
 				( to_date(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR to_date(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME )
+			]]>
+			<isNotEmpty property="v_TITLE">
+			AND 
+                ( A.TITLE LIKE '%' || #v_TITLE# || '%' )
+            </isNotEmpty>
+            <![CDATA[
 			AND
 				( A.OWNERNM LIKE '%' || #v_WRITERNAME# || '%' )
 			AND
@@ -785,6 +809,7 @@
              	ATTACHFLAG ,
              	CHARACTERID ,
              	SCH.ApproveFlag ,
+             	SCH.returnFlag ,
              	SCH.ownerNM ,
              	DEPTNM ,
              	SCH.companyID 
@@ -796,6 +821,8 @@
 				SCH.OWNERID = BRD.BRD_ID
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
+			AND
+				SCH.COMPANYID = BRD.BRD_COMPANY
         	WHERE
         		STARTDATE <= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND 
@@ -806,6 +833,8 @@
 				REFLAG = '1'
 			AND
 				SCH.TENANT_ID = #tenantID#	
+			AND
+				BRD.APPROVEFLAG <> '2'
         	ORDER BY
         		STARTDATE ASC,
                 ENDDATE DESC 
@@ -903,6 +932,7 @@
              	NVL(RESLOCATION, ' ') RESLOCATION  ,
              	SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE  ,
              	NVL(APPROVEFLAG, '0') APPROVEFLAG ,
+             	NVL(RETURNFLAG, '0') RETURNFLAG ,
              	BRD_ACCESS 
         	FROM
         		TBL_RS_BRD 
@@ -1004,6 +1034,7 @@
           		RESLOCATION = RTRIM(#v_P_ResLocation#),
           		BRD_EXPLAIN = RTRIM(#v_P_Brd_Explain#),
           		APPROVEFLAG = RTRIM(#v_P_Approve#),
+          		RETURNFLAG = RTRIM(#v_P_Return#),
           		BRD_NM2 = RTRIM(#v_P_Brd_NM2#),
           		OWNDEPTNM2 = RTRIM(#v_P_ODeptNm2#),
           		OWNERNM2 = RTRIM(#v_P_OwnerNm2#),
@@ -1063,14 +1094,14 @@
 			INSERT INTO TBL_RS_BRD ( 
 				BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY
       			, BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG
-      			, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, TENANT_ID 
+      			, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, TENANT_ID 
       		)
         	VALUES ( 
         		#v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#)
         		,RTRIM(#v_P_OwnerCall#), RTRIM(#v_P_Brd_NM#), RTRIM(#v_P_ResLocation#), RTRIM(#v_P_Brd_Explain#), RTRIM(#v_P_CompanyID#), #v_Brd_ID#
         		,RTRIM(#v_Brd_GB#), RTRIM(#v_Brd_Level#), RTRIM(#v_Brd_Step#), TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYYMMDD')
         		,20, u'A00', u'', #v_Brd_Access#, 365, 0, 0, RTRIM(#v_P_Approve#)
-      			,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), #tenantID# 
+      			,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), RTRIM(#v_P_Return#), #tenantID# 
       		)
 		]]>		
 	</insert>
@@ -1092,6 +1123,23 @@
 				TBL_RS_SCHEDULE
       		SET
       			APPROVEFLAG = #v_PAPPROVE#
+    		WHERE  
+    			COMPANYID = #v_PCOMPANYID#
+     		AND 
+     			OWNERID = #v_POWNERID#
+     		AND 
+     			NUM = #v_PNUM#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzResourceDAO.updateSchedule2" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_RS_SCHEDULE
+      		SET
+      			RETURNFLAG = #v_PRETURN#
     		WHERE  
     			COMPANYID = #v_PCOMPANYID#
      		AND 
@@ -1174,6 +1222,7 @@
 				A.ATTACHFLAG, 
 				A.PUBLICFLAG, 
 				A.APPROVEFLAG, 
+				A.RETURNFLAG,
 				A.SCHEDULEID, 
 				A.TENANT_ID
       		FROM
@@ -1239,6 +1288,7 @@
 				ATTACHFLAG, 
 				PUBLICFLAG, 
 				APPROVEFLAG, 
+				RETURNFLAG,
 				SCHEDULEID, 
 				TENANT_ID 
         	FROM
@@ -1850,6 +1900,21 @@
     		BRD_ID = #v_P_ownerID#
     	AND
     		TENANT_ID = #tenantID#	
+    	AND
+    		BRD_COMPANY = #v_P_companyID#
+	</select>
+	
+	<select id="EzResourceDAO.addRessch_S3" parameterClass="Map" resultClass="String">
+		SELECT
+			RETURNFLAG 
+     	FROM
+     		TBL_RS_BRD 
+    	WHERE
+    		BRD_ID = #v_P_ownerID#
+    	AND
+    		TENANT_ID = #tenantID#	
+    	AND
+    		BRD_COMPANY = #v_P_companyID#
 	</select>
 	
 	<insert id="EzResourceDAO.addRessch" parameterClass="Map">
@@ -1869,13 +1934,13 @@
 		<![CDATA[
 			INSERT INTO TBL_RS_SCHEDULE ( 
 				OWNERID, NUM, PNUM, COMPANYID, WRITERID, DEPTNM, OWNERNM, TITLE, LOCATION, TIMEDISPLAY, STARTDATE, ENDDATE, ALLDAY, ALERTTIME, CONTENT, IMPORTANCE
-     			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, SCHEDULEID, TENANT_ID
+     			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, RETURNFLAG, SCHEDULEID, TENANT_ID
      		)
      		VALUES ( 
      			RTRIM(#v_P_ownerID#), RTRIM(#v_Num#), RTRIM(#v_P_pnum#), RTRIM(#v_P_companyID#), RTRIM(#v_P_writerID#), RTRIM(#v_P_deptNM#), RTRIM(#v_P_ownerNM#), RTRIM(#v_P_title#)
      			, RTRIM(#v_P_location#), RTRIM(#v_P_timeDisplay#), TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'), TO_DATE(RTRIM(#v_P_endDate#),'YYYY-MM-DD HH24:MI:SS')
      			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), NVL(#v_P_reFlag#,' '), NVL(#v_P_gresFlag#,' '), TO_DATE(#nowDate#, 'yyyy-MM-dd hh24:MI:ss')
-     			, RTRIM(#v_P_entryList#), NVL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ScheduleID#), #tenantID#
+     			, RTRIM(#v_P_entryList#), NVL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ReturnFlag#), RTRIM(#v_P_ScheduleID#), #tenantID#
      		)
 		]]>
 	</insert>

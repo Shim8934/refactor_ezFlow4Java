@@ -100,6 +100,7 @@
 					}
 				});
 				opener.memoFoldersInfo();
+				window.opener.parent.parent.frames["left"].memoFolderList();
 	        }
 	        
 	        function btn_cancel_onclick() {
@@ -119,7 +120,7 @@
                 <li><span onclick="btn_cancel_onclick()"></span></li>
             </ul>
         </div>
-	    <div class="txt">▒&nbsp;<spring:message code='ezMemo.t0031' /></div>
+	    <div class="txt">&nbsp;<spring:message code='ezMemo.t0031' /></div>
 	    <div class="nobox" style="margin-top:10px">
 	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;height:25px;border:1px solid #ccc" maxlength="20">
 	    </div>

@@ -40,8 +40,8 @@
 		<script>
 			var g_szAuthor = "";
 			var g_szExchange = "exchange";
-			var g_cmd = "${cmd}";
-		    var Org_cmd = "${cmd}";
+			var g_cmd = '<c:out value="${cmd}"/>';
+		    var Org_cmd = '<c:out value="${cmd}"/>';
 			var g_servername = "${serverName}";
 			var g_myemail = "${userInfo.mail}";
 			var g_from = "${userInfo.mail}";
@@ -90,7 +90,7 @@
 			var userTimezone = "${userTimeset}";
 			var isPrimary = "${userPrimary}";
 			var initFlag = false;
-		    var gg_cmd = "${cmdOwn}";
+	    	var gg_cmd = '<c:out value="${cmdOwn}"/>';
 		    var gg_url = "${urlOwn}";
 		    var g_newid = "${newwindowid}";
 		    var FileUploadtype = "${fileUploadType}";
@@ -103,7 +103,7 @@
 		    var docHref = "${docHref}";
 		    var pTime= "${pReservedSaveTime}";
 		    var isReserve = "YES";
-		    var pCDOMessageId = "${pCDOMessageID}";
+		    var pCDOMessageId = '<c:out value="${pCDOMessageID}"/>';
 		    var pUse_Editor = "${useEditor}";
 		    var GroupplusImg ="/images/ImgIcon/groupplus.gif";
 		    var GroupminImg ="/images/ImgIcon/groupmin.gif";
@@ -202,11 +202,13 @@
 		        MailSignLoad();
 		        Simple_Choice();
 		        
-		        if (m_rgParams4PostOption["bodyType"] == "1") {
-					document.getElementById("message").style.display = "none";
+		        if (g_bodyType == "1") {
 					document.getElementById("plainTextArea").style.display = "";
 					document.getElementById("bodyType").options[1].selected = true;
 		        	document.getElementById("SelMailSign").disabled = true;
+		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+				} else {
+					document.getElementById("message").style.display = "";
 				}
 		        
 		        <c:if test="${useFromAddress == 'YES'}">
@@ -612,15 +614,35 @@
 		    function Editor_Complete(){
 		        DocumentComplete();
 		        
-		        var g_originalHTML = message.GetEditorContent();
-			    document.getElementById("plainTextArea").value = message.GetEditorTextContent();
+			    g_originalHTML = message.GetEditorContent();
+		        g_originalPlainText = document.getElementById("plainTextArea").value;
 		    }
+		    
+		    function removeHTMLTag(html) {
+		    	var resultStr = html;
+	    	    
+	    	    resultStr = resultStr.replace(/\r\n/gi, "\n");
+	    	    resultStr = resultStr.replace(/\n/gi, "");
+	    	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+	    	    resultStr = resultStr.replace(/<br .*?>/gi, "<br>");
+	    	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+	    	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
+	    	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
+	    	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+	    	    resultStr = resultStr.replace(/<style .*?>/gi, "<style>");
+	    	    resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+	    	    resultStr = resultStr.replace(/<script .*?>/gi, "<script>");
+	    	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
+	    	    resultStr = resultStr.replace(/<.*?>/gi, "");
+				
+	    	    return  resultStr;
+	        }
+		    
 		    function DocumentComplete() {
-		        if(initFlag == false)
-		        {
-		            pzFormProc_DocumentComplete();
-		            initFlag = true;
-		        }
+		    	var htmlContent = document.getElementById("messageBody").innerHTML;
+		    	
+		        message.SetEditorContent(htmlContent);
+		        document.getElementById("plainTextArea").innerHTML = removeHTMLTag(htmlContent);
 		    }
 		    function returnvalue(strXML) {
 		        pAttachXml = loadXMLString(strXML);
@@ -759,25 +781,21 @@
 						document.getElementById("plainTextArea").style.display = "";
 		        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 			        	document.getElementById("SelMailSign").disabled = true;
-		        		
+			        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 		        	} else {
 		        		document.getElementById("bodyType").options[0].selected = true;
 		        	}
 		    	} else {
-		    		var texts = document.getElementById("plainTextArea").value.split("\n");
-		            textData = "";
-		            for (var i=0; i<texts.length; i++) {
-		            	if (texts[i] != "") {
-		            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
-		            	}
-		            }
-		            
-		    		message.SetEditorContent(textData);
-		    		
+		    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);		    		
 		    		document.getElementById("message").style.display = "";
 					document.getElementById("plainTextArea").style.display = "none";
 		    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 	        		document.getElementById("SelMailSign").disabled = false;
+	        		if(totBigSizeAttachMBSize == 0){
+		        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+	        		} else {
+		        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
+	        		}
 		    	}
 		    }
 		    
@@ -1113,8 +1131,8 @@
                         <img src="/images/pbar.gif"></li> 
                     <li class="sel" style="background:none; border:none; padding:0px;">
                         <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
-                        	<option value="0">HTML</option>
-                        	<option value="1">PlainText</option>
+                        	<option value="0" <c:if test="${bodyType == '0'}">selected</c:if>>HTML</option>
+                        	<option value="1" <c:if test="${bodyType == '1'}">selected</c:if>>PlainText</option>
                         </select>
                     </li>
 		            <li style="display:none;">
@@ -1157,7 +1175,7 @@
                	  </c:if>
 		          <tr id="MsgTo_TR">
 		            <th rowspan="2">
-		            	<a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('To')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t66' /></span></a>
+		            	<a class="imgbtn"><span onClick="SelectReceiver_onClick('To')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t66' /></span></a>
 		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe"/>
 		                <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 		            </th>
@@ -1172,7 +1190,7 @@
 		            <td colspan="3"><div id="MsgToGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
 		          </tr>
 		          <tr id="MsgCC_TR">
-		            <th rowspan="2"  ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('CC')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t594' /></span></a>
+		            <th rowspan="2"  ><a class="imgbtn"><span onClick="SelectReceiver_onClick('CC')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t594' /></span></a>
 		                <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer"><img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span></div>
 		            </th>
 		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="2" style="WIDTH:99%"></td>
@@ -1186,7 +1204,7 @@
 		            <td colspan="3"><div id="MsgCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
 		          </tr>
 		          <tr id="MsgBCC_TR" style="display:none;">
-		            <th rowspan="2" ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
+		            <th rowspan="2" ><a class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
 		            <td style="width:76%"><input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="3" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectBCCAddress" style="WIDTH:100px" onchange="simple_select('BCC',this)">
@@ -1202,7 +1220,7 @@
 		            <td colspan="3"><input id="eSubject" name="eSubject" onKeyUp="Subject_ReApply()" type="text" value="${encodedSubject}" TABINDEX="4" style="WIDTH:99%"></td>
 		          </tr>
 		        </table>
-		        <div id="messageBody" mbody="${body}" style="DISPLAY:none"></div>
+		        <xmp id="messageBody" style="DISPLAY:none">${body}</xmp>
 		        <xmp id="xmpTo" style="DISPLAY:none">${to}</xmp>
 		        <xmp id="xmpCc" style="DISPLAY:none">${cc}</xmp>
 		        <xmp id="xmpBcc" style="DISPLAY:none">${bcc}</xmp>
@@ -1217,8 +1235,8 @@
 				  <table width="100%" height="100%"> 
 			          <tr> 
 			            <td style="height:100%;">
-							<iframe id="message" frameborder="0" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-			            	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; border-top-width:0; display:none;"></textarea>
+							<iframe id="message" frameborder="0" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="display:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+			            	<textarea id="plainTextArea" style="display:none; height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box;"></textarea>
 	                  	</td> 
 			          </tr> 
 			          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
@@ -1272,11 +1290,11 @@
                                     <script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans","100%", "20");</script>                                
                                 </td>
                                 <td class="pos2">
-                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
+                                    <a class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
                                     <br>
-                                    <a href="#" class="imgbtn imgbck"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
+                                    <a class="imgbtn imgbck"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
                                     <br>                                    
-                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
+                                    <a class="imgbtn imgbck"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
                             </tr>
                         </table>
                     </td>

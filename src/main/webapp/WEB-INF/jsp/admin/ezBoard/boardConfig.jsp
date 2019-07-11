@@ -44,18 +44,20 @@
 	            switch (pSelectTab) {
 	                case "BoardEnv_div1":
 	                    if (pBoardType == 3) {
-	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    } else if (pBoardType == 4) {
-	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                    } else if (pBoardType == 7) {
+	                    	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    } else {	      
-	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
+	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    }
 	                    break;
 	                case "BoardEnv_div2":
-	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardProperty.do?boardID=" + pBoardID + "&adminType=y";
+	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardProperty.do?boardID=" + encodeURIComponent(pBoardID) + "&adminType=y";
 	                    break;
 	                case "BoardEnv_div3":
-	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardACL.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID;
+	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardACL.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(pParentBoardID);
 	                    break;
 	                case "BoardEnv_div4":
 	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardHeader.do";
@@ -63,7 +65,7 @@
 	                case "BoardEnv_div5":
 	                    //if (CrossYN()){
 	                    // 2016-04-11 장진혁과장 Cross 단일 파일로 적용   
-	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardFormSave.do?boardID=" + pBoardID;	
+	                    document.getElementById("BoardEnv_ifrm").src = "/admin/ezBoard/boardFormSave.do?boardID=" + encodeURIComponent(pBoardID);	
 	                    /*} else {
 	                        if (pUse_Editor == "TAGFREE" || pUse_Editor == "DEXT")
 	                            document.getElementById("BoardEnv_ifrm").src = "/myoffice/ezBoardSTD/admin/BoardForm_save_IE.aspx?BoardID=" + pBoardID;
@@ -115,9 +117,9 @@
 	</head>
 	<body class="mainbody" style="margin:0px;overflow-y:hidden">
 		<div style="margin-left:10px">
-			<h1><p style="padding-left:5px">${boardName}</p></h1>
-		    <div class="portlet_tabpart01">
-		        <div class="portlet_tabpart01_top" id="tab1">
+			<h1>${boardName}</h1>
+		    <div class="portlet_tabnew01">
+		        <div class="portlet_tabnew01_top" id="tab1">
 		            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezBoard.t338" /></span></p>
 		            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezBoard.t60" /></span></p>
 		            <p id="BoardEnv_sub3"><span divname="BoardEnv_div3" id="1tab3"><spring:message code="ezBoard.t63" /></span></p>

@@ -309,24 +309,24 @@
 		        */
 		
 		        var span = document.createElement("SPAN");
+		        var spanInnerHtml;
 		
 		        if (obj.childNodes.length == 0) {
-		            span.innerHTML = "<span style='margin-left:20px;'>";
+		        	spanInnerHtml = "<span style='margin-bottom:10px; display:inline-block;'>";
 		        }
 		        else {
-		            span.innerHTML = "<br/><span class='txt' style='text-align:left;margin-left:25px;'></span><br/><span>"
-		                            + "<span onclick='deleteCell(this)' style='cursor:pointer;'><img src='/images/ImgIcon/delete.gif' align='absmiddle'  height='16' style='margin-top:-3px;' hspace='2' /></span>";
+		        	spanInnerHtml = "<br /><span><span onclick='deleteCell(this)' style='cursor:pointer;'><img src='/images/ImgIcon/delete.png' align='absmiddle'  height='16' style='margin-top:-3px;' hspace='2' />";
 		        }
 		
 		        switch (obj.id) {
 		            case "ConArea":
-		                span.innerHTML += inboxRuleCon.innerHTML + "</span>";
+		                span.innerHTML += spanInnerHtml + inboxRuleCon.innerHTML + "</span>";
 		                break;
 		            case "ActArea":
-		                span.innerHTML += inboxRuleAct.innerHTML + "</span>";
+		                span.innerHTML += spanInnerHtml + inboxRuleAct.innerHTML + "</span>";
 		                break;
 		            case "ExptArea":
-		                span.innerHTML += inboxRuleExpt.innerHTML + "</span>";
+		                span.innerHTML += spanInnerHtml + inboxRuleExpt.innerHTML + "</span>";
 		                break;
 		        }
 		
@@ -555,7 +555,7 @@
 		            _popObj.style.backgroundColor = "#ffffff";
 		        }
 		        _popObj = obj;
-		        obj.style.backgroundColor = "#edf4fd";
+		        obj.style.backgroundColor = "#f1f8ff";
 		    }
 		    function random() {
 		        return Math.floor(Math.random() * 100);
@@ -999,30 +999,27 @@
 	            <li><span onClick="window.close();"></span></li>
 	        </ul>
 	    </div>
-	    <div style="border:1px solid #dbdbda;width:585px;height:475px;overflow-y:auto;margin:5px 5px 5px 5px;">
-	    <div style="margin-top:20px;margin-left:20px;">
-	    <img src="/images/ImgIcon/rul-sml.gif" align="absmiddle"  height="16" style="margin-top:-3px;" hspace="2" /><span class="txt"><spring:message code='ezEmail.t812' /></span><p />
-	    <span class="txt"><spring:message code='ezEmail.t813' /></span> <input type="text" style='width:70%;' id="RuleDisplayName" name="RuleDisplayName" maxlength="75" /><p />
-	    <span class="txt"><spring:message code='ezEmail.t814' /></span><br />
-	    <div id="ConArea" name="ConArea" style="margin-top:8px;"></div>
-	    <br />
-	    <div id="mainmenu"><ul id="tb_AddRuleCon"><li><span class="imgbck" onclick='AddRule(ConArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
-	    <span class="txt" ><spring:message code='ezEmail.t816' /></span><br />
-	    <div id="ActArea" name="ActArea" style="margin-top:8px;"></div>
-	    <br />
-	    <div id="mainmenu"><ul id="tb_AddRuleAct"><li><span class="imgbck" onclick='AddRule(ActArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
-	    <span class="txt" ><spring:message code='ezEmail.t842' /></span><br />
-	    <div id="ExptArea" name="ExptArea" style="margin-top:8px;"></div>
-	    <br />
-	    <div id="mainmenu"><ul id="tb_AddRuleExpt"><li><span class="imgbck" onclick='AddRule(ExptArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
-	    </div>
-	</div>
+   	    <div style="border:1px solid #dbdbda;width:585px;height:515px;overflow-y:auto;margin:21px 5px 5px 0px;">
+		    <div style="margin:15px;">
+			    <img src="/images/ImgIcon/rul-sml.png" align="absmiddle" height="16" style="margin-top:-3px;" hspace="2" /><span class="mailRule_title"><spring:message code='ezEmail.t812' /></span>
+			    <p class="mailRule_tit"><span class="mailRule_txt"><spring:message code='ezEmail.t813' /></span> <input type="text" style='width:70%; padding-left: 5px;' id="RuleDisplayName" name="RuleDisplayName" maxlength="75" /></p>
+			    <p class="mailRule_tit"><span class="mailRule_txt"><spring:message code='ezEmail.t814' /></span></p>
+			    <div id="ConArea" name="ConArea" class="mailRule_selectDIV"></div>
+			    <div id="mainmenu"><ul  id="tb_AddRuleCon"><li><span onclick='AddRule(ConArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
+			    <p class="mailRule_tit"><span class="mailRule_txt" ><spring:message code='ezEmail.t816' /></span></p>
+			    <div id="ActArea" name="ActArea" class="mailRule_selectDIV"></div>
+			    <div id="mainmenu"><ul  id="tb_AddRuleAct"><li><span onclick='AddRule(ActArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
+			    <p class="mailRule_tit"><span class="mailRule_txt" ><spring:message code='ezEmail.t842' /></span></p>
+			    <div id="ExptArea" name="ExptArea" class="mailRule_selectDIV"></div>
+			    <div id="mainmenu"><ul  id="tb_AddRuleExpt"><li><span onclick='AddRule(ExptArea);'><spring:message code='ezEmail.t815' /></span></li></ul></div>
+			</div>
+		</div>
 	</body>
 	<script language="javaScript" type="text/javascript">
 	    selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	</script>
 	<div id="inboxRuleCon" name="inboxRuleCon" style="display:none;">
-		<select name="Condition" class="select" onChange="Ruleselect(this)" style="margin-bottom:0px;" > 
+		<select name="Condition" class="mailRule_select" onChange="Ruleselect(this)">
 		    <option value="NONE" selected><spring:message code='ezEmail.t817' /></option>
 		    <option value="SENDER"><spring:message code='ezEmail.t818' /></option>
 		    <option value="DOMAIN"><spring:message code='ezEmail.t829' /></option>
@@ -1035,7 +1032,7 @@
 	</div>
 	<div id="Ruledsc1" name="Ruledsc2"></div>
 	<div id="inboxRuleAct" name="inboxRuleCon"  style="display:none;">
-		<select name="Action" class="select" onchange="Actselect(this);"> 
+		<select name="Action" class="mailRule_select" onchange="Actselect(this);">
 		    <option value="NONE" selected><spring:message code='ezEmail.t817' /></option>
 		    <option value="MOVE"><spring:message code='ezEmail.t822' /></option>
 		    <option value="DELETE"><spring:message code='ezEmail.t168' /></option>
@@ -1045,7 +1042,7 @@
 		    <option value="IMPORTANCE"><spring:message code='ezEmail.t840' /></option>
 		    <!-- <option value="FORWARD"><spring:message code='ezEmail.t841' /></option> -->
 		</select><span id="ActS" name="ActS"  style="width:230px;height:20px;border:0px solid #dbdbda;height:20px;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
-        <select id="ImportanceSel" name="ImportanceSel" class="select" onchange="ImSelect(this)" style="width:auto; display:none;">
+        <select id="ImportanceSel" name="ImportanceSel" class="mailRule_select" onchange="ImSelect(this)" style="width:auto; display:none;">
             <option value="NONE" selected><spring:message code='ezEmail.t359' /><spring:message code='ezEmail.t488' /></option>
             <option value="LOW"><spring:message code='ezEmail.t360' /></option>
             <option value="NORMAL"><spring:message code='ezEmail.t361' /></option>
@@ -1053,7 +1050,7 @@
         </select>
 	</div>
 	<div id="inboxRuleExpt" name="inboxRuleExpt" style="display:none;">
-		<select name="Exception" class="select" onchange="Ruleselect(this);">
+		<select name="Exception" class="mailRule_select" onchange="Ruleselect(this);">
 		    <option value="NONE" selected><spring:message code='ezEmail.t99000009' /></option>
 		    <!--<option value="SENDER"><spring:message code='ezEmail.t818' /></option>-->
 		    <option value="DOMAIN"><spring:message code='ezEmail.t829' /></option>
@@ -1075,7 +1072,7 @@
 			<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px;" >
 				<tr>
 					<td style="width:60%;padding:10px 0 0 10px" id="ReceiverSelecttd" name="ReceiverSelecttd">
-						<INPUT type="text" id="inboxRuleCon1" name="inboxRuleCon1" style="width:100%" onKeyDown="event_keyDown(event);">
+						<input type="text" id="inboxRuleCon1" name="inboxRuleCon1" style="width:100%" onKeyDown="event_keyDown(event);">
 					</td>
 					<td style="width:60%;padding:12px 10px 0 8px;">
 						<div >

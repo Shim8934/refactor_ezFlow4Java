@@ -17,12 +17,16 @@
 
 package egovframework.let.utl.fcc.service;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -71,12 +75,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -144,11 +150,14 @@ public class CommonUtil {
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	private static CommonUtil commonUtilInstance;
 	
+//	private static Map<String, String> loginUsers;
+	
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
 
     	commonUtilInstance = this;
+//    	loginUsers = new ConcurrentHashMap<String, String>();
     	
     	logger.debug("init ended.");
     }
@@ -165,7 +174,7 @@ public class CommonUtil {
 	    	String parentFolder1 = "../";
 	    	String parentFolder2 = "..\\";
 	    	
-	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2)) {
+	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2) || filePath.toUpperCase().contains("WEB-INF")) {
 	    		logger.debug("PathTraversal detected. filePath=" + filePath);
 	    		
 	    		throw new Exception("PathTraversal detected.");
@@ -303,7 +312,7 @@ public class CommonUtil {
 			for (int k = 0; k < cookie.length; k++) {
 				switch (cookie[k].getName()) {
 				case "APRUI0":
-					user.setDeptID(cookie[k].getValue());
+					user.setDeptID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI1":
 					user.setDeptName1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
@@ -324,7 +333,7 @@ public class CommonUtil {
 					user.setTitle2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI7":
-					user.setCompanyID(cookie[k].getValue());
+					user.setCompanyID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				}
 			}
@@ -546,7 +555,7 @@ public class CommonUtil {
 		                            isCookie = true;
 		                        }
 		                    } catch (Exception e) {
-		                        //e.printStackTrace();
+		                        e.printStackTrace();
 		                    }
 		                }
 		            }
@@ -579,7 +588,7 @@ public class CommonUtil {
 								isCookie = true;
 							}
 						} catch (Exception e) {
-							//e.printStackTrace();
+							e.printStackTrace();
 						}
 					}
 				}
@@ -1076,12 +1085,37 @@ public class CommonUtil {
 					packageType = items[2];					
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				logger.debug("License Key Decryption failed.");
 			}			
 		}
 		
 		logger.debug("packageType=" + packageType);
 		
+		return packageType;
+	}
+	
+	// yy tenantID로 db에 있는것만 복호화하는게 아니고 요청된 licenseKey를 복호화하는 기능
+	public String licenseKeyDEC(String licenseKey) throws Exception {
+		String packageType = "";
+		
+		if (!licenseKey.equals("")) {
+			try {
+				// 라이센스키를 복호화한다.
+				licenseKey = egovFileScrty.decryptAES(licenseKey);
+				
+				logger.debug("Decrypted licenseKey=" + licenseKey);
+				
+				String items[] = licenseKey.split(":");
+
+				if (items.length >= 3) {
+					packageType = items[2];					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("License Key Decryption failed.");
+			}			
+		}
 		return packageType;
 	}
 	
@@ -1234,54 +1268,70 @@ public class CommonUtil {
 	 */
 	public JSONObject getJsonFromRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromRestApi started");
-		String gwServerUrl = config.getProperty("config.journalGWServerURL");
-		String url = gwServerUrl + restUrl ;
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-		
-		if (param != null) {
-			for(String key : param.keySet()){
-				builder.queryParam(key, param.get(key));
-			}
-		}
-		
-		RestTemplate rest = new RestTemplate();
-		
-		HttpMethod method = null;
-		switch (methodType) {
-		case "get":
-			method = HttpMethod.GET;
-			break;
-		case "put":
-			method = HttpMethod.PUT;
-			break;
-		case "post":
-			method = HttpMethod.POST;
-			break;
-		case "delete":
-			method = HttpMethod.DELETE;
-			break;
-		default:
-			method = HttpMethod.GET;
-			break;
-		}
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		
 		JSONObject resultBody = null;
 		
-		try {
-			resultBody = (JSONObject) jp.parse(result.getBody());
-		} catch (org.json.simple.parser.ParseException e) {
+		try{
+			String gwServerUrl = config.getProperty("config.journalGWServerURL");
+			String url = gwServerUrl + restUrl ;
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+			
+			if (param != null) {
+				for(String key : param.keySet()){
+					builder.queryParam(key, param.get(key));
+				}
+			}
+			
+			RestTemplate rest = null;
+			
+			if (methodType.equals("patch")) {
+				ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+				rest = new RestTemplate(httpRequestFactory);
+			} else {
+				rest = new RestTemplate();
+			}
+			
+			HttpMethod method = null;
+			switch (methodType) {
+			case "get":
+				method = HttpMethod.GET;
+				break;
+			case "put":
+				method = HttpMethod.PUT;
+				break;
+			case "post":
+				method = HttpMethod.POST;
+				break;
+			case "delete":
+				method = HttpMethod.DELETE;
+				break;
+			case "patch":
+				method = HttpMethod.PATCH;
+				break;
+			default:
+				method = HttpMethod.GET;
+				break;
+			}
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			
+			
+			try {
+				resultBody = (JSONObject) jp.parse(result.getBody());
+			} catch (org.json.simple.parser.ParseException e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		logger.debug("getJsonFromRestApi ended");
 		return resultBody;
 	}
@@ -1348,6 +1398,7 @@ public class CommonUtil {
 			String userLang = ezCommonService.selectUserGetLang(userId, tenantId);
 			String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);
 			user.setOffset(timeZone);
+			user.setLang(userLang);
 			
 			if (userLang != null) {
 				if (user.getPrimary().equals(userLang)) {
@@ -1427,6 +1478,11 @@ public class CommonUtil {
 		return resultBody;
 	}
 	
+	public String getMailPassword() {
+		String pass = jspw;
+		return pass;
+	}
+	
 	/**
 	 * 레스트 API에서 제이슨 오브젝트 넘겨 받는 메서드
 	 * @param resteUrl
@@ -1434,6 +1490,70 @@ public class CommonUtil {
 	 * @param request
 	 * @return
 	 */
+	public JSONObject getJsonFromRestApi(String gwServerUrl, String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
+		logger.debug("getJsonFromRestApi started.");
+		String url = gwServerUrl + restUrl ;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		if (param != null) {
+			for(String key : param.keySet()){
+				builder.queryParam(key, param.get(key));
+			}
+		}
+		
+		RestTemplate rest = null;
+		
+		if (methodType.equals("patch")) {
+			ClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+			rest = new RestTemplate(httpRequestFactory);
+		} else {
+			rest = new RestTemplate();
+		}
+		
+		HttpMethod method = null;
+		switch (methodType) {
+		case "get":
+			method = HttpMethod.GET;
+			break;
+		case "put":
+			method = HttpMethod.PUT;
+			break;
+		case "post":
+			method = HttpMethod.POST;
+			break;
+		case "delete":
+			method = HttpMethod.DELETE;
+			break;
+		case "patch":
+			method = HttpMethod.PATCH;
+			break;
+		default:
+			method = HttpMethod.GET;
+			break;
+		}
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), method, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = null;
+		
+		try {
+			resultBody = (JSONObject) jp.parse(result.getBody());
+		} catch (org.json.simple.parser.ParseException e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getJsonFromRestApi ended.");
+		return resultBody;
+	}
+	
 	public JSONObject getJsonFromMemoRestApi(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		logger.debug("getJsonFromMemoRestApi started");
 		String gwServerUrl = config.getProperty("config.memoGwServerURL");
@@ -1484,10 +1604,10 @@ public class CommonUtil {
 		} catch (org.json.simple.parser.ParseException e) {
 			e.printStackTrace();
 		}
-		logger.debug("getJsonFromMemoRestApi ended");
+		logger.debug("getJsonFromMemoRestApi ended.");
 		return resultBody;
 	}
-
+	
 	public String getWildcardEscapedString(String s, int dbName) {
 		if (dbName == ORACLE) {
 			if ((s.indexOf('%') == -1) && (s.indexOf('_') == -1) && (s.indexOf('\\') == -1)) {
@@ -1526,6 +1646,33 @@ public class CommonUtil {
 		return sb.toString();
 	}
 	
+	public Map<String, Object> transBean2Map(Object obj) {
+	    Map<String, Object> map = new HashMap();
+	    
+	    if (obj == null) {
+	        return map;
+	    }
+	    
+	    try {
+	        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+	        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+	        
+	        for (PropertyDescriptor property : propertyDescriptors) {
+	            String key = property.getName();
+	            
+	            if (!key.equals("class")) {
+	                Method getter = property.getReadMethod();
+	                Object value = getter.invoke(obj);
+	                map.put(key, value);
+	            }
+	        }
+	    } catch (Exception e) {
+	        logger.error("transBean2Map Error " + e);
+	    }
+	    
+	    return map;
+	}
+	
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
 	 */
@@ -1541,6 +1688,64 @@ public class CommonUtil {
 		}
 
 		return strSize;
+	}
+	
+	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
+		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
+	}
+	
+	public boolean checkMultiLogin(HttpServletRequest request, HttpServletResponse response) {
+		boolean result = true;
+		
+		Cookie [] cookies = request.getCookies();
+		Cookie loginCookie = null;
+		Cookie multiLoginCookie = null;
+		String useMultiLogin = "YES";
+		
+		try {
+			if(!request.getRequestURI().equals("/user/login/actionLogout.do") && cookies != null) {
+				for(Cookie cookie : cookies) {
+					if(cookie.getName().equals("loginCookie")) {
+						loginCookie = cookie;
+					} else if(cookie.getName().equals("multiLoginCookie")) {
+						multiLoginCookie = cookie;
+					}
+				}
+				
+				if(loginCookie != null) {
+					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
+					
+					if(cookieInfo.length <  11) {
+						return result;
+					}
+					
+					String userID = cookieInfo[1];
+					String companyID = cookieInfo[10];
+					int tenantID = Integer.parseInt(cookieInfo[8]);
+					
+					logger.debug("MultiLogin::: userID = " + userID + ", companyID = " + companyID + ", tenantID = " + tenantID);
+					
+					if(companyID.equals("")) { 
+						return result;
+					}
+					
+					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
+					
+					if(useMultiLogin.equalsIgnoreCase("NO")) {
+						result = ezCommonService.matchMultiLoginTime(tenantID, userID, multiLoginCookie.getValue());
+					} 
+				} else {
+					if(multiLoginCookie != null) {
+						result = false;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.debug("multilogin fail::: loginCookie = " + loginCookie);
+		}
+		
+		return result;
 	}
 	
 	/** 

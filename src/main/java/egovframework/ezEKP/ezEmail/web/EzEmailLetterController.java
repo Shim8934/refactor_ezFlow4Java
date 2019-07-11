@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
@@ -50,7 +51,7 @@ public class EzEmailLetterController {
 	 * @param String loginCookie, Model model
 	 * @return String
 	 */
-	@RequestMapping(value = "/ezEmail/mailLetter.do")
+	@RequestMapping(value = "/ezEmail/mailLetter.do", method = RequestMethod.GET)
 	public String mailLetterView(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("mailLetterView started.");
 
@@ -75,7 +76,7 @@ public class EzEmailLetterController {
 	 * @param String loginCookie, Model model
 	 * @return String
 	 */
-	@RequestMapping(value = "/ezEmail/searchLetter.do")
+	@RequestMapping(value = "/ezEmail/searchLetter.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONArray searchLetter(@CookieValue("loginCookie") String loginCookie, String search) throws Exception {
 		search = URLDecoder.decode(search, "UTF-8");
@@ -109,7 +110,7 @@ public class EzEmailLetterController {
 	 * @param String loginCookie, letterNo, Model model
 	 * @return String
 	 */
-	@RequestMapping(value = "/ezEmail/mailLetterPreview.do")
+	@RequestMapping(value = "/ezEmail/mailLetterPreview.do", method = RequestMethod.GET)
 	public String mailLetterPreview(@CookieValue("loginCookie") String loginCookie, String letterNo, Model model) throws Exception {
 
 		logger.debug("mailLetterPreview started.");
@@ -129,7 +130,7 @@ public class EzEmailLetterController {
 	 * @param String loginCookie, Model model
 	 * @return String
 	 */
-	@RequestMapping(value = "/ezEmail/selectLetterBoxName.do")
+	@RequestMapping(value = "/ezEmail/selectLetterBoxName.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject selectLetterBoxName(@CookieValue("loginCookie") String loginCookie, String letterBoxNo) throws Exception {
 

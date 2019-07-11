@@ -47,7 +47,7 @@
 						window.open(url, "authorView", GetOpenWindowfeature(520, 200));
 					}
 				} else {
-					alert("<spring:message code='ezPortal.t85' />");
+					alert("<spring:message code='ezJournal.t219' />");
 				}
 			}
 			
@@ -60,7 +60,7 @@
 			
 		    function deleteAuthor() {
 		    	if (selectedUser) {
-			    	var flag =confirm("<spring:message code='ezResource.t351' />");
+			    	var flag =confirm("<spring:message code='ezJournal.t220' />");
 			    	if(flag){
 				    	$.ajax({
 			   				type:"post",
@@ -76,36 +76,37 @@
 			   			});
 			    	}
 				} else {
-					alert("<spring:message code='ezBoard.t601' />");
+					alert("<spring:message code='ezJournal.t221' />");
 				}
 		    }
 		</script>
 		<style>	
 			tr:hover{background:#eee; color:#fff;}
 			.selectTR{
-				background-color: #edf4fd;
+				background-color: #f1f8ff;
 			}
 		</style>
 	</head>
 	<body class="mainbody"> 
-		<h1><spring:message code='ezJournal.t4' /></h1>
+		<h1>
+			<spring:message code='ezJournal.t4' />
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" name="companyId" id="companyId" onchange="changeSelectCompany(this.value)">
+            	<c:forEach items="${compList}" var="company">
+	            	<option value="${company.companyId }"
+            		<c:if test="${company.selected eq 'selected' }">
+            			selected
+            		</c:if>
+	            	><c:out value='${company.companyName }'/></option>
+            	</c:forEach>
+            </select>
+		</h1>
 		<form class="journalForm">
 			<div id="mainmenu" style="padding-left: 5px;">
-				<span><b><spring:message code = 'ezApprovalG.t1512' /></b>
-		            <select name="companyId" id="companyId" onchange="changeSelectCompany(this.value)">
-		            	<c:forEach items="${compList}" var="company">
-			            	<option value="${company.companyId }"
-		            		<c:if test="${company.selected eq 'selected' }">
-		            			selected
-		            		</c:if>
-			            	><c:out value='${company.companyName }'/></option>
-		            	</c:forEach>
-		            </select><br/><br/>
-	            </span>
 	  			<ul>
-					<li><span onClick="insertAuth();"><spring:message code='ezJournal.t36' /></span></li>
+					<li class="important"><span onClick="insertAuth();"><spring:message code='ezJournal.t36' /></span></li>
 					<li><span onClick="updateAuth();"><spring:message code='ezJournal.t362' /></span></li>
-					<li><span onClick="deleteAuthor();"><spring:message code='ezJournal.t37' /></span></li>
+					<li><span class="icon16 icon16_delete" onClick="deleteAuthor();"></span></li>
 	  			</ul>
 			</div>
 			<script type="text/javascript">

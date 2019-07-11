@@ -362,6 +362,12 @@
 		        	});
 		        }
 		        
+
+		        function goProjectDetails(projectId) {
+		        	parent.window.open("/ezPMS/getProjectDetails.do?projectId=" + projectId, "right");
+		        	parent.window.open("/ezPMS/pmsLeft.do?mode=mail", "left");
+		        }
+
 		     	// 전달, 회신 시 보낸 시간
 		        function sentDateView(msg) {
 					var sendDateStrApp = $(".content", parent.document).parent();
@@ -381,6 +387,7 @@
 			     			"width" : "100%",
 			     		    "padding" : "0px 0px 0px 10px",
 			     			"margin" : "0px",
+			     			"font-family" : "malgun gothic",
 			     			"font-size" : "12px",
 			     			"color" : "#333"
 				    	});
@@ -409,5 +416,11 @@
 		</div>
 		<div class='margin' id="normalScreen" style="margin-top:5px; word-wrap:break-word;">${htmlBody}<!--  --></div>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
+	  	<c:if test="${previewMailImage == 'Y' && previewImageListHtml != ''}">
+		  	<div class="previewmail_addImage" style="margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+				<p class="title"><spring:message code='ezEmail.0hun05' /></p>
+				<div class="previewIamgelist" id="PreviewAttachList">${previewImageListHtml}</p>
+			</div>
+	  	</c:if>
 	</body>
 </html>

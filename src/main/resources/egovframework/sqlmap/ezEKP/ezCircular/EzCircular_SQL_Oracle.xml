@@ -254,7 +254,8 @@
 				B.updateStatus,
 				B.commentStatus,
 				B.shareStatus,
-				A.companyId
+				A.companyId,
+				(SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.memberid = F.cn AND A.tenantid = F.tenant_id) as userImageFile
             FROM
                 TBL_CIRCULAR A
 			JOIN

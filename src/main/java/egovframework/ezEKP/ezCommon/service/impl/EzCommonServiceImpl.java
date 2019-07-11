@@ -17,6 +17,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -43,6 +45,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -129,7 +132,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 
         try {
 	        filePath = realPath + filePath;
-	        File file = new File(filePath);
+	        File file = new File(commonUtil.detectPathTraversal(filePath));
 	        is = new FileInputStream(file);
 	        
 	        IOUtils.copy(is,response.getOutputStream());
@@ -230,7 +233,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	private String createBoundary() throws Exception{
         String strBoundary = "Boundary-=_";
-        Random Rnd = new Random();
+        SecureRandom Rnd = new SecureRandom();
 
         while (strBoundary.length() < 39) {
             int nch = Rnd.nextInt(9)+1; 
@@ -436,7 +439,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         			String extension = null;
         	        BufferedInputStream bis = null;
         	        
-        	        File f = new File(realPath + strResource);
+        	        File f = new File(commonUtil.detectPathTraversal(realPath + strResource));
         	        
         	        try {
         		        bis = new BufferedInputStream(new FileInputStream(f));
@@ -668,7 +671,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     			String extension = null;
     	        BufferedInputStream bis = null;
     	        
-    	        File f = new File(realPath + commonUtil.separator + strResource);
+    	        File f = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + strResource));
     	        
     	        try {
     		        bis = new BufferedInputStream(new FileInputStream(f));
@@ -725,7 +728,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			String contentType = null;
 			String extension = null;
 	        BufferedInputStream bis = null;
-	        File f = new File(realPath + m_ImageList[i]);
+	        File f = new File(commonUtil.detectPathTraversal(realPath + m_ImageList[i]));
 	        
 	        try {
 		        bis = new BufferedInputStream(new FileInputStream(f));
@@ -797,18 +800,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             } else {
             	try {
-            		File file = new File(realPath + m_ImageList[i]);
+            		File file = new File(commonUtil.detectPathTraversal(realPath + m_ImageList[i]));
             		in = new FileInputStream(file);
 				} catch (Exception e) {
 					try {
 						logger.debug("not found image(" + m_ImageList[i] + ") :::" + e.getMessage());
-						File file = new File(m_ImageList[i]);
+						File file = new File(commonUtil.detectPathTraversal(m_ImageList[i]));
 						in = new FileInputStream(file);
 						// 이미지 못찾을떄 사진없음 이미지 보여주기
 					} catch (FileNotFoundException e2) {
 						logger.debug("change default image" + e2.getMessage());
 						
-						in = new FileInputStream(realPath + "/images/default_pic.jpg");
+						in = new FileInputStream(commonUtil.detectPathTraversal(realPath + "/images/default_pic.jpg"));
 					}
 				}
                 int len = 0;
@@ -850,7 +853,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			String contentType = null;
 			String extension = null;
 	        BufferedInputStream bis = null;
-	        File f = new File(realPath + commonUtil.separator + m_BackImageList[i]);
+	        File f = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + m_BackImageList[i]));
 	        
 	        try {
 		        bis = new BufferedInputStream(new FileInputStream(f));
@@ -883,7 +886,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             if (strTemp.equals("http")) {
             	m_BackImageList[i] = m_BackImageList[i].substring(m_BackImageList[i].indexOf("/fileroot/"));
             	
-            	File file = new File(realPath + m_BackImageList[i]);
+            	File file = new File(commonUtil.detectPathTraversal(realPath + m_BackImageList[i]));
             	in = new FileInputStream(file);
             	int len = 0;
             	byte[] buf = new byte[1024];
@@ -905,7 +908,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             } else {
             	realPath = realPath + commonUtil.separator;
             	
-            	File file = new File(realPath + m_BackImageList[i]);
+            	File file = new File(commonUtil.detectPathTraversal(realPath + m_BackImageList[i]));
             	in = new FileInputStream(file);
                 int len = 0;
                 byte[] buf = new byte[1024];
@@ -936,7 +939,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String domain = request.getServerName() +":" +request.getServerPort();
         
         filePath = realPath + uploadModule;
-        File file = new File(filePath);
+        File file = new File(commonUtil.detectPathTraversal(filePath));
         
         if (!file.exists()) {
         	file.mkdir();
@@ -948,7 +951,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         } else if (type.equals("COMMUNITYNOTI")) {
         	url = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + request.getParameter("href");
         } else if (type.equals("SCHEDULECONTENT")) {
-        	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;        	
+        	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;
         } else if (type.equals("TASKCONTENT") || type.equals("TASKCONTENT2")) {
         	url = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + itemID;
         }
@@ -1054,7 +1057,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		String strImageName = UUID.randomUUID() + extension;
         String SfilePath = m_strSPath + strImageName;
         String LfilePath = m_strLPath + strImageName;
-        File file = new File(m_strLPath);
+        File file = new File(commonUtil.detectPathTraversal(m_strLPath));
 
         if (!file.exists()) {
         	file.mkdir();
@@ -1062,7 +1065,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         
         OutputStream bos = null;
         try {
-        	bos = new FileOutputStream(new File(LfilePath));
+        	bos = new FileOutputStream(new File(commonUtil.detectPathTraversal(LfilePath)));
         	bos.write(imageBytes);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
@@ -1115,8 +1118,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public String loadMHTFile(String strMHTpath) throws Exception{
 		String strMhtData = "";
-		byte[] fileBytes = Files.readAllBytes(Paths.get(strMHTpath.trim()));
-		
+		byte[] fileBytes = Files.readAllBytes(Paths.get(commonUtil.detectPathTraversal(strMHTpath.trim())));
 
 		// klib 복호화
 		if (strMHTpath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -1283,6 +1285,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createReformFlagColumn() throws Exception {
+		ezCommonDAO.createReformFlagColumn();
+	}
+	
+	@Override
 	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
         map.put("property", property.toUpperCase());
@@ -1355,6 +1362,72 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("deleteCompanyConfig ended");
 	}
+	
+	@Override
+	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception {
+		logger.debug("insertMultiLoginUser started");
+		
+		//멀티로그인 시간을 비교해서 이전 이용자가 없다면 인서트
+		//이전 이용자가 있다면 업데이트한다 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		map.put("loginTime", loginTime);
+		
+		try {
+			ezCommonDAO.deleteMultiLoginUser(map);
+			ezCommonDAO.insertMultiLoginUser(map);
+		} catch (DeadlockLoserDataAccessException e) {
+			//데드락이 발생하면 실패한 작업 다시 실행
+			
+			Thread.sleep(1000);
+			
+			ezCommonDAO.deleteMultiLoginUser(map);
+			ezCommonDAO.insertMultiLoginUser(map);
+		}
+		
+		logger.debug("insertMultiLoginUser ended");
+	}
+	
+	@Override
+	public String selectMultiLoginTime(int tenantID, String userID) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		
+		return Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
+	}
+	
+	@Override
+	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception {
+		logger.debug("matchMultiLoginTime started");
+		
+		// 멀티 로그인 시간을 비교해서 새로운 로그인 유저가 없다면 true 새로운 로그인 유저가 있다면 false
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		
+		String pre_loginTime = Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
+		
+		logger.debug("matchMultiLoginTime ended");
+		
+		if(loginTime.equals(pre_loginTime)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public void createTblUserMultiLogin() throws Exception {
+		ezCommonDAO.createTblUserMultiLogin();
+	}
 
 	@Override
 	public void addMailToJMochaDistribution() throws Exception {
@@ -1426,17 +1499,119 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void addJmochaMailGenenalPreviewMailImage() throws Exception {
+		ezCommonDAO.addJmochaMailGenenalPreviewMailImage();
+	}
+	
+	@Override
+	public void addPortalThemePortletIsFixed() throws Exception {
+		ezCommonDAO.addPortalThemePortletIsFixed();
+	}
+	
+	@Override
 	public void addUserMasterMailBoxQuota() throws Exception {
 		ezCommonDAO.addUserMasterMailBoxQuota();
+	}
+
+	@Override
+	public void addHolidayFlag() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
+	
+	@Override
+	public void createPortalThemePortlet() throws Exception {
+		ezCommonDAO.createPortalThemePortlet();
+	}
+	
+	@Override
+	public void addHolidayRepeat() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
+	
+	@Override
+	public void insertPortalThemePortletInitdata() throws Exception {
+		ezCommonDAO.insertPortalThemePortletInitdata();
 	}
 	
 	@Override
 	public void addJournalFormDelFlag() throws Exception {
 		ezCommonDAO.addJournalFormDelFlag();
 	}
+
+	@Override
+	public void updateTaskUrl() throws Exception {
+		ezCommonDAO.updateTaskUrl();
+	}
+
+	@Override
+	public void addPortalPortletUserPortletUsed() throws Exception {
+		ezCommonDAO.addPortalPortletUserPortletUsed();
+		
+	}
+
+	@Override
+	public void addPortalPortletUserThemeId() throws Exception {
+		ezCommonDAO.addPortalPortletUserThemeId();
+		
+	}
+
+	@Override
+	public void addTblPortalThemeUserIsDefault() throws Exception {
+		ezCommonDAO.addTblPortalThemeUserIsDefault();
+	}
 	
 	@Override
 	public void updateListOptionData() throws Exception {
 		ezCommonDAO.updateListOptionData();
+	}
+	
+	@Override
+	public void addMsgInMailSearch() throws Exception {
+		ezCommonDAO.addMsgInMailSearch();
+	}
+
+	@Override
+	public void addQuickLinkLinkOrder() throws Exception {
+		ezCommonDAO.addQuickLinkLinkOrder();
+	}
+
+	@Override
+	public void addComCloseCompanyId() throws Exception {
+		ezCommonDAO.addComCloseCompanyId();
+	}
+
+	@Override
+	public void addWebfolderTotalLimit() throws Exception {
+		ezCommonDAO.addWebfolderTotalLimit();
+	}
+
+	@Override
+	public void addMemoExtensionColumns() throws Exception {
+		ezCommonDAO.addMemoExtensionColumns();
+	}
+
+	@Override
+	public void addFormVersion() throws Exception {
+		ezCommonDAO.addFormVersion();
+	}
+	
+	@Override
+	public void addAddJobMasterProxy() throws Exception {
+		ezCommonDAO.addAddJobMasterProxy();
+	}
+	
+	@Override
+	public void createAttitudeAnnual() throws Exception {
+		ezCommonDAO.createTblAttitudeAnnual();
+		ezCommonDAO.createTblAttitudeAnnualCanappl();
+		ezCommonDAO.createTblAttitudeAnnualConf();
+		ezCommonDAO.createTblAttitudeAnnualHistory();
+		ezCommonDAO.createTblAttitudeAprConn();
+	}
+
+	@Override
+	public void addThemeContentLang() throws Exception {
+		ezCommonDAO.addThemeContent2();
+		ezCommonDAO.addThemeContent3();
 	}
 }

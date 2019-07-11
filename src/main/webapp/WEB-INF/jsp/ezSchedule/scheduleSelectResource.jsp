@@ -9,7 +9,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/style.css')}" type="text/css" />
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+	    <%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" /> --%>
 	    <style>
 	    	.mainlist tr th {
 	    	
@@ -34,7 +35,7 @@
 		    var ReturnValue_NameEng = new Array();
 		    var pStartTime = "<c:out value='${startTime}'/>";
 		    var pEndTime = "<c:out value='${endTime}'/>";
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var RetValue;
@@ -142,11 +143,61 @@
 		    }
 	
 		    function TreeLoad() {
-		        initTreeInfo("", g_UserID, g_DeptID);
+		        //initTreeInfo("", g_UserID, g_DeptID);
+		    	g_DeptBoardYN = false;
+		       	var xmlhttp = createXMLHttpRequest();
+		    	var xmlpara = createXmlDom();
+		    	var xmlRtn = createXmlDom(); 
+		    	
+		    	var objNode;		
+		    	createNodeInsert(xmlpara, objNode, "BRDLIST"); 
+		    	createNodeAndInsertText(xmlpara, objNode, "PARENT_ID", "1");
+		    	createNodeAndInsertText(xmlpara, objNode, "COMPANY_ID", pCompanyID);
+		    	createNodeAndInsertText(xmlpara, objNode, "ACCESS_FLAG", g_AccessCode);
+		    	createNodeAndInsertText(xmlpara, objNode, "FIRST_NODE", "Y");
+		    	createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "0");
+		    	createNodeAndInsertText(xmlpara, objNode, "USER_ID", g_UserID);
+		    	createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
+		    	createNodeAndInsertText(xmlpara, objNode, "ADMIN_CHECK", "N");
+		    	
+		    	xmlhttp.open("POST","/ezResource/callNodeTreeData.do?flag=" + encodeURIComponent(selectNo), false);
+		    	xmlhttp.send(xmlpara);
+		    	
+		    	var XMLstring = xmlhttp.responseXML;
+
+		    	// 표준모듈 (2007.05.30) : HTC TreeView로 변경	
+		    	//xmlRtn = loadXMLString(XMLstring);	
+		    	TreeView.source(XMLstring);
+		    	TreeView.update();
 		    }
 	
 		    function TreeView_onNodeExpanded(event) {
-		        displayBrdTree.call(this, g_UserID, g_DeptID, event);
+		        //displayBrdTree.call(this, g_UserID, g_DeptID, event);
+		    	if (!event) event = window.event;
+		    	var nodeIdx = event.nodeIdx;
+		    	var p_BrdID = TreeView.getvalue(nodeIdx, "DATA1");
+		    	
+		    	var xmlhttp = createXMLHttpRequest();
+				var xmlpara = createXmlDom();
+				var xmlRtn = createXmlDom(); 
+				
+				var objNode;		
+			    createNodeInsert(xmlpara, objNode, "BRDLIST"); 
+			    createNodeAndInsertText(xmlpara, objNode, "PARENT_ID", p_BrdID);
+			    createNodeAndInsertText(xmlpara, objNode, "COMPANY_ID", pCompanyID);
+			    createNodeAndInsertText(xmlpara, objNode, "ACCESS_FLAG", g_AccessCode);
+			    createNodeAndInsertText(xmlpara, objNode, "FIRST_NODE", "N");
+			    createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "0");
+			    createNodeAndInsertText(xmlpara, objNode, "USER_ID", g_UserID);
+			    createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
+			    createNodeAndInsertText(xmlpara, objNode, "ADMIN_CHECK", "N");
+			    
+				xmlhttp.open("POST","/ezResource/callNodeTreeData.do",false);
+				xmlhttp.send(xmlpara);
+				
+				xmlRtn = xmlhttp.responseXML;
+			
+		        TreeView.putchildxml(nodeIdx, xmlRtn);
 		    }
 	
 		    function TreeView_onNodeClick() {

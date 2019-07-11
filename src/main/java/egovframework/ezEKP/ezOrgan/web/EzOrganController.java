@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -54,7 +55,7 @@ public class EzOrganController {
 	/**
 	 * 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
 	 */
-	@RequestMapping(value = "/ezOrgan/getDeptTreeInfo.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getDeptTreeInfo.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("getDeptTreeInfo started.");
@@ -108,7 +109,7 @@ public class EzOrganController {
 	/**
 	 * 지정된 부서의 바로 아래에 위치한 자식 부서 목록을 XML 형식으로 반환한다.
 	 */
-	@RequestMapping(value = "/ezOrgan/getDeptSubTreeInfo.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getDeptSubTreeInfo.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptSubTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("getDeptSubTreeInfo started");
@@ -129,7 +130,7 @@ public class EzOrganController {
 	/**
 	 * 조직도 부서 FULL PATH 정보 호출 함수
 	 */
-	@RequestMapping(value = "/ezOrgan/getDeptFullPath.do", produces="text/html;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getDeptFullPath.do", method = RequestMethod.POST, produces="text/html;charset=utf-8")
 	@ResponseBody
 	public String getDeptFullPath(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("getDeptFullPath started");
@@ -147,7 +148,7 @@ public class EzOrganController {
 	/**
 	 * 조직도 부서 사원목록 호출 함수
 	 */
-	@RequestMapping(value = "/ezOrgan/getDeptMemberList.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getDeptMemberList.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptMemberList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("getDeptMemberList started");
@@ -225,7 +226,7 @@ public class EzOrganController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezOrgan/getDeptMemberListCount.do")
+	@RequestMapping(value = "/ezOrgan/getDeptMemberListCount.do", method = RequestMethod.POST)
 	public String getDeptMemberListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getDeptMemberList started.");
 		
@@ -260,7 +261,7 @@ public class EzOrganController {
 	/**
 	 * 조직도 부서 및 사원목록 검색 함수
 	 */
-	@RequestMapping(value = "/ezOrgan/getSearchList.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getSearchList.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("getSearchList started.");
@@ -297,7 +298,7 @@ public class EzOrganController {
 				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID, noAddJob);
 			}
 		} else {
-			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId);
+			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId, adminOrgan);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
@@ -342,7 +343,7 @@ public class EzOrganController {
 	/**
 	 * 조직도 외부수신처 depth 1 트리정보  함수
 	 */
-	@RequestMapping(value = "/ezOrgan/getOrganTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getOrganTreeInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getOrganTreeInfo() throws Exception{
 		logger.debug("getOrganTreeInfo Started.(Outer Rec.)");
@@ -358,7 +359,7 @@ public class EzOrganController {
 	/**
 	 * 조직도 부서 및 사원정보 함수
 	 */
-	@RequestMapping(value = "/ezOrgan/getADInfos.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getADInfos.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getADInfos(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -374,7 +375,7 @@ public class EzOrganController {
 	 * 조직도 서브트리정보  함수
 	 * @throws Exception 
 	 */
-	@RequestMapping(value = "/ezOrgan/getOrganSubTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getOrganSubTreeInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getOrganSubTreeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo , @RequestBody String xmlPara) throws Exception{
 		logger.debug("getOrganSubTreeInfo Started (outer)");
@@ -393,7 +394,7 @@ public class EzOrganController {
 	 * 선택한 서브트리정보  함수 
 	 * @throws Exception 
 	 */
-	@RequestMapping(value = "/ezOrgan/insertAllOrganSubTreeInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/insertAllOrganSubTreeInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String insertAllOrganSubTreeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo , String deptID) throws Exception{
 		logger.debug("insertAllOrganSubTreeInfo Started (outer)");
@@ -409,7 +410,7 @@ public class EzOrganController {
 //	/**
 //	 * 조직도 부서 및 사원정보 함수
 //	 */
-	@RequestMapping(value = "/ezOrgan/getADInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getADInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getADInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -425,7 +426,7 @@ public class EzOrganController {
 	 * 외부 수신처 정보 가져오기
 	 * @throws Exception 
 	 */
-	@RequestMapping(value = "/ezOrgan/getOrgInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezOrgan/getOrgInfo.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getOrgInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		logger.debug("getOrgInfo started");
@@ -440,7 +441,10 @@ public class EzOrganController {
 		return strXML;
 	}
 	
-	@RequestMapping(value = "/ezOrgan/getAllDeptID", produces = "text/xml;charsert=utf-8")
+	/**
+	 * @NOTE 해당 URL 호출을 하는 곳이 없음
+	 * */
+	@RequestMapping(value = "/ezOrgan/getAllDeptID", method = RequestMethod.POST, produces = "text/xml;charsert=utf-8")
 	@ResponseBody
 	public String getAllDeptID(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("getAllDeptID started.");
@@ -460,7 +464,7 @@ public class EzOrganController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezOrgan/isProxyUser.do", produces = "text/xml;charsert=utf-8")
+	@RequestMapping(value = "/ezOrgan/isProxyUser.do", method = RequestMethod.POST, produces = "text/xml;charsert=utf-8")
 	@ResponseBody
 	public String isProxyUser(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("isProxyUser started.");
@@ -476,7 +480,7 @@ public class EzOrganController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezOrgan/setListType.do", produces = "text/xml;charsert=utf-8")
+	@RequestMapping(value = "/ezOrgan/setListType.do", method = RequestMethod.POST, produces = "text/xml;charsert=utf-8")
 	@ResponseBody
 	public String setListType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("setListType started.");
@@ -492,7 +496,7 @@ public class EzOrganController {
 		return "TRUE";
 	}
 	
-	@RequestMapping(value = "/ezOrgan/getListType.do", produces = "text/xml;charsert=utf-8")
+	@RequestMapping(value = "/ezOrgan/getListType.do", method = RequestMethod.POST, produces = "text/xml;charsert=utf-8")
 	@ResponseBody
 	public String getListType(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("getListType started.");

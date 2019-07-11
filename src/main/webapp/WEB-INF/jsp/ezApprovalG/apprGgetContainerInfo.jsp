@@ -44,57 +44,57 @@
 	        var g_tagSelectsub = "1";
 	        var NodeList, curpage, nowblock, totalPage, block, p_page, p_nowblock, NodeListLen, Init_Flag, pChackYN, DocListType;
 	        var NodeList2, PageSize, ListView;
-	        var contFlag = "${contType}";
+	        var contFlag = "<c:out value = '${contType}'/>";
 	        var pSusinManagerFlag = "user";
-	        var UserID = "${userInfo.id}";
+	        var UserID = "<c:out value = '${userInfo.id}'/>";
 	        var Block_Size, WriterID;
 	        var docdir = "";
 	        var OrderOption = "";
 	        var OrderCell = "";
-	        var pEndDocHref = '${dirPath}';
+	        var pEndDocHref = "<c:out value = '${dirPath}'/>";
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "${userInfo.id}";
-	        arr_userinfo[2] = "${userInfo.displayName}";
-	        arr_userinfo[3] = "${userInfo.title}";
-	        arr_userinfo[4] = "${userInfo.deptID}";
-	        arr_userinfo[5] = "${userInfo.deptName}";
-	        arr_userinfo[6] = "${userInfo.jikChek}";
-	        arr_userinfo[7] = "${buJaeInfo}";
-	        arr_userinfo[8] = "${userInfo.email}";
+	        arr_userinfo[1] = "<c:out value = '${userInfo.id}'/>";
+	        arr_userinfo[2] = "<c:out value = '${userInfo.displayName}'/>";
+	        arr_userinfo[3] = "<c:out value = '${userInfo.title}'/>";
+	        arr_userinfo[4] = "<c:out value = '${userInfo.deptID}'/>";
+	        arr_userinfo[5] = "<c:out value = '${userInfo.deptName}'/>";
+	        arr_userinfo[6] = "<c:out value = '${userInfo.jikChek}'/>";
+	        arr_userinfo[7] = "<c:out value = '${buJaeInfo}'/>";
+	        arr_userinfo[8] = "<c:out value = '${userInfo.email}'/>";
 	        arr_userinfo[9] = "";
-	        arr_userinfo[10] = "${susinAdmin}";
-	        arr_userinfo[11] = "${userInfo.displayName1}";
-	        arr_userinfo[12] = "${userInfo.displayName2}";
-	        arr_userinfo[13] = "${userInfo.title1}";
-	        arr_userinfo[14] = "${userInfo.title2}";
-	        arr_userinfo[15] = "${userInfo.deptName1}";
-	        arr_userinfo[16] = "${userInfo.deptName2}";
+	        arr_userinfo[10] = "<c:out value = '${susinAdmin}'/>";
+	        arr_userinfo[11] = "<c:out value = '${userInfo.displayName1}'/>";
+	        arr_userinfo[12] = "<c:out value = '${userInfo.displayName2}'/>";
+	        arr_userinfo[13] = "<c:out value = '${userInfo.title1}'/>";
+	        arr_userinfo[14] = "<c:out value = '${userInfo.title2}'/>";
+	        arr_userinfo[15] = "<c:out value = '${userInfo.deptName1}'/>";
+	        arr_userinfo[16] = "<c:out value = '${userInfo.deptName2}'/>";
 	        var LoadContID = "${contID}";
 	        var LoadSquery = "${sQuery}";
 	        var GamSaFlag = false;
-	        var CompanyID = "${userInfo.companyID}";
-	        var USE_OCS = "${useOcs}";
-	        var Udomain = "${userEmail}";
-	        var pOpenYaer = "${openYear}";
-			var approvalFlag = "${approvalFlag}"
+	        var CompanyID = "<c:out value = '${userInfo.companyID}'/>";
+	        var USE_OCS = "<c:out value = '${useOcs}'/>";
+	        var Udomain = "<c:out value = '${userEmail}'/>";
+	        var pOpenYaer = "<c:out value = '${openYear}'/>";
+			var approvalFlag = "<c:out value = '${approvalFlag}'/>"
 	        var CurrentHeight = 0;
 	        var CurrentWidth = 0;
 	        var pItemCD = ""; 
-	        var pEndAprType = "${endAprType}";
-	        var pEndAprState = "${endAprState}";
-	        var pUse_Editor = "${useEditor}";
+	        var pEndAprType = "<c:out value = '${endAprType}'/>";
+	        var pEndAprState = "<c:out value = '${endAprState}'/>";
+	        var pUse_Editor = "<c:out value = '${useEditor}'/>";
 	        var DocType = "";
  	        var DocState = "";
  	        var period;
  	        var pDocInfoValue = "1";
- 	       	var nowDate = "${nowDateUTC}";
+ 	       	var nowDate = "<c:out value = '${nowDateUTC}'/>";
  	        var orgCompanyID = "";
  	       	var ext;
  	        var pListTypeValue;
  	        var isSearch = false;
  	     	//개인문서함 엑셀내보내기시에 필요한 파일명.
- 	        var excelFileName = "${excelFileName}";
+ 	        var excelFileName = "<c:out value = '${excelFileName}'/>";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -142,7 +142,7 @@
 	                AddOption(sel_year, i, i);
 	
 	            try {
-	                if ("${type}" == "1")
+	                if ("<c:out value = '${type}'/>" == "1")
 	                    GamSaFlag = true;
 	
 	                PageSize = 10;
@@ -406,7 +406,7 @@
 		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
 		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
 					
-		            if (tmpStartDate <= "${nowDate}" && tmpEndDate >= "${nowDate}") {
+		            if (tmpStartDate <= "<c:out value = '${nowDate}'/>" && tmpEndDate >= "<c:out value = '${nowDate}'/>") {
 		                return true;
 		            }
 		        } 
@@ -857,10 +857,10 @@
 	            }
 	
 	            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-	                if ("${userInfoEnforce}" == "1") {
+	                if ("<c:out value = '${userInfoEnforce}'/>" == "1") {
 	                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezEnforce_HWP_Cross.aspx";
 	                }
-	                else if ("${userInfoEnforce}" == "2") {
+	                else if ("<c:out value = '${userInfoEnforce}'/>" == "2") {
 	                    openLocation = "../ezViewHWP/ezConv_HWP_Cross.aspx";
 	                }
 	                else {
@@ -868,7 +868,7 @@
 	                }
 	            }
 	            else {
-	                if ("${userInfoEnforce}" == "1") {                    
+	                if ("<c:out value = '${userInfoEnforce}'/>" == "1") {                    
 	                    if (CrossYN())
 	                        openLocation = "../enforce/convEnforce_CK.aspx";
 	                    else
@@ -876,7 +876,7 @@
 	                        openLocation = "../enforce/convEnforce.aspx";
 	                    }
 	                }
-	                else if ("${userInfoEnforce}" == "2") {
+	                else if ("<c:out value = '${userInfoEnforce}'/>" == "2") {
 	                    openLocation = "../enforce/ezConv.aspx";
 	                    if (CrossYN()) {
 	                        openLocation = "../enforce/ezConv_CK.aspx";
@@ -1176,8 +1176,8 @@
 	        				position  : arr_userinfo[3],
 	        				position2 : arr_userinfo[16],
 			        		companyID : CompanyID,
-		    				companyName : "${userInfo.companyName}",
-		    				companyName2 : "${userInfo.companyName2}"
+		    				companyName : "<c:out value = '${userInfo.companyName}'/>",
+		    				companyName2 : "<c:out value = '${userInfo.companyName2}'/>"
 	        				},
 	        		success: function(xml){
 	        		}        			
@@ -1265,7 +1265,7 @@
 	            	}
 		        }
 		
-		        document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>" + strLang943 + " - " + period + "]";
+		        document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>&nbsp;/ " + period;
 		
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
@@ -1679,78 +1679,81 @@
 	<body class="mainbody" style="margin-top: 0px">
 	    <div id="MOC_Div" style="display: none"></div>
 	    <h1 class="title_h1"><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
-	        <span style="float:right;font-weight:normal;color:black;">
+	        <span class="searchForm">
 	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
 		    	</select>
-		        <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	            <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+		        <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	            <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
-	        <ul id="menuend">
+	        <ul id="menuend" style="display:none">
 	        	<c:if test ="${approvalFlag == 'S'}">	        	
-	            <li id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
-	            <li id="tsendCir" style="display: none"><span id="sendCir" onClick="return sendCirCulation_onclick()" ><spring:message code='ezApprovalG.hyj25'/></span></li>
-<!-- 	            시행문 변환 추후 개발 -->
-				<div style="display: none">
-		            <li id="tenforce" style="display: none"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
-				</div>
-	            <li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
+		            <li class="important" id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
+		            <li class="important" id="tsendCir" style="display: none"><span id="sendCir" onClick="return sendCirCulation_onclick()" ><spring:message code='ezApprovalG.hyj25'/></span></li>
+					<!-- 	시행문 변환 추후 개발 -->
+					<div style="display: none">
+			            <li id="tenforce" style="display: none"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+					</div>
 	            </c:if>
 	            <li id="tbar1" style="background: none; padding-right: 2px; display: none;">
 	            <li id="tdEDMFolder" style="display: none"><span id="SelEDMFolder" onclick="return SelEDMFolder_onclick()"><spring:message code='ezApprovalG.t1525'/></span></li>
-	            <li id="tbtnExcel"><span id="btnExcel" onclick="return btnExcel_onclick(0)"><spring:message code='ezApprovalG.t1526'/></span></li>
-	            <li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>
 	            <c:if test ="${approvalFlag == 'S'}">
-	            <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li> -->
-	            <li id=tbtnRemoveDoc><span id=btnRemoveDoc onClick ="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
-	            <c:if test ="${tmpValue !='' && contID !=''}">
-		            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
-	            </c:if>
-			    <li id="tSearchCondi"><span id="SearchCondi" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
-		        <li id="tViewDoc"><span id="ViewDoc" onClick="return ViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>      
-		        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		        <!-- <li id="Li2" style="background: none; padding-right: 2px;">
-		        <img src="/images/i_bar.gif"></li> -->
+	            	<li id="tViewDoc"><span id="ViewDoc" onClick="return ViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
+			        <li id="tbtnExcel"><span id="btnExcel" onclick="return btnExcel_onclick(0)"><spring:message code='ezApprovalG.t1526'/></span></li>
+	            	<li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>      
+			        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+			        <li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
+			        <c:if test ="${tmpValue !='' && contID !=''}">
+			            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
+		            </c:if>
+				    <li id="tSearchCondi"><span class="icon16 icon16_search" id="SearchCondi" onClick="return SearchCondi_onclick()" ></span></li>
+			        <li id=tbtnRemoveDoc><span class="icon16 icon16_delete" id=btnRemoveDoc onClick ="return btnRemoveDoc_onclick()"></span></li>
+			        <!-- <li id="Li2" style="background: none; padding-right: 2px;">
+			        <img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 	            <c:if test ="${approvalFlag == 'G'}">
-	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
-	            <!-- <li id="tbar2" style="background: none; padding-right: 2px; display: none;"><img src="/images/i_bar.gif"></li> -->
-	            <li id="tSearchCondi"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
-	            <li id="tViewDoc"><span id="ViewDoc" onclick="return ViewDoc_onclick()"><spring:message code='ezApprovalG.t367'/></span></li>
-	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
+	            	<li id="tViewDoc"><span id="ViewDoc" onclick="return ViewDoc_onclick()"><spring:message code='ezApprovalG.t367'/></span></li>
+	            	<li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
+	            	<li id="tbtnExcel"><span id="btnExcel" onclick="return btnExcel_onclick(0)"><spring:message code='ezApprovalG.t1526'/></span></li>
+	            	<li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>		            
+		            <!-- <li id="tbar2" style="background: none; padding-right: 2px; display: none;"><img src="/images/i_bar.gif"></li> -->
+		            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+		            <li id="tSearchCondi"><span class="icon16 icon16_search" id="SearchCondi" onclick="return SearchCondi_onclick()"></span></li>
+		            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 	            <!-- <img src="/images/i_bar.gif"> -->
-	            <li style="vertical-align: middle;">
+	            <li style="vertical-align: middle; float:right">
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>
-		        	<c:if test = "${approvalFlag != 'G' && sQuery != 'usercontlist'}">
-		        		<div id="sel_status_div" style="display:inline;">
-						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
-							<option value="ALL"><spring:message code='ezPoll.t104'/></option>
-			        	</select>  
-		        	</div>
-		        	</c:if>  
 		        </li>
+		        	<c:if test = "${approvalFlag != 'G' && sQuery != 'usercontlist'}">
+		        		<li style="vertical-align: middle; float:right">
+		        			<div id="sel_status_div" style="display:inline;">
+							<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
+								<option value="ALL"><spring:message code='ezPoll.t104'/></option>
+			        		</select>  
+		        			</div>
+		        		</li>
+		        	</c:if>  
+		        
 	        </ul>
 	        <!-- 	        후결 문서함 -->
-	    	<ul id="menuapr">
-		        <li id="tViewDocApr"><span id="ViewDocApr" onClick="return ViewDoc_onclick()" ><spring:message code='ezApproval.pjj35'/></span></li> 
-		        <li id="tSearchCondiApr"><span id="SearchCondiApr" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
+	    	<ul id="menuapr" style="display:none">
+		        <li id="tViewDocApr"><span id="ViewDocApr" onClick="return ViewDoc_onclick()" ><spring:message code='ezApproval.pjj35'/></span></li>
 		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
-		        <li style="vertical-align: middle;">
+		        <li id="tSearchCondiApr"><span class="icon16 icon16_search" id="SearchCondiApr" onClick="return SearchCondi_onclick()" ></span></li>
+		        <li style="vertical-align: middle; float:right">
 		        	<select id="who_year" name="who_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  
 		        </li>
       		</ul>
 	    </div>
-	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO;" id="divList">
+	    <div class="div_scroll" style="width:100%;HEIGHT:375px; overflow:AUTO; margin-bottom:10px;" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>

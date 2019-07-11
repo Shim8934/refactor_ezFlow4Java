@@ -13,7 +13,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterList.js')}"></script>
 		<script type="text/javascript">
-			var letterNo = '${letterNo}';
+			var letterNo = '<c:out value="${letterNo}"/>';
 			var isDivPopUp = false;
 			var letterNoMsg = "<spring:message code='ezEmail.letter16'/>"; // 존재하지 않는 편지지 입니다.
 			var previewMsg = "<spring:message code='ezBoard.t431'/>"; // 미리보기 

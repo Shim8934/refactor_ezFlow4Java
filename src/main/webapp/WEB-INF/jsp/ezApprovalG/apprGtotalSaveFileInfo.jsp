@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -11,9 +13,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 	    <script type="text/javascript">	
-	        var pDocID = "${docID}";
-	        var pType = "${type}";
-	        var orgCompanyID = "${orgCompanyID}";
+	        var pDocID = "<c:out value='${docID}'/>";
+	        var pType = "<c:out value='${type}'/>";
+	        var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
 	        var ReturnFunction;
 	        window.onload = function ()
 	        {
@@ -163,7 +165,7 @@
 	        {
 	            document.getElementById('cbx_all').checked = false;
 	            if (obj.checked) {
-	                obj.parentElement.parentElement.style.backgroundColor = "#edf4fd";
+	                obj.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
 	                strPathInfo = strPathInfo + obj.value + "|||";
 	                strTypeInfo = strTypeInfo + GetAttribute(obj, "data1") + "|||";
 	                strFileName = strFileName + GetAttribute(obj, "data2") + "|||";
@@ -190,10 +192,10 @@
 	
 	                    document.getElementById('chk_' + i).checked = true;
 	                    if (CrossYN())
-	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "#edf4fd";
+	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "#f1f8ff";
 	                    else {
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#edf4fd";
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#edf4fd";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#f1f8ff";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#f1f8ff";
 	                    }
 	
 	                    strPathInfo += document.getElementById('chk_' + i).value + "|||";

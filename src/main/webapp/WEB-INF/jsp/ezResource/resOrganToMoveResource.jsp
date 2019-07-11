@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
+		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/email_tree.css')}"/>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwAdmin.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -102,7 +103,7 @@
 			
 			function checkHavePermission() {
 				$.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		async : false,
 		    		data : {
 		    			selectedResourceGroupId : p_TargetID
@@ -207,6 +208,9 @@
 				TreeView.putchildxml(nodeIdx,  xmlRtn);
 			}
 		</script>
+		<style type="text/css">
+			.node_normal, .node_selected {line-height:34px;}
+		</style>
 	</head>
 	<body class="popup">
 		<h1><spring:message code="ezResource.t119" /></h1>

@@ -19,13 +19,13 @@
 		var imageWidth = "${imageWidth}";
 		var imageHeight = "${imageHeight}";
 		var g_xmlhttp = createXMLHttpRequest();
-		var pageid = "${pageID}";
-		var uid = "${uID}";
+		var pageid = "<c:out value = '${pageID}' />";
+		var uid = "<c:out value = '${uID}' />";
 		var g_Dirty = false;
-		var pmode = "${mode}";
-		var parentuid = "${parentUID}";
+		var pmode = "<c:out value = '${mode}' />";
+		var parentuid = "<c:out value = '${parentUID}' />";
 		var g_bSaved = false;
-		var menuindex = "${menuIndex}";
+		var menuindex = "<c:out value = '${menuIndex}' />";
 		var pSkin = "1";   // 기본설정에선 모두 스킨1만 설정
 		var pNoneActiveX = "${noneActiveX}";
 		var selSpan = "";

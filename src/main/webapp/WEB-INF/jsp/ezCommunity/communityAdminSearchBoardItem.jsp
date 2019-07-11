@@ -127,7 +127,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    
@@ -136,7 +136,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    
@@ -229,7 +229,7 @@
 				}
 				
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(strAbstract);
@@ -267,7 +267,7 @@
 				
 				if (CrossYN()) {
 				    if (gubun == "3") {
-				        window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=1&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+				        window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=1&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 				    } else {
 				    	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code), "", 750, 721);
 				    }
@@ -337,7 +337,7 @@
 	
 			function CheckIfHasReplies() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
+				xmlhttp.open("GET", "/ezCommunity/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "TRUE") {
@@ -351,7 +351,7 @@
 	
 			function DeleteItem() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
+				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + encodeURIComponent(strListInfo), false);
 				xmlhttp.send();
 				xmlhttp = null;
 				window.location.reload();
@@ -390,14 +390,14 @@
 				var boardname = document.getElementById("txtBoardName").value;
 	
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
-				url += "&boardname=" + boardname;
+				url += "&boardname=" + encodeURIComponent(boardname);
 				url += "&page=" + newPage.toString();
 				url += "&gubun=" + gubun;
 	
@@ -422,14 +422,14 @@
 				var boardname = document.getElementById("txtBoardName").value;
 	
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
-				url += "&boardname=" + boardname;
+				url += "&boardname=" + encodeURIComponent(boardname);
 				url += "&page=" + newPage.toString();
 				url += "&gubun=" + gubun;
 	
@@ -457,14 +457,14 @@
 				var boardname = document.getElementById("txtBoardName").value;
 				
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
-				url += "&boardname=" + boardname;
+				url += "&boardname=" + encodeURIComponent(boardname);
 				url += "&page=" + CurPage.toString();
 				url += "&gubun=" + gubun;
 				
@@ -533,7 +533,7 @@
 				pheigth = pheigth - 200;
 				pwidth = pwidth - 127;
 				
-				window.open("/ezCommunity/moveBoardItem.do?itemIDList=" + strItemList + "&boardIDList=" + strBoardList, "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,"");		
+				window.open("/ezCommunity/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardIDList=" + encodeURIComponent(strBoardList), "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,"");		
 			}
 	
 			var boardselect_dialogArguments = new Array();
@@ -567,7 +567,7 @@
 				var result = "";
 				
 		    	  $.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "text",
 						async : false,
 						url : "/ezCommunity/getParentBoardID.do",
@@ -601,33 +601,33 @@
 	
 				switch(pIndex) {
 					case 1:		
-						window.location.href = "/ezCommunity/boardProperty.do?boardID=" + pBoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardProperty.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 					case 2:		
-					    window.location.href = "/ezCommunity/boardCreate.do?boardID=" + pBoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+					    window.location.href = "/ezCommunity/boardCreate.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 					case 3:		
-						window.location.href = "/ezCommunity/boardACL.do?boardID=" + pBoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardACL.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 				    case 4:
-				        window.location.href = "/ezCommunity/boardOrder.do?boardID=" + pBoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+				        window.location.href = "/ezCommunity/boardOrder.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 				        break;
 				    case 5:		
 				        if (pBoardID == BoardGroupID) {
 				            alert("<spring:message code = 'ezCommunity.t377' />");
 				        } else {
-				            window.location.href = "/ezCommunity/boardMove.do?boardID=" + pBoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+				            window.location.href = "/ezCommunity/boardMove.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 				        }
 				        
 				        break;
 					case 6:		
-						window.location.href = "/ezCommunity/boardDelete.do?boardID=" + pBoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardDelete.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 					case 7:		
-						window.location.href = "/ezCommunity/adminSearchBoardItem.do?boardID=" + pBoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/adminSearchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 					case 9:		
-						window.location.href = "/ezCommunity/boardGroupCreate.do?boardID=" + pBoardID + "&parentBoardID=" + ParentBoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code;
+						window.location.href = "/ezCommunity/boardGroupCreate.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(ParentBoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + code;
 						break;
 						
 					default:
@@ -674,7 +674,7 @@
 				SelectedBoardParentBoardID = pParentBoardID;
 				SelectedBoardGroupID = pBoardGroupID;
 	
-				window.location.href = "/ezCommunity/boardProperty.do?boardID=" + SelectedBoardID;
+				window.location.href = "/ezCommunity/boardProperty.do?boardID=" + encodeURIComponent(SelectedBoardID);
 			}
 		
 	        function onkey_down() {
@@ -693,7 +693,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang82 + "<span style='color:#017BEC;'> " + "${totalCount}" + " </span>" + strLang83 + "]";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + "${totalCount}" + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;

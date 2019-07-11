@@ -27,8 +27,8 @@
     var g_szRecInfoXml;
     var g_SCFlag;
     var g_CodeInfoXml,g_bRecAdmin;
-    var CompanyID = "${userInfo.companyID}";
-    var UserLang = "${userInfo.lang}";
+    var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+    var UserLang = "<c:out value ='${userInfo.lang}'/>";
     var RetValue;
     var ReturnFunction;
     window.onload = function () {
@@ -625,7 +625,7 @@
     }
 </script>
 </head>
-<body style="margin-left:0px; margin-top:0px;" class="popup">
+<body class="popup">
 <h1><spring:message code='ezApprovalG.t969'/></h1>
 <div id="close">
     <ul>

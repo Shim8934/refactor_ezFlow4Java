@@ -128,10 +128,12 @@
 
 				if (document.getElementById("approve1").checked == true) {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", "1");
-				} else {
+				} else if (document.getElementById("approve0").checked == true) {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", "0");
+				} else {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "2");
 				}
-
+				
 				var checkSpace2 = document.getElementById("Brd_NM2").value.trim();
 				
 				if (checkSpace2 == 0) {
@@ -145,6 +147,13 @@
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("hdnfileNM1").value);
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("hdnfileNM2").value);
 
+				// 반납절차 flag 넘기기
+				if (document.getElementById("return1").checked == true) {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "0");
+				} else {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "1");
+				}
+				
 				//createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("subOwner1").value);
 				xmlHttp.open("Post", "/ezResource/callAddClsItem.do", false);
 				xmlHttp.send(xmlpara);
@@ -381,8 +390,8 @@
 
 	            preview1.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview1.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
-	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
+	            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+	            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM1").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}
@@ -399,8 +408,8 @@
 
 	            preview2.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview2.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
-            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
+            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+            		+encodeURIComponent(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM2").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}
@@ -505,6 +514,16 @@
             						<spring:message code="ezResource.t156"/>
             						<input type="radio" name="approve" id="approve0" value="0">
             						<spring:message code="ezResource.t157"/>
+            						<input type="radio" name="approve" id="approve2" value="2">
+            						<spring:message code="ezSchedule.t404"/>
+            					</td>
+        					</tr>
+        					<tr>
+          						<th><spring:message code="ezResource.kmsr11"/></th>
+          						<td colspan="3" style="width:100%"><input type="radio" name="return" id="return1" value="0" checked>
+            						<spring:message code="ezResource.kmsr12"/>&nbsp;
+            						<input type="radio" name="return" id="return2" value="1">
+            						<spring:message code="ezResource.kmsr13"/>
             					</td>
         					</tr>
         					<tr>
@@ -518,6 +537,7 @@
            							<span onClick="btnfileup()"><spring:message code="ezPersonal.t20003"/></span>
            						</a>
             				</td>
+            				
             			</tr>
             			<tr>
         					<th><spring:message code="ezPortal.t202"/>2</th>
@@ -539,7 +559,7 @@
       				<input type="hidden" id="hdnfileNM1" name="hdnfileNM1" value="">
 					<input type="hidden" id="hdnfileNM2" name="hdnfileNM2" value="">
       				<br>
-      				<h2><spring:message code="ezResource.t158"/></h2>
+      				<h2 style="font-size:12px;margin-bottom:8px;"><spring:message code="ezResource.t158"/></h2>
 				</td>
   			</tr>
   			<tr>

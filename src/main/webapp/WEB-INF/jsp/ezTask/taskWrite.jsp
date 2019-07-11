@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<HEAD>
 		<title><spring:message code='ezTask.t206' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -21,22 +21,22 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<script>
-			var userid = "${userInfo.id }";
-			var username = "${userInfo.displayName1 }";
-			var username2 = "${userInfo.displayName2 }";
-			var deptname = "${userInfo.deptName1 }";
-			var deptname2 = "${userInfo.deptName2 }";
-			var useremail = "${userInfo.email }";
-			var taskid = "${taskInfoVO.taskID }";
-			var taskstatus = "${taskInfoVO.taskStatus }";
-			var completerate = "${taskInfoVO.completeRate }";
-			var startdate = "${taskInfoVO.startDate }";
-			var enddate = "${taskInfoVO.endDate }";
-			var importance = "${taskInfoVO.importance }";
-			var tasktype = "${taskInfoVO.taskType }";
-			var creatorid = "${taskInfoVO.creatorID }";
-			var hasattach = "${taskInfoVO.hasAttach }";
-			var hasshare = "${taskInfoVO.hasShare}";
+			var userid = "<c:out value='${userInfo.id }'/>";
+			var username = "<c:out value='${userInfo.displayName1 }'/>";
+			var username2 = "<c:out value='${userInfo.displayName2 }'/>";
+			var deptname = "<c:out value='${userInfo.deptName1 }'/>";
+			var deptname2 = "<c:out value='${userInfo.deptName2 }'/>";
+			var useremail = "<c:out value='${userInfo.email }'/>";
+			var taskid = "<c:out value='${taskInfoVO.taskID }'/>";
+			var taskstatus = "<c:out value='${taskInfoVO.taskStatus }'/>";
+			var completerate = "<c:out value='${taskInfoVO.completeRate }'/>";
+			var startdate = "<c:out value='${taskInfoVO.startDate }'/>";
+			var enddate = "<c:out value='${taskInfoVO.endDate }'/>";
+			var importance = "<c:out value='${taskInfoVO.importance }'/>";
+			var tasktype = "<c:out value='${taskInfoVO.taskType }'/>";
+			var creatorid = "<c:out value='${taskInfoVO.creatorID }'/>";
+			var hasattach = "<c:out value='${taskInfoVO.hasAttach }'/>";
+			var hasshare = "<c:out value='${taskInfoVO.hasShare}'/>";
 			var contentPath = "<c:out value='${taskInfoVO.contentPath}'/>";
 			var sharelist = "";
 			var g_person = null;
@@ -50,14 +50,14 @@
 			var sharedept2 = "";
 			var sharemail = "";
 // 			var FormProcSpelling = "FormProcSpelling";
-			var personid = "${taskInfoVO.personID }";
-			var personname = "${taskInfoVO.personName }";
-			var personname2 = "${taskInfoVO.personName2 }";
-			var persondept = "${taskInfoVO.personDeptName }";
-			var persondept2 = "${taskInfoVO.personDeptName2 }";
-			var personemail = "${taskInfoVO.personEmail }";
-			var useTodoMemo = "${useTodoMemo }";
-			var primary = "${userInfo.primary}";
+			var personid = "<c:out value='${taskInfoVO.personID }'/>";
+			var personname = "<c:out value='${taskInfoVO.personName }'/>";
+			var personname2 = "<c:out value='${taskInfoVO.personName2 }'/>";
+			var persondept = "<c:out value='${taskInfoVO.personDeptName }'/>";
+			var persondept2 = "<c:out value='${taskInfoVO.personDeptName2 }'/>";
+			var personemail = "<c:out value='${taskInfoVO.personEmail }'/>";
+			var useTodoMemo = "<c:out value='${useTodoMemo }'/>";
+			var primary = "<c:out value='${userInfo.primary}'/>";
 			var defaultFont = "<spring:message code='main.t246' />";
 			var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 			var repetition = "<c:out value = '${taskInfoVO.repetition}' />";		
@@ -66,6 +66,7 @@
 			/*2018-05-23 구해안 버그 수정을 위해 boolean 변수 2개 추가*/
 			var timeCheck = false;
 			var radioCheck = false;
+			var flag = "<c:out value='${flag}'/>";
 			
 			$(function () {
 				 $("#Sdatepicker").datepicker({
@@ -73,7 +74,7 @@
 					changeYear: true,
 					autoSize: true,
 					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly: true,
 					beforeShow: function (input) {
 						var i_offset = $(input).offset();
@@ -88,7 +89,7 @@
 					changeYear: true,
 					autoSize: true,
 					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly: true,
 					beforeShow: function (input) {
 						var i_offset = $(input).offset();
@@ -99,8 +100,8 @@
 				});
 
 				if (startdate == "") {
-					startdate = "${startDate}";
-					enddate = "${endDate}";
+					startdate = "<c:out value='${startDate}'/>";
+					enddate = "<c:out value='${endDate}'/>";
 				}
 
 				// IE계열 브라우저에서 메모가 100자 넘어가면 마우스 커서 default->text
@@ -594,6 +595,12 @@
 					}
 				}
 			}
+
+	        function bodydragover(evt) {
+		        evt.dataTransfer.dropEffect = "none";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden;">
@@ -614,7 +621,7 @@
 				                           <c:when test="${taskID == ''}">				                              
 				                              <li style="display:none"><span onClick="check_name()"><spring:message code='ezTask.t11' /></span></li>
 											  <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-				                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
+				                              <li><span class="icon16 popup_icon16_print" onClick="beforeprint()"></span></li>
 				                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
 				                           </c:when>
 				                           <c:otherwise>				                              

@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript">
+			var folderType = "";
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
 				var reheight = document.documentElement.clientHeight - 240;
@@ -100,8 +101,8 @@
 					type: "POST",
 					url: "/ezWebFolder/getHiddenSharedList.do",
 					data: {
-						"pageNum"           : pagination.currentPage(),
-						"pageSize"          : pagination.listSize(),
+						"pageNum"  : pagination.currentPage(),
+						"pageSize" : pagination.listSize(),
 					},
 					dataType: "JSON",
 					async: true,
@@ -131,7 +132,7 @@
 			}
 			
 			function setMailBoxInfo(folderCount, fileCount) {
-				dom.mailBoxInfo.innerHTML = " - [" + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCount + " </span>" + messages.strLang11 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " + fileCount + " </span>" + messages.strLang11 + "]";
+				dom.mailBoxInfo.innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCount + " </span> / " + messages.strLang16 + " <span style='color:#017BEC;'> " + fileCount + " </span>";
 				$("#listcount").val(pagination.listSize()).prop("selected", true);
 			}
 			
@@ -220,6 +221,19 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
+					row.setAttribute("targetPath", result[i]["folderPath"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
@@ -395,9 +409,14 @@
 				<ul>
 					<li><a onClick="showSharedList()" style="margin-top: 3px;"><span>돌아가기</span></a></li>
 					<li><a onClick="shareContext.showShare()" style="margin-top: 3px;"><span>숨김취소</span></a></li>
-					<li id="right" style="float:right;">
+					<!-- <li id="right" style="float:right;">
 						<img src ="/images/kr/cm/btn_arrow_down.gif" mode="off" id="webfolderlistoptiondiv">
-					</li>
+					</li> -->
+					<div class="sub_frameIcon" style="float:right">
+						<div class="sub_frameIconUL02">
+						  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+						</div>
+					</div>
 				</ul>
 			</div>
 			

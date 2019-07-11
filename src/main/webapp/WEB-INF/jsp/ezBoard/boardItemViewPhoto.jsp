@@ -204,7 +204,7 @@
 				function CheckIfHasReplies()
 				{
 				    var xmlhttp = createXMLHttpRequest();
-					xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + pItemID + ",;", false);
+					xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(pItemID) + ",;", false);
 					xmlhttp.send();	
 					if(xmlhttp.responseText == "FALSE") {
 						xmlhttp = null;	
@@ -233,10 +233,10 @@
 				        if (gubun == "2") {
 				            if (CrossYN()) {
 				                checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-				                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+				                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(340, 200));
 				                try { OpenWin.focus(); } catch (e) { }
 				            } else {
-				                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+				                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
 				                if (typeof (ret) == "undefined") {
 				                    alert("<spring:message code='ezBoard.t265'/>");
 				                    return;
@@ -250,7 +250,7 @@
 				                if (!confirm(strLang48)) return;
 		
 				                var xmlhttp = createXMLHttpRequest();
-				                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+				                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 				                xmlhttp.send();
 		
 				                if (xmlhttp.responseText == "NO") {
@@ -260,7 +260,7 @@
 		
 				                xmlhttp = null;
 				                try {
-				                	window.opener.leftCountRf();
+				                	window.opener.leftCountRf(pBoardID);
 								} catch (e) {
 								}
 				                try {
@@ -282,7 +282,7 @@
 				            if (!confirm(strLang48)) return;
 		
 				            var xmlhttp = createXMLHttpRequest();
-				            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+				            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 				            xmlhttp.send();
 		
 				            if (xmlhttp.responseText == "NO") {
@@ -292,13 +292,35 @@
 		
 				            xmlhttp = null;
 				            try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 				            try {
 				                window.opener.refresh_onclick();
 				            } catch (e) {
 				            }
+				            
+				            //2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+								parent.opener.photoBoardMovePage(null);
+							}
+				            
+				            // 게시판 포틀릿 리스트 업데이트 되도록 수정
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+			            	}
+							
 				            window.close();
 				        }
 				    }
@@ -312,7 +334,7 @@
 		
 		        if (!confirm(strLang48)) return;
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -322,7 +344,7 @@
 		
 		        xmlhttp = null;
 		        try {
-                	window.opener.leftCountRf();
+                	window.opener.leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		        try {
@@ -338,7 +360,7 @@
 						return;
 					}
 		
-					window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
+					window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply";
 				}
 		
 				function btn_Copy_Onclick()
@@ -355,7 +377,7 @@
 					pheigth = pheigth - 200;
 					pwidth = pwidth - 127;
 					
-					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
+					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(pItemID) + ";" + "&boardID=" + encodeURIComponent(pBoardID), "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
 				}
 		        window.onunload = function () {
 		        	//리프레쉬 할 이유가 없는거 같음
@@ -430,7 +452,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
+					var szHref = "/ezBoard/itemReadList.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID);			
 					var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
@@ -631,7 +653,7 @@
 					pheigth = pheigth - 284;
 					pwidth = pwidth - 359;
 							
-					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");	
+					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");	
 				}
 				function GoTop()
 				{
@@ -766,7 +788,7 @@
 		                if ((pListImage.split(";").length - 1) == 1) {
 		                    if (!confirm(strLang48)) return;
 		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 		                    xmlhttp.send();
 		
 		                    if (xmlhttp.responseText == "NO") {
@@ -776,13 +798,35 @@
 		
 		                    xmlhttp = null;
 		                    try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 		                    try {
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+		                    
+		                  	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+								parent.opener.photoBoardMovePage();
+							}
+			                
+							// 게시판 포틀릿 리스트 업데이트 되도록 수정
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+			           		}
+							
 		                    window.close();
 		                }
 		                else {
@@ -791,30 +835,24 @@
 		                    
 		                    pleft = (pwidth - swidth) / 2;
 				            ptop = (pheight - sheight) / 2;
-				            
-		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&mod=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				          
+		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&mod=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            }
 		            else {
-		            	var agent = navigator.userAgent.toLowerCase();
+		            	/* 2019-07-03 홍승비 - 포토/썸네일게시물 사진수정 시 팝업창 크기 조정 */
+						swidth = 460;
 		            	
-		            	if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
-		            		if (gubun != 4) {
-		            			swidth = 440;
-			               		sheight = 460;
-		            		} else {
-			            		swidth = 460;
-				                sheight = 380;
-		            		}
-		            	} else {
-		               		swidth = 460;
-		                	sheight = 380;
-		            	}
-		                
+						if (gubun == 3) { // 포토게시판 (메인이미지 사용 안함)
+							sheight = 360;
+						} else { // 썸네일게시판 (메인이미지 사용함)
+							sheight = 380;
+						}
+						
 			            pleft = (pwidth - swidth) / 2;
 			            ptop = (pheight - sheight) / 2;
-			            
-		                window.open("/ezBoard/modifyImageItem.do?imageID=" + document.getElementById("mainimages").name + "&boardID=" + pBoardID + "&itemID=" + pItemID + "&page=" + pPage + "&mod=image&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
+			            //2019.03.04 유은정 - 게시판 포틀릿 리스트 업데이트 되도록 수정
+		                window.open("/ezBoard/modifyImageItem.do?imageID=" + encodeURIComponent(document.getElementById("mainimages").name) + "&boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&page=" + pPage + "&mod=image&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
 		            }
 		        }
 		
@@ -834,7 +872,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		
-		            window.open("/ezBoard/addImageItem.do?&boardID=" + pBoardID + "&itemID=" + pItemID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft , "");
+		            window.open("/ezBoard/addImageItem.do?&boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft , "");
 		        }
 		
 		        function btn_SmallIamge(Page)
@@ -1040,16 +1078,70 @@
 		                var feature = "status:no;dialogWidth:" + swidth + "px;dialogHeight:" + sheight + "px;help:no;scroll:no;edge:sunken";
 		
 		                var ret = window.showModalDialog("/ezBoard/photoAlbumEdit.do", params, feature);
-		                if (ret == "OK")
-		                    page_reload();
+		                if (ret == "OK") {
+		                	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+								parent.opener.photoBoardMovePage();
+							}
+			                
+							// 게시판 포틀릿 리스트 업데이트 되도록 수정
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+				            }
+							
+				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+								parent.opener.getBoardList_NewBoardSTD();
+							}
+				            
+		                	page_reload();
+		                }
 		
 		            }
 		           
 		        }
 		        function btn_albumEdit_Complete(ret) {
 		            DivPopUpHidden();
-		            if (ret == "OK")
-		                page_reload();
+		            
+		            if (ret == "OK") {
+	                	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+						if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+							parent.opener.photoBoardMovePage();
+						}
+		                
+						// 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
+			            	}
+			            }
+						
+			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+							parent.opener.getBoardList_NewBoardSTD();
+						}
+			            
+			            page_reload();
+		            }
+		                
 		        }
 		        
 		        /* 2018-06-01 홍승비 - 페이징 코드 수정, 도달 불가능 코드 삭제 */
@@ -1097,7 +1189,7 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		            
-		            window.open("/ezBoard/imageDownload.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");			
+		            window.open("/ezBoard/imageDownload.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 		        }
 		
 		    	//mouseWheel Event 
@@ -1154,12 +1246,12 @@
 		        }
 		        function Appr_onclick(pFlag) {
 		            if (pFlag == "C") {
-		                var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + pItemID + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+		                var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + pItemID + ";&mode=" + pFlag, false);
+		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "OK") {
@@ -1193,7 +1285,7 @@
 		            window.close();
 		
 		            /* 2018-06-20 홍승비 - 승인게시물 반려 후 제작성 .do 경로 수정 */
-		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    	
 		        /* 2018-07-24 홍승비 - 이미지 클릭 시 투표 모듈에서 가져온 레이어팝업 동작 */
@@ -1457,7 +1549,24 @@
 			  			$imgPopup.css("top", 0);
 			  			$imgPopupDiv.css("overflow", "auto");
 			  		}
-			  	}
+				}
+				
+				function addRelatedCabinet() {
+					window.open("/ezCabinet/cabinetAddRelated.do?module=board", "addRelated", getOpenWindowfeature(480, 505));
+				}
+				
+				function getOpenWindowfeature(popUpW, popUpH) {
+					var heigth   = window.screen.availHeight;
+					var width    = window.screen.availWidth;
+					var left     = 0;
+					var top      = 0;
+					var pleftpos = parseInt(width) - popUpW;
+					heigth       = parseInt(heigth) - popUpH;
+					left         = pleftpos / 2;
+					top          = heigth / 2;
+					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+					return feature;
+				}
 			  	
 			    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
 			    function checkRefreshFlag () {
@@ -1472,7 +1581,6 @@
 			    		refreshFlag = "N";
 			    	}
 			    }
-			    
 		</script>
 	</head>
 	<body class="popup">
@@ -1514,6 +1622,9 @@
 		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.t1007'/></span></li>
 		        		</c:otherwise>
 		        	</c:choose>
+					<c:if test="${useCabinet == 'YES'}">
+						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+					</c:if>
 		        </ul>
 		      </div>
 		      <div id="close">

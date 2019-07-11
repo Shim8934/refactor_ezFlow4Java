@@ -883,7 +883,8 @@ function GetbrowserLanguage() {
 }
 
 function GetCKEditerHeader() {
-    return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
+    //return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} </STYLE></HEAD>";
+    return "<HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><STYLE title=\"ezform_style_1\">P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;} </STYLE></HEAD>";
 }
     // 사파리 버그 수정용 함수 2012.09.07
 function KeEventControl(obj) {
@@ -1680,9 +1681,9 @@ function makePageSelPageBrd() {
     var PagingHTML = "";
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pAdminType != "y")
-        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
+        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
     else
-        parent.document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
+        parent.document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + " </span>";
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
     var pageNum = CurPage;
@@ -1872,6 +1873,14 @@ function sortNode(xmlRows, colName, exception, orderby) {
 	    	return xmlRows;
 		}
 		
-	}
-	
+	}	
+}
+
+//<c:out>를 통해 변환된 값을 원복시킨다 2019-04-05 임민석
+function replaceEntityCodeToStr(str) {
+	return str.replace(/&amp;/g, "&")
+			  .replace(/&lt;/g, "<")
+			  .replace(/&gt;/g, ">")
+			  .replace(/&#039;/g, "\'")
+			  .replace(/&#034;/g, "\"");
 }

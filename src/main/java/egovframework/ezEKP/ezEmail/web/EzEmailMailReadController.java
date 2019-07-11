@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,15 +69,18 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -133,10 +135,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	@Resource(name = "loginService")
     private LoginService loginService;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
+	
 	/**
 	 * 메일 읽기화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailRead.do")
+	@RequestMapping(value="/ezEmail/mailRead.do", method=RequestMethod.GET)
 	public String readMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("readMail started.");
 		
@@ -172,6 +180,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("email", loginInfo);
+		}
 		
 		// retrieve the passed in parameters
 		String url = request.getParameter("iptURL");
@@ -346,6 +360,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = commonUtil.trimDoubleQuotes(name);
 							}
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
 							
 							/* 유저 본인의 이름을 맨앞으로 toStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
@@ -443,6 +463,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = commonUtil.trimDoubleQuotes(name);
 							}
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
 							
 							/* 유저 본인의 이름을 맨앞으로 ccStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
@@ -490,6 +516,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							} else {
 								name = MimeUtility.decodeText(name);
 								name = commonUtil.trimDoubleQuotes(name);
+							}
+							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
 							}
 							
 							logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
@@ -605,6 +637,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("readMail ended.");
 		
@@ -614,7 +647,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 본문 내용 화면 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailReadContent.do")
+	@RequestMapping(value="/ezEmail/mailReadContent.do", method=RequestMethod.POST)
 	public String readMailContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("readMailContent started.");
 		
@@ -749,7 +782,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
-        	
+
 		// 2018-08-03 황윤호 추가
         String memoFlag = "";
         if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
@@ -757,6 +790,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         } else {
         	memoFlag = "NO";
         }
+        
+        // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
+        MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+        String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
         
         model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
@@ -770,6 +807,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("Name", userInfo.getDisplayName());	
 		model.addAttribute("Id", userInfo.getId());
 		model.addAttribute("memoFlag", memoFlag);
+		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		
+		model.addAttribute("previewMailImage", previewMailImage);
 		
 		logger.debug("readMailContent ended.");
 		
@@ -779,7 +819,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 웹페이지로 보기 수행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailReadOriginal.do")
+	@RequestMapping(value="/ezEmail/mailReadOriginal.do", method=RequestMethod.GET)
 	public String readMailOriginal(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("readMailOriginal started.");
 		
@@ -860,7 +900,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
-		model.addAttribute("htmlBody", bodyInfoList.get(0));
+		String htmlBody = bodyInfoList.get(0);
+		model.addAttribute("htmlBody", htmlBody);
 		
 		logger.debug("readMailOriginal ended.");
 		
@@ -870,7 +911,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 일반 첨부파일시 모두저장 클릭시 호출되는 메서드 (압축파일 내려받기) 
 	 */
-	@RequestMapping(value="/ezEmail/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
+	@RequestMapping(value="/ezEmail/downloadAttachAll.do", method=RequestMethod.POST, produces="text/plain; charset=UTF-8")
 	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachAll started.");
@@ -1092,7 +1133,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 첨부파일 다운로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadAttach.do")
+	@RequestMapping(value="/ezEmail/downloadAttach.do", method=RequestMethod.GET)
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadAttach started.");
 		
@@ -1228,7 +1269,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 대용량 첨부파일 다운로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", method=RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	public void downloadAttachCommon(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachCommon started.");
 		
@@ -1237,7 +1278,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
 		fileDate = commonUtil.detectPathTraversal(fileDate);		
 		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
-			
+		tenantIdStr = commonUtil.detectPathTraversal(tenantIdStr);
+		
 		int tenantId = Integer.parseInt(tenantIdStr);
 		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
@@ -1321,7 +1363,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 인라인 이미지 읽어오기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadInline.do")
+	@RequestMapping(value="/ezEmail/downloadInline.do", method=RequestMethod.GET)
 	public void downloadInline(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadInline started.");
 		
@@ -1433,7 +1475,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("downloadInline ended.");
 	}
 	
-	@RequestMapping(value="/ezEmail/downloadInlineDotNet.do")
+	@RequestMapping(value="/ezEmail/downloadInlineDotNet.do", method=RequestMethod.GET)
 	public void downloadInlineDotNet(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadInlineDotNet started.");
 		
@@ -1531,7 +1573,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 미리보기 메일 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPrevShow.do")
+	@RequestMapping(value="/ezEmail/mailPrevShow.do", method=RequestMethod.POST)
 	public void mailPrevShow(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailPrevShow started.");
 		
@@ -1591,6 +1633,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		int unread = 0;
 		int importance = 1;
 		IMAPAccess ia = null;
+		String fromId = "";
+		String senderProfileImageName = "";
 		Boolean emptyFlag = false;
 		
 		try {
@@ -1701,6 +1745,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								toStr += ";";
 	                        }					
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							toStr += "\""+ name +"\" <" + iAddress.getAddress() + ">";
 						}
 					}
@@ -1766,6 +1816,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								ccStr += ";";
 	                        }
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							ccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
 						}
 					}
@@ -1791,6 +1847,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							if (i != 0) {
 								bccStr += ";";
 	                        }
+							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
 							
 							bccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
 						}
@@ -1847,6 +1909,40 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
+		if (fromEmail != null && !fromEmail.equals("")) {
+			if (fromEmail.contains("@")) {
+				fromId = ezOrganService.getCNByEmail(fromEmail, loginInfo.getTenantId());
+				
+				//email이 alias 메일이어서 id를 못가져왔을 경우
+				//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
+				if (fromId == null || fromId.equals("")) {
+					List<String> aliasAddress = new ArrayList<String>();
+					aliasAddress.add(fromEmail);
+					Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginInfo.getTenantId());
+					
+					if (targetAddress != null) {
+						String resultTargetAddress = targetAddress.get(fromEmail);
+						logger.debug("resultAddress=" + resultTargetAddress);
+						
+						if (resultTargetAddress != null) {
+							int atSignPos = resultTargetAddress.indexOf("@");
+							if (atSignPos != -1) {
+								fromId = resultTargetAddress.substring(0, atSignPos);
+								logger.debug("fromId=" + fromId);
+							}
+						}
+						
+					}
+				}
+				
+				senderProfileImageName = ezOrganService.getPropertyValue(fromId, "EXTENSIONATTRIBUTE2", loginInfo.getTenantId());
+				logger.debug("senderProfileImageName=" + senderProfileImageName);
+				if (senderProfileImageName == null) {
+					senderProfileImageName = "";
+				}
+			}
+		}
+		
 		if(emptyFlag) {
 			dateStr = "";
 			fromStr = "";
@@ -1874,6 +1970,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		sb.append("<SENSITIVITY><![CDATA[" + "Normal" + "]]></SENSITIVITY>");
 		sb.append("<HASEMBEDED><![CDATA[" + 0 + "]]></HASEMBEDED>");
 		sb.append("<ITEMID><![CDATA[" + url + "]]></ITEMID>");
+		sb.append("<SENDERPROFILEIMAGENAME><![CDATA[" + senderProfileImageName + "]]></SENDERPROFILEIMAGENAME>");
 		sb.append("<CONTENTCLASS><![CDATA[" + "]]></CONTENTCLASS>");
 		sb.append("</DATA>");
 
@@ -1888,7 +1985,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 미리보기 메일 본문 내용 화면 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPreviewContent.do")
+	@RequestMapping(value="/ezEmail/mailPreviewContent.do", method=RequestMethod.POST)
 	public String previewContent(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("previewContent started.");
 		
@@ -1984,7 +2081,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
     					double size = Double.parseDouble(bodyInfoList.get(2));
     					String strSize = ezEmailUtil.getSizeWithUnit(size);
-    					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+    					pAttachListHtmlSub = " <span class='cblue'>" + bodyInfoList.get(3) + "</span> (" + strSize + ")";
     	
     					if (!folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
                             String[] messageIds = message.getHeader("Message-ID");
@@ -2072,7 +2169,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         } else {
         	memoFlag = "NO";
         }
-		
+
+        // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
+        MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+        String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
+        
 		logger.debug("readMailContent ended.");
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", htmlBody);
@@ -2081,6 +2182,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("isAttach", bodyInfoList.get(4));
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
 		model.addAttribute("memoFlag", memoFlag);
+		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		model.addAttribute("previewMailImage", previewMailImage);
 		
 		logger.debug("previewContent ended.");
 		
@@ -2090,7 +2193,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 인쇄
 	 */
-	@RequestMapping(value="/ezEmail/mailPrint.do")
+	@RequestMapping(value="/ezEmail/mailPrint.do", method=RequestMethod.GET)
 	public String mailPrint(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("mailPrint started.");
 		
@@ -2299,7 +2402,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 첨부파일 삭제(메일읽기)
 	 */
-	@RequestMapping(value="/ezEmail/mailDelReadInterAttach.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailDelReadInterAttach.do", method=RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailDelInterAttach(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("mailDelInterAttach started.");
@@ -2427,7 +2530,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		return returnValue;
 	}
 	
-	@RequestMapping(value="/ezEmail/mailReadBoard.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailReadBoard.do", method=RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailReadBoard(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("mailReadBoard started.");
@@ -2576,6 +2679,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									
 									String orgFileName = attachedFileList.get(i).get("filename");
 									String fileName = newGuid + "_" + orgFileName;
+									fileName = commonUtil.detectPathTraversal(fileName);
 
 									File file = new File(realPath + path);
 									if (!file.exists()) {
@@ -2621,7 +2725,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		return sb.toString();
 	}
 	
-	@RequestMapping(value="/ezEmail/mailReadBoardDotNet.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailReadBoardDotNet.do", method=RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailReadBoardDotNet(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		logger.debug("mailReadBoardDotNet started.");
@@ -2781,7 +2885,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								if (part != null) {
 									String orgFileName = attachedFileList.get(i).get("filename");
 									String fileName = newGuid + "_" + orgFileName;
-
+									fileName = commonUtil.detectPathTraversal(fileName);
+									
 									File file = new File(realPath + path);
 									if (!file.exists()) {
 										file.mkdirs();
@@ -2839,7 +2944,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 읽기화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/readSecureMail.do")
+	@RequestMapping(value="/ezEmail/readSecureMail.do", method=RequestMethod.POST)
 	public String readSecureMail(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("readSecureMail started.");
 		
@@ -3218,7 +3323,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 첨부파일 다운로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadSecureAttach.do")
+	@RequestMapping(value="/ezEmail/downloadSecureAttach.do", method=RequestMethod.GET)
 	public void downloadSecureAttach(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadSecureAttach started.");
 		
@@ -3374,7 +3479,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 인라인 이미지 읽어오기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadSecureInline.do")
+	@RequestMapping(value="/ezEmail/downloadSecureInline.do", method=RequestMethod.GET)
 	public void downloadSecureInline(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadSecureInline started.");
 		
@@ -3522,7 +3627,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 원본내용 읽기화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/readSecureMailContent.do")
+	@RequestMapping(value="/ezEmail/readSecureMailContent.do", method=RequestMethod.POST)
 	public String readSecureMailContent(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("readSecureMailContent started.");
 		
@@ -3659,7 +3764,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 보안메일 정보화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/secureMailInfo.do")
+	@RequestMapping(value="/ezEmail/secureMailInfo.do", method=RequestMethod.GET)
 	public String secureMailInfo(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("secureMailInfo started.");
 		
@@ -3804,7 +3909,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 *  편지함 모두 읽기
 	 */
-	@RequestMapping(value="/ezEmail/folderSetReadChange.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezEmail/folderSetReadChange.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String folderSetReadChange(@CookieValue("loginCookie") String loginCookie,
@@ -3878,7 +3983,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 읽기 창에서 주소록에 추가 아이콘 클릭 시 나타나는 주소 추가 화면 출력
 	 */
-	@RequestMapping(value="/ezEmail/mailSelectAddress.do")
+	@RequestMapping(value="/ezEmail/mailSelectAddress.do", method=RequestMethod.GET)
 	public String mailSelectAddress(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("mailSelectAddress started.");
 		
@@ -3911,7 +4016,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * 메일 주소 리스트 가져오는 함수
 	 */
-	@RequestMapping(value="/ezEmail/getMailAddressList.do")
+	@RequestMapping(value="/ezEmail/getMailAddressList.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String getMailAddressList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("getMailAddressList started.");
@@ -4124,5 +4229,141 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		logger.debug("getMailAddressList ended.");
 		return new JSONObject(result).toString();
+	}
+	
+	/**
+	 * 메일 첨부파일 브라우저로 읽기
+	 */
+	@RequestMapping(value="/ezEmail/readAttachIamge.do")
+	public void readAttachIamge(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("readAttachIamge started.");
+		
+		// get user credentials
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("downloadAttach ended.");
+					
+					return;
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		
+		// retrieve the passed in parameters
+		String folderPath = request.getParameter("folderPath");
+		String strUid = request.getParameter("uid");
+		long uid = strUid != null ? Long.parseLong(strUid) : 0;
+		String filename = request.getParameter("filename");
+		logger.debug("folderPath=" + folderPath + ",uid=" + uid + ",filename=" + filename);
+		
+		if (folderPath == null || strUid == null || filename == null) {
+			logger.debug("readAttachIamge illegal arguments.");
+			return;
+		}
+		
+		String strIndex = request.getParameter("index");
+		int index = -1;
+		
+		if (strIndex != null) {
+			index = Integer.parseInt(strIndex);
+		}
+		logger.debug("index=" + index);
+		
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+	
+			Folder f = ia.getFolder(folderPath);
+			
+			if (f == null || !f.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				
+				if (message == null) {
+					logger.error("Message not found. uid=" + uid);
+				} else {
+					Part part = null;
+					
+					if (index == -1) {
+						part = message;
+					}
+					else {
+						part = ezEmailUtil.getAttachPart(message, index);
+					}
+					
+					if (part == null) {
+						logger.error("AttachPart not found. AttachPartIndex=" + index);
+					} else {
+						response.setContentType(part.getContentType());
+						
+						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
+						
+						String nfcFilename = commonUtil.normalizeFileName(filename);
+						
+						response.addHeader("content-disposition", "inline; filename=\"" + nfcFilename + "\"");
+						logger.debug("content-disposition=" + "inline; filename=\"" + nfcFilename + "\"");
+						
+						InputStream input = null;
+						OutputStream output = null;
+						
+						try {
+							input = part.getInputStream();
+							output = response.getOutputStream();
+							
+							byte[] buffer = new byte[4096];
+							int byteRead;
+							
+							while ((byteRead = input.read(buffer)) != -1) {
+								output.write(buffer, 0, byteRead);
+							}
+						} catch(IOException e) {
+						} finally {
+							if (ia != null) {
+								ia.close();
+							}
+							if (input != null) {
+								try { input.close(); } catch (IOException e1) {}
+							}
+							if (output != null) {
+								try { output.flush(); } catch (IOException e1) {}
+								try { output.close(); } catch (IOException e1) {}
+							}
+						}
+						
+					}
+				}
+			}
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("readAttachIamge ended.");
 	}
 }

@@ -81,10 +81,14 @@ function displaySubFolder(divTree, divElmt, list, folderType) {
 	
 	var imgElmt2 = document.createElement("img");
 	imgElmt2.setAttribute("class", "webfolderImg");
-	imgElmt2.src = "/images/webfolder/fldr.png";
+	imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 	
 	var spanFolderName = document.createElement("span");
-	spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
+	if (list["folderLevel"] == 0) {
+		spanFolderName.textContent = primary == "1" ? list["folderName"]+"(" + list["ownerId"]+")" : list["folderName2"]+"(" + list["ownerId"]+")";
+	} else {
+		spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
+	}
 	spanFolderName.setAttribute("class", "spanName");
 	spanFolderName.setAttribute("name", list["folderId"]);
 	spanFolderName.setAttribute("level", list["folderLevel"]);

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <HTML>
 	<head>
@@ -14,7 +15,7 @@
 		<script language="javascript" type="text/javascript">
 // 		    var XmlBodyATT = createXmlDom();
 		    document.onselectstart = function () { 
-				var useAllowTextSelection = "${useAllowTextSelection}";
+				var useAllowTextSelection = "<c:out value ='${useAllowTextSelection}'/>";
 	        	
 	        	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
             		ret = true;
@@ -41,6 +42,28 @@
 		        } catch (e)
 		        { }
 		        
+	            try {
+			        if (document.getElementById('attitude_annual_conn')) { //근태관리 연동양식
+			    		$("select[id^=control]").each(function() {
+			    			$(this).val($(this).attr("attitudetype"));
+			    			$(this).children("option[value=" +$(this).attr("attitudetype") + "]").attr("selected","");
+			    		});
+			        	
+			    		$("input[type=button][id^=control]").each(function() {
+			    			$(this).css("display","none");
+			    		});
+			    		
+			    		$("select[id^=control]").each(function() {
+			    			$(this).css("top","7px");
+			    		});
+			    		
+			    		$('#mobile').css('display',"none");
+			    	    $('#p_mobile').css('display',"");
+			    	    $('#mobile2').css('display',"none");
+			    	    $('#p_mobile2').css('display',"");
+			        }
+	            } catch (e)
+	            { }
 		    };
 		    function BodyTagsEnabled(HtmlObject) {
 		        var SelectRows = HtmlObject.getElementsByTagName("SELECT");
@@ -56,18 +79,47 @@
 		        return HtmlObject;
 		    }
 		    function BodyTagsDisabled(HtmlObject) {
-		        var SelectRows = HtmlObject.getElementsByTagName("SELECT");
-		        for (var i = 0; i < SelectRows.length; i++) {
-		            if (!SelectRows.item(i).disabled)
-		                SelectRows.item(i).disabled = true;
-		        }
-		        var inputRows = HtmlObject.getElementsByTagName("INPUT");
-		        for (var i = 0; i < inputRows.length; i++) {
-		            if (!inputRows.item(i).disabled)
-		                inputRows.item(i).disabled = true;
-		        }
-		        return HtmlObject;
-		    }
+	            var SelectRows = HtmlObject.getElementsByTagName("SELECT");
+	            for (var i = 0; i < SelectRows.length; i++) {
+	                if (!SelectRows.item(i).disabled)
+	                    SelectRows.item(i).disabled = true;
+	            }
+	            var inputRows = HtmlObject.getElementsByTagName("INPUT");
+	            for (var i = 0; i < inputRows.length; i++) {
+	                if (!inputRows.item(i).disabled)
+	                    inputRows.item(i).disabled = true;
+	            }
+	            
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (!element.disabled) {
+						element.disabled = true;
+					}
+				}
+	            
+	            return HtmlObject;
+	        }
+		    
+			// FormBuilder textarea 제대로 나오도록 수정
+	        function validateAllTextArea(targetElement) {
+            	var textAreaElements = targetElement.getElementsByTagName("textarea");
+            	
+            	for (var i = 0; i < textAreaElements.length; i++) {
+            		validateTextArea(textAreaElements[i]);
+            	}
+	        }
+			
+	        function validateTextArea(element) {
+	        	if (element.hasAttribute("value")) {
+        			element.value = element.getAttribute("value");
+        			element.innerHTML = element.value;
+        		}
+	        }
+	        
 		    function Set_EditorContentURL(url)
 		    {
 		        try{
@@ -131,6 +183,8 @@
 	                    parent.OrgHtml = _htmlcontent;
  	                    BodyTagsDisabled(document.getElementById('div_Content'));
  	                    parent.FieldsAvailable();
+ 	                    
+		               	validateAllTextArea(document.getElementById('div_Content'));
 	                }
 	            } catch (e)
 		        { }

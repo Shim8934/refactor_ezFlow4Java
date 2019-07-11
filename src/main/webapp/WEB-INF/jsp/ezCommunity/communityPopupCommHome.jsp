@@ -47,6 +47,7 @@
 			var joinFlag = "<c:out value='${joinFlag }'/>";
 			var pastDate = "<c:out value = '${pastDate}' />";
 			var xmlhttp;
+			var lang = "<c:out value='${lang}'/>";
 			
 			var strLang1 = "<spring:message code='ezCommunity.t78' />";
 		    var strLang2 = "<spring:message code='ezCommunity.t1082' />"; 
@@ -105,7 +106,7 @@
 		    
 		    function getCommhomeBoardInfo() {
 		    	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 // 					async : true,
 					url : "/ezCommunity/commHome/commHomeBoardInfo.do",
@@ -161,9 +162,9 @@
 
 	                            var ul = document.createElement("ul");
 	                            $.ajax({
-	            					type : "POST",
+	            					type : "GET",
 	            					dataType : "text",
-// 	            					async : true,
+// 	            				async : true,
 	            					url : "/ezCommunity/commHome/commHomeBoardItemList.do",
 	            					data : { boardID   : infoVO.boardID
 	            					},
@@ -213,7 +214,8 @@
 			                                        var imgUrl = itemVO.extensionAttribute5;
 			                                        
 			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 사진경로 수정 */
-			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
+			                                        imgUrl = imgUrl.replace(/{/gi,"%7B").replace(/}/gi,"%7D");
+			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + encodeURIComponent(itemVO.boardID) + "&fileName=" + imgUrl;
 			                                        img.style.width = "68px";
 			                                        img.style.height = "68px";
 
@@ -286,7 +288,14 @@
 	            document.getElementById("mastericon").onclick = function () { openInfo(SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERID")); };
 	            document.getElementById("mastername").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERNAME");
 	            document.getElementById("master").innerHTML += "(" + SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/DEPTNAME") + ")";
-	            document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
+	            
+	            /* 2019-07-11 홍승비 - 일본어 환경에서 메세지 표출 일부 수정(생성일) */
+	            if (lang == "3") {
+	            	document.getElementById("regdate").innerHTML =  strLang1 + "：" + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
+	            } else {
+	            	document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
+	            }
+	            
 	            document.getElementById("membercnt").innerHTML =  SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT");
 	            //2018-07-11 김보미 - 공백 조정
 	            countSpanPadding(document.getElementById("membercnt"), SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT"));
@@ -305,8 +314,8 @@
 	                _img.src = "<spring:message code='main.e14' />";
 	            }
 	            
-	            _img.style.width = "51px";
-	            _img.style.height = "54px";
+	            _img.style.width = "48px";
+	            _img.style.height = "48px";
 
 	            document.getElementById("pic").appendChild(_img);
 				var sConfirmType = "";
@@ -320,15 +329,20 @@
 	                break;
 	        	}
 	            
+	            /* 2019-07-11 홍승비 - 일본어 환경에서 메세지 표출 일부 수정(공개설정, 승인여부) */
+	            var langBR = "";
+	            if (lang == "3") {
+	            	langBR = "<br>";
+	            }
 	        	switch (SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBGUBUN").trim()) {
 		            case "1":
 		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t701' />";
 		                break;
 		            case "2":
-		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t702' />" + sConfirmType;
+		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t702' />" + langBR + sConfirmType;
 		                break;
 		            case "3":
-		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t703' />" + sConfirmType;
+		                document.getElementById("cpublic").innerHTML = "<spring:message code='ezCommunity.t700' />" + "<spring:message code='ezCommunity.t703' />" + langBR + sConfirmType;
 		                break;
 	        	}
 	        	
@@ -796,9 +810,9 @@
 		        document.getElementById("makeguide").style.display = "none";
 		        document.getElementById("rightfrm").style.height = "659px";
 		        if (chkPhotoBrd != "3") {
-		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + selectedBoardID + "&boardName=" + boardName + "&code=" + code;
+		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + encodeURIComponent(boardName) + "&code=" + code;
 		        } else {
-		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + selectedBoardID + "&boardName=" + boardName + "&code=" + code;
+		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + encodeURIComponent(boardName) + "&code=" + code;
 		        }
 		        
 		        if (CrossYN()) {
@@ -897,12 +911,12 @@
 	                    	</c:otherwise>
 	                    </c:choose>
                     
-		                    <p><strong id="mastername"></strong></p>
-		                    <p id="master"></p>
+		                    <p style="height:18px;"><strong id="mastername" style="width:93px; display:inline-block; text-overflow:ellipsis; white-space: nowrap; overflow:hidden;"></strong></p>
+		                    <p id="master" style="width:93px; display:inline-block; text-overflow:ellipsis; white-space: nowrap; overflow:hidden;"></p>
 		                </div>
 		                
 		                <c:if test="${checkSysop }">
-		                	<div class="admin_menu"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
+		                	<div class="admin_menu" style="height:auto"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
 		                </c:if>
 		                
 		            </div>
@@ -946,8 +960,8 @@
         		<iframe id="rightfrm" style="width:100%; height:560px; border:0; display:none" frameborder="0"></iframe>
         		<div class="makeguide" id="makeguide" style="display: none;">
             		<p><img src="<spring:message code='ezCommunity.i5' />"></p>
-            		<p><a href="#" id="btn_Manager_home1" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i6' />" alt="<spring:message code='ezCommunity.t2010' />"></a></p>
-            		<p><a href="#" id="btn_Manager_home2" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i7' />" alt="<spring:message code='ezCommunity.t2011' />"></a></p>
+            		<p><a id="btn_Manager_home1" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i6' />" alt="<spring:message code='ezCommunity.t2010' />"></a></p>
+            		<p><a id="btn_Manager_home2" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i7' />" alt="<spring:message code='ezCommunity.t2011' />"></a></p>
             		<p><img src="/images/kr/community/type1/makeguide_img04.gif"></p>
         		</div>
     		</div>

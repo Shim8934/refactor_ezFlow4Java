@@ -34,6 +34,9 @@
 			}
 			.countColor {
 				color:#017BEC;
+			}
+			.imgbck.ladder {
+				margin-top: -30px !important;
 			}	    	
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezLadder.e1', 'msg')}"></script>
@@ -419,7 +422,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px; \" >"
 	            	+ "<span id='spn_deptName' title='" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "'>" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "</span>"
 	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
@@ -474,9 +477,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + "<spring:message code='ezLadder.t105' /></span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + "<spring:message code='ezLadder.t105' /></span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + "<spring:message code='ezLadder.t105' /></span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -515,7 +518,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#edf4fd";
+	        var m_strColorSelect = "#f1f8ff";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1584,6 +1587,8 @@
 		        	if(userId.substring(0, 14) == "anonyAttendant") {
 		        		userName = totalRows[i].getElementsByTagName("input")[0].value;
 		        		userName2 = totalRows[i].getElementsByTagName("input")[0].value;
+		        		description = "";
+		        		description2 = "";
 		        	} else {
 		        		userName = GetAttribute(totalRows[i], "DATA2");
 			        	userName2 = GetAttribute(totalRows[i], "DATA3");
@@ -1817,7 +1822,7 @@
 		        	rowId = _RowObjectID;
 		        }
 
-		        obj.style.backgroundColor = "#edf4fd";
+		        obj.style.backgroundColor = "#f1f8ff";
 		        
 		        if(_RowObjectID.substring(0, 8) !== "nameList") {
 		        	getLadderBmList(_RowObjectID);
@@ -1832,7 +1837,7 @@
 		        _RowObject = obj;
 		        _RowObjectID = obj.id;
 		        _RowObjectName = $(obj).attr("name");
-		        obj.style.backgroundColor = "#edf4fd";
+		        obj.style.backgroundColor = "#f1f8ff";
 		    }
 		    
 		    var Tab1_SelectID = "1tab1";
@@ -1922,7 +1927,7 @@
 		    	<li><span onclick="window_close()"></span></li>
 		    </ul>
 	    </div>
-		<table style="width:100%">
+		<table style="width:100%;margin-top:15px;">
 			<tr>
 				<td>
 	        		<table id="TreeViewTD">
@@ -1957,7 +1962,7 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezLadder.t047' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezLadder.t047' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -1973,7 +1978,7 @@
 	                                    <td class="listview" style="width: 426px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
-	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
+	                                                <th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea">
 	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                    <span style="float:right;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
@@ -2010,10 +2015,11 @@
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                        <h2 class="h2_dot" style="padding-top: 2px; display: inline-block;"><spring:message code='ezLadder.t022' /></h2>
-											<div style="float: right;">
+											<div style="float: right;height:28px;">
 												<a class="imgbtn imgbck" onclick="editBM('modify');" style="display: inline-block; margin-top: 1px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t052" /></span></a>
 												<a class="imgbtn imgbck" onclick="editBM('delete');" style="display: inline-block; margin-top: 1px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t053" /></span></a>
 											</div>
+											<div style="clear:both"></div>
 	                                        <div class="border_gray">
 	                                            <div id="circularDept" style="Width: 100%; Height: 182px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table class="mainlist" style="width: 100%;">
@@ -2035,7 +2041,7 @@
 	                                <tr>
 	                                    <td style="vertical-align: top;">
 	                                        <div class="border_gray">
-	                                            <div id="circularTemp" style="Width: 100%; Height: 325px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            <div id="circularTemp" style="Width: 100%; Height: 323px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table id="List" class="mainlist" style="width:100%">
 														<thead id="List_THEAD2">
 															<tr>
@@ -2060,7 +2066,7 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver2(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top; position: relative;">
-								<a class="imgbtn imgbck" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: -30px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>
+								<a class="imgbtn imgbck ladder" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: -30px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:-30px;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezLadder.t013'/></span>
 	                            </h2>

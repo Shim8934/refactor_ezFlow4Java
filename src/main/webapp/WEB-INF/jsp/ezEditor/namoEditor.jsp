@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -8,9 +9,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/namoEditor/js/namo_scripteditor.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-		var userLang = "${userInfo.lang}";
-		var type = "${type}";
-		var height = "${height}";
+		var userLang = "<c:out value='${userInfo.lang}'/>";
+		var type = "<c:out value='${type}'/>";
+		var height = "<c:out value='${height}'/>";
 		var editorLoadFlag = false;
 		
         function OnInitCompleted(e) {
@@ -152,7 +153,7 @@
                 CrossEditor.SetBodyValue(Data);
                 
                 if (type == "APPROVAL" || type == "APPROVALG") {
-            		if ("${isUsed}" != "reuse") {
+            		if ("<c:out value='${isUsed}'/>" != "reuse") {
             			Set_CellLocked();
             		}
             	}
@@ -305,30 +306,27 @@
         
         //메일(plain text)에서 사용
         function GetEditorTextContent() {
-            try {
-        	    var resultStr = CrossEditor.GetBodyValue("XHTML");
-        	    
-        	    resultStr = resultStr.replace(/\r\n/gi, "");
-        	    resultStr = resultStr.replace(/\n/gi, "");
-        	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
-        	    resultStr = resultStr.replace(/<p><br \/>/gi, "\n");
-        	    resultStr = resultStr.replace(/<p>/gi, "\n");
-        	    resultStr = resultStr.replace(/<br\/>/gi, "\n");
-        	    resultStr = resultStr.replace(/<br \/>/gi, "\n");
-        	    resultStr = resultStr.replace(/<br>/gi, "\n");
-        	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
-        	    resultStr = resultStr.replace(/<hr>/gi, "\n----------------------------------------------------------------------------------------------------");
-        	    resultStr = resultStr.replace(/<.*?>/gi, "");
-        	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
-        	    resultStr = resultStr.replace(/&lt;/gi, "<");
-        	    resultStr = resultStr.replace(/&gt;/gi, ">");
-        	    resultStr = resultStr.replace(/&quot;/gi, "\"");
-        	    resultStr = resultStr.replace(/&#39;/gi, "'");
-        	    resultStr = resultStr.replace(/&amp;/gi, "&");
-        	    resultStr = resultStr.replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, "");
-				
-        	    return  resultStr;
-            } catch (e) { return ""; }
+       	    var resultStr = CrossEditor.GetBodyValue("XHTML");
+       	    
+       	    resultStr = resultStr.replace(/\r\n/gi, "\n");
+       	    resultStr = resultStr.replace(/\n/gi, "");
+       	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+       	    resultStr = resultStr.replace(/<br .*?>/gi, "<br>");
+       	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+       	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
+       	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
+       	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+       	    resultStr = resultStr.replace(/<style .*?>/gi, "<style>");
+       	    resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+       	    resultStr = resultStr.replace(/<script .*?>/gi, "<script>");
+       	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
+       	    resultStr = resultStr.replace(/<.*?>/gi, "");
+       	    
+       	    var tempTextarea = document.createElement("textarea");
+       	    tempTextarea.innerHTML = resultStr;
+       	    resultStr = tempTextarea.value;
+       	    
+       	    return  resultStr;
         }
 
         function Get_BodyUnlock(HtmlBody) {
@@ -438,11 +436,11 @@
 	<body style="margin: 0px; padding: 0px;">
 	    <script type="text/javascript">
 	        var CrossEditor = new NamoSE("Namo");
-	        var useHTMLMode = "${useHTMLMode}";
-	        var defaultFontFamily = "${defaultFontFamily}";
-			var defaultFontSize = "${defaultFontSize}";
+	        var useHTMLMode = "<c:out value='${useHTMLMode}'/>";
+	        var defaultFontFamily = "<c:out value='${defaultFontFamily}'/>";
+			var defaultFontSize = "<c:out value='${defaultFontSize}'/>";
 			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
-			var uploadUrl = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
+			var uploadUrl = "<c:out value='${serverUrl}'/>/ezEditor/namoUpload.do?type=" + type;
 			
 	        if (type == "APPROVAL" || type == "APPROVALG") {
 				CrossEditor.params.Height = height + "px";
@@ -460,10 +458,16 @@
 	        	uploadUrl += "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
 	        }
 	       	
+	        var fontList = "<spring:message code='main.t0620' />".split(";");
+	        var fontListObject = {};
+	        for (var i = 0; i < fontList.length; i++) {
+	        	fontListObject[fontList[i]] = fontList[i];
+	        }
+	        
 	        CrossEditor.params.UploadFileExecutePath = uploadUrl;
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;
-	        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");
+	        CrossEditor.params.Font = fontListObject;
 	        CrossEditor.params.ParagraphTagStyle = {"font-size":defaultFontSize, "font-family":defaultFontFamily};
 	        
 	        if (useHTMLMode == "NO") {

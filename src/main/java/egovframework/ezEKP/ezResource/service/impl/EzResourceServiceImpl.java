@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
@@ -87,12 +85,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Autowired
 	private EzResourceAdminService ezResourceAdminService;
 
-	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID) throws Exception {
+	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID, String adminType) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ParentID", parentID);
 		map.put("v_P_CompanyID", companyID);
 		map.put("v_P_TreeType", treeType);
 		map.put("tenantID", tenantID);
+		if(adminType.equals("Y")) {
+			map.put("adminType", adminType);
+		}
 		return ezResourceDAO.getAdmSubClsTree(map);
 	}
 
@@ -142,7 +143,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleDateList(map);
 	}
 	
-	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String title, String writerName, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -153,6 +154,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PENDDATE", endDate);
 		map.put("v_WRITERNAME", writerName);
 		map.put("v_WRITERDEPT", writerDept);
+		if(!title.equals("")) {
+			map.put("v_TITLE", title);
+		}
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.getScheduleList(map);
 	}
@@ -171,7 +175,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleListMain(map);
 	}
 
-	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String title, String writerName, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -183,6 +187,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PENDDATE", endDate);
 		map.put("v_WRITERNAME", writerName);
 		map.put("v_WRITERDEPT", writerDept);
+		if(!title.equals("")) {
+			map.put("v_TITLE", title);
+		}
 		map.put("tenantID", tenantID);
 		
 		return ezResourceDAO.getScheduleListRepetiti(map);
@@ -264,7 +271,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2) throws Exception {
+	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_Brd_ID", brdID);
 		map.put("v_P_ODeptID", deptID);
@@ -278,6 +285,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_Brd_Explain", brdExplain);
 		map.put("v_P_CompanyID", companyID);
 		map.put("v_P_Approve", approve);
+		map.put("v_P_Return", strReturn);
 		map.put("v_P_Brd_NM2", brdNm2);
 		map.put("v_P_ODeptNm2", deptNm2);
 		map.put("v_P_OwnerNm2", ownerNm2);
@@ -389,7 +397,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2) throws Exception {
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn) throws Exception {
 		logger.debug("addResData Start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -416,6 +424,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Brd_GB", "2");
 		map.put("v_Brd_ID", brdID);
 		map.put("v_Brd_Access", strBreAccess);
+		map.put("v_P_Return", strReturn);
 		
 		Map<String,Object> map2 = new HashMap<String, Object>();
 		logger.debug("classGB="+classGB);
@@ -660,9 +669,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						List<String> deptIds = new ArrayList<String>();
 						Collections.addAll(deptIds, deptPath.split(","));
 						deptIds.remove(0);				// companyID 삭제
-						Collections.reverse(deptIds);
 						
 						if(deptIds.size() > 0) {
+							Collections.reverse(deptIds);
 							map.put("v_PUSERID", deptIds.get(0));
 							accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
 								
@@ -677,20 +686,22 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								}
 								// 부서 상위 권한 체크
 								deptIds.remove(0);				// 현재 부서ID 삭제
-								String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
-								
-								map.put("v_PUSERID", newDeptPath);
-								List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-	
-								if(deptAclList != null) {
-									for(int i=0; i<deptAclList.size(); i++) {
-										if(deptAclList.get(i).getAccessLvl().equals("1")) {
-											logger.debug("user upper dept accessLvl = admin");
-											return "Y";
-										}
-										else {
-											logger.debug("user upper dept accessLvl = user");
-											result = "U";
+								if(deptIds.size() > 0) {
+									String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+									
+									map.put("v_PUSERID", newDeptPath);
+									List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+		
+									if(deptAclList != null) {
+										for(int i=0; i<deptAclList.size(); i++) {
+											if(deptAclList.get(i).getAccessLvl().equals("1")) {
+												logger.debug("user upper dept accessLvl = admin");
+												return "Y";
+											}
+											else {
+												logger.debug("user upper dept accessLvl = user");
+												result = "U";
+											}
 										}
 									}
 								}
@@ -706,9 +717,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								List<String> addJobDeptIds = new ArrayList<String>();
 								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 								addJobDeptIds.remove(0);				// companyID 삭제
-								Collections.reverse(addJobDeptIds);
 								
 								if(addJobDeptIds.size() > 0) {
+									Collections.reverse(addJobDeptIds);
 									map.put("v_PUSERID", addJobDeptIds.get(0));
 									accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
 									
@@ -723,20 +734,22 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 										} 
 										// 부서 상위 권한 체크
 										addJobDeptIds.remove(0);				// 현재 부서ID 삭제
-										String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
-										
-										map.put("v_PUSERID", newDeptPath);
-										List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-										
-										if(deptAclList != null) {
-											for(int j=0; j<deptAclList.size(); j++) {
-												if(deptAclList.get(j).getAccessLvl().equals("1")) {
-													logger.debug("user addjob upper dept accessLvl = admin");
-													return "Y";
-												}
-												else {
-													logger.debug("user addjob upper dept accessLvl = user");
-													result = "U";
+										if(addJobDeptIds.size() > 0) {
+											String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+											
+											map.put("v_PUSERID", newDeptPath);
+											List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+											
+											if(deptAclList != null) {
+												for(int j=0; j<deptAclList.size(); j++) {
+													if(deptAclList.get(j).getAccessLvl().equals("1")) {
+														logger.debug("user addjob upper dept accessLvl = admin");
+														return "Y";
+													}
+													else {
+														logger.debug("user addjob upper dept accessLvl = user");
+														result = "U";
+													}
 												}
 											}
 										}
@@ -804,6 +817,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PAPPROVE", approve);
 		map.put("tenantID", tenantID);
 		ezResourceDAO.updateSchedule(map);
+	}
+	
+	@Override
+	public void updateSchedule2(int num, String ownerID, String companyID, String returnFlag, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PNUM", num);
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PRETURN", returnFlag);
+		map.put("tenantID", tenantID);
+		ezResourceDAO.updateSchedule2(map);
 	}
 	
 	public void modifyResSch(String ownerID, String num, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, String endDate,
@@ -966,6 +990,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		map.put("v_P_Approve", approveFlag);
 		
+		String returnFlag = ezResourceDAO.addRessch_S3(map);
+		
+		map.put("v_P_ReturnFlag", returnFlag);
+		
 		ezResourceDAO.addResSch(map);
 		
 		return ezResourceDAO.addRessch_S2(map);
@@ -999,7 +1027,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
+	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pTitle, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
 		logger.debug("getScheduleXML Start");
 		
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
@@ -1008,7 +1036,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String app = xmlRes.getElementsByTagName("APP").item(0).getTextContent().trim();
 		
 		// 스케줄 정보 가져옴
-		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept, tenantID, offset);
+		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pTitle, pWriterName, pWriterDept, tenantID, offset);
 		
 		Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
 		
@@ -1118,6 +1146,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<gubunFlag>"+ gubun +"</gubunFlag>");
 				returnStr.append("<importance>"+ scheRSDom.getElementsByTagName("importance").item(i).getTextContent() +"</importance>");
 				returnStr.append("<approveFlag>"+ scheRSDom.getElementsByTagName("approveFlag").item(i).getTextContent() +"</approveFlag>");
+				returnStr.append("<returnFlag>"+ scheRSDom.getElementsByTagName("returnFlag").item(i).getTextContent() +"</returnFlag>");
 				returnStr.append("<owner_nm><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm").item(i).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
 				returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
@@ -1302,29 +1331,28 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnStr.toString();
 	}*/
 	
-	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
+	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pTitle, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
 		logger.debug("getScheduleList Start");
 
 		String startDateLimit = eDate + " 23:59:59";
 		String endDateLimit = sDate + " 00:00:01";
 		
-		List<ResGetScheduleVO> getScheduleList = new ArrayList<ResGetScheduleVO>();
-		List<ResGetScheduleVO> getScheduleListRept = new ArrayList<ResGetScheduleVO>();
+		List<ResGetScheduleVO> getScheduleList = new ArrayList<>();
+		List<ResGetScheduleVO> getScheduleListRept = null;
 
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
 		if (pType.equals("")) {
-			getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
+			getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pTitle, pWriterName, pWriterDept, offset, tenantID);
 			logger.debug("getScheduleListSize=" + getScheduleList.size());
-			
-		} else if (pType.equals("MAIN")) {
+		}
+		else if (pType.equals("MAIN")) {
 			getScheduleList = getScheduleListMain(ownerID, companyID, startDateLimit, endDateLimit, offset, tenantID);
 			logger.debug("getScheduleListMainSize=" + getScheduleList.size());
-
 		}
 
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
 		if (pType.equals("")) {
-			getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
+			getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pTitle, pWriterName, pWriterDept, offset, tenantID);
 		} else {
 			getScheduleListRept = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset);
 		}
@@ -1388,6 +1416,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						temp.setAttachFlag(getScheduleListRept.get(i).getAttachFlag());
 						temp.setCharacterID(getScheduleListRept.get(i).getCharacterID());
 						temp.setApproveFlag(getScheduleListRept.get(i).getApproveFlag());
+						temp.setReturnFlag(getScheduleListRept.get(i).getReturnFlag());
 						temp.setOwnerNm(getScheduleListRept.get(i).getOwnerNm());
 						temp.setDeptNm(getScheduleListRept.get(i).getDeptNm());
 						/*temp.setOwnerNm2(getScheduleListRept.get(i).getOwnerNm2());
@@ -1429,15 +1458,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		});
 		
-		String returnSchedule = "<DATA>";
+		StringBuilder returnScheduleBld = new StringBuilder();
+		returnScheduleBld.append("<DATA>");
 		
 		for (ResGetScheduleVO vo :  getScheduleList) {
-			returnSchedule += commonUtil.getQueryResult(vo);
+			returnScheduleBld.append(commonUtil.getQueryResult(vo));
 		}
 		
-		returnSchedule += "</DATA>";
+		returnScheduleBld.append("</DATA>");
 		
-		Document returnDom1 = commonUtil.convertStringToDocument(returnSchedule);
+		Document returnDom1 = commonUtil.convertStringToDocument(returnScheduleBld.toString());
 		
 		// return할 xml string 생성(반복예약 제외)
 		StringBuilder returnStr = new StringBuilder();
@@ -1465,6 +1495,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<attachFlag>" + returnDom1.getElementsByTagName("ATTACHFLAG").item(m).getTextContent() + "</attachFlag>");
 				returnStr.append("<characterID>" + returnDom1.getElementsByTagName("CHARACTERID").item(m).getTextContent() + "</characterID>");
 				returnStr.append("<approveFlag>" + returnDom1.getElementsByTagName("APPROVEFLAG").item(m).getTextContent() + "</approveFlag>");
+				returnStr.append("<returnFlag>" + returnDom1.getElementsByTagName("RETURNFLAG").item(m).getTextContent() + "</returnFlag>");
 				returnStr.append("<owner_nm><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM").item(m).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM").item(m).getTextContent() + "]]></dept_name>");
 				
@@ -1523,7 +1554,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		int tempYoil = 0;
 		
 		// 자원예약 기간
-		Date resStartDate = vo.getStartDate();
 		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -1531,7 +1561,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
 		Date endDate = sdf.parse(eDate);
-
 		String tmpStartDateStr = sdf.format(vo.getStartDate());
 		String tmpEndDateStr = tmpStartDateStr.substring(0, 10) + sdf.format(vo.getEndDate()).substring(10);
 		
@@ -2068,36 +2097,40 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			List<String> deptIds = new ArrayList<String>();
 			Collections.addAll(deptIds, deptPath.split(","));
 			deptIds.remove(0);				// companyID 삭제
-			Collections.reverse(deptIds);
-			
-			map.put("v_PUSERID", deptIds.get(0));
-			String deptAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+			if(deptIds.size() > 0) {
+				Collections.reverse(deptIds);
 				
-			if(deptAccLvl != null && deptAccLvl.trim().equals("1")) {
-				logger.debug("user dept accessLvl = admin");
-				return "Y";
-			}
-			else {
-				if (deptAccLvl != null && deptAccLvl.trim().equals("2")) {
-					logger.debug("user dept accessLvl = user");
-					accessLvl = "2";
+				map.put("v_PUSERID", deptIds.get(0));
+				String deptAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+					
+				if(deptAccLvl != null && deptAccLvl.trim().equals("1")) {
+					logger.debug("user dept accessLvl = admin");
+					return "Y";
 				}
-				// 부서 상위 권한 체크
-				deptIds.remove(0);				// 현재 부서ID 삭제
-				String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
-				
-				map.put("v_PUSERID", newDeptPath);
-				List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-
-				if(deptAclList != null) {
-					for(int i=0; i<deptAclList.size(); i++) {
-						if(deptAclList.get(i).getAccessLvl().equals("1")) {
-							logger.debug("user upper dept accessLvl = admin");
-							return "Y";
-						}
-						else {
-							logger.debug("user upper dept accessLvl = user");
-							accessLvl = "2";
+				else {
+					if (deptAccLvl != null && deptAccLvl.trim().equals("2")) {
+						logger.debug("user dept accessLvl = user");
+						accessLvl = "2";
+					}
+					// 부서 상위 권한 체크
+					deptIds.remove(0);				// 현재 부서ID 삭제
+					if(deptIds.size() > 0) {
+						String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+						
+						map.put("v_PUSERID", newDeptPath);
+						List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+		
+						if(deptAclList != null) {
+							for(int i=0; i<deptAclList.size(); i++) {
+								if(deptAclList.get(i).getAccessLvl().equals("1")) {
+									logger.debug("user upper dept accessLvl = admin");
+									return "Y";
+								}
+								else {
+									logger.debug("user upper dept accessLvl = user");
+									accessLvl = "2";
+								}
+							}
 						}
 					}
 				}
@@ -2112,36 +2145,40 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					List<String> addJobDeptIds = new ArrayList<String>();
 					Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 					addJobDeptIds.remove(0);				// companyID 삭제
-					Collections.reverse(addJobDeptIds);
-					
-					map.put("v_PUSERID", addJobDeptIds.get(0));
-					String addJobAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+					if(addJobDeptIds.size() > 0) {
+						Collections.reverse(addJobDeptIds);
 						
-					if(addJobAccLvl != null && addJobAccLvl.trim().equals("1")) {
-						logger.debug("user addjob dept accessLvl = admin");
-						return "Y";
-					}
-					else {
-						if (addJobAccLvl != null && addJobAccLvl.trim().equals("2")) {
-							logger.debug("user addjob dept accessLvl = user");
-							accessLvl = "2";
-						} 
-						// 부서 상위 권한 체크
-						addJobDeptIds.remove(0);				// 현재 부서ID 삭제
-						String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
-						
-						map.put("v_PUSERID", newDeptPath);
-						List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-						
-						if(deptAclList != null) {
-							for(int j=0; j<deptAclList.size(); j++) {
-								if(deptAclList.get(j).getAccessLvl().equals("1")) {
-									logger.debug("user addjob upper dept accessLvl = admin");
-									return "Y";
-								}
-								else {
-									logger.debug("user addjob upper dept accessLvl = user");
-									accessLvl = "2";
+						map.put("v_PUSERID", addJobDeptIds.get(0));
+						String addJobAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+							
+						if(addJobAccLvl != null && addJobAccLvl.trim().equals("1")) {
+							logger.debug("user addjob dept accessLvl = admin");
+							return "Y";
+						}
+						else {
+							if (addJobAccLvl != null && addJobAccLvl.trim().equals("2")) {
+								logger.debug("user addjob dept accessLvl = user");
+								accessLvl = "2";
+							} 
+							// 부서 상위 권한 체크
+							addJobDeptIds.remove(0);				// 현재 부서ID 삭제
+							if(addJobDeptIds.size() > 0) {
+								String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+								
+								map.put("v_PUSERID", newDeptPath);
+								List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+								
+								if(deptAclList != null) {
+									for(int j=0; j<deptAclList.size(); j++) {
+										if(deptAclList.get(j).getAccessLvl().equals("1")) {
+											logger.debug("user addjob upper dept accessLvl = admin");
+											return "Y";
+										}
+										else {
+											logger.debug("user addjob upper dept accessLvl = user");
+											accessLvl = "2";
+										}
+									}
 								}
 							}
 						}
@@ -2180,16 +2217,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Override
 	public String getItemList(@CookieValue("loginCookie") String loginCookie,String brdID) throws Exception {
-		String childBrd = "";
+		StringBuilder childBrdBld = new StringBuilder();
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		List<ResGetItemListVO> list = getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		for(int i=0; i<list.size(); i++) {
-			childBrd += list.get(i).getBrd_ID() + "/" + commonUtil.cleanValue(list.get(i).getBrd_Nm()) + "/" + list.get(i).getApproveFlag() + ",";
+			childBrdBld.append(list.get(i).getBrd_ID() + "/" + commonUtil.cleanValue(list.get(i).getBrd_Nm()) + "/" + list.get(i).getApproveFlag() + ",");
 		}
 		
-		return childBrd;
+		return childBrdBld.toString();
 	}
 	
 	@Override
@@ -2197,6 +2234,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         String strUserID = "";
         String strDeptPath = "";
         String returnXML = "";
+        String userAdminFlag = "";
+        String strAdminType = "";
    
         Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
         String strParentID = xmlRes.getElementsByTagName("PARENT_ID").item(0).getTextContent().trim();
@@ -2204,20 +2243,25 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         String strAccessFlag = xmlRes.getElementsByTagName("ACCESS_FLAG").item(0).getTextContent().trim();
         String strFirstNode = xmlRes.getElementsByTagName("FIRST_NODE").item(0).getTextContent().trim();
         String strTreeType = xmlRes.getElementsByTagName("TREE_TYPE").item(0).getTextContent().trim();
+        if(strTreeType.equals("0")) {
+        	strAdminType = xmlRes.getElementsByTagName("ADMIN_CHECK").item(0).getTextContent().trim();
+        }
 
         if(xmlRes.getElementsByTagName("BRDLIST").getLength() > 5) {
         	strUserID = xmlRes.getElementById("BRDLIST").getChildNodes().item(5).getTextContent().trim();
-        	strDeptPath = xmlRes.getElementById("BRDLIST").getChildNodes().item(6).getTextContent().trim();
-        	strDeptPath = "'" + strDeptPath.replace("," , "', '")+ "'";
+        }
+        
+        if(strAdminType.equals("Y")) {
+        	userAdminFlag = getAdminFlag(pComID, strParentID, pUserID, tenantID, pDeptID);
         }
         
         List<ResGetAdmSubClsTreeVO> resGetAdmSubClsTree = new ArrayList<ResGetAdmSubClsTreeVO>();
         if(strAccessFlag.equals("0")) {
-        	resGetAdmSubClsTree = getAdmSubClsTree(strParentID, strCompanyID, strTreeType, tenantID);
+        	resGetAdmSubClsTree = getAdmSubClsTree(strParentID, strCompanyID, strTreeType, tenantID, userAdminFlag);
         } else {
         	resGetAdmSubClsTree = getSubClsTree(strParentID, strCompanyID, strTreeType, strUserID, pComID, pDeptID, pUserID, tenantID);
         }
-
+        
         StringBuilder strTreeStyle = new StringBuilder();
         if(strFirstNode.equals("Y")) {
         	strTreeStyle.append("<TREEVIEWDATA>");
@@ -2264,31 +2308,40 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         	strTreeStyle.append("<MFIRSTROOTNODEICON>/images/left/02_minus.gif</MFIRSTROOTNODEICON>");
         	strTreeStyle.append("<PFIRSTROOTNODEICON>/images/left/02_plus.gif</PFIRSTROOTNODEICON>");
         	strTreeStyle.append("</HERITAGEICONIMAGE>");
-        
-        	returnXML = strTreeStyle.toString();
-        } else {
-        	strTreeStyle.append("<NODES>");
-        	returnXML = strTreeStyle.toString();
         }
-        
+        else {
+        	strTreeStyle.append("<NODES>");
+        }
         if(strFirstNode.equals("Y")) {
-        	for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
+        	for(int i = 0; i < resGetAdmSubClsTree.size(); i++) {
         		if(i == 0) {
-        			 returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), true, langStr);
+        			strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), true, langStr));
         		} else {
-        			returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+        			if(resGetAdmSubClsTree.get(i).getApproveFlag().equals("2")) {
+            			if(userAdminFlag.equals("Y")) {
+            				strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr));
+            			}
+            		} 
+        			else {
+        				strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr));
+        			}
         		}
         	}
-        	returnXML += "</TREEVIEWDATA>";
+        	strTreeStyle.append("</TREEVIEWDATA>");
         } else {
         	for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
-        		returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
-
+        		// approveflag = 2이면서 관리자 아니면 값 빼기
+        		if(resGetAdmSubClsTree.get(i).getApproveFlag().equals("2")) {
+        			if(userAdminFlag.equals("Y")) {
+        				strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr));
+        			}
+        		} else {
+        			strTreeStyle.append(makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr));
+        		}
         	}
-
-        	returnXML += "</NODES>";
+        	strTreeStyle.append("</NODES>");
         }
-		return returnXML;
+		return strTreeStyle.toString();
 	}
 	
 	public String makeNodesFromADOFlds(String xmlStr, boolean blnFirstNode, String langStr) throws Exception{
@@ -2305,7 +2358,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         if(langStr.equals("1")) {
         	strData2 = xmlRes.getElementsByTagName("BRDNM").item(0).getTextContent();
         } else {
-        	strData2 = xmlRes.getElementsByTagName("BRDNM"+langStr).item(0).getTextContent();
+        	strData2 = commonUtil.cleanValue(xmlRes.getElementsByTagName("BRDNM"+langStr).item(0).getTextContent());
         }
         String strData3 = xmlRes.getElementsByTagName("BRDLEVEL").item(0).getTextContent();
         String strData4 = xmlRes.getElementsByTagName("BRDSTEP").item(0).getTextContent();
@@ -2436,6 +2489,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String realPath = "";
 	    String strAttachList1 = "";
 	    String strAttachList2 = "";
+	    String strReturn = "";
 	    
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strBrdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2451,15 +2505,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
 			
-		realPath = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		realPath = xmlRes.getElementsByTagName("DATA").item(19).getTextContent().trim();
 		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
 		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
+		strReturn = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
 		
-		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2);
+		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2, strReturn);
 
 		return true;
 	}
@@ -2486,6 +2541,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String realPath = "";
 	    String strAttachList1 = "";
 	    String strAttachList2 = "";
+	    String strReturn = "";
 	    
 	   	Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strClassGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2501,16 +2557,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
 		
-		realPath = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		realPath = xmlRes.getElementsByTagName("DATA").item(19).getTextContent().trim();
 		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
 		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
+		strReturn = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
 		strBreAccess = egovMessageSource.getMessage("ezResource.t58", locale);
 			
-		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2);
+		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2, strReturn);
 
 		return true;
 	}
@@ -3392,7 +3449,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		int tempYoil = 0;
 		
 		// 자원예약 기간
-		Date resStartDate = vo.getStartDate();
 		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -3401,7 +3457,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
 		Date endDate = sdf.parse(eDate);
-
+		
 		String tmpStartDateStr = sdf.format(vo.getStartDate());
 		String tmpEndDateStr = tmpStartDateStr.substring(0, 10) + sdf.format(vo.getEndDate()).substring(10);
 		
@@ -3438,23 +3494,20 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
 		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));*/
 		
-		List<Date[]> returnList = new ArrayList<Date[]>();
+		List<Date[]> returnList = new ArrayList<>();
 		
 		int temp = maxTemp; // 최대 maxTemp번 반복
 		
 		String oSDate;
 		String oStartDate;
-		String oEDate;
 		String oEndDate;
 		String tEDate;
 		
 		Date resEndDate1 = resEndDate;
 		
 		while (true) {
-			
 			oSDate = osdf.format(tmpStartDate);
 			oStartDate = osdf.format(startDate);
-			oEDate = osdf.format(resEndDate);
 			oEndDate = osdf.format(endDate);
 			tEDate = osdf.format(tmpEndDate);
 			
@@ -3732,8 +3785,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			tempStartCal.add(Calendar.DATE, interval * 7);
 			oEndCal.add(Calendar.DATE, interval * 7);
 			
-			
-			
 			temp--;
 			
 			if (temp < 0) {
@@ -3758,12 +3809,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		int instances = vo.getInstances();
 		List<Integer> wDay = vo.getDaysOfWeek();
 		
-		if (wDay != null && wDay.size() > 0) {
+		if (wDay != null && !wDay.isEmpty()) {
 			instances = instances * wDay.size();
 		}
 		
 		// 자원예약 기간
-		Date resStartDate = vo.getStartDate();
 		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -3772,7 +3822,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
 		Date endDate = sdf.parse(eDate);
-
+		
 		String tmpStartDateStr = sdf.format(vo.getStartDate());
 		String tmpEndDateStr = tmpStartDateStr.substring(0, 10) + sdf.format(vo.getEndDate()).substring(10);
 		
@@ -3816,17 +3866,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		boolean loopFlag = true;
 		
-		String oSDate;
 		String oStartDate;
-		String oEDate;
 		String oEndDate;
 		Date resEndDate1 = resEndDate;
 		
 		while (loopFlag) {
-			
-			oSDate = osdf.format(tmpStartDate);
 			oStartDate = osdf.format(startDate);
-			oEDate = osdf.format(resEndDate);
 			oEndDate = osdf.format(endDate);
 			
 			tsdList.clear();
@@ -4002,18 +4047,18 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map2.put("brd_company", companyID);
 		map2.put("upperResourceId", upperResourceId);
 		
-		String SelectedResourceIdOrder = ezResourceDAO.getResourceOrder(map);
-		String TargetResourceIdOrder = ezResourceDAO.getResourceOrder(map2);
+		String selectedResourceIdOrder = ezResourceDAO.getResourceOrder(map);
+		String targetResourceIdOrder = ezResourceDAO.getResourceOrder(map2);
 		
-		String tempOrder = SelectedResourceIdOrder;
-		SelectedResourceIdOrder = TargetResourceIdOrder;
-		TargetResourceIdOrder = tempOrder;
+		String tempOrder = selectedResourceIdOrder;
+		selectedResourceIdOrder = targetResourceIdOrder;
+		targetResourceIdOrder = tempOrder;
 		
-		map.put("resourceOrder", SelectedResourceIdOrder);
-		map2.put("resourceOrder", TargetResourceIdOrder);
+		map.put("resourceOrder", selectedResourceIdOrder);
+		map2.put("resourceOrder", targetResourceIdOrder);
 		
-		ezResourceDAO.ChangeResourceOrder(map);
-		ezResourceDAO.ChangeResourceOrder(map2);
+		ezResourceDAO.changeResourceOrder(map);
+		ezResourceDAO.changeResourceOrder(map2);
 		logger.debug("changeResourceOrder ended");
 	}
 	
@@ -4079,22 +4124,24 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		List<String> deptIds = new ArrayList<String>();
 		Collections.addAll(deptIds, deptPath.split(","));
 		deptIds.remove(0);				// companyID 삭제
-		Collections.reverse(deptIds);
-		deptIds.remove(0);				// 부서 ID 삭제
-		
-		// 상위 부서 권한 체크
-		String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
-		
-		map.put("v_BRD_UPPER", brdID);
-		map.put("v_PCOMPANYID", companyID);
-		
-		map.put("v_PUSERID", newDeptPath);
-		List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
-		
-		if(deptAclList.size() > 0) {
-			for(int i=0; i<deptAclList.size(); i++) {
-				if(deptAclList.get(i).getSdaYn().equals("Y")) {
-					return "1";
+		if(deptIds.size() > 1) {
+			Collections.reverse(deptIds);
+			deptIds.remove(0);				// 부서 ID 삭제
+			
+			// 상위 부서 권한 체크
+			String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+			
+			map.put("v_BRD_UPPER", brdID);
+			map.put("v_PCOMPANYID", companyID);
+			
+			map.put("v_PUSERID", newDeptPath);
+			List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+			
+			if(deptAclList.size() > 0) {
+				for(int i=0; i<deptAclList.size(); i++) {
+					if(deptAclList.get(i).getSdaYn().equals("Y")) {
+						return "1";
+					}
 				}
 			}
 		}
@@ -4109,27 +4156,31 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				List<String> addJobDeptIds = new ArrayList<String>();
 				Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 				addJobDeptIds.remove(0);				// companyID 삭제
-				Collections.reverse(addJobDeptIds);
 				
-				map.put("deptID", addJobDeptIds.get(0));
-				
-				String result2 = ezResourceDAO.userResPermissionCheck(map);	
-				
-				if(result2.equals("1")) {
-					return result2;
-				}
-				
-				addJobDeptIds.remove(0);			// deptID 삭제
-
-				String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+				if(addJobDeptIds.size() > 0) {
+					Collections.reverse(addJobDeptIds);
+					map.put("deptID", addJobDeptIds.get(0));
 					
-				map.put("v_PUSERID", newDeptPath2);
-				List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
-				
-				if(deptAclList2.size() > 0) {
-					for(int j=0; j<deptAclList.size(); j++) {
-						if(deptAclList2.get(j).getSdaYn().equals("Y")) {
-							return "1";
+					String result2 = ezResourceDAO.userResPermissionCheck(map);	
+					
+					if(result2.equals("1")) {
+						return result2;
+					}
+					
+					addJobDeptIds.remove(0);			// deptID 삭제
+	
+					if(addJobDeptIds.size() > 0) {
+						String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+							
+						map.put("v_PUSERID", newDeptPath2);
+						List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
+						
+						if(deptAclList2.size() > 0) {
+							for(int j=0; j<deptAclList2.size(); j++) {
+								if(deptAclList2.get(j).getSdaYn().equals("Y")) {
+									return "1";
+								}
+							}
 						}
 					}
 				}

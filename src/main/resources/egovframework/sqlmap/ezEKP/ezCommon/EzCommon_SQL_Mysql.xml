@@ -178,6 +178,16 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.checkReformFlagColumn">
+		<![CDATA[
+			SELECT
+				REFORMFLAG
+			FROM
+				TBL_FORMINFO
+			LIMIT 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.createTblCompanyConfig"> 
 		CREATE TABLE `tbl_company_config` (
 		  `TENANT_ID` mediumint(5) NOT NULL,
@@ -186,6 +196,13 @@
 		  `PROPERTY_VALUE` varchar(2000) NOT NULL,
 		  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`PROPERTY_NAME`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
+	</statement>
+	
+	<statement id="EzCommonDAO.createReformFlagColumn">
+		ALTER TABLE
+			TBL_FORMINFO
+		ADD
+			REFORMFLAG VARCHAR(4) DEFAULT 'N'
 	</statement>
 		
 	<select id="EzCommonDAO.getCompanyConfig" parameterClass="map" resultClass="String">
@@ -243,6 +260,48 @@
 		]]>
 	</update>
 	
+	<insert id="EzCommonDAO.insertMultiLoginUser" parameterClass="map">
+		INSERT INTO TBL_USER_MULTILOGIN (TENANT_ID, USER_ID, LOGIN_TIME)
+		VALUES (#tenantID#, #userID#, #loginTime#)
+	</insert>
+	
+	<delete id="EzCommonDAO.deleteMultiLoginUser" parameterClass="map">
+		DELETE FROM
+			TBL_USER_MULTILOGIN
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</delete>
+	
+	<select id="EzCommonDAO.selectMultiLoginUser" parameterClass="map" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</select>
+	
+	<select id="EzCommonDAO.checkTblUserMultiLogin" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserMultiLogin">
+		CREATE TABLE TBL_USER_MULTILOGIN (
+		    TENANT_ID MEDIUMINT(5),
+		    USER_ID VARCHAR(80),
+		    LOGIN_TIME VARCHAR(15) NOT NULL,
+		    PRIMARY KEY (USER_ID, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+	
 	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -275,6 +334,23 @@
 			TBL_ADDJOBMASTER
 		ADD 
 			ORDERBY VARCHAR(200) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddAddJobMasterProxy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PROXY
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterProxy"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			PROXY VARCHAR(200) DEFAULT NULL
 	</statement>
 	
 	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
@@ -484,6 +560,31 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
 	
+	<select id="EzCommonDAO.checkJmochaMailGenenalPreviewMailImage">
+		SELECT 
+			PREVIEW_MAIL_IMAGE
+		FROM 
+			JMOCHA_MAIL_GENERAL
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addJmochaMailGenenalPreviewMailImage"> 
+		ALTER TABLE 
+			JMOCHA_MAIL_GENERAL
+		ADD 
+			PREVIEW_MAIL_IMAGE VARCHAR(10) DEFAULT 'Y'
+	</statement>
+
+	<select id="EzCommonDAO.checkPortalThemePortletIsFixed" resultClass="String">
+		<![CDATA[
+			SELECT 
+				IS_FIXED
+			FROM 
+				TBL_PORTAL_THEME_PORTLET
+			LIMIT 1
+		]]>
+	</select>
+	
 	<select id="EzCommonDAO.checkUserMasterMailBoxQuota" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -494,6 +595,13 @@
 		]]>
 	</select>
 	
+	<statement id="EzCommonDAO.addPortalThemePortletIsFixed"> 
+		ALTER TABLE 
+			TBL_PORTAL_THEME_PORTLET
+		ADD 
+			IS_FIXED INT DEFAULT 0
+	</statement>
+	
 	<statement id="EzCommonDAO.addUserMasterMailBoxQuota">
 		ALTER TABLE
 			TBL_USERMASTER
@@ -501,6 +609,70 @@
 			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
 			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
 			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+					1 
+			FROM 
+					INFORMATION_SCHEMA.COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYFLAG'
+		]]>
+	</select>
+			
+	<select id="EzCommonDAO.checkPortalThemePortlet">
+		<![CDATA[
+			SELECT
+				theme_id
+			FROM 
+				TBL_PORTAL_THEME_PORTLET
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayFlag"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYFLAG VARCHAR(45) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
+		<![CDATA[
+			SELECT 
+					1 
+			FROM 
+					INFORMATION_SCHEMA.COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYREPEAT'
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayRepeat"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYREPEAT VARCHAR(45) DEFAULT NULL
+	</statement>
+			
+	<statement id="EzCommonDAO.createTblPortalThemePortlet">
+		CREATE TABLE `tbl_portal_theme_portlet` (
+			`theme_id` int(11) NOT NULL,
+			`tenant_id` mediumint(9) NOT NULL DEFAULT '0',
+			`company_id` varchar(100) NOT NULL DEFAULT '',
+			`portlet_id` int(11) NOT NULL DEFAULT '0',
+			`portlet_used` int(11) DEFAULT NULL,
+			`portlet_order` int(11) DEFAULT NULL,
+			`menu_id` int(11) DEFAULT NULL,
+			`is_fixed` int(11) DEFAULT 0,
+			PRIMARY KEY (`theme_id`,`tenant_id`,`company_id`,`portlet_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
 	
 	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
@@ -519,6 +691,92 @@
 			)
 	</statement>
 	
+	<select id="EzCommonDAO.checkTaskUrl" resultClass="String">
+			SELECT
+				menu_id
+			FROM
+				TBL_PORTAL_MENU
+			WHERE
+				menu_url LIKE '%taskIndex%'
+			AND
+				menu_id = 17
+			LIMIT 1
+	</select>
+	
+	<update id="EzCommonDAO.updateTaskUrl">
+		UPDATE
+			TBL_PORTAL_MENU
+		SET
+			menu_url = '/ezTask/taskIndex.do'
+		WHERE
+			menu_id = 17
+	</update>
+	
+	<select id="EzCommonDAO.checkAddPortalPortletUserPortletUsed">
+		<![CDATA[
+			SELECT
+				portlet_used
+			FROM 
+				TBL_PORTAL_PORTLET_USER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addPortalPortletUserPortletUsed"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		ADD 
+			PORTLET_USED int(11) DEFAULT 1
+	</statement>
+	
+	<select id="EzCommonDAO.checkPortalPortletUserThemeId">
+		<![CDATA[
+			SELECT
+				theme_id
+			FROM 
+				TBL_PORTAL_PORTLET_USER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addPortalPortletUserThemeId"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		ADD 
+			THEME_ID int(11) DEFAULT 1
+	</statement>
+	
+	<statement id="EzCommonDAO.deletePortalPortletUserPrimaryKey"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		DROP 
+			PRIMARY KEY
+	</statement>
+	
+	<statement id="EzCommonDAO.addPortalPortletUserPrimaryKey"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		ADD 
+			PRIMARY KEY(user_id, tenant_id, company_id, portlet_id, theme_id)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddTblPortalThemeUserIsDefault">
+		<![CDATA[
+			SELECT
+				is_default
+			FROM 
+				TBL_PORTAL_THEME_USER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addTblPortalThemeUserIsDefault"> 
+		ALTER TABLE 
+			TBL_PORTAL_THEME_USER
+		ADD 
+			is_default int(11) DEFAULT 0
+	</statement>
+
 	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
 		SELECT 
 			COUNT(*) 
@@ -566,5 +824,367 @@
 			LISTTYPE = 'S001' 
 		AND 
 			COLNAME = 'FunctionTypeName'
+	</update>
+	
+	<select id="EzCommonDAO.checkQuickLinkLinkOrder">
+		<![CDATA[
+			SELECT
+				LINKORDER
+			FROM 
+				TBL_PS_QUICKLINK
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addQuickLinkLinkOrder"> 
+		ALTER TABLE 
+			TBL_PS_QUICKLINK
+		ADD 
+			LINKORDER INT(11) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkComCloseCompanyId">
+		<![CDATA[
+			SELECT
+				COMPANYID
+			FROM 
+				TBL_C_COMCLOSE
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addComCloseCompanyId"> 
+		ALTER TABLE 
+			TBL_C_COMCLOSE
+		ADD 
+			COMPANYID VARCHAR(100) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderTotalLimit">
+		SELECT
+			COMPANY_TOTAL_LIMIT, DEPARTMENT_TOTAL_LIMIT, USER_TOTAL_LIMIT
+		FROM
+			TBL_WEBFOLDER_CONFIG
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderConfigTotalLimit">
+		ALTER TABLE
+			TBL_WEBFOLDER_CONFIG
+		CHANGE
+			COLUMN TOTAL_LIMIT USER_TOTAL_LIMIT VARCHAR(100) NULL DEFAULT NULL,
+		ADD
+			COLUMN COMPANY_TOTAL_LIMIT VARCHAR(100) NULL DEFAULT NULL,
+		ADD
+			COLUMN DEPARTMENT_TOTAL_LIMIT VARCHAR(100) NULL DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderUserCnType">
+		SELECT
+			TYPE
+		FROM
+			TBL_WEBFOLDER_USER
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createWebfolderUserCnTypeColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_USER
+		ADD
+			COLUMN TYPE VARCHAR(50) NOT NULL,
+		DROP
+			PRIMARY KEY,
+		ADD
+			PRIMARY KEY(CN, TENANT_ID, TYPE)
+	</statement>
+	
+	<update id="EzCommonDAO.updateWebfolderUserCnType">
+		UPDATE
+			TBL_WEBFOLDER_USER
+		SET
+			TYPE = 'U'
+	</update>
+	
+	<select id="EzCommonDAO.checkExtensionColumns">
+		SELECT
+			B_MEMO_WIDTH
+		FROM
+			TBL_MEMO_CONFIG
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addMemoExtensionColumns">
+		ALTER TABLE
+			TBL_MEMO_CONFIG
+		ADD (
+			b_memo_left SMALLINT(6) DEFAULT '0',
+			b_memo_top SMALLINT(6) DEFAULT '0',
+			b_memo_width SMALLINT(6) DEFAULT '0',
+			b_memo_height SMALLINT(6) DEFAULT '0',
+			b_memo_status TINYINT(4) DEFAULT '0',
+			memo_id BIGINT(10) DEFAULT '0'
+			)
+	</statement>
+
+	<select id="EzCommonDAO.checkMsgInMailSearch" resultClass="int" >
+		SELECT 
+			COUNT(*) 
+		FROM(
+			SELECT * FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE TABLE_SCHEMA = 'jmocha' 
+			AND TABLE_NAME = 'JAMES_MAIL_SEARCH' 
+			AND COLUMN_NAME = 'MESSAGE_ID'
+		) existsYN
+	</select>
+	
+	<update id="EzCommonDAO.updateMsgInMailSearch">
+		ALTER TABLE 
+			JAMES_MAIL_SEARCH
+		ADD 
+			COLUMN MESSAGE_ID VARCHAR(200) NULL DEFAULT NULL 
+	</update>
+	
+	<select id="EzCommonDAO.checkFormVersionColumnOfForminfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_FORMINFO 
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_EXPENDAPRDOCINFO
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_EXPAPRDOCINFO
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_TMPEXPAPRDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.addFormVersionColumnOfForminfo">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPENDAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo">
+		ALTER TABLE 
+			TBL_TMPEXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnual">
+		SELECT 
+			USER_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAnnual"> 
+		CREATE TABLE `tbl_attitude_annual` (
+  			`USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+  			`MONTHLY_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '월차 수',
+  			`ANNUAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '연차 수',
+  			`ADDITIONAL_HOLIDAY_CNT` decimal(4,1) NOT NULL DEFAULT 0.0 COMMENT '추가 연차 수',
+  			`JOIN_DATE` datetime DEFAULT NULL COMMENT '입사일',
+  			`COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+  			`TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  			PRIMARY KEY (`USER_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnualCanappl">
+		SELECT 
+			ATTITUDE_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL_CANAPPL
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAnnualCanappl"> 
+		CREATE TABLE `tbl_attitude_annual_canappl` (
+  			`ATTITUDE_ID` bigint(20) NOT NULL COMMENT '근태ID',
+  			`APPL_CNT` int(11) NOT NULL COMMENT '수정신청키',
+  			`COMPANY_ID` varchar(80) NOT NULL COMMENT '회사ID',
+  			`TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+  			`WRITER_ID` varchar(80) NOT NULL COMMENT '작성자ID',
+  			`WRITER_NAME` varchar(100) DEFAULT NULL COMMENT '작성자이름',
+  			`WRITER_NAME2` varchar(100) DEFAULT NULL COMMENT '작성자이름2',
+  			`WRITER_TITLE` varchar(200) DEFAULT NULL COMMENT '작성자직위',
+  			`WRITER_TITLE2` varchar(200) DEFAULT NULL COMMENT '작성자직위2',
+  			`WRITER_DEPT_ID` varchar(80) NOT NULL COMMENT '작성자부서ID',
+  			`WRITER_DEPT_NAME` varchar(100) DEFAULT NULL COMMENT '작성자부서이름',
+  			`WRITER_DEPT_NAME2` varchar(100) DEFAULT NULL COMMENT '작성자부서이름2',
+  			`DELFLAG` char(1) DEFAULT '0',
+  			`APPR_USER_ID` varchar(80) DEFAULT NULL COMMENT '승인자ID',
+  			`APPR_DATE` datetime DEFAULT NULL COMMENT '승인일시',
+  			`APPR_STATUS` char(1) DEFAULT '0' COMMENT '승인상태',
+  			`CONTENT` varchar(3000) DEFAULT NULL COMMENT '내용',
+  			`APPR_USER_NAME` varchar(100) DEFAULT NULL COMMENT '승인자이름',
+  			`APPR_USER_NAME2` varchar(100) DEFAULT NULL COMMENT '승인자이름2',
+  			`APPL_DATE` datetime DEFAULT NULL COMMENT '수정신청일시',
+  			PRIMARY KEY (`ATTITUDE_ID`,`APPL_CNT`,`COMPANY_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnualConf">
+		SELECT 
+			COMPANY_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL_CONF
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAnnualConf"> 
+		CREATE TABLE `tbl_attitude_annual_conf` (
+		  `COMPANY_ID` varchar(80) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  `ANNUAL_CANCEL_RULE` char(1) NOT NULL DEFAULT '1',
+		  `USE_ANNUAL_AUTO_GNRT` char(1) NOT NULL DEFAULT '1',
+		  `ANNUAL_GNRT_STD` char(1) NOT NULL DEFAULT '1',
+		  `INITIAL_DATE` date DEFAULT NULL,
+		  `USE_MINUS_ANNUAL` char(1) NOT NULL DEFAULT '1',
+		  `USE_ANNUAL_TMNT` char(1) NOT NULL DEFAULT '1',
+		  `ROUND_OFF_RULE` char(1) NOT NULL DEFAULT '1',
+		  `CONF_SET_DATE` date NOT NULL,
+		  PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAnnualHistory">
+		SELECT 
+			ANNUAL_HISTORY_ID
+		FROM 
+			TBL_ATTITUDE_ANNUAL_HISTORY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAnnualHistory">
+		CREATE TABLE `tbl_attitude_annual_history` (
+		  `ANNUAL_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '연차수정기록ID',
+		  `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
+		  `ORIGIN_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '기존연차수',
+		  `CHANGE_ANNUAL_CNT` decimal(4,1) NOT NULL COMMENT '수정연차수',
+		  `CHANGE_REASON` varchar(2000) DEFAULT NULL COMMENT '수정사유',
+		  `CHANGE_DATE` datetime NOT NULL COMMENT '수정일자',
+		  `CHANGE_USER_ID` varchar(80) NOT NULL COMMENT '수정자ID',
+		  `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
+		  `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트ID',
+		  PRIMARY KEY (`ANNUAL_HISTORY_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblAttitudeAprConn">
+		SELECT 
+			ATTITUDE_ID
+		FROM 
+			TBL_ATTITUDE_APR_CONN
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAttitudeAprConn">
+		CREATE TABLE `tbl_attitude_apr_conn` (
+		  `ATTITUDE_ID` bigint(20) NOT NULL,
+		  `USER_ID` varchar(80) DEFAULT NULL,
+		  `ANNUAL_DOC_ID` varchar(80) NOT NULL,
+		  `CANCEL_DOC_ID` varchar(80) DEFAULT NULL,
+		  `ANNUAL_APPR_STATUS` char(1) DEFAULT NULL,
+		  `CANCEL_APPR_STATUS` char(1) DEFAULT NULL,
+		  `COMPANY_ID` varchar(80) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`ATTITUDE_ID`,`COMPANY_ID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<select id="EzCommonDAO.checkThemeContent2">
+		SELECT
+			THEME_CONTENT2
+		FROM
+			TBL_PORTAL_THEME
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addThemeContent2">
+		ALTER TABLE
+			TBL_PORTAL_THEME
+		ADD (
+			THEME_CONTENT2 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME2 VARCHAR(100) DEFAULT 'theme2'
+			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkThemeContent3">
+		SELECT
+			THEME_CONTENT3
+		FROM
+			TBL_PORTAL_THEME
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addThemeContent3">
+		ALTER TABLE
+			TBL_PORTAL_THEME
+		ADD (
+			THEME_CONTENT3 VARCHAR(400) DEFAULT 'theme content',
+			THEME_NAME3 VARCHAR(100) DEFAULT 'theme3'
+			)
+	</statement>
+	
+	<update id="EzCommonDAO.insertThemeContent2">
+		UPDATE
+			TBL_PORTAL_THEME
+		SET
+			THEME_CONTENT2 = CASE 
+								WHEN theme_id = 1 THEN 'A theme with a fixed area on the left or right.'
+								WHEN theme_id = 2 THEN 'A theme with a fixed area on the top.'
+								WHEN theme_id = 3 THEN 'A theme that consists of only portlets without fixed areas.'
+							END ,
+			THEME_NAME2 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
+				
+	</update>
+	
+	<update id="EzCommonDAO.insertThemeContent3">
+		UPDATE
+			TBL_PORTAL_THEME
+		SET
+			THEME_CONTENT3 = CASE 
+								WHEN theme_id = 1 THEN '固定領域を画面の右または左に配置できるテーマです。'
+								WHEN theme_id = 2 THEN '固定領域が画面の上部に表示されるテーマです。'
+								WHEN theme_id = 3 THEN '固定領域がなく、すべてのポートレットを自由に配置できるテーマです。'
+							END ,
+			THEME_NAME3 = CASE 
+								WHEN theme_id = 1 THEN 'Theme1'
+								WHEN theme_id = 2 THEN 'Theme2'
+								WHEN theme_id = 3 THEN 'Theme3'
+							END
 	</update>
 </sqlMap>

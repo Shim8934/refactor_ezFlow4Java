@@ -26,7 +26,7 @@
 	
 			var offsetMin = "${offsetMin}";
 			var individualMailUser = parseInt("${individualMailUser}");
-			var shareId = "${shareId}";
+			var shareId = '<c:out value="${shareId}"/>';
 			
 		    var RetValue;
 		    var ReturnFunction;
@@ -39,7 +39,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var NowDate = utcDate2(offsetMin);

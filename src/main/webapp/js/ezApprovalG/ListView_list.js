@@ -14,7 +14,7 @@ var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
 //따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
 //document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
-var m_strColorSelect = "#edf4fd";
+var m_strColorSelect = "#f1f8ff";
 var m_strColorDefault = "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
@@ -524,18 +524,19 @@ function ListView() {
                 }
                 
                 if (strColName == "RejectFlag") {
-                	objTd.style.textAlign = "left";
+                	objTd.style.textAlign = "center";
                 }
                 
                 if (strColName == "TransferFlag") {
-                	objTd.style.textAlign = "center";
+//                	objTd.style.textAlign = "center";
                 }
                
                 if (strColName == "DelayFlag") {
-                	objTd.style.textAlign = "center";
+//                	objTd.style.textAlign = "center";
                 }
                 
-                if (strName == "비치" || strName == "특수목록" || strName == "연기신청" || strName == "수신") {
+//                if (strName == "비치" || strName == "특수목록" || strName == "연기신청" || strName == "수신") {
+            	if (strName == "비치" || strName == "특수목록" || strName == "수신") {
                 	objTd.style.textAlign = "center";
                 }
 
@@ -844,7 +845,7 @@ function ListView() {
                     	objTd.appendChild(oText);
                     }
                     else if (SelectSingleNodeValue(oHeaders[j], "NAME") == "비치" || SelectSingleNodeValue(oHeaders[j], "NAME") == "연기신청") {
-                    	objTd.style.textAlign = "center";
+                    	objTd.style.textAlign = "left";
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }

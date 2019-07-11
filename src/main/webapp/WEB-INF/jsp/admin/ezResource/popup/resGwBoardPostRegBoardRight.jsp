@@ -290,7 +290,7 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" 
+        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" 
 	        		+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
 	        		+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
@@ -329,9 +329,9 @@
 							var strIsLeaf = $("div#" + id + "").attr("isleaf");
 							
 							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
-			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang400 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang400 + "</span>]";
+			        			document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span> / <span class='countColor'>" + parseInt(result.totalCount + result.totalCount2) + "</span>";
 							} else {
-								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang400 + "</span>]";
+								document.getElementById("countInfo").innerHTML += "&nbsp;&nbsp;<span class='countColor'>" + result.totalCount + "</span>";
 							}
 							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
 							deptNameLong(result.containLow, strIsLeaf);
@@ -360,7 +360,7 @@
 				}
 	        }
 	    
-	    var m_strColorSelect = "#edf4fd";
+	    var m_strColorSelect = "#f1f8ff";
 	    var m_strColorOver = "#f4f5f5";
 	    var m_strColorDefault = "#ffffff";
 	    var p_ListOrderObject = null;
@@ -418,7 +418,8 @@
 	            return;
 	        }
 	        var id = p_ListOrderObject.getAttribute("_DATA2");
-	        var dept = p_ListOrderObject.getAttribute("_DATA11");
+	       // var dept = p_ListOrderObject.getAttribute("_DATA11");
+	        var dept = document.getElementsByClassName("node_selected")[0].parentNode.getAttribute("cn");
 	        var feature = GetOpenPosition(420, 450);
 	        if (CrossYN()) {
 	            var OpenWin = window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "ShowPersonInfo_cross", GetOpenWindowfeature(420, 450));
@@ -581,8 +582,9 @@
 
 	        } else {
 	            if (p_ListOrderObject == "") {
-	                alert("<spring:message code='ezResource.t169' />");
-	                        return;
+	            	dept_select();
+	                /* alert("<spring:message code='ezResource.t169' />");
+	                        return; */
 	                    }
 	                    if (p_ListOrderObject != "") {
 	                        var strId = p_ListOrderObject.getAttribute("_data2");
@@ -759,7 +761,7 @@
 	                    document.getElementById("txtlist_table").style.display = "none";
 	                    document.getElementById("Search_txtlist_table").style.display = "none";
 	                    if (pSeach) {
-	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang401 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
 	                        SelectDeptNM.setAttribute("countinfo", "1")
 	                    }
 	                } else {
@@ -771,7 +773,7 @@
 	                    } else {
 	                        document.getElementById("Search_txtlist_table").style.display = "";
 	                        document.getElementById("txtlist_table").style.display = "none";
-	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang401 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+	                        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"padding-right:3px;\" >" + "<span id='spn_deptName'>" + strLang401 + "</span>" + "<span id='countInfo' style='color:#017BEC;'>&nbsp;&nbsp;<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "</span></span>";
 	                        SelectDeptNM.setAttribute("countinfo", "1")
 	                    }
 	                }
@@ -1001,6 +1003,11 @@
 	        	    keyword.focus();
 	            	return;
 	        	}
+		        
+		        if(document.getElementById("search_type").value == "description") {
+		        	deptsearch_click();
+		        	return;
+		        }
 	       
 	        	$.ajax({
 	        		type : "POST",
@@ -1023,6 +1030,113 @@
 	        			}
 	        		}
 	        	});
+	    	}
+		    
+		    var rgParams = new Array();
+	    	var checkname2_cross_dialogArguments = new Array();
+		    function deptsearch_click() {
+	    		if (document.getElementById('keyword').value.trim() == "") {
+		            alert("<spring:message code='ezPersonal.t61'/>");
+	    	        deptkeyword.focus();
+	        	    return;
+	        	}
+	    		
+	    		var xmlDOM = createXmlDom();
+	        	 $.ajax({
+					url : '/ezOrgan/getSearchList.do',
+					method : 'POST',
+					dataType : "text",
+					async : false,
+					data : {search : "displayname::" + document.all("keyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
+  					success : function(result) {
+  						xmlDOM = loadXMLString(result);
+  						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
+	                	adCount = row.length;
+						},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezResource.t2'/>" + textStatus);
+						xmlDOM = null;
+					}
+				}); 
+
+		        if (adCount == 0) {
+	    	        alert("<spring:message code='ezPersonal.t63'/>");
+	        	    return;
+	        	} else if (adCount == 1) {
+	            	bSearch = true;
+	            	g_xmlHTTP = createXMLHttpRequest();
+
+	            	if(CrossYN())
+		                var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	            	else
+	                	var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+
+	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+	            	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+	            	g_xmlHTTP.send(strQuery);
+	        	} else {
+		            rgParams["addrBook"] = xmlDOM;
+		            rgParams["deptid"] = "";
+	            	var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
+	            	feature = feature + GetShowModalPosition(600, 320);
+	            	
+	            	if (CrossYN()) {
+		                checkname2_cross_dialogArguments[0] = rgParams;
+	                	checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
+	                	var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_cross", GetOpenWindowfeature(600, 320));
+	             	    OpenWin.focus();
+	            	} else {
+	                	window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, feature);
+
+	                	if (rgParams["deptid"] != "") {
+		                    bSearch = true;
+	                    	g_xmlHTTP = createXMLHttpRequest();
+	                    	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                    	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+	                    	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+	                    	g_xmlHTTP.send(strQuery);
+	                	}
+	            	}
+	        	}
+	    	}
+	    	
+	    	function deptsearch_click_Complete() {
+		        if (rgParams["deptid"] != "") {
+		            bSearch = true;
+	    	        g_xmlHTTP = createXMLHttpRequest();
+	            	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+	            	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+	            	g_xmlHTTP.send(strQuery);
+	        	}
+	    	}
+	    	
+	    	function event_getDeptFullTree() {
+		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
+	            	if (g_xmlHTTP.statusText == "OK") {
+	            		var treeXML = loadXMLFile("/xml/organtree_config.xml");
+	                	document.getElementById('TreeView').innerHTML = "";
+
+	                	var treeView = new TreeView();
+	                	treeView.SetConfig(treeXML);
+	                	treeView.SetID("FromTreeView");
+	                	treeView.SetUseAgency(true);
+	                	treeView.SetRequestData("TreeViewRequestData");
+	                	treeView.SetNodeClick("TreeViewNodeClick");
+	                	treeView.SetNodeDblClick("TreeViewNodeDbClick");
+	                	treeView.DataSource(g_xmlHTTP.responseXML);
+	                	treeView.DataBind("TreeView");
+	                	
+	                	var treeView = new TreeView();
+	    		        treeView.LoadFromID("FromTreeView");
+	    	    	    var nodeIdx = treeView.GetSelectNode();
+	    	        	var treeNode = new TreeNode();
+	    	        	treeNode.LoadFromID(nodeIdx.NodeID);
+	            	} else {
+	                	alert(g_xmlHTTP.statusText)
+		                g_xmlHTTP = null;
+	            	}
+	        	}
 	    	}
 		    
 		    //2018-07-23 이효진 미사용
@@ -1315,7 +1429,7 @@
                                             	</td>
                                             	<td>
                                                 	<div style="float: right; margin-right: 5px;">
-                                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code="ezSchedule.t1052" /></span></a>
+                                                    	<a class="imgbtn"><span onclick="infoview_click()"><spring:message code="ezSchedule.t1052" /></span></a>
                                                 	</div>
                                                 	<div style="float: right; margin-right: 5px;">
                                                     	<a href="#" class="imgbtn"><span onclick="dept_select()"><spring:message code="ezEmail.t596" /></span></a>
@@ -1328,11 +1442,11 @@
                             	<table style="margin-top: 4px;">
                                 	<tr>
                                     	<td class="box">
-                                        	<div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+                                        	<div style="width: 220px; height: 507px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
                                     	</td>
                                     	<td></td>
                                     	<td class="listview" style="width: 426px" id="orglistView">
-                                        	<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
+                                        	<table style="width: 100%; margin-top: -1px; height:35px" class="popup_mainlist">
                                             	<tr>
                                                 	<th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea">
 														<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
@@ -1347,7 +1461,7 @@
                                                 	</th>
                                             	</tr>
                                         	</table>
-                                        	<div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+                                        	<div style="vertical-align: top; height: 475px; overflow: auto; width: 440px;" id="txtlist_Layer">
                                             	<table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
                                                 	<tr>
                                                     	<td style="width: 170px; color:#333;background-color: #f8f8fa;" class="td_gray"><spring:message code="ezResource.t9" /></td>
@@ -1364,7 +1478,7 @@
                     	                            </tr>
                         	                    </table>
                             	            </div>
-                                	        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+                                	        <div style="vertical-align: top; text-align: center; height: 475px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
                                 		</tr>
                             		</table>
                         		</td>
@@ -1377,7 +1491,7 @@
                                 	<span style="min-width: 45px;" id="ToTitleStr"><spring:message code="ezResource.jjs01" /></span>
                             		</h2>
                             		<div class="receiver_borderbox">
-                                		<div id="ListViewMsgTo" ondragover="onDragEnter(event)" ondrop="onDrop(event, this)" style="width: 250px; Height: 471px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+                                		<div id="ListViewMsgTo" ondragover="onDragEnter(event)" ondrop="onDrop(event, this)" style="width: 250px; Height: 510px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
                             		</div>
                         		</td>
                     		</tr>

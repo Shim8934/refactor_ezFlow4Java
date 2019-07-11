@@ -15,15 +15,15 @@
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/viewRecInfo_Cross.js')}"></script>
 <script type="text/javascript" ID="clientEventHandlersJS">
-    var CompanyID = "${userInfo.companyID}";
-    var strLang = "${userInfo.lang}";
+    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+    var strLang = "<c:out value='${userInfo.lang}'/>";
     var OrderCell = "";
 </script>
 </head>
 <body class="popup" onload = "return window_onload()">
 <div id="menu">
 	<ul>
-		<li><span onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li> 
+		<li style="margin:2px 0px 19px 0px;"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li> 
 	</ul>
 </div>
 <div id="close"><ul><li id="btnClose" ><span onClick="return btnClose_onclick()"></span></li></ul></div>

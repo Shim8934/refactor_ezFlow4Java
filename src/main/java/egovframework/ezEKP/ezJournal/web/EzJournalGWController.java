@@ -1,23 +1,31 @@
 package egovframework.ezEKP.ezJournal.web;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -691,6 +699,7 @@ public class EzJournalGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String pPreviewShow_HOW = request.getParameter("pPreviewShow_HOW");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			/*
 			String viewDate = "";
@@ -699,23 +708,29 @@ public class EzJournalGWController {
 			}
 			*/
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId(), lang, info.getOffSet());
+			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId(), lang, info.getOffSet(), pPreviewShow_HOW);
 			
 			if (journal.getFileList().size() > 0) {
 				List<JournalFileVO> fileList = journal.getFileList();
 				
+				long fileTotalSizeLong = 0;
 				for (JournalFileVO vo : fileList) {
 					String fileType = vo.getFileName().substring(vo.getFileName().lastIndexOf(".") + 1).toLowerCase();
 					vo.setFileType(fileType);
 					vo.setFileEncodeName(URLEncoder.encode(vo.getFileName(), "UTF-8"));
 					vo.setFilePath(URLEncoder.encode(vo.getFilePath(), "UTF-8"));
-
+						
 					String fileSize = commonUtil.getSizeWithUnit(vo.getFileSize());
 					vo.setFileTransSize(fileSize);
+					
+					fileTotalSizeLong+=vo.getFileSize();
+					
 					LOGGER.debug("##fileType: " + vo.getFileType() + ", EncodeFileName: " + vo.getFileEncodeName() + ", transSize: " + vo.getFileTransSize());
 				}
 				
 				journal.setFileList(fileList);
+				String totalFileSize = commonUtil.getSizeWithUnit(fileTotalSizeLong);
+				journal.setFileTotalSize(totalFileSize);
 			}
 			
 			result.put("data", journal);
@@ -751,7 +766,7 @@ public class EzJournalGWController {
 			String mode = jsonParam.get("mode").toString();
 			LOGGER.debug("mode : " + mode);
 			
-			ezJournalService.updateJournal(journalId, jsonParam, info.getTenantId(), realPath);
+			ezJournalService.updateJournal(commonUtil.detectPathTraversal(journalId), jsonParam, info.getTenantId(), realPath);
 			
 			result.put("data", journalId);
 			result.put("status", "ok");
@@ -781,12 +796,12 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, jsonParam.get("userId").toString());
 			String realPath = commonUtil.getRealPath(request);
-			String journalId = jsonParam.get("journalId").toString();
+			String journalId = commonUtil.detectPathTraversal(jsonParam.get("journalId").toString());
 			List<String> journalIdList = new ArrayList<String>();
 			
 			if (journalId.contains("[")) {
 				Gson gson = new Gson();
-				journalIdList = gson.fromJson(jsonParam.get("journalId").toString(), new TypeToken<List<String>>(){}.getType());
+				journalIdList = gson.fromJson(journalId, new TypeToken<List<String>>(){}.getType());
 			} else {
 				journalIdList.add(journalId);
 			}
@@ -1032,7 +1047,7 @@ public class EzJournalGWController {
     	
 		InputStream stream = null;
 		OutputStream bos = null;
-		String stordFilePathReal = (stordFilePath == null ? "" : stordFilePath);
+		String stordFilePathReal = (stordFilePath == null ? "" : commonUtil.detectPathTraversal(stordFilePath));
 		
 		try {
 		    File cFile = new File(stordFilePathReal);
@@ -1044,7 +1059,7 @@ public class EzJournalGWController {
 				}
 		    }
 	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+		    bos = new FileOutputStream(stordFilePathReal + File.separator + commonUtil.detectPathTraversal(newName));
 		    LOGGER.debug("###" + stordFilePathReal + File.separator + newName + "###");
 		    Decoder decoder = Base64.getDecoder();
 
@@ -1097,7 +1112,7 @@ public class EzJournalGWController {
 		//		mode = request.getParameter("mode");
 		//	}
 			String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
-			String filePath = request.getParameter("filePath");
+			String filePath = commonUtil.detectPathTraversal(request.getParameter("filePath"));
 			String fileList = request.getParameter("fileList");
 			
 			LOGGER.debug("pDirPath : " + pDirPath + " | fileList : " + fileList);
@@ -1108,40 +1123,41 @@ public class EzJournalGWController {
 					String[] data = fileList.split("/"); 
 					
 					for (int i=0; i<data.length; i++) {
-						String sGUID = data[i].split(":")[0];
-						String fileName = data[i].split(":")[1];
-						String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+						String sGUID = commonUtil.detectPathTraversal(data[i].split(":")[0]);
+						String fileName = commonUtil.detectPathTraversal(data[i].split(":")[1]);
+						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
 						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						if(file.exists()){
-						file.delete();
-					}			
+							file.delete();
+						}
+					}
 				}
-				}
-			} else {
+			}
+			else {
 				if (fileList.length() != 0) {
 					String[] data = fileList.split("/"); 
 					
 					for (int i=0; i<data.length; i++) {
-						String sGUID = data[i].split(":")[0];
-						String fileName = data[i].split(":")[1];
-						String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+						String sGUID = commonUtil.detectPathTraversal(data[i].split(":")[0]);
+						String fileName = commonUtil.detectPathTraversal(data[i].split(":")[1]);
+						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
 						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						
 						file.delete();
-					}			
+					}
 				}
 			}
 			
 			result.put("status", "ok");
-			result.put("code", 0);			
+			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
 			result.put("status", "error");
-			result.put("code", 1);			
+			result.put("code", 1);
 			result.put("data", "");
 		}
 		
@@ -1150,11 +1166,117 @@ public class EzJournalGWController {
 	}
 	
 	/**
+	 * 업무일지 G/W [GET] 모든첨부파일 다운로드
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/allattachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
+	public JSONObject downloadFile(@PathVariable String journalId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LOGGER.debug("ezJournal G/W downloadFile started.");
+		LOGGER.debug("journalId=" + journalId);
+		
+		Gson gson = new Gson();
+		
+		JSONObject result = new JSONObject();
+		
+		int bufferSize = 4096;
+		            
+		ZipOutputStream zos = null;
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String realPath = commonUtil.getRealPath(request);
+			String uploadFilePath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
+			String tempFileUploadPath = realPath + uploadFilePath + commonUtil.separator + "tempUploadFile";
+			String guid = UUID.randomUUID().toString();
+			String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+			String[] filePathS = request.getParameter("filePathS").split("\\|");
+			String[] fileNameS = request.getParameter("fileNameS").split("\\|");
+			List<String> filePathList = Arrays.asList(filePathS);
+			List<String> fileNameList = Arrays.asList(fileNameS);
+			
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+			BufferedInputStream bis = null;
+			
+			for (int i = 0; i < filePathList.size(); i++) {
+				try {
+					String filePath = URLDecoder.decode(filePathList.get(i), "UTF-8");
+					String fileName = fileNameList.get(i);
+					
+					String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.detectPathTraversal(filePath);
+					
+					LOGGER.debug("fullFilePath : " + fullFilePath);
+					
+					File file = new File(fullFilePath);
+					
+					if (!file.exists()) {
+						throw new FileNotFoundException(fullFilePath);
+					}
+					
+					if (!file.isFile()) {
+						throw new FileNotFoundException(fullFilePath);
+					}
+					
+					bis = new BufferedInputStream(new FileInputStream(file));
+			        ZipEntry zentry = new ZipEntry(fileName);
+			        zentry.setTime(file.lastModified());
+			        zos.putNextEntry(zentry);
+					
+			        byte[] buffer = new byte[bufferSize];
+			        int cnt = 0;
+			        	
+			        while ((cnt = bis.read(buffer, 0, bufferSize)) != -1) {
+			            zos.write(buffer, 0, cnt);
+			        }
+			        zos.closeEntry();
+				}catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (bis != null) {
+						try {
+							bis.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			zos.flush();
+			zos.close();
+			zos = null;
+			
+			File file = new File(pDirTempPath + ".zip");
+			
+			int fileSize = (int)file.length();
+			
+			if (fileSize > 0) {
+				byte[] bytes = Files.readAllBytes(Paths.get(pDirTempPath + ".zip"));
+				
+				JSONObject data = new JSONObject();
+				
+				data.put("bytes", bytes);
+				data.put("fileSize", fileSize);
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", data);
+			}
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezJournal G/W downloadFile ended.");
+		return result;
+	}
+	
+	/**
 	 * 업무일지 G/W [GET] 첨부파일 다운로드
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rest/ezjournal/journals/{journalId}/attachfiles", method= RequestMethod.GET, produces="application/json;charset=UTF-8")
-	public JSONObject downloadFile(@PathVariable String journalId, HttpServletRequest request) throws Exception {
+	public JSONObject downloadAllFile(@PathVariable String journalId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W downloadFile started.");
 		LOGGER.debug("journalId=" + journalId);
 		
@@ -1166,8 +1288,7 @@ public class EzJournalGWController {
 			String realPath = commonUtil.getRealPath(request);
 			String uploadFilePath = commonUtil.getUploadPath("upload_journal.ROOT", info.getTenantId());
 			String filePath = request.getParameter("filePath");
-			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
-
+			String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.detectPathTraversal(filePath);
 			LOGGER.debug("fullFilePath : " + fullFilePath);
 			
 			File file = new File(fullFilePath);

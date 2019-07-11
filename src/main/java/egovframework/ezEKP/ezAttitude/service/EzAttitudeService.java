@@ -1,10 +1,14 @@
 package egovframework.ezEKP.ezAttitude.service;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
@@ -18,9 +22,10 @@ import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzAttitudeService {
-	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, int tenantId) throws Exception;
+	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, String companyId, int tenantId) throws Exception;
 	
 	public void insertAttitude(String writerId, String deptId, String startDate, String endDate, String region,
 			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String mode, String adminId) throws Exception;
@@ -28,11 +33,11 @@ public interface EzAttitudeService {
 	public void insertAdminAttHistory(String writerId, String deptId, String startDate, String endDate, String region,
 			String mobile, String bizSub, String content, String ip, String typeId, String dateType, String offset, String companyId, int tenantId, String adminId) throws Exception;
 	
-	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh, String typeId, String startDate, String endDate, String offset, String deptFlag, String lang, int tenantId) throws Exception;
+	public List<AttitudeVO> getAttitudeList(String pidList, String deptIdList, String yrmh, String typeId, String startDate, String endDate, String offset, String deptFlag, String lang, String companyId, int tenantId) throws Exception;
 	
 	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String deptIdList, String offset, String startDate, String endDate, int tenantId, String deptFlag) throws Exception;
 	
-	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, int tenantId, String primary) throws Exception;
+	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, String typeIdArr, int tenantId, String primary) throws Exception;
 	
 	public AttitudeFormVO getFormBody(String typeId, String companyId, int tenantId) throws Exception;
 	
@@ -95,6 +100,8 @@ public interface EzAttitudeService {
 	
 	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String deptId, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId, List<String> deptIdList, String primary) throws Exception;
 	
+	public List<Map<String, Object>> getTenantCompanyId() throws Exception;
+	
 //	public void absentedListSendMail(List<AdminAttitudeVO> duplicatedList, List<AdminAttitudeVO> distinctedList, String loginCookie, String startDate, String endDate, String fromName, String fromEmail) throws Exception;
 	
 	public String attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
@@ -110,7 +117,7 @@ public interface EzAttitudeService {
 
 	public List<AttitudeAuthorVO> getAttitudeAuthDeptList(int tenantId, String companyId, String userId, String isAllDept, String primary) throws Exception;
 	
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag) throws Exception;
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag, String primary) throws Exception;
 	
 	public List<AttitudeStatisVO> getAttitudeUserStatistics(String userId, String deptId, String offset, String year,String typeId, int tenantId) throws Exception;
 
@@ -129,4 +136,73 @@ public interface EzAttitudeService {
 	public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId, String isOutCheck) throws Exception;
 
 	public List<AttitudeAuthorVO> getDeptUserList(int tenantId, String key, String value, String companyId, String lang) throws Exception;
+
+	public String getAttitudeAnnualListCount(String searchUserName,	String searchDeptName, String searchTitle, String offsetMin, String companyId, int tenantId) throws Exception;
+
+	public List<AttitudeAnnualVO> getAttitudeAnnualList(String searchUserName,String searchDeptName, String searchTitle, String orderCell, String orderOption, String offsetMin, String pageNum, String listSize, String companyId, int tenantId, String primary) throws Exception;
+	
+//	public void changeAllAnnual(Map<String, Object> map, int tenantId, String companyId, String primary) throws Exception;
+
+	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String startDate, String endDate, String orderCell, String orderOption, String secondYear, String companyId, int tenantId) throws Exception;
+
+	public void changeAnnual(Map<String, Object> map) throws Exception;
+	
+	public String annualExcelUpload(List<Map<String, Object>> excelList, String changeUserId, String companyId, int tenantId, String changeReason, String flagCheck) throws Exception;
+	
+	public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception;
+	
+	public List<Map<String, Object>> getAnnualHistoryList(Map<String, Object> map) throws Exception;
+
+	void changeAllAnnual(Map<String, Object> map) throws Exception;
+
+	public Map<String, Object> getMonthlyAnnualList(String userId, String offset, String startDate, String endDate, int tenantId) throws Exception;
+	
+	public String saveCancelAnnual(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
+			String writerDeptId, String writerDeptName, String writerDeptName2, String delFlag, String content,String offset) throws Exception;
+	
+	public List<Map<String, Object>> getJoinDateUserList(String yesterday, String companyId, int tenantId) throws Exception;
+	
+	public void updateAnnualHoliday(Map<String, Object> map) throws Exception;
+	
+	public void updateExceedAnnualHoliday(Map<String, Object> map) throws Exception;
+	
+	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception;
+	
+	public void updateFiscalYearAnnualHoliday(Map<String, Object> map) throws Exception;
+	
+	public void extinctionMonthlyHoliday(Map<String, Object> map) throws Exception;
+
+	public int deleteCancelAnnual(String companyId, int tenantId, String attitudeId) throws Exception;
+
+	public String sendMailToReference(AttitudeVO vo, String attitudeId, String idList, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception;
+
+	public int getUsersCancelAnnCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String lang, String offset, String type, String deptId, List<String> deptIdList, String adminFlag, String checkAdmin) throws Exception;
+
+	public List<AttitudeApplicationVO> getUsersCancelAnn(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName,	String lang, String offset, String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String deptId, List<String> deptIdList) throws Exception;
+
+	public AttitudeApplicationVO annCanAppDetail(String attModId, String offset, String applCnt, String lang, String companyId, int tenantId) throws Exception;
+
+	public void changeUsersCancelAnn(String companyId, int tenantId, String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception;
+
+	public List<AttitudeApplicationVO> getAnnCanHistory(String attModId, String userId, String offset, String lang, String companyId, int tenantId) throws Exception;
+
+	public void saveJoinDate(Map<String, Object> map) throws Exception;
+	
+	public int approvalGConn(String userId, String deptId, String content, String mobile, String attitudeTypeList, String startDateList, String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception;
+	
+	public int updateApprovalGConnInfo(String aprStatus, String userId, String docId,	String companyId, int tenantId) throws Exception;
+
+	public int deleteApprovalGConnInfo(String userId, String type, String docId, String companyId, int tenantId) throws Exception;
+	
+	public Map<String, Object> getAttitudeAnnualConfig(int tenantId, String companyId) throws Exception;
+
+	public void updateAnnualConfig(Map<String, Object> map) throws Exception;
+
+	public Map<String, Object> getJoinDate(int tenantId, String companyId, String userId) throws Exception;
+
+	public List<Map<String, Object>> getAttitudeAprInfo(String attitudeId, String lang, int tenantId, String companyId) throws Exception;
+
+	public List<String> getDisabledDays(String primary, String offset, String year, String month, String startDate, String endDate, String userId, String companyId, int tenantId) throws Exception;
+	
+	public List<String> getHoliDays(String primary, String offset, String year, String month, String startDate, String endDate, String userId, String companyId, int tenantId) throws Exception;
 }

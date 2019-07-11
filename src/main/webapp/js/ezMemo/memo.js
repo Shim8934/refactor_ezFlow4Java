@@ -1,7 +1,7 @@
 function createMemo(memo, flag) {
 	
 	var div = document.createElement("div");
-	div.setAttribute("class", "mamo0"+ memo.color_id +" memoLay");
+	div.setAttribute("class", "memo0"+ memo.color_id +" memoLay");
 	div.id  = "memo" + memo.memo_id;
 	div.setAttribute("orders", memo.orders)
 	if(memo.display_flag == 1) {
@@ -37,16 +37,16 @@ function createMemo(memo, flag) {
 	dt.setAttribute("class", "mtitText");
 	
 	var dd2 = document.createElement("dd");
-	dd2.setAttribute("class", "memoIcon pallete");
+	dd2.setAttribute("class", "memoIcon garbage");
+	dd2.setAttribute("onclick", "addRemoveButton("+memo.memo_id+")");
 	
 	var dd3 = document.createElement("dd");
-	dd3.setAttribute("class", "memoIcon saveBtn");
+	dd3.setAttribute("class", "memoIcon pallete");
 	dd3.setAttribute("memoid", memo.memo_id);
 	
 	var dd = document.createElement("dd");
-	dd.setAttribute("class", "memoIcon memoX");
+	dd.setAttribute("class", "memoIcon hidden");
 	dd.setAttribute("memoId", memo.memo_id);
-	dd.setAttribute("onclick", "addRemoveButton("+memo.memo_id+")");
 	
 	dl.appendChild(dt);
 	dl.appendChild(dd);
@@ -122,7 +122,7 @@ function loadMemoList(flag) {
 		}
 }
 
-function addDateInfo(date) {
+function addDateInfo(date, detail) {
     	var nowDate 
     	
     	if(date == null) {
@@ -142,8 +142,12 @@ function addDateInfo(date) {
     	if(date < 10) {
     		date = "0"+date;
     	}
+    	if (detail) {
+    		$('#dMTime').html(month+"."+date+" ("+dayArray[day]+")");
+    	} else {
+    		$(".mtitText:first").html(month+"."+date+" ("+dayArray[day]+")");	
+    	}
 
-		$(".mtitText:first").html(month+"."+date+" ("+dayArray[day]+")");	
 }
 
 function addRemoveButton(memoId) {
@@ -158,7 +162,7 @@ function addRemoveButton(memoId) {
 	
 	var popHeader = document.createElement('div');
 	popHeader.setAttribute("class", "memoPopHeader");
-	popHeader.innerHTML = "<span>"+strLangMemo4+"</span>";
+	popHeader.innerHTML = "<span>"+memoMessages.strLangMemo4+"</span>";
 	
 	var popContainer = document.createElement('div');
 	popContainer.setAttribute("class", "popContainer");
@@ -168,7 +172,7 @@ function addRemoveButton(memoId) {
 	
 	var footBtn = document.createElement('p');
 	footBtn.setAttribute("class", "footBtn");
-	//footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' onclick='modalDelete("+ memoId +")'>"+strLangMemo5+"</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' onclick=$('#modal"+memoId+"').remove()>"+strLangMemo6+"</span></div>";
+	//footBtn.innerHTML = "<div class='modRm-wrap'><span class='modRm' id='modRm" +memoId +"' onclick='modalDelete("+ memoId +")'>"+memoMessages.strLangMemo5+"</span></div><div class='close-wrap'><span class='close' id='close" +memoId +"' onclick=$('#modal"+memoId+"').remove()>"+memoMessages.strLangMemo6+"</span></div>";
 	
 	var div = document.createElement("div");
 	div.setAttribute("class", "modRm-wrap");
@@ -177,7 +181,7 @@ function addRemoveButton(memoId) {
 	span.setAttribute("class", "modRm");
 	span.setAttribute("id", "modRm"+memoId);
 	span.setAttribute("onclick", "modalDelete("+memoId+")");
-	span.innerHTML = strLangMemo5;
+	span.innerHTML = memoMessages.strLangMemo5;
 
 	var div2 = document.createElement("div");
 	div2.setAttribute("class", "close-wrap");
@@ -186,7 +190,7 @@ function addRemoveButton(memoId) {
 	span2.setAttribute("class", "close");
 	span2.setAttribute("id", "close"+memoId);
 	span2.setAttribute("onclick", "$('#modal"+memoId+"').remove()");
-	span2.innerHTML = strLangMemo6;
+	span2.innerHTML = memoMessages.strLangMemo6;
 	
 	div.appendChild(span);
 	div2.appendChild(span2);
@@ -240,7 +244,7 @@ function BoardSearchOptionHidden() {
 
 //새로고침
 function refresh_onclick() {
-    window.location.href = "/ezMemo/memoMain.do";
+	$(window.parent.frames["left"].document.getElementsByClassName("node_selected")).click();
 }
 
 //리스트설정 on/off 설정
@@ -285,7 +289,7 @@ function memoFoldersInfo() {
 			
 			var folderList = result["folders"];
 			var html="";
-			html += "<option value='0'>"+ strLangMemo9 +"</option>";
+			html += "<option value='0'>"+ memoMessages.strLangMemo9 +"</option>";
 			folderList.forEach(function(list, index){
 				var folderName = list.folder_name;
 				
@@ -329,17 +333,7 @@ function addEmptyMemo(flag) {
 	if(flag != 'layer') {		// 메모 게시판 게시물 없을 때
 		var div = document.createElement("div");
 		div.setAttribute("class", "emptyDiv");
-		div.style.textAlign = "center";
-		
-		var div2 = document.createElement("img");
-		div2.setAttribute("src", "/images/kr/main/nodata_plan.png");
-		
-		var div3 = document.createElement("div");
-		div3.style.marginTop = "10px";
-		div3.innerHTML = strLangMemo7;
-			
-		div.appendChild(div2);
-		div.appendChild(div3);
+		div.innerHTML = "<dl class='nodata_sIcon'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + memoMessages.strLangMemo7 + "</dd></dl>";		
 		
 		$("#boardMemoList").parent().prepend(div);
 		
@@ -352,7 +346,7 @@ function addEmptyMemo(flag) {
 		div.setAttribute("class", "memo_add");
 		div.id = "addFirstMemo";
 		var span = document.createElement("span");
-		span.innerHTML = strLangMemo7;
+		span.innerHTML = memoMessages.strLangMemo7;
 		
 		div.appendChild(span);
 		
@@ -366,6 +360,7 @@ function addEmptyMemo(flag) {
  * toast 팝업 출력 메서드
  * @param memoId
  */
+/* 더 이상 사용하지 않기로 하여 주석처러 함
 function saveMemoToast(memoId) {
 	var doc = window.document;
 	var alertMessage = strLangMemo8;
@@ -386,9 +381,8 @@ function saveMemoToast(memoId) {
 			parent.removeChild(toastArea);		
 		});
 	}, 1000);	
-
 }
-
+*/
 
 /**
  * 음영 삭제 메서드
@@ -404,7 +398,6 @@ function clearSelection() {
 	}
 }
 
-
 /**
  * mainBody 내 더블클릭시, 음영 삭제 메서드
  */
@@ -417,4 +410,23 @@ function bodyClearSelection() {
 	//$(".mainbody").on("selectstart", function(event){return false;});
 	mainmenu.addEventListener("click", clearSelection, false);
 	mainmenu.addEventListener("drag", clearSelection, false);
+}
+
+// 저장 이전 내용과 이후 내용 비교
+function compareContents(param) {
+	// if문으로 값 비교후 반환할 객체
+	var resultObj = {};
+	// 포커스 들어간 메모가 작은 메모인가 큰 메모인가 확인 후 메모 id 획득
+	var thisMemoId = param.getAttribute('memoid') ? param.getAttribute('memoid') : param.getAttribute('bigmemoid');
+	//console.log('비교할 id', beforeMemoId, ', ', thisMemoId);
+	//console.log('비교할 내용', beforeMemo, ', ', param.value);
+	// 메모의 id는 같고 내용이 다를 때 내용 수정 허용
+	if (beforeMemoId === thisMemoId && beforeMemo != param.value) {
+		resultObj.result = 'ok';
+		resultObj.afterVal = param.value;
+		
+	} else {
+		resultObj.result = 'fail';
+	}
+	return resultObj;
 }

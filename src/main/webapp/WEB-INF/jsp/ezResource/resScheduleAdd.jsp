@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/Schedule_cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
 		<!-- data picker-->
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
@@ -24,13 +25,13 @@
 			<%-- var g_DD = "<%=Request.QueryString["dd"]%>";
 	    	var g_MM = "<%=Request.QueryString["mm"]%>";
 	    	var g_YY = "<%=Request.QueryString["yy"]%>"; --%>
-	    	var dayView = "${dayView}";
+	    	var dayView = "<c:out value='${dayView}'/>";
 	    	if (!dayView) {
 	    		dayView = 0;
 	    	}
 	    	var reFlag; 
 	    	var importanceVal;
-	    	var g_fromStr		= "${fromStr}";
+	    	var g_fromStr		= "<c:out value='${fromStr}'/>";
 	    	var s_userID		= "${userInfo.id}";
 	    	var ss_companyID	= "${userInfo.companyID}";
 	    	var ss_deptNM		= "";
@@ -52,10 +53,10 @@
 	    	var org_ownerID		= "${ownerID}";
 	    	var pnumVal			= "${pNum}";
 	    	var writerIDVal		= "${writerID}";
-	    	var cmd				= "${cmdStr}";
+	    	var cmd				= "<c:out value='${cmdStr}'/>";
 	    	var typeVal			= "${typeVal}";
-	    	var startDateVal	= "${startDateVal}";
-	    	var endDateVal		= "${endDateVal}";
+	    	var startDateVal	= "<c:out value='${startDateVal}'/>";
+	    	var endDateVal		= "<c:out value='${endDateVal}'/>";
 	    	var gFlagVal		= "${gresFlag}";
 	    	var uploadPath		= "${scheduleFilePath}";
 	    	var org_companyID	= ss_companyID;
@@ -81,6 +82,8 @@
 	    	var title = "${title}";
 	    	var allDay = "${allDay}";//"1":하루종일
 	    	var timeSelect = false;
+	    	var userDisplayName2 = "${userInfo.displayName2}";
+	    	var repetition = "";
 	    	
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
@@ -102,9 +105,9 @@
 		            }        
 	    	    } 
 	        	if (cmd == "mod") {
-	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "','" +deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
+	        		document.getElementById("displayNM").innerHTML = "<a onClick=MemberInfo_onClick('" + writerIDVal + "','" +deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
 	        	} else {
-	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "','" + deptID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
+	        	document.getElementById("displayNM").innerHTML = "<a onClick=MemberInfo_onClick('" + s_userID + "','" + deptID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
 	        	}
 	            
 	        	if (cmd == "mod") {
@@ -206,7 +209,12 @@
 		    }
 			
 		    window.onresize = function () {
-		        document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";
+		    	if(cmd == "add") {
+		   	    	 document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 240 + "PX";
+		    	}
+		    	else {
+		    		document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";
+		    	}
 	    	}
 		    
 		    window.onunload = function () {
@@ -224,7 +232,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true,
 	            	onSelect : function(dateText, inst) {
 		            	var startD = new Date(inst.lastVal);
@@ -243,7 +251,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true
 	        	});
 
@@ -487,6 +495,13 @@
 	        	}
 
 	        	if (check == true) {
+	            	// 일정관리 동시 등록
+	            	if (cmd == "add") {
+		            	if(document.getElementById("useSchedule").checked = true) {
+		            		SaveScheduleId = saveSchedule();
+		            	}
+	            	}
+	            	
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 		                SaveSchedule_onClick(cmd, ItemArray[0][i]);
 		            }
@@ -499,19 +514,93 @@
 	    	    }
 	        	return check;
 	    	}
+	    	
+	    	function saveSchedule() {
+	    		var pageFrom = "";
+	    		var xmlHTTP = createXMLHttpRequest();
+	    		var xmlDom = createXmlDom();    
+	    		var objNode;
+
+	    		objNode = createNodeInsert(xmlDom, objNode, "DATA");
+	    		createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", "");
+	    		createNodeAndInsertText(xmlDom, objNode, "OWNERID", s_userID);
+	    		createNodeAndInsertText(xmlDom, objNode, "OWNERNAME", ss_ownerNM);
+	    		createNodeAndInsertText(xmlDom, objNode, "OWNERNAME2", userDisplayName2);
+	    		createNodeAndInsertText(xmlDom, objNode, "CREATORID", s_userID);
+	    		createNodeAndInsertText(xmlDom, objNode, "CREATORNAME", ss_ownerNM);
+	    		createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", userDisplayName2);
+	    		//createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", "1");
+	    		createNodeAndInsertText(xmlDom, objNode, "SCHEDULETYPE", "1");
+	    		createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", document.getElementById("importance1").value);
+	    		createNodeAndInsertText(xmlDom, objNode, "ISPUBLIC", "N");
+	    		createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
+	    		createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("title").value);
+	    		createNodeAndInsertText(xmlDom, objNode, "LOCATION", "");
+	    		createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
+	    		
+	    		var Doc_ContentHtml = document.createElement("DIV");
+	    	    var strBody = message.GetEditorContent();
+	    	    Doc_ContentHtml.innerHTML = strBody;
+	    	    strBody = HTMLtoMHT_MakeTag(Doc_ContentHtml);
+	    	    
+	    	    var htmlConv = Signature_ImagePathConvert(strBody);
+	    		try {
+	    			htmlConv = ConvertHTMLtoMHT(htmlConv);
+	    		} catch (e) {
+	    			//alert(strLangHSB1);
+	    			return;
+	    		}
+	    	    createNodeAndInsertText(xmlDom, objNode, "CONTENT", pidCryptUtil.encodeBase64(htmlConv, 64));
+	    		/* var content = "";
+				content = message.GetEditorContent();
+	    		createNodeAndInsertText(xmlDom, objNode, "CONTENT", content); */
+	    		
+	    		var objNode4,objNode5,objNode6;
+	    		if (document.getElementById("AllDay").checked == true) {
+	    		    objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+	    		    objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:00";
+	    			objNode6 = "2";
+	    		} else {
+	    		    objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+	    		    objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+	    			objNode6 = "1";
+	    		}
+	    		
+	    		if(repetition != "") {
+	    			objNode6 = "3";
+	    		}
+	    		createNodeAndInsertText(xmlDom, objNode, "DATETYPE", objNode6);
+	    		createNodeAndInsertText(xmlDom, objNode, "STARTDATE", objNode4);
+	    		createNodeAndInsertText(xmlDom, objNode, "ENDDATE", objNode5);
+
+	    		xmlHTTP.open("POST", "/ezSchedule/scheduleSave.do?pageFrom=" + pageFrom, false);
+	    		xmlHTTP.send(xmlDom);
+	    		
+	    		return trim(xmlHTTP.responseText);
+	    	}
 
 	    	function window_onUnload() {
 	        	if (m_Arguments == undefined) {
 		            if (window.opener != null && g_fromStr == "schedule" && trim(s_userID) != "") {
-		                window.opener.btnRefresh_onclick();
+		            	try {
+			                window.opener.btnRefresh_onclick();
+		            	} catch (e) {}
 	    	        } else if (window.opener != null && g_fromStr == "schedule2" && trim(s_userID) != "") {
-	                	window.opener.parent.main.document.location.reload();
+		            	try {
+		                	window.opener.parent.main.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "frame" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin2.document.location.reload();
+		            	try {
+		                	window.opener.document.all.iframeWin2.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "frame2" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin.document.location.reload();
+		            	try {
+		                	window.opener.document.all.iframeWin.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "todaySchedule" && trim(s_userID) != "") {
-	                	window.opener.location.reload();
+		            	try {
+		                	window.opener.location.reload();
+		            	} catch (e) {}
 	            	}
 	        	}
 	    	}
@@ -567,26 +656,25 @@
         					<c:choose>
         						<c:when test="${typeVal ne 'Readonly'}">
         							<div id="menuTable1" >
-        							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezResource.t185 => t114 -->
-          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
-          							<li><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>
-          							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
-          							
-       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
-       									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
-       								</c:if>
-
-       								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
-       									<c:choose>
-       										<c:when test="${saveApproveFlag eq '1'}">
-				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '0')"><spring:message code="ezResource.t190"/></span></li>
-       										</c:when>
-       										<c:otherwise>
-				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '1')"><spring:message code="ezResource.t191"/></span></li>
-       										</c:otherwise>
-       									</c:choose>
-        					 		</c:if> 
-          							
+	        							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezResource.t185 => t114 -->
+	          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
+	          							<li id="deletebtbn" style="display:none"><span class="icon16 popup_icon16_delete" onClick="delSchedule_onClick('${num}','${ownerID}')"></span></li>
+	          							
+	       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
+	       									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
+	       								</c:if>
+	
+	       								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
+	       									<c:choose>
+	       										<c:when test="${saveApproveFlag eq '1'}">
+					    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '0')"><spring:message code="ezResource.t190"/></span></li>
+	       										</c:when>
+	       										<c:otherwise>
+					    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '1')"><spring:message code="ezResource.t191"/></span></li>
+	       										</c:otherwise>
+	       									</c:choose>
+	        					 		</c:if>
+	        					 		<li><span class="icon16 popup_icon16_print" onClick="print_onClick( false )"></span></li>
 	          						</div>          
 	          						<div id="menuTable2" style='display:none'>								
 	          							<li><span  onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
@@ -638,9 +726,9 @@
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
-	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
 	           						~
-	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
 	          				</td>
 	        			</tr>
 				        <tr>
@@ -687,6 +775,12 @@
 	         				<th> <spring:message code="ezResource.t224"/></th>
 	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" />          </td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
 	       				</tr>
+	       				<c:if test="${cmdStr eq 'add'}">
+	       				<tr>
+	         				<th><spring:message code="ezSchedule.t214"/></th>
+	         				<td colspan="3"><input type="checkbox" id="useSchedule" name="useSchedule">          </td>
+	       				</tr>
+	       				</c:if>
       				</table>
       			</td>
   			</tr>
@@ -792,7 +886,12 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		</script>
     	<script type="text/javascript">
-	       	document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";
+    			if(cmd == "add") {
+		   	    	 document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 240 + "PX";
+		    	}
+		    	else {
+		    		document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";
+		    	}
     	</script>
 	</body>
 </html>

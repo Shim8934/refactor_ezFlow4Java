@@ -8,6 +8,7 @@
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
       <link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
       <link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
+      <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
       <style>
          .box{border:1px solid #ddd; padding:1px 18px 1px 1px; background-color:#fff;}
       </style>
@@ -134,6 +135,7 @@
              createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "0");
              createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
              createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
+             createNodeAndInsertText(xmlpara, objNode, "ADMIN_CHECK", "N");
    
              xmlhttp.open("POST", "/ezResource/callNodeTreeData.do?flag=" + selectNo, false);
              xmlhttp.send(xmlpara);
@@ -214,6 +216,7 @@
                  createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "0");
                  createNodeAndInsertText(xmlpara, objNode, "USER_ID", p_UserID);
                  createNodeAndInsertText(xmlpara, objNode, "DEPT_PATH", g_DeptPath);
+                 createNodeAndInsertText(xmlpara, objNode, "ADMIN_CHECK", "N");
 
                  xmlhttp.open("POST", "/ezResource/callNodeTreeData.do", false);
                  xmlhttp.send(xmlpara);

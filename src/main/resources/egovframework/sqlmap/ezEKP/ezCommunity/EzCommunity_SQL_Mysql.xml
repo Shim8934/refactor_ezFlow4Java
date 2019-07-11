@@ -267,11 +267,13 @@
 	            FROM
 	            	$v_BNAME$
 	            WHERE
-	            	title LIKE CONCAT('%', #v_KEYWORD#, '%')
-	            OR
-	            	content LIKE CONCAT('%', #v_KEYWORD#, '%')
+	            	(title LIKE CONCAT('%', #v_KEYWORD#, '%')
+	            	OR
+	            	content LIKE CONCAT('%', #v_KEYWORD#, '%'))
 	            AND
 	            	tenant_id = #tenantID#
+	            AND
+	            	COMPANYID = #companyID#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_S_RADIO" compareValue="TITLECONTENT">
@@ -285,6 +287,8 @@
 						title LIKE CONCAT('%', #v_KEYWORD#, '%')
 					AND
 	            		tenant_id = #tenantID#
+	            	AND
+	            		COMPANYID = #companyID#
 				]]>
 			</isEqual>
 			
@@ -299,6 +303,8 @@
 							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE CONCAT('%', #v_KEYWORD#, '%')
 						AND
 	            			tenant_id = #tenantID#
+	            		AND
+	            			COMPANYID = #companyID#
 					]]>
 				</isEqual>
 				<isNotEqual property="v_S_RADIO" compareValue="WRITER">
@@ -309,6 +315,8 @@
 	                    	$v_BNAME$
 	                    WHERE
             				tenant_id = #tenantID#
+            			AND
+	            			COMPANYID = #companyID#
 					]]>
 				</isNotEqual>
 			</isNotEqual>
@@ -1228,7 +1236,11 @@
 				ON
 					A2.DEPTID = C.CN
 				AND
-					B.TENANT_ID = C.TENANT_ID)) T
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					C.EXTENSIONATTRIBUTE2 = #companyID#
+				WHERE
+               		B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T
 			ON
 				A.USERID = T.CN
 			AND
@@ -1300,7 +1312,11 @@
 				ON
 					A2.DEPTID = C.CN
 				AND
-					B.TENANT_ID = C.TENANT_ID)) T
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					C.EXTENSIONATTRIBUTE2 = #companyID#
+				WHERE
+                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T
 			ON
 				A.USERID = T.CN
 			AND
@@ -1482,7 +1498,11 @@
 					ON
 						A2.DEPTID = C.CN
 					AND
-						B.TENANT_ID = C.TENANT_ID)) T2
+						B.TENANT_ID = C.TENANT_ID
+					AND
+						C.EXTENSIONATTRIBUTE2 = #companyID#
+					WHERE
+	                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
 				ON
 					A.C_ID = T2.CN
 				AND
@@ -1560,7 +1580,11 @@
 						ON
 							A2.DEPTID = C.CN
 						AND
-							B.TENANT_ID = C.TENANT_ID)) T2
+							B.TENANT_ID = C.TENANT_ID
+						AND
+							C.EXTENSIONATTRIBUTE2 = #companyID#
+						WHERE
+		                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
 					ON
 						A.C_ID = T2.CN
 					AND
@@ -1633,7 +1657,11 @@
 						ON
 							A2.DEPTID = C.CN
 						AND
-							B.TENANT_ID = C.TENANT_ID)) T2
+							B.TENANT_ID = C.TENANT_ID
+						AND
+							C.EXTENSIONATTRIBUTE2 = #companyID#
+						WHERE
+		                    B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
 					ON
 						A.C_ID = T2.CN
 					AND
@@ -2112,7 +2140,11 @@
 				ON
 					A2.DEPTID = C.CN
 				AND
-					B.TENANT_ID = C.TENANT_ID)) T2
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					C.EXTENSIONATTRIBUTE2 = #companyID#
+				WHERE
+					B.PHYSICALDELIVERYOFFICENAME <> #companyID#)) T2
 			ON
 				A.C_ID = T2.CN
 			AND
@@ -2223,7 +2255,8 @@
 					c_clubconfirmtype,
 					c_membercnt,
 					description,
-					description2
+					description2,
+					TBL_C_CATEGORY.C_NAME
 				FROM
 					TBL_C_CLUB
 				JOIN
@@ -2250,8 +2283,6 @@
 					TBL_C_CLUB.tenant_id = #tenantID#
 				ORDER BY
 					TBL_C_CLUB.c_regdate
-				LIMIT
-					#mariaStart#, #mariaEnd#
 		</isEqual>
 		
 		<isNotEqual property="cat" compareValue="A">
@@ -2267,7 +2298,8 @@
 						c_clubconfirmtype, 
 						c_membercnt,
 						description,
-						description2
+						description2,
+						TBL_C_CATEGORY.C_NAME
 					FROM
 						TBL_C_CLUB 
 					JOIN
@@ -2294,8 +2326,6 @@
 						TBL_C_CLUB.tenant_id = #tenantID#
 					ORDER BY
 						TBL_C_CLUB.c_regdate
-					LIMIT
-						#mariaStart#, #mariaEnd#
 			]]>
 		</isNotEqual>
 	</select>
@@ -2317,7 +2347,8 @@
 					displayname2, 
 					c_clubconfirmtype,
 					description,
-					description2
+					description2,
+					T3.C_NAME
 				FROM
 					TBL_C_CLUB T1
 				JOIN
@@ -2326,6 +2357,14 @@
 					RTRIM(T1.c_sysopid) = RTRIM(T2.cn)
 				AND
 					T1.tenant_id = T2.tenant_id
+				LEFT JOIN
+					tbl_c_category T3
+				on
+					T1.C_CATE_A = T3.C_CODE
+				AND
+					T1.tenant_id = T3.tenant_id
+				AND
+					T3.C_CAT = 'a'
 				WHERE
 					$v_searchName$ LIKE CONCAT('%', #v_searchValue#, '%')
 				AND
@@ -2336,8 +2375,6 @@
 					T1.C_ADMINCONFIRM = 'Y'
 				ORDER BY
 					T1.c_regdate
-				LIMIT
-					#mariaStart#, #mariaEnd#
 			]]>
 		</isEqual>
 		
@@ -2952,7 +2989,7 @@
 	<select id="EzCommunityDAO.myCommunityItemGet"				parameterClass="Map"		resultClass="CommunityMyCommunityVO">
 		<![CDATA[
 			SELECT
-       			c_clubno,
+       			a.c_clubno,
                 boardname,
                 boardname2,
                 itemid,
@@ -2996,8 +3033,11 @@
 					A.boardid = B.boardid
 				AND
                		A.tenant_id = B.tenant_id
-				WHERE
-					RTRIM(A.c_clubno) = #v_copNo#
+               	]]>
+				<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+					            #v_copNo[]#
+			    </iterate>
+			    <![CDATA[
 				AND
 					A.parentboardid != 'top'
 				AND
@@ -3005,18 +3045,27 @@
 				) T1
 			CROSS JOIN
 				(SELECT
+					c_clubno,
 					c_clubname,
 					c_clubname2,
 					c_membercnt
                   	FROM
                   		TBL_C_CLUB
-                  	WHERE
-                  		RTRIM(c_clubno) = #v_copNo#
+                  		]]>
+					<iterate prepend="WHERE RTRIM(c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+						            #v_copNo[]#
+				    </iterate>
+			    <![CDATA[
                   	AND
 					TBL_C_CLUB.tenant_id = #tenantID#
                   	) T3
-       		WHERE
-       			RTRIM(A.c_clubno) = #v_copNo#
+       			]]>
+				<iterate prepend="WHERE RTRIM(A.c_clubno) IN" property="v_copNo" open="(" close=")" conjunction=",">
+					            #v_copNo[]#
+			    </iterate>
+			    <![CDATA[
+			AND
+				T3.c_clubno = A.c_clubno
        		AND
        			A.parentboardid != 'top'
        		AND
@@ -4062,6 +4111,8 @@
 						TBL_C_CLUBUSER.permit <> 0
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
+					AND
+						TBL_C_CLUBUSER.companyID = #companyID#
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="NAME">
@@ -4160,8 +4211,6 @@
 						) T1 
 					ORDER BY
 						writedate DESC
-					LIMIT
-						#mariaStart#, #mariaEnd#
 					) T2
 				WHERE
 					T2.companyid = #companyID#
@@ -4742,6 +4791,8 @@
 					(title LIKE CONCAT('%', #v_KEYWORD#, '%') OR content LIKE CONCAT('%', #v_KEYWORD#, '%'))
 				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
 			]]>
 		</isEqual>
 		
@@ -4756,6 +4807,8 @@
 						title LIKE CONCAT('%', #v_KEYWORD#, '%')
 					AND
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
 				]]>
 			</isEqual>
 			
@@ -4770,6 +4823,8 @@
 							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE CONCAT('%', #v_KEYWORD#, '%')
 						AND
 							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
 					]]>
 				</isEqual>
 				
@@ -4781,6 +4836,8 @@
 							$v_BNAME$
 						WHERE
 							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
 					]]>
 				</isNotEqual>
 			</isNotEqual>
@@ -6585,6 +6642,7 @@
 				c_clubname,
 				c_clubname2,
 				c_sysopid,
+				companyid,
 				companyname,
 				applicationdate,
 				closereason,
@@ -6595,6 +6653,7 @@
 				#v_COMMNAME#,
 				#v_COMMNAME2#,
 				#v_SYSOPID#,
+				#v_COMPANYID#,
 				#v_COMPANYNAME#,
 				#v_DATETIME_NOW#,
 				#v_REASON#,

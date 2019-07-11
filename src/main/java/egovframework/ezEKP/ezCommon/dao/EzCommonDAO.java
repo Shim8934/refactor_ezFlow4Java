@@ -11,25 +11,39 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCommonDAO")
-public class EzCommonDAO extends EgovAbstractDAO{
+public class EzCommonDAO extends EgovAbstractDAO {
 
     private static final Logger logger = LoggerFactory.getLogger(EzCommonDAO.class);
-            
+
+    @Value("#{globals['Globals.DbType']}")
+	private String dbType;
+
     @Autowired
     private Properties config;
 
     @Autowired
     private EzEmailUtil ezEmailUtil;
+    
+    //2019.01.21 유은정 - 동적 테이블 생성시 초기데이터 삽입 관련 추가
+    @Autowired
+    private EzOrganAdminDAO ezOrganAdminDAO;
+    
+    @Autowired
+    private EzNewPortalDAO ezNewPortalDAO;
     
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception {
 		return (ApprovPWDVO) select("EzCommonDAO.getApprovPWD", userInfo);
@@ -213,6 +227,24 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
 	
+	public void deleteMultiLoginUser(Map<String, Object> map) throws Exception {
+		update("EzCommonDAO.deleteMultiLoginUser", map);
+	}
+	
+	public String selectMultiLoginUser(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommonDAO.selectMultiLoginUser", map);
+	}
+	
+	public void createTblUserMultiLogin() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserMultiLogin");
+		} catch (Exception e) {
+			logger.debug("tbl_user_multilogin doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblUserMultiLogin");
+		}
+	}
+	
 	public void createTblCompanyConfig() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblCompanyConfig");
@@ -220,6 +252,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_company_config doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createTblCompanyConfig");
+		}
+	}
+	
+	public void createReformFlagColumn() throws Exception {
+		try {
+			select("EzCommonDAO.checkReformFlagColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo reformflag column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.createReformFlagColumn");
 		}
 	}
 	
@@ -237,6 +279,10 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	
 	public int deleteCompanyConfig(Map<String, Object> map) throws Exception {
 		return delete("EzCommonDAO.deleteCompanyConfig", map);
+	}
+	
+	public void insertMultiLoginUser(Map<String, Object> map) throws Exception {
+		insert("EzCommonDAO.insertMultiLoginUser", map);
 	}
 
 	public void addMailToJMochaDistribution() throws Exception {
@@ -256,6 +302,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_addjobmaster orderby column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.addAddJobMasterOrderBy");
+		}
+	}
+	
+	public void addAddJobMasterProxy() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddAddJobMasterProxy");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster proxy column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterProxy");
 		}
 	}
 	
@@ -369,6 +425,26 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 	
+	public void addJmochaMailGenenalPreviewMailImage() {
+		try {
+			select("EzCommonDAO.checkJmochaMailGenenalPreviewMailImage");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_token doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.addJmochaMailGenenalPreviewMailImage");
+		}
+	}
+	
+	public void addPortalThemePortletIsFixed() {
+		try {
+			select("EzCommonDAO.checkPortalThemePortletIsFixed");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_portlet isFixed column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addPortalThemePortletIsFixed");
+		}
+	}
+	
 	public void addUserMasterMailBoxQuota() {
 		try {
 			select("EzCommonDAO.checkUserMasterMailBoxQuota");
@@ -379,6 +455,62 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 	
+	public void addHolidayFlag() {
+		try {
+			select("EzCommonDAO.checkHolidayFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_holidayList HolidayFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addHolidayFlag");
+		}
+	}
+	
+	public void addHolidayRepeat() {
+		try {
+			select("EzCommonDAO.checkHolidayRepeat");
+		} catch (Exception e) {
+			logger.debug("tbl_holidayList HolidayRepeat doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addHolidayRepeat");
+		}
+	}
+	
+	public void createPortalThemePortlet() {
+		try {
+			select("EzCommonDAO.checkPortalThemePortlet");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_portlet doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblPortalThemePortlet");
+		}
+	}
+
+	public void insertPortalThemePortletInitdata() {
+		// TODO Auto-generated method stub
+
+		//insert init data
+		List<OrganDeptVO> initList = ezNewPortalDAO.getInitCompanyList();
+		
+		if (initList != null ) {
+			int initListCount = initList.size();
+			
+			for (int i = 0; i < initListCount; i++) {
+				int tenantId = initList.get(i).getTenantId();
+				String companyId = initList.get(i).getCn();
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tenantID", tenantId);
+				map.put("companyID", companyId);
+				
+				try {
+					ezOrganAdminDAO.insertCompanyInfo_I30(map);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public void addJournalFormDelFlag() {
 		try {
 			select("EzCommonDAO.checkJournalFormDelFlag");
@@ -386,6 +518,55 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_journal_form JournalFormDelFlag doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.addJournalFormDelFlag");
+		}
+	}
+
+	public void updateTaskUrl() {
+		try {
+			String taskUrl = select("EzCommonDAO.checkTaskUrl").toString();
+			
+			if (taskUrl == null) {
+				logger.debug("Task url has to update... update task module url...");
+				
+				update("EzCommonDAO.updateTaskUrl");
+			}
+		} catch (Exception e) {
+			logger.debug("Task url has to update... update task module url...");
+			
+			update("EzCommonDAO.updateTaskUrl");
+		}
+	}
+
+	public void addPortalPortletUserPortletUsed() {
+		try {
+			select("EzCommonDAO.checkAddPortalPortletUserPortletUsed");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_user portlet_used doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addPortalPortletUserPortletUsed");
+		}
+		
+	}
+
+	public void addPortalPortletUserThemeId() {
+		try {
+			select("EzCommonDAO.checkPortalPortletUserThemeId");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_user theme_id doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addPortalPortletUserThemeId");
+			update("EzCommonDAO.deletePortalPortletUserPrimaryKey");
+			update("EzCommonDAO.addPortalPortletUserPrimaryKey");
+		}
+	}
+	
+	public void addTblPortalThemeUserIsDefault() {
+		try {
+			select("EzCommonDAO.checkAddTblPortalThemeUserIsDefault");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_user is_default doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addTblPortalThemeUserIsDefault");
 		}
 	}
 	
@@ -400,6 +581,184 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		} catch (Exception e) {
 			logger.debug("updateListOptionData() ERROR...");
 			e.printStackTrace();
+		}
+	}
+
+	public void addQuickLinkLinkOrder() {
+		try {
+			select("EzCommonDAO.checkQuickLinkLinkOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_ps_quicklink linkorder doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addQuickLinkLinkOrder");
+		}
+	}
+
+	public void addComCloseCompanyId() {
+		try {
+			select("EzCommonDAO.checkComCloseCompanyId");
+		} catch (Exception e) {
+			logger.debug("tbl_c_comclose companyid doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addComCloseCompanyId");
+		}
+	}
+
+	public void addWebfolderTotalLimit() {
+		try {
+			select("EzCommonDAO.checkWebfolderTotalLimit");
+		} catch (Exception ex) {
+			logger.debug("tbl_webfolder_config company_total_limit, department_total_limit, user_total_limit doesn't exist. creating the column...");
+			
+			if (dbType.equalsIgnoreCase("oracle")) {
+				// rename column
+				update("EzCommonDAO.renameWebfolderConfigTotalLimit");
+				// add column
+				update("EzCommonDAO.addWebfolderConfigTotalLimit");
+			} else {
+				update("EzCommonDAO.createWebfolderConfigTotalLimit");
+			}
+		}
+		
+		try {
+			select("EzCommonDAO.checkWebfolderUserCnType");
+		} catch (Exception ex) {
+			logger.debug("tbl_webfolder_user type doesn't exist. creating the column...");
+			
+			if (dbType.equalsIgnoreCase("oracle")) {
+				// add nullable column
+				update("EzCommonDAO.addWebfolderUserCnTypeColumn");
+				// update all rows type = 'U'
+				update("EzCommonDAO.updateWebfolderUserCnType");
+				// modify nullable to not null
+				update("EzCommonDAO.modifyWebfolderUserCnTypeColumn");
+				// primary key change
+				update("EzCommonDAO.dropWebfolderUserPrimaryKey");
+				update("EzCommonDAO.addWebfolderUserPrimaryKey");
+			} else {
+				update("EzCommonDAO.createWebfolderUserCnTypeColumn");
+				update("EzCommonDAO.updateWebfolderUserCnType");
+			}
+		}
+	}
+
+	public void addMemoExtensionColumns() {
+		try {
+			select("EzCommonDAO.checkExtensionColumns");
+		} catch (Exception e) {
+			logger.debug("tbl_memo_config addMemoextensionColumns doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMemoExtensionColumns");
+		}
+	}
+		
+	public void addMsgInMailSearch() {
+		try {
+			if ((int) select("EzCommonDAO.checkMsgInMailSearch") == 0) {
+				update("EzCommonDAO.updateMsgInMailSearch");
+			}
+		} catch (Exception e) {
+			logger.debug("addMsgInMailSearch() ERROR...");
+			e.printStackTrace();
+		}
+	}
+
+	public void addFormVersion() {
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfForminfo");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfForminfo");
+		}
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo");
+		} catch (Exception e) {
+			logger.debug("tbl_expendaprdocinfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo");
+		}
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo");
+		} catch (Exception e) {
+			logger.debug("tbl_expaprdocinfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfExpaprdocinfo");
+		}
+		try {
+			select("EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo");
+		} catch (Exception e) {
+			logger.debug("tbl_tmpexpaprdocinfo formVersion doesn't exist. creating the column...");
+			update("EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo");
+		}
+	}
+	
+	public void createTblAttitudeAnnual() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAnnual");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_annual doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAnnual");
+		}
+	}
+	
+	public void createTblAttitudeAnnualCanappl() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAnnualCanappl");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_annual_canappl doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAnnualCanappl");
+		}
+	}
+	
+	public void createTblAttitudeAnnualConf() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAnnualConf");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_annual_conf doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAnnualConf");
+		}
+	}
+	
+	public void createTblAttitudeAnnualHistory() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAnnualHistory");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_annual_history doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAnnualHistory");
+		}
+	}
+	
+	public void createTblAttitudeAprConn() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAttitudeAprConn");
+		} catch (Exception e) {
+			logger.debug("tbl_attitude_apr_conn doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAttitudeAprConn");
+		}
+	}
+
+	public void addThemeContent2() {
+		try {
+			select("EzCommonDAO.checkThemeContent2");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme themeContent2 doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addThemeContent2");
+			update("EzCommonDAO.insertThemeContent2");
+		}
+	}
+
+	public void addThemeContent3() {
+		try {
+			select("EzCommonDAO.checkThemeContent3");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme themeContent3 doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addThemeContent3");
+			update("EzCommonDAO.insertThemeContent3");
 		}
 	}
 }

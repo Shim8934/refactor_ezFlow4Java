@@ -34,7 +34,7 @@
 	    <script type="text/javascript">
 	        var pMode = "NEW";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
-	        var pBoardID = "${boardID}";
+	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var pUrl = "${url}";
 	        var PhotoBoard = "N";
 	        var spanimagename = "";
@@ -357,6 +357,9 @@
 	            strXML += "<CONTENT2>" + MakeXMLString(content) + "</CONTENT2>";
 	            strXML += "<IMAGE_FILENAME>" + MakeXMLString(filename) + "</IMAGE_FILENAME>";
 	            strXML += "<MAINIMAGEID>" + mainImageID + "</MAINIMAGEID>";
+	            
+	            /* 2018-11-06 홍승비 - 게시판 체크용 구분값 추가 */
+	            strXML += "<GUBUN>" + gubun + "</GUBUN>";
 			    strXML += "</NODE>";
 			    strXML += "</NODES>";
 			    
@@ -375,14 +378,14 @@
 						if (strItemID == "")
 						{
 						    xmlhttp = createXMLHttpRequest();
-							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 							xmlhttp.send();		
 							xmlhttp = null;
 						}
 						if (pMode == "reply")
 						{
 						    xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + strUpperItemIDTree, false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}
@@ -390,7 +393,7 @@
 						/* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
 						if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 						    xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+						    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}
@@ -435,7 +438,7 @@
 				        
 				        if (!check) {
 				        	document.getElementById("file1").files[i] = "";
-				        	alert("<spring:message code ='ezCommunity.lhj03' />");
+				        	alert("<spring:message code ='ezBoard.hsbImg01' />");
 				        	return;
 				        }
 				        else {
@@ -447,7 +450,7 @@
 		            xhr = new XMLHttpRequest();
 		            xhr.upload.addEventListener("progress", uploadProgress, false);
 		            xhr.addEventListener("load", uploadComplete, false);
-		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 		            xhr.send(fd);
 		            document.getElementById("progdiv").style.display = "";
 		        }
@@ -558,7 +561,7 @@
 			    		return;	
 		            }
 		            
-		            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueIDs=" + uniqueIDs, false);
+		            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + encodeURIComponent(pBoardID) +"&uniqueIDs=" + uniqueIDs, false);
 		            xmlhttp.send(fd);
 		
 		            document.getElementById("checkmenu").checked = false;
@@ -675,7 +678,7 @@
 		            xhr = new XMLHttpRequest();
 		            xhr.upload.addEventListener("progress", uploadProgress, false);
 		            xhr.addEventListener("load", uploadComplete, false);
-		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 		            xhr.send(fd);
 		
 		            document.getElementById("progdiv").style.display = "";
@@ -724,7 +727,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10055'/>"))
 		                        return;
 		                    else {
-	                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+	                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
 		                    }
 		                }
 		                pBoardID = ret[0];
@@ -741,7 +744,7 @@
 	                    if (!confirm("<spring:message code='ezBoard.t10055'/>"))
 	                        return;
 	                    else {
-                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
 	                    }
 	                }
 	                pBoardID = ret[0];
@@ -752,7 +755,7 @@
 	        }
 		    function GetBoardInfo() {
 		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
+		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp_boardinfo.send();
 		        if (xmlhttp_boardinfo.status == 200) {
 		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);

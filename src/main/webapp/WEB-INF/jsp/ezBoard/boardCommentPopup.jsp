@@ -65,13 +65,13 @@
 		</style>
 		
 		<script type="text/javascript">
-			var pItemID = "${boardItemVo.itemID}";
+			var pItemID = "<c:out value='${boardItemVo.itemID}'/>";
 			var pBoardID = "${boardItemVo.boardID}";
 			var userInfoID = "${userInfo.id}";
 			var commentType = "totalComment";
 			var gubun = "${gubun}";
-			var Reply_FG = "${Reply_FG}";
-			var OneLineReplyFlag = "${OneLineReplyFlag}";
+			var Reply_FG = "<c:out value='${Reply_FG}'/>";
+			var OneLineReplyFlag = "<c:out value='${OneLineReplyFlag}'/>";
 			var BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
 			var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 			var checkpassword_dialogArguments = new Array();
@@ -104,7 +104,15 @@
 			</ul>
 		</div>
 		
-		<div style='height:570px;overflow-y:auto;'>
+	<%-- 2018-11-07 홍승비 - 동영상게시판 구분 추가 --%>
+	<c:choose>
+		<c:when test="${gubun == 7}">
+			<div id="replyDiv" style='height:540px;overflow-y:auto;'>
+		</c:when>
+		<c:otherwise>
+			<div id="replyDiv" style='height:570px;overflow-y:auto;'>
+		</c:otherwise>
+	</c:choose>
 			<table class="mainlist" style="width:99.5%" >
 				<c:choose>
 					<c:when test="${gubun == 2}">

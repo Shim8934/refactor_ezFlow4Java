@@ -24,12 +24,10 @@
 	    		cursor : pointer;
 	    	}
 	    	tr.hover:hover {background:#eee; color:#fff;}
-			.selectTR {background-color: #edf4fd;}
+			.selectTR {background-color: #f1f8ff;}
 			#searchTable {
-				border-top: 1px solid #e8e8e8;
-				border-left: 1px solid #e8e8e8;
-				border-right: 1px solid #e8e8e8;
-				background-color: #fcfcfc;
+				border: 1px solid #e8e8e8;
+				background-color: #f8f8fa;
 			}
 			#searchTable td {padding: 8px 5px;}
 	    </style>
@@ -106,7 +104,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    $("#Edatepicker").datepicker({
@@ -114,7 +112,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			});
@@ -295,7 +293,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/ezAttitude/excelAbsentedListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&orderCell=" + orderCell + "&orderOption=" + orderOption + "&duplicated=duplicated";
+		    	exportExcelframe.location.href="/ezAttitude/excelAbsentedListExport.do?companyId=" + encodeURIComponent(pCompanyId) + "&userName=" + encodeURIComponent(searchUserName) + "&deptName=" + encodeURIComponent(searchDeptName) + "&title=" + encodeURIComponent(searchTitle) + "&deptId=&startDate=" + encodeURIComponent(searchStartDate) + "&endDate=" + encodeURIComponent(searchEndDate) + "&orderCell=" + encodeURIComponent(orderCell) + "&orderOption=" + encodeURIComponent(orderOption) + "&duplicated=duplicated";
 		    	exportExcelframe.target="_blank";
 			}
 			
@@ -335,7 +333,7 @@
 				var pwidth = window.screen.availWidth;
 				var pTop = (pheight - conHeight) / 2;
 				var pLeft = (pwidth - 890) / 2;
-				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&deptId=&startDate=" + searchStartDate + "&endDate=" + searchEndDate + "&pageNum=&listSize=&orderCell=&orderOption=";
+				var szUrl = "/ezEmail/mailWrite.do?cmd=attitudeAbsented&companyId=" + encodeURIComponent(pCompanyId) + "&userName=" + encodeURIComponent(searchUserName) + "&deptName=" + encodeURIComponent(searchDeptName) + "&title=" + encodeURIComponent(searchTitle) + "&deptId=&startDate=" + encodeURIComponent(searchStartDate) + "&endDate=" + encodeURIComponent(searchEndDate) + "&pageNum=&listSize=&orderCell=&orderOption=";
 					
 				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
 			}
@@ -356,15 +354,16 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezAttitude.t6' /><span id="mailBoxInfo"></span></h1>
-		<div id="mainmenu">
-        	<span style="border: none;"><b><spring:message code='ezAttitude.t15' /> : </b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-top:4px; padding-right:40px;">
+	    <h1>
+	    	<spring:message code = 'ezAttitude.t6' /><span id="mailBoxInfo"></span>
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
+	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var = "companyItem" items="${list }">
 					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
 				</c:forEach>
       		</select>
-	  	</div>
+	    </h1>
+		<div id="mainmenu"></div>
 	  	
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
@@ -394,7 +393,7 @@
 			</tbody>
 		</table>
 		
-	  	<div id="contentlist" style="width:100%; height:610px;">
+	  	<div id="contentlist" style="width:100%; height:610px;margin-top:5px">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
@@ -409,8 +408,7 @@
 				</tbody>
 			</table>
 	  	</div>
-	  	
-		<div style="color: #666; padding-top: 10px"></div>
+	  			
 		<div id="tblPageRayer"></div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>

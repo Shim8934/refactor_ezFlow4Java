@@ -30,11 +30,13 @@
 			var CurPage = "<c:out value='${qstListVO.currPage}'/>";
 			var totalPage = "<c:out value='${qstListVO.totalPage}'/>";
 		    var totalCount = "<c:out value='${qstListVO.totalCnt}'/>";
-		    var receve = "${receve}";
-		    var adminYN = "${adminYN}";
-		    var titleSearch = "${titleSearch}";
+		    var receve = "<c:out value='${receve}'/>";
+		    var adminYN = "<c:out value='${adminYN}'/>";
+		    var titleSearch = "<c:out value='${titleSearch}'/>";
 		    
 			window.onload = function() {
+				//url을 제대로 읽지 못하여 수정
+				receve = ReplaceText(receve, "&amp;", "&");
 				makePageSelPage();
 				var height = parseInt(document.documentElement.clientHeight - 170);
 	            document.getElementById("QstDiv").style.height = height + "px";
@@ -409,7 +411,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
@@ -598,16 +600,16 @@
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${adminYN == 'Y' }">
-					<li><span onclick="qstWhite()"><spring:message code="ezBoard.t367" /></span></li>
-					<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
-				</c:if>	
+					<li class="important"><span onclick="qstWhite()"><spring:message code="ezBoard.t367" /></span></li>
+					<li class="important"><span onClick="menu_reuse()"><spring:message code="ezQuestion.t700" /></span></li>
+				</c:if>				
 				<li><span onClick="menu_Result()"><spring:message code="ezQuestion.t303" /></span></li>
 				<li><span onClick="menu_Analysis()"><spring:message code="ezQuestion.t304" /></span></li>
-				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
-				<li><span onClick="menu_Search()"><spring:message code="ezQuestion.t34" /></span></li>
-				<li <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if> ><span onClick="menu_InfoModify()"><spring:message code="ezQuestion.t305" /></span></li>
-				<li <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if> ><span onClick="menu_Delete()"><spring:message code="ezQuestion.t177" /></span></li>
-				<li <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if> ><span onClick="menu_reuse()" ><spring:message code="ezQuestion.t700" /></span></li>
+				<c:if test="${adminYN == 'Y' }">
+					<li><span onClick="menu_InfoModify()"><spring:message code="ezQuestion.t305" /></span></li>
+					<li><span class="icon16 icon16_search" onClick="menu_Search()"></span></li>
+					<li><span class="icon16 icon16_delete" onClick="menu_Delete()"></span></li>
+				</c:if>
 			</ul>
 		</div>
 		<script type="text/javascript">

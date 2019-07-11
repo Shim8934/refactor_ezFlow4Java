@@ -25,6 +25,9 @@
 	    	var ss_companyID = "${userInfo.companyID}";
 	    	var CurPage = "1";
 	    	var totalPage = "";
+	    	var approveFlag = "<c:out value='${approveFlag}'/>";
+	    	var returnFlag = "<c:out value='${returnFlag}'/>";
+	    	var pType = "<c:out value='${pType}'/>";
 
 	    	$(function () {
 		        $("#Sdatepicker").datepicker({
@@ -32,7 +35,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true
 	        	});
 	        	$("#Sdatepicker2").datepicker({
@@ -40,7 +43,7 @@
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            	buttonImage: "/images/ImgIcon/calendar-month.png",
 	            	buttonImageOnly: true
 	        	});
 	        	var startdate = "${startDate}";
@@ -100,9 +103,32 @@
 	            	CurPage = "1";
 		        }
 
-	        	document.getElementById("listviewtype").selectedIndex
-	        	var listviewtype = document.getElementById("listviewtype")[document.getElementById("listviewtype").selectedIndex].value;
-
+	        	var listviewtype = "";
+	        	if(approveFlag != "2") {
+	        		listviewtype = document.getElementById("listviewtype")[document.getElementById("listviewtype").selectedIndex].value;
+		        	
+	        		document.getElementById("Span1").parentNode.style.display = "none";
+	    			document.getElementById("pn_img").parentNode.style.display = "none";
+	    			document.getElementById("pn_img2").parentNode.style.display = "none";
+	    			
+	    			if(listviewtype == "0") {
+	    				document.getElementById("Span1").parentNode.style.display = "";
+	        			document.getElementById("pn_img2").parentNode.style.display = "";
+	    			}
+	    			else if(listviewtype == "1") {
+	    				document.getElementById("pn_img").parentNode.style.display = "";
+	    			}
+	    			else if(listviewtype == "2") {
+	    				document.getElementById("Span1").parentNode.style.display = "";
+	    			}
+	        	}
+	        	
+	        	if(pType == "User") {
+	        		document.getElementById("Span1").parentNode.style.display = "none";
+	    			document.getElementById("pn_img").parentNode.style.display = "none";
+	    			document.getElementById("pn_img2").parentNode.style.display = "none";
+	        	}
+    			
 	        	xmlhttp = createXMLHttpRequest();
 	        	var xmlpara = createXmlDom();
 	        	var objNode;
@@ -114,7 +140,16 @@
 	        	}
 	        	createNodeAndInsertText(xmlpara, objNode, "STARTDATETIME", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
 	        	createNodeAndInsertText(xmlpara, objNode, "ENDDATETIME", $("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val());
-	        	createNodeAndInsertText(xmlpara, objNode, "APPROVEFLAG", listviewtype);
+	        	if(listviewtype >= 3) {
+	        		createNodeAndInsertText(xmlpara, objNode, "APPROVEFLAG", "");
+	        		createNodeAndInsertText(xmlpara, objNode, "RETURNFLAG", listviewtype-3);
+	        	}
+	        	else {
+	        		createNodeAndInsertText(xmlpara, objNode, "APPROVEFLAG", listviewtype);
+	        		createNodeAndInsertText(xmlpara, objNode, "RETURNFLAG", "");
+	        	}
+	        	//createNodeAndInsertText(xmlpara, objNode, "APPROVEFLAG", listviewtype);
+	        	createNodeAndInsertText(xmlpara, objNode, "TITLE", document.getElementById("subject").value);
 	        	createNodeAndInsertText(xmlpara, objNode, "WRITERNAME", document.getElementById("writername").value);
 	        	createNodeAndInsertText(xmlpara, objNode, "WRITERDEPT", document.getElementById("writerdept").value);
 	        	createNodeAndInsertText(xmlpara, objNode, "APP", "1");
@@ -184,6 +219,7 @@
 	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "owner_nm2")[i]) + "</VALUE></CELL>"; 
 	                	} */
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "instancetype")[i]) + "</VALUE></CELL>";
+	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "returnFlag")[i]) + "</VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "writeDay")[i]).substring(0, 10) + "</VALUE></CELL></ROW>";
 	            	}
 	            	list += "</ROWS>";
@@ -235,7 +271,7 @@
 	
 	        	var issave = false;
 	        	for (var i = 0; i < selrow.length; i++) {
-	            	if (selrow[i].getAttribute("DATA5") == "0") {
+	            	if (selrow[i].getAttribute("DATA5") == "0" || selrow[i].getAttribute("DATA5") == "2") {
 		                var startdate = "";
 		                var enddate = "";
 
@@ -302,14 +338,14 @@
 		            alert("" + strLang584 + "");
 	    	}
 
-	    	function btn_ApprovCancel() {
+	    	function btn_ApprovCancel(flag) {
 		        var listview = new ListView();
 	        	listview.LoadFromID("ApprovListView");
 	        	var selrow = listview.GetSelectedRows();
 
 	        	var issave = false;
 	        	for (var i = 0; i < selrow.length; i++) {
-		            if (selrow[i].getAttribute("DATA5") == "1") {
+		            if (selrow[i].getAttribute("DATA5") == "1" || selrow[i].getAttribute("DATA5") == "0") {
 	                	var xmlHTTP = createXMLHttpRequest();
 	                	var xmlDOM = createXmlDom();
 	                	var objNode;
@@ -318,7 +354,7 @@
 	                	createNodeAndInsertText(xmlDOM, objNode, "COMPANYID", ss_companyID);
 	                	createNodeAndInsertText(xmlDOM, objNode, "RESID", selrow[i].getAttribute("DATA2"));
 	                	createNodeAndInsertText(xmlDOM, objNode, "NUM", selrow[i].getAttribute("DATA1"));
-	                	createNodeAndInsertText(xmlDOM, objNode, "APPROVE", "0");
+	                	createNodeAndInsertText(xmlDOM, objNode, "APPROVE", flag);
 	
 	                	xmlHTTP.open("POST", "/ezResource/updateApprovalFlag.do", false);
 	                	xmlHTTP.send(xmlDOM);
@@ -346,112 +382,120 @@
 	            	}
 	        	}
 	        	getCalendarList();
-	        	if (issave)
-		            alert("" + strLang585 + "");
+	        	if (issave) {
+	        		if(flag == "0") {
+		           	 	alert("" + strLang585 + "");
+	        		}
+	        		else {
+	        			alert("" + strLang337 + "");
+	        		}
+	        		
+	        	}
 	    	}
 
 	    	var schedule_repetition_del_cross_dialogArguments = new Array();
 	    	var selrow;
 	    	function btn_Delete() {
-	        
-	        	var listview = new ListView();
-	        	listview.LoadFromID("ApprovListView");
-	        	selrow = listview.GetSelectedRows();
-
-	        	var isRepetition = false;
-	        	for (var i = 0; i < selrow.length; i++) {
-		            var reFlagVal = selrow[i].getAttribute("DATA7");
-	            	if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {
-		                isRepetition = true;
-	                	break;
-	            	}
-	        	}
-	        
-	        	var szType;
-	        	if (isRepetition) {
-		            if (CrossYN()) {
-	                	var rgParams = new Array();
-	                	rgParams["CancelOpen"] = false;
-	                	rgParams["InstanceType"] = "";
-	                	schedule_repetition_del_cross_dialogArguments[0] = rgParams;
-	                	schedule_repetition_del_cross_dialogArguments[1] = btn_Delete_Complete;
-
-		                DivPopUpShow(390, 175, "/ezResource/scheduleRepetitionDel.do");
-		            } else {
-	                	var rgParams = new Array();
-	                	rgParams["CancelOpen"] = false;
-	                	rgParams["InstanceType"] = "";
-
-	                	var feature = "dialogHeight:175px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
-	                	feature = feature + GetShowModalPosition(390, 175);
-	                	var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
-
-	                	if (false != rgParams["CancelOpen"]) return (false);
-	                	szType = rgParams["InstanceType"];
-	            	}
-	        	}
-	        
-	        	if ((!isRepetition && CrossYN()) || !CrossYN()) {
-	            	var issdelete = false;
-	            	for (var i = 0; i < selrow.length; i++) {
-		                var reFlagVal = selrow[i].getAttribute("DATA7");
-
-		                var xmlHttp = createXMLHttpRequest();
-		                var xmlDoc = createXmlDom();
-	    	            var objNode;
-
-	        	        createNodeInsert(xmlDoc, objNode, "PARAMETER");
-
-	            	    var num = selrow[i].getAttribute("DATA1");
-	                	var ownerID = selrow[i].getAttribute("DATA2");
-	                	var pnumVal = selrow[i].getAttribute("DATA8");
-	                	var gFlagVal = selrow[i].getAttribute("DATA9");
-	                	var startDateVal = selrow[i].getAttribute("DATA3");
-	                	var endDateVal = selrow[i].getAttribute("DATA4");
-	                	var writerIDVal = "";
-
-		                if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {
-		                    if (parseInt(reFlagVal) == 1) {
-	    	                    if (szType == "Instance") {
-	        	                    pnumVal = num;
-	            	                writerIDVal = ownerID;
-	                	            num = "0";
-	                    	        reFlagVal = "3";
-	                        	}
-	                    	} else if (parseInt(reFlagVal) == 3) {
-	                        	if (szType == "Master") {
-		                            num = pnumVal;
-		                            ownerID = writerIDVal;
-	    	                        reFlagVal = "1";
-	        	                }
-	            	        }
-	                	}
-	                	createNodeAndInsertText(xmlDoc, objNode, "NUM", num);
-	                	createNodeAndInsertText(xmlDoc, objNode, "OWNERID", ownerID);
-	                	createNodeAndInsertText(xmlDoc, objNode, "PNUM", pnumVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "WRITERID", writerIDVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "INSTYPE", reFlagVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "GFLAG", gFlagVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", startDateVal);
-	                	createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", endDateVal);
-
-		                xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
-		                xmlHttp.send(xmlDoc);
-
-	    	            var res = xmlHttp.responseText;
-
-	        	        if (res.trim() == "OK") {
-	            	        issdelete = true;
-	                	} else {
-	                    	issdelete = false;
-	                    	alert("" + strLang149 + "");
-	                    	return;
-		                }
-		            }
-	    	        getCalendarList();
-	        	    if (issdelete)
-	            	    alert("" + strLang259 + "");
-	        	}
+	    		if(confirm(strLang90)) {
+		        	var listview = new ListView();
+		        	listview.LoadFromID("ApprovListView");
+		        	selrow = listview.GetSelectedRows();
+	
+		        	var isRepetition = false;
+		        	for (var i = 0; i < selrow.length; i++) {
+			            var reFlagVal = selrow[i].getAttribute("DATA7");
+		            	if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {
+			                isRepetition = true;
+		                	break;
+		            	}
+		        	}
+		        
+		        	var szType;
+		        	if (isRepetition) {
+			            if (CrossYN()) {
+		                	var rgParams = new Array();
+		                	rgParams["CancelOpen"] = false;
+		                	rgParams["InstanceType"] = "";
+		                	schedule_repetition_del_cross_dialogArguments[0] = rgParams;
+		                	schedule_repetition_del_cross_dialogArguments[1] = btn_Delete_Complete;
+	
+			                DivPopUpShow(390, 175, "/ezResource/scheduleRepetitionDel.do");
+			            } else {
+		                	var rgParams = new Array();
+		                	rgParams["CancelOpen"] = false;
+		                	rgParams["InstanceType"] = "";
+	
+		                	var feature = "dialogHeight:175px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
+		                	feature = feature + GetShowModalPosition(390, 175);
+		                	var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
+	
+		                	if (false != rgParams["CancelOpen"]) return (false);
+		                	szType = rgParams["InstanceType"];
+		            	}
+		        	}
+		        
+		        	if ((!isRepetition && CrossYN()) || !CrossYN()) {
+		            	var issdelete = false;
+		            	for (var i = 0; i < selrow.length; i++) {
+			                var reFlagVal = selrow[i].getAttribute("DATA7");
+	
+			                var xmlHttp = createXMLHttpRequest();
+			                var xmlDoc = createXmlDom();
+		    	            var objNode;
+	
+		        	        createNodeInsert(xmlDoc, objNode, "PARAMETER");
+	
+		            	    var num = selrow[i].getAttribute("DATA1");
+		                	var ownerID = selrow[i].getAttribute("DATA2");
+		                	var pnumVal = selrow[i].getAttribute("DATA8");
+		                	var gFlagVal = selrow[i].getAttribute("DATA9");
+		                	var startDateVal = selrow[i].getAttribute("DATA3");
+		                	var endDateVal = selrow[i].getAttribute("DATA4");
+		                	var writerIDVal = "";
+	
+			                if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {
+			                    if (parseInt(reFlagVal) == 1) {
+		    	                    if (szType == "Instance") {
+		        	                    pnumVal = num;
+		            	                writerIDVal = ownerID;
+		                	            num = "0";
+		                    	        reFlagVal = "3";
+		                        	}
+		                    	} else if (parseInt(reFlagVal) == 3) {
+		                        	if (szType == "Master") {
+			                            num = pnumVal;
+			                            ownerID = writerIDVal;
+		    	                        reFlagVal = "1";
+		        	                }
+		            	        }
+		                	}
+		                	createNodeAndInsertText(xmlDoc, objNode, "NUM", num);
+		                	createNodeAndInsertText(xmlDoc, objNode, "OWNERID", ownerID);
+		                	createNodeAndInsertText(xmlDoc, objNode, "PNUM", pnumVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "WRITERID", writerIDVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "INSTYPE", reFlagVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "GFLAG", gFlagVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", startDateVal);
+		                	createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", endDateVal);
+	
+			                xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
+			                xmlHttp.send(xmlDoc);
+	
+		    	            var res = xmlHttp.responseText;
+	
+		        	        if (res.trim() == "OK") {
+		            	        issdelete = true;
+		                	} else {
+		                    	issdelete = false;
+		                    	alert("" + strLang149 + "");
+		                    	return;
+			                }
+			            }
+		    	        getCalendarList();
+		        	    if (issdelete)
+		            	    alert("" + strLang259 + "");
+		        	}
+	    		}
 	    	}
 
 	    	function btn_Delete_Complete(retVal) {
@@ -799,7 +843,7 @@
         			</HEADER>   
         			<HEADER>
             			<NAME><spring:message code='ezResource.t224'/></NAME>
-            			<WIDTH>40%</WIDTH>
+            			<WIDTH>35%</WIDTH>
         			</HEADER>
         			<HEADER>
             			<NAME><spring:message code='ezResource.t202'/></NAME>
@@ -826,6 +870,10 @@
             			<WIDTH>6%</WIDTH>
         			</HEADER>
         			<HEADER>
+            			<NAME><spring:message code='ezResource.kmsr29'/></NAME>
+            			<WIDTH>6%</WIDTH>
+        			</HEADER> 
+        			<HEADER>
             			<NAME><spring:message code='ezResource.t2004'/></NAME>
             			<WIDTH>6%</WIDTH>
         			</HEADER> 					
@@ -840,25 +888,47 @@
 		</div>
 		<div id="mainmenu">
   			<ul>
-    			<li><span id="Span1" onClick="btn_Approv()"><spring:message code='ezResource.t191'/></span></li>
-    			<li><span id="pn_img" onClick="btn_ApprovCancel()"><spring:message code='ezResource.t190'/></span></li>
-    			<li><span onclick='btn_Delete();'><spring:message code='ezResource.t65'/></span></li>
+  				<c:if test="${approveFlag ne 2 }">
+    				<li><span id="Span1" onClick="btn_Approv()"><spring:message code='ezResource.t191'/></span></li>
+    				<li><span id="pn_img" onClick="btn_ApprovCancel('0')"><spring:message code='ezResource.t190'/></span></li>
+    				<li><span id="pn_img2" onClick="btn_ApprovCancel('2')"><spring:message code='ezResource.kmsr22'/></span></li>
+    			</c:if>
+    			<li><span class="icon16 icon16_delete" onclick='btn_Delete();'></span></li>
     			<li><span onclick='ViewCalendar()'><spring:message code='ezResource.t255'/></span></li>
     			<li style="background:none;float:right">
         			<select id="listviewtype" onchange="getCalendarList('search')">
             			<option value=""><spring:message code='ezResource.t2000'/></option>
+    					<c:if test="${approveFlag ne 2 }">
             			<option value="1"><spring:message code='ezResource.t2001'/></option>
-            			<option value="0"><spring:message code='ezResource.t2002'/></option>
+            			<c:if test="${approveFlag eq 1}">
+	            			<option value="0"><spring:message code='ezResource.kmsr28'/></option>
+	            			<option value="2"><spring:message code='ezResource.kmsr30'/></option>
+	            		</c:if>
+            			<c:if test="${returnFlag eq 1}">
+	            			<option value="3"><spring:message code='ezResource.kmsr31'/></option>
+	            			<option value="4"><spring:message code='ezResource.kmsr32'/></option>
+	            		</c:if>
+		    			</c:if>
         			</select>
     			</li>
   			</ul>
 		</div>
 		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd;border-bottom:0px; padding:5px 0px 5px 5px">
-    		<input id="writername" type="text" style="width: 80px" />
-    		<a class="imgbtn" style="padding-top:2px"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
-    		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
-    		<input id="writerdept" type="text" style="width: 120px" />
-    		<a class="imgbtn" style="padding-top:2px"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
+    		<a class="imgbtn" style="padding-top:2px; cursor:default;"><span id="Span3"><spring:message code='ezEmail.t556'/></span></a>
+    		<input id="subject" type="text" style="width: 300px" />
+    		<c:if test="${pType eq 'User'}">
+	    		<a id="writername1" class="imgbtn" style="padding-top:2px; display:none;"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
+	    		<input id="writername" type="text" style="width: 80px; display:none;" value='<c:out value="${userInfo.displayName }"/>'/>
+	    		<a id="writerdept1" class="imgbtn" style="padding-top:2px; display:none;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
+	    		<input id="writerdept" type="text" style="width: 120px; display:none;" value='<c:out value="${userInfo.deptName }"/>'/>
+	    	</c:if>
+	    	<c:if test="${pType ne 'User'}">
+	    		<a id="writername1" class="imgbtn" style="padding-top:2px;"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
+	    		<input id="writername" type="text" style="width: 80px;"/>
+	    		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->
+	    		<a id="writerdept1" class="imgbtn" style="padding-top:2px;"><span id="Span3" onclick="seldept()"><spring:message code='ezResource.t132'/></span></a>
+	    		<input id="writerdept" type="text" style="width: 120px;"/>
+	    	</c:if>
     		<input type="text" id="Sdatepicker" style="width: 80px; text-align: center"> ~  <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center">
        		<a class="imgbtn" style="padding-top:2px"><span id="btn_OK" onclick="getCalendarList('search')"><spring:message code='ezResource.t14'/></span></a>
 		</div>

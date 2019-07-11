@@ -203,7 +203,7 @@
 		        	changeYear: true,
 		        	autoSize: true,
 		        	showOn: "both",
-		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImage: "/images/ImgIcon/calendar-month.png",
 		        	buttonImageOnly: true,
 		            onSelect: function(dateText, inst) {
 		            	dateCompare(dateText, SDate);
@@ -215,7 +215,7 @@
 		    	    changeYear: true,
 		        	autoSize: true,
 		        	showOn: "both",
-		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImage: "/images/ImgIcon/calendar-month.png",
 		        	buttonImageOnly: true
 		    	});		
 		
@@ -508,7 +508,7 @@
 	        	autoSize: true,
 	        	format: 'yyyy-mm-dd',
 	        	showOn: "both",
-	        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	        	buttonImage: "/images/ImgIcon/calendar-month.png",
 	        	buttonImageOnly: true,
 	            onSelect: function(dateText, inst) {
 	            	dateCompare(dateText);
@@ -521,7 +521,7 @@
 	        	autoSize: true,
 	        	format: 'yyyy-mm-dd',
 	        	showOn: "both",
-	        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+	        	buttonImage: "/images/ImgIcon/calendar-month.png",
 	        	buttonImageOnly: true
 	    	});
 			
@@ -774,7 +774,7 @@
             	document.getElementById("hidStartDate").value = L_StartDate + " " + L_StartTime ; 
             	document.getElementById("hidEndDate").value = L_EndDate + " " + L_EndTime ;
             	document.getElementById("hidCreateDate").value = getCurrTime();
-            	document.getElementById("hidContent").innerHTML = message.GetEditorContent();     	       	
+            	document.getElementById("hidContent").textContent = message.GetEditorContent();
 		    	var listtable = document.getElementById("filelist");
 		    	var filelist = GetChildNodes(listtable);		    	
 				
@@ -800,6 +800,8 @@
 		    		document.getElementById("hidModifyInfo").value = qstID;
 		    		flag = 1;
 		    	}
+		    	
+		    	window.parent.frames["left"].resetNodeSelected();
 				
 		    	document.getElementById("hidFilePath").value = document.getElementById("hidFilePath").value.substring(0, document.getElementById("hidFilePath").value.length - 1);               	  
 		    	document.getElementById("hidOptImgFilePath").value = document.getElementById("hidOptImgFilePath").value.substring(0, document.getElementById("hidOptImgFilePath").value.length - 1);               	  

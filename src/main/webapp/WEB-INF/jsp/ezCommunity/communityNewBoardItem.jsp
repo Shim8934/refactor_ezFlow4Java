@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
@@ -172,7 +172,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 				
@@ -181,7 +181,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        	
@@ -275,7 +275,7 @@
 	            var filename = "";
 	            var filepath = "";
 
-	            xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + strItemID, false);
+	            xmlhttp.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(strItemID), false);
 	            xmlhttp.send();
 
 	            xmldom.async = false;
@@ -787,7 +787,7 @@
 						
             function InitializeSettings() {
             	
-                document.getElementById('tdBoardName').innerHTML = "${boardInfo.boardName}";
+                document.getElementById('tdBoardName').innerHTML = userInfo.primary == "1"? "${boardInfo.boardName}" : "${boardInfo.boardName2}";
                 
                 if (ExpireDays == "-1" && strEndDate.substring(0,4) == "9999" || ExpireDays == "-1" && pMode == "new") {
                     document.getElementById('ChkPermanence').checked = true;
@@ -904,6 +904,12 @@
                 
                 AttachFileInfo(strXML);
             }
+
+	        function bodydragover(evt) {
+		        evt.dataTransfer.dropEffect = "none";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
 		</script>
 
 		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">

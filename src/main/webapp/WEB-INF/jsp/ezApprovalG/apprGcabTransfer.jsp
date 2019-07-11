@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,10 +27,10 @@
 	        var g_DDeptName = "";
 	        var g_DTaskCode = "";
 	        var g_DTaskName = "";
-	        var g_SDeptCode = "${userInfo.deptID}";
-	    	var g_SDeptName = "${userInfo.deptName}";
-	        var CompanyID = "${userInfo.companyID}";
-	        var UserLang = "${userInfo.lang}";
+	        var g_SDeptCode = "<c:out value ='${userInfo.deptID}'/>";
+	    	var g_SDeptName = "<c:out value ='${userInfo.deptName}'/>";
+	        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
 	        var date = new Date();
             var nowYear = date.getFullYear();
 	        document.onselectstart = function () { return false; };
@@ -428,12 +429,12 @@
 	    <h1><spring:message code='ezApprovalG.t560'/></h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <li><span onclick="return bt_OK_onclick()"><spring:message code='ezApprovalG.t574'/></span></li>
+	            <li class="important"><span onclick="return bt_OK_onclick()"><spring:message code='ezApprovalG.t574'/></span></li>
 	        </ul>
 	    </div>
 	    <table>
 	        <tr>
-	            <td>
+	            <td style="width:49%">
 	                <table class="content" style="width: 100%">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t575'/></th>
@@ -458,18 +459,18 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2 class="h2_dot" style="font-weight: normal;width:440px"><spring:message code='ezApprovalG.t578'/><span style="float:right"><select id="selYear" style="width: 55px;" onchange="selYear_onChange()"></select></span></h2>
+	                <h2 class="h2_dot" style="font-weight: normal;margin-bottom:5px;"><spring:message code='ezApprovalG.t578'/><span style="float:right"><select id="selYear" style="width: 55px;" onchange="selYear_onChange()"></select></span></h2>
 	                
-	                <div style="WIDTH: 450px; HEIGHT: 300px; OVERFLOW-Y: AUTO;" class="listview">
+	                <div style="WIDTH: 100%; HEIGHT: 500px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="CabinetList"></div>
 	                </div>
 	            </td>
-	            <td style="text-align: center; width: 25px">
+	            <td style="text-align: center; width: 2%">
 	                <img src="/images/arr_right.gif" name="Image191" onclick="return AddCabList_onclick()" style="cursor: pointer;margin-top:100px">
 	                <img src="/images/arr_left.gif" name="Image201" onclick="return DelCabList_onclick()" style="padding-top: 5px; cursor: pointer;">
 	                <img name="Image1911" src="/images/arr01a.gif" onclick="return btnAddAll_onclick()" style="padding-top: 20px;  cursor: pointer">
 	            </td>
-	            <td style="vertical-align: top">
+	            <td style="vertical-align: top; width:49%">
 	                <table class="content" style="width: 100%">
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t579'/></th>
@@ -503,8 +504,8 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2 class="h2_dot" style="font-weight: normal"><spring:message code='ezApprovalG.t580'/></h2>
-	                <div style="WIDTH: 375px; HEIGHT: 300px; OVERFLOW-Y: AUTO;" class="listview">
+	                <h2 class="h2_dot" style="font-weight: normal; margin-bottom:5px;"><spring:message code='ezApprovalG.t580'/></h2>
+	                <div style="WIDTH: 100%; HEIGHT: 500px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="SelCabinetList"></div>
 	                </div>
 	            </td>

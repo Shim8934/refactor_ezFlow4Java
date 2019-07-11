@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
@@ -99,12 +101,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityController.class);
 	
 	/**
 	 * 커뮤니티 메인화면 호출함수
 	 */
-	@RequestMapping(value="/ezCommunity/communityMain.do")
+	@RequestMapping(value="/ezCommunity/communityMain.do", method = RequestMethod.GET)
 	public String  main() {
 		return "ezCommunity/communityMain";
 	}
@@ -112,7 +117,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 왼쪽 메뉴화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/communityLeftCommunity.do")
+	@RequestMapping(value = "/ezCommunity/communityLeftCommunity.do", method = RequestMethod.GET)
 	public String communityLeftCommunity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("communityLeftCommunity started.");
 		
@@ -171,7 +176,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getLeftCommunity.do")
+	@RequestMapping(value = "/ezCommunity/getLeftCommunity.do", method = RequestMethod.GET)
 	public String getLeftCommunity(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -186,7 +191,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 알림마당목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getLeftBoardList.do")
+	@RequestMapping(value = "/ezCommunity/getLeftBoardList.do", method = RequestMethod.GET)
 	public String getLeftBoardList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -200,7 +205,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 이미지 출력함수(ezCommon_Interface)
 	 */
-	@RequestMapping(value="/ezCommunity/getCommunityThumInfo.do")
+	@RequestMapping(value="/ezCommunity/getCommunityThumInfo.do", method = RequestMethod.GET)
 	public void getCommunityThumInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
         String pType = request.getParameter("type");
@@ -235,7 +240,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 만들기화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/commMake.do")
+	@RequestMapping(value = "/ezCommunity/commMake.do", method = RequestMethod.GET)
 	public String commMake(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String browser = ClientUtil.getClientInfo(request, "browser");
@@ -274,7 +279,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판Tree 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getSubBoards.do")
+	@RequestMapping(value = "/ezCommunity/getSubBoards.do", method = RequestMethod.POST)
 	public String getSubBoards(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("getSubBoards started.");
 		
@@ -318,7 +323,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 관리자권한 확인 함수
 	 */
-	@RequestMapping(value = "/ezCommunity/goAdminOk.do")
+	@RequestMapping(value = "/ezCommunity/goAdminOk.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String goAdminOk(@CookieValue("loginCookie") String loginCookie, CommunityClubVO communityClubVO, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -338,7 +343,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 권한 및 승인여부 확인 함수
 	 */
-	@RequestMapping(value = "/ezCommunity/checkCommHome.do")
+	@RequestMapping(value = "/ezCommunity/checkCommHome.do", method = RequestMethod.GET)
 	public String checkCommHome(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("checkCommHome started.");
 		
@@ -368,7 +373,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티팝업화면 출력 함수
 	 */
-	@RequestMapping(value = "/ezCommunity/commHome/popupCommHome.do")
+	@RequestMapping(value = "/ezCommunity/commHome/popupCommHome.do", method = RequestMethod.GET)
 	public String popupCommHome(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("popupCommHome started.");
 		
@@ -452,9 +457,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("checkSysop", checkSysop);
 		model.addAttribute("retXML", retXML);
 		model.addAttribute("pastDate", pastDate);
+		model.addAttribute("lang", userInfo.getLang()); // 2019-07-11 홍승비 - 다국어 지원용 lang 초가
 		
 		logger.debug("popupCommHome ended.");
-		
 		return "ezCommunity/communityPopupCommHome";
 	}
 	
@@ -474,7 +479,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 메인 오른쪽화면 게시판 조회 함수
 	 */
-	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardInfo.do")
+	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardInfo.do", method = RequestMethod.GET)
 	public String commHomeBoardInfo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
@@ -493,7 +498,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/** 
 	 * 커뮤니티 메인 오른쪽화면 게시판 목록 조회 함수
 	 */
-	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardItemList.do")
+	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardItemList.do", method = RequestMethod.GET)
 	public String commHomeBoardItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
@@ -508,7 +513,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 게시판 목록화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardItemList.do")
+	@RequestMapping(value = "/ezCommunity/boardItemList.do", method = RequestMethod.GET)
 	public String boardItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -567,7 +572,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 검색화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/searchBoardItem.do")
+	@RequestMapping(value = "/ezCommunity/searchBoardItem.do", method = RequestMethod.GET)
 	public String searchBoardItem(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String boardID = request.getParameter("boardID");
@@ -658,7 +663,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 검색화면 인쇄화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezCommunity/searchBoardItemPrint.do")
+	@RequestMapping(value = "/ezCommunity/searchBoardItemPrint.do", method = RequestMethod.GET)
 	public String searchBoardItemPrint(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("searchBoardItemPrint started");
 		
@@ -728,7 +733,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시물 답변 여부 체크 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/checkIfHasReply.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/checkIfHasReply.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String checkIfHasReply (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -752,7 +757,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시물 등록/수정/답변 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/newBoardItem.do")
+	@RequestMapping(value = "/ezCommunity/newBoardItem.do", method = RequestMethod.GET)
 	public String newBoardItem(@CookieValue("loginCookie") String loginCookie, Model model, CommunityBoardItemVO item, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pBoardID = request.getParameter("boardID");
@@ -883,7 +888,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			prefix = request.getParameter("prefix");
 		}
 		
-		String boardID = prefix;
+		String boardID = commonUtil.detectPathTraversal(prefix);
 		String uploadSN = "{" + guid + "}";
 		String fileName = fileTitle + "." + ext;
 		
@@ -897,6 +902,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         fileName = fileName.replace("=", "%3d");
         
         String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+        dirPath = commonUtil.detectPathTraversal(dirPath);
         
         if (useExtension.toLowerCase().indexOf(fileName.substring(fileName.lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
         	returnVal = "denied";
@@ -905,14 +911,15 @@ public class EzCommunityController extends EgovFileMngUtil{
         		new File(dirPath + "tempUploadFile").mkdirs();
         	}
         	
-        	if (!new File(dirPath + boardID).exists()) {
-        		new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
-        		new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
-        	} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
-        		new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+        	if (!new File(commonUtil.detectPathTraversal(dirPath + boardID)).exists()) {
+        		new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).mkdirs();
+        		new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "doc")).mkdirs();
+        	} else if (!new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).exists()) {
+        		new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).mkdirs();
         	}
         	
         	String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + "_" + fileName;
+        	attachPath = commonUtil.detectPathTraversal(attachPath);
         	
             InputStream stream = null;
             OutputStream bos = null;         
@@ -959,7 +966,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 포토게시판 파일업로드(IE9) 실행함수 
 	 */
-	@RequestMapping(value = "/ezCommunity/itemAttachFilePhoto.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/itemAttachFilePhoto.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String itemAttachFilePhoto(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -989,21 +996,26 @@ public class EzCommunityController extends EgovFileMngUtil{
 		fileName = fileName.replace("=", "%3d");
 		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		dirPath = commonUtil.detectPathTraversal(dirPath);
 		
 		if (!new File(dirPath + "tempUploadFile").exists()) {
 			new File(dirPath + "tempUploadFile").mkdirs();
 		}
 		
-		if (!new File(dirPath + boardID).exists()) {
-			new File(dirPath + boardID).mkdir();
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
-			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
-		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+		if (!new File(commonUtil.detectPathTraversal(dirPath + boardID)).exists()) {
+			new File(commonUtil.detectPathTraversal(dirPath + boardID)).mkdir();
+			new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).mkdirs();
+			new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "doc")).mkdirs();
+		} else if (!new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).exists()) {
+			String newFilePath = dirPath + boardID + commonUtil.separator + "uploadFile";
+			newFilePath = commonUtil.detectPathTraversal(newFilePath);
+			
+			new File(newFilePath).mkdirs();
 		}
 		
 		String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + fileName;
 		String mapPath = dirPath + "tempUploadFile" + commonUtil.separator;
+		attachPath = commonUtil.detectPathTraversal(attachPath);
 		
 		InputStream stream = null;
 		OutputStream bos = null;         
@@ -1063,7 +1075,11 @@ public class EzCommunityController extends EgovFileMngUtil{
             
             BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
             bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
-            ImageIO.write(bufferedImage, ext, new File(mapPath + "s_" + uploadSN + fileName));
+            
+            String imgFilePath = mapPath + "s_" + uploadSN + fileName;
+            imgFilePath = commonUtil.detectPathTraversal(imgFilePath);
+            
+            ImageIO.write(bufferedImage, ext, new File(imgFilePath));
 		}
 		
 		returnVal = "OK_" + uploadSN + fileName;
@@ -1074,7 +1090,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 읽기 화면호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardItemView.do")
+	@RequestMapping(value = "/ezCommunity/boardItemView.do", method = RequestMethod.GET)
 	public String boardItemView(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("boardItemView started.");
 		
@@ -1110,6 +1126,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
 		String commentCount = ezCommunityService.getOneLineReplyCount(pBoardID, pItemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
+		//2018.08.08 캐비넷 추가
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("commu", userInfo);
+		}
 		
 		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("item", item);
@@ -1126,6 +1147,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("treeCtrl", treeCtrl);
+		model.addAttribute("useCabinet", use_cabinet);
 		
 		logger.debug("boardItemView ended.");
 		
@@ -1135,7 +1157,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 암호확인화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/checkPassword.do")
+	@RequestMapping(value = "/ezCommunity/checkPassword.do", method = RequestMethod.GET)
 	public String checkPassword(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("checkPassword started.");
 		
@@ -1190,7 +1212,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 한줄답변 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/readOneLineReply.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/readOneLineReply.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	public String readOneLineReply(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pBoardID = request.getParameter("boardID");
@@ -1221,7 +1243,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 한줄답변 삭제시 작성자본인확인 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/checkOneLineOwner.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/checkOneLineOwner.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String checkOneLineOwner(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1233,7 +1255,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 한줄답변 삭제 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/deleteOneLineReply.do", produces="text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/deleteOneLineReply.do", method = RequestMethod.POST, produces="text/plain; charset=utf-8")
 	@ResponseBody
 	public String deleteOneLineReply(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		 
@@ -1248,7 +1270,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 익명게시판일때 checkReplyPassword
 	 */
-	@RequestMapping(value = "/ezCommunity/checkReplyPassword.do")
+	@RequestMapping(value = "/ezCommunity/checkReplyPassword.do", method = RequestMethod.GET)
 	public String checkReplyPassword(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String publicModulus = egovFileScrty.getPbm();
@@ -1270,7 +1292,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 첨부파일 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getItemAttachments.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/getItemAttachments.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1288,7 +1310,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 예약게시목록 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardReservedItemList.do")
+	@RequestMapping(value = "/ezCommunity/boardReservedItemList.do", method = RequestMethod.GET)
 	public String boardReservedItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pSortBy = "";
@@ -1348,7 +1370,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 첨부파일 다운로드 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getCommunityAttachInfo.do")
+	@RequestMapping(value = "/ezCommunity/getCommunityAttachInfo.do", method = RequestMethod.GET)
 	public void getCommunityAttachInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getCommunityAttachInfo started.");
 		
@@ -1368,7 +1390,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 조회자정보 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/itemReadList.do")
+	@RequestMapping(value = "/ezCommunity/itemReadList.do", method = RequestMethod.GET)
 	public String itemReadList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("itemReadList started");
 //		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1396,7 +1418,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시글 미리보기 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardItemPreview.do")
+	@RequestMapping(value = "/ezCommunity/boardItemPreview.do", method = RequestMethod.GET)
 	public String boardItemPreView(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1418,7 +1440,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 복사화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/copyBoardItem.do")
+	@RequestMapping(value = "/ezCommunity/copyBoardItem.do", method = RequestMethod.GET)
 	public String copyBoardItem(Model model, HttpServletRequest request) {
 		String pItemIDList = request.getParameter("itemIDList");
 		String pBoardID = request.getParameter("boardID");
@@ -1436,7 +1458,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 복사 권한 검사
 	 */
-	@RequestMapping(value = "/ezCommunity/getACL.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/getACL.do", method = RequestMethod.GET)
 	public String getACL(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityBoardPropertyVO boardInfo;
@@ -1495,7 +1517,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 복사시 일반/포토/익명 게시판 검사 실행 함수
 	 */
-	@RequestMapping(value = "/ezCommunity/checkIfAnonyBoard.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/checkIfAnonyBoard.do", method = RequestMethod.GET)
 	public String checkIfAnonyBoard(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("checkIfAnonyBoard started.");
 		
@@ -1530,7 +1552,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 알림마당 목록화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/board/bbsList.do")
+	@RequestMapping(value = "/ezCommunity/board/bbsList.do", method = RequestMethod.GET)
 	public String bbsList(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("bbsList started.");
 		
@@ -1562,7 +1584,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
 
-		keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
+		keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
 		totalPage = keywordCount / comNoPerPage;
 		
 		if (keywordCount % comNoPerPage != 0) {
@@ -1570,7 +1592,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		curPage = Math.min(curPage, totalPage);
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		String strHTML = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 
@@ -1594,7 +1616,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 알림마당 읽기 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/board/bbsViewNew.do")
+	@RequestMapping(value = "/ezCommunity/board/bbsViewNew.do", method = RequestMethod.GET)
 	public String bbsNewViewNew(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("bbsViewNew started.");
 		
@@ -1643,7 +1665,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			grsNo = cBoardGet1.getNo();
 			
 		} else {
-			response.encodeRedirectURL("/error.do");
+			throw new Exception();
 		}
 		
 		String previousTitle = egovMessageSource.getMessage("ezCommunity.t191", userInfo.getLocale());
@@ -1697,7 +1719,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 알림마당 쓰기/수정 화면 호출함수 
 	 */
-	@RequestMapping(value = "/ezCommunity/board/bbsEditNew.do")
+	@RequestMapping(value = "/ezCommunity/board/bbsEditNew.do", method = RequestMethod.GET)
 	public String bbsEditNew(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("bbsEditNew started.");
 		
@@ -1846,7 +1868,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 방명록 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/guestOne.do")
+	@RequestMapping(value = "/ezCommunity/guestOne.do", method = RequestMethod.GET)
 	public String guestOne(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("guestOne started.");
 		
@@ -1908,7 +1930,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 방명록 수정화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/guestEdit.do")
+	@RequestMapping(value = "/ezCommunity/guestEdit.do", method = RequestMethod.GET)
 	public String guestEdit(@CookieValue("loginCookie") String loginCookie, CommunityCClubGuestVO item, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
@@ -1945,7 +1967,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 방명록 쓰기/수정/삭제 실행함수 
 	 */
-	@RequestMapping(value = "/ezCommunity/guestEditOk.do")
+	@RequestMapping(value = "/ezCommunity/guestEditOk.do", method = RequestMethod.POST)
 	public String guestEditOk(@CookieValue("loginCookie") String loginCookie, Model model, CommunityCClubGuestVO item, HttpServletRequest request) throws Exception {
 		logger.debug("guestEditOk started. ");
 		
@@ -1973,7 +1995,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 목록 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollMain.do")
+	@RequestMapping(value = "/ezCommunity/pollMain.do", method = RequestMethod.GET)
 	public String pollMain(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int guest = 0;
@@ -2008,7 +2030,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 등록 화면1 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollAdd.do")
+	@RequestMapping(value = "/ezCommunity/pollAdd.do", method = RequestMethod.POST)
 	public String pollAdd(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pState = "", pSubject = "", pStartDate = "", pEndDate = "", pSelType = "", pSelRes1 = "", pSelRes2 = "", expireDays = "-1";
@@ -2069,7 +2091,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 등록 화면2 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollAddOk.do")
+	@RequestMapping(value = "/ezCommunity/pollAddOk.do", method = RequestMethod.POST)
 	public String pollAddOk (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String selRes = "", answerViewType = "", selRes1="0";
@@ -2121,7 +2143,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 등록 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollAddOkGo.do", method=RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/pollAddOkGo.do", method = RequestMethod.POST)
 	public void pollAddOkGo(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2131,7 +2153,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 삭제 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollDelete.do")
+	@RequestMapping(value = "/ezCommunity/pollDelete.do", method = RequestMethod.GET)
 	public void pollDelete(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2141,7 +2163,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 읽기화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollRes.do")
+	@RequestMapping(value = "/ezCommunity/pollRes.do", method = RequestMethod.GET)
 	public String poll(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2189,7 +2211,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 날짜변경화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollEdit.do")
+	@RequestMapping(value = "/ezCommunity/pollEdit.do", method = RequestMethod.GET)
 	public String pollEdit(@CookieValue("loginCookie") String loginCookie, Model model,HttpServletRequest request) throws Exception {
 		logger.debug("pollEdit started.");
 		
@@ -2221,7 +2243,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 날짜변경 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollEditOk.do")
+	@RequestMapping(value = "/ezCommunity/pollEditOk.do", method = RequestMethod.POST)
 	public void pollEditOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offset = userInfo.getOffset();
@@ -2238,7 +2260,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 답변 응답보기화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollETCView.do")
+	@RequestMapping(value = "/ezCommunity/pollETCView.do", method = RequestMethod.GET)
 	public String pollETCView(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("pollETCView started.");
 		
@@ -2260,7 +2282,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 응답 테이블 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollETCTable.do")
+	@RequestMapping(value = "/ezCommunity/pollETCTable.do", method = RequestMethod.GET)
 	public String pollETCTable(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("pollETCTableGet started.");
 		
@@ -2282,7 +2304,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원목록 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/commViewMember.do")
+	@RequestMapping(value = "/ezCommunity/commViewMember.do", method = RequestMethod.GET)
 	public String commViewMember(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String keyword = "", sRadio = "", block = "";
@@ -2307,7 +2329,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
+		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int comNoPerPage = 10;
         int totalPage = keywordCount / comNoPerPage;
@@ -2338,14 +2360,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원탈퇴 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/commOut.do")
+	@RequestMapping(value = "/ezCommunity/commOut.do", method = RequestMethod.GET)
 	public String commOut(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String code = request.getParameter("code");
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		// 2018-06-29 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
@@ -2371,7 +2393,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원탈퇴 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/commOutOk.do")
+	@RequestMapping(value = "/ezCommunity/commOutOk.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String commOutOk(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData) throws Exception{
 		Document xmlDoc = commonUtil.convertStringToDocument(xmlData);
@@ -2387,7 +2409,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 관리메뉴 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/admin/index.do")
+	@RequestMapping(value = "/ezCommunity/admin/index.do", method = RequestMethod.GET)
 	public String adminIndex(HttpServletRequest request, Model model) {
 		logger.debug("adminIndex started.");
 		
@@ -2413,7 +2435,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 관리메뉴 왼쪽화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminLeft.do")
+	@RequestMapping(value = "/ezCommunity/adminLeft.do", method = RequestMethod.GET)
 	public String adminLeft(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("adminLeft started.");
 		
@@ -2449,7 +2471,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
 			pMode = 0;
-		} else {
+		} else { 
 			pMode = 1;
 		}
 
@@ -2477,7 +2499,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 관리메뉴 기본정보수정화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminBasic.do")
+	@RequestMapping(value = "/ezCommunity/adminBasic.do", method = RequestMethod.GET)
 	public String adminBasic(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("adminBasic started.");
 		
@@ -2508,16 +2530,17 @@ public class EzCommunityController extends EgovFileMngUtil{
 			name1 = member.getUserName();
 		}
 
+		// 2018-11-12 김민성 - 안쓰는 카테고리 주석처리
 		int pPermitCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());
 		String cCateA = ezCommunityService.adminBasicGet1(code, userInfo.getTenantId());
-		String cCateB = ezCommunityService.adminBasicGet2(code, userInfo.getTenantId());
+		//String cCateB = ezCommunityService.adminBasicGet2(code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);
 		model.addAttribute("club", club);
 		model.addAttribute("name1", name1);
 		model.addAttribute("pPermitCount", pPermitCount);
 		model.addAttribute("c_cate_a", (cCateA == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateA, userInfo.getLocale()));
-		model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, userInfo.getLocale()));
+		//model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, userInfo.getLocale()));
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
 		
@@ -2529,7 +2552,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 관리메뉴 기본정보수정 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminBasicOk.do")
+	@RequestMapping(value = "/ezCommunity/adminBasicOk.do", method = RequestMethod.POST)
 	public String adminBasicOk(@CookieValue("loginCookie")String loginCookie, CommunityClubVO clubVO, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2552,7 +2575,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 환경설정화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminLogo.do")
+	@RequestMapping(value = "/ezCommunity/adminLogo.do", method = RequestMethod.GET)
 	public String adminLogo(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
@@ -2583,7 +2606,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 환경설정화면 로고 temp파일 저장 실행함수
 	 */
-	@RequestMapping(value = "ezCommunity/adminLogoUpload.do")
+	@RequestMapping(value = "ezCommunity/adminLogoUpload.do", method = RequestMethod.POST)
 	public String adminLogoUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("adminLogoUpload started.");
 		
@@ -2599,8 +2622,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		//cache 문제로 인한 ? 랜덤값 추가
-		result = result + "?" + new Random().nextInt(50);
-
+		result = result + "?" + new SecureRandom().nextInt(50);
+		
 		model.addAttribute("tempLogoPath", result);
 		logger.debug("adminLogoUpload ended.");
 		logger.debug("result======" + result);
@@ -2611,7 +2634,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 환경설정화면 썸네일 temp파일 저장 실행함수
 	 */
-	@RequestMapping(value = "ezCommunity/adminThumbUpload.do")
+	@RequestMapping(value = "ezCommunity/adminThumbUpload.do", method = RequestMethod.POST)
 	public String adminThumbUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("adminThumbUpload started.");
 		
@@ -2627,7 +2650,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		//cache 문제로 인한 ? 랜덤값 추가
-		result = result + "?" + new Random().nextInt(50);
+		result = result + "?" + new SecureRandom().nextInt(50);
 
 		model.addAttribute("tempThumbPath", result);
 		logger.debug("adminThumbUpload ended.");
@@ -2638,7 +2661,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 환경설정화면 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminLogoOk.do")
+	@RequestMapping(value = "/ezCommunity/adminLogoOk.do", method = RequestMethod.POST)
 	public String adminLogoOk(@CookieValue("loginCookie")String loginCookie, Model model, MultipartHttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
@@ -2659,7 +2682,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 환경설정화면 실행함수 IE9
 	 */
-	@RequestMapping(value = "/ezCommunity/adminLogoIE9Ok.do")
+	@RequestMapping(value = "/ezCommunity/adminLogoIE9Ok.do", method = RequestMethod.GET)
 	public String adminLogoOkIE9(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -2679,7 +2702,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 홈 화면관리화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminHomeBoard.do")
+	@RequestMapping(value = "/ezCommunity/adminHomeBoard.do", method = RequestMethod.GET)
 	public String adminHomeBoard(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2759,7 +2782,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 관리화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardProperty.do")
+	@RequestMapping(value = "/ezCommunity/boardProperty.do", method = RequestMethod.GET)
 	public String adminBoardProperty (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("adminBoardProperty started.");
 		
@@ -2807,6 +2830,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardProp", boardProp);
 		model.addAttribute("_style", style);
+		model.addAttribute("userInfo",userInfo);
 		
 		logger.debug("adminBoardProperty ended.");
 		
@@ -2816,7 +2840,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 관리메뉴 일반설정 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/saveBoardProperty.do")
+	@RequestMapping(value = "/ezCommunity/saveBoardProperty.do", method = RequestMethod.POST)
 	public String saveBoardProperty(@CookieValue("loginCookie") String loginCookie, CommunityBoardInfoVO vo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("saveBoardProperty started.");
 		
@@ -2834,7 +2858,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 그룹생성화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardGroupCreate.do")
+	@RequestMapping(value = "/ezCommunity/boardGroupCreate.do", method = RequestMethod.GET)
 	public String boardGroupCreate(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
@@ -2858,7 +2882,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 그룹생성화면 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/createBoardGroup.do")
+	@RequestMapping(value = "/ezCommunity/createBoardGroup.do", method = RequestMethod.POST)
 	public void createBoardGroup(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2867,13 +2891,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardGroupName2 = request.getParameter("boardGroupName2");
 		String code = request.getParameter("code");
 		
-		ezCommunityService.createBoardGroup(code, boardGroupID, boardGroupName, boardGroupName2, userInfo);
+		ezCommunityService.createBoardGroup(code, commonUtil.stripScriptTags(boardGroupID), boardGroupName, boardGroupName2, userInfo);
 	}
 	
 	/**
 	 * 순서변경화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardOrder.do")
+	@RequestMapping(value = "/ezCommunity/boardOrder.do", method = RequestMethod.GET)
 	public String boardOrder(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2893,7 +2917,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("upperBoardID", parentBoardID);
-		model.addAttribute("boardName", boardInfo.getBoardName());
+		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
 
 		return "ezCommunity/communityAdminBoardOrder";
 	}
@@ -2901,7 +2925,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판관리 Tree 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminGetSubBoards.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/adminGetSubBoards.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String adminGetSubBoards(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("adminGetSubBoards started.");
@@ -2948,7 +2972,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 하위게시판 생성화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardCreate.do")
+	@RequestMapping(value = "/ezCommunity/boardCreate.do", method = RequestMethod.GET)
 	public String boardCreate(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
@@ -2971,7 +2995,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
-		model.addAttribute("parentBoardName", boardInfo.getBoardName());
+		model.addAttribute("parentBoardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
 		
 		return "ezCommunity/communityAdminBoardCreate";
 	}
@@ -2993,13 +3017,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		//첨부 용량 제한 [이성우]
 		String comatt = "10";
 		
-		ezCommunityService.createBoardInsert(code, boardID, boardName, boardName2, parentBoardID, boardGroupID, comatt, userInfo);
+		ezCommunityService.createBoardInsert(code, commonUtil.stripScriptTags(boardID), boardName, boardName2, parentBoardID, boardGroupID, comatt, userInfo);
 	}
 	
 	/**
 	 * 게시판이동화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardMove.do")
+	@RequestMapping(value = "/ezCommunity/boardMove.do", method = RequestMethod.GET)
 	public String boardMove(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3018,7 +3042,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("boardName", boardInfo.getBoardName());
+		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
 		
 		return "ezCommunity/communityAdminBoardMove";
 	}
@@ -3026,7 +3050,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 대상게시판선택화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardMoveSelect.do")
+	@RequestMapping(value = "/ezCommunity/boardMoveSelect.do", method = RequestMethod.GET)
 	public String boardMoveSelect() throws Exception {
 		return "ezCommunity/communityAdminBoardMoveSelect";
 	}
@@ -3054,7 +3078,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판삭제화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardDelete.do")
+	@RequestMapping(value = "/ezCommunity/boardDelete.do", method = RequestMethod.GET)
 	public String boardDelete(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3081,7 +3105,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("boardName", boardInfo.getBoardName());
+		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
 		model.addAttribute("xmlret", strXML);
 		
 		return "ezCommunity/communityAdminBoardDelete";
@@ -3106,7 +3130,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 관리메뉴 게시판검색화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminSearchBoardItem.do")
+	@RequestMapping(value = "/ezCommunity/adminSearchBoardItem.do", method = RequestMethod.GET)
 	public String adminSearchBoardItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String title = "", writerName = "", abstracts = "", searchStart = "", searchEnd = "", startDateTime = "", endDateTime = "";
@@ -3175,7 +3199,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("boardName", boardInfo.getBoardName());
+		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
         model.addAttribute("userInfo", userInfo);
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("orgBoardParameters", orgBoardParameters);
@@ -3195,7 +3219,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 검색 대상게시판 선택화면 호출
 	 */
-	@RequestMapping(value = "/ezCommunity/boardSelect.do")
+	@RequestMapping(value = "/ezCommunity/boardSelect.do", method = RequestMethod.GET)
 	public String boardSelect(Model model, HttpServletRequest request) {
 		String code = request.getParameter("code");
 		
@@ -3207,7 +3231,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 탈퇴희망자 승인화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminOuterList.do")
+	@RequestMapping(value = "/ezCommunity/adminOuterList.do", method = RequestMethod.GET)
 	public String adminOuterList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3234,7 +3258,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 탈퇴희망자 승인 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminOuterOkNo.do")
+	@RequestMapping(value = "/ezCommunity/adminOuterOkNo.do",  method = RequestMethod.GET)
 	public String adminOuterOkNo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3258,7 +3282,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원 탈퇴처리화면/마스터이취임화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminMemberList.do")
+	@RequestMapping(value = "/ezCommunity/adminMemberList.do", method = RequestMethod.GET)
 	public String adminMemberList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("adminMemberList started.");
 		
@@ -3303,7 +3327,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/** 
 	 * 회원 탈퇴처리화면/마스터이취임화면 실행함수
 	 */
-	@RequestMapping( value = "/ezCommunity/adminMemberListOk.do")
+	@RequestMapping( value = "/ezCommunity/adminMemberListOk.do", method = RequestMethod.GET)
 	String adminMemberListOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityCClubUserVO clubUser = null;
@@ -3393,7 +3417,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/** 
 	 * 회원 탈퇴처리화면/마스터이취임화면 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminMemberListOkGo.do")
+	@RequestMapping(value = "/ezCommunity/adminMemberListOkGo.do", method = RequestMethod.POST)
 	public String adminMemberListOkGo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3421,7 +3445,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * Cop 폐쇄신청화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminCommClose.do")
+	@RequestMapping(value = "/ezCommunity/adminCommClose.do", method = RequestMethod.GET)
 	public String adminCommClose(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("adminCommClose started.");
 		
@@ -3437,7 +3461,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 		
 		/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -3495,9 +3519,11 @@ public class EzCommunityController extends EgovFileMngUtil{
                  //commName2 = commName2.Replace("\"", "\\\"");
 
                  String sysopID = clubVO.getC_SysopID().trim();
+                 // 2019-01-16 김헤정 companyId 추가
                  String companyName = userInfo.getCompanyName1();
+                 String companyId = userInfo.getCompanyID();
                  
-                 ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, commonUtil.getTodayUTCTime(""), reason, egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale()), userInfo.getTenantId());
+                 ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), reason, "0", userInfo.getTenantId());
                  
                  strXML = "<RETURN><VALUE>SuccessApplication</VALUE></RETURN>";
 			}
@@ -3511,12 +3537,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 메인페이지화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezCommunity/mainPage.do")
+	@RequestMapping(value = "/ezCommunity/mainPage.do", method = RequestMethod.GET)
 	public String mainPage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("mainPage started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
 		int totalPage = ezCommunityService.mainPage(userInfo);
+		String bName = "tbl_c_board";
 		
 		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
 		String pastDate = commonUtil.getTodayUTCTime("");
@@ -3525,10 +3552,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
 		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 		
+		/* 2018-11-12 김민성 - 커뮤니티 공지사항 추가 */
+		List<CommunityCBoardVO> cNoticeList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), "", "", userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		for(CommunityCBoardVO noticeList : cNoticeList) {
+			noticeList.setTitle(commonUtil.cleanValue(noticeList.getTitle()));
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("pastDate", pastDate);
+		model.addAttribute("cNoticeList", cNoticeList);
 		
 		logger.debug("mainPage ended.");
 		
@@ -3538,7 +3573,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * My 커뮤니티 새글 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/myCopNewBoardItem.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/myCopNewBoardItem.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String myCopNewBoardItem (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("myCopNewBoardItem started.");
@@ -3562,7 +3597,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 우수커뮤니티/ 신규커뮤니티 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getBestNewCommunity.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/getBestNewCommunity.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getBestNewCommunity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getBestNewCommunity started.");
@@ -3579,7 +3614,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원가입화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/join1.do")
+	@RequestMapping(value = "/ezCommunity/join1.do", method = RequestMethod.GET)
 	public String join1(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("join1 started.");
 		
@@ -3599,7 +3634,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원가입화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/join2.do")
+	@RequestMapping(value = "/ezCommunity/join2.do", method = RequestMethod.GET)
 	public String join2(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("join2 started.");
 		
@@ -3619,7 +3654,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원가입화면 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/agreeOk.do")
+	@RequestMapping(value = "/ezCommunity/agreeOk.do", method = RequestMethod.GET)
 	public String agreeOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("agreeOk started.");
 		
@@ -3647,7 +3682,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원가입 정보입력화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/join.do")
+	@RequestMapping(value = "/ezCommunity/join.do", method = RequestMethod.GET)
 	public String join(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("join started.");
 		
@@ -3674,7 +3709,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원가입 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/joinOk.do")
+	@RequestMapping(value = "/ezCommunity/joinOk.do", method = RequestMethod.POST)
 	public String joinOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("joinOk started.");
 		
@@ -3783,7 +3818,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * OpenAlertUI 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/ezAprAlert.do")
+	@RequestMapping(value = "/ezCommunity/ezAprAlert.do", method = RequestMethod.GET)
 	public String ezAprAlert () {
 		return "ezCommunity/communityAprAlert";
 	}
@@ -3791,7 +3826,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * OpenInformationUI 화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/ezAPROPINION.do")
+	@RequestMapping(value = "/ezCommunity/ezAPROPINION.do", method = RequestMethod.GET)
 	public String ezAPROPINION () throws Exception {
 		logger.debug("ezAPROPINION started.");
 		logger.debug("ezAPROPINION ended.");
@@ -3801,7 +3836,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 비공개 커뮤니티 가입/미가입 체크 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getIsJoin.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/getIsJoin.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getIsJoin (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getIsJoin started.");
@@ -3826,7 +3861,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 가입희망자 승인화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminMemPermit.do")
+	@RequestMapping(value = "/ezCommunity/adminMemPermit.do", method = RequestMethod.GET)
 	public String adminMemPermit(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
@@ -3853,7 +3888,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 가입희망자 승인 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminOkNo.do")
+	@RequestMapping(value = "/ezCommunity/adminOkNo.do", method = RequestMethod.POST)
 	public String adminOkNo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("adminOkNo started.");
 		
@@ -3890,7 +3925,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 오늘의 커뮤니티 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/todayCop.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCommunity/todayCop.do", method = RequestMethod.GET)
 	public String todayCop(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("todayCop started.");
 		
@@ -3916,7 +3951,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (club != null) {
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 			
 			if (!club.getC_Cate_A().equals("0")){
 				cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A", userInfo.getTenantId());
@@ -3942,7 +3977,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 카테고리별 커뮤니티화면 업무별/종류별 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/myCategoryCop.do")
+	@RequestMapping(value = "/ezCommunity/myCategoryCop.do", method = RequestMethod.GET)
 	public String myCategoryCop (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("mainPageCategory started.");
 		
@@ -3985,7 +4020,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 카테고리별 커뮤니티화면 업무별/종류에 따른 커뮤니티목록  호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/categoryCopList.do")
+	@RequestMapping(value = "/ezCommunity/categoryCopList.do", method = RequestMethod.GET)
 	public String categoryCopList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("categoryCopList started.");
 		
@@ -4006,8 +4041,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		for (CommunityClubVO club : clubList) {
-			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업하므로, 쿼리에 companyID를 줄 필요는 없다.(동일 테넌트에서 C_CLUBNO로 구분 가능하므로)
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4021,7 +4055,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 카테고리별 커뮤니티 검색기능 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/searchCop.do")
+	@RequestMapping(value = "/ezCommunity/searchCop.do", method = RequestMethod.GET)
 	public String searchCop(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("searchCop started.");
 		
@@ -4054,9 +4088,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				clubList.get(0).setCopCnt(clubCopCnt.get(0).getCopCnt());
 			}
 			
-			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업하므로, 쿼리에 companyID를 줄 필요는 없다.(동일 테넌트에서 C_CLUBNO로 구분 가능하므로)
 			// 18-05-08 김민성 - 커뮤니티 회원수 수정
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4070,7 +4103,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 포토게시판 목록화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardItemListPhoto.do")
+	@RequestMapping(value = "/ezCommunity/boardItemListPhoto.do", method = RequestMethod.GET)
 	public String boardItemListPhoto(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -4164,7 +4197,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 포토게시판 쓰기화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/newBoardItemPhoto.do")
+	@RequestMapping(value = "/ezCommunity/newBoardItemPhoto.do", method = RequestMethod.GET)
 	public String newBoardItemPhoto (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -4244,7 +4277,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 포토게시판 쓰기 실행함수
 	 */
-	@RequestMapping(value ="/ezCommunity/saveItemPhoto.do")
+	@RequestMapping(value ="/ezCommunity/saveItemPhoto.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveItemPhoto (@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlData, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("saveItemPhoto started.");
@@ -4282,7 +4315,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 포토게시판 읽기화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardItemViewPhoto.do")
+	@RequestMapping(value = "/ezCommunity/boardItemViewPhoto.do", method = RequestMethod.GET)
 	public String boardItemViewPhoto(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -4320,7 +4353,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.setAsRead(userInfo, boardID, itemID);
 		
 		if (item == null) {
-			return response.encodeRedirectURL("/error.do");
+			throw new Exception();
 		}
 		
 		if (EgovDateUtil.getDaysDiff(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), item.getParentWriteDate().substring(0, 10)) > 0) {
@@ -4357,6 +4390,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
 			String pFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getExtensionAttribute5();
 			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + URLEncoder.encode((item.getExtensionAttribute4()).replace("+", "%20").replace("&amp;", "&"),"UTF-8");
+			pFilePath = commonUtil.detectPathTraversal(pFilePath);
 			
 			File file = new File(pFilePath);
 			
@@ -4377,6 +4411,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		String commentCount = ezCommunityService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
+		//2018.08.08 캐비넷 추가
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("commu", userInfo);
+		}
 		
 		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("userInfo", userInfo);
@@ -4394,6 +4433,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("gImageUrl", gImageUrl);
 		model.addAttribute("gWidth", gWidth);
 		model.addAttribute("gHeight", gHeight);
+		model.addAttribute("useCabinet", use_cabinet);
 		
 		return "ezCommunity/communityBoardItemViewPhoto";
 	}
@@ -4401,7 +4441,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 포토게시판 인쇄화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardItemViewPrint.do")
+	@RequestMapping(value = "/ezCommunity/boardItemViewPrint.do", method = RequestMethod.GET)
 	public String boardItemViewPrint(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String oneLineReplyFlag = ezCommonService.getTenantConfig("ONELINE_REPLY_ENABLE", userInfo.getTenantId());
@@ -4440,7 +4480,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 
 	 */
-	@RequestMapping(value = "/ezCommunity/colorPicker.do")
+	@RequestMapping(value = "/ezCommunity/colorPicker.do", method = RequestMethod.GET)
 	public String colorPicker() {
 		return "ezCommunity/communityColorPicker";
 	}
@@ -4448,7 +4488,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * Email관련
 	 */
-	@RequestMapping(value = "/ezCommunity/getItemInfo.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/getItemInfo.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getItemInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getItemInfo started.");
@@ -4505,7 +4545,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 관리메뉴 전체메일보내기 화면 조회
 	 */
-	@RequestMapping(value = "/ezCommunity/adminNoticeMail.do")
+	@RequestMapping(value = "/ezCommunity/adminNoticeMail.do", method = RequestMethod.GET)
 	public String adminNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("adminNoticeMail started.");
 		
@@ -4528,7 +4568,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 관리메뉴 전체메일보내기 화면 조회
 	 */
-	@RequestMapping(value = "/ezCommunity/adminNoticeMailOk.do")
+	@RequestMapping(value = "/ezCommunity/adminNoticeMailOk.do", method = RequestMethod.POST)
 	public String adminNoticeMailOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("adminNoticeMailOk started.");
 		
@@ -4578,7 +4618,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 테마1 My 커뮤니티 새글 목록 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/getMyCoummunityBoardList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/getMyCoummunityBoardList.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getMyCoummunityBoardList (@RequestBody String xmlStr,@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getMyCoummunityBoardList started.");
@@ -4595,7 +4635,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 답변메일발송
 	 */
-	@RequestMapping(value = "/ezCommunity/sendReplyNoticeMail.do")
+	@RequestMapping(value = "/ezCommunity/sendReplyNoticeMail.do", method = RequestMethod.POST)
 	public void sendReplyNoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("sendReplyNoticeMail started.");
 		
@@ -4612,7 +4652,7 @@ public class EzCommunityController extends EgovFileMngUtil{
      * 댓글 팝업화면 조회
      * 강민수92
      */
-    @RequestMapping(value = "/ezCommunity/communityCommentPopup.do")
+    @RequestMapping(value = "/ezCommunity/communityCommentPopup.do", method = RequestMethod.GET)
     public String communityCommentPopup(@CookieValue("loginCookie") String loginCookie, CommunityBoardItemVO boardItemVO, Model model) throws Exception {
     	logger.debug("comunnityCommentPopup started.");
     	
@@ -4648,7 +4688,7 @@ public class EzCommunityController extends EgovFileMngUtil{
     /**
      * 2018-02-06 김보미 - 리스트 페이징 처리
      */
-	@RequestMapping(value = "/ezCommunity/itemReadPagingList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/itemReadPagingList.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String itemReadPagingList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, String boardID, String itemID, int pageNum, int perCount) throws Exception {
 		logger.debug("itemReadPagingList started");
@@ -4665,7 +4705,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 2018-07-03 홍승비 - 커뮤니티 답변알림메일 사용 시 companyID 비교 부분 추가
 	 */
-	@RequestMapping(value = "/ezCommunity/getItemViewNew.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/getItemViewNew.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getItemViewNew(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getItemViewNew started.");
@@ -4692,7 +4732,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 2019-01-10 홍승비 - 커뮤니티 게시판 > 부모게시판ID 리턴하는 함수 추가
 	 */
-	@RequestMapping(value = "/ezCommunity/getParentBoardID.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezCommunity/getParentBoardID.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getParentBoardID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getParentBoardID started.");

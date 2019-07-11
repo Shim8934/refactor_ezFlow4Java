@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 
 		<script type="text/javascript">
-			var userInfoID = "${userInfo.id}";
+			var userInfoID = "<c:out value='${userInfo.id}'/>";
 
 			window.onload = function () {
 					
@@ -38,7 +38,7 @@
 		    	}
 
 		        _RowObject = obj;
-		        obj.style.backgroundColor = "#edf4fd";
+		        obj.style.backgroundColor = "#f1f8ff";
 		    }
 		    
 		    function memberList() {
@@ -81,13 +81,13 @@
 	                        <table class="mainlist" style="width: 100%;">
 	                            <c:forEach var="item" items="${result}">
 		                            <tr id="${item.circularBMID }" style="cursor:pointer" onmouseover="event_Mover(this);" onmouseout="event_Mout(this);" onclick="event_click(this);">
-		                            	<td style="width:250px;color:gray;padding-left: 20px;">${item.title }</td>
+		                            	<td style="width:250px;color:gray;padding-left: 20px;"><c:out value='${item.title }'/></td>
 		                            	<c:if test="${item.memberNameCount != 0}">
-		                        			<td style="width: 80px;color:gray;" align="center">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
+		                        			<td style="width: 80px;color:gray;" align="center"><c:out value='${item.memberName }'/> <spring:message code='ezCircular.t50' /> <c:out value='${item.memberNameCount }'/> <spring:message code='ezCircular.t51' /></td>    		
 		                            		<td id="pop" style="width: 80px;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t50' />]</a></td>
 		                            	</c:if>
 	                            		<c:if test="${item.memberNameCount == 0}">
-	                            			<td style='width: 80px;color:gray;'>${item.memberName }</td>
+	                            			<td style='width: 80px;color:gray;'><c:out value='${item.memberName }'/></td>
 	                            		</c:if>
 		                            </tr>
 	                            </c:forEach>

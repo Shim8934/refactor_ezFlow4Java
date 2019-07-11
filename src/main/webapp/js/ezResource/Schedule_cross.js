@@ -385,6 +385,7 @@ function show_repetition_info() {
 	switch (szType) {
 		case "4":
 			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
+			repetition = selType;
 			if(selType == "0") {			// 매일마다
 				var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
 				
@@ -394,9 +395,11 @@ function show_repetition_info() {
 				else {
 					repeatinfo += "" + interval + strLang550;
 				}
+				repetition += "|" + interval;
 			}
 			else {
 				repeatinfo += "" + strLang551;
+				repetition += "|0" ;
 			}
 			break;
 		case "5":
@@ -404,6 +407,7 @@ function show_repetition_info() {
 			
 			var resdayList = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfWeek")[0]);
 			resdayList = resdayList.substring(0, resdayList.length - 1);
+			repetition = "1|" + interval + "|" + resdayList.replace(/,/g,"");
 			
 			if(interval == "1") {		// 매주
 				repeatinfo += "" + strLang124 + " ";
@@ -416,9 +420,10 @@ function show_repetition_info() {
 		case "6":
 			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
 			var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
-			
+			repetition = "2|";
 			if(selType == "0") {
 				var dayOfMonth = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfMonth")[0]);
+				repetition += "1|" + interval + "|" + dayOfMonth;
 				if(interval == "1") {
 					repeatinfo += "" + strLang97 + " " + dayOfMonth + strLang270;
 				}
@@ -429,7 +434,7 @@ function show_repetition_info() {
 			else {
 				var byPosition = getNodeText(SelectNodes(xmlinDoc, "recurrence/byPosition")[0]);
 				var daysOfWeek = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfWeek")[0]);
-				
+				repetition += "2|" + interval +"|" + byPosition + "|" + daysOfWeek;
 				if(interval == "1") {
 					repeatinfo += strLang97 + " ";
 				}
@@ -457,6 +462,7 @@ function show_repetition_info() {
 				var day = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfMonth")[0]);
 				
 				repeatinfo += "" + strLang98 + " " + month + strLang271 + " " + day + strLang278;
+				repetition = "3|1|" + month + "|" + day;
 			}
 			else {
 				var byPosition = getNodeText(SelectNodes(xmlinDoc, "recurrence/byPosition")[0]);
@@ -473,6 +479,7 @@ function show_repetition_info() {
 				else {
 					repeatinfo += " " + strLang559;
 				}
+				repetition = "3|2|" + month + "|" + byPosition + "|" + daysOfWeek;
 			}
 			break;
 	}
@@ -480,7 +487,9 @@ function show_repetition_info() {
 	repeatinfo += ", " + strLang125;
 	if (document.getElementById("AllDay").checked == true) {
 	    repeatinfo += "" + strLang126 + "";
+	    repetition = "1|" + repetition;
 	} else {
+		repetition = "0|" + repetition;
 	    reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
 	    reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);  
 
@@ -529,10 +538,13 @@ function show_repetition_info() {
 
 	if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "0") {
 	    repeatinfo += strLang581;
+	    repetition = "-1|" + repetition;
 	} else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "1") {
 	    repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + strLang582;
+	    repetition = getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + "|" + repetition;
 	} else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "2") {
 	    repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("endDateTime")[0]).split(' ')[0];
+	    repetition = "0|" + repetition;
 	}
 	
 	document.getElementById("AllDayDisplay").innerHTML = repeatinfo;
@@ -952,6 +964,9 @@ function SaveSchedule_onClick( cmd , resItem) {
 	}
 	createNodeAndInsertText(xmlDoc, objNode, "APPROVE", objNode23); //승인여부
 	
+	if(cmd == "add") {
+		createNodeAndInsertText(xmlDoc, objNode, "scheduleID", SaveScheduleId);		// 일정ID
+	}
 	// 위에 노드 22까지 값을 받아 처리부분으로 넘겨준다.
 	xmlHttp.open("POST","/ezResource/scheduleAddOk.do?cmd="+cmd+"&type="+typeVal,false);
 	xmlHttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
@@ -2168,4 +2183,59 @@ function TimeRevision(szTime) {
 		return szTime = "00";
 	}
 	return szTime
+}
+
+function Signature_ImagePathConvert(tbContent) {
+    var tempDiv = document.createElement("DIV");
+    tempDiv.innerHTML = tbContent;
+    var imgColl = tempDiv.getElementsByTagName("IMG");
+    var OrgBody = tbContent;
+    for (var i = 0; i < imgColl.length; i++) {
+        if (imgColl.item(i).src.indexOf("file:///") == 0) {
+            var OrgSrc = imgColl.item(i).src;
+            var NewSrc = ConvertSaveImageFile(OrgSrc);
+            OrgBody = OrgBody.replace(OrgSrc, NewSrc);
+        }
+    }
+    return OrgBody;
+}
+function ConvertSaveImageFile(filename) {
+    filename = unescape(filename);
+    filename = ReplaceText(filename, "file:///", "");
+
+    var fileExt = filename.substr(filename.length - 3).toLowerCase();
+    var result = false;
+    var ezUtil = new ActiveXObject("ezUtil.MiscFunc.1");
+    ezUtil.UseUTF8 = true;
+    if (fileExt == "bmp") {
+        var imageGUID = ezUtil.GetGUID();
+
+        var newfilename = filename.substr(0, filename.lastIndexOf("/") + 1) + imageGUID + ".png";
+        var imageUtil = new ActiveXObject("ezUtil.ImageFunc");
+
+        result = imageUtil.ConvertImageFormat(filename, newfilename, "image/png");
+
+    }
+
+    if (result == true)
+        filename = newfilename;
+
+    var fullpath = filename;
+    var encodedText = ezUtil.DownloadToBase64(fullpath);
+
+    if (result == true)
+        ezUtil.DeleteFile(filename);
+
+    var XmlHttp = createXMLHttpRequest();
+    var xmlDom = createXmlDom();
+    var objNode;
+    createNodeInsert(xmlDom, objNode, "DATA");
+    createNodeAndInsertText(xmlDom, objNode, "IMAGECONTENT", encodedText);
+    createNodeAndInsertText(xmlDom, objNode, "IMAGEEXT", fileExt);
+    try {
+        XmlHttp.open("POST", "/myoffice/Common/ImageToSaveFile_Stream.aspx", false);
+        XmlHttp.send(xmlDom);
+        return XmlHttp.responseText;
+    }
+    catch (e) { }
 }

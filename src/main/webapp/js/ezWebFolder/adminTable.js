@@ -205,10 +205,12 @@ function TableView() {
 	// process table function
 	function renderTable() {
 		switch (_tableType) {
-			case 'filelist'   : setFileListTable();    break;
-			case 'filelog'    : setFileLogTable();     break;
-			case 'configTable': setConfigTable();      break;
-			case 'deletedfile': setDeletedFileTable(); break;
+			case 'filelist'   : setFileListTable();                   break;
+			case 'filelog'    : setFileLogTable();                    break;
+			case 'userConfigTable': setUserConfigTable();             break;
+			case 'departmentConfigTable': setDepartmentConfigTable(); break;
+			case 'companyConfigTable': setCompanyConfigTable();       break;
+			case 'deletedfile': setDeletedFileTable();                break;
 		}
 	}
 	
@@ -275,6 +277,7 @@ function TableView() {
 					case "RE": tdElmt5.textContent = strActType6; break;
 					case "MV": tdElmt5.textContent = strActType7; break;
 					case "CP": tdElmt5.textContent = strActType8; break;
+					case "WR": tdElmt5.textContent = strActType9; break;
 				}
 				
 				tdElmt6.setAttribute("style", "text-align: center; overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
@@ -292,7 +295,7 @@ function TableView() {
 		}
 	}
 	
-	function setConfigTable() {
+	function setUserConfigTable() {
 		var tableList              = document.getElementById(_tableId);
 		var tableHeader            = document.getElementById(_tableheader);
 		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
@@ -338,7 +341,7 @@ function TableView() {
 				
 				trElmt.setAttribute("class", _unselectClass);
 				trElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
-				trElmt.setAttribute("userId", _dataSource[i]["userId"]);
+				trElmt.setAttribute("cn", _dataSource[i]["cn"]);
 				trElmt.onclick = function(event) {clickRow(event);};
 				
 				var inputElmt  = document.createElement("input");
@@ -346,7 +349,7 @@ function TableView() {
 				inputElmt.setAttribute("class", "checkBnk");
 				inputElmt.setAttribute("value", "0");
 				inputElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
-				inputElmt.setAttribute("userId", _dataSource[i]["userId"]);
+				inputElmt.setAttribute("cn", _dataSource[i]["cn"]);
 				inputElmt.onclick = function(event) {getChecked(event);};
 				
 				tdElmt1.appendChild(inputElmt);
@@ -360,7 +363,7 @@ function TableView() {
 				tdElmt3.setAttribute("title", tdElmt3.textContent);
 				
 				tdElmt4.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
-				tdElmt4.textContent = _dataSource[i]["userName"];
+				tdElmt4.textContent = _dataSource[i]["displayName"] + "(" + _dataSource[i]["cn"] + ")";
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				
 				tdElmt5.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
@@ -389,6 +392,220 @@ function TableView() {
 				trElmt.appendChild(tdElmt3);
 				trElmt.appendChild(tdElmt4);
 				trElmt.appendChild(tdElmt5);
+				trElmt.appendChild(tdElmt6);
+				trElmt.appendChild(tdElmt7);
+				trElmt.appendChild(tdElmt8);
+				tableList.appendChild(trElmt);
+				
+				initProgressBar("rategrogressBar" + i, "3", _dataSource[i]["usedRate"]);
+			}
+		}
+	}
+	
+	function setDepartmentConfigTable() {
+		var tableList              = document.getElementById(_tableId);
+		var tableHeader            = document.getElementById(_tableheader);
+		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		firstInputCheckBox.checked = false;
+		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		
+		while (tableList.rows.length > 0) {
+			tableList.deleteRow(0);
+		}
+		
+		if (_dataSource == null || _dataSource.length == 0) {
+			var trElmt = document.createElement("tr");
+			var tdElmt = document.createElement("td");
+			tdElmt.setAttribute("colspan", "8");
+			tdElmt.setAttribute("align", "center");
+			tdElmt.setAttribute("bgcolor", "#FFFFFF");
+			tdElmt.innerHTML = strNoData;
+			
+			trElmt.appendChild(tdElmt);
+			tableList.appendChild(trElmt);
+		}
+		else {
+			var len = _dataSource.length;
+			for (var i = 0; i < len; i++) {
+				var trElmt  = document.createElement("tr");
+				var tdElmt1 = document.createElement("td");
+				var tdElmt2 = document.createElement("td");
+				var tdElmt3 = document.createElement("td");
+//				var tdElmt4 = document.createElement("td");
+//				var tdElmt5 = document.createElement("td");
+				var tdElmt6 = document.createElement("td");
+				var tdElmt7 = document.createElement("td");
+				var tdElmt8 = document.createElement("td");
+				
+				tdElmt1.setAttribute("class", "wfFilecheck");
+				tdElmt2.setAttribute("class", "wfConfigCompany");
+				tdElmt3.setAttribute("class", "wfConfigCompany");
+//				tdElmt4.setAttribute("class", "wfActive");
+//				tdElmt5.setAttribute("class", "wfActive");
+				tdElmt6.setAttribute("class", "wfConfigCapacity");
+				tdElmt7.setAttribute("class", "wfConfigCapacity");
+				tdElmt8.setAttribute("class", "wfConfigCompany");
+				
+				trElmt.setAttribute("class", _unselectClass);
+				trElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
+				trElmt.setAttribute("cn", _dataSource[i]["cn"]);
+				trElmt.onclick = function(event) {clickRow(event);};
+				
+				var inputElmt  = document.createElement("input");
+				inputElmt.setAttribute("type", "checkbox");
+				inputElmt.setAttribute("class", "checkBnk");
+				inputElmt.setAttribute("value", "0");
+				inputElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
+				inputElmt.setAttribute("cn", _dataSource[i]["cn"]);
+				inputElmt.onclick = function(event) {getChecked(event);};
+				
+				tdElmt1.appendChild(inputElmt);
+				
+				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+				tdElmt2.textContent = _dataSource[i]["companyName"];
+				tdElmt2.setAttribute("title", tdElmt2.textContent);
+				
+				tdElmt3.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+				tdElmt3.textContent = _dataSource[i]["displayName"] + "(" + _dataSource[i]["cn"] + ")";
+				tdElmt3.setAttribute("title", tdElmt3.textContent);
+				
+//				tdElmt4.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+//				tdElmt4.textContent = _dataSource[i]["cn"];
+//				tdElmt4.setAttribute("title", tdElmt4.textContent);
+				
+//				tdElmt5.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+//				tdElmt5.textContent = _dataSource[i]["jobTitle"];
+//				tdElmt5.setAttribute("title", tdElmt5.textContent);
+				
+				tdElmt6.setAttribute("style", "text-align: center;");
+				tdElmt6.textContent = getFileSize(_dataSource[i]["totalUsed"]);
+				
+				tdElmt7.setAttribute("style", "text-align: center;");
+				tdElmt7.textContent = _dataSource[i]["totalCapacity"] + "GB";
+				
+				tdElmt8.setAttribute("style", "white-space:nowrap; text-align:center; word-wrap: normal;");
+				
+				var span        = document.createElement("span");
+				span.className  = "workProgressBar";
+				span.innerHTML += "<span class='bar' usedrate='rategrogressBar" + i + "'></span>&nbsp;";
+				
+				var span2           = document.createElement("span");
+				span2.style.display = "inline-block";
+				span.appendChild(span2);
+				tdElmt8.appendChild(span);
+				
+				trElmt.appendChild(tdElmt1);
+				trElmt.appendChild(tdElmt2);
+				trElmt.appendChild(tdElmt3);
+//				trElmt.appendChild(tdElmt4);
+//				trElmt.appendChild(tdElmt5);
+				trElmt.appendChild(tdElmt6);
+				trElmt.appendChild(tdElmt7);
+				trElmt.appendChild(tdElmt8);
+				tableList.appendChild(trElmt);
+				
+				initProgressBar("rategrogressBar" + i, "3", _dataSource[i]["usedRate"]);
+			}
+		}
+	}
+	
+	function setCompanyConfigTable() {
+		var tableList              = document.getElementById(_tableId);
+		var tableHeader            = document.getElementById(_tableheader);
+		var firstInputCheckBox     = tableHeader.rows[0].firstElementChild.firstElementChild;
+		firstInputCheckBox.checked = false;
+		firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		
+		while (tableList.rows.length > 0) {
+			tableList.deleteRow(0);
+		}
+		
+		if (_dataSource == null || _dataSource.length == 0) {
+			var trElmt = document.createElement("tr");
+			var tdElmt = document.createElement("td");
+			tdElmt.setAttribute("colspan", "8");
+			tdElmt.setAttribute("align", "center");
+			tdElmt.setAttribute("bgcolor", "#FFFFFF");
+			tdElmt.innerHTML = strNoData;
+			
+			trElmt.appendChild(tdElmt);
+			tableList.appendChild(trElmt);
+		}
+		else {
+			var len = _dataSource.length;
+			for (var i = 0; i < len; i++) {
+				var trElmt  = document.createElement("tr");
+				var tdElmt1 = document.createElement("td");
+				var tdElmt2 = document.createElement("td");
+//				var tdElmt3 = document.createElement("td");
+//				var tdElmt4 = document.createElement("td");
+//				var tdElmt5 = document.createElement("td");
+				var tdElmt6 = document.createElement("td");
+				var tdElmt7 = document.createElement("td");
+				var tdElmt8 = document.createElement("td");
+				
+				tdElmt1.setAttribute("class", "wfFilecheck");
+				tdElmt2.setAttribute("class", "wfConfigCompany");
+//				tdElmt3.setAttribute("class", "wfConfigCompany");
+//				tdElmt4.setAttribute("class", "wfActive");
+//				tdElmt5.setAttribute("class", "wfActive");
+				tdElmt6.setAttribute("class", "wfConfigCapacity");
+				tdElmt7.setAttribute("class", "wfConfigCapacity");
+				tdElmt8.setAttribute("class", "wfConfigCompany");
+				
+				trElmt.setAttribute("class", _unselectClass);
+				trElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
+				trElmt.setAttribute("cn", _dataSource[i]["cn"]);
+				trElmt.onclick = function(event) {clickRow(event);};
+				
+				var inputElmt  = document.createElement("input");
+				inputElmt.setAttribute("type", "checkbox");
+				inputElmt.setAttribute("class", "checkBnk");
+				inputElmt.setAttribute("value", "0");
+				inputElmt.setAttribute("usedAmount", _dataSource[i]["totalUsed"]);
+				inputElmt.setAttribute("cn", _dataSource[i]["cn"]);
+				inputElmt.onclick = function(event) {getChecked(event);};
+				
+				tdElmt1.appendChild(inputElmt);
+				
+				tdElmt2.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+				tdElmt2.textContent = _dataSource[i]["displayName"] + "(" + _dataSource[i]["cn"] + ")";
+				tdElmt2.setAttribute("title", tdElmt2.textContent);
+				
+//				tdElmt3.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+//				tdElmt3.textContent = _dataSource[i]["displayName"] + "(" + _dataSource[i]["cn"] + ")";
+//				tdElmt3.setAttribute("title", tdElmt3.textContent);
+				
+//				tdElmt4.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+//				tdElmt4.textContent = _dataSource[i]["cn"];
+//				tdElmt4.setAttribute("title", tdElmt4.textContent);
+				
+//				tdElmt5.setAttribute("style", "overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap; word-wrap: normal;");
+//				tdElmt5.textContent = _dataSource[i]["jobTitle"];
+//				tdElmt5.setAttribute("title", tdElmt5.textContent);
+				
+				tdElmt6.setAttribute("style", "text-align: center;");
+				tdElmt6.textContent = getFileSize(_dataSource[i]["totalUsed"]);
+				
+				tdElmt7.setAttribute("style", "text-align: center;");
+				tdElmt7.textContent = _dataSource[i]["totalCapacity"] + "GB";
+				
+				tdElmt8.setAttribute("style", "white-space:nowrap; text-align:center; word-wrap: normal;");
+				
+				var span        = document.createElement("span");
+				span.className  = "workProgressBar";
+				span.innerHTML += "<span class='bar' usedrate='rategrogressBar" + i + "'></span>&nbsp;";
+				
+				var span2           = document.createElement("span");
+				span2.style.display = "inline-block";
+				span.appendChild(span2);
+				tdElmt8.appendChild(span);
+				
+				trElmt.appendChild(tdElmt1);
+				trElmt.appendChild(tdElmt2);
+//				trElmt.appendChild(tdElmt3);
+//				trElmt.appendChild(tdElmt4);
+//				trElmt.appendChild(tdElmt5);
 				trElmt.appendChild(tdElmt6);
 				trElmt.appendChild(tdElmt7);
 				trElmt.appendChild(tdElmt8);

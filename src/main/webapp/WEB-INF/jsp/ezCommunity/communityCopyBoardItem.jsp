@@ -6,7 +6,8 @@
 	<head>
 		<title><spring:message code='ezCommunity.t1047' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="${util.addVer('ezOrgan.e3', 'msg')}">
+		<%-- <link rel="stylesheet" type="text/css" href="${util.addVer('ezOrgan.e3', 'msg')}"> --%>
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
 		<style>
 			.groupBoard {
@@ -15,6 +16,7 @@
 				text-overflow:ellipsis;
 				display: inline-block;
 			}
+			
 			.node_div {
 				overflow:hidden;
 				text-overflow:ellipsis;
@@ -112,7 +114,7 @@
 				var access = "";
 				
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					async : false,
 					url : "/ezCommunity/getACL.do",
 					dataType : "JSON",
@@ -140,7 +142,7 @@
 				var retval = '0';
 				
 				$.ajax({
-			   		type : "POST",
+			   		type : "GET",
 			   		async : false,
 			   		url : "/ezCommunity/checkIfAnonyBoard.do",
 			   		dataType : "JSON",
@@ -317,7 +319,7 @@
 				    } else {
 						strHTML += "<tr><td><h2 TreeCtrl='TreeCtrl" + i.toString() + "' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
 				    }
- 					strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:310px;overflow-x:hidden;padding-top:10px;padding-bottom:10px;'></DIV></td></tr>";
+ 					strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow:hidden;padding-top:10px;padding-bottom:10px;'></DIV></td></tr>";
 			    }
 			    strHTML += "</table>";
 			

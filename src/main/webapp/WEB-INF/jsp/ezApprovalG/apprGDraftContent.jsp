@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<head>
 	    <title></title>
 	    <script  type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprGContent.js')}"></script>
 		<style>
 			P { margin-top: 0px;margin-bottom: 0px; } 
 			.viewbox {
@@ -53,9 +55,11 @@
 	            return ret;
 	        };
 // 	        var XmlBodyATT = createXmlDom();
-	        var pEditor = "${editor}";
+	        var pEditor = "<c:out value ='${editor}'/>";
 	        var isConDoc = false;
 	        var isEditor = false;
+	        var isReform = parent.reformFlag === "Y";
+	        
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
@@ -93,6 +97,24 @@
 		        	}
 		        } catch (e)
 		        { }
+		        
+	            try {
+			        if (document.getElementById('attitude_annual_conn')) { //근태관리 연동양식
+			    		$("select[id^=control]").each(function() {
+			    			$(this).val($(this).attr("attitudetype"));
+			    			$(this).children("option[value=" +$(this).attr("attitudetype") + "]").attr("selected","");
+			    		});
+			        	
+			    		$("input[type=button][id^=control]").each(function() {
+			    			$(this).css("display","");
+			    		});
+			    		
+			    		$("select[id^=control]").each(function() {
+			    			$(this).css("top","17px");
+			    		});
+			        }
+	            } catch (e)
+	            { }
 	        };
 	        function onKeyDownEvent(e, obj, Maxlength) {
 	            var curevent = (typeof event == 'undefined' ? e : event);
@@ -167,22 +189,22 @@
 	            else
 	                return true;
 	        }
-	        function SelectOnchange(obj) {
-	            for (var i = 0; i < obj.options.length; i++) {
-	            	if (i == obj.selectedIndex) {
-	            		obj.options[i].setAttribute("selected", "selected");
-	            	} else {
-	            		obj.options[i].removeAttribute("selected");
-	            	}
-	            }
-	        }
-	        function CheckBoxOnclick(obj) {
-	            obj.removeAttribute("checked");
-	            if (obj.checked)
-	                obj.setAttribute("check", "1");
-	            else
-	                obj.setAttribute("check", "0");
-	        }
+	        // function SelectOnchange(obj) {
+	        //     for (var i = 0; i < obj.options.length; i++) {
+	        //     	if (i == obj.selectedIndex) {
+	        //     		obj.options[i].setAttribute("selected", "selected");
+	        //     	} else {
+	        //     		obj.options[i].removeAttribute("selected");
+	        //     	}
+	        //     }
+	        // }
+	        // function CheckBoxOnclick(obj) {
+	        //     obj.removeAttribute("checked");
+	        //     if (obj.checked)
+	        //         obj.setAttribute("check", "1");
+	        //     else
+	        //         obj.setAttribute("check", "0");
+	        // }
 	        function Conent_contentEditable(obj) {
 	            try {
 	                var TDRows = obj.getElementsByTagName("TD");
@@ -302,6 +324,19 @@
 	                    // 2018.10.15 필드도 free 속성일 시에 수정 가능하도록 수정
 	                    parent.FieldsAvailable();
 	
+	                    if (parent.pDraftFlag != "REDRAFT" || parent.pFormID !== "") {
+		                    $.ajax({
+			                	type: "GET",
+			                	dataType: "text",
+			                	url: "/ezApprovalG/getReformFlag.do",
+			                	data: { formHref: url },
+			                	async: false,
+			                	success: function (result) {
+			                		isReform = result === "Y";
+			                	}
+			                });
+	                    }
+	                    
 	                    if (parent.pDraftFlag != "REDRAFT") {
   							var Body_innerHTML = "";
 	                        if (document.getElementById("body") != null) {
@@ -310,20 +345,25 @@
 	                                document.getElementById("body").innerHTML = "";
 	                            }
 	                        }
-	                        if (parent.isUsed != "reuse"){
+	                        // if (parent.isUsed != "reuse"){
 		                        Conent_contentEditable(document.getElementById('div_Content'));
-	                        }
+	                        // }
 	                        var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                        for (var i = 0; i < SelectRows.length; i++) {
-	                            SelectRows.item(i).onchange = function () { SelectOnchange(this); };
+	                            SelectRows.item(i).onchange = SelectOnchange;
 	                        }
 	                        var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                        for (var i = 0; i < CheckRows.length; i++) {
-	                            if (CheckRows.item(i).type == "checkbox" || CheckRows.item(i).type == "radio")
-	                                CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
+	                            if (CheckRows.item(i).type == "checkbox") {
+									CheckRows.item(i).onchange = CheckBoxOnclick;
+									CheckRows.item(i).ondblclick = CheckBoxOnDblclick;
+								} else if (CheckRows.item(i).type == "radio") {
+									CheckRows.item(i).onchange = RadioOnClick;
+								}
 	                        }
 	                        if (document.getElementById("body") != null) {
-	                            if (document.getElementById("body").getAttribute("class") == "FIELD") {
+	                        	// class가 FIELD를 포함한 두 개 이상일 때도 조건문에 포함되어야 함 2019-05-14 임민석
+	                        	if (document.getElementById("body").getAttribute("class").indexOf("FIELD") != -1) {
 	                                document.getElementById("body").innerHTML = Body_innerHTML;
 	                                BODYTag = document.getElementById("body");
 	                            }
@@ -333,7 +373,7 @@
 	                            DocTitleObj = document.getElementById("doctitle");
 	
 	                        var EditorHeight = 500;
-	                        if (parent.isUsed != "reuse"){
+	                        // if (parent.isUsed != "reuse"){
 		                        if (document.getElementById("body") != null) {
 		                            if (BODYTag.getAttribute("tagfreeheight")) {
 		                                EditorHeight = BODYTag.getAttribute("tagfreeheight");
@@ -341,7 +381,13 @@
 		                            div_BODY.innerHTML = BODYTag.innerHTML;
 		                        }
 		                        if (document.getElementById("body") != null) {
-		                            if (BODYTag.getAttribute("editor") == null) {
+		                        	if (isReform) {
+		                        		try {
+		                        			Conent_contentEditable(document.getElementById('body'));
+		                        			BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/draftHtml.do?formID=" + parent.pFormID + "' frameborder='0'></iframe>";
+		                                } catch (e) { }
+		                        	}
+		                        	else if (BODYTag.getAttribute("editor") == null) {
 		                                isEditor = true;
 		                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?type=APPROVALG&height=" + EditorHeight + "&isUsed=${isUsed}' frameborder='0'></ifrmae>";
 		                            }
@@ -352,7 +398,7 @@
 		                                } catch (e) { }
 		                            }
 		                        }
-	                        }
+	                        // }
 	                    }
 	
 	
@@ -381,12 +427,16 @@
 	                    Conent_contentEditable(document.getElementById('div_Content'));
 	                    var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                    for (var i = 0; i < SelectRows.length; i++) {
-	                        SelectRows.item(i).onchange = function () { SelectOnchange(this); };
+	                        SelectRows.item(i).onchange = SelectOnchange;
 	                    }
 	                    var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                    for (var i = 0; i < CheckRows.length; i++) {
-	                        if (CheckRows.item(i).type == "checkbox" || CheckRows.item(i).type == "radio")
-	                            CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
+	                        if (CheckRows.item(i).type == "checkbox") {
+								CheckRows.item(i).onchange = CheckBoxOnclick;
+								CheckRows.item(i).ondblclick = CheckBoxOnDblclick;
+							} else if (CheckRows.item(i).type == "radio") {
+								CheckRows.item(i).onchange = RadioOnClick;
+							}
 	                    }
 	                    if (document.getElementById("body") != null) {
 	                        if (document.getElementById("body").getAttribute("class") == "FIELD") {
@@ -408,7 +458,11 @@
 	                        parent.modifiOrgBody = BODYTag.innerHTML;
 	                    }
 	                    if (document.getElementById("body") != null) {
-	                        if (BODYTag.getAttribute("editor") == null) {
+	                    	if (isReform) {
+	                    		Conent_contentEditable(document.getElementById('body'));
+	                    		BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/draftHtml.do?formID=" + parent.pFormID + "' frameborder='0'></iframe>";
+	                    	}
+	                    	else if (BODYTag.getAttribute("editor") == null) {
 	                            isEditor = true;
 	                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px;" +
 	                                                "height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
@@ -560,6 +614,18 @@
 	                if (inputRows.item(i).disabled)
 	                    inputRows.item(i).disabled = false;
 	            }
+
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (element.disabled) {
+						element.disabled = false;
+					}
+				}
+
 	            return HtmlObject;
 	        }
 	        
@@ -577,31 +643,39 @@
 	                        }
 	                    }
 	                }
-	            }
-	            var InputRows = Div.getElementsByTagName("INPUT");
-	            for (var i = 0; i < InputRows.length; i++) {
-	                if (InputRows.item(i).getAttribute("check") == "1")
-	                    InputRows.item(i).outerHTML = InputRows.item(i).outerHTML.replace("input ", "input checked ");
-	            }
-	            var SelectRows = Div.getElementsByTagName("SELECT");
-	            for (var i = 0; i < SelectRows.length; i++) {
-	                for (var j = 0; j < SelectRows.item(i).childNodes.length; j++) {
-	                    if (SelectRows.item(i).childNodes.item(j).nodeType == "1") {
-	                        /* if (SelectRows.item(i).childNodes.item(j).getAttribute("check") == "2")
-	                            SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("option ", "option selected ");
-	                        else {
-	                            SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("selected=\"\"", "");
-	                        } */
-	                        //2019-04-08 - 일괄결재로 완료된문서 재사용>임시저장 시, select박스의 option selected속성이 해제되는 현상 수정 #15360
-	                        if (SelectRows.item(i).childNodes.item(j).outerHTML.indexOf("option selected") > -1) {
-	                        	SelectRows.item(i).childNodes.item(j).removeAttribute("selected");
-	                        	SelectRows.item(i).childNodes.item(j).setAttribute("selected", "selected");
-	                        } else {
-	                        	SelectRows.item(i).childNodes.item(j).removeAttribute("selected");
-	                        }
-	                    }
-	                }
-	            }
+				}
+				
+				// var i, len, len2;
+	            // var InputRows = Div.getElementsByTagName("INPUT");
+	            // for (i = 0, len = InputRows.length; i < len; i++) {
+				// 	var input = InputRows.item(i);
+
+	            //     if (input.getAttribute("check") == "1")
+				// 		input.removeAttribute("check");
+				// 		input.setAttribute("checked", "checked");
+				// }
+				
+	            // var SelectRows = Div.getElementsByTagName("SELECT");
+	            // for (i = 0, len = SelectRows.length; i < len; i++) {
+				// 	var select = SelectRows.item(i);
+
+	            //     for (j = 0, len2 = select.options.length; j < len2; j++) {
+	            //         if (SelectRows.item(i).childNodes.item(j).nodeType == "1") {
+	            //             /* if (SelectRows.item(i).childNodes.item(j).getAttribute("check") == "2")
+	            //                 SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("option ", "option selected ");
+	            //             else {
+	            //                 SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("selected=\"\"", "");
+	            //             } */
+	            //             //2019-04-08 - 일괄결재로 완료된문서 재사용>임시저장 시, select박스의 option selected속성이 해제되는 현상 수정 #15360
+	            //             if (SelectRows.item(i).childNodes.item(j).outerHTML.indexOf("option selected") > -1) {
+	            //             	SelectRows.item(i).childNodes.item(j).removeAttribute("selected");
+	            //             	SelectRows.item(i).childNodes.item(j).setAttribute("selected", "selected");
+	            //             } else {
+	            //             	SelectRows.item(i).childNodes.item(j).removeAttribute("selected");
+	            //             }
+	            //         }
+	            //     }
+	            // }
 	
 	            return Div.innerHTML;
 	        }
@@ -624,11 +698,11 @@
 	                HEAD.appendChild(META3);
 	                HTML.appendChild(HEAD);
 	
-	                var pDiv_Content = document.getElementById('div_Content');
-	                for (var i = 0; i < pDiv_Content.getElementsByTagName("input").length; i++) {
-	                    if (pDiv_Content.getElementsByTagName("input")[i].checked)
-	                        pDiv_Content.getElementsByTagName("input")[i].setAttribute("checked", "true");
-	                }
+	                // var pDiv_Content = document.getElementById('div_Content');
+	                // for (var i = 0; i < pDiv_Content.getElementsByTagName("input").length; i++) {
+	                //     if (pDiv_Content.getElementsByTagName("input")[i].checked)
+	                //         pDiv_Content.getElementsByTagName("input")[i].setAttribute("checked", "true");
+	                // }
 	
 	                var BODY = document.createElement("BODY");
 	                Doc_ContentHtml = document.createElement("DIV");
@@ -636,8 +710,15 @@
 	                BODY.appendChild(Doc_ContentHtml);
 	                HTML.appendChild(BODY);
 	
-	                var EditorContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body") == null
-	                                             ? "" : document.getElementById("body").innerHTML;
+	                var EditorContent = "";
+	                
+	                if (isReform) {
+	                	EditorContent = GetBodyHTML();
+	                } else {
+	                	EditorContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body") == null
+                                ? "" : document.getElementById("body").innerHTML;
+	                }
+	                
 	                div_BODY.innerHTML = EditorContent;
 	                if(!isEditor)
 	                    EditorContent = Get_HtmlBody(EditorContent);
@@ -690,6 +771,25 @@
 	
 	        function GetBodyHTML() {
 	            try {
+	            	if (isReform) {
+	            		var documentCloneNode = iframe_content.document.cloneNode(true);
+	            		var datepickerDivElement = documentCloneNode.getElementById("ui-datepicker-div");
+	            		
+	            		if (datepickerDivElement != null) {
+	            			datepickerDivElement.parentNode.removeChild(datepickerDivElement);
+	            		}
+	            		
+	            		// reform inner editor
+	            		var reformEditor = iframe_content.iframe_content_reform;
+	            		
+	            		if (reformEditor) {
+		            		// set editor content to innerHTML
+		            		documentCloneNode.getElementById("reform-editor").innerHTML = reformEditor.GetEditorContent();	
+	            		}
+	            		
+	            		return documentCloneNode.body.innerHTML;
+	            	}
+	            	
 	                return iframe_content.GetEditorContent();
 	            } catch (e) {
 	                return null;
@@ -755,8 +855,14 @@
 	
 	        function Editor_Complete() {
 	            try {
-	                iframe_content.SetEditorContent(div_BODY.innerHTML);
-// 	                iframe_content.SetEditorContent();
+
+	            	if (!isReform) {
+						iframe_content.SetEditorContent(div_BODY.innerHTML);
+	            		// iframe_content.SetEditorContent();
+	            	} else if (parent.pDraftFlag == "REDRAFT" || parent.isUsed == "reuse") {
+						iframe_content.document.body.innerHTML = div_BODY.innerHTML;
+					}
+	                
 	                if (isConDoc) {
 	                    parent.Conn_Initial();
 	                }
@@ -787,10 +893,25 @@
 	        function Editor_ReUseContent(content) {
 	            _reUseContent = content;
 	            try{
-	            	div_BODY.innerHTML = _reUseContent;
+					div_BODY.innerHTML = _reUseContent.editorContent;
+					var elem = document.getElementById('frame_doctitle');
+					while(true) {
+						if(elem.childNodes.length > 0 && elem.childNodes.item(0).nodeName == '#text') {
+							elem.childNodes.item(0).textContent = _reUseContent.titleContent;
+							break;
+						}
+
+						elem = elem.childNodes.item(0);
+					}
 	            }
 	            catch (e) { }
 	        }
+
+	        function bodydragover(evt) {
+		        evt.dataTransfer.dropEffect = "none";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
 	    </script>
 	</head>
 	<body>

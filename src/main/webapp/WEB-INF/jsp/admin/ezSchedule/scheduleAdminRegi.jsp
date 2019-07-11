@@ -30,7 +30,7 @@
 	
 			function schedule_get_regiUse() {
 			    $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetRegi.do",
@@ -74,17 +74,18 @@
 		</script>
 	</head>
 	<body class="mainbody"> 
-		<h1><spring:message code='ezSchedule.t9990007' /></h1>
+		<h1>
+			<spring:message code='ezSchedule.t9990007' />
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select class="companySelect" id="ListCompany" onchange="schedule_get_regiUse()">
+				<c:forEach var="item" items="${list}">
+       				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+       			</c:forEach>
+            </select>
+		</h1>
+		
 		<form id="Form1" method="post">
 			<!-- 2018-12-04 박성빈 SelectBox 나오게 수정 -->
-			<div id="mainmenu">
-			<span><b><spring:message code='ezResource.t28' /></b></span>&nbsp;
-	            <select id="ListCompany" onchange="schedule_get_regiUse()">
-					<c:forEach var="item" items="${list}">
-           				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-          				</c:forEach>
-	            </select>
-			</div>
 			<br />
 			<table class="content" style="width: 450px;">
 			    <tr>

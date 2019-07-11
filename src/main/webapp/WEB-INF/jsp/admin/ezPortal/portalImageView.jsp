@@ -7,7 +7,7 @@
 		<title><spring:message code="ezPortal.t49"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<script language="javascript" type="text/javascript">
-			var image_name = "${imageName}";
+			var image_name = "<c:out value = '${imageName}' />";
 		
 			function window_onload() {
 				if (image_name != "") {

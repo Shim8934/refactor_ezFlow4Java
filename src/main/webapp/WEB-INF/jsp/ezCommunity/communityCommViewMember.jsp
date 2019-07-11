@@ -8,25 +8,28 @@
 		<title>Insert title here</title>
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
 		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
-		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
 		<style>
-			.pagetd{
+			.pagetd {
 				padding-top:6px; 
 			}
-       		.pcol{
+       		.pcol {
        			padding-top:6px;
        		}
         	.Right_Point01 {
 	        	font:bold;
 	        	color:#017bec;
 	        }
+	        .cmhomelist tr td {
+	        	overflow:hidden;
+	        	text-overflow:ellipsis;
+	        	white-space:nowrap;
+	        }
 		</style>
-		
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var g_draftpath = window.frames.top.draftspath;
 			var g_outboxpath = window.frames.top.outboxpath;
@@ -94,7 +97,7 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang82 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang5351 + "]";
+	            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            var pageNum = CurPage;
@@ -206,9 +209,9 @@
 	        }
 	        
 	        function movePage(newPage) {	
-				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent("${sRadio}")
+				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent('<c:out value="${sRadio}"/>')
 					+"&code="+encodeURIComponent("${code}")
-					+"&keyword="+encodeURIComponent("${keyword}")
+					+"&keyword="+encodeURIComponent('<c:out value="${keyword}"/>')
 					+"&block="+encodeURIComponent("${nowBlock}");
 				
 	            if(parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
@@ -221,9 +224,9 @@
 			} */
 
 			function goToPage(page) {
-				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent("${sRadio}")
-					+"&code="+encodeURIComponent("${code}")
-					+"&keyword="+encodeURIComponent("${keyword}")
+				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent('<c:out value="${sRadio}"/>')
+					+"&code="+encodeURIComponent('<c:out value="${code}"/>')
+					+"&keyword="+encodeURIComponent('<c:out value="${keyword}"/>')
 					+"&block="+encodeURIComponent("${nowBlock}");
 					
 				if (page == "front") {
@@ -267,7 +270,7 @@
 							<option selected value="name"><spring:message code = 'ezCommunity.t10' /></option>
 						</select>						
 						<input class="inputText" type="text" id="keyword" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px">
-						<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="javascript:search();" style="height:22px;line-height:22px"><spring:message code = 'ezCommunity.t31' /></span></a>						
+						<a class="imgbtn imgbck" style="vertical-align: middle;height:22px;margin:0px"><span onClick="javascript:search();" style="height:22px;line-height:22px"><spring:message code = 'ezCommunity.t31' /></span></a>						
 						<c:if test="${keyword != '' }">
 							<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="searchList()" style="height:22px;line-height:22px"><spring:message code = 'ezCommunity.t724' /></span></a>
 						</c:if>						

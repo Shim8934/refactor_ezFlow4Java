@@ -7,7 +7,8 @@
 		<title><spring:message code = 'ezCommunity.t352' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css"> --%>
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style>
 			.groupBoard {
 				width:276px;
@@ -18,6 +19,12 @@
 			.node_div {
 				overflow:hidden;
 				text-overflow:ellipsis;
+			}
+			.node_div span {
+				vertical-align:text-bottom;
+			}
+			.node_div img {
+				margin-bottom: 2px;
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -233,6 +240,7 @@
 			    for (var i = 0; i < xmldomNodes.length; i++) {
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 			        tid = tid.substring(1, 37);
+			        
 			        //strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
 			        if (i == 0) {
 						strHTML += "<tr><td><h2 style='border-top:0px; cursor:pointer;' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";

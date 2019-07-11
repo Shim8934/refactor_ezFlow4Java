@@ -182,7 +182,7 @@
 		        
 		        if (type == "DEL") {
 		        	// 일지 양식작성에서 사용하는 부분
-	            	if ("${type}" == "JOURNAL") {
+	            	if ('<c:out value="${type}"/>' == "JOURNAL") {
 	            		selCell[0].removeAttribute("id");
 	            		selCell[0].innerHTML = "";
 	            	} else {
@@ -213,7 +213,7 @@
 		        }
 		        else {
 		        	// 일지양식작성에서 사용하는 부분
-	                if ("${type}" == "JOURNAL") {
+	                if ('<c:out value="${type}"/>' == "JOURNAL") {
 		                selCell[0].setAttribute("id", id);
 	                	selCell[0].innerHTML = "@" + id;
 	                	
@@ -380,13 +380,18 @@
 		<script type="text/javascript">
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
-		
+			
+			// visible 상관 없이 로드
+			DEXT5.util.DEXT5_CheckEditorVisible = function() {
+				return 1;
+			}
+			
 	        DEXT5.config.DialogWindow = parent.window;
 	        DEXT5.config.RemoveItem = "about";
             DEXT5.config.StatusBarItem = "design,source";
             DEXT5.config.ManagerMode = "1";
 	        
-            DEXT5.config.Height = (parseInt("${height}") - 12) + "px";
+            DEXT5.config.Height = (parseInt('<c:out value="${height}"/>') - 12) + "px";
 	        
 	        DEXT5.config.userFontFamily = defaultFontFamily;
             DEXT5.config.Lang = "<spring message code = 'main.t0619' />";

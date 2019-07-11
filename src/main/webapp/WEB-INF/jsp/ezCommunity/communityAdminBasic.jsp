@@ -88,7 +88,8 @@
 				<tr>
 					<th><spring:message code ='ezCommunity.t11' /></th>
 					<td>
-						<c:choose>
+						<c:out value = '${c_cate_a}' />
+						<%-- <c:choose>
 							<c:when test="${c_cate_a != '' && c_cate_b != '' }">
 								<c:out value = '${c_cate_a}' />, &nbsp; <c:out value = '${c_cate_b}' />
 							</c:when>
@@ -96,7 +97,7 @@
 								<c:out value = '${c_cate_a}' />
 								<c:out value = '${c_cate_b}' />
 							</c:otherwise>
-						</c:choose>
+						</c:choose> --%>
 					</td>
 				</tr>
 				<tr>
@@ -196,7 +197,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th colspan="2"><spring:message code ='ezCommunity.t1529' /> <spring:message code ='ezCommunity.t461' /></th>
+					<th colspan="2"><spring:message code ='ezCommunity.t2008' /></th>
 				</tr>
 				<tr>
 					<td colspan="2" style="padding:3px"><textarea name="c_ClubDesc" maxlength="2000" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none"><c:out value = '${club.c_ClubDesc}' /></textarea></td>

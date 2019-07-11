@@ -5,9 +5,10 @@
 .memoIcon{display:inline-block; background:url(../../images/ezMemo/memo_icon.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
 .memoIcon30{display:inline-block; background:url(../../images/ezMemo/memo_icon_30.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
 
-/* .memo_wrap{ margin:0px; padding:10px 25px 10px 20px; box-sizing:border-box; overflow:hidden; background:rgba(0, 0, 0, 0.30);}
-.memo_header{ overflow:hidden; margin:0px 0px 10px 0px; padding:0px;} */
-.memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#000000; border:1px solid #ccc; float:right; position:absolute; z-index: 1001; overflow:hidden; height: 50%;}
+.memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#000000; border:1px solid #ccc; float:right; position:absolute; z-index: 1001; height: 50%; box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 5px 3px;}
+/* .memo_wrap .ui-resizable-handle {border: none; background-image: none;} */
+.memo_wrap .ui-resizable-s {border: none; background-image: none; height: 7px !important;}
+.memo_wrap .ui-resizable-e {border: none; background-image: none; width: 7px !important;}
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px padding:0px; }
 .memoHeaderUL{ margin: 10px 4px 9px 9px; padding:0px; list-style:none; overflow:hidden;}
 .memoHeaderUL li{ margin:0px; padding:0px;}
@@ -24,79 +25,113 @@ select::-ms-expand {
 .memo_main .memoLay{ width:260px; height:310px; float:left; margin:0px 0px 10px 5px; position:relative;}
 #boardMemoList { margin: 10px; pointer-events : auto;}
 #boardMemoList .memoLay{ width:260px; height:310px; float:left; margin:0px 10px 10px 0px; position:relative;}
-.mamo01{ background:url(../../images/ezMemo/memo01.png) no-repeat left center; overflow:hidden;}
-.mamo02{ background:url(../../images/ezMemo/memo02.png) no-repeat left center; overflow:hidden;}
-.mamo03{ background:url(../../images/ezMemo/memo03.png) no-repeat left center; overflow:hidden;}
-.mamo04{ background:url(../../images/ezMemo/memo04.png) no-repeat left center; overflow:hidden;}
-.mamo05{ background:url(../../images/ezMemo/memo05.png) no-repeat left center; overflow:hidden;}
-.mamo06{ background:url(../../images/ezMemo/memo06.png) no-repeat left center; overflow:hidden;}
+.memo01{ background:url(../../images/ezMemo/memo01.png) no-repeat left center; }
+.memo02{ background:url(../../images/ezMemo/memo02.png) no-repeat left center; }
+.memo03{ background:url(../../images/ezMemo/memo03.png) no-repeat left center; }
+.memo04{ background:url(../../images/ezMemo/memo04.png) no-repeat left center; }
+.memo05{ background:url(../../images/ezMemo/memo05.png) no-repeat left center; }
+.memo06{ background:url(../../images/ezMemo/memo06.png) no-repeat left center; }
 .memoTit{ margin:4px 5px 0px 5px; padding:0px 10px; height:37px; line-height:35px; overflow:hidden;}
 .memoTit input{ width: 13px; height: 13px; vertical-align: middle; float:left; margin-top:10px; margin-right:5px; }
-.memoTit .mtitText{ margin:0px; padding:0px; font-family:Gulim; color:#696969; font-size:11px; float:left;}
-.mamo01 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px 0px; width:16px; height:16px; cursor:pointer;}
-.mamo01 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
-.mamo01 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
-.mamo02 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px 0px; width:16px; height:16px; cursor:pointer;}
-.mamo02 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px 0px; width:16px; height:16px; cursor:pointer;}
-.mamo02 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px 0px; width:16px; height:16px; cursor:pointer;}
-.mamo03 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px -32px; width:16px; height:16px; cursor:pointer;}
-.mamo03 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -32px; width:16px; height:16px; cursor:pointer;}
-.mamo03 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -32px; width:16px; height:16px; cursor:pointer;}
-.mamo04 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px -32px; width:16px; height:16px; cursor:pointer;}
-.mamo04 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -32px; width:16px; height:16px; cursor:pointer;}
-.mamo04 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -32px; width:16px; height:16px; cursor:pointer;}
-.mamo05 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px -64px; width:16px; height:16px; cursor:pointer;}
-.mamo05 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -64px; width:16px; height:16px; cursor:pointer;}
-.mamo05 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -64px; width:16px; height:16px; cursor:pointer;}
-.mamo06 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px -64px; width:16px; height:16px; cursor:pointer;}
-.mamo06 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -64px; width:16px; height:16px; cursor:pointer;}
-.mamo06 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -64px; width:16px; height:16px; cursor:pointer;}
+.memoTit .mtitText{ margin:0px; padding:0px; font-family:malgun gothic; color:#696969; font-size:14px; float:left;}
+
+.memo01 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px 0px; width:16px; height:16px; cursor:pointer;}
+.memo01Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
+/* .memo01 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;} */
+.memo01 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -128px; width:16px; height:16px; cursor:pointer;}
+.memo01 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -160px; width:16px; height:16px; cursor:pointer;}
+
+.memo02 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px 0px; width:16px; height:16px; cursor:pointer;}
+.memo02Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px 0px; width:16px; height:16px; cursor:pointer;}
+/* .memo02 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px 0px; width:16px; height:16px; cursor:pointer;} */
+.memo02 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-32px -128px; width:16px; height:16px; cursor:pointer;}
+.memo02 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-32px -160px; width:16px; height:16px; cursor:pointer;}
+
+.memo03 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px -32px; width:16px; height:16px; cursor:pointer;}
+.memo03Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -32px; width:16px; height:16px; cursor:pointer;}
+/* .memo03 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -32px; width:16px; height:16px; cursor:pointer;} */
+.memo03 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-64px -128px; width:16px; height:16px; cursor:pointer;}
+.memo03 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-64px -160px; width:16px; height:16px; cursor:pointer;}
+
+.memo04 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px -32px; width:16px; height:16px; cursor:pointer;}
+.memo04Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -32px; width:16px; height:16px; cursor:pointer;}
+/* .memo04 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -32px; width:16px; height:16px; cursor:pointer;} */
+.memo04 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -128px; width:16px; height:16px; cursor:pointer;}
+.memo04 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -160px; width:16px; height:16px; cursor:pointer;}
+
+.memo05 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px -64px; width:16px; height:16px; cursor:pointer;}
+.memo05Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -64px; width:16px; height:16px; cursor:pointer;}
+/* .memo05 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -64px; width:16px; height:16px; cursor:pointer;} */
+.memo05 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-128px -128px; width:16px; height:16px; cursor:pointer;}
+.memo05 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-128px -160px; width:16px; height:16px; cursor:pointer;}
+
+.memo06 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px -64px; width:16px; height:16px; cursor:pointer;}
+.memo06Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -64px; width:16px; height:16px; cursor:pointer;}
+/* .memo06 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -64px; width:16px; height:16px; cursor:pointer;} */
+.memo06 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-160px -128px; width:16px; height:16px; cursor:pointer;}
+.memo06 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-160px -160px; width:16px; height:16px; cursor:pointer;}
+
 .memoTit .memoPlus{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
 .memoTit .memoMinus{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-80px 0px; width:16px; height:16px; cursor:pointer;}
-.memoText{border: none; background: none; margin: 10px 0px 0px 17px; padding: 0px 30px 0px 0px; line-height: 24px; color: #000; font-size: 12px; width: 90%; height: 213px; outline:none; resize:none; -ms-overflow-style: none; }
-.memoText::-webkit-scrollbar { display: none !important; }
+.memoText{border: none; background: none; margin: 10px 0px 0px 10px; line-height: 24px; color: #000; font-size: 12px; width: 90%; height: 216px; outline:none; resize:none; overflow-y:auto;}
+.memoText::-webkit-scrollbar {width: 5px;}
+.memoText::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
+.memoText::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
-.memo01Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo01Big .bigTop{ background:#fff9c5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo01Big .bigTop .memoTit{background:#fff6a9; margin:0px;}
-.memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20);}
-.memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point01.png) no-repeat;}
-.memo01Big .bigTop #detailMemoContents{background:#fff9c5; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
-.memo02Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo02Big .bigTop{ background:#c5ffdf; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo02Big .bigTop .memoTit{background:#b3fdd5; margin:0px;}
-.memo02Big .bigBottom_left{background:#c5ffdf; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point02.png) no-repeat;}
-.memo02Big .bigTop #detailMemoContents{background:#c5ffdf; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+.memo01Big .bigTop{ background:#fff9c5; height:100%; width: 100%; height: 37px;}
+.memo01Big .bigTop .memoTit{background:#fff6a9; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
+.memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point01.png); margin-top: -4px;}
+.memo01Big .bigTop #dMContents{background:#fff9c5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
+.memo01Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
+.memo01Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
+.memo01Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
-.memo03Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo03Big .bigTop{ background:#e8ffc5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo03Big .bigTop .memoTit{background:#d9ffa5; margin:0px;}
-.memo03Big .bigBottom_left{background:#e8ffc5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point03.png) no-repeat;}
-.memo03Big .bigTop #detailMemoContents{background:#e8ffc5; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+.memo02Big .bigTop{ background:#c5ffdf; height:100%; width: 100%; height: 37px;}
+.memo02Big .bigTop .memoTit{background:#b3fdd5; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo02Big .bigBottom_left{background:#c5ffdf; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
+.memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point02.png) no-repeat; margin-top: -4px;}
+.memo02Big .bigTop #dMContents{background:#c5ffdf; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
+.memo02Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
+.memo02Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
+.memo02Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
-.memo04Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo04Big .bigTop{ background:#c5f3ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo04Big .bigTop .memoTit{background:#b0e6ff; margin:0px;}
-.memo04Big .bigBottom_left{background:#c5f3ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point04.png) no-repeat;}
-.memo04Big .bigTop #detailMemoContents{background:#c5f3ff; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+.memo03Big .bigTop{ background:#e8ffc5; height:100%; width: 100%; height: 37px;}
+.memo03Big .bigTop .memoTit{background:#d9ffa5; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo03Big .bigBottom_left{background:#e8ffc5; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
+.memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point03.png) no-repeat; margin-top: -4px;}
+.memo03Big .bigTop #dMContents{background:#e8ffc5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
+.memo03Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
+.memo03Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
+.memo03Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
-.memo05Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo05Big .bigTop{ background:#d7d6ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo05Big .bigTop .memoTit{background:#c9c4ff; margin:0px;}
-.memo05Big .bigBottom_left{background:#d7d6ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point05.png) no-repeat;}
-.memo05Big .bigTop #detailMemoContents{background:#d7d6ff; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+.memo04Big .bigTop{ background:#c5f3ff; height:100%; width: 100%; height: 37px;}
+.memo04Big .bigTop .memoTit{background:#b0e6ff; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo04Big .bigBottom_left{background:#c5f3ff; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
+.memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point04.png) no-repeat;margin-top: -4px;}
+.memo04Big .bigTop #dMContents{background:#c5f3ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
+.memo04Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
+.memo04Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
+.memo04Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
-.memo06Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo06Big .bigTop{ background:#ffd6f2; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
-.memo06Big .bigTop .memoTit{background:#fcc5ec; margin:0px;}
-.memo06Big .bigBottom_left{background:#ffd6f2; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point06.png) no-repeat;}
-.memo06Big .bigTop #detailMemoContents{background:#ffd6f2; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
+.memo05Big .bigTop{ background:#d7d6ff; height:100%; width: 100%; height: 37px;}
+.memo05Big .bigTop .memoTit{background:#c9c4ff; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo05Big .bigBottom_left{background:#d7d6ff; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
+.memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point05.png) no-repeat; margin-top: -4px;}
+.memo05Big .bigTop #dMContents{background:#d7d6ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
+.memo05Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
+.memo05Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
+.memo05Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
+
+.memo06Big .bigTop{ background:#ffd6f2; height:100%; width: 100%; height: 37px;}
+.memo06Big .bigTop .memoTit{background:#fcc5ec; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo06Big .bigBottom_left{background:#ffd6f2; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
+.memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point06.png) no-repeat; margin-top: -4px;}
+.memo06Big .bigTop #dMContents{background:#ffd6f2; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
+.memo06Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
+.memo06Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
+.memo06Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
 .color_popup{ margin:0px; padding:6px; list-style:none; width:90px; height:65px; border:1px solid #999; box-sizing:border-box;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); position:absolute; right:32px; top:30px; background:#fff;}
 .color_popup li{ margin:3px 2px 2px 3px; padding:0px; width:18px; height:18px; border-radius:30px; -webkit-border-radius:30px; -moz-border-radius:30px; float:left; cursor:pointer;}
@@ -106,19 +141,21 @@ select::-ms-expand {
 .color_popup li.color04{background:#519ef0; border:1px solid #4592e4;}
 .color_popup li.color05{background:#8e74f6; border:1px solid #8167ec;}
 .color_popup li.color06{background:#f261d0; border:1px solid #e752c4;}
-.memobgBar{ float:right; clear:both; padding:0px 25px 10px 20px; margin-top: 8px;}
+.memobgBar{ float:right; clear:both; padding:0px 20px 0px 0px; height: 15px; margin-top: 10px;}
 
 /* memoBtn */
 .memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
-.memoBtn span{ display:inline-block; padding:45px 0px 0px 0px; margin:0px; color:#fff; font-size:12px; font-family:Gulim; }
+.memoBtn span{ display:inline-block; padding:45px 0px 0px 0px; margin:0px; color:#fff; font-size:12px; font-family:malgun gothic; }
 .memo_add{ background:url(../../images/ezMemo/memo_add.png) no-repeat center; margin:0 auto; padding:0px; width:242px; height:292px; text-align:center; cursor:pointer;}
 .memo_add span{ font-size:13px; color:#fff; display:inline-block; margin:0px; padding:200px 0px 0px 0px;}
 
 /* 09-05 추가  */
-#detailMemo{width:400px; height:400px; position:absolute;}
+#detailMemo{position:absolute; visibility: hidden; z-index: 1002; border-top: 1px solid rgba(0, 0, 0, 0.1); border-left: 1px solid rgba(0, 0, 0, 0.1);}
+#detailMemo .ui-resizable-handle {border: none; background-image: none;}
+
 /* 09-06 추가  */
 #memoFolderList {width:149px; height:27px; border-radius:25px;}
-/* .memo_header_wrapper{ overflow:hidden; padding:0px; opacity:1; background:#000000;} */
+.memo_header_wrapper{ height: 54px;}
 #mCSB_1_scrollbar_vertical {margin-right: 4px;}
 /* 09-07 추가 */
 .mCSB_inside > .mCSB_container{margin-right: 25px;}
@@ -134,9 +171,9 @@ h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; pa
 .footBtn{font-size:18px;line-height:33px;text-align:center;margin: 0px;padding: 0px;height: 46px;}
 .memoModal {z-index: 10000;padding-top:top: 0px;width: 150px;width: 251px;height: 301px;overflow: hidden;background-color: rgba(0,0,0,0.4);position: absolute;margin-left: 5px;margin-top: 3px;}
 .modRm-wrap{display:inline-block; margin:6px 3px 0px 3px; padding:0px; cursor:pointer;}
-.modRm-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'gulim','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
+.modRm-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'malgun gothic','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
 .close-wrap{display:inline-block; margin:6px 0px 0px 0px; padding:0px; cursor:pointer;}
-.close-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'gulim','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
+.close-wrap span{width: auto; word-break: keep-all; white-space: nowrap; padding: 6px 10px 0px 10px;height: 18px; background-color: white; border: 1px solid #bbbbbb;border-radius: 3px;font-family: 'malgun gothic','arial'; cursor: pointer; color: #000;font-weight: bold; box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.25);}
 
 
 /* portalMain 메모분류함  */
@@ -147,10 +184,9 @@ h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; pa
 .select_wrapper .select_inner li:hover { background: #eee; }
 .select_wrapper .select_inner li:last-child {border: none;border-radius: 0 0 5px 5px;}
 .select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
-.select_wrapper span {display: block; width:200px; font-size:13px;}
+.select_wrapper span {display: block; width:165px; font-size:13px;}
 
 
-.individual-memo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
 .noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 #slider-range{background: #7e7e7e; width:70px;float:left; margin-left:15px; height:5px; border-radius:0px; border:none;}
 .ui-widget-header {background: #d5d5d5; border:none;}
@@ -162,6 +198,8 @@ h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; pa
 .ui-widget-content {border:none; background: #727272; border-radius:0px;}
 .ui-slider-handle:active, .ui-slider-handle:hover, .ui-slider-handle:focus, .ui-slider-handle:default{background: #0470e4; height: 13px; width: 13px; margin-top:-1px; outline: none; border:none;}
 .ui-slider-horizontal, .ui-slider-range {border-radius:0px;}	
-.emptyDiv { height: 140px; padding-top: 100px; color: #d0d0d0; font-size: 12px; font-weight: bold; }
+.emptyDiv { height: 140px; padding-top: 75px; color: #d0d0d0; font-size: 12px; font-weight: bold; }
 
-.toastArea { padding : 10px; position : absolute; background : rgba(0, 0, 0, 0.33); display : block; color : #ffffff; font-size: 12px; border-radius: 3px;}
+/* .toastArea { padding : 10px; position : absolute; background : rgba(0, 0, 0, 0.33); display : block; color : #ffffff; font-size: 12px; border-radius: 3px;} */
+.memoTit:hover {cursor:move;}
+

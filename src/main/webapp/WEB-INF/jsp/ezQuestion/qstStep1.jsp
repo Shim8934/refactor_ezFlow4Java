@@ -22,8 +22,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript">
-			var L_SearchStartDt = "${uploadSDate}";
-	    	var L_SearchEndDt = "${uploadEDate}";
+			var L_SearchStartDt = "<c:out value='${uploadSDate}'/>";
+	    	var L_SearchEndDt = "<c:out value='${uploadEDate}'/>";
 			var FixMonth=Array(0,1,2,3,4,5,6,7,8,9,10,11,12);
 			var FixDay=Array(0,31,28,31,30,31,30,31,31,30,31,30,31);
 			var g_windowReference = null;
@@ -49,7 +49,7 @@
 		        	changeYear: true,
 		        	autoSize: true,
 		        	showOn: "both",
-		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImage: "/images/ImgIcon/calendar-month.png",
 		        	buttonImageOnly: true
 		    	});
 			    $("#Edatepicker").datepicker({
@@ -57,7 +57,7 @@
 		    	    changeYear: true,
 		        	autoSize: true,
 		        	showOn: "both",
-		        	buttonImage: "/images/ImgIcon/calendar-month.gif",
+		        	buttonImage: "/images/ImgIcon/calendar-month.png",
 		        	buttonImageOnly: true
 		    	});
 			    if (document.getElementById("hidStartDate").value != "") {
@@ -255,8 +255,9 @@
 		                
 		            var _MSIE = 'MSIE';
 		            var useragentstr = navigator.userAgent;
+		            
 		            if (useragentstr.indexOf(_MSIE) != -1) {
-		                var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
+		                /* var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
 		                var rv = window.showModalDialog(szUrl, document.getElementById("RangeXMLStr").value, szParam);
 		                if (rv[0] == "OK") {
 		                    document.getElementById("set_Target").selectedIndex = 1;
@@ -268,7 +269,8 @@
 		                    document.getElementById("hidTarget").value = "0";
 		                    document.getElementById("selectYN").value = "NO";
 		                    document.getElementById("RangeXMLStr").value = "";
-		                }
+		                } */
+			            menu_SelectRange_IE();
 		            } else {
 		                if ((g_windowReference == null) || (g_windowReference.closed == true)) {
 		                    if (window.navigator.userAgent.indexOf("Safari") > 0 && window.navigator.userAgent.indexOf("Chrome") == -1) {
@@ -429,7 +431,7 @@
 		                        <option value="0" selected="selected"><spring:message code="ezQuestion.t251" /></option> 
 		                        <option value="1"><spring:message code="ezQuestion.t252" /></option> 
 		                    </select> 
-		                    <a class="imgbtn imgbck"><span onclick="menu_SelectRange();"><spring:message code="ezQuestion.t253" /></span></a>
+		                    <a class="imgbtn imgbck" onclick="menu_SelectRange();" target="parentWin"><span><spring:message code="ezQuestion.t253" /></span></a>
 	                    </div>
 	                </td> 
 	            </tr> 

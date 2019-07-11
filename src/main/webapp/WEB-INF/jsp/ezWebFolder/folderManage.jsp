@@ -6,14 +6,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title><spring:message code="ezWebFolder.t268"/></title>
-    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
-    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
     <link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
-    <link rel="stylesheet" href="${util.addVer('/js/ezWebFolder/jsTree/dist/themes/default/style.css')}" />
-    <link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
-	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/jsTree/dist/jstree.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+    <link rel="stylesheet" href="${util.addVer('/js/ezWebFolder/jsTree/dist/themes/default/style.css')}" />
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/jsTree/dist/jstree.js')}"></script>
+    <link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
     <script>
 		var lang = "${userinfo.lang}";
 		var PostTreeView = null;
@@ -33,7 +33,7 @@
 		var userId = "<c:out value='${userId}'/>";
 		var userName = "<c:out value='${userName}'/>";
 		var folderId = "";
-		var folderType = "${folderType}";
+		var folderType = "<c:out value='${folderType}'/>";
 		var folderName1 = "";
 		var folderName2 = "";
 		var drawVolume = "";
@@ -56,18 +56,20 @@
 		function Window_Close() {
 			if (ReturnFunction != null) {
 				if (!isDivPopUp) {
-					window.opener.drawVolume();
+					//window.opener.drawVolume();
 					window.close();
 				} else {
 					CancelFunction();
 				}
-			} else
-				window.opener.drawVolume();
+			} else {
+				//window.opener.drawVolume();
+			}
+			window.opener.refreshView();
 			window.close();
 		}
 
 		function folderList(obj) {
-			$('#folderTree').jstree('destroy');
+			$('#tree').jstree('destroy');
 			folderType = obj;
 			$.ajax({
 				type: "POST",
@@ -84,7 +86,13 @@
 					var firstNode = "#" + folderId;
 					treeData = parentControll;
 					addTitle();
-					$('#folderTree').jstree({
+					$('#tree').on('changed.jstree', function(e, data) {
+						folderId = data.selected[0];
+						createId = folderId != null ? data.node.original.createId : "";
+						folderName1 = folderName1 != null ? data.node.original.folderName1 : "";
+						folderName2 = folderName2 != null ? data.node.original.folderName2 : "";
+						parent = data.node.original.parent;
+					}).jstree({
 						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
 						'core': {
 							"animation": 0,
@@ -100,19 +108,13 @@
 						},
 						"types": {
 							"default": {
-								"icon": "/images/webfolder/fldr.png"
+								"icon": "/images/OrganTree_cross/fldr.gif"
 							}
 						},
 						"grid": {
 							"width"			: "20",
 							"margin-left"	: "10"
 						}
-					}).on('changed.jstree', function(e, data) {
-						folderId = data.selected[0];
-						createId = folderId != null ? data.node.original.createId : "";
-						folderName1 = folderName1 != null ? data.node.original.folderName1 : "";
-						folderName2 = folderName2 != null ? data.node.original.folderName2 : "";
-						parent = data.node.original.parent;
 					});
 					
 				},
@@ -164,7 +166,8 @@
 			inputNameDlg_cross_dialogArguments[3] = functionType;
 			inputNameDlg_cross_dialogArguments[4] = folderName1;
 			inputNameDlg_cross_dialogArguments[5] = folderName2;
-			DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
+			DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+			functionType = "";
 		}
 
 		function update_onclick() {
@@ -211,7 +214,8 @@
 			inputNameDlg_cross_dialogArguments[3] = functionType;
 			inputNameDlg_cross_dialogArguments[4] = folderName1;
 			inputNameDlg_cross_dialogArguments[5] = folderName2;
-			DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
+			DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+			functionType = "";
 		}
 
 		function delete_onclick() {
@@ -356,10 +360,17 @@
 		}
 
 		function returnFunction(type) {
-			window.opener.drawVolume();
+			//window.opener.drawVolume();
 			folderType = type;
 			$('input:radio[name=treeType]:input[value=' + folderType + ']').prop("checked", true);
         	add_onclick_Complete('');
+		}
+		function refreshView() {
+			// 파일과 같은 function타게 하기 위해 생성
+		}
+		
+		function closeAllPopup() {
+			add_onclick_Complete();
 		}
 	</script>
 </head>
@@ -379,7 +390,7 @@
 			<input name="treeType" id="radio4" type="radio" value="S"         style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="radioOnclick('S');"><label for="radio4"><span> <spring:message code='ezWebFolder.t266'/></span></label>
 		</div>
 	</div>
-	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 350px; height: 350px; overflow: auto;padding-top:5px" id="folderTree"></div>
+	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 350px; height: 350px; overflow: auto;padding-top:5px" id="tree" class="webfolderTree"></div>
 	
 	<div class="btnpositionNew">
       	<a class="imgbtn" onclick="add_onclick()"><span><spring:message code="ezWebFolder.t255"/></span></a>

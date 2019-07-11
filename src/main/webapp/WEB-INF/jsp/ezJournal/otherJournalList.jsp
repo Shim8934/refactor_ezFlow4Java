@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezBoard.t320'/></title>
+		<title><spring:message code='ezJournal.t203'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -16,7 +16,7 @@
 				background-color: rgb(244,245,245);
 			}
 			.selectTR{
-				background-color: #edf4fd;
+				background-color: #f1f8ff;
 			}
 		</style>
 		<script type="text/javascript">
@@ -49,8 +49,8 @@
 		  		<li onClick="close_onclick()"><span></span></li>
 		    </ul>
 		  </div>
-	      <div style="width:100%; height:305px" id="divList">
-	            <table class="mainlist" id="otherJournalList" style="width:100%">
+	      <div style="width:100%; height:290px; overflow: auto;" id="divList">
+	            <table class="mainlist" id="otherJournalList" style="width: 100%; border: 1px solid #ddd !important; border-top: none;">
 	            <c:choose>
 		            <c:when test="${fn:length(journalList) ne 0 }">
 			            <c:forEach items="${journalList }" var="journal" varStatus="status">

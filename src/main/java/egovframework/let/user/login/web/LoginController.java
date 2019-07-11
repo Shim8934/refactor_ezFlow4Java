@@ -3,16 +3,10 @@ package egovframework.let.user.login.web;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -21,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +25,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -101,7 +99,7 @@ public class LoginController {
     
     @Autowired
     private LocaleResolver localeResolver;
-        
+    
 	/**
 	 * 로그인 화면으로 들어간다
 	 * @param vo - 로그인후 이동할 URL이 담긴 LoginVO
@@ -109,7 +107,7 @@ public class LoginController {
 	 * @exception Exception
 	 */
     
-    @RequestMapping(value="/user/login/login.do")
+    @RequestMapping(value="/user/login/login.do", method={RequestMethod.GET, RequestMethod.POST})
 	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
@@ -121,24 +119,61 @@ public class LoginController {
     	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
     	
         if (ezOffice365Auth.equals("YES")) {        	
-        	return "redirect:/ezPortal/portalMain.do";         	
+//        	return "redirect:/ezPortal/portalMain.do";
+        	return "redirect:/ezNewPortal/newPortalMain.do";         	
         }
         
     	if (commonUtil.isLoginCookieExists(request, response)) {
-    	    return "redirect:/ezPortal/portalMain.do"; 
+//        	return "redirect:/ezPortal/portalMain.do";
+        	return "redirect:/ezNewPortal/newPortalMain.do"; 
     	}
-        	
+    	
+    	if(model.get("multiLoginFlag") != null || request.getParameter("multiLoginFlag") != null) {
+    		model.addAttribute("message", "multiLoginNoti");
+    		
+    		if(model.get("multiLoginFlag") == null) {
+    			Cookie tempMLCookie = new Cookie("multiLoginCookie", null);
+        		tempMLCookie.setMaxAge(0);
+        		tempMLCookie.setPath("/");
+        		response.addCookie(tempMLCookie);
+    		}
+    	}
+    	
     	String pbm = egovFileScrty.getPbm();
+    	
+    	//2018-11-05 유은정 - 포탈 개인화 관련 logo 추가
+    	String logo = "";
+    	
+    	String companyId = null;
+    	String logoUrl = "/rest/admin/ezPortal/logos/companies/" + companyId;
+    	JSONObject logoResult = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), logoUrl, null, request, "get", null);
+    	String logoStatus = logoResult.get("status").toString();
+    	
+    	if (logoStatus.equals("ok")) {
+    		JSONArray logoList = (JSONArray) logoResult.get("data");
+    		int logoListCount = logoList.size();
+    		
+    		for (int i = 0; i < logoListCount; i++) {
+    			JSONObject logoJson = (JSONObject) logoList.get(i);
+    			
+    			if (logoJson.get("logoType").equals("L")) {
+    				logo = logoJson.get("logoUrl").toString();
+    				break;
+    			}
+    		}
+    	}
+    	
+    	logger.debug("logoUrl : " + logo);
+    	//유은정 끝
     	
 		model.addAttribute("publicModulus", pbm);
 		model.addAttribute("publicExponent", "10001");
-    
+		model.addAttribute("logoUrl", logo);
 		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
 		
     	return "/user/login/login";
     
 	}
-    
     
     public void setLocaleResolver(LocaleResolver localeResolver) {
     	this.localeResolver = localeResolver;
@@ -151,7 +186,7 @@ public class LoginController {
 	 * @return result - 로그인결과(세션정보)
 	 * @exception Exception
 	 */
-    @RequestMapping(value="/user/login/actionLogin.do")
+    @RequestMapping(value="/user/login/actionLogin.do", method=RequestMethod.POST)
     public String actionLogin(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpSession session, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	logger.debug("=========================================== login ============================================");
     	
@@ -371,9 +406,8 @@ public class LoginController {
 	        			session.setMaxInactiveInterval(sessionTime * 60);	// 세션 유지 시간 설정
 	        		}
 	        	}
-	        	
-	        
-	        	return "redirect:/ezPortal/portalMain.do";
+//	        	return "redirect:/ezPortal/portalMain.do";
+	        	return "redirect:/ezNewPortal/newPortalMain.do";
         		
         	} else {
         		//Check login state of the user
@@ -464,6 +498,9 @@ public class LoginController {
     		        	cookieName.setPath("/");
     		        	response.addCookie(cookieName);
     		        	
+    		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
+    		        	//session = request.getSession();
+    		        	
     		        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
     		        	if (!useSession.equals("")) {
     		        		int sessionTime = Integer.parseInt(useSession);
@@ -474,8 +511,8 @@ public class LoginController {
 		    		        	session.setMaxInactiveInterval(sessionTime * 60);		// 세션의 유지 시간 설정
 	    		        	}
     		        	}
-    		        	
-    		        	return "redirect:/ezPortal/portalMain.do";
+//    		        	return "redirect:/ezPortal/portalMain.do";
+    		        	return "redirect:/ezNewPortal/newPortalMain.do";
     		        	
     				}
     			// 해당 사용자의 로그인이 블록된 경우
@@ -718,6 +755,25 @@ public class LoginController {
     		ssoLoginCookie.setDomain(useSSOCookie);
     		response.addCookie(ssoLoginCookie);
     	}
+
+    	String multiLoginTime = "";
+    	if(!request.getRequestURI().matches("(/ezConn|/ezTalkGate|/ezUCMessenger).+")) { // 외부 로그인으로 접근시에는 멀티로그인 옵션 무시
+    		// 멀티로그인 옵션 관련 쿠키 (default : YES)
+    		multiLoginTime = String.valueOf(System.currentTimeMillis());
+    		
+    		String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyID, "useMultiLogin");
+    		if(useMultiLogin.equalsIgnoreCase("NO")) {
+    			commonUtil.setLoginUsers(tenantId, userId, multiLoginTime);
+    		}
+    	} else {
+    		// 멀티로그인 쿠키 셀렉트해서 넣어주기 
+    		multiLoginTime = ezCommonService.selectMultiLoginTime(tenantId, userId);
+    	}
+    	
+    	Cookie multiLoginCookieID = new Cookie("multiLoginCookie", multiLoginTime);
+    	multiLoginCookieID.setPath("/");
+    	response.addCookie(multiLoginCookieID);
+    	// end
     }
     
     /**
@@ -725,7 +781,7 @@ public class LoginController {
 	 * @return String
 	 * @exception ExceptionactionLogout
 	 */
-    @RequestMapping(value="/user/login/actionLogout.do")
+    @RequestMapping(value="/user/login/actionLogout.do", method=RequestMethod.GET)
 	public String actionLogout(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
@@ -743,8 +799,6 @@ public class LoginController {
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);
-    				// 2018.10.22 이석화 추가 - 세션 제거 
-    				request.getSession().invalidate();
     			}
     	    }
     	}
@@ -767,17 +821,20 @@ public class LoginController {
 			
         	return "redirect:https://login.microsoftonline.com/common/OAuth2/logout?post_logout_redirect_uri=" + redirectUri;         	
         }
+        
         // 2018.10.22 이석화 추가 - 세션 제거 
        	request.getSession().invalidate();
 
        	return "redirect:/user/login/login.do"; 
     }
     
-    @RequestMapping(value="/user/login/actionLogoutWithRedirectUri.do")
-	public void actionLogoutWithRedirectUri(
+    @RequestMapping(value="/user/login/actionLogoutWithRedirectUri.do", method=RequestMethod.GET)
+	public String actionLogoutWithRedirectUri(
+//	public void actionLogoutWithRedirectUri(
 					@RequestParam("redirectUri") String redirectUri,
 					HttpServletRequest request,
-					HttpServletResponse response
+					HttpServletResponse response,
+					RedirectAttributes rttr
 					) throws Exception {
     	logger.debug("redirectUri=" + redirectUri);
     	
@@ -785,7 +842,7 @@ public class LoginController {
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
-    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
+    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().equals("multiLoginCookie")){
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);
@@ -793,11 +850,19 @@ public class LoginController {
     	    }
     	}
     	
+//    	response.sendRedirect(redirectUri);
+    	
     	request.getSession().invalidate();
-    	response.sendRedirect(redirectUri);
+    	
+    	if (request.getParameter("multiLoginFlag") != null) {
+//    		rttr.addFlashAttribute("message", message);
+    		rttr.addFlashAttribute("multiLoginFlag", request.getParameter("multiLoginFlag"));
+    	}
+    	
+    	return "redirect:" + redirectUri;
     }
     
-    @RequestMapping(value = "/user/login/setPassword.do")
+    @RequestMapping(value = "/user/login/setPassword.do", method=RequestMethod.POST)
     public void setPassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse response) throws Exception{
     	userInfo = commonUtil.userInfo(loginCookie);
 
@@ -814,7 +879,7 @@ public class LoginController {
     	}
     }
         
-    @RequestMapping(value = "/user/login/changeExPassword.do", produces = "text/html; charset=utf-8")
+    @RequestMapping(value = "/user/login/changeExPassword.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
 	@ResponseBody
     public String changeExPassword(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response) throws Exception{
     	logger.debug("=========================================== changePassword ============================================");

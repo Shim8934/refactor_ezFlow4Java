@@ -6,7 +6,8 @@
 		<title><spring:message code='ezBoard.t135'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css"> --%>
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -27,7 +28,6 @@
 			var SS_ServerName = "${serverName}";
 			var xmlDom_treeview = createXmlDom();
 			var pUse_Editor = "${useEditor}";
-			var pNoneActiveX = "${noneActiveX}";
 			var isAdminLeft = "${isAdminLeft}";
 			var ReturnFunction;
 			
@@ -69,7 +69,7 @@
 		    }
 
 			function CheckIfAnonyBoard(pBoardID) {
-				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				if(ret.indexOf("anonyboard") != -1) return true;
@@ -77,7 +77,7 @@
 			}
 			
 			function CheckIfCanWrite(pBoardID) {
-				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				if(ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
@@ -133,7 +133,7 @@
 			}
 			
 			function TopBoard_onclick(obj, ID, items) {
-			    var rootBoardID = "{" +ID+ "}";
+			    var rootBoardID = encodeURIComponent("{" +ID+ "}");
 			    var num = obj.split("TreeCtrl");
 			
 			    if (document.getElementById(obj).style.display != "none") {
@@ -156,7 +156,7 @@
 			}
 			
 			function GetSubBoard(pRootBoardID, pSubFlag) {
-				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + BoardID + "&isAdminLeft=" + isAdminLeft, false);
+				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + encodeURIComponent(BoardID) + "&isAdminLeft=" + isAdminLeft, false);
 				xmlhttp.send();
 				
 				return xmlhttp.responseXML;
@@ -173,7 +173,7 @@
 				    var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 				    tid= tid.substring(1,37);
 					strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl"+i.toString()+"\" ,\""+ tid + "\""+", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
-					strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow-x:hidden;'></DIV></td></tr>";
+					strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow:hidden;'></DIV></td></tr>";
 				}
 				strHTML += "</table>";
 				

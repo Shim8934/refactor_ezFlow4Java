@@ -10,17 +10,17 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-			var creatorid = "${addressInfo.creatorId}";
-			var modifierid = "${addressInfo.modifierId}";
-			var userid = "${userInfo.id}";
-			var foldertype = "${pFolderType}";
-			var addressid = "${pAddressId}";
-			var deptAdmin = "${deptAdmin}";
-			var compAdmin = "${compAdmin}";
-		    var pFolderID = "${pFolderId}";
-		    var pUse_Editor = "${useEditor}";
-		    var pNoneActiveX = "${noneActiveX}";
-		    var getMemo = '${getsMemo}';
+			var creatorid = "<c:out value='${addressInfo.creatorId}'/>";
+			var modifierid = "<c:out value='${addressInfo.modifierId}'/>";
+			var userid = "<c:out value='${userInfo.id}'/>";
+			var foldertype = "<c:out value='${pFolderType}'/>";
+			var addressid = "<c:out value='${pAddressId}'/>";
+			var deptAdmin = "<c:out value='${deptAdmin}'/>";
+			var compAdmin = "<c:out value='${compAdmin}'/>";
+		    var pFolderID = "<c:out value='${pFolderId}'/>";
+		    var pUse_Editor = "<c:out value='${useEditor}'/>";
+		    var pNoneActiveX = "<c:out value='${noneActiveX}'/>";
+		    var getMemo = "<c:out value='${getsMemo}'/>";
 		    
 		    window.onload = function () {
 		    	getMemo = getMemo.replace(/&lt;br&gt;/gi, "\n").replace(/\\\\/gi, "\\"); 
@@ -125,16 +125,37 @@
 				    window.showModalDialog("htm/attachdownload.aspx", param, feature);
 				}
 			}
+			
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=addrs", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
 		</script>
 	</head>
 	<body class="popup" >
 		<form method="post">
 		  <div id="normalScreen">
-		    <div id="menu">
+		    <div id="menu" style="margin-top:7px;margin-bottom:19px;">
 		      <ul style="margin:0;">
 		        <li><span onClick="modify_address()"><spring:message code='ezAddress.t174' /></span></li>
-		        <li><span onClick="window.print()"><spring:message code='ezAddress.t283' /></span></li>
-		        <li><span onClick="send_email()"><spring:message code='ezAddress.t285' /></span></li>
+				<li><span class="icon16 popup_icon16_print" onClick="window.print()"></span></li>
+		        <li><span class="icon16 popup_icon16_mail_gray" onClick="send_email()"></span></li>
+		      	<c:if test="${useCabinet == 'YES'}">
+					<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+				</c:if>
 		      </ul>
 		    </div>
 		    <div id="close">

@@ -18,7 +18,7 @@
 				<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: center; padding: 0px 3px;" class="h5_center">
 					<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
 				</th>
-				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px; text-align: center;" class="h5_center">
+				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: center;" class="h5_center">
 					<img src="/images/newAttach.gif" style="vertical-align: middle;">
 				</th>
 				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:50%;" class="h5_center">
@@ -65,16 +65,16 @@
 					</c:choose>
 					<c:choose>
 						<c:when test="${journal.fileCount ne 0}">
-							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:20px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:35px;">
 								<img src="/images/newAttach.gif" style="vertical-align: middle;">
 							</td>
 						</c:when>
 						<c:otherwise>
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:20px;"></td>
+							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:35px;"></td>
 						</c:otherwise>
 					</c:choose>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:50%;">
-						<div style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>
+						<div style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 95%;'>
 							<jsp:useBean id="toDay" class="java.util.Date" />
 							<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
 							<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
@@ -85,8 +85,9 @@
 							<c:out value='${journal.journalTitle}'/>
 						</div>
 						<c:if test="${journal.replyCount gt 0}">
-							<!-- <a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #c64200">[${journal.replyCount }]</span></a> -->
-							<a style="position: absolute;" onclick=""><span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span></a>
+<!-- 							<a style="position: absolute;" onclick=""> -->
+							<span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span>
+<!-- 							</a> -->
 						</c:if>
 					</td>
 					<td style="width: 20px;"></td>

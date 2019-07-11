@@ -7,19 +7,20 @@
 		<title><spring:message code="ezBoard.t84" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
-	    <style>
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+		<style>
 	    	.mainlist_free tr th {
 	    		border-top: 0px;
 	    	}
-	    </style>		
-	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" language="javascript">		
+		</style>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/admin.css')}">
+		<script type="text/javascript">
 			var topid = "<c:out value='${topid}'/>";
 		    var useOCS = "<c:out value='${useOCS}'/>";
 		    var g_xmlHTTP = null;
@@ -27,7 +28,12 @@
 		    var userinfo_dialogArguments = new Array();
 		    var useDisablePopImap = "";
 		    var deptTreeTopId = "${deptTreeTopId}";
-		    
+		    var changePassLength = 0;
+			var totalPage = "";
+			var BlockSize = 10;
+			var pageNum = 1;
+			var PageSize = 15;
+			
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
 		            return false;
@@ -41,12 +47,17 @@
 				
 				if (topid != "Top"){
 					companybutton1.style.display = "none";
-					companybutton2.style.display = "none";
-					companybutton3.style.display = "none";
 				}
-		    });		    
-		    
-		    function Tree_setconfig(){
+				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+				windowResize();
+				functionSetting();
+			});
+			
+			window.onresize = function(event) {
+				windowResize();
+			};
+
+			function Tree_setconfig(){
 			    var xmlHTTP = createXMLHttpRequest();
 			    xmlHTTP.open("GET", "/xml/common/organtree_config3.xml", false);			    
 			    xmlHTTP.send();
@@ -140,36 +151,67 @@
 			function displayUserList(DeptID){
 				var cellContent;
 				var typeContent;
-				
+
 				if (listOpt1.checked == true){
-					cellContent = "displayname;description;title";
+					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10";
 					typeContent = "userWithMasterAdmin";
+					document.getElementsByClassName('searchForm')[0].style.display = "";
 				}else{
-					cellContent = "displayname;extensionAttribute9";
-					typeContent = "group";
+					cellContent = ";displayname;extensionAttribute9";
+					// typeContent값은 부서장을 넣어주기 위해 바꿔주었음 (기존 group)
+					typeContent = "groupDeptMaster";
+					document.getElementsByClassName('searchForm')[0].style.display = "none";
 				}
-				
-		        $.ajax({
-		        	type : "POST",
-		        	dataType : "text",
-		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : cellContent, prop : "userType", type : typeContent},
-		        	success : function(xml){
-		        		result=loadXMLString(xml);
-		        		var headerData = createXmlDom();
-		        		
-				        if (listOpt1.checked == true){
-				            headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
-				        }else{
-				            headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
-				        }
-				        
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezOrgan/getDeptMemberList.do",
+					data : {
+							deptID : DeptID,
+							cell : cellContent,
+							prop : "userType",
+							type : typeContent
+					},
+					success : function(xml){
+						result=loadXMLString(xml);
+						var headerData = createXmlDom();
+
+						if (listOpt1.checked == true){
+							headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+							$("#maillist_user").css("display", "");
+							$("#maillist_dept").css("display", "none");
+						} else {
+							headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
+							$("#maillist_user").css("display", "none");
+							$("#maillist_dept").css("display", "");
+						}
+
+						if (listOpt1.checked == true) {
+							// 암호관리, 사원이동, 퇴직 cell append
+							var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
+							var i = 0;
+							for(i;i<cnt;i++) {
+								var cell1 = result.createElement("CELL");
+								var value1 = result.createElement("VALUE");
+								cell1.appendChild(value1);
+								var cell2 = result.createElement("CELL");
+								var value2 = result.createElement("VALUE");
+								cell2.appendChild(value2);
+								var cell3 = result.createElement("CELL");
+								var value3 = result.createElement("VALUE");
+								cell3.appendChild(value3);
+								result.getElementsByTagName("ROW")[i].appendChild(cell1);
+								result.getElementsByTagName("ROW")[i].appendChild(cell2);
+								result.getElementsByTagName("ROW")[i].appendChild(cell3);
+							}
+						}
+
 				        if (CrossYN()) {
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
 				            	if($(this).find("DATA3").text() == "addJob"){
-				            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
-				            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            		var orgPosition = $(this).find("CELL").eq(4).find("VALUE").text();
+				            		$(this).find("CELL").eq(4).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 				            	}
 				            });
 				            var Node = headerData.importNode(xmlRtn, true);
@@ -178,31 +220,26 @@
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 				            headerData.documentElement.appendChild(xmlRtn);
 				        }
-		                document.getElementById("OrganListView").innerHTML = '<table style="width: 100%; height: 30px;" class="popup_mainlist"><tr><th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea"><span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block;"></span></th></tr></table>';
+		                document.getElementById("OrganListView").innerHTML = "";
 
-				        var pUserList = new ListView();
-				        pUserList.SetID("lvUserList");
-				        pUserList.SetMulSelectable(true);
-				        pUserList.SetRowOnDblClick("info_user");
-				        pUserList.SetSelectFlag(false);
-				        pUserList.SetHeightFree(true);
-				        pUserList.DataSource(headerData);
-				        pUserList.DataBind("OrganListView");
-				        
-				        var treeView = new TreeView();
-					    treeView.LoadFromID("FromTreeView");
-					    var selnode = treeView.GetSelectNode();
-				        $("#SelectDeptNM").html("<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + selnode.GetNodeData("NodeName") + "" + "-[<span style='color:#017BEC;'>" + $(headerData).find("ROWS ROW").length + strLang24 + "</span>]");
-
-				        moveDisplay(false);
-		        	},
-		        	error : function(error){
-		        		alert("<spring:message code='ezOrgan.t2'/>" + error);	
-		        	}
-		        });	
+						var pUserList = new ListView();
+						pUserList.SetID("lvUserList");
+						pUserList.SetMulSelectable(true);
+						pUserList.SetRowOnDblClick("info_user");
+						pUserList.SetSelectFlag(false);
+						pUserList.SetHeightFree(true);
+						pUserList.DataSource(headerData);
+						pUserList.DataBind("OrganListView");
+						if (listOpt1.checked == true) {
+							sawonDataParsing();
+						}
+						moveDisplay(false);
+					},
+					error : function(error){
+						alert("<spring:message code='ezOrgan.t2'/>" + error);	
+					}
+				});	
 			}			
-			
-			var companyinfo_dialogArguments = new Array();
 			
 			function add_company(){
 		        var treeView = new TreeView();
@@ -234,7 +271,8 @@
 			        }
 			    }
 			}
-			
+
+			var companyinfo_dialogArguments = new Array();
 		    function add_company_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            getDeptFullTree(rtnValue);
@@ -271,7 +309,7 @@
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				} else {
-                    var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 270));
+                    var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 260));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.x0005' />");
@@ -569,77 +607,8 @@
 				}
 			}
 
-			function deptsearch_press(){			
-				if (window.event.keyCode == "13"){
-					deptsearch_click();
-				}
-			}
-			
-		    var rgParams = new Array();
-		    var checkname2_cross_dialogArguments = new Array();
-		    
-			function deptsearch_click(){
-				if ($.trim(document.getElementById("deptkeyword").value) == ""){
-					alert("<spring:message code='ezOrgan.t56' />");
-				    document.getElementById("deptkeyword").focus();
-					return;
-				}
-				
-				var xmlDOM = createXmlDom();
-				
-			    $.ajax({
-		        	type : "POST",
-		        	dataType : "text",
-		        	url : "/ezOrgan/getSearchList.do",
-		        	async : false,
-		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
-		        	success : function(result){	
-		        		xmlDOM = loadXMLString(result);
-		                adCount = xmlDOM.getElementsByTagName("ROW").length;
-		        	},
-		        	error : function(error){
-		        		alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
-		        		xmlDOM = null;
-		        	}
-		        });		        	
-			    var ModalCheck = false;
-				if (adCount == 0){
-					alert("<spring:message code='ezOrgan.t61' />");
-					return;
-				}else if (adCount == 1){
-				    g_xmlHTTP = createXMLHttpRequest();
-				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
-				    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-					g_xmlHTTP.send(strQuery);
-				}else{
-					rgParams["addrBook"] = xmlDOM;
-					rgParams["deptid"] = "";
-					
-					if (CrossYN()) {
-					    ModalCheck = true;
-					    checkname2_cross_dialogArguments[0] = rgParams;
-					    checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-					    var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(600, 320));					    
-					    try { OpenWin.focus(); } catch (e) { }
-					}else{
-					    window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(600, 320));
-
-					    if (rgParams["deptid"] != "") {
-					        g_xmlHTTP = createXMLHttpRequest();
-					        // 20110412 사용자 추가시 필요 정보 추가처리.
-					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";					        
-					        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-					        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-					        g_xmlHTTP.send(strQuery);
-					    }
-					}
-				}
-			    if(!ModalCheck){
-			        document.getElementById("deptkeyword").value = "";
-			    }
-			}
-			
+			var rgParams = new Array();
+			var checkname2_cross_dialogArguments = new Array();		
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
@@ -648,78 +617,154 @@
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
 		        }
-		        document.getElementById("deptkeyword").value = "";
+		        //document.getElementById("deptkeyword").value = "";
 		    }
-		    
-		    function search_click(){
+
+			var searchWord = "";
+			var searchType = "";
+			function search_click(){
+				pageNum = 1;
 				if ($.trim(keyword.value) == ""){
 					alert("<spring:message code='ezOrgan.t56' />");
 					keyword.focus();
 					return;
 				}
-			    document.getElementById("listOpt1").checked = true;
-			    //2016-04-14 장진혁과장 -- Change_List 실행시 검색 결과값 불일치로 인한 주석처리
-			    //Change_List();
-			    				
-				$.ajax({
-		        	type : "POST",
-		        	dataType : "text",
-		        	url : "/ezOrgan/getSearchList.do",
-		        	async : false,
-		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department;usertype", type : "user", adminOrgan : "y"},
-		        	success : function(xml){
-		        		result=loadXMLString(xml);
-		        		var listview = new ListView();
-				        listview.LoadFromID("lvUserList");
-						
-				        var headerData = createXmlDom();
-				        if (listOpt1.checked == true)
-				            headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
-				        else
-				            headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
 
-				        if (CrossYN()) {
-				        	var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
-				            	if($(this).find("DATA4").text() == "addJob"){
-				            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
-				            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
-				            	}
-				            });
-				            var Node = headerData.importNode(xmlRtn, true);
-				            headerData.documentElement.appendChild(Node);
-// 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-// 				            var Node = headerData.importNode(xmlRtn, true);
-// 				            headerData.documentElement.appendChild(Node);
-				        }else{
-				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-				            headerData.documentElement.appendChild(xmlRtn);
-				        }
-				        document.getElementById("OrganListView").innerHTML = '<table style="width: 100%; height: 30px;" class="popup_mainlist"><tr><th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea"><span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block;"></span></th></tr></table>';
+				if(search_type.value !== 'description') {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/ezOrgan/getSearchList.do",
+						async : false,
+						data : {
+							search : search_type.value + "::" + keyword.value,
+							cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
+							prop : "department;usertype",
+							type : "user",
+							page : pageNum,
+							adminOrgan : "y"
+						},
+						success : function(xml){
+							searchWord = keyword.value;
+							searchType = search_type.value;
+							result=loadXMLString(xml);
+							var listview = new ListView();
+							listview.LoadFromID("lvUserList");
+	
+							// 전체페이지 처리
+							var totCount = result.getElementsByTagName('TOTALCOUNT')[0].innerHTML;
+							totalPage = Math.ceil((totCount)/10);
+							if(totalPage == 0) {
+								totalPage = 1;
+							}
+	
+							// 암호관리, 사원이동, 퇴직 cell append
+							var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
+							var i = 0;
+							for(i;i<cnt;i++) {
+								var cell1 = result.createElement("CELL");
+								var value1 = result.createElement("VALUE");
+								cell1.appendChild(value1);
+								var cell2 = result.createElement("CELL");
+								var value2 = result.createElement("VALUE");
+								cell2.appendChild(value2);
+								var cell3 = result.createElement("CELL");
+								var value3 = result.createElement("VALUE");
+								cell3.appendChild(value3);
+								result.getElementsByTagName("ROW")[i].appendChild(cell1);
+								result.getElementsByTagName("ROW")[i].appendChild(cell2);
+								result.getElementsByTagName("ROW")[i].appendChild(cell3);
+							}
+	
+							var headerData = createXmlDom();
+							headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+							$("#maillist_user").css("display", "");
+							$("#maillist_dept").css("display", "none");
+	
+					        if (CrossYN()) {
+					            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+					            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+					            	if($(this).find("DATA4").text() == "addJob"){
+					            		var orgPosition = $(this).find("CELL").eq(4).find("VALUE").text();
+					            		$(this).find("CELL").eq(4).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+					            	}
+					            });
+					            var Node = headerData.importNode(xmlRtn, true);
+					            headerData.documentElement.appendChild(Node);
+					        }else{
+					            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+					            headerData.documentElement.appendChild(xmlRtn);
+					        }
+			                document.getElementById("OrganListView").innerHTML = "";
+	
+							var pUserList = new ListView();
+							pUserList.SetID("lvUserList");
+							pUserList.SetRowOnDblClick("info_user");
+							pUserList.SetSelectFlag(false);
+							pUserList.SetHeightFree(true);
+							pUserList.DataSource(headerData);
+							pUserList.DataBind("OrganListView");
+							sawonDataParsing();
+							moveDisplay(true);
+							makePageSelPage();
+						},
+						error : function(error){
+							alert("<spring:message code='ezOrgan.t59' />" + error);
+						}
+					});
+				} else { // 부서검색
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/ezOrgan/getSearchList.do",
+						async : false,
+						data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
+						success : function(result){	
+							xmlDOM = loadXMLString(result);
+							adCount = xmlDOM.getElementsByTagName("ROW").length;
+						},
+						error : function(error){
+							alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
+							xmlDOM = null;
+						}
+					});	
 
-				        var pUserList = new ListView();
-				        pUserList.SetID("lvUserList");
-				        pUserList.SetRowOnDblClick("info_user");
-				        pUserList.SetSelectFlag(false);
-				        pUserList.SetHeightFree(true);
-				        pUserList.DataSource(headerData);
-				        pUserList.DataBind("OrganListView");
-				        
-				        var treeView = new TreeView();
-					    treeView.LoadFromID("FromTreeView");
-					    var selnode = treeView.GetSelectNode();
-				        $("#SelectDeptNM").html("<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + $(headerData).find("ROWS ROW").length + strLang24 + "</span>]");
-				        
-				        moveDisplay(true);
-					},
-					error : function(error){
-						alert("<spring:message code='ezOrgan.t59' />" + error);
+					var ModalCheck = false;
+					if (adCount == 0){
+						alert("<spring:message code='ezOrgan.t61' />");
+						return;
+					} else if (adCount == 1){
+						g_xmlHTTP = createXMLHttpRequest();
+						var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+						g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+						g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+						g_xmlHTTP.send(strQuery);
+					} else{
+						rgParams["addrBook"] = xmlDOM;
+						rgParams["deptid"] = "";
+
+						if (CrossYN()) {
+							ModalCheck = true;
+							checkname2_cross_dialogArguments[0] = rgParams;
+							checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
+							var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(600, 320));
+
+							try { OpenWin.focus(); } catch (e) {}
+						}else{
+							window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(600, 320));
+							if (rgParams["deptid"] != "") {
+								g_xmlHTTP = createXMLHttpRequest();
+								// 20110412 사용자 추가시 필요 정보 추가처리.
+								var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+								g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+								g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+								g_xmlHTTP.send(strQuery);
+							}
+						}
 					}
-		        });				
-				// [2006. 02. 10. 이민수] 검색을 완료하면 TextBox를 초기화하도록 변경
-				//keyword.value = "";
+				}
 			}
-		    
+
 		    function mail_manage(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
@@ -740,64 +785,34 @@
 
 			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
-		    
-			function Change_List(){
-		        var treeView = new TreeView();
-		        treeView.LoadFromID("FromTreeView");
-		        
-		        var nodeIdx = treeView.GetSelectNode();
-		        var treeNode = new TreeNode();
-		        treeNode.LoadFromID(nodeIdx.NodeID);
 
-		        if (listOpt1.checked == true) {
-		            usermenu1.disabled = false;
-		            usermenu2.disabled = false;
-		            usermenu3.disabled = false;
-		             
-		            usermenu4.disabled = false;
-		            usermenu5.disabled = false;
-		            usermenu6.disabled = false;
-		            
-		            usermenu7.disabled = false;
-		            usermenu8.disabled = false;
-		            try {
-		                usermenu9.disabled = false;
-		            } catch (e) { }
-		            usermenu10.disabled = false;
-		            //usermenu13.disabled = false;
-		            userRetire.disabled = false;
-		            if(useOCS == "YES"){
-		                usermenusipuri.disabled = false;
-		            }
-		        }else{
-		            usermenu1.disabled = true;
-		            usermenu2.disabled = true;
-		            usermenu3.disabled = true;
-		            
-		            usermenu4.disabled = true;
-		            usermenu5.disabled = true;
-		            usermenu6.disabled = true;
-		            
-		            usermenu7.disabled = true;
-		            usermenu8.disabled = true;
-		            
-		            try {
-		                usermenu9.disabled = false;
-		            } catch (e) { }
-		            usermenu10.disabled = true;
-		            //usermenu13.disabled = true;
-		            userRetire.disabled = true;
-		            
-		            if (useOCS == "YES"){
-		                usermenusipuri.disabled = true;
-		            }
-		        }
-		        		        
-		        if (TreeView.selectedIndex != -1){
-		            displayUserList(treeNode.GetNodeData("CN"));
-		        }
-		    }
-			
+			function Change_List(){
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+
+/* 				usermenu3.disabled = false;
+				usermenu4.disabled = false;
+				usermenu6.disabled = false;
+				usermenu7.disabled = false;
+				usermenu8.disabled = false; */
+
+				try {
+					usermenu9.disabled = false;
+				} catch (e) { }
+				usermenu10.disabled = false;
+				//usermenu13.disabled = false;
+				if(useOCS == "YES"){
+					usermenusipuri.disabled = false;
+				}
+
+				if (TreeView.selectedIndex != -1){
+					displayUserList(treeNode.GetNodeData("CN"));
+				}
+			}
+
 			function MoveUp_onclick(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
@@ -844,7 +859,7 @@
 						userType +=",";
 					}
 				}
-				
+
 				if (listOpt1.checked == true){
 					pClass = "user";
 				} else {
@@ -905,7 +920,7 @@
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -961,21 +976,8 @@
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
 			    try { OpenWin.focus(); } catch (e) { }
-				/* }else{
-				    var rtnValue;
-				    rtnValue = window.showModalDialog("/admin/ezOrgan/userInfo.do", args, "dialogHeight:500px; dialogWidth:830px; scroll:no;status:no; help:no; edge:sunken; resize:no" + GetShowModalPosition(830, 520));
-
-				    if (typeof (rtnValue) != "undefined") {
-				        alert("<spring:message code='ezOrgan.t11' />");
-				        displayUserList(treeNode.GetNodeData("CN"));
-
-				        if (trim(document.getElementById("keyword").value) != "") {
-				            search_click();
-				        }
-				    }
-				} */
 			}
 			
 		    function info_user_Complete(rtnValue) {
@@ -1052,67 +1054,6 @@
 		    
 		    var inputpassword_dialogArguments = new Array();
 		    
-			function mod_password() {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvUserList");
-		        var length = listview.GetSelectedRows().length;
-		        
-		        if (length == 0) {
-					alert("<spring:message code='ezOrgan.t39' />");
-					return;
-				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
-                    alert(strLang13);
-                    return;
-				} else if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
-		    		alert("<spring:message code='ezOrgan.psb02' />");
-					return;
-			    }
-		        
-		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
-		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        
-		      	//크롬일때 alert창 크기때문에 크롬일때 구별
-	            var agent = navigator.userAgent.toLowerCase();
-	            if (agent.indexOf("chrome") != -1) {
-	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
-	            } else {
-	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));	
-	            }
-	            
-		        try { OpenWin.focus(); } catch (e) { }
-			}
-			
-		    function mod_password_Complete(rtnValue) {
-		        if (typeof (rtnValue) != "undefined") {
-		            var listview = new ListView();
-		            listview.LoadFromID("lvUserList");
-
-		            var length = listview.GetSelectedRows().length;
-         			var data = "";
-		            for (var i = 0; i < length; i++) {
-		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
-		            	
-		            	if(i != length-1){
-		            		data = data + ",";
-		            	}		                
-		            }
-		            
-		            $.ajax({
-		            	type : "POST",
-		            	dataType : "xml",
-		            	url : "/admin/ezOrgan/changePassword.do",
-		            	async : false,
-		            	data : {password : rtnValue, cn : data},
-		            	success : function(result){
-		            		alert(length + "<spring:message code='ezOrgan.t42' />");
-		            	},
-		            	error : function(){
-		            		alert("<spring:message code='ezOrgan.t41' />");		            		
-		            	}
-		            });
-	            }		        
-		    }		    
-		    
 		    function Retire_user(){
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
@@ -1178,142 +1119,6 @@
 	        }
 		    
 		    var selectdept_cross_dialogArguments = new Array();
-		    
-			function mov_user(){
-			 	var treeView = new TreeView();
-		        treeView.LoadFromID("FromTreeView");
-		        
-		        var nodeIdx = treeView.GetSelectNode();
-		        var treeNode = new TreeNode();
-		        treeNode.LoadFromID(nodeIdx.NodeID);
-			        
-		        var listview = new ListView();
-		        listview.LoadFromID("lvUserList");
-
-		        if (listview.GetSelectedRows().length == 0){
-					alert("<spring:message code='ezOrgan.t12' />");
-					return;
-				} else {
-				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
-				    	alert(strLang13);
-	                    return;
-				    } else {
-				    	if (listview.GetSelectedRows()[0].getAttribute("DATA3") == 'addJob'){
-				    		alert("<spring:message code='ezOrgan.psb02' />");
-							return;
-				    	}
-				    }
-				}
-		        
-		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
-			    //if (CrossYN()) {
-		    	document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
-		    	
-		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
-		        selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
-		        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
-		        try { OpenWin.focus(); } catch (e) { }
-			    <%-- }else {
-			        var rtnValue = '';
-			        rtnValue = window.showModalDialog("SelectDept_Cross.aspx", "<%=RM.GetString("t13")%>", "dialogHeight:390px; dialogWidth:302px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(302, 390));
-
-			        if (typeof (rtnValue) != "undefined") {
-			            var length = listview.GetSelectedRows().length;
-			            if (!confirm(length + "<%=RM.GetString("t14")%>"))
-			                return;
-
-			            var xmlDom = createXmlDom();
-			            var xmlHTTP = createXMLHttpRequest();
-
-			            var objNode = "";
-			            createNodeInsert(xmlDom, objNode, "DATA");
-			            createNodeAndInsertText(xmlDom, objNode, "PARENTCN", rtnValue);
-			            for (var i = 0; i < length; i++) {
-			                createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[i].getAttribute("DATA2"));
-			            }
-
-			            xmlHTTP.open("POST", "MovUser.aspx", false);
-			            xmlHTTP.send(xmlDom);
-
-			            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-			                alert("<%=RM.GetString("t15")%>");
-			            else
-			                alert(length + "<%=RM.GetString("t16")%>");
-
-			            var treeView = new TreeView();
-			            treeView.LoadFromID("FromTreeView");
-			            var nodeIdx = treeView.GetSelectNode();
-			            var treeNode = new TreeNode();
-			            treeNode.LoadFromID(nodeIdx.NodeID);
-			            displayUserList(treeNode.GetNodeData("CN"));
-			        }
-			    } --%>
-			}
-			
-            function move_user_CompleteWithTimeout(rtnValue) {
-                setTimeout(function() {
-                    mov_user_Complete(rtnValue);
-                }, 10);
-            }
-            
-		    function mov_user_Complete(rtnValue) {
-		        if (typeof (rtnValue) != "undefined") {
-		        	var listview = new ListView();
-			        listview.LoadFromID("lvUserList");
-			        
-		            var selectedCN = document.getElementById("selectedCN").value;
-		            if (rtnValue.toLowerCase() == selectedCN.toLowerCase()) {
-		                alert("<spring:message code='ezOrgan.t21' />");
-		                return;
-		            }
-		            
-		            var length = listview.GetSelectedRows().length;
-		            if (!confirm(length + "<spring:message code='ezOrgan.t14' />")){
-		                return;
-		            }
-		            
-		            var data = "";
-		            for (var i = 0; i < length; i++) {
-		            	data += listview.GetSelectedRows()[i].getAttribute("DATA2");
-		            	
-		            	if(i != length-1){
-		            		data = data + ",";
-		            	}		                
-		            }
-
-		            $.ajax({
-		            	type : "POST",
-		            	dataType : "html",
-		            	url : "/admin/ezOrgan/movUser.do",
-		            	async : false,
-		            	data : {parentCn : rtnValue, cn : data},
-		            	success : function(result) {
-		            		if (result == "EMAIL_ERROR") {
-		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		} else if (result == "SAME") {
-		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		} else if (result == "DIFF_COMPANY") {
-		            			alert("<spring:message code='ezOrgan.lhm4' />");
-		            		} else if (result == "HASGYUMJIK") {
-		            			alert("<spring:message code='ezOrgan.t15' />");
-		            		} else {
-		            			alert(length + "<spring:message code='ezOrgan.t16' />");
-		            		}
-		            	},
-		            	error : function() {
-		            		alert("<spring:message code='ezOrgan.t15' />");
-		            	}
-		            });
-
-		            var treeView = new TreeView();
-		            treeView.LoadFromID("FromTreeView");
-		            var nodeIdx = treeView.GetSelectNode();
-		            var treeNode = new TreeNode();
-		            treeNode.LoadFromID(nodeIdx.NodeID);
-		            displayUserList(treeNode.GetNodeData("CN"));
-		        }
-		    }
-		    
 		    function del_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -1460,25 +1265,14 @@
 	    		var mobileOwner = $(trIdx).children().eq(0).text();
 	    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
 		    	document.getElementById("userSend").value = data;
-
-				var wWeight = "660";
-				var wHeight = "370";
-
-				var heigth = window.screen.availHeight;
-				var width = window.screen.availWidth;
-
-				var left = (width - wWeight) / 2;
-				var top = (heigth - wHeight) / 2;
-
-				if (CrossYN()) {
-					var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(wWeight, wHeight));
-					try { OpenWin.focus(); } catch (e) { }
-				} else {
-					var ret = window.showModalDialog("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "",
-								"dialogWidth:405px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:"
-								+ top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
-					window.location.reload(true);
-				}
+		    	
+		    	var agent = navigator.userAgent.toLowerCase();
+		    	
+		    	if (agent.indexOf("chrome") != -1) {
+		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 330));
+		    	} else {
+			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 330));
+		    	}
 		    }
 		   
 		    // POP3/IMAP 설정 함수
@@ -1555,16 +1349,482 @@
 		    		});
 		    	}
 		    }
-		    
-		    function moveDisplay(mode) {
-		    	if (mode) {
-		    		$(".moveWrap").css("display","none");	
-		    	} else {
-		    		$(".moveWrap").css("display","block");	
-		    	}
-		    }
-		    
-	    </script>
+
+			function moveDisplay(mode) {
+				if (mode) {
+					$(".moveWrap").css("display","none");
+					$(".tblPageRayerOrgan").css("display","block");
+				} else {
+					pageNum = 1;
+					$(".moveWrap").css("display","block");
+					$(".tblPageRayerOrgan").css("display","none");
+				}
+			}
+			
+			// xml data -> input checkbox method
+			var cnt;
+			var sawonDataParsing = function() {
+				var doc = window.document;
+				var acList = doc.getElementById("lvUserList");
+
+				cnt = acList.children[1].childElementCount;
+				// 사원이 없을 경우
+				if(cnt == 1) {
+					if(acList.children[1].children[0].id === "lvUserList_TR_noItems") {
+						return;
+					}
+				}
+
+				var i = 0;
+				for (i; i < cnt; i++) {
+					var tempLV = doc.getElementById('lvUserList_TR_' + i);
+					var userID = tempLV.getAttribute('DATA2');
+					var gyumInfo = tempLV.getAttribute('DATA3');
+					// 3 암호관리 4 사원이동 5 퇴직
+					if(tempLV.children[0].innerHTML != "") {
+						tempLV.children[0].innerHTML = "<span><img id='pwd" + userID +"' class='deptMaster' onclick='mod_pwd(event)' src='/images/admin/deptmaster.png'></span>";
+					}
+					tempLV.children[6].innerHTML = "<span><img id='pwd" + userID +"' class='pwd' onclick='mod_pwd(event)' src='/images/admin/password.png'></span>";
+					tempLV.children[7].innerHTML = "<span><img id='move" + userID +"' class='move' onclick='move_user(event)' src='/images/admin/move_sawon.png'></span>";
+					tempLV.children[8].innerHTML = "<span><img id='retire" + userID +"' data1='" + gyumInfo + "' class='retire' onclick='retire_user(event)' src='/images/admin/retire.png'></span>";
+				}
+			}
+
+			// 암호관리 수정 팝업
+			var userID;
+			function mod_pwd(event) {
+				event.stopPropagation();
+				changePassLength = 1;
+				userID = event.target.id;
+				var indexCN = userID.indexOf("pwd") + 3;
+				userID = userID.substring(indexCN);
+				inputpassword_dialogArguments[1] = mod_pwd_complete;
+
+				//크롬일때 alert창 크기때문에 크롬일때 구별
+				var agent = navigator.userAgent.toLowerCase();
+				if (agent.indexOf("chrome") != -1) {
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
+				} else {
+					var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 200));	
+				}
+			}
+
+			// 암호관리 수정 수행
+			function mod_pwd_complete(rtnValue){
+				if (typeof (rtnValue) != "undefined") {
+					var data = userID;
+
+					$.ajax({
+						type : "POST",
+						dataType : "xml",
+						url : "/admin/ezOrgan/changePassword.do",
+						async : false,
+						data : {password : rtnValue, cn : data},
+						success : function(result){
+							alert("<spring:message code='ezOrgan.hyh02' />");
+						},
+						error : function(){
+							alert("<spring:message code='ezOrgan.t41' />");
+						}
+					});
+				}
+				userID = "";
+			}
+
+			// 사원이동 호출
+			function move_user(event){
+				event.stopPropagation();
+				
+				userID = event.target.id;
+				var indexCN = userID.indexOf("move") + 4;
+				userID = userID.substring(indexCN);
+				
+				// 조직도 load
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+				document.getElementById("selectedCN").value = treeNode.GetNodeData("CN");
+
+				selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
+				selectdept_cross_dialogArguments[1] = move_user_CompleteWithTimeout;
+				var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
+				try { OpenWin.focus(); } catch (e) { }
+			}
+
+			// tree load 시간
+			function move_user_CompleteWithTimeout(rtnValue) {
+				setTimeout(function() {
+					move_user_Complete(rtnValue);
+				}, 10);
+			}
+
+			// 사원이동 수행
+			function move_user_Complete(rtnValue) {
+				if (typeof (rtnValue) != "undefined") {
+
+					// 동일 부서 체크
+					var selectedCN = document.getElementById("selectedCN").value;
+					if (rtnValue.toLowerCase() == selectedCN.toLowerCase()) {
+						alert("<spring:message code='ezOrgan.t21' />");
+						return;
+					}
+
+					// 사원이동 confirm
+					if (!confirm("<spring:message code='ezOrgan.hyh04' />")){
+						return;
+					}
+
+					var data = userID;
+
+					$.ajax({
+						type : "POST",
+						dataType : "html",
+						url : "/admin/ezOrgan/movUser.do",
+						async : false,
+						data : {parentCn : rtnValue, cn : data},
+						success : function(result) {
+							if (result == "EMAIL_ERROR") {
+								alert("<spring:message code='ezOrgan.t15' />");
+							} else if (result == "SAME") {
+								alert("<spring:message code='ezOrgan.t15' />");
+							} else if (result == "DIFF_COMPANY") {
+								alert("<spring:message code='ezOrgan.lhm4' />");
+							} else {
+								alert("<spring:message code='ezOrgan.hyh05' />");
+							}
+						},
+						error : function() {
+							alert("<spring:message code='ezOrgan.t15' />");
+						}
+					});
+
+					// 이동 후 tree 재 호출
+					curTreeNodeReload()
+				}
+			}
+
+			// 사원 퇴직
+			var retire_user = function(event) {
+				event.stopPropagation();
+				
+				userID = event.target.id;
+				var indexCN = userID.indexOf("retire") + 6;
+				userID = userID.substring(indexCN);
+
+				// 겸직유무 체크
+				var gyumInfo = event.target.getAttribute('data1')
+				if (gyumInfo === 'addJob'){
+					alert("<spring:message code='ezOrgan.psb02' />");
+					return;
+				}
+
+				var data = userID;
+				if (!confirm("<spring:message code='ezOrgan.hyh03' />")){
+					return;
+				}
+
+				$.ajax({
+					type : "POST",
+					dataType : "html",
+					url : "/admin/ezOrgan/retireUser.do",
+					async : false,
+					data : {cn : data},
+					success : function(result) {
+						if (result == "OK") {
+							alert(strLang3);
+							curTreeNodeReload();
+						} else {
+							alert(strLang4);
+						}
+					},
+					error : function(){
+						alert(strLang4);
+					}
+				});
+			}
+
+			function curTreeNodeReload() {
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+				displayUserList(treeNode.GetNodeData("CN"));
+			}
+
+			function check_info() {
+
+				var treeView = new TreeView();
+				treeView.LoadFromID("FromTreeView");
+				var nodeIdx = treeView.GetSelectNode();
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(nodeIdx.NodeID);
+
+				if (treeNode.selectedIndex == -1){
+					alert("<spring:message code='ezOrgan.t5' />");
+					return;
+				}
+
+				// 회사정보
+				if (treeNode.GetNodeData("CN") == treeNode.GetNodeData("EXTENSIONATTRIBUTE2")){
+					info_company();	
+				} else { // 부서정보
+					info_dept();
+				}
+			}
+
+			// 페이징 객체 생성 method
+			function td_Create1(strtext) {
+				document.getElementById("tblPageRayer").innerHTML = strtext;
+			}
+
+			// 페이징 method
+			function makePageSelPage() {
+				var strtext;
+				var PagingHTML = "";
+				document.getElementById("tblPageRayer").innerHTML = "";
+				/* document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + TotalCount + "</span>";  */
+				strtext = "<div class='pagenavi'>";
+				PagingHTML += strtext;
+
+					if (totalPage > 1 && pageNum != 1) {
+					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				if (totalPage > BlockSize) {
+					if (pageNum > BlockSize) {
+						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+
+				var MaxNum;
+				var i;
+				var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+				if (totalPage >= (startNum + parseInt(BlockSize))) {
+					MaxNum = (startNum + parseInt(BlockSize)) - 1;
+				} else {
+					MaxNum = totalPage;
+				}
+
+
+				for (i = startNum; i <= MaxNum; i++) {
+					if (i == pageNum) {
+						strtext = "<span class='on'>" + i + "</span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+						PagingHTML += strtext;
+					}
+				}
+
+
+				//2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
+				if (i == 1) {
+					strtext = "<span class='on'>" + i + "</span>";
+					PagingHTML += strtext;
+				}
+
+
+				if (totalPage > BlockSize) {
+					if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "";
+					strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+					strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+					PagingHTML += strtext;
+				}
+
+				PagingHTML += "</div>";
+				td_Create1(PagingHTML);
+			}
+
+			function goToPageByNum(Value) {
+				pageNum = Value;
+				makePageSelPage();
+				pageChange();
+			}
+
+			function selbeforeBlock() {
+				pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+				goToPageByNum(pageNum);
+			}
+
+			function selbeforeBlock_one() {
+				if (parseInt(pageNum - 1) > 0) {
+					goToPageByNum(parseInt(pageNum - 1));
+				} else {
+					return;
+				}
+			}
+
+			function selafterBlock() {
+				pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+				goToPageByNum(pageNum);
+			}
+
+			function selafterBlock_one() {
+				if (parseInt(pageNum + 1) <= totalPage) {
+					goToPageByNum(parseInt(pageNum + 1));
+				} else {
+					return;
+				}
+			}
+
+			function selNum(pselNum) {
+				pageNum = pselNum;
+				pageChange();
+			}
+
+			function selNext() {
+				pageNum = pageNum + 1;
+				pageChange();
+			}
+
+			function selPrev() {
+				pageNum = pageNum - 1;
+				pageChange();
+			}
+
+			function pageChange() {
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezOrgan/getSearchList.do",
+					async : false,
+					data : {
+						search : searchType + "::" + searchWord,
+						cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
+						prop : "department",
+						type : "user",
+						page : pageNum,
+						adminOrgan : "y"
+					},
+					success : function(xml){
+						result=loadXMLString(xml);
+						var listview = new ListView();
+						listview.LoadFromID("lvUserList");
+
+						// 전체페이지 처리
+						var totCount = result.getElementsByTagName('TOTALCOUNT')[0].innerHTML;
+						totalPage = Math.ceil((totCount)/10);
+						if(totalPage == 0) {
+							totalPage = 1;
+						}
+
+						// 암호관리, 사원이동, 퇴직 cell append
+						var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
+						var i = 0;
+						for(i;i<cnt;i++) {
+							var cell1 = result.createElement("CELL");
+							var value1 = result.createElement("VALUE");
+							cell1.appendChild(value1);
+							var cell2 = result.createElement("CELL");
+							var value2 = result.createElement("VALUE");
+							cell2.appendChild(value2);
+							var cell3 = result.createElement("CELL");
+							var value3 = result.createElement("VALUE");
+							cell3.appendChild(value3);
+							result.getElementsByTagName("ROW")[i].appendChild(cell1);
+							result.getElementsByTagName("ROW")[i].appendChild(cell2);
+							result.getElementsByTagName("ROW")[i].appendChild(cell3);
+						}
+
+						var headerData = createXmlDom();
+						headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+						$("#maillist_user").css("display", "");
+						$("#maillist_dept").css("display", "none");
+
+				        if (CrossYN()) {
+				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];				            
+				            var Node = headerData.importNode(xmlRtn, true);
+				            headerData.documentElement.appendChild(Node);
+				        }else{
+				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				            headerData.documentElement.appendChild(xmlRtn);
+				        }
+		                document.getElementById("OrganListView").innerHTML = "";
+
+						var pUserList = new ListView();
+						pUserList.SetID("lvUserList");
+						pUserList.SetRowOnDblClick("info_user");
+						pUserList.SetSelectFlag(false);
+						pUserList.SetHeightFree(true);
+						pUserList.DataSource(headerData);
+						pUserList.DataBind("OrganListView");
+						sawonDataParsing();
+						moveDisplay(true);
+						makePageSelPage();
+					},
+					error : function(error){
+						alert("<spring:message code='ezOrgan.t59' />" + error);
+					}
+				});
+			}
+
+			var windowResize = function() {
+				var doc = window.document;
+				var height = window.innerHeight * 0.8 - 62;
+				doc.getElementById('TreeView').style.height = (height + 9.6) + "px";
+				doc.getElementsByClassName('OrganListView')[0].style.height = (height -63) + "px";
+			}
+
+			/*
+			 * 기존 Treeview '+' 클릭시 사이즈 조절 제외
+			 */
+			function TreeViewRequestData(pNodeID, pTreeID) {
+				var TreeIdx = pNodeID;
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(TreeIdx);
+				var deptID = treeNode.GetNodeData("CN");
+				GetDeptSubTreeInfo(deptID, TreeIdx);
+			}
+			
+			//2019.01.23 유은정 버튼 동작 추가
+			function functionSetting() {
+				//move up
+				var upBtn = document.getElementById("upBtn");
+				var downBtn = document.getElementById("downBtn");
+				var saveBtn = document.getElementById("saveBtn");
+				
+				upBtn.addEventListener("click", MoveUp_onclick);
+				downBtn.addEventListener("click", MoveDown_onclick);
+				saveBtn.addEventListener("click", MoveConfirm_onclick);
+			}
+			
+		</script>
+		<style>
+			.OrganListView {width:100%;}
+		</style>
 	</head>
 	<body class="mainbody">
 		<input type="hidden" name="selectedCN" id="selectedCN" />
@@ -1572,190 +1832,143 @@
 		<form name="sendForm">
 			<input type="hidden" name="userSend" id="userSend" />
 		</form>
-		
-		<xml id="listviewheader1" style="display:none">
+
+		<xml id="listviewheader1" style="display:none;">
 			<LISTVIEWDATA>
 				<HEADERS>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t67' /></NAME>
-						<WIDTH>40</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t68' /></NAME>
-						<WIDTH>80</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t69' /></NAME>
-						<WIDTH>50</WIDTH>
-					</HEADER>
+					<HEADER><WIDTH>4%</WIDTH></HEADER>
+					<HEADER><WIDTH>20%</WIDTH></HEADER>
+					<HEADER><WIDTH></WIDTH></HEADER>
+					<HEADER><WIDTH>15%</WIDTH></HEADER>
+					<HEADER><WIDTH>10%</WIDTH></HEADER>
+					<HEADER><WIDTH>10%</WIDTH></HEADER>
+					<HEADER><WIDTH>8%</WIDTH></HEADER>
+					<HEADER><WIDTH>8%</WIDTH></HEADER>
+					<HEADER><WIDTH>7%</WIDTH></HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
+
 		<xml id="listviewheader2" style="display:none">
 			<LISTVIEWDATA>
 				<HEADERS>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t70' /></NAME>
-						<WIDTH>70</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t71' /></NAME>
-						<WIDTH>30</WIDTH>
-					</HEADER>
+					<HEADER><WIDTH>4%</WIDTH></HEADER>
+					<HEADER><WIDTH>46%</WIDTH></HEADER>
+					<HEADER><WIDTH>50%</WIDTH></HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
 		<h1>
-		<c:if test="${dotNetIntegration != 'YES'}">
-		<spring:message code='ezOrgan.t72' />
-		</c:if>
-		<c:if test="${dotNetIntegration == 'YES'}">
-		<spring:message code='main.t24' />
-		</c:if>
+			<c:if test="${dotNetIntegration != 'YES'}">
+				<spring:message code='main.t56' />
+			</c:if>
+			<c:if test="${dotNetIntegration == 'YES'}">
+				<spring:message code='main.t24' />
+			</c:if>
+			<span class="searchForm">
+				<select id="search_type" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+					<option selected value="description"><spring:message code='ezOrgan.t68' /></option>
+					<option value="displayname"><spring:message code='ezOrgan.t67' /></option>
+					<option value="cn"><spring:message code='ezOrgan.t94' /></option>
+					<option value="title"><spring:message code='ezOrgan.t69' /></option>
+					<option value="extensionAttribute10"><spring:message code='ezOrgan.t1500' /></option>
+					<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
+					<option value="mobile"><spring:message code='ezOrgan.t96' /></option>
+					<option value="HomePhone"><spring:message code='ezOrgan.t97' /></option>
+					<option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98' /></option>
+					<option value="mail"><spring:message code='ezOrgan.t99' /></option>
+					<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
+				</select>
+				<input id="keyword" class="organSearchKeyword" onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;"/>
+				<a class=searchBtn>
+					<img src="/images/bsearch_new2.gif" onClick="search_click()" border="0">
+				</a>
+			</span>
 		</h1>
-		<table style="height:630px;margin-top:10px;width:900px;border:1px solid #ddd">
-			<tr>
-				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
-				<th style="border-bottom:0px">
-					<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>					
-					<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
-				</th>
-				<th style="width:80px;text-align:center;" rowspan="3">
-					<table>
-                        <tr id="companybutton3">
-                            <td><a class="imgbtn"><span onClick="info_company()"><spring:message code='ezCommunity.t1070' /></span></a></td>
-                        </tr>     
-						<c:if test="${dotNetIntegration != 'YES'}">
-						<tr id="companybutton1">
-							<td><a class="imgbtn"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></a></td>
-						</tr>
-						<tr id="companybutton2">
-							<td><a class="imgbtn"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></a></td>
-						</tr>
-						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn"><span onClick="info_dept()"><spring:message code='ezOrgan.t79' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn"><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></a></td>
-						</tr>
-						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu3"><span onClick="info_user()"><spring:message code='ezOrgan.t83' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></a></td>
-						</tr>
-						<tr style="display:none">
-							<td><a class="imgbtn" id="usermenu2"><span onClick="del_user()"><spring:message code='ezOrgan.t85' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu1"><span onClick="mov_user()"><spring:message code='ezOrgan.t86' /></span></a></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="userRetire"><span onClick="Retire_user()"><spring:message code='ezOrgan.t310' /></span></a></td>
-						</tr>      
-						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
-							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
-						</tr>
-						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
-							<td><a class="imgbtn" id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></a></td>
-						</tr>
-						<tr>
-							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
-						</tr>
-						<tr>
-							<td><a class="imgbtn" id="usermenu5"><span onClick="mod_password()"><spring:message code='ezOrgan.t90' /></span></a></td>
-						</tr>
-						</c:if>
-						<tr>
-							<td><a class="imgbtn" id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></a></td>
-						</tr>		
-						<tr>
-							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
-						</tr>
-						<c:if test="${useSyncServer == 'YES'}">			
-							<tr>
-			                	<td><a class="imgbtn" id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></a></td>
-			                </tr>
-		                </c:if>
-						<c:if test="${useBizmekaTalk == 'YES'}">			
-							<tr>
-			                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
-			                </tr>
-		                </c:if>
-		                <c:if test="${useDisablePopImap == 'YES'}">
-							<tr>
-			                	<td><a class="imgbtn" id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></a></td>
-			                </tr>
-		                </c:if>
-		                <c:if test="${useMobileManagemant == 'YES' }">
-		                	<tr>
-			                	<td><a class="imgbtn" id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></pan></a></td>
-			                </tr>
-			            </c:if>
-					</table>
-				</th>
-			</tr>
-			<tr>
-				<th style="height:30px;border-top:0px">
-					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px; height:22px;" />
-					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='main.t74' />/<spring:message code='ezOrgan.t93' /></span></a>
-				</th>
-				<th style="border-top:0px">
-					<select id="search_type" style="WIDTH:100px; height:22px;">
-						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
-						<option value="cn"><spring:message code='ezOrgan.t94' /></option>
-						<option value="description"><spring:message code='ezOrgan.t68' /></option>
-						<option value="title"><spring:message code='ezOrgan.t69' /></option>
-						<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
-						<option value="mobile"><spring:message code='ezOrgan.t96' /></option>
-						<option value="HomePhone"><spring:message code='ezOrgan.t97' /></option>
-						<option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98' /></option>
-						<option value="mail"><spring:message code='ezOrgan.t99' /></option>
-						<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
-					</select>
-					<input id="keyword" onKeyPress="search_press()" style="WIDTH:120px; height:22px;" />
-					<a class="imgbtn" style="vertical-align:middle"><span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span></a>
-				</th>
-			</tr>
-		    <tr>
-		        <th style="padding: 3px; text-align: left; font-weight: normal;vertical-align:top">
-		            <div style="border: 1px solid #ddd; height: 510px; width: 375px; margin:10px; overflow: auto; background-color: #FFFFFF" id="TreeView"></div>
-		        </th>
-		        <th style="padding: 3px; text-align: left;vertical-align:top">
-		            <div class="listview" style="margin:10px;margin-bottom:2px">
-		            	<c:if test="${dotNetIntegration != 'YES'}">
-			                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; ">
-			                </div>
-		                </c:if>
-		                <c:if test="${dotNetIntegration == 'YES'}">
-			                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 540px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; ">
-			                </div>
-		                </c:if>
-		            </div>
-		            <div style="height: 5px; overflow: hidden">&nbsp;</div>
-		            <c:if test="${dotNetIntegration != 'YES'}">
-		            <div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center">
-		            	<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
-						<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
-		                <a class="imgbtn" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
-		            </div>
-		            </c:if>
-		        </th>
-		    </tr>
-		</table>
-     <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
-     <span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>  
+
+		<div id="mainmenu" class="organMainmenu">
+			<ul style="height:33px;">
+				<c:if test="${dotNetIntegration != 'YES'}">
+					<li id="companybutton3" class="important"><span onClick="check_info()"><spring:message code='ezOrgan.hyh06' /></span></li>
+					<li id="companybutton1" class="important"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></li>
+					<li class="important"><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></li>
+					<li class="important"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></li>
+					<li id="companybutton2"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></li>
+					<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
+					<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
+					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
+				</c:if>
+				<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
+				<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
+				<c:if test="${useSyncServer == 'YES'}">			
+					<li id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></li>
+				</c:if>
+				<c:if test="${useBizmekaTalk == 'YES'}">
+					<li id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></li>
+				</c:if>
+				<c:if test="${useDisablePopImap == 'YES'}">
+					<li id="usermenu22"><span onClick="mod_pop3Imap()">POP3/IMAP</span></li>
+				</c:if>
+				<c:if test="${useMobileManagemant == 'YES' }">
+					<li id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></span></li>
+				</c:if>
+				<dl class="organList">
+					<dt class="organListDT">
+						<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
+						<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
+					</dt>
+				</dl>
+			</ul>
+		</div>
+
+		<div>
+			<div style="border: 1px solid #ddd; height: 530px; width: 30%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
+			<div class="organHeader">
+	 		 	<table id="maillist_user" class="mainlist" style="width:100%;">
+					<tr class="header">
+						<th width="4%"></th> 
+						<th width="20%"><spring:message code='ezOrgan.t67' /></th> 
+						<th ><spring:message code='ezAttitude.t218' /></th>
+						<th  width="15%"><spring:message code='main.t75' /></th>
+						<th width="10%"><spring:message code='main.t77' /></th>
+						<th  width="10%"><spring:message code='ezOrgan.t1500' /></th>
+						<th width="8%"><spring:message code='ezOrgan.t90' /></</th>
+						<th width="8%"><spring:message code='ezOrgan.t86' /></th>
+						<th  width="7%"><spring:message code='ezOrgan.hyh01' /></th>
+					</tr>
+				</table>
+ 				<table id="maillist_dept" class="mainlist" style="width:100%;display:none;">
+					<tr class="header">
+						<th width="4%"></th>
+						<th width="46%"><spring:message code='ezOrgan.t70' /></th>
+						<th width="50%"><spring:message code='ezOrgan.t71' /></th>
+					</tr>
+				</table>
+			</div> 
+			<div class="listview organ" style="width:69%; float:right;">
+				<c:if test="${dotNetIntegration != 'YES'}">
+					<div id="OrganListView" class="OrganListView"></div>
+				</c:if>
+				<c:if test="${dotNetIntegration == 'YES'}">
+					<div id="OrganListView" class="OrganListView"></div>
+				</c:if>
+			</div>
+		</div>	
+		<c:if test="${dotNetIntegration != 'YES'}">
+			<div class="moveWrap" style="width:69%; vertical-align:middle; text-align:center; float:right; border: 1px solid #ddd;background-color: #f8f8fa; padding:5px 0px;">
+				<span class="upBtn" id="upBtn"><img src="/images/admin/arrowUp.png"/></span>
+				<span class="downBtn" id="downBtn"><img src="/images/admin/arrowDown.png"/></span>
+				<span class="btnpositionJsp"><a class="imgbtn" id="saveBtn"><span><spring:message code='ezOrgan.t104' /></span></a></span>
+				<!--<span class="imgbtn" id="saveBtn" ><spring:message code='ezOrgan.t104' /></span>-->
+				<%-- <img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
+				<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
+				<a class="imgbtn order" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a> --%>
+			</div>
+			
+		</c:if>
+		<div id="tblPageRayer" class="tblPageRayerOrgan" style="width: 69% !important;"></div>
+
+	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
+	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>  
 	</body>
 </html>

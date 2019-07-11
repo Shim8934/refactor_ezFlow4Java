@@ -112,7 +112,15 @@
 	                document.getElementById("messagetd").style.height = document.body.clientHeight - 298 + "PX";
 	            }
 	        }
-				
+	        
+		    window.onbeforeunload = function () {
+		        try {
+		    		window.opener.openerCalendarMiniView("CalendarMini");	    		
+		    		window.opener.openerCalendarMiniDataSource();
+		            window.opener.getScheduleList(window.opener.nowDay, "P");
+		        } catch (e) { }
+		    }
+				    
 	        function show_personinfo(userid) {
 	        	var deptID = "";
 	        	
@@ -122,7 +130,7 @@
 	                userid = modifierid;
 	            
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezSchedule/scheduleGetCumDeptID.do",
@@ -338,6 +346,24 @@
 	            post_to_url("/ezSchedule/scheduleContentsPrint.do", params, "post");
 	        }
 	
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=schedl", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
+	        
 	        function post_to_url(path, params, method) {
 	            method = method || "post";
 	
@@ -580,21 +606,24 @@
 	                    <div id="menu">
 	                        <ul>
 	                        	<c:if test="${_editPosible == 'Y'}">
-                                <li>
-                                	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
-                                </li>
-                                <li>
-                                	<span onclick="check_schedule()"><spring:message code='ezSchedule.t215' /></span>
-                                </li>	                                
-                                <li id ="manageli">
-                                	<span id=managespan onclick="manage_attendant()"><spring:message code='ezSchedule.t303' /></span>
-                                </li>
+	                                <li>
+	                                	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
+	                                </li>
+	                                <li id ="manageli">
+	                                	<span id=managespan onclick="manage_attendant()"><spring:message code='ezSchedule.t303' /></span>
+	                                </li>
+	                                <li>
+	                                	<span class="icon16 popup_icon16_delete" onclick="check_schedule()"></span>
+	                                </li>
                                 </c:if>
-                            	<li>
-                            		<span onclick="Print_onClick()"><spring:message code='ezSchedule.t217' /></span>
+								<c:if test="${useCabinet == 'YES'}">
+									<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+								</c:if>
+								<li>
+                            		<span class="icon16 popup_icon16_print" onclick="Print_onClick()"></span>
                             	</li>                            	
 	                        </ul>
-	                    </div>	                    
+	                    </div>
 	                    <div id="close">
 	                        <ul>
 	                            <li>
@@ -739,8 +768,7 @@
 	                                <spring:message code='ezSchedule.t316' />
 	                            </th>
 	                            <td class="pos1">
-	                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">	                                
-	                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
+	                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">
 	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
 	                                    	<div style="margin-top:3px;height:20px">
 	                                    		<c:set var="imagePath" value="/images/file.gif" />
@@ -775,10 +803,10 @@
 	                                </div>
 	                            </td>
 	                            <td class="pos2">	                                
-	                                <a href="#" class="imgbtn imgbck">
+	                                <a class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
 	                                </a><br/>	                                
-	                                <a href="#" class="imgbtn imgbck">
+	                                <a class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
 	                                </a>
 	                            </td>

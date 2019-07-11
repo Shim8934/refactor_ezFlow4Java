@@ -47,7 +47,7 @@
 	    </style>
 	    <script type="text/javascript">
 		//	var companyId = "${info.companyID}"; 
-			var userId = "${userId}";
+			var userId = "<c:out value='${userId}'/>";
 			//트리조직도 JSON
 	   		var treeContent;
 	    	// 수신자
@@ -57,7 +57,7 @@
 	    	// 일지함아이디
 	    	var typeId = "<c:out value='${typeId}'/>";
 	    	// 부서아이디
-	    	var deptId = "${info.deptID}";
+	    	var deptId = "<c:out value='${info.deptID}'/>";
 	    	// 첨부파일 최대용량
 	    	var AttachLimit = 5;
 	    	var mode = "<c:out value='${mode}'/>";
@@ -187,13 +187,9 @@
 	    					"deptId" : deptId},
 	    			success : function(result) {
 	    				var str = "";
-	    				if (result.length > 0) {
-		    				$(result).each(function() {
-		    					str += "<option value=" + this.formId + ">" + this.formName + "</option>";
-		    				});
-	    				} else {
-	    					str += "<option><spring:message code='ezJournal.t134'/></option>";
-	    				}
+	    				$(result).each(function() {
+	    					str += "<option value=" + this.formId + ">" + this.formName + "</option>";
+	    				});
 	    				$("#optForm").html(str);
 	    			}
 	    		});
@@ -387,14 +383,14 @@
 	        	var content = message.GetEditorContent();
 	
 				if ($("#title").val() == "") {
-					alert("<spring:message code='ezCircular.t52'/>");
+					alert("<spring:message code='ezJournal.t217'/>");
 					doubleSubmitFlag = false;
 					
 					return;
 				}
 	
 				if ($.trim($("#title").val()) == "") {
-		        	alert("<spring:message code='ezCircular.t190' />");
+		        	alert("<spring:message code='ezJournal.t218' />");
 		        	doubleSubmitFlag = false;
 	
 		        	return;
@@ -488,14 +484,14 @@
 	        	}
 	
 				if ($("#title").val() == "") {
-					alert("<spring:message code='ezCircular.t52'/>");
+					alert("<spring:message code='ezJournal.t217'/>");
 					doubleSubmitFlag = false;
 					
 					return;
 				}
 	
 				if ($.trim($("#title").val()) == "") {
-		        	alert("<spring:message code='ezCircular.t190' />");
+		        	alert("<spring:message code='ezJournal.t218' />");
 		        	doubleSubmitFlag = false;
 	
 		        	return;
@@ -613,15 +609,15 @@
 	                    <ul>
 	                    	<c:choose>
 	                    		<c:when test="${mode eq 'reuse'}">
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
+			                        <li><span onclick="btn_Save('<c:out value='${mode}'/>');"><spring:message code='ezJournal.t26' /></span></li>
 			                        <li><span onclick="btn_TempSave('reuse')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:when>
 	                    		<c:when test="${mode eq 'modify'}">
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
+			                        <li><span onclick="btn_Save('<c:out value='${mode}'/>');"><spring:message code='ezJournal.t26' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
 	                    			<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezJournal.t73 => t26 -->
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
+			                        <li><span onclick="btn_Save('<c:out value='${mode}'/>');"><spring:message code='ezJournal.t26' /></span></li>
 			                        <li><span onclick="btn_TempSave('temp')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
@@ -701,7 +697,7 @@
 	        </tr>
 	        <tr>
   				<td>
-   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px;" src="/ezJournal/dragAndDrop.do?mode=${mode}&journalId=${journalId}"></iframe>
+   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px;" src="/ezJournal/dragAndDrop.do?mode='<c:out value='${mode}'/>'&journalId='<c:out value='${journalId}'/>'"></iframe>
   				</td>
   			</tr>
 	    </table>
@@ -711,7 +707,7 @@
 	    	<span id="loading"><img id="loading-image" src="/images/ProgressBar.gif" alt="Loading..."></span>
 	    </c:if>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	        <iframe src="<spring:message code='ezJournal.t185' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 
 		<script>

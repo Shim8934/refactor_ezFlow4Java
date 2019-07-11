@@ -98,9 +98,10 @@
 		    function btnClose_onclick() {
 		        window.close();
 		    }
-				
+		    
+		    /* 2019-02-20 홍승비 - 커뮤니티 CSRF 수정 (단순 호출 작동 시 get방식 사용 )*/
 		    function btn_Reply_Onclick() {
-		        document.re.submit();
+		    	window.location.href = "/ezCommunity/board/bbsEditNew.do?mode=write&bName=${bName}&no=${grsNo}&head=${strTitle}&step=${myStep}&level=${myLevel}&ref=${grsRef}&pagec=${pagec}";
 		    }
 				
 		    function btn_Modify_Onclick() {
@@ -192,9 +193,9 @@
 			<input type="hidden" name="content" value="">
 		</form>
 		
-		<table class="layout" style="height:707px">
+		<table class="layout">
 			<tr>
-				<td style="height:20px;">
+				<td style="height: 10px; vertical-align: top;">
 					<div id="menu">
 						<ul>
 							<c:if test="${bName == 'tbl_c_board'}">
@@ -202,7 +203,7 @@
 							</c:if>
 							<c:if test="${strWriterID == userInfo.id ||fn:indexOf(userInfo.rollInfo, 'c=1') > -1 || fn:indexOf(userInfo.rollInfo, 'k=1') > -1}">
 								<li id="btn_Modify"><span  onclick="btn_Modify_Onclick()" ><spring:message code='ezCommunity.t6' /></span></li>
-								<li id="btn_Delete"><span  onclick="btn_Delete_Onclick()" ><spring:message code='ezCommunity.t208' /></span></li>
+								<li id="btn_Delete"><span class="icon16 popup_icon16_delete" onclick="btn_Delete_Onclick()"></span></li>
 		          			</c:if>
 						</ul>
 					</div>
@@ -235,22 +236,13 @@
       			</td>
   			</tr>
   			<tr>
-				<td style="padding-top:10px;height:70%" id="ItemOverflow">
+				<td style="padding-top:10px;height:580px" id="ItemOverflow">
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
     			</td>
   			</tr>
   			<!-- 2018-05-04 홍승비 - 그룹게시판 다음글, 이전글 테이블 삭제 -->			
 		</table>
-                
-		<form style="display:none" name="re" method="post" action="/ezCommunity/board/bbsEditNew.do?mode=write&bName=<c:out value='${bName}'/>">
-			<input type="hidden" name="no" value="<c:out value='${grsNo}'/>">
-			<input type="hidden" name="head" value="<c:out value='${strTitle}'/>">
-			<input type="hidden" name="step" value="<c:out value='${myStep}'/>">
-			<input type="hidden" name="level" value="<c:out value='${myLevel}'/>">
-			<input type="hidden" name="ref" value="<c:out value='${grsRef}'/>">
-			<input type="hidden" name="pagec" value="<c:out value='${pagec}'/>">
-		</form>
-		
+				
 		<form style="display:none" method="post" name="del" action="/ezCommunity/board/bbsDelOk.do">
 			<input type=hidden name=grsNo value="<c:out value='${grsNo}'/>">
 			<input type=hidden name=goToPage value="<c:out value='${pagec}'/>">

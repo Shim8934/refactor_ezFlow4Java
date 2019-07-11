@@ -39,21 +39,21 @@
     var CompanyID = "<c:out value = '${userInfo.companyID}' />";
     var arr_userinfo = new Array();
     arr_userinfo[0]  = "user";								
-    arr_userinfo[1]  = "<c:out value = '${userInfo.id} '/>";            
-    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName} '/>";        
-    arr_userinfo[3]  = "<c:out value = '${userInfo.title} '/>";
-    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
-    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName} '/>";
-    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
-    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";            
+    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";            
+    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";        
+    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";            
     arr_userinfo[9]  = CompanyID;
-    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
-    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
-    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
-    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
-    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
-    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";		
-    var UserLang = "${userInfo.lang}";
+    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";
+    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";		
+    var UserLang = "<c:out value = '${userInfo.lang}'/>";
     var pUserID			= arr_userinfo[1];
     var pUserName		= arr_userinfo[2];
     var pUserJobTitle	= arr_userinfo[3];
@@ -518,10 +518,10 @@
 		<td style="width: 50%;">
 			<table style="width:100%; border-bottom: 0px; border-right: 0px;" class="content">
 				<tr>
-					<th style="border-bottom: 0px; padding-right:30px;"><spring:message code='ezApprovalG.t1063'/></th>
+					<th style="border-bottom: 0px; padding-right:29px;"><spring:message code='ezApprovalG.t1063'/></th>
        				<td style="border-bottom: 0px; border-right: 0px;">
        				<span id="tdCabinetName">&nbsp;</span>
-       				<a class="imgbtn imgbck" style="position: absolute; top: 77px; left: 441px;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
+       				<a class="imgbtn imgbck" style="position: absolute; top: 74px; left: 441px;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
        				</td>
 				</tr>
 			</table>
@@ -733,7 +733,7 @@
 		                <th id="btn_Attach" style="font-weight: normal; text-align: left; padding-right: 58px;"><spring:message code='ezApprovalG.t65'/></th>
 		                <td style="border-right: 0px;"><div id="lstAttachLink"></div></td>
 	                    <td style="border-left: 0px;">
-                            <a href="#" class="imgbtn imgbck" style="height: 44px; margin: 0px;">
+                            <a class="imgbtn imgbck" style="height: 44px; margin: 0px;">
                                 <span onclick="return btnFileAttach_onclick()" style="line-height: 45px;"><spring:message code='ezApprovalG.t268'/></span>
                             </a>
                         </td>

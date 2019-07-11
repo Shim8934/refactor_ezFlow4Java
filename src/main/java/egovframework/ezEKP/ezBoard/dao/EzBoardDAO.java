@@ -673,7 +673,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> CheckBoardManage(Map<String, Object> map) throws Exception{
+	public List<HashMap<String, Object>> checkBoardManage(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzBoardDAO.CheckBoardManage", map);
 	}
 
@@ -686,10 +686,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.getSearchAllBoardItemCount", map);
 	}
 	
-	public int isDeptChk(String id, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
-		map.put("tenantID", tenantID);
+	public int isDeptChk(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.isDeptChk", map);
 	}
 	
@@ -722,5 +719,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<String> getPDOAddJobDeptID(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzBoardDAO.getPDOAddJobDeptID", map);
+	}
+	
+	/* 2019-05-15 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
+	public String getUpperDeptID(Map<String, Object> map) throws Exception{
+		return (String) select("EzBoardDAO.getUpperDeptID", map);
 	}
 }

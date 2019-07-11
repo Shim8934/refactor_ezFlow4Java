@@ -140,6 +140,8 @@ public class BoardListVO {
 	private String mainImageID;
 	/** 게시물 내용*/
 	private String content;
+	/** 작성자 사진 파일  **/
+	private String userImageFile;
 
 	public int getrNum() {
 		return rNum;
@@ -554,6 +556,12 @@ public class BoardListVO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getUserImageFile() {
+		return userImageFile;
+	}
+	public void setUserImageFile(String userImageFile) {
+		this.userImageFile = userImageFile;
 	}
 	
 }

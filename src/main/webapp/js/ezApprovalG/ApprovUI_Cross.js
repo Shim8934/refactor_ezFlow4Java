@@ -1193,6 +1193,25 @@ function getDocInfo() {
 
         var objNodes = xmldoc.documentElement.childNodes;
         if (objNodes) {
+        	tempKeep = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/STORAGEPERIOD");
+        	tempPublic = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/ISPUBLIC");
+        	tempUrgent = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/URGENTAPPROVAL");
+        	tempKeyword = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/KEYWORD");
+        	tempItemCode = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/ITEMCODE");
+        	tempSecurity = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/SECURITYCODE");
+        	tempItemName = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/ITEMNAME");
+        	tempItemName2 = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/ITEMNAME2");
+        	tempSecurityDate = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/SECURITYAPPROVAL");
+        	pPublicityCode = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/PUBLICITYCODE");
+        	pPublicityYN = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/PUBLICITYYN");
+        	pLimitRange = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/LIMITRANGE");
+        	pSummery = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/SUMMARY");
+        	pPageNum = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/PAGENUM");
+        	TaskCode = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/TASKCODE");
+        	cabinetID = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/CABINETID");
+        	pSpecialRecordCode = SelectSingleNodeValueNew(xmldoc, "DOCINFO/DATA/SPECIALRECORDCODE");
+        	
+            /* xml데이터 추출 방법 변경으로 인한 주석처리
             tempSecurity = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[19]);
             tempKeep = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[20]);
             tempUrgent = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[21]);
@@ -1209,7 +1228,8 @@ function getDocInfo() {
             pPageNum = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[29]);
             cabinetID = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[30]);
             TaskCode = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[31]);
-            tempSecurityDate = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[36]);           
+            tempSecurityDate = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[36]);
+            */
         }
     } catch (e) {
         alert("getDocInfo :: " + e.description);

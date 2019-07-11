@@ -20,6 +20,10 @@
 			#resourceDataTable tr th{
 				font-weight: normal;
 			}
+			.table_layout th {
+				color:#2f2f2f;height: 32px;background:#e4e8ec;border: 1px solid #c8ccd0;padding:0;margin:0;
+				
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -30,10 +34,17 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<style type="text/css">
+			.warningbox{margin:240px auto 0px auto; padding:40px 20px 0px 20px; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
+			.warningbox .warningimg{margin:0px; padding:0px 0px 0px 40px; float:left;}
+			.warningbox .warningDL{margin:0px; padding:0px 0px 0px 30px; float:left; overflow:hidden;}
+			.warningbox .warningDL dt{margin:0px; padding:12px 0px 5px 0px; font-size:24px; font-weight:bold; color:#3d8fea; letter-spacing:-1px; text-align: left;}
+			.warningbox .warningDL dd{margin:0px; padding:0px; font-size:20px; color:#333; letter-spacing:-1px;}
+			.warningbox .warningDL dd span{ font-size:20px; font-weight:bold;}
+			
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}
 			.warnintxt01 { position:relative; margin-bottom:10px;margin-top:20px}
-			.warningimg { position:absolute; top:0px; left:0px;}
+			/* .warningimg { position:absolute; top:0px; left:0px;} */
 			.warningdl { width:75%; padding:10px 10px 5px 114px; margin:0px; display:inline-block; text-align:left;}
 			.warningdl dt { height:40px; padding-left:6px; margin-top:10px; margin-left:10px; text-align:left;}
 			.warningdl dd { padding:0px 10px 0px 20px; margin:0px 0px 10px 0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left; word-break:break-all;}
@@ -53,9 +64,9 @@
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
 		</style>
 		<script type="text/javascript">
-			var pBrdid = "${brdID}";
-	    	var pBrdnm = "<c:out value='${brdNm}' escapeXml='false'/>";
-	    	var pAccessCode = "${accessCode}";
+			var pBrdid = "<c:out value='${brdID}'/>";
+	    	var pBrdnm = "<c:out value='${brdNm}'/>";
+	    	var pAccessCode = "<c:out value='${accessCode}'/>";
 	    	var pCompanyID = "${companyID}";
 	    	var pUserID = "${userID}";
 	    	var pDeptID = "${deptID}";
@@ -67,8 +78,10 @@
 	    	var pChildBrd = "${childBrd}";
 		    var Mod = "";
 		    var pUse_Editor = "${useEditor}";
-		    var pStartday = "${startDay}";		    
-		    select_memorialDays("${lang}");
+		    var pStartday = "${startDay}";		
+		    var lunarUseFlag = "${lunarUseFlag}";
+		    var lunarUse = "${lunarUse}";
+		    /* select_memorialDays("${lang}"); */
 		    var dayView = "";
 		    
 	    	 /* 2019-01-11 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
@@ -83,7 +96,7 @@
 	    	var xmlhttp2 = createXMLHttpRequest();
 		    function schedule_get_holiday() {
 		        xmlhttp2 = createXMLHttpRequest();
-		        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
+		        xmlhttp2.open("GET", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
 		        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
 		        xmlhttp2.send();
 		    }
@@ -95,27 +108,40 @@
 		            XmlNodeText = xmlhttp2.responseText;
 		            XmlNode = loadXMLString(XmlNodeText);
 		            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-		                if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0]) == "1") {
+		                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
 		                    var issolar;
 		                    var holiday;
-		                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0]) == "1")
+		                    var holidayFlag;
+		                    
+		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1") {
 		                        issolar = "1";
-		                    else
+		                    } else {
 		                        issolar = "2";
-		                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0]) == "1")
-		                        holiday = true;
-		                    else
-		                        holiday = false;
-		                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0]) == "1") {
-		                        memorialDays.push(new memorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
-		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
-		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
 		                    }
-		                    else {
-		                        yearmemorialDays.push(new yearmemorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
-		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(0, 4),
-		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
-		                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
+		                    
+		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1") {
+		                        holiday = true;			                    
+		                    } else {
+		                        holiday = false;
+		                    }
+		                    
+		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYFLAG")[0].textContent == "Y") {
+		                        holidayFlag = "Y";			                    
+		                    } else {
+		                        holidayFlag = "D";
+		                    }
+		                    
+		                    var repetition = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYREPEAT")[0].textContent;	                    
+		                    
+		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
+		                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
+		                    } else {                   	
+		                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
 		                    }
 		                }
 		            }
@@ -132,7 +158,7 @@
 	    		} else {
 		            DefaultView = 0;
 	    		}
-	    		
+
 	        	try {
 	            	if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                	document.body.style.MozUserSelect = 'none';
@@ -142,9 +168,9 @@
 	                	document.body.style.UserSelect = 'none';
 	            	}
 	            	if (navigator.userAgent.indexOf("Chrome") > -1)
-		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
+		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 150 + "px";
 		            else
-	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 170 + "px";
 
 	        	    if (pBrdCount != 0) {
 	            	    for (var i = 0; i < pBrdCount; i++) {
@@ -159,6 +185,7 @@
 	    	               	document.getElementById("noResListSpan").style.display = "none";
 	    	               	//document.getElementById("tbar2").style.display = "none";
 	                	} else {
+	                		document.getElementById("noResListSpan").style.display = "none";
 	                		document.getElementById("mainmenu").style.display = "none";
 	                	} 
 	                	document.getElementById("tdDateCalendarViewer").innerHTML = document.getElementById("EmptyMsg").innerHTML;
@@ -202,11 +229,17 @@
 		            if (type == "WEEK") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        weekonload(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $("#Weekbtn").attr("class","on");
+	        	        $("#ToDaybtn").attr("class","off");
+	        	        
+	        	        $("#divViewHeader").css("color","");
 	        	        $('body').css('overflowY', 'hidden');
 		            }
 		            else if (type == "TODAY") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        todayonlaod(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $("#Weekbtn").attr("class","off");
+	        	        $("#ToDaybtn").attr("class","on");
 	        	        $('body').css('overflowY', 'auto');
 	            	}
 	        	} else {
@@ -245,9 +278,9 @@
 	    		}
 	    		//else if(Mod == "TODAY") {
 	    			if (navigator.userAgent.indexOf("Chrome") > -1)
-		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
+		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 150 + "px";
 		            else
-	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 170 + "px";
 	    		//}
 	    	}
 
@@ -314,7 +347,7 @@
 	    	
 	    	function showRes(val01) {
 	    		$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezResource/scheduleResourceData.do",
@@ -357,8 +390,18 @@
 						
 						if (approveFlag == "1") {
 							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
-						} else {
+						} else if (approveFlag == "0") {
 							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+						} else {
+							$("#approveFlag").html("<spring:message code='ezSchedule.t404'/>");
+						}
+						
+						var returnFlag = result.resBrd.returnFlag;
+						
+						if (returnFlag == "0") {
+							$("#returnFlag").html("<spring:message code='ezResource.kmsr12'/>");
+						} else {
+							$("#returnFlag").html("<spring:message code='ezResource.kmsr13'/>");
 						}
 						
 						$("#resDate").html(result.resBrd.makeDate);
@@ -369,6 +412,28 @@
 						}
 						
 						$("#brdExplain").html(resbrdExc);
+						
+						if(result.attachList1 != null) {
+							document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURIComponent(result.attachList1);
+							document.getElementById("preview1").width = 200;
+							document.getElementById("preview1").height = 200;
+						}
+						else {
+							document.getElementById("preview1").src = "/images/default_pic.jpg";
+							document.getElementById("preview1").width = 120;
+							document.getElementById("preview1").height = 120;
+						}
+						
+						if(result.attachList2 != null) {
+							document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + val01 + "&fileName=" + encodeURIComponent(result.attachList2);
+							document.getElementById("preview2").width = 200;
+							document.getElementById("preview2").height = 200;
+						}
+						else {
+							document.getElementById("preview2").src = "/images/default_pic.jpg";
+							document.getElementById("preview2").width = 120;
+							document.getElementById("preview2").height = 120;
+						}
 						
 						/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 			        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
@@ -398,6 +463,33 @@
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
+            <ul class="on">
+            	<c:if test="${adminFg eq 'Y'}">
+            		<li class="important"><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
+    				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
+              	</c:if>
+              	<!-- <span id = "noResListSpan"> -->
+              		<%-- <li style="background:none;float:right;cursor:default;border:0px;color:#393939">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
+					<li style="background:none;float:right;cursor:default;border:0px;color:#393939"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li> --%>
+				<!-- </span> -->
+            </ul>
+		</div>
+		<div class="calendar_pagenav" id="weeklyline">
+	        <ul class="contentlayout">
+	            <li class="contentlayout_left" id="preM"><span class="icon16 calendarleft" onclick="pagenavi('PREV');"></span></li>
+	            <li class="contentlayout_right" id="preN"><span class="icon16 calendarright" onclick="pagenavi('NEXT');"></span></li>
+	            <li class="contentlayout_none"><span class="spanText" id="divViewHeader"></span>
+	            </li>
+	        </ul>
+	    </div>
+
+	    <div class="mainmenuTab" id="noResListSpan">
+	    	<ul class="mainmenuTabUL_left">  <li><span class="sub_iconLNB tree_resource_ok"></span><spring:message code='ezResource.t191'/></li><li><span class="sub_iconLNB tree_resource_no"></span><spring:message code='ezResource.kmsr21'/></li> <li><span class="sub_iconLNB tree_resource_refuse"></span><spring:message code='ezResource.kmsr22'/></li> </ul>
+	        <ul class="mainmenuTabUL">
+	            <li id="ToDaybtn" class="off"><span onClick="setweek_onload('TODAY');"><spring:message code='ezSchedule.t140'/></span></li><li id="Weekbtn" class="on"><span onClick="setweek_onload('WEEK');"><spring:message code='ezSchedule.t141'/></span></li>
+	        </ul>
+	    </div>
+		<%-- <div id="mainmenu" onload = "makePageSelPage()">
   			<ul>
     			<c:if test="${adminFg eq 'Y'}">
     				<li><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
@@ -412,10 +504,10 @@
       			<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
   				</span>
   			</ul>
-		</div>
+		</div> --%>
 		
 		<script type="text/javascript">
-    		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+    		//selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
     	<table style="width:100%;margin-top:-37px;" id="mainlist" >
@@ -430,15 +522,6 @@
             	<td style="vertical-align:top;">
                 	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;" >
                 		<table style="width:100%;">
-                    		<tr id="weeklyline">
-                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">
-                					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
-					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
-					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan"></span>&nbsp;
-					                	<img src="/images/calendar/btn_calendar_mini_next.gif" style="cursor:pointer;vertical-align:middle;" id=Img3 onClick="pagenavi('NEXT');">
-				                	</div>
-				            	</td>
-				            </tr>
                     		<tr>
                       			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  -->
                         			<div id="tooltip" style="position:absolute; visibility:hidden; z-index:1000;"></div> 
@@ -446,11 +529,11 @@
                         		</td>
                     		</tr>
                     		<tr id="noapproval" style="display:none;">
-                        		<td colspan="2" style="font-weight:bold;padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2>▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
+                        		<td colspan="2" style="padding-top:15px;padding-left:5px;vertical-align:bottom;" ><h2 style="font-weight: normal;font-size:12px">▒&nbsp;<spring:message code="ezResource.t402" /></h2></td>
                     		</tr>
                     		<tr>
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
-                        			<div id="idCalendarViewer2" style='height:100%; text-align:center'> </div>
+                        			<div id="idCalendarViewer2" style='height:100%; text-align:center; margin-bottom:10px;'> </div>
                         		</td>
                     		</tr>
                     		<tr style="display:none;" id="approval">
@@ -462,7 +545,14 @@
           	</tr>
 		</table>		
     	<div id="EmptyMsg" style="display:none;">
-        	<div class="warningbox01" style="margin-top:155px;">
+    	<div class="warningbox">
+	        <p class="warningimg"><img src="/images/notify/warning_resorce.png" width="105" height="89"></p>
+	        <dl class="warningDL">
+	        	<dt>WARNING</dt>
+	        	<dd><spring:message code="ezResource.t9900001" /></dd>
+	        </dl>
+	    </div>
+        	<%-- <div class="warningbox01" style="margin-top:155px;">
           		<div class="warningbox02">
   	        		<div class="warnintxt01" >
 	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="64" height="64" style="margin: 18px 0px 18px 34px;"></span>
@@ -474,22 +564,22 @@
 	        			</dl>
 	        		</div>
 	        	</div>
-        	</div>
+        	</div> --%>
         </div>
         <!-- layer 팝업 -->
         <!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
-        <div id="ResourceInfo" style="display: none">
+        <div id="ResourceInfo" style="display: none; max-width: 700px">
         	<div class="popupJQLayer" style="padding-top:6px">
-				<div class="title" id="brdNm" style="overflow:hidden; text-overflow:ellipsis; width:450px;"></div>
+				<div class="title" id="brdNm" style="overflow:hidden; text-overflow:ellipsis; width:650px; white-space:nowrap; margin-bottom:2px;"></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span></span></a></li>
 		            </ul>
 		        </div>
-	        	<table id="resourceDataTable" style="width:478px; margin-top:10px;">
+	        	<table id="resourceDataTable" style="width:680px; /* margin-top:10px; */">
 					<tr>
 						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-						<td><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
+						<td colspan="2"><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
 					</tr>
 					<%-- <tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.rkms01'/></th>
@@ -497,23 +587,32 @@
 					</tr> --%>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
-						<td><span id="ownerCall"></span></td>
+						<td colspan="2"><span id="ownerCall"></span></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
-						<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
+						<td colspan="2" style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
 					</tr>							
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
-						<td id="approveFlag"></td>
+						<td colspan="2" id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.kmsr11'/></th>
+						<td colspan="2" id="returnFlag"></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezBoard.t5007'/></th>
-						<td><span id="resDate"></span></td>
+						<td colspan="2"><span id="resDate"></span></td>
+					</tr>
+					<tr>
+						<th style="height:200px;background-color: #fafafa"><spring:message code="ezPortal.t202"/></th>
+						<td style="width:39%; border-right: 0"><img id="preview1" name="preview" src="/images/default_pic.jpg" width="120" height="120" alt="" border="0" style="margin-left: auto; margin-right: auto; display: block; border-right: 0px;"></td>
+						<td style="border-left: 0"><img id="preview2" name="preview" src="/images/default_pic.jpg" width="120" height="120" alt="" border="0" style="margin-left: auto; margin-right: auto; display: block;"></td>
 					</tr>
 					<tr>
 						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-						<td><div style="overflow-y: auto; height: 200px; word-break:break-all; white-space:pre-wrap;" id="brdExplain"></div></td>
+						<td colspan="2"><div style="overflow-y: auto; height: 200px; word-break:break-all; white-space:pre-wrap;" id="brdExplain"></div></td>
 					</tr>
 	         	</table>
 	         </div>	

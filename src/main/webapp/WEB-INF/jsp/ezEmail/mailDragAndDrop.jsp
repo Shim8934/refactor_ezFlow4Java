@@ -42,7 +42,7 @@
 		    var isbigyn = "N";
 			var alertCnt = 1;
 			var currUid = 0;
-		    var shareId = "${shareId}";
+		    var shareId = '<c:out value="${shareId}"/>';
 		    
 		    function onDrop(evt) {
 		       

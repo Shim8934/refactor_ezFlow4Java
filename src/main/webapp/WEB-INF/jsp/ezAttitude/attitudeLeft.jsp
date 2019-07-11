@@ -12,16 +12,18 @@
 		<link rel="stylesheet" href="${util.addVer('/css/main.css')}" type="text/css"/>	
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />	
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<style>
 			.time {
 				float:left;
 				width:100%;
-				margin:0px 0px 5px 0px;
+				border-bottom:1px solid #cdd2d9;
 			}
 			
 			.time .title {
@@ -40,7 +42,7 @@
 				margin-left:7px;
 				display:inline-block;
 				padding: 5px 4px;
-				font: 12px gulim;
+				font: 12px malgun gothic;
 				padding-top: 7px;
  				border: 1px solid #ddd;
  				color: #666;
@@ -65,6 +67,9 @@
 				height:20px;
 				font-family: Malgun Gothic, Meiryo UI;
 			}
+			#mCSB_1_container {
+				margin-right: 0px;
+			}
 		</style>
 		
 		<script type="text/javascript">
@@ -84,15 +89,40 @@
 			closedDay = closedDay.split(",");
 			
 			parseDate();
-			attiClock();
+			//attiClock();
 			setAttiBtnHover();
 			getAttitudeList();
 			getHolidayList();
-		    select_memorialDays(uselang);
+		    /* select_memorialDays(uselang); */
 		    
 		    document.getElementById('userAttitude').onclick();
 		    
-		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
+		    leftResize();
+	        $(".attitudeListBox").mCustomScrollbar({
+        		theme : "dark"
+        	});
+	        
+	      	var initClock = setInterval(function(){
+		     		var servert = new Date(serverTime);
+		     		var clientt = new Date();
+		     		
+		     		var serverMonth = (servert.getMonth() + 1);
+		     		serverMonth = serverMonth >= 10 ? serverMonth : '0' + serverMonth;
+					var serverDate = servert.getDate();
+					serverDate = serverDate >= 10 ? serverDate : '0' + serverDate;
+		     		var serverDay = servert.getFullYear() + '' + serverMonth + '' + serverDate;
+		     		
+		     		var clientMonth = (clientt.getMonth() + 1);
+		     		clientMonth = clientMonth >= 10 ? clientMonth : '0' + clientMonth; 
+		     		var clientDate = clientt.getDate();
+		     		clientDate = clientDate >= 10 ? clientDate : '0' + clientDate;
+		     		var clientDay = clientt.getFullYear() + '' + clientMonth + '' + clientDate;
+		     		
+		      		if(serverDay < clientDay) {
+		      			getAttitudeList();
+			     		clearInterval(initClock);
+		      		}
+		      	}, 5000);
 		}
 		
 		 function leadingZeros(n, digits) {
@@ -119,16 +149,23 @@
 	    				if (result[i].typeId == "A01") {
 		    				$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
 							$("#inAttiBtn").removeClass("out").addClass("in");
-							$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+							$("#inAttiBtn").html("<span class='sub_iconLNB workIcon'></span>" + "<span class='workT'>"+result[i].startDate.split(" ")[1].substring(0,5)+"</span>");
 	    				} else if (result[i].typeId == "A02") {
 	    					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
-							$("#inAttiBtn").removeClass("out").addClass("lateIn");
-							$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+							$("#inAttiBtn").removeClass("out").addClass("lateIn");							
+							$("#inAttiBtn").html("<span class='sub_iconLNB workIcon'></span>" + "<span class='workT'>"+result[i].startDate.split(" ")[1].substring(0,5)+"</span>");
 	    				} else if (result[i].typeId == "A03") {
 // 	    					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter"); //퇴근은 여러번 찍을 수 있다.
 							$("#outAttiBtn").removeClass("out").addClass("in");
-							$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+							$("#outAttiBtn").html("<span class='sub_iconLNB workIcon'></span>" + "<span class='workT'>"+result[i].startDate.split(" ")[1].substring(0,5)+"</span>");
 	    				}
+	    			}
+	    			
+	    			if(result.length == 0) {
+	    				var a = '<p class="btn_write02" id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t65'/></span></p>'+
+	    						'<p class="btn_write01" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t64'/></span></p>';
+	    				$(".btn_writeBox_work").empty();
+	    				$(".btn_writeBox_work").append(a);
 	    			}
 	    		}
 	    	})
@@ -136,7 +173,7 @@
 	    
 		function getHolidayList() {
 			$.ajax({
-				type:"POST",
+				type:"GET",
 				dataType : "json",
 				async : true,
 				url : "/ezAttitude/getHolidayList.do",
@@ -145,17 +182,41 @@
 				},
 				success : function(result) {
 					for (var i = 0; i < result.holidayList.length; i++) {
-						if (result.holidayList[i].holidayDate != null) {
-							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
-								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
-																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
-							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
-								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
-																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
-																		  result.holidayList[i].isRest == 1 ? true : false));
-							}
+						var isSolar = "";
+						var holidayFlag = "";
+						var repetition = "";
+						
+						if (result.holidayList[i].isSolar == "1") {
+							isSolar = "1";
+						} else {
+							isSolar = "2";
+						}
+						
+						if (result.holidayList[i].holidayDate == null) {
+							result.holidayList[i].holidayDate = '';
+						}
+						
+						if (result.holidayList[i].holidayRepeat == null) {
+							repetition = '';
+						} else {
+							repetition = result.holidayList[i].holidayRepeat;
+						}
+						
+						if (result.holidayList[i].holidayFlag == 'Y') {
+							holidayFlag = "Y";			                    
+		                } else {
+		                    holidayFlag = "D";
+		                }
+						
+						if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+							memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+															  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+															  isSolar, result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
+						} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+							yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																	  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																	  result.holidayList[i].holidayDate.substring(8,10), isSolar,
+																	  result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
 						}
 					}
 				}
@@ -206,7 +267,23 @@
 					alert("<spring:message code='ezAttitude.t169'/>");					
 				}
 				getAttitudeList();
-    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
+    			try{
+    				var calType = "";
+    				var btnOnNodes = parent.frames["right"].document.getElementsByClassName("on");
+    				for (var i = 0; i < btnOnNodes.length; i++) {
+    					if (btnOnNodes[i].getAttribute("id") != null && btnOnNodes[i].getAttribute("id") == "btnTableList") {
+    						calType = btnOnNodes[i].getAttribute("id");
+    						break;
+    					}
+    				}
+    				
+    				if (calType == "btnTableList") {
+    					parent.frames["right"].getAttitudeTableList();
+    				} else {
+	    				parent.frames["right"].getAttitudeMainList();
+    				}
+    				
+    			}catch(e){}
 			}
 	 	}
 		
@@ -221,19 +298,29 @@
 		    		return;
 	    		} else {
 	    			getAttitudeList();
-	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
+	    			try{
+	    				var calType = "";
+	    				var btnOnNodes = parent.frames["right"].document.getElementsByClassName("on");
+	    				for (var i = 0; i < btnOnNodes.length; i++) {
+	    					if (btnOnNodes[i].getAttribute("id") != null && btnOnNodes[i].getAttribute("id") == "btnTableList") {
+	    						calType = btnOnNodes[i].getAttribute("id");
+	    						break;
+	    					}
+	    				}
+	    				
+	    				if (calType == "btnTableList") {
+	    					parent.frames["right"].getAttitudeTableList();
+	    				} else {
+		    				parent.frames["right"].getAttitudeMainList();
+	    				}
+	    				
+	    			}catch(e){}
 	    		}
 	    	}
 	    	
 	    	beforeAlertDate = new Date();
 	    	var dateAlert = nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + (nowAttiTime.getMonth() + 1) + "<spring:message code='ezAttitude.t67'/> " + (nowAttiTime.getDate()) + "<spring:message code='ezAttitude.t68'/> " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
-// 	    	var saveFlag = confirm("<spring:message code='ezAttitude.t69'/> " + dateAlert + "<spring:message code='ezAttitude.t70'/>");
-// 	    	if (!saveFlag) {
-// 	    		afterAlertDate = new Date();
-// 	    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
-// 	    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
-// 	    		return;
-// 	    	} 
+ 
 	    	$.ajax({
 	    		type : "POST",
 	    		async : true,
@@ -245,7 +332,23 @@
 	    		},
 	    		success : function(result) {
 	    			getAttitudeList();
-	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
+	    			try{
+	    				var calType = "";
+	    				var btnOnNodes = parent.frames["right"].document.getElementsByClassName("on");
+	    				for (var i = 0; i < btnOnNodes.length; i++) {
+	    					if (btnOnNodes[i].getAttribute("id") != null && btnOnNodes[i].getAttribute("id") == "btnTableList") {
+	    						calType = btnOnNodes[i].getAttribute("id");
+	    						break;
+	    					}
+	    				}
+	    				
+	    				if (calType == "btnTableList") {
+	    					parent.frames["right"].getAttitudeTableList();
+	    				} else {
+		    				parent.frames["right"].getAttitudeMainList();
+	    				}
+	    				
+	    			}catch(e){}
 	    		},
 	    		complete : function() {
 	    			afterAlertDate = new Date();
@@ -293,13 +396,19 @@
 	    		case 2:
 	    			window.open("/ezAttitude/attitudeDeptMain.do", "right");
 	    			break;
-	    		case 3: // 나의수정신청
+	    		case 3:
+	    			window.open("/ezAttitude/attitudeUserAnnual.do", "right");
+	    			break;
+	    		case 4: // 나의수정신청
 	    			window.open("/ezAttitude/attModAppList.do", "right");
 	    			break;
-	    		case 4:	// 신청관리현황
+	    		case 5:	// 신청관리현황
 	    			window.open("/ezAttitude/manageAttModAppList.do", "right");
 	    			break;
-	    		case 5:	// 근태정보관리
+	    		case 6:	// 연차취소관리
+	    			window.open("/ezAttitude/manageAnnCanAppList.do", "right");
+	    			break;
+	    		case 7:	// 근태정보관리
 	    			window.open("/ezAttitude/attitudeManage.do", "right");
 	    			break;
 	    	}
@@ -351,23 +460,95 @@
 			    	alert("<spring:message code='ezAttitude.t175'/>");
 			    },
 			    success : function(result){
-			    	if (result == "0") {
+			    	if (result == "0") { 
 			    		result = "";
 			    	} else {
-			    		result = "("+ result +")";
+			    		result = "&nbsp;" + result;
 			    	}
 			    	try {
-						document.getElementsByClassName("attCount")[0].innerText = result;
-						document.getElementsByClassName("attCount")[1].innerText = result;
+						document.getElementById("attCount").innerHTML = result;
+// 						document.getElementsByClassName("attCount")[1].innerHTML = result;
+					} catch (e) {	}
+			    }
+	    	})
+	    }
+    	function leftAnnualCount() {
+	    	$.ajax({
+				type : 'get',
+			    url : '/ezAttitude/getTotalAnnualCount.do',
+			    dataType : "text",
+			    error: function(xhr, status, error){
+			    	alert("<spring:message code='ezAttitude.t175'/>");
+			    },
+			    success : function(result){
+			    	if (result == "0") { 
+			    		result = "";
+			    	} else {
+			    		result = "&nbsp;" + result;
+			    	}
+			    	try {
+						document.getElementById("annualCount").innerHTML = result;
 					} catch (e) {	}
 			    }
 	    	})
 	    }
     	
+    	function leftResize(){
+        	$(".attitudeListBox").height(window.innerHeight-105);
+        }
+        
+        $( window ).resize(function() {
+        	leftResize();
+    	});
+    	
 		</script>
 	</head>
-<body class="leftbody">
-	<div class="left_pims" title="<spring:message code='ezAttitude.t1'/>"><span><spring:message code='ezAttitude.t1'/></span></div>
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+	    	<!-- <div class="lnb_btn"></div> -->
+	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<div class="left_title" title="<spring:message code='ezAttitude.t1'/>">
+	    		<spring:message code='ezAttitude.t1'/>
+	        </div>
+	        <div class="btn_writeBox_work">
+	        	<p class="btn_write02" id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t65'/></span></p> 
+	        	<p class="btn_write01" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t64'/></span></p>
+	        </div>
+	        <div class="attitudeListBox" style="overflow:hidden; padding-right: 0;">
+		        <h2 class="on">
+		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t1'/></span>
+		        </h2>
+		        <ul class="lnbUL">
+                   	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span></li>
+                   	<li><span class="sub_iconLNB tree_workTime_department"></span><span class="list_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span></li>
+                   	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAnnual" onclick="functionFlag(3)"><spring:message code='ezAttitude.t265'/></span></li>
+		        </ul>
+		        <h2 class="on">
+		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
+		        </h2>
+		        <ul class="lnbUL">
+               		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t166'/></span></li>
+                   	<c:if test="${attitudeAdminCheck == true}">
+                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t7'/>
+                   			<c:if test="${totalAtt != 0 }">
+								<span id="attCount" class="attCount">&nbsp;${totalAtt}</span>
+							</c:if>
+                   		</span></li>
+                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t275'/>
+	                   		<c:if test="${totalAnnual != '0' }">
+								<span id="annualCount" class="attCount">&nbsp;${totalAnnual}</span>
+							</c:if>
+                   		</span></li>
+                    </c:if>
+		        </ul>
+		        <c:if test="${attitudeAdminCheck == true}">
+			        <ul class="lnbUL">
+                  		<li><span class="sub_iconLNB tree_workTimeset"></span><span class="list_text" onclick="functionFlag(7)"><spring:message code='ezAttitude.t73'/></span></li>
+					</ul>
+				</c:if>
+			</div>
+	    </div>
+	<%-- <div class="left_pims" title="<spring:message code='ezAttitude.t1'/>"><span><spring:message code='ezAttitude.t1'/></span></div>
 	<div id="left" style="border-top:1px solid #dedede">
 		<div style="display: block;">
 			<article class="time">
@@ -385,10 +566,10 @@
     						<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">입력</dd>
     					</dl>
     				</div>
-<%-- 					<p id="inAttiClock" style="margin:3px 0px 0px 7px; font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p> --%>
-<%-- 					<p id="outAttiClock" style="margin:7px 0px 30px 8px;  font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p> --%>
-<%-- 					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span> --%>
-<%-- 					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px"><spring:message code='ezAttitude.t65'/></span> --%>
+					<p id="inAttiClock" style="margin:3px 0px 0px 7px; font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p>
+					<p id="outAttiClock" style="margin:7px 0px 30px 8px;  font-size:15px; text-align: left; margin-left:47px; padding-left:22px;"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p>
+					<span id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span>
+					<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:2px"><spring:message code='ezAttitude.t65'/></span>
 				</div>
 			</article>
 		</div>
@@ -428,6 +609,6 @@
 		<c:if test="${attitudeAdminCheck == true}">
 			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block"><spring:message code='ezAttitude.t73'/></span></h3>
 		</c:if>
-	</div>
+	</div> --%>
 </body>
 </html>

@@ -362,8 +362,8 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String accessFlag = "";
 		String userID = "";
 		String deptPath = "";
-		String returnXML = "";
-		String strXML = "";
+		StringBuilder strXMLBld = new StringBuilder();
+		StringBuilder returnXMLBld = new StringBuilder();
 		
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		try {
@@ -381,44 +381,52 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			
 			if (accessFlag.equals("0")) {
 				List<ResGetSubClsListVO> admSubClsList = getAdmSubClsList(parentID, companyID, tenantID);
-				strXML += "<DATA>";
+				strXMLBld.append("<DATA>");
+				
 				for (int i=0; i<admSubClsList.size(); i++) {
-					strXML += commonUtil.getQueryResult(admSubClsList.get(i));	
+					strXMLBld.append(commonUtil.getQueryResult(admSubClsList.get(i)));
 				}
-				strXML += "</DATA>";
-			} else {
-				List<ResGetSubClsListVO> subClsList = getSubClsList(parentID, companyID, userID, deptPath, tenantID);
-				strXML += "<DATA>";
-				for (int i=0; i<subClsList.size(); i++) {
-					strXML += commonUtil.getQueryResult(subClsList.get(i));
-				}
-				strXML += "</DATA>";
+				
+				strXMLBld.append("</DATA>");
 			}
-			returnXML += "<SUBCLSLIST>";
-		
-			Document returnXMLDom = commonUtil.convertStringToDocument(strXML);
+			else {
+				List<ResGetSubClsListVO> subClsList = getSubClsList(parentID, companyID, userID, deptPath, tenantID);
+				strXMLBld.append("<DATA>");
+				
+				for (int i=0; i<subClsList.size(); i++) {
+					strXMLBld.append(commonUtil.getQueryResult(subClsList.get(i)));
+				}
+				
+				strXMLBld.append("</DATA>");
+			}
+			
+			returnXMLBld.append("<SUBCLSLIST>");
+			
+			Document returnXMLDom = commonUtil.convertStringToDocument(strXMLBld.toString());
 			for (int i=0; i<returnXMLDom.getElementsByTagName("ROW").getLength(); i++) {
-				returnXML += "<ROWNODE>";
+				returnXMLBld.append("<ROWNODE>");
 				
 				for (int j=0; j<returnXMLDom.getElementsByTagName("ROW").item(i).getChildNodes().getLength(); j++) {
-
 					String elementName = returnXMLDom.getElementsByTagName("ROW").item(i).getChildNodes().item(j).getNodeName();
 					String elementValue = returnXMLDom.getElementsByTagName("ROW").item(i).getChildNodes().item(j).getTextContent();
 					
 					if (elementName.equals("BRDNM") && !langStr.equals("1")) {
 						elementValue = returnXMLDom.getElementsByTagName("BRDNM2").item(i).getTextContent();
-						returnXML += "<" + elementName + "><![CDATA[" + elementValue + "]]></" + elementName + ">";
+						returnXMLBld.append("<" + elementName + "><![CDATA[" + elementValue + "]]></" + elementName + ">");
 					} else {
-						returnXML += "<" + elementName + "><![CDATA[" + elementValue + "]]></" + elementName + ">";
+						returnXMLBld.append("<" + elementName + "><![CDATA[" + elementValue + "]]></" + elementName + ">");
 					}
 				}
-				returnXML += "</ROWNODE>";
+				
+				returnXMLBld.append("</ROWNODE>");
 			}
-			returnXML += "</SUBCLSLIST>";
-		} catch (Exception e) {
 			
+			returnXMLBld.append("</SUBCLSLIST>");
 		}
-		return returnXML;
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnXMLBld.toString();
 	}
 	
 	public boolean delClsData(String xmlStr, int tenantID) throws Exception{
@@ -438,26 +446,26 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		String strBrdID = "";
 		String strCompanyID = "";
-		String returnXML = "";
-
+		
 		strBrdID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(0).getTextContent().trim();
 		strCompanyID = xmlRes.getElementsByTagName("PARA_DATA").item(0).getChildNodes().item(1).getTextContent().trim();
 		
 		List<ResGetClsAclListVO> clsACLList = getClsAclList(strBrdID, strCompanyID, tenantID);
 		
-		returnXML += "<RTN_DATA>";
+		StringBuilder returnXMLBld = new StringBuilder();
+		returnXMLBld.append("<RTN_DATA>");
 		for (int i=0; i<clsACLList.size(); i++) {
-			returnXML += "<NODE>";
-			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getDeptYn()  + "</ATTRIBUTE>";
-			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getSdaYn()  + "</ATTRIBUTE>";
-			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getMemberNam()  + "</ATTRIBUTE>";
-			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getMemberID()  + "</ATTRIBUTE>";
-			returnXML += "<ATTRIBUTE>" + clsACLList.get(i).getAccessLvl()  + "</ATTRIBUTE>";
-			returnXML += "</NODE>";
+			returnXMLBld.append("<NODE>");
+			returnXMLBld.append("<ATTRIBUTE>" + clsACLList.get(i).getDeptYn()  + "</ATTRIBUTE>");
+			returnXMLBld.append("<ATTRIBUTE>" + clsACLList.get(i).getSdaYn() + "</ATTRIBUTE>");
+			returnXMLBld.append("<ATTRIBUTE>" + commonUtil.cleanValue(clsACLList.get(i).getMemberNam()) + "</ATTRIBUTE>");
+			returnXMLBld.append("<ATTRIBUTE>" + clsACLList.get(i).getMemberID() + "</ATTRIBUTE>");	
+			returnXMLBld.append("<ATTRIBUTE>" + clsACLList.get(i).getAccessLvl() + "</ATTRIBUTE>");
+			returnXMLBld.append("</NODE>");
 		}
-		returnXML += "</RTN_DATA>";
 		
-		return returnXML;
+		returnXMLBld.append("</RTN_DATA>");
+		return returnXMLBld.toString();
 	}
 	
 	
@@ -546,13 +554,15 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 							List<String> deptIds = new ArrayList<String>();
 							Collections.addAll(deptIds, deptPath.split(","));
 							deptIds.remove(0);				// companyID 삭제
-							Collections.reverse(deptIds);
-							deptIds.remove(0);				// 부서 ID 삭제
-							
-							for(int l=0; l<deptIds.size(); l++) {
-								if(memberID.equals(deptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
-									logger.debug("dept(2) id : " + memberID + ", This dept has access privilege");
-									flag = true;
+							if(deptIds.size() > 0) {
+								Collections.reverse(deptIds);
+								deptIds.remove(0);				// 부서 ID 삭제
+								
+								for(int l=0; l<deptIds.size(); l++) {
+									if(memberID.equals(deptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
+										logger.debug("dept(2) id : " + memberID + ", This dept has access privilege");
+										flag = true;
+									}
 								}
 							}
 							
@@ -570,13 +580,15 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 								List<String> addJobDeptIds = new ArrayList<String>();
 								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 								addJobDeptIds.remove(0);				// companyID 삭제
-								Collections.reverse(addJobDeptIds);
-								addJobDeptIds.remove(0);				// 부서 ID 삭제
-								
-								for(int l=0; l<addJobDeptIds.size(); l++) {
-									if(memberID.equals(addJobDeptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
-										logger.debug("add job dept(2) id : " + memberID + ", This dept has access privilege");
-										flag = true;
+								if(addJobDeptIds.size() > 0) {
+									Collections.reverse(addJobDeptIds);
+									addJobDeptIds.remove(0);				// 부서 ID 삭제
+									
+									for(int l=0; l<addJobDeptIds.size(); l++) {
+										if(memberID.equals(addJobDeptIds.get(l)) && deptSDA.equals("Y")) {		// 현재 부서
+											logger.debug("add job dept(2) id : " + memberID + ", This dept has access privilege");
+											flag = true;
+										}
 									}
 								}
 							}

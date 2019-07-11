@@ -65,7 +65,7 @@
 	
 		    window.onload = function () {
 		    	//2018-08-09 김보미 - 일본어시에 폰트 다르게
-		    	var font = "Gulim, arial, verdana";
+		    	var font = "malgun gothic, arial, verdana";
 		    	if (locale == "ja") {
 		    		font = "Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif";
 		    	}
@@ -96,13 +96,13 @@
 	            	<th><spring:message code='ezSchedule.t363' /></th>
 <!-- 	            <td style="width:280px;"> -->
 	              	<td>
-	                	<div id="printOwner" style="min-width:280px;">${printOwner}</div>
+	                	<div id="printOwner" style="min-width:280px;"><c:out value='${printOwner}'/></div>
 	              	</td>
 <%-- 	            <th style="min-width:49px; white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th> --%>
 	              	<th style="white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th>
 <!-- 	            <td  style="width:100%;"> -->
 	                <td>
-	                    <div id="printCreateDate" style="min-width:260px;">${printCreateDate}</div>                    
+	                    <div id="printCreateDate" style="min-width:260px;"><c:out value='${printCreateDate}'/></div>                    
 	                </td>
 	          	</tr>
 	          	</c:if>
@@ -112,38 +112,38 @@
 	                <th style="white-space:nowrap"><spring:message code='ezSchedule.jjh05' /></th>
 <!-- 	            <td style="width:280px;"> -->
 	                <td>
-	                    <div id="printCreator" style="min-width:280px;">${printCreator}</div>
+	                    <div id="printCreator" style="min-width:280px;"><c:out value='${printCreator}'/></div>
 	                </td>
 <%-- 	            <th style="min-width:49px; white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th> --%>
 	                <th style="white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th>
 <!-- 	            <td style="width:100%;"> -->
 	                <td>
-	                    <div id="printCreateDate" style="min-width:260px;">${printCreateDate}</div>                    
+	                    <div id="printCreateDate" style="min-width:260px;"><c:out value='${printCreateDate}'/></div>                    
 	                </td>
 	            </tr>
 	          	</c:if>
 	          	<tr>
 	            	<th><spring:message code='ezSchedule.t309' /></th>
 	              	<td>
-	                	<div id="printIsPublic">${printIsPublic}</div>
+	                	<div id="printIsPublic"><c:out value='${printIsPublic}'/></div>
 	              	</td>
 	              	<th><spring:message code='ezSchedule.jjh07' /></th>
 	              	<td>
-	                	<div id="printImportance">${printImportance}</div>
+	                	<div id="printImportance"><c:out value='${printImportance}'/></div>
 	              	</td>
 	          	</tr>
 	          	<c:if test="${printAttendant != ''}">	          
 	          	<tr>
 	            	<th><spring:message code='ezSchedule.t311' /></th>
 	              	<td colspan="3">
-	                	<div id="printAttendant" style="padding:2px 0px;">${printAttendant}</div>
+	                	<div id="printAttendant" style="padding:2px 0px;"><c:out value='${printAttendant}'/></div>
 	              	</td>
 	          	</tr>
 	          	</c:if>
 				<tr>
 				    <th><spring:message code='ezSchedule.t312' /></th>
 				    <td>
-				        <div id="printDate">${printDate}</div>
+				        <div id="printDate"><c:out value='${printDate}'/></div>
 				    </td>
 				    <th><spring:message code='ezSchedule.t313' /></th>
 				    <td>

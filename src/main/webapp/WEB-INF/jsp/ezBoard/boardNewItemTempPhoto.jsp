@@ -530,6 +530,8 @@
 	            strXML += "<IMAGE_FILENAME>" + MakeXMLString(filename) + "</IMAGE_FILENAME>";
 	            strXML += "<MAINIMAGEID>" + mainImageID + "</MAINIMAGEID>";
 	
+	            /* 2018-11-06 홍승비 - 게시판 체크용 구분값 추가 */
+	            strXML += "<GUBUN>" + gubun + "</GUBUN>";
 	            strXML += "</NODE>";
 	            strXML += "</NODES>";
 	
@@ -551,13 +553,13 @@
 	
 		                if (strItemID == "") {
 		                	xmlhttp = createXMLHttpRequest();
-							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
+							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID), false);
 							xmlhttp.send();		
 							xmlhttp = null;
 		                }
 		                if (pMode == "reply") {
 		                	xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + strItemID + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID) + "&itemTreeID=" + strUpperItemIDTree, false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 		                }
@@ -565,7 +567,7 @@
 		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
 		                if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 		                	xmlhttp = createXMLHttpRequest();
-		                	xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+		                	xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 		                }
@@ -589,19 +591,33 @@
 	            xmldom = null;
 	        }
 	
+	        /* 2019-05-22 홍승비 - 이미지파일 확장자체크 추가 */
 	        function imgtemp_onclick() {
 	            if (document.form.file1.value != "") {
 	                var fd = new FormData();
+	                
 	                for (var i = 0; i < document.getElementById("form").file1.files.length; i++) {
-	                    fd.append("file1", document.getElementById("form").file1.files[i]);
+	                	var file1val = document.getElementById("file1").files[i].name;
+				        var exIndex = file1val.lastIndexOf('.');
+						var extension = file1val.substring(exIndex+1, file1val.length);
+				        var check = false;
+				        check = compareExtension(check, extension);
+				        
+				        if (!check) {
+				        	document.getElementById("file1").files[i] = "";
+				        	alert("<spring:message code ='ezBoard.hsbImg01' />");
+				        	return;
+				        }
+				        else {
+	                    	fd.append("file1", document.getElementById("form").file1.files[i]);
+				        }
 	                }
 	                fd.append("mode", document.getElementById("mode").value);
-	
 	                isfileup = true;
 	                xhr = new XMLHttpRequest();
 	                xhr.upload.addEventListener("progress", uploadProgress, false);
 	                xhr.addEventListener("load", uploadComplete, false);
-	                xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+	                xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 	                xhr.send(fd);
 	                document.getElementById("progdiv").style.display = "";
 	            }
@@ -821,7 +837,7 @@
 		    		return;	
 	            }
 	            
-	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueIDs=" + uniqueIDs, false);
+	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + encodeURIComponent(pBoardID) +"&uniqueIDs=" + uniqueIDs, false);
 	            xmlhttp.send(fd);
 	
 	            document.getElementById("checkmenu").checked = false;
@@ -925,7 +941,7 @@
 	                xhr = new XMLHttpRequest();
 	                xhr.upload.addEventListener("progress", uploadProgress, false);
 	                xhr.addEventListener("load", uploadComplete, false);
-	                xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+	                xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 	                xhr.send(fd);
 	
 	                document.getElementById("progdiv").style.display = "";
@@ -948,6 +964,18 @@
 	            returnvalue(xhr.responseText);
 	            isfileup = false;
 	        }
+	        
+	        /* 2019-05-22 홍승비 - 이미지파일 확장자체크 추가 */
+		    function compareExtension(check, extension) {
+	    		var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+	    		for (var i = 0; i < filterExtension.length; i++) {
+	        		if (extension.toLowerCase() == filterExtension[i]) {
+	            		check = true;
+	            		break;
+	        		}
+	    		}
+	    		return check;
+			}
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 		    <script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">

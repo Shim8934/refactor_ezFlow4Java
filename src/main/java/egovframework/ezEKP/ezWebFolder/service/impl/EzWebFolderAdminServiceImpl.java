@@ -7,16 +7,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.ClientAnchor.AnchorType;
@@ -28,7 +30,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.util.Units;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -45,6 +46,9 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderUserVO;
@@ -68,19 +72,63 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	@Autowired
 	private EzOrganService ezOrganService;
 	
+	@Autowired
+	private EzWebfolderUtil webfolderUtil;
+
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminServiceImpl.class);
 	
 	@Override
-	public void saveConfig(String personalLimit, String uploadLimit, String companyId, int tenantId) throws Exception {
+	public void saveConfig(String companyLimit, String departmentLimit, String userLimit, String uploadLimit, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("personalLimit", personalLimit);
-		map.put("uploadLimit",   uploadLimit);
-		map.put("companyId",     companyId);
-		map.put("tenantId",      tenantId);
+		map.put("companyLimit", emptyToNull(companyLimit));
+		map.put("departmentLimit", emptyToNull(departmentLimit));
+		map.put("userLimit", emptyToNull(userLimit));
+		map.put("uploadLimit", emptyToNull(uploadLimit));
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+
+		if (!companyId.equals("*")) {
+			checkExistCompany(map);
+		}
+
 		ezWebFolderAdminDAO.saveConfig(map);
+	}
+
+	private String emptyToNull(String str) {
+		if (str == null) {
+			return null;
+		}
+
+		if (str.isEmpty()) {
+			return null;
+		}
+
+		return str;
+	}
+	
+	@Override
+	public WebfolderConfigVO getEveryCompanyConfig(int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  tenantId);
+
+		WebfolderConfigVO result = ezWebFolderAdminDAO.getEveryCompanyConfig(map);
+
+		if (result == null) {
+			map.put("companyLimit", "1");
+			map.put("departmentLimit", "1");
+			map.put("userLimit", "1");
+			map.put("uploadLimit", "1");
+			map.put("companyId", "*");
+
+			ezWebFolderAdminDAO.saveConfig(map);
+
+			return ezWebFolderAdminDAO.getEveryCompanyConfig(map);
+		}
+
+		return result;
 	}
 
 	@Override
@@ -88,59 +136,74 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId",  tenantId);
+
+		checkExistCompany(map);
 		WebfolderConfigVO result = ezWebFolderAdminDAO.getWebfolderConfig(map);
 		
 		if (result == null) {
-			result = new WebfolderConfigVO();
-			result.setCompanyId(companyId);
-			result.setTenantId(tenantId);
-			result.setTotalLimit("0");
-			result.setUploadLimit("0");
+			Map<String, Object> everyMap = new HashMap<>();
+			everyMap.put("companyLimit", "1");
+			everyMap.put("departmentLimit", "1");
+			everyMap.put("userLimit", "1");
+			everyMap.put("uploadLimit", "1");
+			everyMap.put("companyId", "*");
+			everyMap.put("tenantId", tenantId);
+
+			ezWebFolderAdminDAO.saveConfig(everyMap);
+
+			return ezWebFolderAdminDAO.getWebfolderConfig(map);
 		}
 		
 		return result;
 	}
 
-	@Override
-	public List<UserCapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("realColmn",  realColmn);
-		map.put("order",      order);
-		map.put("companyId",  companyId);
-		map.put("searchStr",  searchStr);
-		map.put("searchOpt",  searchOpt);
-		map.put("startPoint", startPoint);
-		map.put("pageSize",   pageSize);
-		map.put("tenantId",   tenantId);
-		map.put("primary",    primary);
-		return ezWebFolderAdminDAO.getListUserCapacity(map);
-	}
-
-	@Override
-	public int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("companyId",  companyId);
-		map.put("searchStr",  searchStr);
-		map.put("searchOpt",  searchOpt);
-		map.put("startPoint", startPoint);
-		map.put("pageSize",   pageSize);
-		map.put("tenantId",   tenantId);
-		map.put("primary",    primary);
-		return ezWebFolderAdminDAO.getTotalListUserCapacity(map);
-	}
-
-	@Override
-	public void updateNewAmount(List<String> userList, String newStorageValue, String companyId, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("totalCapacity", newStorageValue);
-		map.put("companyId",     companyId);
-		map.put("tenantId",      tenantId);
-		
-		for (String userId : userList) {
-			map.put("userId",        userId);
-			ezWebFolderAdminDAO.updateNewAmount(map);
+	private void checkExistCompany(Map<String, Object> map) throws Exception {
+		if (ezWebFolderAdminDAO.existCompany(map) == 0) {
+			throw new IllegalArgumentException("non existent company ID: " + map);
 		}
 	}
+
+//	@Override
+//	public List<CapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("realColmn",  realColmn);
+//		map.put("order",      order);
+//		map.put("companyId",  companyId);
+//		map.put("searchStr",  searchStr);
+//		map.put("searchOpt",  searchOpt);
+//		map.put("startPoint", startPoint);
+//		map.put("pageSize",   pageSize);
+//		map.put("tenantId",   tenantId);
+//		map.put("primary",    primary);
+//		return ezWebFolderAdminDAO.getListUserCapacity(map);
+//	}
+//
+//	@Override
+//	public int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("companyId",  companyId);
+//		map.put("searchStr",  searchStr);
+//		map.put("searchOpt",  searchOpt);
+//		map.put("startPoint", startPoint);
+//		map.put("pageSize",   pageSize);
+//		map.put("tenantId",   tenantId);
+//		map.put("primary",    primary);
+//		return ezWebFolderAdminDAO.getTotalListUserCapacity(map);
+//	}
+//
+//	@Override
+//	public void updateNewAmount(List<String> targetList, String type, String newStorageValue, String companyId, int tenantId) throws Exception {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("type", type);
+//		map.put("totalCapacity", newStorageValue);
+//		map.put("companyId", companyId);
+//		map.put("tenantId", tenantId);
+//		
+//		for (String targetId : targetList) {
+//			map.put("targetId", targetId);
+//			ezWebFolderAdminDAO.updateNewAmount(map);
+//		}
+//	}
 
 	@Override
 	public List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String actionType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
@@ -300,12 +363,19 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 	
 	@Override
-	public void addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2, LoginVO userInfo) throws Exception {
+	public List<DuplicateInfoVO> addCompanyFolder(String pFolderId, String folderUsers, String folderName, String folderName2, LoginVO userInfo) throws Exception {
+		String offset              = userInfo.getOffset();
+		int tenantId               = userInfo.getTenantId();
+		List<DuplicateInfoVO> duplicateList = ezWebFolderService.getAllDuplicateInfo(folderName, pFolderId, offset, tenantId);
+		
+		// 중복 정보가 있으면 바로 리턴
+		if (duplicateList.size() > 0) {
+			return duplicateList;
+		}
+		
 		String userName1           = userInfo.getDisplayName1();
 		String userName2           = userInfo.getDisplayName2();
-		int tenantId               = userInfo.getTenantId();
 		String userId              = userInfo.getId();
-		String offset              = userInfo.getOffset();
 		FolderVO parentFolder      = ezWebFolderService.getFolderByFolderId(pFolderId, offset, tenantId);
 		FolderVO folder            = new FolderVO();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -337,11 +407,23 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		//Insert new folder users
 		insertListFolderUsers(userId, folderId, folder.getCompanyId(), folderUsers, timeUTC, tenantId);
+		
+		return duplicateList;
 	}
 	
 	@Override
-	public void updateCompanyFolder(String userId, String folderId, String folderUsers, String folderName, String folderName2, String offset, int tenantId) throws Exception {
+	public List<DuplicateInfoVO> updateCompanyFolder(String userId, String folderId, String folderUsers, String folderName, String folderName2, String offset, int tenantId) throws Exception {
+		List<DuplicateInfoVO> duplicateList = new ArrayList<>();
 		FolderVO folder            = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+		
+		if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(folderName, folder.getFolderUpper(), offset, tenantId))) {
+			if (duplicateList.size() == 1 && duplicateList.get(0).getOldId().equals(folderId)) {
+				duplicateList.clear();
+			} else {
+				return duplicateList;
+			}
+		}
+		
 		String folderPath          = folder.getFolderPath();
 		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
 		String ancestorId          = folderPath.split("\\|")[1];
@@ -372,6 +454,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			//Insert new folder users
 			insertListFolderUsers(userId, folderId, folder.getCompanyId(), folderUsers, timeUTC, tenantId);
 		}
+		
+		return duplicateList;
 	}
 	
 	@Override
@@ -500,13 +584,12 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 	
 	@Override
-	public void moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, String realPath, LoginVO userInfo) throws Exception {
+	public List<DuplicateInfoVO> moveCompanyFolder(FolderVO folder, FolderVO destFolder, String mode, String realPath, LoginVO userInfo) throws Exception {
 		if (mode.equals("move")) {
-			moveFolder(folder, destFolder, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
+			return moveFolder(folder, destFolder, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
 		}
-		else {
-			copyFolder(folder, destFolder, realPath, userInfo);
-		}
+		
+		return copyFolder(folder, destFolder, realPath, userInfo);
 	}
 	
 	public String getMaxFolderUserSeq(int tenantId) throws Exception {
@@ -534,7 +617,13 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		return currentMaxStep;
 	}
 	
-	private void moveFolder(FolderVO folder, FolderVO parentFolder, String userId, String offset, int tenantId) throws Exception {
+	private List<DuplicateInfoVO> moveFolder(FolderVO folder, FolderVO parentFolder, String userId, String offset, int tenantId) throws Exception {
+		List<DuplicateInfoVO> duplicateList = ezWebFolderService.getAllDuplicateInfo(Type.DIRECTORY, folder.getFolderId(), parentFolder.getFolderId(), offset, tenantId);
+		
+		if (duplicateList.size() > 0) {
+			return duplicateList;
+		}
+		
 		String oldPath             = folder.getFolderPath();
 		String newPath             = parentFolder.getFolderPath() + folder.getFolderId() + "|";
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -578,6 +667,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		//Update list sub folders
 		moveListSubFolders(userId, parentFolder.getFolderType(), oldPath, newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, tenantId);
+		
+		return duplicateList;
 	}
 	
 	private void moveListSubFolders(String userId, String folderType, String oldPath, String newPath, String timeUTC, String ownerId, int levelDistance, int tenantId) throws Exception {
@@ -594,10 +685,16 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		ezWebFolderAdminDAO.moveListSubFolders(map);
 	}
 
-	private void copyFolder(FolderVO folder, FolderVO parentFolder, String realPath, LoginVO userInfo) throws Exception {
+	private List<DuplicateInfoVO> copyFolder(FolderVO folder, FolderVO parentFolder, String realPath, LoginVO userInfo) throws Exception {
+		String offset = userInfo.getOffset();
+		int tenantId = userInfo.getTenantId();
+		List<DuplicateInfoVO> duplicateList = ezWebFolderService.getAllDuplicateInfo(Type.DIRECTORY, folder.getFolderId(), parentFolder.getFolderId(), offset, tenantId);
+		
+		if (duplicateList.size() > 0) {
+			return duplicateList;
+		}
+		
 		String userId                = userInfo.getId();
-		String offset                = userInfo.getOffset();
-		int tenantId                 = userInfo.getTenantId();
 		String folderId              = folder.getFolderId();
 		//String oldPath               = folder.getFolderPath();
 		String newId                 = getMaxFolderID(tenantId);
@@ -639,6 +736,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		
 		//copy all sub folders
 		copySubFolders(folderId, parentFolder.getFolderType(), newPath, timeUTC, parentFolder.getOwnerId(), levelDistance, realPath, userInfo);
+		
+		return duplicateList;
 	}
 
 
@@ -697,10 +796,10 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				
 				String fileName = file.getFileName();
 				int dotPos      = fileName.lastIndexOf(".");
-				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-				String newName  = UUID.randomUUID().toString() + "." + extend;
+				String extend   = dotPos == -1 ? ".none" : commonUtil.detectPathTraversal(fileName.substring(dotPos + 1));
+				String newName  = webfolderUtil.generateFilePath(extend);
 				String newPath  = ezWebFolderService.getWebFolderDirPath(userInfo.getTenantId()) + newName;
-				File srcFile    = new File(realPath + file.getFilePath());
+				File srcFile    = new File(realPath + commonUtil.detectPathTraversal(file.getFilePath()));
 				File destFile   = new File(realPath  + newPath);
 				destFile.getParentFile().mkdirs(); 
 				destFile.createNewFile();
@@ -715,12 +814,98 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 
 	@Override
-	public UserCapacityVO getUserCapacity(String userId, String lang, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("userId",   userId);
-		map.put("primary",  lang);
+	public void setDefaultCapacity(String companyValue, String departmentValue, String userValue, String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyValue", companyValue);
+		map.put("departmentValue", departmentValue);
+		map.put("userValue", userValue);
+		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		return ezWebFolderAdminDAO.getUserCapacity(map);
+
+		ezWebFolderAdminDAO.setDefaultCapacity(map);
+	}
+
+	@Override
+	public void setCapacities(List<String> cnList, String type, String value, String companyId, int tenantId) throws Exception {
+		Consumer<Map<String, Object>> setCapacityFunc = type.equals("C") ? ezWebFolderAdminDAO::setCapacityForCompany : ezWebFolderAdminDAO::setCapacity;
+		Map<String, Object> map = new HashMap<>();
+		map.put("type", type);
+		map.put("value", value);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+
+		for (String cn : cnList) {
+			map.put("cn", cn);
+			setCapacityFunc.accept(map);
+		}
+	}
+
+	@Override
+	public void deleteCapacities(List<String> cnList, String type, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", cnList);
+		map.put("type", type);
+		map.put("tenantId", tenantId);
+
+		ezWebFolderAdminDAO.deleteCapacities(map);
+	}
+
+	@Override
+	public List<UserCapacityVO> getCapacityList(String type, String primary, String companyId, int tenantId, String realColumn, String order, String searchKeyword, String searchOption, int startPoint, int pageSize) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", type);
+		map.put("realColumn", realColumn);
+		map.put("order", order);
+
+		if (companyId != null) {
+			map.put("companyId", companyId);
+		}
+
+		map.put("searchKeyword", searchKeyword);
+		map.put("searchOption", searchOption);
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);
+		map.put("tenantId", tenantId);
+		map.put("primary", primary);
+
+		return ezWebFolderAdminDAO.getCapacityList(map);
+	}
+
+	@Override
+	public int getTotalCapacityCount(String type, String companyId, int tenantId, String searchKeyword, String searchOption) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", type);
+		map.put("companyId", companyId);
+		map.put("searchKeyword", searchKeyword);
+		map.put("searchOption", searchOption);
+		map.put("tenantId", tenantId);
+		map.put("primary", "1");
+
+		return ezWebFolderAdminDAO.getTotalCapacityCount(map);
+	}
+
+	@Override
+	public UserCapacityVO getCapacity(String cn, String type, String primary, int tenantId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("cn", cn);
+		param.put("type", type);
+		param.put("primary", primary);
+		param.put("tenantId", tenantId);
+
+		return ezWebFolderAdminDAO.getCapacity(param);
+	}
+
+	@Override
+	public UserCapacityVO getCapacity(String folderId, String primary, int tenantId) throws Exception {
+		FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, "0|000000", tenantId);
+
+		if (folder.getFolderLevel() > 0) {
+			StringBuilder folderPath = new StringBuilder(folder.getFolderPath());
+			String rootFolderId = folderPath.deleteCharAt(0).substring(0, folderPath.indexOf("|"));
+			folder = ezWebFolderService.getFolderByFolderId(rootFolderId, "0|000000", tenantId);
+		}
+
+		return getCapacity(folder.getOwnerId(), folder.getFolderType(), primary, tenantId);
 	}
 
 	@Override
@@ -739,9 +924,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			FileUtils.cleanDirectory(file); 
 		}
 		
-		
 		if (file2.exists()) {
-			int pos         = fileName.lastIndexOf(".");
+			int pos         = fileName.lastIndexOf('.');
 			String extend   = fileName.substring(pos + 1);
 			String mainName = fileName.substring(0, pos);
 			int k           = 1;
@@ -812,6 +996,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				case "R" : newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t111", locale)); break;
 				case "P" : newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t19",  locale)); break;
 				case "RE": newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t287", locale)); break;
+				case "MV": newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t121", locale)); break;
+				case "CP": newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t122", locale)); break;
+				case "WR": newRow1.createCell(4).setCellValue(egovMessageSource.getMessage("ezWebFolder.t506", locale)); break;
 			}
 			
 			newRow1.createCell(5).setCellValue(fileLog.getCreateDate().substring(0, 19));
@@ -901,7 +1088,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String _fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, fileName);
 		String dirPath   = ezWebFolderService.getWebFolderDirPath(tenantId);
 		dirPath          = realPath + dirPath + "temp" + commonUtil.separator;
-		File file        = new File(dirPath + fileName);
+		File file        = new File(dirPath + commonUtil.detectPathTraversal(fileName));
 		
 		if (!file.exists()) {
 			throw new FileNotFoundException(fileName);

@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css">
@@ -56,7 +57,7 @@
 		        for (var i = 0; i < filelist.length; i++) {
 		            filesize = parseInt(filesize) + parseInt(filelist[i].size);
 		            if (filesize / 1024 / 1024 > window.parent.AttachLimit) {
-		                if ("${userInfo.lang}" == "2") {
+		                if ("<c:out value='${userInfo.lang}'/>" == "2") {
 		                    alert(strLang8 + window.parent.AttachLimit + strLang9);
 		                } else {
 		                    alert(strLang8 + window.parent.AttachLimit + "MB" + strLang9);
@@ -244,7 +245,12 @@
 		        xhr.send(fd);
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }
-		
+
+	        function bodydragover(evt) {
+		        evt.dataTransfer.dropEffect = "none";
+		        evt.stopPropagation();
+		        evt.preventDefault();
+		    }
 		</script>
 	</head>  
 	<body style ="width:100%;height:100%;overflow:hidden">   

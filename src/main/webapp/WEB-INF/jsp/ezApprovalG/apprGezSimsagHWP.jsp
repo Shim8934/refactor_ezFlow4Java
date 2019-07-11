@@ -21,34 +21,34 @@
 	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
     <script type="text/javascript">
-    	var pDocID = "${docID}";
-    	var pDocHref = "${docHref}";
-    	var pOrgDocID = "${orgDocID}";
+    	var pDocID = "<c:out value = '${docID}'/>";
+    	var pDocHref = "<c:out value = '${docHref}'/>";
+    	var pOrgDocID = "<c:out value = '${orgDocID}'/>";
         var pUserID;
         var flag = false;
         var flag2 = false;
         var stampFlag = false;
         var NostampFlag = false;
         var modeflag = false;
-        var companyID = "${userInfo.companyID}";
-	    var companyName = "${userInfo.companyName}";
+        var companyID = "<c:out value = '${userInfo.companyID}'/>";
+	    var companyName = "<c:out value = '${userInfo.companyName}'/>";
         var maxwidth = 659;
         var arr_userinfo = new Array();
         arr_userinfo[0]  = "user";
-	    arr_userinfo[1]  = "${userInfo.id}";
-	    arr_userinfo[2]  = "${userInfo.displayName}";
-	    arr_userinfo[3]  = "${userInfo.title}";
-	    arr_userinfo[4]  = "${userInfo.deptID}";
-	    arr_userinfo[5]  = "${userInfo.deptName}";
-	    arr_userinfo[6]  = "${userInfo.jikChek}";
-	    arr_userinfo[8]  = "${userInfo.email}";
+	    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
+	    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";
+	    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+	    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+	    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+	    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+	    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
 	    arr_userinfo[9]  = companyID;
-	    arr_userinfo[11]  = "${userInfo.displayName}";
-	    arr_userinfo[12]  = "${userInfo.displayName2}";
-	    arr_userinfo[13]  = "${userInfo.title1}";
-	    arr_userinfo[14]  = "${userInfo.title2}";
-	    arr_userinfo[15]  = "${userInfo.deptName1}";
-	    arr_userinfo[16]  = "${userInfo.deptName2}";
+	    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName}'/>";
+	    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+	    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+	    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+	    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+	    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
         pUserID = arr_userinfo[1];
         var is_Enc = "NONE";
         var isExternal = false;
@@ -84,11 +84,11 @@
         var arrDelFiles = new Array();
         arrDelFiles[0] = "c:\\" + pDocID + ".xml";
         arrDelFiles[1] = "c:\\" + pOrgDocID + ".xml";
-        var pUse_Editor = "${useEditor}";
-        var approvalRoot = "${approvalRoot}";
+        var pUse_Editor = "<c:out value = '${useEditor}'/>";
+        var approvalRoot = "<c:out value = '${approvalRoot}'/>";
         var ext = "hwp";
         var orgCompanyID = "<c:out value='${orgCompanyID}' />";
-        var docTitle = "${docTitle}";
+        var docTitle = "<c:out value = '${docTitle}'/>";
         
         function btnPrint_onclick() {
             HwpCtrl.PrintDocument("", true);
@@ -372,7 +372,7 @@
                         window.open("/myoffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pOrgDocID + "&Url=" + pDocHref, '', 'height=720,width=765,resizable=yes,scrollbars=no' + GetOpenPosition(765, 720));
                     }
                     else {
-                        window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,scrollbars=no');
+                        window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,scrollbars=no');
                     }
                 }
             }
@@ -1233,7 +1233,7 @@ function CheckUsePassword() {
         <tr>
             <td style="padding-bottom: 10px">
                 <div style="height: 100%">
-                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
+                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value = '${hwpToolbar}'/>", "");</script>
                 </div>
             </td>
         </tr>

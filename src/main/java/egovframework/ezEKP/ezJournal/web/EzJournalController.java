@@ -1,10 +1,17 @@
 package egovframework.ezEKP.ezJournal.web;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -40,6 +48,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
@@ -48,6 +57,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezJournal.vo.JournalPagination;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -72,10 +83,16 @@ public class EzJournalController extends EgovFileMngUtil {
 	@Resource(name="EzEmailService")
 	private EzEmailService ezEmailService;
 	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+	
 	/**
 	 * 업무일지 메인화면 호출
 	 */
-	@RequestMapping(value="/ezJournal/journalMain.do")
+	@RequestMapping(value="/ezJournal/journalMain.do", method = RequestMethod.GET)
 	public String journalMain(HttpServletRequest req, Model model) {
 		logger.debug("journalMain started");
 		logger.debug("journalMain ended");
@@ -89,7 +106,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/journalLeft.do")
+	@RequestMapping(value="/ezJournal/journalLeft.do", method = RequestMethod.GET)
 	public String journalLeft(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalLeft started");
 		
@@ -130,7 +147,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/journalListMain.do")
+	@RequestMapping(value="/ezJournal/journalListMain.do", method = RequestMethod.GET)
 	public String journalListMain(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalListMain started");
 		
@@ -173,7 +190,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/getFormList.do")
+	@RequestMapping(value="/ezJournal/getFormList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONArray journalListMainFormList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalListMainFormList started");
@@ -214,7 +231,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value="/ezJournal/journalList.do")
+	@RequestMapping(value="/ezJournal/journalList.do", method = RequestMethod.POST)
 	public String journalList(@RequestBody JSONObject jsonParam, HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -316,7 +333,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/leftRecvCount.do")
+	@RequestMapping(value="/ezJournal/leftRecvCount.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String leftRecvCount(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("leftRecvCount started");
@@ -342,7 +359,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 업무일지 작성 화면 호출
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezJournal/journalWrite.do")
+	@RequestMapping(value="/ezJournal/journalWrite.do", method = RequestMethod.GET)
 	public String journalWrite(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("journalWrite started");
 		
@@ -383,7 +400,8 @@ public class EzJournalController extends EgovFileMngUtil {
 						JSONObject file = (JSONObject) fileList.get(i);
 						file.put("pFileName", file.get("fileName"));
 					//	file.put("fileName", file.get("fileName"));
-						String filePath = file.get("filePath").toString();
+						String filePath = URLDecoder.decode(file.get("filePath").toString(), "UTF-8");
+						
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
 						file.put("resultUpload", "true");
@@ -442,7 +460,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 수신자 선택화면 호출
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezJournal/selectReceiver.do")
+	@RequestMapping(value = "/ezJournal/selectReceiver.do", method = RequestMethod.GET)
 	public String selectReceiver(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("selectReceiver started");
 		
@@ -483,7 +501,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 수신자 즐겨찾기 저장 화면 호출 
 	 */
-	@RequestMapping(value = "/ezJournal/receiverLineName.do")
+	@RequestMapping(value = "/ezJournal/receiverLineName.do", method = RequestMethod.GET)
 	public String receiverLineName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("receiverLineName started");
 	
@@ -502,7 +520,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@ResponseBody
-	@RequestMapping(value = "/ezJournal/saveReceiverFavorite.do")
+	@RequestMapping(value = "/ezJournal/saveReceiverFavorite.do", method = RequestMethod.POST)
 	public void saveReceiverFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("saveReceiverFavorite started");
 		
@@ -545,7 +563,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 수신자 즐겨찾기 리스트 가져오기
 	 */
-	@RequestMapping(value = "/ezJournal/getFavoriteList.do")
+	@RequestMapping(value = "/ezJournal/getFavoriteList.do", method = RequestMethod.POST)
 	public String getFavoriteList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("getFavoriteList started");
 		
@@ -576,7 +594,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 즐겨찾기 아이디에 해당하는 수신자 리스트 가져오기
 	 */
-	@RequestMapping(value = "/ezJournal/getFavoriteUser.do")
+	@RequestMapping(value = "/ezJournal/getFavoriteUser.do", method = RequestMethod.POST)
 	public String getFavoriteUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("getFavoriteUser started");
 		
@@ -609,7 +627,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 즐겨찾기 수신자 적용
 	 */
-	@RequestMapping(value = "/ezJournal/applyFavoriteUser.do")
+	@RequestMapping(value = "/ezJournal/applyFavoriteUser.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONArray applyFavoriteUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("applyFavoriteUser started");
@@ -643,7 +661,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 즐겨찾기 삭제
 	 */
-	@RequestMapping(value = "/ezJournal/deleteFavorite.do")
+	@RequestMapping(value = "/ezJournal/deleteFavorite.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void deleteFavorite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("deleteFavorite started");
@@ -674,7 +692,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 업무일지 양식 폼 호출
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezJournal/journalGetForm.do", produces="application/json; charset=utf-8")
+	@RequestMapping(value = "/ezJournal/journalGetForm.do", produces="application/json; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject journalGetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("journalGetForm started");
@@ -749,7 +767,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 업무일지 마지막 사용양식 아이디 가져오기
 	 */
-	@RequestMapping(value = "/ezJournal/journalGetLastForm.do", produces="application/json; charset=utf-8")
+	@RequestMapping(value = "/ezJournal/journalGetLastForm.do", produces="application/json; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String journalGetLastForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("journalGetLastForm started");
@@ -780,7 +798,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 일지작성 > 첨부파일 리스트 호출 
 	 */
-	@RequestMapping(value = "/ezJournal/dragAndDrop.do")
+	@RequestMapping(value = "/ezJournal/dragAndDrop.do", method = RequestMethod.GET)
 	public String journalDragAndDrop(@CookieValue("loginCookie") String loginCookie, Model model,  HttpServletRequest request) throws Exception {
 		
 		logger.debug("journalDragAndDrop started");
@@ -817,7 +835,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 일지작성 > 첨부파일 업로드
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/ezJournal/uploadJournalAttach.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezJournal/uploadJournalAttach.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String uploadJournalAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		
@@ -918,7 +936,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 일지작성 > 닫기 클릭시 임시첨부파일 삭제 또는 파일삭제
 	 */
-	@RequestMapping(value = "/ezJournal/tempUploadFileDelete.do")
+	@RequestMapping(value = "/ezJournal/tempUploadFileDelete.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		
@@ -977,7 +995,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 업무일지 저장
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezJournal/saveJournal.do")
+	@RequestMapping(value = "/ezJournal/saveJournal.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("saveJournal started");
@@ -1053,7 +1071,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 업무일지 임시저장
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezJournal/saveTempJournal.do")
+	@RequestMapping(value = "/ezJournal/saveTempJournal.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveTempJournal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("saveTempJournal started");
@@ -1120,7 +1138,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 업무일지 삭제 (한건 또는 여러건)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezJournal/journalDelete.do")
+	@RequestMapping(value = "/ezJournal/journalDelete.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void journalDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("journalDelete started");
@@ -1157,7 +1175,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 업무일지 첨부파일 다운로드
 	 */
-	@RequestMapping(value = "/ezJournal/journalAttachDown.do")
+	@RequestMapping(value = "/ezJournal/journalAttachDown.do", method = RequestMethod.GET)
 	public void journalAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("journalAttachDown started");
 		
@@ -1169,7 +1187,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("filePath", filePath);
+		param.put("filePath", URLDecoder.decode(filePath, "UTF-8"));
 	//	param.put("fileName", fileName);
 		
 		String restUrl = "/rest/ezjournal/journals/" + journalId + "/attachfiles";
@@ -1208,14 +1226,70 @@ public class EzJournalController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 업무일지 모든 첨부파일 다운로드
+	 */
+	@RequestMapping(value = "/ezJournal/journalAllAttachDown.do", method = RequestMethod.POST)
+	public void journalAllAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("journalAllAttachDown started");
+		
+		request.setCharacterEncoding("UTF-8");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String journalId = request.getParameter("journalId");
+		String journalTitle = request.getParameter("journalTitle");
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("userId", userInfo.getId());
+		param.put("filePathS", request.getParameter("filePathS"));
+		param.put("fileNameS", request.getParameter("fileNameS"));
+		
+		String restUrl = "/rest/ezjournal/journals/" + journalId + "/allattachfiles";
+		JSONObject result = new JSONObject();
+		
+		result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
+		
+		String status = result.get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) result.get("data");
+			String bytes = (String) data.get("bytes");
+			int fileSize = ((Number) data.get("fileSize")).intValue();
+			
+			String mimetype = "application/octet-stream";
+			byte[] tempBytes = Base64.getDecoder().decode(bytes);
+			
+			journalTitle = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), journalTitle);
+			
+			try (InputStream is = new ByteArrayInputStream(tempBytes)) {
+				response.setBufferSize(BUFF_SIZE);
+				response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + journalTitle + ".zip\"");
+				response.setContentLength(fileSize);
+				
+				FileCopyUtils.copy(is, response.getOutputStream());
+				
+				response.getOutputStream().flush();
+				response.getOutputStream().close();
+			} catch (Exception e) {
+				logger.debug("error");
+			}	
+		}
+		
+		logger.debug("journalAllAttachDown ended");
+	}
+	
+	/**
 	 * 업무일지 상세내용 가져오기
 	 * @param request
 	 * @param model
 	 * @param loginCookie
 	 * @return
+	 * @throws Exception 
 	 */
-	@RequestMapping(value="/ezJournal/journalDetail.do")
-	public String getJournalDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+	@RequestMapping(value="/ezJournal/journalDetail.do", method = RequestMethod.GET)
+	public String getJournalDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getJournalDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1227,8 +1301,16 @@ public class EzJournalController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		*/
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("jounl", userInfo);
+		}
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("pPreviewShow_HOW", request.getParameter("pPreviewShow_HOW"));
 //		param.put("viewDate", viewDate);
 		
 		String journalId = request.getParameter("journalId");
@@ -1246,6 +1328,8 @@ public class EzJournalController extends EgovFileMngUtil {
 			model.addAttribute("journal",journal);
 		}
 		
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
+		
 		logger.debug("getJournalDetail ended");
 		
 		return "/ezJournal/journalDetail";
@@ -1258,7 +1342,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		 * @param loginCookie
 		 * @return
 		 */
-		@RequestMapping(value="/ezJournal/journalPreview.do")
+		@RequestMapping(value="/ezJournal/journalPreview.do", method = RequestMethod.POST)
 		public String getJournalPreview(HttpServletRequest request,Model model, @CookieValue("loginCookie") String loginCookie) {
 			logger.debug("getJournalPreview started");
 			
@@ -1301,7 +1385,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/journalReply.do")
+	@RequestMapping(value="/ezJournal/journalReply.do", method = RequestMethod.GET)
 	public String journalReply(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalReply started");
 		
@@ -1340,7 +1424,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/saveJournalReply.do")
+	@RequestMapping(value="/ezJournal/saveJournalReply.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveJournalReply(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("saveJournalReply started");
@@ -1376,7 +1460,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/removeJournalReply.do")
+	@RequestMapping(value="/ezJournal/removeJournalReply.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String removeJournalReply(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("saveJournalReply started");
@@ -1403,7 +1487,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/JournalViewerList.do")
+	@RequestMapping(value="/ezJournal/JournalViewerList.do", method = RequestMethod.GET)
 	public String getJournalViewerList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalViewerList started");
 		
@@ -1464,7 +1548,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/ezJournal/checkToMailJournal.do")
+	@RequestMapping(value="/ezJournal/checkToMailJournal.do", method = RequestMethod.POST)
 	public JSONObject checkToMailJournal(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("checkToMailJournal started");
 		
@@ -1503,7 +1587,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/JournalReceiverList.do")
+	@RequestMapping(value="/ezJournal/JournalReceiverList.do", method = RequestMethod.GET)
 	public String getJournalReveiberList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalViewerList started");
 		
@@ -1560,7 +1644,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/otherJournalList.do")
+	@RequestMapping(value="/ezJournal/otherJournalList.do", method = RequestMethod.GET)
 	public String getOtherJournalList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getOtherJournalList started");
 		
@@ -1602,7 +1686,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/getOtherJournalContent.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value="/ezJournal/getOtherJournalContent.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getOtherJournal(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getOtherJournal started");
@@ -1648,7 +1732,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@ResponseBody
-	@RequestMapping(value="/ezJournal/journalDetailJSON.do")
+	@RequestMapping(value="/ezJournal/journalDetailJSON.do", method = RequestMethod.POST)
 	public JSONObject getJournalJSON(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalJSON started");
 		
@@ -1694,13 +1778,14 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/journalDetailContent.do")
+	@RequestMapping(value="/ezJournal/journalDetailContent.do", method = RequestMethod.GET)
 	public String getJournalContent(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("getJournalContent started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("pPreviewShow_HOW", request.getParameter("pPreviewShow_HOW"));
 		
 		String journalId = request.getParameter("journalId");
 		
@@ -1712,6 +1797,8 @@ public class EzJournalController extends EgovFileMngUtil {
 		if (status.equals("ok")) {			
 			journal = (JSONObject) resultBody.get("data");
 			model.addAttribute("journalContent",((String) journal.get("journalContent")));
+			model.addAttribute("journal",journal);
+			model.addAttribute("journalType",request.getParameter("journalType"));
 		}
 		
 		logger.debug("getJournalContent ended");
@@ -1726,7 +1813,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/journalViewCheck.do")
+	@RequestMapping(value="/ezJournal/journalViewCheck.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String journalViewCheck(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("journalViewCheck started");
@@ -1765,7 +1852,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/sendJournalReplyMail.do")
+	@RequestMapping(value="/ezJournal/sendJournalReplyMail.do", method = RequestMethod.POST)
 	public String sendJournalReplyMail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("sendJournalReplyMail started");
 		
@@ -1824,7 +1911,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param model
 	 * @param loginCookie
 	 */
-	@RequestMapping(value="/ezJournal/sendJournalRecvMail.do")
+	@RequestMapping(value="/ezJournal/sendJournalRecvMail.do", method = RequestMethod.POST)
 	public void sendJournalRecvMail(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		logger.debug("sendJournalRecvMail started");
 		
@@ -1900,7 +1987,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/ezJournal/saveJournalEnv.do")
+	@RequestMapping(value="/ezJournal/saveJournalEnv.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject saveJournalEnv(@RequestParam Map<String,Object> param,HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) {
 		logger.debug("saveJournalEnv started");
@@ -1918,7 +2005,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * 환경설정 화면 호출
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezJournal/journalConfig.do")
+	@RequestMapping(value = "/ezJournal/journalConfig.do", method = RequestMethod.GET)
 	public String journalConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("journalConfig started");
 		
@@ -1963,7 +2050,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezJournal/saveChiefAuthDept.do")
+	@RequestMapping(value = "/ezJournal/saveChiefAuthDept.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveChiefAuthDept(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("saveChiefAuthDept started");

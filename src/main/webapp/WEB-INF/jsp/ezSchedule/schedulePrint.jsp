@@ -108,8 +108,8 @@
 			         	<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t205' /> / <spring:message code='ezSchedule.t996' /></c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">			          
-				        <c:if test="${primary == '1'}">${item.ownerName}</c:if>
-						<c:if test="${primary != '1'}">${item.ownerName2}</c:if>
+				        <c:if test="${primary == '1'}"><c:out value="${item.ownerName}"/></c:if>
+						<c:if test="${primary != '1'}"><c:out value="${item.ownerName2}"/></c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
 			         	<c:out value="${item.title} " escapeXml="true" />
@@ -120,11 +120,11 @@
  			         	<c:out value="${item.location} "/>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
-			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)}(<spring:message code='ezSchedule.t280' /></c:if>
+			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)} (<spring:message code='ezSchedule.t280' /></c:if>
 			         	<c:if test="${item.dateType != '2'}">${fn:substring(item.startDate,0,16)}</c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
-			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.endDate,0,10)}(<spring:message code='ezSchedule.t280' /></c:if>
+			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.endDate,0,10)} (<spring:message code='ezSchedule.t280' /></c:if>
 			         	<c:if test="${item.dateType != '2'}">${fn:substring(item.endDate,0,16)}</c:if>
 			         </td>
 			    </tr>

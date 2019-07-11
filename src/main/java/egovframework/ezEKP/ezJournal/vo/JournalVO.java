@@ -27,7 +27,21 @@ public class JournalVO {
 	private String nextContent;
 	private String formStatus;
 	private String isSum;
+	private String userImage;
+	private String fileTotalSize;
 	
+	public String getFileTotalSize() {
+		return fileTotalSize;
+	}
+	public void setFileTotalSize(String fileTotalSize) {
+		this.fileTotalSize = fileTotalSize;
+	}
+	public String getUserImage() {
+		return userImage;
+	}
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
+	}
 	public String getFormStatus() {
 		return formStatus;
 	}

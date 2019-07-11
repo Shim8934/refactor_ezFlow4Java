@@ -3,6 +3,7 @@ var strLang1 = "午前"
 var strLang2 = "午後"
 var strLang3 = "1月;2月;3月;4月;5月;6月;7月;8月;9月;10月;11月;12月"
 var strLang4 = "日曜日;月曜日;火曜日;水曜日;木曜日;金曜日;土曜日"
+var strLang4_1 = "日曜日;月曜日;火曜日;水曜日;木曜日;金曜日;土曜日"
 var strLang5 = "日;月;火;水;木;金;土"
 var strLang6 = "月;火;水;木;金;土;日"
 var strLang5_1 = "日;月;火;水;木;金;土"
@@ -129,11 +130,15 @@ var strLang122 = "月";
 var strLang123 = "日";
 var strLang124 = "終日";
 var strLang125 = "個人日程";
+var strLang125_1 = "個人日程";
 var strLang126 = "部署日程";
+var strLang126_1 = "部署日程";
 var strLang127 = "会社日程";
+var strLang127_1 = "会社日程";
 var strLang128 = "時";
 var strLang129 = "分";
 var strLang130 = "グループスケジュール";
+var strLang130_1 = "グループスケジュール";
 
 var strLang253 = "選択した設備がありません。"
 var strLang254 = "選択した設備は削除できません。"
@@ -145,7 +150,7 @@ var strLang259 = "ファイルサイズ"
 var strLang260 = "ファイル名"
 var StrLang261 = "接続テストが正常的に完了しました。";
 var StrLang262 = "エラーが発生しました。ＩＤとパスワードを確認してください。";
-var strLang263 = "データが存在しません。";
+var strLang263 = "データが存在しません";
 var strLang264 = "グループ説明";
 var strLang265 = "グループメンバー";
 var strLang266 = "グループを選択してください。";
@@ -157,7 +162,7 @@ var strLang271 = "削除する添付ファイルを選択してください。";
 var strLang272 = "終了日の指定が正しくありません。";
 var strLang273 = "スケジュールを登録する権限がありません。部署のスケジュールは部署管理者とシステム管理者のみ登録できます。";
 var strLang274 = "スケジュールを登録する権限がありません。会社のスケジュールはとシステム管理者のみ登録できます。";
-var strLang535 = "データが存在しません。";
+var strLang535 = "データが存在しません";
 var strLang1000 = "会社日程は、会社管理者のみ登録できます。";
 var strLang1001 = "部署日程は、部署管理者と会社管理者のみ登録できます。";
 /* 2017-07-11 */
@@ -170,6 +175,8 @@ var strLang275 = "開始日の指定が正しくありません。";
 var strLangKMS1 = "繰り返し設定は100回まで可能です。";
 /*2018-07-16 구해안 리소스 추가 요청 메일 발송함.*/
 var strLang276 = "日程グループを一つだけ選択してください。";
+/*2018-09-27*/
+var strLang277 = "日程を登録してください"
 //2018.10.24
 var strLangKHJ1 = "날짜를 지정해 주세요.";
 var strLangKHJ2 = "開始日を指定してください。";
@@ -180,6 +187,9 @@ var strLangKHJ6 = "ics파일 형식에 맞지 않습니다.";
 var strLangKHJ7 = "ics파일을 저장하는 중 에러발생";
 //2018-11-12
 var strLangKHJ8 = "権限がありません。";
+//2018-12-27
+var strLangKHA1 = "会社記念日";
+var strLangKHA2 = "法定公休日";
 //2018-02-22
 var strLangGHA1 = "、";
 /* 2019-04-03 */

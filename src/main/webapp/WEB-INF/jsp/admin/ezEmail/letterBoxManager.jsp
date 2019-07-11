@@ -28,8 +28,8 @@
 	    <h1 style="padding: 5px"> </h1>
 	    <div id="mainmenu">
 		    <ul class="on">
-		        <li><span onclick="addLetterBox()"><spring:message code='ezEmail.letter17'/></span></li>
-		        <li><span onclick="deleteLetterBox()"><spring:message code='ezEmail.letter18'/></span></li>
+		        <li class="important"><span onclick="addLetterBox()"><spring:message code='ezEmail.letter17'/></span></li>
+		        <li><span class="icon16 icon16_delete" onclick="deleteLetterBox()"></span></li>
 		    </ul>
 		</div>
 		<div id="letterContentDiv" style="width:639px;">
@@ -38,14 +38,14 @@
 			<div id="divInput" style="border:1px solid #ddd; padding:15px; height:319px">
 				<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
 					<label for="display">
-						<spring:message code='ezEmail.letter35'/>
+						<spring:message code='ezEmail.letter35'/> (${primary})
 					</label>
 					<input type="text" id="display" name="displayname" size="30" maxlength="40">
 					
 					<br><br>
 					
 					<label for="display2">
-						<spring:message code='ezEmail.letter36'/>
+						<spring:message code='ezEmail.letter36'/> (${secondary})
 					</label>
 					<input type="text" id="display2" name="displayname2" size="30" maxlength="40">
 					

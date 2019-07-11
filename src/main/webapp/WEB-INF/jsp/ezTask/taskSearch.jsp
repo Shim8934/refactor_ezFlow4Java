@@ -35,11 +35,11 @@
 		    var orgfilter = "_OrgFilter";
 		    var pUse_Editor = "Use_Editor";
 		    var pSearchType = "pSearchType";
-		    var primary = "${userInfo.primary}";
-		    var delayColor = "${delayColor}";
-		    var completeColor = "${completeColor}"
+		    var primary = "<c:out value='${userInfo.primary}'/>";
+		    var delayColor = "<c:out value='${delayColor}'/>";
+		    var completeColor = "<c:out value='${completeColor}'/>"
 		    var selectelem = null;
-		    var useTodoMemo = "${useTodoMemo }";
+		    var useTodoMemo = "<c:out value='${useTodoMemo }'/>";
 		    
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -110,7 +110,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f1f8ff";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 		    }
 		    
@@ -119,7 +119,7 @@
 
 				if ($("#checkboxAll").is(":checked")) {
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body td").css("background", "#edf4fd");
+					$(".row_body td").css("background", "#f1f8ff");
 				} else {
 					$(":checkbox[name=myCheckbox]").prop("checked", false);
 					$(".row_body td").css("background", "");
@@ -132,7 +132,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -140,7 +140,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var SDate;
@@ -233,7 +233,7 @@
 				var chkValue = $("#search_field").val();
 
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskGetList.do",

@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezPortal.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,6 +38,7 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -135,7 +135,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/portalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		logger.debug("portalMain Start");
+		return "redirect:/ezNewPortal/newPortalMain.do";
+		
+		/*logger.debug("portalMain Start");
 				
 		String companyID = req.getParameter("companyID");
 		String deptID = req.getParameter("deptID");
@@ -146,7 +148,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		if (companyID != null && !companyID.equals("") && deptID != null && !deptID.equals("")) {
-			Cookie cookieID0 = new Cookie("APRUI0", userInfo.getDeptID());
+			Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(userInfo.getDeptID(), "utf-8"));
 	    	cookieID0.setPath("/");
 	    	resp.addCookie(cookieID0);
 	    	
@@ -174,7 +176,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	    	cookieID6.setPath("/");
 	    	resp.addCookie(cookieID6);
 	    	
-	    	Cookie cookieID7 = new Cookie("APRUI7", userInfo.getCompanyID());
+	    	Cookie cookieID7 = new Cookie("APRUI7", URLEncoder.encode(userInfo.getCompanyID(), "utf-8"));
 	    	cookieID7.setPath("/");
 	    	resp.addCookie(cookieID7);
 		}
@@ -213,7 +215,7 @@ public class EzPortalController extends EgovFileMngUtil {
                             "<link href=\""+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
                             "<style type='text/css'>" +
                             "<!--" +
-                            ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
+                            ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:malgun gothic, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
                             ".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}" +
                             ".warnintxt01 { position:relative }" +
                             ".warningimg { position:absolute; top:0px; left:0px;}" +
@@ -251,7 +253,7 @@ public class EzPortalController extends EgovFileMngUtil {
 							resp.setCharacterEncoding("UTF-8");
 							resp.setContentType("text/html; charset=UTF-8");
 							resp.getWriter().write(commentHtml);
-							/*resp.getWriter().flush();*/
+							resp.getWriter().flush();
 				}
 			}
 		}
@@ -378,6 +380,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 2018-08-03 황윤호 추가
         String memoFlag = "";
+        
         if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
         	memoFlag = "YES";
         } else {
@@ -389,13 +392,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("topHeight", topHeight);
 		model.addAttribute("memoFlag", memoFlag);
 		
-		return "/ezPortal/portalMain";
+		return "/ezPortal/portalMain";*/
 	}
 	
 	/**
 	 * 포탈 상단 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/topMenu.do")
+	@RequestMapping(value = "/ezPortal/topMenu.do", method = RequestMethod.GET)
 	public String topMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("topMenu started");
 
@@ -551,7 +554,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		//사용자 영역에서만 팝업 공지사항을 오픈한다.
 		if (mode.equals("view") && !viewMode.equals("preview")) {
 			// 팝업 공지사항
-			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId());
+			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 			
 			String popUp = "";
 			int popUpWidth = 0;
@@ -622,7 +625,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
-		model.addAttribute("pageID", pageID);
+		model.addAttribute("pageID", commonUtil.stripScriptTags(pageID));
 		model.addAttribute("parentPageID", parentPageID);
 		model.addAttribute("editMode", editMode);
 		model.addAttribute("viewMode", viewMode);
@@ -631,7 +634,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("displayName2", displayName2);
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
-		model.addAttribute("mode", mode);
+		model.addAttribute("mode", commonUtil.stripScriptTags(mode));
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("skinExist", skinExist);
 		model.addAttribute("script1", script1);
@@ -644,7 +647,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/portalTopMenu";
 	}
 	
-	@RequestMapping(value = "/ezPortal/portalPage.do")
+	@RequestMapping(value = "/ezPortal/portalPage.do", method = RequestMethod.GET)
 	public String portalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalPage started");
 
@@ -782,7 +785,10 @@ public class EzPortalController extends EgovFileMngUtil {
 				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId(), userInfo.getCompanyID());
 				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId(), userInfo.getCompanyID()), userInfo.getTenantId(), userInfo.getCompanyID());
 				baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
-//				logger.debug("strHTML="+strHTML);
+				logger.debug("userInfo.getCompanyID() = "+userInfo.getCompanyID());
+				logger.debug("width = "+width);
+				logger.debug("height = "+height);
+				logger.debug("baseType = "+baseType);
 			}
 		}
 		
@@ -815,14 +821,16 @@ public class EzPortalController extends EgovFileMngUtil {
 			portalPageCategoryXML += "</DATA>";
 			portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
 		}
+
+		strHTML = strHTML.replace("{", "%7B").replace("}", "%7D");
 		
 		model.addAttribute("strHTML", strHTML);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("displayName2", displayName2);
-		model.addAttribute("mode", mode);
+		model.addAttribute("mode", commonUtil.stripScriptTags(mode));
 		model.addAttribute("parentPageID", parentPageID);
-		model.addAttribute("pageID", pageID);
+		model.addAttribute("pageID", commonUtil.stripScriptTags(pageID));
 		model.addAttribute("baseType", baseType);
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
@@ -882,7 +890,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 마이포탈 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/myPortal.do")
+	@RequestMapping(value = "/ezPortal/myPortal.do", method = RequestMethod.GET)
 	public void myPortal (HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("myPortal started");
 		
@@ -964,7 +972,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					"<link href="+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
 					"<style type='text/css'>" +
 					"<!--" +
-					".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
+					".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:malgun gothic, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
 					".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}" +
 					".warnintxt01 { position:relative }" +
 					".warningimg { position:absolute; top:0px; left:0px;}" +
@@ -1038,7 +1046,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - urlPortlet 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/urlPortlet.do")
+	@RequestMapping(value = "/ezPortal/urlPortlet.do", method = RequestMethod.GET)
 	public void urlPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("urlPortlet started");
 
@@ -1081,7 +1089,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		String parametersXML = ezPortalService.getPortletParameters(uID, userInfo.getTenantId());
-		
+
 		if (pMoveURL != null && !pMoveURL.equals("")) {
 			pMoveURL = pMoveURL + ezPortalService.loadGetParametersXML(pMoveURL, parametersXML, userInfo);
 			
@@ -1092,6 +1100,20 @@ public class EzPortalController extends EgovFileMngUtil {
 					pMoveURL = pMoveURL + "&pClassID=" + pUserID;
 				}
 			}
+			
+			/* 2018-08-24 새로운 포탈 */
+			String type = req.getParameter("type");
+			
+			if (type != null && !type.equals("")) {
+				if (pMoveURL.indexOf("?") == -1) {
+					pMoveURL = pMoveURL + "?type=" + type;
+				} else {
+					pMoveURL = pMoveURL + "&type=" + type;
+				}
+			}
+
+			pMoveURL = pMoveURL.replace("{", "%7B").replace("}", "%7D");
+			
 			resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
 			resp.getWriter().write("<body onload='window_onload()'></body>");
 		} else {
@@ -1103,7 +1125,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart NewImage 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpNewImage.do")
+	@RequestMapping(value = "/ezPortal/wpNewImage.do", method = RequestMethod.GET)
 	public String wpNewImage(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("wpNewImage started");
 		
@@ -1119,7 +1141,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 현재시간 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpTime.do")
+	@RequestMapping(value = "/ezPortal/wpTime.do", method = RequestMethod.GET)
 	public String wpTime(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		return "/ezPortal/portalWpTime";
 	}
@@ -1127,7 +1149,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart totalSection 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpTotalSection.do")
+	@RequestMapping(value = "/ezPortal/wpTotalSection.do", method = RequestMethod.GET)
 	public String wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("wpTotalSection started");
 
@@ -1177,11 +1199,18 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//유저이미지
 		String userPhoto = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
+		
 		if (userPhoto != null && !userPhoto.equals("")) {
-			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + userPhoto + "' width=61 height=64>";
+			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + userPhoto + "' width=36 height=36>";
 		} else {
 			userPhoto = "";
 		}
+		logger.debug("userPhoto="+userPhoto);
+		//2018-08-29 장진혁 - 이미지 슬라이더
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
+		
+		//새로고침 시간 컨피그화
+		String refreshSecond = config.getProperty("refreshSecond");
 		
 		boolean checkBrowser;
 		if (req.getHeader("User-Agent").indexOf("Trident") < 0 && req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
@@ -1192,7 +1221,72 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		//근태관리 사용에 따른 시계 사용 유무 로직
 		isUseAttMenuItem = ezPortalService.getMainMenuItemUID(accessID, attitudeLinkURL, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String accessList = ezPortalService.getAccessList(userInfo);
 		
+		//근태 태넌트 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		
+		/*
+		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
+		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
+		 */
+		
+		HashMap <String, String> moduleList = new HashMap<String, String>();
+
+//		moduleList.put("/ezEmail/mailMain.do", "mail");
+//		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+//		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
+//		moduleList.put("/ezBoard/boardMain.do", "board");
+//		moduleList.put("/ezCommunity/communityMain.do", "community");
+//		moduleList.put("/ezResource/resMain.do", "res");
+		moduleList.put("/ezCircular/circularIndex.do", "circular");
+//		moduleList.put("/ezJournal/journalMain.do", "journal");
+		
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), "");
+		
+		Calendar cal = Calendar.getInstance();
+		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
+	
+		model.addAttribute("curMon", curMon);
+		
+		//이달의 우수사원
+		String filePath = "";
+		String displayNameBirth = "";
+		String titleBirth = "";
+		String description = "";
+				
+		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + curMon;
+		
+		PersonalGetEmpOfMonthVO resultBirth = ezPersonalService.getEmpOfMonth(term, userInfo);
+		
+		if (resultBirth != null) {
+			if (resultBirth.getFilePath() != null && !resultBirth.getFilePath().equals("")) {
+				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + resultBirth.getFilePath();
+			} else {
+				filePath = "/images/kr/main/bestEmployee_pic_none.png";
+			}
+			
+			if (userInfo.getPrimary().equals("1")) {
+				displayNameBirth = resultBirth.getDisplayName();
+				titleBirth = resultBirth.getTitle();
+				description = resultBirth.getDescription();
+			} else {
+				displayNameBirth = resultBirth.getDisplayName2();
+				titleBirth = resultBirth.getTitle2();
+				description = resultBirth.getDescription2();
+			}
+		} else {
+			filePath = "/images/kr/main/bestEmployee_pic_none.png";
+		}
+		
+		model.addAttribute("displayNameBirth", displayNameBirth);
+		model.addAttribute("titleBirth", titleBirth);
+		model.addAttribute("description", description);
+		model.addAttribute("filePath", filePath);
+		model.addAttribute("result", resultBirth);
 		List<PortalTopOtherCompanyAddJobVO> companyList = ezPortalService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
 		
 		model.addAttribute("useCircular", useCircular);
@@ -1213,11 +1307,24 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("checkBrowser", checkBrowser);
+		model.addAttribute("type", req.getParameter("type"));
+		model.addAttribute("sliderList", sliderList);
 		model.addAttribute("companyList", companyList);
 		model.addAttribute("loginIP", loginIP);
 		//근태관리 추가
 		model.addAttribute("serverTime", serverTime);
 		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
+		model.addAttribute("use_attitude", use_attitude);
+		
+		/**
+		 * 협업 메뉴가 존재할 경우 통계 화면 대신 협업 포틀릿 호출
+		 * */
+		//String accessList = ezPortalService.getAccessList(userInfo);
+		logger.debug("accessList: " + accessID);
+		String workspaceUID = ezPortalService.getWorkspaceUID(userInfo.getTenantId());
+		Boolean hasWorkspace = ezPortalService.checkViewRightBln(workspaceUID, accessID, userInfo.getTenantId());
+		logger.debug("workspace author: " + userInfo.getId() + " " + hasWorkspace.toString());		
+		model.addAttribute("hasWorkspace", hasWorkspace);
 		
 		logger.debug("wpTotalSection ended");
 		
@@ -1227,7 +1334,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart totalSection2 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpTotalSection2.do")
+	@RequestMapping(value = "/ezPortal/wpTotalSection2.do", method = RequestMethod.GET)
 	public String wpTotalSection2(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("wpTotalSection2 started");
 
@@ -1315,7 +1422,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 공지사항 & 뉴스 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpNewBoard.do")
+	@RequestMapping(value = "/ezPortal/wpNewBoard.do", method = RequestMethod.GET)
 	public String wpNewBoard(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("wpNewBoard started");
 
@@ -1365,9 +1472,101 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 우수사원 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpNewSide.do")
+	@RequestMapping(value = "/ezPortal/wpNewSide.do", method = RequestMethod.GET)
 	public String wpNewSide(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("wpNewSide started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("wpNewSide ended");
+		
+		return "/ezPortal/portalWpNewSide";
+	}
+	
+	/**
+	 * 포탈 - webPart 전자결재 & 메일 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewApprMail.do", method = RequestMethod.GET)
+	public String wpNewApprMail(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("wpNewApprMail started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String id = "ROOT"; // Get_Favoritelist 함수에서 id에  "ROOT"로 박아두어서 함께 복사했으나 쿼리에는 타지 않는다.
+		String kind = "000"; // 양식종류 전체에 해당하는 value 값, Portal에 양식종류 선택하는 셀렉트 박스 제작시 "000" 하드코딩을 빼고 req로 값 불러올 것
+		String searchType = "";
+		String searchName = "";
+		String type = req.getParameter("type");
+		int listType = 1;
+		String nowDate = EgovDateUtil.convertDate(egovframework.rte.fdl.string.EgovDateUtil.getCurrentDateTimeAsString(), "", "", "");
+		nowDate = nowDate.substring(0, 16);
+		
+		logger.debug("wpNewApprMail type : " + type);
+		
+		if (type.equals("favo")) {
+			List<ApprGFormVO> result = ezApprovalGService.getFormInfoByPortal(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+			
+			logger.debug("result : " + result + "    result.size() : " + result.size());
+			
+			model.addAttribute("result", result);
+		}
+		
+		//2018-09-18 구해안 부재자 정보 가져오기
+		String buJaeInfo = "";
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
+		Document doc = commonUtil.convertStringToDocument(result);
+		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		
+		/* 2018-08-24 새로운 포틀릿 */
+		model.addAttribute("type", type);
+		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("host", userInfo.getServerName());
+		model.addAttribute("buJaeInfo", buJaeInfo);
+		model.addAttribute("nowDate", nowDate);
+		model.addAttribute("listType", listType);
+
+		logger.debug("wpNewApprMail ended");
+		return "/ezPortal/portalWpNewApprMail";
+	}
+		
+	/**
+	 * 포탈 - webPart 배너 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewGWBanner.do", method = RequestMethod.GET)
+	public String wpNewGWbanner(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		return "/ezPortal/portalWpNewGWBanner";
+	}
+	
+	/**
+	 * 포탈 - webPart 커뮤니티 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewCommunity.do", method = RequestMethod.GET)
+	public String wpNewCommunity(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("wpNewCommunity started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		/* 2018-06-22 홍승비 - 포탈메인 커뮤니티 호출 companyID 구분 추가 */
+		String strHTML = ezPortalService.addBestTable(userInfo);
+		
+		model.addAttribute("userLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("strHTML", strHTML);
+
+		logger.debug("wpNewCommunity ended");
+		return "/ezPortal/portalWpNewCommunity";
+	}
+	
+	/**
+	 * 포탈 - webPart 게시판 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/wpNewBoardSTD.do", method = RequestMethod.GET)
+	public String wpNewBoardSTD(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("wpNewBoardSTD started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1405,177 +1604,15 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("filePath", filePath);
 		model.addAttribute("result", result);
 		
-		logger.debug("wpNewSide ended");
-		return "/ezPortal/portalWpNewSide";
-	}
-	
-	/**
-	 * 포탈 - webPart 전자결재 & 메일 화면 호출 함수
-	 */
-	@RequestMapping(value = "/ezPortal/wpNewApprMail.do")
-	public String wpNewApprMail(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
-		logger.debug("wpNewApprMail started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
-		model.addAttribute("userLang", userInfo.getLang());
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("host", userInfo.getServerName());
-
-		logger.debug("wpNewApprMail ended");
-		return "/ezPortal/portalWpNewApprMail";
-	}
-	
-	/**
-	 * 포탈 - webPart 배너 화면 호출 함수
-	 */
-	@RequestMapping(value = "/ezPortal/wpNewGWBanner.do")
-	public String wpNewGWbanner(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
-		return "/ezPortal/portalWpNewGWBanner";
-	}
-	
-	/**
-	 * 포탈 - webPart 커뮤니티 화면 호출 함수
-	 */
-	@RequestMapping(value = "/ezPortal/wpNewCommunity.do")
-	public String wpNewCommunity(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
-		logger.debug("wpNewCommunity started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		/* 2018-06-22 홍승비 - 포탈메인 커뮤니티 호출 companyID 구분 추가 */
-		String strHTML = ezPortalService.addBestTable(userInfo);
-		
-		model.addAttribute("userLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("strHTML", strHTML);
-
-		logger.debug("wpNewCommunity ended");
-		return "/ezPortal/portalWpNewCommunity";
-	}
-	
-	/**
-	 * 포탈 - webPart 게시판 화면 호출 함수
-	 */
-	@RequestMapping(value = "/ezPortal/wpNewBoardSTD.do")
-	public String wpNewBoardSTD(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
-		logger.debug("wpNewBoardSTD started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		model.addAttribute("userInfo", userInfo);
-
 		logger.debug("wpNewBoardSTD ended");
+
 		return "/ezPortal/portalWpNewBoardSTD";
 	}
 	
 	/**
 	 * 포탈 - webPart 설문참여 화면 호출 함수
 	 */
-/*	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
-	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
-		logger.debug("wpNewPoll Start");
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String votePoll = "";
-		int pPollItemSeq = 0;
-		String pPollTitle = "";
-		String pPollResultContent = "";
-		
-		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
-		
-		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
-		
-		if (result != null) {
-			if (result.getResult() > 0) {
-				if (result.getResult() != 0) {
-					votePoll = Integer.toString(result.getResult());
-				}
-			} else {
-				votePoll = "";
-			}	
-			
-			if (result.getItemSeq() > 0) {
-				if (result.getItemSeq() != 0) {
-					pPollItemSeq = result.getItemSeq();
-					int maxAns = Integer.parseInt(result.getPollSelectionCount());
-					pPollTitle = userInfo.getPrimary().equals("1") ? result.getPollTitle() : result.getPollTitle2();
-					
-					List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq, userInfo.getTenantId());
-					
-					int pTotalCnt = 0;
-					
-					for (int i=0; i<list.size(); i++) {
-						pTotalCnt = pTotalCnt + list.get(i).getCount();
-					}
-					
-					List<Integer> pPollResultList = new ArrayList<Integer>();
-					int resultPrintCnt = 0;
-					
-					for (int i=0; i<list.size(); i++) {
-						if (i >= 4) {
-							break;
-						} else {
-							float poolRstCnt = list.get(i).getCount();
-							float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
-							String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
-							String titleString = strAnswer;
-							if (strAnswer.length() > 11) {
-								strAnswer = strAnswer.substring(0, 11) + "…";
-							}
-							pPollResultList.add(list.get(i).getResult());
-							pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
-							"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
-							"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
-							"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
-							"</dl>";
-	                        resultPrintCnt++;
-						}
-					}
-					
-					if (resultPrintCnt < 4) {
-						for (int i=1; i<=maxAns; i++) {
-							boolean isDuplication = false;
-							for (int j=0; j<pPollResultList.size(); j++) {
-								if (i == pPollResultList.get(j)) {
-									isDuplication = true;
-									break;
-								}
-							}
-							
-							if (!isDuplication) {
-								String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
-								String titleString = strAnswer;
-								if (strAnswer.length() > 13) {
-									strAnswer = strAnswer.substring(0, 13) + "...";
-								}
-								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
-	                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
-	                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-																resultPrintCnt++;
-								if (resultPrintCnt == 4) {
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		model.addAttribute("pPollTitle", pPollTitle);
-		model.addAttribute("votePoll", votePoll);
-		model.addAttribute("pPollItemSeq", pPollItemSeq);
-		model.addAttribute("pPollResultContent", pPollResultContent);
-		model.addAttribute("userLang", userInfo.getLang());
-		
-		logger.debug("wpNewPoll End");
-		return "/ezPortal/portalWpNewPoll";
-	}*/
-	
-	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
+	@RequestMapping(value = "/ezPortal/wpNewPoll.do", method = RequestMethod.GET)
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("wpNewVote is running!");
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1590,7 +1627,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String votePoll = "";
 		int pPollItemSeq = 0;
 		String pPollTitle = "";
-		String pPollResultContent = "";
+		StringBuilder pPollResultContent = new StringBuilder();
 		
 		String checkFlag = ezCommonService.getTenantConfig("useBallotSystem", userInfo.getTenantId());
 		
@@ -1670,8 +1707,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			return "/ezPortal/portalWpNewVote";
 		}
 		else {			
-			PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
-			
+			PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 			Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 			
 			if (result != null) {
@@ -1699,7 +1735,7 @@ public class EzPortalController extends EgovFileMngUtil {
 						
 						List<Integer> pPollResultList = new ArrayList<Integer>();
 						int resultPrintCnt = 0;
-						
+
 						for (int i=0; i<list.size(); i++) {
 							if (i >= 4) {
 								break;
@@ -1708,32 +1744,12 @@ public class EzPortalController extends EgovFileMngUtil {
 								float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
 								String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
 								String titleString = strAnswer;
-								// 2018-07-25 김보미 - 주석
-//								if (strAnswer.length() > 11) {
-//									strAnswer = strAnswer.substring(0, 11) + "…";
-//								}
+
 								pPollResultList.add(list.get(i).getResult());
-								// 2018-07-25 김보미 - content부분 변경
-//								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
-//								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
-//								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
-//								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
-//								"</dl>";
-								pPollResultContent += 
-								"<div class='poll_list1'>" + 								    
-									"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
-										"<div style='float:left; display: block;'>" + list.get(i).getResult() + "." + "</div>" +
-										"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
-										"<div id='info" + list.get(i).getResult() + "' class='Pt_QstInfoDiv'>&nbsp" + 
-											 "<span class='Pt_QstInfoVotes'>"+ list.get(i).getCount() + "</span>" +
-											 egovMessageSource.getMessage("main.t20000", locale) + "/" +
-											 "<span class='Pt_QstInfoPercent'>" + String.format("%.1f", poolRstPer) + "</span>" +
-										"%</div>" +
-									"</div>" +
-									"<div class='graphbar1' id='divGraph" + list.get(i).getResult() + "' style='display: block;'>" +
-										"<p id='graph" + list.get(i).getResult() + "' class='gx_bar11' style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%;'></p>" +
-									"</div>"+	
-								"</div>";
+								
+								pPollResultContent.append("<li class='voteList_0"+(i+1)+"'><div class='voteT'><span class='Vnum'>"+ list.get(i).getResult() + "</span><span class='Vtext'>" + titleString + "</span></div>");
+								pPollResultContent.append("<div class='percent'>" + String.format("%.0f", poolRstPer) + "%</div>");
+								pPollResultContent.append("<div class='voteGraph'><span style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%'></span></div></li>");
 								
 		                        resultPrintCnt++;
 							}
@@ -1752,31 +1768,14 @@ public class EzPortalController extends EgovFileMngUtil {
 								if (!isDuplication) {
 									String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
 									String titleString = strAnswer;
-									// 2018-07-25 김보미 - 주석
-//									if (strAnswer.length() > 13) {
-//										strAnswer = strAnswer.substring(0, 13) + "...";
-//									}
-									// 2018-07-25 김보미 - content부분 변경
-//									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
-//		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
-//		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-									pPollResultContent += 
-									"<div class='poll_list1'>" + 								    
-										"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
-											"<div style='float:left; display: block;'>" + i + "." + "</div>" +
-											"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
-											"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
-												 "<span class='Pt_QstInfoVotes'>0</span>" +
-												 egovMessageSource.getMessage("main.t20000", locale) + "/" +
-												 "<span class='Pt_QstInfoPercent'>0.0</span>" +
-											"%</div>" +
-										"</div>" +
-										"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" +
-											"<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>" +
-										"</div>"+
-									"</div>";
+									
+									/* 2018-09-10 홍승비 - 비어있는 설문조사 보기 생성 */
+									pPollResultContent.append("<li class='voteList_0"+(resultPrintCnt+1)+"'><div class='voteT'><span class='Vnum'>"+ i + "</span><span class='Vtext'>" + titleString + "</span></div>");
+									pPollResultContent.append("<div class='percent'>0%</div>");
+									pPollResultContent.append("<div class='voteGraph'><span style='width:0%'></span></div></li>");
 									
 									resultPrintCnt++;
+									
 									if (resultPrintCnt == 4) {
 										break;
 									}
@@ -1790,20 +1789,18 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("pPollTitle", pPollTitle);
 			model.addAttribute("votePoll", votePoll);
 			model.addAttribute("pPollItemSeq", pPollItemSeq);
-			model.addAttribute("pPollResultContent", pPollResultContent);
+			model.addAttribute("pPollResultContent", pPollResultContent.toString());
 			model.addAttribute("userLang", userInfo.getLang());
 			
 			logger.debug("wpNewPoll End");
 			return "/ezPortal/portalWpNewPoll";
-		}	
-		
+		}
 	}
-	
 	
 	/**
 	 * 포탈 - webPart 결재 통계 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpNewGraph.do")
+	@RequestMapping(value = "/ezPortal/wpNewGraph.do", method = RequestMethod.GET)
 	public String wpNewGraph(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("wpNewGraph started");
 
@@ -1811,57 +1808,71 @@ public class EzPortalController extends EgovFileMngUtil {
 		int dMaxCount = 0;
 		int sMaxCount = 0;
 		
-		Calendar cal = Calendar.getInstance();
-		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
-		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+		/**
+		 * 협업 메뉴가 존재할 경우 통계 화면 대신 협업 포틀릿 호출
+		 * */
+		String accessList = ezPortalService.getAccessList(userInfo);
+		logger.debug("accessList: " + accessList);
+		String workspaceUID = ezPortalService.getWorkspaceUID(userInfo.getTenantId());
+		Boolean hasWorkspace = ezPortalService.checkViewRightBln(workspaceUID, accessList, userInfo.getTenantId());
+		logger.debug("workspace author: " + userInfo.getId() + " " + hasWorkspace.toString());
 		
-		if (startDate != null && startDate.split("-")[1].equals("0")) {
-			startDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-01 00:00:00";
-		}
-		
-		if (endDate != null && endDate.split("-")[1].equals("0")) {
-			endDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-" + ezPortalService.daysInMonth(12, cal.get(Calendar.YEAR)-1) + " 23:59:59";
-		}
-		
-		logger.debug("startDate="+startDate+", endDate="+endDate);
-		
-		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
-		
-		String dMax = "1";
-		
-		if (list.size() > 0) {
-			for (int j=0; j<String.valueOf(list.get(0).getDraftCount()).length() - 1; j++) {
-				dMax = dMax + "0";
+		if(!hasWorkspace) {
+			Calendar cal = Calendar.getInstance();
+			String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
+			String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+			
+			if (startDate != null && startDate.split("-")[1].equals("0")) {
+				startDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-01 00:00:00";
 			}
 			
-			dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
-			sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+			if (endDate != null && endDate.split("-")[1].equals("0")) {
+				endDate = String.valueOf(cal.get(Calendar.YEAR)-1) + "-" + "12" + "-" + ezPortalService.daysInMonth(12, cal.get(Calendar.YEAR)-1) + " 23:59:59";
+			}
 			
-			for (int i=0; i<list.size(); i++) {
-				if (sMaxCount < list.get(i).getSusinCount() + Integer.parseInt(dMax)) {
-					sMaxCount = list.get(i).getSusinCount() + Integer.parseInt(dMax);
+			logger.debug("startDate="+startDate+", endDate="+endDate);
+			
+			List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			String dMax = "1";
+			
+			if (list.size() > 0) {
+				for (int j=0; j<String.valueOf(list.get(0).getDraftCount()).length() - 1; j++) {
+					dMax = dMax + "0";
 				}
-			}
-			dMaxCount = dMaxCount + sMaxCount;
-			
-			logger.debug("listSize="+list.size());
-			for (int i=0; i<list.size(); i++) {
-				logger.debug("draftCount="+list.get(i).getDraftCount());
-				logger.debug("susinCount="+list.get(i).getSusinCount());
-				float draftPercent = (float)list.get(i).getDraftCount() / dMaxCount * 100;
-				float susinPercent = (float)list.get(i).getSusinCount() / dMaxCount * 100;
 				
-				list.get(i).setDraftCount((int)(draftPercent));
-				list.get(i).setSusinCount((int)(susinPercent));
+				dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
+				sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+				
+				for (int i=0; i<list.size(); i++) {
+					if (sMaxCount < list.get(i).getSusinCount() + Integer.parseInt(dMax)) {
+						sMaxCount = list.get(i).getSusinCount() + Integer.parseInt(dMax);
+					}
+				}
+				dMaxCount = dMaxCount + sMaxCount;
+				
+				logger.debug("listSize="+list.size());
+				for (int i=0; i<list.size(); i++) {
+					logger.debug("draftCount="+list.get(i).getDraftCount());
+					logger.debug("susinCount="+list.get(i).getSusinCount());
+					float draftPercent = (float)list.get(i).getDraftCount() / dMaxCount * 100;
+					float susinPercent = (float)list.get(i).getSusinCount() / dMaxCount * 100;
+					
+					list.get(i).setDraftCount((int)(draftPercent));
+					list.get(i).setSusinCount((int)(susinPercent));
+				}
+			} else {
+				dMax = "0";
+				dMaxCount = 0;
 			}
+			logger.debug("dMaxCount="+dMaxCount);
+			
+			model.addAttribute("dMaxCount", dMaxCount);
+			model.addAttribute("list", list);
 		} else {
-			dMax = "0";
-			dMaxCount = 0;
+			model.addAttribute("userID", userInfo.getId());
 		}
-		logger.debug("dMaxCount="+dMaxCount);
-		
-		model.addAttribute("dMaxCount", dMaxCount);
-		model.addAttribute("list", list);
+		model.addAttribute("hasWorkspace", hasWorkspace);
 
 		logger.debug("wpNewGraph ended");
 		return "/ezPortal/portalWpNewGraph";
@@ -1870,7 +1881,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 썸네일게시판 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpNewPhoto.do")
+	@RequestMapping(value = "/ezPortal/wpNewPhoto.do", method = RequestMethod.GET)
 	public String wpNewPhoto(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pPhotoGalleryID = "";
@@ -1892,7 +1903,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 이달의생일 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpNewBirth.do")
+	@RequestMapping(value = "/ezPortal/wpNewBirth.do", method = RequestMethod.GET)
 	public String wpNewBirth(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1908,7 +1919,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart totalSection5 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/wpTotalSection5.do")
+	@RequestMapping(value = "/ezPortal/wpTotalSection5.do", method = RequestMethod.GET)
 	public String wpTotalSection5(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1939,9 +1950,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		int noViewCnt = 0;
 		int cnt = 0;
+		int page = Integer.parseInt(req.getParameter("page"));
+		
 		String[] noViewArrayID = new String[1000];
 		String[] arrayID = new String[1000];
 		StringBuilder result = new StringBuilder("<DATA>");
+		
+		List<PersonalGetQuickLinkMenuVO> realList = new ArrayList<PersonalGetQuickLinkMenuVO>();
 		
 //		String deptFullPath = ezOrganService.getDeptFullPath(userInfo.getDeptID(), userInfo.getTenantId());
 //		
@@ -1952,8 +1967,6 @@ public class EzPortalController extends EgovFileMngUtil {
 //		for (int i=0; i<splitDeptPath.length; i++) {
 //			reversePath += splitDeptPath[splitDeptPath.length - i - 1] + ",";
 //		}
-		
-		List<PersonalGetQuickLinkMenuVO> resultQuickLinkMenuList = new ArrayList<PersonalGetQuickLinkMenuVO>();
 		
 		String pAccessID = userInfo.getId() + "," + userInfo.getDeptID() + "," + userInfo.getCompanyID() + "," + "everyone";
 		
@@ -1982,30 +1995,46 @@ public class EzPortalController extends EgovFileMngUtil {
 					if (TF) {
 						arrayID[cnt] = getQuickLinkMenu.get(k).getQuickLinkID();
 						cnt ++;
-						resultQuickLinkMenuList.add(getQuickLinkMenu.get(k));
+						realList.add(getQuickLinkMenu.get(k));
 					}
 				}
 			}
 		}
-		Collections.sort(resultQuickLinkMenuList, new Comparator<PersonalGetQuickLinkMenuVO>() {
+
+		Collections.sort(realList, new Comparator<PersonalGetQuickLinkMenuVO>() {
 		    public int compare(PersonalGetQuickLinkMenuVO o1, PersonalGetQuickLinkMenuVO o2) {
 		        return o2.getRegDate().compareTo(o1.getRegDate());
 		    }
 		});
-		for (PersonalGetQuickLinkMenuVO personalGetQuickLinkMenuVO : resultQuickLinkMenuList) {
+		
+		for (PersonalGetQuickLinkMenuVO personalGetQuickLinkMenuVO : realList) {
 			result.append(commonUtil.getQueryResult(personalGetQuickLinkMenuVO));
 		}
-		result.append("</DATA>");
-		logger.debug("quickLinkXML="+result.toString());
+		
+		int lastSize = 0;
+		
+		if (page+5 >= realList.size()) {
+			lastSize = realList.size();
+		} else {
+			lastSize = page+5;
+		}
+		
+		for (int z=page; z < lastSize; z++) {
+			result.append(commonUtil.getQueryResult(realList.get(z)));
+		}
+		
+		result.append("<SIZE><PAGE>" + realList.size() + "</PAGE></SIZE></DATA>");
 
+		logger.debug("quickLinkXML="+result.toString());
 		logger.debug("getQuickLink ended");
+		
 		return result.toString();
 	}
 	
 	/**
 	 * 포탈 - webPart 테마1 totalSection 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpTotalSection.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpTotalSection.do", method = RequestMethod.GET)
 	public String theme1wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("wpTotalSection started");
 
@@ -2080,7 +2109,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 공지사항 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemeNotice.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeNotice.do", method = RequestMethod.GET)
 	public String theme1wpThemeNotice(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("theme1wpThemeNotice started");
 
@@ -2095,7 +2124,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 메일 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemeMail.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeMail.do", method = RequestMethod.GET)
 	public String theme1wpThemeMail(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("theme1wpThemeMail started");
 
@@ -2110,7 +2139,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 메일 그래프 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemeMailGraph.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeMailGraph.do", method = RequestMethod.GET)
 	public String theme1wpThemeMailGraph(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("theme1wpThemeMaiGraph started");
 
@@ -2125,7 +2154,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 일정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemeCalendar.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeCalendar.do", method = RequestMethod.GET)
 	public String theme1wpThemeCalendar(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("theme1wpThemeCalendar started");
 
@@ -2140,7 +2169,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 결재 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemeAppr.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeAppr.do", method = RequestMethod.GET)
 	public String theme1wpThemeAppr(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("theme1wpThemeAppr started");
 
@@ -2157,7 +2186,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 생일 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemeBirth.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeBirth.do", method = RequestMethod.GET)
 	public String theme1wpThemeBirth(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("theme1wpThemeAppr started");
 
@@ -2176,7 +2205,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 게시판 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemeBoard.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeBoard.do", method = RequestMethod.GET)
 	public String theme1wpThemeBoard(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("theme1wpThemeBoard started");
 
@@ -2194,7 +2223,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 설문 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemePoll.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemePoll.do", method = RequestMethod.GET)
 	public String theme1wpThemePoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("theme1wpThemePoll started");
 
@@ -2204,7 +2233,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		int pPollItemSeq = 0;
 		String pPollTitle = "";
 		
-		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		if (result != null) {
 			if (result.getResult() > 0) {
@@ -2235,7 +2264,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 포토게시판 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemePhoto.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemePhoto.do", method = RequestMethod.GET)
 	public String theme1wpThemePhoto(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("theme1wpThemePhoto started");
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -2298,7 +2327,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 커뮤니티 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemeComm.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeComm.do", method = RequestMethod.GET)
 	public String theme1wpThemeComm(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("theme1wpThemeComm started");
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -2312,7 +2341,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - webPart 테마1 배너 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/wpThemeBanner.do")
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeBanner.do", method = RequestMethod.GET)
 	public String theme1wpThemeBanner(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("theme1wpThemeBanner started");
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -2338,7 +2367,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 테마1 포탈페이지 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/portalPage.do")
+	@RequestMapping(value = "/ezPortal/theme1/portalPage.do", method = RequestMethod.GET)
 	public String theme1PortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("theme1PortalPage started");
 
@@ -2548,7 +2577,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 상단 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/theme1/topMenu.do")
+	@RequestMapping(value = "/ezPortal/theme1/topMenu.do", method = RequestMethod.GET)
 	public String theme1topMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("theme1topMenu started");
 
@@ -2692,7 +2721,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		//사용자 영역에서만 팝업 공지사항을 오픈한다.
 		if (mode.equals("view") && !viewMode.equals("preview")) {
 			// 팝업 공지사항
-			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId());
+			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 			
 			String popUp = "";
 			int popUpWidth = 0;
@@ -2775,7 +2804,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 환경설정 메인 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/environmentMain.do")
+	@RequestMapping(value = "/ezPortal/environmentMain.do", method = RequestMethod.GET)
 	public String environmentMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("environmentMain started");
 
@@ -2813,7 +2842,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 환경설정 MyPortalPageList 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/myPortalPageList.do")
+	@RequestMapping(value = "/ezPortal/myPortalPageList.do", method = RequestMethod.GET)
 	public String environmentMain(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		logger.debug("environmentMain started");
 
@@ -2958,7 +2987,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 환경설정 초기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/startPageUser.do")
+	@RequestMapping(value = "/ezPortal/startPageUser.do", method = RequestMethod.GET)
 	public String startPageUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("startPageUser started");
 		
@@ -3106,7 +3135,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezPortal/myPortalPage.do")
+	@RequestMapping(value = "/ezPortal/myPortalPage.do", method = RequestMethod.GET)
 	public String myPortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("myPortalPage started");
 
@@ -3296,7 +3325,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 환경설정 마이포탈페이지 portalPageSearch 실행 함수
 	 */
-	@RequestMapping(value = "/ezPortal/portalPageSearch.do")
+	@RequestMapping(value = "/ezPortal/portalPageSearch.do", method = RequestMethod.GET)
 	public String portalPageSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("portalPageSearch started");
 
@@ -3345,7 +3374,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 환경설정 마이포탈페이지 portalPortletSearch 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/portletSearch.do")
+	@RequestMapping(value = "/ezPortal/portletSearch.do", method = RequestMethod.GET)
 	public String portletSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("portletSearch started");
 
@@ -3403,7 +3432,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 포탈페이지 권한 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/portalPageACL.do")
+	@RequestMapping(value = "/ezPortal/portalPageACL.do", method = RequestMethod.GET)
 	public String portalPageACL(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("portalPageACL started");
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -3424,7 +3453,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 메인 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/help.do")
+	@RequestMapping(value = "/ezPortal/help/help.do", method = RequestMethod.GET)
 	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("help started");
 
@@ -3448,7 +3477,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 상단 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/top.do")
+	@RequestMapping(value = "/ezPortal/help/top.do", method = RequestMethod.GET)
 	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("top started");
 
@@ -3517,7 +3546,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 하단 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/main.do")
+	@RequestMapping(value = "/ezPortal/help/main.do", method = RequestMethod.GET)
 	public String main(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("main started");
 
@@ -3538,7 +3567,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 indexSub 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/indexSub.do")
+	@RequestMapping(value = "/ezPortal/help/indexSub.do", method = RequestMethod.GET)
 	public String indexSub(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("indexSub started");
 
@@ -3564,7 +3593,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftPortal 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftPortal.do")
+	@RequestMapping(value = "/ezPortal/help/leftPortal.do", method = RequestMethod.GET)
 	public String leftPortal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftPortal started");
 
@@ -3579,7 +3608,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftMail 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftMail.do")
+	@RequestMapping(value = "/ezPortal/help/leftMail.do", method = RequestMethod.GET)
 	public String leftMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftMail started");
 
@@ -3594,7 +3623,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftAddr 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftAddr.do")
+	@RequestMapping(value = "/ezPortal/help/leftAddr.do", method = RequestMethod.GET)
 	public String leftAddr(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftAddr started");
 
@@ -3609,7 +3638,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftAppr 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftAppr.do")
+	@RequestMapping(value = "/ezPortal/help/leftAppr.do", method = RequestMethod.GET)
 	public String leftAppr(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftAppr started");
 
@@ -3624,7 +3653,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftApprG 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftApprG.do")
+	@RequestMapping(value = "/ezPortal/help/leftApprG.do", method = RequestMethod.GET)
 	public String leftApprG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftApprG started");
 
@@ -3639,7 +3668,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftBoard 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftBoard.do")
+	@RequestMapping(value = "/ezPortal/help/leftBoard.do", method = RequestMethod.GET)
 	public String leftBoard(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftBoard started");
 
@@ -3654,7 +3683,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftCommunity 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftCommunity.do")
+	@RequestMapping(value = "/ezPortal/help/leftCommunity.do", method = RequestMethod.GET)
 	public String leftCommunity(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftCommunity started");
 
@@ -3669,7 +3698,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftEnv 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftEnv.do")
+	@RequestMapping(value = "/ezPortal/help/leftEnv.do", method = RequestMethod.GET)
 	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftEnv started");
 
@@ -3721,7 +3750,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftPoll 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftPoll.do")
+	@RequestMapping(value = "/ezPortal/help/leftPoll.do", method = RequestMethod.GET)
 	public String leftPoll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftPoll started");
 
@@ -3736,7 +3765,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftResource 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftResource.do")
+	@RequestMapping(value = "/ezPortal/help/leftResource.do", method = RequestMethod.GET)
 	public String leftResource(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftResource started");
 
@@ -3751,7 +3780,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftSchedule 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftSchedule.do")
+	@RequestMapping(value = "/ezPortal/help/leftSchedule.do", method = RequestMethod.GET)
 	public String leftSchedule(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftSchedule started");
 
@@ -3763,7 +3792,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/help/leftSchedule";
 	}
 	
-	@RequestMapping(value = "/ezPortal/help/leftTask.do")
+	@RequestMapping(value = "/ezPortal/help/leftTask.do", method = RequestMethod.GET)
 	public String leftTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftTask started");
 
@@ -3778,7 +3807,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftCircular 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftCircular.do")
+	@RequestMapping(value = "/ezPortal/help/leftCircular.do", method = RequestMethod.GET)
 	public String leftCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftCircular started");
 
@@ -3793,7 +3822,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftleftWebfolder 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/leftWebfolder.do")
+	@RequestMapping(value = "/ezPortal/help/leftWebfolder.do", method = RequestMethod.GET)
 	public String leftWebfolder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftWebfolder started");
 
@@ -3808,7 +3837,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 topPortal 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/help/topPortal.do")
+	@RequestMapping(value = "/ezPortal/help/topPortal.do", method = RequestMethod.GET)
 	public String topPortal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("topPortal started");
 
@@ -3823,7 +3852,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 포틀릿 추가 portalMenuItemSearch 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/menuItemSearch.do")
+	@RequestMapping(value = "/ezPortal/menuItemSearch.do", method = RequestMethod.GET)
 	public String menuItemSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("menuItemSearch started");
 
@@ -3853,7 +3882,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 ActiveX 다운로드 목록 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/componentListTransfer.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezPortal/componentListTransfer.do", produces="text/xml;charset=utf-8", method=RequestMethod.GET)
 	@ResponseBody
 	public String componentListTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		StringBuilder result = new StringBuilder();
@@ -3880,7 +3909,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 ActiveX 다운로드 실행 함수
 	 */
-	@RequestMapping(value = "/ezPortal/progress.do")
+	@RequestMapping(value = "/ezPortal/progress.do", method=RequestMethod.GET)
 	public String progress() {
 		return "/ezPortal/portalProgress";
 	}
@@ -3888,7 +3917,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - HTMLPortlet 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/htmlPortlet.do")
+	@RequestMapping(value = "/ezPortal/htmlPortlet.do", method=RequestMethod.GET)
 	public String htmlPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req) throws Exception {
 		logger.debug("htmlPortlet started");
 
@@ -3908,7 +3937,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - imagePortlet 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezPortal/imagePortlet.do")
+	@RequestMapping(value = "/ezPortal/imagePortlet.do", method=RequestMethod.GET)
 	public String imagePortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req) throws Exception {
 		logger.debug("imagePortlet started");
 
@@ -3939,7 +3968,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - boardPortlet 실행 함수
 	 */
-	@RequestMapping(value = "/ezPortal/boardPortlet.do")
+	@RequestMapping(value = "/ezPortal/boardPortlet.do", method=RequestMethod.GET)
 	public void boardPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		logger.debug("boardPortlet started");
 		
@@ -4013,12 +4042,21 @@ public class EzPortalController extends EgovFileMngUtil {
 			resp.getWriter().close();
 		}
 		logger.debug("boardPortlet ended");
+	}
+	
+	@RequestMapping(value = "/ezPortal/wpNewSchedule.do", method = RequestMethod.GET)
+	public String wpNewSchedule(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("wpNewSchedule started");
+		
+		logger.debug("wpNewSchedule ended");
+		
+		return "/ezPortal/portalWpNewSchedule";
 	}	
 	
 	/**
 	 * 공지사항 쿠키 생성
 	 * */
-	@RequestMapping(value="/ezPortal/setPopupCookie.do")
+	@RequestMapping(value="/ezPortal/setPopupCookie.do", method = RequestMethod.POST)
 	public void setPopupCookie(HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("setPopupCookie is started.");
 		String cookieName = request.getParameter("cookieName");

@@ -25,7 +25,7 @@
 
 		return this.each(function(index, el) {
 			// Markup
-			$(el).html('<div class="progressbar"><div class="proggress"></div></div><div class="percentCount"></div>');
+			$(el).html('<div class="progressbar"><div class="proggress" style="width: 0%;"></div></div><div class="percentCount"></div>');
 			
 
 
@@ -53,6 +53,8 @@
 					step: function(x) {
 						if(options.ShowProgressCount){
 							$(el).find(".percentCount").text(Math.round(x) + "%");
+						} else {
+							$(el).find(".percentCount").css("display", "none");
 						}
 					},
 					duration: options.duration

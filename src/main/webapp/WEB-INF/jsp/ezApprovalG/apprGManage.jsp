@@ -40,30 +40,30 @@
 		    var Resultxml = createXmlDom();
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    var companyID = "${userInfo.companyID}";
-		    arr_userinfo[7] = "${buJaeInfo}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
-		    var proxyInfo = "${proxyInfo}";
-		    var proxyStartDate = "${proxyInfo.startDate}"
-		    var proxyEndDate = "${proxyInfo.endDate}"
+		    arr_userinfo[10] = "<c:out value = '${susinAdmin}'/>";
+		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
+		    arr_userinfo[7] = "<c:out value = '${buJaeInfo}'/>";
+		    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
+		    var proxyInfo = "<c:out value = '${proxyInfo}'/>";
+		    var proxyStartDate = "<c:out value = '${proxyInfo.startDate}'/>"
+		    var proxyEndDate = "<c:out value = '${proxyInfo.endDate}'/>"
 		    var formURL = "";
 		    var formDocType = "";
 		    var pDocInfoValue = "1";
-		    var pListTypeValue = "${listType}";
+		    var pListTypeValue = '<c:out value="${listType}"/>';
 		    var pListTypeName = "LISTTYPE";
 		    var pDocTypeName = "DOCTYPE";
 		    var pUserID = arr_userinfo[1];
@@ -86,24 +86,25 @@
 		    var nowblock = "0";
 		    var OrderOption = "";
 		    var OrderCell = "";
-		    var USE_OCS = "${useOcs}";
+		    var USE_OCS = "<c:out value = '${useOcs}'/>";
 		    var SendOutFlag = "O";
-		    var g_RelayG_Type = "${relayG_type}";
+		    var g_RelayG_Type = "<c:out value = '${relayG_type}'/>";
 		    var userLang = "1";
-		    var pSelMenu = "${selMenu}";
-		    var pOpenYaer = "${openYear}";
-		    var ViewLeftCount = "${viewLeftCount}";
+		    var pSelMenu = "<c:out value = '${selMenu}'/>";
+		    var pOpenYaer = "<c:out value = '${openYear}'/>";
+		    var ViewLeftCount = "<c:out value = '${viewLeftCount}'/>";
 		    var CurrentHeight = 0;
 		    var CurrentWidth = 0;
-		    var approvalFlag = "${approvalFlag}"; //전자결재 G , S 여부
-		    var forceCallBackYN = "${forceCallBackYN}";
-		    var SubQuery = "${SubQuery}";
+		    var approvalFlag = "<c:out value = '${approvalFlag}'/>"; //전자결재 G , S 여부
+		    var forceCallBackYN = "<c:out value = '${forceCallBackYN}'/>";
+		    var SubQuery = "<c:out value = '${SubQuery}'/>";
 		    var condition = new Array();
-		    var nowDate = "${nowDateUTC}";
+		    var nowDate = "<c:out value = '${nowDateUTC}'/>";
 		    var ext;
 		    var currentpage = 1;
 		    var selRowChangeFlag = false;
 		    var orgCompanyID = "";
+		    var useHWP = "${useHWP}";
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -114,10 +115,10 @@
 		            return true;
 		    };
 		    function checkBujaeInfo() {
-		    	if (pListTypeValue == "10") {
-		    		checkBujaeInfo_Complete(true);
-		    		return;
-	            }
+//		    	if (pListTypeValue == "10") {
+//		    		checkBujaeInfo_Complete(true);
+//		    		return;
+//	            }
 		        var BString = "${buJaeInfo}";
 		        
 		        if (BString != "") {
@@ -129,12 +130,12 @@
 		            tmpStartDate = tmpStartDate.replace("/", ":");
 		            tmpEndDate = tmpEndDate.replace("/", ":");
 		            
-		            if (tmpEndDate < "${nowDate}") {
+		            if (tmpEndDate < "<c:out value = '${nowDate}'/>") {
 		                setBujaeOff();
 		                checkBujaeInfo_Complete(true);
 		                return true;
 
-		            } else if (tmpStartDate > "${nowDate}") {
+		            } else if (tmpStartDate > "<c:out value = '${nowDate}'/>") {
 		            	checkBujaeInfo_Complete("ING");
 		                return true;
 		            }
@@ -223,21 +224,21 @@
 		        }
 		        else if (pListTypeValue == "10") {
 		            getDocList();
-		            var result = "";
+// 		            var result = "";
 			    	
-			        $.ajax({
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		url : "/ezPersonal/saveBujae.do",
-			    		data : {
-			    				buJae  : bujaeVal,
-			    				proxy  : ""
-			    				},
-			    		success: function(xml){
-			    			result = xml;
-			    		}        			
-			    	});
+// 			        $.ajax({
+// 			    		type : "POST",
+// 			    		dataType : "text",
+// 			    		async : false,
+// 			    		url : "/ezPersonal/saveBujae.do",
+// 			    		data : {
+// 			    				buJae  : bujaeVal,
+// 			    				proxy  : ""
+// 			    				},
+// 			    		success: function(xml){
+// 			    			result = xml;
+// 			    		}        			
+// 			    	});
 		        }
 		        else if (pListTypeValue == "21") {
 		            getDocList();
@@ -260,17 +261,18 @@
 		    function setBujaeOff() {
 		    	var result = "";
 		    	
-		    	if(pListTypeValue != "10") {
-		    		bujaeVal = "";
-		    	}
+// 		    	if(pListTypeValue != "10") {
+// 		    		bujaeVal = "";
+// 		    	}
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezPersonal/saveBujae.do",
 		    		data : {
-		    				buJae  : bujaeVal,
-		    				proxy  : ""
+		    				buJae  : "",
+		    				proxy  : "",
+		    				dept : arr_userinfo[4]
 		    				},
 		    		success: function(xml){
 		    			result = xml;
@@ -279,6 +281,26 @@
 		        
 		        bujaeVal = arr_userinfo[7];
 		        arr_userinfo[7] = "";
+		       
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezPersonal/getBujaeInfo.do",
+		    		data : {
+		    				buJae  : bujaeVal,
+		    				proxy  : "",
+		    				dept : arr_userinfo[4]
+		    				},
+		    		success: function(xml){
+		    			result = xml;
+		    			if (result != "") {
+		    				window.location.reload();
+		    			}
+		    		}        			
+		    	});
+		        
+		        
 		    }
 		
 		    $(function () {
@@ -368,7 +390,7 @@
 		        
 			    AddOption(sel_status, '<spring:message code="ezPoll.t104"/>', "ALL");
 			    
-			    $('#sel_status_div').show();
+			    $('#sel_status_div').closest("li").show();
 			    
 		        if (pListTypeValue == "1") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
@@ -399,7 +421,7 @@
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
 		        } else {
-		        	$('#sel_status_div').hide();
+		        	$('#sel_status_div').closest("li").hide();
 		        }
 		        
 		    }
@@ -1286,8 +1308,8 @@
 	        				position  : arr_userinfo[3],
 	        				position2 : arr_userinfo[16],
 			        		companyID : companyID,
-		    				companyName : "${userInfo.companyName}",
-		    				companyName2 : "${userInfo.companyName2}"
+		    				companyName : "<c:out value = '${userInfo.companyName}'/>",
+		    				companyName2 : "<c:out value = '${userInfo.companyName2}'/>"
 	        				},
 	        		success: function(xml){
 	        		}        			
@@ -1491,18 +1513,18 @@
 		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
 		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
 					
-		            if (tmpStartDate <= "${nowDate}" && tmpEndDate >= "${nowDate}") {
+		            if (tmpStartDate <= "<c:out value = '${nowDate}'/>" && tmpEndDate >= "<c:out value = '${nowDate}'/>") {
 		                return true;
-		            } else if(tmpStartDate < "${nowDate}" && tmpEndDate < "${nowDate}"){
+		            } else if(tmpStartDate < "<c:out value = '${nowDate}'/>" && tmpEndDate < "<c:out value = '${nowDate}'/>"){
 		            	setBujaeOff();
 				        return false;
 		            }
 		        } else if (proxyInfo != null && proxyInfo != "") {
-		        	var strDate = "${proxyInfo.startDate}";
-		        	var endDate = "${proxyInfo.endDate}";
-		            if (strDate <= "${nowDate}" && endDate >= "${nowDate}") {
+		        	var strDate = "<c:out value = '${proxyInfo.startDate}'/>";
+		        	var endDate = "<c:out value = '${proxyInfo.endDate}'/>";
+		            if (strDate <= "<c:out value = '${nowDate}'/>" && endDate >= "<c:out value = '${nowDate}'/>") {
 		                return true;
-		            }else if(strDate < "${nowDate}" && endDate < "${nowDate}"){
+		            }else if(strDate < "<c:out value = '${nowDate}'/>" && endDate < "<c:out value = '${nowDate}'/>"){
 		            	setBujaeOff();
 				        return false;
 		            }
@@ -1961,7 +1983,7 @@
 		                var objNode;
 		                var tr = selRow[i];
 		                createNodeInsert(xmlpara, objNode, "PARAMETER");
-		                if ("${listType}" == 10) {
+		                if ("<c:out value = '${listType}'/>" == 10) {
 		                	createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA2"));
 		                } else {
 		                	createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
@@ -2112,25 +2134,25 @@
 	<body class="mainbody" style="margin-top:0px;">	
 		<h1 class="title_h1">
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
-		    <span style="float:right;font-weight:normal;color:black;">
+		    <span class="searchForm">
 		    	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
 		    	</select>
-			    <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		        <a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+			    <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		        <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		<div id="mainmenu">
 			<ul>  
 		  		<li id="tbtnRegUserCont" style="DISPLAY:none"><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
-				<li id="tbtnDraft" style="DISPLAY:none"><span id="btnDraft" onclick="return btnDraft_onclick()" ><spring:message code='ezApprovalG.t30'/></span></li>
-				<li id="tbtnLinkDraft" style="display:none"><span id="btnLinkDraft" onclick="return btnLinkDraft_onclick()"><spring:message code='ezApprovalG.t1737'/></span></li>
-				<li id="tbtnRedraft" style="DISPLAY:none"><span id="btnRedraft" onclick="return btnRedraft_onclick()"><spring:message code='ezApprovalG.t1738'/></span></li>
+				<li class="important" id="tbtnDraft" style="DISPLAY:none"><span id="btnDraft" onclick="return btnDraft_onclick()" ><spring:message code='ezApprovalG.t30'/></span></li>
+				<li class="important" id="tbtnLinkDraft" style="display:none"><span id="btnLinkDraft" onclick="return btnLinkDraft_onclick()"><spring:message code='ezApprovalG.t1737'/></span></li>
+				<li class="important" id="tbtnRedraft" style="DISPLAY:none"><span id="btnRedraft" onclick="return btnRedraft_onclick()"><spring:message code='ezApprovalG.t1738'/></span></li>
 				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" ></li> -->
 				<li id="tbtnApprove" style="DISPLAY:none"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
 				<li id="tbtnApprove1" style="DISPLAY:none"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
-				<li id="tbtnNonElecRec" style="DISPLAY:none"><span id="btnNonElecRec" onclick="return btnNonElecRec_onclick()" >비전자문서등록</span></li><%-- 비전자문서 등록 --%>
+				<li class="important" id="tbtnNonElecRec" style="DISPLAY:none"><span id="btnNonElecRec" onclick="return btnNonElecRec_onclick()" >비전자문서등록</span></li><%-- 비전자문서 등록 --%>
 				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
@@ -2140,31 +2162,33 @@
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<li id="tbtncallback" style="DISPLAY:none"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
-		        
-		        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
-				
-				<li id="tbtnRemoveDoc" style="DISPLAY:none"><span id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
-				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
+		        <li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 				<c:if test="${approvalFlag == 'G'}">
 					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
 				</c:if>
 				<c:if test="${approvalFlag != 'G'}">
 					<li id="tbtnGongRam" style="DISPLAY:none"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
 				</c:if>
-		        <li id="tSearchCondi" style="DISPLAY:none"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
+				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
+		        <li id="tSearchCondi" style="DISPLAY:none"><span class="icon16 icon16_search" id="SearchCondi" onclick="return SearchCondi_onclick()"></span></li>
+		        <%-- <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li> --%>
+		        <li id="tbtnRemoveDoc" style="DISPLAY:none"><span class="icon16 icon16_delete" id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"></span></li>
 		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
-		        <li style="vertical-align: middle;">
+		        <li style="vertical-align: middle; float:right">
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
-		        	</select>  
+		        	</select>
+		        </li>
+		        <li style="vertical-align: middle; float:right">
 		        	<div id="sel_status_div" style="display:inline;">
 						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
 			            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 			        	</select>  
 		        	</div>
-		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
+		        </li>
+		        <c:if test="${fn:length(companyList) gt 1 and listType ne '4' and listType ne '21'}">
+			        <li style="vertical-align: middle; float:right">		        	
 						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">
 								<spring:message code='main.t74'/>
@@ -2175,11 +2199,11 @@
 								</option>
 							</c:forEach>
 						</select>
-					</c:if>
-		        </li>
+					</li>	
+				</c:if>
 			</ul>
 		</div>
-		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
+		<div class="div_scroll" style="width:100%;HEIGHT:375px; overflow:AUTO; margin-bottom:10px" id="divList">
 			<div id="lvDocList"></div>
 		</div>
 		

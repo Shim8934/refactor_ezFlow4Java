@@ -104,10 +104,14 @@
 				
 				var imgElmt2 = document.createElement("img");
 				imgElmt2.setAttribute("class", "webfolderImg");
-				imgElmt2.src = "/images/webfolder/fldr.png";
+				imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 				
 				var spanFolderName = document.createElement("span");
-				spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
+				if (list["folderLevel"] == 0) {
+					spanFolderName.textContent = primary == "1" ? list["folderName"]+"(" + list["ownerId"]+")" : list["folderName2"]+"(" + list["ownerId"]+")";
+				} else {
+					spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
+				}
 				spanFolderName.setAttribute("class", "spanName");
 				spanFolderName.setAttribute("name", list["folderId"]);
 				spanFolderName.setAttribute("level", list["folderLevel"]);
@@ -373,6 +377,9 @@
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
 								break;
+							case 8:
+								alert(messages.resultErrDuplicateCreate);
+								break;
 						}
 					},
 					error: function (xhr, status, e){
@@ -465,6 +472,9 @@
 								break;
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+							case 8:
+								alert(messages.resultErrDuplicateRename);
 								break;
 						}
 					},
@@ -654,7 +664,7 @@
 									<tr>
 										<td>
 											<div style="margin: 20px 20px 5px; min-height: 36px;">
-												<div style="display: inline-block; width: 52px; line-height: 30px;" id= "displayUsers">
+												<div style="display: inline-block; width: 60px; line-height: 30px;" id= "displayUsers">
 													<img src="/images/kr/left/left_dot02.gif"/>
 													<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>
 												</div>

@@ -46,7 +46,7 @@
 		    var ListIdx;
 		    var text1 = "<spring:message code='ezStatistics.t1008'/>";
 		    var deleteTimes = 0;		    
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    
 		    var CurPage = "";
 			var totalPage = "";
@@ -182,7 +182,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -196,7 +196,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -275,8 +275,8 @@
 				var strtext;
 				var PagingHTML = "";
 				$("#tblpageRayer").html("");
-				$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
-						+ totalCount + " </span><spring:message code='ezSystem.kyj2'/>]")
+				$("#listInfo").html("&nbsp;&nbsp;<span style='color:#017BEC;'>"
+						+ totalCount + " </span>")
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				var pageNum = CurPage;
@@ -481,7 +481,7 @@
 
 								if (res.totalcnt < 1) {
 									if (res.pSelectTab == "completedoclist") {
-										html += "<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>";
+										html += "<tr><td colspan='10' style='text-align:center;'>"+text1+"</td></tr>";
 									} else {
 										html += "<tr><td colspan='12' style='text-align:center;'>"+text1+"</td></tr>";
 									}
@@ -573,7 +573,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f1f8ff";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 		    }
 			
@@ -964,7 +964,7 @@
 				</table>
 			</tr>
 		</table>  -->
-		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
+		<table style="width:100%; background-color: #f8f8fa; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
 			<tr>
 				<td style="width:6%;">
 					<spring:message code='ezApproval.t434'/> 
@@ -1018,7 +1018,7 @@
 			</tr>
 		</table>
 		
-		<div id="contentlist" style="width: 100%; overflow: auto;">
+		<div id="contentlist" style="width: 100%; overflow: auto; margin-top:5px">
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr id ="doclist">
@@ -1039,7 +1039,7 @@
 			</table>
 		</div>
 		
-		<div id="tblPageRayer" style="padding-top: 10px;"></div>
+		<div id="tblPageRayer"></div>
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");

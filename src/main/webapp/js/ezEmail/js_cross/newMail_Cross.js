@@ -878,7 +878,7 @@ function Save_onClick_Complete(ReturnValue) {
             if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1")
                 createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
             else
-                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n").replace(regex, " "));
+                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
             createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
@@ -1070,6 +1070,14 @@ function event_SaveonClick() {
                 		
                 		setTimeout(Send_onClick(), 100);
                 	}
+                }
+                // 잘못된 메일주소가 있을 경우 (ex> mailto:test@test.com)
+                else if (pRtnMessage.indexOf("Local address contains illegal character") > -1) {
+                	alert(strLangLHM22);
+                }
+                // 잘못된 도메인 주소가 있을 경우 (ex> mailtotest@tes:t.com)
+                else if (pRtnMessage.indexOf("Domain contains illegal character") > -1) { 
+                	alert(strLangLHM22);
                 }
                 // 그 외
                 else {
@@ -2108,7 +2116,7 @@ function getOriginalFileExtension(filePath) {
 function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 	AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
-    xmlHTTP.open("GET", "/ezBoard/getItemInfo.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+    xmlHTTP.open("GET", "/ezBoard/getItemInfo.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
     xmlHTTP.send("");
 
     if (xmlHTTP.status == 200) {
@@ -2136,13 +2144,14 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
         if (Sender.indexOf("(,,)") > -1) Sender = Sender.split("(")[0];
 
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
+
         if (pRetransType != "boardAttach") {
             document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
             	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
             	"<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "</DIV><br><br>" + htmlData;
         }
         
-        xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + pItemID + "&mode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
+        xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + encodeURIComponent(pItemID) + "&mode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -2211,7 +2220,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
     AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
-    xmlHTTP.open("GET", "/ezCommunity/getItemInfo.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+    xmlHTTP.open("GET", "/ezCommunity/getItemInfo.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
     xmlHTTP.send("");
 
     if (xmlHTTP.status == 200) {
@@ -2242,7 +2251,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
         	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
         	"<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br></DIV>" + htmlData;
 
-        xmlHTTP.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
+        xmlHTTP.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -3587,139 +3596,11 @@ OLECMDEXECOPT_DODEFAULT = 0;
 
 var g_originalHTML = "";
 var g_originalPlainText = "";
-function pzFormProc_DocumentComplete() {
-    if (g_isFormat) return;
-
-    var MailBodyContent = document.createElement("DIV");
-    MailBodyContent.innerHTML = messageBody.getAttribute("mbody");
-
-    var DivCnt = MailBodyContent.getElementsByTagName("DIV").length;
-    for (var i = DivCnt; i >= 0; i--) {
-        if (MailBodyContent.getElementsByTagName("DIV").item(i) != null) {
-            try {
-                if (MailBodyContent.getElementsByTagName("DIV").item(i).getAttribute("id") == "ezFormProc_div") {
-                    MailBodyContent.getElementsByTagName("DIV").item(i).outerHTML = MailBodyContent.getElementsByTagName("DIV").item(i).innerHTML;
-                }
-                else if (MailBodyContent.getElementsByTagName("DIV").item(i).getAttribute("id") == "ORGMAIL_CONTENT___send") {
-                    MailBodyContent.getElementsByTagName("DIV").item(i).outerHTML = MailBodyContent.getElementsByTagName("DIV").item(i).innerHTML;
-                }
-                else if (MailBodyContent.getElementsByTagName("DIV").item(i).getAttribute("id") == "msgbody") {
-                    MailBodyContent.getElementsByTagName("DIV").item(i).outerHTML = MailBodyContent.getElementsByTagName("DIV").item(i).innerHTML;
-                }
-            } catch (e) {
-            }
-        }
-    }
-
-    message.SetEditorContent("<div id=msgbody><div>" + messageBody.getAttribute("mbody") + "</div></div>")
-    g_originalHTML = message.GetEditorContent();
-
-    if (eSubject.value != "") {
-    }
-    else
-        MsgTo.focus();
-
-    var tempDiv = document.createElement("DIV");
-    tempDiv.innerHTML = message.GetEditorContent();
-    var DivRows = tempDiv.getElementsByTagName("DIV");
-    for (var i = 0; i < DivRows.length; i++) {
-        if (DivRows.item(i).id == "MailSign" && DivRows.item(i).childNodes.length > 0) {
-            if (DivRows.item(i).childNodes.item(0).nodeName == "DIV") {
-                if (DivRows.item(i).childNodes.item(0).id == "kaoni_sign1") {
-                    document.getElementById("SelMailSign").selectedIndex = 1;
-                    CurrentSing = "1";
-                }
-                else if (DivRows.item(i).childNodes.item(0).id == "kaoni_sign2") {
-                    document.getElementById("SelMailSign").selectedIndex = 2;
-                    CurrentSing = "2";
-                }
-                else if (DivRows.item(i).childNodes.item(0).id == "kaoni_sign1") {
-                    document.getElementById("SelMailSign").selectedIndex = 3;
-                    CurrentSing = "3";
-                }
-            }
-        }
-    }
-    tempDiv = null;
-
-}
 
 function pzFormProc_FieldsAvailable() {
     tbContentElement.ShowWorkingDlg("", false);
 }
 
-function GetUpmooItemInfo_New(Itemid, DocHref) {
-    objMHT = new ActiveXObject("MhtFormat.Convert");
-    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURIComponent(DocHref);
-    objMHT.sync = true;
-    var strMht = objMHT.DownloadURL(fullPath);
-
-    objMHT.mhtData = strMht;
-    objMHT.filterIn();
-
-    var htmlData = "<div class='margin' id='ezFormProc_div'>" + objMHT.htmlData + "</div>";
-
-    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
-    var xmlHTTP = new ActiveXObject("Microsoft.XMLHTTP");
-
-    var objRoot = xmlpara.createNode(1, "PARAMETER", "");
-    xmlpara.appendChild(objRoot);
-
-    // 0
-    var objNode = xmlpara.createNode(1, "ITEMID", "");
-    objNode.text = Itemid;
-    xmlpara.documentElement.appendChild(objNode);
-
-    // 1
-    objNode = xmlpara.createNode(1, "COMPANYID", "");
-    objNode.text = g_companyID;
-    xmlpara.documentElement.appendChild(objNode);
-
-
-
-    xmlHTTP.open("Post", "/myoffice/ezReport/remote/Call_View.aspx", false);
-    xmlHTTP.send(xmlpara);
-
-    try {
-        if (xmlHTTP.status == 200) {
-            var Resultxml = loadXMLString(xmlHTTP.responseText);
-            eSubject.value = Resultxml.selectSingleNode("DATA/ROW/TITLE").text;
-            var PostDate = Resultxml.selectSingleNode("DATA/ROW/POSTDATE").text;
-            var Sender = "";
-
-            if (isPrimary == "1") {
-                Sender = Resultxml.selectSingleNode("DATA/ROW/USERNM").text + " (" +
-                        Resultxml.selectSingleNode("DATA/ROW/USERDEPTNM").text + ", " +
-                        Resultxml.selectSingleNode("DATA/ROW/USERJOBTITLE").text + ")";
-            }
-            else {
-                Sender = Resultxml.selectSingleNode("DATA/ROW/USERNM2").text + " (" +
-                        Resultxml.selectSingleNode("DATA/ROW/USERDEPTNM2").text + ", " +
-                        Resultxml.selectSingleNode("DATA/ROW/USERJOBTITLE2").text + ")";
-            }
-
-            if (Resultxml.selectSingleNode("DATA/ROW/HASATTACH").text == "1") {
-                getReportAttachList(Itemid);
-            }
-
-            htmlData = htmlData.substr(htmlData.indexOf("<BODY"));
-            htmlData = ReplaceText(htmlData, "<P ", "<DIV ");
-            htmlData = ReplaceText(htmlData, "/P>", "/DIV>");
-            htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
-            htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
-
-            messageBody.mbody = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br>" + htmlData;
-            eSubject.value = strLang121 + eSubject.value;
-            Subject_ReApply();
-        }
-
-        xmlhttp = null;
-        xmlpara = null;
-    }
-    catch (e) {
-        alert("GetReportItemInfo :: " + e.description);
-    }
-}
 function getReportAttachList(ItemNo) {
     try {
 

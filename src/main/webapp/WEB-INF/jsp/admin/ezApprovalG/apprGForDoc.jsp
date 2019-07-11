@@ -222,7 +222,7 @@
 				var strtext;
 				var PagingHTML = "";
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("mailBoxInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang943 + "]";
+				document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				
@@ -652,14 +652,25 @@
 				if (CrossYN()) {
 				    ezStatisticsSearch_Cross_dialogArguments[0] = para;
 				    ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
-				
-				    var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 350));
+				    var ezStatisticsSearch_Cross;
+				    if (approvalFlag == "S") {
+					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 260));
+				    } else {
+					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 350));
+				    }
 
 				    try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 				    }
 				} else {
 				    var url = "ezStatisticsSearch_Cross.aspx?INGFLAG=END";
-				    var feature = "dialogWidth:500px;dialogHeight:340px;status:no;scroll:no;edge:sunken";
+				    var feature = "";
+				    
+				    if (approvalFlag == "S") {
+					    feature = "dialogWidth:500px;dialogHeight:260px;status:no;scroll:no;edge:sunken";
+				    } else {
+					    feature = "dialogWidth:500px;dialogHeight:340px;status:no;scroll:no;edge:sunken";
+				    }
+				    
 				    var condition = window.showModalDialog(url, para, feature);
 				    
 				    if (condition) {
@@ -858,13 +869,13 @@
 		</xml>
 		
 	    <h1><spring:message code = 'ezApprovalG.t1324' /><span id="mailBoxInfo"></span>
-	        <span style="float:right;font-weight:normal;color:black;">
+	        <span class="searchForm">
 	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
 		    	</select>
-			  	<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	          	<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+			  	<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	          	<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
@@ -873,12 +884,13 @@
 			</c:if>
 	        <ul>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
-	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>	            
-	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
+	            <!-- 폐기버튼 숨김처리 -->
+	            <%-- <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li> --%>	            
+	            <li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
 	        </ul>
 	    </div>
 	
-		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
+		<div class="div_scroll" style="width:100%;HEIGHT:375px; overflow:AUTO" id="divList">
 	  		<div id="lvtDoclist" ></div>
 		</div>
 	 	<div id="tblPageRayer"></div>

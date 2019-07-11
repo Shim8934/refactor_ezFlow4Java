@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -18,10 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.google.gson.Gson;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -56,7 +53,7 @@ public class EzJournalAdminController {
 	/**
 	 * 관리자 업무일지  메인 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezJournal/journalMain.do")
+	@RequestMapping(value = "/admin/ezJournal/journalMain.do", method = RequestMethod.GET)
 	public String portalMain(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("journalMain started");
 
@@ -73,7 +70,7 @@ public class EzJournalAdminController {
 	/**
 	 * 관리자 업무일지  좌측 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezJournal/leftTop.do")
+	@RequestMapping(value = "/admin/ezJournal/leftTop.do", method = RequestMethod.GET)
 	public String leftTop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("leftTop started");
 
@@ -89,7 +86,7 @@ public class EzJournalAdminController {
 	/**
 	 * 관리자 일지함 관리
 	 */
-	@RequestMapping(value = "/admin/ezJournal/formType.do")
+	@RequestMapping(value = "/admin/ezJournal/formType.do", method = RequestMethod.GET)
 	public String formTypeManage(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("formType started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -132,7 +129,7 @@ public class EzJournalAdminController {
 	 */
 	@SuppressWarnings("unchecked")
 	@ResponseBody
-	@RequestMapping(value = "/admin/ezJournal/updatreFormType.do")
+	@RequestMapping(value = "/admin/ezJournal/updatreFormType.do", method = RequestMethod.POST)
 	public JSONObject formTypeUpdate(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("formTypeUpdate started");
 		
@@ -169,7 +166,7 @@ public class EzJournalAdminController {
 	/**
 	 * 관리자 업무일지 양식리스트 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezJournal/form.do")
+	@RequestMapping(value = "/admin/ezJournal/form.do", method = RequestMethod.GET)
 	public String formMain(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("formMain started");
 		
@@ -223,7 +220,7 @@ public class EzJournalAdminController {
 	/**
 	 * 관리자 업무일지 일지함의 양식리스트 가져오기
 	 */
-	@RequestMapping(value = "/admin/ezJournal/getFormList.do")
+	@RequestMapping(value = "/admin/ezJournal/getFormList.do", method = RequestMethod.POST)
 	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		logger.debug("getFormList started");
 		
@@ -256,7 +253,7 @@ public class EzJournalAdminController {
 	 * 관리자 업무일지 양식등록 양식추가, 양식수정 화면호출함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezJournal/insertForm.do")
+	@RequestMapping(value = "/admin/ezJournal/insertForm.do", method = RequestMethod.GET)
 	public String insertForm(HttpServletRequest request, ModelMap model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("insertForm started");
 		
@@ -349,7 +346,7 @@ public class EzJournalAdminController {
 	 * 업무일지 양식등록 양식등록,양식수정 양식작성기 저장 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezJournal/formSave.do")
+	@RequestMapping(value = "/admin/ezJournal/formSave.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("formSave started.");
@@ -403,7 +400,7 @@ public class EzJournalAdminController {
 	/**
 	 * 업무일지 양식관리 양식삭제 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezJournal/deleteForm.do")
+	@RequestMapping(value = "/admin/ezJournal/deleteForm.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteForm (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("deleteForm started.");
@@ -433,7 +430,7 @@ public class EzJournalAdminController {
 	 * 관리자 열람 권한 관리
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezJournal/author.do")
+	@RequestMapping(value = "/admin/ezJournal/author.do", method = RequestMethod.GET)
 	public String authorMain(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("authorMain started");
 		
@@ -488,7 +485,7 @@ public class EzJournalAdminController {
 	 * @param loginCookie
 	 * @return
 	 */
-	@RequestMapping(value="/admin/ezJournal/authorView.do")
+	@RequestMapping(value="/admin/ezJournal/authorView.do", method = RequestMethod.GET)
 	public String authorView(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("authorView started");
 		if (request.getParameter("userId")!=null) {
@@ -518,7 +515,7 @@ public class EzJournalAdminController {
 	 * 관리자 열람 권한 세부 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezJournal/authorDetail.do")
+	@RequestMapping(value = "/admin/ezJournal/authorDetail.do", method = RequestMethod.GET)
 	public String authorDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("authorDetail started");
 		
@@ -568,7 +565,7 @@ public class EzJournalAdminController {
 	 * 관리자 열람 권한 부서 선택하기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezJournal/selectAuthorDept.do")
+	@RequestMapping(value = "/admin/ezJournal/selectAuthorDept.do", method = RequestMethod.GET)
 	public String selectAuthorDept(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("selectAuthorDept started");
 		
@@ -617,7 +614,7 @@ public class EzJournalAdminController {
 	/**
 	 * 사원리스트
 	 */
-	@RequestMapping(value = "/admin/ezJournal/userList.do")
+	@RequestMapping(value = "/admin/ezJournal/userList.do", method = RequestMethod.POST)
 	public String userList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("userList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -645,16 +642,11 @@ public class EzJournalAdminController {
 //				keyword = (String) ((JSONObject)userList.get(0)).get("deptName");
 				keyword = request.getParameter("deptName");
 			} else{
-				keyword = egovMessageSource.getMessage("ezJournal.t43", userInfo.getLocale());
+				keyword = egovMessageSource.getMessage("ezJournal.t170", userInfo.getLocale());
 			}
 			int userCount = 0;
-			if (userList.size() == 0 && !key.equals("DEPARTMENT")) {
-				keyword = egovMessageSource.getMessage("ezJournal.t170", userInfo.getLocale());
-			} else {
-				userCount = userList.size();
-			}
+			
 			model.addAttribute("keyword",keyword);
-			model.addAttribute("userCount",userCount);
 			model.addAttribute("key", key);
 			model.addAttribute("totalCount", resultBody.get("totalCount"));
 			model.addAttribute("totalCount2", resultBody.get("totalCount2"));
@@ -668,7 +660,7 @@ public class EzJournalAdminController {
 	/**
 	 * 해당사원이 열람 할 수 있는 부서 리스트
 	 */
-	@RequestMapping(value = "/admin/ezJournal/authorDeptList.do")
+	@RequestMapping(value = "/admin/ezJournal/authorDeptList.do", method = RequestMethod.POST)
 	public String authorDeptList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie){
 		logger.debug("authorDeptList started");
 		String userId = request.getParameter("userId");
@@ -693,7 +685,7 @@ public class EzJournalAdminController {
 	 * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezJournal/saveAuthor.do")
+	@RequestMapping(value = "/admin/ezJournal/saveAuthor.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws IOException{
 		logger.debug("saveAuthor started");
@@ -720,7 +712,7 @@ public class EzJournalAdminController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/admin/ezJournal/deleteAuthor.do")
+	@RequestMapping(value = "/admin/ezJournal/deleteAuthor.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteAuthor(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws IOException{
 		logger.debug("deleteAuthor started");

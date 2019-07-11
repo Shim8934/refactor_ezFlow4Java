@@ -331,7 +331,7 @@
 		    }
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + pItemID + ",;", false);
+		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(pItemID) + ",;", false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText == "FALSE") {
 		            xmlhttp = null;
@@ -355,12 +355,12 @@
 		            if (gubun == "2") {
 		                if (CrossYN()) {
 		                    checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(340, 200));
 		                    try { OpenWin.focus(); } catch (e) { }
 		                } else {
 		                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                    feature = feature + GetShowModalPosition(330, 200);
-		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
 		                    
 			                if (ret == "NO") {
 			                    alert("<spring:message code='ezBoard.t267' />");
@@ -376,7 +376,7 @@
 		                    	return;
 		                    }
 		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 		                    xmlhttp.send();
 		
 		                    if (xmlhttp.responseText == "NO") {
@@ -386,13 +386,14 @@
 		
 		                    xmlhttp = null;
 		                    try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 		                    try {
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+		                    
 		                    window.close();
 		                }
 		            }
@@ -406,7 +407,7 @@
 		            if (BoardAdmin_FG == "true" || gubun != "2") {
 		                if (!confirm("<spring:message code='ezBoard.t197' />")) return;
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+		                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "NO") {
@@ -416,13 +417,40 @@
 		
 		                xmlhttp = null;
 		                try {
-		                	window.opener.leftCountRf();
+		                	window.opener.leftCountRf(pBoardID);
 						} catch (e) {
 						}
 		                try {
 		                    window.opener.refresh_onclick();
 		                } catch (e) {
 		                }
+		                
+
+	                    //2019.03.04 유은정 - 게시판 적용
+	                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
+	                    	parent.opener.getNoticePortletList();
+	                    }
+	                    
+	                 	// 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
+			            	}
+			            }
+	                 	
+			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+							parent.opener.getBoardList_NewBoardSTD();
+						}
+			            
 		                window.close();
 		            }
 		        }
@@ -448,7 +476,7 @@
 		        	return;
 		        }
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + ";", false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -458,7 +486,7 @@
 		
 		        xmlhttp = null;
 		        try {
-                	window.opener.leftCountRf();
+                	window.opener.leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		        try {
@@ -479,7 +507,7 @@
 		            alert("<spring:message code='ezBoard.t303' />");
 		            return;
 		        }
-	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
+	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply";
 		        window.resizeTo(785, 780);
 		    }
 		    function btn_Modify_Onclick() {
@@ -491,30 +519,41 @@
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
 		        }
+		        
+		        var portletId = "";
+		     	// 게시판 포틀릿 리스트 업데이트 되도록 수정
+	            if (parent.opener.getBoardPortletInfo != undefined) {
+	            	portletId = "<c:out value='${portletId}'/>";
+	            }
+		     	
+	            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+					parent.opener.getBoardList_NewBoardSTD();
+				}
+	            
 		        //익명게시판
 		        if (gubun == "2") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments = new Array();
 		                checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
-		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(435, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(435, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
 		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(pItemID), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		                if (ret == "NO") {
 		                    alert("<spring:message code='ezBoard.t267' />");
 		                    return;
 		                }
 		
-	                    window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	                    window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
 		                window.resizeTo(785, 780);
 		            }
 		        }
 		        if (gubun != "2") {
-	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
 		            window.resizeTo(785, 780);
 		        }
 		    }
@@ -526,11 +565,12 @@
 		            return;
 		        }
 		
-	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem;
 		        window.resizeTo(785, 780);
 		    }
 		    
 		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
+			var copyboarditem_cross_dialogArguments = new Array();
 		    function btn_Copy_Onclick() {
 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
 		            alert("<spring:message code='ezBoard.t202' />");
@@ -550,7 +590,18 @@
 		        pwidth = pwidth - 127;
 		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature + GetOpenPosition(355,600);
-		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", feature, "");
+		        copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(pItemID) + ";" + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", feature, "");
+		    }
+		    /* 2019-07-09 홍승비 - 게시물 읽기창에서 복사 후 좌측 게시물카운트 갱신 */
+		    function CopyItem_onclick_Complete(ret) {
+		        if (typeof (ret) != "undefined" && ret != "") {
+		            if (ret != "ERROR") {
+			            try {
+			            	window.opener.leftCountRf(ret);
+						} catch (e) {}
+		            }
+		        }
 		    }
 		
 		    /* 2018-07-11 홍승비 - 게시물 이동 시 guBun 파라미터 추가 */
@@ -573,7 +624,7 @@
 		
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = btn_Move_Onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
+		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(pItemID) + ";" + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -583,9 +634,12 @@
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
-		            if (typeof (ret) != "undefined") {
-		                if (ret == "OK") {
+		            
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(pItemID) + ";" + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
+		            
+		            if (typeof (ret) != "undefined" && ret != "") {
+		                if (ret != "ERROR") {
+		                	window.opener.leftCountRf(pBoardID + ";" + ret); // 기존 게시판과 이동 목표 게시판의 카운트를 갱신
 		                    window.opener.location.reload();
 		                    window.close();
 		                }
@@ -593,20 +647,40 @@
 		        }
 		    }
 		    function btn_Move_Onclick_Complete(ret) {
-		        if (typeof (ret) != "undefined") {
-		            if (ret == "OK") {
+		        if (typeof (ret) != "undefined" && ret != "") {
+		            if (ret != "ERROR") {
+		            	window.opener.leftCountRf(pBoardID + ";" + ret);
 		                window.opener.location.reload();
 		                window.close();
 		            }
 		        }
 		    }
+		    
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=board", "addRelated", getOpenWindowfeature(480, 505));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
+				return feature;
+			}
+		    
 		    function btnClose_onclick() {
 		        window.close();
 		    }
 		    function SetAttachmentInfo() {
 		        var xmlhttp = createXMLHttpRequest();
 		        var xmldom = createXmlDom();
-		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + pItemID, false);
+		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
 		        xmlhttp.send();
 		        xmldom = loadXMLString(xmlhttp.responseText);
 
@@ -702,7 +776,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&cmd=board";
+		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&cmd=board";
 		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        window.close();
 		    }
@@ -712,7 +786,7 @@
 		        var width = window.screen.availWidth;
 		        var left = (width - 620) / 2;
 		        var top = (heigth - 425) / 2;
-		        var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+		        var szHref = "/ezBoard/itemReadList.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID);
 		        var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
@@ -946,11 +1020,11 @@
 		        pheigth = pheigth - 284;
 		        pwidth = pwidth - 359;
 
-		        window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=720,width=1000, status = no, toolbar=no, menubar=no,scrollbars=1, location=no, resizable=1, top=0, left=0", "");
+		        window.open("/ezBoard/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=720,width=1000, status = no, toolbar=no, menubar=no,scrollbars=1, location=no, resizable=1, top=0, left=0", "");
 		    }
 		    //kms 미구현
 		    function ToKMS() {
-		        var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert.aspx?Mode=new&Flag=board&ItemID=" + pItemID + "&boardid=" + pBoardID + "&url=" + strContentLocation;
+		        var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert.aspx?Mode=new&Flag=board&ItemID=" + encodeURIComponent(pItemID) + "&boardid=" + encodeURIComponent(pBoardID) + "&url=" + strContentLocation;
 		        window.open(url, "KAssetConvert", GetOpenWindowfeature(780, 800));
 		    }
 		    function trim(parm_str) {
@@ -1018,6 +1092,7 @@
 		            }
 		        }
 		    }
+		    
 		    function btn_Retrans_Onclick_Complete(RtnVal) {
 		        DivPopUpHidden();
 		
@@ -1041,11 +1116,11 @@
 		    }
 		    function Retrans_boardContent() {
 		        var feature = GetOpenWindowfeature(790, 820);
-	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=boardContent&itemID=" + pItemID, "", feature, "");
+	            window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=boardContent&itemID=" + encodeURIComponent(pItemID), "", feature, "");
 		    }
 		    function Retrans_boardAttach() {
 		        var feature = GetOpenWindowfeature(790, 820);
-	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=boardAttach&itemID=" + pItemID, "", feature, "");
+	            window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=boardAttach&itemID=" + encodeURIComponent(pItemID), "", feature, "");
 		    }
 		    function Retrans_mailContent() {
 		        var pheight = window.screen.availHeight;
@@ -1053,7 +1128,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&cmd=board";
+		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&cmd=board";
 		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
 		    function Retrans_mailAttach() {
@@ -1062,17 +1137,17 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&cmd=board&retransType=boardAttach";
+		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&cmd=board&retransType=boardAttach";
 		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
 		    function Appr_onclick(pFlag) {
 		        if (pFlag == "C") {
-		            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + pItemID + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+		            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + pItemID + ";&mode=" + pFlag, false);
+		            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, false);
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "OK") {
@@ -1082,7 +1157,7 @@
 		                    alert("<spring:message code='ezBoard.t999009' />");
 		            }
 		            try {
-						window.opener.leftCountRf();
+						window.opener.leftCountRf(pBoardID);
 					} catch (e) {}
 		
 		            try {
@@ -1136,7 +1211,7 @@
 		        		</c:when>
 		        		<c:when test="${pReservedItem == 'true'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-		                    <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
+		                    <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 		        			<c:if test="${guBun != '3'}">
 <%-- 			        			<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 		        			</c:if>
@@ -1146,7 +1221,7 @@
 		                    <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014' /></span></li>
 		                    	<c:if test="${boardItem.writerID == userInfo.id}">
 			                        <li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-			                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
+			                        <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 		                    	</c:if>
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'C'}">
@@ -1154,7 +1229,7 @@
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'W'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-		                    <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
+		                    <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 		        		</c:when>
 		        		<c:otherwise>
 		        			<c:choose>
@@ -1170,11 +1245,11 @@
 				        				</c:when>
 			        				</c:choose>
 			        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-			                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
+			        				<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 			                        <c:if test="${guBun != '3'}">
-			                        	<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
-<%-- 			        					<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
-			                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
+			                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+			                        	<li ID='btn_Move' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
+<%-- 			        				<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 			                        </c:if>
 			        			</c:when>
 			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
@@ -1187,21 +1262,21 @@
 			        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 			        				</c:if>
 			        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-			                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
 			                        <c:if test="${guBun != '3'}">
 			                        	<c:if test="${guBun != '2'}">
 					                        <li ID='btn_Move'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
 								            <%--게시물이동추가--%>
 								            <li><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
 			                        	</c:if>
-			                      		<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
-<%-- 			                      		<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
+<%-- 			                      	<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 			                    	</c:if>
 			                    	<c:if test="${guBun != '2'}">
 			                        	<li ID='btn_Move'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 			                    	</c:if>
+			                    	<li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 			                    	<c:if test="${guBun != '3'}">
-			                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
+			                        	<li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+			                        	<li ID='btn_Move' ><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 			                        </c:if>
 			        			</c:when>
 			        			<c:otherwise>
@@ -1212,12 +1287,12 @@
 				        				</c:if>
 										<!--		강민수92 end -->			        				
 				                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-				                        <li ID='btn_Move' style="display:none;"><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
 				                        <c:if test="${guBun != '2'}">
-<%-- 				                        	<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
+<%-- 				                        <li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 				                        </c:if>
 				                        <li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
-				                        <li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
+				                        <li ID='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
+				                        <li ID='btn_Move' style="display:none;"><span class="icon16 popup_icon16_mail_gray" onclick='mail_boarditem()' ></span></li>
 				                    </c:if>
 			        			</c:otherwise>
 		        			</c:choose>
@@ -1231,6 +1306,9 @@
 		        	<c:if test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 		        		<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
 		        	</c:if>
+					<c:if test="${useCabinet == 'YES'}">
+						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+					</c:if>
 		        </ul>
 		      </div>    
 		      <div id="close">
@@ -1495,8 +1573,8 @@
 				            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 50px; background-color:white" id="lstAttachLink" ></div>
 				            </td>
 				        <td class="pos2">
-				        <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-				        <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+				        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+				        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
 				        </td>
 				        <td id="ItemLevel" style="display:none"></td>
 				        </tr>
@@ -1602,7 +1680,7 @@
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	        <iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	</body>
 </html>

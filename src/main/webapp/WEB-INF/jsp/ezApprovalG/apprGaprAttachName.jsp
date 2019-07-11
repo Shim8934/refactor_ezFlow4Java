@@ -15,7 +15,7 @@
 		    var pUserID;
 		    var pFormID;
 		    var ConnectFlag = true;
-		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
 		    var Resultxml = createXmlDom();
 		    var ret = new Array();
 		    //2018-08-24 배현상, 확장자 변경 문제

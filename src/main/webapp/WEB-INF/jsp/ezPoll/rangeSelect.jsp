@@ -17,16 +17,16 @@
         	var xmlHttp_Depttree = createXMLHttpRequest();
         	var xmlHttp_UserList = createXMLHttpRequest();
         	var xmlHttp = createXMLHttpRequest();
-			var L_BRDID = "${brdID}"; 
-			var L_ITEMNO = "${itemNo}";
-			var pCompanyID = "${pCompanyID}";
+			var L_BRDID = "<c:out value='${brdID}'/>"; 
+			var L_ITEMNO = "<c:out value='${itemNo}'/>";
+			var pCompanyID = "<c:out value='${pCompanyID}'/>";
 			var g_aChanged = false;
 			var g_bChanged = false;
 			var g_bTreeLoad = false;
 			var bSearch = false;
         	var retArr = new Array();
-        	var langData = "${langData}";
-        	var primary = "${primary}";
+        	var langData = "<c:out value='${langData}'/>";
+        	var primary = "<c:out value='${primary}'/>";
         	var targetId = "";
         	var targetName = "";
         	
@@ -777,7 +777,7 @@
     		<tr> 
         		<td valign="top">
             		<h2><spring:message code='ezPoll.t223' /></h2>
-            		<div id="TreeView" class="listview"></div>
+            		<div id="TreeView" class="listview" style="overflow-x: auto; overflow-y: auto;"></div>
         		</td>
         		<td class="middleTd">
             		<div><img class="midArrowImg" src="/images/arr_right.gif" onclick="add_dept()"></div>

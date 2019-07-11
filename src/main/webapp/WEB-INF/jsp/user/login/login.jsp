@@ -38,7 +38,10 @@
 			.password_reset .passwordForm li .formInput input{font-size:13px; width:199px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; padding:0px 0px 0px 5px;}
 			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
 			#exDiv3 dl{margin-top: 20px;}
-			#layerTitle{margin-bottom: 20px;}
+			.warning_wrap .layerTitle{margin-bottom: 20px;}
+			
+			/* 2018-11-06 포탈개인화 로고 설정 - 유은정 */
+			.logo img {width:137px; height:38px;}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -114,12 +117,19 @@
 			}
 			
 			function fnInit() {
+			    var message = document.loginForm.message.value;
+			    var multiLoginFlag = "<c:out value='${multiLoginFlag}' />";
+			    
 			    // 로그인 페이지가 로드된 프레임이 Top 프레임이 아니면 Top 프레임으로 로드시킨다.
                 if (top != self) {
-                    top.location.href = self.location.href;
+                    //top.location.href = self.location.href;
+                    //멀티 로그인 기능때문에 변경
+                    top.reloadLoginPage(multiLoginFlag, document.URL);
+                    return;
+                } else {
+               		history.pushState(null, null, "login.do");
                 }
 			    
-			    var message = document.loginForm.message.value;
 			    if(message == "oldBrowser"){
 			    	alert("<spring:message code='main.t0631'/>"
 			    		+ "\nInternet Explorer 10 <spring:message code='main.t0632'/>"
@@ -130,14 +140,22 @@
 			    if ("${isWrongPass}" == "Y") {
 			    	$("#imgMnt").html("<img src='/images/warning2.png'>");
 			    	$("#exDiv2").modal();
-			    }
-			    else if (message != "") {
+			    } else if(message == "oldBrowser"){
+		    		alert("<spring:message code='main.t0631'/>"
+			    		+ "\nInternet Explorer 10 <spring:message code='main.t0632'/>"
+			    		+ "\n(<spring:message code='main.t0633'/> : Internet Explorer 11)");
+			    	return false;
+			    } else if (message === "multiLoginNoti") {
+					$("#imgMnt3").html("<img src='/images/warning2.png'>");
+			        $("#exDiv4").modal();
+			    } else if (message != "") {
 // 			        alert(message);
 					$("#layerTitle").text(message);
 					$("#imgMnt2").html("<img src='/images/warning2.png'>");
 			        $("#exDiv3").modal();
 			    }
 			    getid(document.loginForm);
+			    document.loginForm.message.value = "";
 			    
 				if ("${isExpireDate}" == "Y") {
 					$("#exDiv").modal();
@@ -217,34 +235,36 @@
 		<div class="login_wrapper">
 			<div class="login_layout">
         		<div class="login_form">	                
-	                <form id="loginForm" name="loginForm" method="post">
+	                <form style="display: inherit;" id="loginForm" name="loginForm" method="post">
 	                	<input type="hidden" name="publicModulus" value="${publicModulus}"/>
 	                	<input type="hidden" name="publicExponent" value="${publicExponent}"/>
 	                	<input type="hidden" name="encryptID" />
 	                	<input type="hidden" name="encryptPass"/>
 	                	
-	                    <fieldset>		                    	
-	                    	<p class="logo"><img src="/images/kr/login/logo.gif"></p>   
+	                    <fieldset>
+	                    	<p class="logo"><img src="<c:out value='${logoUrl }'/>"></p>   
 	                        <p class="id">
 	                        	<input id="uid" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) document.loginForm.password.focus();" />
 	                        </p>		                 
 	                        <p class="pw">
 	                        	<input id="upw" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
 	                        </p>	                        
-	                        <img src="/images/kr/login/btn_login.gif" id="LoginButton"  tabindex="3" border="0" class="btn_login" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
 	                        <p class="saveid">
-	                        	<input type="checkbox" value="" id="checkId" name="checkId" class="inp_checkbox" />
-	                        	<label for="checkId">
-	                        		<span></span>
-	                        		ID Save
+	                        	<input type="checkbox" value="" id="checkId" name="checkId" />
+	                        	<label for="checkId"><span></span>ID Save</label>
+	                        </p>
+	                        <p class="btn_login">
+	                        	<label for="LoginButton" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
+	                        		<span id="LoginBtnSpan" style="font-size:24px;">LOGIN</span>
 	                        	</label>
-	                        </p>	                        	                        
+	                        </p>
+	                        <p class="address">COPYRIGHT (C) KAONI. All RIGHT RESERVED.</p>
 	                    </fieldset>
 	                    <input type="hidden" name="message" value="${message}" />		                    
 				    </form>
-				</div>															
+				</div>	
+				<div class="login_formBg"></div>														
 			</div>
-			<footer style="min-height: 40px"><p style="font-family: Malgun Gothic, Meiryo UI">Copyright &copy; 2000-2018 KAONI  All Rights reserved</p></footer>
 		</div>				
 		<div class="noti_layer" style="position:absolute;top:295px;left:800px;display:none;" id="divCapsLock">
 			<span class="arrow">
@@ -351,9 +371,26 @@
 			<div class="warning_wrap" style="padding-left:20px">
 				<p style="border:0px" id="imgMnt2"></p>
 		        <dl>
-					<dt id="layerTitle">${message1}</dt>
+					<dt id="layerTitle" class="layerTitle">${message1}</dt>
 		            <dd><spring:message code='fail.common.login.warning1'/></dd>
 		            <dd><spring:message code='fail.common.login.warning6'/></dd>
+		        </dl>
+		    </div>
+		</div>
+		
+		<!-- 2018-12-24 김보혜 멀티로그인으로 인해 강제 로그아웃 됐을 시 알림 레이어 팝업 -->
+		<div id="exDiv4" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
+			<div class="warning_wrap" style="padding-left:20px">
+				<p style="border:0px" id="imgMnt3"></p>
+		        <dl>
+					<dt id="layerTitle1" class="layerTitle"><spring:message code="ezSystem.kbh01" /></dt>
+		            <dd><spring:message code="ezSystem.kbh02" /></dd>
+		            <dd><spring:message code="ezSystem.kbh03" /></dd>
 		        </dl>
 		    </div>
 		</div>

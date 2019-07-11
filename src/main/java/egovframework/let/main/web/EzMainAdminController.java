@@ -44,11 +44,15 @@ public class EzMainAdminController {
 		//2018-07-26 김보미 - 저널, 애티튜드 추가
 		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
 		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
-		
+		//2018-09-18 유은정 - ezPMS 추가
+		String use_ezPMS = ezCommonService.getTenantConfig("USE_ezPMS", userInfo.getTenantId());
+		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가  */
+		String use_community = ezCommonService.getTenantConfig("USE_COMMUNITY", userInfo.getTenantId());
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
-
+		
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezDMS", use_ezDMS);
 		model.addAttribute("use_portal", use_portal);
@@ -56,6 +60,10 @@ public class EzMainAdminController {
 		//2018-07-26 김보미 - 저널, 애티튜드 추가
 		model.addAttribute("use_attitude", use_attitude);
 		model.addAttribute("use_journal", use_journal);
+		//2018-09-18 유은정 - ezPMS 추가
+		model.addAttribute("use_ezPMS", use_ezPMS);
+		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가  */
+		model.addAttribute("use_community", use_community);
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			model.addAttribute("firstScreen_Mail", "NO");
@@ -67,6 +75,9 @@ public class EzMainAdminController {
 		if (use_journal == null || use_journal.equals("")) {
 			model.addAttribute("use_journal", "YES");
 		}
+		if (use_community == null || use_community.equals("")) {
+			model.addAttribute("use_community", "YES");
+		}
 		
 		//baonk added
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1 && userInfo.getRollInfo().indexOf("wf=1") != -1) {
@@ -74,12 +85,19 @@ public class EzMainAdminController {
 		}
 		//end
 		
+		String useActiveX = ezCommonService.getTenantConfig("useActiveX", userInfo.getTenantId());
+		if(useActiveX == null || useActiveX.equals("")) {
+			useActiveX = "NO";
+		}
+		
 		model.addAttribute("AdminActiveX", AdminActiveX);
 		model.addAttribute("useHWP", useHWP);
+		model.addAttribute("useActiveX", useActiveX);
 		
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());
         
         model.addAttribute("packageType", packageType);
+        model.addAttribute("useCabinet", use_cabinet);
 		
 		return "admin/adminTop";
 	}	

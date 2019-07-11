@@ -8,30 +8,33 @@
 		<title><spring:message code = 'ezCommunity.t28' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
-		
 		<style> 
-	        .pagetd{
+	        .pagetd {
 	        	padding-top:6px;
 	        }
-	        .pcol{
+	        .pcol {
 	        	padding-top:6px;
 	        }
 	        .right_point01 {
 		        font:bold;
 		        color:#017bec;
 	        }
+			.mainlist tr:hover {background-color: #f4f5f5;}
         </style>
-        
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
         <script type="text/javascript">
 	        var pKeyWord = "<c:out value = '${keyword}' />";
 	        var CurPage = "<c:out value = '${curPage}' />";
 		    var totalPage = "<c:out value = '${totalPage}' />";
 		    var totalCount = "<c:out value = '${keywordCount}' />";
 		    var pUse_Editor = "<c:out value = '${useEditor}' />";
+		    
+		    /* 2019-01-02 홍승비 - IE > 로딩 속도 개선용 DOM 로드 리스너 추가(IE8 이상 지원) */
+		    document.addEventListener("DOMContentLoaded", makePageSelPage);
 		    
 			function keyword_onkeydown(e) {
 			    if (!window.ActiveXObject) {
@@ -50,19 +53,20 @@
 			function refresh_onclick() {
 				window.location.reload(false);
 			}
-		</script>
-		<script type="text/javascript">		    
+			
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
-					var strSearch = "sRadio=title&keyword=" + make_searchstring(document.page.keyword.value);
-				} else if (document.page.s_radio.value == "titleContent" ) {
-					var strSearch = "sRadio=titleContent&keyword=" + make_searchstring(document.page.keyword.value);
+					var strSearch = "sRadio=title&keyword=" + encodeURIComponent(document.page.keyword.value);
 				} else {
-					var strSearch = "sRadio=writer&keyword=" + make_searchstring(document.page.keyword.value);
+					var strSearch = "sRadio=writer&keyword=" + encodeURIComponent(document.page.keyword.value);
 				}
+				/// else if (document.page.s_radio.value == "titleContent" ) {
+				//	var strSearch = "sRadio=titleContent&keyword=" + make_searchstring(document.page.keyword.value);
+				// } 
 				
-				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bName=" + "<c:out value = '${bName}' />" + "&key=" + make_searchstring(document.page.keyword.value);
-				window.location.href = "/admin/ezCommunity/bbsList.do" + "?" + encodeURI(strSearch);
+				// key파마리터 없어도 되므로 삭제
+				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bName=" + "<c:out value = '${bName}' />";
+				window.location.href = "/admin/ezCommunity/bbsList.do?" + strSearch;
 			}
 	
 			function comm_searchCheck() {
@@ -86,7 +90,7 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang82 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang83 + "]";
+	            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            var pageNum = CurPage;
@@ -203,7 +207,7 @@
 	        }
 				
 			function goToPage(page) {
-				var href = "/ezCommunity/board/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(make_searchstring(pKeyWord)) + "&s_radio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
+				var href = "/admin/ezCommunity/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(pKeyWord) + "&sRadio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
 				if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
 					document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt(page));
 				}
@@ -237,16 +241,34 @@
 				url = "/admin/ezCommunity/bbsList.do?bName=<c:out value = '${bName}' />";
 				location.href = url;
 			}
+			
+			//페이지네이션 위치 고정
+			$(window).on("resize", function(){
+				windowResize();
+			});
+			
+			function windowResize() {
+				var height = document.documentElement.clientHeight - 200;
+				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+					height = height - 30;
+				}
+					document.getElementById("contentlist").style.overflow = "auto";
+					document.getElementById("contentlist").style.height = height + "px";
+			}
+			
+			$(function(){
+				windowResize();
+			});
         </script>
 	</head>
 	
-	<body class="mainbody" onload = "makePageSelPage()">
+	<body class="mainbody">
 		<c:choose>
 			<c:when test="${bName == 'tbl_c_notice' }">
-				<h1><spring:message code = 'ezCommunity.t2001' /><span id="mailBoxInfo"></span></h1>
+				<h1><spring:message code='ezCommunity.khj07'/><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:when test="${bName == 'tbl_c_board' }">
-				<h1><spring:message code = 'ezCommunity.t2001' /><span id="mailBoxInfo"></span></h1>
+				<h1><spring:message code='ezCommunity.khj07'/><span id="mailBoxInfo"></span></h1>
 			</c:when>
 			<c:otherwise>
 				<h1><c:out value = '${titleName}' /><span id="mailBoxInfo"></span></h1>
@@ -257,18 +279,13 @@
   			<ul>
 				<c:choose>
 					<c:when test="${bName == 'tbl_c_board' }">
-						<li><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
+						<li class="important"><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t958' /></span></li>
 					</c:when>
 					
 					<c:when test="${fn:indexOf(rollInfo, 'k=1') > -1 && bName == 'tbl_c_notice'}">
-						<li><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
+						<li class="important"><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t958' /></span></li>
 					</c:when>
 				</c:choose>
-				
-				<c:if test="${keyword != '' }">
-					<li><span onclick="btn_list('${bName}')"><spring:message code = 'ezCommunity.t168' /></span></li>
-				</c:if>
-				
   			</ul>
 		</div>
 
@@ -276,29 +293,38 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 
-		<table class="content" >
+		<table class="content">
 			<form name="page">
 				<tr>
-					<th><spring:message code = 'ezCommunity.t28' /></th>
-					<td>
-						<select name="s_radio" style="vertical-align:middle">
-							<option value="title" selected><spring:message code = 'ezCommunity.t124' /></option>
-							<option value="titleContent"><spring:message code = 'ezCommunity.t169' /></option>
-							<option value="writer"><spring:message code = 'ezCommunity.t138' /></option>
-						</select>
+					<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;"><spring:message code = 'ezCommunity.t28' /></th>
+					<td style="border: 1px solid #e2e3e6;">
+						<c:choose>
+							<c:when test="${sRadio == '' || sRadio == 'title'}">
+								<select name="s_radio" style="vertical-align: middle; height: 22px;">
+									<option value="title" selected><spring:message code = 'ezCommunity.t124' /></option>
+									<option value="writer"><spring:message code = 'ezCommunity.t138' /></option>
+								</select>
+							</c:when>
+							<c:when test="${sRadio == 'writer'}">
+								<select name="s_radio" style="vertical-align: middle; height: 22px;">
+									<option value="title"><spring:message code = 'ezCommunity.t124' /></option>
+									<option value="writer" selected><spring:message code = 'ezCommunity.t138' /></option>
+								</select>
+							</c:when>
+						</c:choose>
 						
-						<input type="text" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px;vertical-align:middle">
-						<a class="imgbtn" style="vertical-align:middle"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
+						<input type="text" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px; height: 22px; vertical-align:middle;">
+						<a class="imgbtn imgbck" style="vertical-align: middle; margin-bottom: 0px;"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
 					</td>
 				</tr>
 			</form>
 		</table>
 		
-		<br>
-		
-		<table class="mainlist" style="width:100%">
-			<span id="idSpan">${idSpanValue}</span>
-		</table>
+		<div id="contentlist" style="margin-top: 10px;">
+			<table class="mainlist" style="width:100%;">
+				<span id="idSpan">${idSpanValue}</span>
+			</table>
+		</div>
 		
 		<div id="tblPageRayer"></div>
 	</body>

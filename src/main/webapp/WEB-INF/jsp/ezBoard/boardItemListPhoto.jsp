@@ -46,7 +46,7 @@
 		}
 		</style>
 		<script type="text/javascript">
-			var pBoardID = "${boardID}";
+			var pBoardID = "<c:out value='${boardID}'/>";
 	    	var SSUserID = "${userInfo.id}";
 		    var SSUserName = "${userInfo.name}";
 		    var CurPage = "${boardInfo.page}";
@@ -61,7 +61,7 @@
 		    var Delete_FG = "${boardInfo.delete_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
-		    var pSortBy = "${boardInfo.sortBy}";
+		    var pSortBy = "<c:out value='${boardInfo.sortBy}'/>";
 		    var url = "${boardInfo.url}";
 		    var ShowAdjacent = "";
 		    var gubun = "${boardInfo.guBun}";
@@ -69,12 +69,12 @@
 			var lang = "${userInfo.lang}";
 		    var OrderOption = "";
 		    var OrderCell = "";
-		    var pBoardType = "${boardInfo.boardType}";
+		    var pBoardType = "<c:out value='${boardInfo.boardType}'/>";
 		    var USE_OCS = "${use_ocs}";
 		    var useRunTime = "${useRunTime}"
 		    var SQLPARADATA = "";
 		    var Use_OneLineCount = "${use_oneLineCount}";
-		    var pAdminType = "${boardInfo.adminType}";
+		    var pAdminType = "<c:out value='${boardInfo.adminType}'/>";
 		    if (url != "")
 		        window.location.href = url;
 		
@@ -106,6 +106,9 @@
 		    var starttime;
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var useNotReadCnt = "${useNotReadCnt}";
+		    var BoardGroupID = "${boardInfo.boardGroupID}";
+		    
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		
@@ -236,7 +239,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -244,7 +247,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		
@@ -543,7 +546,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
-		        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        
 		    }
 		    
@@ -574,7 +577,7 @@
 		        }	
 		        // if (tr != null && oArrRows.length > 0) {
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		        //}       
 		    }
 		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */
@@ -592,7 +595,7 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
 		
 		    } */
 		    
@@ -646,12 +649,12 @@
 		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + strItemList[0], "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(strItemList[0]), "CheckPassWord", GetOpenWindowfeature(340, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            } else {
 		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + arrList[0], "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(arrList[0]), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
 		
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		
@@ -661,7 +664,7 @@
 		                }
 		                else {
 		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + pBoardID + "&itemList=" + arrList[0] + ";", false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(arrList[0]) + ";", false);
 		                    xmlhttp.send();
 		
 		                    if (xmlhttp.responseText == "NO") {
@@ -692,7 +695,7 @@
 				}
 		        
 		        try {
-			        leftCountRf();
+			        leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		    }
@@ -705,7 +708,7 @@
 		        }
 		        else {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + pBoardID + "&itemList=" + strItemList[0] + ";", false);
+		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(strItemList[0]) + ";", false);
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "NO") {
@@ -728,14 +731,14 @@
                     getBoardList();
                     
                     try {
-                    	leftCountRf();
+                    	leftCountRf(pBoardID);
     				} catch (e) {
     				}
                 }
             }
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText == "FALSE") {
 		            xmlhttp = null;
@@ -746,7 +749,7 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + pBoardID + "&itemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(strListInfo), false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -799,12 +802,12 @@
 		    }
 		
 		    function refresh_onclick() {
-		        window.location.href = window.location.href = "/ezBoard/boardItemListPhoto.do?page=" + CurPage.toString() + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
+		        window.location.href = window.location.href = "/ezBoard/boardItemListPhoto.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
 		    }
 		
 		    function AddToMyBoards() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/addToMyBoards.do?boardID=" + pBoardID, false);
+		        xmlhttp.open("POST", "/ezBoard/addToMyBoards.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
@@ -848,7 +851,7 @@
 		        pheigth = pheigth - 200;
 		        pwidth = pwidth - 127;
 		
-		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&mode=COPY", "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
 		
 		    }
 		    var moveboarditem_cross_dialogArguments = new Array();
@@ -879,7 +882,7 @@
 		        arrList = null;
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
+		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -889,7 +892,7 @@
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
@@ -928,12 +931,29 @@
 				    }
 				    arrList = null;
 				    var xmlhttp = createXMLHttpRequest();
-				    xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
+				    xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + encodeURIComponent(strItemList), false);
 				    xmlhttp.send();
 				    xmlhttp = null;
 				    getBoardList();
+				    
+				     /* 2019-07-03 홍승비 - 게시물 읽음표시 할 경우 좌측메뉴의 미독건수 갱신하도록 수정 */
+		            if (useNotReadCnt == "YES") {
+			            var boardLeftFrame;
+			            
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) { // 즐겨찾기에서 읽기창 진입
+							boardLeftFrame = window.parent.parent.frames["left"];
+						} else { // 해당 게시판 내부에서 읽기창 진입
+			        		boardLeftFrame = window.parent.frames["left"];
+			        	}
+			            
+			            if (boardLeftFrame != null && boardLeftFrame != undefined && boardLeftFrame.location.href.indexOf("/ezBoard/boardLeft.do")> -1) {
+			     			boardLeftFrame.getBoardNotReadCountByID(BoardGroupID, "", "GROUP");
+			     			boardLeftFrame.getBoardNotReadCountByID(pBoardID, gubun, "SUB");
+				    	}
+		            }
 				}
 			}
+		    
 		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 			function MemberInfo_onclick(pUserID, pDeptID) {
 			    if (gubun == "2") return;
@@ -944,12 +964,12 @@
 			    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 			}
 			function ReservationItem_onclick() {
-			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
+			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType;
 			    window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(OrgBoardParameters) + "&boardType=" + pBoardType;
 			}
 			function search_onclick() {
-			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
-			    window.location.href = "/ezBoard/searchBoardItem.do?boardID=" + pBoardID + "&boardType=" + pBoardType + "&orgBoardParameters=" + escape(OrgBoardParameters);
+			    var OrgBoardParameters = "page=" + CurPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType;
+			    window.location.href = "/ezBoard/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&boardType=" + pBoardType + "&orgBoardParameters=" + escape(OrgBoardParameters);
 			}
 		
 			function window_reload() {
@@ -1123,11 +1143,11 @@
 		
 		    function SaveMyBoard() {
 		        if (CrossYN()) {
-		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, "MyBoardConfig", 525, 418);
+		            var OpenWin = GetOpenWindow("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), "MyBoardConfig", 525, 418);
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else
-		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + pBoardID, null, "dialogHeight:418px; dialogWidth:525px; status:no; help:no; scroll:no; edge:sunken");
+		            showModalDialog("/ezBoard/myBoardConfig.do?type=ADD&boardID=" + encodeURIComponent(pBoardID), null, "dialogHeight:418px; dialogWidth:525px; status:no; help:no; scroll:no; edge:sunken");
 		    }
 		
 		    function SetBoardAcl() {
@@ -1137,9 +1157,9 @@
 		
 		        if (xmlhttp.status == 200) {
 		            if (parent.window.document.getElementsByTagName("h1").length == 0)
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + encodeURI(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURI(BrdName);
 		            else
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + pBoardID + "&parentBoardID=" + getNodeText(xmlhttp.responseText) + "&boardType=" + pBoardType + "&boardName=" + encodeURI(BrdName);
+		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURI(BrdName);
 		        }
 		        else {
 		            alert("ERROR");
@@ -1163,14 +1183,14 @@
 		<c:choose>
 			<c:when test="${boardInfo.adminType != 'y'}">
 				<h1>${boardName}<span id="mailBoxInfo"></span>
-				      <span style="float:right;font-weight:normal;color:black;">
-				          <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+					<span class="searchForm">
+				    	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 				    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 				    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 				    	</select>
-						  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-				          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
-				        </span>
+						<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				        <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
+				    </span>
 				</h1>
 			</c:when>
 			<c:otherwise>
@@ -1178,36 +1198,45 @@
 			        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" +"<span id='mailBoxInfo'></span>";
 			    </script>
 			    <br />
-			    <span style="display:none; float:right;font-weight:normal;color:black;">
+			    <span class="searchForm" style="display:none;">
 					<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 						<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 			    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 			    	</select>
-					  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-			          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+					<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			        <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
 		        </span>
 			</c:otherwise>
 		</c:choose>
 	<c:if test="${boardInfo.buttonHidden == 'N'}">
 		<div id="mainmenu">
 		  <ul>
-		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
+		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
-			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
+		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li>
+			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->		        
 			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
-		        <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
-		        <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
-		        <li><span onClick="AddToMyBoards()"><spring:message code='ezBoard.t10051'/></span></li>
-		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li> 
-		        <li id="right">
+			    <c:if test="${boardInfo.boardAdmin_FG == 'true'}">
+			    	<li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li> 
+		        </c:if>
+		        <li onClick="AddToMyBoards()"><span class="icon16 icon16_star"></span></li>
+		        <li onClick="doLayerPopup(this)"><span class="icon16 icon16_search" id="SearchOption" mode="off"></span></li>
+		        <li onClick="DeleteItem_onclick()"><span class="icon16 icon16_delete"></span></li>
+		        <li onClick="refresh_onclick()"><span class="icon16 icon16_refresh"></span></li> 
+		        <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-				</li>
-		        <c:if test="${boardInfo.boardAdmin_FG == 'true'}">
-			      <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li> 
-		        </c:if>
+				</li> -->
+		        <div id="right" class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL" style="width:57px !important">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+					</div>
+				 </div>
 		  </ul>
 		</div>
 		<script type="text/javascript">
@@ -1265,58 +1294,52 @@
         <div id="tblPageRayer" style="text-align:center"></div>
     </span>
 
-    <span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-        <span class="previewmail_bar_h" display: inline-block;">
+     <div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
+        <div class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
             <p class="hbar_dotted">
                 <img src="/images/prevview_hbar_dotted.gif">
             </p>
-        </span>
-        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
-            <span style="width: 100%; height: 100px; display: block;">
-                <span class="previewmail_info" style="display: block; width: 100%;">
-                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
-                        <p class="mail_title" style="margin-left: 0px;">
-                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
-                        </p>
-                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
-                        <dl class="mail_item">
-                            <dt><spring:message code='ezBoard.t223'/>:
-                                <span id="PreH_MailReceiver" style="display: inline-block"></span>
-                            </dt>
-                        </dl>
-                    </div>
-                </span>
+        </div>
+        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
+            <div class="previewmail">
+                <div class="previewmail_info">
+                	<dl class="previewmailDL" id="Preview_HeaderH" style="display:none;">
+						<dt class="prepic"><img id="userImgH" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+						<dd class="pretext">
+							<ul class="pretextUL">
+								<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject" style="max-width:570px;"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
+								<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreH_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span></li>
+								
+							</ul>
+						</dd>
+					</dl>
+                </div>
                 <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
-            </span>
-        </span>
-    </span>
-
-
-    <span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
-        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
+            </div>
+        </div>
+    </div>
+ 	<div id="PreviewRayerW" style="border: 0px; width: 100%; height: 300px; overflow: hidden; display: none;">
+        <div onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
             <img src="/images/prevview_bar_dotted.gif">
-        </span>
-        <span id="PreContent_RayerW" style="display: block;">
-            <span style="width: 100%; height: 100px; display: block;">
-                <span class="previewmail_info" style="display: block; width: 100%;">
-                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
-                        <p class="mail_title">
-                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
-                        </p>
-                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
-                        <dl class="mail_item">
-                            <dt><spring:message code='ezBoard.t223'/>:</dt>
-                            <dd style="padding-left:44px; margin-top:-20px;"><span id="PreW_MailReceiver" style="display: inline-block"></span>
-                            </dd>
-                        </dl>
-                    </div>
-                </span>
+        </div>
+        <div id="PreContent_RayerW" style="display: block;">
+            <div class="previewmail">
+                <div class="previewmail_info" style="display: block; width: 100%;">
+                	<dl class="previewmailDL" id="Preview_HeaderW" style="display:none;">
+						<dt class="prepic"><img id="userImgW" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+						<dd class="pretext">
+							<ul class="pretextUL">
+								<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
+								<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreW_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreW_date"><span id="PreW_sub_date" style="display:none;"></span></span></span></li>
+								
+							</ul>
+						</dd>
+					</dl>
+                </div>
                 <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
-            </span>
-        </span>
-    </span>
+            </div>
+        </div>
+    </div>
 	
 	    
 	<div id="ListInfo" style="display:none"></div>

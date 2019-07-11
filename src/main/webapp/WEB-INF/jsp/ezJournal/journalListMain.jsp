@@ -66,11 +66,11 @@
 }
 
 .selectTR {
-	background-color: #edf4fd;
+	background-color: #f1f8ff;
 }
 
 .selectTD {
-	background-color: #edf4fd;
+	background-color: #f1f8ff;
 }
 
 #journalListBody #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {
@@ -79,8 +79,8 @@
 </style>
 
 <script type="text/javascript">
-			var listType = "${listType}";
-			var typeId = "${typeId}";
+			var listType = "<c:out value='${listType}'/>";
+			var typeId = "<c:out value='${typeId}'/>";
 			var pAdminType  = "n";
 			var currentPage = 1;
 			var listCnt = "${journalEnv.listCnt}";
@@ -203,6 +203,7 @@
 							document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
 							document.getElementById("journalListBody").style.height = (pMailListHeightW - 100) + "px";
 							document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45)+ "px";
+							document.getElementById("Preview_ContentW").style.height = (pMailPreHeightW - $(".previewmail").eq(1).height()) + "px";
 							
 		                    document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
 		                }
@@ -236,10 +237,11 @@
 							document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 		                    
 		                    document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
+							document.getElementById("Preview_ContentH").style.height = (CurrentHeight - $(".previewmail").eq(0).height()) + "px";
 		                    document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
-		                    if(document.getElementById("PreH_subject") != null) {
-		    		            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
-		    	            }
+		                    if(document.getElementById("PreH_subject")!=null){
+			                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+		                    }
 		                    
 		                    /* 좌우 리사이징 시 round로 인해 비율의 합이 100%가 되지 않아
 		                       오른쪽 끝에 여백이 발생하여 제거함
@@ -342,26 +344,26 @@
 				if (listType == "mine") {
 					if ($("#searchTitle").val().trim() == "" && $("#searchContent").val().trim() == "" && $("#searchFormName").val().trim() == "" 
 						&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	               		alert("<spring:message code='ezBoard.t192' />");
+	               		alert("<spring:message code='ezJournal.t190' />");
 	                	return;
 		            }
 				} else {
 					if ($("#searchTitle").val().trim() == "" && $("#searchContent").val().trim() == "" && $("#searchFormName").val().trim() == "" && $("#searchWriter").val().trim() == "" 
 						&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	               		alert("<spring:message code='ezBoard.t192' />");
+	               		alert("<spring:message code='ezJournal.t190' />");
 	                	return;
 		            }
 				}
 	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	        		alert("<spring:message code='ezSystem.x0035' />");	
+	        		alert("<spring:message code='ezJournal.t191' />");	
 	                return;
 	            }
 	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-	                alert("<spring:message code='ezSystem.x0036' />");
+	                alert("<spring:message code='ezJournal.t192' />");
 	                return;
 	            }
 	            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-	                alert("<spring:message code='ezBoard.t191' />");
+	                alert("<spring:message code='ezJournal.t193' />");
 	                return;
 	            }
 				
@@ -388,21 +390,22 @@
 					searchWriter = $("#searchValue").val().trim();
 				
 					if (searchWriter == "") {
-						alert("<spring:message code='ezBoard.t192' />");
+						alert("<spring:message code='ezJournal.t190' />");
 	                	return;
 					}
 					setJournalList();
-					$("#searchValue").val("");
+					//2019-06-05 김보미 - 검색후 검색어 초기화 되던것 주석처리
+// 					$("#searchValue").val("");
 				
 				} else if(searchFlag == 'journalTitle'){
 					searchTitle = $("#searchValue").val().trim();
 				
 					if (searchTitle == "") {
-						alert("<spring:message code='ezBoard.t192' />");
+						alert("<spring:message code='ezJournal.t190' />");
 	                	return;
 					}
 					setJournalList();
-					$("#searchValue").val("");
+// 					$("#searchValue").val("");
 				}
 			}
 			
@@ -605,8 +608,8 @@
 	   			var vc = $(parentElem).find(".viewCount");
 	   			$(parentElem).find("input[type='checkbox']").prop("checked","true");
 	   			var journalId=$(parentElem).attr("id");
-	   			if (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H') {
-		   			if($(parentElem).hasClass("noView")){
+// 	   			if (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H') {
+		   			if($(parentElem).hasClass("noView") && (pPreviewShow_HOW == 'W' || pPreviewShow_HOW == 'H')){
 		   				if($(parentElem).attr("mine") == 'N'){
 		   	   				$(vc).text(parseInt($(vc).text())+1);
 		   				}
@@ -621,24 +624,27 @@
 		   				success : function(journal){
 							$("#Preview_ContentW").html(journal);
 							$("#Preview_ContentH").html(journal);
-							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId);
+							$(".journalPreviewContentIframe").attr("src","/ezJournal/journalDetailContent.do?journalId=" + journalId+"&journalType=p&pPreviewShow_HOW="+pPreviewShow_HOW);
 							if(listType == 'recv'){
 								parent.left.setRecvCount();
 // 								setJournalList();
 								setRecvCount();
 								$(parentElem).find("td:eq(1)").find("img").attr("src", "/images/ImgIcon/icon-msg-read.gif");
 							}
-							var textContentSize;
-							textContentSize = $("#PreviewRayerH").height() - 55;
-							$("#Preview_ContentH").css("height", textContentSize);
-							textContentSize = $("#PreviewRayerW").height() - 80;
-							$("#Preview_ContentW").css("height", textContentSize);
-							document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+// 							var textContentSize;
+// 							textContentSize = $("#PreviewRayerH").height()-$(".previewmail_info").height();
+// 							$("#Preview_ContentH").css("height", textContentSize);
+// 							textContentSize = $("#PreviewRayerW").height()-$(".previewmail_info").height()-50;
+// 							$("#Preview_ContentW").css("height", textContentSize);
+							if(document.getElementById("PreH_subject")!=null){
+			                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+		                    }
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
+							Window_resize();
 		   				}
 		   			});
-				}
+// 				}
 			}
 			
 			//체크박스 전체선택 혹은 해제
@@ -679,11 +685,11 @@
 	        function ShowQuickAddres() {
 	        	if (useAnyoneEdit != "YES") {
 		        	if (deptAdmin != "Y" && pFolderType == "D") {
-		                alert("<spring:message code='ezAddress.t999900003' />");
+		                alert("<spring:message code='ezJournal.t194' />");
 		                return;
 		            }
 		            else if (compAdmin != "Y" && pFolderType == "C") {
-		                alert("<spring:message code='ezAddress.t999900004' />");
+		                alert("<spring:message code='ezJournal.t195' />");
 		                return;
 		            }
 	        	}	        	
@@ -701,6 +707,7 @@
 	   				url : "/ezJournal/saveJournalEnv.do",
 	   				success : function() {
 	   					journalPreviewRayerChange(viewHow);
+	   					Window_resize();
 	   				}
 	   			});
 			}
@@ -739,8 +746,8 @@
 						document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
 						g_bPrevShow = false;
 						onPreview=false;
-						$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-						$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
+// 						$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
 					} else if (pGubun == "W") {
 						document.getElementById("MailListRayer").style.display = "inline-block";
 						document.getElementById("PreviewRayerW").style.display = "block";
@@ -769,12 +776,10 @@
 // 						document.getElementById("Preview_HeaderH").style.display = "none";
 						g_bPrevShow = true;
 						
-						if(onPreview == false){
-							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-// 							ifrmPreViewW.document
-// 									.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-						}
+// 						if(onPreview == false){
+// 							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						}
 						onPreview = true;
 					} else if (pGubun == "H") {
 						if (parent.document.getElementById("tab1")) {
@@ -808,7 +813,7 @@
 
 // 						document.getElementById("divList").style.overflow = "auto";
 						document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-						document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
+						document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 5) + "px";
 // 						document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
 						pPreviewShow_HOW = "H";
 						pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
@@ -819,11 +824,10 @@
 
 						g_bPrevShow = true;
 						
-						if(onPreview == false){
-							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-// 							ifrmPreViewH.documentr.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-						}
+// 						if(onPreview == false){
+// 							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+// 						}
 						onPreview = true;
 					}
 					
@@ -847,7 +851,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 				
@@ -856,7 +860,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 
@@ -867,13 +871,13 @@
 				$("#Edatepicker").datepicker('setDate', "");
 			});
 			
-			var monthMsg = "<spring:message code='ezBoard.t218' />";
+			var monthMsg = "<spring:message code='ezJournal.t196' />";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezBoard.t216' />";
+		    var dayMsg = "<spring:message code='ezJournal.t197' />";
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
-		        $.datepicker.regional["ko"] = {
+		        $.datepicker.regional["<spring:message code='ezJournal.t198' />"] = {
 		        	monthNames: monthStr,
 		            monthNamesShort: monthStr,
 		            dayNames: dayStr,
@@ -887,7 +891,7 @@
 		            showAnim: 'show',
 		            showMonthAfterYear: true
 		        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='ezJournal.t198' />"]);
 		    });			
 			
 			//정렬에 의한 리스트 셋팅
@@ -974,7 +978,7 @@
 				
 				for (var i = 0; i < journalIdList.length; i++) {
 					if ($("#" + journalIdList[i]).attr("mine") == "N" && listType != "recv") {
-						alert("<spring:message code='ezBoard.t265'/>");
+						alert("<spring:message code='ezJournal.t199'/>");
 						return;
 					}
 				}
@@ -991,8 +995,8 @@
 						success : function() {
 							alert("<spring:message code='ezJournal.t138'/>");
 							setJournalList();
-							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
-							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
+							$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+							$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
 						},
 						error : function() {
 							alert("<spring:message code='ezJournal.t149'/>");
@@ -1023,6 +1027,9 @@
 		    	$(window.frames['ifrmPreViewW']).mouseup(function (e) {
 		    		MailOptionHiddenOutside(e);
 		    	});
+		    	$("#Preview_ContentH").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+				$("#Preview_ContentW").html("<dl class='nodata_sIcon' style='margin-top:70px;'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd><spring:message code='ezJournal.t91' /></dd></dl>");
+
 // 				if(pPreviewShow_HOW=='H'){
 // 					PreviewH_Move = true;
 // 				} else if(pPreviewShow_HOW=='W'){
@@ -1052,35 +1059,28 @@
 	</c:if>
 	<c:choose>
 		<c:when test="${listType eq 'recv' }">
-			<span id="mailBoxInfo">[<spring:message code='ezJournal.t161' />
-				<span id="recvCount" style="color: #017BEC;"></span> 
-					<spring:message code='ezJournal.t55' /> / <spring:message code='ezJournal.t54' /> 
-				<span id="totalCount" style="color: #017BEC;"></span> 
-					<spring:message code='ezJournal.t55' />]
-			</span>
+			<span id="mailBoxInfo">&nbsp;<span id="recvCount" style="color: #017BEC;"></span> / <span id="totalCount"></span></span>
 		</c:when>
 		<c:otherwise>
-			<span id="mailBoxInfo">[<spring:message code='ezJournal.t54' />
-				<span id="totalCount" style="color: #017BEC;"></span> <spring:message code='ezJournal.t55' />]
-			</span>
+			<span id="mailBoxInfo">&nbsp;<span id="totalCount" style="color: #017BEC;"></span></span>
 		</c:otherwise>
 	</c:choose>
-	<span style="float: right; font-weight: normal; color: black;">
+	<span class="searchForm">
 		<select id="searchKey" name="searchKey" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; width: 80px;">    
-           	<option value="journalTitle"><spring:message code='ezBoard.t208' /></option>
+           	<option value="journalTitle"><spring:message code='ezJournal.t56' /></option>
 			<c:if test="${listType eq 'department' or listType eq 'recv' }">
 	       		<option value="journalWriter"><spring:message code='ezJournal.t34' /></option>
        		</c:if>
        	</select>
-		<input id="searchValue" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
-		<a href="#" style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
+		<input id="searchValue" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
+		<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="quickSearch()"></a>
 	</span>
 	</h1>
 	<div id="mainmenu">
 		<ul>
 			<!-- 		  	일지쓰기 -->
 			<c:if test="${listType eq 'department' or listType eq 'mine' }">
-				<li><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
+				<li class="important"><span onClick="writejournal()"><spring:message code='ezJournal.t57' /></span></li>
 			</c:if>
 			<!-- 		  	확인완료 -->
 			<c:if test="${listType eq 'recv' }">
@@ -1088,26 +1088,18 @@
 			</c:if>
 			<!-- 		  	읽음표시 -->
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li><span onClick="doViewJournal();"><spring:message code='ezBoard.t204' /></span></li>
+				<li><span onClick="doViewJournal();"><spring:message code='ezJournal.t58' /></span></li>
 			</c:if>
 			<!-- 		  	수정 -->
 			<c:if test="${listType eq 'temp' }">
 				<li><span onClick="modifyJournal()"><spring:message code='ezJournal.t107' /></span></li>
 			</c:if>
-			<!-- 		  	삭제 -->
-<%-- 			<c:if --%>
-<%-- 				test="${listType eq 'temp' or listType eq 'recv' or listType eq 'mine'}"> --%>
-			<li><span onClick="deleteJournal()"><spring:message code='ezJournal.t108' /></span></li>
-<%-- 			</c:if> --%>
 			<c:if test="${listType eq 'department' or listType eq 'recv' or listType eq 'mine'}">
-				<!-- 		  	상세검색 -->
-				<li><span id="SearchOption" onClick="doLayerPopup(this);" mode="off"><spring:message code='ezJournal.t59' /></span></li>
 				<!-- 		  	취합 -->
 				<li><span onClick="doSelectSumJournal();"><spring:message code='ezJournal.t60' /></span></li>
+				<li><span class="icon16 icon16_search" id="SearchOption" onClick="doLayerPopup(this);" mode="off"></span></li>
 			</c:if>
-			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-			</c:if>
+			<li onClick="deleteJournal()"><span class="icon16 icon16_delete"></span></li>
 			<c:if test="${listType eq 'department'}">
 				<li style="background: none"><select id="dept" onchange="goToPageByDeptId();" style="height:29px;">
 					<c:forEach items="${deptList}" var="dept">
@@ -1120,13 +1112,22 @@
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
 				<li style="background: none"><select id="formId" onchange="goToPageByFormName();" style="height:29px;"></select></li>
 			</c:if>
-			<li style=""></li>
-			<li id="right">
+			<!-- <li id="right">
 				<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" status="off" onclick="savePreviewRayer('NONE')">
 				<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" status="off" onclick="savePreviewRayer('W')"> 
 				<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" status="off" onclick="savePreviewRayer('H')"> 
 				<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-			</li>
+			</li> -->
+			<div class="sub_frameIcon" style="float:right">	
+				<div class="sub_frameIconUL">
+				   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="savePreviewRayer('NONE')"></span></p>
+				    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="savePreviewRayer('W')"></span></p>
+				    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="savePreviewRayer('H')"></span></p>
+				</div>
+				<div class="sub_frameIconUL02">
+				  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+				</div>
+			</div>
 		</ul>
 	</div>
 	<script type="text/javascript">
@@ -1142,7 +1143,7 @@
 						<col>
 					</colgroup>
 					<tr>
-						<th><spring:message code='ezBoard.t10021' /></th>
+						<th><spring:message code='ezJournal.t68' /></th>
 						<td><select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="goToPageByListCnt(this);">
 								<c:forEach begin="1" end="5" varStatus="status">
 									<c:choose>
@@ -1177,13 +1178,8 @@
 			</p>
 		</span> 
 		<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;"> 
-			<span style="width: 100%; height: 100px; display: block;"> 
-				<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
-				<!-- 		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;"> -->
-				<!-- 		                    </div> --> <!-- 		                </span> -->
-
-				<div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #e8e8e8;"></div> 
-				<!-- 		                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe> -->
+			<span style="width: 100%; height: 100px; display: block;">
+				<div id="Preview_ContentH" style="text-align: center; border-top: 1px solid #e8e8e8;"></div>
 			</span>
 		</span>
 	</span>
@@ -1193,11 +1189,7 @@
 			<img src="/images/prevview_bar_dotted.gif">
 		</span>		 
 		<span id="PreContent_RayerW" style="display: block;border-top:1px solid #e6e6e6"> 
-			<span style="width: 100%; height: 100px; display: block;"> 
-				<!-- 		                <span class="previewmail_info" style="display: block; width: 100%;"> -->
-				<!-- 		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;"> -->
-				<!-- 		                    </div> --> <!-- 		                </span> -->
-
+			<span style="width: 100%; height: 100px; display: block;">
 				<div id="Preview_ContentW" style="text-align: center;"></div>
 			</span>
 		</span>
@@ -1226,7 +1218,7 @@
 					</c:if>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.t208' />
+							<spring:message code='ezJournal.t56' />
 						</th>
 						<td>
 							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value="">
@@ -1234,7 +1226,7 @@
 					</tr>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezEmail.t649' />
+							<spring:message code='ezJournal.t201' />
 						</th>
 						<td>
 							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value="">
@@ -1250,7 +1242,7 @@
 					</tr>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.t210' />
+							<spring:message code='ezJournal.t66' />
 						</th>
 						<td>
 							<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
@@ -1264,7 +1256,7 @@
 					<tr>
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezJournal.t43' /></span></a>
 							</div>	
 						</td>
 					</tr>
@@ -1274,7 +1266,7 @@
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
 	<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel_sub">
-		<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer_sub"></iframe>
+		<iframe src="<spring:message code='ezJournal.t185' />" style="border: none;" id="iFrameLayer_sub"></iframe>
 	</div>
 	<div class="jquery-modal blocker current" id="selectSumJournal" style="display: none;">
 		<div id="sumpopup" class="popupwrap1 modal" style="text-align: center; width: 300px; margin-bottom: 70px; left: 500px; display: inline-block;">
@@ -1332,10 +1324,10 @@
 	            document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
-	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 55) + "px";
-	            if(document.getElementById("PreH_subject") != null) {
-		            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
-	            }
+	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 65) + "px";
+	            if(document.getElementById("PreH_subject")!=null){
+                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 155) + "px";
+                }
 	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
 	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 
@@ -1476,7 +1468,7 @@
 								+ feature);
 			Openwin.focus();
 		} else {
-			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId, "",
+			Openwin = window.open("/ezJournal/journalDetail.do?journalId=" + journalId + "&pPreviewShow_HOW=D", "",
 					"width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1"
 					+ feature);
 			Openwin.focus();

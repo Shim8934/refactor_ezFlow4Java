@@ -839,9 +839,9 @@
 						</c:choose>
 					</p>
 					<div style="float:left;margin:1px 8px">
-						<span class="name" style="float:left"><c:out value="${vo.writerName}" /></span>
-						<span class="team" style="float:left"><c:out value="${vo.deptName}" /></span>
-						<span class="date" style="float:left"><c:out value="${vo.writeDate}" /></span>
+						<span class="name" style="display:block;"><c:out value="${vo.writerName}" /></span>
+						<span class="team" style="display:block;"><c:out value="${vo.deptName}" /></span>
+						<span class="date" style="display:block;"><c:out value="${vo.writeDate}" /></span>
 					</div>
 				</div>	
 				<div class="ladderGame_info" style="float:right">
@@ -894,7 +894,7 @@
 								<c:choose>
 									<c:when test="${id eq vo.writerId }">
 										<div style="width: 500px; height: 150px; text-align: center;">
-											<a href="#" onclick="start(<c:out value="${vo.ladderId}" />); return false;"><img src ='/images/ezLadder/btn_play.png' width='103' height ='103' style="margin-top:20px" /></a>
+											<a onclick="start(<c:out value="${vo.ladderId}" />); return false;"><img src ='/images/ezLadder/btn_play.png' style="margin-top:40px" /></a>
 										</div>
 									</c:when>
 									<c:otherwise>
@@ -923,7 +923,7 @@
 															</span>
 														</c:otherwise>
 													</c:choose>
-													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<div title="${line.userName}" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;"><c:out value="${line.userName}" /></span></div>
 													<c:if test="${id eq vo.writerId }">
 														<img src="/images/ezLadder/icon_switchAttendant.png" style="width: 20px;height: 20px;position: absolute;top: 0;right: 15px;" />
 													</c:if>
@@ -933,7 +933,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 398px;background: whiteSmoke; position: absolute;left: -50px;right: 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd">
+									<div id="blackBox" style="height: 398px;background: whiteSmoke; position: absolute;left: -50px;right: 0;border-top:1px solid #333;border-bottom:1px solid #333">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>
@@ -971,7 +971,7 @@
 																</span>
 															</c:otherwise>
 														</c:choose>
-													<div title="${line.userName}" class="userInfo" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;">${line.userName}</span></div>
+													<div title="${line.userName}" class="userInfo" style="line-height: 30px; background: white; height: 30px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;"><span style="white-space: nowrap;"><c:out value='${line.userName}' /></span></div>
 												</div>
 											</li>
 										</c:forEach>
@@ -986,7 +986,7 @@
 									<c:forEach var="line" items="${list}">
 										<li>
 											<div title="${line.item}" class="resultItem" style="line-height: 30px; height:30px; outline: 1px solid #ddd; overflow: hidden; text-overflow: ellipsis;">
-												<span style="white-space: nowrap;">${line.item}</span>
+												<span style="white-space: nowrap;"><c:out value="${line.item}" /></span>
 											</div>
 										</li>
 									</c:forEach>
@@ -1030,7 +1030,7 @@
 							<td>
 								<div class="userName">${_comt.userName}</div>
 								<div id="div2Cmt<c:out value ="${_comt.id}" />" style="display: inline-block; height: auto; padding:10px 0px 10px 20px; max-width: 1300px;" >
-									<p id="cmtArea<c:out value ="${_comt.id}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;">${_comt.comment}</p>
+									<p id="cmtArea<c:out value ="${_comt.id}" />" style="word-break: break-all; margin-top: 0px;margin-bottom: 0px;"><c:out value="${_comt.comment}" /></p>
 								</div>
 								<div id="editCmtDiv<c:out value ="${_comt.id}" />" style="display: none;"></div>
 							</td>

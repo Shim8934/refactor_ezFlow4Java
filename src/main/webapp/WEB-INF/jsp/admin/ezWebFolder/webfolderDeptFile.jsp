@@ -9,11 +9,14 @@
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminFile.js')}"></script>
@@ -36,6 +39,10 @@
 			var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 			var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 			var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+			
+			capacity.setFolderIdProvider(function() {
+				return "<c:out value='${folderId}'/>";
+			});
 			
 			$(function () {
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
@@ -115,12 +122,23 @@
 		   	        optionHidden();
 		   	    }
 		   	}
+			
+			function leftFolderCPMV(functionType, folderList, toTargetId) {
+				closeAllPopup();
+				window.close();
+	        }
 		</script>
 	</head>
 	<body class="mainbody" onload="init('dept');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
 		<h1>
 			<spring:message code='ezWebFolder.t220'/>
 			<span id="mailBoxInfo"></span>
+			<div id="capacity-wrapper">
+				<div class="progressbar">
+					<div id="capacity-bar" class="proggress"></div>
+				</div>
+				<span id="capacity-percent"></span>
+			</div>
 		</h1>
 		<div id="companySelect" style="margin-left: 5px;">
 			<span><b><spring:message code='ezWebFolder.t129'/></b></span>
@@ -131,17 +149,18 @@
 			</select>
 		</div>
 		
-		<div id="mainmenu2" style="position: relative; margin-left: 5px;">
+		<div id="mainmenu" style="position: relative; margin-left: 5px;">
 			<ul>
-				<li id=""><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-				<c:if test="${level != '0'}">
-					<li id="uploadBttn"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-				</c:if>
-				<li id=""><a><span><spring:message code='ezWebFolder.t117'/></span></a></li>
-				<li id=""><a><span><spring:message code='ezWebFolder.t118'/></span></a></li>
-				<li id=""><a><span><spring:message code='ezWebFolder.t120'/></span></a></li>
-				<li id=""><a><span><spring:message code='ezWebFolder.t123'/></span></a></li>
-				<li id=""><a><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+				<li id="" class="important" onclick="fileDownload();"><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
+				<!-- root에서 파일업로드 되도록하려면 아래를 주석  -->
+<%-- 				<c:if test="${level != '0'}"> --%>
+				<li id="uploadBttn" class="important" onclick="fileUpload();"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+<%-- 				</c:if> --%>
+				<li id="" onclick="fileRename();"><a><span><spring:message code='ezWebFolder.t508'/></span></a></li>
+				<li id="" onclick="fileMove();"><a><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+				<li id="SearchOption" mode="off" onclick="openSearchPanel();"><span class="icon16 icon16_search"></span></li>
+				<li><span class="icon16 icon16_delete" onclick="fileDelete();"></span></li>
+				<li><span class="icon16 icon16_refresh" onclick="refreshView();"></span></li>
 				<li id="">
 					<select id="fileTypeSelect">
 						<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
@@ -153,16 +172,21 @@
 						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
-				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
+				<div class="sub_frameIcon" style="float:right">
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+					</div>
+				</div>
 			</ul>
 		</div>
 		
 		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "dept", "", "<c:out value='${level}'/>");
 		</script>
 		
-		<div id="searchPanel" class="popup wfSearchPanel" style="display:none;">
+		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
+		<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
 			<h1><spring:message code='ezWebFolder.t21'/></h1> 
 			<div id="wfSearchCloseBttn" class="wfClose"><ul><li><span></span></li></ul></div>
 			<div style="margin: 10px 0px 15px;">
@@ -203,6 +227,7 @@
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
+		</div>
 		</div>
 		
 		<div id="progress-wrp" style="display: none; margin-left: 5px;">

@@ -77,24 +77,24 @@
 	                <li><span onclick="Window_Close()"></span></li>
 	            </ul>
 	        </div>
-			<div class="box" id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:320px;border:0px">
+			<div id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; height:350px;">
 			  <table style="width:100%;" class="popuplist" style="TABLE-LAYOUT:fixed" id="checkboxtable">
 			    <tr>
 			      <th style="width:50px;text-align:center;"><spring:message code='ezEmail.t488' /></th>
-			      <th><spring:message code='ezEmail.t712' /></th>
+			      <th style="width:120px;text-align:center;"><spring:message code='ezEmail.t31' /></th>
+			      <th style="text-align:center;"><spring:message code='ezEmail.t712' /></th>
 			      <th style="width:100px;text-align:center;"><spring:message code='ezEmail.t26' /></th>
 			      <th style="width:80px;text-align:center;"><spring:message code='ezEmail.t28' /></th>
-			      <th style="width:80px;text-align:center;"><spring:message code='ezEmail.t31' /></th>
 			    </tr>
 			    
 			    <c:forEach var="item" items="${list}">
 			    
 			    <tr>
 			      <td style="text-align:center;"><input type='checkbox' name="goruplistinput" _email="${item.mail}" _name="${item.displayName}" checked ></td>
-			      <td>&nbsp;${item.company} </td>
+			      <td style="text-align:center;">${item.displayName}</td>
+			      <td style="text-align:center;">&nbsp;${item.company} </td>
 			      <td style="text-align:center;">${item.dept}</td>
 			      <td style="text-align:center;">${item.title}</td>
-			      <td style="text-align:center;">${item.displayName}</td>
 			    </tr>
 			    
 			    </c:forEach>

@@ -111,7 +111,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 기본 환경설정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailConfig.do")
+	@RequestMapping(value="/ezEmail/mailConfig.do", method = RequestMethod.GET)
 	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailConfig started.");
 		
@@ -119,6 +119,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String userEditor = "";
 		String noneActiveX = "YES";
+		String flag = request.getParameter("flag");
 		String dotnetFlag = request.getParameter("dotnetFlag");
 		
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -126,6 +127,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		model.addAttribute("flag", flag);
 		model.addAttribute("dotnetFlag", dotnetFlag);
 		
 		logger.debug("mailConfig ended.");
@@ -135,7 +137,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 기본 환경설정 내부 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGeneral.do")
+	@RequestMapping(value="/ezEmail/mailGeneral.do", method = RequestMethod.GET)
 	public String mailGeneral(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailGeneral started.");
 		
@@ -152,7 +154,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String refreshInterval = mailGeneralVO.getRefreshInterval() == null ? "" : mailGeneralVO.getRefreshInterval();
 		String keepDeleteLength = mailGeneralVO.getKeepDeleteLength() == null ? "" : mailGeneralVO.getKeepDeleteLength();
 		String previewSubtree = mailGeneralVO.getPreviewSubTree() == null ? "" : mailGeneralVO.getPreviewSubTree();
+		String textOption = mailGeneralVO.getTextOption();
 		String mailSendObject = "";
+		String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
 		String dotnetFlag = request.getParameter("dotnetFlag");
 		
 		if (keepDeleteLength.equals("30")) {
@@ -180,7 +184,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("listCount=" + listCount + ",previewMode=" + previewMode  + ",previewHListSize=" + previewHListSize
 				 + ",previewHContentSize=" + previewHContentSize + ",previewWListSize=" + previewWListSize + ",previewWContentSize=" + previewWContentSize
 				 + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength + ",mailSendObject=" + mailSendObject
-				 + ",previewSubtree=" + previewSubtree + ",useOnlyInnerMail=" + useOnlyInnerMail + ",usePreviewSubTree=" + usePreviewSubTree);
+				 + ",previewSubtree=" + previewSubtree + ",useOnlyInnerMail=" + useOnlyInnerMail + ",usePreviewSubTree=" + usePreviewSubTree
+				 + ",previewMailImage=" + previewMailImage + ",textOption=" + textOption);
 		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
@@ -194,6 +199,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("previewSubTree", previewSubtree);
 		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
+		model.addAttribute("previewMailImage", previewMailImage);
+		model.addAttribute("textOption", textOption);
 		model.addAttribute("dotnetFlag", dotnetFlag);
 		
 		logger.debug("mailGeneral ended.");
@@ -204,7 +211,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 보내는 사람이름을 수정하는 팝업 
 	 */
-	@RequestMapping(value="/ezEmail/mailExtSenderNM.do")
+	@RequestMapping(value="/ezEmail/mailExtSenderNM.do", method = RequestMethod.GET)
 	public String mailExtSenderNM(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
 		return "ezEmail/mailExtSenderNM";
 	}
@@ -236,6 +243,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String previewWContent = doc.getElementsByTagName("PREVIEWWCONTENT").item(0).getTextContent();
 		String previewHList = doc.getElementsByTagName("PREVIEWHLIST").item(0).getTextContent();
 		String previewHContent = doc.getElementsByTagName("PREVIEWHCONTENT").item(0).getTextContent();
+		String previewMailImage = doc.getElementsByTagName("PREVIEWMAILIMAGE").item(0).getTextContent();
+		String textOption = doc.getElementsByTagName("TEXTOPTION").item(0).getTextContent();
 		String mailSenderNm = "";
 		String previewSubTree = "";
 		
@@ -254,6 +263,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
 				+ ",previewHList=" + previewHList + ",previewHContent=" + previewHContent
 				+ ",mailSenderNm=" + mailSenderNm + ",previewSubTree=" + previewSubTree
+				+ ",previewMailImage=" + previewMailImage + ",textOption=" + textOption
 				);
 
 		String rtnValue= "OK";
@@ -271,6 +281,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setPreviewHContent(previewHContent);	
 			mailGeneral.setMailSenderNm(mailSenderNm);
 			mailGeneral.setPreviewSubTree(previewSubTree);
+			mailGeneral.setPreviewMailImage(previewMailImage);
+			mailGeneral.setTextOption(textOption);
 			
 			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
 		} catch (Exception e) {
@@ -286,7 +298,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 기본 환경설정 내부 화면(용량) 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetUse.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetUse.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetUse(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailGetUse started.");
@@ -374,7 +386,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동 전달 설정 화면 표시 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoForward.do")
+	@RequestMapping(value="/ezEmail/mailAutoForward.do", method=RequestMethod.GET)
 	public String mailAutoForward(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailAutoForward stated.");
 		
@@ -398,7 +410,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동 전달 설정 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoForwardSave.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezEmail/mailAutoForwardSave.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody	
 	public String mailAutoForwardSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
@@ -443,7 +455,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동 전달 설정 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoForwardDelete.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezEmail/mailAutoForwardDelete.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody	
 	public String mailAutoForwardDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
@@ -579,7 +591,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 서명관리 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSignature.do")
+	@RequestMapping(value="/ezEmail/mailSignature.do", method=RequestMethod.GET)
 	public String mailSignature(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailSignature started.");
 		
@@ -679,7 +691,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 서명관리 저장 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSignSave.do")
+	@RequestMapping(value="/ezEmail/mailSignSave.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailSignSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailSignSave started.");
@@ -737,7 +749,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동삭제 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoDelete.do")
+	@RequestMapping(value="/ezEmail/mailAutoDelete.do", method=RequestMethod.GET)
 	public String mailAutoDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailAutoDelete started.");
 		
@@ -761,7 +773,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 편지함선택 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSelectFolder.do")
+	@RequestMapping(value="/ezEmail/mailSelectFolder.do", method=RequestMethod.GET)
 	public String mailSelectFolder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		return "ezEmail/mailSelectFolder";
 	}
@@ -769,7 +781,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동삭제 조건추가 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoDeleteAdd.do")
+	@RequestMapping(value="/ezEmail/mailAutoDeleteAdd.do", method=RequestMethod.GET)
 	public String mailAutoDeleteAdd(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailAutoDeleteAdd started.");
 		
@@ -793,7 +805,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동삭제 조건삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailAutoDeleteDelete.do")
+	@RequestMapping(value="/ezEmail/mailAutoDeleteDelete.do", method=RequestMethod.GET)
 	public String mailAutoDeleteDelete(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailAutoDeleteDelete started.");
 		
@@ -810,7 +822,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailInboxRule.do")
+	@RequestMapping(value="/ezEmail/mailInboxRule.do", method=RequestMethod.GET)
 	public String mailInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		return "ezEmail/mailInboxRule";
 	}
@@ -818,7 +830,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 추가 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailNewInboxRule.do")
+	@RequestMapping(value="/ezEmail/mailNewInboxRule.do", method=RequestMethod.GET)
 	public String mailNewInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		return "ezEmail/mailNewInboxRule";
 	}
@@ -826,7 +838,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 추가/수정 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetInboxRule.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetInboxRule.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailSetInboxRule started.");
@@ -956,7 +968,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 리스트 추출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetInboxRule.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetInboxRule.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailGetInboxRule started.");
@@ -1137,7 +1149,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDeleteInboxRule.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailDeleteInboxRule.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailDeleteInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailDeleteInboxRule started.");
@@ -1168,7 +1180,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 우선순위 변경 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetRulePriority.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetRulePriority.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetRulePriority(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailSetRulePriority started.");
@@ -1205,7 +1217,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 사용여부 변경 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetRuleStatus.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetRuleStatus.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetRuleStatus(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailSetRuleStatus started.");
@@ -1238,7 +1250,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 자동분류 룰 자세히보기 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDetailInboxRule.do")
+	@RequestMapping(value="/ezEmail/mailDetailInboxRule.do", method=RequestMethod.GET)
 	public String mailDetailInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
 		return "ezEmail/mailDetailInboxRule";
 	}
@@ -1246,7 +1258,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중 설정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailOutOfOffice.do")
+	@RequestMapping(value="/ezEmail/mailOutOfOffice.do", method=RequestMethod.GET)
 	public String mailOutOfOffice(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
 		logger.debug("mailOutOfOffice started.");
 		
@@ -1331,7 +1343,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중 설정 저장 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do")
+	@RequestMapping(value="/ezEmail/mailOutOfOfficeSave.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailOutOfOfficeSave(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailOutOfOfficeSave started.");
@@ -1386,7 +1398,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 외부메일 설정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPop3.do")
+	@RequestMapping(value="/ezEmail/mailPop3.do", method=RequestMethod.GET)
 	public String mailPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailPop3 started.");
 
@@ -1447,7 +1459,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 외부메일 설정 저장 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPop3Save.do")
+	@RequestMapping(value="/ezEmail/mailPop3Save.do", method=RequestMethod.GET)
 	@ResponseBody
 	public String mailPop3Save(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String ret) throws Exception{
 		logger.debug("mailPop3Save started.");
@@ -1470,7 +1482,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 외부메일 설정 접속확인 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPop3Connect.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailPop3Connect.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailPop3Connect(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("mailPop3Connect started.");
@@ -1515,7 +1527,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 외부메일 확인 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetPop3.do")
+	@RequestMapping(value="/ezEmail/mailGetPop3.do", method=RequestMethod.GET)
 	public void mailGetPop3(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("mailGetPop3 started.");
 		

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -22,7 +23,7 @@
 		    var OrderCell = "";
 		    var pDeptID;
 		    var Rtnval = new Array();
-		    var DocFileType = "${docFileType}";
+		    var DocFileType = "<c:out value = '${docFileType}'/>";
 		    var TreeIdx;
 		    var ListIdx;
 		    var RetValue;
@@ -34,7 +35,7 @@
 		        Tree_setconfig();
 		        
 		        var pFormKind;
-		        pDeptID = "${deptID}";
+		        pDeptID = "<c:out value = '${deptID}'/>";
 		
 		        try {
 		            RetValue = parent.getformcont_cross_dialogArguments[0];
@@ -163,6 +164,8 @@
 		                Rtnval[2] = selRow.getAttribute("DATA1");
 		                Rtnval[3] = selRow.childNodes[0].innerText;
 		                
+		                Rtnval["reformflag"] = selRow.getAttribute("reformflag");
+		                
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(Rtnval);
 		                } else {
@@ -258,9 +261,19 @@
 				    				if (type == "2") {
 				                        OpenAlertUI("<spring:message code='ezApprovalG.t804'/>");
 				                        Get_Favoritelist();
+				                        
+				                        //2019.02.28 유은정 : 포탈개인화 즐겨찾기 양식에서 포틀릿 정보 가져오는 매서드 추가
+				                        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+				        		        	parent.opener.getFavoriteForms();
+				        		        }
 				                    } else {
 				                        OpenAlertUI(strLang1003);
 				                        Get_Favoritelist();
+				                        
+				          		      	//2019.02.28 유은정 : 포탈개인화 즐겨찾기 양식에서 포틀릿 정보 가져오는 매서드 추가
+				                        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+				        		        	parent.opener.getFavoriteForms();
+				        		        }
 				                    }
 				    			} else {
 				    				OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");

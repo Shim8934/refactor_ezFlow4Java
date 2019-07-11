@@ -163,8 +163,8 @@ function MakeAddressList() {
                 document.getElementById("FolderType").style.display = "";
                 _TR.setAttribute("_FolderType", FolderType);
                 _TR.setAttribute("_FolderID", FolderID);
-                document.getElementById("width1").style.width = "20%";
-                document.getElementById("width2").style.width = "20%";
+                document.getElementById("width1").style.width = "15%";
+                document.getElementById("width2").style.width = "15%";
             } else {
                 document.getElementById("FolderType").style.display = "none";
                 document.getElementById("width1").style.width = "20%";
@@ -241,10 +241,10 @@ function MakeAddressList() {
 
             var _TD5 = document.createElement("TD");
             if (searchFlag) {
-                _TD5.style.width = "20%";
+                _TD5.style.width = "15%";
             }
             else
-                _TD5.style.width = "20%";
+            _TD5.style.width = "20%";
             _TD5.style.margin = "0px";
             _TD5.style.padding = "0px";
             _TD5.style.whiteSpace = "nowrap";
@@ -259,7 +259,7 @@ function MakeAddressList() {
 
             var _TD6 = document.createElement("TD");
             if (searchFlag) {
-            	_TD6.style.width = "20%";
+            	_TD6.style.width = "15%";
             }
             else
             	_TD6.style.width = "20%";
@@ -485,12 +485,19 @@ function MakeNoDateList() {
         _TR.appendChild(_TD);
         document.getElementById("MailList").appendChild(_TR);
     }
-    else {
+    else if(searchFlag){
         var DivLayer = document.createElement("DIV");
         DivLayer.style.textAlign = "center";
         DivLayer.className = "emptyDiv";
-        DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
+        /*DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";*/
+        DivLayer.innerHTML = "<dl class='nodata_sIcon'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + strLangNoSearchData + "</dd></dl>";
         document.getElementById("MailListCard").appendChild(DivLayer);
+    } else{
+    	var DivLayer = document.createElement("DIV");
+    	DivLayer.style.textAlign = "center";
+    	DivLayer.className = "emptyDiv";
+    	DivLayer.innerHTML = "<img src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px'>" + strLang100 + "</div>";
+    	document.getElementById("MailListCard").appendChild(DivLayer);
     }
 }
 function OderbyOptionExpression(obj) {
@@ -559,7 +566,7 @@ function makePageSelPage() {
     totalPage = Math.ceil(pTotalCnt / pPageSize);
     var pageNum = pCurrentPage;
     if (!searchFlag || strLang_1 == "")
-        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + " <span style='color:#017BEC;'>" + pTotalCnt + "</span> " + strLang42 + "]";
+        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
     else {
         document.getElementById("mailBoxInfo").className = "h2_dot"; 
         document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "&nbsp;<span class='point'>" + pTotalCnt + "</span> " + strLang_2;
@@ -630,8 +637,8 @@ function Window_onresize() {
             document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 312) + "px";
         }
         else {
-            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 245) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 275) + "px";
+            document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 283) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 312) + "px";
         }
     }
     else {

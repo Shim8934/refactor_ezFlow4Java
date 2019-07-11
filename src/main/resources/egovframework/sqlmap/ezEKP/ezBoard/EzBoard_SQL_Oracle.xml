@@ -81,6 +81,7 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="32"/>
 		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
         <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="34"/>
+        <result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="35"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -115,6 +116,8 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
 		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
 		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
+		<result property="guBun" 					column="GUBUN" 					columnIndex="32"/>
+		<result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="33"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -1080,7 +1083,7 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
@@ -1114,7 +1117,7 @@
                       AND 
                       	ITEMID <> #v_PITEMID#
                       AND 
-                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                      	TO_CHAR(UPPERITEMIDTREE) NOT LIKE #v_PUPPERITEMIDTREE# || '%'
                       AND 
                       	STARTDATE <= #nowDate#
                       AND 
@@ -1170,7 +1173,8 @@
 	      					A.DOCNO,
 	      					'' AS NOTICE,
 	      					P.GUBUN,
-	      					A.MAINCONTENT
+	      					A.MAINCONTENT,
+	      					P.BOARDGROUPID
 	      			  	FROM 
 	      			  		TBL_BOARD_ITEM A 
 	      			  	INNER JOIN 
@@ -2670,7 +2674,8 @@
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10 ,
 	            A.BOARDID,
-	            A.DOCNO
+	            A.DOCNO,
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE
 	        FROM 
 	        	TBL_Board_Item A
             JOIN 
@@ -2714,16 +2719,24 @@
 	            EXTENSIONATTRIBUTE4 ,
 	            EXTENSIONATTRIBUTE5 ,
 	            MAINCONTENT ,
+	            B.GUBUN ,
 	            EXTENSIONATTRIBUTE6 ,
 	            EXTENSIONATTRIBUTE7 ,
 	            EXTENSIONATTRIBUTE8 ,
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10,
-	            DOCNO 
+	            DOCNO,
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE
 	        FROM 
-	        	TBL_Board_Item_temp 
+	        	TBL_Board_Item_temp A
+	        JOIN
+	        	TBL_Board_BoardInfo B
+            ON
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.BoardID = B.BoardID
        		WHERE
-       			TENANT_ID = #v_TENANTID#
+       			A.TENANT_ID = #v_TENANTID#
        		AND  
        			ItemID = #v_pItemID#
 		]]>
@@ -2926,7 +2939,7 @@
        		WHERE  
        			tenant_id = #v_TENANTID#
        		AND
-       			TO_CHAR(UpperItemIDTree) LIKE CONCAT(CONCAT('%', #v_pItemID#), '%')
+       			TO_CHAR(UpperItemIDTree) LIKE '%' || #v_pItemID# || '%'
             AND 
             	ItemID <> #v_pItemID#
 		]]>
@@ -3347,6 +3360,12 @@
 	                 			AND  
 	                 				ITEMID = #v_ITEMID# )
 			]]>
+			<isEqual property="v_ISDEPT" compareValue="1">
+				<isEqual property="v_ISEQUALDEPT" compareValue="0">
+					AND
+						BoardGroupACL = 'Y'
+				</isEqual>
+			</isEqual>
 		</isNotEqual>
 		<isEqual property="v_BOARDTYPE" compareValue="TEMP">
 			<![CDATA[
@@ -3662,7 +3681,7 @@
 	       	AND
 	       		itemid = #itemID#
 	       	ORDER BY
-	       		GUID
+	       		TO_NUMBER(GUID)
        	]]>
 	</select>
 	
@@ -3680,7 +3699,7 @@
             AND 
             	parentwritedate = #v_PPARENTWRITEDATE#
             AND 
-            	TO_CHAR(upperitemidtree) LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+            	TO_CHAR(upperitemidtree) LIKE #v_PUPPERITEMIDTREE# || '%'
             AND 
             	startdate <= #nowDate#
             AND 
@@ -4124,7 +4143,7 @@
 			AND 
 				BoardID = #boardID# 
 			AND 
-				ItemID like CONCAT(#itemTreeID#, '%')
+				ItemID like #itemTreeID# || '%'
 		]]>
 	</select>
 	
@@ -5507,8 +5526,6 @@
 				UM.CN = AM.CN
 			AND
 				UM.CN = #v_pUserID#
-			AND
-				UM.PHYSICALDELIVERYOFFICENAME = #v_pCompanyID#
 			INNER JOIN
 				TBL_DEPTMASTER DM
 			ON
@@ -5521,4 +5538,18 @@
 				UM.TENANT_ID = #v_TENANTID# 
 		]]>
 	</select>
+	
+		<select id="EzBoardDAO.getUpperDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				EXTENSIONATTRIBUTE1
+			FROM
+				tbl_deptmaster
+			WHERE
+				CN = #v_DEPTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
 </sqlMap>

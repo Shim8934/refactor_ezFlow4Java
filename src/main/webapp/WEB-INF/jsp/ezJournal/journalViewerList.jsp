@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezBoard.t320'/></title>
+		<title><spring:message code='ezJournal.t203'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -30,7 +30,7 @@
 	</head>
 	<body class="popup">
 		<form method="post" >
-		  <h1><spring:message code='ezBoard.t320'/></h1>
+		  <h1><spring:message code='ezJournal.t203'/></h1>
 		  <div id="close">
 		    <ul>
 		      <li onClick="close_onclick()"><span></span></li>
@@ -53,7 +53,7 @@
 		            <c:otherwise>
 	            		<table class="popuplist" style="width:100%; height:100%;">
 			            	<tr style="background-color: rgb(255, 255, 255);">
-								<td align="left" colspan="3" style="height:100%; width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezBoard.kbm01'/></td>
+								<td align="left" colspan="3" style="height:100%; width: 130px; text-align: center; cursor: pointer;"><spring:message code='ezJournal.t205'/></td>
 							</tr>
 						</table>
 		            </c:otherwise>

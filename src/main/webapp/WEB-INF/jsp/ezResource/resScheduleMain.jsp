@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/CalendarDataPro_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/CalendarView_Cross.js')}"></script>		
-		<script type="text/javascript" src="${util.addVer('/js/ezResource/CalendarMini_Cross.js')}"></script>
+		<%-- <script type="text/javascript" src="${util.addVer('/js/ezResource/CalendarMini_Cross.js')}"></script> --%>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/calendar_cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
@@ -63,7 +63,7 @@
 	    /* 2018-10-01 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
 	    if(pAdminFg == "") {
 	    	var msg = "<spring:message code='ezResource.t58' />";
-	        window.location.href = "/ezResource/nonResList.do?msg=" + msg;
+	        window.location.href = "/ezResource/nonResList.do?msg=" + encodeURIComponent(msg);
 	    }
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";
@@ -85,15 +85,16 @@
 	    var lunarUseFlag = "${lunarUseFlag}";
 	    var LunarUse = false;
 	    var dayView = 0;
+	    var returnFlag = "${returnFlag}";
 	    
 	    document.onselectstart = function () { return false; };
 	    
-	    select_memorialDays("${userInfo.lang}");
+	    /* select_memorialDays("${userInfo.lang}"); */
 	    
 	    var xmlhttp2 = createXMLHttpRequest();
 	    function schedule_get_holiday() {
 	        xmlhttp2 = createXMLHttpRequest();
-	        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
+	        xmlhttp2.open("GET", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
 	        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
 	        xmlhttp2.send();
 	    }
@@ -105,27 +106,40 @@
 	            XmlNodeText = xmlhttp2.responseText;
 	            XmlNode = loadXMLString(XmlNodeText);
 	            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-	                if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0]) == "1") {
+	                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
 	                    var issolar;
 	                    var holiday;
-	                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0]) == "1")
+	                    var holidayFlag;
+	                    
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1") {
 	                        issolar = "1";
-	                    else
+	                    } else {
 	                        issolar = "2";
-	                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0]) == "1")
-	                        holiday = true;
-	                    else
-	                        holiday = false;
-	                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0]) == "1") {
-	                        memorialDays.push(new memorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
-	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
-	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
 	                    }
-	                    else {
-	                        yearmemorialDays.push(new yearmemorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
-	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(0, 4),
-	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
-	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
+	                    
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1") {
+	                        holiday = true;			                    
+	                    } else {
+	                        holiday = false;
+	                    }
+	                    
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYFLAG")[0].textContent == "Y") {
+	                        holidayFlag = "Y";			                    
+	                    } else {
+	                        holidayFlag = "D";
+	                    }
+	                    
+	                    var repetition = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYREPEAT")[0].textContent;	                    
+	                    
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
+	                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
+	                    } else {                   	
+	                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
 	                    }
 	                }
 	            }
@@ -177,7 +191,7 @@
 	        createNodeInsert(xmlpara, objNode, "DATA");
 	        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", "${userInfo.companyID}");
 
-	        xmlhttp.open("POST", "/ezSchedule/scheduleGetLunarUse.do", true);
+	        xmlhttp.open("GET", "/ezSchedule/scheduleGetLunarUse.do", true);
 	        xmlhttp.onreadystatechange = event_schedule_get_lunaruse;
 	        xmlhttp.send(xmlpara);
 	    }
@@ -324,6 +338,11 @@
 	    }
 
 	    function newSchedule_onclick(e) {
+	    	if(ApproveFlag == 2) {
+	    		alert(strLang336);
+	    		return;
+	    	}
+	    	
 	        var srcEl;
 
 	        if (CrossYN()) {
@@ -372,7 +391,11 @@
 	    }
 
 	    function btnApprov_list() {
-	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&startDate=" + sStartDate + "&endDate=" + sEndDate;
+	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&type=Admin&startDate=" + sStartDate + "&endDate=" + sEndDate;
+	    }
+	    
+	    function btnMyApprov_list() {
+	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&type=User&startDate=" + sStartDate + "&endDate=" + sEndDate;
 	    }
 
         function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
@@ -458,7 +481,7 @@
 		//2018-06-05 구해안 showres 함수 추가
 		function showRes(val01) {
     		$.ajax({
-				type : "POST",
+				type : "GET",
 				dataType : "json",
 				async : false,
 				url : "/ezResource/scheduleResourceData.do",
@@ -503,8 +526,18 @@
 					
 					if (approveFlag == "1") {
 						$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
-					} else {
+					} else if (approveFlag == "0") {
 						$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+					} else {
+						$("#approveFlag").html("<spring:message code='ezSchedule.t404'/>");
+					}
+					
+					var returnFlag = result.resBrd.returnFlag;
+					
+					if (returnFlag == "0") {
+						$("#returnFlag").html("<spring:message code='ezResource.kmsr12'/>");
+					} else {
+						$("#returnFlag").html("<spring:message code='ezResource.kmsr13'/>");
 					}
 					
 					$("#resDate").html(result.resBrd.makeDate);
@@ -517,13 +550,13 @@
 					$("#brdExplain").html(resbrdExc);
 					
 					if(result.attachList1 != null) {
-						document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURI(result.attachList1);
+						document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURIComponent(result.attachList1);
 						document.getElementById("preview1").width = 200;
 						document.getElementById("preview1").height = 200;
 					}
 					
 					if(result.attachList2 != null) {
-						document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURI(result.attachList2);
+						document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + encodeURIComponent(result.attachList2);
 						document.getElementById("preview2").width = 200;
 						document.getElementById("preview2").height = 200;
 					}
@@ -565,7 +598,51 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
 		<div id="mainmenu">
+            <ul class="on">
+            	<li class="important"><span id="pn_img" onClick="newSchedule_onclick(event)"><spring:message code='ezResource.t171'/></span></li>
+            	<li><span onclick='showRes(${resID});'><spring:message code='ezResource.t142'/></span></li>
+            	<c:if test="${adminFg eq 'Y'}" >
+    				<li><span onClick="btnform_onclick();"><spring:message code='ezResource.t378'/></span></li>
+    				<%-- <c:if test="${approveFlag eq '1'}" > --%>
+    					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.kmsr33'/></span></li>
+    				<%-- </c:if> --%>
+    			</c:if>
+    			<c:if test="${approveFlag ne 2 }">
+    				<li id="myApprovlist"><span onClick="btnMyApprov_list();"><spring:message code='ezResource.kmsr34'/></span></li>
+    			</c:if>
+            </ul>
+		</div>
+		<div class="calendar_pagenav">
+	        <ul class="contentlayout">
+	            <li class="contentlayout_left" id="preM"></li>
+	            <li class="contentlayout_right" id="preN"></li>
+	            <li class="contentlayout_none"><span class="spanText" id="calTitle"></span>
+	            </li>
+	        </ul>
+	    </div>
+	    <div class="mainmenuTab">
+	    	<ul class="mainmenuTabUL_left"> 
+	    		<li><img src="../images/ezResource/state_approval.gif" class="icon"><spring:message code='ezResource.t191'/></li>
+	    		<c:if test="${approveFlag eq 1 }">
+		    		<li><img src="../images/ezResource/state_approvalPending.gif" class="icon"><spring:message code='ezResource.kmsr21'/></li>
+		    		<li><img src="../images/ezResource/state_approvalrefuse.gif" class="icon"><spring:message code='ezResource.kmsr22'/></li>
+		    	</c:if>
+	    		<li><img src="../images/ezResource/state_rental.gif" class="icon"><spring:message code='ezResource.kmsr23'/></li>
+	    		<c:if test="${returnFlag eq 0 }">
+	    			<li><img src="../images/ezResource/state_return.gif" class="icon"><spring:message code='ezBoard.t345'/></li>
+	    		</c:if>
+	    		<c:if test="${returnFlag eq 1 }">
+		    		<li><img src="../images/ezResource/state_return.gif" class="icon"><spring:message code='ezResource.kmsr24'/></li>
+		    		<li><img src="../images/ezResource/state_noreturn.gif" class="icon"><spring:message code='ezResource.kmsr25'/></li>
+		    	</c:if>
+	    	</ul>
+	        <ul class="mainmenuTabUL">
+	            <li id="dayView" class="off"><span onclick='onViewDate("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="off"><span onclick='onViewDate("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="on"><span onclick='onViewDate("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
+	        </ul>
+	    </div>
+		<%-- <div id="mainmenu">
   			<ul>
     			<li><span id="pn_img" onClick="newSchedule_onclick(event)"><spring:message code='ezResource.t171'/></span></li>
     			<!-- 2018-06-05 구해안 자원정보 버튼 추가 및 resinfo 정보 popup으로 수정 -->
@@ -584,9 +661,9 @@
 				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
     			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
   			</ul>  			
-		</div>
+		</div> --%>
 		<script type="text/javascript">
-    		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+    		//selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		<table>   
 			<tr>
@@ -626,6 +703,10 @@
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
 						<td colspan="2" id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.kmsr11'/></th>
+						<td colspan="2" id="returnFlag"></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezBoard.t5007'/></th>

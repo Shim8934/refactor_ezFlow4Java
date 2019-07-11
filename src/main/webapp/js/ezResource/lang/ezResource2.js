@@ -213,4 +213,23 @@ var strLangKMS1 = "Repeat is impossible if it's more than 100 times.";
 var strLangkmsr01 = "User is already added.";
 
 //2019-04-08 김민성
-var strLangkmsr02 = "자원관리자는 사용자 또는 관리자 권한이 있어야 합니다.";
+var strLangkmsr02 = "The resource manager must have user or administrator permissions.";
+
+//2019-05-14
+var strLangkmsr03 = "Would you like to refuse approval?"
+var strLang321 = "Pending";
+var strLang322 = "Refuse";
+var strLang323 = "Approve";
+var strLang324 = "Rent";
+var strLang325 = "Return";
+var strLang326 = "Non-Return";
+var strLang327 = "End";
+var strLang331 = "Would you like to request a return?";
+var strLang332 = "Are you sure you want to approve the return request?";
+var strLang333 = "Would you like to return it?";
+var strLang334 = "Your return request has been completed.";
+var strLang335 = "Returned.";
+var strLang336 = "If the resource is set to disabled, it can not be scheduled.";
+
+//2019-05-28
+var strLang337 = "Approval has been denied."

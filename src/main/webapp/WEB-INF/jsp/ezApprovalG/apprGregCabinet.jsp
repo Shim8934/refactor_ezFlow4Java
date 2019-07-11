@@ -26,8 +26,8 @@
 	<script ID="clientEventHandlersJS"  type="text/javascript">
 		var OrderCell = "";    
 	   	var xmlhttp = createXMLHttpRequest();
-	    var pUserID = "${userInfo.id}";
-	    var CompanyID = "${userInfo.companyID}";
+	    var pUserID = "<c:out value = '${userInfo.id}'/>";
+	    var CompanyID = "<c:out value = '${userInfo.companyID}'/>";
 	    var arr_userinfo = new Array();
 	    arr_userinfo[0]  = "user";
 	    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
@@ -216,7 +216,7 @@
 					</div>
 				</td>
 				<td valign="top" style="padding:3px;">
-					<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1040'/><a class="imgbtn imgbck" style="margin:-3px 0px 0px 156px;"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></h2>
+					<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1040'/><a class="imgbtn imgbck" style="margin:-3px 0px 0px 155px;"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></h2>
 					<table>
 						<%-- <tr>
 							<th align="left"><a class="imgbtn"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></th>

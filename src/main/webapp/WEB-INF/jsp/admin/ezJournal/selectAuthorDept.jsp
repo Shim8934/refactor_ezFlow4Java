@@ -233,7 +233,7 @@
 				   			lpDepts.push(lpDeptId);
 				   			lpDeptNames.push(lpDeptName);
 						} else {
-			   				alert("<spring:message code='ezApprovalG.t2000'/>");
+			   				alert("<spring:message code='ezJournal.t178'/>");
 						}
 		   			}
 	   			}
@@ -270,7 +270,7 @@
 	   				lpDeptNames.splice(lpDeptNames.indexOf(targetDeptName), 1);
 	   				$(".selectTR").remove();
 	   			} else {
-	   				alert("<spring:message code='ezOrgan.t249'/>");
+	   				alert("<spring:message code='ezJournal.t168'/>");
 	   			}
 	   		}
 	   		
@@ -305,7 +305,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: #edf4fd;
+				background-color: #f1f8ff;
 			}
 		</style>
 	</head>
@@ -337,13 +337,13 @@
             	<td class="box" style="width: 250px;padding-top:5px;padding-left:3px">
             		<div style="height:25px">
             			<input type="checkbox" id="withChild" name="withChild" style="vertical-align: middle" />
-            			<label for="withChild"><spring:message code='ezSchedule.t39' /></label>
+            			<label for="withChild"><spring:message code='ezJournal.t226' /></label>
             		</div>
             	</td>
             </tr>
         </table>
         <div class="btnpositionNew">
-	        <a class="imgbtn"><span onclick="setAuthorViewDept();" ><spring:message code='ezSchedule.t157' /></span></a>
+	        <a class="imgbtn"><span onclick="setAuthorViewDept();" ><spring:message code='ezJournal.t26' /></span></a>
 	    </div>
 	</body>
 </html>

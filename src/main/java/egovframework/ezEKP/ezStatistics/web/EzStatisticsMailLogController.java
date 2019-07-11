@@ -27,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -80,7 +81,7 @@ public class EzStatisticsMailLogController {
 	/**
 	 * 메일 수신 내역 메인 호출 
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsMailRecieveLogList.do")
+	@RequestMapping(value = "/ezStatistics/statisticsMailRecieveLogList.do", method = RequestMethod.GET)
 	public String getStatMailRecieveLogMain(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model)throws Exception {
 		logger.debug("getStatMailRecieveLogMain started.");
 		
@@ -129,7 +130,7 @@ public class EzStatisticsMailLogController {
 	/**
 	 * 메일 발신 내역 메인 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsMailSendLogList.do")
+	@RequestMapping(value = "/ezStatistics/statisticsMailSendLogList.do", method = RequestMethod.GET)
 	public String getStatMailSendLogMain(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
 		logger.debug("getStatMailSendLogMain started.");
 		
@@ -179,7 +180,7 @@ public class EzStatisticsMailLogController {
 	/**
 	 * 메일 수발신 데이터 리스트 호출
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsMailLogList.do")
+	@RequestMapping(value = "/ezStatistics/statisticsMailLogList.do", method = RequestMethod.POST)
 	public String getStatMailLogList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		
 		logger.debug("getStatMailLogList controller started.");
@@ -324,7 +325,7 @@ public class EzStatisticsMailLogController {
 	/**
 	 * 엑셀 내려받기 함수 
 	 */
-	@RequestMapping(value = "/ezStatistics/statisticsMailLogExcelExport.do")
+	@RequestMapping(value = "/ezStatistics/statisticsMailLogExcelExport.do", method = RequestMethod.GET)
 	public void statisticsMailLogExcelExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Locale locale)  throws Exception {
 		logger.debug("statisticsMailLogExcelExport started.");
 		
@@ -343,6 +344,17 @@ public class EzStatisticsMailLogController {
 		String pageSize = request.getParameter("pageSize");
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String companyId = request.getParameter("companyId");
+		String orgSearchValue = searchValue;
+		
+		if (searchField != null && (searchField.equals("recipientEmail") || searchField.equals("senderEmail"))) {
+			String realEmailAddress = ezEmailUtil.getRealEmailAddress(searchValue);
+			
+			logger.debug("realEmailAddress=" + realEmailAddress);
+			
+			if (realEmailAddress != null && !realEmailAddress.isEmpty()) {
+				searchValue = realEmailAddress;
+			}
+		}
 		
 		if (!searchStartTime.isEmpty()) {
 			searchStartTime = searchStartTime.replaceAll("[^0-9]", "");
