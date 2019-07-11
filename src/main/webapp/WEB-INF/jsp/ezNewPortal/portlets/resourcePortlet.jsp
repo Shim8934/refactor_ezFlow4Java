@@ -34,8 +34,6 @@
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 <script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
