@@ -122,22 +122,21 @@
 		        var inputkeyword = document.getElementsByName('prekeyword').item(0);
 		        
 		        if (searchFromList) {
+		        	$("#moreSearch").css("display", "block"); 
+	        		var keyCode = document.getElementById("selectDetail1");
 		       		if (searchCheck == 'SUBJECT') {
-		        		var subject = document.getElementById("select").children[0];
-		        		subject.setAttribute("selected", "selected");
-		    		    inputkeyword.value = keywordFromList;
+		       			keyCode.children[0].setAttribute("selected", "selected");
+		       			prekeywordDetail1.value = keywordFromList;
 		        	} else if (searchCheck == 'FROM') {
-				   	 	var sender = document.getElementById("select").children[2];
-				   	 	sender.setAttribute("selected", "selected");
-		    		    inputkeyword.value = keywordFromList;
+		        		keyCode.children[2].setAttribute("selected", "selected");
+		        		prekeywordDetail1.value = keywordFromList;
 			   	 	} else if (searchCheck == 'RECEIVE') {
-		        		var receiver = document.getElementById("select").children[3];
-		        		receiver.setAttribute("selected", "selected");
-		    		    inputkeyword.value = keywordFromList;
+			   	 		keyCode.children[3].setAttribute("selected", "selected");	
+			   	 		prekeywordDetail1.value = keywordFromList;
 			   	 	} else if (searchCheck == 'ALL') {
-		        		var all = document.getElementById("select").children[4];
-		        		all.setAttribute("selected", "selected");
-		    		    inputkeyword.value = keywordFromList;
+			   	 		$("#moreSearch").css("display") == "none"
+		        		var all = document.getElementById("select2");
+		        		ALL.value = keywordFromList;
 		        	}  
 
 		       		setTimeout(set_searchKey, 1000);
@@ -909,7 +908,7 @@
 						    </c:forEach>
 					    </select>
 				    	<input name="keyword" id="keyword" style="vertical-align: top; display: none;" onkeyup="return search_keypress(event)">
-				    	<input name="prekeyword" id="ALL" style="vertical-align: top;height:25px" onkeyup="return search_keypress(event)" placeholder=<spring:message code="ezEmail.t641" />>
+				    	<input name="prekeyword" id="ALL" style="vertical-align: top;height:25px; margin-right:5px;" onkeyup="return search_keypress(event)" placeholder=<spring:message code="ezEmail.t641" />>
 				    	<a class="imgbtn imgbck" style="margin-left: 4px; height: 25px; vertical-align: middle;">
 					    	<span onclick="addSearch()" style="line-height: 25px; vertical-align: middle; height: 25px;"><spring:message code="ezEmail.pyy02" /></span>
 				    	</a>
