@@ -5507,7 +5507,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (!newFile.exists()) {
 				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				
-				FileUtils.copyFile(orgFile, newFile);
+				// KLIB 복호화
+				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
+				} else {
+					FileUtils.copyFile(orgFile, newFile);
+				}
 			}
 		}
 		
