@@ -8,25 +8,28 @@
 		<title>Insert title here</title>
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
 		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
-		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
 		<style>
-			.pagetd{
+			.pagetd {
 				padding-top:6px; 
 			}
-       		.pcol{
+       		.pcol {
        			padding-top:6px;
        		}
         	.Right_Point01 {
 	        	font:bold;
 	        	color:#017bec;
 	        }
+	        .cmhomelist tr td {
+	        	overflow:hidden;
+	        	text-overflow:ellipsis;
+	        	white-space:nowrap;
+	        }
 		</style>
-		
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var g_draftpath = window.frames.top.draftspath;
 			var g_outboxpath = window.frames.top.outboxpath;
