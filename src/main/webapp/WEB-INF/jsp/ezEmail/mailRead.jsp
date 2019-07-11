@@ -125,11 +125,17 @@
 		        if (useCountryIP == "YES") {
 		        	if (useShowSystemCountry == "YES") {
 		        		if (countryCode != "") {
+		        			if (countryCode == "unknown") {
+		        				countryCode = "qm";
+        					}
 				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
 				        	document.getElementById("nationalFlag").style.display = "";
 		        		}
 		        	} else {
 		        		if (countryCode != systemCountryCode) {
+		        			if (countryCode == "unknown") {
+		        				countryCode = "qm";
+        					}
 				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
 				        	document.getElementById("nationalFlag").style.display = "";
 		        		} else {
