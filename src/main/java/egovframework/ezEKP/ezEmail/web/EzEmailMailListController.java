@@ -871,7 +871,6 @@ public class EzEmailMailListController {
 							countryName = countryName.replaceAll(" ", "");
 							countryCode = ctryCode[0].toLowerCase();
 						}
-						logger.debug("countryName:" + countryName + ",ctryCode[0]:" + countryCode );
 						sb.append(String.format("<countryName><![CDATA[%s]]></countryName>", countryName));
 						sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));
 						
