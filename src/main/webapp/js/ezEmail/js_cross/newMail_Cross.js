@@ -1394,7 +1394,7 @@ function GetMailAddresses(name) {
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);
     
-    var mailAddressSearchOrder = SelectNodes(xmlDOM, "RESULT/MAILADDRESSSEARCHORDER/ROW")[0].innerHTML;
+    var mailAddressSearchOrder = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(xmlDOM, "RESULT/MAILADDRESSSEARCHORDER/ROW")[0])[0])[0])
     if (mailAddressSearchOrder != "") {
     	var mailAddressSearchOrderSplit = mailAddressSearchOrder.split(";");
     	
