@@ -900,6 +900,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
+		String htmlBody = bodyInfoList.get(0);
 		model.addAttribute("htmlBody", htmlBody);
 		
 		logger.debug("readMailOriginal ended.");

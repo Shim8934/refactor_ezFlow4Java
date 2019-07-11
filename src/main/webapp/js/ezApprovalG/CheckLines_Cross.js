@@ -14,7 +14,7 @@ function setDeptLinesXML(tempXML) {
 }
 
 function checkLines() {
-    if (CheckAprLinesXML != "") {
+    if (CheckAprLinesXML && CheckAprLinesXML != "") {
         var xmlHTTP = createXMLHttpRequest();
         xmlHTTP.open("POST", "/ezApprovalG/checkAprLines.do", false);
         xmlHTTP.setRequestHeader('Content-Type','text/html;charset=utf-8');
@@ -29,7 +29,7 @@ function checkLines() {
         }
     }
 
-    if (CheckDeptLinesXML != "") {
+    if (CheckDeptLinesXML && CheckDeptLinesXML != "") {
         var xmlHTTP2 = createXMLHttpRequest();
         xmlHTTP2.open("POST", "/ezApprovalG/checkDeptLines.do", false);
         xmlHTTP2.send(CheckDeptLinesXML);
