@@ -1506,6 +1506,7 @@
 		        parameter[40] = "";
 		        parameter[45] = pPublicityYN;
 		        parameter[46] = nonElecRec;
+		        parameter[52] = OrgAprUserDeptID;
 			    
 			    if (nonElecRec == "Y") {
 			    	if (pGubun != "1") {

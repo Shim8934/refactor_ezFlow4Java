@@ -199,6 +199,7 @@
 	        var nonElecRecInfoXml = "";
 	        var g_CabID = "";
 	        var useReceiveInfoName = "${useReceiveInfoName}";
+	        var OrgAprUserDeptID = "";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -395,8 +396,8 @@
 	            vAprSecurity = RetValue[38];
 	            SummaryFlag = RetValue[39];
 	            vPublicFlag2 = RetValue[45];
-	            
 	            nonElecRec = RetValue[46];
+	            OrgAprUserDeptID = RetValue[52];
 	            
 	            if (nonElecRec == "Y") {
 	            	g_CabID = RetValue[47];
