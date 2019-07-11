@@ -260,7 +260,7 @@
 		
 				                xmlhttp = null;
 				                try {
-				                	window.opener.leftCountRf();
+				                	window.opener.leftCountRf(pBoardID);
 								} catch (e) {
 								}
 				                try {
@@ -292,7 +292,7 @@
 		
 				            xmlhttp = null;
 				            try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 				            try {
@@ -344,7 +344,7 @@
 		
 		        xmlhttp = null;
 		        try {
-                	window.opener.leftCountRf();
+                	window.opener.leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		        try {
@@ -798,7 +798,7 @@
 		
 		                    xmlhttp = null;
 		                    try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 		                    try {

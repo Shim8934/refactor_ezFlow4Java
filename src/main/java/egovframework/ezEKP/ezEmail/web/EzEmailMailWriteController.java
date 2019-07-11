@@ -2144,7 +2144,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String realPath = commonUtil.getRealPath(request);
 		
-		String ezPMSPath = realPath + commonUtil.getUploadPath("upload_project.ROOT", userInfo.getTenantId())+ commonUtil.separator +"uploadFile";
+		String ezJournalPath = realPath + commonUtil.getUploadPath("upload_journal.ROOT", userInfo.getTenantId())+ commonUtil.separator +"uploadFile";
 		
 		String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
@@ -2176,11 +2176,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			String filePathValue = doc.getElementsByTagName("DATA2").item(i).getTextContent();		
 			filePathValue = filePathValue != null ? filePathValue : "";
 			
+			filePathValue = URLDecoder.decode(filePathValue,"UTF-8");
+			
 //			if (!filePathValue.startsWith("/")) {
 //				filePathValue = "/" + filePathValue;
 //			}
 			
-			filePath[i] = ezPMSPath + filePathValue;
+			filePath[i] = ezJournalPath + filePathValue;
 			
 			if (dotNetIntegration.equals("YES")) {
 				try {
@@ -2525,6 +2527,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //			if (!filePathValue.startsWith("/")) {
 //				filePathValue = "/" + filePathValue;
 //			}
+			//19.07.09 첨부파일 경로가 인코딩되어서 파일을 찾지 못해 오류가 나므로 decode처리.
+			filePathValue = URLDecoder.decode(filePathValue, "UTF-8");
 			
 			filePath[i] = commonUtil.detectPathTraversal(journalPath + filePathValue);
 			
