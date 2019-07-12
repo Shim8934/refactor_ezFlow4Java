@@ -457,9 +457,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("checkSysop", checkSysop);
 		model.addAttribute("retXML", retXML);
 		model.addAttribute("pastDate", pastDate);
+		model.addAttribute("lang", userInfo.getLang()); // 2019-07-11 홍승비 - 다국어 지원용 lang 초가
 		
 		logger.debug("popupCommHome ended.");
-		
 		return "ezCommunity/communityPopupCommHome";
 	}
 	

@@ -1047,12 +1047,15 @@
 			        <h2 onclick="favoriteList()">
 			            <span class="sub_iconLNB tree_board_star"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
 			        </h2>
-			        <c:if test="${MyBoardTopFlag == 'NO'}">
+			        <c:if test="${MyBoardTopFlag != 'NO'}">
 				        <h2 class="off" id="myBoardList">
 				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem()"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>
+				        	<li><span class="sub_iconLNB tree_board_my"></span><span class="list_text" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></li>
+							<li><span class="sub_iconLNB tree_board_reservation"></span><span class="list_text" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></li>
+							<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" onclick="TempBoard()"><spring:message code="ezBoard.t10030" /></span></li>
 				        </ul>
 			        </c:if>
 			        <div id='TopBoardsList'>
@@ -1077,7 +1080,7 @@
 		        			});
 			        	</script>
 			        </div>
-			        <c:if test="${MyBoardTopFlag != 'NO'}">
+			        <c:if test="${MyBoardTopFlag == 'NO'}">
 			        	<h2 class="off" id="myBoardList">
 				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem(this)"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>

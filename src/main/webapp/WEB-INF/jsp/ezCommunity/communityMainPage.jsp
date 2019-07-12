@@ -1860,7 +1860,7 @@
 		    <div class="community_section02">
 		    	<div class="contents_noticeCommunity">
 		        	<dl class="contents_tabCommunity">
-		                <dt><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/></dt>
+		                <dt><spring:message code='ezCommunity.khj07'/></dt>
 		            </dl>
 		            <ul id="listCommunity" class="contents_listCommunity">
 		            	<c:choose>

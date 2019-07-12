@@ -5,3 +5,4 @@ output/
 #Eclipse Setting
 .settings/
 .classpath
+src/main/java/test/**
