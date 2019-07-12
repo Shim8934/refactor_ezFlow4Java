@@ -59,7 +59,8 @@
 	    	}
 	    	
 	    	function exportExcel() {
-	    		opener.exportExcel();
+	    		exportExcelframe.location.href="/admin/ezAttitude/excelAnnualFormatDownload.do";
+		    	exportExcelframe.target="_blank";
 	    	}
 	    	
 			function ShowMailProgress() {
@@ -81,11 +82,10 @@
 	                alert("<spring:message code='ezAttitude.t259' />");
 	                return;
 	            }
-	    		if($("[name=changeReason]").val() == null || $("[name=changeReason]").val() == "") {
-	                alert("<spring:message code='ezAttitude.t243' />");
-	                return;
-	            }
-	    		
+// 	    		if($("[name=changeReason]").val() == null || $("[name=changeReason]").val() == "") {
+// 	                alert("<spring:message code='ezAttitude.t243' />");
+// 	                return;
+// 	            }
 	    		var form = $("#cForm")[0];
 	    		var formData = new FormData(form);
 
@@ -127,9 +127,11 @@
             </ul>
         </div>
         <div>
-        <a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
        	<form name="cForm" id="cForm" method="post" onsubmit="return false;" enctype="multipart/form-data">
-       	<h2 style="font-weight: normal;font-size:12px;padding-bottom: 5px;">▒&nbsp;<spring:message code='ezAttitude.t258' /></h2>
+		<div>
+	       	<h2 style="font-weight: normal;font-size:12px;padding-bottom: 5px; float:left;">▒&nbsp;<spring:message code='ezAttitude.t258' /></h2>
+	       	<a class="imgbtn" style ="margin-top:3px; float:right;"><span onclick="exportExcel();"><spring:message code='ezAddress.lhm2' /></span></a>
+       	</div>
         <table class="content">
         	<tr>
 	            <th style="width:100px; text-align:center"><spring:message code='ezAttitude.t257' /></th>
@@ -137,24 +139,26 @@
 	        		<input name="excelFile" id="excelFile" type="file" style="width:100%;" accept=".xls" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
 	            </td>
 	        </tr>
-        	<tr>
-	            <th style="width:100px; text-align:center"><spring:message code='ezAttitude.t262' /></th>
-	            <td>
-        			<input name="changeReason" id="changeReason" type="text"  style="width:100%;text-align:left;padding-bottom: 5px;" value="">
-	            </td>
-	        </tr>
+<!--         	<tr> -->
+<%-- 	            <th style="width:100px; text-align:center"><spring:message code='ezAttitude.t262' /></th> --%>
+<!-- 	            <td> -->
+<!--         			<input name="changeReason" id="changeReason" type="text"  style="width:100%;text-align:left;padding-bottom: 5px;" value=""> -->
+<!-- 	            </td> -->
+<!-- 	        </tr> -->
         </table>
-        		<input name="companyId" id="companyId" type="hidden" value="${companyId}">
-        		<input name="flagCheck" id="flagCheck" type="hidden" value="change">
+			<span style="color: red;">※ 기존의 기본 연차 수는 초기화 됩니다.</span>
+       		<input name="companyId" id="companyId" type="hidden" value="${companyId}">
+       		<input name="flagCheck" id="flagCheck" type="hidden" value="change">
         </form>
         </div>
         <div class="btnposition btnpositionNew">
-	        <a class="imgbtn"><span onclick="annualExcelUpload();" ><spring:message code='ezAttitude.t16' /></span></a>
+	        <a class="imgbtn"><span onclick="annualExcelUpload();" ><spring:message code='ezBoard.t321' /></span></a>
 	    </div>
         <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
 	    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
             <img src="/images/email/progress_img.gif" style="padding-top:20px;">
             <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
         </div>
+        <iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
 </html>

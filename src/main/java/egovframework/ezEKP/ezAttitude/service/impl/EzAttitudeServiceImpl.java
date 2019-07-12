@@ -2682,6 +2682,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
+	public void excelChangeAnnual(Map<String, Object> map) throws Exception {
+		LOGGER.debug("excelChangeAnnual started");
+		
+		ezAttitudeDAO.insertAnnualHistory(map);
+		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
+			ezAttitudeDAO.excelInsertAnnual(map);
+		} else {
+			//ezAttitudeDAO.changeAnnualHistory(map);
+			ezAttitudeDAO.excelChangeAnnual(map);
+		}
+		
+		LOGGER.debug("excelChangeAnnual ended");
+	}
+	
+	@Override
 	public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception {
 		LOGGER.debug("getAnnualCnt started");
 
@@ -2771,7 +2786,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		Map<String, Object> excelVo = null;
 		Map<String, Object> map1 = null;
 		Map<String, Object> map2 = null;
-		String year = null;
+		String joinDate = null;
 		String userId = null;
 		String totalAnnualCnt = null;
 		int userCnt = 0;
@@ -2780,13 +2795,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			excelVo = excelList.get(i);
 			
-			year = (String) excelVo.get("B");
-			userId = (String) excelVo.get("C");
-			totalAnnualCnt = (String) excelVo.get("H");
+			userId = (String) excelVo.get("A");
+			joinDate = (String) excelVo.get("B");
+			totalAnnualCnt = (String) excelVo.get("C");
 			
 			
-			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "년도", year, 8, "1"))) {
-				return ExcelCellRef.validateCheck(i+1, "년도", year, 8, "1");
+			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "입사일", joinDate, 10, "4"))) {
+				return ExcelCellRef.validateCheck(i+1, "입사일", joinDate, 10, "4");
 			}
 			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "사용자 ID", userId, 80, "2"))) {
 				return ExcelCellRef.validateCheck(i+1, "사용자 ID", userId, 80, "2");
@@ -2812,16 +2827,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			excelVo = excelList.get(i);
 			
 			map2 = new HashMap<String, Object>();
-			map2.put("year", excelVo.get("B"));
-			map2.put("userId", excelVo.get("C"));
-			map2.put("annualCnt", excelVo.get("H"));
+			map2.put("userId", excelVo.get("A"));
+			map2.put("joinDate", excelVo.get("B"));
+			map2.put("annualCnt", excelVo.get("C"));
 			map2.put("companyId", companyId);
 			map2.put("tenantId", tenantId);
 			map2.put("changeUserId", changeUserId);
 			map2.put("changeReason", changeReason);
 			map2.put("flagCheck", flagCheck);
 			
-			changeAnnual(map2);
+			excelChangeAnnual(map2);
 		}
 		
 		LOGGER.debug("annualExcelUpload started");

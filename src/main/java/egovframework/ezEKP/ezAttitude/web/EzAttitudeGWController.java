@@ -2252,7 +2252,8 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String changeUserId = (String) jsonObject.get("changeUserId");
 			String companyId = (String) jsonObject.get("companyId");
-			String changeReason = (String) jsonObject.get("changeReason");
+//			String changeReason = (String) jsonObject.get("changeReason");
+			String changeReason = "액셀업로드";
 			String flagCheck = (String) jsonObject.get("flagCheck");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, changeUserId);
@@ -2283,7 +2284,7 @@ public class EzAttitudeGWController {
 	        Map<String, Object> map = null;
 	        List<Map<String, Object>> excelList = new ArrayList<Map<String, Object>>();
 	        List<String> outputColumns = new ArrayList<String>();
-	        String[] outputColumnsArray = {"A","B","C","D","E","F","G","H"};
+	        String[] outputColumnsArray = {"A","B","C"};
 	        
 	        for(String ouputColumn : outputColumnsArray) {
 	            outputColumns.add(ouputColumn);

@@ -146,6 +146,8 @@ public interface EzAttitudeService {
 	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String startDate, String endDate, String orderCell, String orderOption, String secondYear, String companyId, int tenantId) throws Exception;
 
 	public void changeAnnual(Map<String, Object> map) throws Exception;
+
+	public void excelChangeAnnual(Map<String, Object> map) throws Exception;
 	
 	public String annualExcelUpload(List<Map<String, Object>> excelList, String changeUserId, String companyId, int tenantId, String changeReason, String flagCheck) throws Exception;
 	
