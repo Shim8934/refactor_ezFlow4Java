@@ -81,11 +81,12 @@
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#contentlist table.mainlist th', function(){
-	    			if ($(this).attr("colname") != "") {
+	    			var order = $(this).attr("colname");
+	    			if (order != "" && order != "NO") {
 	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
 	    					src = "";
 	    					orderOption = "";
-	    					orderCell = $(this).attr("colname");
+	    					orderCell = order;
 	    				}
 	    			
 		    			if (orderOption == "" || orderOption == "DESC") {
@@ -324,11 +325,11 @@
 		    	exportExcelframe.target="_blank";
 			}
 			
-			/* //엑셀로 등록 팝업
+			//엑셀로 등록 팝업
 	    	function annualExcelUploadPop(userId, year) {
 	        	var url = "/admin/ezAttitude/annualExcelUploadPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 230));
-	        } */
+				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 200));
+	        } 
 			
 			//전체 연차 변경 팝업
 	    	function modifyAllAnnualPop() {
@@ -409,7 +410,7 @@
 						<a class="imgbtn"><span onclick="searchAnnualList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAnnualList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
-						<%-- <a class="imgbtn"><span onclick="annualExcelUploadPop();"><spring:message code='ezAttitude.t235' /></span></a> --%>
+						<a class="imgbtn"><span onclick="annualExcelUploadPop();"><spring:message code='ezAttitude.t235' /></span></a>
 						<a class="imgbtn"><span onclick="modifyAllAnnualPop();"><spring:message code='ezAttitude.t236' /></span></a>
 <!-- 						<a class="imgbtn"><span onclick="directScheduler();">스케줄러 동작</span></a> -->
 					</td>

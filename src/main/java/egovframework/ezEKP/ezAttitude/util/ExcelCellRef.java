@@ -1,9 +1,14 @@
 package egovframework.ezEKP.ezAttitude.util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.util.CellReference;
 
 public class ExcelCellRef {
@@ -33,8 +38,13 @@ public class ExcelCellRef {
             else if( cell.getCellType() == Cell.CELL_TYPE_NUMERIC ) {
                 //텍스트값으로 읽도록 CELL타입을 변경
                 //value = cell.getNumericCellValue() + "";
-                cell.setCellType(Cell.CELL_TYPE_STRING);
-                value = cell.getStringCellValue() + "";
+            	if( DateUtil.isCellDateFormatted(cell)) {
+    				Date date = cell.getDateCellValue();
+    				value = new SimpleDateFormat("yyyy-MM-dd").format(date)+"";
+    			} else {
+    				cell.setCellType(Cell.CELL_TYPE_STRING);
+    				value = cell.getStringCellValue() + "";
+    			}
             }
             else if( cell.getCellType() == Cell.CELL_TYPE_STRING ) {
                 value = cell.getStringCellValue();
@@ -48,7 +58,7 @@ public class ExcelCellRef {
             else if( cell.getCellType() == Cell.CELL_TYPE_BLANK ) {
                 value = "";
             }
-            else {
+            else { 
                 value = cell.getStringCellValue();
             }
         }
@@ -217,6 +227,15 @@ public class ExcelCellRef {
         		if(!annualCheck(checkStr)) {
         			return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 연차형식에 맞지 않습니다.\n";
         		}
+        	}
+        }
+        
+      //입사일 체크
+        if("4".equals(optionStr) && !nullCheck(checkStr)) {
+        	Pattern p = Pattern.compile("^(\\d+)[/|\\-|\\s]+[0|1](\\d)[/|\\-|\\s]+([0|1|2|3]\\d)$");
+        	Matcher m = p.matcher(checkStr);
+        	if(!m.find()) {
+        		return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 입사일 형식(YYYY-MM-DD)에 맞지 않습니다.\n";
         	}
         }
 
