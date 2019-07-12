@@ -2893,7 +2893,7 @@
 		                        <td>
 		                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
 		                                <div class="portlet_tabpart03_top" id="Div2" style="border: 1px solid #d3d2d2;">
-		                                    <table style="margin-top: 3px; width: 100%;">
+		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td id="dlmember" style="display: none">
 		                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
