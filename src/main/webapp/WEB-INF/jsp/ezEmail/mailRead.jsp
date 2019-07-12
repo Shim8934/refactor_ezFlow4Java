@@ -142,9 +142,7 @@
 		        			document.getElementById("nationalFlag").style.display = "none";
 		        		}
 		        	}
-		        } else {
-		        	document.getElementById("country").style.display = "none";
-		        }
+		        } 
 		        
 		        try{
 		            if(ReadCountCheck=="N")
