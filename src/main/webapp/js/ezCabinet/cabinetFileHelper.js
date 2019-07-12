@@ -92,6 +92,7 @@ var CabinetFileHelper = function() {
 				data: {"itemId" : itemId},
 				dataType: "JSON",
 				async: false,
+				cache: false,
 				success : function(data) {processFileDetail(data);},
 				error : function(error) {alert(CabinetMessages.strError);}
 			});
@@ -247,6 +248,7 @@ var CabinetFileHelper = function() {
 					data: {itemList : itemArr.toString()},
 					dataType: "JSON",
 					async: false,
+					cache: false,
 					success : function(data) {
 						var code = data.code;
 						switch(code) {

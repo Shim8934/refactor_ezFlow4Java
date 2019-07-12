@@ -1657,6 +1657,7 @@ var CabinetItem = function() {
 			data: ajaxData,
 			dataType: "JSON",
 			async: asyncMode != false ? true : false,
+			cache: false,
 			success : function(data) {
 				handleSuccess(data, moreParam);
 			},

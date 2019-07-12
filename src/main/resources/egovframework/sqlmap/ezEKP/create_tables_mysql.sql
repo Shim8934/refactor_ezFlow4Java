@@ -2879,10 +2879,10 @@ DROP TABLE IF EXISTS `tbl_aprdocgroupinfo`;
 CREATE TABLE `tbl_aprdocgroupinfo` (
   `DOCID` varchar(80) NOT NULL,
   `TABSN` bigint(10) NOT NULL,
-  `GROUPDOCSN` varchar(400) NOT NULL,
+  `GROUPDOCSN` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`TABSN`,`GROUPDOCSN`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`GROUPDOCSN`,`TABSN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
