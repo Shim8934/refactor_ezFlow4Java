@@ -7201,6 +7201,25 @@
                 ORDER BY 
                       APRMEMBERSN 
          </isEqual>
+		<isEqual property="v_FLAG" compareValue="4">
+			SELECT
+				APRMEMBERSN ,
+				APRTYPE ,
+				APRMEMBERID ,
+				APRMEMBERDEPTID ,
+				ISPROPOSERYN ,
+				ISBRIEFUSERYN 
+			FROM 
+				TBL_ENDAPRLINEINFO
+			WHERE
+				DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			ORDER BY 
+				APRMEMBERSN
+         </isEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getApproveDocInfo" parameterClass="Map" resultClass="ApprGDocListVO"> -->
@@ -18590,6 +18609,32 @@
 																																																																					    	COMPANYID = #companyID#), #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, ' ' , TENANT_ID, COMPANYID
           FROM 
         			TBL_APRLINEINFO 
+          WHERE  
+          			DOCID = #v_DOCID#
+          AND
+          			TENANT_ID = #v_TENANTID#
+          AND
+          			COMPANYID = #companyID#)
+	</insert>
+	
+	<insert id="EzApprovalG.updateHistoryForLine2" parameterClass="Map">
+		 INSERT INTO 
+		 			TBL_HISTORYLINEINFO
+        			( DOCID,   APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, MODIFYDATE, MODIFYSN, MODIFYUSERID, MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG , TENANT_ID, COMPANYID)
+        ( SELECT 
+        			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, #v_SYSDATE#, (
+        																																																																				SELECT 
+        																																																																					IFNULL(MAX(MODIFYSN),0) + 1 
+																																																																					    FROM 
+																																																																					    	TBL_HISTORYLINEINFO 
+																																																																					    WHERE  
+																																																																					    	DOCID = #v_DOCID#
+																																																																					    AND
+																																																																					    	TENANT_ID = #v_TENANTID#
+																																																																					    AND
+																																																																					    	COMPANYID = #companyID#), #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, ' ' , TENANT_ID, COMPANYID
+          FROM 
+        			TBL_ENDAPRLINEINFO 
           WHERE  
           			DOCID = #v_DOCID#
           AND
