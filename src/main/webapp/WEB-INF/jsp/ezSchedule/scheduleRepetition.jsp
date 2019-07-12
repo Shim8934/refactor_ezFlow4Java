@@ -295,7 +295,7 @@
 		    	ehour = etime.split(":")[0];
 		    	eminute = etime.split(":")[1];
 	
-		    	if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) == parseInt(endDay))) {
+		    	if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) <= parseInt(endDay))) {
 		    	    if (document.getElementById("alldaycheck").checked == false && (shour > ehour || (shour == ehour && sminute >= eminute))) {
 		    	        alert("<spring:message code='ezSchedule.t60' />");
 		    	        return;
