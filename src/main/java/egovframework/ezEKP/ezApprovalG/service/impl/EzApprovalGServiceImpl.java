@@ -19586,27 +19586,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		
 		List<ApprGFormVO> apprGFormVOlist = ezApprovalGDAO.getFormInfo(map); 
-		
-		logger.debug("========처음이랑 두번째 차이가 뭘까 시작========");
-		logger.debug("formContID : " + formContID);
-		logger.debug("userID : " + userID);
-		logger.debug("kind : " + kind);
-		logger.debug("strMultiData : " + strMultiData);
-		logger.debug("searchType : " + searchType);
-		logger.debug("========처음이랑 두번째 차이가 뭘까 끝========");
-		
-		
-		//구해안 잠시 결과물 로그 찍어봄
-		int count1 =0;
-		logger.debug("========즐겨찾기 리스트 맞는지 확인 시작========");
-		for (ApprGFormVO fL : apprGFormVOlist) {
-			count1++;
-			logger.debug("getUserID" + count1 + "  :  " + fL.getUserID());
-			logger.debug("getFormID" + count1 + "  :  " + fL.getFormID());
-			logger.debug("getFormName" + count1 + "  :  " + fL.getFormName());
-		}
-		logger.debug("========즐겨찾기 리스트 맞는지 확인 끝========");
-		
+				
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");
 		
