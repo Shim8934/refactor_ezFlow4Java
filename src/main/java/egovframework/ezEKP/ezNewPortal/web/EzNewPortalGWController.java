@@ -1692,21 +1692,35 @@ public class EzNewPortalGWController {
 			String primary = "";
 			int tenantId = 0;
 			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			String lang = "";
 			
 			if (userId == null) {
 				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
 				primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+				lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+				
+				if (lang == null || lang.equals("")) {
+					lang = "1";
+				}
+				
+				result.put("lang", lang);
 			} else {
 				userInfo = commonUtil.getUserForGw(userId, serverName);
 				primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 				tenantId = userInfo.getTenantId();
+				lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+				
+				if (lang == null || lang.equals("")) {
+					lang = "1";
+				}
+				
 				result.put("userCompany", userInfo.getCompanyID());
-				result.put("lang", userInfo.getLang());
+				result.put("lang",lang);
 			}
 
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 
-			resultList = ezOrganAdminService.getCompanyList(primary, tenantId);
+			resultList = ezOrganAdminService.getCompanyList(lang, tenantId);
 
 			result.put("data", resultList);
 			result.put("primary", primary);
