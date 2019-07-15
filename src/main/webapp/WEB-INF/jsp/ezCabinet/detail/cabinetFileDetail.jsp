@@ -374,14 +374,6 @@
 						var fileDivElmt         = document.getElementById("fileDiv");
 						var divInformElmt       = fileDivElmt.querySelector("div[class='divInform']");
 						if (divInformElmt.firstElementChild) {divInformElmt.removeChild(divInformElmt.firstElementChild);}
-						
-						/*var spanElmt1         = document.createElement("span");
-						var spanElmt2           = document.createElement("span");
-						spanElmt1.textContent   = CabinetMessages.strAttach1;
-						spanElmt2.textContent   = CabinetMessages.strAttach2;
-						
-						divInformElmt.appendChild(spanElmt1);
-						divInformElmt.appendChild(spanElmt2);*/
 					}
 					else {
 						for (var i = 0; i < liElmt.length; i++) {
