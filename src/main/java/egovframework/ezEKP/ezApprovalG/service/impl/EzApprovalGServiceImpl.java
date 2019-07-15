@@ -6050,6 +6050,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		for (Section s : hwpFile.getBodyText().getSectionList()) {
 			for (Paragraph p : s) {
+				if (p == null || p.getControlList() == null) {
+					continue;
+				}
+
 				for (Control c : p.getControlList()) {
 					if (c.getType() == ControlType.Table) {
 						ControlTable ct = (ControlTable) c;
