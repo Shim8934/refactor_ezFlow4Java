@@ -570,7 +570,7 @@
 				</span> 
 				</td>
 				<td width="5%">
-					<a class="imgbtn">
+					<a class="imgbtn" style="margin-right: 5px">
 						<span onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span>
 					</a>
 				</td>

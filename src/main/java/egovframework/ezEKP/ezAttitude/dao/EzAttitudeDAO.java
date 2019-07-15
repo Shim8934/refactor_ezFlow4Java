@@ -386,6 +386,16 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     public void changeAnnual(Map<String, Object> map) throws Exception {
     	update("ezAttitudeAdminDAO.changeAnnual", map);
     }
+
+    @SuppressWarnings("unchecked")
+    public void excelInsertAnnual(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.excelInsertAnnual", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void excelChangeAnnual(Map<String, Object> map) throws Exception {
+    	update("ezAttitudeAdminDAO.excelChangeAnnual", map);
+    }
     
     @SuppressWarnings("unchecked")
     public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception {
