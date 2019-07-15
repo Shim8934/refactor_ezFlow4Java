@@ -1091,7 +1091,9 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
         if (pDraftFlag == "SUSIN") {
         	var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1").trim();
-            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "mht" || g_RelayG_Type.toUpperCase() == "MHT") {
+            var docHref = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
+            var isMht = docHref == "mht" || (docHref != "hwp" && g_RelayG_Type.toUpperCase() == "MHT");
+            if (isMht) {
                 openLocation = "";
                 
                 if (GetAttribute(pCurSelRow,"DATA15") == "001") {
@@ -1108,7 +1110,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                      alert(strLang1103);
                      return;
             	 } else {
-            		if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
+            		if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
             			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
                     }
             	 }

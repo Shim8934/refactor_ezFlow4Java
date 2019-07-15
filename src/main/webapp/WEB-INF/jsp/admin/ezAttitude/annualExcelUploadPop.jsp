@@ -146,7 +146,7 @@
 <!-- 	            </td> -->
 <!-- 	        </tr> -->
         </table>
-			<span style="color: red;">※ 기존의 기본 연차 수는 초기화 됩니다.</span>
+			<span style="color: red;">※ <spring:message code='ezAttitude.t315' /></span>
        		<input name="companyId" id="companyId" type="hidden" value="${companyId}">
        		<input name="flagCheck" id="flagCheck" type="hidden" value="change">
         </form>
