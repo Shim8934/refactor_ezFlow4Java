@@ -1097,12 +1097,12 @@
 			user_id AS userid,
 			CASE
 			WHEN user_type = 1
-				THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+				THEN (SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
 				ELSE ''
 			END AS username,
 			CASE WHEN user_type = 1
-				THEN (SELECT description FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
-				ELSE (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+				THEN (SELECT description$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id)
+				ELSE (SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 			END AS userdeptname,
 			user_type AS usertype,
 			access_yn AS accessyn

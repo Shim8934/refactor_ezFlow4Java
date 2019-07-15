@@ -4701,7 +4701,7 @@ public class EzNewPortalGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
-			String lang = userInfo.getLang();
+			String lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
 			
 			Map<String, Object> portletAuth = ezNewPortalService.getPortletAuth(companyId, tenantId, portletId, lang);
 
