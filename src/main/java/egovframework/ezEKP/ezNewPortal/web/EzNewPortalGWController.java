@@ -3400,7 +3400,16 @@ public class EzNewPortalGWController {
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
 			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId());
-
+			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			int listCount = list.size();
+			
+			for (int i = 0; i < listCount; i++) {
+				if (lang != null && !lang.equals("")) {
+					list.get(i).setFormName(list.get(i).getFormName2());
+				}
+			}
+			
 			JSONObject data = new JSONObject();
 			data.put("resultList", list);
 
