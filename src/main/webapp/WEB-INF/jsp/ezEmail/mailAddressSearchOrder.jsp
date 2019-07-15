@@ -14,7 +14,8 @@
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript">
 			var mailAddressSearchOrder = "${mailAddressSearchOrder}";
-		
+			var mailAddressCount = "";
+			
 			document.onselectstart = function() {
 				return false;
 			};
@@ -41,9 +42,10 @@
 			    	}
 			    	_html += "</table>";
 			    	document.getElementById("contentlist").innerHTML = _html;
+			    	mailAddressCount = mailAddressSearchOrderSplit.length;
 				} catch (e) {
 		            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang202 + "</td></tr></table>";
-		    		
+		            mailAddressCount = 0;
 				}
 			}
 			
@@ -66,6 +68,11 @@
 		        }
 		            
 		        _RowObject = obj;
+		        
+		        $('#contentTable tr').each(function(){
+		    		$(this).removeClass();
+		    	});
+		        
 		        obj.setAttribute('class', 'currentObj');
 		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
 		    }
@@ -78,9 +85,19 @@
 		    	var $tr = _RowObject;
 		    	
 		    	if (selector == "UP") {
-		    		$('.currentObj').prev().before($tr);
+		    		if($tr.rowIndex == 0) {
+		    			return;
+		    		} else {
+		    			$('.currentObj').prev().before($tr);
+		    			setMailAddressSearchOrder();
+		    		}
 		    	} else {
-		    		$('.currentObj').next().after($tr);
+		    		if($tr.rowIndex == mailAddressCount) {
+		    			return;
+		    		} else {
+		    			$('.currentObj').next().after($tr);
+		    			setMailAddressSearchOrder();
+		    		}
 		    	}
 		    	setMailAddressSearchOrder();
 		    }
