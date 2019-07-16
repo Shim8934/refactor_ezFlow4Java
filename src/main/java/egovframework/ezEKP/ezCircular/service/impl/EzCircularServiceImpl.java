@@ -590,6 +590,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("circularID", circularID);
 		map.put("hasFile", hasFile);
 		map.put("tenantID", tenantID);
+		map.put("regDate", commonUtil.getTodayUTCTime(""));
 		
 		ezCircularDAO.modifyCircular(map);
 		
