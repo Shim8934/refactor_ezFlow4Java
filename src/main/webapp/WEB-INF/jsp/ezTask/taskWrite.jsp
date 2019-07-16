@@ -66,6 +66,8 @@
 			/*2018-05-23 구해안 버그 수정을 위해 boolean 변수 2개 추가*/
 			var timeCheck = false;
 			var radioCheck = false;
+			var printTitle = "<spring:message code='ezApprovalG.pjj03'/>";
+			var cssLang = "<spring:message code='ezTask.e2'/>";
 			
 			$(function () {
 				 $("#Sdatepicker").datepicker({
@@ -471,10 +473,10 @@
 			}
 
 			function beforeprint() {
-				$(".popup").css('background-image', 'none');
+				/* $(".popup").css('background-image', 'none');
 	
 				document.getElementById("main_body").style.display = "none";
-				document.getElementById("printScreen").style.display = "";
+				document.getElementById("printScreen").style.display = "";  */
 				
 				setNodeText(document.getElementById("printPerson"), getNodeText(document.getElementById("personlist")));
 				setNodeText(document.getElementById("printShare"), getNodeText(document.getElementById("sharelist")));
@@ -564,12 +566,25 @@
 				document.getElementById("printAttach").innerHTML = filehtml;
 				document.getElementById("printDocument").innerHTML = message.GetEditorContent();
 				
-				window.print();
+				//window.print();
 				
-				$(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
+				var feature = GetOpenPosition(700, 700);
+				printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
+		        var strContent = "<html><head>"; // If you use this script inside <head> on the page, there might be error. So I am keeping inside body (becaue of <head>)        
+		        strContent = strContent + "<title>" + printTitle + "</title>";      
+		        strContent = strContent + "<link rel='stylesheet' href='" + cssLang + "' type='text/css' />";       
+		        strContent = strContent + "</head><body style='padding:10px;' onload='window.print();'>";   
+		        strContent = strContent + "<div id='printScreen' style>";
+		        strContent = strContent + document.getElementById("printScreen").innerHTML ;
+		        strContent = strContent + "</div></body>"; 
+		        printWindow.document.write(strContent);        
+		        printWindow.document.close();        
+		        printWindow.focus();  
+				
+				/* $(".popup").css("background-image", "url('/images/kr/cm/popup_bg.gif')");
 				
 				document.getElementById("main_body").style.display = "";
-				document.getElementById("printScreen").style.display = "none";
+				document.getElementById("printScreen").style.display = "none"; */
 			}
           
 			function textLimit(obj, event, limit) {
