@@ -115,7 +115,7 @@ function event_QuickList(result) {
 		}
 	});
 	
-	$("#mainlist").disableSelection();
+	//$("#mainlist").disableSelection();
 }
 
 function setQuickImg(linkType, linkTypeUrl) {
