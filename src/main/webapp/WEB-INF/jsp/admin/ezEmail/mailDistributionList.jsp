@@ -77,6 +77,11 @@
 		                headerData.documentElement.appendChild(xmlRtn);
 		            }
 		            document.getElementById("OrganListView").innerHTML = "";
+		            
+		            // 리스트 총 개수
+		            var listCount = headerData.getElementsByTagName("ROWS")[0].childElementCount;
+		            document.getElementById("listCount").innerHTML = listCount;
+		            
 		            var pUserList = new ListView();
 		            pUserList.SetID("lvUserList");
 		            pUserList.SetRowOnDblClick("mod_dl");
@@ -251,6 +256,65 @@
 		                company_change();
 		        }
 		    }
+		    function search_click() {
+				var searchType = document.getElementById("searchType").value;
+		    	var searchValue = document.getElementById("searchValue").value;
+		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
+
+		    	if (searchValue == "") {
+		    		alert("<spring:message code='ezEmail.t10' />");
+		    		return;
+		    	}
+		    	
+		        var xmlDom = createXmlDom();
+		        var xmlHTTP = createXMLHttpRequest();
+		        var objRoot;
+		        createNodeInsert(xmlDom, objRoot, "DATA");
+		        createNodeAndInsertText(xmlDom, objRoot, "CN", null);
+		        createNodeAndInsertText(xmlDom, objRoot, "COMPID", companyId);
+		        createNodeAndInsertText(xmlDom, objRoot, "SEARCHTYPE", searchType);
+		        createNodeAndInsertText(xmlDom, objRoot, "SEARCHVALUE", searchValue);
+			
+		        xmlHTTP.open("POST", "/admin/ezEmail/mailGetDistributionSearchByItem.do", false);
+		        xmlHTTP.send(xmlDom);
+		        var stateVlaue = "";
+		        
+		        if (CrossYN())
+		            stateVlaue = xmlHTTP.responseXML.documentElement.textContent.substr(0, 5)
+		        else
+		            stateVlaue = xmlHTTP.responseXML.documentElement.text.substr(0, 5)
+		            
+		        if (xmlHTTP.status != 200 || stateVlaue == "ERROR")
+		            alert("<spring:message code='ezEmail.t50' />");
+		        else {
+		            var headerData = createXmlDom();
+		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		
+		            if (CrossYN()) {
+		                var xmlRtn = xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
+		                var Node = headerData.importNode(xmlRtn, true);
+		                headerData.documentElement.appendChild(Node);
+		            }
+		            else {
+		                var xmlRtn = xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
+		                headerData.documentElement.appendChild(xmlRtn);
+		            }
+		            document.getElementById("OrganListView").innerHTML = "";
+		            
+		            // 리스트 총 개수
+		            var listCount = headerData.getElementsByTagName("ROWS")[0].childElementCount;
+		            document.getElementById("listCount").innerHTML = listCount;
+		            
+		            var pUserList = new ListView();
+		            pUserList.SetID("lvUserList");
+		            pUserList.SetRowOnDblClick("mod_dl");
+		            pUserList.SetRowOnClick("View_dl");
+		            pUserList.SetSelectFlag(false);
+		            pUserList.SetHeightFree(true);
+		            pUserList.DataSource(headerData);
+		            pUserList.DataBind("OrganListView");
+		        }
+		    } // search_onclick END
 		</script>
 	</head>
 	<body class="mainbody">
@@ -282,18 +346,40 @@
 	  <script type="text/javascript">
 	      selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	</script>
-	    <table class="mainlist">
+		<div style="width:825px;">
+		<!-- 검색 -->
+		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box;">
+			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
+				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC;" id="listCount"></span><spring:message code='ezSystem.kyj2'/>]</span>
+			</div>
+			<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
+				<select id="searchType" style="height: 26px; width: 120px;">
+					<option value="displayName"><spring:message code='ezEmail.t710' /></option> <!-- 그룹이름 -->
+					<option value="groupID"><spring:message code='ezEmail.lhm09' /></option> <!-- 그룹아이디 -->
+					<option value="memberName"><spring:message code='ezEmail.ksaDistribution01' /></option> <!-- 구성원이름 -->
+					<option value="memberID"><spring:message code='ezEmail.ksaDistribution02' /></option> <!-- 구성원아이디 -->
+				</select>
+				<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
+				<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+			</div>
+		</div>
+	    <table class="mainlist" style="width:100%;">
+	    	<colgroup>
+	    		<col width="37%"/>
+	    		<col width=""/>
+	    	</colgroup>
 	        <tr>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div style="width:300px">
+	                <div style="width:100%">
 	                    <div id="OrganListView" style ="BORDER:0;WIDTH:100%; height:400px; overflow-y: auto; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;"></div>      
 	                </div>
 	            </td>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div id="DIV_Member" style="padding-top:10px; padding-left:5px; width: 515px; height: 390px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;"></div>      
+	                <div id="DIV_Member" style="padding-top:10px; padding-left:5px; height: 390px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;"></div>      
 	            </td>
 	        </tr>
 	    </table>
+	    </div>
 	</form>
 	</body>
 </html>

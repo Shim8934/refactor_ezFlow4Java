@@ -71,6 +71,7 @@ public interface EzEmailService {
 	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception;
 	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public List<MailDistributionVO> getDistributionSearchListByItem(String companyId, int tenantId, String searchValue, String searchType) throws Exception;
 	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception;
 	public boolean setInitInboxRule(int tenantId, String userId) throws Exception;
 	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception;
@@ -104,6 +105,7 @@ public interface EzEmailService {
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
 	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
 	public List<MailSharedMailboxVO> getSharedMailboxSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public List<MailSharedMailboxVO> getSharedMailboxListSearchByItem(String companyId, int tenantId, String searchType, String searchValue) throws Exception;
 	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception;
 	public int deleteUserFromAllSharedMailbox(String userId, int tenantId) throws Exception;
 	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception;
