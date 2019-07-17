@@ -1784,6 +1784,59 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return distributionList;
 	}
+
+	@Override
+	public List<MailDistributionVO> getDistributionSearchListByItem(String companyId, int tenantId, String searchValue, String searchType) throws Exception {
+		logger.debug("getDistributionSearchListByItem started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue + ",searchType=" + searchType);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		inputParams += "&searchType=" + URLEncoder.encode(searchType, "UTF-8");
+		inputParams += "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSearchListByItem";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();	
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						MailDistributionVO vo = new MailDistributionVO();
+						
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						
+						vo.setName((String)obj.get("distributionName"));
+						vo.setId((String)obj.get("distributionId"));
+						vo.setMail((String)obj.get("distributionMail"));
+						
+						distributionList.add(vo);
+					}
+				}
+			}
+		}
+		
+		logger.debug("getDistributionSearchListByItem ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributionList.toString());
+		
+		return distributionList;
+	}
 	
 	@Override
 	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception {
@@ -2350,6 +2403,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			map.put("shareId", (String)obj.get("shareId"));
         			map.put("deletePermission", (String)obj.get("deletePermission"));
         			map.put("sendPermission", (String)obj.get("sendPermission"));
+        			map.put("managePermission", (String)obj.get("managePermission"));
     				map.put("shareName", (String)obj.get("shareName"));
         			map.put("mail", (String)obj.get("mail"));
         			map.put("compId", (String)obj.get("compId"));
@@ -2490,6 +2544,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			userVO.setCompName((String)user.get("compName"));
         			userVO.setDeletePermission((String)user.get("deletePermission"));
         			userVO.setSendPermission((String)user.get("sendPermission"));
+        			userVO.setManagePermission((String)user.get("managePermission"));
         			
         			userList.add(userVO);
         		}
@@ -2523,6 +2578,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         	shareMailBoxPermissonInfo.setShareId((String)result.get("shareId"));
         	shareMailBoxPermissonInfo.setDeletePermission((String)result.get("delete_permission"));
         	shareMailBoxPermissonInfo.setSendPermission((String)result.get("send_permission"));
+        	shareMailBoxPermissonInfo.setManagePermission((String)result.get("manage_permission"));
         	shareMailBoxPermissonInfo.setShareName((String)result.get("displayname"));
         }
 		
@@ -2652,6 +2708,54 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		
 		logger.debug("getSharedMailboxSearchList ended. listSize=" + list.size());
+		return list;
+	}
+	
+	
+	@Override
+	public List<MailSharedMailboxVO> getSharedMailboxListSearchByItem(String companyId, int tenantId, String searchType, String searchValue) throws Exception {
+		logger.debug("getSharedMailboxListSearchByItem started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchType=" + searchType + ",searchValue=" + searchValue);
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		List<MailSharedMailboxVO> list = new ArrayList<>();
+		
+		if (useSharedMailbox.equals("YES")) {
+			String deptId = "shared_mailbox_" + companyId;
+			
+			String inputParams = "tenantId=" + tenantId + "&deptId=" + URLEncoder.encode(deptId, "UTF-8") 
+					+ "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8") + "&searchType=" + URLEncoder.encode(searchType, "UTF-8");
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSharedMailboxListSearchByItem";
+			String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			logger.debug("strJson=" + strJson);
+
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			if (object.get("resultCode").equals("OK")) {
+	        	JSONArray array = (JSONArray)object.get("result");
+	        	
+	        	if (array != null) {
+	        		int length = array.size();
+	        		
+	        		MailSharedMailboxVO vo = null;
+	        		
+	        		for (int i = 0; i < length; i++) {
+	        			JSONObject sharedMailbox = (JSONObject)array.get(i);
+	        			vo = new MailSharedMailboxVO();
+	        			
+	        			vo.setShareId((String)sharedMailbox.get("shareId"));
+	        			vo.setShareMail((String)sharedMailbox.get("shareMail"));
+	        			vo.setShareName((String)sharedMailbox.get("shareName"));
+	        			
+	        			list.add(vo);
+	        		}
+	        	}
+	        }
+		}
+		
+		logger.debug("getSharedMailboxListSearchByItem ended. listSize=" + list.size());
 		return list;
 	}
 	

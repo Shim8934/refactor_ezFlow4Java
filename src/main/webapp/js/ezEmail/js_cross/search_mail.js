@@ -221,8 +221,14 @@ function searchRecurMail(sMailFolder, startDate, endDate) {
     createNodeAndInsertText(xmlDOM, objNode, "ORDERBY", p_ListOrderObject.getAttribute("orderoption"));
     createNodeAndInsertText(xmlDOM, objNode, "STARTINDEX", startIndex);
     createNodeAndInsertText(xmlDOM, objNode, "LISTCOUNT", listSize);
-
-    g_searchHttp.open("POST", "/ezEmail/mailSearch.do", true);
+    
+    var requestUrl = "/ezEmail/mailSearch.do";
+    
+    if (shareId != "") {
+    	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    }
+    
+    g_searchHttp.open("POST", requestUrl, true);
     g_searchHttp.onreadystatechange = event_searchRecurMail;
     g_searchHttp.send(xmlDOM);
 }
@@ -691,9 +697,21 @@ function view_click() {
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     
     if (this.parentname == ("/" + strLang65)) {
-    	window.open("/ezEmail/mailWrite.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&cmd=EDIT", "", feature);
+    	var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&cmd=EDIT";
+    	
+    	if (shareId != "") {
+    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+    	}
+    	
+    	window.open(requestUrl, "", feature);
     } else {
-    	window.open("/ezEmail/mailRead.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&SEARCHPAGE=1&CONTENTCLASS=" + this.getAttribute("contentclass"), "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+    	var requestUrl = "/ezEmail/mailRead.do?URL=" + encodeURIComponent(this.getAttribute("targeturl")) + "&SEARCHPAGE=1&CONTENTCLASS=" + this.getAttribute("contentclass");
+    	
+    	if (shareId != "") {
+    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+    	}
+    	
+    	window.open(requestUrl, "", feature);
     }
 }
 

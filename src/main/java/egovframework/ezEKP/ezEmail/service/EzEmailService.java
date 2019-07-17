@@ -71,6 +71,7 @@ public interface EzEmailService {
 	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception;
 	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public List<MailDistributionVO> getDistributionSearchListByItem(String companyId, int tenantId, String searchValue, String searchType) throws Exception;
 	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception;
 	public boolean setInitInboxRule(int tenantId, String userId) throws Exception;
 	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception;
@@ -93,9 +94,13 @@ public interface EzEmailService {
 	 * 
 	 * permissionType
 	 *   0: 공유자인지 체크
-	 *   1: 삭제(이동/복사 포함) 권한이 있는지 체크
-	 *   2: 메일 전송 권한이 있는지 체크
-	 *   3: 삭제(이동/복사 포함), 메일 전송 권한이 있는지 체크
+	 *   1(001): 삭제(이동/복사 포함) 권한이 있는지 체크
+	 *   2(010): 메일 보내기 권한이 있는지 체크
+	 *   3(011): 메일 보내기, 삭제 권한이 있는지 체크
+	 *   4(100): 관리(편지함 관리/메일 환경설정) 권한이 있는지 체크
+	 *   5(101): 관리, 삭제 권한이 있는지 체크
+	 *   6(110): 관리, 메일 보내기 권한이 있는지 체크
+	 *   7(111): 관리, 메일 보내기, 삭제 권한이 있는지 체크
 	 * </pre>
 	 */
 	public boolean checkUserShareId(String userId, String shareId, int permissionType, int tenantId) throws Exception;
@@ -104,6 +109,7 @@ public interface EzEmailService {
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
 	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
 	public List<MailSharedMailboxVO> getSharedMailboxSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public List<MailSharedMailboxVO> getSharedMailboxListSearchByItem(String companyId, int tenantId, String searchType, String searchValue) throws Exception;
 	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception;
 	public int deleteUserFromAllSharedMailbox(String userId, int tenantId) throws Exception;
 	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception;
