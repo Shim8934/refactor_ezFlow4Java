@@ -683,7 +683,7 @@
 		            DeleteItem();
 		
 		    }
-		    function CopyItem_onclick() {
+/* 		    function CopyItem_onclick() {
 	        if (strListInfo == "") {
 	            alert("<spring:message code='ezBoard.t201'/>");
 	                return;
@@ -758,7 +758,7 @@
 	                }
 	            }
 	        }
-	
+	 */
 	
 	        function doLayerPopup(obj) {
 	            btn_PostDate_Clear();

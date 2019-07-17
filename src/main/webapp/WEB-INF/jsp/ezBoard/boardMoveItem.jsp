@@ -45,7 +45,15 @@
 		            return;
 		        }
 
-		    	if (oldguBun > 0) {
+		        if (BoardIDList.indexOf(selectedBoard) != -1) {
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t139' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t139'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+// 		            alert("<spring:message code='ezBoard.t139'/>");
+		            return;
+		        }
+
+		    	 /* 2019-07-16 홍승비 - 게시물 이동 시 경고 메세지 발생 분기 수정 */
+//		    	if (oldguBun > 0) {
 			    	if (oldguBun != newguBun) {
 			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
@@ -58,14 +66,14 @@
 // 			        	alert("<spring:message code='ezBoard.hsb01'/>");
 			            return;
 			        }
-		    	} else {
+/* 		    	} else {
 		    		if (newguBun != "0") {
 		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb01'/>");
 			            return;
 			        }
-		    	}
+		    	} */
 
 		    	if (CheckIfAnonyBoard(selectedBoard) == "1") {
 		    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -78,13 +86,6 @@
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t999070' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t999070'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t999070'/>");
-		            return;
-		        }
-
-		        if (BoardIDList.indexOf(selectedBoard) != -1) {
-		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t139' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t139'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
-					DivPopUpShow(330, 205, pUrl);
-// 		            alert("<spring:message code='ezBoard.t139'/>");
 		            return;
 		        }
 

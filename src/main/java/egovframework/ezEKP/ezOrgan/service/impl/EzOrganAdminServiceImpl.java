@@ -1582,9 +1582,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		if (!searchType.equals("") && !searchValue.equals("")) {
 			StringBuffer sb = new StringBuffer();
+			
 			if (searchType.equals("displayname")) {
-				sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+				if (primary.equals("1")) {
+					sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+				} else {
+					sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%'");
+				}
 			}
+			
 			map.put("v_SUBQUERY", "WHERE " + sb.toString());
 		}
 		

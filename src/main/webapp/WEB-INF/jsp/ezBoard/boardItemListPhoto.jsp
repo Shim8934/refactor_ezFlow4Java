@@ -817,7 +817,7 @@
 				}
 		        xmlhttp = null;
 		    }            
-		
+/* 		
 		    function CopyItem_onclick() {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202'/>");
@@ -853,8 +853,9 @@
 		
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&mode=COPY", "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
 		
-		    }
-		    var moveboarditem_cross_dialogArguments = new Array();
+		    } */
+		    
+		   /*  var moveboarditem_cross_dialogArguments = new Array();
 		    function MoveItem_onclick() {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202'/>");
@@ -910,7 +911,8 @@
 		                window.close();
 		            }
 		        }
-		    }
+		    } */
+		    
 		    function SetRead_onclick() {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t194'/>");
