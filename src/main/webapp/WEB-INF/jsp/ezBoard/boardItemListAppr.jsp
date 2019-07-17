@@ -681,7 +681,7 @@
 		            DeleteItem();
 		
 		    }
-		    function CopyItem_onclick() {
+/* 		    function CopyItem_onclick() {
 	        if (strListInfo == "") {
 	            alert("<spring:message code='ezBoard.t201'/>");
 	                return;
@@ -706,8 +706,9 @@
 	            var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 	            feature = feature += GetOpenPosition(355, 600);
 	            window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + selobj.getAttribute("DATA1"), "", feature, "");
-	        }
-	        var moveboarditem_cross_dialogArguments = new Array();
+	        } */
+	        
+	      /*   var moveboarditem_cross_dialogArguments = new Array();
 	        function MoveItem_onclick() {
 	            if (strListInfo == "") {
 	                alert("<spring:message code='ezBoard.t497'/>");
@@ -756,7 +757,7 @@
 	                }
 	            }
 	        }
-	
+	 */
 	
 	        function doLayerPopup(obj) {
 	            btn_PostDate_Clear();

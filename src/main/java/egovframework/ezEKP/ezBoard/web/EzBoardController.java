@@ -4609,10 +4609,22 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardIDs = request.getParameter("boardID");
 		String guBun = request.getParameter("guBun");
 		
-		if (guBun != null) {
-			guBun = guBun.replace(";", "");
-		} else {
-			guBun = "0";
+		/* 2019-07-12 홍승비 - 나의 게시물에서 복사 시 구분값 전부 합쳐지는 오류 수정 */
+		HashSet<String> gubunSet = new HashSet<String>(); 
+		if (guBun != null && !guBun.equals("")) {
+			String[] guBuns = guBun.split(";");
+			for (int i = 0; i < guBuns.length; i++) {
+				gubunSet.add(guBuns[i]);
+			}
+			
+			// 타입이 다른 게시판에서 게시물을 복사 시도, 또는 split한 구분값 없음
+			if (gubunSet.size() > 1 || gubunSet.isEmpty()) {
+				guBun = "error";
+			} else {
+				guBun = gubunSet.iterator().next();
+			}
+		} else { // 구분값이 null 또는 공백이라면 에러
+			guBun = "error";
 		}
 		
 		String[] boardID = boardIDs.split(";");
@@ -4811,7 +4823,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2019-06-03 홍승비 - 게시판 구분값과 확장컬럼 여부값만을 사용하므로, getBoardProperty로 메서드 변경 */
 		BoardPropertyVO boardInfo = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
-		if (boardInfo.getGuBun() != null && boardInfo.getUrl() != null && (boardInfo.getGuBun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4"))) {
+		/* 2019-07-16 홍승비 - URL게시판 null 체크 위치 수정 */
+		if (boardInfo.getGuBun() != null && (boardInfo.getGuBun().equals("2") || (boardInfo.getUrl() != null && !boardInfo.getUrl().trim().equals("")) || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4"))) {
 			result = "<RESULT>anonyboard</RESULT>";
 		} else if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
 			result = "<RESULT>attributeextension</RESULT>";
@@ -4863,10 +4876,22 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String guBun = request.getParameter("guBun");
 		
-		if (guBun != null) {
-			guBun = guBun.replace(";", "");
-		} else {
-			guBun = "0";
+		/* 2019-07-16 홍승비 - 나의 게시물에서 이동 시 구분값 전부 합쳐지는 오류 수정 */
+		HashSet<String> gubunSet = new HashSet<String>(); 
+		if (guBun != null && !guBun.equals("")) {
+			String[] guBuns = guBun.split(";");
+			for (int i = 0; i < guBuns.length; i++) {
+				gubunSet.add(guBuns[i]);
+			}
+			
+			// 타입이 다른 게시판에서 게시물을 이동 시도, 또는 split한 구분값 없음
+			if (gubunSet.size() > 1 || gubunSet.isEmpty()) {
+				guBun = "error";
+			} else {
+				guBun = gubunSet.iterator().next();
+			}
+		} else { // 구분값이 null 또는 공백이라면 에러
+			guBun = "error";
 		}
 		
 		model.addAttribute("itemIDList", itemIDList);
