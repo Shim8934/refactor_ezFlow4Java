@@ -915,7 +915,9 @@
 		
 		// 슬라이더 질문 답변 유무 체크
 		function checkSliderResponse(id) {
-			var sliderValue = $("#slider" + id).val();
+			// IE 버그로 수정
+			// var sliderValue = $("#slider" + id).val();
+			var sliderValue = $("#slider" + id)[0].textContent;
 			return sliderValue;
 		}
 		

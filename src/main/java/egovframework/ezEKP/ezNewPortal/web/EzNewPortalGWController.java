@@ -1730,21 +1730,35 @@ public class EzNewPortalGWController {
 			String primary = "";
 			int tenantId = 0;
 			String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+			String lang = "";
 			
 			if (userId == null) {
 				tenantId = ezNewPortalService.getTnenantIdByServerName(serverName);
 				primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+				lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+				
+				if (lang == null || lang.equals("")) {
+					lang = "1";
+				}
+				
+				result.put("lang", lang);
 			} else {
 				userInfo = commonUtil.getUserForGw(userId, serverName);
 				primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 				tenantId = userInfo.getTenantId();
+				lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+				
+				if (lang == null || lang.equals("")) {
+					lang = "1";
+				}
+				
 				result.put("userCompany", userInfo.getCompanyID());
-				result.put("lang", userInfo.getLang());
+				result.put("lang",lang);
 			}
 
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 
-			resultList = ezOrganAdminService.getCompanyList(primary, tenantId);
+			resultList = ezOrganAdminService.getCompanyList(lang, tenantId);
 
 			result.put("data", resultList);
 			result.put("primary", primary);
@@ -3433,7 +3447,16 @@ public class EzNewPortalGWController {
 			LoginVO info = commonUtil.getUserForGw(userId, serverName);
 
 			List<ApprGFormVO> list = ezNewPortalService.getFavoriteForms(userId, info.getCompanyID(), info.getTenantId());
-
+			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			int listCount = list.size();
+			
+			for (int i = 0; i < listCount; i++) {
+				if (lang != null && !lang.equals("")) {
+					list.get(i).setFormName(list.get(i).getFormName2());
+				}
+			}
+			
 			JSONObject data = new JSONObject();
 			data.put("resultList", list);
 

@@ -1332,7 +1332,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				calendar.add(Calendar.DATE, openDays);
 				Date endPublicDate         = calendar.getTime();
 				
-				if (adminYN.equals("N") && (today.compareTo(endDate) < 0 || today.compareTo(endPublicDate) > 0)) {
+				if (adminYN.equals("N") && (today.compareTo(endPublicDate) > 0)) {
 					result.put("status", "error");
 					result.put("code", 7);
 					return result;
