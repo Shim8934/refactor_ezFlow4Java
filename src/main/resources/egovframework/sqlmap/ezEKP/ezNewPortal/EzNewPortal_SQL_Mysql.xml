@@ -744,7 +744,8 @@ AND
                 COMP.company_lang     AS companyLang,
                 A.menu_url         AS menuUrl,
                 A.icon_urL         AS iconUrl,
-                COMP.company_order    AS companyOrder
+                COMP.company_order    AS companyOrder,
+                A.menucode
             FROM
                 tbl_portal_menu AS A
             JOIN
@@ -1501,15 +1502,17 @@ LIMIT
 				IFNULL(USER.portlet_order, IFNULL(THEME.portlet_order, IFNULL(COMP.portlet_used, A.default_order))) AS portletOrder,
                 IFNULL(USER.portlet_used, IFNULL(THEME.portlet_used, IFNULL(COMP.portlet_used, 1))) AS portletUsed,
             	THEME.is_fixed as isFixed,
+            	A.portletcode,
+            	MENU.menucode
 		]]>
 		
-		<isEmpty property="deptId">
+		<isEmpty property="deptId" prepend=",">
 			<![CDATA[
 				AUTH.access_yn AS accessYN
 			]]>
 		</isEmpty>
 		
-		<isNotEmpty property="deptId">
+		<isNotEmpty property="deptId" prepend=",">
 			<![CDATA[
 				IFNULL(AUTH.access_yn, 1) AS accessYN
 			]]>
@@ -1524,6 +1527,10 @@ LIMIT
 				A.portlet_id = NAME.portlet_id
 			AND
 				A.menu_id = NAME.menu_id
+			JOIN
+				TBL_PORTAL_MENU AS MENU
+			ON
+				A.menu_id = MENU.menu_id
 			JOIN
 				TBL_PORTAL_THEME_PORTLET AS THEME
 			ON
@@ -2086,7 +2093,8 @@ SELECT
 	comp.COMPANY_LANG     AS COMPANYLANG,
 	main.MENU_URL         AS MENUURL,
     main.ICON_URL         AS ICONURL,
-    comp.company_order    AS COMPANYORDER
+    comp.company_order    AS COMPANYORDER,
+    main.menucode         AS MENUCODE
 FROM 
 	tbl_portal_menu_comp as comp
 JOIN 

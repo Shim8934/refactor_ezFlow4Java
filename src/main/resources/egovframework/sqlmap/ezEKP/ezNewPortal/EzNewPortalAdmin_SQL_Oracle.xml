@@ -89,7 +89,8 @@
 				CASE WHEN A.company_order IS NULL
 					THEN B.default_order
 					ELSE A.company_order
-				END AS defaultorder
+				END AS defaultorder,
+				B.menucode
 			FROM
 				TBL_PORTAL_MENU_COMP A
 			JOIN
@@ -129,7 +130,8 @@
 				CASE WHEN A.company_order IS NULL
 					THEN B.default_order
 					ELSE A.company_order
-				END AS defaultorder
+				END AS defaultorder,
+				B.menucode
 			FROM
 				TBL_PORTAL_MENU_COMP A
 			JOIN
@@ -991,7 +993,9 @@
 			A.portlet_order as portletorder,
 			A.menu_id as menuid,
 			C.portlet_name as portletname,
-			A.is_fixed as isFixed
+			A.is_fixed as isFixed,
+			PORTLET.portletcode,
+			MENU.menucode
 		FROM
 			TBL_PORTAL_THEME_PORTLET A
 		JOIN
@@ -1004,6 +1008,14 @@
 			A.tenant_id = B.tenant_id
 		AND
 			B.portlet_used = 1
+		LEFT JOIN
+			TBL_PORTAL_PORTLET PORTLET
+		ON
+			A.portlet_id = PORTLET.portlet_id
+		LEFT JOIN
+			TBL_PORTAL_MENU MENU
+		ON
+			PORTLET.menu_id = MENU.menu_id
 		LEFT JOIN
 			TBL_PORTAL_PORTLET_NAME C
 		ON

@@ -1608,4 +1608,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createTblThemeAuth();
 		ezCommonDAO.createTblPortletAuth();
 	}
+
+	@Override
+	public void addMenuAndPortletCode() throws Exception {
+		ezCommonDAO.addMenuCode();
+		ezCommonDAO.addPortletCode();
+	}
 }

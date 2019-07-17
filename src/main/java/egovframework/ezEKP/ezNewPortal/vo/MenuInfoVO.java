@@ -13,6 +13,7 @@ public class MenuInfoVO {
 	private String companyLang; //회사 사용 언어
 	private int companyOrder; // 회사 설정 기본 순서
 	private boolean accessYN;
+	private String menuCode;
 	
 	public boolean isAccessYN() {
 		return accessYN;
@@ -80,13 +81,18 @@ public class MenuInfoVO {
 	public void setCompanyLang(String companyLang) {
 		this.companyLang = companyLang;
 	}
+	public String getMenuCode() {
+		return menuCode;
+	}
+	public void setMenuCode(String menuCode) {
+		this.menuCode = menuCode;
+	}
+	
 	@Override
 	public String toString() {
-		return "MenuInfoVO [menuId=" + menuId + ", menuOrder=" + menuOrder
-				+ ", menuName=" + menuName + ", menuUrl=" + menuUrl
-				+ ", menuType=" + menuType + ", iconUrl=" + iconUrl
-				+ ", defaultOrder=" + defaultOrder + ", menuUsed=" + menuUsed
-				+ ", companyLang=" + companyLang + ", companyOrder="
-				+ companyOrder + ", accessYN=" + accessYN + "]";
+		return "MenuInfoVO [menuId=" + menuId + ", menuOrder=" + menuOrder + ", menuName=" + menuName + ", menuUrl="
+				+ menuUrl + ", menuType=" + menuType + ", iconUrl=" + iconUrl + ", defaultOrder=" + defaultOrder
+				+ ", menuUsed=" + menuUsed + ", companyLang=" + companyLang + ", companyOrder=" + companyOrder
+				+ ", accessYN=" + accessYN + ", menuCode=" + menuCode + "]";
 	}
 }

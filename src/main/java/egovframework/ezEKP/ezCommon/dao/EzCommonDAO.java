@@ -825,4 +825,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
+
+	public void addMenuCode() {
+		try {
+			select("EzCommonDAO.checkMenuCode");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_menu menucode doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMenuCode");
+			update("EzCommonDAO.updateMenuCode");
+		}
+	}
+	
+	public void addPortletCode() {
+		try {
+			select("EzCommonDAO.checkPortletCode");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet portletcode doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addPortletCode");
+			update("EzCommonDAO.updatePortletCode");
+		}
+	}
 }

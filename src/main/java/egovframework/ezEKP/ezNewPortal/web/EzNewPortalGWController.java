@@ -231,54 +231,54 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 14));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 18));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 16));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 11));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 15));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 8));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 7));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 9));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 10));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 12));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 5));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 			//인터넷 사용이 NO 인 경우에는 weather portlet사용 불가능
 			String useInternet = config.getProperty("config.useInternet");
 			LOGGER.debug("useInternet=" + useInternet);
 			if (useInternet.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getPortletId() == 14));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			// 협업 사용여부에 따라 제거 
@@ -339,19 +339,19 @@ public class EzNewPortalGWController {
 			boolean isUseQuestionAuth = false;
 			
 			for (MenuInfoVO mVO : menuList) {
-				if (mVO.getMenuId()==3) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("approval")) {
 					useApproval = "YES";
 				} 
 				
-				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("question") && useQuestion.equals("YES")) {
 					isUseQuestionAuth = true;
 				}
 				
-				if (mVO.getMenuId()==1) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("mail")) {
 					useMail = "YES";
 				}
 				
-				if (mVO.getMenuId()==2) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule")) {
 					useSchedule = "YES";
 				}
 			}
@@ -366,7 +366,7 @@ public class EzNewPortalGWController {
 			
 			for (MenuInfoVO mVO : menuList) {
 				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("circular") && useCircular.equals("YES")) {
 					isUseCircular = true;
 					break;
 				} else {
@@ -383,7 +383,7 @@ public class EzNewPortalGWController {
 			boolean isUseAttitude = false;
 			
 			for (MenuInfoVO mVO : menuList) {
-				if (mVO.getMenuId()==9 && useAttitude.equals("YES")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("attitude") && useAttitude.equals("YES")) {
 					isUseAttitude = true;
 					break;
 				} else {
@@ -718,47 +718,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 14));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 18));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 16));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 11));
+				menuList.removeIf(vo -> vo.getMenuCode() != null && (vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 15));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 8));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 7));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 9));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 10));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 12));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 5));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 
 			data.put("menuList", menuList);
@@ -899,47 +899,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 14));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 18));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 16));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 11));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 15));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 8));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 7));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 9));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 10));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 12));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				menuList.removeIf(vo -> (vo.getMenuId() == 5));
+				menuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 			data.put("menuList", menuList);
@@ -1039,47 +1039,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 14));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 18));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 16));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 11));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 15));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 8));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 7));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 9));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 10));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 12));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				compMenuList.removeIf(vo -> (vo.getMenuId() == 5));
+				compMenuList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 			data.put("menuList", compMenuList);
@@ -1276,47 +1276,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 14));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 18));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 16));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 11));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 15));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 8));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 7));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 9));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 10));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 12));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 5));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 
@@ -1324,7 +1324,7 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			
 			if (useInternet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getPortletId() == 14));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			data.put("portletList", portletList);
@@ -1964,47 +1964,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 14));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 18));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 16));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 11));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 15));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 8));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 7));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 9));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 10));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 12));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 5));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 			result.put("status", "ok");
@@ -2342,47 +2342,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 14));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 18));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 16));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 11));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 15));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 8));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 7));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 9));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 10));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 12));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuId() == 5));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 
@@ -2390,7 +2390,7 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			
 			if (useInternet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getPortletId() == 14));
+				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			for (PortletInfoVO pvo : portletList) {
@@ -3840,7 +3840,7 @@ public class EzNewPortalGWController {
 				List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
 				
 				for (MenuInfoVO mVO : menuList) {
-					if (mVO.getMenuId()==9 && useAttitude2.equals("YES")) {
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("attitude") && useAttitude2.equals("YES")) {
 						useAttitude = "YES";
 					}	
 				}
@@ -3924,20 +3924,22 @@ public class EzNewPortalGWController {
 			boolean isUseQuestionAuth = false;
 			
 			for (MenuInfoVO mVO : menuList) {
-				if (mVO.getMenuId()==3) {
-					useApproval = "YES";
-				} 
-				
-				if (mVO.getMenuId()==14 && useQuestion.equals("YES")) {
-					isUseQuestionAuth = true;
-				}
-				
-				if (mVO.getMenuId()==1) {
-					useMail = "YES";
-				}
-				
-				if (mVO.getMenuId()==2) {
-					useSchedule = "YES";
+				if (mVO.getMenuCode() != null) {
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("approval")) {
+						useApproval = "YES";
+					} 
+					
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("question") && useQuestion.equals("YES")) {
+						isUseQuestionAuth = true;
+					}
+					
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("mail")) {
+						useMail = "YES";
+					}
+					
+					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule")) {
+						useSchedule = "YES";
+					}					
 				}
 			}
 			
@@ -3951,7 +3953,7 @@ public class EzNewPortalGWController {
 			
 			for (MenuInfoVO mVO : menuList) {
 				
-				if (mVO.getMenuId()==7 && useCircular.equals("YES")) {
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("circular") && useCircular.equals("YES")) {
 					isUseCircular = true;
 					break;
 				} else {
@@ -4490,47 +4492,47 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useQuestion.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 14));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
 			}
 			
 			if (useMemo.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 18));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
 			}
 			
 			if (useLadder.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 16));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
 			}
 			
 			if (useCabinet.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 11));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
 			}
 			
 			if (useVote.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 15));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
 			}
 			
 			if (useJournal.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 8));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
 			}
 			
 			if (useCircular.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 7));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
 			}
 			
 			if (useAttitude.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 9));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
 			}
 			
 			if (useWebfolder.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 10));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
 			}
 			
 			if (useEzPMS.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 12));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
 			}
 			
 			if (useCommunity.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuId() == 5));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
 			}
 			
 
@@ -4538,7 +4540,7 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			
 			if (useInternet.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getPortletId() == 14));
+				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			result.put("status", "ok");

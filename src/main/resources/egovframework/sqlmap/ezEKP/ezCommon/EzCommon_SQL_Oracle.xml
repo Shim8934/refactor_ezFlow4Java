@@ -1325,5 +1325,213 @@
 		"USER_TYPE" NUMBER(5,0),
 		CONSTRAINT "TBL_PORTAL_PORTLET_AUTH_PK" PRIMARY KEY ("PORTLET_ID","COMPANY_ID", "TENANT_ID", "USER_ID")
 	)
+	</statement><select id="EzCommonDAO.checkMenuCode">
+	<![CDATA[
+		SELECT
+			menucode
+		FROM
+			TBL_PORTAL_MENU
+		WHERE 
+			ROWNUM <= 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addMenuCode">
+		ALTER TABLE
+			TBL_PORTAL_MENU
+		ADD 
+			menucode VARCHAR(100) DEFAULT NULL
 	</statement>
+	
+	<select id="EzCommonDAO.checkPortletCode">
+	<![CDATA[
+		SELECT
+			portletcode
+		FROM
+			TBL_PORTAL_PORTLET
+		WHERE 
+			ROWNUM <= 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addPortletCode">
+		ALTER TABLE
+			TBL_PORTAL_PORTLET
+		ADD 
+			portletcode VARCHAR(100) DEFAULT NULL
+	</statement>
+	
+	<update id="EzCommonDAO.updateMenuCode">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_MENU
+		SET
+			menucode = 
+			CASE
+				WHEN menu_url like '%ezNewPortal%' 
+					AND menu_type = 'G' 
+				THEN 
+					'portal'
+				WHEN menu_url like '%mailMain.do' 
+					AND menu_type = 'G' 
+				THEN 
+					'mail'
+				WHEN menu_url like '%ezSchedule%' 
+					AND menu_type = 'G' 
+				THEN 
+					'schedule'
+				WHEN menu_url like '%ezApprovalG%' 
+					AND menu_type = 'G' 
+				THEN 
+					'approval'
+				WHEN menu_url like '%ezBoard%' 
+					AND menu_type = 'G' 
+				THEN 
+					'board'
+				WHEN menu_url like '%ezCommunity%' 
+					AND menu_type = 'G' 
+				THEN 
+					'community'
+				WHEN menu_url like '%ezResource%' 
+					AND menu_type = 'G' 
+				THEN 
+					'resource'
+				WHEN menu_url like '%ezCircular%' 
+					AND menu_type = 'G' 
+				THEN 
+					'circular'
+				WHEN menu_url like '%ezJournal%' 
+					AND menu_type = 'G' 
+				THEN 
+					'journal'
+				WHEN menu_url like '%ezAttitude%' 
+					AND menu_type = 'G' 
+				THEN 
+					'attitude'
+				WHEN menu_url like '%ezWebFolder%' 
+					AND menu_type = 'G' 
+				THEN 
+					'webfolder'
+				WHEN menu_url like '%ezCabinet%' 
+					AND menu_type = 'G' 
+				THEN 
+					'cabinet'
+				WHEN menu_url like '%ezPMS%' 
+					AND menu_type = 'G' 
+				THEN 
+					'pms'
+				WHEN menu_url like '%mailMain.do?funCode=2%' 
+					AND menu_type = 'G' 
+				THEN 
+					'address'
+				WHEN menu_url like '%ezQuestion%' 
+					AND menu_type = 'G' 
+				THEN 
+					'question'
+				WHEN menu_url like '%ezPoll%' 
+					AND menu_type = 'G' 
+				THEN 
+					'vote'
+				WHEN menu_url like '%ezLadder%' 
+					AND menu_type = 'G' 
+				THEN 
+					'ladder'
+				WHEN menu_url like '%ezTask%' 
+					AND menu_type = 'G' 
+				THEN 
+					'task'
+				WHEN menu_url like '%ezMemo%' 
+					AND menu_type = 'G' 
+				THEN 
+					'memo'
+			END
+	]]>
+	</update>
+	
+	<update id="EzCommonDAO.updatePortletCode">
+	<![CDATA[
+		UPDATE 
+			TBL_PORTAL_PORTLET
+		SET
+			portletcode = 
+			CASE
+				WHEN portlet_url like '%receivedMailPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'receivedmail'
+				WHEN portlet_url like '%noticePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'notice'
+				WHEN portlet_url like '%votePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'vote'
+				WHEN portlet_url like '%pollPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'poll'
+				WHEN portlet_url like '%schedulePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'schedule'
+				WHEN portlet_url like '%approvalListPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'approvallist'
+				WHEN portlet_url like '%favoriteFormsPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'favoriteforms'
+				WHEN portlet_url like '%photoBoardPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'photoboard'
+				WHEN portlet_url like '%favoriteBoardPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'favoriteboard'
+				WHEN portlet_url like '%communityPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'community'
+				WHEN portlet_url like '%helpPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'help'
+				WHEN portlet_url like '%weatherPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'weather'
+				WHEN portlet_url like '%birthdayPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'birthday'
+				WHEN portlet_url like '%slideImagePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'slideimage'
+				WHEN portlet_url like '%userInfoPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'userinfo'
+				WHEN portlet_url like '%movieBoardPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'movieboard'
+				WHEN portlet_url like '%countPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'count'
+				WHEN portlet_url like '%resourcePortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'resource'
+				WHEN portlet_url like '%surveyPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'survey'
+			END
+	]]>
+	</update>
 </sqlMap>

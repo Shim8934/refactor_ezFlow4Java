@@ -24,8 +24,23 @@ public class PortletInfoVO {
 	private String comAuth;
 	private boolean accessYN;
 	private boolean isFixed; // 관리자가 포틀릿을 끌 수 없도록 지정 : 
-							//포틀릿 미사용 불가(true), 포틀릿 미사용 가능(false) 
+							//포틀릿 미사용 불가(true), 포틀릿 미사용 가능(false)
+	//2019.07.15 유은정 : 포틀릿 및 메뉴 코드 개선 작업
+	private String portletCode;
+	private String menuCode;
 	
+	public String getPortletCode() {
+		return portletCode;
+	}
+	public void setPortletCode(String portletCode) {
+		this.portletCode = portletCode;
+	}
+	public String getMenuCode() {
+		return menuCode;
+	}
+	public void setMenuCode(String menuCode) {
+		this.menuCode = menuCode;
+	}
 	public String getUserAuth() {
 		return userAuth;
 	}
@@ -147,11 +162,16 @@ public class PortletInfoVO {
 	public void setFixed(boolean isFixed) {
 		this.isFixed = isFixed;
 	}
+	
 	@Override
 	public String toString() {
-		return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName=" + portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral="
-				+ isGeneral + ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl=" + connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId="
-				+ portletBoardId + ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2 + ", menuName=" + menuName + ", userAuth=" + userAuth
-				+ ", deptAuth=" + deptAuth + ", comAuth=" + comAuth + ", accessYN=" + accessYN + ", isFixed=" + isFixed + "]";
+		return "PortletInfoVO [portletId=" + portletId + ", portletOrder=" + portletOrder + ", portletName="
+				+ portletName + ", menuId=" + menuId + ", portletUrl=" + portletUrl + ", isGeneral=" + isGeneral
+				+ ", defaultOrder=" + defaultOrder + ", portletCategory=" + portletCategory + ", connectionUrl="
+				+ connectionUrl + ", portletUsed=" + portletUsed + ", portletBoardId=" + portletBoardId
+				+ ", portletNameList=" + portletNameList + ", boardName1=" + boardName1 + ", boardName2=" + boardName2
+				+ ", menuName=" + menuName + ", userAuth=" + userAuth + ", deptAuth=" + deptAuth + ", comAuth="
+				+ comAuth + ", accessYN=" + accessYN + ", isFixed=" + isFixed + ", portletCode=" + portletCode
+				+ ", menuCode=" + menuCode + "]";
 	}
 }

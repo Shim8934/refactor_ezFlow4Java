@@ -144,5 +144,7 @@ public interface EzCommonService {
 
 	public void createThemeAndPortletAuth() throws Exception;
 
+	public void addMenuAndPortletCode() throws Exception;
+
 }
 

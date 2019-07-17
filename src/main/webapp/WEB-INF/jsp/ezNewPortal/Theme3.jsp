@@ -267,9 +267,10 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
+			var portletCode = portletOrder[i].portletCode;
 			
 			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-				(function (portletId, portletUrl, portletName) {
+				(function (portletId, portletUrl, portletName, portletCode) {
 					$.ajax({
 						type : "GET",
 						dataType : "html",
@@ -284,7 +285,7 @@
 								$("#" + portletId + "Portlet").css("background", "none");
 							}
 							
-							eventSetting(portletId, usedTheme);
+							eventSetting(portletId, usedTheme, portletCode);
 						},
 						error : function() {
 							var nonePage = "<article class='box_shadow'></article>"
@@ -303,7 +304,7 @@
 							return;
 						}
 					});
-				}(portletId, portletUrl, portletName));
+				}(portletId, portletUrl, portletName, portletCode));
 			/* } */
 		}
 		

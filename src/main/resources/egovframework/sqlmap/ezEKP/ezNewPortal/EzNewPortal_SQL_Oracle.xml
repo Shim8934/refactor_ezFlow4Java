@@ -870,7 +870,8 @@ AND
                 COMP.company_lang     AS companyLang,
                 A.menu_url         AS menuUrl,
                 A.icon_urL         AS iconUrl,
-                COMP.company_order    AS companyOrder
+                COMP.company_order    AS companyOrder,
+                A.menucode
             FROM
                 tbl_portal_menu A
             JOIN
@@ -1716,15 +1717,17 @@ AND
 				NVL(U.portlet_order, NVL(THEME.portlet_order, NVL(COMP.portlet_used, A.default_order))) AS portletOrder,
                 NVL(U.portlet_used, NVL(THEME.portlet_used, NVL(COMP.portlet_used, 1))) AS portletUsed,
                 THEME.is_fixed as isFixed,
+            	A.portletcode,
+            	MENU.menucode
 		]]>
 		
-		<isEmpty property="deptId">
+		<isEmpty property="deptId" prepend=",">
 			<![CDATA[
 				AUTH.access_yn AS accessYN
 			]]>
 		</isEmpty>
 		
-		<isNotEmpty property="deptId">
+		<isNotEmpty property="deptId" prepend=",">
 			<![CDATA[
 				NVL(AUTH.access_yn, 1) AS accessYN
 			]]>
@@ -1739,6 +1742,10 @@ AND
 				A.portlet_id = N.portlet_id
 			AND
 				A.menu_id = N.menu_id
+			JOIN
+				TBL_PORTAL_MENU MENU
+			ON
+				A.menu_id = MENU.menu_id
 			JOIN
 				TBL_PORTAL_THEME_PORTLET THEME
 			ON
@@ -2348,7 +2355,8 @@ SELECT
 	comp.COMPANY_LANG     AS COMPANYLANG,
 	main.MENU_URL         AS MENUURL,
     main.ICON_URL         AS ICONURL,
-    comp.company_order    AS COMPANYORDER
+    comp.company_order    AS COMPANYORDER,
+    main.menucode         AS MENUCODE
 FROM 
 	tbl_portal_menu_comp comp
 JOIN 

@@ -740,9 +740,10 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
+			var portletCode = portletOrder[i].portletCode;
 			
 			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-				(function (portletId, portletUrl, portletName) {
+				(function (portletId, portletUrl, portletName, portletCode) {
 					$.ajax({
 						type : "GET",
 						dataType : "html",
@@ -752,7 +753,7 @@
 						retryLimit : 3,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
-							eventSetting(portletId, usedTheme);
+							eventSetting(portletId, usedTheme, portletCode);
 						},
 						error : function() {
 							this.url = "/ezNewPortal/errorPortlet.do";
@@ -767,7 +768,7 @@
 							return;
 						}
 					});
-				}(portletId, portletUrl, portletName));
+				}(portletId, portletUrl, portletName, portletCode));
 			/* } */
 		}
 
