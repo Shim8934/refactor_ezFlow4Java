@@ -10,6 +10,7 @@ public class MailSharedMailboxUserVO {
 	private String compName;
 	private String deletePermission;
 	private String sendPermission;
+	private String managePermission;
 	private String shareId;
 	private String shareName;
 	
@@ -77,6 +78,14 @@ public class MailSharedMailboxUserVO {
 		this.sendPermission = sendPermission;
 	}
 	
+	public String getManagePermission() {
+		return managePermission;
+	}
+	
+	public void setManagePermission(String managePermission) {
+		this.managePermission = managePermission;
+	}
+	
 	public String getShareId() {
 		return shareId;
 	}
@@ -97,8 +106,8 @@ public class MailSharedMailboxUserVO {
 	public String toString() {
 		return "MailSharedMailboxUserVO [userId=" + userId + ", userName=" + userName + ", deptId=" + deptId
 				+ ", deptName=" + deptName + ", compId=" + compId + ", compName=" + compName + ", deletePermission="
-				+ deletePermission + ", sendPermission=" + sendPermission + ", shareId=" + shareId + ", shareName="
-				+ shareName + "]";
+				+ deletePermission + ", sendPermission=" + sendPermission + ", managePermission=" + managePermission
+				+ ", shareId=" + shareId + ", shareName=" + shareName + "]";
 	}
 	
 }

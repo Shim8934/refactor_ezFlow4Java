@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezEmail.t804' /></title>
+		<title><spring:message code='ezEmail.t804' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
@@ -18,6 +19,8 @@
 		<script type="text/javascript" >
 			var isFolderChanged = false;
 		    var ReturnFunction;
+		    var shareId = "${shareId}";
+		    
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = opener.mail_newinboxrule_cross_dialogArguments[1];
@@ -151,7 +154,14 @@
 		    }
 		    function getFolder() {
 		        mail_selectfolder_cross_dialogArguments[1] = getFolder_Complete;
-		        DivPopUpShow(400, 355, "/ezEmail/mailSelectFolder.do");
+		        
+				var requestUrl = "/ezEmail/mailSelectFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
+		        DivPopUpShow(400, 355, requestUrl);
 		    }
 		    function getFolder_Complete(mailBoxInfo) {
 		    	try {
@@ -184,7 +194,14 @@
 		        _RuleKind = _curCellObj.getAttribute("RuleKind");
 		        mail_selectfolder_cross_dialogArguments[1] = getFoldercell_Complete;
 		        mail_selectfolder_cross_dialogArguments[2] = obj.parentNode;
-		        DivPopUpShow(400, 355, "/ezEmail/mailSelectFolder.do");
+		        
+				var requestUrl = "/ezEmail/mailSelectFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
+		        DivPopUpShow(400, 355, requestUrl);
 		    }
 		    function getFoldercell_Complete(mailBoxInfo) {
 		        try {
@@ -696,7 +713,13 @@
 		            createNodeAndAppandNodeText(XmlDom, objRows, objRow3Row, "EXPTVALUE", document.getElementsByName("ExptS").item(i).getAttribute("value"));
 		        }
 				
-		        Xmlhttp.open("POST", "/ezEmail/mailSetInboxRule.do?mode=NEW", false);
+		        var requestUrl = "/ezEmail/mailSetInboxRule.do?mode=NEW";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+		        }
+		        
+		        Xmlhttp.open("POST", requestUrl, false);
 		        Xmlhttp.send(XmlDom);
 		        if (!CrossYN()) {
 		            if (Xmlhttp.responseXML.text == "OK") {

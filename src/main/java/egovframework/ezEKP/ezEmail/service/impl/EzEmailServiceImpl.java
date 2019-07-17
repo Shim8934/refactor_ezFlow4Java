@@ -2350,6 +2350,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			map.put("shareId", (String)obj.get("shareId"));
         			map.put("deletePermission", (String)obj.get("deletePermission"));
         			map.put("sendPermission", (String)obj.get("sendPermission"));
+        			map.put("managePermission", (String)obj.get("managePermission"));
     				map.put("shareName", (String)obj.get("shareName"));
         			map.put("mail", (String)obj.get("mail"));
         			map.put("compId", (String)obj.get("compId"));
@@ -2490,6 +2491,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			userVO.setCompName((String)user.get("compName"));
         			userVO.setDeletePermission((String)user.get("deletePermission"));
         			userVO.setSendPermission((String)user.get("sendPermission"));
+        			userVO.setManagePermission((String)user.get("managePermission"));
         			
         			userList.add(userVO);
         		}
@@ -2523,6 +2525,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         	shareMailBoxPermissonInfo.setShareId((String)result.get("shareId"));
         	shareMailBoxPermissonInfo.setDeletePermission((String)result.get("delete_permission"));
         	shareMailBoxPermissonInfo.setSendPermission((String)result.get("send_permission"));
+        	shareMailBoxPermissonInfo.setManagePermission((String)result.get("manage_permission"));
         	shareMailBoxPermissonInfo.setShareName((String)result.get("displayname"));
         }
 		
