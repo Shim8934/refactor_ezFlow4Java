@@ -26,9 +26,15 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            
-            	document.getElementById("1tab1").setAttribute("class", "tabon");
-	            Tab1_SelectID = "1tab1";
-	            ChangeTab(document.getElementById("1tab1"));	
+	            if(flag === "email") {
+					document.getElementById("1tab1").setAttribute("class", "tabon");
+					Tab1_SelectID = "1tab1";
+					ChangeTab(document.getElementById("1tab1"));	
+				} else { // 주소록 환경설정
+					document.getElementById("1tab2").setAttribute("class", "tabon");
+					Tab1_SelectID = "1tab2";
+					ChangeTab(document.getElementById("1tab2"));	
+				}
 	            
 	            window_resize();
 	        }
