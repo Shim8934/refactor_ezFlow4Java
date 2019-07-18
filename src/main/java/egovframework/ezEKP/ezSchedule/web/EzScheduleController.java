@@ -2189,12 +2189,12 @@ public class EzScheduleController extends EgovFileMngUtil {
        
         	// 참석자 초대 메일 발송
         	 if (attendantId != null) {
+        		 startdate = commonUtil.getDateStringInUTC(startdate, loginVO.getOffset(), false);
+        		 enddate = commonUtil.getDateStringInUTC(enddate, loginVO.getOffset(), false);
      			for (int i=0; i < attendantId.getLength(); i++) {								
      				String v_attendantId = attendantId.item(i).getTextContent();				
      				String v_attendantName = attendantName.item(i).getTextContent();
      				
-     				startdate = commonUtil.getDateStringInUTC(startdate, loginVO.getOffset(), false);
-     				enddate = commonUtil.getDateStringInUTC(enddate, loginVO.getOffset(), false);
      				
      				String period = "";
      				if (datetype.equals("3")){
