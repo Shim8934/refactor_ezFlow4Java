@@ -156,5 +156,10 @@ public interface EzCommonService {
 	public void alterChamjoView() throws Exception;
 
 	public void addAddressFurigana() throws Exception;
+
+	public void createOpenGovTable() throws Exception;
+
+	public void addOpenGovFlag() throws Exception;
+
 }
 

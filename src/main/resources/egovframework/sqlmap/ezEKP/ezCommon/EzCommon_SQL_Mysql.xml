@@ -1430,4 +1430,67 @@
 			ADD COLUMN s_furigana VARCHAR(120) NULL DEFAULT NULL AFTER s_type
 		]]>
 	</update>
+
+	<select id="EzCommonDAO.checkTblOpenGovDocInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVDOCINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblOpenGovfileInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVFILEINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblOpenGovDocInfo"> 
+		CREATE TABLE `tbl_opengovdocinfo` (
+		  `docid` varchar(80) NOT NULL,
+		  `openflag` char(9) DEFAULT NULL,
+		  `basis` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+		  `reason` varchar(1000) CHARACTER SET utf8 DEFAULT NULL,
+		  `openlimitdate` datetime DEFAULT NULL,
+		  `createdate` datetime DEFAULT NULL,
+		  `updatedate` datetime DEFAULT NULL,
+		  `tenant_id` mediumint(5) NOT NULL,
+		  `companyid` varchar(20) NOT NULL,
+		  `listopenflag` char(2) DEFAULT NULL,
+		  PRIMARY KEY (`docid`,`tenant_id`,`companyid`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<statement id="EzCommonDAO.createTblOpenGovFileInfo"> 
+		CREATE TABLE `tbl_opengovfileinfo` (
+		  `DOCID` varchar(80) NOT NULL,
+		  `SN` bigint(10) NOT NULL,
+		  `FILEOPENFLAG` char(1) DEFAULT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`DOCID`,`SN`,`COMPANYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='원문정보공개 첨부파일 테이블';
+	</statement>
+	
+	<select id="EzCommonDAO.checkOpenGovFlag">
+		SELECT
+			opengovflag
+		FROM
+			TBL_FORMINFO
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addOpenGovFlag">
+		ALTER TABLE
+			TBL_FORMINFO
+		ADD (
+			OPENGOVFLAG VARCHAR(4) DEFAULT 'N',
+			)
+	</statement>
 </sqlMap>

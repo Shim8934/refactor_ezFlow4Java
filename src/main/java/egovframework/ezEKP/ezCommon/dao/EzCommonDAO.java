@@ -828,4 +828,32 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public void createOpenGovTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblOpenGovDocInfo");
+		} catch (Exception e) {
+			logger.debug("tbl_opengovdocinfo doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblOpenGovDocInfo");
+		}
+		
+		try {
+			select("EzCommonDAO.checkTblOpenGovfileInfo");
+		} catch (Exception e) {
+			logger.debug("tbl_opengovfileinfo doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblOpenGovFileInfo");
+		}
+	}
+	
+	public void addOpenGovFlag() {
+		try {
+			select("EzCommonDAO.checkOpenGovFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo openGovFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addOpenGovFlag");
+		}
+	}
 }

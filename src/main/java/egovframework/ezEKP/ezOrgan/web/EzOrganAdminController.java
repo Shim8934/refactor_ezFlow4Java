@@ -174,7 +174,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
     	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
     	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
-    	
+    	ezCommonService.createJobMasterTable();
+    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
+//    	ezCommonService.addPassAprLineFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
     	logger.debug("init ended.");
     }
 

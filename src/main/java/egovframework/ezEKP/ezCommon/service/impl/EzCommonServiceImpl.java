@@ -1660,4 +1660,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addAddressFurigana() throws Exception {
 		ezCommonDAO.addAddressFurigana();
 	}
+	
+	@Override
+	public void createOpenGovTable() throws Exception {
+		ezCommonDAO.createOpenGovTable();
+	}
+	
+	@Override
+	public void addOpenGovFlag() throws Exception {
+		ezCommonDAO.addOpenGovFlag();
+	}
 }
