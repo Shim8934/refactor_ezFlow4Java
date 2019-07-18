@@ -210,12 +210,12 @@
 		    var sharedMailboxDialogArguments = new Array();
 		    
 		    function addSharedMailbox() {
-		        var feature = "dialogHeight:670px; dialogWidth:1060px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(1060, 670);
+		        var feature = "dialogHeight:670px; dialogWidth:1080px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(1080, 670);
 		        
 		        if (CrossYN()) {
 		            sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
-		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, "", GetOpenWindowfeature(1060, 670));
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, "", GetOpenWindowfeature(1080, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, feature);
@@ -243,12 +243,12 @@
 		        }
 		        
 		        var shareId = selnode[0].getAttribute("DATA1");
-		        var feature = "dialogHeight:670px; dialogWidth:1060px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(1060, 670);
+		        var feature = "dialogHeight:670px; dialogWidth:1080px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(1080, 670);
 		        
 		        if (CrossYN()) {
 		        	sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
-		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1060, 670));
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1080, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), feature);
