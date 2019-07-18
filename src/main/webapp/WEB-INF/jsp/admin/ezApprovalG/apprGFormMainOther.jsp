@@ -1097,10 +1097,8 @@
 							<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
 						</c:if>
 						<!-- FormBuilder - end -->
-						<input type="checkbox" id="setOpenGovFlag" style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"/> 원문정보공개
-						<c:if test="${useDraftAll == 'YES' && approvalFlag == 'G'}">
-							<input type="checkbox" id="setDraftAllFlag" onclick="changePassAprFlag()"/> 일괄기안
-						</c:if>
+                        <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
+                        <input type="checkbox" id="setDraftAllFlag" onclick="changePassAprFlag()" style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"/> 일괄기안
 						<input type="checkbox" id="setPassAprLineFlag" /> 기결재통과
 					</td>
 				</tr>
