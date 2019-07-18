@@ -405,10 +405,10 @@
 		        var DATA = "";
 		
 		        //하위 게시판 검색할 건지에 대한 조건
-/* 		        if (document.getElementById("chkSearchSub").checked)		// SearchSubBoard
+		        if (document.getElementById("chkSearchSub").checked)		// SearchSubBoard
 		        {
 		            TYPE += "SEARCHSUBBOARD;";
-		        } */
+		        }
 		
 		        if (document.getElementById("txt_keyword").value != "") {
 		        	var selectSearch = document.getElementById('selectType');
@@ -1339,7 +1339,7 @@
 								<spring:message code='ezBoard.t185' />
 							</th>
 							<td>${boardName} 
-<%-- 			      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' /> --%>
+			      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
 			    			</td>
 						</tr>
 						<tr>

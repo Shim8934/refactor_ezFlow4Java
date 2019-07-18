@@ -989,14 +989,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-		map.put("v_PWHEREBOARD", boardVO.getBoardId());
 		
-		/* 2019-07-18 홍승비 - 제대로 동작하지 않는 하위게시판검색기능 제거 */
-		/*if (boardVO.getSubFlag().equals("Y")) {
+		
+		if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
 		} else {
 			map.put("v_PWHEREBOARD", " A.BOARDID = '" + boardVO.getBoardId() + "' ");
-		}*/
+		}
 		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 		
@@ -1096,15 +1095,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
-		map.put("v_PWHEREBOARD", boardVO.getBoardId());
 		
-		/* 2019-07-18 홍승비 - 제대로 동작하지 않는 하위게시판검색기능 제거 */
 		/* 2018-06-22 홍승비 - 게시판 즐겨찾기 > 썸네일게시판 쿼리 BOARDID 중복 문제 수정(TBL_BOARD_ITEM as A) */
-/*		if (boardVO.getSubFlag().equals("Y")) {
+		if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
 		} else {
 			map.put("v_PWHEREBOARD", " A.BOARDID = '" + boardVO.getBoardId() + "' ");
-		}*/
+		}
 		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 		
@@ -1632,14 +1629,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("v_PWHEREBOARD", boardVO.getBoardId());
 		
-		/* 2019-07-18 홍승비 - 제대로 동작하지 않는 하위게시판검색기능 제거 */
-		/*if (boardVO.getSubFlag().equals("Y")) {
+		if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
 		} else {
 			map.put("v_PWHEREBOARD", " BOARDID = '" + boardVO.getBoardId() + "' ");
-		}*/
+		}
 
 		logger.debug("getSearchBoardItemCount ended");
 		return ezBoardDAO.getSearchBoardItemCount(map); 
