@@ -308,10 +308,10 @@
 	            }
 	    	    if (CrossYN()) {
 	                win = window.open(filename + "?cmd=mod&from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal, "",
-	                                    "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                                    "height = 700, width = 820, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            } else {
 	            	win = window.open(filename + "?cmd=mod&from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal, "",
-                            "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                            "height = 700, width = 820, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	
 	            }
 	    	    win.opener = window.opener;
