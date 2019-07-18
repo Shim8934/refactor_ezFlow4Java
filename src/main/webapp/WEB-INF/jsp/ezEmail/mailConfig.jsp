@@ -133,7 +133,7 @@
 	<body class="mainbody" style="min-width: 835px">
 		<c:choose>
 			<c:when test="${flag eq 'email'}">
-		    	<h1><spring:message code='ezEmail.t904'' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
+		    	<h1><spring:message code='ezEmail.t904' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
 		    </c:when>
 		    <c:otherwise>
 				<h1><spring:message code='ezAddress.hyh001' /></h1>
