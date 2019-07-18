@@ -48,6 +48,7 @@
 		    
 		    function companyChange() {
 		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
+		    	document.getElementsByClassName("shared_boxesTable")[0].style.display = "none";
 		        
 		    	$.ajax({
 	    			url: "/admin/ezEmail/getSharedMailboxList.do",
@@ -61,7 +62,6 @@
 	    				} else if (result === "ERROR") {
 	    					alert("<spring:message code='ezEmail.sharedMailbox07' />");
 	    				} else {
-	    					document.getElementById("sharedMailboxUser").innerHTML = "";
 	    					var resultXml = loadXMLString(result);
 	    					var headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	    		            var xmlRtn = resultXml.documentElement.getElementsByTagName("ROWS")[0];
@@ -109,61 +109,37 @@
 	    			data: {'shareId' : shareId},
 	    			success: function(result) {
 	    				if (result.resultCode === "OK") {
-	    					document.getElementById("sharedMailboxUser").innerHTML = "";
 	    					
-	    			        var sharedMailboxInfoDiv = document.createElement("DIV");
-	    			        sharedMailboxInfoDiv.setAttribute("style", "height:50px;");
-	    			        
-	    			        var span = document.createElement("SPAN");
-	    			        span.setAttribute("style", "color: #000; font-weight: bold;");
-	    			        
-	    			        if (CrossYN()) {
-	    			        	span.textContent = "▒ <spring:message code='ezEmail.sharedMailbox08' />";
-	    			        } else {
-	    			        	span.innerText = "▒ <spring:message code='ezEmail.sharedMailbox08' />";
-	    			        }
-	    			        
-	    			        sharedMailboxInfoDiv.appendChild(span);
-	    			        
-	    			        var br = document.createElement("BR");
-	    			        sharedMailboxInfoDiv.appendChild(br);
-	    			        
-	    			        var mailDiv = document.createElement("DIV");
-	    			        mailDiv.setAttribute("style", "margin-top:5px; margin-left:5px;");
-	    			        
-	    			        if (CrossYN()) {
-	    			        	mailDiv.textContent = "<spring:message code='ezOrgan.t91' /> : " + result.sharedMailboxInfo.shareMail;
-	    			        } else {
-	    			        	mailDiv.innerText = "<spring:message code='ezOrgan.t91' /> : " + result.sharedMailboxInfo.shareMail;
-	    			        }
-	    			        
-	    			        sharedMailboxInfoDiv.appendChild(mailDiv);
-	    			        
-	    			        var sharedMailboxUserDiv = document.createElement("DIV");
-	    			        sharedMailboxUserDiv.setAttribute("style", "margin-top:10px;");
-	    			        
-	    			        span = document.createElement("SPAN");
-	    			        span.setAttribute("style", "color: #000; font-weight: bold;");
-	    			        
-	    			        if (CrossYN()) {
-	    			        	span.textContent = "▒ <spring:message code='ezEmail.sharedMailbox06' />";
-	    			        } else {
-	    			        	span.innerText = "▒ <spring:message code='ezEmail.sharedMailbox06' />";
-	    			        }
-	    			        
-	    			        sharedMailboxUserDiv.appendChild(span);
-	    			        
-	    			        result.sharedMailboxInfo.userList.forEach(function(vo, index) {
-	    			        	var userDiv = document.createElement("DIV");
-	    			            userDiv.setAttribute("style", "margin-top:5px; margin-left:5px; cursor:pointer;");
-	    			            userDiv.setAttribute("onClick", "showMember(this)");
-	    			            userDiv.setAttribute("id", vo.userId);
-	    			            userDiv.innerHTML = vo.userName + " (" + vo.deptName + ")";
-	    			            sharedMailboxUserDiv.appendChild(userDiv);
+	    					document.getElementById("sharedMailTitleTH").getElementsByTagName("th")[0].innerHTML = "▒ <spring:message code='ezEmail.sharedMailbox08' />";
+	    			        document.getElementById("sharedMailTitleTB").getElementsByTagName("span")[0].innerHTML= "<spring:message code='ezOrgan.t91' /> : " + result.sharedMailboxInfo.shareMail;
+	    			        document.getElementById("sharedMailListTH").getElementsByTagName("th")[0].innerHTML = "▒ <spring:message code='ezEmail.sharedMailbox06' />";
+	    			        document.getElementById("sharedMailListTB").innerHTML = "";
+		                
+		                	var TR = '<tr><td>';
+		                		TR += '<ul class="layoutUL">';
+		                		TR += '<li class="layoutRight"><span class="$managePermission"><spring:message code="ezEmail.sharedMailbox25" /></span></li>';
+		                		TR += '<li class="layoutRight"><span class="$sendPermission"><spring:message code="ezEmail.sharedMailbox17" /></span></li>';
+	                			TR += '<li class="layoutRight"><span class="$deletePermission"><spring:message code="ezEmail.sharedMailbox16" /></span></li>';
+	                			TR += '<li class="layoutNone"><span class="$shared_boxesText" style="cursor:pointer;" onclick="showMember(this)" id="$userId">$userName</span></li>';
+			                	TR += '</ul>';
+	                            TR += '</td></tr>';
+
+	                        result.sharedMailboxInfo.userList.forEach(function(vo, index) {
+	    			        	var TRTemp = TR;
+	    			        	var manageClass = vo.managePermission == 'Y' ? 'shared_boxesText_1' : 'shared_boxesText_2';
+	    			        	var sendClass = vo.sendPermission == 'Y' ? 'shared_boxesText_1' : 'shared_boxesText_2';
+	    			        	var deleteClass = vo.deletePermission == 'Y' ? 'shared_boxesText_1' : 'shared_boxesText_2';
+	    			        	
+	    			        	TRTemp = TRTemp.replace('$userId', vo.userId);
+	    			        	TRTemp = TRTemp.replace('$userName', vo.userName + " (" + vo.deptName + ")");
+	    			        	TRTemp = TRTemp.replace('$managePermission', manageClass);
+	    			        	TRTemp = TRTemp.replace('$sendPermission', sendClass);
+	    			        	TRTemp = TRTemp.replace('$deletePermission', deleteClass);
+	    			        	
+	    			        	$("#sharedMailListTB").append(TRTemp);
 				    		});
-	    			        
-	    			        document.getElementById("sharedMailboxUser").appendChild(sharedMailboxInfoDiv);
-	    			        document.getElementById("sharedMailboxUser").appendChild(sharedMailboxUserDiv);
+
+	    			    	document.getElementsByClassName("shared_boxesTable")[0].style.display = "table";
 	    				} else if (result.resultCode === "NO_PERMISSION") {
 	    					alert("<spring:message code='ezOrgan.t302' />");
 	    				} else {
@@ -234,12 +210,12 @@
 		    var sharedMailboxDialogArguments = new Array();
 		    
 		    function addSharedMailbox() {
-		        var feature = "dialogHeight:670px; dialogWidth:1060px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(1060, 670);
+		        var feature = "dialogHeight:670px; dialogWidth:1080px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(1080, 670);
 		        
 		        if (CrossYN()) {
 		            sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
-		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, "", GetOpenWindowfeature(1060, 670));
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, "", GetOpenWindowfeature(1080, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?compId=" + companyId, feature);
@@ -267,12 +243,12 @@
 		        }
 		        
 		        var shareId = selnode[0].getAttribute("DATA1");
-		        var feature = "dialogHeight:670px; dialogWidth:1060px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(1060, 670);
+		        var feature = "dialogHeight:670px; dialogWidth:1080px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(1080, 670);
 		        
 		        if (CrossYN()) {
 		        	sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
-		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1060, 670));
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1080, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), feature);
@@ -346,7 +322,7 @@
 	    				} else if (result === "ERROR") {
 	    					alert("<spring:message code='ezEmail.sharedMailbox07' />");
 	    				} else {
-	    					document.getElementById("sharedMailboxUser").innerHTML = "";
+	    			    	document.getElementsByClassName("shared_boxesTable")[0].style.display = "none";
 	    					var resultXml = loadXMLString(result);
 	    					var headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	    		            var xmlRtn = resultXml.documentElement.getElementsByTagName("ROWS")[0];
@@ -441,7 +417,31 @@
 				</td>
 				<td style="vertical-align:top; border-bottom:0;">
 					<div style="margin-left:5px; height:400px; border-color:#dbdbda; border-width:1px; border-style:solid; ">
-						<div id="sharedMailboxUser" style="width:100%; height:100%; padding:10px; overflow-y:auto; box-sizing: border-box;"></div>
+						<div id="sharedMailboxUser" style="width:100%; height:100%; overflow-y:auto; box-sizing: border-box;">
+							<table class="shared_boxesTable" style="display:none">
+								<thead id="sharedMailTitleTH">
+					                <tr>
+					                    <th></th>
+					                </tr>
+				                </thead>
+				           		<tbody id="sharedMailTitleTB">
+					                <tr>
+					                    <td>
+					                        <ul class="layoutUL">
+					                            <li class="layoutNone"><span class="shared_boxesText"></span></li>
+					                        </ul>
+					                    </td>
+					                </tr>
+				                </tbody>
+				           		<thead id="sharedMailListTH">
+				                <tr>
+				                    <th></th>
+				                </tr>
+				                </thead>
+					            <tbody id="sharedMailListTB">
+					            </tbody>
+				            </table>
+						</div>
 					</div>
 				</td>
 			</tr>

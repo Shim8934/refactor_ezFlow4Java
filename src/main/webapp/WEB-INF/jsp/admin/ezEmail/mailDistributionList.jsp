@@ -44,7 +44,7 @@
 		    }
 		    function company_change() {
 		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
-		        document.getElementById("DIV_Member").innerHTML = "";
+		    	document.getElementsByClassName("shared_boxesTable")[0].style.display = "none";
 		
 		        var xmlDom = createXmlDom();
 		        var xmlHTTP = createXMLHttpRequest();
@@ -111,56 +111,41 @@
 		
 		    function getDistributionMember_after()
 		    {
-		        document.getElementById("DIV_Member").innerHTML = "";
-		
 		        if (xmlHTTP == null || xmlHTTP.readyState != 4) return;
 				
 		        var mailNode = SelectNodes(xmlHTTP.responseXML, "DATA/MAIL")[0];
 		        var mail = getNodeText(mailNode);
 		        
-		        var infoDiv = document.createElement("DIV");
-		        infoDiv.setAttribute("style", "margin-bottom:20px;");
-		        
-		        var infoP = document.createElement("P");
-		        infoP.setAttribute("style", "color:#000; font-weight:bold; margin-top:0px; margin-bottom:5px;");
-		        setNodeText(infoP, "▒ " + strLangLHM21);
-		        infoDiv.appendChild(infoP);
-		        
-		        var mailDiv = document.createElement("DIV");
-		        mailDiv.setAttribute("style", "color:#000; display:inline-block; margin-left:5px; margin-bottom:5px;");
-		        setNodeText(mailDiv, "<spring:message code='ezOrgan.t91' /> : " + mail);
-		        infoDiv.appendChild(mailDiv);
-		        
-		        var DIV_GroupMember = document.createElement("DIV");
-		        var P = document.createElement("P");
-		        var BR = document.createElement("BR");
-		        P.setAttribute("style", "color:#000; font-weight:bold; margin-top:0px; margin-bottom:5px;");
-		        setNodeText(P, "▒ <spring:message code='ezEmail.t659' />");
-		        DIV_GroupMember.appendChild(P);
-		        
+		        document.getElementById("distributionTitleTH").getElementsByTagName("th")[0].innerHTML = "▒ " + strLangLHM21;
+		        document.getElementById("distributionTitleTB").getElementsByTagName("span")[0].innerHTML= "<spring:message code='ezOrgan.t91' /> : " + mail;
+		        document.getElementById("distributionListTB").innerHTML = "";
+
 		        for (var i = 0; i < SelectNodes(xmlHTTP.responseXML, "DATA/ROW").length; i++) {
-		            var DIV = document.createElement("DIV");
-		            DIV.setAttribute("style", "color:#000; display:inline-block; margin-left:5px; margin-bottom:5px;");
+		            var TR = document.createElement("TR");
+		            var TD = document.createElement("TD");
+		            var SPAN = document.createElement("SPAN");
+		            SPAN.setAttribute("class","shared_boxesText");
 		            
 		            if (CrossYN()) {
 		                if ("${useOcs}" == "YES")
-		                    DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(xmlHTTP.responseXML, "MAIL").item(i).textContent + "\",this);'/></span><span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(xmlHTTP.responseXML, "CN").item(i).textContent + " onclick='show_member(this)'>" + SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).textContent + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).textContent + ")</span>";
+		                	SPAN.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(xmlHTTP.responseXML, "MAIL").item(i).textContent + "\",this);'/></span><span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(xmlHTTP.responseXML, "CN").item(i).textContent + " onclick='show_member(this)'>" + SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).textContent + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).textContent + ")</span>";
 		                else
-		                    DIV.innerHTML = SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).textContent + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).textContent + ")";
+		                	SPAN.innerHTML = SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).textContent 
+		                    + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).textContent + ")";
 		            }
 		            else {
 		                if ("${useOcs}" == "YES")
-		                    DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(xmlHTTP.responseXML, "MAIL").item(i).text + "\",this);'/></span><span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(xmlHTTP.responseXML, "CN").item(i).text + " onclick='show_member(this)'>" + SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).text + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).text + ")</span>";
+		                	SPAN.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(xmlHTTP.responseXML, "MAIL").item(i).text + "\",this);'/></span><span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(xmlHTTP.responseXML, "CN").item(i).text + " onclick='show_member(this)'>" + SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).text + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).text + ")</span>";
 		                else
-		                    DIV.innerHTML = SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).text + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).text + ")";
+		                	SPAN.innerHTML = SelectNodes(xmlHTTP.responseXML, "DISPLAYNAME").item(i).text 
+		                    + " (" + SelectNodes(xmlHTTP.responseXML, "DEPT").item(i).text + ")";
 		            }
-		            DIV_GroupMember.appendChild(DIV);
-		            var BR = document.createElement("BR");
-		            DIV_GroupMember.appendChild(BR);
+		            TD.appendChild(SPAN);
+		            TR.appendChild(TD);
+		            document.getElementById("distributionListTB").appendChild(TR);
 		        }
 		        
-		        document.getElementById("DIV_Member").appendChild(infoDiv);
-		        document.getElementById("DIV_Member").appendChild(DIV_GroupMember);
+		        document.getElementsByClassName("shared_boxesTable")[0].style.display = "table";
 		    }
 		
 		    function show_member(obj) {
@@ -287,6 +272,8 @@
 		        if (xmlHTTP.status != 200 || stateVlaue == "ERROR")
 		            alert("<spring:message code='ezEmail.t50' />");
 		        else {
+		        	document.getElementsByClassName("shared_boxesTable")[0].style.display = "none";
+		        	
 		            var headerData = createXmlDom();
 		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 		
@@ -375,7 +362,27 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div id="DIV_Member" style="padding-top:10px; padding-left:5px; height: 390px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;"></div>      
+	                <div id="DIV_Member" style="width: 515px; height: 400px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;">
+	                	<table class="shared_boxesTable public_distribution" style="display:none">
+	                		<thead id="distributionTitleTH">
+	                			<tr>
+	                				<th></th>
+	                			</tr>
+	                		</thead>
+				            <tbody id="distributionTitleTB">
+				            	<tr>
+				            		<td><span class="shared_boxesText" id="distriTitSpan"></span></td>
+				            	</tr>
+				            </tbody>
+				            <thead id="distributionListTH">
+				            	<tr>
+					                <th>▒ <spring:message code='ezEmail.t659' /></th>
+					            </tr>
+				            </thead>
+				            <tbody id="distributionListTB">
+				            </tbody>
+				        </table>
+	                </div>      
 	            </td>
 	        </tr>
 	    </table>

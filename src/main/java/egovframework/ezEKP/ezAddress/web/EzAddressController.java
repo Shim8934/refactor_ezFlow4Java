@@ -85,7 +85,7 @@ public class EzAddressController{
 	/**
 	 * 도로명 주소 팝업창 호출 함수 (Open API)
 	 */
-	@RequestMapping(value = "/ezAddress/addressZipCodePopUpOpen.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezAddress/addressZipCodePopUpOpen.do")
 	public String addressZipCodePopupOpen(Model model) throws Exception {
 		logger.debug("addressZipCodePopupOpen started.");
 		
