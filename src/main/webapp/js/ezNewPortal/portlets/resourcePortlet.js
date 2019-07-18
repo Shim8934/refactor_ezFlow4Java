@@ -169,7 +169,7 @@ function reserveInfoPopup(id) {
 	 var url = "/ezResource/portletResourceInfo.do?ownerID=" + id;
      var feature = "status:no;dialogWidth:700px;dialogHeight:650px;help:no;scroll:no;edge:sunken;resizable:no";
      feature = feature + GetShowModalPosition(700, 700);
-     window.showModalDialog(url, "", feature);
+     window.open(url, "", feature);
 }
 
 // 예약 등록 팝업
@@ -177,7 +177,7 @@ function reserveSavePopup(id) {
 	 var url = "/ezResource/persPortletAdd.do?cmd=add&from=schedule&selsd=" + Sdatepicker.value + "&seled=" + Sdatepicker.value + "&dayView=&ownerID=" + id;
      var feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken;resizable:no";
      feature = feature + GetShowModalPosition(700, 700);
-     window.showModalDialog(url, "", feature);
+     window.open(url, "", feature);
 }
 
 // 예약 보기/수정 팝업
@@ -190,5 +190,5 @@ function reserveViewPopup() {//0 num //1 id
     var feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken;resizable:no";
     
 	feature = feature + GetShowModalPosition(700, 700);
-    window.showModalDialog(url, "", feature);
+    window.open(url, "", feature);
 }

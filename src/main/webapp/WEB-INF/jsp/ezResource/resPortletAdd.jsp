@@ -95,15 +95,6 @@
 	    	}
 
 		    window.onload = function () {
-		        try {
-	    	        m_Arguments = opener.schedule_add_ck_dialogArguments[0];
-		       } catch (e) {
-	            	try {
-	            		m_Arguments = window.dialogArguments;
-	            	} catch (e) {
-	            		m_Arguments = parent.schedule_add_ck_dialogArguments[0];
-		            }        
-	    	    } 
 	        	if (cmd == "mod") {
 	        		document.getElementById("displayNM").innerHTML = "<a onClick=MemberInfo_onClick('" + writerIDVal + "','" +deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
 	        	} else {
@@ -184,21 +175,6 @@
 	            	
 	            	onloadflag = true;
 	        	}
-
-	        	if (m_Arguments != undefined) {
-	            	ItemArray[0] = m_Arguments[0];
-	            	ItemArray[1] = m_Arguments[1];
-
-		            document.getElementById('itemList').innerHTML = "";
-
-		            for (var i = 0 ; i < ItemArray[0].length; i++) {
-	                	if ((i + 1) < ItemArray[0].length) {
-	                		document.getElementById('itemList').innerHTML = document.getElementById('itemList').innerHTML + ItemArray[1][i] + " ,  ";
-	                	} else {
-	                		document.getElementById('itemList').innerHTML = document.getElementById('itemList').innerHTML + ItemArray[1][i];
-		                }	
-		            }
-		        }
 	        	
 	        	if(cmd == "mod") {
 	        		if(sDT.substring(14,19) == "12:00" && eDT.substring(14,19) == "11:59") {
@@ -509,8 +485,7 @@
 	            	
 	            	// 2019-04-19 김민성 - 자원 동시에 예약 시 모든 자원 예약 후 화면 새로고침 되도록 수정
 	            	if (!setApprovFlag) {
-	        		    window_onUnload();
-			            window.opener.getPersPortlet();
+			            parent.opener.getPersPortlet();
 	        		    window.close();
 	        		}
 	    	    }
