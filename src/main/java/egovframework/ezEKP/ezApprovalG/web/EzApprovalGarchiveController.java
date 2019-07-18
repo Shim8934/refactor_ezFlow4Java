@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -60,6 +61,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private Properties config;
+	
 	@Resource(name = "crypto") 
     private EgovFileScrty egovFileScrty;
 
@@ -103,6 +107,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	    String userEmail = userInfo.getEmail();
 	    String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 	    String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
+	    
+	    String useOpenGov = config.getProperty("config.useOpenGov");
+	    
+		if (useOpenGov != null && useOpenGov.equals("YES")) {
+			model.addAttribute("useOpenGov", useOpenGov);
+		}
 	    
     	if (userInfo.getRollInfo().indexOf("a=1") > -1) {
     		susinAdmin = "YES";

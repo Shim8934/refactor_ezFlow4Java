@@ -208,6 +208,7 @@
 	        var useConfirmParallelAgreement = "<c:out value ='${useConfirmParallelAgreement}'/>";
 	        var filterTimerId;
 	        //원문정보공개
+	        var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 	        var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate = "";
 	        
 	        $(function () {
@@ -345,6 +346,10 @@
 	                         document.getElementById("deptaddbtn").style.display = "none";
 	                 }
 
+	            }
+	            
+	            if (approvalFlag != "G" || useOpenGov != "YES") {
+	            	$(".openGov").hide();
 	            }
 	        };
 	
@@ -2748,7 +2753,9 @@
 		                        <input type="radio" name="rdoSecType" value="1" checked onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t47'/></span>&nbsp;
 		                        <input type="radio" name="rdoSecType" value="2" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t150'/></span>&nbsp;
 		                        <input type="radio" name="rdoSecType" value="3" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t46'/></span>&nbsp;
+		                        <span class="openGov">
 		                        <input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 목록공개</span>
+		                        </span>
 		                    </div>
 		                </td>
 		            </tr>
@@ -2759,7 +2766,7 @@
                     	* 35자 이내로 입력해주세요
 		            </td>
 		            </tr>
-		            <tr>
+		            <tr class="openGov">
 		                <th>원문공개열람제한일</th>
 		                <td>
 		                	<input type="checkbox" name="openGovLimitDate" id="openGovLimitDate" value="checkbox" onclick="openGovLimitDate_onClick()">
