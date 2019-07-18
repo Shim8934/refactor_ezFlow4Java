@@ -2229,9 +2229,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		Document searchQueryDoc = commonUtil.convertStringToDocument(boardVO.getSearchQuery());
 		
-		if (boardVO.getSearchQuery().indexOf("SEARCHSUBBOARD;") != -1) {
+		/* 2019-07-18 홍승비 - 제대로 동작하지 않는 하위게시판검색기능 제거 */
+		/*if (boardVO.getSearchQuery().indexOf("SEARCHSUBBOARD;") != -1) {
 			boardVO.setSubFlag("Y");
-		}
+		}*/
 		//혜정 추가
 		if (boardVO.getSearchQuery().indexOf("SEARCHSUBSUBBOARD;") != -1) {
 			boardVO.setSubFlag("YY");

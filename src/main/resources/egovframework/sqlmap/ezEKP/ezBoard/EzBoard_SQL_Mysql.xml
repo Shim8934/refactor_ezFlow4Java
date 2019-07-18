@@ -2015,7 +2015,7 @@
    			  WHERE  
    			  	A.TENANT_ID = #v_TENANTID#
    			  AND
-   			  	$v_PWHEREBOARD$ 
+   			  	A.BOARDID = #v_PWHEREBOARD# 
    			  AND 
    			  	B.MAIN_FLAG = 'Y'
    			  AND 
@@ -2154,7 +2154,7 @@
 				  AND
 				  	A.BOARDID = I.BOARDID 					
 				  WHERE 
-				  	$v_PWHEREBOARD$
+				  	A.BOARDID = #v_PWHEREBOARD#
 				  AND
 				  	A.TENANT_ID = #v_TENANTID#
 				  AND 
@@ -3220,7 +3220,7 @@
    			FROM 
    				TBL_BOARD_ITEM A 
    			WHERE    				
-   				$v_PWHEREBOARD$ 
+   				BOARDID = #v_PWHEREBOARD# 
    			AND
    				TENANT_ID = #v_TENANTID#
    			AND (
