@@ -167,17 +167,17 @@ function resourceNodata() {
 //예약 등록 팝업
 function reserveInfoPopup(id) {
 	 var url = "/ezResource/portletResourceInfo.do?ownerID=" + id;
-     var feature = "status:no;dialogWidth:700px;dialogHeight:650px;help:no;scroll:no;edge:sunken;resizable:no";
-     feature = feature + GetShowModalPosition(700, 700);
-     window.showModalDialog(url, "", feature);
+     var feature =  "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1"
+     feature = feature + GetOpenPosition(820, 700);
+     window.open(url, "", feature);
 }
 
 // 예약 등록 팝업
 function reserveSavePopup(id) {
 	 var url = "/ezResource/persPortletAdd.do?cmd=add&from=schedule&selsd=" + Sdatepicker.value + "&seled=" + Sdatepicker.value + "&dayView=&ownerID=" + id;
-     var feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken;resizable:no";
-     feature = feature + GetShowModalPosition(700, 700);
-     window.showModalDialog(url, "", feature);
+     var feature =  "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1"
+     feature = feature + GetOpenPosition(820, 700);
+     window.open(url, "", feature);
 }
 
 // 예약 보기/수정 팝업
@@ -187,8 +187,8 @@ function reserveViewPopup() {//0 num //1 id
 	var _ownerID = _this.getAttribute('ownerID');
 	
 	var url     = "/ezResource/persPortletRead.do?cmd=mod&from=schedule&num=" + _num + "&ownerID=" + _ownerID + "&type=Master&startDate=" + Sdatepicker.value+ "&endDate=" + Sdatepicker.value
-    var feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken;resizable:no";
+    var feature =  "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1"
     
-	feature = feature + GetShowModalPosition(700, 700);
-    window.showModalDialog(url, "", feature);
+	feature = feature + GetOpenPosition(820, 700);
+    window.open(url, "", feature);
 }
