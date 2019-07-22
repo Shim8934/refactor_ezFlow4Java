@@ -250,22 +250,25 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			resultList.get(i).setRegion(commonUtil.cleanValue(resultList.get(i).getRegion()));
 		}
 		
-		if(deptFlag.equals("true") && startDate.compareTo(commonUtil.getTodayUTCTime("")) <= 0) {
+		if(deptFlag.equals("true") && typeId.trim().equals("") && startDate.compareTo(commonUtil.getTodayUTCTime("")) <= 0) {
 			map.put("companyId", companyId);
 			map.put("searchStartDate", startDate);
 			map.put("searchEndDate", endDate);
 			map.put("searchDeptId", deptIdList.split(",")[0]);
-			List<AdminAttitudeVO> absentresultList = ezAttitudeDAO.getAttitudeAbsentList(map);
 			
-			if(!absentresultList.isEmpty()) {
-				for(AdminAttitudeVO v : absentresultList) {
-					AttitudeVO a = new AttitudeVO();
-					a.setTypeId(v.getTypeId());
-					a.setTypeName(v.getTypeName());
-					a.setWriterId(v.getWriterId());
-					a.setWriterName(v.getUserName());
-					a.setTenantId(v.getTenantId());
-					resultList.add(a);
+			if (checkHoliday2(startDate.substring(0,10), endDate.substring(0,10), companyId, tenantId).size() < 1) {				
+				List<AdminAttitudeVO> absentresultList = ezAttitudeDAO.getAttitudeAbsentList(map);
+				
+				if(!absentresultList.isEmpty()) {
+					for(AdminAttitudeVO v : absentresultList) {
+						AttitudeVO a = new AttitudeVO();
+						a.setTypeId(v.getTypeId());
+						a.setTypeName(v.getTypeName());
+						a.setWriterId(v.getWriterId());
+						a.setWriterName(v.getUserName());
+						a.setTenantId(v.getTenantId());
+						resultList.add(a);
+					}
 				}
 			}
 		} 
