@@ -1778,6 +1778,20 @@ public class EzEmailAdminController {
 				return "json";
 			}
 			
+			if (!companyDomain.isEmpty()) {
+				String newMailAddr = shareId + "@" + companyDomain;				
+				String returnValue = ezEmailService.checkIndividualAlias(newMailAddr, tenantId);
+				
+				if (!returnValue.equals("OK")) {
+					logger.debug("create sharedMailbox account failed. '" + shareId + "' ID is already used.");
+					resultCode = "DUPLICATE";
+					
+					model.addAttribute("resultCode", resultCode);
+					logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+					return "json";					
+				}
+			}			
+			
 			String mailAddr = shareId + "@" + domain;
 			
 			// 이메일 시스템에 계정을 생성한다.
