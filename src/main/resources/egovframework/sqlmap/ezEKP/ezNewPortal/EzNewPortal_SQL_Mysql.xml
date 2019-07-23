@@ -1479,7 +1479,13 @@ LIMIT
 		
 		<isNotEmpty property="deptId">
 			<![CDATA[
-				IFNULL(AUTH.access_yn, 1) AS accessYN
+                CASE WHEN
+					A.menu_Id = 0
+				THEN
+					IFNULL(AUTH.access_yn, 1)
+				ELSE
+					AUTH.access_yn
+				END AS accessYN
 			]]>
 		</isNotEmpty>
 		
@@ -1561,14 +1567,9 @@ LIMIT
 				NAME.portlet_lang = #portletLang#
 			AND
 				(COMP.portlet_used = 1 && THEME.portlet_used = 1)
-		]]>
-		
-		<isEmpty property="deptId" prepend="AND">
-			<![CDATA[
+			AND
 				(AUTH.access_yn IS NOT NULL)
-			]]>
-		</isEmpty>
-		
+		]]>
 		<isNotEqual property="config" compareValue="true" prepend="AND">
 			<![CDATA[
 				(USER.portlet_used = 1 OR USER.portlet_used IS NULL OR THEME.is_fixed = 1)
