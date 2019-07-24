@@ -201,7 +201,7 @@
 		        }
 	        	
 	        	if(cmd == "mod") {
-	        		if(sDT.substring(14,19) == "12:00" && eDT.substring(14,19) == "11:59") {
+	        		if(sDT.substring(14,19) == "00:00" && eDT.substring(14,19) == "23:59") {
 	        			document.getElementById("AllDay").checked = true;	        			
 	        			display_time_Unshow();
 	        		}

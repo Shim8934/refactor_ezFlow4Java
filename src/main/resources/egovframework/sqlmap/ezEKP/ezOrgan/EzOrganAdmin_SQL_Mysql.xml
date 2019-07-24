@@ -3083,7 +3083,7 @@
   		]]>
     </insert>
     
-    <insert id="EzOrganAdminDAO.insertCompanyInfo_I31" parameterClass="Map">
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_IJHS1" parameterClass="Map">
 	    <![CDATA[
 	    	INSERT INTO
 	    		TBL_ATTITUDE_ANNUAL_CONF

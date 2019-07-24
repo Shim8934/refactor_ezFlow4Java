@@ -335,7 +335,8 @@
 		        try { top.onresize() } catch (e) { }
 		        
 		        //ajax로 각 모듈 counting 및 list 호출
-		        getnewmailcount();
+		        //getnewmailcount();
+		        getUnreadCountAll();
 		        getnewapprovalcount();		        
 		        getScheduleList(nowDay, pMode);
 		        getNewCircularCount();
@@ -482,6 +483,44 @@
 				});
 	        }
 			
+	        function getUnreadCountAll() {
+	        	var mailboxList = [];
+	        	
+	        	var requestData = {
+        			"mailboxList" : mailboxList
+	        	}
+	        	
+	        	$.ajax({
+                    url: "/ezEmail/getUnreadCountAll.do",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data : JSON.stringify(requestData),
+                    success : function(result) {
+                    	try {
+	                    	if (result.resultCode === "OK") {
+	                    		var totalUnreadCountInAllAccounts = result.totalUnreadCountInAllAccounts;
+	                    		
+	                    		console.error("totalUnreadCountInAllAccounts=" + totalUnreadCountInAllAccounts);
+	                    		
+	    			        	if (totalUnreadCountInAllAccounts.length > 2) {
+	    			        	    totalUnreadCountInAllAccounts = "99+";
+	    			        	}			        	
+	    			        	
+	    		                document.getElementById("mailnum").textContent = totalUnreadCountInAllAccounts;
+	                    	} else {
+	                    		console.error(result.resultCode);
+	                    	}
+                    	} catch (e) {
+                    		console.error(e);
+                    	}
+                    },
+                    error : function(error) {
+                        console.error(error);
+                    }
+                });
+	        }
+	        
 			var xmlHttp_getnewmailcount_total = null;
 			
 			function getnewmailcount() {

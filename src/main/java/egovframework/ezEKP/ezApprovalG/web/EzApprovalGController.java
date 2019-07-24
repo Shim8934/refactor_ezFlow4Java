@@ -4298,7 +4298,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
 		
-		if (!orgCompanyID.equals(userInfo.getCompanyID())) {
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			companyID = orgCompanyID;
 		}
 		String result = ezApprovalGService.getCabinetNum(deptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
