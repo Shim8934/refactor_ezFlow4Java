@@ -138,6 +138,8 @@
 <result property="portletBoardId" 			column="BOARD_ID" />
 <result property="menuName" 				column="MENU_NAME" />
 <result property="portletName" 				column="PORTLET_NAME" />
+<result property="portletCode" 				column="PORTLETCODE" />
+<result property="menuCode" 				column="MENUCODE" />
 </resultMap>
 <resultMap class="PortletNameInfoVO" id="PortletNameInfoVO">
 <result property="portletId" 				column="PORTLET_ID" />
@@ -1890,10 +1892,14 @@ SELECT A.PORTLET_ID,
        A.BOARD_ID,
        D.BOARDNAME$lang$ AS BOARDNAME,
        E.MENU_NAME,
-       F.PORTLET_NAME
+       F.PORTLET_NAME,
+       C.PORTLETCODE,
+       G.MENUCODE
   FROM TBL_PORTAL_PORTLET_COMP A
   JOIN TBL_PORTAL_PORTLET C
     ON A.PORTLET_ID = C.PORTLET_ID
+  LEFT JOIN TBL_PORTAL_MENU G
+    ON C.MENU_ID = G.MENU_ID
   LEFT JOIN TBL_BOARD_BOARDINFO D
   	ON A.BOARD_ID = D.BOARDID
   	AND (A.COMPANY_ID = D.COMPANYID OR TRIM(D.COMPANYID) = '' OR D.COMPANYID IS NULL)
