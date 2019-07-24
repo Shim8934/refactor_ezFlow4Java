@@ -601,6 +601,7 @@ public class LoginController {
     
     public boolean ipAccessCheck(LoginVO loginVO) throws Exception {
     	logger.debug("ipAccessCheck start");
+    	logger.debug("userIP=" + loginVO.getIp());
     	
     	String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", loginVO.getTenantId());
     	
