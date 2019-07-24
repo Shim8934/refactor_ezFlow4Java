@@ -148,7 +148,7 @@
 		    function SaveItem() {
 		    	var strArray = document.getElementById('txtPhotoFile').value.split('.'); 
 		    	var mimeType = strArray[strArray.length-1].toLowerCase();
-		    	if (mimeType != "gif" && mimeType != "jpg" && mimeType != "png" && mimeType != "jpeg") {
+		    	if (mimeType != "gif" && mimeType != "jpg" && mimeType != "png" && mimeType != "jpeg" && mimeType != "bmp") {
 		    		alert(strLang85);
 		    		return;
 		    	} 

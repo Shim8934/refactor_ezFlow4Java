@@ -425,6 +425,7 @@
 	    	    }
 	    	}
 	    	
+	    	var SaveScheduleId = "";
 	    	function btn_Save() {
 
 	        	var check = true;
@@ -497,7 +498,7 @@
 	        	if (check == true) {
 	            	// 일정관리 동시 등록
 	            	if (cmd == "add") {
-		            	if(document.getElementById("useSchedule").checked = true) {
+		            	if(document.getElementById("useSchedule").checked == true) {
 		            		SaveScheduleId = saveSchedule();
 		            	}
 	            	}
