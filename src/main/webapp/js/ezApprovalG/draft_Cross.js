@@ -1494,7 +1494,11 @@ function setRecevInfo(ret) {
     	if (SummaryOuterReceiverList != "") {
             setNodeText(field , SummaryOuterReceiverList);
         }else{
-        	setNodeText(field , precipents);
+        	var precipentsList = precipents.split(",");
+        	
+        	if (precipentsList.length > 1) {
+                setNodeText(field , precipents);
+        	}
         }
     }
 }

@@ -3056,6 +3056,7 @@
 	    		(3, #tenantID#, #companyID#, 49, 1, 18, 0, 0)
   		]]>
     </insert>
+    
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I31" parameterClass="Map">
   		<![CDATA[
 	    INSERT INTO 
@@ -3092,6 +3093,17 @@
 	    		(49, #companyID#, #tenantID#, #companyID#, 1, 0)
   		]]>
     </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_IJHS1" parameterClass="Map">
+	    <![CDATA[
+	    	INSERT INTO
+	    		TBL_ATTITUDE_ANNUAL_CONF
+	    			(COMPANY_ID, TENANT_ID, ANNUAL_CANCEL_RULE, USE_ANNUAL_AUTO_GNRT, ANNUAL_GNRT_STD, INITIAL_DATE, USE_MINUS_ANNUAL, USE_ANNUAL_TMNT, ROUND_OFF_RULE, CONF_SET_DATE)
+	    	VALUES
+	    			(#companyID#, #tenantID#, '1', '1', '1', #nowDate#, '1', '1', '1', #nowDate#)
+	    ]]>
+    </insert>
+    
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM

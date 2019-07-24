@@ -246,9 +246,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
     	result = userCheckForLocal(map);
     	
+    	// 모든 Inner Domain에 대해 cn@Inner Domain이 이미 존재하는 지를 체크하였으나
+    	// 특정 Inner Domain에서 Alias로 사용되는 아이디인 경우에도 Full 주소로 중복되는 것이
+    	// 아니라면 등록 가능하도록 하기 위해 제거함.
+    	/* 
     	if (result == 0) {
     		result = userCheckForJMocha(map);
     	}
+    	*/
     	
         return result;    
 	}
@@ -1412,7 +1417,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void insertCompanyInfo_I32(Map<String, Object> map) {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I32", map);
 	}
-	
+    
+    public void insertCompanyInfo_IJHS1(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_IJHS1", map);
+    }
+    
     public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS", map);
     }

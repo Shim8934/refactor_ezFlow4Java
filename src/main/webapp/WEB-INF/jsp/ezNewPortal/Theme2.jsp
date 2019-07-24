@@ -722,7 +722,39 @@
 			}		    		
 	    });
 	}
- 	
+
+	var tryCount = 0;
+	
+	var sortableEvent = function () {
+		//포틀릿 드래그 앤 드롭
+		try {
+			$(".portlet_area").sortable({
+				handle : ".sortablePortlet",
+				helper : "clone",
+				scroll: false,
+				start : function (event, block) {
+					/* 
+					$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
+					
+					$(".ui-sortable-placeholder").css({
+						'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
+						'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
+					}); */
+				},
+				update : function(event, ui) {
+					updatePortletOrderUser(usedTheme);
+				}
+			});
+		} catch (e) {
+			tryCount++;
+			if (tryCount <= 5) {
+				setTimeout(sortableEvent(), 100);
+			} else {
+				return;
+			}
+		}
+	}
+	
 	$(function() {
 		$("#featured").orbit();
 		
@@ -753,7 +785,12 @@
 						retryLimit : 3,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
+							
 							eventSetting(portletId, usedTheme, portletCode);
+							
+							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+								sortableEvent();
+							}
 						},
 						error : function() {
 							this.url = "/ezNewPortal/errorPortlet.do";
@@ -763,6 +800,10 @@
 								//try again
 								$.ajax(this);
 								return;
+							}
+							
+							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+								sortableEvent();
 							}
 							
 							return;
@@ -845,23 +886,9 @@
 		getQuickLink();		
 		
 		//포틀릿 드래그 앤 드롭
-		$(".portlet_area").sortable({
-			handle : ".sortablePortlet",
-			helper : "clone",
-			scroll: false,
-			start : function (event, block) {
-				/* 
-				$(".portlet.ui-sortable-helper").css("width", $(".portlet").not(block.item).not(block.placeholder).outerWidth());
-				
-				$(".ui-sortable-placeholder").css({
-					'width' : $(".portlet").not(block.item).not(block.placeholder).outerWidth(),
-					'height' : $(".portlet").not(".ui-sortable-helper").outerHeight()
-				}); */
-			},
-			update : function(event, ui) {
-				updatePortletOrderUser(usedTheme);
-			}
-		});
+		if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
+			sortableEvent();
+		}
 		
 		/* $(".portlet_area").disableSelection(); */
 		

@@ -1,0 +1,62 @@
+Return-Path: <seigan@jtb.com>
+Delivered-To: 100001486@ezekp.com
+Received: from 10.50.3.4 (EHLO mxg.ryobi.co.jp) ([10.50.3.4])
+          by ezEkp1 (JMOCHA ESMTP Server) with ESMTP ID -1481974157
+          for <yamaguchi@ryobi-holdings.jp>;
+          Tue, 16 Jul 2019 13:01:04 +0900 (JST)
+X-matriXgate-loop-detect: 03c0882579d2e8a73cb8ed78a281249f93572e5b
+Received: from jtbdns.jtb.co.jp ([61.200.27.106]) by mxg.ryobi.co.jp with ESMTP;
+	Tue, 16 Jul 2019 13:00:41 +0900 (JST)
+Received: from NAINSMTP01.jtb.co.jp (unknown [172.16.1.21])
+	by jtbdns.jtb.co.jp (Postfix) with ESMTP id 175971003A107
+	for <yamaguchi@ryobi-holdings.jp>; Tue, 16 Jul 2019 13:00:38 +0900 (JST)
+Received: from JNETWEB114 (unknown [10.93.46.97])
+	by NAINSMTP01.jtb.co.jp (Postfix) with SMTP id 1043C160005A2
+	for <yamaguchi@ryobi-holdings.jp>; Tue, 16 Jul 2019 13:00:38 +0900 (JST)
+thread-index: AdU7iwbuP68n5U7eQN6y5K/4kPhpQw==
+Thread-Topic: =?iso-2022-jp?B?GyRCJSghPCU5ISYlNSVzIXUlNSVzQEE0aj89QEEhSjlSNnUbKEI=?=
+	=?iso-2022-jp?B?GyRCIUskTj83NSxFUE8/JCw0ME47JDckXiQ3JD8hIyFKRTlKXkw+GyhC?=
+	=?iso-2022-jp?B?GyRCISdOPkh3I0gjRDgpRCNETBsoQiAbJEIhIj1QSC9GfCEnGyhCMjAx?=
+	=?iso-2022-jp?B?OS8xMS8wMRskQiEiJCo1Uk1NNElNfRsoQk5vLhskQiEnGyhCRDcxNg==?=
+	=?iso-2022-jp?B?RTM3MjAtMDAxGyRCIUsbKEI=?=
+From: <seigan@jtb.com>
+To: <yamaguchi@ryobi-holdings.jp>
+Subject: =?iso-2022-jp?B?GyRCJSghPCU5ISYlNSVzIXUlNSVzQEE0aj89QEEhSjlSNnUbKEI=?=
+	=?iso-2022-jp?B?GyRCIUskTj83NSxFUE8/JCw0ME47JDckXiQ3JD8hIyFKRTlKXkw+GyhC?=
+	=?iso-2022-jp?B?GyRCISdOPkh3I0gjRDgpRCNETBsoQiAbJEIhIj1QSC9GfCEnGyhCMjAx?=
+	=?iso-2022-jp?B?OS8xMS8wMRskQiEiJCo1Uk1NNElNfRsoQk5vLhskQiEnGyhCRDcxNg==?=
+	=?iso-2022-jp?B?RTM3MjAtMDAxGyRCIUsbKEI=?=
+Date: Tue, 16 Jul 2019 13:00:38 +0900
+Message-ID: <72674BDA663E4511A9A1AB7392F70A3F@JNETWEB114>
+MIME-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft CDO for Windows 2000
+Content-Class: urn:content-classes:message
+Importance: normal
+Priority: normal
+X-MimeOLE: Produced By Microsoft MimeOLE V6.2.9200.22773
+X-matriXgate-msec-AV: Clean
+X-matriXgate-UniqId: Through
+X-matriXgate-msecIpRepId: i=3dc81b6a;s=100
+X-matriXgate-Action: Approve
+X-matriXgate: Uncategorized
+X-matriXgate-SenderAuth-Results: Through
+Authentication-Results: mxg.ryobi.co.jp;
+	spf=pass smtp.mailfrom=seigan@jtb.com;
+	sender-id=pass header.From=seigan@jtb.com;
+	dkim=none;
+	dkim-adsp=none header.From=seigan@jtb.com;
+X-matriXgate-Auth: UnknownUser
+X-matriXgate-archive-id: ff7.1084.7f13ed91ce80.5d2d4c00.ba5d8
+
+※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+システムからの自動送信メールです。こちらのメールに返信しないでください。
+ご返信頂いても、こちらのメールからは回答できません。
+※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+エース・サン＆サン請願申請（航空）の新規登録が完了しました。
+
+提販事業部からの回答をお待ち下さい。
+
+※ 取消待が不要となりましたら、必ず本システムから「請願取下」連絡を行って下さい。

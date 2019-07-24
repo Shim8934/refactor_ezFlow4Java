@@ -7,8 +7,11 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t055' /></title>
-		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
+	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" />
+	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
 		<style type="text/css">
 			body {background-color : white;}
 			.ui-sortable{ margin:0px; padding:0px;}
@@ -195,7 +198,7 @@
 						}
 					});
 					
-					$("#menuList").disableSelection();
+					//$("#menuList").disableSelection();
 					$("#menuList").on("sortstart", function( event, ui ) { ui.placeholder.css("width","100px"); });
 					//메뉴추가버튼
 					$("#menuAdd").on("click", openMenuAdd);

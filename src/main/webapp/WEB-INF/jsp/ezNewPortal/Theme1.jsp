@@ -278,7 +278,7 @@
 			</aside>
 		</div>
 		<section class="section_main">
-			<div class="portlet_area">
+			<div id="portletArea" class="portlet_area">
 			</div>
 		</section>
 		
@@ -288,11 +288,11 @@
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 <%-- script line --%>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezPortal/showModalDialog.js')}" ></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
@@ -515,6 +515,10 @@
 								}
 								
 								eventSetting(portletId, usedTheme, portletCode);
+								
+								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+									sortableEvent();
+								}
 							},
 							error : function() {
 								this.url = "/ezNewPortal/errorPortlet.do";
@@ -524,6 +528,10 @@
 									//try again
 									$.ajax(this);
 									return;
+								}
+								
+								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+									sortableEvent();
 								}
 								
 								return;
@@ -615,31 +623,50 @@
 		}
 		// 퀵링크 호출
 		getQuickLink();		
+		var tryCount = 0;
 		
 		//포틀릿 드래그 앤 드롭
-		$(".portlet_area").sortable({
-			handle : ".sortablePortlet",
-			helper : "clone",
-			scroll: false,
-			start : function (event, block) {
-				/* $(".portlet.ui-sortable-helper").css({
-					"width" : $(".portlet").not(block.placeholder).not(block.item).width()
-				}); 
-				
-				$(".ui-sortable-placeholder").css({
-					'width' : $(".portlet").not(block.item).not(block.placeholder).width() + 0.23,
-					'height' : $(".portlet").not(".ui-sortable-helper").height()
-				}); */
-			},
-			update : function(event, ui) {
-				updatePortletOrderUser(usedTheme);
-			}
-		});
-		
+		if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
+			sortableEvent();
+		}
 		/* $(".portlet_area").disableSelection(); */
 
 		leftResize();
 	});
+	
+	var tryCount = 0;
+	
+	var sortableEvent = function () {
+		
+		//포틀릿 드래그 앤 드롭
+		try {
+			$("#portletArea").sortable({
+				handle : ".sortablePortlet",
+				helper : "clone",
+				scroll: false,
+				start : function (event, block) {
+					/* $(".portlet.ui-sortable-helper").css({
+						"width" : $(".portlet").not(block.placeholder).not(block.item).width()
+					}); 
+					
+					$(".ui-sortable-placeholder").css({
+						'width' : $(".portlet").not(block.item).not(block.placeholder).width() + 0.23,
+						'height' : $(".portlet").not(".ui-sortable-helper").height()
+					}); */
+				},
+				update : function(event, ui) {
+					updatePortletOrderUser(usedTheme);
+				}
+			});
+		} catch (e) {
+			tryCount++;
+			if (tryCount <= 5) {
+				setTimeout(sortableEvent(), 100);
+			} else {
+				return;
+			}
+		}
+	}
 	
 	var frameSetting = function (frameSetId) {
 		frameId = frameSetId;

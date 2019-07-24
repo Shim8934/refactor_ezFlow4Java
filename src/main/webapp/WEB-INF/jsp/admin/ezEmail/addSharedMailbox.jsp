@@ -153,9 +153,17 @@
 	        	var resultXml = "<LISTVIEWDATA><ROWS>";
 	        	
 	        	userList.forEach(function(vo, index) {
+	        		var xmlStrId = MakeXMLString(vo.userId);
+	        		var xmlStrname = MakeXMLString(vo.userName);
 	        		resultXml += "<ROW>";
-	        		resultXml += "<CELL><DATA1>" + MakeXMLString(vo.userId) + "</DATA1><DATA2>" + vo.deletePermission + "</DATA2>";
-	        		resultXml += "<DATA3>" + vo.sendPermission + "</DATA3><VALUE>" + MakeXMLString(vo.userName) + "</VALUE></CELL>";
+	        		resultXml += "<CELL>";
+	        		resultXml += "<DATA1>" + xmlStrId + "</DATA1>";
+	        		resultXml += "<DATA2>" + vo.deletePermission + "</DATA2>";
+	        		resultXml += "<DATA3>" + vo.sendPermission + "</DATA3>";
+	        		resultXml += "<DATA4>" + vo.managePermission + "</DATA4>";
+	        		resultXml += "<DATA5>" + xmlStrname + "</DATA5>";
+	        		resultXml += "<VALUE>" + xmlStrname + "(" + xmlStrId + ")" + "</VALUE>";
+	        		resultXml += "</CELL>";
 	        		resultXml += "<CELL></CELL>";
 	        		resultXml += "</ROW>";
 	        	})
@@ -182,7 +190,7 @@
                 	chk.setAttribute("type", "checkbox");
                 	chk.setAttribute("id", "delete_" + row.getAttribute("DATA1"));
                 	chk.setAttribute("name", "delete_" + row.getAttribute("DATA1"));
-                	chk.style.marginRight = "5px";
+                	chk.style.marginLeft = "8px";
                 	
                 	if (row.getAttribute("DATA2") === "Y") {
                 		chk.setAttribute("checked", true);
@@ -192,14 +200,15 @@
                 	lbl.setAttribute("for", "delete_" + row.getAttribute("DATA1"));
                 	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox16' />"));
                 	lbl.style.cursor = "pointer";
-                	
-                	row.childNodes[1].appendChild(lbl);
+
                 	row.childNodes[1].appendChild(chk);
+                	row.childNodes[1].appendChild(lbl);
                 	
                 	chk = document.createElement("input");
                 	chk.setAttribute("type", "checkbox");
                 	chk.setAttribute("id", "send_" + row.getAttribute("DATA1"));
                 	chk.setAttribute("name", "send_" + row.getAttribute("DATA1"));
+                	chk.style.marginLeft = "8px";
                 	
                 	if (row.getAttribute("DATA3") === "Y") {
                 		chk.setAttribute("checked", true);
@@ -209,9 +218,27 @@
                 	lbl.setAttribute("for", "send_" + row.getAttribute("DATA1"));
                 	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox17' />"));
                 	lbl.style.cursor = "pointer";
-                	
-                	row.childNodes[1].appendChild(lbl);
+
                 	row.childNodes[1].appendChild(chk);
+                	row.childNodes[1].appendChild(lbl);
+                	
+                	chk = document.createElement("input");
+                	chk.setAttribute("type", "checkbox");
+                	chk.setAttribute("id", "manage_" + row.getAttribute("DATA1"));
+                	chk.setAttribute("name", "manage_" + row.getAttribute("DATA1"));
+                	chk.style.marginLeft = "8px";
+                	
+                	if (row.getAttribute("DATA4") === "Y") {
+                		chk.setAttribute("checked", true);
+                	}
+                	
+                	lbl = document.createElement("label");
+                	lbl.setAttribute("for", "manage_" + row.getAttribute("DATA1"));
+                	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox25' />"));
+                	lbl.style.cursor = "pointer";
+
+                	row.childNodes[1].appendChild(chk);
+                	row.childNodes[1].appendChild(lbl);
                 	row.childNodes[1].ondblclick = function() { event.cancelBubble = true; };
                 }
 	        }
@@ -460,7 +487,7 @@
 	            var memberListLength = memberList.length;
 	            
 	            var userList = [];
-	            var userId, deletePermission, sendPermission;
+	            var userId, deletePermission, sendPermission, managePermission;
 	            
 	            for (var i = 0; i < memberListLength; i++) {
 	            	userId = memberList.item(i).getAttribute("data1");
@@ -477,7 +504,13 @@
 	            		sendPermission = "N";
 	            	}
 	            	
-					userList.push(userId + ":" + deletePermission + ":" + sendPermission);
+					if (document.getElementById("manage_" + userId).checked) {
+						managePermission = "Y";
+	            	} else {
+	            		managePermission = "N";
+	            	}
+					
+					userList.push(userId + ":" + deletePermission + ":" + sendPermission + ":" + managePermission);
 	            }
 	            
 	            if (shareId != "") {
@@ -1028,11 +1061,13 @@
                         if (bFlag) {
                             pAddFlag = true;
                         } else {
+                        	var xmlStringName = MakeXMLString(strName);
+                        	var printval = xmlStringName + "(" + strId + ")";
                             pparsingXML2 = "";
                             pparsingXML = "";
                             pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1><DATA2>Y</DATA2><DATA3>Y</DATA3>";
-                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL><CELL></CELL></ROW>";
+                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1><DATA2>Y</DATA2><DATA3>Y</DATA3><DATA5>" + xmlStringName + "</DATA5>";
+                            pparsingXML = pparsingXML + "<VALUE>" + printval + "</VALUE></CELL><CELL></CELL></ROW>";
                             pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
                             Resultxml = loadXMLString(pparsingXML2);
 
@@ -1069,29 +1104,44 @@
                         	chk.setAttribute("id", "delete_" + objTr.getAttribute("DATA1"));
                         	chk.setAttribute("name", "delete_" + objTr.getAttribute("DATA1"));
                         	chk.setAttribute("checked", true);
-                        	chk.style.marginRight = "5px";
+                        	chk.style.marginLeft = "8px";
                         	
                         	var lbl = document.createElement("label");
                         	lbl.setAttribute("for", "delete_" + objTr.getAttribute("DATA1"));
                         	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox16' />"));
                         	lbl.style.cursor = "pointer";
-                        	
-                        	objTr.childNodes[1].appendChild(lbl);
+
                         	objTr.childNodes[1].appendChild(chk);
+                        	objTr.childNodes[1].appendChild(lbl);
                         	
                         	chk = document.createElement("input");
                         	chk.setAttribute("type", "checkbox");
                         	chk.setAttribute("id", "send_" + objTr.getAttribute("DATA1"));
                         	chk.setAttribute("name", "send_" + objTr.getAttribute("DATA1"));
                         	chk.setAttribute("checked", true);
+                        	chk.style.marginLeft = "8px";
                         	
                         	lbl = document.createElement("label");
                         	lbl.setAttribute("for", "send_" + objTr.getAttribute("DATA1"));
                         	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox17' />"));
                         	lbl.style.cursor = "pointer";
-                        	
-                        	objTr.childNodes[1].appendChild(lbl);
+
                         	objTr.childNodes[1].appendChild(chk);
+                        	objTr.childNodes[1].appendChild(lbl);
+                        	
+                        	chk = document.createElement("input");
+                        	chk.setAttribute("type", "checkbox");
+                        	chk.setAttribute("id", "manage_" + objTr.getAttribute("DATA1"));
+                        	chk.setAttribute("name", "manage_" + objTr.getAttribute("DATA1"));
+                        	chk.style.marginLeft = "8px";
+                        	
+                        	lbl = document.createElement("label");
+                        	lbl.setAttribute("for", "manage_" + objTr.getAttribute("DATA1"));
+                        	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox25' />"));
+                        	lbl.style.cursor = "pointer";
+
+                        	objTr.childNodes[1].appendChild(chk);
+                        	objTr.childNodes[1].appendChild(lbl);
                         	objTr.childNodes[1].ondblclick = function() { event.cancelBubble = true; };
                         }
                     }
@@ -1289,6 +1339,16 @@
 	        	}
 	        }
 	        
+	        function popupClose() {
+	        	if (shareId != "") {
+	        		if (confirm("<spring:message code='ezEmail.lhm16' />")) {
+		        		return OK_Click();
+		        	}
+	        	}
+	        	
+	        	window.close();
+	        }
+	        
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -1299,7 +1359,7 @@
 		</div>
 		<div id="close">
 			<ul>
-				<li><span onclick="window.close()"></span></li>
+				<li><span onclick="popupClose()"></span></li>
 			</ul>
 		</div>
 		
@@ -1425,7 +1485,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.sharedMailbox06' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 270px; Height: 502px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 360px; Height: 502px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
