@@ -91,7 +91,7 @@
 			    			case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
 			    						   break;
 			
-			    			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm02'/>");
+			    			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej04'/>");
 			    						   break;
 			    			
 			    			case "Haze" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm03'/>");
@@ -272,7 +272,7 @@
 			case "Clear" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm01'/>");
 						   break;
 		
-			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm02'/>");
+			case "Clouds" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej04'/>");
 						   break;
 			case "Mist" :
 			case "Haze" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm03'/>");
