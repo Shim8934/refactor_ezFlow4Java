@@ -33,7 +33,6 @@
 
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
-<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
@@ -60,13 +59,13 @@
 	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	$("#Sdatepicker").datepicker('setDate', SDate);
 
-	$.datepicker.regional[strLang602] = {
-		closeText: strLang601,
-		prevText: strLang599,
-		nextText: strLang600,
-		currentText: strLang598,
-		monthNames: [strLang586, strLang587, strLang588, strLang589, strLang590, strLang591, strLang592, strLang593, strLang594, strLang595, strLang596, strLang597],
-		monthNamesShort: [strLang586, strLang587, strLang588, strLang589, strLang590, strLang591, strLang592, strLang593, strLang594, strLang595, strLang596, strLang597],
+	$.datepicker.regional[messages.strLang602] = {
+		closeText: messages.strLang601,
+		prevText: messages.strLang599,
+		nextText: messages.strLang600,
+		currentText: messages.strLang598,
+		monthNames: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
+		monthNamesShort: [messages.strLang586, messages.strLang587, messages.strLang588, messages.strLang589, messages.strLang590, messages.strLang591, messages.strLang592, messages.strLang593, messages.strLang594, messages.strLang595, messages.strLang596, messages.strLang597],
 		dayNames: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
 		dayNamesShort: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
 		dayNamesMin: [dSun, dMon, dTue, dWed, dThu, dFri, dSat],
@@ -82,7 +81,7 @@
 			getPersPortlet();
 		}
 	};
-	$.datepicker.setDefaults($.datepicker.regional[strLang602]);
+	$.datepicker.setDefaults($.datepicker.regional[messages.strLang602]);
 </script>
 </body>
 </html>
