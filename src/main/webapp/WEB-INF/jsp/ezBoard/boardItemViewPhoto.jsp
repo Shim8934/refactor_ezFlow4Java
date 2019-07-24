@@ -260,7 +260,7 @@
 		
 				                xmlhttp = null;
 				                try {
-				                	window.opener.leftCountRf();
+				                	window.opener.leftCountRf(pBoardID);
 								} catch (e) {
 								}
 				                try {
@@ -292,7 +292,7 @@
 		
 				            xmlhttp = null;
 				            try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 				            try {
@@ -322,7 +322,7 @@
 		
 		        xmlhttp = null;
 		        try {
-                	window.opener.leftCountRf();
+                	window.opener.leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		        try {
@@ -340,7 +340,7 @@
 		
 					window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply";
 				}
-		
+/* 		
 				function btn_Copy_Onclick()
 				{
 					if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
@@ -356,7 +356,7 @@
 					pwidth = pwidth - 127;
 					
 					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
-				}
+				} */
 		        window.onunload = function () {
 		        	//리프레쉬 할 이유가 없는거 같음
 // 		            refresh_onclick();
@@ -776,7 +776,7 @@
 		
 		                    xmlhttp = null;
 		                    try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 		                    try {

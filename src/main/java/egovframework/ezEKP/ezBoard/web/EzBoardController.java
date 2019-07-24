@@ -250,7 +250,13 @@ public class EzBoardController extends EgovFileMngUtil{
         } else {
         	memoFlag = "NO";
         }
-		
+        
+        /* 2019-07-09 홍승비 - 게시판 좌측메뉴 게시물 개수 표출 사용여부 플래그 추가 */
+        String useLeftCnt = "";
+        if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", tenantID) != null) {
+        	useLeftCnt = ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", tenantID);
+        }
+        
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
 		}
@@ -353,6 +359,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("pollFlag", pollFlag);
         modelMap.addAttribute("ladderFlag", ladderFlag);
         modelMap.addAttribute("memoFlag", memoFlag);
+        modelMap.addAttribute("useLeftCnt", useLeftCnt);
         
 		logger.debug("boardLeft ended");
 
@@ -4602,10 +4609,22 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardIDs = request.getParameter("boardID");
 		String guBun = request.getParameter("guBun");
 		
-		if (guBun != null) {
-			guBun = guBun.replace(";", "");
-		} else {
-			guBun = "0";
+		/* 2019-07-12 홍승비 - 나의 게시물에서 복사 시 구분값 전부 합쳐지는 오류 수정 */
+		HashSet<String> gubunSet = new HashSet<String>(); 
+		if (guBun != null && !guBun.equals("")) {
+			String[] guBuns = guBun.split(";");
+			for (int i = 0; i < guBuns.length; i++) {
+				gubunSet.add(guBuns[i]);
+			}
+			
+			// 타입이 다른 게시판에서 게시물을 복사 시도, 또는 split한 구분값 없음
+			if (gubunSet.size() > 1 || gubunSet.isEmpty()) {
+				guBun = "error";
+			} else {
+				guBun = gubunSet.iterator().next();
+			}
+		} else { // 구분값이 null 또는 공백이라면 에러
+			guBun = "error";
 		}
 		
 		String[] boardID = boardIDs.split(";");
@@ -4804,7 +4823,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2019-06-03 홍승비 - 게시판 구분값과 확장컬럼 여부값만을 사용하므로, getBoardProperty로 메서드 변경 */
 		BoardPropertyVO boardInfo = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
-		if (boardInfo.getGuBun() != null && boardInfo.getUrl() != null && (boardInfo.getGuBun().equals("2") || !boardInfo.getUrl().trim().equals("") || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4"))) {
+		/* 2019-07-16 홍승비 - URL게시판 null 체크 위치 수정 */
+		if (boardInfo.getGuBun() != null && (boardInfo.getGuBun().equals("2") || (boardInfo.getUrl() != null && !boardInfo.getUrl().trim().equals("")) || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4"))) {
 			result = "<RESULT>anonyboard</RESULT>";
 		} else if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
 			result = "<RESULT>attributeextension</RESULT>";
@@ -4856,10 +4876,22 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String guBun = request.getParameter("guBun");
 		
-		if (guBun != null) {
-			guBun = guBun.replace(";", "");
-		} else {
-			guBun = "0";
+		/* 2019-07-16 홍승비 - 나의 게시물에서 이동 시 구분값 전부 합쳐지는 오류 수정 */
+		HashSet<String> gubunSet = new HashSet<String>(); 
+		if (guBun != null && !guBun.equals("")) {
+			String[] guBuns = guBun.split(";");
+			for (int i = 0; i < guBuns.length; i++) {
+				gubunSet.add(guBuns[i]);
+			}
+			
+			// 타입이 다른 게시판에서 게시물을 이동 시도, 또는 split한 구분값 없음
+			if (gubunSet.size() > 1 || gubunSet.isEmpty()) {
+				guBun = "error";
+			} else {
+				guBun = gubunSet.iterator().next();
+			}
+		} else { // 구분값이 null 또는 공백이라면 에러
+			guBun = "error";
 		}
 		
 		model.addAttribute("itemIDList", itemIDList);
@@ -8441,19 +8473,21 @@ public class EzBoardController extends EgovFileMngUtil{
 			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 			BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 			
-			myFavoriteVO.setBoardId(boardID);
-			myFavoriteVO.setUserId(userInfo.getId());
-			myFavoriteVO.setType("1");
-			myFavoriteVO.setTenantID(userInfo.getTenantId());
-			myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
-			
-			if (boardInfo.getGuBun().equals("4")) {
-				intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
-			} else if (boardInfo.getGuBun().equals("5")) {
-				myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
-				intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
-			} else {
-				intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+			if(boardInfo != null && boardInfo.getGuBun() != null) { // 마이게시판 트리의 boardID 전달 시 NullPointer 에러 방지
+				myFavoriteVO.setBoardId(boardID);
+				myFavoriteVO.setUserId(userInfo.getId());
+				myFavoriteVO.setType("1");
+				myFavoriteVO.setTenantID(userInfo.getTenantId());
+				myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+				
+				if (boardInfo.getGuBun().equals("4")) {
+					intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
+				} else if (boardInfo.getGuBun().equals("5")) {
+					myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
+					intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
+				} else {
+					intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+				}
 			}
 		} else {
 			intCount = 0;

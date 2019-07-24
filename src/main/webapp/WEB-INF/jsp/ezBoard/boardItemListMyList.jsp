@@ -85,6 +85,9 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
+	        var arrListSetForMove = new Set();
+	        var arrListStrForMove = "";
+	        
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
 	
@@ -609,10 +612,13 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp;
+		        var arrListSet = new Set();
 		        
 		        arrList = strListInfo.split(";");
 		        for (var i = 0; i < arrList.length - 1; i++) {
 		            xmlhttp = createXMLHttpRequest();
+		            arrListSet.add(document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";");
+		            
 		            try {
 			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + "&itemList=" + arrList[i].split(",")[0] + ";", false);
 					} catch (e) {
@@ -648,8 +654,12 @@
 		        
 		        getBoardList();
 		        
+		        var arrListStr = "";
+		        arrListSet.forEach(function callback (value1, value2, Set) {
+		        	arrListStr += value1;
+		        });
 		        try {
-			    	window.opener.leftCountRf();
+			    	leftCountRf(arrListStr);
 				} catch (e) {}
 		    }
 		
@@ -865,8 +875,12 @@
 	            var guBun = "";
 	            var i = 0;
 	            arrList = strListInfo.split(";");
+	            arrListSetForMove.clear();
+	            arrListStrForMove = "";
+	            
 	            for (i = 0; i < arrList.length - 1; i++) {
 	                strItemList += arrList[i].split(",")[0] + ";";
+	                arrListSetForMove.add(document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";");
 	                try {
 		                strBoardItemList += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
 		                guBun += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA10") + ";";
@@ -876,7 +890,11 @@
 					}
 	            }
 	            arrList = null;
-	
+	            
+	            arrListSetForMove.forEach(function callback (value1, value2, Set) {
+	            	arrListStrForMove += value1;
+		        });
+		        
 	            if (CrossYN()) {
 	                moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
 	                var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&guBun=" + guBun, "MoveBoardItem_Cross", GetOpenWindowfeature(355, 600));
@@ -890,11 +908,11 @@
 	                pheigth = pheigth - 200;
 	                pwidth = pwidth - 127;
 	                var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&guBun=" + guBun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
-	
-	                if (typeof (ret) != "undefined") {
-	                    if (ret == "OK") {
+	                
+	                if (typeof (ret) != "undefined" && ret != "") {
+	                    if (ret != "ERROR") {
 	                    	try {
-	    				    	window.opener.leftCountRf();
+	    				    	leftCountRf(ret + ";" + arrListStrForMove);
 	    					} catch (e) {}
 	                        window.location.reload();
 	                        window.close();
@@ -902,23 +920,24 @@
 	                }
 	            }
 	        }
+	        
+	        /* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 확장 닫히지 않도록 수정 */
 	        function MoveItem_onclick_Complete(ret) {
-	            if (typeof (ret) != "undefined") {
-	                if (ret == "OK") {
+	            if (typeof (ret) != "undefined" && ret != "") {
+	                if (ret != "ERROR") {
 	                	try {
-					    	window.opener.leftCountRf();
+					    	leftCountRf(ret + ";" + arrListStrForMove);
 						} catch (e) {}
 	                    window.location.reload();
 	                    window.close();
 	                }
 	            }
 	        }
-	        
 	        function CopyItem_onclick_Complete(ret) {
-	            if (typeof (ret) != "undefined") {
-	                if (ret == "OK") {
+	            if (typeof (ret) != "undefined" && ret != "") {
+	                if (ret != "ERROR") {
 	                	try {
-					    	window.opener.leftCountRf();
+					    	leftCountRf(ret);
 						} catch (e) {}
 	                    window.location.reload();
 	                    window.close();

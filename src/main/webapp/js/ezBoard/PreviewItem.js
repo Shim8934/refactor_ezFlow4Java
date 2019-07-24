@@ -1075,16 +1075,19 @@ function Set_BoardConfig() {
 	});
 }
 
+/* 2019-07-08 홍승비 - 게시물 등록, 삭제, 복사, 이동시 좌측메뉴의 선택된 하위게시판 확장 닫히지 않도록 수정 */
 //레프트 메뉴카운트 업뎃용
-function leftCountRf() {
-	var pDiv, pId, pValue, pNodeID, pTreeID;
+function leftCountRf(pDestBoardIDs) {
+	// 기존 코드 주석처리
+/*	var pDiv, pId, pValue, pNodeID, pTreeID;
 
 	if (window.parent.frames["left"] != undefined) {
 	    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
 	    var span = window.parent.frames["left"].document.getElementsByTagName("span");
 	    
+	    
 	    // 2018-02-23 천성준 
-	    /* 게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 */
+	     게시판  게시물 등록, 삭제, 복사, 이동시 왼쪽 게시판 폴더 볼드 해제되는 버그 수정 
 	    for (var j = 0; j < span.length; j++) {
 	    	if (span[j].className == "node_selected") {
 	    		pNodeID = span[j].id.replace("spn_","");
@@ -1102,8 +1105,64 @@ function leftCountRf() {
 	            break;
 	        }
 	    }
+	}*/
+	var pNodeID = "";
+	var leftFrame;
+	
+	// 즐겨찾기탭, 관리자단탭에서 좌측메뉴 접근
+	if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) {
+		leftFrame = window.parent.parent.frames["left"];
+    } else if (window.parent.location.href.indexOf("/admin/ezBoard") > -1) {
+    	leftFrame = window.parent.parent.frames["board_menu"];
+    } else {
+    	leftFrame = window.parent.frames["left"];
+    }
+	
+	if (leftFrame != undefined) {
+	    var h2 = leftFrame.document.getElementsByTagName("h2");
+	    var span = leftFrame.document.getElementsByTagName("span");
+	    
+	    // 현재 선택된 하위게시판명 div의 id 저장
+	    for (var j = 0; j < span.length; j++) {
+	    	if (span[j].className == "node_selected") {
+	    		pNodeID = span[j].id.replace("spn_","");
+	    	}
+	    }
+	    
+	    if (pNodeID != "") {
+	    	leftFrame.refreshItemCnt(pNodeID);
+	    }
+	    
+	    // 게시판을 선택하여 등록, 복사, 이동 시의 목표게시판 게시물 카운트 갱신 (해당 게시판트리가 확장된 경우에만 게시물 개수 갱신 확인 가능)
+	    if (pDestBoardIDs != null && pDestBoardIDs != "") {
+	    	var destBoardIDs = pDestBoardIDs.split(";"); // 갱신 대상 게시판이 여러개인 경우 ';' 기호로 잘라서 루프
+	    	var destBoardLength = destBoardIDs.length;
+	    	var tempDestBoardDiv = leftFrame.document.getElementsByClassName("node_div");
+	    	var tempLength = tempDestBoardDiv.length;
+	    	
+	    	for (var d = 0; d < destBoardLength; d++) {
+	    		if (destBoardIDs[d] != null && destBoardIDs[d].trim() != "") {
+			    	for (var i = 0; i < tempLength; i++) {
+			    		if (tempDestBoardDiv[i].id.indexOf("FromTreeView") > -1) { // 마이게시판에 등록된 하위게시판
+			    			if (tempDestBoardDiv[i].getAttribute("data3") == destBoardIDs[d]) {
+			    				leftFrame.refreshItemCnt(tempDestBoardDiv[i].id);
+			    				break;
+			    			}
+			    		} else { // 일반 하위게시판
+				    		if (tempDestBoardDiv[i].getAttribute("data1") == destBoardIDs[d]) {
+				    			leftFrame.refreshItemCnt(tempDestBoardDiv[i].id);
+			    	    		break;
+				    		}
+			    		}
+			    	}
+	    		} else {
+	    			break;
+	    		}
+	    	}
+	    }
 	}
 }
+
 
 //무적의 자바 인코더
 function javaURLEncode(str) {

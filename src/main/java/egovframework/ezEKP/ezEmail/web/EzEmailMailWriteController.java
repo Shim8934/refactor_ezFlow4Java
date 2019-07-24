@@ -1267,6 +1267,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			mailMaxReceiverCount = "200";
 		}
 		
+		// 20190708 조진호 - 결재, 게시판, 커뮤니티에서 메일로 발송 시에는 textOption 무시
+		if (_cmd.equalsIgnoreCase("board") || _cmd.equalsIgnoreCase("boardDotNet") 
+ 				|| _cmd.equalsIgnoreCase("Community") || _cmd.equalsIgnoreCase("CommunityDotNet")
+ 				|| _cmd.equalsIgnoreCase("docsend") || _cmd.equalsIgnoreCase("docsendDotNet")) {
+			bodyType = "0";
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
@@ -2132,6 +2139,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //			if (!filePathValue.startsWith("/")) {
 //				filePathValue = "/" + filePathValue;
 //			}
+			//19.07.09 첨부파일 경로가 인코딩되어서 파일을 찾지 못해 오류가 나므로 decode처리.
+			filePathValue = URLDecoder.decode(filePathValue, "UTF-8");
 			
 			filePath[i] = journalPath + filePathValue;
 			

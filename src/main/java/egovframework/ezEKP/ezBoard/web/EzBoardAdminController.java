@@ -106,10 +106,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			redirectBoardGroupID = leftBoardList.get(0).getBoardGroupId();
 		}
 		
+		/* 2019-07-09 홍승비 - 게시판 좌측메뉴 게시물 개수 표출 사용여부 플래그 추가 */
+        String useLeftCnt = "";
+        if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", user.getTenantId()) != null) {
+        	useLeftCnt = ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", user.getTenantId());
+        }
+		
 		model.addAttribute("redirectBoardID", redirectBoardID);
 		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID);
 		model.addAttribute("user", user);
 		model.addAttribute("serverName", serverName);
+		model.addAttribute("useLeftCnt", useLeftCnt);
 		
 		logger.debug("boardLeft ended");
 		return "admin/ezBoard/boardLeft";

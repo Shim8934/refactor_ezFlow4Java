@@ -2740,9 +2740,9 @@
 		                <table id="TreeViewTD">
 		                    <tr>
 		                        <td>
-		                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-		                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
-		                                    <table style="margin-top: 3px; width: 100%;">
+		                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;border: 1px solid #eaeaea; padding:0;">
+		                                <div class="portlet_tabpart03_top" id="tab1" style="border-bottom:0; height:26px;">
+		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td>
 		                                                <div style="margin-left: 5px;">
@@ -2824,7 +2824,7 @@
 		                            <table style="width: 100%;">
 		                                <tr>
 		                                    <td id="AddrSearch">
-		                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+		                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px; padding: 0px; border: 1px solid #eaeaea;">
 		                                            <div class="portlet_tabpart03_top" id="Div1" style="border-bottom: 0px; height:26px;">
 		                                                <table style="margin-top: 4px; width: 100%;">
 		                                                    <tr>
@@ -2891,9 +2891,9 @@
 		                <table id="ListViewDLTD" style="display: none">
 		                    <tr>
 		                        <td>
-		                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-		                                <div class="portlet_tabpart03_top" id="Div2" style="border: 1px solid #d3d2d2;">
-		                                    <table style="margin-top: 3px; width: 100%;">
+		                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;border: 1px solid #eaeaea; padding:0;">
+		                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom:0; height:26px;">
+		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td id="dlmember" style="display: none">
 		                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
@@ -2911,7 +2911,7 @@
 		                <table id="ListViewINPUT" style="display: none">
 		                    <tr>
 		                        <td>
-		                             <div id="ManualView" style="width: 648px; height: 476px; padding: 10px; border-right: 1px solid #ddd" class="box">
+		                             <div id="ManualView" style="width: 648px; height: 472px; padding: 10px; border-right: 1px solid #ddd; margin-top: 4px;" class="box">
 	                        		 	<table class="content">
 	                            			<tr>
 	                                			<th><spring:message code='ezEmail.t31' /></th>

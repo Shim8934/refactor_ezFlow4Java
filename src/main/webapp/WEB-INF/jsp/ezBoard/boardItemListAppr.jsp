@@ -681,7 +681,7 @@
 		            DeleteItem();
 		
 		    }
-		    function CopyItem_onclick() {
+/* 		    function CopyItem_onclick() {
 	        if (strListInfo == "") {
 	            alert("<spring:message code='ezBoard.t201'/>");
 	                return;
@@ -706,8 +706,9 @@
 	            var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 	            feature = feature += GetOpenPosition(355, 600);
 	            window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + selobj.getAttribute("DATA1"), "", feature, "");
-	        }
-	        var moveboarditem_cross_dialogArguments = new Array();
+	        } */
+	        
+	      /*   var moveboarditem_cross_dialogArguments = new Array();
 	        function MoveItem_onclick() {
 	            if (strListInfo == "") {
 	                alert("<spring:message code='ezBoard.t497'/>");
@@ -756,7 +757,7 @@
 	                }
 	            }
 	        }
-	
+	 */
 	
 	        function doLayerPopup(obj) {
 	            btn_PostDate_Clear();
@@ -881,9 +882,11 @@
 		        }
 		        
 		        var strItemList = "";
+		        var arrListSet = new Set();
 		        arrList = strListInfo.split(";");
 		        for (i = 0; i < arrList.length - 1; i++) {
 		            strItemList += arrList[i].split(",")[0] + ";";
+		            arrListSet.add(document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";");
 		        }
 		        
 		        if (pFlag == "C") {
@@ -917,8 +920,12 @@
 			                
 	// 		                getBoardList();
 							/* 2019-04-03 홍승비 - 게시물 승인 리스트에서 승인하는 경우에도 좌측 게시물 카운트 갱신되도록 수정 */
+							var arrListStr = "";
+					        arrListSet.forEach(function callback (value1, value2, Set) {
+					        	arrListStr += value1;
+					        });
 							try { // try ~ catch로 감싸지 않으면 연속된 함수가 동작하지 않음
-								leftCountRf();
+								leftCountRf(arrListStr);
 							} catch (e) {}
 				            try {
 				                refresh_onclick();

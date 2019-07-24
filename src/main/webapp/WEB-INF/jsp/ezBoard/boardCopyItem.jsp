@@ -53,27 +53,28 @@
 		            return;
 		        }
 
-		        if (oldguBun > 0) {
-			    	if (oldguBun != newguBun) {
+		        /* 2019-07-16 홍승비 - 게시물 복사 시 경고 메세지 발생 분기 수정 */
+//		        if (oldguBun > 0) {
+			    	if (oldguBun != newguBun) { // 게시판 타입 불일치
 			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
-			    	if (oldguBun == "3" && newguBun == "3") {
+			    	if (oldguBun == "3" && newguBun == "3") { // 이후 CheckIfAnonyBoard에서도 익명, 포토, 썸네일, URL게시판 여부 체크함
 			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
-		    	} else {
+		    	/* } else {
 		    		if (newguBun != "0") {
 		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
-		    	}
+		    	} */
 
 		        CopyItem(selectedBoard);
 		    }
@@ -110,8 +111,8 @@
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t355'/>");
 					board_alertArguments[1] = window.close;
-		            window.returnValue = "OK";
-		            rtnVal = "OK";
+		            window.returnValue = pDestBoardID;
+		            rtnVal = pDestBoardID;
 		            
 			        /* 2019-07-02 홍승비 - 승인게시판에 게시물 복사, 이동 시에도 승인메일 보내도록 수정 */
 			        $.ajax({
@@ -135,10 +136,6 @@
     					}
     				});
 			        
-		            try {
-				        window.opener.leftCountRf();
-					} catch (e) {
-					}
 // 		            window.close();
 		        } 
 		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
