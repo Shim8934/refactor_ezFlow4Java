@@ -1108,7 +1108,7 @@
             	<input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" />
             	<span><spring:message code='ezApproval.t00004'/></span>
                 <!-- FormBuilder -->
-                <c:if test="${useReform && approvalFlag == 'S'}">
+                <c:if test="${useReformsrc/main/webapp/WEB-INF/jsp/ezApprovalG/apprGrecev.jsp && approvalFlag == 'S'}">
                 	<input type="checkbox" id="reform-checkbox" name="reform-checkbox" onclick="onReformCheckboxClickEvent()"/>
                 	<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
                 </c:if>
