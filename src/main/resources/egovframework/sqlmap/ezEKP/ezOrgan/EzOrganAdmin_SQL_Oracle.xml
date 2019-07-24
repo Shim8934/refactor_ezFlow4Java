@@ -1955,7 +1955,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A17','002','반송의견','1','반송의견','Rejection','差し戻し','退回意见',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A17','003','보류의견','1','보류의견','Holding','保留意見','保存意见',#tenantID#, #companyID#)
+			VALUES ('A17','003','보류의견','1','보류의견','Holding','保留','保存意见',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A17','004','회송의견','1','회송의견','Returning','返送','退回意见',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
