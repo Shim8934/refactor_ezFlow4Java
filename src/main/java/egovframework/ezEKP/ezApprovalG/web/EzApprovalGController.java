@@ -4250,13 +4250,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("formId", formId);
 		}
 		
-		//basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "";
-		Map<String, Object> openGovMap = ezApprovalGService.getOpenGovInfo(docID, userInfo.getTenantId(), userInfo.getCompanyID());
-		
-		model.addAttribute("basis", openGovMap.get("basis"));
-		model.addAttribute("reason", openGovMap.get("reason"));
-		model.addAttribute("listOpenFlag", openGovMap.get("listOpenFlag"));
-		model.addAttribute("fileOpenFlagList", openGovMap.get("fileOpenFlagList"));
+		if (approvalFlag.equals("G")) {
+			//basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "";
+			Map<String, Object> openGovMap = ezApprovalGService.getOpenGovInfo(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+			
+			model.addAttribute("basis", openGovMap.get("basis"));
+			model.addAttribute("reason", openGovMap.get("reason"));
+			model.addAttribute("listOpenFlag", openGovMap.get("listOpenFlag"));
+			model.addAttribute("fileOpenFlagList", openGovMap.get("fileOpenFlagList"));
+		}
 		
 		logger.debug("approvui ended");
 		
