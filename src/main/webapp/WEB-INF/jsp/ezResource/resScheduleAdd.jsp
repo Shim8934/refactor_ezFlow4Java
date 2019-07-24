@@ -425,6 +425,7 @@
 	    	    }
 	    	}
 	    	
+	    	var SaveScheduleId = "";
 	    	function btn_Save() {
 
 	        	var check = true;
