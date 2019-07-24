@@ -278,7 +278,7 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			LOGGER.debug("useInternet=" + useInternet);
 			if (useInternet.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getPortletCode().equals("weather")));
+				portletOrder.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			// 협업 사용여부에 따라 제거 
@@ -1324,7 +1324,7 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			
 			if (useInternet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getPortletCode().equals("weather")));
+				portletList.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			data.put("portletList", portletList);
@@ -2390,7 +2390,7 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			
 			if (useInternet.equals("NO")) {
-				portletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getPortletCode().equals("weather")));
+				portletList.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			for (PortletInfoVO pvo : portletList) {
@@ -4540,7 +4540,7 @@ public class EzNewPortalGWController {
 			String useInternet = config.getProperty("config.useInternet");
 			
 			if (useInternet.equals("NO")) {
-				themePortletList.removeIf(vo -> (vo.getMenuCode() != null && vo.getPortletCode().equals("weather")));
+				themePortletList.removeIf(vo -> (vo.getPortletCode() != null && vo.getPortletCode().equals("weather")));
 			}
 			
 			result.put("status", "ok");
