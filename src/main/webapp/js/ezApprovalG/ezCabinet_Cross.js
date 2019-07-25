@@ -31,7 +31,7 @@ var g_searchDate = {
 function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
-    var MenuType = MenuTypeGlobal;
+    var MenuType;
 
     if (selRow != null) {
         if (ListTypeFlag == "2" || ListTypeFlag == "3") {
