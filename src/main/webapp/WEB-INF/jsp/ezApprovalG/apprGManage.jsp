@@ -119,7 +119,7 @@
 //		    		checkBujaeInfo_Complete(true);
 //		    		return;
 //	            }
-		        var BString = "${buJaeInfo}";
+		        var BString = arr_userinfo[7];
 		        
 		        if (BString != "") {
 		            var BDim = new Array("");
