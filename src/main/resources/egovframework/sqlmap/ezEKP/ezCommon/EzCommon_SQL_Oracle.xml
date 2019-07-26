@@ -1531,6 +1531,10 @@
 					AND portlet_type = 'G' 
 				THEN 
 					'survey'
+				WHEN portlet_url like '%webFolderPortlet%' 
+					AND portlet_type = 'G' 
+				THEN 
+					'webfolder'
 			END
 	]]>
 	</update>
