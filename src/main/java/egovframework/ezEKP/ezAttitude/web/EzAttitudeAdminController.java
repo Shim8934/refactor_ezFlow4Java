@@ -2287,9 +2287,9 @@ public class EzAttitudeAdminController {
 		pFileName = "annualReport_format";
 		
 		//header
-		row.createCell(0).setCellValue("사용자 ID");
-		row.createCell(1).setCellValue("입사일");
-		row.createCell(2).setCellValue("기본 연차 수");
+		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezEmail.t263", userInfo.getLocale()));
+		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t289", userInfo.getLocale()));
+		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t290", userInfo.getLocale()));
 		row.getCell(0).setCellStyle(headerStyle);
 		row.getCell(1).setCellStyle(headerStyle);
 		row.getCell(2).setCellStyle(headerStyle);
