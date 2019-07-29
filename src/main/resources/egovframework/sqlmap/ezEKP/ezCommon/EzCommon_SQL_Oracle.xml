@@ -1276,4 +1276,20 @@
 								WHEN theme_id = 3 THEN 'Theme3'
 							END
 	</update>
+	
+	<select id="EzCommonDAO.checkSnMenuAuth">
+		SELECT
+			sn
+		FROM
+			TBL_PORTAL_MENU_AUTH
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.snMenuAuth">
+		ALTER TABLE
+			TBL_PORTAL_MENU_AUTH
+		ADD 
+			sn INT DEFAULT 0
+	</statement>
 </sqlMap>
