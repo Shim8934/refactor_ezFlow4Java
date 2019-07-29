@@ -1992,6 +1992,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//update 시 기존에 있던 메뉴 권한 삭제 후 insert
 		ezNewPortalDAO.deleteMenuAuth(map);
 		
+		int index = 0;
+		
 		for (Object item : menuAuths) {
 			if (item instanceof JSONObject) {
 				JSONObject menuAuth = (JSONObject) item;
@@ -2006,12 +2008,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
 				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
+				map.put("sn", index);
 				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				map.put("menuId", menuId);
 				
 				ezNewPortalDAO.updateMenuAuth(map);
+				
+				index++;
 			}
 		}
 		

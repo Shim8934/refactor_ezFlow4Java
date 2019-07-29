@@ -175,14 +175,12 @@
 	        	$("[id^='" + treeviewStr + "_node']").each(function(index, element){
 	        		
 	        		var imgCnt = $(element).parent().children('.sub_iconLNB').length - 2;
-	        		var title = $(element)[0].innerHTML;
 	        		
 	        		if (imgCnt > 0) {
 	        			// 최초값 170, 한 블럭의 값 16 이지만 길이가 맞지 않아 14로 설정
 	        			var customWidth = 170 - (14 * imgCnt);
 	        			$(element).css("width", customWidth+"px");
 	        			$(element).css("text-align", "justify");
-	        			$(element).attr("title", title);	
 	        		}
 							
 	        	});
@@ -464,10 +462,7 @@
 	                    if (unreadcount == "0") {
 	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption);
 	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : ''");
-	                    } else {
-	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "&nbsp;&nbsp;" + unreadcount);
-	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : bold");
-	                    }
+	                    } 
 	                    
 	                    var pageSrc = parent.frames["right"].document.location.toString();
 	                    if (pageSrc.indexOf("mailList.do") != -1) {

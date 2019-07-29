@@ -109,4 +109,8 @@ public interface EzWebFolderService_m {
 	void moveRenameFile(String fileId, String newName, String folderId, int tenantId, String timeUTC) throws Exception;
 
 	List<String> getAllFolderIdNotInFolder(String folderPath, String folderId, String flag) throws Exception;
+	
+	List<Map<String, String>> subFolders(String folderId, String folderOwner, int tenantId ) throws Exception;
+	
+	String subFolderRealDeleteRecursive(List<Map<String, String>> subFolders, int tenantId, Map<String, Object> map, LoginVO userInfo, String flag) throws Exception;
 }

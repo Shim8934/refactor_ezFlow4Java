@@ -189,7 +189,7 @@
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
 	    	<div class="left_title" title="<spring:message code='ezSchedule.t1011'/>"><spring:message code='ezSchedule.t1011'/>
-	        	<span onClick="Function_Flag(11)" class="sub_iconLNB tree_leftconfig" title="<spring:message code='ezTask.hyh001'/>"></span>
+	        	<span onClick="Function_Flag(11)" class="sub_iconLNB tree_leftconfig" title="<spring:message code='ezTask.yej01'/>"></span>
 	        </div>
 	        <div class="btn_writeBox" onclick="WritePopup()">
 	        	<p class="btn_write01"><span class="sub_iconLNB tree_write"></span><spring:message code='ezTask.t113' /></p>
