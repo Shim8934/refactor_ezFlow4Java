@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -2258,8 +2259,10 @@ public class EzAttitudeGWController {
 //			String changeReason = (String) jsonObject.get("changeReason");
 			String changeReason = egovMessageSource.getMessage("ezAttitude.t316");
 			String flagCheck = (String) jsonObject.get("flagCheck");
+			String loginCookie = (String) jsonObject.get("loginCookie");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, changeUserId);
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			MultipartFile tempFile = multiFileLists.get(0);
 			
@@ -2321,7 +2324,7 @@ public class EzAttitudeGWController {
 	        
 	        wb.close();
 	        
-	        resultMsg = ezAttitudeService.annualExcelUpload(excelList, changeUserId, companyId, info.getTenantId(), changeReason, flagCheck);
+	        resultMsg = ezAttitudeService.annualExcelUpload(excelList, changeUserId, companyId, info.getTenantId(), changeReason, flagCheck, userInfo.getLocale());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

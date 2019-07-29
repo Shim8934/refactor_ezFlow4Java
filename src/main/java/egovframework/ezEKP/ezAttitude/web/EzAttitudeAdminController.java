@@ -2287,8 +2287,8 @@ public class EzAttitudeAdminController {
 		pFileName = "annualReport_format";
 		
 		//header
-		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezEmail.t263", userInfo.getLocale()));
-		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t289", userInfo.getLocale()));
+		row.createCell(0).setCellValue(egovMessageSource.getMessage("ezEmail.t263", userInfo.getLocale()));
+		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t289", userInfo.getLocale()));
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t290", userInfo.getLocale()));
 		row.getCell(0).setCellStyle(headerStyle);
 		row.getCell(1).setCellStyle(headerStyle);
@@ -2363,6 +2363,7 @@ public class EzAttitudeAdminController {
 		jsonObject.put("companyId", companyId);
 		jsonObject.put("changeReason", changeReason);
 		jsonObject.put("flagCheck", flagCheck);
+		jsonObject.put("loginCookie", loginCookie);
 		
 		map.add("data", jsonObject);
 		
@@ -2716,13 +2717,13 @@ public class EzAttitudeAdminController {
 		
 		//header
 		row.createCell(0).setCellValue("NO");
-		row.createCell(1).setCellValue("사용자 ID");
+		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezEmail.t263", locale));
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
 		row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
 		row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
-		row.createCell(5).setCellValue("입사일");
-		row.createCell(6).setCellValue("기본 연차 수");
-		row.createCell(7).setCellValue("추가 연차 수");
+		row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t289", locale));
+		row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.t290", locale));
+		row.createCell(7).setCellValue(egovMessageSource.getMessage("ezAttitude.t291", locale));
 		row.getCell(0).setCellStyle(headerStyle);
 		row.getCell(1).setCellStyle(headerStyle);
 		row.getCell(2).setCellStyle(headerStyle);

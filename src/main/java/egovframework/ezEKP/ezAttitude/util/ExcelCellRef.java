@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -204,38 +205,38 @@ public class ExcelCellRef {
      * @param String
      * @return boolean
      */
-    public String validateCheck(int iRow, String titleStr, String checkStr, int maxLength, String optionStr){
+    public String validateCheck(int iRow, String titleStr, String checkStr, int maxLength, String optionStr, Locale locale){
     	
         //널체크
         if(titleStr != null) {
         	if(nullCheck(checkStr)) {
-        		return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319") + titleStr+ msg.getMessage("ezAttitude.t318");
+        		return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale) + titleStr+ msg.getMessage("ezAttitude.t318", locale);
             }
         } else {
-            return msg.getMessage("ezAttitude.t317");
+            return msg.getMessage("ezAttitude.t317", locale);
         }
 
         //입력최대크기
         if(!nullCheck(checkStr)){
             if(byteCheck(checkStr,maxLength)){
-                return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319") + titleStr+ msg.getMessage("ezAttitude.t320") +String.valueOf(maxLength)+ msg.getMessage("ezAttitude.t321");
+                return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale) + titleStr+ msg.getMessage("ezAttitude.t320", locale) +String.valueOf(maxLength)+ msg.getMessage("ezAttitude.t321", locale);
             }
         }
 
         //년도(정수) 체크
         if("1".equals(optionStr) && !nullCheck(checkStr)) {
             if(!intCheck(checkStr)) {
-                return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319")+ titleStr+ msg.getMessage("ezAttitude.t322");
+                return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale)+ titleStr+ msg.getMessage("ezAttitude.t322", locale);
             }
         }
         
         //연차체크
         if("3".equals(optionStr) && !nullCheck(checkStr)) {
         	if(!floatCheck(checkStr)) {
-        		return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319")+ titleStr+ msg.getMessage("ezAttitude.t323");
+        		return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale)+ titleStr+ msg.getMessage("ezAttitude.t323", locale);
         	} else {
         		if(!annualCheck(checkStr)) {
-        			return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319")+ titleStr+ msg.getMessage("ezAttitude.t324");
+        			return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale)+ titleStr+ msg.getMessage("ezAttitude.t324", locale);
         		}
         	}
         }
@@ -245,7 +246,7 @@ public class ExcelCellRef {
         	Pattern p = Pattern.compile("^(\\d+)[/|\\-|\\s]+[0|1](\\d)[/|\\-|\\s]+([0|1|2|3]\\d)$");
         	Matcher m = p.matcher(checkStr);
         	if(!m.find()) {
-        		return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319")+ titleStr+ msg.getMessage("ezAttitude.t325");
+        		return String.valueOf(iRow) + msg.getMessage("ezAttitude.t319", locale)+ titleStr+ msg.getMessage("ezAttitude.t325", locale);
         	}
         }
 
