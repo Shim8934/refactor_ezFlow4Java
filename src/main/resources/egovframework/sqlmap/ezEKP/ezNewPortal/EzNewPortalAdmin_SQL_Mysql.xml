@@ -216,7 +216,7 @@
 			AND
 				access_yn = #accessType#
 			ORDER BY
-				user_type
+				sn, user_type
 		]]>
 	</select>
 	
@@ -310,11 +310,12 @@
 	<update id="ezNewPortal.updateMenuAuth" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_MENU_AUTH
-				(menu_id, user_id, user_type, access_yn, company_id, tenant_id)
+				(menu_id, user_id, user_type, access_yn, company_id, tenant_id, sn)
 			VALUES
-				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#)
+				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#, #sn#)
 			ON DUPLICATE KEY UPDATE
-				access_yn = #accessYN#
+				access_yn = #accessYN#,
+				sn = #sn#
 		]]>
 	</update>
 	
