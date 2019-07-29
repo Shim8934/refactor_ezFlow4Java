@@ -102,7 +102,11 @@
 		            	attitudeConfigSet(result);
 	            	},
 	            	error : function() {
+<<<<<<< Updated upstream
 	            		alert(<spring:message code='ezAttitude.t329' />);
+=======
+	            		alert("<spring:message code='ezAttitude.t329' />");
+>>>>>>> Stashed changes
 	            		$("#Sdatepicker").datepicker('setDate', new Date());
 	            		$('input[name=use_annual_auto_gnrt]').eq(1).prop('checked', true);
 	            		$('input[name=use_minus_annual]').eq(1).prop('checked', true);
