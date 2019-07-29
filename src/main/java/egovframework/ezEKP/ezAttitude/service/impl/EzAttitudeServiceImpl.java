@@ -2786,7 +2786,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public String annualExcelUpload(List<Map<String, Object>> excelList, String changeUserId, String companyId, int tenantId, String changeReason, String flagCheck) throws Exception {
+	public String annualExcelUpload(List<Map<String, Object>> excelList, String changeUserId, String companyId, int tenantId, String changeReason, String flagCheck, Locale locale) throws Exception {
 		LOGGER.debug("annualExcelUpload started");
 		
 		Map<String, Object> excelVo = null;
@@ -2806,14 +2806,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			totalAnnualCnt = (String) excelVo.get("C");
 			
 			
-			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, "입사일", joinDate, 10, "4"))) {
-				return excelCellRef.validateCheck(i+1, "입사일", joinDate, 10, "4");
+			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t289", locale), joinDate, 10, "4", locale))) {
+				return excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t289", locale), joinDate, 10, "4", locale);
 			}
-			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, "사용자 ID", userId, 80, "2"))) {
-				return excelCellRef.validateCheck(i+1, "사용자 ID", userId, 80, "2");
+			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezEmail.t263", locale), userId, 80, "2", locale))) {
+				return excelCellRef.validateCheck(i+1, messageSource.getMessage("ezEmail.t263", locale), userId, 80, "2", locale);
 			}
-			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, "총 연차수", totalAnnualCnt, 8, "3"))) {
-				return excelCellRef.validateCheck(i+1, "총 연차수", totalAnnualCnt, 5, "3");
+			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t239", locale), totalAnnualCnt, 8, "3", locale))) {
+				return excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t239", locale), totalAnnualCnt, 5, "3", locale);
 			}
 			
 			map1 = new HashMap<String, Object>();
@@ -2825,7 +2825,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			}
 			
 			if(userCnt == 0) {
-				return i+1 + messageSource.getMessage("ezAttitude.t319") + userId + messageSource.getMessage("ezAttitude.t326");
+				return i+1 + messageSource.getMessage("ezAttitude.t319", locale) + userId + messageSource.getMessage("ezAttitude.t326", locale);
 			}
 		}
 		
@@ -2846,7 +2846,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		
 		LOGGER.debug("annualExcelUpload started");
-		return messageSource.getMessage("ezAttitude.t327");
+		return messageSource.getMessage("ezAttitude.t327", locale);
 	}
 	
 	@Override
