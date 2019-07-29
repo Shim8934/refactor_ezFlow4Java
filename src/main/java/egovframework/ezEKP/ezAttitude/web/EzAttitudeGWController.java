@@ -2259,9 +2259,10 @@ public class EzAttitudeGWController {
 //			String changeReason = (String) jsonObject.get("changeReason");
 			String changeReason = egovMessageSource.getMessage("ezAttitude.t316");
 			String flagCheck = (String) jsonObject.get("flagCheck");
-			Locale locale = (Locale) jsonObject.get("locale");
+			String loginCookie = (String) jsonObject.get("loginCookie");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, changeUserId);
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			MultipartFile tempFile = multiFileLists.get(0);
 			
@@ -2323,7 +2324,7 @@ public class EzAttitudeGWController {
 	        
 	        wb.close();
 	        
-	        resultMsg = ezAttitudeService.annualExcelUpload(excelList, changeUserId, companyId, info.getTenantId(), changeReason, flagCheck, locale);
+	        resultMsg = ezAttitudeService.annualExcelUpload(excelList, changeUserId, companyId, info.getTenantId(), changeReason, flagCheck, userInfo.getLocale());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

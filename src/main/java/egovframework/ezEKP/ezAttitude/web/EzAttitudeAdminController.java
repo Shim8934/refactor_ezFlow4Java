@@ -2363,7 +2363,7 @@ public class EzAttitudeAdminController {
 		jsonObject.put("companyId", companyId);
 		jsonObject.put("changeReason", changeReason);
 		jsonObject.put("flagCheck", flagCheck);
-		jsonObject.put("locale", userInfo.getLocale());
+		jsonObject.put("loginCookie", loginCookie);
 		
 		map.add("data", jsonObject);
 		
