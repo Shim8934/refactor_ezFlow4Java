@@ -396,7 +396,7 @@
 		    			if(vo.endDate != null) {
 			    			holidayCnt = getHolidayCnt(vo.startDate.substr(0,10), vo.endDate.substr(0,10));
 		    			}
-		    			var useAnnualCnt = (Number(vo.annualCnt) - holidayCnt);
+		    			var useAnnualCnt = (Number(vo.annualCnt) - (vo.annualApprStatus == -1 ? 0 : holidayCnt));
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
 		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "' ondblclick=attitudeItemView('" + vo.attitudeId + "','" + vo.typeId + "') style='background-color:;'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
