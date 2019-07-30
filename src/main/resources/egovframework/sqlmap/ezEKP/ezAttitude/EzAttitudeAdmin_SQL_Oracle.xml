@@ -1858,7 +1858,8 @@
 			               WHEN TYPE_ID = 'A13' THEN 0.5
 						   ELSE 0
 						END
-					)), 0) AS useAnnualCnt
+					)), 0) AS useAnnualCnt,
+					B.JOIN_DATE AS joinDate
 				FROM 
 					TBL_USERMASTER A
 				LEFT OUTER JOIN 
