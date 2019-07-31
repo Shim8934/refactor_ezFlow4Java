@@ -1842,7 +1842,7 @@
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", "<spring:message code='ezAttitude.t231' />");
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html("<spring:message code='ezAttitude.t231' />");
-			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr({typeid : vo.typeId, attitudeid : vo.attitudeId, modappl : vo.modAppl, style : "cursor:pointer"});
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr({typeid : vo.typeId, attitudeid : vo.attitudeId, modappl : vo.modAppl, style : "cursor:pointer; width:12%"});
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").on('dblclick',function(){
 			    				var typeid = $(this).attr('typeid');
 								var modappl = $(this).attr('modappl');
@@ -1871,7 +1871,7 @@
 
 		    			} else if (vo.typeId == "A02") { //지각
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='AttRedText " + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
-			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr({typeid : vo.typeId, attitudeid : vo.attitudeId, modappl : vo.modAppl, style : "cursor:pointer"});
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr({typeid : vo.typeId, attitudeid : vo.attitudeId, modappl : vo.modAppl, style : "cursor:pointer; width:12%"});
 			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").on('dblclick',function(){
 			    				var typeid = $(this).attr('typeid');
 								var modappl = $(this).attr('modappl');
@@ -2187,7 +2187,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
+	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0" onselectstart="return false">
 		<c:if test="${deptFlag != 'true'}">
 			<h1 id="titleimg"><spring:message code='ezAttitude.t143'/></h1>
 		</c:if>

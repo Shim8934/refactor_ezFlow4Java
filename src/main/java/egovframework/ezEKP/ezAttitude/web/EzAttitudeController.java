@@ -2486,6 +2486,7 @@ public class EzAttitudeController {
 	
 		model.addAttribute("font", font);
 		model.addAttribute("authFlag", authFlag);
+		model.addAttribute("userInfo",userInfo);
 		
 		LOGGER.debug("/ezAttitude/attitudeItemDetail ended");
 		return "/ezAttitude/attitudeItemDetail";

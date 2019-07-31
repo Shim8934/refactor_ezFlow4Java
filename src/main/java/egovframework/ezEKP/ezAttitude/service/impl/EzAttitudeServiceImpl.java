@@ -2772,12 +2772,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map2.put("searchStartTime", searchStartTime);
 			map2.put("searchEndTime", searchEndTime);
 			
-			double useAnnualCnt = Double.parseDouble(getAnnualCnt(map2).getUseAnnualCnt());
+			AttitudeAnnualVO v = getAnnualCnt(map2);
+			
+			double useAnnualCnt = Double.parseDouble(v.getUseAnnualCnt());
 			if(useAnnualCnt > 11.0) {
 				useAnnualCnt = 11.0;
 			}
 			double totalAnnualCnt = Double.parseDouble(list.get(0).getTotalAnnualCnt());
-			list.get(0).setTotalAnnualCnt(totalAnnualCnt - useAnnualCnt + "");
+			if (v.getJoinDate() != null) {
+				list.get(0).setTotalAnnualCnt(totalAnnualCnt - useAnnualCnt + "");
+			}
 		}
 		
 		LOGGER.debug("getUserAnnual ended.");

@@ -376,6 +376,9 @@
 	   					orderCell : orderCell,
 	   					orderOption : orderOption
     				},
+    				beforeSend : function() {
+    					ShowMailProgress();
+    				},
 	    			success : function(result){
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
@@ -383,6 +386,9 @@
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			},
+	    			complete : function() {
+	    				HiddenMailProgress();
 	    			}
 	    		});
 	    	}
@@ -460,10 +466,16 @@
 	   					orderOption : orderOption,
 	   					duplicated : "duplicated"
 					},
+					beforeSend : function() {
+						ShowMailProgress();
+					},
 					success : function(result) {
 						totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
 						getAttitudeAbsentedList_after(result.list);
+					},
+					complete : function() {
+						HiddenMailProgress();
 					}
 				});
 	    	}
@@ -535,6 +547,9 @@
 	   					orderCell : orderCell,
 	   					orderOption : orderOption
     				},
+    				beforeSend : function() {
+    					ShowMailProgress();
+    				},
 	    			success : function(result){
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
@@ -542,6 +557,9 @@
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			},
+	    			complete : function() {
+	    				HiddenMailProgress();
 	    			}
 	    		});
 	    	}
@@ -683,6 +701,20 @@
 	        	
 	        	$("#searchPopup").modal();
 	        }
+	    	
+	    	function ShowMailProgress() {
+				var CurrenWidth = window.innerWidth;
+	        	
+			    document.getElementById("mailPanel").style.display = "";
+			    document.getElementById("MailProgress").style.top = "330px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			}
+	    	
+	    	function HiddenMailProgress() {
+			    document.getElementById("mailPanel").style.display = "none";
+			    document.getElementById("MailProgress").style.display = "none";
+			}
 	        
 	        function layerHidden() {
 		        $.modal.close();
@@ -927,6 +959,11 @@
 			</div>
 		</div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+	    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+            <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+        </div>
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
