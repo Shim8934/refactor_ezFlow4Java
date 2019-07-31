@@ -27,8 +27,10 @@
 	<body>
 		<header id="top"></header>
 		<c:if test="${useActiveX == 'YES'}">
-			<script type="text/javascript">ezIcd_ActiveX("i_icd2");</script>
-			<iframe id="if_Progress" src="/ezNewPortal/progress.do" style="display: none;"></iframe>
+			<script type="text/javascript">
+				ezIcd_ActiveX("i_icd2");
+			</script>
+			<iframe id="if_Progress" src="/admin/ezApprovalG/progressAdmin.do?" style="display: none;"></iframe>
 		</c:if>
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
@@ -954,7 +956,6 @@
 			getNotiPopup();          // 팝업공지 불러오기
 			setExpandMenuListEvent();// 확장메뉴 이벤트 설정
 			setExpandMenuEvent();    // 확장메뉴 이벤트 설정
-			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 			
 		}
  		
@@ -985,6 +986,10 @@
 		
 		window.onresize = function () {
 			countTopMenuList();      // 메인메뉴 카운팅
+		}
+		
+		window.onload = function() {
+			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 		}
 		</script>	
 	</body>
