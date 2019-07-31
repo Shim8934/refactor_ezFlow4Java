@@ -3783,9 +3783,15 @@
 	        
 	        function checkMailWriteWindow(){
 	        	setInterval(function(){ 
-	        		if(!window.opener) {
-	        			window.close();
-	        		} 
+	        		if (isIE()) {
+		        		if(window.opener.closed) {
+		        			window.close();
+		        		} 
+	        		} else {
+	        			if(!window.opener) {
+	        				window.close();
+	        			}
+	        		}
 	        	}, 500);
 	        }
 	    </script>
