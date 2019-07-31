@@ -320,7 +320,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute1;extensionAttribute2;usertype", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype", type : "user", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -812,7 +812,7 @@
 	            	var strId = p_ListOrderObject.getAttribute("_data2");
 	            	var strName = p_ListOrderObject.getAttribute("_data4");
 	            	var strMail = p_ListOrderObject.getAttribute("_data3");
-	            	var strData = p_ListOrderObject.getAttribute("_data9");
+	            	var strData = p_ListOrderObject.getAttribute("_data10");
 	            	var strDept = p_ListOrderObject.getAttribute("_data14");
 	            	
 	            	if (strData == null || strData == "") {
