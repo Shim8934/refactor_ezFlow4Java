@@ -122,7 +122,7 @@
                 
                 var _ACCESS = document.createElement("TD");
                 _ACCESS.style.width = "100px";
-                _ACCESS.innerHTML = json[Cnt].access == "YES" ? "<spring:message code='ezBoard.t95'/>" : "<spring:message code='ezCommunity.t44'/>";
+                _ACCESS.innerHTML = json[Cnt].access == "YES" ? "<spring:message code='ezSystem.jje21'/>" : "<spring:message code='ezSystem.jje22'/>";
                 _TR.appendChild(_ACCESS);
                 
                 var _EXPLANATION = document.createElement("TD");
