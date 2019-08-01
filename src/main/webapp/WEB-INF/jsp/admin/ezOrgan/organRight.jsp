@@ -1920,53 +1920,58 @@
 				</dl>
 			</ul>
 		</div>
-
 		<div>
-			<div style="border: 1px solid #ddd; height: 530px; width: 30%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
-			<div class="organHeader">
-	 		 	<table id="maillist_user" class="mainlist" style="width:100%;">
-					<tr class="header">
-						<th width="4%"></th> 
-						<th width="20%"><spring:message code='ezOrgan.t67' /></th> 
-						<th ><spring:message code='ezAttitude.t218' /></th>
-						<th  width="15%"><spring:message code='main.t75' /></th>
-						<th width="10%"><spring:message code='main.t77' /></th>
-						<th  width="10%"><spring:message code='ezOrgan.t1500' /></th>
-						<th width="8%"><spring:message code='ezOrgan.t90' /></</th>
-						<th width="8%"><spring:message code='ezOrgan.t86' /></th>
-						<th  width="7%"><spring:message code='ezOrgan.hyh01' /></th>
-					</tr>
-				</table>
- 				<table id="maillist_dept" class="mainlist" style="width:100%;display:none;">
-					<tr class="header">
-						<th width="4%"></th>
-						<th width="46%"><spring:message code='ezOrgan.t70' /></th>
-						<th width="50%"><spring:message code='ezOrgan.t71' /></th>
-					</tr>
-				</table>
-			</div> 
-			<div class="listview organ" style="width:69%; float:right;">
-				<c:if test="${dotNetIntegration != 'YES'}">
-					<div id="OrganListView" class="OrganListView"></div>
-				</c:if>
-				<c:if test="${dotNetIntegration == 'YES'}">
-					<div id="OrganListView" class="OrganListView"></div>
-				</c:if>
-			</div>
+			<div style="border: 1px solid #ddd; height: 530px; width: 25%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
+			<div id="organListDIv" style="width: 74%; float:right;">
+				<div>
+					<div class="organHeader">
+			 		 	<table id="maillist_user" class="mainlist" style="width:100%;">
+							<tr class="header">
+								<th width="4%"></th> 
+								<th width="20%"><spring:message code='ezOrgan.t67' /></th> 
+								<th ><spring:message code='ezAttitude.t218' /></th>
+								<th  width="15%"><spring:message code='main.t75' /></th>
+								<th width="10%"><spring:message code='main.t77' /></th>
+								<th  width="10%"><spring:message code='ezOrgan.t1500' /></th>
+								<th width="8%"><spring:message code='ezOrgan.t90' /></</th>
+								<th width="8%"><spring:message code='ezOrgan.t86' /></th>
+								<th  width="7%"><spring:message code='ezOrgan.hyh01' /></th>
+							</tr>
+						</table>
+		 				<table id="maillist_dept" class="mainlist" style="width:100%;display:none;">
+							<tr class="header">
+								<th width="4%"></th>
+								<th width="46%"><spring:message code='ezOrgan.t70' /></th>
+								<th width="50%"><spring:message code='ezOrgan.t71' /></th>
+							</tr>
+						</table>
+					</div>
+					
+					<div class="listview organ" style="width:100%; float:right;">
+						<c:if test="${dotNetIntegration != 'YES'}">
+							<div id="OrganListView" class="OrganListView"></div>
+						</c:if>
+						<c:if test="${dotNetIntegration == 'YES'}">
+							<div id="OrganListView" class="OrganListView"></div>
+						</c:if>
+					</div> 
+				</div>
+				<div>
+					<c:if test="${dotNetIntegration != 'YES'}">
+						<div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center; float:right; border: 1px solid #ddd;background-color: #f8f8fa; padding:5px 0px;">
+							<span class="upBtn" id="upBtn"><img src="/images/admin/arrowUp.png"/></span>
+							<span class="downBtn" id="downBtn"><img src="/images/admin/arrowDown.png"/></span>
+							<span class="btnpositionJsp"><a class="imgbtn" id="saveBtn"><span><spring:message code='ezOrgan.t104' /></span></a></span>
+							<!--<span class="imgbtn" id="saveBtn" ><spring:message code='ezOrgan.t104' /></span>-->
+							<%-- <img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
+							<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
+							<a class="imgbtn order" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a> --%>
+						</div>
+					</c:if>
+					<div id="tblPageRayer" class="tblPageRayerOrgan" style="width: 100%;"></div>
+				</div>
+			</div><!-- organListDIv END -->
 		</div>	
-		<c:if test="${dotNetIntegration != 'YES'}">
-			<div class="moveWrap" style="width:69%; vertical-align:middle; text-align:center; float:right; border: 1px solid #ddd;background-color: #f8f8fa; padding:5px 0px;">
-				<span class="upBtn" id="upBtn"><img src="/images/admin/arrowUp.png"/></span>
-				<span class="downBtn" id="downBtn"><img src="/images/admin/arrowDown.png"/></span>
-				<span class="btnpositionJsp"><a class="imgbtn" id="saveBtn"><span><spring:message code='ezOrgan.t104' /></span></a></span>
-				<!--<span class="imgbtn" id="saveBtn" ><spring:message code='ezOrgan.t104' /></span>-->
-				<%-- <img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
-				<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
-				<a class="imgbtn order" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a> --%>
-			</div>
-			
-		</c:if>
-		<div id="tblPageRayer" class="tblPageRayerOrgan" style="width: 69% !important;"></div>
 
 	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
 	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>  
