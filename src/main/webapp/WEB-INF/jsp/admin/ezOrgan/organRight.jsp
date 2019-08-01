@@ -707,6 +707,8 @@
 							sawonDataParsing();
 							moveDisplay(true);
 							makePageSelPage();
+							
+							windowResize();
 						},
 						error : function(error){
 							alert("<spring:message code='ezOrgan.t59' />" + error);
@@ -1794,8 +1796,12 @@
 			var windowResize = function() {
 				var doc = window.document;
 				var height = window.innerHeight * 0.8 - 62;
-				doc.getElementById('TreeView').style.height = (height + 9.6) + "px";
-				doc.getElementsByClassName('OrganListView')[0].style.height = (height -63) + "px";
+				var treeViewH = (height + 9.6);
+				var organListBottomH = doc.getElementById("organListBottom").offsetHeight;
+				var organListHeaderH = doc.getElementsByClassName("organHeader")[0].offsetHeight;
+				
+				doc.getElementById('TreeView').style.height =  treeViewH + "px";
+				doc.getElementsByClassName('OrganListView')[0].style.height = (treeViewH - (organListBottomH + organListHeaderH)) + "px";
 			}
 
 			/*
@@ -1845,6 +1851,7 @@
 					<HEADER><WIDTH>8%</WIDTH></HEADER>
 					<HEADER><WIDTH>8%</WIDTH></HEADER>
 					<HEADER><WIDTH>7%</WIDTH></HEADER>
+					<HEADER><STYLE>display:none</STYLE><WIDTH>15</WIDTH></HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
@@ -1855,6 +1862,7 @@
 					<HEADER><WIDTH>4%</WIDTH></HEADER>
 					<HEADER><WIDTH>46%</WIDTH></HEADER>
 					<HEADER><WIDTH>50%</WIDTH></HEADER>
+					<HEADER><WIDTH>15</WIDTH></HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
@@ -1923,7 +1931,7 @@
 		<div>
 			<div style="border: 1px solid #ddd; height: 530px; width: 25%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
 			<div id="organListDIv" style="width: 74%; float:right;">
-				<div>
+				<div style="width:100%; float:left; box-sizing: border-box;">
 					<div class="organHeader">
 			 		 	<table id="maillist_user" class="mainlist" style="width:100%;">
 							<tr class="header">
@@ -1947,7 +1955,7 @@
 						</table>
 					</div>
 					
-					<div class="listview organ" style="width:100%; float:right;">
+					<div class="listview organ" style="width:100%; float:right; box-sizing: border-box;">
 						<c:if test="${dotNetIntegration != 'YES'}">
 							<div id="OrganListView" class="OrganListView"></div>
 						</c:if>
@@ -1956,9 +1964,9 @@
 						</c:if>
 					</div> 
 				</div>
-				<div>
+				<div id="organListBottom" style="width:100%; float:left; box-sizing: border-box;  border: 1px solid #ddd; ">
 					<c:if test="${dotNetIntegration != 'YES'}">
-						<div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center; float:right; border: 1px solid #ddd;background-color: #f8f8fa; padding:5px 0px;">
+						<div class="moveWrap" style="width:100%; vertical-align:middle; text-align:center; float:right; background-color: #f8f8fa; padding:5px 0px;">
 							<span class="upBtn" id="upBtn"><img src="/images/admin/arrowUp.png"/></span>
 							<span class="downBtn" id="downBtn"><img src="/images/admin/arrowDown.png"/></span>
 							<span class="btnpositionJsp"><a class="imgbtn" id="saveBtn"><span><spring:message code='ezOrgan.t104' /></span></a></span>
