@@ -188,6 +188,8 @@
 			    			"methodType" : "delete",
 			    			"folder_ids" : deleteList.join()
 			    		}, success: function() {
+			    			parent.parent.parent.parent.memoFoldersInfo("delete");
+			    			window.parent.parent.frames["left"].memoFolderList();
 			    			memoFoldersInfo();
 			    		}, error: function(err) {
 			    			alert("<spring:message code='ezMemo.t0045' />");
