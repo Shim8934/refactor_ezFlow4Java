@@ -93,6 +93,7 @@
 						alert("<spring:message code='ezOrgan.t1' />" + g_xmlHTTP.statusText);
 						g_xmlHTTP = null;
 					}
+					isScroll();
 				}
 			}			
 			
@@ -234,6 +235,7 @@
 							sawonDataParsing();
 						}
 						moveDisplay(false);
+						isScroll();
 					},
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t2'/>" + error);	
@@ -709,6 +711,7 @@
 							makePageSelPage();
 							
 							windowResize();
+							isScroll();
 						},
 						error : function(error){
 							alert("<spring:message code='ezOrgan.t59' />" + error);
@@ -1786,6 +1789,7 @@
 						sawonDataParsing();
 						moveDisplay(true);
 						makePageSelPage();
+						isScroll();
 					},
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t59' />" + error);
@@ -1802,6 +1806,8 @@
 				
 				doc.getElementById('TreeView').style.height =  treeViewH + "px";
 				doc.getElementsByClassName('OrganListView')[0].style.height = (treeViewH - (organListBottomH + organListHeaderH)) + "px";
+				
+				isScroll();
 			}
 
 			/*
@@ -1825,6 +1831,20 @@
 				upBtn.addEventListener("click", MoveUp_onclick);
 				downBtn.addEventListener("click", MoveDown_onclick);
 				saveBtn.addEventListener("click", MoveConfirm_onclick);
+			}
+			
+			function isScroll(){
+				var forScroll = $(".organHeader #maillist_user #forScroll"); 
+				
+				if (listOpt2.checked == true) {
+					var forScroll = $(".organHeader #maillist_dept #forScroll"); 
+				}
+			
+				if ($("#OrganListView").height() < $("#OrganListView table").height()) {
+					forScroll.css("display", "");
+				} else {
+					forScroll.css("display", "none");
+				}
 			}
 			
 		</script>
@@ -1851,7 +1871,6 @@
 					<HEADER><WIDTH>8%</WIDTH></HEADER>
 					<HEADER><WIDTH>8%</WIDTH></HEADER>
 					<HEADER><WIDTH>7%</WIDTH></HEADER>
-					<HEADER><STYLE>display:none</STYLE><WIDTH>15</WIDTH></HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
@@ -1862,7 +1881,6 @@
 					<HEADER><WIDTH>4%</WIDTH></HEADER>
 					<HEADER><WIDTH>46%</WIDTH></HEADER>
 					<HEADER><WIDTH>50%</WIDTH></HEADER>
-					<HEADER><WIDTH>15</WIDTH></HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
@@ -1944,6 +1962,7 @@
 								<th width="8%"><spring:message code='ezOrgan.t90' /></</th>
 								<th width="8%"><spring:message code='ezOrgan.t86' /></th>
 								<th  width="7%"><spring:message code='ezOrgan.hyh01' /></th>
+								<th  width="10" style="display:none" id="forScroll"></th>
 							</tr>
 						</table>
 		 				<table id="maillist_dept" class="mainlist" style="width:100%;display:none;">
@@ -1951,6 +1970,7 @@
 								<th width="4%"></th>
 								<th width="46%"><spring:message code='ezOrgan.t70' /></th>
 								<th width="50%"><spring:message code='ezOrgan.t71' /></th>
+								<th  width="10" style="display:none" id="forScroll"></th>
 							</tr>
 						</table>
 					</div>
