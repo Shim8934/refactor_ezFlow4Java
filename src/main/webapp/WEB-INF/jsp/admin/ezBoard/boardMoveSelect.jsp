@@ -18,6 +18,7 @@
 			.node_div span {
 				overflow:hidden;
 				text-overflow:ellipsis;
+				font-family:inherit;
 			}
 		</style>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
