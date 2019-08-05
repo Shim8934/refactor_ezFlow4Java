@@ -122,7 +122,8 @@
 		     	}
 	    		
 	    		if($(obj).attr('data1') == inputNameDlg_cross_dialogArguments[4] ) {
-	    			var strLangTemp = "<spring:message code='ezMemo.t0050' arguments='" + inputNameDlg_cross_dialogArguments[5].trim() + "' />"
+	    			// var strLangTemp = "<spring:message code='ezMemo.t0050' arguments='" + inputNameDlg_cross_dialogArguments[5].trim() + "' />"
+	    			var strLangTemp = "<spring:message code='ezMemo.t0050' arguments='" + memoMessages.strLangMemo22 + "' />"
 					alert(strLangTemp);
 		     		return;
 		     	}
