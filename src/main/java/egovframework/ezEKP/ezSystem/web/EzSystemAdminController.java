@@ -420,7 +420,7 @@ public class EzSystemAdminController {
 		row = sheet.createRow(0);
 		cell = row.createCell(0);	
 		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
-		cell = row.createCell(5);
+		cell = row.createCell(6);
 		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
 		
 		row = sheet.createRow(1);
@@ -428,13 +428,15 @@ public class EzSystemAdminController {
 		cell.setCellStyle(headerStyle);
 		cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0023", locale)); 
 		cell.setCellStyle(headerStyle);
-		cell = row.createCell(2);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0024", locale)); 
+		cell = row.createCell(2);	cell.setCellValue(egovMessageSource.getMessage("ezEmail.t712", locale)); 
 		cell.setCellStyle(headerStyle);
-		cell = row.createCell(3);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0025", locale)); 
+		cell = row.createCell(3);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0024", locale)); 
 		cell.setCellStyle(headerStyle);
-		cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0026", locale)); 
+		cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0025", locale)); 
 		cell.setCellStyle(headerStyle);
-		cell = row.createCell(5);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0027", locale)); 
+		cell = row.createCell(5);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0026", locale)); 
+		cell.setCellStyle(headerStyle);
+		cell = row.createCell(6);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0027", locale)); 
 		cell.setCellStyle(headerStyle);
 		
 		for (int i = 2; i < totalCount + 2; i++) {
@@ -447,20 +449,24 @@ public class EzSystemAdminController {
 				cell.setCellStyle(bodyStyle);
 				cell = row.createCell(1); cell.setCellValue((String) loginHistList.get(i-j).getDeptnm());
 				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(2); cell.setCellValue((String) loginHistList.get(i-j).getCompanynm());
+				cell.setCellStyle(bodyStyle);
 			} else {
 				cell = row.createCell(0); cell.setCellValue((String) loginHistList.get(i-j).getUsernm2());
 				cell.setCellStyle(bodyStyle);
 				cell = row.createCell(1); cell.setCellValue((String) loginHistList.get(i-j).getDeptnm2());
 				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(2); cell.setCellValue((String) loginHistList.get(i-j).getCompanynm2());
+				cell.setCellStyle(bodyStyle);
 			}
 			
-			cell = row.createCell(2); cell.setCellValue((String) loginHistList.get(i-j).getConnectip());
+			cell = row.createCell(3); cell.setCellValue((String) loginHistList.get(i-j).getConnectip());
 			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(3); cell.setCellValue((String) loginHistList.get(i-j).getConnecttime());
+			cell = row.createCell(4); cell.setCellValue((String) loginHistList.get(i-j).getConnecttime());
 			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(4); cell.setCellValue((String) loginHistList.get(i-j).getConnectbrowser());
+			cell = row.createCell(5); cell.setCellValue((String) loginHistList.get(i-j).getConnectbrowser());
 			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(5); cell.setCellValue((String) loginHistList.get(i-j).getConnectos());
+			cell = row.createCell(6); cell.setCellValue((String) loginHistList.get(i-j).getConnectos());
 			cell.setCellStyle(bodyStyle);
 			
 			sheet.autoSizeColumn(i-1);
