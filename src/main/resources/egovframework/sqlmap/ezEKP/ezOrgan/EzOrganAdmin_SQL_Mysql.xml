@@ -4217,7 +4217,9 @@
 			department,
 			description,
 			mailboxquota,
-			mailboxusage
+			mailboxusage,
+			displayName2,
+			description2
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 

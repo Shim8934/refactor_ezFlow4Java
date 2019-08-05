@@ -5929,7 +5929,11 @@
  				CN,
  				displayName,
  				department,
- 				description
+ 				description,
+				mailboxquota,
+				mailboxusage,
+				displayName2,
+				description2
  			FROM
  				TBL_USERMASTER
  			WHERE
