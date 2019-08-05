@@ -113,6 +113,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				
 				rtnValue = "OK";
 			} else if (boardMyFavoriteVO.getMode().equals("DEL")) {
+				/* 2019-08-05 홍승비 - 마이게시판 관리 > 분류 삭제 시 삭제된 하위게시판은 무시하도록 수정 */
 				String treeUpper = ezBoardAdminDAO.getMyBoardTreeUpper(boardMyFavoriteVO);
 				
 				if (treeUpper.equals("0")) {
@@ -329,6 +330,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		return ezBoardAdminDAO.checkForm(map);
 	}
 
+	/* 2019-08-05 홍승비 - 삭제된 게시판은 마이게시판 트리에 표출되지 않도록 수정 */
 	/* 2018-06-26 홍승비 - 마이게시판 트리 가져올때 companyID 조건 추가 */
 	@Override
 	public List<BoardMyFavoriteVO> getMyBoardTree_get3(String userID, String pRootTreeID, String companyID, int tenantID) throws Exception {
@@ -340,7 +342,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PTREEUPPER", pRootTreeID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
-
+		
 		logger.debug("getMyBoardTree_get3 ended");
 		return ezBoardAdminDAO.getMyBoardTree_get3(map);
 	}
