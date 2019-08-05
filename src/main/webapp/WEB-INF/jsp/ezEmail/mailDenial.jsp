@@ -34,7 +34,6 @@
 	                    if (emailValue != "") {
 	                        var objTr = document.createElement("TR");
 	                        objTr.setAttribute("valign", "top");
-	                        objTr.style.height = "60px";
 	                        var objTdcheck = document.createElement("TD");
 	                        objTdcheck.setAttribute('id', "TDID");
 	                        objTdcheck.style.padding = "5px";

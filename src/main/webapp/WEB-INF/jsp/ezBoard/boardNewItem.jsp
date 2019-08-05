@@ -2127,8 +2127,8 @@
 	            <td>
 	                <div class="portlet_tabpart03" style="margin:0px;border-top:0px;padding:0px;margin-bottom:4px">
 	                    <div class="portlet_tabpart03_top" id="tab1">
-	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.t321' /></span></p>
-	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.t60' /></span></p>
+	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.hsbJP02' /></span></p>
+	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.hsbJP01' /></span></p>
 	                    </div>
 	                </div>
 	            </td>

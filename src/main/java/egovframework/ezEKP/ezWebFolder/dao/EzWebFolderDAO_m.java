@@ -188,4 +188,8 @@ public class EzWebFolderDAO_m extends EgovAbstractDAO {
 	public List<String> getAllFolderIdNotInFolder (Map<String, Object> map) {
 		return (List<String>) list("EzWebFolderDAO_m.getAllFolderIdNotInFolder", map);
 	}
+	
+	public List<Map<String,String>> selectSubFolders(Map<String, Object> map) {
+		return (List<Map<String, String>>) list("EzWebFolderDAO_m.selectSubFolders", map);
+	}
 }

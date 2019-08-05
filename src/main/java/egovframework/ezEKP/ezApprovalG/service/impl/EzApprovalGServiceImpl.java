@@ -7354,7 +7354,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					doc.getElementById("docnumber").text(docNO);
 					
 					if (doc.getElementById("enforcedate") != null) {
-						doc.getElementById("enforcedate").text(commonUtil.getTodayUTCTime("yyyy").replace("-", "."));
+						doc.getElementById("enforcedate").text(commonUtil.getTodayUTCTime("yyyy-MM-dd").replace("-", "."));
 					}
 					
 					retNum = getNDigitNum(cabinetSN, 6);
@@ -14171,14 +14171,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					String autoDeptID = getCode2Name("A55", "001", companyID, lang,userInfo.getTenantId()).trim();
 					
 					if (!autoDeptID.equals("")) {
-						int addressCount = ezApprovalGDAO.doDocCompleteReceiptCnt(map);
+//						int addressCount = ezApprovalGDAO.doDocCompleteReceiptCnt(map);
 						// 민원인 외부 수신처 아이디가 존재하는 경우
-						if (addressCount > 0) {
-							map.put("v_DOCID", docID);
-							map.put("v_TENANTID", userInfo.getTenantId());
-							// ProcessYN(진행여부)를 O으로 변경
-							ezApprovalGDAO.updateReceiptPointInfo(map);
-						}
+//						if (addressCount > 0) {
+//							map.put("v_DOCID", docID);
+//							map.put("v_TENANTID", userInfo.getTenantId());
+//							// ProcessYN(진행여부)를 O으로 변경
+//							ezApprovalGDAO.updateReceiptPointInfo(map);
+//						}
 					}
 					//시행문일때만 발신함
 					if (realDocType.equals("001")) {

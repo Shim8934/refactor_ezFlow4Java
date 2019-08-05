@@ -9425,25 +9425,25 @@
 		   		TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 		   	AND
 		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#		   		
-		   	AND 
-		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
-		   
 		   	]]>
-		   	<isEqual property="v_MODELENGTH" compareValue="2">
-		   	NOT
-		   	</isEqual>
-		   	 LIKE 
-		   	 	'Address%' 
+<!-- 		   	AND  -->
+<!-- 		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID -->
+		   
+<!-- 		   	<isEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	NOT -->
+<!-- 		   	</isEqual> -->
+<!-- 		   	 LIKE  -->
+<!-- 		   	 	'Address%'  -->
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 		   	</isEqual>
-		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
-		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
-		   	</isNotEqual> 
+<!-- 		   	<isNotEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	 AND  -->
+<!-- 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#) -->
+<!-- 		   	</isNotEqual>  -->
 		   	<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
 			AND
 				$v_SPSUBQUERY$

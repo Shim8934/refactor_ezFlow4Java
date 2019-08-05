@@ -147,5 +147,8 @@ public interface EzCommonService {
 	public void addThemeContentLang() throws Exception;
 
 	public void insertPortletInfo() throws Exception;
+
+	public void addSnMenuAuth() throws Exception;
+
 }
 

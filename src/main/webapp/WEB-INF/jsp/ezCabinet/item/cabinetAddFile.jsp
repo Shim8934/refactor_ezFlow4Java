@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}"       type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 	</head>
-	<body class="popup cabAddMain">
+	<body class="popup cabAddMain" style="margin-top:0px;">
 		<%-- <h1><spring:message code="ezCabinet.t67"/></h1> --%>
 		<div id="cabAddStore" class="cabStore">
 			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t14' /></span></a>

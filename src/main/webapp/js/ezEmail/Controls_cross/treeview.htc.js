@@ -852,8 +852,11 @@
             }
 */
             if (GetAttribute(childNode, "title") != null) {
-                SPAN_TAG.setAttribute("title",GetAttribute(childNode, "title"));
+            	if (mydepth != "1") {
+            		SPAN_TAG.setAttribute("title", GetAttribute(childNode, "caption"));
+            	}
             }
+            
             
             var folderCount = GetAttribute(childNode, "foldercount");
             if (folderCount > 0) {

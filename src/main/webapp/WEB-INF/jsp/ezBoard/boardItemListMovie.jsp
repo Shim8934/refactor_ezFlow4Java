@@ -949,7 +949,7 @@
 	<c:if test="${buttonHidden == 'N'}">
 		<div id="mainmenu">
 			<ul>
-		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
+		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02'/></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li>
 				<div id="right" class="sub_frameIcon" style="float:right">	

@@ -385,10 +385,17 @@
 		
 		        if (gIsAppoint != '2') {
 		        	/* document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>"*/
-		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
-		                alert("<spring:message code='ezPersonal.t36'/>");
-		                return;
-		            }
+		        	if (approvalFlag == "G") {
+			            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
+			                alert("<spring:message code='ezPersonal.t36'/>");
+			                return;
+			            }
+		        	} else {
+			            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
+			                alert("<spring:message code='ezPersonal.t36'/>");
+			                return;
+			            }
+		        	}
 		        }
 				var pProxy = "";
 				var pBujae = "";

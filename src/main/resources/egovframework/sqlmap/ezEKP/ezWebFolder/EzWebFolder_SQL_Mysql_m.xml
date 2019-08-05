@@ -112,6 +112,12 @@
 		<result property="folderName2"  column="FOLDERNAME2"  />
 		<result property="folderLevel"  column="FOLDERLEVEL"  />
 	</resultMap>
+	
+	<resultMap id="subFolderRealAll" class="HashMap">
+		<result property="folderId"     	column="FOLDER_ID" 		 columnIndex="1" 	/>
+		<result property="folderStatus"     column="USE_STATUS" 	 columnIndex="2" 	/>
+		<result property="folderPath"       column="FOLDER_PATH"	 columnIndex="3" 	/>
+	</resultMap>
 
 	<sql id="searchTerm">
 		<isNotEqual property="searchFileType" compareValue="" prepend="AND">
@@ -1442,9 +1448,6 @@
 			AND
 				FOLDER_ID = #folderId#
 		]]>
-		<isNotEqual property="flag" compareValue="delete" prepend="AND">
-			USE_STATUS = 'T'
-		</isNotEqual>
 	</delete>
 	
 	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterClass="Map" resultClass="String">
@@ -1954,6 +1957,21 @@
 				      AND FOLDER_ID <> #folderId# 
 			      ) FP
 			   ON F2.FOLDER_PATH LIKE CONCAT(FP.FOLDER_PATH ,'%'))
+	    ]]>
+	</select>
+	
+	<select id="EzWebFolderDAO_m.selectSubFolders" parameterClass="Map" resultMap="subFolderRealAll">
+		<![CDATA[
+			SELECT 
+				FOLDER_ID 	AS folderId, 
+				USE_STATUS 	AS folderStatus, 
+				FOLDER_PATH AS folderPath  
+			FROM 
+				TBL_WEBFOLDER_FOLDER 
+			WHERE 
+				FOLDER_UPPER = #folderId#
+			AND 
+				TENANT_ID = #tenantId#
 	    ]]>
 	</select>
 </sqlMap>

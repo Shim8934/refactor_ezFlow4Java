@@ -948,7 +948,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:547px; z-index
 #theme2Body .scalendar_mini_title{table-layout:fixed; text-align:center; height:25px; margin:2px 0px 10px 0px;; padding:0px 10px 0px 3px;}
 #theme2Body .sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden; height:203px; background: white}
 #theme2Body .sscheduleUL .scheduleLi .scheduleTime .Tdept_timeText{color:#333333; font-size:13px; margin:0px 0px 0px 8px;}
-#theme2Body .schedule_calendar{float:left; width:calc(46% - 11px); margin-right:5px; background:#f0c80a;}
+#theme2Body .schedule_calendar{float:left; width:calc(46% - 11px); margin-right:5px;}
 #theme2Body .schedule_scheduleList{float:right; width:54%;}
 #theme2Body .linkBtn_open{ margin:0px; padding:0px; position:absolute; right:82px; top:-10px; cursor:pointer; z-index:1000;}
 #theme2Body .linkBtn_close{margin:0px; padding:0px; position:absolute; right:0px; top:-10px; cursor:pointer; z-index:1000;}
