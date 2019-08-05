@@ -2907,7 +2907,7 @@
 	    		(17, 3, #companyID#, #tenantID#, 'To Do管理'),
 	    		(18, 1, #companyID#, #tenantID#, '메모'),
 	    		(18, 2, #companyID#, #tenantID#, 'Memo'),
-	    		(18, 3, #companyID#, #tenantID#, 'メモ')
+	    		(18, 3, #companyID#, #tenantID#, 'メモ帳')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I28" parameterClass="Map">
