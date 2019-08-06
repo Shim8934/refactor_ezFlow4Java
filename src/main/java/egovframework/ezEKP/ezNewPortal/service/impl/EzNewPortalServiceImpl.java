@@ -1418,6 +1418,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//update 시 기존에 있던 메뉴 권한 삭제 후 insert
 		ezNewPortalDAO.deleteThemeAuth(map);
+		int idx = 1;
 		
 		for (Object item : themeAuths) {
 			if (item instanceof JSONObject) {
@@ -1437,8 +1438,11 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				map.put("themeId", themeId);
+				map.put("sn", idx);
 				
 				ezNewPortalDAO.insertThemeAuth(map);
+				
+				idx++;
 			}
 		}
 		LOGGER.debug("updateThemeAuth ended.");
@@ -1561,6 +1565,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//update 시 기존에 있던 메뉴 권한 삭제 후 insert
 		ezNewPortalDAO.deletePortletAuth(map);
+		int idx = 1;
 		
 		for (Object item : portletAuths) {
 			if (item instanceof JSONObject) {
@@ -1580,8 +1585,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				map.put("portletId", portletId);
+				map.put("sn", idx);
 				
 				ezNewPortalDAO.insertPortletAuth(map);
+				idx++;
 			}
 		}
 		LOGGER.debug("updatePortletAuth ended.");

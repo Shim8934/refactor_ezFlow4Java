@@ -1619,4 +1619,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addSnMenuAuth() throws Exception {
 		ezCommonDAO.addSnMenuAuth();
 	}
+
+	@Override
+	public void addSnThemeAndPortletAuth() throws Exception {
+		ezCommonDAO.addSnThemeAuth();
+		ezCommonDAO.addSnPortletAuth();
+	}
 }

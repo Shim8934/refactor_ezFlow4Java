@@ -168,6 +168,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createThemeAndPortletAuth();
     	ezCommonService.addMenuAndPortletCode(); //2019-07-15 유은정 - 메뉴, 포틀릿 호출 로직 개선 위한 컬럼 추가
     	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
+    	ezCommonService.addSnThemeAndPortletAuth();
     	
     	logger.debug("init ended.");
     }

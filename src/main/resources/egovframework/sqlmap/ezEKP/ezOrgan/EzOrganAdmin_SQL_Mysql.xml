@@ -3061,36 +3061,36 @@
   		<![CDATA[
 	    INSERT INTO 
 	    	TBL_PORTAL_THEME_AUTH 
-	    		(THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
+	    		(THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
 	    VALUES 
-	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(3, #companyID#, #tenantID#, #companyID#, 1, 0)
+	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(3, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I32" parameterClass="Map">
   		<![CDATA[
 	    INSERT INTO 
 	    	TBL_PORTAL_PORTLET_AUTH 
-	    		(PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE) 
+	    		(PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
 	    VALUES 
-	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(4, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(5, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(6, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(7, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(8, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(9, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(10, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(11, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(12, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(14, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(26, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(34, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(36, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(47, #companyID#, #tenantID#, #companyID#, 1, 0),
-	    		(49, #companyID#, #tenantID#, #companyID#, 1, 0)
+	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(4, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(5, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(6, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(7, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(8, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(9, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(10, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(11, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(12, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(14, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(26, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(34, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(36, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(47, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(49, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
   		]]>
     </insert>
     

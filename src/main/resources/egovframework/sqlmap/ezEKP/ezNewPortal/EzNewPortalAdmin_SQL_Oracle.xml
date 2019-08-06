@@ -1126,7 +1126,7 @@
 	</isNotEmpty>
 		<![CDATA[
 		ORDER BY
-			user_type
+			sn, user_type
 		]]>
 	</select>
 	
@@ -1146,9 +1146,9 @@
 	<insert id="ezNewPortal.insertThemeAuth" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_THEME_AUTH (
-			theme_id, company_id, tenant_id, user_id, access_YN, user_type
+			theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn
 		) VALUES (
-			#themeId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#
+			#themeId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#
 		)
 	]]>
 	</insert>
@@ -1207,7 +1207,7 @@
 		AND
 			access_yn = #accessType#
 		ORDER BY
-			user_type
+			sn, user_type
 	]]>
 	</select>
 	
@@ -1227,9 +1227,9 @@
 	<insert id="ezNewPortal.insertPortletAuth" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_PORTLET_AUTH (
-			portlet_id, company_id, tenant_id, user_id, access_YN, user_type
+			portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn
 		) VALUES (
-			#portletId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#
+			#portletId#, #companyId#, #tenantId#, #userId#, #accessYN#, #userType#, #sn#
 		)
 	]]>
 	</insert>

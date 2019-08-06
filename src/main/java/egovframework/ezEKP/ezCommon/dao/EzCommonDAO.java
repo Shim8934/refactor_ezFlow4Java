@@ -857,4 +857,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.snMenuAuth");
 		}
 	}
+
+	public void addSnThemeAuth() {
+		try {
+			select("EzCommonDAO.checkSnThemeAuth");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_auth sn doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.snThemeAuth");
+		}
+	}
+
+	public void addSnPortletAuth() {
+		try {
+			select("EzCommonDAO.checkSnPortletAuth");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_auth sn doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.snPortletAuth");
+		}
+	}
 }

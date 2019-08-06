@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>포틀릿 권한</title>
+<title><spring:message code="ezNewPortal.yej08"/></title>
 <link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 
@@ -23,7 +23,7 @@
 </style>
 </head>
 <body class="popup">
-	<h1><spring:message code="ezNewPortal.yej05"/></h1>
+	<h1><spring:message code="ezNewPortal.yej08"/></h1>
 	<div id="close"><ul><li><span></span></ul></div>
 	<div class="admin_menu" id="portletAuthList"></div>
 	<div class="btnpositionNew" id="menuTable">
@@ -142,7 +142,7 @@
 				board_alertArguments[1] = DivPopUpHidden;
 				
 				if (result == "ok") {
-					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.yej06' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.yej06'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.yej07' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.yej07'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 					return;
 				} else {
@@ -155,7 +155,7 @@
 			}
 			
 			request.onerror = function() {
-				alert("저장에 실패하였습니다.");
+				alert("<spring:message code='ezBoard.t80'/>");
 				return;
 			}
 			

@@ -1554,4 +1554,36 @@
 		ADD 
 			sn INT DEFAULT 0
 	</statement>
+	
+	<select id="EzCommonDAO.checkSnThemeAuth">
+		SELECT
+			sn
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.snThemeAuth">
+		ALTER TABLE
+			TBL_PORTAL_THEME_AUTH
+		ADD 
+			sn INT DEFAULT 0
+	</statement>
+	
+	<select id="EzCommonDAO.checkSnPortletAuth">
+		SELECT
+			sn
+		FROM
+			TBL_PORTAL_PORTLET_AUTH
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.snPortletAuth">
+		ALTER TABLE
+			TBL_PORTAL_PORTLET_AUTH
+		ADD 
+			sn INT DEFAULT 0
+	</statement>
 </sqlMap>
