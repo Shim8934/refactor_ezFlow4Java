@@ -3937,6 +3937,14 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("mailShareId", request.getParameter("mailShareId"));
 		}
 		
+		/* 2019-08-06 홍승비 - 포토/썸네일 게시물 작성 시 작성자 이름 다국어 처리(임시보관함) */
+		String displayName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			displayName = userInfo.getDisplayName1();
+		} else {
+			displayName = userInfo.getDisplayName2();
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -3967,6 +3975,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("displayName", displayName);
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -5721,7 +5730,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String userID = userInfo.getDisplayName1();
+		String userID = "";
 		String userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String boardID = request.getParameter("boardID");
 		String url = request.getParameter("url");
@@ -5739,6 +5748,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
+		/* 2019-08-06 홍승비 - 포토/썸네일 게시물 작성 시 작성자 이름 다국어 처리 */
+		if (userInfo.getPrimary().equals("1")) {
+			userID = userInfo.getDisplayName1();
+		} else {
+			userID = userInfo.getDisplayName2();
+		}
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);
