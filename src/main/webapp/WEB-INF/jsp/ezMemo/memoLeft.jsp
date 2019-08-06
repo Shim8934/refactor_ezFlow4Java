@@ -136,7 +136,7 @@
 	            			span4.setAttribute("class", "node_normal");
 	            			span4.setAttribute("onclick", "memoClick(this)");
 	            			span4.setAttribute("folderId", folders[i].folder_id);
-	            			if (i === 0 && folders[i].orders === 0) {
+	            			if (folders[i].orders === 0) {
 		            			span4.setAttribute("folderName", memoMessages.strLangMemo22);
 		            			span4.innerHTML = memoMessages.strLangMemo22;
 	            			} else {

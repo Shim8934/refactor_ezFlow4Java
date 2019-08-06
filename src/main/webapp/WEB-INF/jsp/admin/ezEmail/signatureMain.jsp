@@ -80,7 +80,8 @@
 	                var _SPAN = document.createElement("span");
 	                _TD.style.border = "none";
 	                _TD.style.borderBottom = "1px solid #f2f2f2";
-	                _TD.style.padding = "0";
+	                _TD.style.padding = "0 6px";
+	                _TD.style.boxSizing = "border-box";
 	                
 	                if (userLang != '1') {
 	                	_SPAN.innerText = json[Cnt].displayname2;
@@ -92,7 +93,7 @@
 	                _SPAN.style.lineHeight = "30px";
 	                _SPAN.style.float = "left";
 	                _SPAN.style.display = "inline-block";
-	                _SPAN.style.width = "64%";
+	                _SPAN.style.width = "235px";
 	                _SPAN.style.whiteSpace = "nowrap";
 	                _SPAN.style.overflow = "hidden";
 	                _SPAN.style.textOverflow = "ellipsis";
@@ -101,9 +102,11 @@
 	                _TR.appendChild(_TD);
 	                
 	                var _DIV = document.createElement("DIV")
-	                _DIV.style.float = "left";
+	                _DIV.style.float = "right";
 	                _DIV.style.marginLeft = "13px";
-	                _DIV.style.lineHeight = "30px";
+	                _DIV.style.height = "100%";
+	                _DIV.style.display = "flex";
+	                _DIV.style.alignItems = "center";
 	                var _EDIT = document.createElement("BUTTON");
 	                var _DEL = document.createElement("BUTTON");
 	                _EDIT.innerHTML = "<spring:message code='ezResource.t54'/>";
@@ -340,13 +343,15 @@
 								<div style="border-top: 0px">
 									<spring:message code='ezEmail.jje06'/>
 								</div>
-									<input type="text" id="signSearchInput" onkeydown="signSearchEnter()" style="height:22px;">
+								<input type="text" id="signSearchInput" onkeydown="signSearchEnter()" style="height:22px;">
+								<div class="lmLetterBoxTitSearch">
 									<button class="lmTop" onclick="searchSignList()">
 										<spring:message code='ezBoard.t188'/>
 									</button>
 									<button class="lmTop" onclick="inputReset()">
 										<spring:message code='ezBoard.t999035'/>
 									</button>
+								</div>
 							</div>
 							<div style="height:418px; overflow:auto;">
 								<table class="content" style="width:100%; border:none;">

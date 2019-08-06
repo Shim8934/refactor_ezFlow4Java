@@ -420,6 +420,7 @@
 											html += "   <td>"	+ j 								+ "</td>";
 											html += "	<td title=\'" + i.usernm + "'>"	+ i.usernm	+ "</td>";
 											html += "	<td>"	+ i.deptnm							+ "</td>";
+											html += "	<td>"	+ i.companynm						+ "</td>";
 											html += "	<td>"	+ i.connectip						+ "</td>";
 											html += "	<td>"	+ i.connecttime						+ "</td>";
 											html += "	<td>"	+ i.connectbrowser					+ "</td>";
@@ -435,6 +436,7 @@
 											html += "   <td>"	+ j		+ "</td>";
 											html += "	<td title=\'" + i.usernm2 + "'>"  + i.usernm2 	+ "</td>";
 											html += "	<td>"	+ i.deptnm2								+ "</td>";
+											html += "	<td>"	+ i.companynm2							+ "</td>";
 											html += "	<td>"	+ i.connectip							+ "</td>";
 											html += "	<td>"	+ i.connecttime							+ "</td>";
 											html += "	<td>"	+ i.connectbrowser						+ "</td>";
@@ -594,6 +596,7 @@
 						<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
 						<th><spring:message code="ezStatistics.t1068"></spring:message></th>
 						<th><spring:message code="ezStatistics.t113"></spring:message></th>
+						<th><spring:message code="ezEmail.t712"></spring:message></th>
 						<th><spring:message code="ezSystem.x0024"></spring:message></th>
 						<th><spring:message code="ezSystem.x0025"></spring:message></th>
 						<th><spring:message code="ezSystem.x0026"></spring:message></th>
