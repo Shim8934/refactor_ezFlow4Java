@@ -325,8 +325,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String companyId       = userInfo.getCompanyID();
 		String userId          = userInfo.getId();
 		String primary         = userInfo.getPrimary();
-		String cabinetStr1     = egovMessageSource.getMessage("ezCabinet.t02", new Locale(config.getProperty("config.cabinetPrimary")));
-		String cabinetStr2     = egovMessageSource.getMessage("ezCabinet.t02", new Locale(config.getProperty("config.cabinetSecondary")));
+		String cabinetStr1     = egovMessageSource.getMessage("ezCabinet.t169", new Locale(config.getProperty("config.cabinetPrimary")));
+		String cabinetStr2     = egovMessageSource.getMessage("ezCabinet.t169", new Locale(config.getProperty("config.cabinetSecondary")));
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
