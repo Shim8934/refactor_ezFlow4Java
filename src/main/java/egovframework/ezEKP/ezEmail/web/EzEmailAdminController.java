@@ -1087,13 +1087,15 @@ public class EzEmailAdminController {
         String domain = ezCommonService.getTenantConfig("DomainName",userInfo.getTenantId());
         String mailServerAddress = config.getProperty("config.MailServerAddress");
         String iMAPPort = config.getProperty("config.IMAPPort");
+        
+        boolean primaryChk = userInfo.getPrimary().equals("1") ? true : false;
 
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {				
 			List<String> quaList = new ArrayList<String>();
 			String userId = organUser.getCn();
-			String department = organUser.getDescription();
-			String displayname = organUser.getDisplayName();
+			String department = primaryChk ? organUser.getDescription() : organUser.getDescription2();
+			String displayname = primaryChk ? organUser.getDisplayName() : organUser.getDisplayName2();
 			displayname = displayname + "(" + userId + ")";		
 			
 			quaList.add(0, userId);
@@ -1176,13 +1178,15 @@ public class EzEmailAdminController {
 		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
 		
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
+		
+		boolean primaryChk = userInfo.getPrimary().equals("1") ? true : false;
 
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {
 			List<String> quaList = new ArrayList<String>();
 			String userId = organUser.getCn();
-			String department = organUser.getDescription();
-			String displayname = organUser.getDisplayName();
+			String department = primaryChk ? organUser.getDescription() : organUser.getDescription2();
+			String displayname = primaryChk ? organUser.getDisplayName() : organUser.getDisplayName2();
 			displayname = displayname + "(" + userId + ")";	
 				
 			quaList.add(0, userId);
