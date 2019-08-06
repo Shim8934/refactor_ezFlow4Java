@@ -1,8 +1,14 @@
 package egovframework.ezMobile.ezCommon.web;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -21,6 +27,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.fcc.service.MimeTypes;
 
 /** 
  * @Description [Controller] 모바일GW - 공통
@@ -56,6 +63,8 @@ public class MCommonGWController {
 		
 		String filePath = request.getParameter("filePath");
 		LOGGER.debug("filePath = " + filePath);
+		String fileName = (request.getParameter("fileName") == null) ? "" : request.getParameter("fileName");
+		LOGGER.debug("fileName = " + fileName);
 		String realPath = commonUtil.getRealPath(request);
 		
 		filePath = realPath + filePath;
@@ -81,11 +90,18 @@ public class MCommonGWController {
 				if (filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 					bytes = klibUtil.decrypt(bytes);
 				}
+				
+				String fileType = MimeTypes.getContentType(bytes, fileName);
+				
+				if (fileType == null || fileType.equalsIgnoreCase("")) {
+					fileType = "application/octet-stream";
+				}
 
 				JSONObject data = new JSONObject();
 				
 				data.put("bytes", bytes);
 				data.put("fileSize", fSize);
+				data.put("fileType", fileType);
 				
 				result.put("status", "ok");
 				result.put("code", 0);
@@ -102,4 +118,6 @@ public class MCommonGWController {
 		
 		return result;
 	}
+	
+	
 }
