@@ -462,7 +462,9 @@
 	                    if (unreadcount == "0") {
 	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption);
 	                        //window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : ''");
-	                    } 
+	                    } else {
+	                        window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "&nbsp;&nbsp;" + unreadcount);
+	                    }
 	                    
 	                    var pageSrc = parent.frames["right"].document.location.toString();
 	                    if (pageSrc.indexOf("mailList.do") != -1) {

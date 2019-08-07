@@ -333,6 +333,9 @@
                });
 	            
 	            ChangeListView_onClick(getOrganListType());
+	            
+	            //메일창에서 수신자설정창을 열고 메일창을 먼저 닫았을 경우, 수신사설정창도 닫히도록 처리 2019-07-31 홍대표
+	            checkMailWriteWindow();
 	        }
 	        
 		    function recevieListview(pID, pListView) {
@@ -3785,6 +3788,20 @@
 	        	} else {
 	        		receiverCount -= 1;
 	        	}
+	        }
+	        
+	        function checkMailWriteWindow(){
+	        	setInterval(function(){ 
+	        		if (isIE()) {
+		        		if(window.opener.closed) {
+		        			window.close();
+		        		} 
+	        		} else {
+	        			if(!window.opener) {
+	        				window.close();
+	        			}
+	        		}
+	        	}, 500);
 	        }
 	    </script>
 	</head>

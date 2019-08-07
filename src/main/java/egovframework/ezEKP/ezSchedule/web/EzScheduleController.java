@@ -1978,7 +1978,7 @@ public class EzScheduleController extends EgovFileMngUtil {
     	Calendar cal = Calendar.getInstance();
     	cal.setTime(sdf.parse(enddate));
     	
-    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+    	if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
     		cal.add(Calendar.MINUTE, -1);        		
     		enddate = sdf.format(cal.getTime());
     	}

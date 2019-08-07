@@ -244,7 +244,15 @@
                     	}
 						
 	                    if (filter == "circularNew") {
-	                    	if(OrderCell == 'TITLE') {
+	                    	if (OrderCell == 'IMPORTANCE') {
+								$('#BoardList_TH_1').append(imgTag);
+							} else if (OrderCell == 'CONFIRMSTATUS') {
+								$('#BoardList_TH_2').append(imgTag);
+							} else if (OrderCell == 'COMMENTSTATUS') {
+								$('#BoardList_TH_3').append(imgTag);
+							} else if (OrderCell == 'HASFILE') {
+								$('#BoardList_TH_4').append(imgTag);
+							} else if(OrderCell == 'TITLE') {
 			                	$('#BoardList_TH_5').append(imgTag);
 			                } else if(OrderCell == 'MEMBERNAME') {
 			                	$('#BoardList_TH_6').append(imgTag);
@@ -254,7 +262,13 @@
 			                	$('#BoardList_TH_9').append(imgTag);
 			                }
 	                    } else {
-	                    	if(OrderCell == 'TITLE') {
+	                    	if (OrderCell == 'IMPORTANCE') {
+								$('#BoardList_TH_1').append(imgTag);
+							} else if (OrderCell == 'CONFIRMSTATUS') {
+								$('#BoardList_TH_2').append(imgTag);
+							} else if (OrderCell == 'HASFILE') {
+								$('#BoardList_TH_3').append(imgTag);
+							} else if(OrderCell == 'TITLE') {
 			                	$('#BoardList_TH_4').append(imgTag);
 			                } else if(OrderCell == 'MEMBERNAME') {
 			                	$('#BoardList_TH_5').append(imgTag);

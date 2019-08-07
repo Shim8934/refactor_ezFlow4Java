@@ -86,6 +86,8 @@
 		            }
 		        } catch (e) {}
 	
+		        popupTitle();
+		        
 		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
@@ -195,44 +197,6 @@
         		+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
         		+ "<span id='countInfo'></span>";
 		        SelectDeptNM.setAttribute("countinfo", "")
-		        
-		        if (delType == "c") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t291' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t291' />";
-		        } else if (delType == "k") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t293' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t293' />";
-		        } else if (delType == "g"){
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t295' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t295' />";
-		        } else if (delType == "a") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t292' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t292' />";
-		        } else if (delType == "i") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t294' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t294' />";
-		        } else if (delType == "n") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t297' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t297' />";
-		        } else if (delType == "l") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t296' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t296' />";
-		        } else if (delType == "w") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t301' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t301' />";
-		        } else if (delType == "m") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t300' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t300' />";
-		        } else if (delType == "f") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.lhj1' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.lhj1' />";
-		        } else if (delType == "wf") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t303' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t303' />";
-		        } else if (delType == "wa") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.kbm01' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.kbm01' />";
-		        }
 
 		        //if (cn != "") {
 		        if (isfirst && cn != "") {
@@ -277,50 +241,11 @@
 		    }
 		    
 		    function displayUserList(DeptID) {
-		        // 2018-12-20 권한명에 따라 권한 리스트 텍스트 출력 - 문성업 
-		        if (delType == "c") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t291' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t291' />";
-		        } else if (delType == "k") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t293' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t293' />";
-		        } else if (delType == "g"){
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t295' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t295' />";
-		        } else if (delType == "a") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t292' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t292' />";
-		        } else if (delType == "i") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t294' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t294' />";
-		        } else if (delType == "n") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t297' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t297' />";
-		        } else if (delType == "l") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t296' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t296' />";
-		        } else if (delType == "w") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t301' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t301' />";
-		        } else if (delType == "m") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t300' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t300' />";
-		        } else if (delType == "f") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.lhj1' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.lhj1' />";
-		        } else if (delType == "wf") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t303' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t303' />";
-		        } else if (delType == "wa") {
-		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.kbm01' />";
-		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.kbm01' />";
-		        }
-		        
 		    	$.ajax({
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute1;extensionAttribute2;usertype", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;extensionAttribute1;usertype", type : "user", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -812,7 +737,7 @@
 	            	var strId = p_ListOrderObject.getAttribute("_data2");
 	            	var strName = p_ListOrderObject.getAttribute("_data4");
 	            	var strMail = p_ListOrderObject.getAttribute("_data3");
-	            	var strData = p_ListOrderObject.getAttribute("_data9");
+	            	var strData = p_ListOrderObject.getAttribute("_data10");
 	            	var strDept = p_ListOrderObject.getAttribute("_data14");
 	            	
 	            	if (strData == null || strData == "") {
@@ -1402,6 +1327,26 @@
 		        	}
 		        });		        
 		    }
+	        
+	        function popupTitle() {
+	        	var titleTxt_c = "<spring:message code='ezOrgan.t291' />";
+	        	var titleTxt_k = "<spring:message code='ezOrgan.t293' />";
+	        	var titleTxt_g = "<spring:message code='ezOrgan.t295' />";
+	        	var titleTxt_a = "<spring:message code='ezOrgan.t292' />";
+	        	var titleTxt_i = "<spring:message code='ezOrgan.t294' />";
+	        	var titleTxt_n = "<spring:message code='ezOrgan.t297' />";
+	        	var titleTxt_l = "<spring:message code='ezOrgan.t296' />";
+	        	var titleTxt_w = "<spring:message code='ezOrgan.t301' />";
+	        	var titleTxt_m = "<spring:message code='ezOrgan.t300' />";
+	        	var titleTxt_f = "<spring:message code='ezOrgan.lhj1' />";
+	        	var titleTxt_wf = "<spring:message code='ezOrgan.t303' />";
+	        	var titleTxt_wa = "<spring:message code='ezOrgan.kbm01' />";
+	        	
+	        	var titleTxt = eval("titleTxt_" + delType);
+	        	document.getElementById("subtitle").innerText = titleTxt;
+	        	document.getElementById("PermissionStr").innerText = titleTxt;
+	        }
+	        
 	    </script>
 	</head>
 	<body class="popup">
@@ -1518,7 +1463,7 @@
 			</LISTVIEWDATA>
 		</xml>
 	    <div id="menu">
-	       <div id ="authorText" style="font-weight: bold; margin-top: 10px;"></div>
+	    	<h1 id="subtitle" class="authorText"></h1>
 	    </div>
 	    <div id="close">
 	        <ul>
@@ -1587,7 +1532,7 @@
 	                                    <tr>
 	                                        <td style="width: 170px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
 	                                        <td style="width: 150px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-	                                        <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezOrgan.t97'/></td>
+	                                        <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezOrgan.t95'/></td>
 	                                    </tr>
 	                                </table>
 	                                <table style="width:100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
@@ -1595,7 +1540,7 @@
 	                                        <td style="width: 130px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t68'/></td>
 	                                        <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t67'/></td>
 	                                        <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezOrgan.t69'/></td>
-	                                        <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezOrgan.t97'/></td>
+	                                        <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezOrgan.t95'/></td>
 	                                    </tr>
 	                                </table>
 	                            </div>

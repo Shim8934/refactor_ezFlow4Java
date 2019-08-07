@@ -4413,7 +4413,7 @@
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
 		    VALUES (18, 2, #companyID#, #tenantID#, 'Memo')
 		    INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) 
-		    VALUES (18, 3, #companyID#, #tenantID#, 'メモ')
+		    VALUES (18, 3, #companyID#, #tenantID#, 'メモ帳')
 		SELECT
 	    	*
 	    FROM DUAL
@@ -5985,7 +5985,11 @@
  				CN,
  				displayName,
  				department,
- 				description
+ 				description,
+				mailboxquota,
+				mailboxusage,
+				displayName2,
+				description2
  			FROM
  				TBL_USERMASTER
  			WHERE
