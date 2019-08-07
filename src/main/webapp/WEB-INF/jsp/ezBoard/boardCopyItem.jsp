@@ -157,8 +157,11 @@
 		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp.send();
 		        var ret = xmlhttp.responseText;
-		        if (ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
-		        return false;
+		        if (ret.indexOf("<WRITE>true</WRITE>") != -1 || ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") != -1) {
+		        	return true;
+		        } else {
+		        	return false;
+		        }
 		    }
 		    function CheckIfAnonyBoard(pBoardID) {
 		        var xmlhttp2 = createXMLHttpRequest();
