@@ -2309,7 +2309,7 @@ ORDER BY
 		INSERT INTO TBL_TENANT_CONFIG (
 			tenant_id, property_name, property_value, description, config_name, regdate, config_type
 		) VALUES (
-			#tenantId#, #proprtyName#, #propertyValue#, #description#, #configName#, '2019-01-08 00:00:00', #configType#
+			#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, '2019-01-08 00:00:00', #configType#
 		)
 	]]>
 </insert>

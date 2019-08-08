@@ -403,8 +403,10 @@ public class EzNewPortalGWController {
 
 			//2019-08-07  자동리프레시 가져오기
 			String usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", tenantId);
+			LOGGER.debug("usePortalAutoRefreshInterval : " + usePortalAutoRefreshInterval);
 			
 			if (usePortalAutoRefreshInterval == null || usePortalAutoRefreshInterval.equals("")) {
+				LOGGER.debug("userPortalAutoRefreshInterval is none!");
 				String propertyName = "usePortalAutoRefreshInterval";
 				String propertyValue = "5";
 				String description = "포탈 자동 새로고침 간격, 단 0이면 새로고침 사용안함";
