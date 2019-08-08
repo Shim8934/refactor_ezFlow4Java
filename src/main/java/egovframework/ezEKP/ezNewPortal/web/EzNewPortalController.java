@@ -422,6 +422,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("lastLogin", data.get("lastLogin"));
 			model.addAttribute("userEmail", data.get("userEmail"));
 			model.addAttribute("userId", userId);
+			model.addAttribute("usePortalAutoRefreshInterval", data.get("usePortalAutoRefreshInterval"));
 			
 			String usedTheme = data.get("usedTheme").toString();
 			returnUrl += "Theme" + usedTheme;

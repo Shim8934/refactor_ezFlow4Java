@@ -314,6 +314,18 @@
 					});
 				}(portletId, portletUrl, portletName, portletCode));
 			/* } */
+			
+			settingPortalInterval();
+		}
+		
+		var settingPortalInterval = function () {
+			var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
+			
+			if (refreshInterval != null && refreshInterval != "0") {
+				window.setInterval(function() {
+					parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+				}, Number(refreshInterval) * 60000);
+			}
 		}
 		
 		var useQuestion = "<c:out value='${useQuestion}'/>";

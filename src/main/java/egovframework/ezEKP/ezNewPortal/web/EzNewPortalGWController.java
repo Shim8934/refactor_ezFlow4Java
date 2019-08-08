@@ -401,6 +401,20 @@ public class EzNewPortalGWController {
 			LOGGER.debug("useMail : " + useMail + ", useApproval : " + useApproval + ", useSchedule : " + useSchedule);
 			// =================================== 여기까지 end
 
+			//2019-08-07  자동리프레시 가져오기
+			String usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", tenantId);
+			
+			if (usePortalAutoRefreshInterval == null || usePortalAutoRefreshInterval.equals("")) {
+				String propertyName = "usePortalAutoRefreshInterval";
+				String propertyValue = "5";
+				String description = "포탈 자동 새로고침 간격, 단 0이면 새로고침 사용안함";
+				String configName = "포탈 자동 새로고침 간격";
+				String configType = "포탈";
+				
+				ezNewPortalService.addPortalTenantConfig(tenantId, propertyName, propertyValue, description, configName, configType);
+				usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", tenantId);
+			}
+			
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
 //			data.put("portletOrder", portletOrder);
@@ -418,6 +432,7 @@ public class EzNewPortalGWController {
 			data.put("useSchedule", useSchedule);
 			data.put("lastLogin", lastLogin);
 			data.put("userEmail", info.getEmail());
+			data.put("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
 
 			result.put("status", "ok");
 			result.put("code", 0);

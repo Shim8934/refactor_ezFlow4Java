@@ -669,4 +669,8 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<OrganDeptVO> getInitCompanyListPortletAuth() {
 		return (List<OrganDeptVO>) list("ezNewPortal.getInitCompanyListPortletAuth");
 	}
+
+	public void addPortalTenantConfig(Map<String, Object> map) {
+		insert("ezNewPortal.addPortalTenantConfig", map);
+	}
 }

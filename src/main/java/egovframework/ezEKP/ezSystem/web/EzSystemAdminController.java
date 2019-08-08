@@ -192,6 +192,7 @@ public class EzSystemAdminController {
 		List<String> defaultFontSizeList = Arrays.asList("8px,9px,10px,11px,12px,13px,14px,16px,18px,20px,24px,30px,36px,54px,72px".split(","));
 		String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", userInfo.getTenantId());
 		String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", userInfo.getTenantId());
+		String usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", userInfo.getTenantId());
 		
 		model.addAttribute("configMap", configMap);
 		model.addAttribute("licensedUserCount", licensedUserCount);
@@ -201,6 +202,7 @@ public class EzSystemAdminController {
 		model.addAttribute("defaultFontSizeList", defaultFontSizeList);
 		model.addAttribute("useAllUserOldMailDelete", useAllUserOldMailDelete);
 		model.addAttribute("useAllUserOldMailDeletePeriod", useAllUserOldMailDeletePeriod);
+		model.addAttribute("usePortalAutoRefreshInterval", usePortalAutoRefreshInterval);
 		
 		logger.debug("systemMainMenu ended");
 		

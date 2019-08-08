@@ -2570,4 +2570,14 @@ ORDER BY
 			A.cn NOT LIKE 'shared_mailbox%'
 	]]>
 </select>
+
+<insert id="ezNewPortal.addPortalTenantConfig" parameterClass="map">
+	<![CDATA[
+		INSERT INTO TBL_TENANT_CONFIG (
+			tenant_id, property_name, property_value, description, config_name, regdate, config_type
+		) VALUES (
+			#tenantId#, #proprtyName#, #propertyValue#, #description#, #configName#, TO_DATE('2019-01-08 00:00:00','yyyy-mm-dd hh24:mi:ss'), #configType#
+		)
+	]]>
+</insert>
 </sqlMap>

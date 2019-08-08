@@ -204,4 +204,6 @@ public interface EzNewPortalService {
 	public void updateSlideOrder(JSONArray slideList, String companyId,	int tenantId) throws Exception;
 
 	public int getApprovalDoingListCount(String userId, String companyId, int tenantId, String offset, String approvalFlag, String lang) throws Exception;
+	
+	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception;
 }

@@ -2745,4 +2745,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		return doingListCount;
 	}
+	
+	@Override
+	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception {
+		LOGGER.debug("addPortalTenantConfig started");
+		LOGGER.debug("tenantId = " + tenantId + " || propertyName = " + propertyName + " || propertyValue = " + propertyValue + " || description = " + description + " || configName = " + configName + " || configType = " + configType);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("propertyName", propertyName);
+		map.put("propertyValue", propertyValue);
+		map.put("description", description);
+		map.put("configName", configName);
+		map.put("configType", configType);
+		
+		ezNewPortalDAO.addPortalTenantConfig(map);
+		
+		LOGGER.debug("addPortalTenantConfig ended");
+	}
 }
