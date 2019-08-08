@@ -103,8 +103,14 @@
 			    			case "Snow" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm05'/>");
 			    						   break;
 			    			
-			    			case "Thunderstrom" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
+			    			case "Thunderstorm" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
 			    						   break;
+			    						   
+			    			case "Drizzle" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej09'/>");
+			    						   break;
+			    						   
+			    			case "Fog" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej10'/>");
+ 										   break;
 			    			
 			    			default : $("#mainWeather").text(currentMain);
 			    						   break;
@@ -284,9 +290,15 @@
 			
 			case "Snow" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm05'/>");
 						   break;
-			
-			case "Thunderstrom" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
+			    			
+			case "Thunderstorm" : $("#mainWeather").text("<spring:message code='ezNewPortal.garm06'/>");
 						   break;
+						   
+			case "Drizzle" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej09'/>");
+						   break;
+						   
+			case "Fog" : $("#mainWeather").text("<spring:message code='ezNewPortal.yej10'/>");
+							   break;
 			
 			default : $("#mainWeather").text(currentMain);
 						   break;
