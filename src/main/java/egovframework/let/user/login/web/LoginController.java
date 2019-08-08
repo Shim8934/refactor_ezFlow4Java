@@ -114,6 +114,16 @@ public class LoginController {
         int tenantId = loginService.getTenantId(serverName);
         
         logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
+    	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
+    	String userOs = ClientUtil.getClientInfo(request, "os");
+    	
+    	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+    		System.out.println(mobileRedirection);
+    		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
+    			response.sendRedirect(mobileRedirection);
+    			return null;
+    		}
+    	}
     	
         String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", tenantId);
         
