@@ -4815,6 +4815,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardPropertyVO = sumBoardACL(boardACLList, boardPropertyVO);
 		}
 		
+		/* 2019-08-06 홍승비 - 게시판 선택 팝업창으로 게시물 작성/복사/이동 시 게시판그룹의 관리자 권한(boardGroupAdmin)을 체크하지 않는 오류 수정  */
 		if (userInfo.getRollInfo() != null && ((userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || boardPropertyVO.getBoardAdmin_FG().equals("OK")) ||
 				(isAllGroupBoard.equals("N") && (userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)))) {
 			strACLXML = "<NODES><NODE><ACCESS>1</ACCESS><BOARDADMIN>true</BOARDADMIN><LIST>true</LIST><READ>true</READ><WRITE>true</WRITE><REPLY>true</REPLY><DELETE>true</DELETE><INHERIT>false</INHERIT><POSTNOTICE></POSTNOTICE></NODE></NODES>";
@@ -4825,6 +4826,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (boardPropertyVO != null) {
 				sb.append("<NODE>");
 				sb.append("<ACCESS>" + boardPropertyVO.getAccess_() + "</ACCESS>");
+				sb.append("<BOARDGROUPADMIN>" + boardPropertyVO.getBoardGroupAdmin_FG()+ "</BOARDGROUPADMIN>"); // OK/NO
 				sb.append("<BOARDADMIN>" + boardPropertyVO.getBoardAdmin_FG() + "</BOARDADMIN>");
 				sb.append("<LIST>" + boardPropertyVO.getListView_FG() + "</LIST>");
 				sb.append("<READ>" + boardPropertyVO.getRead_FG() + "</READ>");
@@ -4840,7 +4842,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			strACLXML = sb.toString();
 		}
-
+		
+		logger.debug("strACLXML in boardACL   ::  " + strACLXML);
 		logger.debug("getACL ended");
 		return strACLXML;
 	}
