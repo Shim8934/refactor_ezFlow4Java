@@ -68,6 +68,9 @@
 					case 31:
 						url = "/admin/ezOrgan/jobInfoList.do";
 						break;
+					case 32:
+						url = "/admin/ezOrgan/loginStop.do";
+						break;
 				}
 				window.open(url,"right");
 			}
@@ -108,6 +111,9 @@
 				</h2> 
 				<h2>
 					<span class="list_text" onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
+				</h2>
+				<h2>
+					<span class="list_text" onClick="goPage(32)" style="display:inline-block;width:100%;">사용자정지</span>
 				</h2>
 	  		</div>			
 		</div>

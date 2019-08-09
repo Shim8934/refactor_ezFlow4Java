@@ -120,6 +120,9 @@ public class OrganUserVO {
 	private String mailboxQuota;
 	/** 직위 */
 	private String jobID;
+	
+	/** 패스워드 업데이트 일자*/
+	private String passwordUpdateDT;
 
 	public String getJobID() {
 		return jobID;
@@ -591,6 +594,14 @@ public class OrganUserVO {
 
 	public void setManualFlag(String manualFlag) {
 		this.manualFlag = manualFlag;
+	}
+
+	public String getPasswordUpdateDT() {
+		return passwordUpdateDT;
+	}
+
+	public void setPasswordUpdateDT(String passwordUpdateDT) {
+		this.passwordUpdateDT = passwordUpdateDT;
 	}
 
 }

@@ -1,0 +1,514 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>    
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript">
+		var useIPAccess = "${useIPAccess}";
+		var rollInfo = "${rollInfo}";
+		var permission = true;
+		var allIPList = "";
+		var companyID = "${companyId}";
+		var CurPage = "";
+		var totalPage = "";
+		var totalCount = "";
+		var BlockSize = 10;
+		
+		window.parent.onresize = function () {
+// 			windowResize();
+		}
+		
+		window.onload = function () {
+			if (rollInfo.indexOf("c=1") == -1) {
+				permission = false;
+				var btnList = $("body [id^=btn]");
+				
+				for (var i = 0; i < btnList.length; i++) {
+					btnList[i].onclick = function() { alert("<spring:message code='ezSystem.jje7' />"); return; };
+				}
+			}
+			
+			getUserList(1);
+			makePageSelPage();
+// 			windowResize();
+	    }
+		
+		function getUserList(pageNum){
+    		var selectOption = parent.document.getElementById("searchKeycode");
+			var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
+			var searchKeyword = parent.document.getElementById("searchKeyword").value;
+			var companyIdChk = companyID;
+				
+	    	var pURL = "/admin/ezOrgan/getLoginStopUserList.do";
+	    		 
+	    	$.ajax({
+	    		 url: pURL
+	    		,type: "POST"
+	    		,async: false
+	    		,dataType: 'json'
+	    		,data: {
+	    				'searchKeycode' : searchKeycode,
+	    				'searchKeyword' : searchKeyword,
+	    				'pageNum' : pageNum,
+	    				'companyId' : companyIdChk
+	    			   }    
+	    		,success: function(res) {
+	    			var html = "";
+
+   					if (res.itemCnt < 1) {
+   						html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
+  					} else {
+   						var j = ((pageNum - 1) * 20) + 1 ;
+   							
+   						res.userList.forEach(function(user, v) {
+   							var result;
+   								
+   							var cn = user.cn;
+   							var userName = user.displayName;
+  							var deptName = user.description;
+  							var companyName = user.company;
+  							var passwordUpdateDT = user.passwordUpdateDT;
+  							var durationDays = 0;
+  							
+  							if(passwordUpdateDT) {
+  								passwordUpdateDT = passwordUpdateDT.substr(0, 10);
+  								durationDays = parseInt((new Date() - new Date(passwordUpdateDT)) / (1000 * 60 * 60 * 24))
+  							} else {
+  								passwordUpdateDT = "없음";
+  								durationDays = "-";
+  							}
+								
+							html += "<tr>";
+							html += "   <td style='width:22px;text-align:center;cursor:deafult;'>" +
+									"		<input type='checkbox' style='margin:0;padding:0;width:13px;height:13px;cursor=pointer;' onclick='event_listclick(this)' />" +
+									"	</td>";
+    						html += "   <td>" + j + "</td>";
+    						html += "	<td title=\'" + userName + "(" + cn + ")'>" + userName + "(" + cn + ")" + "</td>";
+    						html += "	<td>" + deptName + "</td>";
+    						html += "	<td>" + companyName + "</td>";
+    						html += "	<td>" + passwordUpdateDT + " (" + durationDays + ")" + "</td>";
+    						html += "	<td>"         + "stopdate" 			   + "</td>";
+							html += "</tr>";
+							j++;
+						})
+ 					}
+  						
+    				document.getElementById("userListBody").innerHTML = html;
+    				
+    				CurPage = res.currPage;
+    				totalPage = res.totalPage;
+    				totalCount = res.itemCnt;
+    				
+    				if (res.searchKeycode != null) {
+    					var idx = parseInt(searchKeycode) - 1;
+	    				$('#searchKeycode option:eq(' + idx + ')').attr('selected', 'selected');
+    				}
+    				
+    				$('#searchKeyword').val(res.searchKeyword);
+    			}
+    			,error: function(err) {
+    				alert(strLang321);
+    			}
+    		})
+	    		
+    		makePageSelPage();
+	    }
+		
+		function makePageSelPage() {
+	        var strtext;
+	        var PagingHTML = "";
+	        document.getElementById("tblPageRayer").innerHTML = "";
+	        strtext = "<div class='pagenavi'>";
+	        PagingHTML += strtext;
+	        var pageNum = CurPage;
+	        
+	        if (totalPage > 1 && pageNum != 1) {
+	            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>"
+	            PagingHTML += strtext;
+	        } else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>"
+	            PagingHTML += strtext;
+	        }
+	        
+	        if (totalPage > BlockSize) {
+	            
+	        	if (pageNum > BlockSize) {
+	                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+	                PagingHTML += strtext;
+	            } else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+	                PagingHTML += strtext;
+	            }
+	        	
+	        } else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        var MaxNum;
+	        var i;
+	        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	        
+	        if (totalPage >= (startNum + parseInt(BlockSize))) {
+	            MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	        } else {
+	            MaxNum = totalPage;
+	        }
+	        
+	        for (i = startNum; i <= MaxNum; i++) {
+	            
+	        	if (i == pageNum) {
+	                strtext = "<span class='on'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            } else {
+	                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+	                PagingHTML += strtext;
+	            }
+	        	
+	        }
+	        
+	        if (totalPage > BlockSize) {
+	           
+	        	if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
+	                PagingHTML += strtext;
+	            } else {
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                PagingHTML += strtext;
+	            }
+	        	
+	        } else {
+	            strtext = "";
+	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+	            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+	            PagingHTML += strtext;
+	        } else {
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+	            PagingHTML += strtext;
+	        }
+	        
+	        PagingHTML += "</div>";
+	        td_Create1(PagingHTML);
+	        
+	    	// 페이징처리
+			function td_Create1(strtext) {
+		        document.getElementById("tblPageRayer").innerHTML = strtext;
+		    }
+	    }
+		
+		function goToPageByNum(Value) {
+	        CurPage = Value;
+	        makePageSelPage();
+			goToPage(CurPage);
+	    }
+		
+		// 페이지네이션 클릭시
+		function goToPage(page) {
+			getUserList(page);
+		}	
+		
+		// 사용여부 저장 버튼 클릭
+		function saveBtn() {
+			var allowResult = false;
+			if (!document.getElementById("ipRadio0").checked) {
+				allowResult = true;
+			}
+			
+			$.ajax({
+				type : "POST",
+				url : "/ezSystem/setUseIPAccess.do?allowResult=" + allowResult,
+				cache : false,
+				error : function(data) {
+					console.log(data);
+					alert("<spring:message code='ezCommunity.t283'/>");
+				},
+				complete : function(data) {
+					alert("<spring:message code='ezCommunity.t282'/>");
+					
+					if (useIPAccess == "NO") {
+						useIPAccess = "YES";
+					} else {
+						useIPAccess = "NO";
+					}
+					
+				}
+			});
+		}
+		
+		// 설정된 IP 대역 리스트 삭제하기 (refresh할때 사용)
+		function IPBandListRemove() {
+			var ipListElement = $("#tblIP tbody tr[id^=IPBand]");
+			
+			for (var i = 0; i < ipListElement.length; i++) {
+				document.getElementById("ipBody").removeChild(ipListElement[i]);
+			}
+		}
+		
+		function makeIPBands(json) {
+			var _TBODY = document.getElementById("ipBody");
+			
+			if (json.length == 0) {
+				var _TR = document.createElement("TR");
+				_TR.setAttribute("id", "IPBandNoData");
+				
+				var _NODATA = document.createElement("TD");
+                _NODATA.colSpan = "4";
+                _NODATA.style.textAlign = "center";
+                _NODATA.innerHTML = "<spring:message code='ezStatistics.t1008'/>";
+                
+				_TR.appendChild(_NODATA);
+                _TBODY.appendChild(_TR);
+                return;
+			}
+			
+			for (var Cnt = 0; Cnt < json.length; Cnt++) {
+				var _TR = document.createElement("TR");
+				_TR.setAttribute("id", "IPBand_" + Cnt);
+				_TR.setAttribute("ipno", json[Cnt].ipNo);
+				_TR.onclick = function() { event_listclick(this); };
+				_TR.onmouseover = function () { event_listMover(this); };
+				_TR.onmouseout = function () { event_listMout(this); };
+				_TR.ondblclick = function () {
+					if (!permission) {
+						alert("<spring:message code='ezSystem.jje7'/>");
+						return;
+					}
+					ipBandUpdateInfo(this); 
+				};
+				_TR.style.cursor = "pointer";
+				
+				var _TDCheckBox = document.createElement("TD");
+				_TDCheckBox.onclick = function() { event_listclick(this); };
+                _TDCheckBox.style.width = "22px";
+                _TDCheckBox.style.textAlign = "center";
+                _TDCheckBox.style.cursor = "default";
+                
+                var _TDCheckBox_Sub = document.createElement("INPUT");
+                _TDCheckBox_Sub.type = "checkbox";
+                _TDCheckBox_Sub.style.margin = "0px";
+                _TDCheckBox_Sub.style.padding = "0px";
+                _TDCheckBox_Sub.style.width = "13px";
+                _TDCheckBox_Sub.style.height = "13px";
+                _TDCheckBox_Sub.style.cursor = "pointer";
+                
+                _TDCheckBox.appendChild(_TDCheckBox_Sub);
+                _TR.appendChild(_TDCheckBox);
+                
+                var _IPADDRESS = document.createElement("TD");
+                _IPADDRESS.style.width = "230px";
+                _IPADDRESS.innerHTML = json[Cnt].ipAddress;
+                _TR.appendChild(_IPADDRESS);
+                
+                var _ACCESS = document.createElement("TD");
+                _ACCESS.style.width = "100px";
+                _ACCESS.innerHTML = json[Cnt].access == "YES" ? "<spring:message code='ezSystem.jje21'/>" : "<spring:message code='ezSystem.jje22'/>";
+                _TR.appendChild(_ACCESS);
+                
+                var _EXPLANATION = document.createElement("TD");
+                var _SPAN = document.createElement("span");
+                _EXPLANATION.title = json[Cnt].explanation;
+                _SPAN.innerText = json[Cnt].explanation;
+                _SPAN.style.display = "inline-block";
+                _SPAN.style.width = "100%";
+                _SPAN.style.whiteSpace = "nowrap";
+                _SPAN.style.overflow = "hidden";
+                _SPAN.style.textOverflow = "ellipsis";
+                _EXPLANATION.appendChild(_SPAN);
+                _TR.appendChild(_EXPLANATION);
+                
+                _TBODY.appendChild(_TR);
+			}
+		}
+		
+		function cancleBtn() {
+			if (useIPAccess === "NO") {
+				document.getElementById("ipRadio0").checked = true;
+			} else {
+				document.getElementById("ipRadio1").checked = true;
+			}
+		}
+	
+		// IP 대역 등록 및 수정
+		function ipBandEidtPopUp(type) {
+			var url = "/ezSystem/systemIPBandEditPopup.do";
+			if (type === "add") {
+				url += "?type=add";
+				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
+			} else {
+				var selectedList = $("#tblIP tbody tr[selected=true]");
+				if (selectedList.length > 1) {
+					alert("<spring:message code='ezSystem.jje8'/>");
+					return;
+				} else if (selectedList.length == 0) {
+					alert("<spring:message code='ezSystem.jje9'/>");
+					return;
+				} else {
+					ipBandUpdateInfo(selectedList[0]);
+				}
+			}
+		}
+		
+		function ipBandUpdateInfo(obj) {
+			var ipNo = obj.getAttribute("ipNo");
+			var ipAddress = obj.childNodes[1].innerText;
+			var access = obj.childNodes[2].innerText == "허용" ? "YES" : "NO";
+			var explanation = obj.childNodes[3].innerText;
+			var url = "/ezSystem/systemIPBandEditPopup.do";
+			
+			url += "?type=modify&ipNo=" + ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + encodeURIComponent(explanation);
+			
+			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
+		}
+		
+		function deleteIPBand() {
+			var selectedList = $("#tblIP tbody tr[selected=true]");
+			var ipNo = "";
+			
+			if (selectedList.length == 0) {
+				alert("<spring:message code='ezSystem.jje10'/>");
+				return;
+			} else if (selectedList.length == 1) {
+				ipNo = selectedList[0].getAttribute("ipno");
+			} else {
+				for (var i = 0; i <selectedList.length; i++) {
+					ipNo += selectedList[i].getAttribute("ipno");
+					
+					if (i < selectedList.length - 1) {
+						ipNo += ",";
+					}
+				}
+			}
+			
+			var con = confirm("<spring:message code='ezCircular.t46'/>");
+			
+			if (con) {
+				$.ajax({
+					type : "POST",
+					url : "/ezSystem/deleteIPBand.do",
+					data : "ipNo=" + ipNo,
+					error : function(data) {
+						alert("<spring:message code='ezSystem.jje11'/>");
+					},
+					complete : function(data) {
+						alert("<spring:message code='ezAttitude.t161'/>");
+						IPBandListRemove();
+						getIPList_http();
+				    }
+				});
+			}
+			
+		}
+		
+		var tdChk = false;
+		function event_listclick(obj) {
+			if (obj.tagName == "TD") {
+		        obj = obj.parentElement;
+		        tdChk = true;
+		    } else {
+		    	if (!tdChk) {
+		    		var selectedList = $("#tblIP tbody tr[selected=true]");
+			    	
+			    	for (var i = 0; i < selectedList.length; i++) {
+			    		selectedList[i].style.backgroundColor = m_strColorDefault;
+			    		selectedList[i].childNodes.item(0).childNodes.item(0).checked = false;
+			    		selectedList[i].setAttribute("selected", false);
+			    	}
+		    	}
+		    	tdChk = false;
+		    }
+			
+			if (obj.childNodes.item(0).childNodes.item(0).checked) {
+				obj.style.backgroundColor = m_strColorDefault;
+				obj.childNodes.item(0).childNodes.item(0).checked = false;
+				obj.setAttribute("selected", false);
+			} else {
+				obj.style.backgroundColor = m_strColorSelect;
+				obj.childNodes.item(0).childNodes.item(0).checked = true;
+				obj.setAttribute("selected", true);
+			}
+		}
+		
+		function event_HeaderCheckBoxClick(obj) {
+			var ipListElement = $("#tblIP tbody tr[id^=IPBand_]");
+			
+			// 설정한 IP대역이 없을 경우
+			if (ipListElement.length == 0) {
+				return;
+			}
+			
+			if (obj.checked) {
+				for (var i = 0; i < ipListElement.length; i++) {
+		        	var ipNode = ipListElement[i];
+		        	ipNode.style.backgroundColor = m_strColorSelect;
+		        	ipNode.childNodes[0].childNodes[0].checked = true;
+		        	ipNode.setAttribute("selected", true);
+		        }
+			} else {
+				for (var i = 0; i < ipListElement.length; i++) {
+		        	var ipNode = ipListElement[i];
+		        	ipNode.style.backgroundColor = m_strColorDefault;
+		        	ipNode.childNodes[0].childNodes[0].checked = false;
+		        	ipNode.setAttribute("selected", false);
+		        }
+			}
+		}
+		
+		function event_listMover(obj) {
+		    if (!obj.childNodes.item(0).childNodes.item(0).checked) {
+		        obj.style.backgroundColor = m_strColorOver;
+		    }
+		}
+		
+		function event_listMout(obj) {
+		    if (!obj.childNodes.item(0).childNodes.item(0).checked) {
+		        obj.style.backgroundColor = m_strColorDefault;
+		    }
+		}
+		
+		function windowResize() {
+        	var height = parent.document.documentElement.clientHeight - 345;
+        	var width = parent.document.documentElement.clientWidth - 30;
+        	/* if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+        		height = height - 10;
+        	} */
+        	document.getElementById("contentHeader").style.width = width + "px";
+        	document.getElementById("contentlist").style.width = width + "px";
+        	document.getElementById("contentlist").style.height = height + "px";
+        	document.getElementById("contentlist").style.overflowY = "auto";
+        }
+		
+	</script>
+</head>
+<body class="mainbody" style="overflow:hidden; margin:0" marginwidth="0" marginheight="0">
+	<div id="contentHeader" style="width: 100%; overflow: auto;">
+		<table class="mainlist" style="width:100%;">
+			<thead style="">
+				<tr>
+					<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
+					<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
+					<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
+					<th width="15%;"><spring:message code="ezEmail.t712"></spring:message></th>
+					<th width="15%;">암호 최종변경일자(경과일)</th>
+					<th width="15%;">정지일자</th>
+				</tr>
+			</thead>
+			<tbody id="userListBody" style="overflow: auto;"></tbody>
+		</table>
+	</div>
+	
+	<div id="tblPageRayer" style="width:100%;"></div>
+</body>
+</html>

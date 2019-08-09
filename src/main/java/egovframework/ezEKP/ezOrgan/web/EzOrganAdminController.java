@@ -3962,4 +3962,175 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    logger.debug("saveUserImagebyTemp ended.");
 	    return resultMap;
 	}
+	
+	/**
+	 * 조직도관리 사용자정지 메뉴 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/loginStop.do", method = RequestMethod.GET)	
+	public String loginStop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("loginStop started");
+	    
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		String companyId = user.getCompanyID();
+   		
+   		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+   		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < companylist.size(); i++) {
+			OrganDeptVO vo = companylist.get(i);			
+			
+			if (user.getRollInfo().indexOf("c=1") > -1 || (user.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(user.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("companylist", resultList);
+		model.addAttribute("companyId", companyId);
+   		
+   		logger.debug("loginStop ended");
+   		
+		return "admin/ezOrgan/loginStop";
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/normalUserList.do", method=RequestMethod.GET)
+	public String normalUserList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("normalUserList started");
+		
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String companyId = userInfo.getCompanyID();
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		model.addAttribute("companyId", companyId);
+		
+		logger.debug("normalUserList ended");
+		 
+		return "admin/ezOrgan/normalUserList";
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/stopUserList.do", method=RequestMethod.GET)
+	public String stopUserList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("stopUserList started");
+		
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String companyId = userInfo.getCompanyID();
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		model.addAttribute("companyId", companyId);
+		
+		logger.debug("stopUserList ended");
+		 
+		return "admin/ezOrgan/stopUserList";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/getLoginStopUserList.do", method = RequestMethod.POST)
+	public String getLoginStopUserList( @CookieValue("loginCookie") String loginCookie,
+			Model model, HttpServletRequest req,
+			@RequestParam(required = false) String searchKeycode,
+			@RequestParam(required = false) String searchKeyword) throws Exception {
+		logger.debug("getLoginStopUserList started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String companyId = req.getParameter("companyId");
+		String currPage = req.getParameter("pageNum");
+		
+		if (currPage == null || currPage.equals("")) {
+			currPage = "1";
+		}
+
+		int maxItemPerPage = 20; 
+		int currentPage = Integer.parseInt(currPage);
+		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		
+		if (currPage.equals("-1")) {
+			startRow = -1;
+		}
+		
+		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+
+		// 모든 사용자의 목록을 가져온다.
+		List<OrganUserVO> userCnList;
+		int itemCnt;
+		
+		// 사용률로 검색 시에 숫자가 아니면 빈 값으로 리턴하도록 처리
+		try {
+			userCnList = ezOrganAdminService.getLoginStopUserList(userInfo.getTenantId(), startRow, 
+				    maxItemPerPage, searchKeycode, searchKeyword, companyId);
+			itemCnt = ezOrganAdminService.getLoginStopUserListCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
+		} catch (Exception ex) {
+			userCnList = new ArrayList<>();
+			itemCnt = 0;
+		}
+
+		int totalPage = itemCnt / maxItemPerPage;
+		
+		if (itemCnt < 1) {
+			totalPage = 1;
+		}
+		
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1;
+		}
+		
+		currentPage = Math.min(currentPage, totalPage);
+		
+		model.addAttribute("userList", userCnList);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("itemCnt", itemCnt);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("searchKeycode", searchKeycode);
+
+		logger.debug("getLoginStopUserList ended.");
+
+		return "json";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/insertStopUser.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
+	@ResponseBody
+	public String setLoginStopUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req) throws Exception{
+		logger.debug("insertStopUser started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		// 관리자 권한 체크
+		if (userInfo == null) {
+			return "EMAIL_ERROR";
+		}
+		
+		String[] cnArr = req.getParameterValues("cn[]");
+		String companyId = req.getParameter("companyId");
+		
+		String result = "";
+		
+		try {
+			
+			ezOrganAdminService.insertStopUser(cnArr, companyId, userInfo.getTenantId());
+			result = "OK";
+		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+			e.printStackTrace();
+			result = "EMAIL_ERROR";
+		}
+
+		logger.debug("insertStopUser ended.");
+		return result;
+	}
 }

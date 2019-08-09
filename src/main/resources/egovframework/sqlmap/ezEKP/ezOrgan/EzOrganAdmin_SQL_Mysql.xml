@@ -50,6 +50,18 @@
 		<result property="updateDT" 							column="UpdateDT" 						columnIndex="12"/>
 	</resultMap>
 	
+	<resultMap id="loginStopList" class="OrganUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>
+		<result property="displayName" 							column="DisplayName" 					columnIndex="2"/>
+		<result property="displayName2" 						column="DisplayName2"					columnIndex="3"/>
+		<result property="department" 							column="department"						columnIndex="4"/>
+		<result property="description" 							column="Description"					columnIndex="5"/>
+		<result property="description2" 						column="Description2"					columnIndex="6"/>
+		<result property="company" 								column="company" 						columnIndex="7"/>
+		<result property="company2" 							column="company2" 						columnIndex="8"/>
+		<result property="passwordUpdateDT" 					column="passwordUpdateDT"				columnIndex="9"/>
+	</resultMap>
+	
 	<resultMap id="userCnList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>	
 	</resultMap>
@@ -4867,6 +4879,49 @@
 				TENANT_ID = #v_TENANT_ID#
 		]]>
 	</select>
+	
+	<select id="EzOrganAdminDAO.getLoginStopUserList" parameterClass="map" resultMap="loginStopList">
+		SELECT 
+			CN,
+			displayName,
+			displayName2,
+			department,
+			description,
+			description2,
+			company,
+			company2,
+			PASSWORD_UPDATEDT as passwordUpdateDT
+		FROM 
+	    	TBL_USERMASTER
+        WHERE 
+            tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+	    ORDER BY 
+	    	displayName
+	    <isNotEqual property="v_start" compareValue="-1">
+	    LIMIT
+			#v_start#, #pageCount#	
+		</isNotEqual>
+	</select>
+	
+	<select id="EzOrganAdminDAO.getLoginStopUserListCount" parameterClass="map" resultClass="Integer">
+		SELECT 
+			count(CN)
+		FROM 
+	    	TBL_USERMASTER
+        WHERE 
+            tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
+			<include refid="EzOrganAdminDAO.searchQuery"/>
+	</select>
+	
+	<insert id="EzOrganAdminDAO.insertStopUser" parameterClass="map">
+		INSERT INTO TBL_USER_CONFIG
+			(TENANT_ID, CN, PROPERTY_NAME, PROPERTY_VALUE)
+		VALUES
+			<iterate property="cnArr" prepend="," removeFirstPrepend="true">
+			(#tenantID#, #cnArr[]#, 'LoginStopUser', #nowDate#)
+			</iterate>
+	</insert>
 
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}

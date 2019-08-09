@@ -2208,4 +2208,17 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getDeptAddJobUserList(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getDeptAddJobUserList", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getLoginStopUserList(Map<String, Object> map) throws Exception {
+		return (List<OrganUserVO>) list("EzOrganAdminDAO.getLoginStopUserList", map);
+	}
+	
+    public int getLoginStopUserListCount(Map<String, Object> map) throws Exception {
+    	return (int) select("EzOrganAdminDAO.getLoginStopUserListCount", map);        
+    }
+    
+    public void insertStopUser(Map<String, Object> map) throws Exception {
+    	insert ("EzOrganAdminDAO.insertStopUser", map);
+    }
 }

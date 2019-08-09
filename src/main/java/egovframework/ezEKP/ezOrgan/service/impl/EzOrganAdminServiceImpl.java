@@ -1796,4 +1796,72 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
     	}
     }
+	
+    @Override
+    public List<OrganUserVO> getLoginStopUserList(int tenantID,int startPage, int maxItemPerPage,
+    									 String keycode,String keyword,String companyId) throws Exception {     
+    	logger.debug("getLoginStopUserList started");
+    	
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	
+    	params.put("tenantID", tenantID);
+		params.put("v_start", startPage);
+		params.put("v_end",   startPage + maxItemPerPage - 1);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("companyId", companyId);
+		
+    	List<OrganUserVO> list = ezOrganAdminDao.getLoginStopUserList(params);
+    	
+    	logger.debug("getLoginStopUserList ended");
+    	
+    	return list;
+    }
+
+    @Override
+    public int getLoginStopUserListCount(int tenantID, String keycode,String keyword,String companyId) throws Exception {     
+    	logger.debug("getLoginStopUserListCount started");
+   		
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	
+    	params.put("tenantID", tenantID);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("companyId", companyId);
+		
+		int userCount = ezOrganAdminDao.getLoginStopUserListCount(params);
+		
+		logger.debug("getLoginStopUserListCount ended. userCount=" + userCount);
+    	
+		return userCount;
+    }
+
+	@Override
+	public String insertStopUser(String[] cnArr, String companyID, int tenantID) throws Exception {
+		logger.debug("insertStopUser started.");
+		
+		String rtnVal = "";
+
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("cnArr", cnArr);
+		map.put("nowDate", nowDate);
+		
+		try {
+			ezOrganAdminDao.insertStopUser(map);
+			rtnVal = "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "FALSE";
+		}
+		
+		logger.debug("insertStopUser ended. result = " + rtnVal);
+		return rtnVal;
+	}	
 }
