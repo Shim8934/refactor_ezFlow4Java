@@ -92,6 +92,11 @@
 		            $(".sbHolder").each(function (index) {
 		                $(this).addClass('instance');
 		            });
+		         //19.08.05 김보미 - 마우스 클릭시 볼드체   
+		         $(document).on("click", "span.list_text", function(){
+		        	 $("#left li").removeClass("on");
+		        	 $(this).parent().addClass("on");
+		         })
 		    });
 		    document.onselectstart = function () {
 		    	 if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -185,7 +190,7 @@
 		        leftResize();
 		        $(".apprListBox").mCustomScrollbar({
 	        		theme : "dark"
-	        	});	
+	        	});
 		    };
 		    
 		    function UserContRequestData(pNodeID, pTreeID) {

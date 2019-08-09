@@ -3979,7 +3979,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        	        }
 				        	        
 				        	        if (contentType == null) {
-			        		        	contentType = "application/octet-stream";
+			        		        	contentType = Files.probeContentType(f.toPath());
 			        		        }
 				        	        
 				        	        

@@ -39,7 +39,7 @@
 							memoFolderList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' data2='" + list.folder_name +"' data3='" + list.count + "' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></td>";
 
 							if (parseInt(list.orders) === 0) {
-								memoFolderList += "<td class='title' style='color:gray;' title='" + list.folder_name + "'>" + memoMessages.strLangMemo22 + "</td>";
+								memoFolderList += "<td class='title' style='color:gray;' title='" + memoMessages.strLangMemo22 + "'>" + memoMessages.strLangMemo22 + "</td>";
 							} else {
 								memoFolderList += "<td class='title' style='color:gray;' title='" + list.folder_name + "'>" + list.folder_name + "</td>";
 							}
@@ -122,7 +122,8 @@
 		     	}
 	    		
 	    		if($(obj).attr('data1') == inputNameDlg_cross_dialogArguments[4] ) {
-	    			var strLangTemp = "<spring:message code='ezMemo.t0050' arguments='" + inputNameDlg_cross_dialogArguments[5].trim() + "' />"
+	    			// var strLangTemp = "<spring:message code='ezMemo.t0050' arguments='" + inputNameDlg_cross_dialogArguments[5].trim() + "' />"
+	    			var strLangTemp = "<spring:message code='ezMemo.t0050' arguments='" + memoMessages.strLangMemo22 + "' />"
 					alert(strLangTemp);
 		     		return;
 		     	}

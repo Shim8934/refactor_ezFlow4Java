@@ -2091,7 +2091,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			/*else {		// 아이디 혹은 everyone에서 관리자 권한 있을 때
 				return "Y";
 			}*/
-		} else {	//부서의 관리자 권한 확인
+		else {	//부서의 관리자 권한 확인
 			Map<String,Object> map = new HashMap<String, Object>();
 			map.put("v_PCOMPANYID", companyID);
 			map.put("v_BRD_UPPER", brdID);
@@ -2207,7 +2207,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				accessLvl = AccessDeptLvl;
 			} */
 		}
-
+		}
 		
 		if(accessLvl.trim().equals("1")) {
 			return "Y";

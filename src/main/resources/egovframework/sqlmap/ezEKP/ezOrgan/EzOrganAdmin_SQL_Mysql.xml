@@ -2909,7 +2909,7 @@
 	    		(17, 3, #companyID#, #tenantID#, 'To Do管理'),
 	    		(18, 1, #companyID#, #tenantID#, '메모'),
 	    		(18, 2, #companyID#, #tenantID#, 'Memo'),
-	    		(18, 3, #companyID#, #tenantID#, 'メモ'),
+	    		(18, 3, #companyID#, #tenantID#, 'メモ帳'),
 	    		(42, 1, #companyID#, #tenantID#, '전자설문'),
 	    		(42, 2, #companyID#, #tenantID#, 'Survey'),
 	    		(42, 3, #companyID#, #tenantID#, '電子アンケート')
@@ -4243,7 +4243,9 @@
 			department,
 			description,
 			mailboxquota,
-			mailboxusage
+			mailboxusage,
+			displayName2,
+			description2
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 

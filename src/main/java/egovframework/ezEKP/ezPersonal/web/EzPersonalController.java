@@ -446,9 +446,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String type = request.getParameter("type");
+		String dept = request.getParameter("dept"); 
 		
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
+		userInfo.setDeptID(dept);
+		
+		model.addAttribute("dept", dept);
 		model.addAttribute("type", type);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
