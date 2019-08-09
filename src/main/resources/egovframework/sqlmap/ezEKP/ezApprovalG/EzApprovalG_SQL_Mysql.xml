@@ -12552,6 +12552,45 @@
             	1
 	</select>
 	
+	<select id="EzApprovalG.selectHabyuiResultAprMemberInfoVO" parameterClass="Map" resultClass="ApprGAprLineVO">
+			SELECT 
+				DOCID, 
+				APRMEMBERSN, 
+				APRTYPE, 
+				APRSTATE, 
+				APRMEMBERID, 
+				APRMEMBERISDEPTYN, 
+				APRMEMBERNAME, 
+				APRMEMBERJOBTITLE, 
+				APRMEMBERDEPTID, 
+				APRMEMBERDEPTNAME, 
+				APRMEMBERLDAPPATH, 
+				RECEIVEDDATE, 
+				PROCESSDATE, 
+				REASONDONOTAPPROV, 
+				ISPROPOSERYN, 
+				ISBRIEFUSERYN, 
+				APRMEMBERNAME2, 
+				APRMEMBERJOBTITLE2, 
+				APRMEMBERDEPTNAME2, 
+				TENANT_ID, 
+				COMPANYID
+            FROM 
+            	TBL_APRLINEINFO 
+            WHERE
+            	TENANT_ID = #v_TENANTID#
+            AND
+            	COMPANYID = #companyID#
+            AND  
+            	DOCID = #v_DOCID#
+            AND 
+            	APRTYPE IN ( '001','004' )
+            ORDER BY 
+            	APRMEMBERSN DESC 
+            LIMIT 
+            	1
+	</select>
+	
 <!-- 	<procedure id="EzApprovalG.chkDocDelete" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_CHKDOCDELETE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->

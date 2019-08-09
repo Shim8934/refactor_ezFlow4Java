@@ -7290,7 +7290,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int lastSignNum = 0;
 		
 		if (!signAdd.equals("")) {
-			for (int k = 1; k < 10; k++) {
+			for (int k = 1; k <= 30; k++) {
 				if (!doc.body().html().contains(signAdd + "sign" + k)) {
 					LSignNum = k - 1;
 					lastSignNum = LSignNum;
@@ -7298,7 +7298,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		} else {
-			for (int k = 1; k < 20; k++) {
+			for (int k = 1; k <= 30; k++) {
 				if (!doc.body().html().contains("id=\"sign" + k + "\"")) {
 					LSignNum = k - 1;
 					lastSignNum = LSignNum;
@@ -15153,6 +15153,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String signType = "TEXT";
 		String signTitle = "";
 		String signCont = "";
+		String signName = "";
 		String cabinetSN = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -15175,10 +15176,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		signTitle = makeListField(ezApprovalGDAO.updateHabyuiResultAprMemberJobTitle(map));
+		//서명한 사람의 직위뿐만 아니라 다른 정보들도 필요해서 조회방식 변경
+		//signTitle = makeListField(ezApprovalGDAO.updateHabyuiResultAprMemberJobTitle(map));
+		
+		ApprGAprLineVO aprLineVO = ezApprovalGDAO.selectHabyuiResultAprMemberInfoVO(map);
+		if (aprLineVO != null) {
+			if (lang.equals("2")) {
+				signTitle = aprLineVO.getAprMemberJobTitle2();
+				signName = aprLineVO.getAprMemberName2();
+			} else {
+				signTitle = aprLineVO.getAprMemberJobTitle();
+				signName = aprLineVO.getAprMemberName();
+			}
+		}
 		
 		if (signTitle.trim().equals("")) {
 			signTitle = "-";
+		}
+		if (signName.trim().equals("")) {
+			signName = "-";
 		}
 		
 		String susinSN = getSusinSNInside(orgDocID, orgCompanyID, userInfo.getTenantId());
@@ -15283,16 +15299,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (doc.getElementById(susinSN + "habyuidate" + aprSN) != null) {
 				doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
 			}
-			
-			String tempHtml = doc.outerHtml();
-			OutputStream outputStream = null;
-			OutputStreamWriter output = null;
-			
-			try {
+		
+		if (doc.getElementById(susinSN + "habyuija" + aprSN) != null) {
+			doc.getElementById(susinSN + "habyuija" + aprSN).html(signName);
+		}
+		
+		String tempHtml = doc.outerHtml();
+		OutputStream outputStream = null;
+		OutputStreamWriter output = null;
+		
+		try {
 				String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
-				String tempMht = new File(formURL).getParentFile() + commonUtil.separator + orgDocID + "_backup.mht";
-				FileUtils.copyFile(new File(formURL), new File(tempMht));
-				
+				String tempMht = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + orgDocID + "_backup.mht";
+				FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempMht)));
+					
 				outputStream = new FileOutputStream(new File(formURL));
 				output = new OutputStreamWriter(outputStream);
 				

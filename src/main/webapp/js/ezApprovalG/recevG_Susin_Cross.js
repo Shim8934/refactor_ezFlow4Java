@@ -488,12 +488,14 @@ function SGetDraftAprLineInfo(ret) {
             TempsaveAprlineinfo = ret[0];
             xmlKuljea = ret[0];
             setAprLinesXML(xmlKuljea);
-            DrawAutoAprLine(ret[0], pDraftFlag);
+            //DrawAutoAprLine(ret[0], pDraftFlag);
+            New_DrawAutoLine(ret[0], pDraftFlag);
         } else {
-            TempsaveAprlineinfo = ret[1];
-            xmlKuljea = ret[1];
-            setAprLinesXML(xmlKuljea);
-            DrawAutoAprLine(ret[1], pDraftFlag);
+	        TempsaveAprlineinfo = ret[1];
+	        xmlKuljea = ret[1];
+	        setAprLinesXML(xmlKuljea);
+	        //DrawAutoAprLine(ret[1], pDraftFlag);
+	        New_DrawAutoLine(ret[1], pDraftFlag);
         }
         
         // FieldsAvailable(); 가온누리 살리려고 우선 주석 -> 가변결재선 체크해보고 수정필요
@@ -786,7 +788,7 @@ function SGetDraftAprLineInfo(ret) {
             Flag = susinSN + "Recv";
         }
 
-        for (i = 1; i < 20; i++) {
+        for (i = 1; i <= 20; i++) {
 
             fieldname = susinSN + "jikwe" + i
             field = message.GetListItem(fields, fieldname);
@@ -798,7 +800,7 @@ function SGetDraftAprLineInfo(ret) {
             }
         }
 
-        for (i = 1; i < 20; i++) {
+        for (i = 1; i <= 20; i++) {
 
             fieldname = "hjkwe" + i
             field = message.GetListItem(fields, fieldname);
@@ -810,7 +812,7 @@ function SGetDraftAprLineInfo(ret) {
             }
         }
 
-        for (i = 1; i < 20; i++) {
+        for (i = 1; i <= 20; i++) {
 
             fieldname = susinSN + "seumyungdate" + i
             field = message.GetListItem(fields, fieldname);
@@ -822,7 +824,7 @@ function SGetDraftAprLineInfo(ret) {
             }
         }
         
-        for (i = 1; i < 20; i++) {
+        for (i = 1; i <= 20; i++) {
         	fieldname = susinSN + "approdept" + i;
         	field = message.GetListItem(fields, fieldname);
         	
@@ -849,7 +851,7 @@ function SGetDraftAprLineInfo(ret) {
                     if (field)
                         cnt = OrderType.length;
 
-                    for (k = 1; k < cnt; k++) {
+                    for (k = 1; k <= cnt; k++) {
                         if (pDraftFlag == "SUSIN") signID = susinSN + "sign" + k
                         else signID = "sign" + k
 
@@ -910,7 +912,13 @@ function SGetDraftAprLineInfo(ret) {
                 fieldname = susinSN + "sign" + idx;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
-                    setNodeText(field , OrderName[i]);
+                    //setNodeText(field , OrderName[i]);
+                }
+                
+                fieldname = susinSN + "seumyung" + idx;
+                field = message.GetListItem(fields, fieldname);
+                if (field) {
+                	setNodeText(field , OrderName[i]);
                 }
                 
                 fieldname = susinSN + "approdept" + idx;

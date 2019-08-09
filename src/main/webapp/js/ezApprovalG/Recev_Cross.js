@@ -646,7 +646,7 @@ function SGetDraftAprLineInfo(ret) {
                 fieldname = susinSN + "sign" + idx;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
-                    setNodeText(field , OrderName[i]);
+                    //setNodeText(field , OrderName[i]);
                 }
                 
                 fieldname = susinSN + "approdept" + idx;

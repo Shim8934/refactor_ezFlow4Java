@@ -326,14 +326,16 @@ function SGetDraftAprLineInfo(ret) {
             TempsaveAprlineinfo = ret[0];
             xmlKuljea = ret[0];
             setAprLinesXML(xmlKuljea);
-            DrawAutoAprLine(ret[0], pDraftFlag);
+            //DrawAutoAprLine(ret[0], pDraftFlag);
+            New_DrawAutoLine(ret[0], pDraftFlag);
         } else {
 	        TempsaveAprlineinfo = ret[1];
 	        xmlKuljea = ret[1];
 	        setAprLinesXML(xmlKuljea);
-	        DrawAutoAprLine(ret[1], pDraftFlag);
+	        //DrawAutoAprLine(ret[1], pDraftFlag);
+	        New_DrawAutoLine(ret[1], pDraftFlag);
         }
-
+        
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
         } else if (xmlReDraft == "R") {
@@ -660,7 +662,7 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -698,7 +700,7 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS26) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -739,7 +741,7 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -781,7 +783,7 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -820,7 +822,7 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS26) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -861,7 +863,7 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -902,7 +904,8 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -941,7 +944,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS57) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -982,7 +986,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -1026,7 +1031,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -1066,7 +1072,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field && OrderStat[i] != strLangS26) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
 
@@ -1107,7 +1114,8 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
 
                         if (field) {
-                            setNodeText(field , OrderName[i]);
+                            //setNodeText(field , OrderName[i]);
+                        	setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuija" + hapyuiCnt;
@@ -1197,7 +1205,7 @@ function SGetDraftAprLineInfo(ret) {
         if (field)
             cnt = OrderType.length;
 
-        for (i = 1; i < cnt; i++) {
+        for (i = 1; i <= cnt; i++) {
             fieldname = susinSN + "jikwe" + i
             field = message.GetListItem(fields, fieldname);
 
@@ -1216,6 +1224,15 @@ function SGetDraftAprLineInfo(ret) {
                 }
                 
                 fieldname = susinSN + "approdept" + i
+                field = message.GetListItem(fields, fieldname)
+                if (field) {
+                    field.innerHTML = "&nbsp;";
+                    if (new RegExp(/Firefox/).test(navigator.userAgent))
+                        field.innerHTML = "<br type='_moz'>";
+
+                }
+                
+                fieldname = susinSN + "seumyung" + i
                 field = message.GetListItem(fields, fieldname)
                 if (field) {
                     field.innerHTML = "&nbsp;";
@@ -1247,7 +1264,7 @@ function SGetDraftAprLineInfo(ret) {
         for (i = 1; i < OrderJobtitle.length; i++) {
             if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
                 if (LastSignSN == 1 || LastSignSN == i) {
-                    for (k = 1; k < cnt; k++) {
+                    for (k = 1; k <= cnt; k++) {
                         if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + k
                         else signID = "sign" + k
 
@@ -1287,6 +1304,16 @@ function SGetDraftAprLineInfo(ret) {
                         field.innerHTML = "<br type='_moz'>";
                 }
                 
+                fieldname = susinSN + "seumyung" + idx;
+                field = message.GetListItem(fields, fieldname);
+                
+                if (field) {
+                	setNodeText(field , OrderName[i]);
+                	
+                	if (new RegExp(/Firefox/).test(navigator.userAgent) && trim(getNodeText(field)) == "")
+                		field.innerHTML = "<br type='_moz'>";
+                }
+                
                 fieldname = susinSN + "sign" + idx;
                 field = message.GetListItem(fields, fieldname);
 
@@ -1295,7 +1322,7 @@ function SGetDraftAprLineInfo(ret) {
                 		field.innerHTML = strLang6 + "<br>" + OrderName[i];
                         idx = idx + 1;
                 	} else {
-                		setNodeText(field , OrderName[i]);
+                		//setNodeText(field , OrderName[i]);
                         idx = idx + 1;
                 	}
                 }
@@ -1769,7 +1796,7 @@ function SendDraftMappingSign(ret) {
 
         if (approvalFlag == "S") {
             if (LastSignSN == 1) {
-                for (i = 1; i < 20; i++) {
+                for (i = 1; i <= 20; i++) {
                     if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
                     else signID = "sign" + i
 
@@ -1781,7 +1808,7 @@ function SendDraftMappingSign(ret) {
                 sn = LastSignNo;
             } else if (DraftLastFlag) {
                 putJunkyulSign("sign" + sn);
-                for (i = 1; i < 20; i++) {
+                for (i = 1; i <= 20; i++) {
                     if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
                     else signID = "sign" + i
 

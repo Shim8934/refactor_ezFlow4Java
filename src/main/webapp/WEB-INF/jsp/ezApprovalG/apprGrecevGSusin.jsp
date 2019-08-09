@@ -282,21 +282,26 @@
 		        setAutoProperty();
 		        process_AfterOpen();
 		        
-		        if (SignCount < 1) {
-		        	if (approvalFlag == "G") {
-			            pGubun = "12";
-			            if (CrossYN())
-			                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
-			            else
-			                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
-		        	} else {
-		        		document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.csj001'/>";
-		        	}
-		            document.getElementById("btnSetAprLine").style.display = "none";
-		            document.getElementById("btnSendDraft").style.display = "none";
-		            document.getElementById("btntotaldocinfo").style.display = "none";
+		        if ($("#message").contents().find("#RecvautoAprLine").length == 0) {
+			        if (SignCount < 1) {
+			        	if (approvalFlag == "G") {
+				            pGubun = "12";
+				            if (CrossYN())
+				                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
+				            else
+				                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
+			        	} else {
+			        		document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.csj001'/>";
+			        	}
+			            document.getElementById("btnSetAprLine").style.display = "none";
+			            document.getElementById("btnSendDraft").style.display = "none";
+			            document.getElementById("btntotaldocinfo").style.display = "none";
+			        } else {
+			        	setFirstDrafter();
+			        }
 		        } else {
 		        	setFirstDrafter();
+		        	setAutoProperty();
 		        }
 		        getGongRamDocInfo();
 		        var g_SepAttachLVXml = "";

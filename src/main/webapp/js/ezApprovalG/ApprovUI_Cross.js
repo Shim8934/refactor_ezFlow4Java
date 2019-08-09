@@ -500,7 +500,7 @@ function ApprovMappingSign(ret) {
     	//approvalFlag == "S" && pAprLineType == strAprType4인 경우는 없음(위에서 처리하였음)
     	if (approvalFlag == "S") {
     		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
-    			for (i = 1; i < 20; i++) {
+    			for (i = 1; i <= 20; i++) {
     				if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
     					signID = pSusinSN + "sign" + i
     					else
@@ -2207,7 +2207,7 @@ function SReAprLineSingMapping(ret) {
         susinSN = pSusinSN
     }
 
-    for (i = startIdx; i < 20; i++) {
+    for (i = startIdx; i <= 20; i++) {
         fieldname = susinSN + "jikwe" + i
         field = message.GetListItem(fields, fieldname);
         if (field) {
@@ -2309,7 +2309,7 @@ function SReAprLineSingMapping(ret) {
                     cnt = OrderType.length;
 
 
-                for (k = 1; k < cnt; k++) {
+                for (k = 1; k <= cnt; k++) {
                     if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
                         signID = pSusinSN + "sign" + k
                     else
@@ -2376,7 +2376,7 @@ function SReAprLineSingMapping(ret) {
             fieldname = susinSN + "sign" + idx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                field.innerHTML = OrderName[i];
+                //field.innerHTML = OrderName[i];
             }
             
             fieldname = susinSN + "approdept" + idx;
@@ -2387,7 +2387,7 @@ function SReAprLineSingMapping(ret) {
             idx = idx + 1;
         }
 
-        if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+        if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9) {
             fieldname = susinSN + "habyui" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
@@ -2397,7 +2397,35 @@ function SReAprLineSingMapping(ret) {
             fieldname = susinSN + "habyuisign" + hidx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
-                setNodeText(field , OrderName[i]);
+                //setNodeText(field , OrderName[i]);
+            }
+
+            fieldname = susinSN + "habyuipositon" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+                setNodeText(field , OrderJobtitle[i]);
+            }
+            
+            fieldname = susinSN + "habyuiapprodept" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field , OrderDept[i]);
+            }
+            hidx = hidx + 1;
+        }
+        
+        if (OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+        	fieldname = susinSN + "habyui" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+                setNodeText(field , OrderDept[i]);
+            }
+
+            fieldname = susinSN + "habyuisign" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+                //setNodeText(field , OrderName[i]);
+            	setNodeText(field , OrderDept[i]);
             }
 
             fieldname = susinSN + "habyuipositon" + hidx;

@@ -212,6 +212,7 @@
 	        var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 	        var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate = "";
 	        var OrgAprUserDeptID = "";
+	        var useDynamicAprLine = "<c:out value ='${useDynamicAprLine}'/>";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -485,6 +486,15 @@
 		            	document.getElementById("SaveAprLineTemplet").style.display = "none";
 		            }
 	            }
+	            
+	    	    // 가변결재양식 사용 시, 최대 사인칸 20개로 고정
+	    	    if (useDynamicAprLine == "1") {
+	    	    	pSignCount = 20;
+	    	    	// (개인,부서)합의는 기안할때만 사용하도록
+	    	    	if (approvalType == "DRAFT") {
+		    	    	pHapYuiCount = 20;
+	    	    	}
+	    	    }
 	        }
 	        function CheckGubunInit() {
 	            if (pIniGubun == "1") {
@@ -1194,6 +1204,14 @@
                                     ret[31] = "";
                                 }
 							}
+		                }
+		                
+		                if (useDynamicAprLine == "1") {
+		                	if (approvalFlag == "G") {
+			                	ret[27] = SaveAprLineList();
+		                	} else {
+			                	ret[27] = SAPRLINETEMPLETXMLParsing();
+		                	}
 		                }
 		
 		                if (ReturnFunction != null) {

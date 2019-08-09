@@ -1365,6 +1365,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String useOpenGov = config.getProperty("config.useOpenGov");
 
+		String useDynamicAprLine = ezCommonService.getTenantConfig("UseDynamicAprLine", userInfo.getTenantId()); //가변 결재선 사용여부 - 1(사용) / 0(사용안함)
+		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
@@ -1435,7 +1437,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("ext", ext);
 		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
 		model.addAttribute("useOpenGov", useOpenGov);
-
+		model.addAttribute("useDynamicAprLine", useDynamicAprLine); //가변 결재선 사용여부 - 1(사용) / 0(사용안함)
+		
 		logger.debug("ezApprovalInfo ended.");
 		
 		return "ezApprovalG/apprGezApprovalInfo";

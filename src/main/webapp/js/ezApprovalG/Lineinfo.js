@@ -2911,10 +2911,9 @@ function CheckLineArea()
 
 	    var pAprTypeFlag = "040";
 	    pCurAprilban = pCurAprilban + getAprLineGyulJeLen(AprLineRow , NodeListLen , pAprTypeFlag);
-
-	    if(pCurAprilban > pSignCount)  
-	    { 
-		    pAlertContent = pAlertContent + strLangS276 + pSignCount + strLangS277 + "<br>";
+	    
+	    if (pCurAprilban > pSignCount) { 
+	    	pAlertContent = pAlertContent + strLangS276 + pSignCount + strLangS277 + "<br>";
 	    }
     }
     

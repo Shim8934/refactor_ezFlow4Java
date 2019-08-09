@@ -1142,3 +1142,277 @@ function DrawAutoAprLine(ret, pDraftFlag) {
     }
   
 }
+
+function New_DrawAutoLine(ret, pDraftFlag) {
+	try {
+		var signCnt = 0;
+		var habyCnt = 0;
+		
+		var xmlDom = createXmlDom();
+			xmlDom = loadXMLString(ret);
+			
+		var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
+		for (var i = 0; i < oRows.length; i++) {
+			var tempAprType = getNodeText(GetChildNodes(oRows[i])[16]);
+			if (tempAprType == "001" || tempAprType == "003" || tempAprType == "004" || tempAprType == "015" || tempAprType == "040") {
+				signCnt++;
+			} else if (tempAprType == "008" || tempAprType == "009" || tempAprType == "011" || tempAprType == "012") {
+				habyCnt++;
+			}
+		}
+		
+		var aprLineRowCnt = parseInt(signCnt / 10);
+		if (signCnt % 10 > 0) {
+			aprLineRowCnt++;
+		}
+		
+		var habyRowCnt = parseInt(habyCnt / 10);
+		if (habyCnt % 10 > 0) {
+			habyRowCnt++;
+		}
+		
+		var Recv = "";
+		var SusinSN = "";
+		if (pDraftFlag == "SUSIN") {
+			Recv = "Recv";
+			SusinSN = "1";
+		}
+		
+		var fields = message.GetFieldsList();
+		var field = message.GetListItem(fields, Recv + "autoAprLine");
+		if (field && signCnt > 0) {
+			field.innerHTML = "";
+			
+			var signIdx = 1;
+			var signMax = 0;
+			
+			for (var r = 0; r < aprLineRowCnt; r++) {
+				var oTable = document.createElement("TABLE");
+				oTable.style.width = "100%";
+				oTable.style.marginTop = "10px";
+				oTable.style.tableLayout = "fixed";
+				oTable.style.border = "1px solid black";
+				oTable.style.borderCollapse = "collapse";
+	
+				if (r == 0) {
+					if (signCnt > 10) {
+						signMax = 10;
+					} else {
+						signMax = signCnt;
+					}
+				} else {
+					signIdx++;
+					signMax = signCnt;
+				}
+				
+				for (var i = 0; i < 4; i++) {
+					var oTr = document.createElement("TR");
+					
+					switch (i) {
+						case 0 : 
+							oTr.style.height = "20px";
+							break;
+						case 1 : 
+							oTr.style.height = "60px";
+							break;
+						case 2 : 
+							oTr.style.height = "20px";
+							break;
+						case 3 : 
+							oTr.style.height = "20px";
+							oTr.style.display = "none";
+							break;
+					}
+					
+					if (i == 0) {
+						var oTd = document.createElement("TD");
+						oTd.style.width = "30px";
+						oTd.style.background = "#def7ff";
+						oTd.style.border = "1px solid black";
+						oTd.setAttribute("rowspan", 4);
+						
+						for (var p = 0; p < 3; p++) {
+							var oP = document.createElement("P");
+							oP.style.textAlign = "center";
+							oP.style.fontFamily = "굴림";
+							oP.style.fontSize = "9pt";
+							oP.style.marginTop = "0pt";
+							oP.style.marginBottom = "0pt";
+							
+							if (pDraftFlag == "SUSIN") {
+								switch (p) {
+								case 0 : 
+									oP.innerHTML = "수";
+									break;
+								case 1 : 
+									oP.innerHTML = "&nbsp;";
+									break;
+								case 2 : 
+									oP.innerHTML = "신";
+									break;
+								}
+							} else {
+								switch (p) {
+								case 0 : 
+									oP.innerHTML = "결";
+									break;
+								case 1 : 
+									oP.innerHTML = "&nbsp;";
+									break;
+								case 2 : 
+									oP.innerHTML = "재";
+									break;
+								}
+							}
+							oTd.appendChild(oP);
+						}
+						oTr.appendChild(oTd);
+					}
+					
+					for (var j = signIdx; j <= signMax; j++) {
+						var oTd = document.createElement("TD");
+						oTd.className = "FIELD";
+						oTd.style.textAlign = "center";
+						oTd.style.border = "1px solid black";
+						oTd.style.fontFamily = "굴림";
+						oTd.style.fontSize = "9pt";
+						
+						switch (i) {
+							case 0 : 
+								oTd.id = SusinSN + "jikwe" + j;
+								break;
+							case 1 : 
+								oTd.id = SusinSN + "sign" + j;
+								break;
+							case 2 : 
+								oTd.id = SusinSN + "seumyung" + j;
+								break;
+							case 3 : 
+								oTd.id = SusinSN + "seumyungdate" + j;
+								break;
+						}
+						oTr.appendChild(oTd);
+					}
+					oTable.appendChild(oTr);
+				}
+				
+				signIdx = signMax;
+				field.appendChild(oTable);
+			}
+		}
+		
+		field = message.GetListItem(fields, Recv + "autoHabyLine");
+		if (field && habyCnt > 0) {
+			field.innerHTML = "";
+			
+			var habyIdx = 1;
+			var habyMax = 0;
+			
+			for (var r = 0; r < habyRowCnt; r++) {
+				var oTable = document.createElement("TABLE");
+				oTable.style.width = "100%";
+				oTable.style.marginTop = "10px";
+				oTable.style.tableLayout = "fixed";
+				oTable.style.border = "1px solid black";
+				oTable.style.borderCollapse = "collapse";
+	
+				if (r == 0) {
+					if (habyCnt > 10) {
+						habyMax = 10;
+					} else {
+						habyMax = habyCnt;
+					}
+				} else {
+					habyIdx++;
+					habyMax = habyCnt;
+				}
+				
+				for (var i = 0; i < 4; i++) {
+					var oTr = document.createElement("TR");
+					
+					switch (i) {
+						case 0 : 
+							oTr.style.height = "20px";
+							break;
+						case 1 : 
+							oTr.style.height = "60px";
+							break;
+						case 2 : 
+							oTr.style.height = "20px";
+							break;
+						case 3 : 
+							oTr.style.height = "20px";
+							oTr.style.display = "none";
+							break;
+					}
+					
+					if (i == 0) {
+						var oTd = document.createElement("TD");
+						oTd.style.width = "30px";
+						oTd.style.background = "#def7ff";
+						oTd.style.border = "1px solid black";
+						oTd.setAttribute("rowspan", 4);
+						
+						for (var p = 0; p < 3; p++) {
+							var oP = document.createElement("P");
+							oP.style.textAlign = "center";
+							oP.style.fontFamily = "굴림";
+							oP.style.fontSize = "9pt";
+							oP.style.marginTop = "0pt";
+							oP.style.marginBottom = "0pt";
+							
+							switch (p) {
+								case 0 : 
+									oP.innerHTML = "협";
+									break;
+								case 1 : 
+									oP.innerHTML = "&nbsp;";
+									break;
+								case 2 : 
+									oP.innerHTML = "의";
+									break;
+							}
+							oTd.appendChild(oP);
+						}
+						oTr.appendChild(oTd);
+					}
+					
+					for (var j = habyIdx; j <= habyMax; j++) {
+						var oTd = document.createElement("TD");
+						oTd.className = "FIELD";
+						oTd.style.border = "1px solid black";
+						oTd.style.textAlign = "center";
+						oTd.style.fontFamily = "굴림";
+						oTd.style.fontSize = "9pt";
+						
+						switch (i) {
+							case 0 : 
+								oTd.id = SusinSN + "habyuipositon" + j;
+								break;
+							case 1 : 
+								oTd.id = SusinSN + "habyuisign" + j;
+								break;
+							case 2 : 
+								oTd.id = SusinSN + "habyuija" + j;
+								break;
+							case 3 : 
+								oTd.id = SusinSN + "habyuidate" + j;
+								break;
+						}
+						oTr.appendChild(oTd);
+					}
+					oTable.appendChild(oTr);
+				}
+				
+				habyIdx = habyMax;
+				field.appendChild(oTable);
+			}
+		} else {
+			if (field) {
+				field.innerHTML = "";
+			}
+		}
+	} catch (e) {
+		alert("New_DrawAutoLine ERROR!!");
+	}
+}

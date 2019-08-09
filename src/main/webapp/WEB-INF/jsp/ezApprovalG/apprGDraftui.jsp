@@ -447,6 +447,10 @@
 			                			getDocInfo();
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
 				                	}
+				                	
+				                	if ($("#message").contents().find("#autoLine") != null && $("#message").contents().find("#RecvautoAprLine") != null) {
+				                		$("#message").contents().find("#RecvautoAprLine").remove();
+				                	}
 			                	}
 		                    }
 		                }
@@ -1653,6 +1657,16 @@
 		                }    
 		                
 		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string" && pDocType != "002") {
+		                	if ($("#message").contents().find("#autoLine") != null) {
+		                		var oDIV = document.createElement("DIV");
+		                		oDIV.className = "FIELD";
+		                		oDIV.id = "RecvautoAprLine";
+		                		
+		                		if ($("#message").contents().find("#RecvautoAprLine").length == 0) {
+			                		$("#message").contents().find("#autoLine").append(oDIV);
+		                		}
+		                	}
+		                	
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
@@ -1671,6 +1685,10 @@
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
 		                } else if (pSuSinFlag == "Y" && ret[2] == "" && pDocType != "002") {
+		                	if ($("#message").contents().find("#autoLine") != null) {
+		                		$("#message").contents().find("#RecvautoAprLine").remove();
+		                	}
+		                	
 		                    DeleteDeptInfo();
 		                    setRecevInfo("");
 		                }

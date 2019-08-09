@@ -3471,4 +3471,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<KEDSharedUserInfo> getShareList(Map<String, Object> map) {
 		return (List<KEDSharedUserInfo>)list("EzApprovalG.getShareList", map);
 	}
+	
+	public ApprGAprLineVO selectHabyuiResultAprMemberInfoVO(Map<String, Object> map) throws Exception{
+		return (ApprGAprLineVO) select("EzApprovalG.selectHabyuiResultAprMemberInfoVO", map);
+	}
 }

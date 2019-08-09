@@ -116,6 +116,7 @@
 			var orgCompanyID = "${userInfo.companyID}";
 			var ext = "mht";
 			var isHWP = "";
+			var signImageType = "<c:out value ='${signImageType}'/>";
 			
 			//부서순차합의를 위해 아래 파라미터 추가. 2019-02-08 홍대표
 			//최종결재시 채번
