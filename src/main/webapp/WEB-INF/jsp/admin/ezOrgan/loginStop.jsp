@@ -390,27 +390,6 @@
 					currentRow.className = "unselectedTR";
 				}
 			}
-			
-			function scroll() {
-				var headerWidth = document.getElementById("mainListHeader").clientWidth;
-				var bodyWidth   = document.getElementById("mainListBody").clientWidth;
-				var scrollWidth = headerWidth - bodyWidth;
-				
-				var scrollElmt = document.getElementById("forScroll");
-				if (scrollElmt) {
-					scrollElmt.parentNode.removeChild(scrollElmt);
-				}
-				
-				if (scrollWidth > 0) {
-					var headerTr = document.getElementById("mainListHeaderTr");
-					var thElmt   = document.createElement("th");
-					thElmt.setAttribute("id", "forScroll");
-					thElmt.style.width = "8px";
-					
-					headerTr.appendChild(thElmt);
-				}
-			}
-			
 	    </script>
 	</head>
 	<body class="mainbody">

@@ -20,10 +20,6 @@
 		var totalCount = "";
 		var BlockSize = 10;
 		
-		window.parent.onresize = function () {
-// 			windowResize();
-		}
-		
 		window.onload = function () {
 			if (rollInfo.indexOf("c=1") == -1) {
 				permission = false;
@@ -36,7 +32,6 @@
 			
 			getUserList(1);
 			makePageSelPage();
-// 			windowResize();
 	    }
 		
 		function getUserList(pageNum){
@@ -103,13 +98,6 @@
     				CurPage = res.currPage;
     				totalPage = res.totalPage;
     				totalCount = res.itemCnt;
-    				
-    				if (res.searchKeycode != null) {
-    					var idx = parseInt(searchKeycode) - 1;
-	    				$('#searchKeycode option:eq(' + idx + ')').attr('selected', 'selected');
-    				}
-    				
-    				$('#searchKeyword').val(res.searchKeyword);
     			}
     			,error: function(err) {
     				alert(strLang321);
@@ -224,25 +212,6 @@
 				elem.checked = obj.checked;
 			});
 		}
-		////////////////////////////////////////////////////////////////////////////////
-		function event_listMout(obj) {
-		    if (!obj.childNodes.item(0).childNodes.item(0).checked) {
-		        obj.style.backgroundColor = m_strColorDefault;
-		    }
-		}
-		
-		function windowResize() {
-        	var height = parent.document.documentElement.clientHeight - 345;
-        	var width = parent.document.documentElement.clientWidth - 30;
-        	/* if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-        		height = height - 10;
-        	} */
-        	document.getElementById("contentHeader").style.width = width + "px";
-        	document.getElementById("contentlist").style.width = width + "px";
-        	document.getElementById("contentlist").style.height = height + "px";
-        	document.getElementById("contentlist").style.overflowY = "auto";
-        }
-		
 	</script>
 </head>
 <body class="mainbody" style="overflow:hidden; margin:0" marginwidth="0" marginheight="0">
