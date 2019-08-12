@@ -180,13 +180,13 @@
 	        	});
 			    
 			    if (checkedCheckboxArr.length == 0) {
-			        alert("<spring:message code='ezOrgan.t28'/>"); 
+			        alert("정지할 사원을 선택해주세요."); 
 			        return;
 			    }			    
-		        var ret = confirm(strLangLHM02 + " " + checkedCheckboxArr.length + strLang5);
+		        var ret = confirm("정지 시 해당 사용자는 로그인을 할 수 없습니다." + "\n" + checkedCheckboxArr.length + "명을 정지하시겠습니까?");
 		        
 		        if (ret) {
-		        	ret = confirm(strLangLHM03);
+		        	ret = confirm("정말 정지하시겠습니까?");
 		        }
 		        
 			    if (ret) {
@@ -205,14 +205,16 @@
 	            			companyId : companyId
 		            	},
 		            	success : function(result) {
-		            	    setTimeout(function() {		   
+		            	    setTimeout(function() {
 		            	        if (result == "OK") {
-		            				alert(checkedCheckboxArr.length + "<spring:message code='ezOrgan.t31' />");
+		            				alert(checkedCheckboxArr.length + " 명의 사원을 정지했습니다.");
+		            				loginStop_ifrm.contentWindow.getUserList(1);
+		            				loginStop_ifrm.contentWindow.makePageSelPage();
+		            				loginStop_ifrm.contentDocument.getElementById("HeaderAllCheckBox").checked = false;
 		            	        } else {
 		            	            alert("<spring:message code='ezOrgan.t30' />")
 		            	        }
 		            			
-		            	        retireUserList();
 		            	    }, 100);
 		            	},
 		            	error : function() {
@@ -222,99 +224,108 @@
 		            	    
 		            	    setTimeout(function() {
 		            			alert("<spring:message code='ezOrgan.t30' />");
-		            			
-		            			retireUserList();		            			
 		            	    }, 100);
 		            	}
 		            });					
 			    }
 			}
 	        
-	        ///////////////////////////////////////////////////////////////////////
-			
-			function funCheckBox(mode) {
-			    CheckBoxArr = new Array();
+	        function release_onclick() {
+	        	var companyList = document.getElementById("ListCompany");
+	        	var companyId = companyList[companyList.selectedIndex].value;
+	        	var loginStop_ifrm = document.getElementById("loginStop_ifrm");
+	        	var checkBoxArr = loginStop_ifrm.contentDocument.querySelectorAll("#userListBody tr input");
+	        	var checkedCheckboxArr = [].filter.call(checkBoxArr, function(elem){
+	        		return elem.checked
+	        	});
 			    
-			    if (mode == 'get') {
-			        for (var i = 0 ; i < document.getElementsByName("chk").length ; i++) {
-			            if (document.getElementsByName("chk").item(i).checked == true) {
-			                CheckBoxArr[CheckBoxArr.length] = document.getElementsByName("chk").item(i).value;
-			            }
-			        }
-			    }
-			    if (mode == 'set') {
-			        for (var i = 0 ; i < document.getElementsByName("chk").length ; i++) {
-			            if (document.getElementsByName('checkbox').item(0).checked == true) {
-			                document.getElementsByName("chk").item(i).checked = true;
-			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "selectedTR";
-			            } else {
-			                document.getElementsByName("chk").item(i).checked = false;
-			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "unselectedTR";
-			            }
-			        }
-			    }
-			}
-			
-			//2016-05-04일 까지 구현
-			var selectdept_cross_dialogArguments = new Array();
-			function Restore_onclick() {
-			    funCheckBox('get');
-			    
-			    if (CheckBoxArr.length == 0) {
-			        alert(strLang6); 
+	        	if (checkedCheckboxArr.length == 0) {
+			        alert("해제할 사원을 선택해주세요."); 
 			        return;
-			    }
-			    //var ret = confirm(CheckBoxArr.length + strLang7);
-			    //var ret = confirm(strLangKHJ01 + CheckBoxArr.length + strLangKHJ02);
-			    var ret = confirm(strLangKHJ03.replace("%s", CheckBoxArr.length));
-			    
-				if (ret) {
-				    //if (CrossYN()) {
-			        selectdept_cross_dialogArguments[0] = strLang8;
-			        selectdept_cross_dialogArguments[1] = Restore_onclick_Complete;
-			        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
-			        try { OpenWin.focus(); } catch (e) { }
-				}
-			}
-			
-			function Restore_onclick_Complete(rtnValue) {
-			    if (typeof (rtnValue) != "undefined") {
-			    	var data = "";
-			    	
-			        for (var i = 0 ; i < CheckBoxArr.length ; i++) {
-			        	data += CheckBoxArr[i];
-			        	
-			        	if (i != CheckBoxArr.length-1) {
-			        		data += ",";
-			        	}
-			        }
-
+			    }			    
+		        var ret = confirm("해제 시 해당 사용자는 로그인을 할 수 있습니다." + "\n" + checkedCheckboxArr.length + "명을 해제하시겠습니까?");
+		        
+// 		        if (ret) {
+// 		        	ret = confirm("정말 정지하시겠습니까?");
+// 		        }
+		        
+			    if (ret) {
+			        var data = [];
+			        for (var i = 0; i < checkedCheckboxArr.length; i++) {
+		            	data[data.length] = checkedCheckboxArr[i].id;
+		            }
+					
 			        $.ajax({
-			        	type : "POST",
-			        	dataType : "html",
-			        	url : "/admin/ezOrgan/restoreRetireUser.do",
-			        	async : false,
-			        	data : {deptID : rtnValue, cn : data},
-			        	success : function(result) {			        	    
-			        	    if (result == "OK") {
-			        			alert(strLang9);
-			        	    } else if (result == "DIFF_COMPANY") {
-			        	    	alert(strLangLHM01);
-			        	    } else {
-			        	        alert(strLang10);
-			        	    }
-			        	},
-			        	error : function(){
-			        		alert(strLang10);	
-			        	}
-			        });
-
-			        retireUserList();
+		            	type : "POST",
+		            	dataType : "html",
+		            	url : "/admin/ezOrgan/deleteStopUser.do",
+		            	async : true,
+		            	data : {
+		            		cn : data,
+	            			companyId : companyId
+		            	},
+		            	success : function(result) {
+		            	    setTimeout(function() {		   
+		            	        if (result == "OK") {
+		            				alert(checkedCheckboxArr.length + " 명의 사원을 해제했습니다.");
+		            				loginStop_ifrm.contentWindow.getUserList(1);
+		            				loginStop_ifrm.contentWindow.makePageSelPage();
+		            				loginStop_ifrm.contentDocument.getElementById("HeaderAllCheckBox").checked = false;
+		            	        } else {
+		            	            alert("<spring:message code='ezOrgan.t30' />")
+		            	        }
+		            			
+		            	    }, 100);
+		            	},
+		            	error : function() {
+		            	    if (useBizmekaSpambox == "YES") {
+		            	    	hideProgress();
+		            	    }
+		            	    
+		            	    setTimeout(function() {
+		            			alert("<spring:message code='ezOrgan.t30' />");
+		            	    }, 100);
+		            	}
+		            });					
 			    }
 			}
-			
-			var inputpassword_dialogArguments = new Array();
-			
+	        
+	        function removeCheckedCheckbox(loginStop_ifrm, checkboxArr){
+	        	var idx = checkboxArr.length;
+	        	var userList = loginStop_ifrm.contentDocument.getElementById("userListBody");
+	        	for(var i = 0; i < idx; i++) {
+	        		var targetTr = checkboxArr[i].parentElement;
+	        		while(targetTr.tagName != "TR") {
+						targetTr = targetTr.parentElement;
+	        		}
+	        		userList.removeChild(targetTr);
+	        	}
+	        }
+	        
+	      	//검색 버튼 클릭시 이벤트
+		    function search() {
+		    	var loginStop_ifrm = document.getElementById("loginStop_ifrm");
+				CurPage = 1;
+				
+				if ($('#startDatepicker').val() == "" && $('#endDatepicker').val() == "" && $('#searchKeyword').val() == "") {
+ 					alert("<spring:message code='ezOrgan.0hun04' />");
+ 					return ;
+				}
+				
+				if ($("#startDatepicker").val() != "" && $("#endDatepicker").val() == "") {
+					alert("<spring:message code='ezOrgan.0hun06' />");
+				    return;
+				}
+				 
+				if ($("#endDatepicker").val() != "" && $("#startDatepicker").val() == "") {
+ 				 	alert("<spring:message code='ezOrgan.0hun05' />");
+				    return;
+				}
+				 
+				loginStop_ifrm.contentWindow.getUserList(1);
+				loginStop_ifrm.contentWindow.makePageSelPage();
+		    }
+	        ///////////////////////////////////////////////////////////////////////
 			function refresh_onclick() {
 				window.location.reload(false);
 			}
@@ -348,34 +359,6 @@
 				}
 			    
 				return true;
-			}
-			
-			//검색 버튼 클릭시 이벤트
-		    function search() {
-				CurPage = 1;
-				
-				if ($('#startDatepicker').val() == "" && $('#endDatepicker').val() == "" && $('#searchKeyword').val() == "") {
- 					alert("<spring:message code='ezOrgan.0hun04' />");
- 					return ;
-				}
-				
-				 if ($("#startDatepicker").val() != "" && $("#endDatepicker").val() == "") {
- 				 	alert("<spring:message code='ezOrgan.0hun06' />");
-				     return;
-				 }
-				 
-				 if ($("#endDatepicker").val() != "" && $("#startDatepicker").val() == "") {
- 				 	alert("<spring:message code='ezOrgan.0hun05' />");
-				     return;
-				 }
-				 
-				 retireUserList();
-		    }
-			
-			//**/ 날짜 초기화버튼
-			function reset() {
-				$('#startDatepicker').val('');				
-				$('#endDatepicker').val('');				
 			}
 			
 			function clickRow(event) {
@@ -470,12 +453,9 @@
 							<a class="imgbtn" >
 								<span onclick="javascript:search();"><spring:message code="ezStatistics.t36"></spring:message></span> <!-- 검색 -->
 							</a>
-							<a class="imgbtn" >
-								<span onclick="javascript:reset();"><spring:message code="ezStatistics.t1059"></spring:message></span> <!-- 재입력 -->
-							</a>
-							<a class="imgbtn" >
-								<span onclick="javascript:reload();"><spring:message code="ezStatistics.t1060"></spring:message></span> <!-- 새로고침 -->
-							</a>
+<!-- 							<a class="imgbtn" > -->
+<%-- 								<span onclick="javascript:reload();"><spring:message code="ezStatistics.t1060"></spring:message></span> <!-- 새로고침 --> --%>
+<!-- 							</a> -->
 						</span>
 					</td>
 				</tr>

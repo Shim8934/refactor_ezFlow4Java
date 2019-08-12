@@ -34,6 +34,7 @@ import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -2210,8 +2211,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<OrganUserVO> getLoginStopUserList(Map<String, Object> map) throws Exception {
-		return (List<OrganUserVO>) list("EzOrganAdminDAO.getLoginStopUserList", map);
+	public List<OrganLoginStopUserVO> getLoginStopUserList(Map<String, Object> map) throws Exception {
+		return (List<OrganLoginStopUserVO>) list("EzOrganAdminDAO.getLoginStopUserList", map);
 	}
 	
     public int getLoginStopUserListCount(Map<String, Object> map) throws Exception {
@@ -2220,5 +2221,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     public void insertStopUser(Map<String, Object> map) throws Exception {
     	insert ("EzOrganAdminDAO.insertStopUser", map);
+    }
+    
+    public void deleteStopUser(Map<String, Object> map) throws Exception {
+    	delete ("EzOrganAdminDAO.deleteStopUser", map);
     }
 }

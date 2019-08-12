@@ -19,6 +19,7 @@
 		var totalPage = "";
 		var totalCount = "";
 		var BlockSize = 10;
+		var stopFlag = "Y";
 		
 		window.parent.onresize = function () {
 // 			windowResize();
@@ -56,13 +57,14 @@
 	    				'searchKeycode' : searchKeycode,
 	    				'searchKeyword' : searchKeyword,
 	    				'pageNum' : pageNum,
+	    				'stopFlag' : stopFlag,
 	    				'companyId' : companyIdChk
 	    			   }    
 	    		,success: function(res) {
 	    			var html = "";
 
    					if (res.itemCnt < 1) {
-   						html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
+   						html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + "검색된 결과가 없습니다." + "</td></tr>";
   					} else {
    						var j = ((pageNum - 1) * 20) + 1 ;
    							
@@ -75,6 +77,7 @@
   							var companyName = user.company;
   							var passwordUpdateDT = user.passwordUpdateDT;
   							var durationDays = 0;
+  							var loginStopDT = user.loginStopDT;
   							
   							if(passwordUpdateDT) {
   								passwordUpdateDT = passwordUpdateDT.substr(0, 10);
@@ -83,17 +86,18 @@
   								passwordUpdateDT = "없음";
   								durationDays = "-";
   							}
+							loginStopDT = loginStopDT.substr(0, 10);
 								
 							html += "<tr>";
 							html += "   <td style='width:22px;text-align:center;cursor:deafult;'>" +
-									"		<input type='checkbox' style='margin:0;padding:0;width:13px;height:13px;cursor=pointer;' onclick='event_listclick(this)' />" +
+									"		<input id='" + cn + "'type='checkbox' style='margin:0;padding:0;width:13px;height:13px;cursor=pointer;'/>" +
 									"	</td>";
     						html += "   <td>" + j + "</td>";
     						html += "	<td title=\'" + userName + "(" + cn + ")'>" + userName + "(" + cn + ")" + "</td>";
     						html += "	<td>" + deptName + "</td>";
     						html += "	<td>" + companyName + "</td>";
     						html += "	<td>" + passwordUpdateDT + " (" + durationDays + ")" + "</td>";
-    						html += "	<td>"         + "stopdate" 			   + "</td>";
+    						html += "	<td>" + loginStopDT + "</td>";
 							html += "</tr>";
 							j++;
 						})
@@ -219,249 +223,19 @@
 			getUserList(page);
 		}	
 		
-		// 사용여부 저장 버튼 클릭
-		function saveBtn() {
-			var allowResult = false;
-			if (!document.getElementById("ipRadio0").checked) {
-				allowResult = true;
-			}
-			
-			$.ajax({
-				type : "POST",
-				url : "/ezSystem/setUseIPAccess.do?allowResult=" + allowResult,
-				cache : false,
-				error : function(data) {
-					console.log(data);
-					alert("<spring:message code='ezCommunity.t283'/>");
-				},
-				complete : function(data) {
-					alert("<spring:message code='ezCommunity.t282'/>");
-					
-					if (useIPAccess == "NO") {
-						useIPAccess = "YES";
-					} else {
-						useIPAccess = "NO";
-					}
-					
-				}
+		function event_HeaderCheckBoxClick(obj) {
+			var checkboxList = document.querySelectorAll("#userListBody tr input");
+			[].forEach.call(checkboxList, function(elem){
+				elem.checked = obj.checked;
 			});
 		}
-		
+		///////////////////////////////////
 		// 설정된 IP 대역 리스트 삭제하기 (refresh할때 사용)
-		function IPBandListRemove() {
-			var ipListElement = $("#tblIP tbody tr[id^=IPBand]");
-			
-			for (var i = 0; i < ipListElement.length; i++) {
-				document.getElementById("ipBody").removeChild(ipListElement[i]);
-			}
-		}
-		
-		function makeIPBands(json) {
-			var _TBODY = document.getElementById("ipBody");
-			
-			if (json.length == 0) {
-				var _TR = document.createElement("TR");
-				_TR.setAttribute("id", "IPBandNoData");
-				
-				var _NODATA = document.createElement("TD");
-                _NODATA.colSpan = "4";
-                _NODATA.style.textAlign = "center";
-                _NODATA.innerHTML = "<spring:message code='ezStatistics.t1008'/>";
-                
-				_TR.appendChild(_NODATA);
-                _TBODY.appendChild(_TR);
-                return;
-			}
-			
-			for (var Cnt = 0; Cnt < json.length; Cnt++) {
-				var _TR = document.createElement("TR");
-				_TR.setAttribute("id", "IPBand_" + Cnt);
-				_TR.setAttribute("ipno", json[Cnt].ipNo);
-				_TR.onclick = function() { event_listclick(this); };
-				_TR.onmouseover = function () { event_listMover(this); };
-				_TR.onmouseout = function () { event_listMout(this); };
-				_TR.ondblclick = function () {
-					if (!permission) {
-						alert("<spring:message code='ezSystem.jje7'/>");
-						return;
-					}
-					ipBandUpdateInfo(this); 
-				};
-				_TR.style.cursor = "pointer";
-				
-				var _TDCheckBox = document.createElement("TD");
-				_TDCheckBox.onclick = function() { event_listclick(this); };
-                _TDCheckBox.style.width = "22px";
-                _TDCheckBox.style.textAlign = "center";
-                _TDCheckBox.style.cursor = "default";
-                
-                var _TDCheckBox_Sub = document.createElement("INPUT");
-                _TDCheckBox_Sub.type = "checkbox";
-                _TDCheckBox_Sub.style.margin = "0px";
-                _TDCheckBox_Sub.style.padding = "0px";
-                _TDCheckBox_Sub.style.width = "13px";
-                _TDCheckBox_Sub.style.height = "13px";
-                _TDCheckBox_Sub.style.cursor = "pointer";
-                
-                _TDCheckBox.appendChild(_TDCheckBox_Sub);
-                _TR.appendChild(_TDCheckBox);
-                
-                var _IPADDRESS = document.createElement("TD");
-                _IPADDRESS.style.width = "230px";
-                _IPADDRESS.innerHTML = json[Cnt].ipAddress;
-                _TR.appendChild(_IPADDRESS);
-                
-                var _ACCESS = document.createElement("TD");
-                _ACCESS.style.width = "100px";
-                _ACCESS.innerHTML = json[Cnt].access == "YES" ? "<spring:message code='ezSystem.jje21'/>" : "<spring:message code='ezSystem.jje22'/>";
-                _TR.appendChild(_ACCESS);
-                
-                var _EXPLANATION = document.createElement("TD");
-                var _SPAN = document.createElement("span");
-                _EXPLANATION.title = json[Cnt].explanation;
-                _SPAN.innerText = json[Cnt].explanation;
-                _SPAN.style.display = "inline-block";
-                _SPAN.style.width = "100%";
-                _SPAN.style.whiteSpace = "nowrap";
-                _SPAN.style.overflow = "hidden";
-                _SPAN.style.textOverflow = "ellipsis";
-                _EXPLANATION.appendChild(_SPAN);
-                _TR.appendChild(_EXPLANATION);
-                
-                _TBODY.appendChild(_TR);
-			}
-		}
-		
 		function cancleBtn() {
 			if (useIPAccess === "NO") {
 				document.getElementById("ipRadio0").checked = true;
 			} else {
 				document.getElementById("ipRadio1").checked = true;
-			}
-		}
-	
-		// IP 대역 등록 및 수정
-		function ipBandEidtPopUp(type) {
-			var url = "/ezSystem/systemIPBandEditPopup.do";
-			if (type === "add") {
-				url += "?type=add";
-				var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
-			} else {
-				var selectedList = $("#tblIP tbody tr[selected=true]");
-				if (selectedList.length > 1) {
-					alert("<spring:message code='ezSystem.jje8'/>");
-					return;
-				} else if (selectedList.length == 0) {
-					alert("<spring:message code='ezSystem.jje9'/>");
-					return;
-				} else {
-					ipBandUpdateInfo(selectedList[0]);
-				}
-			}
-		}
-		
-		function ipBandUpdateInfo(obj) {
-			var ipNo = obj.getAttribute("ipNo");
-			var ipAddress = obj.childNodes[1].innerText;
-			var access = obj.childNodes[2].innerText == "허용" ? "YES" : "NO";
-			var explanation = obj.childNodes[3].innerText;
-			var url = "/ezSystem/systemIPBandEditPopup.do";
-			
-			url += "?type=modify&ipNo=" + ipNo + "&ipAddress=" + ipAddress + "&access=" + access + "&explanation=" + encodeURIComponent(explanation);
-			
-			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(460, 188));
-		}
-		
-		function deleteIPBand() {
-			var selectedList = $("#tblIP tbody tr[selected=true]");
-			var ipNo = "";
-			
-			if (selectedList.length == 0) {
-				alert("<spring:message code='ezSystem.jje10'/>");
-				return;
-			} else if (selectedList.length == 1) {
-				ipNo = selectedList[0].getAttribute("ipno");
-			} else {
-				for (var i = 0; i <selectedList.length; i++) {
-					ipNo += selectedList[i].getAttribute("ipno");
-					
-					if (i < selectedList.length - 1) {
-						ipNo += ",";
-					}
-				}
-			}
-			
-			var con = confirm("<spring:message code='ezCircular.t46'/>");
-			
-			if (con) {
-				$.ajax({
-					type : "POST",
-					url : "/ezSystem/deleteIPBand.do",
-					data : "ipNo=" + ipNo,
-					error : function(data) {
-						alert("<spring:message code='ezSystem.jje11'/>");
-					},
-					complete : function(data) {
-						alert("<spring:message code='ezAttitude.t161'/>");
-						IPBandListRemove();
-						getIPList_http();
-				    }
-				});
-			}
-			
-		}
-		
-		var tdChk = false;
-		function event_listclick(obj) {
-			if (obj.tagName == "TD") {
-		        obj = obj.parentElement;
-		        tdChk = true;
-		    } else {
-		    	if (!tdChk) {
-		    		var selectedList = $("#tblIP tbody tr[selected=true]");
-			    	
-			    	for (var i = 0; i < selectedList.length; i++) {
-			    		selectedList[i].style.backgroundColor = m_strColorDefault;
-			    		selectedList[i].childNodes.item(0).childNodes.item(0).checked = false;
-			    		selectedList[i].setAttribute("selected", false);
-			    	}
-		    	}
-		    	tdChk = false;
-		    }
-			
-			if (obj.childNodes.item(0).childNodes.item(0).checked) {
-				obj.style.backgroundColor = m_strColorDefault;
-				obj.childNodes.item(0).childNodes.item(0).checked = false;
-				obj.setAttribute("selected", false);
-			} else {
-				obj.style.backgroundColor = m_strColorSelect;
-				obj.childNodes.item(0).childNodes.item(0).checked = true;
-				obj.setAttribute("selected", true);
-			}
-		}
-		
-		function event_HeaderCheckBoxClick(obj) {
-			var ipListElement = $("#tblIP tbody tr[id^=IPBand_]");
-			
-			// 설정한 IP대역이 없을 경우
-			if (ipListElement.length == 0) {
-				return;
-			}
-			
-			if (obj.checked) {
-				for (var i = 0; i < ipListElement.length; i++) {
-		        	var ipNode = ipListElement[i];
-		        	ipNode.style.backgroundColor = m_strColorSelect;
-		        	ipNode.childNodes[0].childNodes[0].checked = true;
-		        	ipNode.setAttribute("selected", true);
-		        }
-			} else {
-				for (var i = 0; i < ipListElement.length; i++) {
-		        	var ipNode = ipListElement[i];
-		        	ipNode.style.backgroundColor = m_strColorDefault;
-		        	ipNode.childNodes[0].childNodes[0].checked = false;
-		        	ipNode.setAttribute("selected", false);
-		        }
 			}
 		}
 		

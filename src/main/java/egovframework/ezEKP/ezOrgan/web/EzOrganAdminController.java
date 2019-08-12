@@ -60,6 +60,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -4050,6 +4051,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String companyId = req.getParameter("companyId");
 		String currPage = req.getParameter("pageNum");
+		String stopFlag = req.getParameter("stopFlag") != null ? req.getParameter("stopFlag") : "";
 		
 		if (currPage == null || currPage.equals("")) {
 			currPage = "1";
@@ -4067,15 +4069,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
 
 		// 모든 사용자의 목록을 가져온다.
-		List<OrganUserVO> userCnList;
+		List<OrganLoginStopUserVO> userCnList;
 		int itemCnt;
 		
 		// 사용률로 검색 시에 숫자가 아니면 빈 값으로 리턴하도록 처리
 		try {
 			userCnList = ezOrganAdminService.getLoginStopUserList(userInfo.getTenantId(), startRow, 
-				    maxItemPerPage, searchKeycode, searchKeyword, companyId);
-			itemCnt = ezOrganAdminService.getLoginStopUserListCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
+				    maxItemPerPage, searchKeycode, searchKeyword, stopFlag, companyId);
+			itemCnt = ezOrganAdminService.getLoginStopUserListCount(userInfo.getTenantId(), searchKeycode, searchKeyword, stopFlag, companyId);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			userCnList = new ArrayList<>();
 			itemCnt = 0;
 		}
@@ -4106,7 +4109,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/admin/ezOrgan/insertStopUser.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
-	public String setLoginStopUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req) throws Exception{
+	public String insertStopUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req) throws Exception{
 		logger.debug("insertStopUser started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -4122,7 +4125,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String result = "";
 		
 		try {
-			
 			ezOrganAdminService.insertStopUser(cnArr, companyId, userInfo.getTenantId());
 			result = "OK";
 		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
@@ -4131,6 +4133,35 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 
 		logger.debug("insertStopUser ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/deleteStopUser.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
+	@ResponseBody
+	public String deleteLoginStopUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req) throws Exception{
+		logger.debug("deleteStopUser started.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		// 관리자 권한 체크
+		if (userInfo == null) {
+			return "EMAIL_ERROR";
+		}
+		
+		String[] cnArr = req.getParameterValues("cn[]");
+		String companyId = req.getParameter("companyId");
+		
+		String result = "";
+		
+		try {
+			ezOrganAdminService.deleteStopUser(cnArr, companyId, userInfo.getTenantId());
+			result = "OK";
+		} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+			e.printStackTrace();
+			result = "EMAIL_ERROR";
+		}
+		
+		logger.debug("deleteStopUser ended.");
 		return result;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -114,9 +115,11 @@ public interface EzOrganAdminService {
 
 	public String getCompanyName(String displayName, int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getLoginStopUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,String companyId) throws Exception;
+	public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID, int startPage, int maxItemPerPage, String keycode, String keyword, String stopFlag, String companyId) throws Exception;
 		
-	public int getLoginStopUserListCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
+	public int getLoginStopUserListCount(int tenantID, String keycode, String keyword, String stopFlag, String companyId) throws Exception;
 	
 	public String insertStopUser(String[] cnArr, String companyID, int tenantID) throws Exception;
+	
+	public String deleteStopUser(String[] cnArr, String companyID, int tenantID) throws Exception;
 }

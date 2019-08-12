@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezOrgan.vo;
 
-public class OrganUserVO {
+public class OrganLoginStopUserVO {
 	/** 사용자 부모 ID */
 	private String parentCn;
 	/** 사용자 ID */
@@ -120,6 +120,12 @@ public class OrganUserVO {
 	private String mailboxQuota;
 	/** 직위 */
 	private String jobID;
+	
+	/** 패스워드 업데이트 일자*/
+	private String passwordUpdateDT;
+	
+	/** 로그인 정지된 일자*/
+	private String loginStopDT;
 
 	public String getJobID() {
 		return jobID;
@@ -592,4 +598,21 @@ public class OrganUserVO {
 	public void setManualFlag(String manualFlag) {
 		this.manualFlag = manualFlag;
 	}
+
+	public String getPasswordUpdateDT() {
+		return passwordUpdateDT;
+	}
+
+	public void setPasswordUpdateDT(String passwordUpdateDT) {
+		this.passwordUpdateDT = passwordUpdateDT;
+	}
+
+	public String getLoginStopDT() {
+		return loginStopDT;
+	}
+
+	public void setLoginStopDT(String loginStopDT) {
+		this.loginStopDT = loginStopDT;
+	}
+
 }

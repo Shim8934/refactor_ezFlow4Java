@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1798,8 +1799,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     }
 	
     @Override
-    public List<OrganUserVO> getLoginStopUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword,String companyId) throws Exception {     
+    public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID,int startPage, int maxItemPerPage,
+    									 String keycode,String keyword,String stopFlag, String companyId) throws Exception {     
     	logger.debug("getLoginStopUserList started");
     	
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1810,9 +1811,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("stopFlag", stopFlag);
 		params.put("companyId", companyId);
 		
-    	List<OrganUserVO> list = ezOrganAdminDao.getLoginStopUserList(params);
+    	List<OrganLoginStopUserVO> list = ezOrganAdminDao.getLoginStopUserList(params);
     	
     	logger.debug("getLoginStopUserList ended");
     	
@@ -1820,7 +1822,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     }
 
     @Override
-    public int getLoginStopUserListCount(int tenantID, String keycode,String keyword,String companyId) throws Exception {     
+    public int getLoginStopUserListCount(int tenantID, String keycode, String keyword, String stopFlag, String companyId) throws Exception {     
     	logger.debug("getLoginStopUserListCount started");
    		
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1828,6 +1830,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	params.put("tenantID", tenantID);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
+		params.put("stopFlag", stopFlag);
 		params.put("companyId", companyId);
 		
 		int userCount = ezOrganAdminDao.getLoginStopUserListCount(params);
@@ -1862,6 +1865,29 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		}
 		
 		logger.debug("insertStopUser ended. result = " + rtnVal);
+		return rtnVal;
+	}
+
+	@Override
+	public String deleteStopUser(String[] cnArr, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteStopUser started.");
+		
+		String rtnVal = "";
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("cnArr", cnArr);
+		
+		try {
+			ezOrganAdminDao.deleteStopUser(map);
+			rtnVal = "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "FALSE";
+		}
+		
+		logger.debug("deleteStopUser ended. result = " + rtnVal);
 		return rtnVal;
 	}	
 }
