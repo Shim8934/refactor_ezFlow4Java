@@ -783,15 +783,21 @@ function tableListControl_Week()
                 }
                 else if (weekdatename[0] <= s_weekDateSet && weekdatename[6] < e_weekDateSet) {
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
-                    for (var i = startCnt; i < 8; i++) {
-                        if (i == 7 || i == 0) {
-                        	if (DefaultView == 1) { // 월요일 시작
-                        		makeTable(xmldom, j, 0);
-                        	}
-                        	break;
-                        } else {
-                        	makeTable(xmldom, j, i);
-                        }
+                    if (DefaultView == 0) { //일요일 시작
+                    	for (var i = startCnt; i < 7; i++) {
+                    		makeTable(xmldom, j, i);
+                    	}
+                    } else {
+	                    for (var i = startCnt; i < 8; i++) {
+	                        if (i == 7 || i == 0) {
+	                        	if (DefaultView == 1) { // 월요일 시작
+	                        		makeTable(xmldom, j, 0);
+	                        	}
+	                        	break;
+	                        } else {
+	                        	makeTable(xmldom, j, i);
+	                        }
+	                    }
                     }
                 }
                 else {
