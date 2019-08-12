@@ -466,6 +466,17 @@ public class LoginController {
     	        		diff = 1;
     	        	}
     	        	
+    	        	// 사용자정지 여부를 체크
+    	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+    	        	
+    	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
+    	        		int flag = checkStopUser(tenantId, resultVO.getId());
+    	        		if(flag > 0) {
+    	        			model.addAttribute("message", "stopUser");
+    	        			return "forward:/user/login/login.do";
+    	        		}
+    	        	}
+    	        	
     				//0보다 작아지면 패스워드 변경기한 Expired
     				if (diff <= 0) {				
     					model.addAttribute("isExpireDate", "Y");
@@ -974,6 +985,11 @@ public class LoginController {
         		return currentNumber;
         	}
         } 
+    }   
+    
+    private int checkStopUser(int tenantID, String userID) throws Exception {
+    	int flag = ezOrganAdminService.checkStopUser(userID, tenantID);
+    	return flag;
     }   
 
 }

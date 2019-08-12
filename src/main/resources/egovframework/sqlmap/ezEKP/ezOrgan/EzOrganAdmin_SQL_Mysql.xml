@@ -5019,13 +5019,26 @@
 	</insert>
 	
 	<update id="EzOrganAdminDAO.deleteStopUser" parameterClass="map">
-		DELETE
-			FROM TBL_USER_CONFIG
+		DELETE FROM
+			TBL_USER_CONFIG
 		WHERE
 			TENANT_ID = #tenantID#
 		AND
 			USER_ID IN (<iterate property="cnArr" conjunction=","> #cnArr[]# </iterate>)
 	</update>
+	
+	<select id="EzOrganAdminDAO.checkStopUser" parameterClass="map" resultClass="Integer">
+		SELECT
+			1
+		FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+		AND
+			PROPERTY_NAME = 'LoginStopUser'
+	</select>
 
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}

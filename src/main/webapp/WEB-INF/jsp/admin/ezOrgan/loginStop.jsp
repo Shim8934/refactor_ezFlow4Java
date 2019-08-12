@@ -16,8 +16,6 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<style>
 			.selectedTR td:not(:first-child), .unselectedTR td:not(:first-child) {overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 			.selectedTR {background-color: #f1f8ff; cursor:pointer;}
@@ -243,7 +241,7 @@
 			        alert("해제할 사원을 선택해주세요."); 
 			        return;
 			    }			    
-		        var ret = confirm("해제 시 해당 사용자는 로그인을 할 수 있습니다." + "\n" + checkedCheckboxArr.length + "명을 해제하시겠습니까?");
+		        var ret = confirm("정지 해제 시 해당 사용자는 로그인을 할 수 있습니다." + "\n" + checkedCheckboxArr.length + "명을 정지 해제하시겠습니까?");
 		        
 // 		        if (ret) {
 // 		        	ret = confirm("정말 정지하시겠습니까?");
@@ -267,7 +265,7 @@
 		            	success : function(result) {
 		            	    setTimeout(function() {		   
 		            	        if (result == "OK") {
-		            				alert(checkedCheckboxArr.length + " 명의 사원을 해제했습니다.");
+		            				alert(checkedCheckboxArr.length + " 명의 사원을 정지 해제했습니다.");
 		            				loginStop_ifrm.contentWindow.getUserList(1);
 		            				loginStop_ifrm.contentWindow.makePageSelPage();
 		            				loginStop_ifrm.contentDocument.getElementById("HeaderAllCheckBox").checked = false;

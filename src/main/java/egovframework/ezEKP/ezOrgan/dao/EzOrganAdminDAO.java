@@ -2226,4 +2226,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void deleteStopUser(Map<String, Object> map) throws Exception {
     	delete ("EzOrganAdminDAO.deleteStopUser", map);
     }
+    
+    public int checkStopUser(Map<String, Object> map) throws Exception {
+    	return (int) select ("EzOrganAdminDAO.checkStopUser", map);
+    }
 }

@@ -122,4 +122,6 @@ public interface EzOrganAdminService {
 	public String insertStopUser(String[] cnArr, String companyID, int tenantID) throws Exception;
 	
 	public String deleteStopUser(String[] cnArr, String companyID, int tenantID) throws Exception;
+	
+	public int checkStopUser(String userID, int tenantID) throws Exception;
 }

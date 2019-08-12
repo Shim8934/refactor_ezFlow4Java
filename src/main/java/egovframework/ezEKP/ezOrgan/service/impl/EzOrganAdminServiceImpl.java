@@ -1889,5 +1889,27 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("deleteStopUser ended. result = " + rtnVal);
 		return rtnVal;
-	}	
+	}
+	
+	@Override
+	public int checkStopUser(String userID, int tenantID) throws Exception {
+		logger.debug("checkStopUser started.");
+		
+		int flag = 0;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		try {
+			flag = ezOrganAdminDao.checkStopUser(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("checkStopUser ended. result = " + flag);
+		return flag;
+	}
+	
+	
 }
