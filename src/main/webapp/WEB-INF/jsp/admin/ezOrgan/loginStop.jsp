@@ -323,6 +323,13 @@
 				loginStop_ifrm.contentWindow.getUserList(1);
 				loginStop_ifrm.contentWindow.makePageSelPage();
 		    }
+	      	
+			function selectCompanyID(obj) {
+				var loginStop_ifrm = document.getElementById("loginStop_ifrm");
+				loginStop_ifrm.contentWindow.companyID = obj.options[obj.selectedIndex].value;
+				loginStop_ifrm.contentWindow.getUserList(1);
+				loginStop_ifrm.contentWindow.makePageSelPage();
+			}
 	        ///////////////////////////////////////////////////////////////////////
 			function refresh_onclick() {
 				window.location.reload(false);
@@ -333,9 +340,6 @@
 			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=800px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
 			}
 			
-			function selectCompanyID() {
-				retireUserList();
-			}
 	  
 			//2018-07-20 천성준 - 페이지 네이션 변경 
 			function td_Create1(strtext) {
@@ -397,11 +401,21 @@
 		</div>
 		<div>
 			<span class="title_bar"><b>회사 선택 : </b></span>
-			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
-	        	<c:forEach var="item" items="${companylist}">
-	           		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	           	</c:forEach>
-		    </select>
+			<c:if test="${rollCheck == 1}">
+				<select class="companySelect" id="ListCompany" onChange="selectCompanyID(this)">
+	           		<option value="">전체</option>
+		        	<c:forEach var="item" items="${companylist}">
+		           		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		           	</c:forEach>
+			    </select>
+			</c:if>
+			<c:if test="${rollCheck != 1}">
+				<select class="companySelect" id="ListCompany" disabled>
+					<c:forEach var="item" items="${companylist}">
+		           		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		           	</c:forEach>
+			    </select>
+			</c:if>
 		</div>
 		<div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">

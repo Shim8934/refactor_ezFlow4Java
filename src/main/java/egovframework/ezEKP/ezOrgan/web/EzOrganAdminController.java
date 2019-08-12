@@ -3972,10 +3972,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    logger.debug("loginStop started");
 	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
+		int rollCheck = 0;
 		
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
+		}
+		
+		if (user.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			rollCheck = 1;
+		} else if (user.getRollInfo().indexOf("k=1") != -1) {
+			rollCheck = 2;
 		}
 		String companyId = user.getCompanyID();
    		
@@ -3992,6 +3999,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("companylist", resultList);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("rollCheck", rollCheck);
    		
    		logger.debug("loginStop ended");
    		

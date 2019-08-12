@@ -4924,8 +4924,10 @@
 		    ]]>
 	        WHERE 
 	            TENANT_ID = #tenantID#
+	        <isNotEmpty property="companyId">
            	AND
            		PHYSICALDELIVERYOFFICENAME = #companyId#
+           	</isNotEmpty>
            	AND
            		CN NOT IN ( SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
 				<include refid="EzOrganAdminDAO.searchQuery"/>
@@ -4961,7 +4963,11 @@
 		    	b.PROPERTY_NAME = 'LoginStopUser'
 	        WHERE
 	        ]]>
-	            a.TENANT_ID = #tenantID#  AND a.PHYSICALDELIVERYOFFICENAME = #companyId#
+	            a.TENANT_ID = #tenantID#
+	        <isNotEmpty property="companyId">
+            AND
+				a.PHYSICALDELIVERYOFFICENAME = #companyId#
+			</isNotEmpty>
 				<include refid="EzOrganAdminDAO.searchQueryForLoginStop"/>
 		    ORDER BY 
 		    	a.PASSWORD_UPDATEDT, a.displayName
@@ -4981,11 +4987,13 @@
 		    	TBL_USERMASTER
 	        WHERE 
 	            TENANT_ID = #tenantID#
+		    ]]>
+		    <isNotEmpty property="companyId">
 	        AND
 	        	PHYSICALDELIVERYOFFICENAME = #companyId#
+	        </isNotEmpty>
 	        AND
 	        	CN NOT IN ( SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
-		    ]]>
 				<include refid="EzOrganAdminDAO.searchQuery"/>
 		</isNotEqual>
 		<isEqual property="stopFlag" compareValue="Y">
@@ -5002,9 +5010,13 @@
 		    	a.CN = b.USER_ID
 		    AND
 		    	b.PROPERTY_NAME = 'LoginStopUser'
-	        WHERE
-	            a.TENANT_ID = #tenantID# AND a.PHYSICALDELIVERYOFFICENAME = #companyId#
 		    ]]>
+	        WHERE
+	            a.TENANT_ID = #tenantID#
+	        <isNotEmpty property="companyId">
+			AND
+	            a.PHYSICALDELIVERYOFFICENAME = #companyId#
+	        </isNotEmpty>
 				<include refid="EzOrganAdminDAO.searchQueryForLoginStop"/>
 		</isEqual>
 	</select>

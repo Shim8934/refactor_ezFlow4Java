@@ -22,15 +22,6 @@
 		var stopFlag = "Y";
 		
 		window.onload = function () {
-			if (rollInfo.indexOf("c=1") == -1) {
-				permission = false;
-				var btnList = $("body [id^=btn]");
-				
-				for (var i = 0; i < btnList.length; i++) {
-					btnList[i].onclick = function() { alert("<spring:message code='ezSystem.jje7' />"); return; };
-				}
-			}
-			
 			getUserList(1);
 			makePageSelPage();
 	    }
