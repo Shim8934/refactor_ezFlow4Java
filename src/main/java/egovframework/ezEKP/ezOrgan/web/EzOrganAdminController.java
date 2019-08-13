@@ -4060,6 +4060,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String companyId = req.getParameter("companyId");
 		String currPage = req.getParameter("pageNum");
 		String stopFlag = req.getParameter("stopFlag") != null ? req.getParameter("stopFlag") : "";
+		String offset = userInfo.getOffset();
 		
 		if (currPage == null || currPage.equals("")) {
 			currPage = "1";
@@ -4083,7 +4084,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// 사용률로 검색 시에 숫자가 아니면 빈 값으로 리턴하도록 처리
 		try {
 			userCnList = ezOrganAdminService.getLoginStopUserList(userInfo.getTenantId(), startRow, 
-				    maxItemPerPage, searchKeycode, searchKeyword, stopFlag, companyId);
+				    maxItemPerPage, searchKeycode, searchKeyword, stopFlag, offset, companyId);
 			itemCnt = ezOrganAdminService.getLoginStopUserListCount(userInfo.getTenantId(), searchKeycode, searchKeyword, stopFlag, companyId);
 		} catch (Exception ex) {
 			ex.printStackTrace();

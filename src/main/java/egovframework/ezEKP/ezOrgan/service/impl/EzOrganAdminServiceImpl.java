@@ -1799,8 +1799,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     }
 	
     @Override
-    public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword,String stopFlag, String companyId) throws Exception {     
+    public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID,int startPage, int maxItemPerPage, String keycode, String keyword, String stopFlag, String offset, String companyId) throws Exception {
     	logger.debug("getLoginStopUserList started");
     	
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1812,6 +1811,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		params.put("stopFlag", stopFlag);
+		params.put("offset", commonUtil.getMinuteUTC(offset));
 		params.put("companyId", companyId);
 		
     	List<OrganLoginStopUserVO> list = ezOrganAdminDao.getLoginStopUserList(params);

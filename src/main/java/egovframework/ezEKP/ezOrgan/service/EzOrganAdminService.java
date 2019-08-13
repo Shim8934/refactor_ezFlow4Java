@@ -115,7 +115,7 @@ public interface EzOrganAdminService {
 
 	public String getCompanyName(String displayName, int tenantID) throws Exception;
 	
-	public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID, int startPage, int maxItemPerPage, String keycode, String keyword, String stopFlag, String companyId) throws Exception;
+	public List<OrganLoginStopUserVO> getLoginStopUserList(int tenantID, int startPage, int maxItemPerPage, String keycode, String keyword, String stopFlag, String offset, String companyId) throws Exception;
 		
 	public int getLoginStopUserListCount(int tenantID, String keycode, String keyword, String stopFlag, String companyId) throws Exception;
 	
