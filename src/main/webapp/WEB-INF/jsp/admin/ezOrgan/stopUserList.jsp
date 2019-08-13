@@ -22,6 +22,7 @@
 		var stopFlag = "Y";
 		
 		window.onload = function () {
+			getCompanyId();
 			getUserList(1);
 			makePageSelPage();
 	    }
@@ -208,20 +209,24 @@
 				elem.checked = obj.checked;
 			});
 		}
+		
+		function getCompanyId(){
+			companyID = parent.companyId;
+		}
 	</script>
 </head>
 <body class="mainbody" style="overflow:hidden; margin:0" marginwidth="0" marginheight="0">
 	<div id="contentHeader" style="width: 100%; overflow: auto;">
 		<table class="mainlist" style="width:100%;">
-			<thead style="">
+			<thead>
 				<tr>
 					<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
 					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
 					<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
 					<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
 					<th width="15%;"><spring:message code="ezEmail.t712"></spring:message></th>
-					<th width="15%;">암호 최종변경일자(경과일)</th>
-					<th width="15%;">정지일자</th>
+					<th width="20%;">암호 최종변경일자(경과일)</th>
+					<th width="20%;">정지일자</th>
 				</tr>
 			</thead>
 			<tbody id="userListBody" style="overflow: auto;"></tbody>

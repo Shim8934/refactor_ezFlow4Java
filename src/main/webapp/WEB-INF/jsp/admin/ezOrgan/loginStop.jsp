@@ -197,32 +197,20 @@
 		            	type : "POST",
 		            	dataType : "html",
 		            	url : "/admin/ezOrgan/insertStopUser.do",
-		            	async : true,
 		            	data : {
 		            		cn : data,
 	            			companyId : companyId
 		            	},
 		            	success : function(result) {
-		            	    setTimeout(function() {
-		            	        if (result == "OK") {
-		            				alert(checkedCheckboxArr.length + " 명의 사원을 정지했습니다.");
-		            				loginStop_ifrm.contentWindow.getUserList(1);
-		            				loginStop_ifrm.contentWindow.makePageSelPage();
-		            				loginStop_ifrm.contentDocument.getElementById("HeaderAllCheckBox").checked = false;
-		            	        } else {
-		            	            alert("<spring:message code='ezOrgan.t30' />")
-		            	        }
-		            			
-		            	    }, 100);
+	            	        if (result == "OK") {
+	            				alert(checkedCheckboxArr.length + " 명의 사원을 정지했습니다.");
+	            				refreshList();
+	            	        } else {
+	            	            alert("<spring:message code='ezOrgan.t30' />")
+	            	        }
 		            	},
 		            	error : function() {
-		            	    if (useBizmekaSpambox == "YES") {
-		            	    	hideProgress();
-		            	    }
-		            	    
-		            	    setTimeout(function() {
-		            			alert("<spring:message code='ezOrgan.t30' />");
-		            	    }, 100);
+	            			alert("<spring:message code='ezOrgan.t30' />");
 		            	}
 		            });					
 			    }
@@ -263,26 +251,15 @@
 	            			companyId : companyId
 		            	},
 		            	success : function(result) {
-		            	    setTimeout(function() {		   
-		            	        if (result == "OK") {
-		            				alert(checkedCheckboxArr.length + " 명의 사원을 정지 해제했습니다.");
-		            				loginStop_ifrm.contentWindow.getUserList(1);
-		            				loginStop_ifrm.contentWindow.makePageSelPage();
-		            				loginStop_ifrm.contentDocument.getElementById("HeaderAllCheckBox").checked = false;
-		            	        } else {
-		            	            alert("<spring:message code='ezOrgan.t30' />")
-		            	        }
-		            			
-		            	    }, 100);
+	            	        if (result == "OK") {
+	            				alert(checkedCheckboxArr.length + " 명의 사원을 정지 해제했습니다.");
+	            				refreshList();
+	            	        } else {
+	            	            alert("<spring:message code='ezOrgan.t30' />")
+	            	        }
 		            	},
 		            	error : function() {
-		            	    if (useBizmekaSpambox == "YES") {
-		            	    	hideProgress();
-		            	    }
-		            	    
-		            	    setTimeout(function() {
-		            			alert("<spring:message code='ezOrgan.t30' />");
-		            	    }, 100);
+	            			alert("<spring:message code='ezOrgan.t30' />");
 		            	}
 		            });					
 			    }
@@ -320,15 +297,23 @@
 				    return;
 				}
 				 
-				loginStop_ifrm.contentWindow.getUserList(1);
-				loginStop_ifrm.contentWindow.makePageSelPage();
+				refreshList();
 		    }
 	      	
 			function selectCompanyID(obj) {
 				var loginStop_ifrm = document.getElementById("loginStop_ifrm");
-				loginStop_ifrm.contentWindow.companyID = obj.options[obj.selectedIndex].value;
+				companyId = obj.options[obj.selectedIndex].value;
+				
+				loginStop_ifrm.contentWindow.companyID = companyId;
+				refreshList();
+			}
+			
+			function refreshList(){
+				var loginStop_ifrm = document.getElementById("loginStop_ifrm");
+				
 				loginStop_ifrm.contentWindow.getUserList(1);
 				loginStop_ifrm.contentWindow.makePageSelPage();
+				loginStop_ifrm.contentDocument.getElementById("HeaderAllCheckBox").checked = false;
 			}
 	        ///////////////////////////////////////////////////////////////////////
 			function refresh_onclick() {
