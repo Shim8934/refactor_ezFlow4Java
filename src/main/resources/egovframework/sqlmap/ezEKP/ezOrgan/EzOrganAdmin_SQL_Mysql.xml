@@ -4917,7 +4917,7 @@
 				description2,
 				company,
 				company2,
-				PASSWORD_UPDATEDT as passwordUpdateDT,
+				DATE_ADD(DATE_FORMAT(PASSWORD_UPDATEDT ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as passwordUpdateDT,
 				'' as loginStopDT
 			FROM 
 		    	TBL_USERMASTER
@@ -4949,8 +4949,8 @@
 				a.description2,
 				a.company,
 				a.company2,
-				a.PASSWORD_UPDATEDT as passwordUpdateDT,
-				b.PROPERTY_VALUE as loginStopDT
+				DATE_ADD(DATE_FORMAT(a.PASSWORD_UPDATEDT ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as passwordUpdateDT,
+				DATE_ADD(DATE_FORMAT(b.PROPERTY_VALUE ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as loginStopDT
 			FROM 
 		    	TBL_USERMASTER a
 		    JOIN
