@@ -32,7 +32,7 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1><spring:message code='ezBoard.t371'/><spring:message code="ezBoard.t0005" /></h1>
+    <h1><spring:message code='ezPoll.hdp16'/></h1>
     <div class="portlet_tabpart01">
         <div class="portlet_tabpart01_top" id="tab1">
             <p id="BoardEnv_sub3" style="display: block"><span divname="BoardEnv_div3" id="1tab3" class="tabover"><spring:message code="ezBoard.t10011" /></span></p>
