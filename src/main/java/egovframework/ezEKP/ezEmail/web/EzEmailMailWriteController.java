@@ -3430,6 +3430,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String eContentTransferEncoding = "";
 		String eSimpleMIME = "";
 		String eSimpleMIMEContentTransferEncoding = "";
+		String modeFlag = ""; // 20190807 김수아 : 메일 작성 미리보기
 		
 		String realPath = commonUtil.getRealPath(request);
 		List<Map<String, Object>> addressCheck = null; 		// 메일 주소록 자동저장을 위한 name, address 담을 list
@@ -3623,6 +3624,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						secureReadDate = tempNode.getTextContent();
 					}
 				}
+			}
+		}
+		if (root.getElementsByTagName("MODEFLAG") != null) {
+			tempNode = root.getElementsByTagName("MODEFLAG").item(0);
+			if (tempNode != null) {
+				modeFlag = tempNode.getTextContent();
 			}
 		}
 		
@@ -4377,7 +4384,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    	
 		            // this deletion code block has been moved here because
 		            // it needs to be kept in Drafts if an error occurs during the above process.
-		            if (oldMessage != null) {
+		    		// modeFlag=='preview'는 메일작성 미리보기로 이전에 저장된 메일을 삭제하면 안된다(미리보기용으로 저장된 메일이 아닌 임시저장용 메일)
+		            if (oldMessage != null && !modeFlag.equalsIgnoreCase("preview") ) {
 		            	oldMessage.setFlag(Flags.Flag.DELETED, true);
 		            }
 		            
@@ -4781,6 +4789,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        
 		        pResult = "<RESULT>OK</RESULT>";
 		        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
+		        if (cmd.equalsIgnoreCase("SAVE") && modeFlag.equalsIgnoreCase("preview")) {
+		        	pResult += "<MESSAGEID><![CDATA[" + ezEmailUtil.getDraftsFolderId(locale) + "]]></MESSAGEID>";
+		        }
 		        
 		        // useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
 				String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", userInfo.getTenantId());
@@ -4966,15 +4977,16 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		//첨부파일 정보파일(templist) 삭제
 		String delId = request.getParameter("delid");
-		delId = commonUtil.detectPathTraversal(delId);
-        String realPath = commonUtil.getRealPath(request);
-        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "templist";
-        pDirPath += commonUtil.separator + delId + ".txt";
-        File f = new File(pDirPath);
-        if (f.exists()) {
-        	f.delete();
-        }
-		
+		if (delId != null && !delId.equals("")) {
+			delId = commonUtil.detectPathTraversal(delId);
+	        String realPath = commonUtil.getRealPath(request);
+	        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "templist";
+	        pDirPath += commonUtil.separator + delId + ".txt";
+	        File f = new File(pDirPath);
+	        if (f.exists()) {
+	        	f.delete();
+	        }
+		}
         logger.debug("delDrafts ended.");
         
 		return "";
