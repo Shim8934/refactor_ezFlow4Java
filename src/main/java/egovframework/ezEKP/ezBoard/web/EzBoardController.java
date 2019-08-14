@@ -4666,7 +4666,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			guBun = "error";
 		}
 		
-		String[] boardID = boardIDs.split(";");
+		/* 2019-08-08 홍승비 - 잘못된 권한체크 제거(주석처리) */
+/*		String[] boardID = boardIDs.split(";");
 		
 		for (int k = 0; k < boardID.length - 1; k++) {
 			BoardPropertyVO boardInfo = getBoardInfo(boardID[k], userInfo);
@@ -4681,7 +4682,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 			}
 		}
-		
+		*/
 		model.addAttribute("itemIDList", itemIDList);
 		model.addAttribute("boardID", boardIDs);
 		model.addAttribute("guBun", guBun);
