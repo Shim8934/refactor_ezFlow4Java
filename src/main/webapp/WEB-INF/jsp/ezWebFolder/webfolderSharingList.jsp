@@ -606,6 +606,7 @@
 					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
 					absolutePathColumn.textContent = resultJson["folderPath"];
 					absolutePathColumn.setAttribute("title", resultJson["folderPath"]);
+					sharerColumn.setAttribute("title", resultJson["userListStr"]);
 					
 					if (resultJson["shareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");
