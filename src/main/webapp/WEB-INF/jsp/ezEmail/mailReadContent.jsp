@@ -85,6 +85,7 @@
 						
 						// 임시보관함 미리보기용 메일 삭제
 						window.parent.mailWritePreviewDel();
+						window.parent.opener.parent.previewChk = false;
 					}
 					
 					if ($(".previewmail_addImage").length > 0) {

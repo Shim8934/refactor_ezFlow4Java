@@ -500,7 +500,6 @@
 	        xmlhttp.send();
 	        xmlhttp = null;
 	        isDelted = true;
-	        previewChk = false;
 	    }
 	    function delAttachListFile(filedate) {
 	    	var xmlhttp = createXMLHttpRequest();
@@ -2241,9 +2240,14 @@
 		   20190807 김수아 : 메일 작성 창의 미리보기 버튼 클릭 시
 		*/
 		function mailWritePreview() {
-			if (previewChk == true && MailStatus == "SEND") {return; }
-			previewChk = true;
-			Save_onClick('preview');
+			if (Save_onClick_Complete.savemode == "tempsave" && MailStatus == "SEND" && !previewChk) { // 저장 중
+				setTimeout(function() {
+					mailWritePreview();
+		        }, 1000);
+			} else if (!previewChk){
+				previewChk = true;
+				Save_onClick('preview');
+			}
 		}
 		
 	    </script>

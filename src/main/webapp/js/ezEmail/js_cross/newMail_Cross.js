@@ -1165,7 +1165,6 @@ function event_SaveonClick() {
                 xmlID = loadXMLString(g_saveHttp.responseText);
                 var xmlItem = xmlID.childNodes.item(0).childNodes;
                 
-                console.log("정상적으로 처리 됨, 이전 임시저장 파일 명 =" + preview_g_url_forRead);
                 if (!CrossYN()) {
                 	preview_g_url = xmlItem.item(1).text;
                 	preview_g_url_forRead = xmlItem.item(2).text + "/" + preview_g_url;
@@ -1210,6 +1209,7 @@ function event_SaveonClick() {
                 
                 if (!isAutoSave) {
                 	alert(strLang108);
+                	MailSend_Hidden_Progress();
                 }
                 
                 try {
@@ -1217,9 +1217,9 @@ function event_SaveonClick() {
                 } catch (e) { }
         	}
         	
-    		if (!isAutoSave && !previewChk) {
+    		/*if (!isAutoSave) {
         		MailSend_Hidden_Progress();
-        	}
+        	}*/
         	g_saveHttp = null;
         	MailStatus = "NO";
         	isAutoSave = false;
@@ -4070,7 +4070,7 @@ function decreaseReceiverCount(pType, pHref) {
 
 function preMailRead(Href) {
 	if(event_SaveonClick.savemode != 'preview' && !previewChk) {return; }
-	console.log("!!! href=" + Href);
+
     var pheight = window.screen.availHeight;
     var conHeight = pheight * 0.8;
     var pwidth = window.screen.availWidth;
