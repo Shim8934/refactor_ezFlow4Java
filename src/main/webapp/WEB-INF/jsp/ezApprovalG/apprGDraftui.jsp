@@ -1658,12 +1658,18 @@
 		                
 		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string" && pDocType != "002") {
 		                	if ($("#message").contents().find("#autoLine") != null) {
-		                		var oDIV = document.createElement("DIV");
-		                		oDIV.className = "FIELD";
-		                		oDIV.id = "RecvautoAprLine";
+								var oDIV = document.createElement("DIV");
+								oDIV.className = "FIELD";
+								oDIV.id = "RecvautoAprLine";
 		                		
-		                		if ($("#message").contents().find("#RecvautoAprLine").length == 0) {
+		                		if ($("#message").contents().find("#RecvautoAprLine").length <= 0) {
 			                		$("#message").contents().find("#autoLine").append(oDIV);
+		                		} else {
+		                			//수신문 회송받아서 재기안할 때, 수신사인칸 초기화작업 
+		                			if (pDraftFlag == "REDRAFT") {
+		                				$("#message").contents().find("#RecvautoAprLine").remove();
+				                		$("#message").contents().find("#autoLine").append(oDIV);
+		                			}
 		                		}
 		                	}
 		                	
