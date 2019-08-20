@@ -206,6 +206,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (useLetter == null || useLetter.equals("")) {
 			useLetter = "NO";
 		}
+		
+		String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", user.getTenantId());
+		if (useLoginStop == null || useLoginStop.equals("")) {
+			useLoginStop = "NO";
+		}
 				
 		logger.debug("useLetter=" + useLetter);
 		
@@ -220,6 +225,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
+		model.addAttribute("useLoginStop", useLoginStop);
 		model.addAttribute("useSignatureTemplate", useSignatureTemplate);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("cChk", cChk);
