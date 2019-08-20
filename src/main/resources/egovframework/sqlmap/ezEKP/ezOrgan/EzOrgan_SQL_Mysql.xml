@@ -1411,11 +1411,14 @@
 	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
+			select *
+			from (
 			SELECT 
 				cn,
 				department as displayName,
 				extensionAttribute15,
-				'user' as type			
+				'user' as type,
+				displayName as name
 			FROM 
 	    		TBL_USERMASTER A 
             $strSQLForMySQL$
@@ -1445,7 +1448,8 @@
 		      		A.cn,
 		      		deptid as displayName,
 		      		extensionAttribute15,
-		      		'user' as type
+		      		'user' as type,
+					B.displayName as name
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
 	            $strSQLForMySQL$ 
@@ -1461,9 +1465,9 @@
 		    	</isNotEmpty>
    		 	</isNotEqual>
 	    	
-            <isNotEqual property="class" compareValue="all">
+            <!-- <isNotEqual property="class" compareValue="all">
             ORDER BY  displayname asc, CAST(EXTENSIONATTRIBUTE15 as unsigned) ASC
-            </isNotEqual>
+            </isNotEqual> -->
 				
 			<isEqual property="class" compareValue="all">
 				UNION ALL
@@ -1472,7 +1476,8 @@
 					cn,
 					'' as displayName,
 					'' as extensionAttribute15,
-					'group' as type
+					'group' as type,
+					displayName as name
 				FROM
 					TBL_DEPTMASTER 
                 $strSQLForMySQL$ 
@@ -1486,7 +1491,9 @@
 		    	</isNotEmpty>                
 			</isEqual>	     
 			
-            $strSizeForMySQL$			 				
+            $strSizeForMySQL$
+            ) a
+            ORDER BY type DESC, NAME ASC	 				
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -1941,7 +1948,7 @@
       	AND
       		TENANT_ID = #tenantId#
 		ORDER BY
-			CN
+			DISPLAYNAME
 	</select>
 	
 	<select id="EzOrganDAO.getUserOrgDeptId" parameterClass="Map" resultClass="String">
