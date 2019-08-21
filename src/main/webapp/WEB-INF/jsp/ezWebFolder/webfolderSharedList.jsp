@@ -1041,7 +1041,7 @@
 					<li class="important" id="uploadBtn" style="display:none;" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
 					<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 					<li id="fileRenameBtn" style="display:none;"><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t508' /></span></a></li>
-					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
+					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t251'/></span></a></li>
 					<li id="fileCopyBtn"><a onclick="buttons.fileCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t316'/></span></a></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>

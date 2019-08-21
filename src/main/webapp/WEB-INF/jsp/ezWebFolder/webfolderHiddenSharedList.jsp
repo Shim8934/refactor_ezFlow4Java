@@ -362,7 +362,7 @@
 				var selectedLength = selectedRows.length;
 				
 				if (selectedLength <= 0) {
-					alert(messages.strLang5);
+					alert(messages.strLang38);
 					return undefined;
 				}
 				
@@ -401,14 +401,14 @@
 			<!-- pagenation이 namePath로 움직이지 않도록 설정 -->
 			<div id="originalPathWrapper" style="height: 40px;">
 				<span style="font-size: 24px; font-weight: bold; font-weight: bold; display: block; float: left;" id="originalPath">
-					<span class="aName" style="font-size:15px;" onClick="getFileList();">공유숨김목록</span>
+					<span class="aName" style="font-size:15px;" onClick="getFileList();"><spring:message code='ezWebFolder.t318'/></span><!-- 공유숨김목록 -->
 				</span>
 			</div>
 			
 			<div id="mainmenu">
 				<ul>
-					<li><a onClick="showSharedList()" style="margin-top: 3px;"><span>돌아가기</span></a></li>
-					<li><a onClick="shareContext.showShare()" style="margin-top: 3px;"><span>숨김취소</span></a></li>
+					<li><a onClick="showSharedList()" style="margin-top: 3px;"><span><spring:message code='ezWebfolder.t518'/></span></a></li><!-- 돌아가기 -->
+					<li><a onClick="shareContext.showShare()" style="margin-top: 3px;"><span><spring:message code='ezWebfolder.t519'/></span></a></li><!-- 숨김취소 -->
 					<!-- <li id="right" style="float:right;">
 						<img src ="/images/kr/cm/btn_arrow_down.gif" mode="off" id="webfolderlistoptiondiv">
 					</li> -->
@@ -471,11 +471,11 @@
 								<th class="wfFileSize" style=" text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
 								<th class="wfFileShareMember" style=""><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
 								<th class="wfFileShareDate" style=""><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-								<th class="wfFileShareDate" id="updateDateHeader" style="display:none;">갱신일</th><!-- 갱신일 -->
-								<th class="wfFileShareMember" id="sharerHeader" style="">공유자</th><!-- 공유자 -->
-								<th class="wfFileShareDate" id="shareDateHeader" style="">공유받은날짜</th><!-- 공유받은날짜 -->
+								<th class="wfFileShareDate" id="updateDateHeader" style="display:none;"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
+								<th class="wfFileShareMember" id="sharerHeader" style=""><spring:message code='ezWebFolder.t319'/></th><!-- 공유자 -->
+								<th class="wfFileShareDate" id="shareDateHeader" style=""><spring:message code='ezWebFolder.t321'/></th><!-- 공유받은날짜 -->
 								<th class="wfFilePath" style=""><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-								<th class="wfFileShare" style="margin:0px 0px 0px !important; text-align: center;">공유</th><!-- 공유 -->
+								<th class="wfFileShare" style="margin:0px 0px 0px !important; text-align: center;"><spring:message code='ezWebFolder.t254'/></th><!-- 공유 -->
 							</tr>
 						</thead>
 					</table>

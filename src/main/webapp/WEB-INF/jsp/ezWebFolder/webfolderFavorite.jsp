@@ -840,7 +840,7 @@
 		var selectedLength = selectedRows.length;
 		
 		if (selectedLength <= 0) {
-			alert(messages.strLang5);
+			alert(messages.strLang38);
 			return undefined;
 		}
 		
@@ -901,8 +901,8 @@
 				<li favoritemenu onclick="buttons.fileDownload()" class="important"><span><spring:message code='ezWebFolder.t186'/></span></li>
 				<li id="upload" onclick="buttons.fileUpload()" class="important"><span><spring:message code='ezWebFolder.t187'/></span></li>
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
-				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
-				<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t275'/></span></li>
+				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t508'/></span></li><!-- 파일명 변경에서 이름변경으로 수정  -->
+				<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t251'/></span></li>
 				<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>			
 				<!-- <li favoritemenu><img src="/images/i_bar.gif"></li> -->
 				<li favoritemenu onclick="favoriteContext.toggleAll()"><span class="icon16 icon16_star"></span></li>

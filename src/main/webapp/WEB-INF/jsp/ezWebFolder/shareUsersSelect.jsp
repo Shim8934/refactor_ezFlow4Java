@@ -161,7 +161,7 @@
 					<div><img src="/images/arr_left.gif" width="16" height="16" vspace="3" onclick="unselect_dept();" style="cursor:pointer"></div>
 				</td>
 				<td valign="top">
-					<h2><spring:message code='ezSchedule.t1004'/></h2>
+					<h2><spring:message code='ezWebFolder.t520'/></h2>
 					<div class="listview" style="margin-bottom:5px">
 						<div id="DeptListView" style="overflow:auto;width:280px;height:270px;border:0">
 							<table id="DListView" class="mainlist" style="width:100%;">
@@ -175,10 +175,10 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t179'/></h2>
+					<h2 style="display: inline-block;"><spring:message code='ezWebfolder.t517'/></h2>
 					<span style="float:right;padding-top:3px">
 						<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;height:20px">
-						<a class="imgbtn imgbck btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezTask.t183' /></span></a>
+						<a class="imgbtn imgbck btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezWebFolder.t521' /></span></a>
 					</span>
 					<div class="listview" style="margin-top:3px;margin-bottom:5px">
 						<div id="OrganListView" style="overflow:auto; width:280px; height:240px;border:0">

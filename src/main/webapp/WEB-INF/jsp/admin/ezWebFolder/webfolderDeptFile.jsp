@@ -187,7 +187,7 @@
 		
 		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
 		<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
-			<h1><spring:message code='ezWebFolder.t21'/></h1> 
+			<h1><spring:message code='ezWebFolder.t22'/></h1> 
 			<div id="wfSearchCloseBttn" class="wfClose"><ul><li><span></span></li></ul></div>
 			<div style="margin: 10px 0px 15px;">
 				<table class="content wftable">

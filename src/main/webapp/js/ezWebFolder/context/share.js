@@ -5,7 +5,7 @@ var shareContext = (function() {
 		var selectedLength = selectedRows.length;
 		
 		if (selectedLength == 0) {
-			alert(messages.strLang5);
+			alert(messages.strLang38);
 			return;
 		}
 		
@@ -57,7 +57,7 @@ var shareContext = (function() {
 			var selectedLength = selectedRows.length;
 			
 			if (selectedLength == 0) {
-				alert(messages.strLang5);
+				alert(messages.strLang38);
 				return;
 			}
 			
@@ -72,7 +72,7 @@ var shareContext = (function() {
 		var selectedLength = selectedRows.length;
 		
 		if (selectedLength == 0) {
-			alert(messages.strLang5);
+			alert(messages.strLang38);
 			return;
 		}
 		
@@ -115,7 +115,7 @@ var shareContext = (function() {
 		var selectedLength = selectedRows.length;
 		
 		if (selectedLength == 0) {
-			alert(messages.strLang5);
+			alert(messages.strLang38);
 			return;
 		}
 		
@@ -143,7 +143,7 @@ var shareContext = (function() {
 		var selectedLength = selectedRows.length;
 		
 		if (selectedLength == 0) {
-			alert(messages.strLang5);
+			alert(messages.strLang38);
 			return;
 		}
 		

@@ -58,9 +58,9 @@
 		function afterSuccess(code, obj) {
 			if (code == 0) {
 				if (obj == "move") {
-					alert("<spring:message code='ezWebFolder.t298'/>");
+					alert("<spring:message code='ezWebFolder.t247'/>");
 				} else if (obj == "copy") {
-					alert("<spring:message code='ezWebFolder.t299'/>");
+					alert("<spring:message code='ezWebFolder.t248'/>");
 				}
 				parent.returnFunction(folderType);
 				parent.folderList(folderType);

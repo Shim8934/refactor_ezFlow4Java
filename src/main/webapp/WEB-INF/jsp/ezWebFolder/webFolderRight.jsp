@@ -709,7 +709,7 @@
 				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
-				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t275' /></span></li>
+				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
 				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()"></span></li>
