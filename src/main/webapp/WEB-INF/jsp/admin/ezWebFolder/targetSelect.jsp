@@ -66,7 +66,7 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<h2 style="display: inline-block;"><spring:message code='ezWebfolder.t516'/></h2>
+					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t516'/></h2>
 					<span style="float:right;padding-top:3px">
 						<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;height:20px" />
 						<a class="imgbtn imgbck btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezWebFolder.t123' /></span></a>

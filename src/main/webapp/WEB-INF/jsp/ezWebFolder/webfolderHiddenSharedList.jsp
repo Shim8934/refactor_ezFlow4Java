@@ -407,8 +407,8 @@
 			
 			<div id="mainmenu">
 				<ul>
-					<li><a onClick="showSharedList()" style="margin-top: 3px;"><span><spring:message code='ezWebfolder.t518'/></span></a></li><!-- 돌아가기 -->
-					<li><a onClick="shareContext.showShare()" style="margin-top: 3px;"><span><spring:message code='ezWebfolder.t519'/></span></a></li><!-- 숨김취소 -->
+					<li><a onClick="showSharedList()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t518'/></span></a></li><!-- 돌아가기 -->
+					<li><a onClick="shareContext.showShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t519'/></span></a></li><!-- 숨김취소 -->
 					<!-- <li id="right" style="float:right;">
 						<img src ="/images/kr/cm/btn_arrow_down.gif" mode="off" id="webfolderlistoptiondiv">
 					</li> -->
