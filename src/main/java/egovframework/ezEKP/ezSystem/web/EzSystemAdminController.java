@@ -429,7 +429,7 @@ public class EzSystemAdminController {
 		row = sheet.createRow(0);
 		cell = row.createCell(0);	
 		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
-		cell = row.createCell(histHeaderLen);
+		cell = row.createCell(histHeaderLen-1);
 		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
 		
 		row = sheet.createRow(1);
