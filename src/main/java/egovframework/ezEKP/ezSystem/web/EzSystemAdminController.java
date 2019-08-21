@@ -368,6 +368,11 @@ public class EzSystemAdminController {
 		
 		String offset = userInfo.getOffset();
 		String currPage = request.getParameter("pageNum");
+		String config = request.getParameter("config");	// 사용자화면에서도 사용하기 위해
+		if (config == null) {
+			config = "";
+		}
+		logger.debug("config=" + config);
 		
 		int maxItemPerPage = 20; 
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
@@ -417,57 +422,52 @@ public class EzSystemAdminController {
 		font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 		
+		String histHeader = config.equals("u") ? egovMessageSource.getMessage("ezSystem.ksaLoginHistUser", locale) : egovMessageSource.getMessage("ezSystem.ksaLoginHistAdmin", locale);
+		String[] histHeaderArr = histHeader.split(";");
+		int histHeaderLen = histHeaderArr.length;
+		
 		row = sheet.createRow(0);
 		cell = row.createCell(0);	
 		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
-		cell = row.createCell(6);
+		cell = row.createCell(histHeaderLen);
 		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
 		
 		row = sheet.createRow(1);
-		cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0022", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0023", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(2);	cell.setCellValue(egovMessageSource.getMessage("ezEmail.t712", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(3);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0024", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0025", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(5);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0026", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(6);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0027", locale)); 
-		cell.setCellStyle(headerStyle);
+		for (int i = 0; i < histHeaderLen; i ++) {
+			cell = row.createCell(i);	cell.setCellValue(histHeaderArr[i]); 
+			cell.setCellStyle(headerStyle);
+		}
 		
 		for (int i = 2; i < totalCount + 2; i++) {
 			row = sheet.createRow(i);
 			row.setHeight((short)300);
 			int j = 2;
 			
-			if (sysLang.equals("primary")) {
-				cell = row.createCell(0); cell.setCellValue((String) loginHistList.get(i-j).getUsernm());
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(1); cell.setCellValue((String) loginHistList.get(i-j).getDeptnm());
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(2); cell.setCellValue((String) loginHistList.get(i-j).getCompanynm());
-				cell.setCellStyle(bodyStyle);
+			ConnectionInfoVO infoVo = loginHistList.get(i-j);
+			String userName = infoVo.getUsernm();
+			String userDeptName = infoVo.getDeptnm();
+			String userCompanyName = infoVo.getCompanynm();
+			if (!sysLang.equals("primary")) {
+				userName = infoVo.getUsernm2();
+				userDeptName = infoVo.getDeptnm2();
+				userCompanyName = infoVo.getCompanynm2();
+			}
+			String userConnectIp = infoVo.getConnectip();
+			String userConnectTime = infoVo.getConnecttime();
+			String userConnectBrowser = infoVo.getConnectbrowser();
+			String userConnectOS = infoVo.getConnectos();
+			
+			String[] userHist = null;
+			if (config.equals("u")){
+				userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
 			} else {
-				cell = row.createCell(0); cell.setCellValue((String) loginHistList.get(i-j).getUsernm2());
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(1); cell.setCellValue((String) loginHistList.get(i-j).getDeptnm2());
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(2); cell.setCellValue((String) loginHistList.get(i-j).getCompanynm2());
-				cell.setCellStyle(bodyStyle);
+				userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
 			}
 			
-			cell = row.createCell(3); cell.setCellValue((String) loginHistList.get(i-j).getConnectip());
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(4); cell.setCellValue((String) loginHistList.get(i-j).getConnecttime());
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(5); cell.setCellValue((String) loginHistList.get(i-j).getConnectbrowser());
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(6); cell.setCellValue((String) loginHistList.get(i-j).getConnectos());
-			cell.setCellStyle(bodyStyle);
+			for (int k = 0; k < histHeaderLen; k ++) {
+				cell = row.createCell(k);	cell.setCellValue((String) userHist[k]); 
+				cell.setCellStyle(bodyStyle);
+			}
 			
 			sheet.autoSizeColumn(i-1);
 		}
