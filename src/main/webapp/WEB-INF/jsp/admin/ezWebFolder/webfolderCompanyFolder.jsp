@@ -487,12 +487,12 @@
 					document.getElementById("fldName2").focus;
 					return;
 				}
-				
+				/* 조직도에 아무도 선택하지 않고 저장할 수 있도록 주석처리
 				if (!target.replace(/\s/g,'')) {
 					alert("<spring:message code='ezWebFolder.t202'/>");
 					return;
 				}
-				
+				*/
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/changeCompanyFolder.do",
