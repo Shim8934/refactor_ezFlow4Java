@@ -32,6 +32,13 @@ var messages = {
 	strLang31 : "You do not have anyone to share with. ",
 	strLang32 : "Are you sure you want to cancel sharing?",
 	strLang33 : "You canceled sharing.",
+	strLang34 : "Shared folders cannot be modified.",									// ezWebFolder.t327
+	strLang35 : "Top-level folders cannot be modified.",								// ezWebFolder.t328
+	strLang36 : "This folder can be managed only by administrators.",					// ezWebFolder.t329
+	strLang37 : "If you are not a folder creator, you cannot modify the folder name.",	// ezWebFolder.t258
+	strLang38 : "Please select a file or folder.",
+	strLang39 : "Please select one file or folder.",
+	strLang40 : "You can't delete a folder unless it's a folder creator.",
 	completeDuplicateJob : "Processing completed.",
 	parameterError: "Insufficient parameters.",
 	serverError: "An error has occurred.",
