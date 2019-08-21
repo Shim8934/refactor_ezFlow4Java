@@ -7415,6 +7415,10 @@
           AND
           		DOCSTATE = #v_CHAMSTATE#
           </isNotEmpty>
+          <isEmpty property="v_CHAMSTATE">
+          AND
+          		DOCSTATE != '017'
+          </isEmpty>
           </isNotNull>
          
 	        LIMIT 1
