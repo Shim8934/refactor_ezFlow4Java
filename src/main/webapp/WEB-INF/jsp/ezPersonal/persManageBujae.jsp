@@ -177,7 +177,6 @@
 					selectedDept = document.getElementById("deptList").value;
 				}
 				
-				document.getElementById("deptList").value;
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments[1] = select_person_Complete;

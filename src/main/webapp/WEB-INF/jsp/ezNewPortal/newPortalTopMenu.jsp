@@ -694,26 +694,27 @@
 		    var wVertical, wHorizontal;
 		    
 			if(wPosition == 0) {
-		        wVertical = Math.floor(window.innerHeight/2) - (wHeight/2) - 90 + (index*10);
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+				console.log(window.outerHeight);
+		        wVertical = Math.floor(window.outerHeight/2) - (wHeight/2) - 56 + (index * 10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else if(wPosition == 1) {
 		        wVertical = 100 + (index*10); 
 		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 2) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
-		        wHorizontal = 100 + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = 100 + (index * 10);
 		    } else if(wPosition == 3) {
-		        wVertical = 100 + (index*10); 
-		        wHorizontal = screen.width - wWidth - 100 + (index*10);
+		        wVertical = 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
 		    } else if(wPosition == 4) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
-		        wHorizontal = screen.width - wWidth - 100 + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
 		    } else if(wPosition == 5) {
 		        wVertical = 100 + (index*10); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else if(wPosition == 6) {
-		        wVertical = screen.height - wHeight - 100 - (index*10); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 - (index * 10); 
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else {
 		        wVertical = 0 + (index*10); 
 		        wHorizontal = 0 + (index*10);
