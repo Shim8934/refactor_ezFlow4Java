@@ -272,7 +272,16 @@ var buttons = (function() {
 		},
 		
 		fileCopy: function() {
-			var selected = getSelectedFoldersAndFiles();
+			var selectedRows = rowContext.getSelectedRows();
+			var selectedLength = selectedRows.length;
+			var selected ;
+			
+			if (selectedLength <= 0) {
+				alert(messages.strLang1);
+				selected = undefined;
+			} else {
+				selected = getSelectedFoldersAndFiles();
+			}
 			
 			if (selected === undefined) {
 				return;
