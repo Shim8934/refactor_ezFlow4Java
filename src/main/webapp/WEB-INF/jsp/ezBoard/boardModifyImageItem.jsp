@@ -468,7 +468,7 @@
 		                        <tr>
 		                            <td style="text-align:center">
 		                                <span id='imagechange1' class='preView' style='display:none;' value=""></span>
-		                                <img src='' id='image1' name='zb_target_resize' style='cursor:pointer;max-height:230px;'/>
+		                                <img src='' id='image1' name='zb_target_resize' style='cursor:pointer;max-height:230px;max-width:429px;'/>
 		                                <%-- <img src='${res}' id='image${vs.count}' name='zb_target_resize' style='cursor:pointer; max-height:230px; max-width:429px;'/>--%>
 		                            </td>
 		                        </tr>

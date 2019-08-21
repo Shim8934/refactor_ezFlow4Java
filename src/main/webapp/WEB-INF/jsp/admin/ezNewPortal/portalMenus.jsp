@@ -52,6 +52,7 @@
 			.menuChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
 	        .admin_menu .menuIconTD {padding:0px;}
 	        .admin_menu .menuIconTD div {height:100%; overflow:auto; padding:5px;}
+			li.menu dl dd span {white-space:normal; line-height:1.2; word-wrap:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
 		</style>
 	</head>
 	
@@ -156,13 +157,32 @@
 					var result = JSON.parse(request.responseText);
 					var menuList = result.list;
 					var menusHTML = "";
+					var agent = navigator.userAgent.toLowerCase();
+					var isIE = false
+					
+					if ( (navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || (agent.indexOf("msie") != -1)) {
+						// ie일 경우
+						isIE = true;
+					}
 					
 					menuList.forEach(function (item, index) {
 						menusHTML += "<li class='menu' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
-						menusHTML += "<dd><span style='font-size: 15px; display: inline-block; text-overflow: ellipsis; overflow: hidden; width: 95px; white-space: nowrap;'>" + ConvertCharToEntityReference(item.menuName) + "</span></dd>" ;
+						
+						if (isIE) {
+							var menuNameWithoutSpace = ConvertCharToEntityReference(item.menuName).replace(/ /gi, "");
+							if (menuNameWithoutSpace.length > 18) {
+								var menuName = ConvertCharToEntityReference(item.menuName).substr(0, 19) + '...';
+								menusHTML += "<dd><span style='font-size: 15px; text-overflow: ellipsis; overflow: hidden; width: 95px;'>" + ConvertCharToEntityReference(menuName) + "</span></dd>" ;
+							} else {
+								menusHTML += "<dd><span style='font-size: 15px; text-overflow: ellipsis; overflow: hidden; width: 95px;'>" + ConvertCharToEntityReference(item.menuName) + "</span></dd>" ;
+							}
+						} else {
+							menusHTML += "<dd><span style='font-size: 15px; text-overflow: ellipsis; overflow: hidden; width: 95px;'>" + ConvertCharToEntityReference(item.menuName) + "</span></dd>" ;
+						}
+						
 						menusHTML += "</li>";
 					});
 					
