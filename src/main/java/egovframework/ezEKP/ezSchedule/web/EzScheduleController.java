@@ -893,6 +893,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		loginVO = commonUtil.userInfo(loginCookie);
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", loginVO.getTenantId());
 		
 		if (userID == null || userID.equals("")) userID = loginVO.getId();
 		
@@ -906,6 +907,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("userID", userID);
 		model.addAttribute("deptID", loginVO.getDeptID());
 		model.addAttribute("companyID", loginVO.getCompanyID());
+		model.addAttribute("primaryLang", primaryLang);
 		
 		return "ezSchedule/scheduleSelectAttendant";
 	}	
@@ -1339,6 +1341,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		loginVO = commonUtil.userInfo(loginCookie);
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", loginVO.getTenantId());
 		
 		model.addAttribute("title", title);
 		model.addAttribute("startTime", startTime);
@@ -1347,6 +1350,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("use_ocs", use_ocs);
 		model.addAttribute("userID", loginVO.getId());
 		model.addAttribute("deptID", loginVO.getDeptID());
+		model.addAttribute("primaryLang", primaryLang);
 		
 		return "/ezSchedule/scheduleSelectEntity";
 	}

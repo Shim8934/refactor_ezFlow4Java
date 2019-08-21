@@ -33,11 +33,16 @@
 	    	var pUserPositionID = "";
 	    	var jobTitleID, jobTitleName, jobTitleName2;
 	    	var jobPositionID, jobPositionName, jobPositionName2;
+	    	var primaryLang = "${primaryLang}";
 	    	
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
 				var sYear = parseInt(toYear-70);
 				var eYear = parseInt(toYear+10);
+				
+				if (primaryLang == '3') {
+					window.resizeTo(850, 540);
+				}
 				
 				$("#txtBirth").datepicker({
 			        changeMonth: true,
@@ -155,7 +160,7 @@
 						dataType : "text",
 						url : "/admin/ezOrgan/getEntryInfo.do",
 						async : false,
-						data : {cn : document.getElementById("UserID").value, prop : "description;extensionAttribute10;extensionAttribute14;displayName;title;extensionAttribute15;telephoneNumber;homePhone;facsimileTelephoneNumber;mobile;postalCode;streetAddress;mail;extensionAttribute1;extensionAttribute2;extensionAttribute6;birth;birthType;extensionAttribute7;extensionAttribute8", pMode : "user" },
+						data : {cn : document.getElementById("UserID").value, prop : "description;extensionAttribute10;extensionAttribute14;displayName;title;extensionAttribute15;telephoneNumber;homePhone;facsimileTelephoneNumber;mobile;postalCode;streetAddress;mail;extensionAttribute1;extensionAttribute2;extensionAttribute6;birth;birthType;extensionAttribute7;extensionAttribute8;furigana;extensionPhone;officeMobile", pMode : "user" },
 						success : function(result){
 							xmlDom = loadXMLString(result);
 							document.getElementById("UserName").value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME1").trim();
@@ -177,6 +182,9 @@
 			                document.getElementById("SocialNum").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE14").trim();
 			                document.getElementById("txtBirth").value = SelectSingleNodeValueNew(xmlDom, "DATA/BIRTH").trim();
 			                document.getElementById("userPhotoYN").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2").trim();
+			                document.getElementById("furigana").value = SelectSingleNodeValueNew(xmlDom, "DATA/FURIGANA").trim();
+			                document.getElementById("txtExtensionPhone").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONPHONE").trim();
+			                document.getElementById("txtOfficeMobile").value = SelectSingleNodeValueNew(xmlDom, "DATA/OFFICEMOBILE").trim();
 			                
 			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
@@ -422,7 +430,10 @@
 						    mailNickName : mailNickName, title : jobTitleName, title2 : jobTitleName2, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
 						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : jobPositionName, extensionAttribute102 : jobPositionName2, telephoneNumber : PhoneNumber.value,
 						    homePhone : HomePhone.value, facsimileTelephoneNumber : FaxNum.value, mobile : Mobile.value, postalCode : ZipCode.value, streetAddress : HomeAddr.value,
-						    birthType : birthtype, birth : document.getElementById("txtBirth").value, manualFlag : "Y", extensionAttribute7 : jobTitleID, extensionAttribute8 : jobPositionID 
+						    birthType : birthtype, birth : document.getElementById("txtBirth").value, manualFlag : "Y", extensionAttribute7 : jobTitleID, extensionAttribute8 : jobPositionID ,
+			    			officeMobile : document.getElementById("txtOfficeMobile").value,
+			    			extensionPhone : document.getElementById("txtExtensionPhone").value,
+			    			furigana : document.getElementById("furigana").value
 					},
 					success : function(result) {
 					    if (useBizmekaSpambox == "YES") {
@@ -684,7 +695,7 @@
 	    <div style="margin-top:4px;margin-bottom:2px"><span style="color:red;"><spring:message code='ezOrgan.t00018' /></span></div>
 	    <table id="Tbl_UserInfo" class="content" style="width:800px">
 	        <tr>
-	            <td rowspan="5" id="UserPhotoDiv" style="width:119px; height:180px; text-align:center; min-width:119px;">
+	            <td rowspan="<c:out value="${primaryLang eq '3' ? 7 : 6}" />" id="UserPhotoDiv" style="width:119px; height:180px; text-align:center; min-width:119px;">
 	                <b><spring:message code='ezOrgan.t272' /></b> 
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t275' /><span style="color:red"> *</span></th>
@@ -732,6 +743,12 @@
 	                </table>
 	            </td>
 	        </tr>       
+	        <tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
+	        	<th style="width: 71px; text-align:center"><spring:message code='main.ksa01' /></th>
+	            <td style="width: 240px"><input id="furigana" style="width: 100%;" maxlength="20"></td>
+	        	<th style="width: 71px; text-align:center"></th>
+	        	<td style="width: 240px; padding: 0">
+	        </tr>
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t279' /></th>
 	            <td style="width: 240px; padding: 0">
@@ -807,10 +824,10 @@
 	            <td style="width: 190px">
 	                <input id="FaxNum" style="width: 100%" maxlength="50"/>
 	            </td>
-	            <th style="width: 80px; text-align:center"></th>
-	            <td style="width: 190px"></td>
-	            <th style="width: 80px; text-align:center"></th>
-	            <td style="width: 190px"></td>
+				<th style="width: 80px; text-align:center"><c:if test="${primaryLang eq '3' }"><spring:message code='main.ksa02' /></c:if></th>
+	            <td style="width: 190px"><input type="text" id="txtExtensionPhone" size="22" value="${LiteralExtensionPhone }" maxlength="50" <c:out value="${primaryLang eq '3' ?  'style=width:100%' : 'style=display:none' }"/> ></td>
+	            <th style="width: 80px; text-align:center"><c:if test="${primaryLang eq '3' }"><spring:message code='main.ksa03' /></c:if></th>
+	            <td style="width: 190px"><input type="text" id="txtOfficeMobile" size="22" value="${LiteralOfficeMobile }" maxlength="50" <c:out value="${primaryLang eq '3' ?  'style=width:100%' : 'style=display:none' }"/>></td>
 	        </tr>
 	        <tr class="onlyUseKo">
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t286' /></th>
