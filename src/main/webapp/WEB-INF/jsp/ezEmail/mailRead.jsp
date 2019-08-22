@@ -513,6 +513,7 @@
 		    	if (mailWritePreview != "true") {return; }
 		    	// 메일 작성 > 미리보기 메일 삭제
 				window.opener.parent.delDrafts(g_uid);
+				window.parent.opener.parent.previewChk = false;
 		    }
 		</script>
 	</head>
