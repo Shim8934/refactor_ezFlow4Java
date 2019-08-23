@@ -190,6 +190,7 @@
 		function goToPageByNum(Value) {
 	        CurPage = Value;
 	        makePageSelPage();
+	        document.getElementById("HeaderAllCheckBox").checked = false;
 			goToPage(CurPage);
 	    }
 		
@@ -197,6 +198,38 @@
 		function goToPage(page) {
 			getUserList(page);
 		}
+		
+		function selbeforeBlock() {
+	        var pageNum = parseInt(CurPage);
+	        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+	        goToPageByNum(pageNum);    
+	    }
+	    
+	    function selbeforeBlock_one() {
+	        var pageNum = parseInt(CurPage);
+	        
+	        if (parseInt(pageNum - 1) > 0) {
+	            goToPageByNum(parseInt(pageNum - 1));
+	        } else {
+	            return;
+	        }
+	    }
+	    
+	    function selafterBlock() {
+	        var pageNum = parseInt(CurPage);
+	        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+	        goToPageByNum(pageNum);
+	    }
+	    
+	    function selafterBlock_one() {
+	        var pageNum = parseInt(CurPage);
+	        
+	        if( parseInt(pageNum + 1) <= totalPage) {
+	            goToPageByNum(parseInt(pageNum + 1));
+	        } else {
+	            return;
+	        }
+	    }
 		
 		function event_HeaderCheckBoxClick(obj) {
 			var checkboxList = document.querySelectorAll("#userListBody tr input");

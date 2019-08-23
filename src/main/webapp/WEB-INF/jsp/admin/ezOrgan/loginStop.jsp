@@ -315,22 +315,7 @@
 				loginStop_ifrm.contentWindow.makePageSelPage();
 				loginStop_ifrm.contentDocument.getElementById("HeaderAllCheckBox").checked = false;
 			}
-	        ///////////////////////////////////////////////////////////////////////
-			function refresh_onclick() {
-				window.location.reload(false);
-			}
 			
-			function ShowUserInfo(UserID) {
-				event.stopPropagation();
-			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=800px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
-			}
-			
-	  
-			//2018-07-20 천성준 - 페이지 네이션 변경 
-			function td_Create1(strtext) {
-                document.getElementById("tblPageRayer").innerHTML = strtext; //document.all.tblPageNum1.innerHTML + strtext;
-            }
-            
 			//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
 			function keyword_onkeydown(e) {
 				
@@ -346,36 +331,6 @@
 				}
 			    
 				return true;
-			}
-			
-			function clickRow(event) {
-				var currentRow = event.currentTarget;
-				var crrClass   = currentRow.className;
-				
-				var tableList  = document.getElementById("mainListBody");
-				var length = tableList.rows.length;
-				
-				for (var i = 0; i < length; i++) {
-					tableList.rows[i].className = "unselectedTR";
-					tableList.rows[i].firstElementChild.firstElementChild.checked = false;
-				}
-					
-				currentRow.className = "selectedTR";
-				currentRow.firstElementChild.firstElementChild.checked = true;
-			}
-			
-			function selectCheckBox() {
-				event.stopPropagation();
-				
-				var checkboxElmt = event.currentTarget;
-				var currentRow   = checkboxElmt.parentElement.parentElement;
-				
-				if (checkboxElmt.checked) {
-					currentRow.className = "selectedTR";
-				}
-				else {
-					currentRow.className = "unselectedTR";
-				}
 			}
 	    </script>
 	</head>
@@ -445,6 +400,5 @@
      	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
      	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
 <!--      	<br/> -->
-		<div id="tblPageRayer"></div>
 	</body>
 </html>
