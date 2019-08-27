@@ -91,19 +91,14 @@
 	</head>
 	<body class="popup">
 		<h1>	
-			<c:if test ="${approvalFlag =='G'}">
-				<spring:message code='ezApprovalG.t308'/>
-			</c:if>
-			<c:if test = "${approvalFlag == 'S'}" >
 				<spring:message code='ezApprovalG.G0009'/>
-			</c:if>
 		</h1>
 		<div id="close">
             <ul>
                 <li><span onclick="return btn_CancelAprDeptTempletName_onclick()"></span></li>
             </ul>
         </div>
-		<span>▒ <c:if test ="${approvalFlag =='G'}"><spring:message code='ezApprovalG.t311'/></c:if><c:if test ="${approvalFlag =='S'}"><spring:message code='ezApproval.t199'/></c:if></span>
+		<span>▒ <spring:message code='ezApproval.t199'/></span>
 		<div class="nobox" style="margin-top:7px">
 		<input class="text" type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width:100%;border:1px solid #ccc;height:25px" maxlength="20">
 		</div>
