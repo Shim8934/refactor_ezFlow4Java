@@ -1731,7 +1731,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 외부메일 설정 저장 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailPop3Save.do", method=RequestMethod.GET)
+	@RequestMapping(value="/ezEmail/mailPop3Save.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailPop3Save(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String ret) throws Exception{
 		logger.debug("mailPop3Save started.");
