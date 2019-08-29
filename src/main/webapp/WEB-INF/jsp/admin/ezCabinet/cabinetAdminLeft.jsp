@@ -16,7 +16,7 @@
 				<spring:message code='ezCabinet.t154'/>
 			</div>
 			
-			<div class="adminListBox">
+			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<!-- 기본설정 -->
 				<h2><span><spring:message code='ezCabinet.t09'/></span></h2>
 				<ul></ul>
