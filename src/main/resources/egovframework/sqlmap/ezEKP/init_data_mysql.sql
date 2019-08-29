@@ -191,6 +191,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'systemCountryCode', '현재국가코드', 'KR', '메일리스트 > 국기표시시 현재국가코드 나타냄 (default: KR)', '2018-12-20 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useShowSystemCountry', 'systemCountryCode와 .eml파일의 국가코드가 같을시 국기 표시할지 여부', 'NO', 'systemCountryCode와 .eml파일의 국가코드가 같을시 국기 표시할지 여부 YES: 현재 국가도 국기표시 NO: 현재 국가는 표시하지 않음 (default: NO)', '2018-12-20 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'dotNetTotalNotification', '닷넷 모듈의 통합알림 사용 여부', 'NO', 'YES/NO (default: NO)', '2019-01-08 00:00:00', '연동');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useSession', '세션 유지 시간', '0', '세션 유지 시간. 단, 0이면 세션 사용 안함 (default: 0)', '2018-12-20 00:00:00', '일반');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useSessionMobile', '세션 유지 시간 모바일', '0', '세션 유지 시간. 단, 0이면 세션 사용 안함 (default: 0)', '2019-01-08 00:00:00', '일반');
 
 
 -- Board insert 
