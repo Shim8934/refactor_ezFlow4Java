@@ -197,7 +197,7 @@
 					<div><img src="/images/arr_left.gif"  width="16" height="16" vspace="3" onclick="unselect_member();" style="cursor:pointer"></div>
 				</td> 
 				<td valign="top">
-					<h2><spring:message code='ezTask.t137' /></h2>
+					<h2><spring:message code='ezWebFolder.t319' /></h2>
 					<div class="listview" style="margin-top:5px;margin-bottom:0px">
 						<div id="MemberListView" style="overflow:auto; width:280px; height:240px;border:0">
 							<table id="MListView" class="mainlist" style="width:100%;">
