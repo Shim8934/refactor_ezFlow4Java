@@ -13,14 +13,14 @@ var messages = {
 	strLang12 : "データが存在しません", 							// ezWebFolder.t144
 	strLang13 : "ファイルの生成者ではありません。", 				// ezWebFolder.t243
 	strLang14 : "ファルダを選択してください。", 					// ezWebFolder.t270
-	strLang15 : " フォルダ", 									// ezWebFolder.t276
+	strLang15 : "フォルダ", 										// ezWebFolder.t276
 	strLang16 : "ファイル", 										// ezWebFolder.t277
 	strLang17 : "すべてのファイル", 								// ezWebFolder.t291
 	strLang18 : "掲示日を正しく指定してください。", 				// ezBoard.t189
 	strLang19 : "期間の指定が正しくありません。",					// ezBoard.t191
 	strLang20 : "検索条件がありません。", 						// ezBoard.t192
-	strLang21 : "검색기간의 종료일을 지정해 주세요.", 						//ezWebFolder.t308
-	strLang22 : "검색기간의 시작일을 지정해 주세요.", 						//ezWebFolder.t309
+	strLang21 : "期間の指定が正しくありません。", 						//ezWebFolder.t308
+	strLang22 : "期間の指定が正しくありません。", 						//ezWebFolder.t309
 	strLang23 : '共有機能は複数選択して処理することができません。\nn"ファイルまたはフォルダを一つだけ選択してください。',
 	strLang24 : "パラメータ値が足りていません。",
 	strLang25 : "アクセス権限がありません。",
@@ -30,7 +30,7 @@ var messages = {
 	strLang29 : "共有を修正しました。",
 	strLang30 : "파일 또는 폴더의 소유자가 아닙니다.",
 	strLang31 : "共有対象者がありません。",
-	strLang32 : "有を解除してよろしいですか？",
+	strLang32 : "共有を解除してよろしいですか？",
 	strLang33 : "共有を解除しました。",
 	strLang34 : "共有されたフォルダは修正できません。",			// ezWebFolder.t327
 	strLang35 : "最上位フォルダは修正できません。",				// ezWebFolder.t328

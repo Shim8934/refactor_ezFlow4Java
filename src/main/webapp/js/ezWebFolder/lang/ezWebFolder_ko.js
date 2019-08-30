@@ -17,10 +17,10 @@ var messages = {
 	strLang16 : "파일", 								// ezWebFolder.t277
 	strLang17 : "모든 파일", 							// ezWebFolder.t291
 	strLang18 : "게시일 조건이 올바르지 않습니다.", 			// ezBoard.t189
-	strLang19 : "검색 시작일을 종료일보다 빠르게 지정해 주십시오.",	// ezBoard.t191
+	strLang19 : "검색기간을 올바르게 지정해 주세요.",	// ezBoard.t191
 	strLang20 : "검색 조건이 없습니다.", 					// ezBoard.t192
-	strLang21 : "검색기간의 종료일을 지정해 주세요.", 			//ezWebFolder.t308
-	strLang22 : "검색기간의 시작일을 지정해 주세요.", 			//ezWebFolder.t309
+	strLang21 : "검색기간을 올바르게 지정해 주세요.", 			//ezWebFolder.t308
+	strLang22 : "검색기간을 올바르게 지정해 주세요.", 			//ezWebFolder.t309
 	strLang23 : "하나만 선택하세요.",
 	strLang24 : "파라메터가 부족합니다.",
 	strLang25 : "접근 권한이 없습니다.",
