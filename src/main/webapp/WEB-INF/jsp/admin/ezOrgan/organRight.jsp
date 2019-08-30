@@ -1495,8 +1495,8 @@
 								alert("<spring:message code='ezOrgan.t15' />");
 							} else if (result == "SAME") {
 								alert("<spring:message code='ezOrgan.t15' />");
-							} else if (result == "DIFF_COMPANY") {
-								alert("<spring:message code='ezOrgan.lhm4' />");
+							//} else if (result == "DIFF_COMPANY") {
+							//	alert("<spring:message code='ezOrgan.lhm4' />");
 							} else {
 								alert("<spring:message code='ezOrgan.hyh05' />");
 							}

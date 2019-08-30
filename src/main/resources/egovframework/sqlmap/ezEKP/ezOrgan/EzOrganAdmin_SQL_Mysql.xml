@@ -285,7 +285,7 @@
                 COMPANY = #v_EXTENSIONATTRIBUTE3#,
                 COMPANY2 = #v_COMPNM2#
             WHERE
-                DEPARTMENT = #v_CN#
+                DEPARTMENT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE CONCAT(#v_DEPT_CD_PATH#, ',%') AND TENANT_ID = #v_TENANT_ID#)
             AND
                 TENANT_ID = #v_TENANT_ID#  
         ]]>
