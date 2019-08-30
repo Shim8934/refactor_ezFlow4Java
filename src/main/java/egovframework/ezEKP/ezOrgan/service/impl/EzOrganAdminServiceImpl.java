@@ -287,8 +287,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				compId = userVO.getPhysicalDeliveryOfficeName();
 			}
 			
-			// 회사 간 사원/부서 이동하지 못하도록 막음
-			if (!parentDept.getExtensionAttribute2().equals(compId)) {
+			// 회사 간 부서 이동하지 못하도록 막음
+			if (type.equalsIgnoreCase("group") && !parentDept.getExtensionAttribute2().equals(compId)) {
 				result = "DIFF_COMPANY";
 				logger.debug("moveEntry ended. result=" + result);
 				return result;

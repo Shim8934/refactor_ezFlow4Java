@@ -1317,6 +1317,88 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	/**
 	 * 메일 보내기 서비스
+	 * @param userEmail 유저 메일 주소
+	 * @param password 유저 메일 패스워드(JMochaSuperPassword)
+	 * @param userLocale 유저 로케일(메세지 프로퍼티를 판별하기 위함)
+	 * @param from 보내는 사람
+	 * @param toArr 받는 사람
+	 * @param ccArr 참조(없으면 null)
+	 * @param bccArr 숨은 참조(없으면 null)
+	 * @param subject 메일 제목
+	 * @param content 메일 내용(html형식)
+	 * @throws Exception
+	 */
+	@Override
+	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content) throws Exception {
+		logger.debug("sendMail started.");
+		logger.debug("from=" + from + ",subject=" + subject);
+		
+		IMAPAccess ia = null;
+		
+		try {
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					userEmail, password);
+			
+			MimeMessage message = sa.createMimeMessage();
+			
+			// set from
+			logger.debug("from=" + from.getAddress());
+			message.setFrom(from);
+			
+			// set to
+			for (InternetAddress to : toArr) {
+				logger.debug("to=" + to.getAddress());
+				message.addRecipient(RecipientType.TO, to);
+			}
+			
+			// set cc
+			if (ccArr != null) {
+				for (InternetAddress cc : ccArr) {
+					logger.debug("cc=" + cc.getAddress());
+					message.addRecipient(RecipientType.CC, cc);
+				}
+			}
+			
+			// set bcc
+			if (bccArr != null) {
+				for (InternetAddress bcc : bccArr) {
+					logger.debug("bcc=" + bcc.getAddress());
+					message.addRecipient(RecipientType.BCC, bcc);
+				}
+			}
+			
+			// set subject
+			logger.debug("subject=" + subject);
+			message.setSubject(subject, "UTF-8");
+			
+			// set content
+			message.setContent(content, "text/html; charset=utf-8");
+			
+			// set sentDate
+	        message.setSentDate(Calendar.getInstance().getTime());
+	        
+	        // set User-Agent header
+	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+	        	        
+	        // set X-JMocha-Noti header
+	        message.setHeader("X-JMocha-Noti", "true");
+	        
+	        Transport.send(message);
+	        
+	        logger.debug("Mail send success.");	                
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+        logger.debug("sendMail ended.");
+	}
+	
+	/**
+	 * 메일 보내기 서비스
 	 * @param recipients SMTP의 rcpt to에 지정될 수신자 목록
 	 * @param loginCookie 로그인 쿠키
 	 * @param from 보내는 사람

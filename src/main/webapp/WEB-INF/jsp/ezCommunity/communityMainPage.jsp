@@ -1867,7 +1867,7 @@
 		            		<c:when test="${fn:length(cNoticeList) eq 0 }"> 
 		            			<dl class="nodata_sIcon">
 									<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-								    <dd>"<spring:message code='ezCommunity.kmsc01'/>"</dd>
+								    <dd><spring:message code='ezCommunity.kmsc01'/></dd>
 								</dl>
 		            		</c:when>
 		            		<c:when test="${fn:length(cNoticeList) ne 0 }">

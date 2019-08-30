@@ -21823,7 +21823,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} else {
 					fieldValue = docXML.getElementsByTagName(fieldName).item(j).getTextContent();
 				}
-				resultXML.append(commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
+				resultXML.append(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "</VALUE>");
 				
 				if (i == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(j).getTextContent().trim()+ "</DATA1>");
