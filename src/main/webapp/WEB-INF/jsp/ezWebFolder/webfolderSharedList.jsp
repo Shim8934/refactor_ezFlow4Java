@@ -898,23 +898,24 @@
 						extension: $('#searchExt').val()
 					};
 		        	
-					if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" && requirement.startDate == "") {
+					if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" 
+							&& requirement.startDate == "" && requirement.endDate == "") {
 						alert(messages.strLang20);
 						return;
 					}
 		
 					if (requirement.startDate != "" && requirement.endDate == "") {
-						alert(messages.strLang18);
+						alert(messages.strLang21);
 						return;
 					}
 		           
 					if (requirement.startDate == "" && requirement.endDate != "") {
-						alert(messages.strLang18);
+						alert(messages.strLang21);
 						return;
 					}
 		
 					if (new Date(requirement.startDate) > new Date(requirement.endDate)) {
-						alert(messages.strLang19);
+						alert(messages.strLang21);
 						return;
 					}
 	           		

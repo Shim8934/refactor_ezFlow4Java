@@ -521,8 +521,9 @@
 					extension: $('#searchExt').val()
 				};
 	        	
-				if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" && requirement.startDate == "") {
-					alert(messages.strLang20);// 검색조건을 입력하세요 
+				if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" 
+						&& requirement.startDate == "" && requirement.endDate == "") {
+					alert(messages.strLang20);
 					return;
 				}
 	

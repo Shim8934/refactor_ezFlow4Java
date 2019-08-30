@@ -239,9 +239,9 @@ function startSearch() {
 	
 	if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) { alert(strLang36); return;}
 	
-	if ((!sDateVal && eDateVal) || (sDateVal && !eDateVal)) {alert(strLang34); return;}
+	if ((!sDateVal && eDateVal) || (sDateVal && !eDateVal)) {alert(strLang43); return;}
 	
-	if (sDateVal && eDateVal) {if (sDateVal > eDateVal) {alert(strLang35); return;}}
+	if (sDateVal && eDateVal) {if (sDateVal > eDateVal) {alert(strLang43); return;}}
 	
 	startDateStr = sDateVal;
 	endDateStr   = eDateVal;

@@ -38,6 +38,7 @@
 			var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 			var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 			var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+			var strLang43  = "<spring:message code='ezWebFolder.t308'/>";
 			
 			capacity.setFolderIdProvider(function() {
 				return "<c:out value='${folderId}'/>";
@@ -223,7 +224,7 @@
 			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
+				<a class="webfolderBttn" style="display:none"><span><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
 		</div>
 		</div>

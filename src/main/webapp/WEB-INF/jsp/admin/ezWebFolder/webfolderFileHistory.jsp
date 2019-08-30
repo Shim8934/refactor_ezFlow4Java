@@ -275,7 +275,7 @@
 				
 				if (sDateVal && eDateVal) {
 					if (sDateVal > eDateVal) {
-						alert("<spring:message code='ezWebFolder.t164'/>");
+						alert("<spring:message code='ezWebFolder.t309'/>");
 						return;
 					}
 				}
@@ -530,7 +530,7 @@
 			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
-				<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+				<a class="webfolderBttn" style="display:none"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
 		</div>
 		</div>
