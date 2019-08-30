@@ -4176,6 +4176,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 
+		String startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
 		String type = request.getParameter("type");
 		type = (type == null || type.isEmpty()) ? "admin" : type;
 
@@ -4194,6 +4196,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 
+		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("list", resultList);
@@ -4221,60 +4224,81 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String draftFromMonth = request.getParameter("draftFromMonth");
 		String draftFromDay = request.getParameter("draftFromDay");
 
-		String draftFrom = "";
+        String draftFrom = "";
 
-		if (draftFromYear != null && !draftFromYear.equals("")) {
-			draftFrom = draftFromYear + "-" + draftFromMonth + "-" + draftFromDay;
-		}
-		String draftToYear = request.getParameter("draftToYear");
-		String draftToMonth = request.getParameter("draftToMonth");
-		String draftToDay = request.getParameter("draftToDay");
+        if (draftFromYear != null && !draftFromYear.equals("")) {
+            draftFrom = draftFromYear + "-" + draftFromMonth + "-" + draftFromDay;
+        }
+        String draftToYear = request.getParameter("draftToYear");
+        String draftToMonth = request.getParameter("draftToMonth");
+        String draftToDay = request.getParameter("draftToDay");
 
-		String draftTo = "";
+        String draftTo = "";
 
-		if (draftToYear != null && !draftToYear.equals("")) {
-			draftTo = draftToYear + "-" + draftToMonth + "-" + draftToDay;
-		}
+        if (draftToYear != null && !draftToYear.equals("")) {
+            draftTo = draftToYear + "-" + draftToMonth + "-" + draftToDay;
+        }
 
-		String apprFromYear = request.getParameter("apprFromYear");
-		String apprFromMonth = request.getParameter("apprFromMonth");
-		String apprFromDay = request.getParameter("apprFromDay");
+        String apprFromYear = request.getParameter("apprFromYear");
+        String apprFromMonth = request.getParameter("apprFromMonth");
+        String apprFromDay = request.getParameter("apprFromDay");
 
-		String aprFrom = "";
+        String aprFrom = "";
 
-		if (apprFromYear != null && !apprFromYear.equals("")) {
-			aprFrom = apprFromYear + "-" + apprFromMonth + "-" + apprFromDay;
-		}
+        if (apprFromYear != null && !apprFromYear.equals("")) {
+            aprFrom = apprFromYear + "-" + apprFromMonth + "-" + apprFromDay;
+        }
 
-		String apprToYear = request.getParameter("apprToYear");
-		String apprToMonth = request.getParameter("apprToMonth");
-		String apprToDay = request.getParameter("apprToDay");
-		String aprTo = "";
+        String apprToYear = request.getParameter("apprToYear");
+        String apprToMonth = request.getParameter("apprToMonth");
+        String apprToDay = request.getParameter("apprToDay");
+        String aprTo = "";
 
-		if (apprToYear != null && !apprToYear.equals("")) {
-			aprTo = apprToYear + "-" + apprToMonth + "-" + apprToDay;
-		}
+        if (apprToYear != null && !apprToYear.equals("")) {
+            aprTo = apprToYear + "-" + apprToMonth + "-" + apprToDay;
+        }
 
-		String formID = request.getParameter("formID");
-		String draftDeptName = request.getParameter("deptName1");
-		String pageNum = request.getParameter("pageNum");
-		String pageSize = request.getParameter("pageSize");
-		String docState = request.getParameter("docState");
+        String formID = request.getParameter("formID");
+        String draftDeptName = request.getParameter("deptName1");
+        String pageNum = request.getParameter("pageNum");
+        String pageSize = request.getParameter("pageSize");
+        String docState = request.getParameter("docState");
 
-		String subQuery = request.getParameter("subQuery");
-		String orderCell = request.getParameter("orderCell");
-		String orderOption = request.getParameter("orderOption");
-		String approvUser = request.getParameter("approvUser");
-		String companyID = request.getParameter("companyID");
-		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+        String subQuery = request.getParameter("subQuery");
+        String orderCell = request.getParameter("orderCell");
+        String orderOption = request.getParameter("orderOption");
+        String approvUser = request.getParameter("approvUser");
+        String companyID = request.getParameter("companyID");
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		String result = "";
-		result = ezApprovalGService.getSearchDocListForOpenGov("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay,
-				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
-				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+        String result = "";
+        result = ezApprovalGService.getSearchDocListForOpenGov("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay,
+                draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
+                draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 
-		logger.debug("getStatSearchDocList ended.");
+        logger.debug("getStatSearchDocList ended.");
 
-		return result;
+        return result;
+    }
+
+	/**
+	 * 원문공개 재전송
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/resendOpenGov.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public void resendOpenGov(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("resendOpenGov started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String resendDate = request.getParameter("resendDate");
+		
+		String resendStartTime = resendDate + " 00:00:01";
+		String resendEndTime = resendDate + " 23:59:59";
+		
+		ezApprovalGAdminService.resendOpenGov(resendStartTime, resendEndTime, userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		logger.debug(resendEndTime);
+		
+		logger.debug("resendOpenGov ended.");
 	}
 }

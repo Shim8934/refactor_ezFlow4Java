@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONObject;
@@ -2984,7 +2985,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String tbItemName2 = "";
 		String useFlag = "";
 		String formConnFlag = "";
-		
+		String formDraftAllFlag = "";
+		String openGovFlag = "";
+
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
 		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
@@ -3001,6 +3004,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			useFlag = doc.getElementsByTagName("USEFLAG").item(0).getTextContent();
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
+			formDraftAllFlag = doc.getElementsByTagName("draftAllFlag").item(0).getTextContent();
+			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
 		}
 
 		String recevGroupXML = "";
@@ -3048,6 +3053,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PFORMKIND", formKind);
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PFORMCONNFLAG", formConnFlag);
+		map.put("v_PFORMDRAFTALLFLAG", formDraftAllFlag);
+		map.put("v_POPENGOVFLAG", openGovFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
 
@@ -4141,5 +4148,54 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String auth = ezApprovalGDAO.getExtAttr1(map);
 		
 		return auth;
+	}
+
+	@Override
+	public List<ApprGAttachInfoVO> getAdminTotalDownload(String docIdList, String mode, String companyID, int tenantID) throws Exception {
+		logger.debug("getAdminTotalDownload started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_PMODE", mode);
+		
+		if (!docIdList.trim().equals("")){
+			map.put("docIdList", docIdList.split(","));
+		}
+		
+		logger.debug("getAdminTotalDownload ended");
+		
+		return ezApprovalGAdminDAO.getAdminTotalDownload(map);
+	}
+	
+	@Override
+	public List<ApprGAttachInfoVO> getAdminTotalDownloadCnt(String docIdList, String mode, String companyID, int tenantID) throws Exception {
+		logger.debug("getAdminTotalDownload started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_PMODE", mode);
+		if (!docIdList.trim().equals("")){
+			map.put("docIdList", docIdList.split(","));
+		}
+		
+		logger.debug("getAdminTotalDownload ended");
+		
+		return ezApprovalGAdminDAO.getAdminTotalDownloadCnt(map);
+	}
+
+	@Override
+	public void resendOpenGov(String resendStartTime, String resendEndTime, int tenantId, String companyID) throws Exception {
+		logger.debug("resendOpenGov started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		map.put("startTime", resendStartTime);
+		map.put("endTime", resendEndTime);
+		
+		ezApprovalGAdminDAO.resendOpenGov(map);
+		
+		logger.debug("resendOpenGov ended");
 	}
 }

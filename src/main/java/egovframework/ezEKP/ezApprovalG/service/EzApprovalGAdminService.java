@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezApprovalG.service;
 import java.util.List;
 import java.util.Locale;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
@@ -183,4 +184,10 @@ public interface EzApprovalGAdminService {
 	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception;
 	
 	public String getExAttribute(String buJaeId, int tenantID) throws Exception;
+
+	public List<ApprGAttachInfoVO> getAdminTotalDownload(String docIdList, String mode, String companyID, int tenantID) throws Exception;
+
+	public List<ApprGAttachInfoVO> getAdminTotalDownloadCnt(String docIdList, String mode, String companyID, int tenantID) throws Exception;
+
+	public void resendOpenGov(String resendStartTime, String resendEndTime, int tenantId, String companyID) throws Exception;
 }

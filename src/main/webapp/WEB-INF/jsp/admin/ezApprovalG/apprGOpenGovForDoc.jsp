@@ -8,16 +8,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>	
 		<style>
 			#div_AprLine .mainlist tr th {
 				border-top:0px;
 			}
 		</style>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>		
 		<script type="text/javascript">
 			var labelcolor = "gray";
 			var OrderCell = "";
@@ -34,6 +38,46 @@
 			var SearchCond = new Array();
 			var approvalFlag = "<c:out value = '${approvalFlag}' />";
 			var type = "<c:out value = '${type}' />";
+			var startDateTime = "<c:out value ='${startDateTime}'/>";
+	        var arr_userinfo = new Array();
+	        arr_userinfo[0] = "user";
+		    arr_userinfo[0]  = "user";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
+	        arr_userinfo[9] = "<c:out value ='${userInfo.companyID}'/>";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
+			 $(function () {
+		        	if (document.getElementById("resendChk").checked){
+		        		$("#idDatepicker").attr('disabled',false);
+		        	} else {
+		        		$("#idDatepicker").attr('disabled',true);
+		        	}
+		        	
+		        	
+	        		var date = new Date(startDateTime);
+		        	$("#idDatepicker").datepicker({
+		        		maxDate : date,
+			            changeMonth: true,
+			            changeYear: true,
+			            autoSize: true,
+			            showOn: "both",
+			            buttonImage: "/images/ImgIcon/calendar-month.png",
+			            buttonImageOnly: true
+			        });
+		        	
+		        	initdatepicker();
+		        });
 			
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -458,10 +502,10 @@
 			}
 			
 			function lvtDoclist_onSel_DBclick() {
-			    ViewDoc_onclick();
+			    ViewDoc_onclick(DocID, pURL);
 			}
 			
-			function ViewDoc_onclick() {
+			function ViewDoc_onclick(DocID, pURL) {
 			    if (DocID == "") {
 			        alert("<spring:message code = 'ezApprovalG.t633' />");
 			    } else {
@@ -843,6 +887,131 @@
 		            }
 		        }
 		    }
+		    
+		    function btnViewDoc_onclick() {
+		            var DocList = new ListView();
+		            DocList.LoadFromID("DocList");
+		            var oArrRows = DocList.GetSelectedRows();
+		            var pCurSelRow = oArrRows[0];
+			        var viewDocID = pCurSelRow.getAttribute("DATA1");
+			        var viewURL = pCurSelRow.getAttribute("DATA2");
+		            if (oArrRows.length > 0) {
+		            	OrgDocid = pCurSelRow.getAttribute("DATA5");
+		            	ViewDoc_onclick(viewDocID, viewURL);
+		            } else {
+		                var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
+		                //OpenAlertUI(pAlertContent);
+		                alert(pAlertContent);
+		            }
+		    }
+		    
+		    function initdatepicker() {
+	    	$("#idDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#idDatepicker").datepicker('setDate', new Date(startDateTime.substring(0, 10)));
+
+			$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+				closeText: "<spring:message code='main.t3' />",
+				prevText: "<spring:message code='main.t0604' />",
+				nextText: "<spring:message code='main.t0605' />",
+				currentText: "<spring:message code='main.t0606' />",
+				monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+				             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+				             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+				             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+				monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+				                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+				                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+				                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+				dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+				           "<spring:message code='main.t0627' />"],
+				dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				                "<spring:message code='main.t0627' />"],
+				dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				              "<spring:message code='main.t0627' />"],
+				weekHeader: "Wk",
+				dateFormat: "yy-mm-dd",
+				firstDay: 0,
+				isRTL: false,
+				duration: 200,
+				showAnim: "show",
+				showMonthAfterYear: true
+			};
+			
+			$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+	    }
+		    
+		function resendChk_onClick() {
+			if (document.getElementById("resendChk").checked) {
+				document.getElementById("idDatepicker").disabled = "";
+				document.getElementById("tbresend").style.display = "";
+			} else {
+				document.getElementById("idDatepicker").disabled = "disabled";
+				document.getElementById("tbresend").style.display = "none";
+			}
+		}
+		
+		function resend_onclick() {
+			var resendDate = document.getElementById("idDatepicker").value.substring(0, 10);
+			var checkDate = new Date(resendDate);
+			var today = new Date();
+			var todayCheck = today.getYear() + "-" + today.getMonth() + "-" + today.getDate();
+			var resendCheck = checkDate.getYear() + "-" + checkDate.getMonth() + "-" + checkDate.getDate();
+			
+			if (checkDate > new Date() || todayCheck == resendCheck) {
+				alert("오늘 이전의 날짜를 선택해주세요.");
+				return;
+			}
+			
+			$.ajax({
+				type : "POST",
+            	url : "/admin/ezApprovalG/resendOpenGov.do",
+            	async : true,
+            	dataType : "text",
+            	data : {
+            		resendDate : resendDate
+            	},
+            	success : function(result) {
+            		alert("재전송이 완료되었습니다.");
+            	}
+			})
+		}
+		
+	    var changeOpenGovInfo_cross_dialogArguments = new Array();
+	    function btnChangeOpenGovInfo_onclick() {
+	        var DocList = new ListView();
+	        DocList.LoadFromID("DocList");
+	        var selRow = DocList.GetSelectedRows();
+	        if (selRow.length != 0) {
+	            var tr = selRow[0];
+	            var para = new Array();
+	            para[0] = tr.getAttribute("DATA6");
+	            para[1] = tr.getAttribute("DATA8");
+	            para[2] = arr_userinfo[1];
+	            para[3] = arr_userinfo[2];
+	            para[4] = true;
+	            para[5] = tr.getAttribute("DATA1");
+	
+	            var url = "/ezApprovalG/changeOpenGovInfo.do";
+	
+	            changeOpenGovInfo_cross_dialogArguments[0] = para;
+	            changeOpenGovInfo_cross_dialogArguments[1] = btnChangeOpenGovInfo_onclick_Complete;
+	
+	            var OpenWin = window.open(url, "ChangeOpenGovInfo_Cross", GetOpenWindowfeature(680, 510));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }
+	        else {
+	            OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+	        }
+	    }
+	
+	    function btnChangeOpenGovInfo_onclick_Complete(rtn) {
+	        if (rtn[0] == "TRUE") {
+	            GetRecordList();
+	        }
+	    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -867,13 +1036,24 @@
 	          	<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
+	    
+	    
 	    <div id="mainmenu">
 	    	<c:if test="${type == 'admin' }">
 	    		<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
 			</c:if>
 	        <ul>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
+	            <li id="tbtnViewDoc"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
+	            <li id="tdModifyOpenGov"><span id="ModifyOpenGov" onclick="return btnChangeOpenGovInfo_onclick()">원문공개수정</span></li>
 	            <li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
+	            <li style="border:0px;line-height:35px;margin-left:10px;">
+                 <input style="width:25px;height:25px" type="checkbox" name="resendChk" id="resendChk" value="checkbox" onclick="resendChk_onClick()">
+                 </li>
+	            <li style="border:0px;line-height:35px;margin-right:5px">
+                 <input readonly="readonly" id='idDatepicker' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;height:27px">
+                 </li>
+	            <li id="tbresend" style="display:none"><span id="resend" onclick="return resend_onclick()" >재전송</span></li>
 	        </ul>
 	    </div>
 	

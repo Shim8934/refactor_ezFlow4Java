@@ -2048,12 +2048,12 @@
 	            			$.each(result, function(index, item) {
 	            				attachTr = "";
 	            				if (item.fileOpenFlag == "Y") {
-	            					attachTr = "<tr><td style='width:30px'><input class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
+	            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></td>"
 		            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
 		            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
 		            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "공개" + "</td></tr>";
 	            				} else {
-	            					attachTr = "<tr><td style='width:30px'><input class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
+	            					attachTr = "<tr><td style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></td>"
 		            				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
 		            				+ "<td style='width:70px'>" + item.fileSize + "</td>"
 		            				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "비공개" + "</td></tr>";
@@ -2068,6 +2068,14 @@
             			}
             		}
             	});
+		    }
+		    
+		    function fileOpenFlagChk_onClick(chk) {
+		    	if (chk.checked == true) {
+		    		chk.parentElement.parentElement.lastElementChild.textContent = "공개";
+		    	} else {
+		    		chk.parentElement.parentElement.lastElementChild.textContent = "비공개";
+		    	}
 		    }
 		    
 		    function openListFlag_onClick(chk) {

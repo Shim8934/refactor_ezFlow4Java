@@ -1,13 +1,8 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
@@ -22,6 +17,10 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Map;
 
 @Repository("EzApprovalGAdminDAO")
 public class EzApprovalGAdminDAO extends EgovAbstractDAO{
@@ -525,5 +524,19 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public void removeAutoDoc(Map<String, Object> map) {
 		update("EzApprovalGAdminDAO.removeAutoDoc", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAttachInfoVO> getAdminTotalDownload(Map<String, Object> map) throws Exception{
+		return (List<ApprGAttachInfoVO>) list("EzApprovalGAdminDAO.getAdminTotalDownload", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAttachInfoVO> getAdminTotalDownloadCnt(Map<String, Object> map) throws Exception{
+		return (List<ApprGAttachInfoVO>) list("EzApprovalGAdminDAO.getAdminTotalDownloadCnt", map);
+	}
+
+	public void resendOpenGov(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdminDAO.resendOpenGov", map);
 	}
 }

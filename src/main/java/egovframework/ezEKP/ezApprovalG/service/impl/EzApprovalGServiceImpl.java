@@ -14397,6 +14397,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (rtnVal) {
 				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
 				
+				String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""),"235|+09:00", false);
+				map.put("nowDate", nowDate);
+				ezApprovalGDAO.updateOpenGovDocInfoComp_createDate(map);
+				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
 				}
@@ -28290,7 +28294,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("saveSpecialInfoNonElecRec started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("v_docID",  docID);
 		map.put("v_recordID",  recordID);
 		map.put("v_cabID",  cabID);
@@ -28419,7 +28423,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public ApprGDocInfoWebSrvVO getHWPdownload(String docID, int tenantID, String companyID) throws Exception{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("v_PDOCID",  docID);
 		map.put("v_TENANTID",  tenantID);
 		map.put("companyID",  companyID);
@@ -28459,7 +28463,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			e.printStackTrace();
 			rtnVal = "false";
 		}
-		
+
 		return rtnVal;
 	}
 	
@@ -28898,18 +28902,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public int GongRamDocLineInfo(String docID, String companyID, int tenantID) throws Exception {
 		logger.debug("GongRamDocLineInfo started");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_docID", docID);
 		map.put("v_companyID", companyID);
 		map.put("v_tenantID", tenantID);
-		
+
 		int gongRamDocLineCnt = ezApprovalGDAO.checkGongRamLineCount(map);
-		
+
 		logger.debug("GongRamDocLineInfo ended");
 		return gongRamDocLineCnt;
-	}
-	
+    }
+
 	public void GongRamSend(String docID, String dirPath, String companyID, String lang,  int tenantID, String offSet) throws Exception {
 		logger.debug("GongRamSend started");
 		

@@ -31414,6 +31414,7 @@
 			BASIS = #basis#,
 			REASON = #reason#,
 			OPENLIMITDATE = #limitDate#,
+			SENDFLAG = 'N',
 			UPDATEDATE = now()
 		WHERE
 			DOCID = #docID#
@@ -31422,14 +31423,27 @@
 		AND
 			COMPANYID = #companyID#
 	</update>
+	<update id="EzApprovalG.updateOpenGovDocInfoComp_createDate" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVDOCINFO
+		SET
+			createdate = STR_TO_DATE(#nowDate#, '%Y-%m-%d %H:%i:%s'),
+			sendflag = 'N'
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</update>
 	<update id="EzApprovalG.updateOpenGovDocInfo_OPENGOVFILEINFO" parameterClass="Map">
 		UPDATE
 			TBL_OPENGOVFILEINFO
 		SET
-		<isEqual property="openFlag" compareValue="1">
+		<isEqual property="fileOpenFlag" compareValue="1">
 			FILEOPENFLAG = 'Y'
 		</isEqual>
-		<isEqual property="openFlag" compareValue="3">
+		<isEqual property="fileOpenFlag" compareValue="3">
 			FILEOPENFLAG = 'N'
 		</isEqual>
 		WHERE

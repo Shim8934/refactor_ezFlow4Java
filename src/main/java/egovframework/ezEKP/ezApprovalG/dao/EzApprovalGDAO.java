@@ -3364,6 +3364,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		update("EzApprovalG.updateOpenGovDocInfo_OPENGOVDOCINFO", map);
 	}
 
+	public void updateOpenGovDocInfoComp_createDate(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpenGovDocInfoComp_createDate", map);
+	}
+	
 	public void updateOpenGovFileInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateOpenGovDocInfo_OPENGOVFILEINFO", map);
 	}

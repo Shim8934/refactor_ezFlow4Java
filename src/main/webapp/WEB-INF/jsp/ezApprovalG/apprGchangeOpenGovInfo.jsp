@@ -200,8 +200,10 @@
     }
     
     function btnReset_onclick() {
-        document.getElementById("txtChangeReason").value = "";
+//         document.getElementById("txtChangeReason").value = "";
+		window.close();
     }
+    
     function btnOK_onclick() {
         if (document.getElementById("openListFlag").checked == false) {
         	if ($("#txt_Basis").val() == "") {
@@ -227,6 +229,13 @@
         		reason = $("#txt_Reason").val();
         	}
         }
+        
+        if ($("#modifyReason").val() == "") {
+    		OpenAlertUI("수정 사유를 입력해주세요");
+    		return;
+    	} else {
+    		modifyReason = $("#modifyReason").val();
+    	}
         
         if (updateOpenGovInfo() == "TRUE") {
 		    OpenAlertUI("원문정보를 정상적으로 변경하였습니다.", window.close);
@@ -263,7 +272,9 @@
      			reason : reason,
      			basis : basis,
      			openLimitDate : openLimitDate,
-     			fileOpenFlagList : fileOpenFlagList
+     			fileOpenFlagList : fileOpenFlagList,
+     			// 수정사유
+     			modifyReason : modifyReason
      		},
      		success: function(xml){
  			    rtnVal[0] = "TRUE";
@@ -504,12 +515,12 @@
         			$.each(result, function(index, item) {
         				attachTr = "";
         				if (item.fileOpenFlag == "Y") {
-        					attachTr = "<tr><td align='center' style='width:30px'><input class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked />&nbsp;</td>"
+        					attachTr = "<tr><td align='center' style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked />&nbsp;</td>"
             				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
             				+ "<td style='width:70px'>" + item.fileSize + "</td>"
             				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "공개" + "</td></tr>";
         				} else {
-        					attachTr = "<tr><td align='center' style='width:30px'><input class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/>&nbsp;</td>"
+        					attachTr = "<tr><td align='center' style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/>&nbsp;</td>"
             				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
             				+ "<td style='width:70px'>" + item.fileSize + "</td>"
             				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "비공개" + "</td></tr>";
@@ -524,6 +535,14 @@
     			}
     		}
     	});
+    }
+    
+    function fileOpenFlagChk_onClick(chk) {
+    	if (chk.checked == true) {
+    		chk.parentElement.parentElement.lastElementChild.textContent = "공개";
+    	} else {
+    		chk.parentElement.parentElement.lastElementChild.textContent = "비공개";
+    	}
     }
 </script>
 </head>
@@ -543,9 +562,9 @@
     <th style="width:17%;padding-right:0px;min-width:90px;max-width:90px;">문서번호</th>
     <td id="docNo" style="width:30%"></td>
     <th style="width:10%;">기안자</th>
-    <td id="writerName" style="width:15%"></td>
+    <td id="writerName" style="width:10%"></td>
     <th style="width:10%">기안부서</th>
-    <td id="writerDeptName" style="width:15%"></td>
+    <td id="writerDeptName" style="width:20%"></td>
   </tr>
 </table>
 <Div>
@@ -621,9 +640,26 @@
   	</tbody>
 	</table> 
 </div>
+ <div style="overflow: auto; width: 100%; height: 115px; margin-top:10px">
+	 <table width="100%" class="popuplist" style="margin-top: 2px;">
+	     <thead>
+		<tr>
+		<th id="lvAPRLINE_TH_0" class="h4_center" bgcolor="#CCCCCC" style="height:10px;width:30px">수정 사유</th>
+	  	</tr>
+	  	</thead>
+	  	<tbody>
+	  	<tr>
+	  	<td>
+	  		<textarea id="modifyReason" name="modifyReason" style="height: 50px; width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
+  		</td>
+	  	</tr>
+	  	</tbody>
+		</table>
+ 	
+</div>
 <div class="btnposition btnpositionNew" style="display:block;">
-  <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
-  <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
+  <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()">취소</span></a>
+  <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()">저장</span></a>
 </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

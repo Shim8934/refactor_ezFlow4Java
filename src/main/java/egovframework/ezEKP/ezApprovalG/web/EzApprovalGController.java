@@ -181,6 +181,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//공유결재문서 추가개발
 		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
 		
+		//원문공개사용여부
+		String useOpenGov = config.getProperty("config.useOpenGov"); 
+		
+		model.addAttribute("useOpenGov", useOpenGov);
+		
 		StringBuffer containers = new StringBuffer();
 		
 		List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo, "2");
