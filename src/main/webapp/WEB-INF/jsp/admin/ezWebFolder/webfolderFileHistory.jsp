@@ -258,10 +258,10 @@
 				var fileTypeIdx = document.getElementById("fileTypeVal").selectedIndex;
 				var actTypeVal  = document.getElementById("actionType").value;
 				
-				/* if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
+				if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
 					alert("<spring:message code='ezWebFolder.t163'/>");
 					return;
-				} */
+				} 
 				
 				if (sDateVal != "" && eDateVal == "") {
 					alert("<spring:message code='ezWebFolder.t308' />");
