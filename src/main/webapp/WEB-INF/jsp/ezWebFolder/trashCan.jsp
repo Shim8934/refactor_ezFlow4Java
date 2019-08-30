@@ -201,8 +201,10 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; 폴더 " + "<span style='color:#017BEC;'>" 
-					+ folderCnt +" </span> / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>";
+					
+					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCnt +" </span>"
+					 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+						+ fileCnt +" </span>";
 					hideProgress();
 				},
 				error : function(error) {

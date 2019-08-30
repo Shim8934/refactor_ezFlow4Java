@@ -207,8 +207,11 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; 폴더 " + "<span style='color:#017BEC;'>" 
-					+ folderCnt +" </span> / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>";
+					
+					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCnt +" </span>"
+					+ " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+					+ fileCnt +" </span>";
+					
 				},
 				error : function(error) {
 					hideProgress();
@@ -517,12 +520,12 @@
 </head>
 <body class="mainbody" onkeydown="keyPressPanel(event);">
     <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span></h1>
-	<div id="mainmenu2" style="margin-left: 5px;">
+	<div id="mainmenu" style="margin-left: 5px;">
 		<ul>
 			<li id=""><a onClick="restoreTrashCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>
 			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
 			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
-			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
+			<li id="SearchOption" mode="off" onclick="doLayerPopup(this)" class="off"><span class="icon16 icon16_search"></span></li>
 			<li style="float:left;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="height: 29px; border-radius: 3px; padding: 0px; width: 85px;">
 					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
@@ -535,11 +538,15 @@
 					<option value="unknown"><spring:message code='ezWebFolder.t311'/></option>
 				</select>
 			</li>
-			<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
+			<div class="sub_frameIcon" style="float:right">
+				<div class="sub_frameIconUL02">
+				  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+				</div>
+			</div>
 		</ul>
 	</div>
 	<script type="text/javascript">
-		selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
+		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	</script>
 	<!-- 파일 리스트 10~ 50 선택 -->
     <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
@@ -642,7 +649,7 @@
 		</div>
 		<div class="wfdivBttn">
 			<a class="webfolderBttn"><span onclick="search('basic');"><spring:message code='ezWebFolder.t123'/></span></a>
-			<a class="webfolderBttn"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>
+			<a class="webfolderBttn" style="display:none"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>
 		</div>
 	</div>
 	</div>
