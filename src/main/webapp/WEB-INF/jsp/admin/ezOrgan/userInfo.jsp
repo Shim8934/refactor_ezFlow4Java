@@ -707,6 +707,12 @@
 	                <input type="password" id="Password" style="width: 100%" maxlength="50"/>
 	            </td>
 	        </tr>
+	        <tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
+	        	<th style="width: 71px; text-align:center"><spring:message code='main.ksa01' /></th>
+	            <td style="width: 240px"><input id="furigana" style="width: 100%;" maxlength="20"></td>
+	        	<th style="width: 71px; text-align:center"></th>
+	        	<td style="width: 240px; padding: 0">
+	        </tr>
 	        <tr>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t276' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px; padding: 0">
@@ -743,12 +749,6 @@
 	                </table>
 	            </td>
 	        </tr>       
-	        <tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
-	        	<th style="width: 71px; text-align:center"><spring:message code='main.ksa01' /></th>
-	            <td style="width: 240px"><input id="furigana" style="width: 100%;" maxlength="20"></td>
-	        	<th style="width: 71px; text-align:center"></th>
-	        	<td style="width: 240px; padding: 0">
-	        </tr>
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t279' /></th>
 	            <td style="width: 240px; padding: 0">
