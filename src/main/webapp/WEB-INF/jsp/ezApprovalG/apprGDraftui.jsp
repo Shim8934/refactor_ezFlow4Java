@@ -688,15 +688,26 @@
 			            if (DraftFlag == "REDRAFT") {
 			            	pDocType = DocType;
 			            }
-			            if (pDocType == "003" && pSuSinFlag == "Y" && !btnReceivLineEnable) {
-					        var fields = message.GetFieldsList();
-					        
-							if (getNodeText(message.GetListItem(fields, "recipient")) == "") {
-				                var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
-				                OpenInformationUI(pAlertContent, check_btnSendDraft3);
-				                return;								
-							} 
-
+			            
+			            if (pDocType == "003" && pSuSinFlag == "Y") {
+			            	if (!btnReceivLineEnable) {
+						        var fields = message.GetFieldsList();
+								if (getNodeText(message.GetListItem(fields, "recipient")) == "") {
+					                var pAlertContent = "<spring:message code='ezApprovalG.t141'/>" + "<br>" + "<spring:message code='ezApprovalG.t142'/>";
+					                OpenInformationUI(pAlertContent, check_btnSendDraft3);
+					                return;								
+								}
+			            	}
+							
+							if ($("#message").contents().find("#autoLine") != null) {
+		                		if ($("#message").contents().find("#RecvautoAprLine").length <= 0) {
+									var oDIV = document.createElement("DIV");
+									oDIV.className = "FIELD";
+									oDIV.id = "RecvautoAprLine";
+									
+			                		$("#message").contents().find("#autoLine").append(oDIV);
+		                		}
+		                	}
 			            }
 			            
 			            if (isUsed ==  "reuse") {
