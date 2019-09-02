@@ -3460,4 +3460,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateBebuRelayDocSenderInfo(Map<String, Object> map) throws Exception {
 	        update("EzApprovalG.updateBebuRelayDocSenderInfo", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGFormVO> getFormContainer(Map<String, Object> map) {
+		return (List<ApprGFormVO>) list("EzApprovalG.getFormContainer", map);
+	}
 }

@@ -651,6 +651,12 @@
 	                }
 	            }
 	        }
+		    
+		    function goFormContainer(ContainerID){
+		    	PresentOpen = "CONTAINER";
+                var subCondition = "TBL_EXPENDAPRDOCINFO.FORMNAME = '" + ContainerID + "'";
+                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+		    }
 		
 		    function getAprCount() {
 		        try {
@@ -1122,8 +1128,8 @@
 	        		$("#" + val01 + "H2").attr("class", "off");
 	        		$("#" + val01 + "UL").attr("class", "lnbUL off");
 	        	} else {
-	        		$(".lnb H2").attr("class", "off");
-	        		$(".lnb UL").attr("class", "lnbUL off");
+// 	        		$(".lnb H2").attr("class", "off");
+// 	        		$(".lnb UL").attr("class", "lnbUL off");
 	        		
 	        		$("#" + val01 + "H2").attr("class", "on")
 	        		$("#" + val01 + "UL").attr("class", "lnbUL");
@@ -1197,10 +1203,10 @@
                        	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></li>
 					</c:if>
 		        </ul>
-		        <h2 class="off" id="compH2">
+		        <h2 class="on" id="compH2">
 		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('comp')"><spring:message code='ezApprovalG.lhj15'/></span>
 		        </h2>
-		        <ul class="lnbUL off" id="compUL">
+		        <ul class="lnbUL on" id="compUL">
                    	<li><span class="sub_iconLNB tree_appr_complete"></span><span class="list_text" id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span></li>
                    	<c:if test="${approvalFlag == 'S'}">
                            	<li><span class="sub_iconLNB tree_appr_turn"></span><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></li>
@@ -1209,10 +1215,10 @@
                            	<li><span class="sub_iconLNB tree_appr_turn"></span><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span></li>
                    	</c:if>
 		        </ul>
-		        <h2 class="off" id="deptH2">
+		        <h2 class="on" id="deptH2">
 		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezApprovalG.t1755'/></span>
 		        </h2>
-		        <ul class="lnbUL off" id="deptUL">
+		        <ul class="lnbUL on" id="deptUL">
                    	<c:choose>
 						<c:when test="${fn:length(apprGLeftVOList) > 0}">
 							<c:forEach var="apprGLeftVOList" items="${apprGLeftVOList}" varStatus="status">
@@ -1235,20 +1241,29 @@
 					</c:if>
 		        </ul>
 		        <c:if test="${approvalFlag == 'S'}">
-		        	<h2 class="off" id="ITEMCONTH2">
+		        	<h2 class="on" id="ITEMCONTH2">
 		        		<span class="sub_iconLNB tree_arrow_up"></span>
-		        		<span class="h2Title" onclick="openFolder('ITEMCONT');"><spring:message code='ezApproval.t844'/></span>
+		        		<span class="h2Title" onclick="openFolder('ITEMCONT');">양식별 문서함</span>
 		        	</h2>
-					<ul class="off" id="ITEMCONTUL">
-			          	<c:forEach var="itemList" items="${itemList}" varStatus="status">
-			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
+					<ul class="lnbUL on" id="ITEMCONTUL">
+			          	<c:forEach var="form" items="${itemList}" varStatus="status">
+			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${form.formName}'); goFormContainer('${form.formName}');"><c:out value="${form.formName}"></c:out></span></li>
 			          	</c:forEach>
 		          	</ul>
-			        <h2 class="off" id="personH2">
+<!-- 		          	<h2 class="off" id="ITEMCONTH2"> -->
+<!-- 		        		<span class="sub_iconLNB tree_arrow_up"></span> -->
+<%-- 		        		<span class="h2Title" onclick="openFolder('ITEMCONT');"><spring:message code='ezApproval.t844'/></span> --%>
+<!-- 		        	</h2> -->
+<!-- 					<ul class="off" id="ITEMCONTUL"> -->
+<%-- 			          	<c:forEach var="itemList" items="${itemList}" varStatus="status"> --%>
+<%-- 			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');">${itemList.taskName}(${itemList.keepingPeriod}) </span></li> --%>
+<%-- 			          	</c:forEach> --%>
+<!-- 		          	</ul> -->
+			        <h2 class="on" id="personH2">
 			        	<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
 			            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>			            
 			        </h2>
-			        <ul class="lnbUL off" id="personUL">
+			        <ul class="lnbUL on" id="personUL">
 			        	<div class="tree onlytree" id="divUserContTree"></div>
 			        </ul>
 		        </c:if>

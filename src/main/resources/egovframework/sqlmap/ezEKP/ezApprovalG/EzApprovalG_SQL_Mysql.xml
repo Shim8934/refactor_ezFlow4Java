@@ -31900,4 +31900,25 @@
         AND
             DOCID = #v_DOCID#
     </update>
+	
+	<select id="EzApprovalG.getFormContainer" parameterClass="Map" resultClass="ApprGFormVO">
+		SELECT 
+			DISTINCT FORMNAME
+		FROM 
+			TBL_ENDAPRDOCINFO E
+		INNER JOIN 
+			TBL_EXPENDAPRDOCINFO X 
+		ON 
+			E.DOCID = X.DOCID AND E.TENANT_ID = X.TENANT_ID
+		INNER JOIN 
+			TBL_CONTAINER C 
+		ON 
+			E.CONTAINERID = C.CONTAINERID AND E.TENANT_ID = C.TENANT_ID
+		WHERE 
+			C.CONTAINEROWNDEPID = #deptId#
+		AND 
+			E.TENANT_ID = #tenantId#
+		AND
+			E.COMPANYID = #companyId#		
+	</select>
 </sqlMap>

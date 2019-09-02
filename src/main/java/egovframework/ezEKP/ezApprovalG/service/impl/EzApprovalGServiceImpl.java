@@ -30836,4 +30836,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     	logger.debug("getFormAprOptionInfo started");
     	return aprOptionInfo;
     }
+
+	@Override
+	public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId) {
+		logger.debug("getFormContainer ended");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("deptId", deptId);
+		
+		logger.debug("getFormContainer ended");
+		return ezApprovalGDAO.getFormContainer(map);
+	}
 }
