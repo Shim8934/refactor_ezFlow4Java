@@ -4654,9 +4654,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				            	for (Address a : allRecipients) {
 				            		logger.debug("address=" + a);
 				            		
-				            		message.setRecipient(RecipientType.TO, a);
-				            		
-				            		Transport.send(message);
+				            		try {
+					            		message.setRecipient(RecipientType.TO, a);
+					            		
+					            		Transport.send(message);
+				            		} catch (Exception e) {
+				            			e.printStackTrace();
+				            		}
 				            		
 	    			            	sentFolderMessageUID = 0;
 	    			            	mailSendCompleted = true;				            		

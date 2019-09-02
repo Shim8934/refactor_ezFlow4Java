@@ -1083,6 +1083,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 				model.addAttribute("isJournalUsed", "Y");
 			} else if (menuId == 10) {
 				model.addAttribute("isWebfolderUsed", "Y");
+			} else if (menuId == 12) {
+				model.addAttribute("isPMSUsed", "Y");
 			}
 		}
 		

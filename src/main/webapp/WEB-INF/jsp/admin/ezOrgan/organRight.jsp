@@ -1495,8 +1495,8 @@
 								alert("<spring:message code='ezOrgan.t15' />");
 							} else if (result == "SAME") {
 								alert("<spring:message code='ezOrgan.t15' />");
-							} else if (result == "DIFF_COMPANY") {
-								alert("<spring:message code='ezOrgan.lhm4' />");
+							//} else if (result == "DIFF_COMPANY") {
+							//	alert("<spring:message code='ezOrgan.lhm4' />");
 							} else {
 								alert("<spring:message code='ezOrgan.hyh05' />");
 							}
@@ -1864,7 +1864,7 @@
 				<HEADERS>
 					<HEADER><WIDTH>4%</WIDTH></HEADER>
 					<HEADER><WIDTH>20%</WIDTH></HEADER>
-					<HEADER><WIDTH></WIDTH></HEADER>
+					<HEADER><WIDTH>18%</WIDTH></HEADER>
 					<HEADER><WIDTH>15%</WIDTH></HEADER>
 					<HEADER><WIDTH>10%</WIDTH></HEADER>
 					<HEADER><WIDTH>10%</WIDTH></HEADER>
@@ -1959,7 +1959,7 @@
 							<tr class="header">
 								<th width="4%"></th> 
 								<th width="20%"><spring:message code='ezOrgan.t67' /></th> 
-								<th ><spring:message code='ezAttitude.t218' /></th>
+								<th width="18%"><spring:message code='ezAttitude.t218' /></th>
 								<th  width="15%"><spring:message code='main.t75' /></th>
 								<th width="10%"><spring:message code='main.t77' /></th>
 								<th  width="10%"><spring:message code='ezOrgan.t1500' /></th>

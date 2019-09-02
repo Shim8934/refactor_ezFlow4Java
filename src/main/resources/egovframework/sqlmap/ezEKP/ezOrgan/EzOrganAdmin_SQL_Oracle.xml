@@ -274,25 +274,20 @@
 		]]>
 	</update>
 	
-	<statement id="EzOrganAdminDAO.moveDBData_U3" parameterClass="Map">
+	<update id="EzOrganAdminDAO.moveDBData_U3" parameterClass="Map">
 		<![CDATA[
-			MERGE INTO
-				TBL_USERMASTER B
-      		USING (	SELECT B.ROWID ROW_ID, A.EXTENSIONATTRIBUTE3, COMPNM2, A.EXTENSIONATTRIBUTE2
-      					FROM TBL_DEPTMASTER A
-      					JOIN TBL_USERMASTER B   ON A.CN = B.DEPARTMENT AND A.TENANT_ID = B.TENANT_ID 
-      					WHERE A.CN = #v_CN#
-      					AND A.TENANT_ID = #v_TENANT_ID#) src
-      		ON ( B.ROWID = src.row_id )
-      		WHEN
-      			MATCHED
-      		THEN
-      			UPDATE SET
-      				COMPANY = src.EXTENSIONATTRIBUTE3,
-                    COMPANY2 = COMPNM2,
-                    PHYSICALDELIVERYOFFICENAME = src.EXTENSIONATTRIBUTE2
+            UPDATE
+                TBL_USERMASTER
+            SET 
+                PHYSICALDELIVERYOFFICENAME = #v_EXTENSIONATTRIBUTE2#,
+                COMPANY = #v_EXTENSIONATTRIBUTE3#,
+                COMPANY2 = #v_COMPNM2#
+            WHERE
+                DEPARTMENT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE #v_DEPT_CD_PATH# || ',%' AND TENANT_ID = #v_TENANT_ID#)
+            AND
+                TENANT_ID = #v_TENANT_ID#  
 		]]>
-	</statement>
+	</update>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
