@@ -864,9 +864,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (req.getParameter("searchString") != null && !req.getParameter("searchString").equals("")) {
 			searchString = req.getParameter("searchString");
 		}
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("searchString", searchString);
+		model.addAttribute("primaryLang", primaryLang);
 
 		logger.debug("personSearch ended");
 		return "/ezPersonal/persPersonSearch";
