@@ -18,6 +18,7 @@
 			var useAllUserOldMailDeletePeriod = "${useAllUserOldMailDeletePeriod}";
 			
 			function window_onload() {
+				checkUseSession();
 				
 				if (timeZone != "") {
 					document.getElementById("PrimaryTimeZone").value = timeZone;
@@ -29,7 +30,7 @@
 			
 			function update_Sys_Param() {
 				
-				checkUseSession();
+				//checkUseSession();
 				
 				var paramArray
 					= [

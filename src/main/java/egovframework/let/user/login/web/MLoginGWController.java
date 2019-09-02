@@ -439,6 +439,8 @@ public class MLoginGWController {
         					String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
         					/* 2018-11-02 배현상 - 공유결재문서 사용 유무 YES or NO */
         					String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", tenantId);
+        					/* 2019-08-30 김수아 - 모바일 세션 시간 config - useMobileSession */
+        					String useSessionMobile = ezCommonService.getTenantConfig("useSessionMobile", tenantId);
         					
         					Map<String, Object> map = new HashMap<String, Object>();
         					map.put("uid", uid);
@@ -452,7 +454,8 @@ public class MLoginGWController {
         					map.put("useSecurity", useSecurity);    		
         					map.put("companyID", resultVO.getCompanyID());
         					map.put("primaryLang", primaryLang);
-        					map.put("rollInfo", resultVO.getRollInfo());    				
+        					map.put("rollInfo", resultVO.getRollInfo());
+        					map.put("useSessionMobile", useSessionMobile);    				
         					
         					if (commonUtil.getPrimaryData(lang, tenantId) == "1") {
         						map.put("userName", resultVO.getDisplayName1());

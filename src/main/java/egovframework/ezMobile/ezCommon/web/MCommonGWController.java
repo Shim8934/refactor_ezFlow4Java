@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
@@ -56,6 +57,9 @@ public class MCommonGWController {
 
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@RequestMapping(value = "/mobile/ezcommon/filedown", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mFileDown(HttpServletRequest request) throws Exception {
@@ -119,5 +123,27 @@ public class MCommonGWController {
 		return result;
 	}
 	
+	
+	// 20190829 김수아 : tenantConfig 가져오기
+	@RequestMapping(value = "/mobile/ezcommon/getTenantConfig", method=RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getTenantConfig(HttpServletRequest request) throws Exception {
+		LOGGER.debug("MCommonGWController getTenantConfig Start");
+		
+		int tenantId = Integer.parseInt(request.getParameter("tenantID"));
+		String tenantConfig = request.getParameter("tenantConfig");
+		LOGGER.debug("tenantID=" + tenantId + ", tenantConfig=" + tenantConfig);
+		
+		String config = ezCommonService.getTenantConfig(tenantConfig, tenantId);
+		config = config == null ? "" : config;
+		LOGGER.debug("config=" + config);
+		
+		JSONObject result = new JSONObject();
+		result.put("status", "ok");
+		result.put("code", 0);
+		result.put("data", config);
+
+		LOGGER.debug("MCommonGWController getTenantConfig End");
+		return result;
+	}
 	
 }
