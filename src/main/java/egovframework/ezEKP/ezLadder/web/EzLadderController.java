@@ -217,11 +217,13 @@ public class EzLadderController {
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID());
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("domainName", domainName);
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("setLadderAttendantPopUp ended.");
 		

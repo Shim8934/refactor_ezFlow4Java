@@ -2,8 +2,11 @@ package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
 import java.util.Locale;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -15,8 +18,10 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -32,6 +37,9 @@ public class EzCabinetController_h {
 	
 	@Autowired
 	private EzCabinetRestService cabinetRestService;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetController_h.class);
 	
@@ -79,6 +87,7 @@ public class EzCabinetController_h {
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
 		String cabinetId      = request.getParameter("cabId");
 		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), "", cabinetId, 1);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
 		
 		if ((long)permission.get("code") == 1) {
 			return "ezCabinet/cabinetAccessDenied";
@@ -99,6 +108,7 @@ public class EzCabinetController_h {
 		
 		model.addAttribute("cabinetId", cabinetId);
 		model.addAttribute("userId"   , user.getId());
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("jspGetShareCabinetPage ended");
 		return "ezCabinet/share/cabinetShare";

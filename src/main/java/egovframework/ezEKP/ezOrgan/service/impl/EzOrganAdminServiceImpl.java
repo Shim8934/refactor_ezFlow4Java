@@ -952,6 +952,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PASS", vo.getPassword());
 		map.put("v_INSERTADPASS", oriPass);
 		map.put("v_MANUAL_FLAG", vo.getManualFlag() != null ? vo.getManualFlag() : "N");
+		map.put("v_FURIGANA", vo.getFurigana() != null ? vo.getFurigana() : "");
+		map.put("v_EXTENSION_PHONE", vo.getExtensionPhone() != null ? vo.getExtensionPhone() : "");
+		map.put("v_OFFICE_MOBILE", vo.getOfficeMobile() != null ? vo.getOfficeMobile() : "");
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -990,7 +993,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     public void updateDBData_user(OrganUserVO vo) throws Exception {
         logger.debug("updateDBData_user started");
         logger.debug("tenantId=" + vo.getTenantId() + ",cn=" + vo.getCn() + ",displayName=" + vo.getDisplayName()
-                + ",displayName2=" + vo.getDisplayName2() + ",parentCn=" + vo.getParentCn());
+                + ",displayName2=" + vo.getDisplayName2() + ",parentCn=" + vo.getParentCn()
+                + ",ExtensionPhone=" + vo.getExtensionPhone() + ",OfficeMobile=" + vo.getOfficeMobile());
                 
         if (vo.getDisplayName2() == null || vo.getDisplayName2().equals("")) {
             vo.setDisplayName2(vo.getDisplayName());

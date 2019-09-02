@@ -312,8 +312,11 @@ public class EzCommonController extends EgovFileMngUtil{
 		String literalPhone = "";
 		String literalInfo = "";
 		boolean aliasMailUse = false;
+		String literalFurigana = "";
+		String literalExtensionPhone = "";
+		String literalOfficeMobile = "";
 		
-		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
+		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT;FURIGANA;EXTENSIONPHONE;OFFICEMOBILE";
 		
 		if (request.getParameter("id") != null) {
 			id = request.getParameter("id");
@@ -333,6 +336,8 @@ public class EzCommonController extends EgovFileMngUtil{
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
 		
 		logger.debug("dotNetIntegration=" + dotNetIntegration);
+		
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", loginVO.getTenantId());
 		
 		if (dotNetIntegration.equals("YES")) {
 			String parameter = "";
@@ -467,6 +472,9 @@ public class EzCommonController extends EgovFileMngUtil{
 				literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
 				literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
 				literalInfo = commonUtil.cleanValue(xmldom.getElementsByTagName("INFO").item(0).getTextContent());
+				literalFurigana = xmldom.getElementsByTagName("FURIGANA").item(0).getTextContent();
+				literalExtensionPhone = xmldom.getElementsByTagName("EXTENSIONPHONE").item(0).getTextContent();
+				literalOfficeMobile = xmldom.getElementsByTagName("OFFICEMOBILE").item(0).getTextContent();
 			}
 		} else {
 			String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
@@ -536,6 +544,10 @@ public class EzCommonController extends EgovFileMngUtil{
 		model.addAttribute("LiteralAddress", literalAddress);
 		model.addAttribute("LiteralPhone", literalPhone);
 		model.addAttribute("LiteralInfo", literalInfo);
+		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("LiteralFurigana", literalFurigana);
+		model.addAttribute("LiteralExtensionPhone", literalExtensionPhone);
+		model.addAttribute("LiteralOfficeMobile", literalOfficeMobile);
 
 		logger.debug("showPersonInfo ended");
         return "/ezCommon/showPersonInfo";
