@@ -2700,12 +2700,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		String result = "";
-		int tempCount = ezApprovalGDAO.checkAprLine(map);
+		int tempCount = ezApprovalGDAO.checkAprLine(map); //결재선에 포함되어있는지 체크
 		
 		if (tempCount > 0) {
 			result = "<RESULT>TRUE</RESULT>";
 		} else {
-			result = "<RESULT>FALSE</RESULT>";
+			tempCount = ezApprovalGDAO.checkProxyAprLine(map); //결재 진행중인 결재자의 대리결재자인지 체크
+			
+			if (tempCount > 0) {
+				result = "<RESULT>TRUE</RESULT>";
+			} else {
+				result = "<RESULT>FALSE</RESULT>";
+			}
 		}
 
 		logger.debug("checkAprLine ended");

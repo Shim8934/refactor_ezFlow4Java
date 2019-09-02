@@ -29497,4 +29497,29 @@
 					COMPANYID = #companyID#
 			) AS A
 	</select>
+	<select id="EzApprovalG.checkProxyAprLine" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_USERMASTER
+		WHERE
+			EXTENSIONATTRIBUTE5 LIKE CONCAT(#v_USERID#, ':%')
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			CN IN (
+					SELECT
+						DISTINCT APRMEMBERID
+					FROM
+						TBL_APRLINEINFO
+					WHERE
+						DOCID = #v_DOCID#
+					AND
+						APRSTATE = '002'
+					AND
+						TENANT_ID = #v_TENANTID#
+					AND
+						COMPANYID = #companyID#
+				)
+	</select>
 </sqlMap>
