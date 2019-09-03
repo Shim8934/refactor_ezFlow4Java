@@ -6019,7 +6019,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		for (Section s : hwpFile.getBodyText().getSectionList()) {
 			for (Paragraph p : s) {
-				if (p.getControlList() == null) {
+				if (p == null || p.getControlList() == null) {
 					//return false; 2019.09.03 천성준 - 한글양식에 줄이 2이상 일때, 필드 검색중 줄이 넘어가면 false를 반환해버려서 찾으려는 필드가 존재해도 찾지 못하는 현상 수정
 					continue;
 				}
