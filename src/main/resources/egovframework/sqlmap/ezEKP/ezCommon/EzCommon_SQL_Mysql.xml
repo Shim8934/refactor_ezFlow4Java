@@ -1193,6 +1193,8 @@
 			THEME_ID
 		FROM 
 			TBL_PORTAL_THEME_AUTH
+		WHERE
+			THEME_ID = 1
 		LIMIT 1
 	</select>
 	
@@ -1213,6 +1215,8 @@
 			PORTLET_ID
 		FROM 
 			TBL_PORTAL_PORTLET_AUTH
+		WHERE
+			PORTLET_ID = 1
 		LIMIT 1
 	</select>
 	
