@@ -2,6 +2,7 @@ package egovframework.let.user.login.service;
 
 import java.util.List;
 
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -79,5 +80,7 @@ public interface LoginService {
 	public int updateDeviceInfo(String devId, String devType, String subType, String userId, String token, String badge, String tenantId,
 			String state, String pushState, String isLogin, String startMenu, String loginTime, String loginLock,
 			String isPasswordChange, String extension1, String extension2) throws Exception;
+
+	public CountryVO getLoginIPCountry(long loginIP) throws Exception;
 
 }

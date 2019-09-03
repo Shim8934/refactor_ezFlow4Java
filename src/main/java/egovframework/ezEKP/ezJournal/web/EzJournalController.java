@@ -461,7 +461,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/selectReceiver.do", method = RequestMethod.GET)
-	public String selectReceiver(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String selectReceiver(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception  {
 		logger.debug("selectReceiver started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -471,6 +471,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
 		String status = result.get("status").toString();
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) result.get("data");
@@ -493,6 +494,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			}
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("userId", userInfo.getId());
+			model.addAttribute("primaryLang", primaryLang);
 		}		
 		logger.debug("selectReceiver ended");
 		return "/ezJournal/journalSelectReceiver";
