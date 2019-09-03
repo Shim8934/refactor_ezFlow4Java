@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -53,12 +54,13 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Header;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Transport;
 import javax.mail.UIDFolder;
-import javax.mail.Message.RecipientType;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.ContentDisposition;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.InternetHeaders;
@@ -4667,6 +4669,15 @@ public class EzEmailUtil {
 			return this;
 		}
 
+		public SimpleMailer from(String from) throws AddressException {
+			this.from = new InternetAddress(from);
+			return this;
+		}
+
+		public SimpleMailer to(String... array) {
+			return to(strArrayToAddress(array));
+		}
+
 		public SimpleMailer to(InternetAddress... array) {
 			toList = addAll(toList, array);
 			return this;
@@ -4677,6 +4688,10 @@ public class EzEmailUtil {
 			return this;
 		}
 
+		public SimpleMailer cc(String... array) {
+			return cc(strArrayToAddress(array));
+		}
+
 		public SimpleMailer cc(InternetAddress... array) {
 			ccList = addAll(ccList, array);
 			return this;
@@ -4685,6 +4700,10 @@ public class EzEmailUtil {
 		public SimpleMailer cc(List<InternetAddress> list) {
 			ccList = addAll(ccList, list);
 			return this;
+		}
+
+		public SimpleMailer bcc(String... array) throws AddressException {
+			return bcc(strArrayToAddress(array));
 		}
 
 		public SimpleMailer bcc(InternetAddress... array) {
@@ -4711,6 +4730,10 @@ public class EzEmailUtil {
 			return this;
 		}
 
+		public SimpleMailer smtpRecipients(String... array) throws AddressException {
+			return smtpRecipients(strArrayToAddress(array));
+		}
+
 		public SimpleMailer smtpRecipients(InternetAddress... array) {
 			recipientList = addAll(recipientList, array);
 			return this;
@@ -4719,6 +4742,17 @@ public class EzEmailUtil {
 		public SimpleMailer smtpRecipients(List<InternetAddress> list) {
 			recipientList = addAll(recipientList, list);
 			return this;
+		}
+
+		private InternetAddress[] strArrayToAddress(String... array) {
+			return Arrays.stream(array).map(address -> {
+				try {
+					return new InternetAddress(address);
+				} catch (AddressException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}).filter(Objects::nonNull).toArray(InternetAddress[]::new);
 		}
 
 		@SuppressWarnings("unchecked")
