@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code="ezBoard.t81" /></title>
+		<title><spring:message code="ezJournal.t102" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -76,7 +76,7 @@
 			function saveJournalReply(){
 				var replyContent = $("#replyContent").val();
 				if(replyContent == null || replyContent==""){
-					alert('<spring:message code='ezBoard.t10049' />');
+					alert('<spring:message code='ezJournal.t206' />');
 				}else{
 					$.ajax({
 						type:"post",
@@ -152,7 +152,7 @@
 		<div class="layerpopup"  style="z-index: 1000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer" onload="autoResize(this)"></iframe>
 		</div>
-		<h1><spring:message code='ezBoard.t81'/><span id="headTitle" style="font-size: 14px">[<c:out value="${fn:length(replyList) }"></c:out>]</span></h1>
+		<h1><spring:message code='ezJournal.t102'/><span id="headTitle" style="font-size: 14px">[<c:out value="${fn:length(replyList) }"></c:out>]</span></h1>
 		<div id="close">
 			<ul>
 				<li><span onclick="closeJournalPopup();"></span></li>
@@ -166,7 +166,7 @@
 						<textarea id="replyContent" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
 					</th>
 					<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
-						<a class='imgbtn' style="vertical-align: middle"><span onclick="saveJournalReply();"><spring:message code='ezBoard.t321' /></span></a>
+						<a class='imgbtn' style="vertical-align: middle"><span onclick="saveJournalReply();"><spring:message code='ezJournal.t73' /></span></a>
 					</th>
 				</tr>
 			</table>
@@ -209,7 +209,7 @@
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel2">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel2">
-	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer2"></iframe>
+	        <iframe src="<spring:message code='ezJournal.t185' />" style="border:none;" id="iFrameLayer2"></iframe>
 	    </div>
 	</body>
 </html>

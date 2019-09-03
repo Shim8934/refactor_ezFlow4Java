@@ -583,6 +583,20 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("itemSeq") != null) {
 			itemSeq = request.getParameter("itemSeq");
 			infoVO = ezPersonalAdminService.getPollInfo(itemSeq, userInfo.getTenantId());
+			
+			String startDate = infoVO.getStartDate();
+			String endDate = infoVO.getEndDate();
+			
+			if (startDate != null && startDate.indexOf(".") > -1) {
+				startDate = startDate.substring(0, startDate.indexOf("."));
+				infoVO.setStartDate(startDate);
+			}
+			
+			if (endDate != null && endDate.indexOf(".") > -1) {
+				endDate = endDate.substring(0, endDate.indexOf("."));
+				infoVO.setStartDate(endDate);
+			}
+			
 			model.addAttribute("infoVO", infoVO);
 		} 
 		
@@ -851,6 +865,20 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			vo.setItemSeq(Integer.parseInt(itemSeq));
 			// &quot의 경우 FE에서 string을 감쌀 때 쌍따옴표를 사용하고 있기 때문에 따옴표로 변경
 			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\'").replace("&apos;", "\'"));
+			
+			//
+			String startDate = vo.getStartDate();
+			String endDate = vo.getEndDate();
+			
+			if (startDate != null && startDate.indexOf('.') > -1) {
+				startDate = startDate.substring(0, startDate.indexOf("."));
+				vo.setStartDate(startDate);
+			}
+			
+			if (endDate != null && endDate.indexOf('.') > -1) {
+				endDate = endDate.substring(0, endDate.indexOf("."));
+				vo.setEndDate(endDate);
+			}
 		} else {
 			vo.setWidth(600);
 			vo.setHeight(600);
@@ -1146,9 +1174,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			BufferedImage outputImage = null;
 			Graphics2D saveImage = null;
 			
-			outputImage= new BufferedImage(467, 200, BufferedImage.TYPE_INT_RGB);
+			outputImage= new BufferedImage(280, 515, BufferedImage.TYPE_INT_RGB);
 			saveImage = outputImage.createGraphics();
-			saveImage.drawImage(inputImage, 0, 0, 467, 200, null);
+			saveImage.drawImage(inputImage, 0, 0, 280, 515, null);
 			saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 			
 			File newFile = new File(commonUtil.detectPathTraversal(realPath + serverPath + saveName));

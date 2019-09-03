@@ -446,9 +446,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String type = request.getParameter("type");
+		String dept = request.getParameter("dept"); 
 		
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
+		userInfo.setDeptID(dept);
+		
+		model.addAttribute("dept", dept);
 		model.addAttribute("type", type);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
@@ -687,7 +691,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		int totalCount = 0;
 		String subject = "";
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-		String subjectCont = "";
+		String subjectContent = "";
+		String subjectCnt = "";
 		
 		String itemSeq = req.getParameter("itemSeq");
 		
@@ -755,16 +760,16 @@ public class EzPersonalController extends EgovFileMngUtil {
 				
 				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.format("%.1f", temp));
 			}
-			//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-			if (subject.length() > 86) {
-				subjectCont = subject.substring(0, 86) + "...";
-			}
 			//subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
-			subjectCont +=  egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+			subjectCnt +=  egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
 		}
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
 		else {
-			subjectCont = "";
+			subjectCnt = "";
+		}
+		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+		if (subject.length() > 86) {
+			subjectContent = subject.substring(0, 86) + "...";
 		}
 		
 		String strHtml = "";
@@ -814,7 +819,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("strHtml", strHtml);
 		model.addAttribute("title", title);
 		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
-		model.addAttribute("subjectCont", subjectCont);
+		model.addAttribute("subjectContent", subjectContent);
+		model.addAttribute("subjectCont", subjectCnt);
 		
 		logger.debug("pollResult ended");
 		if(flag.equals("preview")) {
@@ -858,9 +864,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (req.getParameter("searchString") != null && !req.getParameter("searchString").equals("")) {
 			searchString = req.getParameter("searchString");
 		}
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("searchString", searchString);
+		model.addAttribute("primaryLang", primaryLang);
 
 		logger.debug("personSearch ended");
 		return "/ezPersonal/persPersonSearch";
@@ -950,6 +958,105 @@ public class EzPersonalController extends EgovFileMngUtil {
 		List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
 		/*HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);*/
 		
+		String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+		String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+		String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+		String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+		String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+		String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+		String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+		String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+		String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+		String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+		
+		if (useAttitude == null || useAttitude.equals("")) {
+			useAttitude = "NO";
+		}
+		
+		if (useMemo == null || useMemo.equals("")) {
+			useMemo = "YES";
+		}
+		
+		if (useLadder == null || useLadder.equals("")) {
+			useLadder = "NO";
+		}
+		
+		if (useCabinet == null || useCabinet.equals("")) {
+			useCabinet = "NO";
+		}
+		
+		if (useVote == null || useVote.equals("")) {
+			useVote = "YES";
+		}
+		
+		if (useJournal == null || useJournal.equals("")) {
+			useJournal = "NO";
+		}
+		
+		if (useCircular == null || useCircular.equals("")) {
+			useCircular = "YES";
+		}
+		
+		if (useQuestion == null || useQuestion.equals("")) {
+			useQuestion = "NO";
+		}
+		
+		if (useWebfolder == null || useWebfolder.equals("")) {
+			useWebfolder = "NO";
+		}
+		
+		if (useCommunity == null || useCommunity.equals("")) {
+			useCommunity = "YES";
+		}
+		
+		if (useEzPMS == null || useEzPMS.equals("")) {
+			useEzPMS = "NO";
+		}
+		
+		if (useQuestion.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 14));
+		}
+		
+		if (useMemo.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 18));
+		}
+		
+		if (useLadder.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 16));
+		}
+		
+		if (useCabinet.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 11));
+		}
+		
+		if (useVote.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 15));
+		}
+		
+		if (useJournal.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 8));
+		}
+		
+		if (useCircular.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 7));
+		}
+		
+		if (useAttitude.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 9));
+		}
+		
+		if (useWebfolder.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 10));
+		}
+		
+		if (useEzPMS.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 12));
+		}
+		
+		if (useCommunity.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 5));
+		}
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
 		 */
@@ -976,6 +1083,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 				model.addAttribute("isJournalUsed", "Y");
 			} else if (menuId == 10) {
 				model.addAttribute("isWebfolderUsed", "Y");
+			} else if (menuId == 12) {
+				model.addAttribute("isPMSUsed", "Y");
 			}
 		}
 		
@@ -1025,7 +1134,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		//String radBirthType2 = "";
 		String literalPhoto = "";
 		
-		String propList = "postalCode;streetAddress;homePhone;facsimileTelephoneNumber;extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;extensionAttribute10;birth;birthType;password";
+		String propList = "postalCode;streetAddress;homePhone;facsimileTelephoneNumber;extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;extensionAttribute10;birth;birthType;password;FURIGANA;EXTENSIONPHONE;OFFICEMOBILE";
 		
 		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(result);
@@ -1045,6 +1154,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String birthDay = xmlDom.getElementsByTagName("BIRTH").item(0).getTextContent();
 		String birthType = xmlDom.getElementsByTagName("BIRTHTYPE").item(0).getTextContent();
 		String password = xmlDom.getElementsByTagName("PASSWORD").item(0).getTextContent();
+		String literalFurigana = xmlDom.getElementsByTagName("FURIGANA").item(0).getTextContent();
+		String literalExtensionPhone = xmlDom.getElementsByTagName("EXTENSIONPHONE").item(0).getTextContent();
+		String literalOfficeMobile = xmlDom.getElementsByTagName("OFFICEMOBILE").item(0).getTextContent();
 		
 		/*if (userInfo.getLang().equals("1") || userInfo.getLang().equals("4")) {
 			radBirthType1 = messageSource.getMessage("ezPersonal.t2001", locale);
@@ -1104,6 +1216,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("userMobileManaged", userMobileManaged);
+		model.addAttribute("LiteralFurigana", literalFurigana);
+		model.addAttribute("LiteralExtensionPhone", literalExtensionPhone);
+		model.addAttribute("LiteralOfficeMobile", literalOfficeMobile);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";

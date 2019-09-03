@@ -457,9 +457,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("checkSysop", checkSysop);
 		model.addAttribute("retXML", retXML);
 		model.addAttribute("pastDate", pastDate);
+		model.addAttribute("lang", userInfo.getLang()); // 2019-07-11 홍승비 - 다국어 지원용 lang 초가
 		
 		logger.debug("popupCommHome ended.");
-		
 		return "ezCommunity/communityPopupCommHome";
 	}
 	
@@ -2830,6 +2830,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardProp", boardProp);
 		model.addAttribute("_style", style);
+		model.addAttribute("userInfo",userInfo);
 		
 		logger.debug("adminBoardProperty ended.");
 		
@@ -2916,7 +2917,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("upperBoardID", parentBoardID);
-		model.addAttribute("boardName", boardInfo.getBoardName());
+		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
 
 		return "ezCommunity/communityAdminBoardOrder";
 	}
@@ -2994,7 +2995,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
-		model.addAttribute("parentBoardName", boardInfo.getBoardName());
+		model.addAttribute("parentBoardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
 		
 		return "ezCommunity/communityAdminBoardCreate";
 	}
@@ -3041,7 +3042,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("boardName", boardInfo.getBoardName());
+		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
 		
 		return "ezCommunity/communityAdminBoardMove";
 	}
@@ -3104,7 +3105,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("boardName", boardInfo.getBoardName());
+		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
 		model.addAttribute("xmlret", strXML);
 		
 		return "ezCommunity/communityAdminBoardDelete";
@@ -3198,7 +3199,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("boardName", boardInfo.getBoardName());
+		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
         model.addAttribute("userInfo", userInfo);
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("orgBoardParameters", orgBoardParameters);

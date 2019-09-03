@@ -5018,9 +5018,7 @@
 		    TBL_CABINET.TRANSDELAYFLAG,
 		    TBL_CABINET.TITLE,
 		    TBL_CABINET.TITLE2,
-		   	<!--  단위업무가 아닌 기록물철 자체의 보존연한을 가져오게 수정 2019-03-22 임민석 -->
-		    TBL_CABINET.KEEPINGPERIOD,
-		    <!-- VTASKCLASS.KEEPINGPERIOD, -->
+		    IFNULL(TBL_CABINET.KEEPINGPERIOD, VTASKCLASS.KEEPINGPERIOD) KEEPINGPERIOD,
 		    VTASKCLASS.DISPLAYRECFLAG,
 		    VTASKCLASS.DISPLAYRECTRASTIME,
 		    VTASKCLASS.SC1,
@@ -7417,6 +7415,10 @@
           AND
           		DOCSTATE = #v_CHAMSTATE#
           </isNotEmpty>
+          <isEmpty property="v_CHAMSTATE">
+          AND
+          		DOCSTATE != '017'
+          </isEmpty>
           </isNotNull>
          
 	        LIMIT 1
@@ -8032,6 +8034,19 @@
 					             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 					        AND
 					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTID  ,
+						  (
+	                        SELECT 
+	                        	 TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME 
+					        FROM 
+					        	 TBL_APRRECEIPTPROCESSINFO 
+					     	WHERE  
+					     		 TBL_APRRECEIPTPROCESSINFO.DOCID = #v_DOCID#
+					        AND 
+					        	 TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+					        AND
+					             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+					        AND
+					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTNAME  ,
 	                      (
 	                       SELECT 
 	                      	  *  
@@ -9626,25 +9641,25 @@
 		   		TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 		   	AND
 		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
-		   	AND 
-		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
-		   
 		   	]]>
-		   	<isEqual property="v_MODELENGTH" compareValue="2">
-		   	NOT
-		   	</isEqual>
-		   	 LIKE 
-		   	 	'ADDRESS%' 
+<!-- 		   	AND  -->
+<!-- 		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID -->
+		   
+<!-- 		   	<isEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	NOT -->
+<!-- 		   	</isEqual> -->
+<!-- 		   	 LIKE  -->
+<!-- 		   	 	'ADDRESS%'  -->
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 		   	</isEqual>
-		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
-		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
-		   	</isNotEqual> 
+<!-- 		   	<isNotEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	 AND  -->
+<!-- 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#) -->
+<!-- 		   	</isNotEqual>  -->
 		   	<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
 			AND
 				$v_SPSUBQUERY$
@@ -22910,9 +22925,9 @@
    <insert id="EzApprovalG.insertTmpAttachInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_TMPATTACHINFO
-	    ( SELECT 
-	    		#v_USERID#, 
-	    		#v_SN#, 
+			(
+				OWNERID,
+	    		SN,
 	    		ATTACHFILESN , 
 	    		ATTACHFILENAME , 
 	    		ATTACHFILEHREF , 
@@ -22929,15 +22944,35 @@
 	    		AttachUserJobTitle2 , 
 	    		AttachUserDeptName2, 
 	    		TENANT_ID ,
-	    		COMPANYID  
+	    		COMPANYID  ) 
+	     SELECT 
+	    		#v_USERID#, 
+	    		#v_SN#, 
+	    		A.ATTACHFILESN , 
+	    		A.ATTACHFILENAME , 
+	    		A.ATTACHFILEHREF , 
+	    		A.ATTACHFILESIZE , 
+	    		A.ATTACHUSERID , 
+	    		A.ATTACHUSERNAME , 
+	    		A.ATTACHUSERJOBTITLE , 
+	    		A.ATTACHUSERDEPTID , 
+	    		A.ATTACHUSERDEPTNAME , 
+	    		A.PAGENUM , 
+	    		A.DISPLAYNAME , 
+	    		A.BODYATTACH , 
+	    		A.AttachUserName2 ,  
+	    		A.AttachUserJobTitle2 , 
+	    		A.AttachUserDeptName2, 
+	    		A.TENANT_ID ,
+	    		A.COMPANYID  
 	      FROM 
 	      		TBL_APRATTACHINFO A 
 	      WHERE  
-	      		DOCID = #v_DOCID# 
+	      		A.DOCID = #v_DOCID# 
 		  AND 	
-		   		TENANT_ID = #v_TENANTID#
+		   		A.TENANT_ID = #v_TENANTID#
 		  AND
-		  		COMPANYID = #companyID#)
+		  		A.COMPANYID = #companyID#
    </insert>
    
    <insert id="EzApprovalG.insertTmpExpAprLine" parameterClass="Map"> 
@@ -29461,5 +29496,30 @@
 				AND
 					COMPANYID = #companyID#
 			) AS A
+	</select>
+	<select id="EzApprovalG.checkProxyAprLine" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_USERMASTER
+		WHERE
+			EXTENSIONATTRIBUTE5 LIKE CONCAT(#v_USERID#, ':%')
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			CN IN (
+					SELECT
+						DISTINCT APRMEMBERID
+					FROM
+						TBL_APRLINEINFO
+					WHERE
+						DOCID = #v_DOCID#
+					AND
+						APRSTATE = '002'
+					AND
+						TENANT_ID = #v_TENANTID#
+					AND
+						COMPANYID = #companyID#
+				)
 	</select>
 </sqlMap>

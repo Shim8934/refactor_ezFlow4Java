@@ -429,6 +429,9 @@
 			    url : '/ezAttitude/getAttModAppList.do',
 			    data : obj,
 			    dataType : "json",
+			    beforeSend : function() {
+   					ShowAttProgress();
+				},
 			    error: function(xhr, status, error){
 			    	ajaxRunning = false;
 			    },
@@ -478,6 +481,9 @@
 			    url : '/ezAttitude/getAttModAppList.do',
 			    data : obj,
 			    dataType : "json",
+			    beforeSend : function() {
+   					ShowAttProgress();
+				},
 			    error: function(xhr, status, error){
 			    	ajaxRunning = false;
 			    },
@@ -661,6 +667,15 @@
 	    function HiddenAttProgress() {
 	        document.getElementById("attPanel").style.display = "none";
 	        document.getElementById("AttProgress").style.display = "none";
+	    }
+	    
+	    function ShowAttProgress() {
+	    	var CurrenWidth = window.innerWidth;
+        	
+		    document.getElementById("attPanel").style.display = "";
+		    document.getElementById("AttProgress").style.top = "330px";
+		    document.getElementById("AttProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+		    document.getElementById("AttProgress").style.display = "";
 	    }
 	    
 	    function goToPageByNum(Value){

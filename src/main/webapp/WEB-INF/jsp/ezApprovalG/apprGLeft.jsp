@@ -92,6 +92,11 @@
 		            $(".sbHolder").each(function (index) {
 		                $(this).addClass('instance');
 		            });
+		         //19.08.05 김보미 - 마우스 클릭시 볼드체   
+		         $(document).on("click", "span.list_text", function(){
+		        	 $("#left li").removeClass("on");
+		        	 $(this).parent().addClass("on");
+		         })
 		    });
 		    document.onselectstart = function () {
 		    	 if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -185,7 +190,7 @@
 		        leftResize();
 		        $(".apprListBox").mCustomScrollbar({
 	        		theme : "dark"
-	        	});	
+	        	});
 		    };
 		    
 		    function UserContRequestData(pNodeID, pTreeID) {
@@ -1173,12 +1178,12 @@
                    	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL5" onClick="setPresentValue('<spring:message code='ezApprovalG.t257'/>');convMain('6','')"><spring:message code='ezApprovalG.t257'/><span id=count6></span></span></li>
                   	<c:if test="${approvalFlag == 'G'}">
 						<c:if test="${infoXML != '' && infoXML != null }">
-                          	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL9" onclick="setPresentValue('<spring:message code='ezApprovalG.t1751'/>');convMain('9','')"><spring:message code='ezApprovalG.t1751'/></span></span></li>
+                          	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL9" onclick="setPresentValue('<spring:message code='ezApprovalG.t1751'/>');convMain('9','')"><spring:message code='ezApprovalG.t1751'/></span></li>
 						</c:if>
 					</c:if>
 					<c:if test="${userSendOut == 'YES'}">
                        	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL7" onclick="setPresentValue('<spring:message code='ezApprovalG.t1752'/>');convMain('7','')"><spring:message code='ezApprovalG.t1752'/><span id=count7></span></span></li>
-                       	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></span></li>
+                       	<li class="approvalG"><span class="sub_iconLNB tree_appr_write"></span><span class="list_text" id="APPROVAL8" onclick="setPresentValue('<spring:message code='ezApprovalG.t1275'/>');convMain('8','')"><spring:message code='ezApprovalG.t1275'/></span></li>
 					</c:if>
 		        </ul>
 		        <h2 class="off" id="compH2">

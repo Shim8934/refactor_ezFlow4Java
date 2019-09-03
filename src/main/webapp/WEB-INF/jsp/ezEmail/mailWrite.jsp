@@ -296,6 +296,7 @@
 				document.getElementById("bodyType").options[1].selected = true;
 	        	document.getElementById("SelMailSign").disabled = true;
 	        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+	        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
 			} else {
 				document.getElementById("tbContentElement").style.display = "";
 			}
@@ -1287,6 +1288,7 @@
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 		        	document.getElementById("SelMailSign").disabled = true;
 		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+		        	document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
 	        	} else {
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
@@ -1297,6 +1299,7 @@
 				document.getElementById("plainTextArea").style.display = "none";
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
+	        	document.getElementById("SelMailSign").classList.remove("disabled"); // plainTextDisable style remove
         		if(totBigSizeAttachMBSize == 0){
 	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
         		} else {
@@ -1755,13 +1758,13 @@
 						//2018-10-04 배현상, 근태관리 미입력자 메일 안내문구 삭제
 						var resultHtml = "<hr>";
 						
-						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;근태미입력자</strong></span></p><p></p>";
+						resultHtml += "<p></p><p><span style='font-size:18px;'><strong>&nbsp;<spring:message code='ezAttitude.t75' /></strong></span></p><p></p>";
 						resultHtml += "<table style='border-collapse:collapse; width:800px;'>";
 						resultHtml += "<thead><tr>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>날짜</th>" ;
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>이름</th>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>직위</th>";
-						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'>부서</th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t133' /></th>" ;
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t10' /></th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t11' /></th>";
+						resultHtml += "<th style='text-align:left; border:1px solid #666; background-color: #f8f8fa;'><spring:message code='ezAttitude.t9' /></th>";
 						resultHtml += "</thead><tbody>";
 						
 						result.list.forEach(function(vo, index) {

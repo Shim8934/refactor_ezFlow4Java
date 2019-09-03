@@ -260,7 +260,7 @@
 		
 				                xmlhttp = null;
 				                try {
-				                	window.opener.leftCountRf();
+				                	window.opener.leftCountRf(pBoardID);
 								} catch (e) {
 								}
 				                try {
@@ -292,7 +292,7 @@
 		
 				            xmlhttp = null;
 				            try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 				            try {
@@ -344,7 +344,7 @@
 		
 		        xmlhttp = null;
 		        try {
-                	window.opener.leftCountRf();
+                	window.opener.leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		        try {
@@ -362,7 +362,7 @@
 		
 					window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply";
 				}
-		
+/* 		
 				function btn_Copy_Onclick()
 				{
 					if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
@@ -378,7 +378,8 @@
 					pwidth = pwidth - 127;
 					
 					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(pItemID) + ";" + "&boardID=" + encodeURIComponent(pBoardID), "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
-				}
+				} */
+				
 		        window.onunload = function () {
 		        	//리프레쉬 할 이유가 없는거 같음
 // 		            refresh_onclick();
@@ -798,7 +799,7 @@
 		
 		                    xmlhttp = null;
 		                    try {
-			                	window.opener.leftCountRf();
+			                	window.opener.leftCountRf(pBoardID);
 							} catch (e) {
 							}
 		                    try {
@@ -840,21 +841,15 @@
 		                }
 		            }
 		            else {
-		            	var agent = navigator.userAgent.toLowerCase();
+		            	/* 2019-07-03 홍승비 - 포토/썸네일게시물 사진수정 시 팝업창 크기 조정 */
+						swidth = 460;
 		            	
-		            	if ((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1) {
-		            		if (gubun != 4) {
-		            			swidth = 440;
-			               		sheight = 460;
-		            		} else {
-			            		swidth = 460;
-				                sheight = 380;
-		            		}
-		            	} else {
-		               		swidth = 460;
-		                	sheight = 380;
-		            	}
-		                
+						if (gubun == 3) { // 포토게시판 (메인이미지 사용 안함)
+							sheight = 360;
+						} else { // 썸네일게시판 (메인이미지 사용함)
+							sheight = 380;
+						}
+						
 			            pleft = (pwidth - swidth) / 2;
 			            ptop = (pheight - sheight) / 2;
 			            //2019.03.04 유은정 - 게시판 포틀릿 리스트 업데이트 되도록 수정

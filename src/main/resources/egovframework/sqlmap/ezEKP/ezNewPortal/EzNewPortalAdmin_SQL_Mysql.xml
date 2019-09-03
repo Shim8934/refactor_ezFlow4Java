@@ -195,13 +195,13 @@
 				user_id AS userid,
 				CASE
 				WHEN user_type = 1
-					THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
+					THEN (SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
 					ELSE ''
 				END AS username,
 				CASE WHEN user_type = 1	
-					THEN ifnull((SELECT description FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
-								(SELECT displayname FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) and extensionattribute2 = #companyId# limit 1))
-					ELSE (SELECT displayname FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
+					THEN ifnull((SELECT description$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND physicaldeliveryofficename = #companyId# AND cn = user_id),
+								(SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE cn in (SELECT deptid FROM TBL_ADDJOBMASTER WHERE cn = user_id) and extensionattribute2 = #companyId# limit 1))
+					ELSE (SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id)
 				END AS userdeptname,
 				user_type AS usertype,
 				access_yn AS accessyn
@@ -216,7 +216,7 @@
 			AND
 				access_yn = #accessType#
 			ORDER BY
-				user_type
+				sn, user_type
 		]]>
 	</select>
 	
@@ -310,11 +310,12 @@
 	<update id="ezNewPortal.updateMenuAuth" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_MENU_AUTH
-				(menu_id, user_id, user_type, access_yn, company_id, tenant_id)
+				(menu_id, user_id, user_type, access_yn, company_id, tenant_id, sn)
 			VALUES
-				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#)
+				(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#, #sn#)
 			ON DUPLICATE KEY UPDATE
-				access_yn = #accessYN#
+				access_yn = #accessYN#,
+				sn = #sn#
 		]]>
 	</update>
 	

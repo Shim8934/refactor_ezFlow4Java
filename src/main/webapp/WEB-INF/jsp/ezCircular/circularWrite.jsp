@@ -40,7 +40,7 @@
 	    	var userMyName2 = "<c:out value='${userMyName2}'/>";
 	    	var listSize = "<c:out value='${listSize}'/>";
 	    	var defaultFontAndSize  = "<c:out value='${defaultFontAndSize}'/>";
-	    	var strAttach = "<c:out value='${strAttach}'/>";
+	    	var strAttach = "${strAttach}'";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -64,7 +64,7 @@
 		        	document.getElementById("receiverID").innerHTML = "<c:out value='${userID}'/>";
 
 		        	//hasFie구분
-		        	setAttachFileInfo("<c:out value='${strAttach}'/>");
+		        	setAttachFileInfo(strAttach);
 			        
 		        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 		        	
@@ -401,7 +401,7 @@
         						</c:when>
         						<c:otherwise>
         							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezCircular.t28 => t25 -->
-		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t25"/></span></li>	
+		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.kbm01"/></span></li>	
 		          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>       						
         						</c:otherwise>
         					</c:choose>

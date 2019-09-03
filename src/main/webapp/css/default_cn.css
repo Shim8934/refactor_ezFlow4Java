@@ -570,6 +570,7 @@ form{display:inline;margin:0}
     vertical-align: middle;
 }
 
+#menu select.disabled {background-color: #EEE;}
 
 #menu ul{margin:0; padding:0;}
 #menu ul.on{padding-left:0px;}
@@ -2422,6 +2423,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree_reservation{ background-position:-260px 0px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px;} /* tree 예약발송관리 */
 .left_admin_mail{ background-position:-286px 0px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; } /* tree 예약발송관리 */
 .tree_receive_ok { background-position: -234px -26px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; } /* tree 수신확인 */
+.tree_mail_config { background-position: 0px 0px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; } /* tree 환경설정 */
 
 .tree_appr{ background-position:-26px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 결재할문서 */
 .tree_appr_ing{ background-position:-52px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 진행중문서 */
@@ -2648,7 +2650,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .admin_menu_content{ margin:0px; padding:15px 10px; box-sizing:border-box; overflow:hidden; border-left:1px solid #cfd0d2; border-right:1px solid #cfd0d2; border-bottom:1px solid #cfd0d2;}
 .adminMenu_icon{ margin:0px 10px 0px 0px; padding:0px; float:left;}
 .adminMenu_icon .admenuIcon{ margin:0px; padding:0px; width:74px; height:69px; border:1px solid #b9d7f6; background:#f1f8ff; box-sizing:border-box;}
-.adminMenu_icon .admenuIcon_up{ margin:10px 0px 0px 0px; padding:0px 4px; cursor:pointer; font-size:12px; color:393939; height:31px; line-height:29px; box-sizing:border-box; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193;}
+.adminMenu_icon .admenuIcon_up{ margin:10px 0px 0px 0px; padding:0px 4px; cursor:pointer; font-size:12px; color:393939; height:31px; line-height:29px; box-sizing:border-box; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193; text-align:center;}
 .adminMenu_icon .admenuIcon_up:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
 .iconTable01{ margin:0px -1px 0px 0px; padding:0px; float:left; width:383px; height:171px; border:1px solid #dfdfdf; border-right:none; border-collapse:collapse;}
 .iconTable02{ height:171px; width:381px; margin:0px -1px 0px 0px; border:1px solid #dfdfdf; border-left:none;}
@@ -2936,11 +2938,19 @@ h2, #menu span {font-size: 12px;}
 .divPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
 .mainPrevH {width: 100%; position: relative; padding-top: 5px;}
 .mainPrevH >div {height: 100%; display: flex; flex-flow: column;}
-.prevHeaderW >div, .prevHeaderH >div {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
+.prevHeaderW .prevHeaderWwrapper, .prevHeaderH .prevHeaderWwrapper {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
 .prevHeaderW >span, .prevHeaderH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
-.prevHeaderW {border-top: 1px solid #ddd;}
+/* .prevHeaderW {border-top: 1px solid #ddd;} */
+.prevHeaderW .nodataDiv {vertical-align: middle; text-align: center; width: 100%; height: 100%; margin-top: 70px;}
+.prevHeaderW .nodataDiv dl {margin: 0px; padding: 0px;text-align: center;margin-top: 20px;}
+.prevHeaderW .nodataDiv dl dt {margin: 0px; padding: 20px 0px 20px 0px;}
+.prevHeaderW .nodataDiv dl dd {margin: 0px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
+.prevHeaderH .nodataDiv {vertical-align: middle; text-align: center; width: 100%; height: 100%; margin-top: 70px;}
+.prevHeaderH .nodataDiv dl {margin: 0px; padding: 0px;text-align: center;margin-top: 20px;}
+.prevHeaderH .nodataDiv dl dt {margin: 0px; padding: 20px 0px 20px 0px;}
+.prevHeaderH .nodataDiv dl dd {margin: 0px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
 .divPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex; margin-left: 5px;}
-.mainPrevW {height: 100%; width: 100%; position: relative;}
+.mainPrevW {height: 100%; width: 100%; position: relative; border-top: 1px solid #ddd;}
 .mainPrevW >div {width: 100%; height: 100%; display: flex; flex-flow: column;}
 .prevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px; clear: both; padding: 0px; height: 36px; line-height: 36px; display: flex;}
 .prevTitle .prevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; padding-right: 5px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}
@@ -3120,7 +3130,7 @@ h2, #menu span {font-size: 12px;}
 .headpanel .crust {position:relative; clear:none; display:inline-block; zoom:1; width:25%; margin:0px; padding:6px 0px;}
 .headpanel .crust a.crumb>span {display:inline-block; vertical-align:middle; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:100%; font-size:14px;}
 .headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {color:#0470e4;}
-.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 38px; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; align-items: center; text-align:center;}
+.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 38px; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; align-items: center; text-align:center; min-width: 110px;}
 
 .headpanel .crust{background:url(../images/ezSurvey/survey_progressBG.png) top center no-repeat;}
 .headpanel .crust.selected{background:url(../images/ezSurvey/survey_progressBG_on.png) top center no-repeat;}
@@ -3358,7 +3368,7 @@ input::-ms-clear {display: none;}
 
 /* 수정, 취소 버튼 */
 .survey_qsbtn{overflow:hidden; margin:20px 0px 10px 0px; padding:0px; height:40px;}
-.survey_qsbtn li{display:inline-block; width:52px; height:38px; line-height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; font-size:12px; font-weight:bold; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
+.survey_qsbtn li{display:inline-block; width:65px; height:38px; line-height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; font-size:12px; font-weight:bold; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
 .survey_qsbtn li.modify, .survey_qsbtn li.save {color:#0470e4; border:1px solid #2196f3; border-bottom:1px solid #0470e4;}
 .survey_qsbtn li:hover{background:#f1f8ff; border:1px solid #2196f3; border-bottom:1px solid #0470e4; color:#0470e4;}
 .survey_qsbtn li span{display:inline-block; padding:0px 4px;}
@@ -3369,7 +3379,7 @@ input::-ms-clear {display: none;}
 .question-panel .mvBtn span{display:inline-block; width:16px; height:16px; margin:3px 6px 0px 6px; background-position:-64px 0px !important;}
 .mvBtn li:hover{background-color:rgb(255,255,255); border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
 
-.question-panel .srvyDragBtn {position:absolute; display:block; left:50%; margin:0px 0px 0px 0px;}
+.question-panel .srvyDragBtn {position:absolute; display:block; left: calc(50% - 12px); margin:0px 0px 0px 0px;}
 
 /* question header panel */
 .question-panel{background:#f1f6fb; padding: 10px;}
@@ -3503,3 +3513,27 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
+
+/* 20190709 메일분류추가 */
+.mailRule_select{-webkit-appearance: none;border:1px solid #dedede;min-height:30px;margin:0px 0px 3px 0px;padding-left: 5px;background: url(/images/next.gif) no-repeat right 1px center; background-color: #fff;}
+.mailRule_title{font-size:14px; font-weight:bold; color:#333; margin:0px 0px 5px 0px; padding:0px; display:inline-block;}
+.mailRule_tit{ margin: 10px 0px 0px 0px; padding: 10px 0px 0px 0px; border-top: 1px solid #d6d6d6;}
+#RuleDisplayName{ height:30px;}
+.mailRule_txt{ font-size:13px; color:#333; background:url(/images/ImgIcon/mailRule_dot.gif) no-repeat left center; padding:0px 0px 0px 10px;}
+.mailRule_selectDIV{ margin:10px 0px;}
+
+/* 관리자 공유사서함 */
+.shared_boxesTable{width:100%; border:0px none; border-collapse:separate; border-spacing:0;}
+.shared_boxesTable tr th{height:38px; background-color:#f1f3f5; border-top:0px none; border-right:0px none; border-left:0px none; border-bottom:1px solid #e2e3e6; text-align:left; font-size:13px; color:#000; box-sizing:border-box;}
+.shared_boxesTable tr td{height:34px; background-color:#ffffff; border-top:0px none; border-right:0px none; border-left:0px none; border-bottom:1px solid #e2e3e6; font-size:12px; color:#333; box-sizing:border-box;}
+.shared_boxesTable tr td .layoutUL{list-style:none; margin:0px; padding:0px 5px 0px 10px;}
+.shared_boxesTable tr td .layoutUL .layoutLeft{float:left;}
+.shared_boxesTable tr td .layoutUL .layoutRight{float:right;}
+.shared_boxesTable tr td .layoutUL .layoutNone{float:none; overflow:hidden;}
+.shared_boxesTable tr td .layoutUL span.shared_boxesText{display:block; height:18px; line-height:16px; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+.shared_boxesTable tr td .layoutUL span.shared_boxesText_1{display:inline-block; height:18px; line-height:16px; padding:0px 5px; margin:0px 5px; border:1px solid #3d8fea; background:#ffffff; border-radius:3px; white-space:nowrap; color:#3d8fea; box-sizing:border-box;}
+.shared_boxesTable tr td .layoutUL span.shared_boxesText_2{display:inline-block; height:18px; line-height:16px; padding:0px 5px; margin:0px 5px; border:1px solid #999; background:#ffffff; border-radius:3px; white-space:nowrap; color:#999; box-sizing:border-box;}
+
+/* 관리자 공용배포그룹 */
+.shared_boxesTable.public_distribution{table-layout:fixed;}
+.shared_boxesTable.public_distribution tr td > span.shared_boxesText{display:block; height:18px; line-height:16px; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; padding-left:10px;}

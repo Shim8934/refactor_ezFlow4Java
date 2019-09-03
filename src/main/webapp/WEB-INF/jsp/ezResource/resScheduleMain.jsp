@@ -85,6 +85,7 @@
 	    var lunarUseFlag = "${lunarUseFlag}";
 	    var LunarUse = false;
 	    var dayView = 0;
+	    var returnFlag = "${returnFlag}";
 	    
 	    document.onselectstart = function () { return false; };
 	    
@@ -337,6 +338,11 @@
 	    }
 
 	    function newSchedule_onclick(e) {
+	    	if(ApproveFlag == 2) {
+	    		alert(strLang336);
+	    		return;
+	    	}
+	    	
 	        var srcEl;
 
 	        if (CrossYN()) {
@@ -385,7 +391,11 @@
 	    }
 
 	    function btnApprov_list() {
-	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&startDate=" + sStartDate + "&endDate=" + sEndDate;
+	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&type=Admin&startDate=" + sStartDate + "&endDate=" + sEndDate;
+	    }
+	    
+	    function btnMyApprov_list() {
+	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&type=User&startDate=" + sStartDate + "&endDate=" + sEndDate;
 	    }
 
         function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
@@ -516,8 +526,18 @@
 					
 					if (approveFlag == "1") {
 						$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
-					} else {
+					} else if (approveFlag == "0") {
 						$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+					} else {
+						$("#approveFlag").html("<spring:message code='ezSchedule.t404'/>");
+					}
+					
+					var returnFlag = result.resBrd.returnFlag;
+					
+					if (returnFlag == "0") {
+						$("#returnFlag").html("<spring:message code='ezResource.kmsr12'/>");
+					} else {
+						$("#returnFlag").html("<spring:message code='ezResource.kmsr13'/>");
 					}
 					
 					$("#resDate").html(result.resBrd.makeDate);
@@ -585,9 +605,12 @@
             	<li><span onclick='showRes(${resID});'><spring:message code='ezResource.t142'/></span></li>
             	<c:if test="${adminFg eq 'Y'}" >
     				<li><span onClick="btnform_onclick();"><spring:message code='ezResource.t378'/></span></li>
-    				<c:if test="${approveFlag eq '1'}" >
-    					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.t1000'/></span></li>
-    				</c:if>
+    				<%-- <c:if test="${approveFlag eq '1'}" > --%>
+    					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.kmsr33'/></span></li>
+    				<%-- </c:if> --%>
+    			</c:if>
+    			<c:if test="${approveFlag ne 2 }">
+    				<li id="myApprovlist"><span onClick="btnMyApprov_list();"><spring:message code='ezResource.kmsr34'/></span></li>
     			</c:if>
             </ul>
 		</div>
@@ -600,6 +623,21 @@
 	        </ul>
 	    </div>
 	    <div class="mainmenuTab">
+	    	<ul class="mainmenuTabUL_left"> 
+	    		<li><img src="../images/ezResource/state_approval.gif" class="icon"><spring:message code='ezResource.t191'/></li>
+	    		<c:if test="${approveFlag eq 1 }">
+		    		<li><img src="../images/ezResource/state_approvalPending.gif" class="icon"><spring:message code='ezResource.kmsr21'/></li>
+		    		<li><img src="../images/ezResource/state_approvalrefuse.gif" class="icon"><spring:message code='ezResource.kmsr22'/></li>
+		    	</c:if>
+	    		<li><img src="../images/ezResource/state_rental.gif" class="icon"><spring:message code='ezResource.kmsr23'/></li>
+	    		<c:if test="${returnFlag eq 0 }">
+	    			<li><img src="../images/ezResource/state_return.gif" class="icon"><spring:message code='ezBoard.t345'/></li>
+	    		</c:if>
+	    		<c:if test="${returnFlag eq 1 }">
+		    		<li><img src="../images/ezResource/state_return.gif" class="icon"><spring:message code='ezResource.kmsr24'/></li>
+		    		<li><img src="../images/ezResource/state_noreturn.gif" class="icon"><spring:message code='ezResource.kmsr25'/></li>
+		    	</c:if>
+	    	</ul>
 	        <ul class="mainmenuTabUL">
 	            <li id="dayView" class="off"><span onclick='onViewDate("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="off"><span onclick='onViewDate("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="on"><span onclick='onViewDate("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
 	        </ul>
@@ -665,6 +703,10 @@
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
 						<td colspan="2" id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.kmsr11'/></th>
+						<td colspan="2" id="returnFlag"></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezBoard.t5007'/></th>

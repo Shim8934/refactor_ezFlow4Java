@@ -344,26 +344,26 @@
 				if (listType == "mine") {
 					if ($("#searchTitle").val().trim() == "" && $("#searchContent").val().trim() == "" && $("#searchFormName").val().trim() == "" 
 						&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	               		alert("<spring:message code='ezBoard.t192' />");
+	               		alert("<spring:message code='ezJournal.t190' />");
 	                	return;
 		            }
 				} else {
 					if ($("#searchTitle").val().trim() == "" && $("#searchContent").val().trim() == "" && $("#searchFormName").val().trim() == "" && $("#searchWriter").val().trim() == "" 
 						&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	               		alert("<spring:message code='ezBoard.t192' />");
+	               		alert("<spring:message code='ezJournal.t190' />");
 	                	return;
 		            }
 				}
 	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-	        		alert("<spring:message code='ezSystem.x0035' />");	
+	        		alert("<spring:message code='ezJournal.t191' />");	
 	                return;
 	            }
 	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-	                alert("<spring:message code='ezSystem.x0036' />");
+	                alert("<spring:message code='ezJournal.t192' />");
 	                return;
 	            }
 	            if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-	                alert("<spring:message code='ezBoard.t191' />");
+	                alert("<spring:message code='ezJournal.t193' />");
 	                return;
 	            }
 				
@@ -390,7 +390,7 @@
 					searchWriter = $("#searchValue").val().trim();
 				
 					if (searchWriter == "") {
-						alert("<spring:message code='ezBoard.t192' />");
+						alert("<spring:message code='ezJournal.t190' />");
 	                	return;
 					}
 					setJournalList();
@@ -401,7 +401,7 @@
 					searchTitle = $("#searchValue").val().trim();
 				
 					if (searchTitle == "") {
-						alert("<spring:message code='ezBoard.t192' />");
+						alert("<spring:message code='ezJournal.t190' />");
 	                	return;
 					}
 					setJournalList();
@@ -685,11 +685,11 @@
 	        function ShowQuickAddres() {
 	        	if (useAnyoneEdit != "YES") {
 		        	if (deptAdmin != "Y" && pFolderType == "D") {
-		                alert("<spring:message code='ezAddress.t999900003' />");
+		                alert("<spring:message code='ezJournal.t194' />");
 		                return;
 		            }
 		            else if (compAdmin != "Y" && pFolderType == "C") {
-		                alert("<spring:message code='ezAddress.t999900004' />");
+		                alert("<spring:message code='ezJournal.t195' />");
 		                return;
 		            }
 	        	}	        	
@@ -871,13 +871,13 @@
 				$("#Edatepicker").datepicker('setDate', "");
 			});
 			
-			var monthMsg = "<spring:message code='ezBoard.t218' />";
+			var monthMsg = "<spring:message code='ezJournal.t196' />";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezBoard.t216' />";
+		    var dayMsg = "<spring:message code='ezJournal.t197' />";
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
-		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        $.datepicker.regional["<spring:message code='ezJournal.t198' />"] = {
 		        	monthNames: monthStr,
 		            monthNamesShort: monthStr,
 		            dayNames: dayStr,
@@ -891,7 +891,7 @@
 		            showAnim: 'show',
 		            showMonthAfterYear: true
 		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='ezJournal.t198' />"]);
 		    });			
 			
 			//정렬에 의한 리스트 셋팅
@@ -978,7 +978,7 @@
 				
 				for (var i = 0; i < journalIdList.length; i++) {
 					if ($("#" + journalIdList[i]).attr("mine") == "N" && listType != "recv") {
-						alert("<spring:message code='ezBoard.t265'/>");
+						alert("<spring:message code='ezJournal.t199'/>");
 						return;
 					}
 				}
@@ -1067,7 +1067,7 @@
 	</c:choose>
 	<span class="searchForm">
 		<select id="searchKey" name="searchKey" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; width: 80px;">    
-           	<option value="journalTitle"><spring:message code='ezBoard.t208' /></option>
+           	<option value="journalTitle"><spring:message code='ezJournal.t56' /></option>
 			<c:if test="${listType eq 'department' or listType eq 'recv' }">
 	       		<option value="journalWriter"><spring:message code='ezJournal.t34' /></option>
        		</c:if>
@@ -1088,7 +1088,7 @@
 			</c:if>
 			<!-- 		  	읽음표시 -->
 			<c:if test="${listType eq 'department' or listType eq 'mine'}">
-				<li><span onClick="doViewJournal();"><spring:message code='ezBoard.t204' /></span></li>
+				<li><span onClick="doViewJournal();"><spring:message code='ezJournal.t58' /></span></li>
 			</c:if>
 			<!-- 		  	수정 -->
 			<c:if test="${listType eq 'temp' }">
@@ -1143,7 +1143,7 @@
 						<col>
 					</colgroup>
 					<tr>
-						<th><spring:message code='ezBoard.t10021' /></th>
+						<th><spring:message code='ezJournal.t68' /></th>
 						<td><select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="goToPageByListCnt(this);">
 								<c:forEach begin="1" end="5" varStatus="status">
 									<c:choose>
@@ -1218,7 +1218,7 @@
 					</c:if>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezBoard.t208' />
+							<spring:message code='ezJournal.t56' />
 						</th>
 						<td>
 							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value="">
@@ -1226,7 +1226,7 @@
 					</tr>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezEmail.t649' />
+							<spring:message code='ezJournal.t201' />
 						</th>
 						<td>
 							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value="">
@@ -1256,7 +1256,7 @@
 					<tr>
 						<td style="text-align: center;">
 							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a>
+								<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezJournal.t43' /></span></a>
 							</div>	
 						</td>
 					</tr>
@@ -1266,7 +1266,7 @@
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
 	<div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel_sub">
-		<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer_sub"></iframe>
+		<iframe src="<spring:message code='ezJournal.t185' />" style="border: none;" id="iFrameLayer_sub"></iframe>
 	</div>
 	<div class="jquery-modal blocker current" id="selectSumJournal" style="display: none;">
 		<div id="sumpopup" class="popupwrap1 modal" style="text-align: center; width: 300px; margin-bottom: 70px; left: 500px; display: inline-block;">

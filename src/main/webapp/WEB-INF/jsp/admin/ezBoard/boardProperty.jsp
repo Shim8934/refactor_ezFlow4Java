@@ -731,7 +731,7 @@
 		<body class="mainbody"><h1><spring:message code="ezBoard.t60"/></h1>
 	</c:if>	
 	<c:if test="${adminType == 'y'}">
-		<body class="tabbody" style="margin-top:10px; overflow-y:auto;">
+		<body class="tabbody" style="margin-top:10px; margin-bottom: 15px; overflow-y:auto;">
 	</c:if>		
 		<xml id="listviewheader" style ="display:none"></xml>
 		<div style="max-width: 800px;">

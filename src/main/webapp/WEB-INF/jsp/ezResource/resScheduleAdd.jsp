@@ -201,7 +201,7 @@
 		        }
 	        	
 	        	if(cmd == "mod") {
-	        		if(sDT.substring(14,19) == "12:00" && eDT.substring(14,19) == "11:59") {
+	        		if(sDT.substring(14,19) == "00:00" && eDT.substring(14,19) == "23:59") {
 	        			document.getElementById("AllDay").checked = true;	        			
 	        			display_time_Unshow();
 	        		}
@@ -425,6 +425,7 @@
 	    	    }
 	    	}
 	    	
+	    	var SaveScheduleId = "";
 	    	function btn_Save() {
 
 	        	var check = true;
@@ -496,8 +497,10 @@
 
 	        	if (check == true) {
 	            	// 일정관리 동시 등록
-	            	if(document.getElementById("useSchedule").checked = true) {
-	            		SaveScheduleId = saveSchedule();
+	            	if (cmd == "add") {
+		            	if(document.getElementById("useSchedule").checked == true) {
+		            		SaveScheduleId = saveSchedule();
+		            	}
 	            	}
 	            	
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {

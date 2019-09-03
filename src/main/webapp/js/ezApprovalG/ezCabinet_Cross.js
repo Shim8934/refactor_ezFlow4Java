@@ -32,7 +32,7 @@ function ChkCabRoleInfo(selRow) {
     var ConfirmFlag;
     var CabClassNo;
     var MenuType;
-    
+
     if (selRow != null) {
         if (ListTypeFlag == "2" || ListTypeFlag == "3") {
             MenuCtl_Trans();
@@ -60,8 +60,13 @@ function ChkCabRoleInfo(selRow) {
                 g_bConfirm = true;
             else
                 g_bConfirm = false;
-
-            g_bCabCharger = ISCabCharger(CabClassNo, UserID);
+            
+            if (MenuType == "1" && g_bDeptCharger) {
+            	g_bCabCharger = true;
+            } else {
+            	g_bCabCharger = ISCabCharger(CabClassNo, UserID);
+            }
+            
             ezCabMunuCtl(MenuType, selRow);
         }
     }

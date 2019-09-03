@@ -1203,4 +1203,19 @@
 		  PRIMARY KEY (`TENANT_ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 	</statement>
+
+	<select id="EzCommonDAO.checkSnMenuAuth">
+		SELECT
+			sn
+		FROM
+			TBL_PORTAL_MENU_AUTH
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.snMenuAuth">
+		ALTER TABLE
+			TBL_PORTAL_MENU_AUTH
+		ADD 
+			sn INT DEFAULT 0
+	</statement>
 </sqlMap>

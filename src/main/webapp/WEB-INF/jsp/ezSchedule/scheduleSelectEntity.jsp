@@ -1248,6 +1248,10 @@
 	                                                        <option value="mobile"><spring:message code='ezSchedule.t1051' /></option>
 	                                                        <option value="HomePhone"><spring:message code='ezSchedule.t20' /></option>
 	                                                        <option value="facsimileTelephoneNumber"><spring:message code='ezSchedule.t21' /></option>
+															<c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail"><spring:message code='ezSchedule.t22' /></option>
 	                                                        <option value="streetAddress"><spring:message code='ezSchedule.t23' /></option>
 	                                                    </select>

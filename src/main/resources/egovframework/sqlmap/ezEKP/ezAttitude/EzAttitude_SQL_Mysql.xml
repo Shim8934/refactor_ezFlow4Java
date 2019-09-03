@@ -2027,7 +2027,7 @@
 			WHERE 
 				1 = 1
 		]]>
-		<isNotEmpty property="yseterday" > 
+		<isNotEmpty property="yesterday" > 
 			AND
 				JOIN_DATE LIKE CONCAT('%-%-',#yesterday#,'%')
 		</isNotEmpty>

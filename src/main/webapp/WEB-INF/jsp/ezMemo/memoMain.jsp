@@ -207,7 +207,7 @@
 			$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			$("#Edatepicker").datepicker('setDate', "");
 			
-			$.datepicker.regional["ko"] = {
+			$.datepicker.regional[memoMessages.strLangMemo23] = {
 		        	monthNames: monthStr,
 		            monthNamesShort: monthStr,
 		            dayNames: dayStr,
@@ -221,7 +221,7 @@
 		            showAnim: 'show',
 		            showMonthAfterYear: true
 		        };
-		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker.setDefaults($.datepicker.regional[memoMessages.strLangMemo23]);
 		});
 		
 		var inputNameDlg_cross_dialogArguments = new Array();
@@ -248,13 +248,13 @@
 		  </ul>
 		</div>
 		<div style="width:100%; border-bottom: 1px solid #e8e8e8;"></div>
-		<div id="bodyFrame" style="width:100%; overflow-y:auto; ">
+		<div id="bodyFrame" style="width:100%; height:100%; overflow-y:auto;">
  		 	<table class="mainlist" style="width:100%;">
  		 		<div id="boardMemoList">
 		 		</div>
  		 	</table>
  		 </div>
- 		<div style="width:100%; border-top: 1px solid #e8e8e8;"></div>
+<!--  		<div style="width:100%; border-top: 1px solid #e8e8e8;"></div> -->
  	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
  		 <div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<div class="popupJQLayer">

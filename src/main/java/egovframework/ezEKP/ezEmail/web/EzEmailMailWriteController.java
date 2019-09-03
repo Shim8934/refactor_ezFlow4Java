@@ -289,7 +289,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     		
     		if (shareId != null) {
     			if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, 2, loginInfo.getTenantId())) {
-    				logger.debug("the user cannot access the shareId.");
+    				model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailWrite ended.");
+					
+					return "ezCommon/error";
     			} else {
     				MailSharedMailboxVO sharedMailboxInfo = ezEmailService.getSharedMailboxInfo(shareId, loginInfo.getTenantId());
     				
@@ -432,7 +437,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",textOption=" + textOption + ",pMailSenderNM=" + pMailSenderNM);
  		
         //set mail sign
-        MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
+        MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), mailId);
         
         if (mailSignatureVO != null) {
         	mailSign1 = mailSignatureVO.getContent1();
@@ -1295,6 +1300,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			mailMaxReceiverCount = "200";
 		}
 		
+		// 20190708 조진호 - 결재, 게시판, 커뮤니티에서 메일로 발송 시에는 textOption 무시
+		if (_cmd.equalsIgnoreCase("board") || _cmd.equalsIgnoreCase("boardDotNet") 
+ 				|| _cmd.equalsIgnoreCase("Community") || _cmd.equalsIgnoreCase("CommunityDotNet")
+ 				|| _cmd.equalsIgnoreCase("docsend") || _cmd.equalsIgnoreCase("docsendDotNet")) {
+			bodyType = "0";
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
@@ -1445,7 +1457,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			@CookieValue("loginCookie") String loginCookie, 
 			HttpServletRequest request,
 			LoginVO userInfo, 
-			Model model) throws Exception{
+			Model model,
+			Locale locale) throws Exception{
+		logger.debug("dragAndDropIframe started.");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1463,7 +1477,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 2, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("dragAndDropIframe ended.");
+					
+					return "ezCommon/error";
 				} else {
 					model.addAttribute("shareId", shareId);
 				}
@@ -1473,6 +1492,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
+		logger.debug("dragAndDropIframe ended.");
 		return "ezEmail/mailDragAndDrop";
 	}
 
@@ -2137,7 +2157,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String realPath = commonUtil.getRealPath(request);
 		
-		String ezPMSPath = realPath + commonUtil.getUploadPath("upload_project.ROOT", userInfo.getTenantId())+ commonUtil.separator +"uploadFile";
+		String ezJournalPath = realPath + commonUtil.getUploadPath("upload_journal.ROOT", userInfo.getTenantId())+ commonUtil.separator +"uploadFile";
 		
 		String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
@@ -2169,11 +2189,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			String filePathValue = doc.getElementsByTagName("DATA2").item(i).getTextContent();		
 			filePathValue = filePathValue != null ? filePathValue : "";
 			
+			filePathValue = URLDecoder.decode(filePathValue,"UTF-8");
+			
 //			if (!filePathValue.startsWith("/")) {
 //				filePathValue = "/" + filePathValue;
 //			}
 			
-			filePath[i] = ezPMSPath + filePathValue;
+			filePath[i] = ezJournalPath + filePathValue;
 			
 			if (dotNetIntegration.equals("YES")) {
 				try {
@@ -2518,6 +2540,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //			if (!filePathValue.startsWith("/")) {
 //				filePathValue = "/" + filePathValue;
 //			}
+			//19.07.09 첨부파일 경로가 인코딩되어서 파일을 찾지 못해 오류가 나므로 decode처리.
+			filePathValue = URLDecoder.decode(filePathValue, "UTF-8");
 			
 			filePath[i] = commonUtil.detectPathTraversal(journalPath + filePathValue);
 			
@@ -3955,7 +3979,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        	        }
 				        	        
 				        	        if (contentType == null) {
-			        		        	contentType = "application/octet-stream";
+			        		        	contentType = Files.probeContentType(f.toPath());
 			        		        }
 				        	        
 				        	        
@@ -4630,9 +4654,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				            	for (Address a : allRecipients) {
 				            		logger.debug("address=" + a);
 				            		
-				            		message.setRecipient(RecipientType.TO, a);
-				            		
-				            		Transport.send(message);
+				            		try {
+					            		message.setRecipient(RecipientType.TO, a);
+					            		
+					            		Transport.send(message);
+				            		} catch (Exception e) {
+				            			e.printStackTrace();
+				            		}
 				            		
 	    			            	sentFolderMessageUID = 0;
 	    			            	mailSendCompleted = true;				            		
@@ -5454,7 +5482,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailLetterOption ended.");
+					
+					return "ezCommon/error";
+					
 				} else {
 					model.addAttribute("shareId", shareId);
 				}
@@ -5516,6 +5550,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
@@ -5528,6 +5563,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("mailNewReceiverChoose ended.");
 		return "ezEmail/mailNewReceiverChoose";

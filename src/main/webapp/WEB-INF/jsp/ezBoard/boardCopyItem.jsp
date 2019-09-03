@@ -54,27 +54,28 @@
 		            return;
 		        }
 
-		        if (oldguBun > 0) {
-			    	if (oldguBun != newguBun) {
+		        /* 2019-07-16 홍승비 - 게시물 복사 시 경고 메세지 발생 분기 수정 */
+//		        if (oldguBun > 0) {
+			    	if (oldguBun != newguBun) { // 게시판 타입 불일치
 			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
-			    	if (oldguBun == "3" && newguBun == "3") {
+			    	if (oldguBun == "3" && newguBun == "3") { // 이후 CheckIfAnonyBoard에서도 익명, 포토, 썸네일, URL게시판 여부 체크함
 			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
-		    	} else {
+		    	/* } else {
 		    		if (newguBun != "0") {
 		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
 // 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
-		    	}
+		    	} */
 
 		        CopyItem(selectedBoard);
 		    }
@@ -104,17 +105,38 @@
 		        }
 		        xmlhttp.open("POST", "/ezBoard/copyItem.do?orgItemIDList=" + encodeURIComponent(ItemIDList) + "&orgBoardID=" + encodeURIComponent(BoardID) + "&destBoardID=" + encodeURIComponent(pDestBoardID), false);
 		        xmlhttp.send();
-		        if (xmlhttp.responseText.indexOf("OK") > -1) {
+		        
+		        var returnItemIDStr = xmlhttp.responseText;
+		        if (returnItemIDStr != null && returnItemIDStr.indexOf("OK") > -1) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t355'/>");
 					board_alertArguments[1] = window.close;
-		            window.returnValue = "OK";
-		            rtnVal = "OK";
-		            try {
-				        window.opener.leftCountRf();
-					} catch (e) {
-					}
+		            window.returnValue = pDestBoardID;
+		            rtnVal = pDestBoardID;
+		            
+			        /* 2019-07-02 홍승비 - 승인게시판에 게시물 복사, 이동 시에도 승인메일 보내도록 수정 */
+			        $.ajax({
+    					type : "GET",
+    					dataType : "text",
+    					async : true,
+    					url : "/ezBoard/getBoardApprProperty.do",
+    					data : {
+    						boardID : pDestBoardID
+						},
+    					success: function(result){
+    						var itemIDs = returnItemIDStr.split(";");
+						 	if (result == "Y") {
+								for (var i = 0; i < itemIDs.length - 1 ;i++) {
+				                    xmlhttp = createXMLHttpRequest();
+				                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+				                    xmlhttp.send();
+				                    xmlhttp = null;
+								}
+							}
+    					}
+    				});
+			        
 // 		            window.close();
 		        } 
 		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
@@ -135,8 +157,11 @@
 		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp.send();
 		        var ret = xmlhttp.responseText;
-		        if (ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
-		        return false;
+		        if (ret.indexOf("<WRITE>true</WRITE>") != -1 || ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") != -1) {
+		        	return true;
+		        } else {
+		        	return false;
+		        }
 		    }
 		    function CheckIfAnonyBoard(pBoardID) {
 		        var xmlhttp2 = createXMLHttpRequest();

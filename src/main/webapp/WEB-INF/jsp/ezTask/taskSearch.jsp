@@ -359,15 +359,15 @@
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
 			            case "4":	
-			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+			                div.style.background = "url(/images/icon/section_Individualbg.png)";
 			                break;
 			            case "2":
 			            case "5":
-			                div.style.background = "url(/images/icon/section_orderbg.gif)";
+			                div.style.background = "url(/images/icon/section_orderbg.png)";
 			                break;
 			            case "3":
 			            case "6":
-			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+			                div.style.background = "url(/images/icon/section_Cooperativebg.png)";
 			                break;
 			        }
 

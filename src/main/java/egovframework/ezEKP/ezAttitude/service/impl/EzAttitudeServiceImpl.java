@@ -89,6 +89,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Resource(name = "EzOrganDAO")
 	private EzOrganDAO ezOrganDAO;
 	
+	@Resource(name = "excelCellRef")
+	private ExcelCellRef excelCellRef;
+		
 	@Override
 	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeInfo started");
@@ -247,22 +250,25 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			resultList.get(i).setRegion(commonUtil.cleanValue(resultList.get(i).getRegion()));
 		}
 		
-		if(deptFlag.equals("true") && startDate.compareTo(commonUtil.getTodayUTCTime("")) <= 0) {
+		if(deptFlag.equals("true") && typeId.trim().equals("") && startDate.compareTo(commonUtil.getTodayUTCTime("")) <= 0) {
 			map.put("companyId", companyId);
 			map.put("searchStartDate", startDate);
 			map.put("searchEndDate", endDate);
 			map.put("searchDeptId", deptIdList.split(",")[0]);
-			List<AdminAttitudeVO> absentresultList = ezAttitudeDAO.getAttitudeAbsentList(map);
 			
-			if(!absentresultList.isEmpty()) {
-				for(AdminAttitudeVO v : absentresultList) {
-					AttitudeVO a = new AttitudeVO();
-					a.setTypeId(v.getTypeId());
-					a.setTypeName(v.getTypeName());
-					a.setWriterId(v.getWriterId());
-					a.setWriterName(v.getUserName());
-					a.setTenantId(v.getTenantId());
-					resultList.add(a);
+			if (checkHoliday2(startDate.substring(0,10), endDate.substring(0,10), companyId, tenantId).size() < 1) {				
+				List<AdminAttitudeVO> absentresultList = ezAttitudeDAO.getAttitudeAbsentList(map);
+				
+				if(!absentresultList.isEmpty()) {
+					for(AdminAttitudeVO v : absentresultList) {
+						AttitudeVO a = new AttitudeVO();
+						a.setTypeId(v.getTypeId());
+						a.setTypeName(v.getTypeName());
+						a.setWriterId(v.getWriterId());
+						a.setWriterName(v.getUserName());
+						a.setTenantId(v.getTenantId());
+						resultList.add(a);
+					}
 				}
 			}
 		} 
@@ -1847,7 +1853,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag) throws Exception {
+	public List<AttitudeAuthorVO> getAttitudeAuthDeptList_hyo(int tenantId, String companyId, String userId, String rollInfo, String userAuthType, String listAuthType, String comFlag, String primary) throws Exception {
 		LOGGER.debug("getAttitudeAuthDeptList started.");
 		
 		if (userAuthType == null || userAuthType.equals("")) {
@@ -1868,6 +1874,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			listAuthType = "all";
 		}
 		
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		
 		LOGGER.debug("userId = " + userId + " || userAuthType = " + userAuthType + " || listAuthType = " + listAuthType + " || comFlag = " + comFlag);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1877,6 +1887,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("userAuthType", userAuthType);
 		map.put("listAuthType", listAuthType);
 		map.put("comFlag", comFlag);
+		map.put("primary", primary);
 		
 		List<AttitudeAuthorVO> list = ezAttitudeDAO.getAttitudeAuthDeptList_hyo(map);
 		
@@ -2677,6 +2688,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
+	public void excelChangeAnnual(Map<String, Object> map) throws Exception {
+		LOGGER.debug("excelChangeAnnual started");
+		
+		ezAttitudeDAO.insertAnnualHistory(map);
+		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
+			ezAttitudeDAO.excelInsertAnnual(map);
+		} else {
+			//ezAttitudeDAO.changeAnnualHistory(map);
+			ezAttitudeDAO.excelChangeAnnual(map);
+		}
+		
+		LOGGER.debug("excelChangeAnnual ended");
+	}
+	
+	@Override
 	public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception {
 		LOGGER.debug("getAnnualCnt started");
 
@@ -2746,12 +2772,16 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map2.put("searchStartTime", searchStartTime);
 			map2.put("searchEndTime", searchEndTime);
 			
-			double useAnnualCnt = Double.parseDouble(getAnnualCnt(map2).getUseAnnualCnt());
+			AttitudeAnnualVO v = getAnnualCnt(map2);
+			
+			double useAnnualCnt = Double.parseDouble(v.getUseAnnualCnt());
 			if(useAnnualCnt > 11.0) {
 				useAnnualCnt = 11.0;
 			}
 			double totalAnnualCnt = Double.parseDouble(list.get(0).getTotalAnnualCnt());
-			list.get(0).setTotalAnnualCnt(totalAnnualCnt - useAnnualCnt + "");
+			if (v.getJoinDate() != null) {
+				list.get(0).setTotalAnnualCnt(totalAnnualCnt - useAnnualCnt + "");
+			}
 		}
 		
 		LOGGER.debug("getUserAnnual ended.");
@@ -2760,13 +2790,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public String annualExcelUpload(List<Map<String, Object>> excelList, String changeUserId, String companyId, int tenantId, String changeReason, String flagCheck) throws Exception {
+	public String annualExcelUpload(List<Map<String, Object>> excelList, String changeUserId, String companyId, int tenantId, String changeReason, String flagCheck, Locale locale) throws Exception {
 		LOGGER.debug("annualExcelUpload started");
 		
 		Map<String, Object> excelVo = null;
 		Map<String, Object> map1 = null;
 		Map<String, Object> map2 = null;
-		String year = null;
+		String joinDate = null;
 		String userId = null;
 		String totalAnnualCnt = null;
 		int userCnt = 0;
@@ -2775,19 +2805,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			
 			excelVo = excelList.get(i);
 			
-			year = (String) excelVo.get("B");
-			userId = (String) excelVo.get("C");
-			totalAnnualCnt = (String) excelVo.get("H");
+			userId = (String) excelVo.get("A");
+			joinDate = (String) excelVo.get("B");
+			totalAnnualCnt = (String) excelVo.get("C");
 			
 			
-			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "년도", year, 8, "1"))) {
-				return ExcelCellRef.validateCheck(i+1, "년도", year, 8, "1");
+			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t289", locale), joinDate, 10, "4", locale))) {
+				return excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t289", locale), joinDate, 10, "4", locale);
 			}
-			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "사용자 ID", userId, 80, "2"))) {
-				return ExcelCellRef.validateCheck(i+1, "사용자 ID", userId, 80, "2");
+			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezEmail.t263", locale), userId, 80, "2", locale))) {
+				return excelCellRef.validateCheck(i+1, messageSource.getMessage("ezEmail.t263", locale), userId, 80, "2", locale);
 			}
-			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "총 연차수", totalAnnualCnt, 8, "3"))) {
-				return ExcelCellRef.validateCheck(i+1, "총 연차수", totalAnnualCnt, 5, "3");
+			if(!excelCellRef.nullCheck(excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t239", locale), totalAnnualCnt, 8, "3", locale))) {
+				return excelCellRef.validateCheck(i+1, messageSource.getMessage("ezAttitude.t239", locale), totalAnnualCnt, 5, "3", locale);
 			}
 			
 			map1 = new HashMap<String, Object>();
@@ -2799,7 +2829,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			}
 			
 			if(userCnt == 0) {
-				return i+1 + "행 " + userId + "은(는) 존재하지 않는 사용자입니다.";
+				return i+1 + messageSource.getMessage("ezAttitude.t319", locale) + userId + messageSource.getMessage("ezAttitude.t326", locale);
 			}
 		}
 		
@@ -2807,20 +2837,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			excelVo = excelList.get(i);
 			
 			map2 = new HashMap<String, Object>();
-			map2.put("year", excelVo.get("B"));
-			map2.put("userId", excelVo.get("C"));
-			map2.put("annualCnt", excelVo.get("H"));
+			map2.put("userId", excelVo.get("A"));
+			map2.put("joinDate", excelVo.get("B"));
+			map2.put("annualCnt", excelVo.get("C"));
 			map2.put("companyId", companyId);
 			map2.put("tenantId", tenantId);
 			map2.put("changeUserId", changeUserId);
 			map2.put("changeReason", changeReason);
 			map2.put("flagCheck", flagCheck);
 			
-			changeAnnual(map2);
+			excelChangeAnnual(map2);
 		}
 		
 		LOGGER.debug("annualExcelUpload started");
-		return "등록완료";
+		return messageSource.getMessage("ezAttitude.t327", locale);
 	}
 	
 	@Override
@@ -3128,7 +3158,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception {
 		LOGGER.debug("updateMonthlyHoliday started");
-		
+		LOGGER.debug("userId = " + map.get("userId") + " || joinDate = " + map.get("joinDate"));
 		String companyId = (String)map.get("companyId");
 		int tenantId = Integer.parseInt(String.valueOf(map.get("tenantId")));
 		

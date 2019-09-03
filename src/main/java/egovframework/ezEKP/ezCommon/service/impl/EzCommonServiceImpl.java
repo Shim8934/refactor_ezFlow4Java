@@ -1608,4 +1608,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createTblAccessCountry();
 	}
 	
+
+	@Override
+	public void addSnMenuAuth() throws Exception {
+		ezCommonDAO.addSnMenuAuth();
+	}
 }

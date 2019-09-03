@@ -20,10 +20,14 @@
 			#resourceDataTable tr th{
 				font-weight: normal;
 			}
+			
 			.table_layout th {
 				color:#2f2f2f;height: 32px;background:#e4e8ec;border: 1px solid #c8ccd0;padding:0;margin:0;
 				
 			}
+			
+			.icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
+			.icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -34,7 +38,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<style type="text/css">
-			.warningbox{margin:240px auto 0px auto; padding:40px 20px 0px 20px; font-family:Malgun Gothic; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
+			.warningbox{margin:240px auto 0px auto; padding:40px 20px 0px 20px; width:625px; height:184px; border:1px solid #d6d6d6; box-sizing:border-box;}
 			.warningbox .warningimg{margin:0px; padding:0px 0px 0px 40px; float:left;}
 			.warningbox .warningDL{margin:0px; padding:0px 0px 0px 30px; float:left; overflow:hidden;}
 			.warningbox .warningDL dt{margin:0px; padding:12px 0px 5px 0px; font-size:24px; font-weight:bold; color:#3d8fea; letter-spacing:-1px; text-align: left;}
@@ -390,8 +394,18 @@
 						
 						if (approveFlag == "1") {
 							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
-						} else {
+						} else if (approveFlag == "0") {
 							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+						} else {
+							$("#approveFlag").html("<spring:message code='ezSchedule.t404'/>");
+						}
+						
+						var returnFlag = result.resBrd.returnFlag;
+						
+						if (returnFlag == "0") {
+							$("#returnFlag").html("<spring:message code='ezResource.kmsr12'/>");
+						} else {
+							$("#returnFlag").html("<spring:message code='ezResource.kmsr13'/>");
 						}
 						
 						$("#resDate").html(result.resBrd.makeDate);
@@ -474,6 +488,7 @@
 	    </div>
 
 	    <div class="mainmenuTab" id="noResListSpan">
+	    	<ul class="mainmenuTabUL_left">  <li><span class="sub_iconLNB tree_resource_ok"></span><spring:message code='ezResource.t191'/></li><li><span class="sub_iconLNB tree_resource_no"></span><spring:message code='ezResource.kmsr21'/></li> <li><span class="sub_iconLNB tree_resource_refuse"></span><spring:message code='ezResource.kmsr22'/></li> </ul>
 	        <ul class="mainmenuTabUL">
 	            <li id="ToDaybtn" class="off"><span onClick="setweek_onload('TODAY');"><spring:message code='ezSchedule.t140'/></span></li><li id="Weekbtn" class="on"><span onClick="setweek_onload('WEEK');"><spring:message code='ezSchedule.t141'/></span></li>
 	        </ul>
@@ -585,6 +600,10 @@
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
 						<td colspan="2" id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.kmsr11'/></th>
+						<td colspan="2" id="returnFlag"></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezBoard.t5007'/></th>

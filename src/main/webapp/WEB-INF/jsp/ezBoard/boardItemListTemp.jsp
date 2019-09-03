@@ -151,10 +151,13 @@
 			    	});
 			    });
 		        
+			    /* 2019-08-06 홍승비 - 게시물 삭제 등 리프레시 동작 시 미리보기 영역 틀어짐 수정 */
 		        var Save_unloadSave = false;
 		        function Window_onunload() {
 		            if (window_onunload_Event && !Save_unloadSave) {
-		                var divStyle, ifrmStyle, listCount;
+		              /*   var divStyle, ifrmStyle, listCount; */
+						var divStyle;
+						var listCount = 0;
 		
 		                if (document.getElementById("listcount") != null){
 			            	listCount = document.getElementById("listcount").value;
@@ -163,14 +166,16 @@
 			            }
 		                
 		                if (pPreviewShow_HOW == "W") {
-		                    divStyle = parseInt(document.getElementById("divList").style.height);
+		                    /* divStyle = parseInt(document.getElementById("divList").style.height);
 		                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle)); */
+		                	divStyle = Math.round(pMailListDiv);
 		                }
 		                else if (pPreviewShow_HOW == "H") {
-		                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
+		                 /*    divStyle = parseInt(document.getElementById("divList").scrollWidth);
 		                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle)); */
+		                	divStyle = Math.round(pMailListDiv_H);
 		                }
 		                else {
 		                    divStyle = 0;
@@ -365,6 +370,8 @@
 		                DocList.DataBind("lvBoardList");
 		                DocList = null;
 		
+		                /* 2019-08-06 홍승비 - 게시물 리스트 호출 후  strListInfo 초기화 */
+		                strListInfo = "";
 		                var tempno = 0;
 		                for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
 		                    if (CrossYN()) {
@@ -962,7 +969,7 @@
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
+	            <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02'/></span></li>
 	            <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
 	            <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
 	            <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>

@@ -163,7 +163,22 @@
     			AND
        				COMPANYID = #v_COMPANYID#
     			AND
-    				TREEUPPER = A.TREEID) CHILDCNT,
+    				TREEUPPER = A.TREEID
+    			AND
+					(TREEBOARDID IN
+						(SELECT
+							I1.BOARDID
+						FROM
+							TBL_BOARD_BOARDINFO I1
+						WHERE
+							I1.TENANT_ID = #v_TENANTID#
+						AND
+							(I1.companyid = #v_COMPANYID#	OR TRIM(I1.companyid) = ''	OR I1.companyid IS NULL)
+						)
+					OR
+						(TRIM(TREEBOARDID) = ''	OR TREEBOARDID IS NULL)
+                    )
+    			) CHILDCNT,
              	TREEBOARDID 
         	FROM 
         		TBL_Board_MyTree A
@@ -176,6 +191,22 @@
                   OR USERID = 'everyone' )
             AND 
             	TREEUPPER = #v_PTREEUPPER#
+            AND
+				(EXISTS
+					(SELECT
+						I2.BOARDID
+                    FROM
+						TBL_BOARD_BOARDINFO I2
+					WHERE
+						A.TREEBOARDID = I2.BOARDID
+					AND
+						I2.TENANT_ID = #v_TENANTID#
+					AND
+						(I2.companyid = #v_COMPANYID#	OR TRIM(I2.companyid) = ''	OR I2.companyid IS NULL)
+					)
+				OR
+                   (TRIM(TREEBOARDID) = ''	OR TREEBOARDID IS NULL)
+				)
         	ORDER BY 
         		TREESTEP ASC
 		]]>
@@ -907,6 +938,20 @@
 				TENANT_ID = #tenantID#
 			AND
 				treeupper = #treeId#
+			AND
+				(TREEBOARDID IN
+					(SELECT
+						I.BOARDID
+					FROM
+						TBL_BOARD_BOARDINFO I
+					WHERE
+						I.TENANT_ID = #tenantID#
+					AND
+						(I.companyid = #companyID#	OR TRIM(I.companyid) = ''	OR I.companyid IS NULL)
+					)
+				OR
+					(TRIM(TREEBOARDID) = ''	OR TREEBOARDID IS NULL)
+				)
 		]]>
 	</select>
 	

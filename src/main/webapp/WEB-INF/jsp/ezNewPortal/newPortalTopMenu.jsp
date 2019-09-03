@@ -22,18 +22,18 @@
 			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
 			#logoUrl {width:106px; height:42px;}
-			.popup_notice{display:inline-block;position:absolute;}
 		</style>
 	</head>
 	<body>
 		<header id="top"></header>
 		<c:if test="${useActiveX == 'YES'}">
-			<script type="text/javascript">ezIcd_ActiveX("i_icd2");</script>
-			<iframe id="if_Progress" src="/ezNewPortal/progress.do" style="display: none;"></iframe>
+			<script type="text/javascript">
+				ezIcd_ActiveX("i_icd2");
+			</script>
+			<iframe id="if_Progress" src="/admin/ezApprovalG/progressAdmin.do?" style="display: none;"></iframe>
 		</c:if>
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
-		<div id="popupArea"></div>
 		<script type="text/javascript">
 		
 		var newPortalTopMenu = {
@@ -678,8 +678,8 @@
 				topFrame.style.minHeight = screenHeight+"px";
 				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
 				
-				var popupArea = document.getElementById("popupArea");
-				popupArea.style.height = (screenHeight - 57) + "px";
+				var popupArea = parent.document.getElementById("popupArea");
+				popupArea.style.height = (screenHeight) + "px";
 				popupArea.style.width = "100%";
 				showProgress("notice");
 			}
@@ -689,28 +689,29 @@
 		//위치 지정하여 팝업 열기 --- 팝업 공지사항
 		var openNotiPopup = function (popup_number, wWidth, wHeight, wPosition, index) {
 		    var wVertical, wHorizontal;
-		    console.log(index);
+		    
 			if(wPosition == 0) {
-		        wVertical = Math.floor(window.innerHeight/2) - (wHeight/2) - 90 + (index*10);
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+				console.log(window.outerHeight);
+		        wVertical = Math.floor(window.outerHeight/2) - (wHeight/2) - 56 + (index * 10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else if(wPosition == 1) {
 		        wVertical = 100 + (index*10); 
 		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 2) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
-		        wHorizontal = 100 + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = 100 + (index * 10);
 		    } else if(wPosition == 3) {
-		        wVertical = 100 + (index*10); 
-		        wHorizontal = screen.width - wWidth - 100 + (index*10);
+		        wVertical = 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
 		    } else if(wPosition == 4) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
-		        wHorizontal = screen.width - wWidth - 100 + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
 		    } else if(wPosition == 5) {
 		        wVertical = 100 + (index*10); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else if(wPosition == 6) {
-		        wVertical = screen.height - wHeight - 100 - (index*10); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 - (index * 10); 
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else {
 		        wVertical = 0 + (index*10); 
 		        wHorizontal = 0 + (index*10);
@@ -812,29 +813,29 @@
 		    		 */
 		    		 
 		    		//document.getElementById("popupArea").appendChild(popupDiv);
-		    		document.getElementById("popupArea").appendChild(popupDiv);
+		    		parent.document.getElementById("popupArea").querySelector("#noticePopupLayer").appendChild(popupDiv);
 		    		//$("#popupArea").append(resultHTML);
 		    		
-		    		document.getElementById("popup" + popup_number).style.height = wHeight - 40 + "px";
-		    		document.getElementById("popup" + popup_number).style.width = wWidth - 40 + "px";
-		    		document.getElementById("popup" + popup_number).style.left = wLeft + "px";
-		    		document.getElementById("popup" + popup_number).style.top = wTop + "px";
-		    		document.getElementById("popup" + popup_number).style.zIndex = index + 1;
-		    		document.getElementById("popup" + popup_number).addEventListener("click", changeZIndex);
-		    		document.getElementById("inp_noticeCheck" + popup_number).addEventListener("change", function() {
+		    		parent.document.getElementById("popup" + popup_number).style.height = wHeight - 40 + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.width = wWidth - 40 + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.left = wLeft + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.top = wTop + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.zIndex = index + 1;
+		    		parent.document.getElementById("popup" + popup_number).addEventListener("click", changeZIndex);
+		    		parent.document.getElementById("inp_noticeCheck" + popup_number).addEventListener("change", function() {
 		    			notice_close(popup_number, result.userId, "checkbox");
 		    		});
 		    		
-		    		document.getElementById("closeBtn" + popup_number).addEventListener("click", function() {
+		    		parent.document.getElementById("closeBtn" + popup_number).addEventListener("click", function() {
 		    			notice_close(popup_number, result.userId, "btn");
 		    		});
 		    		
-		    		var popupContent = document.getElementById("popup" + popup_number).getElementsByClassName("popup_noticeList")[0];
-		    		popupContent.style.height = document.getElementById("popup" + popup_number).clientHeight - 175 + "px";
+		    		var popupContent = parent.document.getElementById("popup" + popup_number).getElementsByClassName("popup_noticeList")[0];
+		    		popupContent.style.height = parent.document.getElementById("popup" + popup_number).clientHeight - 175 + "px"; 
 		    		
-					$("#popup" + popup_number).draggable({
-						containment : "#popupArea",
-						cancel : ".popup_noticeList",
+		    		parent.$("#popup" + popup_number).draggable({
+						containment : parent.$("#popupArea"),
+						cancel : parent.$(".popup_noticeList"),
 						scroll: false 
 					});
 		    	}
@@ -854,7 +855,7 @@
 		}
 		
 		var changeZIndex = function () {
-			var popupList = document.getElementsByClassName("popup_notice");
+			var popupList = parent.document.getElementsByClassName("popup_notice");
 			var popupListCount = popupList.length;
 			var popupId = this.id;
 			var popupZIndex = Number(this.style.zIndex);
@@ -873,19 +874,19 @@
 		}
 		
 		var notice_close = function (popupId, userId, position) {
-			var isChecked = document.getElementById("inp_noticeCheck" + popupId).checked;
+			var isChecked = parent.document.getElementById("inp_noticeCheck" + popupId).checked;
 			
 			if (isChecked) {
 				setCookie("POPUP_" + popupId + "_" + userId, "1", 1); 
 			}
 			
-			var popupList = document.getElementsByClassName("popup_notice");
+			var popupList = parent.document.getElementsByClassName("popup_notice");
 			
-			var popup = document.getElementById("popup" + popupId);
+			var popup = parent.document.getElementById("popup" + popupId);
 			popup.parentNode.removeChild(popup);
 			
 			if (popupList.length < 1) {
-				hideProgress();
+				hideProgress("notice");
 				var topFrame = parent.document.getElementById('topFrame');
 				document.getElementsByTagName("body")[0].style.backgroundColor = "";
 				topFrame.style.position = "";
@@ -893,12 +894,12 @@
 		}
 		
 		var notice_all_close = function () {
-			var popupList = document.getElementsByClassName("popup_notice");
+			var popupList = parent.document.getElementsByClassName("popup_notice");
 			var popupListCount = popupList.length;
 			
 			for (var i = 0; i < popupListCount; i++) {
 				var popupId = popupList[0].id; 
-				var popup = document.getElementById(popupId);
+				var popup = parent.document.getElementById(popupId);
 				
 				popup.parentNode.removeChild(popup);
 			}
@@ -956,7 +957,6 @@
 			getNotiPopup();          // 팝업공지 불러오기
 			setExpandMenuListEvent();// 확장메뉴 이벤트 설정
 			setExpandMenuEvent();    // 확장메뉴 이벤트 설정
-			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 			
 		}
  		
@@ -964,6 +964,7 @@
  			
  			if (position == "notice") {
  				document.getElementById("progressPanel").style.height = "56px"; 
+ 				parent.document.getElementById("popupArea").style.display = "block";
  			} else {
  				document.getElementById("progressPanel").style.height = "100%";
  			}
@@ -973,8 +974,12 @@
 		    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";
 		}
         
-        var hideProgress = function() {
+        var hideProgress = function(area) {
         	document.getElementById("progressPanel").style.display = "none";
+        	
+        	if (area === "notice") {
+        		parent.document.getElementById("popupArea").style.display = "none";
+        	}
         }
  		
  		// 시작지점
@@ -982,6 +987,10 @@
 		
 		window.onresize = function () {
 			countTopMenuList();      // 메인메뉴 카운팅
+		}
+		
+		window.onload = function() {
+			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 		}
 		</script>	
 	</body>

@@ -1526,13 +1526,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId) throws Exception {
-		LOGGER.debug("getMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+	public Map<String, Object> getMenuAuth(int menuId, String companyId, int tenantId, String lang) throws Exception {
+		LOGGER.debug("getMenuAuth started. menuId = " + menuId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || lang = " + lang);
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("menuId", menuId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("lang", lang);
 //		나중에 쪼갤수도 rest 호출할때 arg받아서 처리해야할수도잇을거같은데
 //		map.put("accessType", "Y","N","TOTAL")
 		map.put("accessType", "1");
@@ -1644,6 +1645,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//update 시 기존에 있던 메뉴 권한 삭제 후 insert
 		ezNewPortalDAO.deleteMenuAuth(map);
 		
+		int index = 0;
+		
 		for (Object item : menuAuths) {
 			if (item instanceof JSONObject) {
 				JSONObject menuAuth = (JSONObject) item;
@@ -1652,12 +1655,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("userName", commonUtil.stripScriptTags(map.get("userName").toString()));
 				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
 				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
+				map.put("sn", index);
 				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				map.put("menuId", menuId);
 				
 				ezNewPortalDAO.updateMenuAuth(map);
+				
+				index++;
 			}
 		}
 		
@@ -1968,7 +1974,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				break;
 			}
 			String primaryLang = primaryLangList.get(i);
-			
+			LOGGER.debug("primaryLang = " + primaryLang);
 			cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLang);
 			
 			StringBuffer buffer = new StringBuffer();

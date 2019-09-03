@@ -355,6 +355,7 @@
 					var portletList = [];
 					var classList = document.getElementsByClassName('ui-portlet-span');
 					var orderCount = 1;
+					var usedCount = 0;
 					// 반복문 돌면서 데이터 쌓기
 					HTMLCollection.prototype.forEach = Array.prototype.forEach;
 					
@@ -372,6 +373,11 @@
 						}
 						
 						orderCount++;
+						
+						if (switchBtn.checked) {
+							usedCount++;
+						}
+						
 						portletList.push(obj);
 					});
  					
@@ -385,7 +391,7 @@
 					
 					console.log('param', portletList);
 					
-					if (param.portletList.length < 1) {
+					if (usedCount < 1) {
 						alert('<spring:message code="ezNewPortal.t011" />');	
 						return;
 					}

@@ -976,7 +976,7 @@
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthDeptList_hyo" parameterClass="Map" resultClass="AttitudeAuthorVO">
 		<isEqual property="userAuthType" compareValue="all">
 			SELECT
-				displayname AS deptname,
+				displayname$primary$ AS deptname,
 				cn AS deptid,
 				'no' AS mine,
 				'M' AS authtype
@@ -998,7 +998,7 @@
 			UNION
 			
 			SELECT
-				displayname AS deptname,
+				displayname$primary$ AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
 				'M' AS authtype
@@ -1023,7 +1023,7 @@
 		
 		<isEqual property="userAuthType" compareValue="dept">
 			SELECT
-				TBL_DEPTMASTER.displayname AS deptname,
+				TBL_DEPTMASTER.displayname$primary$ AS deptname,
 				TBL_DEPTMASTER.cn AS deptid,
 				'no' AS mine,
 				TBL_ATTITUDE_AUTH.auth_type AS authtype
@@ -1055,7 +1055,7 @@
 			</isEqual>
 			UNION
 			SELECT
-				displayname AS deptname,
+				displayname$primary$ AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
 				'M' AS authtype
@@ -1076,7 +1076,7 @@
 							TBL_USERMASTER.cn = #userId#)
 			UNION
 			SELECT
-				D.DISPLAYNAME AS dept_name,
+				D.DISPLAYNAME$primary$ AS dept_name,
 				D.CN AS dept_id,
 				'add' AS mine,
 				'M' AS authtype
@@ -1093,7 +1093,7 @@
 		
 		<isEqual property="userAuthType" compareValue="">
 			SELECT
-				TBL_DEPTMASTER.displayname AS deptname,
+				TBL_DEPTMASTER.displayname$primary$ AS deptname,
 				TBL_DEPTMASTER.cn AS deptid,
 				'no' AS mine,
 				TBL_ATTITUDE_AUTH.auth_type AS authtype
@@ -1127,7 +1127,7 @@
 			</isEqual>
 			UNION
 			SELECT
-				displayname AS deptname,
+				displayname$primary$ AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
 				IFNULL((SELECT
@@ -1166,7 +1166,7 @@
 							TBL_USERMASTER.cn = #userId#)
 			UNION
 			SELECT
-				D.DISPLAYNAME AS dept_name,
+				D.DISPLAYNAME$primary$ AS dept_name,
 				D.CN AS dept_id,
 				'add' AS mine,
 				IFNULL((SELECT
@@ -1594,6 +1594,46 @@
 				USER_ID = #userId#
 			</isNotEmpty>
 	</insert>
+
+	<insert id="ezAttitudeAdminDAO.excelInsertAnnual" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_attitude_annual
+				(USER_ID, MONTHLY_HOLIDAY_CNT, ANNUAL_HOLIDAY_CNT, ADDITIONAL_HOLIDAY_CNT, JOIN_DATE, COMPANY_ID, TENANT_ID)
+			SELECT
+				CN AS USER_ID,
+				'$annualCnt$' AS MONTHLY_HOLIDAY_CNT,
+				'0' AS ANNUAL_HOLIDAY_CNT,
+				'0' AS ADDITIONAL_HOLIDAY_CNT,
+				'$joinDate$' AS JOIN_DATE,
+				physicaldeliveryofficename AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID
+			FROM
+				tbl_usermaster
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				physicaldeliveryofficename = #companyId#
+		]]>
+			<isNotEmpty prepend="AND" property="userId">
+				CN = #userId#
+			</isNotEmpty>
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.excelChangeAnnual" parameterClass="Map">
+			UPDATE 
+				tbl_attitude_annual
+			SET 
+				MONTHLY_HOLIDAY_CNT = #annualCnt#,
+				ANNUAL_HOLIDAY_CNT = 0,
+				JOIN_DATE = #joinDate#
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+			<isNotEmpty prepend="AND" property="userId">
+				USER_ID = #userId#
+			</isNotEmpty>
+	</insert>
 	
 	<select id="ezAttitudeAdminDAO.getUserAnnual" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
@@ -1771,7 +1811,8 @@
 							   ELSE 0
 							END
 						)
-						), 0) as useAnnualCnt
+						), 0) as useAnnualCnt,
+						B.JOIN_DATE AS joinDate
 				FROM 
 					TBL_USERMASTER A
 				LEFT OUTER JOIN 

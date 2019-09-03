@@ -499,8 +499,6 @@ function show_repetition_info() {
 	    var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
 	    var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
 
-	    if (Number(reStartHour) == 0)
-            reStartHour = 12;
 	   /* if (Number(reStartHour) < 12) {
 	        repeatinfo += "" + strLang246 + " ";
 
@@ -516,8 +514,6 @@ function show_repetition_info() {
 
 	    repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
 
-	    if (Number(reEndHour) == 0)
-            reEndHour = 12;
 	    /*if (Number(reEndHour) < 12) {
 	        repeatinfo += "" + strLang246 + " ";
 
@@ -964,7 +960,9 @@ function SaveSchedule_onClick( cmd , resItem) {
 	}
 	createNodeAndInsertText(xmlDoc, objNode, "APPROVE", objNode23); //승인여부
 	
-	createNodeAndInsertText(xmlDoc, objNode, "scheduleID", SaveScheduleId);		// 일정ID
+	if(cmd == "add") {
+		createNodeAndInsertText(xmlDoc, objNode, "scheduleID", SaveScheduleId);		// 일정ID
+	}
 	// 위에 노드 22까지 값을 받아 처리부분으로 넘겨준다.
 	xmlHttp.open("POST","/ezResource/scheduleAddOk.do?cmd="+cmd+"&type="+typeVal,false);
 	xmlHttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");

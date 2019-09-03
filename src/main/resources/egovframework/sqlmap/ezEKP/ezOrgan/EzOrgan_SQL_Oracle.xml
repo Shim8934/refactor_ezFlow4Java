@@ -1330,7 +1330,10 @@
                         		' ' DISPLAYNAMEPRINTABLE  ,
                         		POSITIONCD ,
                         		BIRTH ,
-                        		BIRTHTYPE 
+                        		BIRTHTYPE ,
+                        		FURIGANA ,
+                        		EXTENSIONPHONE ,
+                        		OFFICEMOBILE
              FROM
              	TBL_USERMASTER 
              WHERE
@@ -1534,15 +1537,14 @@
 	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
-			<isNotEqual property="class" compareValue="all">
 			SELECT * FROM(
-			</isNotEqual>
 
 			SELECT 
 				cn,
 				department as displayName,
 				n'' as extensionAttribute15,
-				'user' as type				
+				'user' as type,
+				displayname as NAME			
 			FROM 
 	    		TBL_USERMASTER A 
             $strSQL$
@@ -1570,7 +1572,8 @@
 		      		A.cn,
 		      		deptid as displayName,
 		      		n'' as extensionAttribute15,
-		      		'user' as type
+		      		'user' as type,
+					displayname as NAME	
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
 	            $strGyumjikForOracle$ 
@@ -1583,9 +1586,9 @@
 		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#) 
 		    	</isNotEmpty>
 		    	
-		    	<isNotEqual property="class" compareValue="all">
+		    	<!-- <isNotEqual property="class" compareValue="all">
             		) ORDER BY  displayname asc, TO_NUMBER(EXTENSIONATTRIBUTE15) ASC
-	            </isNotEqual>
+	            </isNotEqual> -->
 		    	
     		</isNotEqual>
 	
@@ -1596,7 +1599,8 @@
 					cn,
 					n'' as displayName,
 					n'' as extensionAttribute15,
-					'group' as type
+					'group' as type,
+					displayname as NAME
 				FROM
 					TBL_DEPTMASTER 
                 $strSQL$ 
@@ -1609,7 +1613,8 @@
 		    	</isNotEmpty>
 			</isEqual>	  
 			
-			$strSize$    				
+			$strSize$
+			) ORDER BY type DESC, NAME ASC	 			
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -2058,7 +2063,7 @@
       	AND
       		TENANT_ID = #tenantId#
 		ORDER BY
-			CN
+			DISPLAYNAME
 	</select>
 	
 	<select id="EzOrganDAO.getDeptMasterName" parameterClass="Map" resultClass="String">

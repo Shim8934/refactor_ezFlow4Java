@@ -555,7 +555,7 @@
 <%-- 							</c:if>						 --%>
 <!-- 			        	</td> -->
 			        	 
-			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" >
+			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;" title="<c:out value ="${list.title}"/>" onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" >
 				          	<c:out value ="${list.title}"/>
 				          	<c:if test="${list.cmtCnt > 0}">
 				          		<span class="voteCmtCnt">[<c:out value ="${list.cmtCnt}"/>]</span>

@@ -2468,7 +2468,7 @@
                 
                 if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
 		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
-                	alert("<spring:message code='ezEmail.t31' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+                	alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ]");
                 	document.getElementById("emailname").focus();
 		            return;
 		        }
@@ -2916,7 +2916,7 @@
 		                <table id="ListViewINPUT" style="display: none">
 		                    <tr>
 		                        <td>
-		                             <div id="ManualView" style="width: 648px; height: 476px; padding: 10px; border-right: 1px solid #ddd" class="box">
+		                             <div id="ManualView" style="width: 648px; height: 472px; padding: 10px; border-right: 1px solid #ddd; margin-top: 4px;" class="box">
 	                        		 	<table class="content">
 	                            			<tr>
 	                                			<th><spring:message code='ezEmail.t31' /></th>

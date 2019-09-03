@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -399,7 +400,7 @@ public class EzJournalController extends EgovFileMngUtil {
 						JSONObject file = (JSONObject) fileList.get(i);
 						file.put("pFileName", file.get("fileName"));
 					//	file.put("fileName", file.get("fileName"));
-						String filePath = file.get("filePath").toString();
+						String filePath = URLDecoder.decode(file.get("filePath").toString(), "UTF-8");
 						
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
@@ -460,7 +461,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/selectReceiver.do", method = RequestMethod.GET)
-	public String selectReceiver(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String selectReceiver(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception  {
 		logger.debug("selectReceiver started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -470,6 +471,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezjournal/depts", param, request, "get", null);
 		String status = result.get("status").toString();
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) result.get("data");
@@ -492,6 +494,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			}
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("userId", userInfo.getId());
+			model.addAttribute("primaryLang", primaryLang);
 		}		
 		logger.debug("selectReceiver ended");
 		return "/ezJournal/journalSelectReceiver";
@@ -1186,7 +1189,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
-		param.put("filePath", filePath);
+		param.put("filePath", URLDecoder.decode(filePath, "UTF-8"));
 	//	param.put("fileName", fileName);
 		
 		String restUrl = "/rest/ezjournal/journals/" + journalId + "/attachfiles";
@@ -1227,7 +1230,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 업무일지 모든 첨부파일 다운로드
 	 */
-	@RequestMapping(value = "/ezJournal/journalAllAttachDown.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezJournal/journalAllAttachDown.do", method = RequestMethod.POST)
 	public void journalAllAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("journalAllAttachDown started");
 		

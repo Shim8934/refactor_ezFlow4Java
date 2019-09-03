@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -176,7 +177,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함관리 및 회람판에서 이동 호출 함수
 	 */
-	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getCircularFolderList started");
@@ -1146,7 +1147,12 @@ public class EzCircularController extends EgovFileMngUtil {
 				strAttach.append("<DATA5><![CDATA[OK]]></DATA5>");
 
 				if (mode.equals("reuse")) {
-					ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
+					String fileName = attach.getFilePath().split("/")[2];
+					String originFile = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName; // 복사할 파일의 경로
+					String copyFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + fileName;
+					
+					Files.copy(new File(originFile).toPath(), new File(copyFilePath).toPath());
+					//ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
 				}
 			}
 
@@ -1807,11 +1813,13 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularSelectAttendant started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		logger.debug("circularSelectAttendant ended");
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID()); //baonk added
+		model.addAttribute("primaryLang", primaryLang);
 		
 		return "/ezCircular/circularSelectAttendant";
 	}

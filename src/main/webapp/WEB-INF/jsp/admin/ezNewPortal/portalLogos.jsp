@@ -28,6 +28,7 @@
 			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
+		<div>&nbsp;*&nbsp;<spring:message code='ezNewPortal.garm08' /></div>
 		<div class="loginLogo" style="margin-top:30px">
 			<div class="logoInfo">
 				<div class='logoIconInfo'>
@@ -233,6 +234,8 @@
 							document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
 							document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
 	    				}
+	    				//초기화(동일한 파일 업로드가 안되는 버그때문)
+	    				document.getElementById("imgFile").value = "";
 	    			}
     			} else {
     				alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif)");
@@ -272,8 +275,9 @@
 							document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 	    					logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
 	    					document.getElementsByClassName("portalLogo")[0].querySelector(".logoIcon").querySelector("img").src = logoUrl;
-							
 	    				}
+						//초기화(동일한 파일 업로드가 안되는 버그때문)
+						document.getElementById("imgFile").value = "";
 	    			}
 					var data = JSON.stringify({
 						companyId : companyValue,

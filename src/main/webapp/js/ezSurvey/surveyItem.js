@@ -493,7 +493,7 @@ var SurveyItem = function() {
 				tdElmt3.textContent  = itemList[i]["title"];
 				tdElmt4.textContent  = itemList[i]["creatorName"];
 				tdElmt5.textContent  = itemList[i]["createDate"].substring(0, 10);
-				tdElmt6.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
+				tdElmt6.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser2    : SurveyMessages.strUser8;
 				tdElmt7.textContent  = itemList[i]["resultPublicFlag"] == 1 ? SurveyMessages.strPublic1  : SurveyMessages.strPublic2;
 				tdElmt8.textContent  = itemList[i]["anonymousFlag"]    == 0 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
 				tdElmt9.textContent  = endDateStr;
@@ -829,6 +829,7 @@ var SurveyItem = function() {
 		var pSpanElmt1 = document.createElement("span");
 		var pSpanElmt2 = document.createElement("span");
 		
+		divChild.className   = "prevHeaderWwrapper";
 		pElmt.className      = "prevTitle";
 		spanElmt.className   = "preDate";
 		dlElmt.className     = "prevItem";
@@ -852,7 +853,8 @@ var SurveyItem = function() {
 		
 		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
 		var divElmt     = document.getElementById(divPrevId);
-		var noDataSpan  = divElmt.querySelector("span[class='notSelected']");
+//		var noDataSpan  = divElmt.querySelector("span[class='notSelected']");
+		var noDataSpan  = divElmt.querySelector("div[class='nodataDiv']");
 		
 		if (noDataSpan) {divElmt.removeChild(noDataSpan); generatePreviewElmt(divElmt);}
 		

@@ -106,6 +106,9 @@
 		    var starttime;
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var useNotReadCnt = "${useNotReadCnt}";
+		    var BoardGroupID = "${boardInfo.boardGroupID}";
+		    
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		
@@ -692,7 +695,7 @@
 				}
 		        
 		        try {
-			        leftCountRf();
+			        leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		    }
@@ -728,7 +731,7 @@
                     getBoardList();
                     
                     try {
-                    	leftCountRf();
+                    	leftCountRf(pBoardID);
     				} catch (e) {
     				}
                 }
@@ -814,7 +817,7 @@
 				}
 		        xmlhttp = null;
 		    }            
-		
+/* 		
 		    function CopyItem_onclick() {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202'/>");
@@ -850,8 +853,9 @@
 		
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&mode=COPY", "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
 		
-		    }
-		    var moveboarditem_cross_dialogArguments = new Array();
+		    } */
+		    
+		   /*  var moveboarditem_cross_dialogArguments = new Array();
 		    function MoveItem_onclick() {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202'/>");
@@ -907,7 +911,8 @@
 		                window.close();
 		            }
 		        }
-		    }
+		    } */
+		    
 		    function SetRead_onclick() {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t194'/>");
@@ -932,8 +937,25 @@
 				    xmlhttp.send();
 				    xmlhttp = null;
 				    getBoardList();
+				    
+				     /* 2019-07-03 홍승비 - 게시물 읽음표시 할 경우 좌측메뉴의 미독건수 갱신하도록 수정 */
+		            if (useNotReadCnt == "YES") {
+			            var boardLeftFrame;
+			            
+			            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1) { // 즐겨찾기에서 읽기창 진입
+							boardLeftFrame = window.parent.parent.frames["left"];
+						} else { // 해당 게시판 내부에서 읽기창 진입
+			        		boardLeftFrame = window.parent.frames["left"];
+			        	}
+			            
+			            if (boardLeftFrame != null && boardLeftFrame != undefined && boardLeftFrame.location.href.indexOf("/ezBoard/boardLeft.do")> -1) {
+			     			boardLeftFrame.getBoardNotReadCountByID(BoardGroupID, "", "GROUP");
+			     			boardLeftFrame.getBoardNotReadCountByID(pBoardID, gubun, "SUB");
+				    	}
+		            }
 				}
 			}
+		    
 		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 			function MemberInfo_onclick(pUserID, pDeptID) {
 			    if (gubun == "2") return;
@@ -1191,7 +1213,7 @@
 	<c:if test="${boardInfo.buttonHidden == 'N'}">
 		<div id="mainmenu">
 		  <ul>
-		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
+		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02'/></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204'/></span></li>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052'/></span></li>
 			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->		        

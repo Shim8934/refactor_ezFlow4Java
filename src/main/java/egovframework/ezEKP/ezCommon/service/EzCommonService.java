@@ -143,6 +143,8 @@ public interface EzCommonService {
 	public void addThemeContentLang() throws Exception;
 
 	public void createAccessCountry() throws Exception;
+	
+	public void addSnMenuAuth() throws Exception;
 
 }
 

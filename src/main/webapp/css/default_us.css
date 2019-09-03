@@ -2415,6 +2415,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree_reservation{ background-position:-260px 0px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px;} /* tree 예약발송관리 */
 .left_admin_mail{ background-position:-286px 0px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; } /* tree 예약발송관리 */
 .tree_receive_ok { background-position: -234px -26px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; } /* tree 수신확인 */
+.tree_mail_config { background-position: 0px 0px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; } /* tree 환경설정 */
 
 .tree_appr{ background-position:-26px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 결재할문서 */
 .tree_appr_ing{ background-position:-52px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 진행중문서 */
@@ -2641,7 +2642,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .admin_menu_content{ margin:0px; padding:15px 10px; box-sizing:border-box; overflow:hidden; border-left:1px solid #cfd0d2; border-right:1px solid #cfd0d2; border-bottom:1px solid #cfd0d2;}
 .adminMenu_icon{ margin:0px 10px 0px 0px; padding:0px; float:left;}
 .adminMenu_icon .admenuIcon{ margin:0px; padding:0px; width:74px; height:69px; border:1px solid #b9d7f6; background:#f1f8ff; box-sizing:border-box;}
-.adminMenu_icon .admenuIcon_up{ margin:10px 0px 0px 0px; padding:0px 4px; cursor:pointer; font-size:12px; color:393939; height:31px; line-height:29px; box-sizing:border-box; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193;}
+.adminMenu_icon .admenuIcon_up{ margin:10px 0px 0px 0px; padding:0px 4px; cursor:pointer; font-size:12px; color:393939; height:31px; line-height:29px; box-sizing:border-box; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193;text-align:center;}
 .adminMenu_icon .admenuIcon_up:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
 .iconTable01{ margin:0px -1px 0px 0px; padding:0px; float:left; width:383px; height:171px; border:1px solid #dfdfdf; border-right:none; border-collapse:collapse;}
 .iconTable02{ height:171px; width:381px; margin:0px -1px 0px 0px; border:1px solid #dfdfdf; border-left:none;}
@@ -2983,7 +2984,7 @@ h2, #menu span {font-size: 12px;}
 .searchDiv .srchTtl{font-size: 11pt; font-weight: bold;color: black; height: 44px; margin-left: 1px; margin-bottom: 8px; line-height: 36px;}
 .srchBttnDiv {text-align: center; margin: -9px; margin-top: 10px; padding: 7px; border-top: 1px solid #eee; background-color: #fcfcfc;}
 .srchBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
-.srchBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: solid; font-size: 12px; color: #000;}
+.srchBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font-family:arial, Arial, Helvetica, sans-serif; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: solid; font-size: 12px; color: #000;}
 .srchDate {width: 100px !important; text-align: center; padding: 0px 5px;}
 
 /* survey draft button */
@@ -3206,7 +3207,7 @@ input::-ms-clear {display: none;}
 .attDivFile .attFileInf >span:last-child {padding: 2px 4px 4px 0px;}
 .attDivFile .attFileInf2 {font-size: 14px; align-items: center; display: flex; flex: 1; overflow: hidden; padding-left: 10px; padding-top: 0px; justify-content: left;}
 .ulFiles .attDivFile .attFileInf2, .user-pageul .attDivFile .attFileInf2 {padding-left: 0px !important;}
-.uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
+.uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family:arial, Arial, Helvetica, sans-serif; font-size: 12px; color: rgb(51, 51, 51);}
 .attach-bttn-div {display:block; overflow:hidden; white-space:nowrap; margin:5px 0px;}
 .period-span {margin-left: 3px;}
 /**** survey attach part end ****/
@@ -3518,3 +3519,35 @@ input[type=range]::-ms-tooltip {display: none;}
 .lnb h2.on + .leftList { visibility: visible; height: auto !important;}
 .lnb .leftList { visibility: hidden; height: 0px !important; list-style-type: none; padding: 0;  margin: 0; width: 100%; overflow: hidden;}
 .lnb .leftList li { padding: 4px 20px; cursor: pointer;}
+
+/* 2019-05-17 김민성 - 자원관리 개선*/
+.mainmenuTabUL_left {  position: absolute;top: 7px;left: -10px; list-style:none; margin:0px; padding:0px; }
+.mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px;}
+.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px; cursor:default;}
+.mainmenuTabUL_left li .icon { vertical-align:middle;}
+
+.tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
+.tree_resource_unused{background-position:-338px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 미사용 아이콘 */
+
+.calendar_layer .text .td_list td.individual .resource_rental {background-image: url('/images/ezResource/state_rental.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_return {background-image: url('/images/ezResource/state_return.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_ok {background-image: url('/images/ezResource/state_approval.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_no {background-image: url('/images/ezResource/state_approvalPending.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_refuse {background-image: url('/images/ezResource/state_approvalrefuse.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_noreturn {background-image: url('/images/ezResource/state_noreturn.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+
+/* 관리자 공유사서함 */
+.shared_boxesTable{width:100%; border:0px none; border-collapse:separate; border-spacing:0;}
+.shared_boxesTable tr th{height:38px; background-color:#f1f3f5; border-top:0px none; border-right:0px none; border-left:0px none; border-bottom:1px solid #e2e3e6; text-align:left; font-size:13px; color:#000; box-sizing:border-box;}
+.shared_boxesTable tr td{height:34px; background-color:#ffffff; border-top:0px none; border-right:0px none; border-left:0px none; border-bottom:1px solid #e2e3e6; font-size:12px; color:#333; box-sizing:border-box;}
+.shared_boxesTable tr td .layoutUL{list-style:none; margin:0px; padding:0px 5px 0px 10px;}
+.shared_boxesTable tr td .layoutUL .layoutLeft{float:left;}
+.shared_boxesTable tr td .layoutUL .layoutRight{float:right;}
+.shared_boxesTable tr td .layoutUL .layoutNone{float:none; overflow:hidden;}
+.shared_boxesTable tr td .layoutUL span.shared_boxesText{display:block; height:18px; line-height:16px; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+.shared_boxesTable tr td .layoutUL span.shared_boxesText_1{display:inline-block; height:18px; line-height:16px; padding:0px 5px; margin:0px 5px; border:1px solid #3d8fea; background:#ffffff; border-radius:3px; white-space:nowrap; color:#3d8fea; box-sizing:border-box;}
+.shared_boxesTable tr td .layoutUL span.shared_boxesText_2{display:inline-block; height:18px; line-height:16px; padding:0px 5px; margin:0px 5px; border:1px solid #999; background:#ffffff; border-radius:3px; white-space:nowrap; color:#999; box-sizing:border-box;}
+
+/* 관리자 공용배포그룹 */
+.shared_boxesTable.public_distribution{table-layout:fixed;}
+.shared_boxesTable.public_distribution tr td > span.shared_boxesText{display:block; height:18px; line-height:16px; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; padding-left:10px;}

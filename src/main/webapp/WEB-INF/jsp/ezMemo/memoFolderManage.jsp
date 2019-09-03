@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 		<script type="text/javascript">
 			
 			var selId="";
@@ -61,7 +62,13 @@
 							html+="<div class='memoNode' id='folder" + list.folder_id + "'>";
 							html+="<img border='0' src='/images/OrganTree_cross/dot_end.gif' style='width: 18px; height: 18px;'>";
 							html+="<img src='/images/ezMemo/memoFolder.png' style='width:18px;height:18px;'>";
-							html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer; padding-left:2px; vertical-align: top;' class='node' data1='" + list.folder_name+ "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name + "</span></div>";
+							
+							if (list.orders === 0) {
+								html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer; padding-left:2px; vertical-align: top;' class='node' data1='" + memoMessages.strLangMemo22 + "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + memoMessages.strLangMemo22 + "</span></div>";
+							} else {
+								html+="<span style='width:100%;height:21px; line-height:21px; font-size:12px;cursor:pointer; padding-left:2px; vertical-align: top;' class='node' data1='" + list.folder_name + "' data2='" + list.folder_id + "' id='folderCount" + index +"'>" + list.folder_name + "</span></div>";
+							}
+							
 						});
 						$('.memoFolders').append(html);
 					}     			
