@@ -4590,8 +4590,18 @@ public class EzEmailUtil {
 		return false;
 	}
 
+	public SimpleMailer createMail(String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userId + "@" + domainName;
+		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+
+		return createMail(userAccount, password);
+	}
+
 	/** 메일을 간단히 보낼 수 있는 SimpleMailer 객체를 반환 */
-	public SimpleMailer createMail(String userEmail, String password) {
+	public SimpleMailer createMail(String userEmail, String password) throws Exception {
 		return new SimpleMailer(userEmail, password);
 	}
 
@@ -4812,7 +4822,6 @@ public class EzEmailUtil {
 						attachPart.setDataHandler(new DataHandler(new ByteArrayDataSource(attachInputStream, contentType)));
 						attachPart.setHeader("Content-Disposition", "attachment;\r\n filename=\"" + encodedFileName + "\"");
 						attachPart.setHeader("Content-Type", contentType);
-						attachPart.setFileName(attachment.getName());
 
 						multipartContent.addBodyPart(attachPart);
 					}
