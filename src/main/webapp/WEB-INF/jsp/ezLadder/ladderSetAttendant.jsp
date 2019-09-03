@@ -1953,6 +1953,10 @@
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezLadder.t041' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezLadder.t042' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezLadder.t043' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezLadder.t044' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezLadder.t045' /></option>
 	                                                    </select>

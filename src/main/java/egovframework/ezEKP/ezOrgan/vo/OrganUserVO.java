@@ -120,6 +120,12 @@ public class OrganUserVO {
 	private String mailboxQuota;
 	/** 직위 */
 	private String jobID;
+	/** 후리가나 */
+	private String furigana;
+	/** 내선번호 */
+	private String extensionPhone;
+	/** 회사전화 */
+	private String officeMobile;
 
 	public String getJobID() {
 		return jobID;
@@ -592,4 +598,29 @@ public class OrganUserVO {
 	public void setManualFlag(String manualFlag) {
 		this.manualFlag = manualFlag;
 	}
+	
+	public String getFurigana() {
+		return furigana;
+	}
+
+	public void setFurigana(String furigana) {
+		this.furigana = furigana;
+	}
+
+	public String getExtensionPhone() {
+		return extensionPhone;
+	}
+
+	public void setExtensionPhone(String extensionPhone) {
+		this.extensionPhone = extensionPhone;
+	}
+
+	public String getOfficeMobile() {
+		return officeMobile;
+	}
+
+	public void setOfficeMobile(String officeMobile) {
+		this.officeMobile = officeMobile;
+	}
+
 }

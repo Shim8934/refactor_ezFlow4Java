@@ -286,7 +286,7 @@ function SendOfferCheck(pDocID, pUserID)
 		}
 		else if (rtnVal == "NORECEIPT")
 		{
-			var pInformationContent = " " + strLang201 + " " + strLang202;
+			var pInformationContent = " " + strLang201 + "<br>" + strLang202;
 			var ret = OpenInformationUI(pInformationContent, SendOfferCheck_OpenUI);
 			if (ret && ext == 'hwp') {
 			    SendOfferCheck_OpenUI(ret);
