@@ -421,7 +421,7 @@
 											html += "	<td title=\'" + i.usernm + "'>"	+ i.usernm	+ "</td>";
 											html += "	<td>"	+ i.deptnm							+ "</td>";
 											html += "	<td>"	+ i.companynm						+ "</td>";
-											html += "	<td>"	+ i.connectip						+ "</td>";
+											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
 											html += "	<td>"	+ i.connecttime						+ "</td>";
 											html += "	<td>"	+ i.connectbrowser					+ "</td>";
 											html += "	<td>"	+ i.connectos						+ "</td>";
@@ -437,7 +437,7 @@
 											html += "	<td title=\'" + i.usernm2 + "'>"  + i.usernm2 	+ "</td>";
 											html += "	<td>"	+ i.deptnm2								+ "</td>";
 											html += "	<td>"	+ i.companynm2							+ "</td>";
-											html += "	<td>"	+ i.connectip							+ "</td>";
+											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
 											html += "	<td>"	+ i.connecttime							+ "</td>";
 											html += "	<td>"	+ i.connectbrowser						+ "</td>";
 											html += "	<td>"	+ i.connectos							+ "</td>";
