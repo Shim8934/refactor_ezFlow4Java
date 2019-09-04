@@ -87,6 +87,7 @@
 		            	break;
 		            case "tagsub3":
 		            	document.getElementById("ipManager_ifrm").src = "/ezSystem/systemIPCountryAccessList.do";
+						document.getElementById("ipManager_ifrm").style.height = "600px";
 		            	break;
 		        }
 	        }
