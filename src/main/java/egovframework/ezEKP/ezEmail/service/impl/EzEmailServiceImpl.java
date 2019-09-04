@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
@@ -35,8 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -1227,90 +1224,192 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("sendMail started.");
 		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
 		
-		IMAPAccess ia = null;
+//		IMAPAccess ia = null;
+//		
+//		try {
+//			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+//					userEmail, password);
+//			
+//			MimeMessage message = sa.createMimeMessage();
+//			
+//			// set from
+//			logger.debug("from=" + from.getAddress());
+//			message.setFrom(from);
+//			
+//			// set to
+//			for (InternetAddress to : toArr) {
+//				logger.debug("to=" + to.getAddress());
+//				message.addRecipient(RecipientType.TO, to);
+//			}
+//			
+//			// set cc
+//			if (ccArr != null) {
+//				for (InternetAddress cc : ccArr) {
+//					logger.debug("cc=" + cc.getAddress());
+//					message.addRecipient(RecipientType.CC, cc);
+//				}
+//			}
+//			
+//			// set bcc
+//			if (bccArr != null) {
+//				for (InternetAddress bcc : bccArr) {
+//					logger.debug("bcc=" + bcc.getAddress());
+//					message.addRecipient(RecipientType.BCC, bcc);
+//				}
+//			}
+//			
+//			// set subject
+//			logger.debug("subject=" + subject);
+//			message.setSubject(subject, "UTF-8");
+//			
+//			// set content
+//			message.setContent(content, "text/html; charset=utf-8");
+//			
+//			// set sentDate
+//	        message.setSentDate(Calendar.getInstance().getTime());
+//	        
+//	        // set User-Agent header
+//	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+//	        
+//			// set importance header
+//			if (importance != null && importance != EmailImportance.NORMAL) {
+//				message.setHeader("Importance", importance.getMappingValue());
+//				message.setHeader("X-Priority", importance.getPriority());
+//			}
+//	        
+//	        // set X-JMocha-Noti header
+//	        message.setHeader("X-JMocha-Noti", "true");
+//	        
+//	        Transport.send(message);
+//	        logger.debug("Mail send success.");
+//	        
+//	        if (isSaved) {
+//	        	//보낸편지함에 저장
+//	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+//	        			userEmail, password, egovMessageSource, userLocale, ezEmailUtil);
+//	        	
+//	    		Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(userLocale));
+//	    		
+//	    		if (!sentFolder.exists()) {
+//	    			ia.createFolder(sentFolder.getFullName());
+//	    		}
+//	    		
+//	    		message.setFlag(Flags.Flag.SEEN, true);
+//    			sentFolder.open(Folder.READ_WRITE);
+//    			sentFolder.appendMessages(new Message[]{message});
+//    			sentFolder.close(true);
+//    			logger.debug("Mail is successfully saved in sent folder.");
+//	        }
+//        
+//		} catch (MessagingException e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (ia != null) {
+//				ia.close();
+//			}
+//		}
 		
-		try {
-			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, password);
-			
-			MimeMessage message = sa.createMimeMessage();
-			
-			// set from
-			logger.debug("from=" + from.getAddress());
-			message.setFrom(from);
-			
-			// set to
-			for (InternetAddress to : toArr) {
-				logger.debug("to=" + to.getAddress());
-				message.addRecipient(RecipientType.TO, to);
-			}
-			
-			// set cc
-			if (ccArr != null) {
-				for (InternetAddress cc : ccArr) {
-					logger.debug("cc=" + cc.getAddress());
-					message.addRecipient(RecipientType.CC, cc);
-				}
-			}
-			
-			// set bcc
-			if (bccArr != null) {
-				for (InternetAddress bcc : bccArr) {
-					logger.debug("bcc=" + bcc.getAddress());
-					message.addRecipient(RecipientType.BCC, bcc);
-				}
-			}
-			
-			// set subject
-			logger.debug("subject=" + subject);
-			message.setSubject(subject, "UTF-8");
-			
-			// set content
-			message.setContent(content, "text/html; charset=utf-8");
-			
-			// set sentDate
-	        message.setSentDate(Calendar.getInstance().getTime());
-	        
-	        // set User-Agent header
-	        message.setHeader("User-Agent", "JMocha Mail 1.0");
-	        
-			// set importance header
-			if (importance != EmailImportance.NORMAL) {
-				message.setHeader("Importance", importance.getMappingValue());
-				message.setHeader("X-Priority", importance.getPriority());
-			}
-	        
-	        // set X-JMocha-Noti header
-	        message.setHeader("X-JMocha-Noti", "true");
-	        
-	        Transport.send(message);
-	        logger.debug("Mail send success.");
-	        
-	        if (isSaved) {
-	        	//보낸편지함에 저장
-	        	ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-	        			userEmail, password, egovMessageSource, userLocale, ezEmailUtil);
-	        	
-	    		Folder sentFolder = ia.getFolder(ezEmailUtil.getSentFolderId(userLocale));
-	    		
-	    		if (!sentFolder.exists()) {
-	    			ia.createFolder(sentFolder.getFullName());
-	    		}
-	    		
-	    		message.setFlag(Flags.Flag.SEEN, true);
-    			sentFolder.open(Folder.READ_WRITE);
-    			sentFolder.appendMessages(new Message[]{message});
-    			sentFolder.close(true);
-    			logger.debug("Mail is successfully saved in sent folder.");
-	        }
-        
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
+		ezEmailUtil.createMail(userEmail, password)
+			.from(from)
+			.to(toArr)
+			.cc(ccArr)
+			.bcc(bccArr)
+			.subject(subject)
+			.content(content)
+			.importance(importance)
+			.saveSentMailbox(isSaved)
+		.send();
+		
+        logger.debug("sendMail ended.");
+	}
+	
+	/**
+	 * 메일 보내기 서비스
+	 * @param userEmail 유저 메일 주소
+	 * @param password 유저 메일 패스워드(JMochaSuperPassword)
+	 * @param userLocale 유저 로케일(메세지 프로퍼티를 판별하기 위함)
+	 * @param from 보내는 사람
+	 * @param toArr 받는 사람
+	 * @param ccArr 참조(없으면 null)
+	 * @param bccArr 숨은 참조(없으면 null)
+	 * @param subject 메일 제목
+	 * @param content 메일 내용(html형식)
+	 * @throws Exception
+	 */
+	@Override
+	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content) throws Exception {
+		logger.debug("sendMail started.");
+		logger.debug("from=" + from + ",subject=" + subject);
+		
+//		IMAPAccess ia = null;
+//		
+//		try {
+//			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+//					userEmail, password);
+//			
+//			MimeMessage message = sa.createMimeMessage();
+//			
+//			// set from
+//			logger.debug("from=" + from.getAddress());
+//			message.setFrom(from);
+//			
+//			// set to
+//			for (InternetAddress to : toArr) {
+//				logger.debug("to=" + to.getAddress());
+//				message.addRecipient(RecipientType.TO, to);
+//			}
+//			
+//			// set cc
+//			if (ccArr != null) {
+//				for (InternetAddress cc : ccArr) {
+//					logger.debug("cc=" + cc.getAddress());
+//					message.addRecipient(RecipientType.CC, cc);
+//				}
+//			}
+//			
+//			// set bcc
+//			if (bccArr != null) {
+//				for (InternetAddress bcc : bccArr) {
+//					logger.debug("bcc=" + bcc.getAddress());
+//					message.addRecipient(RecipientType.BCC, bcc);
+//				}
+//			}
+//			
+//			// set subject
+//			logger.debug("subject=" + subject);
+//			message.setSubject(subject, "UTF-8");
+//			
+//			// set content
+//			message.setContent(content, "text/html; charset=utf-8");
+//			
+//			// set sentDate
+//	        message.setSentDate(Calendar.getInstance().getTime());
+//	        
+//	        // set User-Agent header
+//	        message.setHeader("User-Agent", "JMocha Mail 1.0");
+//	        	        
+//	        // set X-JMocha-Noti header
+//	        message.setHeader("X-JMocha-Noti", "true");
+//	        
+//	        Transport.send(message);
+//	        
+//	        logger.debug("Mail send success.");	                
+//		} catch (MessagingException e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (ia != null) {
+//				ia.close();
+//			}
+//		}
+		
+		ezEmailUtil.createMail(userEmail, password)
+			.from(from)
+			.to(toArr)
+			.cc(ccArr)
+			.bcc(bccArr)
+			.subject(subject)
+			.content(content)
+		.send();
 		
         logger.debug("sendMail ended.");
 	}
@@ -1780,6 +1879,59 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		
 		logger.debug("getDistributionSearchList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributionList.toString());
+		
+		return distributionList;
+	}
+
+	@Override
+	public List<MailDistributionVO> getDistributionSearchListByItem(String companyId, int tenantId, String searchValue, String searchType) throws Exception {
+		logger.debug("getDistributionSearchListByItem started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue + ",searchType=" + searchType);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		inputParams += "&searchType=" + URLEncoder.encode(searchType, "UTF-8");
+		inputParams += "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSearchListByItem";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();	
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						MailDistributionVO vo = new MailDistributionVO();
+						
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						
+						vo.setName((String)obj.get("distributionName"));
+						vo.setId((String)obj.get("distributionId"));
+						vo.setMail((String)obj.get("distributionMail"));
+						
+						distributionList.add(vo);
+					}
+				}
+			}
+		}
+		
+		logger.debug("getDistributionSearchListByItem ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		logger.debug(distributionList.toString());
 		
 		return distributionList;
@@ -2350,6 +2502,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			map.put("shareId", (String)obj.get("shareId"));
         			map.put("deletePermission", (String)obj.get("deletePermission"));
         			map.put("sendPermission", (String)obj.get("sendPermission"));
+        			map.put("managePermission", (String)obj.get("managePermission"));
     				map.put("shareName", (String)obj.get("shareName"));
         			map.put("mail", (String)obj.get("mail"));
         			map.put("compId", (String)obj.get("compId"));
@@ -2490,6 +2643,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         			userVO.setCompName((String)user.get("compName"));
         			userVO.setDeletePermission((String)user.get("deletePermission"));
         			userVO.setSendPermission((String)user.get("sendPermission"));
+        			userVO.setManagePermission((String)user.get("managePermission"));
         			
         			userList.add(userVO);
         		}
@@ -2523,6 +2677,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         	shareMailBoxPermissonInfo.setShareId((String)result.get("shareId"));
         	shareMailBoxPermissonInfo.setDeletePermission((String)result.get("delete_permission"));
         	shareMailBoxPermissonInfo.setSendPermission((String)result.get("send_permission"));
+        	shareMailBoxPermissonInfo.setManagePermission((String)result.get("manage_permission"));
         	shareMailBoxPermissonInfo.setShareName((String)result.get("displayname"));
         }
 		
@@ -2652,6 +2807,54 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		
 		logger.debug("getSharedMailboxSearchList ended. listSize=" + list.size());
+		return list;
+	}
+	
+	
+	@Override
+	public List<MailSharedMailboxVO> getSharedMailboxListSearchByItem(String companyId, int tenantId, String searchType, String searchValue) throws Exception {
+		logger.debug("getSharedMailboxListSearchByItem started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchType=" + searchType + ",searchValue=" + searchValue);
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		List<MailSharedMailboxVO> list = new ArrayList<>();
+		
+		if (useSharedMailbox.equals("YES")) {
+			String deptId = "shared_mailbox_" + companyId;
+			
+			String inputParams = "tenantId=" + tenantId + "&deptId=" + URLEncoder.encode(deptId, "UTF-8") 
+					+ "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8") + "&searchType=" + URLEncoder.encode(searchType, "UTF-8");
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSharedMailboxListSearchByItem";
+			String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			logger.debug("strJson=" + strJson);
+
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			if (object.get("resultCode").equals("OK")) {
+	        	JSONArray array = (JSONArray)object.get("result");
+	        	
+	        	if (array != null) {
+	        		int length = array.size();
+	        		
+	        		MailSharedMailboxVO vo = null;
+	        		
+	        		for (int i = 0; i < length; i++) {
+	        			JSONObject sharedMailbox = (JSONObject)array.get(i);
+	        			vo = new MailSharedMailboxVO();
+	        			
+	        			vo.setShareId((String)sharedMailbox.get("shareId"));
+	        			vo.setShareMail((String)sharedMailbox.get("shareMail"));
+	        			vo.setShareName((String)sharedMailbox.get("shareName"));
+	        			
+	        			list.add(vo);
+	        		}
+	        	}
+	        }
+		}
+		
+		logger.debug("getSharedMailboxListSearchByItem ended. listSize=" + list.size());
 		return list;
 	}
 	

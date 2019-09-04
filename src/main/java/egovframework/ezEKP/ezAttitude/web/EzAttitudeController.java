@@ -2486,6 +2486,7 @@ public class EzAttitudeController {
 	
 		model.addAttribute("font", font);
 		model.addAttribute("authFlag", authFlag);
+		model.addAttribute("userInfo",userInfo);
 		
 		LOGGER.debug("/ezAttitude/attitudeItemDetail ended");
 		return "/ezAttitude/attitudeItemDetail";
@@ -2831,6 +2832,7 @@ public class EzAttitudeController {
 		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
 		String companyID = request.getParameter("companyID") == null ? userInfo.getCompanyID() : request.getParameter("companyID");
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		
 		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
@@ -2902,6 +2904,7 @@ public class EzAttitudeController {
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("companyID", companyID);
+		model.addAttribute("primaryLang", primaryLang);
 		
 		LOGGER.debug("attNewReceiverChoose ended.");
 		return "ezAttitude/attNewReceiverChoose";

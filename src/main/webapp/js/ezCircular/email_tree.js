@@ -18,7 +18,7 @@
         objRoot.appendChild(objNode);
 
         var xmlHTTP = new XMLHttpRequest();
-        xmlHTTP.open("GET", "/ezCircular/getCircularFolderList.do", false);
+        xmlHTTP.open("POST", "/ezCircular/getCircularFolderList.do", false);
 	    xmlHTTP.send(xmlDOM);
 
 	    if( xmlHTTP.status != 207 && xmlHTTP.status != 200 )
@@ -44,7 +44,7 @@
         objNode.text = bcount;
         objRoot.appendChild(objNode);
 
-        xmlHTTP.open("GET", "/ezCircular/getCircularFolderList.do", false);
+        xmlHTTP.open("POST", "/ezCircular/getCircularFolderList.do", false);
 	    xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	    xmlHTTP.send(xmlDOM.xml);
 

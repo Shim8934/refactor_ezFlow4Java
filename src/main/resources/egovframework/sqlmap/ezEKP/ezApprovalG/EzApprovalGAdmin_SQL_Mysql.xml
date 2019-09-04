@@ -4200,8 +4200,10 @@
 	
 	<select id="EzApprovalGAdminDAO.getParentContName" parameterClass="Map" resultClass="String">
 		SELECT
-			FORMCONTNAME,
-			FORMCONTNAME
+			CASE 
+				$v_LANG$ WHEN '1' THEN FORMCONTNAME
+						 WHEN '2' THEN FORMCONTNAME2
+			END AS FORMCONTNAME
 		FROM
 			TBL_FORMCONTAINER
 		WHERE

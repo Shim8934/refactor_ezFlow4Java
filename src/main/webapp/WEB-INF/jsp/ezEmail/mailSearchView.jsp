@@ -43,6 +43,7 @@
 			var searchFromList = "<c:out value='${searchFromList}'/>";
 			var searchCArray = new Array();
 			var searchKArray = new Array();
+			var shareId = "${shareId}";
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -122,22 +123,21 @@
 		        var inputkeyword = document.getElementsByName('prekeyword').item(0);
 		        
 		        if (searchFromList) {
+		        	$("#moreSearch").css("display", "block"); 
+	        		var keyCode = document.getElementById("selectDetail1");
 		       		if (searchCheck == 'SUBJECT') {
-		        		var subject = document.getElementById("select").children[0];
-		        		subject.setAttribute("selected", "selected");
-		    		    inputkeyword.value = keywordFromList;
+		       			keyCode.children[0].setAttribute("selected", "selected");
+		       			prekeywordDetail1.value = keywordFromList;
 		        	} else if (searchCheck == 'FROM') {
-				   	 	var sender = document.getElementById("select").children[2];
-				   	 	sender.setAttribute("selected", "selected");
-		    		    inputkeyword.value = keywordFromList;
+		        		keyCode.children[2].setAttribute("selected", "selected");
+		        		prekeywordDetail1.value = keywordFromList;
 			   	 	} else if (searchCheck == 'RECEIVE') {
-		        		var receiver = document.getElementById("select").children[3];
-		        		receiver.setAttribute("selected", "selected");
-		    		    inputkeyword.value = keywordFromList;
+			   	 		keyCode.children[3].setAttribute("selected", "selected");	
+			   	 		prekeywordDetail1.value = keywordFromList;
 			   	 	} else if (searchCheck == 'ALL') {
-		        		var all = document.getElementById("select").children[4];
-		        		all.setAttribute("selected", "selected");
-		    		    inputkeyword.value = keywordFromList;
+			   	 		$("#moreSearch").css("display") == "none"
+		        		var all = document.getElementById("select2");
+		        		ALL.value = keywordFromList;
 		        	}  
 
 		       		setTimeout(set_searchKey, 1000);
@@ -286,7 +286,14 @@
 			    var pTop = (pheight - conHeight) / 2;
 			    var pLeft = (pwidth - 890) / 2;
 			    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
-			    window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
+			    
+			    var requestUrl = "/ezEmail/mailWrite.do?cmd=NEW";
+			    
+			    if (shareId != "") {
+			    	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+			    }
+			    
+			    window.open(requestUrl, "", feature);
 			}
 			function reply_mail_onclick() 
 			{
@@ -324,7 +331,14 @@
 			    var pTop = (pheight - conHeight) / 2;
 			    var pLeft = (pwidth - 890) / 2;
 			    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
-			    window.open("/ezEmail/mailWrite.do?URL=" + encodeURIComponent(selcheck.getAttribute("itemID")) + "&cmd=REPLY", "", feature);
+			    
+				var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(selcheck.getAttribute("itemID")) + "&cmd=REPLY";
+			    
+			    if (shareId != "") {
+			    	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+			    }
+			    
+			    window.open(requestUrl, "", feature);
 			}
 		
 			function all_reply_mail_onclick() 
@@ -364,7 +378,14 @@
 			    var pTop = (pheight - conHeight) / 2;
 			    var pLeft = (pwidth - 890) / 2;
 			    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
-			    window.open("/ezEmail/mailWrite.do?URL=" + encodeURIComponent(selcheck.getAttribute("itemID")) + "&cmd=REPLYALL", "", feature);
+			    
+				var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(selcheck.getAttribute("itemID")) + "&cmd=REPLYALL";
+			    
+			    if (shareId != "") {
+			    	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+			    }
+			    
+			    window.open(requestUrl, "", feature);
 			}
 		
 			function transmission_mail_onclick() 
@@ -403,7 +424,14 @@
 			    var pTop = (pheight - conHeight) / 2;
 			    var pLeft = (pwidth - 890) / 2;
 			    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
-			    window.open("/ezEmail/mailWrite.do?URL=" + encodeURIComponent(selcheck.getAttribute("itemID")) + "&cmd=FORWARD", "", feature);	
+			    
+				var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(selcheck.getAttribute("itemID")) + "&cmd=FORWARD";
+			    
+			    if (shareId != "") {
+			    	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+			    }
+			    
+			    window.open(requestUrl, "", feature);	
 			}
 		    var mail_movecopy_cross_dialogArguments = new Array();
 		    var selcheck;
@@ -429,16 +457,25 @@
 			            alert(strLang42);
 			            return;
 			        }
+			        
+			        var requestUrl = "/ezEmail/mailMoveCopy.do";
+				    
+				    if (shareId != "") {
+				    	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				    }
+			        
 			        if (CrossYN()) {
 			            mail_movecopy_cross_dialogArguments[1] = move_mail_onclick_Complete;
 			            mail_movecopy_cross_dialogArguments[2] = "CLOSE";
-			            var OpenWin = window.open("/ezEmail/mailMoveCopy.do", "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
+			            
+			            var OpenWin = window.open(requestUrl, "mail_movecopy_cross", GetOpenWindowfeature(320, 375));
 			            try { OpenWin.focus(); } catch (e) { }
 			        }
 			        else {
 			            var feature = "dialogHeight:375px; dialogWidth:320px; status:no; help:no; edge:sunken";
 			            feature = feature + GetShowModalPosition(320, 375);
-			            var moveUrl = window.showModalDialog("/ezEmail/mailMoveCopy.do", null, feature);
+			            
+			            var moveUrl = window.showModalDialog(requestUrl, null, feature);
 		
 			            if (typeof (moveUrl) == "undefined")
 			                return;
@@ -516,7 +553,14 @@
 		            createNodeAndInsertText(xmlDOM, objNode, "CMD",cmd );
 		            createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID", itemIDs);
 		            createNodeAndInsertText(xmlDOM, objNode, "FOLDERID",copyFolderID );
-		            g_copyItemHttp.open("POST", "/ezEmail/mailMoveCopyMessageS.do", true);
+		            
+		            var requestUrl = "/ezEmail/mailMoveCopyMessageS.do";
+				    
+				    if (shareId != "") {
+				    	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				    }
+		            
+		            g_copyItemHttp.open("POST", requestUrl, true);
 		            g_copyItemHttp.onreadystatechange = event_copyItemList;
 		            event_copyItemList.cmd = cmd;
 		            g_copyItemHttp.send(xmlDOM);
@@ -612,7 +656,14 @@
 			    createNodeInsert(xmlpara, objNode, "DATA");
 			    createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", strItemID);
 			    createNodeAndInsertText(xmlpara, objNode, "FOLDERID", "");
-			    xmlhttp_mailMoveDelete.open("POST", "/ezEmail/mailDeleteS.do?cmd=BMOVE", true);
+			    
+			    var requestUrl = "/ezEmail/mailDeleteS.do?cmd=BMOVE";
+			    
+			    if (shareId != "") {
+			    	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+			    }
+			    
+			    xmlhttp_mailMoveDelete.open("POST", requestUrl, true);
 			    xmlhttp_mailMoveDelete.send(xmlpara);
 			    xmlhttp_mailMoveDelete.onreadystatechange = function () {
 			    	if (xmlhttp_mailMoveDelete.readyState == 4) {
@@ -663,7 +714,14 @@
 			        var objNode;
 			        createNodeInsert(xmlDOM, objNode, "DATA");
 			        createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID",strItemID );
-					xmlHTTP.open("POST", "/ezEmail/mailDeleteS.do?cmd=BDELETE", false);
+			        
+			        var requestUrl = "/ezEmail/mailDeleteS.do?cmd=BDELETE";
+				    
+				    if (shareId != "") {
+				    	requestUrl += "&shareId=" + encodeURIComponent(shareId);
+				    }
+			        
+					xmlHTTP.open("POST", requestUrl, false);
 					xmlHTTP.send(xmlDOM);
 					
 					if (xmlHTTP.status < 200 || xmlHTTP.status > 300)
@@ -724,6 +782,11 @@
 				
 				if (checkMailCnt == 1 && encryptPw == "") {
 					var parameters = "url=" + encodeURIComponent(selcheck[0].parentElement.parentElement.getAttribute("targetURL"));
+					
+				    if (shareId != "") {
+				    	parameters += "&shareId=" + encodeURIComponent(shareId);
+				    }
+					
 			    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
 
 			    	AttachDownFrame.location.href = fullpath;
@@ -740,13 +803,19 @@
 			    		}
 			    	}
 
+					var requestUrl = "/ezEmail/mailExportZip.do";
+				    
+				    if (shareId != "") {
+				    	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				    }
+					
 					ShowMailProgress();
 			    	
 			    	$.ajax({
 						type : "POST",
 						dataType : "text",
 						async : true,
-						url : "/ezEmail/mailExportZip.do",
+						url : requestUrl,
 						data : folderIdAndMessageIdList,
 						complete: function(){
 							HiddenMailProgress();
@@ -754,6 +823,11 @@
 						success: function(result){
 							if (result != "") {
 						    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + encryptPw;
+						    	
+						    	if (shareId != "") {
+						    		fullpath += "&shareId=" + encodeURIComponent(shareId);
+							    }
+						    	
 						    	AttachDownFrame.location.href = fullpath;
 						        AttachDownFrame.target = "_blank";
 							} else {
@@ -862,18 +936,22 @@
 	
 	<body style="overflow:auto" id="theBody" class="mainbody"> 
 		<span id="normalblock"> </span>
-		<h1><spring:message code="ezEmail.t641" /></h1>
+		<h1><spring:message code="ezEmail.t641" /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
 		<div id="mainmenu">
 			<ul>
+			  <c:if test="${shareId == null || sendPermission == 'Y'}">
 			  <li class="important"><span onclick="new_mail_onclick()"><spring:message code="ezEmail.t510" /></span></li>
 			  <li class="important"><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
 			  <li class="important"><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
 			  <li class="important"><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
+			  </c:if>
 			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			  <li><span onClick="mail_export()"><spring:message code="ezEmail.t378" /></span></li>
+			  <c:if test="${shareId == null || deletePermission == 'Y'}">
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
 			  <li><span onClick="delete_mail()"><spring:message code="ezEmail.t156" /></span></li>
 			  <li><span class="icon16 icon16_delete" onClick="deleteWork()"></span></li>
+			  </c:if>
 			</ul>
 		</div>  
 		<table class="content" style="min-width:632px"> 
@@ -909,7 +987,7 @@
 						    </c:forEach>
 					    </select>
 				    	<input name="keyword" id="keyword" style="vertical-align: top; display: none;" onkeyup="return search_keypress(event)">
-				    	<input name="prekeyword" id="ALL" style="vertical-align: top;height:25px" onkeyup="return search_keypress(event)" placeholder=<spring:message code="ezEmail.t641" />>
+				    	<input name="prekeyword" id="ALL" style="vertical-align: top;height:25px; margin-right:5px;" onkeyup="return search_keypress(event)" placeholder=<spring:message code="ezEmail.t641" />>
 				    	<a class="imgbtn imgbck" style="margin-left: 4px; height: 25px; vertical-align: middle;">
 					    	<span onclick="addSearch()" style="line-height: 25px; vertical-align: middle; height: 25px;"><spring:message code="ezEmail.pyy02" /></span>
 				    	</a>

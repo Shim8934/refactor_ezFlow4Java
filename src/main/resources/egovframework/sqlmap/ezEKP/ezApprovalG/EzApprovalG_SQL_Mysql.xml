@@ -7415,6 +7415,10 @@
           AND
           		DOCSTATE = #v_CHAMSTATE#
           </isNotEmpty>
+          <isEmpty property="v_CHAMSTATE">
+          AND
+          		DOCSTATE != '017'
+          </isEmpty>
           </isNotNull>
          
 	        LIMIT 1
@@ -8030,6 +8034,19 @@
 					             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 					        AND
 					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTID  ,
+						  (
+	                        SELECT 
+	                        	 TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME 
+					        FROM 
+					        	 TBL_APRRECEIPTPROCESSINFO 
+					     	WHERE  
+					     		 TBL_APRRECEIPTPROCESSINFO.DOCID = #v_DOCID#
+					        AND 
+					        	 TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+					        AND
+					             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+					        AND
+					             TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTNAME  ,
 	                      (
 	                       SELECT 
 	                      	  *  
@@ -9624,25 +9641,25 @@
 		   		TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 		   	AND
 		   		TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
-		   	AND 
-		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
-		   
 		   	]]>
-		   	<isEqual property="v_MODELENGTH" compareValue="2">
-		   	NOT
-		   	</isEqual>
-		   	 LIKE 
-		   	 	'ADDRESS%' 
+<!-- 		   	AND  -->
+<!-- 		   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID -->
+		   
+<!-- 		   	<isEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	NOT -->
+<!-- 		   	</isEqual> -->
+<!-- 		   	 LIKE  -->
+<!-- 		   	 	'ADDRESS%'  -->
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.EXTRECEPTYN = 'Y'
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	 AND 
 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN IN ('A','E','H','I','R','S','T','V','Y')
 		   	</isEqual>
-		   	<isNotEqual property="v_MODELENGTH" compareValue="2">
-		   	 AND 
-		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#)
-		   	</isNotEqual> 
+<!-- 		   	<isNotEqual property="v_MODELENGTH" compareValue="2"> -->
+<!-- 		   	 AND  -->
+<!-- 		   	 	TBL_ENDRECEIPTPOINTINFO.PROCESSYN = UPPER(#v_MODE#) -->
+<!-- 		   	</isNotEqual>  -->
 		   	<isGreaterThan property="v_SPSUBQUERYLENGTH" compareValue="0"> 
 			AND
 				$v_SPSUBQUERY$
@@ -29479,5 +29496,30 @@
 				AND
 					COMPANYID = #companyID#
 			) AS A
+	</select>
+	<select id="EzApprovalG.checkProxyAprLine" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_USERMASTER
+		WHERE
+			EXTENSIONATTRIBUTE5 LIKE CONCAT(#v_USERID#, ':%')
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			CN IN (
+					SELECT
+						DISTINCT APRMEMBERID
+					FROM
+						TBL_APRLINEINFO
+					WHERE
+						DOCID = #v_DOCID#
+					AND
+						APRSTATE = '002'
+					AND
+						TENANT_ID = #v_TENANTID#
+					AND
+						COMPANYID = #companyID#
+				)
 	</select>
 </sqlMap>

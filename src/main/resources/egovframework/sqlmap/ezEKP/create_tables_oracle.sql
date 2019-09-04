@@ -1,476 +1,213 @@
 --------------------------------------------------------
---  파일이 생성됨 - 수요일-5월-15-2019   
---------------------------------------------------------
---------------------------------------------------------
---  DDL for Sequence DBOBJECTID_SEQUENCE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."DBOBJECTID_SEQUENCE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence LIGHTPOLLOPTIONID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."LIGHTPOLLOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence POPUPOPTIONID_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."POPUPOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_DBOBJECTID_SEQUENCE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_DBOBJECTID_SEQUENCE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_ADDRESS_FOLDER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_ADDRESS_FOLDER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_ADDRESS_INFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_ADDRESS_INFO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_ADDRESS_SIMPLE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_ADDRESS_SIMPLE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_CONNECTION_INFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_INBOX_RULE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_INBOX_RULE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_INBOX_RULE_SUB
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_INBOX_RULE_SUB"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_LETTER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_LETTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_LETTER_BOX
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_LETTER_BOX"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_MAIL_POP3
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_MAIL_POP3"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_MAIL_RECALL
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_MAIL_RECALL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_MAIL_SECURE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_MAIL_SECURE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_JMOCHA_STAT_MAIL_LOG
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_STAT_MAIL_LOG"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TALK_TBLNOTIFICATION
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TALK_TBLNOTIFICATION"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_MAIN
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ADMINRECEIPTGROUP_MAIN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_SUB
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ADMINRECEIPTGROUP_SUB"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ATTITUDE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTITUDE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ATTITUDE_HISTORY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTITUDE_HISTORY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ATTITUDE_TYPE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTITUDE_TYPE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_ATTI_MODAPPL_HISTORY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTI_MODAPPL_HISTORY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_COMM_ITEM_ATTACHMENTS
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_COMM_ITEM_ATTACHMENTS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_COMM_SCHEDULE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_COMM_SCHEDULE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_COMM_SCHEDULEATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_COMM_SCHEDULEATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_COMM_SCHEDULECOMMENT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_COMM_SCHEDULECOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_CONNECTION_INFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_BOARD
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_BOARD"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBGUEST
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBGUEST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBNOTICE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBNOTICE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBPHOTO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBPHOTO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBPHOTO_ATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBPHOTO_ATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_CLUBPHOTO_REPLY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBPHOTO_REPLY"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_NOTICE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_NOTICE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_POLLANSWER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_POLLANSWER"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_POLLMANAGER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_POLLMANAGER"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_POLLQUESTION
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_POLLQUESTION"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_C_POLLRESPONSE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_POLLRESPONSE"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_DTPROPERTIES
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_DTPROPERTIES"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_BOARD1
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_BOARD1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_BOARD2
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_BOARD2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_BOARD3
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_BOARD3"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBBOARD"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD1
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBBOARD1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD2
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBBOARD2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBPDS
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBPDS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBPDS1
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBPDS1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_D_C_CLUBPDS_BACK
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBPDS_BACK"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_FORMCONNINFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_FORMCONNINFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_HOLIDAYLIST
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_HOLIDAYLIST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL_FILE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL_FILE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL_FORM
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL_FORM"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL_RECV_FAVORITE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL_RECV_FAVORITE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_JOURNAL_REPLY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL_REPLY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_MEMO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_MEMO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_MEMO_FOLDER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_MEMO_FOLDER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_NOTIFICATION_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_NOTIFICATION_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_COMPANYLINK_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_COMPANYLINK_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_NOTICE_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_NOTICE_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_POPUP_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_POPUP_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_PS_USERLINK_ITEMSEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_USERLINK_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_RECRELAYINFO
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_RECRELAYINFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_RS_ATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_RS_ATTACH"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULEATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULEATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULECOMMENT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULECOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULE_PUBLIC_DEPT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULE_PUBLIC_DEPT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SCHEDULE_REPEDEL
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULE_REPEDEL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SERIALNUMGEN
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SERIALNUMGEN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_STAT_MAIL_TEMP_IDX
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_STAT_MAIL_TEMP_IDX"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SURVEY_ATTACHFILE
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SURVEY_ATTACHFILE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_SURVEY_PARTICIPANT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SURVEY_PARTICIPANT"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASK
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASK"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASKATTACH
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASKATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASKCODEHISTORY
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASKCODEHISTORY"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASKCOMMENT
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASKCOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TASKREQUEST
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASKREQUEST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TT_V_TBLBOARDORDER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TT_V_TBLBOARDORDER"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_TT_V_TBLPARENTBOARDS
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TT_V_TBLPARENTBOARDS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence SEQ_TBL_USER_JOBMASTER
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_USER_JOBMASTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_BMUSER_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_BMUSER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_BM_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_BM_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_COMMENT_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_COMMENT_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_LINE_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_LINE_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_ORDER_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_ORDER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_LADDER_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_PORTAL_FRAME_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_FRAME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_PORTAL_MENU_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_MENU_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_PORTAL_PORTLET_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_PORTLET_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TBL_PORTAL_THEME_SEQ
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_THEME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
---------------------------------------------------------
---  DDL for Sequence TT_SQ_TMPCLASSINFO_SN
---------------------------------------------------------
-
-   CREATE SEQUENCE  "EZEKP2017"."TT_SQ_TMPCLASSINFO_SN"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--  파일이 생성됨 - 금요일-8월-30-2019   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for View SVTASKCLASS
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."SVTASKCLASS" ("CATEGORYCODE", "CNAME", "CNAME2", "MCATEGORYCODE", "MCNAME", "MCNAME2", "SUBCATEGORYCODE", "SCNAME", "SCNAME2", "TASKCODE", "TASKNAME", "TASKNAME2", "KEEPINGPERIOD", "DISPLAYRECFLAG", "SPECIALCATALOGFLAG", "TEMPFLAG", "COMPANYID", "TENANT_ID", "PROCESSDEPTCODE", "PROCESSDEPTNAME", "PROCESSDEPTNAME2", "KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECTRASTIME", "ISPUBLIC", "ITEMSECURITY", "DELFLAG") AS 
+  SELECT 
+        tbl_taskcategory.CATEGORYCODE AS CATEGORYCODE,
+        tbl_taskcategory.NAME AS CNAME,
+        tbl_taskcategory.NAME2 AS CNAME2,
+        tbl_taskmiddlecategory.MCATEGORYCODE AS MCATEGORYCODE,
+        tbl_taskmiddlecategory.NAME AS MCNAME,
+        tbl_taskmiddlecategory.NAME2 AS MCNAME2,
+        tbl_tasksubcategory.SUBCATEGORYCODE AS SUBCATEGORYCODE,
+        tbl_tasksubcategory.NAME AS SCNAME,
+        tbl_tasksubcategory.NAME2 AS SCNAME2,
+        tbl_taskcode.TASKCODE AS TASKCODE,
+        tbl_taskcode.TASKNAME AS TASKNAME,
+        tbl_taskcode.TASKNAME2 AS TASKNAME2,
+        tbl_taskcode.KEEPINGPERIOD AS KEEPINGPERIOD,
+        tbl_taskcode.DISPLAYRECFLAG AS DISPLAYRECFLAG,
+        tbl_taskcode.SPECIALCATALOGFLAG AS SPECIALCATALOGFLAG,
+        tbl_taskcode.TEMPFLAG AS TEMPFLAG,
+        tbl_taskcode.COMPANYID AS COMPANYID,
+        tbl_taskcode.TENANT_ID AS TENANT_ID,
+        tbl_task_deptinfo.PROCESSDEPTCODE AS PROCESSDEPTCODE,
+        tbl_task_deptinfo.PROCESSDEPTNAME AS PROCESSDEPTNAME,
+        tbl_task_deptinfo.PROCESSDEPTNAME2 AS PROCESSDEPTNAME2,
+        tbl_taskcode.KEEPINGMETHOD AS KEEPINGMETHOD,
+        tbl_taskcode.KEEPINGPLACE AS KEEPINGPLACE,
+        tbl_taskcode.DISPLAYRECTRASTIME AS DISPLAYRECTRASTIME,
+        tbl_taskcode.ISPUBLIC AS ISPUBLIC,
+        tbl_taskcode.ITEMSECURITY AS ITEMSECURITY,
+        tbl_task_deptinfo.DELFLAG AS DELFLAG
+    FROM
+        ((((tbl_taskcategory
+        JOIN tbl_taskmiddlecategory ON (((tbl_taskcategory.CATEGORYCODE = tbl_taskmiddlecategory.CATEGORYCODE)
+            AND (tbl_taskcategory.TENANT_ID = tbl_taskmiddlecategory.TENANT_ID)
+            AND (tbl_taskcategory.COMPANYID = tbl_taskmiddlecategory.COMPANYID))))
+        JOIN tbl_tasksubcategory ON (((tbl_taskmiddlecategory.MCATEGORYCODE = tbl_tasksubcategory.MCATEGORYCODE)
+            AND (tbl_taskmiddlecategory.TENANT_ID = tbl_tasksubcategory.TENANT_ID)
+            AND (tbl_taskmiddlecategory.COMPANYID = tbl_tasksubcategory.COMPANYID))))
+        JOIN tbl_taskcode ON (((tbl_tasksubcategory.SUBCATEGORYCODE = tbl_taskcode.SUBCATEGORYCODE)
+            AND (tbl_tasksubcategory.TENANT_ID = tbl_taskcode.TENANT_ID)
+            AND (tbl_tasksubcategory.COMPANYID = tbl_taskcode.COMPANYID))))
+        LEFT JOIN tbl_task_deptinfo ON (((tbl_taskcode.TASKCODE = tbl_task_deptinfo.TASKCODE)
+            AND (tbl_taskcode.TENANT_ID = tbl_task_deptinfo.TENANT_ID)
+            AND (tbl_taskcode.COMPANYID = tbl_task_deptinfo.COMPANYID))))
+    WHERE
+        tbl_task_deptinfo.DELFLAG = '0'
+            OR tbl_task_deptinfo.DELFLAG is null
+            OR tbl_task_deptinfo.DELFLAG = '2';
+--------------------------------------------------------
+--  DDL for View VAPRDOINGDOCLIST
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VAPRDOINGDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL") AS 
+  SELECT  TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",case when TBL_APRLINEINFO."APRSTATE" = '000' then '017' else  TBL_APRDOCINFO."DOCSTATE" end as DOCSTATE,case when TBL_APRLINEINFO."APRSTATE" = '000' and TBL_APRDOCINFO."FUNCTIONTYPE" <> '004' THEN '002' ELSE TBL_APRDOCINFO."FUNCTIONTYPE" END as FUNCTIONTYPE,TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,          TBL_APRLINEINFO.AprType AprType  ,          TBL_APRLINEINFO.AprState AprState  ,          TBL_APRLINEINFO.AprMemberID AprMemberID  ,          TBL_APRLINEINFO.AprMemberName AprMemberName  ,          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,          TBL_APRLINEINFO.ReceivedDate ReceivedDate  ,          TBL_EXPAPRDOCINFO.FormName FormName  ,          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval       FROM TBL_APRDOCINFO             JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID     WHERE  ( TBL_APRLINEINFO.AprState = '002'             OR TBL_APRLINEINFO.AprState = '005'             OR TBL_APRLINEINFO.AprState = '000')             AND ( TBL_APRDOCINFO.StartDate IS NOT NULL );
+--------------------------------------------------------
+--  DDL for View VAPRWILLDOCLIST
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VAPRWILLDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL", "COMPANYNAME", "COMPANYNAME2") AS 
+  SELECT TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",TBL_APRDOCINFO."DOCSTATE",TBL_APRDOCINFO."FUNCTIONTYPE",TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",
+          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,
+          TBL_APRLINEINFO.AprType AprType  ,
+          TBL_APRLINEINFO.AprState AprState  ,
+          TBL_APRLINEINFO.AprMemberID AprMemberID  ,
+          TBL_APRLINEINFO.AprMemberName AprMemberName  ,
+          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,
+          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,
+          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,
+          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,
+          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,
+          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,
+          TBL_EXPAPRDOCINFO.FormName FormName  ,
+          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,
+          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval  ,
+          TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 COMPANYNAME  ,
+		  TBL_DEPTMASTER.COMPNM2 COMPANYNAME2
+     FROM TBL_APRDOCINFO 
+            JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND  TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND  TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
+            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+			JOIN TBL_DEPTMASTER ON TBL_APRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN AND TBL_APRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+    WHERE  ( TBL_APRDOCINFO.StartDate IS NOT NULL );
+--------------------------------------------------------
+--  DDL for View VENDCHAMJODOCINFO
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VENDCHAMJODOCINFO" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL") AS 
+  SELECT 
+        tbl_endaprdocinfo.DOCID AS DOCID,
+        tbl_endaprdocinfo.FORMID AS FORMID,
+        tbl_endaprdocinfo.ORGDOCID AS ORGDOCID,
+        tbl_endaprdocinfo.DOCTYPE AS DOCTYPE,
+        '017' AS DOCSTATE,
+        '002' AS FUNCTIONTYPE,
+        tbl_endaprdocinfo.HREF AS HREF,
+        tbl_endaprdocinfo.DOCTITLE AS DOCTITLE,
+        tbl_endaprdocinfo.DOCNO AS DOCNO,
+        tbl_endaprdocinfo.HASATTACHYN AS HASATTACHYN,
+        tbl_endaprdocinfo.HASOPINIONYN AS HASOPINIONYN,
+        tbl_endaprdocinfo.STARTDATE AS STARTDATE,
+        tbl_endaprdocinfo.ENDDATE AS ENDDATE,
+        tbl_endaprdocinfo.WRITERID AS WRITERID,
+        tbl_endaprdocinfo.WRITERNAME AS WRITERNAME,
+        tbl_endaprdocinfo.WRITERJOBTITLE AS WRITERJOBTITLE,
+        tbl_endaprdocinfo.WRITERDEPTID AS WRITERDEPTID,
+        tbl_endaprdocinfo.WRITERDEPTNAME AS WRITERDEPTNAME,
+        tbl_endaprdocinfo.ISPUBLIC AS ISPUBLIC,
+        tbl_endaprdocinfo.WRITERNAME2 AS WRITERNAME2,
+        tbl_endaprdocinfo.WRITERJOBTITLE2 AS WRITERJOBTITLE2,
+        tbl_endaprdocinfo.WRITERDEPTNAME2 AS WRITERDEPTNAME2,
+        tbl_endaprdocinfo.TENANT_ID AS TENANT_ID,
+        tbl_endaprdocinfo.COMPANYID AS COMPANYID,
+        tbl_endaprlineinfo.APRMEMBERSN AS APRMEMBERSN,
+        tbl_endaprlineinfo.APRTYPE AS APRTYPE,
+        tbl_endaprlineinfo.APRSTATE AS APRSTATE,
+        tbl_endaprlineinfo.APRMEMBERID AS APRMEMBERID,
+        tbl_endaprlineinfo.APRMEMBERNAME AS APRMEMBERNAME,
+        tbl_endaprlineinfo.APRMEMBERNAME2 AS APRMEMBERNAME2,
+        tbl_endaprlineinfo.APRMEMBERJOBTITLE AS APRMEMBERJOBTITLE,
+        tbl_endaprlineinfo.APRMEMBERJOBTITLE2 AS APRMEMBERJOBTITLE2,
+        tbl_endaprlineinfo.APRMEMBERDEPTID AS APRMEMBERDEPTID,
+        tbl_endaprlineinfo.APRMEMBERDEPTNAME AS APRMEMBERDEPTNAME,
+        tbl_endaprlineinfo.APRMEMBERDEPTNAME2 AS APRMEMBERDEPTNAME2,
+        tbl_endaprlineinfo.RECEIVEDDATE AS RECEIVEDDATE,
+        tbl_expendaprdocinfo.FORMNAME AS FORMNAME,
+        tbl_expendaprdocinfo.FORMNAME2 AS FORMNAME2,
+        tbl_expendaprdocinfo.URGENTAPPROVAL AS URGENTAPPROVAL
+    FROM
+        ((tbl_endaprdocinfo
+        JOIN tbl_endaprlineinfo ON (((tbl_endaprdocinfo.DOCID = tbl_endaprlineinfo.DOCID)
+            AND (tbl_endaprdocinfo.TENANT_ID = tbl_endaprlineinfo.TENANT_ID)
+            AND (tbl_endaprdocinfo.COMPANYID = tbl_endaprlineinfo.COMPANYID))))
+        JOIN tbl_expendaprdocinfo ON (((tbl_endaprdocinfo.DOCID = tbl_expendaprdocinfo.DOCID)
+            AND (tbl_endaprdocinfo.TENANT_ID = tbl_expendaprdocinfo.TENANT_ID)
+            AND (tbl_endaprdocinfo.COMPANYID = tbl_expendaprdocinfo.COMPANYID))))
+    WHERE
+        ((tbl_endaprlineinfo.APRSTATE <> '002')
+            AND (tbl_endaprlineinfo.APRSTATE <> '005')
+            AND (tbl_endaprlineinfo.APRSTATE = '000'));
+--------------------------------------------------------
+--  DDL for View VGONGRAMAPRDOINGDOCLIST
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VGONGRAMAPRDOINGDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL") AS 
+  SELECT  TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",case when TBL_APRLINEINFO."APRSTATE" = '000' then '017' else  TBL_APRDOCINFO."DOCSTATE" end as DOCSTATE,case when TBL_APRLINEINFO."APRSTATE" = '000' and TBL_APRDOCINFO."FUNCTIONTYPE" <> '004' THEN '002' ELSE TBL_APRDOCINFO."FUNCTIONTYPE" END as FUNCTIONTYPE,TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,          TBL_APRLINEINFO.AprType AprType  ,          TBL_APRLINEINFO.AprState AprState  ,          TBL_APRLINEINFO.AprMemberID AprMemberID  ,          TBL_APRLINEINFO.AprMemberName AprMemberName  ,          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,          TBL_APRLINEINFO.ReceivedDate ReceivedDate  ,          TBL_EXPAPRDOCINFO.FormName FormName  ,          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval       FROM TBL_APRDOCINFO             JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID     WHERE  (( TBL_APRLINEINFO.AprState = '002') AND (TBL_APRDOCINFO.DOCSTATE = '015') AND ( TBL_APRDOCINFO.StartDate IS NOT NULL ));
+--------------------------------------------------------
+--  DDL for View VSEARCH_CLUBGUEST
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VSEARCH_CLUBGUEST" ("C_CLUBNO", "NO", "ID", "USERNAME", "COMPANYID", "TITLE", "CONTENT", "WRITEDAY", "C_CLUBNAME", "TENANT_ID") AS 
+  SELECT TBL_C_CLUBGUEST.c_clubno ,
+          TBL_C_CLUBGUEST.no ,
+          TBL_C_CLUBGUEST.id ,
+          TBL_C_CLUBGUEST.UserName ,
+          TBL_C_CLUBGUEST.companyID ,
+          TBL_C_CLUBGUEST.title ,
+          TBL_C_CLUBGUEST.content ,
+          TBL_C_CLUBGUEST.writeday ,
+          TBL_C_CLUB.C_ClubName,
+          TBL_C_CLUBGUEST.tenant_ID
+     FROM TBL_C_CLUBGUEST 
+            JOIN TBL_C_CLUB    ON TBL_C_CLUBGUEST.c_clubno = TBL_C_CLUB.C_ClubNo
+                                AND TBL_C_CLUBGUEST.tenant_ID = TBL_C_CLUB.tenant_ID;
+--------------------------------------------------------
+--  DDL for View VTASKCLASS
+--------------------------------------------------------
+
+  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VTASKCLASS" ("CATEGORYCODE", "CNAME", "CNAME2", "MCATEGORYCODE", "MCNAME", "MCNAME2", "SUBCATEGORYCODE", "SCNAME", "SCNAME2", "TASKCODE", "TASKNAME", "TASKNAME2", "KEEPINGPERIOD", "DISPLAYRECFLAG", "SPECIALCATALOGFLAG", "SC1", "SC2", "SC3", "TEMPFLAG", "COMPANYID", "TENANT_ID", "PROCESSDEPTCODE", "PROCESSDEPTNAME", "PROCESSDEPTNAME2", "KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECTRASTIME", "DELFLAG") AS 
+  SELECT TBL_TASKCATEGORY.CategoryCode ,
+          TBL_TASKCATEGORY.Name CName  ,
+          TBL_TASKCATEGORY.Name2 CName2  ,
+          TBL_TASKMIDDLECATEGORY.MCategoryCode ,
+          TBL_TASKMIDDLECATEGORY.Name MCName  ,
+          TBL_TASKMIDDLECATEGORY.Name2 MCName2  ,
+          TBL_TASKSUBCATEGORY.SubCategoryCode ,
+          TBL_TASKSUBCATEGORY.Name SCName  ,
+          TBL_TASKSUBCATEGORY.Name2 SCName2  ,
+          TBL_TASKCODE.TaskCode ,
+          TBL_TASKCODE.TaskName ,
+          TBL_TASKCODE.TaskName2 ,
+          TBL_TASKCODE.KeepingPeriod ,
+          TBL_TASKCODE.DisplayRecFlag ,
+          TBL_TASKCODE.SpecialCatalogFlag ,
+          TBL_TASKCODE.SC1 ,
+          TBL_TASKCODE.SC2 ,
+          TBL_TASKCODE.SC3 ,
+          TBL_TASKCODE.TempFlag ,
+          TBL_TASKCODE.COMPANYID,
+          TBL_TASKCODE.TENANT_ID ,
+          TBL_TASK_DEPTINFO.ProcessDeptCode ,
+          TBL_TASK_DEPTINFO.ProcessDeptName ,
+          TBL_TASK_DEPTINFO.ProcessDeptName2 ,
+          TBL_TASKCODE.KeepingMethod ,
+          TBL_TASKCODE.KeepingPlace ,
+          TBL_TASKCODE.DisplayRecTrasTime ,
+          TBL_TASK_DEPTINFO.DelFlag 
+     FROM TBL_TASKCATEGORY 
+            JOIN TBL_TASKMIDDLECATEGORY    ON TBL_TASKCATEGORY.CategoryCode = TBL_TASKMIDDLECATEGORY.CategoryCode AND TBL_TASKCATEGORY.TENANT_ID = TBL_TASKMIDDLECATEGORY.TENANT_ID AND TBL_TASKCATEGORY.COMPANYID = TBL_TASKMIDDLECATEGORY.COMPANYID
+            JOIN TBL_TASKSUBCATEGORY    ON TBL_TASKMIDDLECATEGORY.MCategoryCode = TBL_TASKSUBCATEGORY.MCategoryCode AND TBL_TASKMIDDLECATEGORY.TENANT_ID = TBL_TASKSUBCATEGORY.TENANT_ID AND TBL_TASKMIDDLECATEGORY.COMPANYID = TBL_TASKSUBCATEGORY.COMPANYID
+            JOIN TBL_TASKCODE    ON TBL_TASKSUBCATEGORY.SubCategoryCode = TBL_TASKCODE.SubCategoryCode AND TBL_TASKSUBCATEGORY.TENANT_ID = TBL_TASKCODE.TENANT_ID AND TBL_TASKSUBCATEGORY.COMPANYID = TBL_TASKCODE.COMPANYID
+
+            LEFT JOIN TBL_TASK_DEPTINFO    ON TBL_TASKCODE.TaskCode = TBL_TASK_DEPTINFO.TaskCode AND TBL_TASKCODE.TENANT_ID = TBL_TASK_DEPTINFO.TENANT_ID AND TBL_TASKCODE.COMPANYID = TBL_TASK_DEPTINFO.COMPANYID
+    WHERE  ( TBL_TASK_DEPTINFO.DelFlag = '0' )
+             OR ( TBL_TASK_DEPTINFO.DelFlag IS NULL )
+             OR ( TBL_TASK_DEPTINFO.DelFlag = '2' );
 --------------------------------------------------------
 --  DDL for Table ACAPHOTO
 --------------------------------------------------------
@@ -694,7 +431,7 @@
 	"MAILBOX_ID" NUMBER, 
 	"MAIL_UID" NUMBER, 
 	"IMPORTANCE" NUMBER DEFAULT 1, 
-	"MESSAGE_ID" VARCHAR2(200 CHAR)
+	"MESSAGE_ID" VARCHAR2(500)
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
@@ -1089,7 +826,8 @@
 
   CREATE TABLE "EZEKP2017"."JMOCHA_MAIL_COPYRIGHT" 
    (	"TENANT_ID" NUMBER(*,0), 
-	"COPYRIGHT_TEXT" VARCHAR2(1000) DEFAULT NULL
+	"COPYRIGHT_TEXT" VARCHAR2(1000) DEFAULT NULL, 
+	"COMPANY_ID" VARCHAR2(80)
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
@@ -1154,7 +892,7 @@
 	"PREVIEW_H_CONTENT" NUMBER(11,0), 
 	"MAIL_SENDER_NAME" NVARCHAR2(255), 
 	"PREVIEW_SUBTREE" NVARCHAR2(10) DEFAULT 'N', 
-	"PREVIEW_MAIL_IMAGE" VARCHAR2(10) DEFAULT 'Y',
+	"PREVIEW_MAIL_IMAGE" VARCHAR2(10) DEFAULT 'Y', 
 	"TEXT_OPTION" VARCHAR2(10)
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
@@ -1405,7 +1143,8 @@
 	"USER_ID" VARCHAR2(100 CHAR), 
 	"DELETE_PERMISSION" CHAR(1), 
 	"SEND_PERMISSION" CHAR(1), 
-	"ORDERBY" NUMBER
+	"ORDERBY" NUMBER, 
+	"MANAGE_PERMISSION" CHAR(1)
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
@@ -2258,6 +1997,18 @@
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS" ;
 --------------------------------------------------------
+--  DDL for Table TBL_ACCESS_COUNTRY
+--------------------------------------------------------
+
+  CREATE TABLE "EZEKP2017"."TBL_ACCESS_COUNTRY" 
+   (	"TENANT_ID" NUMBER(20,0), 
+	"COUNTRY_CODE" NVARCHAR2(800)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
 --  DDL for Table TBL_ACCESS_ID
 --------------------------------------------------------
 
@@ -2297,8 +2048,8 @@
 	"POSITIONCD" NVARCHAR2(20), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
 	"ORDERBY" NVARCHAR2(200) DEFAULT NULL, 
-	"JOBID" VARCHAR2(100) DEFAULT NULL,
-	"PROXY" VARCHAR2(200) DEFAULT NULL
+	"JOBID" VARCHAR2(100) DEFAULT NULL, 
+	"PROXY" VARCHAR2(200)
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
@@ -2383,6 +2134,21 @@
 	"ATTACHUSERDEPTNAME2" NVARCHAR2(100), 
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
 	"COMPANYID" VARCHAR2(20)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table TBL_APRDOCGROUPINFO
+--------------------------------------------------------
+
+  CREATE TABLE "EZEKP2017"."TBL_APRDOCGROUPINFO" 
+   (	"DOCID" NVARCHAR2(80), 
+	"TABSN" NUMBER(10,0), 
+	"GROUPDOCSN" NVARCHAR2(80), 
+	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
+	"COMPANYID" NVARCHAR2(20)
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
@@ -2580,12 +2346,12 @@
 --------------------------------------------------------
 
   CREATE TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL" 
-   (	"USER_ID" VARCHAR2(80 BYTE), 
+   (	"USER_ID" VARCHAR2(80), 
 	"MONTHLY_HOLIDAY_CNT" NUMBER(4,1) DEFAULT 0.0, 
 	"ANNUAL_HOLIDAY_CNT" NUMBER(4,1) DEFAULT 0.0, 
 	"ADDITIONAL_HOLIDAY_CNT" NUMBER(4,1) DEFAULT 0.0, 
 	"JOIN_DATE" TIMESTAMP (6), 
-	"COMPANY_ID" VARCHAR2(200 BYTE), 
+	"COMPANY_ID" VARCHAR2(200), 
 	"TENANT_ID" NUMBER(*,0)
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 10 MAXTRANS 255 NOCOMPRESS LOGGING
@@ -2609,10 +2375,10 @@
 	"WRITER_DEPT_ID" NVARCHAR2(80), 
 	"WRITER_DEPT_NAME" NVARCHAR2(100) DEFAULT NULL, 
 	"WRITER_DEPT_NAME2" NVARCHAR2(100) DEFAULT NULL, 
-	"DELFLAG" CHAR(1 BYTE) DEFAULT '0', 
+	"DELFLAG" CHAR(1) DEFAULT '0', 
 	"APPR_USER_ID" NVARCHAR2(80) DEFAULT NULL, 
 	"APPR_DATE" DATE DEFAULT NULL, 
-	"APPR_STATUS" CHAR(1 BYTE) DEFAULT '0', 
+	"APPR_STATUS" CHAR(1) DEFAULT '0', 
 	"CONTENT" NVARCHAR2(2000) DEFAULT NULL, 
 	"APPR_USER_NAME" NVARCHAR2(100) DEFAULT NULL, 
 	"APPR_USER_NAME2" NVARCHAR2(100) DEFAULT NULL, 
@@ -2622,20 +2388,20 @@
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS" ;
- --------------------------------------------------------
+--------------------------------------------------------
 --  DDL for Table TBL_ATTITUDE_ANNUAL_CONF
 --------------------------------------------------------
 
   CREATE TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" 
    (	"COMPANY_ID" NVARCHAR2(80), 
 	"TENANT_ID" NUMBER(5,0), 
-	"ANNUAL_CANCEL_RULE" CHAR(1 BYTE) DEFAULT '1', 
-	"USE_ANNUAL_AUTO_GNRT" CHAR(1 BYTE) DEFAULT '1', 
-	"ANNUAL_GNRT_STD" CHAR(1 BYTE) DEFAULT '1', 
+	"ANNUAL_CANCEL_RULE" CHAR(1) DEFAULT '1', 
+	"USE_ANNUAL_AUTO_GNRT" CHAR(1) DEFAULT '1', 
+	"ANNUAL_GNRT_STD" CHAR(1) DEFAULT '1', 
 	"INITIAL_DATE" DATE DEFAULT NULL, 
-	"USE_MINUS_ANNUAL" CHAR(1 BYTE) DEFAULT '1', 
-	"USE_ANNUAL_TMNT" CHAR(1 BYTE) DEFAULT '1', 
-	"ROUND_OFF_RULE" CHAR(1 BYTE) DEFAULT '1', 
+	"USE_MINUS_ANNUAL" CHAR(1) DEFAULT '1', 
+	"USE_ANNUAL_TMNT" CHAR(1) DEFAULT '1', 
+	"ROUND_OFF_RULE" CHAR(1) DEFAULT '1', 
 	"CONF_SET_DATE" DATE
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
@@ -2660,7 +2426,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ; 
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_ATTITUDE_APR_CONN
 --------------------------------------------------------
@@ -2670,8 +2436,8 @@
 	"USER_ID" NVARCHAR2(80) DEFAULT NULL, 
 	"ANNUAL_DOC_ID" NVARCHAR2(80), 
 	"CANCEL_DOC_ID" NVARCHAR2(80) DEFAULT NULL, 
-	"ANNUAL_APPR_STATUS" CHAR(1 BYTE) DEFAULT NULL, 
-	"CANCEL_APPR_STATUS" CHAR(1 BYTE) DEFAULT NULL, 
+	"ANNUAL_APPR_STATUS" CHAR(1) DEFAULT NULL, 
+	"CANCEL_APPR_STATUS" CHAR(1) DEFAULT NULL, 
 	"COMPANY_ID" NVARCHAR2(80), 
 	"TENANT_ID" NUMBER(5,0)
    ) SEGMENT CREATION IMMEDIATE 
@@ -4174,9 +3940,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("UPPERITEMIDTREE") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4195,7 +3961,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_ITEM_READ
 --------------------------------------------------------
@@ -4219,7 +3985,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_MYBOARDS
 --------------------------------------------------------
@@ -4234,7 +4000,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_ONELINEREPLY
 --------------------------------------------------------
@@ -4255,7 +4021,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_SCHEDULE
 --------------------------------------------------------
@@ -4291,7 +4057,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_SCHEDULEATTACH
 --------------------------------------------------------
@@ -4307,7 +4073,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_SCHEDULECOMMENT
 --------------------------------------------------------
@@ -4324,9 +4090,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("COMMENT_") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4346,7 +4112,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_SCHEDULEGROUP
 --------------------------------------------------------
@@ -4362,7 +4128,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_SCHEDULEGROUPMEMBER
 --------------------------------------------------------
@@ -4378,7 +4144,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_SCHEDULESHARE
 --------------------------------------------------------
@@ -4395,7 +4161,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_SECRETARY
 --------------------------------------------------------
@@ -4410,7 +4176,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_COMM_TREECACHE
 --------------------------------------------------------
@@ -4423,9 +4189,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("RESULT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4442,7 +4208,36 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table TBL_CONNDATA
+--------------------------------------------------------
+
+  CREATE TABLE "EZEKP2017"."TBL_CONNDATA" 
+   (	"KEYID" VARCHAR2(50), 
+	"FORMID" VARCHAR2(10), 
+	"BODYXML" CLOB, 
+	"STATUS" CHAR(3) DEFAULT 'INT', 
+	"DOCID" CHAR(20), 
+	"UPDATEDATE" DATE DEFAULT SYSDATE
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" 
+ LOB ("BODYXML") STORE AS BASICFILE (
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  NOCACHE LOGGING 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
+
+   COMMENT ON COLUMN "EZEKP2017"."TBL_CONNDATA"."KEYID" IS '연동키값';
+   COMMENT ON COLUMN "EZEKP2017"."TBL_CONNDATA"."FORMID" IS 'FROMID';
+   COMMENT ON COLUMN "EZEKP2017"."TBL_CONNDATA"."BODYXML" IS 'HTML 본문 데이터';
+   COMMENT ON COLUMN "EZEKP2017"."TBL_CONNDATA"."STATUS" IS '결재 상태';
+   COMMENT ON COLUMN "EZEKP2017"."TBL_CONNDATA"."DOCID" IS '문서 번호';
+   COMMENT ON COLUMN "EZEKP2017"."TBL_CONNDATA"."UPDATEDATE" IS '날짜';
+   COMMENT ON TABLE "EZEKP2017"."TBL_CONNDATA"  IS '결재연동 테이블';
 --------------------------------------------------------
 --  DDL for Table TBL_CONNECTION_INFO
 --------------------------------------------------------
@@ -4471,7 +4266,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_CONTAINER
 --------------------------------------------------------
@@ -4486,7 +4281,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_CONTAINERTODOCSTATE
 --------------------------------------------------------
@@ -4500,7 +4295,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_CONTAINERTYPE
 --------------------------------------------------------
@@ -4515,7 +4310,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_CONTAINERUSEDEP
 --------------------------------------------------------
@@ -4529,7 +4324,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_C_BOARD
 --------------------------------------------------------
@@ -4558,14 +4353,14 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) 
  LOB ("CHARFILENAME") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4583,7 +4378,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_C_CLUB
 --------------------------------------------------------
@@ -4654,9 +4449,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("C_CLUBDESC") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4682,9 +4477,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4714,14 +4509,14 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) 
  LOB ("CHARFILENAME") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4750,9 +4545,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("C_INTRO") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4776,9 +4571,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CLOSEREASON") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4812,7 +4607,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_C_NOTICE
 --------------------------------------------------------
@@ -4839,14 +4634,14 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) 
  LOB ("CHARFILENAME") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4864,9 +4659,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("OUTREASON") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -4884,7 +4679,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_C_POLLMANAGER
 --------------------------------------------------------
@@ -4904,7 +4699,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_C_POLLQUESTION
 --------------------------------------------------------
@@ -4922,7 +4717,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_C_POLLRESPONSE
 --------------------------------------------------------
@@ -4940,7 +4735,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DAILYDOCCOUNTLOG
 --------------------------------------------------------
@@ -4963,7 +4758,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DAILYFORMCOUNTLOG
 --------------------------------------------------------
@@ -4986,7 +4781,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DELETECABINETINFO
 --------------------------------------------------------
@@ -5001,7 +4796,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DEPTCONT
 --------------------------------------------------------
@@ -5019,7 +4814,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DEPTCONTLIST
 --------------------------------------------------------
@@ -5034,7 +4829,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DEPTMASTER
 --------------------------------------------------------
@@ -5073,7 +4868,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DEPTTEMPLET
 --------------------------------------------------------
@@ -5089,7 +4884,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DEPTTEMPLETDETAIL
 --------------------------------------------------------
@@ -5117,7 +4912,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DEV_MASTER
 --------------------------------------------------------
@@ -5146,7 +4941,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DOCDELETEHISTORY
 --------------------------------------------------------
@@ -5165,7 +4960,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_DOCDELIVERY
 --------------------------------------------------------
@@ -5196,7 +4991,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_ENDAPRDOCATTACHINFO
 --------------------------------------------------------
@@ -5221,7 +5016,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_ENDAPRDOCINFO
 --------------------------------------------------------
@@ -5256,7 +5051,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_ENDAPRLINEINFO
 --------------------------------------------------------
@@ -5287,7 +5082,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_ENDAPROPINIONINFO
 --------------------------------------------------------
@@ -5311,9 +5106,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -5344,7 +5139,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_ENDRECEIPTPOINTINFO
 --------------------------------------------------------
@@ -5372,7 +5167,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_ENDRECEIPTPROCESSINFO
 --------------------------------------------------------
@@ -5403,7 +5198,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_EXPAPRDOCINFO
 --------------------------------------------------------
@@ -5440,14 +5235,14 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("SEPERATEATTACHXML") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) 
  LOB ("SUMMARY") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -5473,7 +5268,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_EXPENDAPRDOCINFO
 --------------------------------------------------------
@@ -5514,14 +5309,14 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("SEPERATEATTACHXML") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) 
  LOB ("SUMMARY") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -5547,7 +5342,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_FORMCONNINFO
 --------------------------------------------------------
@@ -5580,7 +5375,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_FORMCONTUSERGROUP
 --------------------------------------------------------
@@ -5594,7 +5389,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_FORMGROUP
 --------------------------------------------------------
@@ -5609,7 +5404,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_FORMINFO
 --------------------------------------------------------
@@ -5629,12 +5424,17 @@
 	"FORMDRAFTALLFLAG" CHAR(1) DEFAULT 'N', 
 	"REFORMFLAG" CHAR(1) DEFAULT 'N', 
 	"LASTSIGNPOSFLAG" CHAR(1) DEFAULT 'F', 
-	"FORMVERSION" NUMBER(10,0) DEFAULT 0
+	"FORMVERSION" NUMBER(10,0) DEFAULT 0, 
+	"FORMXSLT" LONG, 
+	"PASSAPRLINEFLAG" VARCHAR2(4) DEFAULT 'N', 
+	"DRAFTALLFLAG" NVARCHAR2(4) DEFAULT 'N', 
+	"FORMGUIDE" VARCHAR2(2000 CHAR), 
+	"OPENGOVFLAG" NVARCHAR2(4) DEFAULT 'N'
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_FORMINFO"."LASTSIGNPOSFLAG" IS 'F:마지막사인칸, O:순서대로';
 --------------------------------------------------------
@@ -5654,7 +5454,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_FORMRECV
 --------------------------------------------------------
@@ -5671,7 +5471,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_FORMUSERINFO
 --------------------------------------------------------
@@ -5685,7 +5485,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_FORM_AUTORULE
 --------------------------------------------------------
@@ -5711,7 +5511,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_FORM_AUTORULELINE
 --------------------------------------------------------
@@ -5743,7 +5543,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_FORM_OFFICE
 --------------------------------------------------------
@@ -5756,7 +5556,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_HISTORYATTACHINFO
 --------------------------------------------------------
@@ -5787,7 +5587,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_HISTORYDOCINFO
 --------------------------------------------------------
@@ -5812,7 +5612,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_HISTORYLINEINFO
 --------------------------------------------------------
@@ -5851,7 +5651,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_HISTORYRECEIPTINFO
 --------------------------------------------------------
@@ -5869,7 +5669,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_HOLIDAYLIST
 --------------------------------------------------------
@@ -5891,7 +5691,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL
 --------------------------------------------------------
@@ -5913,14 +5713,14 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("JOURNAL_CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) 
  LOB ("JOURNAL_TEXT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -5936,7 +5736,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_ENV
 --------------------------------------------------------
@@ -5954,7 +5754,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_FILE
 --------------------------------------------------------
@@ -5970,7 +5770,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_FORM
 --------------------------------------------------------
@@ -5991,9 +5791,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("FORM_CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -6010,7 +5810,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_FORM_USE_DEPT
 --------------------------------------------------------
@@ -6023,7 +5823,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_ORDER
 --------------------------------------------------------
@@ -6037,7 +5837,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_RECV
 --------------------------------------------------------
@@ -6052,7 +5852,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_RECV_FAVORITE
 --------------------------------------------------------
@@ -6067,7 +5867,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_RECV_FAVORITE_LIST
 --------------------------------------------------------
@@ -6080,7 +5880,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_REPLY
 --------------------------------------------------------
@@ -6096,7 +5896,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_SYMBOL
 --------------------------------------------------------
@@ -6110,7 +5910,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_JOURNAL_VIEW
 --------------------------------------------------------
@@ -6124,7 +5924,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LADDER
 --------------------------------------------------------
@@ -6153,9 +5953,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("LINEARRAY") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -6174,7 +5974,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LADDER_BMUSER
 --------------------------------------------------------
@@ -6193,7 +5993,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LADDER_COMMENT
 --------------------------------------------------------
@@ -6212,9 +6012,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("COMMENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -6240,7 +6040,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LADDER_ORDER
 --------------------------------------------------------
@@ -6255,7 +6055,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LASTAPRLINE
 --------------------------------------------------------
@@ -6287,7 +6087,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LASTDEPTLINE
 --------------------------------------------------------
@@ -6316,7 +6116,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LASTDOCID
 --------------------------------------------------------
@@ -6329,7 +6129,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LINTEMPLET
 --------------------------------------------------------
@@ -6345,7 +6145,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LINTEMPLETDETAIL
 --------------------------------------------------------
@@ -6372,7 +6172,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LISTINFO
 --------------------------------------------------------
@@ -6397,7 +6197,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LISTOPTION
 --------------------------------------------------------
@@ -6422,7 +6222,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LOGO_SIZE
 --------------------------------------------------------
@@ -6436,7 +6236,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_LUNARUSE
 --------------------------------------------------------
@@ -6449,7 +6249,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_MEMO
 --------------------------------------------------------
@@ -6471,9 +6271,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENTS") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -6506,7 +6306,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_MEMO_FOLDER
 --------------------------------------------------------
@@ -6525,7 +6325,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_MENUITEM_GENERAL
 --------------------------------------------------------
@@ -6540,7 +6340,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_MENUITEM_ITEMS_IMAGE
 --------------------------------------------------------
@@ -6564,7 +6364,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_MENUITEM_ITEMS_LOGOS
 --------------------------------------------------------
@@ -6577,7 +6377,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_MENUITEM_ITEMS_MENUITEMS
 --------------------------------------------------------
@@ -6601,7 +6401,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_MENUITEM_ITEMS_MENUITEMS_S
 --------------------------------------------------------
@@ -6622,7 +6422,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_MENUITEM_PARAMETERS
 --------------------------------------------------------
@@ -6637,7 +6437,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_MYTASKCODE
 --------------------------------------------------------
@@ -6653,7 +6453,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_NOTIFICATION
 --------------------------------------------------------
@@ -6674,7 +6474,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_OLDCABINETEXTRAINFO
 --------------------------------------------------------
@@ -6690,7 +6490,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_OLDRECORDEXTRAINFO
 --------------------------------------------------------
@@ -6707,7 +6507,42 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table TBL_OPENGOVDOCINFO
+--------------------------------------------------------
+
+  CREATE TABLE "EZEKP2017"."TBL_OPENGOVDOCINFO" 
+   (	"DOCID" NVARCHAR2(80), 
+	"OPENFLAG" CHAR(9) DEFAULT NULL, 
+	"BASIS" NVARCHAR2(200) DEFAULT NULL, 
+	"REASON" NVARCHAR2(1000) DEFAULT NULL, 
+	"OPENLIMITDATE" DATE DEFAULT NULL, 
+	"CREATEDATE" DATE DEFAULT NULL, 
+	"UPDATEDATE" DATE DEFAULT NULL, 
+	"TENANT_ID" NUMBER(5,0), 
+	"COMPANYID" NVARCHAR2(20), 
+	"LISTOPENFLAG" CHAR(2) DEFAULT NULL
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table TBL_OPENGOVFILEINFO
+--------------------------------------------------------
+
+  CREATE TABLE "EZEKP2017"."TBL_OPENGOVFILEINFO" 
+   (	"DOCID" NVARCHAR2(80), 
+	"SN" NUMBER(10,0), 
+	"FILEOPENFLAG" CHAR(1) DEFAULT NULL, 
+	"COMPANYID" NVARCHAR2(20), 
+	"TENANT_ID" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PHOTO_IMAGEITEM
 --------------------------------------------------------
@@ -6729,9 +6564,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("FILECONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -6750,7 +6585,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_POLL_ATTACH
 --------------------------------------------------------
@@ -6769,7 +6604,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_POLL_ITEM
 --------------------------------------------------------
@@ -6809,7 +6644,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_POLL_ITEMACL
 --------------------------------------------------------
@@ -6827,7 +6662,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_POLL_ITEMREAD
 --------------------------------------------------------
@@ -6849,7 +6684,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_POLL_PERMISSION
 --------------------------------------------------------
@@ -6867,7 +6702,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_POLL_QUESTION
 --------------------------------------------------------
@@ -6886,7 +6721,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_POLL_RESPONSE
 --------------------------------------------------------
@@ -6919,9 +6754,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("ANSWER_SUBJECTIVITY") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -6953,7 +6788,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_POLL_TABLE_ANSWER
 --------------------------------------------------------
@@ -6969,7 +6804,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTALPAGE_CACHE
 --------------------------------------------------------
@@ -6985,9 +6820,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("RENDEREDHTML") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -7003,7 +6838,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTALPAGE_GENERAL
 --------------------------------------------------------
@@ -7036,7 +6871,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTALPAGE_ITEMS
 --------------------------------------------------------
@@ -7067,7 +6902,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTALPAGE_ITEMS_CHANGE
 --------------------------------------------------------
@@ -7086,7 +6921,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTAL_ACL
 --------------------------------------------------------
@@ -7102,7 +6937,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTAL_FRAME
 --------------------------------------------------------
@@ -7115,7 +6950,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_FRAME"."FRAME_ID" IS '프레임아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_FRAME"."FRAME_NAME" IS '프레임 이름';
@@ -7136,7 +6971,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_FRAME_COMP"."COMPANY_ID" IS '회사 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_FRAME_COMP"."TENANT_ID" IS '테넌트 아이디';
@@ -7158,7 +6993,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_LOGO"."COMPANY_ID" IS '회사 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_LOGO"."TENANT_ID" IS '테넌트 아이디';
@@ -7174,12 +7009,13 @@
 	"MENU_URL" VARCHAR2(100), 
 	"MENU_TYPE" VARCHAR2(5) DEFAULT 'G', 
 	"ICON_URL" VARCHAR2(200), 
-	"DEFAULT_ORDER" NUMBER(5,0)
+	"DEFAULT_ORDER" NUMBER(5,0), 
+	"MENUCODE" VARCHAR2(100) DEFAULT NULL
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU"."MENU_ID" IS '메뉴 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU"."MENU_URL" IS '메뉴 연동 URL';
@@ -7197,12 +7033,13 @@
 	"TENANT_ID" NUMBER(5,0), 
 	"USER_ID" VARCHAR2(100), 
 	"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
-	"USER_TYPE" NUMBER(5,0)
+	"USER_TYPE" NUMBER(5,0), 
+	"SN" NUMBER(*,0) DEFAULT 0
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU_AUTH"."MENU_ID" IS '메뉴 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU_AUTH"."COMPANY_ID" IS '회사 아이디';
@@ -7226,7 +7063,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU_COMP"."COMPANY_ID" IS '회사 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU_COMP"."TENANT_ID" IS '테넌트 아이디';
@@ -7247,7 +7084,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU_NAME"."MENU_ID" IS '메뉴 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU_NAME"."MENU_LANG" IS '메뉴 이름의 언어';
@@ -7269,7 +7106,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU_USER"."USER_ID" IS '사용자 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_MENU_USER"."TENANT_ID" IS '테넌트 아이디';
@@ -7286,12 +7123,13 @@
 	"MENU_ID" NUMBER(10,0), 
 	"PORTLET_URL" VARCHAR2(200), 
 	"PORTLET_TYPE" VARCHAR2(5) DEFAULT 'G', 
-	"DEFAULT_ORDER" NUMBER(5,0)
+	"DEFAULT_ORDER" NUMBER(5,0), 
+	"PORTLETCODE" VARCHAR2(100) DEFAULT NULL
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET"."PORTLET_ID" IS '포틀릿 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET"."MENU_ID" IS '포틀릿에 연결된 메뉴 아이디';
@@ -7299,6 +7137,23 @@
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET"."PORTLET_TYPE" IS '기본(G), 추가(A)';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET"."DEFAULT_ORDER" IS '제공된 포틀릿 기본 순서';
    COMMENT ON TABLE "EZEKP2017"."TBL_PORTAL_PORTLET"  IS '포틀릿 정보 테이블';
+--------------------------------------------------------
+--  DDL for Table TBL_PORTAL_PORTLET_AUTH
+--------------------------------------------------------
+
+  CREATE TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_AUTH" 
+   (	"PORTLET_ID" NUMBER(10,0), 
+	"COMPANY_ID" VARCHAR2(100), 
+	"TENANT_ID" NUMBER(5,0), 
+	"USER_ID" VARCHAR2(100), 
+	"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
+	"USER_TYPE" NUMBER(5,0), 
+	"SN" NUMBER(*,0) DEFAULT 0
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTAL_PORTLET_COMP
 --------------------------------------------------------
@@ -7317,7 +7172,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET_COMP"."COMPANY_ID" IS '회사 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET_COMP"."TENANT_ID" IS '테넌트 아이디';
@@ -7343,7 +7198,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET_NAME"."PORTLET_ID" IS '포틀릿 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET_NAME"."MENU_ID" IS '메뉴 아이디';
@@ -7369,7 +7224,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET_USER"."USER_ID" IS '사용자 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_PORTLET_USER"."TENANT_ID" IS '테넌트 아이디';
@@ -7391,7 +7246,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTAL_THEME
 --------------------------------------------------------
@@ -7399,21 +7254,38 @@
   CREATE TABLE "EZEKP2017"."TBL_PORTAL_THEME" 
    (	"THEME_ID" NUMBER(10,0), 
 	"THEME_NAME" VARCHAR2(100), 
-	"THEME_CONTENT" VARCHAR2(400),
+	"THEME_CONTENT" VARCHAR2(400), 
 	"THEME_CONTENT2" VARCHAR2(400) DEFAULT 'theme content', 
-	"THEME_CONTENT3" VARCHAR2(400 BYTE) DEFAULT 'theme content',
-	"THEME_NAME2" VARCHAR2(100),
-	"THEME_NAME3" VARCHAR2(100)
+	"THEME_CONTENT3" VARCHAR2(400) DEFAULT 'theme content', 
+	"THEME_NAME2" VARCHAR2(100) DEFAULT 'theme content', 
+	"THEME_NAME3" VARCHAR2(100) DEFAULT 'theme3'
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_THEME"."THEME_ID" IS '테마아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_THEME"."THEME_NAME" IS '테마 이름';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_THEME"."THEME_CONTENT" IS '테마 설명(내용)';
    COMMENT ON TABLE "EZEKP2017"."TBL_PORTAL_THEME"  IS '테마 정보 테이블';
+--------------------------------------------------------
+--  DDL for Table TBL_PORTAL_THEME_AUTH
+--------------------------------------------------------
+
+  CREATE TABLE "EZEKP2017"."TBL_PORTAL_THEME_AUTH" 
+   (	"THEME_ID" NUMBER(10,0) DEFAULT 0, 
+	"COMPANY_ID" VARCHAR2(100) DEFAULT NULL, 
+	"TENANT_ID" NUMBER(5,0) DEFAULT 0, 
+	"USER_ID" VARCHAR2(100) DEFAULT NULL, 
+	"ACCESS_YN" NUMBER(5,0) DEFAULT 0, 
+	"USER_TYPE" NUMBER(5,0) DEFAULT 0, 
+	"SN" NUMBER(*,0) DEFAULT 0
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTAL_THEME_COMP
 --------------------------------------------------------
@@ -7428,7 +7300,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_THEME_COMP"."COMPANY_ID" IS '회사 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_THEME_COMP"."TENANT_ID" IS '테넌트 아이디';
@@ -7453,7 +7325,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTAL_THEME_USER
 --------------------------------------------------------
@@ -7469,7 +7341,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_THEME_USER"."USER_ID" IS '사용자 아이디';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PORTAL_THEME_USER"."COMPANY_ID" IS '회사 아이디';
@@ -7492,7 +7364,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTLET_CATEGORY
 --------------------------------------------------------
@@ -7505,7 +7377,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTLET_GENERAL
 --------------------------------------------------------
@@ -7531,7 +7403,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTLET_HTMLPAGE
 --------------------------------------------------------
@@ -7545,7 +7417,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTLET_IMAGE
 --------------------------------------------------------
@@ -7563,7 +7435,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTLET_PARAMETERS
 --------------------------------------------------------
@@ -7578,7 +7450,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PORTLET_URL
 --------------------------------------------------------
@@ -7593,7 +7465,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PREVIOSLYREGI
 --------------------------------------------------------
@@ -7606,7 +7478,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PROXYINFO
 --------------------------------------------------------
@@ -7623,7 +7495,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_APPROVNOTIMAILCONF
 --------------------------------------------------------
@@ -7641,7 +7513,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 
    COMMENT ON COLUMN "EZEKP2017"."TBL_PS_APPROVNOTIMAILCONF"."ALERT" IS '결재 도착 알림 메일 사용여부';
    COMMENT ON COLUMN "EZEKP2017"."TBL_PS_APPROVNOTIMAILCONF"."COMPLETE" IS '결재 완료 알림 메일 사용여부';
@@ -7673,7 +7545,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_LIGHTPOLL
 --------------------------------------------------------
@@ -7701,7 +7573,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_LIGHTPOLLRESULT
 --------------------------------------------------------
@@ -7715,7 +7587,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_LIGHTPOLL_OPTION
 --------------------------------------------------------
@@ -7729,7 +7601,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_NOTICE
 --------------------------------------------------------
@@ -7746,9 +7618,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -7774,9 +7646,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -7793,7 +7665,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_QUICKLINK
 --------------------------------------------------------
@@ -7817,7 +7689,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_QUICKLINK_ACL
 --------------------------------------------------------
@@ -7833,7 +7705,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_SHAREAPPROVAL
 --------------------------------------------------------
@@ -7851,7 +7723,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_SLIDERIMAGE
 --------------------------------------------------------
@@ -7873,7 +7745,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_USERWEBPART
 --------------------------------------------------------
@@ -7888,7 +7760,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_WEBPARTGROUP
 --------------------------------------------------------
@@ -7902,7 +7774,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_WEBPARTITEM
 --------------------------------------------------------
@@ -7921,7 +7793,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PS_WEBPARTITEMACL
 --------------------------------------------------------
@@ -7935,7 +7807,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_PWDINFO
 --------------------------------------------------------
@@ -7951,7 +7823,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_QS_BRDMNG
 --------------------------------------------------------
@@ -7973,7 +7845,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_QS_ITEMSEQ
 --------------------------------------------------------
@@ -7986,7 +7858,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECEIPTPOINTINFO
 --------------------------------------------------------
@@ -8015,7 +7887,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECEXCHINFO
 --------------------------------------------------------
@@ -8046,9 +7918,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("ADDENDA") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -8096,7 +7968,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECORDHISTORY
 --------------------------------------------------------
@@ -8129,7 +8001,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECORD_TEMP
 --------------------------------------------------------
@@ -8173,7 +8045,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECREADHISTORY
 --------------------------------------------------------
@@ -8196,7 +8068,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECRELAYATTACHINFO
 --------------------------------------------------------
@@ -8213,7 +8085,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECRELAYINFO
 --------------------------------------------------------
@@ -8245,7 +8117,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECRELAYSIGNINFO
 --------------------------------------------------------
@@ -8260,7 +8132,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECROLEINFO
 --------------------------------------------------------
@@ -8283,7 +8155,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RECROLEINFO_TEMP
 --------------------------------------------------------
@@ -8307,7 +8179,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RS_ATTACH
 --------------------------------------------------------
@@ -8324,7 +8196,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RS_BRD
 --------------------------------------------------------
@@ -8365,7 +8237,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RS_FAVORITE
 --------------------------------------------------------
@@ -8379,7 +8251,21 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table TBL_RS_PERSPORTLET
+--------------------------------------------------------
+
+  CREATE TABLE "EZEKP2017"."TBL_RS_PERSPORTLET" 
+   (	"CN" NVARCHAR2(80), 
+	"BRD_ID" NUMBER(10,0), 
+	"BRD_COMPANY" NVARCHAR2(80), 
+	"TENANT_ID" NUMBER(5,0)
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RS_RESACL
 --------------------------------------------------------
@@ -8397,7 +8283,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_RS_SCHEDULE
 --------------------------------------------------------
@@ -8433,9 +8319,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -8452,9 +8338,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("FORMTEXT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -8481,7 +8367,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHEDULE
 --------------------------------------------------------
@@ -8521,7 +8407,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHEDULEATTACH
 --------------------------------------------------------
@@ -8537,7 +8423,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHEDULECONFIG
 --------------------------------------------------------
@@ -8549,12 +8435,16 @@
 	"STARTTIME" NVARCHAR2(4), 
 	"ENDTIME" NVARCHAR2(4), 
 	"AUTODELETE" NUMBER(10,0), 
-	"TENANT_ID" NUMBER(5,0)
+	"TENANT_ID" NUMBER(5,0), 
+	"INVITATIONMAIL" VARCHAR2(4) DEFAULT 'Y', 
+	"CANCELLATIONMAIL" VARCHAR2(4) DEFAULT 'Y', 
+	"ATTENDANCEMAIL" VARCHAR2(4) DEFAULT 'Y', 
+	"REJECTEDMAIL" VARCHAR2(4) DEFAULT 'Y'
    ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHEDULEGROUP
 --------------------------------------------------------
@@ -8573,7 +8463,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHEDULEGROUPMEMBER
 --------------------------------------------------------
@@ -8590,7 +8480,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHEDULEREPETITION_DEL
 --------------------------------------------------------
@@ -8606,7 +8496,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHEDULE_PUBLIC_DEPT
 --------------------------------------------------------
@@ -8625,7 +8515,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHISTORY_CAB
 --------------------------------------------------------
@@ -8643,7 +8533,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SCHISTORY_REC
 --------------------------------------------------------
@@ -8662,7 +8552,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SEALDEPTINFO
 --------------------------------------------------------
@@ -8685,7 +8575,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SEALINFO
 --------------------------------------------------------
@@ -8707,7 +8597,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SECRETARY
 --------------------------------------------------------
@@ -8725,7 +8615,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SEPERATEATTACH
 --------------------------------------------------------
@@ -8752,7 +8642,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SEPERATEATTACH_TEMP
 --------------------------------------------------------
@@ -8780,7 +8670,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SERIALNUMGEN
 --------------------------------------------------------
@@ -8799,7 +8689,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SIGNINFO
 --------------------------------------------------------
@@ -8816,7 +8706,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SKIN_GENERAL
 --------------------------------------------------------
@@ -8834,7 +8724,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SKIN_ITEMS
 --------------------------------------------------------
@@ -8856,7 +8746,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SPECIALCATALOGINFO_CAB
 --------------------------------------------------------
@@ -8873,7 +8763,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SPECIALCATALOGINFO_REC
 --------------------------------------------------------
@@ -8890,7 +8780,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SPECIALCATALOGINFO_TMP
 --------------------------------------------------------
@@ -8908,7 +8798,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SPECIALCONTAINERINFO
 --------------------------------------------------------
@@ -8925,7 +8815,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY
 --------------------------------------------------------
@@ -8960,14 +8850,14 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("TITLE") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) 
  LOB ("PURPOSE") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -8990,7 +8880,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_CONFIG
 --------------------------------------------------------
@@ -9007,7 +8897,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_OPTION
 --------------------------------------------------------
@@ -9030,7 +8920,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_PARTICIPANT
 --------------------------------------------------------
@@ -9052,7 +8942,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_QUESTION
 --------------------------------------------------------
@@ -9076,7 +8966,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_RESPONDENT
 --------------------------------------------------------
@@ -9099,7 +8989,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_SURVEY_RESPONSE
 --------------------------------------------------------
@@ -9122,9 +9012,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("TEXTS") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -9170,7 +9060,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKATTACH
 --------------------------------------------------------
@@ -9187,7 +9077,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKCATEGORY
 --------------------------------------------------------
@@ -9204,7 +9094,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKCODE
 --------------------------------------------------------
@@ -9238,7 +9128,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKCODEHISTORY
 --------------------------------------------------------
@@ -9260,7 +9150,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKCOMMENT
 --------------------------------------------------------
@@ -9278,9 +9168,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("T_COMMENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -9299,7 +9189,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKGENERAL
 --------------------------------------------------------
@@ -9313,7 +9203,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKINSTANCESTATUS
 --------------------------------------------------------
@@ -9331,7 +9221,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKMIDDLECATEGORY
 --------------------------------------------------------
@@ -9349,7 +9239,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKREQUEST
 --------------------------------------------------------
@@ -9370,9 +9260,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("ERRMSG") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -9394,7 +9284,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASKSUBCATEGORY
 --------------------------------------------------------
@@ -9412,7 +9302,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TASK_DEPTINFO
 --------------------------------------------------------
@@ -9437,7 +9327,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TENANT
 --------------------------------------------------------
@@ -9450,7 +9340,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TENANT_CONFIG
 --------------------------------------------------------
@@ -9466,7 +9356,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TENANT_SERVERNAME
 --------------------------------------------------------
@@ -9478,7 +9368,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_THEME_GENERAL
 --------------------------------------------------------
@@ -9503,7 +9393,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TMPAPRDOCATTACHINFO
 --------------------------------------------------------
@@ -9529,7 +9419,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TMPAPRDOCINFO
 --------------------------------------------------------
@@ -9564,7 +9454,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TMPAPRLINEINFO
 --------------------------------------------------------
@@ -9596,7 +9486,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TMPAPROPINIONINFO
 --------------------------------------------------------
@@ -9621,9 +9511,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -9655,7 +9545,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TMPEXPAPRDOCINFO
 --------------------------------------------------------
@@ -9693,14 +9583,14 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("SEPERATEATTACHXML") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) 
  LOB ("SUMMARY") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -9727,7 +9617,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TMPRECEIPTPOINTINFO
 --------------------------------------------------------
@@ -9757,7 +9647,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TOPMENU_GENERAL
 --------------------------------------------------------
@@ -9789,7 +9679,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_TOPMENU_ITEMS
 --------------------------------------------------------
@@ -9819,7 +9709,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERCONT
 --------------------------------------------------------
@@ -9836,7 +9726,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERCONTLIST
 --------------------------------------------------------
@@ -9852,7 +9742,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERINFO
 --------------------------------------------------------
@@ -9871,7 +9761,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERLOCALINFO
 --------------------------------------------------------
@@ -9885,7 +9775,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERMASTER
 --------------------------------------------------------
@@ -9952,7 +9842,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERMASTER_DELETE
 --------------------------------------------------------
@@ -10064,7 +9954,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERMOBILEINFO
 --------------------------------------------------------
@@ -10081,7 +9971,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USERSTARTPAGE_ITEM
 --------------------------------------------------------
@@ -10099,7 +9989,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USER_CONFIG
 --------------------------------------------------------
@@ -10113,7 +10003,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USER_JOBMASTER
 --------------------------------------------------------
@@ -10133,7 +10023,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_USER_MULTILOGIN
 --------------------------------------------------------
@@ -10146,7 +10036,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_VOTE_ANSWER
 --------------------------------------------------------
@@ -10162,9 +10052,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("FILE_PATH") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -10190,7 +10080,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_VOTE_CONFIGURATION
 --------------------------------------------------------
@@ -10206,7 +10096,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_VOTE_QUESTION
 --------------------------------------------------------
@@ -10243,14 +10133,14 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("CONTENT") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) 
  LOB ("FILE_PATH") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -10272,7 +10162,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_VOTE_USER_AND_ANSWER
 --------------------------------------------------------
@@ -10290,7 +10180,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_VOTE_USER_AND_QUESTION
 --------------------------------------------------------
@@ -10306,7 +10196,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEATHER
 --------------------------------------------------------
@@ -10323,7 +10213,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEATHER_USER
 --------------------------------------------------------
@@ -10336,7 +10226,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_CONFIG
 --------------------------------------------------------
@@ -10352,7 +10242,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_ENV
 --------------------------------------------------------
@@ -10366,7 +10256,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_FAVOR
 --------------------------------------------------------
@@ -10381,7 +10271,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_FILE
 --------------------------------------------------------
@@ -10408,7 +10298,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_FILETYPE
 --------------------------------------------------------
@@ -10424,7 +10314,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_FOLDER
 --------------------------------------------------------
@@ -10453,7 +10343,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_FOLDERUSER
 --------------------------------------------------------
@@ -10471,7 +10361,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_LOG
 --------------------------------------------------------
@@ -10493,7 +10383,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_SHARE
 --------------------------------------------------------
@@ -10512,7 +10402,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_SHARE_HIDE
 --------------------------------------------------------
@@ -10529,7 +10419,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_SHARE_SUB
 --------------------------------------------------------
@@ -10546,7 +10436,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_TOKEN
 --------------------------------------------------------
@@ -10562,7 +10452,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TBL_WEBFOLDER_USER
 --------------------------------------------------------
@@ -10577,7 +10467,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table TEMP_DOC_TRANS_TB
 --------------------------------------------------------
@@ -10597,9 +10487,9 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" 
+  TABLESPACE "USERS" 
  LOB ("HTML_BODY") STORE AS BASICFILE (
-  TABLESPACE "USER" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
+  TABLESPACE "USERS" ENABLE STORAGE IN ROW CHUNK 8192 RETENTION 
   NOCACHE LOGGING 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)) ;
@@ -10634,7 +10524,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table V_AZPARTCD_ADR
 --------------------------------------------------------
@@ -10653,7 +10543,7 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table V_AZPARTCD_LIST
 --------------------------------------------------------
@@ -10666,222 +10556,482 @@
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
-
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
---  DDL for View SVTASKCLASS
---------------------------------------------------------
-
-  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."SVTASKCLASS" ("CATEGORYCODE", "CNAME", "CNAME2", "MCATEGORYCODE", "MCNAME", "MCNAME2", "SUBCATEGORYCODE", "SCNAME", "SCNAME2", "TASKCODE", "TASKNAME", "TASKNAME2", "KEEPINGPERIOD", "DISPLAYRECFLAG", "SPECIALCATALOGFLAG", "TEMPFLAG", "COMPANYID", "TENANT_ID", "PROCESSDEPTCODE", "PROCESSDEPTNAME", "PROCESSDEPTNAME2", "KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECTRASTIME", "ISPUBLIC", "ITEMSECURITY", "DELFLAG") AS 
-  SELECT 
-        tbl_taskcategory.CATEGORYCODE AS CATEGORYCODE,
-        tbl_taskcategory.NAME AS CNAME,
-        tbl_taskcategory.NAME2 AS CNAME2,
-        tbl_taskmiddlecategory.MCATEGORYCODE AS MCATEGORYCODE,
-        tbl_taskmiddlecategory.NAME AS MCNAME,
-        tbl_taskmiddlecategory.NAME2 AS MCNAME2,
-        tbl_tasksubcategory.SUBCATEGORYCODE AS SUBCATEGORYCODE,
-        tbl_tasksubcategory.NAME AS SCNAME,
-        tbl_tasksubcategory.NAME2 AS SCNAME2,
-        tbl_taskcode.TASKCODE AS TASKCODE,
-        tbl_taskcode.TASKNAME AS TASKNAME,
-        tbl_taskcode.TASKNAME2 AS TASKNAME2,
-        tbl_taskcode.KEEPINGPERIOD AS KEEPINGPERIOD,
-        tbl_taskcode.DISPLAYRECFLAG AS DISPLAYRECFLAG,
-        tbl_taskcode.SPECIALCATALOGFLAG AS SPECIALCATALOGFLAG,
-        tbl_taskcode.TEMPFLAG AS TEMPFLAG,
-        tbl_taskcode.COMPANYID AS COMPANYID,
-        tbl_taskcode.TENANT_ID AS TENANT_ID,
-        tbl_task_deptinfo.PROCESSDEPTCODE AS PROCESSDEPTCODE,
-        tbl_task_deptinfo.PROCESSDEPTNAME AS PROCESSDEPTNAME,
-        tbl_task_deptinfo.PROCESSDEPTNAME2 AS PROCESSDEPTNAME2,
-        tbl_taskcode.KEEPINGMETHOD AS KEEPINGMETHOD,
-        tbl_taskcode.KEEPINGPLACE AS KEEPINGPLACE,
-        tbl_taskcode.DISPLAYRECTRASTIME AS DISPLAYRECTRASTIME,
-        tbl_taskcode.ISPUBLIC AS ISPUBLIC,
-        tbl_taskcode.ITEMSECURITY AS ITEMSECURITY,
-        tbl_task_deptinfo.DELFLAG AS DELFLAG
-    FROM
-        ((((tbl_taskcategory
-        JOIN tbl_taskmiddlecategory ON (((tbl_taskcategory.CATEGORYCODE = tbl_taskmiddlecategory.CATEGORYCODE)
-            AND (tbl_taskcategory.TENANT_ID = tbl_taskmiddlecategory.TENANT_ID)
-            AND (tbl_taskcategory.COMPANYID = tbl_taskmiddlecategory.COMPANYID))))
-        JOIN tbl_tasksubcategory ON (((tbl_taskmiddlecategory.MCATEGORYCODE = tbl_tasksubcategory.MCATEGORYCODE)
-            AND (tbl_taskmiddlecategory.TENANT_ID = tbl_tasksubcategory.TENANT_ID)
-            AND (tbl_taskmiddlecategory.COMPANYID = tbl_tasksubcategory.COMPANYID))))
-        JOIN tbl_taskcode ON (((tbl_tasksubcategory.SUBCATEGORYCODE = tbl_taskcode.SUBCATEGORYCODE)
-            AND (tbl_tasksubcategory.TENANT_ID = tbl_taskcode.TENANT_ID)
-            AND (tbl_tasksubcategory.COMPANYID = tbl_taskcode.COMPANYID))))
-        LEFT JOIN tbl_task_deptinfo ON (((tbl_taskcode.TASKCODE = tbl_task_deptinfo.TASKCODE)
-            AND (tbl_taskcode.TENANT_ID = tbl_task_deptinfo.TENANT_ID)
-            AND (tbl_taskcode.COMPANYID = tbl_task_deptinfo.COMPANYID))))
-    WHERE
-        tbl_task_deptinfo.DELFLAG = '0'
-            OR tbl_task_deptinfo.DELFLAG is null
-            OR tbl_task_deptinfo.DELFLAG = '2'
-;
---------------------------------------------------------
---  DDL for View VAPRDOINGDOCLIST
+--  DDL for Sequence DBOBJECTID_SEQUENCE
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VAPRDOINGDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL") AS 
-  SELECT  TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",case when TBL_APRLINEINFO."APRSTATE" = '000' then '017' else  TBL_APRDOCINFO."DOCSTATE" end as DOCSTATE,case when TBL_APRLINEINFO."APRSTATE" = '000' and TBL_APRDOCINFO."FUNCTIONTYPE" <> '004' THEN '002' ELSE TBL_APRDOCINFO."FUNCTIONTYPE" END as FUNCTIONTYPE,TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,          TBL_APRLINEINFO.AprType AprType  ,          TBL_APRLINEINFO.AprState AprState  ,          TBL_APRLINEINFO.AprMemberID AprMemberID  ,          TBL_APRLINEINFO.AprMemberName AprMemberName  ,          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,          TBL_APRLINEINFO.ReceivedDate ReceivedDate  ,          TBL_EXPAPRDOCINFO.FormName FormName  ,          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval       FROM TBL_APRDOCINFO             JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID     WHERE  ( TBL_APRLINEINFO.AprState = '002'             OR TBL_APRLINEINFO.AprState = '005'             OR TBL_APRLINEINFO.AprState = '000')             AND ( TBL_APRDOCINFO.StartDate IS NOT NULL )
-;
+   CREATE SEQUENCE  "EZEKP2017"."DBOBJECTID_SEQUENCE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE ;
 --------------------------------------------------------
---  DDL for View VAPRWILLDOCLIST
+--  DDL for Sequence LIGHTPOLLOPTIONID_SEQ
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VAPRWILLDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL", "COMPANYNAME", "COMPANYNAME2") AS 
-  SELECT TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",TBL_APRDOCINFO."DOCSTATE",TBL_APRDOCINFO."FUNCTIONTYPE",TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",
-          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,
-          TBL_APRLINEINFO.AprType AprType  ,
-          TBL_APRLINEINFO.AprState AprState  ,
-          TBL_APRLINEINFO.AprMemberID AprMemberID  ,
-          TBL_APRLINEINFO.AprMemberName AprMemberName  ,
-          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,
-          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,
-          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,
-          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,
-          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,
-          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,
-          TBL_EXPAPRDOCINFO.FormName FormName  ,
-          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,
-          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval  ,
-          TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 COMPANYNAME  ,
-		  TBL_DEPTMASTER.COMPNM2 COMPANYNAME2
-     FROM TBL_APRDOCINFO 
-            JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND  TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND  TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID
-            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
-			JOIN TBL_DEPTMASTER ON TBL_APRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN AND TBL_APRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
-    WHERE  ( TBL_APRDOCINFO.StartDate IS NOT NULL )
-;
+   CREATE SEQUENCE  "EZEKP2017"."LIGHTPOLLOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
---  DDL for View VENDCHAMJODOCINFO
+--  DDL for Sequence POPUPOPTIONID_SEQ
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VENDCHAMJODOCINFO" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL") AS 
-  SELECT 
-        tbl_endaprdocinfo.DOCID AS DOCID,
-        tbl_endaprdocinfo.FORMID AS FORMID,
-        tbl_endaprdocinfo.ORGDOCID AS ORGDOCID,
-        tbl_endaprdocinfo.DOCTYPE AS DOCTYPE,
-        '017' AS DOCSTATE,
-        '002' AS FUNCTIONTYPE,
-        tbl_endaprdocinfo.HREF AS HREF,
-        tbl_endaprdocinfo.DOCTITLE AS DOCTITLE,
-        tbl_endaprdocinfo.DOCNO AS DOCNO,
-        tbl_endaprdocinfo.HASATTACHYN AS HASATTACHYN,
-        tbl_endaprdocinfo.HASOPINIONYN AS HASOPINIONYN,
-        tbl_endaprdocinfo.STARTDATE AS STARTDATE,
-        tbl_endaprdocinfo.ENDDATE AS ENDDATE,
-        tbl_endaprdocinfo.WRITERID AS WRITERID,
-        tbl_endaprdocinfo.WRITERNAME AS WRITERNAME,
-        tbl_endaprdocinfo.WRITERJOBTITLE AS WRITERJOBTITLE,
-        tbl_endaprdocinfo.WRITERDEPTID AS WRITERDEPTID,
-        tbl_endaprdocinfo.WRITERDEPTNAME AS WRITERDEPTNAME,
-        tbl_endaprdocinfo.ISPUBLIC AS ISPUBLIC,
-        tbl_endaprdocinfo.WRITERNAME2 AS WRITERNAME2,
-        tbl_endaprdocinfo.WRITERJOBTITLE2 AS WRITERJOBTITLE2,
-        tbl_endaprdocinfo.WRITERDEPTNAME2 AS WRITERDEPTNAME2,
-        tbl_endaprdocinfo.TENANT_ID AS TENANT_ID,
-        tbl_endaprdocinfo.COMPANYID AS COMPANYID,
-        tbl_endaprlineinfo.APRMEMBERSN AS APRMEMBERSN,
-        tbl_endaprlineinfo.APRTYPE AS APRTYPE,
-        tbl_endaprlineinfo.APRSTATE AS APRSTATE,
-        tbl_endaprlineinfo.APRMEMBERID AS APRMEMBERID,
-        tbl_endaprlineinfo.APRMEMBERNAME AS APRMEMBERNAME,
-        tbl_endaprlineinfo.APRMEMBERNAME2 AS APRMEMBERNAME2,
-        tbl_endaprlineinfo.APRMEMBERJOBTITLE AS APRMEMBERJOBTITLE,
-        tbl_endaprlineinfo.APRMEMBERJOBTITLE2 AS APRMEMBERJOBTITLE2,
-        tbl_endaprlineinfo.APRMEMBERDEPTID AS APRMEMBERDEPTID,
-        tbl_endaprlineinfo.APRMEMBERDEPTNAME AS APRMEMBERDEPTNAME,
-        tbl_endaprlineinfo.APRMEMBERDEPTNAME2 AS APRMEMBERDEPTNAME2,
-        tbl_endaprlineinfo.RECEIVEDDATE AS RECEIVEDDATE,
-        tbl_expendaprdocinfo.FORMNAME AS FORMNAME,
-        tbl_expendaprdocinfo.FORMNAME2 AS FORMNAME2,
-        tbl_expendaprdocinfo.URGENTAPPROVAL AS URGENTAPPROVAL
-    FROM
-        ((tbl_endaprdocinfo
-        JOIN tbl_endaprlineinfo ON (((tbl_endaprdocinfo.DOCID = tbl_endaprlineinfo.DOCID)
-            AND (tbl_endaprdocinfo.TENANT_ID = tbl_endaprlineinfo.TENANT_ID)
-            AND (tbl_endaprdocinfo.COMPANYID = tbl_endaprlineinfo.COMPANYID))))
-        JOIN tbl_expendaprdocinfo ON (((tbl_endaprdocinfo.DOCID = tbl_expendaprdocinfo.DOCID)
-            AND (tbl_endaprdocinfo.TENANT_ID = tbl_expendaprdocinfo.TENANT_ID)
-            AND (tbl_endaprdocinfo.COMPANYID = tbl_expendaprdocinfo.COMPANYID))))
-    WHERE
-        ((tbl_endaprlineinfo.APRSTATE <> '002')
-            AND (tbl_endaprlineinfo.APRSTATE <> '005')
-            AND (tbl_endaprlineinfo.APRSTATE = '000'))
-;
+   CREATE SEQUENCE  "EZEKP2017"."POPUPOPTIONID_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
---  DDL for View VGONGRAMAPRDOINGDOCLIST
+--  DDL for Sequence SEQ_DBOBJECTID_SEQUENCE
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VGONGRAMAPRDOINGDOCLIST" ("DOCID", "FORMID", "ORGDOCID", "DOCTYPE", "DOCSTATE", "FUNCTIONTYPE", "HREF", "DOCTITLE", "DOCNO", "HASATTACHYN", "HASOPINIONYN", "STARTDATE", "ENDDATE", "WRITERID", "WRITERNAME", "WRITERJOBTITLE", "WRITERDEPTID", "WRITERDEPTNAME", "ISPUBLIC", "WRITERNAME2", "WRITERJOBTITLE2", "WRITERDEPTNAME2", "TENANT_ID", "COMPANYID", "APRMEMBERSN", "APRTYPE", "APRSTATE", "APRMEMBERID", "APRMEMBERNAME", "APRMEMBERNAME2", "APRMEMBERJOBTITLE", "APRMEMBERJOBTITLE2", "APRMEMBERDEPTID", "APRMEMBERDEPTNAME", "APRMEMBERDEPTNAME2", "RECEIVEDDATE", "FORMNAME", "FORMNAME2", "URGENTAPPROVAL") AS 
-  SELECT  TBL_APRDOCINFO."DOCID",TBL_APRDOCINFO."FORMID",TBL_APRDOCINFO."ORGDOCID",TBL_APRDOCINFO."DOCTYPE",case when TBL_APRLINEINFO."APRSTATE" = '000' then '017' else  TBL_APRDOCINFO."DOCSTATE" end as DOCSTATE,case when TBL_APRLINEINFO."APRSTATE" = '000' and TBL_APRDOCINFO."FUNCTIONTYPE" <> '004' THEN '002' ELSE TBL_APRDOCINFO."FUNCTIONTYPE" END as FUNCTIONTYPE,TBL_APRDOCINFO."HREF",TBL_APRDOCINFO."DOCTITLE",TBL_APRDOCINFO."DOCNO",TBL_APRDOCINFO."HASATTACHYN",TBL_APRDOCINFO."HASOPINIONYN",TBL_APRDOCINFO."STARTDATE",TBL_APRDOCINFO."ENDDATE",TBL_APRDOCINFO."WRITERID",TBL_APRDOCINFO."WRITERNAME",TBL_APRDOCINFO."WRITERJOBTITLE",TBL_APRDOCINFO."WRITERDEPTID",TBL_APRDOCINFO."WRITERDEPTNAME",TBL_APRDOCINFO."ISPUBLIC",TBL_APRDOCINFO."WRITERNAME2",TBL_APRDOCINFO."WRITERJOBTITLE2",TBL_APRDOCINFO."WRITERDEPTNAME2" ,TBL_APRDOCINFO."TENANT_ID",TBL_APRDOCINFO."COMPANYID",          TBL_APRLINEINFO.AprMemberSN AprMemberSN  ,          TBL_APRLINEINFO.AprType AprType  ,          TBL_APRLINEINFO.AprState AprState  ,          TBL_APRLINEINFO.AprMemberID AprMemberID  ,          TBL_APRLINEINFO.AprMemberName AprMemberName  ,          TBL_APRLINEINFO.AprMemberName2 AprMemberName2  ,          TBL_APRLINEINFO.AprMemberJobTitle AprMemberJobTitle  ,          TBL_APRLINEINFO.AprMemberJobTitle2 AprMemberJobTitle2  ,          TBL_APRLINEINFO.AprMemberDeptID AprMemberDeptID  ,          TBL_APRLINEINFO.AprMemberDeptName AprMemberDeptName  ,          TBL_APRLINEINFO.AprMemberDeptName2 AprMemberDeptName2  ,          TBL_APRLINEINFO.ReceivedDate ReceivedDate  ,          TBL_EXPAPRDOCINFO.FormName FormName  ,          TBL_EXPAPRDOCINFO.FormName2 FormName2  ,          TBL_EXPAPRDOCINFO.UrgentApproval UrgentApproval       FROM TBL_APRDOCINFO             JOIN TBL_APRLINEINFO    ON TBL_APRDOCINFO.DocID = TBL_APRLINEINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID            JOIN TBL_EXPAPRDOCINFO    ON TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID AND TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID AND TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID     WHERE  (( TBL_APRLINEINFO.AprState = '002') AND (TBL_APRDOCINFO.DOCSTATE = '015') AND ( TBL_APRDOCINFO.StartDate IS NOT NULL ))
-;
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_DBOBJECTID_SEQUENCE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE ;
 --------------------------------------------------------
---  DDL for View VSEARCH_CLUBGUEST
+--  DDL for Sequence SEQ_JMOCHA_ADDRESS_FOLDER
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VSEARCH_CLUBGUEST" ("C_CLUBNO", "NO", "ID", "USERNAME", "COMPANYID", "TITLE", "CONTENT", "WRITEDAY", "C_CLUBNAME", "TENANT_ID") AS 
-  SELECT TBL_C_CLUBGUEST.c_clubno ,
-          TBL_C_CLUBGUEST.no ,
-          TBL_C_CLUBGUEST.id ,
-          TBL_C_CLUBGUEST.UserName ,
-          TBL_C_CLUBGUEST.companyID ,
-          TBL_C_CLUBGUEST.title ,
-          TBL_C_CLUBGUEST.content ,
-          TBL_C_CLUBGUEST.writeday ,
-          TBL_C_CLUB.C_ClubName,
-          TBL_C_CLUBGUEST.tenant_ID
-     FROM TBL_C_CLUBGUEST 
-            JOIN TBL_C_CLUB    ON TBL_C_CLUBGUEST.c_clubno = TBL_C_CLUB.C_ClubNo
-                                AND TBL_C_CLUBGUEST.tenant_ID = TBL_C_CLUB.tenant_ID
-;
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_ADDRESS_FOLDER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
---  DDL for View VTASKCLASS
+--  DDL for Sequence SEQ_JMOCHA_ADDRESS_INFO
 --------------------------------------------------------
 
-  CREATE OR REPLACE FORCE VIEW "EZEKP2017"."VTASKCLASS" ("CATEGORYCODE", "CNAME", "CNAME2", "MCATEGORYCODE", "MCNAME", "MCNAME2", "SUBCATEGORYCODE", "SCNAME", "SCNAME2", "TASKCODE", "TASKNAME", "TASKNAME2", "KEEPINGPERIOD", "DISPLAYRECFLAG", "SPECIALCATALOGFLAG", "SC1", "SC2", "SC3", "TEMPFLAG", "COMPANYID", "TENANT_ID", "PROCESSDEPTCODE", "PROCESSDEPTNAME", "PROCESSDEPTNAME2", "KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECTRASTIME", "DELFLAG") AS 
-  SELECT TBL_TASKCATEGORY.CategoryCode ,
-          TBL_TASKCATEGORY.Name CName  ,
-          TBL_TASKCATEGORY.Name2 CName2  ,
-          TBL_TASKMIDDLECATEGORY.MCategoryCode ,
-          TBL_TASKMIDDLECATEGORY.Name MCName  ,
-          TBL_TASKMIDDLECATEGORY.Name2 MCName2  ,
-          TBL_TASKSUBCATEGORY.SubCategoryCode ,
-          TBL_TASKSUBCATEGORY.Name SCName  ,
-          TBL_TASKSUBCATEGORY.Name2 SCName2  ,
-          TBL_TASKCODE.TaskCode ,
-          TBL_TASKCODE.TaskName ,
-          TBL_TASKCODE.TaskName2 ,
-          TBL_TASKCODE.KeepingPeriod ,
-          TBL_TASKCODE.DisplayRecFlag ,
-          TBL_TASKCODE.SpecialCatalogFlag ,
-          TBL_TASKCODE.SC1 ,
-          TBL_TASKCODE.SC2 ,
-          TBL_TASKCODE.SC3 ,
-          TBL_TASKCODE.TempFlag ,
-          TBL_TASKCODE.COMPANYID,
-          TBL_TASKCODE.TENANT_ID ,
-          TBL_TASK_DEPTINFO.ProcessDeptCode ,
-          TBL_TASK_DEPTINFO.ProcessDeptName ,
-          TBL_TASK_DEPTINFO.ProcessDeptName2 ,
-          TBL_TASKCODE.KeepingMethod ,
-          TBL_TASKCODE.KeepingPlace ,
-          TBL_TASKCODE.DisplayRecTrasTime ,
-          TBL_TASK_DEPTINFO.DelFlag 
-     FROM TBL_TASKCATEGORY 
-            JOIN TBL_TASKMIDDLECATEGORY    ON TBL_TASKCATEGORY.CategoryCode = TBL_TASKMIDDLECATEGORY.CategoryCode AND TBL_TASKCATEGORY.TENANT_ID = TBL_TASKMIDDLECATEGORY.TENANT_ID AND TBL_TASKCATEGORY.COMPANYID = TBL_TASKMIDDLECATEGORY.COMPANYID
-            JOIN TBL_TASKSUBCATEGORY    ON TBL_TASKMIDDLECATEGORY.MCategoryCode = TBL_TASKSUBCATEGORY.MCategoryCode AND TBL_TASKMIDDLECATEGORY.TENANT_ID = TBL_TASKSUBCATEGORY.TENANT_ID AND TBL_TASKMIDDLECATEGORY.COMPANYID = TBL_TASKSUBCATEGORY.COMPANYID
-            JOIN TBL_TASKCODE    ON TBL_TASKSUBCATEGORY.SubCategoryCode = TBL_TASKCODE.SubCategoryCode AND TBL_TASKSUBCATEGORY.TENANT_ID = TBL_TASKCODE.TENANT_ID AND TBL_TASKSUBCATEGORY.COMPANYID = TBL_TASKCODE.COMPANYID
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_ADDRESS_INFO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_ADDRESS_SIMPLE
+--------------------------------------------------------
 
-            LEFT JOIN TBL_TASK_DEPTINFO    ON TBL_TASKCODE.TaskCode = TBL_TASK_DEPTINFO.TaskCode AND TBL_TASKCODE.TENANT_ID = TBL_TASK_DEPTINFO.TENANT_ID AND TBL_TASKCODE.COMPANYID = TBL_TASK_DEPTINFO.COMPANYID
-    WHERE  ( TBL_TASK_DEPTINFO.DelFlag = '0' )
-             OR ( TBL_TASK_DEPTINFO.DelFlag IS NULL )
-             OR ( TBL_TASK_DEPTINFO.DelFlag = '2' )
-;
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_ADDRESS_SIMPLE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_CONNECTION_INFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_INBOX_RULE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_INBOX_RULE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_INBOX_RULE_SUB
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_INBOX_RULE_SUB"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_LETTER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_LETTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_LETTER_BOX
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_LETTER_BOX"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_MAIL_POP3
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_MAIL_POP3"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_MAIL_RECALL
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_MAIL_RECALL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_MAIL_SECURE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_MAIL_SECURE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_JMOCHA_STAT_MAIL_LOG
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_JMOCHA_STAT_MAIL_LOG"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TALK_TBLNOTIFICATION
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TALK_TBLNOTIFICATION"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_MAIN
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ADMINRECEIPTGROUP_MAIN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ADMINRECEIPTGROUP_SUB
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ADMINRECEIPTGROUP_SUB"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTITUDE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTITUDE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTITUDE_HISTORY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTITUDE_HISTORY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTITUDE_TYPE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTITUDE_TYPE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTI_ANNUAL_HISTORY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTI_ANNUAL_HISTORY"  MINVALUE 1 MAXVALUE 99999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_ATTI_MODAPPL_HISTORY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_ATTI_MODAPPL_HISTORY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_COMM_ITEM_ATTACHMENTS
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_COMM_ITEM_ATTACHMENTS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_COMM_SCHEDULE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_COMM_SCHEDULE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_COMM_SCHEDULEATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_COMM_SCHEDULEATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_COMM_SCHEDULECOMMENT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_COMM_SCHEDULECOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_CONNECTION_INFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_CONNECTION_INFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_BOARD
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_BOARD"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBGUEST
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBGUEST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBNOTICE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBNOTICE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBPHOTO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBPHOTO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBPHOTO_ATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBPHOTO_ATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_CLUBPHOTO_REPLY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_CLUBPHOTO_REPLY"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_NOTICE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_NOTICE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_POLLANSWER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_POLLANSWER"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_POLLMANAGER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_POLLMANAGER"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_POLLQUESTION
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_POLLQUESTION"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_C_POLLRESPONSE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_C_POLLRESPONSE"  MINVALUE 0 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_DTPROPERTIES
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_DTPROPERTIES"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_BOARD1
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_BOARD1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_BOARD2
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_BOARD2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_BOARD3
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_BOARD3"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBBOARD"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD1
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBBOARD1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBBOARD2
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBBOARD2"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBPDS
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBPDS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBPDS1
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBPDS1"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_D_C_CLUBPDS_BACK
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_D_C_CLUBPDS_BACK"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_FORMCONNINFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_FORMCONNINFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_HOLIDAYLIST
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_HOLIDAYLIST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL_FILE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL_FILE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL_FORM
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL_FORM"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL_RECV_FAVORITE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL_RECV_FAVORITE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_JOURNAL_REPLY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_JOURNAL_REPLY"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_MEMO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_MEMO"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_MEMO_FOLDER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_MEMO_FOLDER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_NOTIFICATION_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_NOTIFICATION_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_COMPANYLINK_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_COMPANYLINK_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_NOTICE_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_NOTICE_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_POPUP_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_POPUP_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_PS_USERLINK_ITEMSEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_PS_USERLINK_ITEMSEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_RECRELAYINFO
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_RECRELAYINFO"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_RS_ATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_RS_ATTACH"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULE"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULEATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULEATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULECOMMENT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULECOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULE_PUBLIC_DEPT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULE_PUBLIC_DEPT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SCHEDULE_REPEDEL
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SCHEDULE_REPEDEL"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SERIALNUMGEN
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SERIALNUMGEN"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 NOCACHE  NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_STAT_MAIL_TEMP_IDX
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_STAT_MAIL_TEMP_IDX"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SURVEY_ATTACHFILE
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SURVEY_ATTACHFILE"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_SURVEY_PARTICIPANT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_SURVEY_PARTICIPANT"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASK
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASK"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASKATTACH
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASKATTACH"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASKCODEHISTORY
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASKCODEHISTORY"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASKCOMMENT
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASKCOMMENT"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TASKREQUEST
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TASKREQUEST"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TT_V_TBLBOARDORDER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TT_V_TBLBOARDORDER"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_TT_V_TBLPARENTBOARDS
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_TT_V_TBLPARENTBOARDS"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence SEQ_TBL_USER_JOBMASTER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."SEQ_TBL_USER_JOBMASTER"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_BMUSER_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_BMUSER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_BM_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_BM_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_COMMENT_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_COMMENT_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_LINE_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_LINE_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_ORDER_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_ORDER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_LADDER_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_LADDER_SEQ"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_FRAME_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_FRAME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_MENU_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_MENU_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_PORTLET_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_PORTLET_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TBL_PORTAL_THEME_SEQ
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TBL_PORTAL_THEME_SEQ"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
+--------------------------------------------------------
+--  DDL for Sequence TT_SQ_TMPCLASSINFO_SN
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "EZEKP2017"."TT_SQ_TMPCLASSINFO_SN"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 1 CACHE 20 NOORDER  NOCYCLE ;
 --------------------------------------------------------
 --  DDL for Index APPROVCONNKAMCO_PK
 --------------------------------------------------------
@@ -10890,7 +11040,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index APPROVCONNKAMCO_USER_PK
 --------------------------------------------------------
@@ -10899,7 +11049,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index FK_TBL_CABINETHISTORY_IDX
 --------------------------------------------------------
@@ -10908,7 +11058,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX1
 --------------------------------------------------------
@@ -10917,7 +11067,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JAMES_MAIL_BLOB
 --------------------------------------------------------
@@ -10926,7 +11076,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JAMES_MAIL_USERFLAG
 --------------------------------------------------------
@@ -10935,7 +11085,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JAMES_PROPERTY_LINE_NUMBER
 --------------------------------------------------------
@@ -10944,7 +11094,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JAMES_PROPERTY_MAILBOX_ID
 --------------------------------------------------------
@@ -10953,7 +11103,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_ADDRESS_INFO
 --------------------------------------------------------
@@ -10962,7 +11112,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_ADDRESS_SEARCH
 --------------------------------------------------------
@@ -10977,7 +11127,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_INBOX_RULE_SUB
 --------------------------------------------------------
@@ -10986,7 +11136,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_MAIL_POP3
 --------------------------------------------------------
@@ -10995,7 +11145,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_MAIL_RECALL
 --------------------------------------------------------
@@ -11004,7 +11154,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_MAIL_SECURE
 --------------------------------------------------------
@@ -11013,7 +11163,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_RESERVE_SEND_DATE
 --------------------------------------------------------
@@ -11022,7 +11172,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_RESERVE_USER_ID
 --------------------------------------------------------
@@ -11031,7 +11181,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_STAT_LOG_EVENT_TYPE
 --------------------------------------------------------
@@ -11040,7 +11190,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_STAT_LOG_LOG_DATE
 --------------------------------------------------------
@@ -11049,7 +11199,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_STAT_LOG_TENANT_ID
 --------------------------------------------------------
@@ -11058,7 +11208,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_TENANT_CONFIG
 --------------------------------------------------------
@@ -11067,7 +11217,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOCHA_TENANT_SERVERNAME
 --------------------------------------------------------
@@ -11076,7 +11226,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_JMOHCA_ADDRESS_SIMPLE
 --------------------------------------------------------
@@ -11085,7 +11235,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index IDX_TBL_TASKCODEHISTORY
 --------------------------------------------------------
@@ -11094,7 +11244,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index INDEX_TBL_CIRCULAR
 --------------------------------------------------------
@@ -11103,7 +11253,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index INDEX_TBL_CIRCULAR_BM
 --------------------------------------------------------
@@ -11112,7 +11262,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index INDEX_TBL_CIRCULAR_BMUSER
 --------------------------------------------------------
@@ -11121,7 +11271,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index INDEX_TBL_CIRCULAR_CO_
 --------------------------------------------------------
@@ -11130,7 +11280,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index INDEX_TBL_CIRCULAR_FIRE
 --------------------------------------------------------
@@ -11139,7 +11289,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index INDEX_TBL_CIRCULAR_FOLDER
 --------------------------------------------------------
@@ -11148,7 +11298,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index INDEX_TBL_CIRCULAR_LINK
 --------------------------------------------------------
@@ -11157,7 +11307,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index INDEX_TBL_CIRCULAR_OPTION
 --------------------------------------------------------
@@ -11166,7 +11316,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index INDEX_TBL_CIRCULAR_USER
 --------------------------------------------------------
@@ -11175,7 +11325,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index I_JMS_LBX_USER_NAME
 --------------------------------------------------------
@@ -11184,7 +11334,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index I_JMS_MIL_MAIL_IS_DELETED
 --------------------------------------------------------
@@ -11193,7 +11343,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index I_JMS_MIL_MAIL_IS_RECENT
 --------------------------------------------------------
@@ -11202,7 +11352,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index I_JMS_MIL_MAIL_IS_SEEN
 --------------------------------------------------------
@@ -11211,7 +11361,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index I_JMS_MIL_MAIL_MODSEQ
 --------------------------------------------------------
@@ -11220,7 +11370,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index JAMES_MAIL_BLOB_PK
 --------------------------------------------------------
@@ -11229,7 +11379,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index JAMES_MAIL_SEARCH_INDEX
 --------------------------------------------------------
@@ -11247,7 +11397,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index JMOCHA_ADDRESS_SEARCH_PK
 --------------------------------------------------------
@@ -11256,7 +11406,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index JMOCHA_DISTRIBUTION_SUB_PK
 --------------------------------------------------------
@@ -11265,7 +11415,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index JMOCHA_LETTERBOX_PK
 --------------------------------------------------------
@@ -11274,7 +11424,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index JMOCHA_LETTER_PK
 --------------------------------------------------------
@@ -11283,7 +11433,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index JMOCHA_MAIL_COUNTRYIP_PK1
 --------------------------------------------------------
@@ -11301,7 +11451,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index MESSAGE_ID_INDEX
 --------------------------------------------------------
@@ -11310,7 +11460,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK2_TBL_COMPANY_CONFIG
 --------------------------------------------------------
@@ -11319,7 +11469,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_ATTITUDE
 --------------------------------------------------------
@@ -11328,52 +11478,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
---------------------------------------------------------
---  DDL for Index PK_TBL_ATTITUDE_ANNUAL
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "EZEKP2017"."PK_TBL_ATTITUDE_ANNUAL" ON "EZEKP2017"."TBL_ATTITUDE_ANNUAL" ("USER_ID", "TENANT_ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
---------------------------------------------------------
---  DDL for Index PK_TBL_ATTITUDE_ANNUAL_CANAPPL
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "EZEKP2017"."PK_TBL_ATTITUDE_ANNUAL_CANAPPL" ON "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" ("ATTITUDE_ID", "APPL_CNT", "COMPANY_ID", "TENANT_ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
---------------------------------------------------------
---  DDL for Index PK_TBL_ATTITUDE_ANNUAL_CONF
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "EZEKP2017"."PK_TBL_ATTITUDE_ANNUAL_CONF" ON "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" ("COMPANY_ID", "TENANT_ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;    
---------------------------------------------------------
---  DDL for Index PK_TBL_ATTITUDE_ANNUAL_HISTORY
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "EZEKP2017"."PK_TBL_ATTITUDE_ANNUAL_HISTORY" ON "EZEKP2017"."TBL_ATTITUDE_ANNUAL_HISTORY" ("ANNUAL_HISTORY_ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ; 
---------------------------------------------------------
---  DDL for Index PK_TBL_ATTITUDE_APR_CONN
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "EZEKP2017"."PK_TBL_ATTITUDE_APR_CONN" ON "EZEKP2017"."TBL_ATTITUDE_APR_CONN" ("ATTITUDE_ID", "COMPANY_ID", "TENANT_ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_ATTITUDE_AUTH
 --------------------------------------------------------
@@ -11382,7 +11487,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_ATTITUDE_CONF
 --------------------------------------------------------
@@ -11391,7 +11496,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_ATTITUDE_FORM
 --------------------------------------------------------
@@ -11400,7 +11505,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_ATTITUDE_MODAPPL
 --------------------------------------------------------
@@ -11409,7 +11514,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_ATTITUDE_MODAPPL_HISTORY
 --------------------------------------------------------
@@ -11418,7 +11523,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_ATTITUDE_TYPE
 --------------------------------------------------------
@@ -11427,7 +11532,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_ATTITUDE_USER_CONF
 --------------------------------------------------------
@@ -11436,7 +11541,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_ADDRESS_GENERAL
 --------------------------------------------------------
@@ -11445,7 +11550,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_ADDRESS_INFO
 --------------------------------------------------------
@@ -11454,7 +11559,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_ADDRESS_SIMPLE
 --------------------------------------------------------
@@ -11463,7 +11568,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_ALIAS
 --------------------------------------------------------
@@ -11472,7 +11577,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_CONNECTION_INFO
 --------------------------------------------------------
@@ -11481,7 +11586,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_DEFAULT_QUOTA
 --------------------------------------------------------
@@ -11490,7 +11595,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_DEPT_MASTER
 --------------------------------------------------------
@@ -11499,7 +11604,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_DISTRIBUTION
 --------------------------------------------------------
@@ -11508,7 +11613,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_INBOX_RULE
 --------------------------------------------------------
@@ -11517,7 +11622,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_INBOX_RULE_SUB
 --------------------------------------------------------
@@ -11526,7 +11631,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_COLOR
 --------------------------------------------------------
@@ -11535,7 +11640,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_DELETE
 --------------------------------------------------------
@@ -11544,7 +11649,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_FORWARD
 --------------------------------------------------------
@@ -11553,7 +11658,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_GENERAL
 --------------------------------------------------------
@@ -11562,7 +11667,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_OUTOFOFFICE
 --------------------------------------------------------
@@ -11571,7 +11676,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_POP3
 --------------------------------------------------------
@@ -11580,7 +11685,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_POP3_LIST
 --------------------------------------------------------
@@ -11589,7 +11694,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_READ
 --------------------------------------------------------
@@ -11598,7 +11703,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_RECALL
 --------------------------------------------------------
@@ -11607,7 +11712,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_RECALL_DETAIL
 --------------------------------------------------------
@@ -11616,7 +11721,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_SECURE
 --------------------------------------------------------
@@ -11625,7 +11730,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_SECURE_READ
 --------------------------------------------------------
@@ -11634,7 +11739,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_MAIL_SIGNATURE
 --------------------------------------------------------
@@ -11643,7 +11748,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_OUTOFOFFICE_SENT
 --------------------------------------------------------
@@ -11652,7 +11757,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_RETIRED_USER
 --------------------------------------------------------
@@ -11661,7 +11766,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_SCHEDULER_SERVER
 --------------------------------------------------------
@@ -11670,7 +11775,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_SHARED_MAILBOX
 --------------------------------------------------------
@@ -11679,7 +11784,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_STAT_COMP_FLOW_DAY
 --------------------------------------------------------
@@ -11688,7 +11793,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_STAT_COMP_FLOW_MON
 --------------------------------------------------------
@@ -11697,7 +11802,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_STAT_MAILBOXQTY_INFO
 --------------------------------------------------------
@@ -11706,7 +11811,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_STAT_MAIL_DEPT_DAY
 --------------------------------------------------------
@@ -11715,7 +11820,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_STAT_MAIL_DEPT_MONTH
 --------------------------------------------------------
@@ -11724,7 +11829,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_STAT_MAIL_LOG
 --------------------------------------------------------
@@ -11733,7 +11838,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_STAT_MAIL_USER_DAY
 --------------------------------------------------------
@@ -11742,7 +11847,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_STAT_MAIL_USER_MONTH
 --------------------------------------------------------
@@ -11751,7 +11856,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_STORAGE_WARNING_SENT
 --------------------------------------------------------
@@ -11760,7 +11865,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_TENANT
 --------------------------------------------------------
@@ -11769,7 +11874,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_TENANT_CONFIG
 --------------------------------------------------------
@@ -11778,7 +11883,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_TENANT_SERVERNAME
 --------------------------------------------------------
@@ -11787,7 +11892,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_USER_LOCAL_INFO
 --------------------------------------------------------
@@ -11796,7 +11901,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_USER_MASTER
 --------------------------------------------------------
@@ -11805,7 +11910,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_USER_MASTER_RETIRE
 --------------------------------------------------------
@@ -11814,7 +11919,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_JMOCHA_USER_QUOTA
 --------------------------------------------------------
@@ -11823,7 +11928,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_MEMO
 --------------------------------------------------------
@@ -11832,7 +11937,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_MEMO_CONFIG
 --------------------------------------------------------
@@ -11841,7 +11946,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_MEMO_FOLDER
 --------------------------------------------------------
@@ -11850,7 +11955,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_MESSAGE_ID
 --------------------------------------------------------
@@ -11859,7 +11964,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_SURVEY
 --------------------------------------------------------
@@ -11868,7 +11973,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_SURVEY_ATTACHFILE
 --------------------------------------------------------
@@ -11877,7 +11982,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_SURVEY_CONFIG
 --------------------------------------------------------
@@ -11886,7 +11991,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_SURVEY_OPTION
 --------------------------------------------------------
@@ -11895,7 +12000,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_SURVEY_PARTICIPANT
 --------------------------------------------------------
@@ -11904,7 +12009,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_SURVEY_QUESTION
 --------------------------------------------------------
@@ -11913,7 +12018,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_SURVEY_RESPONDENT
 --------------------------------------------------------
@@ -11922,7 +12027,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_SURVEY_RESPONSE
 --------------------------------------------------------
@@ -11931,7 +12036,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_ADD_JOBMASTER
 --------------------------------------------------------
@@ -11940,7 +12045,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_ADMINRECEIPTGROUP_SUB
 --------------------------------------------------------
@@ -11949,7 +12054,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_ADMINRECEIPTGROUP_SUB1
 --------------------------------------------------------
@@ -11958,7 +12063,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_ATTENDANT
 --------------------------------------------------------
@@ -11967,7 +12072,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_APPRLIST
 --------------------------------------------------------
@@ -11976,7 +12081,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_BOARDINFO
 --------------------------------------------------------
@@ -11985,7 +12090,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_BOARDINFO_ATTR
 --------------------------------------------------------
@@ -11994,7 +12099,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_BOARDMANAGE
 --------------------------------------------------------
@@ -12003,7 +12108,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_CONFIGURATION
 --------------------------------------------------------
@@ -12012,7 +12117,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_DELETERESERVED
 --------------------------------------------------------
@@ -12021,7 +12126,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_DELETERESERVEDIT
 --------------------------------------------------------
@@ -12030,7 +12135,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_ITEM
 --------------------------------------------------------
@@ -12039,7 +12144,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_ITEM_ATTACHMENTS
 --------------------------------------------------------
@@ -12048,7 +12153,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_ITEM_LISTOPTION
 --------------------------------------------------------
@@ -12057,7 +12162,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_ITEM_LISTOPTION_2
 --------------------------------------------------------
@@ -12066,7 +12171,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_ITEM_READ
 --------------------------------------------------------
@@ -12075,7 +12180,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_ITEM_TEMP
 --------------------------------------------------------
@@ -12084,7 +12189,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_MYBOARDS
 --------------------------------------------------------
@@ -12093,7 +12198,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_MYTREE
 --------------------------------------------------------
@@ -12102,7 +12207,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_ONELINEREPLY
 --------------------------------------------------------
@@ -12111,7 +12216,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BOARD_TREECACHE
 --------------------------------------------------------
@@ -12120,7 +12225,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BRDMNG
 --------------------------------------------------------
@@ -12129,7 +12234,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_BUILTIN_PARAMETERS
 --------------------------------------------------------
@@ -12138,7 +12243,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CABINET
 --------------------------------------------------------
@@ -12147,7 +12252,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CABROLEINFO
 --------------------------------------------------------
@@ -12156,7 +12261,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CABROLEINFO1
 --------------------------------------------------------
@@ -12165,7 +12270,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CLUBID
 --------------------------------------------------------
@@ -12174,7 +12279,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_BOARDINFO
 --------------------------------------------------------
@@ -12183,7 +12288,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_BOARDMANAGE
 --------------------------------------------------------
@@ -12192,7 +12297,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_DELETERESERVED
 --------------------------------------------------------
@@ -12201,7 +12306,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_DELETERESERVEDBOA
 --------------------------------------------------------
@@ -12210,7 +12315,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_ITEM
 --------------------------------------------------------
@@ -12219,7 +12324,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_ITEM_ATTACHMENTS
 --------------------------------------------------------
@@ -12228,7 +12333,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_ITEM_READ
 --------------------------------------------------------
@@ -12237,7 +12342,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_MYBOARDS
 --------------------------------------------------------
@@ -12246,7 +12351,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_ONELINEREPLY
 --------------------------------------------------------
@@ -12255,7 +12360,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_SCHEDULE
 --------------------------------------------------------
@@ -12264,7 +12369,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_SCHEDULEATTACH
 --------------------------------------------------------
@@ -12273,7 +12378,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_SCHEDULECOMMENT
 --------------------------------------------------------
@@ -12282,7 +12387,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_SCHEDULECONFIG
 --------------------------------------------------------
@@ -12291,7 +12396,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_SCHEDULEGROUP
 --------------------------------------------------------
@@ -12300,7 +12405,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_SCHEDULEGROUPMEM
 --------------------------------------------------------
@@ -12309,7 +12414,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_SCHEDULESHARE
 --------------------------------------------------------
@@ -12318,7 +12423,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_SECRETARY
 --------------------------------------------------------
@@ -12327,7 +12432,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_COMM_TREECACHE
 --------------------------------------------------------
@@ -12336,7 +12441,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_CONNECTION_INFO
 --------------------------------------------------------
@@ -12345,7 +12450,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_BOARD
 --------------------------------------------------------
@@ -12354,7 +12459,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_CATEGORY
 --------------------------------------------------------
@@ -12363,7 +12468,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_CLUB
 --------------------------------------------------------
@@ -12372,7 +12477,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_CLUBGUEST
 --------------------------------------------------------
@@ -12381,7 +12486,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_CLUBNOTICE
 --------------------------------------------------------
@@ -12390,7 +12495,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_CLUBUSER
 --------------------------------------------------------
@@ -12399,7 +12504,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_COMCLOSE
 --------------------------------------------------------
@@ -12408,7 +12513,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_MEMBERINFO
 --------------------------------------------------------
@@ -12417,7 +12522,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_NOTICE
 --------------------------------------------------------
@@ -12426,7 +12531,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_OUTAPPLICATION
 --------------------------------------------------------
@@ -12435,7 +12540,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_POLLANSWER
 --------------------------------------------------------
@@ -12444,7 +12549,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_POLLMANAGER
 --------------------------------------------------------
@@ -12453,7 +12558,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_POLLQUESTION
 --------------------------------------------------------
@@ -12462,7 +12567,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_C_POLLRESPONSE
 --------------------------------------------------------
@@ -12471,7 +12576,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DAILYDOCCOUNTLOG
 --------------------------------------------------------
@@ -12480,7 +12585,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DAILYFORMCOUNTLOG
 --------------------------------------------------------
@@ -12489,7 +12594,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DEPTCONT
 --------------------------------------------------------
@@ -12498,7 +12603,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DEPTCONTLIST
 --------------------------------------------------------
@@ -12507,7 +12612,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DEPTMASTER
 --------------------------------------------------------
@@ -12516,7 +12621,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DEPTTEMPLET1
 --------------------------------------------------------
@@ -12525,7 +12630,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DEPTTEMPLETDETAIL1
 --------------------------------------------------------
@@ -12534,7 +12639,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DOCDELETEHISTORY
 --------------------------------------------------------
@@ -12543,7 +12648,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_DOCDELIVERY1
 --------------------------------------------------------
@@ -12552,7 +12657,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_HOLIDAYLIST
 --------------------------------------------------------
@@ -12561,7 +12666,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_ITEMSEQ
 --------------------------------------------------------
@@ -12570,7 +12675,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_JOURNAL
 --------------------------------------------------------
@@ -12579,7 +12684,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_JOURNAL_ENV
 --------------------------------------------------------
@@ -12588,7 +12693,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_JOURNAL_FILE
 --------------------------------------------------------
@@ -12597,7 +12702,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_JOURNAL_FORM
 --------------------------------------------------------
@@ -12606,7 +12711,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_JOURNAL_FORM_TYPE
 --------------------------------------------------------
@@ -12615,7 +12720,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_JOURNAL_RECV_FAVORITE
 --------------------------------------------------------
@@ -12624,7 +12729,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_JOURNAL_REPLY
 --------------------------------------------------------
@@ -12633,7 +12738,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_JOURNAL_VIEW
 --------------------------------------------------------
@@ -12642,7 +12747,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_LOGO_SIZE
 --------------------------------------------------------
@@ -12651,7 +12756,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_LUNARUSE
 --------------------------------------------------------
@@ -12660,7 +12765,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_MENUITEM_GENERAL
 --------------------------------------------------------
@@ -12669,7 +12774,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_MENUITEM_ITEMS_IMAGE
 --------------------------------------------------------
@@ -12678,7 +12783,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_MENUITEM_ITEMS_LOGOS
 --------------------------------------------------------
@@ -12687,7 +12792,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_MENUITEM_ITEMS_MENUIT
 --------------------------------------------------------
@@ -12696,7 +12801,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_MENUITEM_ITEMS_MENUITEM
 --------------------------------------------------------
@@ -12705,7 +12810,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_MENUITEM_PARAMETERS
 --------------------------------------------------------
@@ -12714,7 +12819,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PHOTO_IMAGEITEM
 --------------------------------------------------------
@@ -12723,7 +12828,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_ANSWER
 --------------------------------------------------------
@@ -12732,7 +12837,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_ATTACH
 --------------------------------------------------------
@@ -12741,7 +12846,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_ITEM
 --------------------------------------------------------
@@ -12750,7 +12855,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_ITEMACL
 --------------------------------------------------------
@@ -12759,7 +12864,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_ITEMREAD
 --------------------------------------------------------
@@ -12768,7 +12873,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_PERMISSION
 --------------------------------------------------------
@@ -12777,7 +12882,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_QUESTION
 --------------------------------------------------------
@@ -12786,7 +12891,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_RESPONSE
 --------------------------------------------------------
@@ -12795,7 +12900,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_RESPONSEPERSON
 --------------------------------------------------------
@@ -12804,7 +12909,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_POLL_TABLE_ANSWER
 --------------------------------------------------------
@@ -12813,7 +12918,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTALPAGE_CACHE
 --------------------------------------------------------
@@ -12822,7 +12927,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTALPAGE_CATEGORY
 --------------------------------------------------------
@@ -12831,7 +12936,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTALPAGE_GENERAL
 --------------------------------------------------------
@@ -12840,7 +12945,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTALPAGE_ITEMS
 --------------------------------------------------------
@@ -12849,7 +12954,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTALPAGE_ITEMS_CHANG
 --------------------------------------------------------
@@ -12858,7 +12963,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTALPAGE_ITEMS_CHANGE
 --------------------------------------------------------
@@ -12867,7 +12972,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTAL_ACL
 --------------------------------------------------------
@@ -12876,7 +12981,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTLET_BOARD
 --------------------------------------------------------
@@ -12885,7 +12990,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTLET_CATEGORY
 --------------------------------------------------------
@@ -12894,7 +12999,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTLET_HTMLPAGE
 --------------------------------------------------------
@@ -12903,7 +13008,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTLET_IMAGE
 --------------------------------------------------------
@@ -12912,7 +13017,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTLET_PARAMETERS
 --------------------------------------------------------
@@ -12921,7 +13026,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PORTLET_URL
 --------------------------------------------------------
@@ -12930,7 +13035,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PREVIOSLYREGI
 --------------------------------------------------------
@@ -12939,7 +13044,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PROXYINFO
 --------------------------------------------------------
@@ -12948,7 +13053,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_APPROVNOTIMAILCONF
 --------------------------------------------------------
@@ -12957,7 +13062,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_LIGHTPOLL
 --------------------------------------------------------
@@ -12966,7 +13071,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_LIGHTPOLLRESULT
 --------------------------------------------------------
@@ -12975,7 +13080,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_NOTICE
 --------------------------------------------------------
@@ -12984,7 +13089,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_POPUP
 --------------------------------------------------------
@@ -12993,7 +13098,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_QUICKLINK
 --------------------------------------------------------
@@ -13002,7 +13107,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_QUICKLINK_ACL
 --------------------------------------------------------
@@ -13011,7 +13116,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_SLIDERIMAGE
 --------------------------------------------------------
@@ -13020,7 +13125,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_USERWEBPART
 --------------------------------------------------------
@@ -13029,7 +13134,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_WEBPARTGROUP
 --------------------------------------------------------
@@ -13038,7 +13143,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_WEBPARTITEM
 --------------------------------------------------------
@@ -13047,7 +13152,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PS_WEBPARTITEMACL
 --------------------------------------------------------
@@ -13056,7 +13161,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_PWDINFO
 --------------------------------------------------------
@@ -13065,7 +13170,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_RS_BRD
 --------------------------------------------------------
@@ -13074,7 +13179,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_RS_FAVORITE
 --------------------------------------------------------
@@ -13083,7 +13188,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_RS_RESACL
 --------------------------------------------------------
@@ -13092,7 +13197,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_RS_SCHEDULE
 --------------------------------------------------------
@@ -13101,7 +13206,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_RS_SCHEDULEFORM
 --------------------------------------------------------
@@ -13110,7 +13215,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SCHEDULE
 --------------------------------------------------------
@@ -13119,7 +13224,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SCHEDULEATTACH
 --------------------------------------------------------
@@ -13128,7 +13233,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SCHEDULECONFIG
 --------------------------------------------------------
@@ -13137,7 +13242,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SCHEDULEGROUP
 --------------------------------------------------------
@@ -13146,7 +13251,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SCHEDULEGROUPMEMBER
 --------------------------------------------------------
@@ -13155,7 +13260,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SCHEDULE_PUBLIC_DEPT
 --------------------------------------------------------
@@ -13164,7 +13269,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SCHISTORY_CAB
 --------------------------------------------------------
@@ -13173,7 +13278,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SCHISTORY_REC1
 --------------------------------------------------------
@@ -13182,7 +13287,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SEALDEPTINFO
 --------------------------------------------------------
@@ -13191,7 +13296,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SEALDEPTINFO1
 --------------------------------------------------------
@@ -13200,7 +13305,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SEALINFO
 --------------------------------------------------------
@@ -13209,7 +13314,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SECRETARY
 --------------------------------------------------------
@@ -13218,7 +13323,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SKIN_ITEMS
 --------------------------------------------------------
@@ -13227,7 +13332,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SPECIALCATALOGINFO_CAB
 --------------------------------------------------------
@@ -13236,7 +13341,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_SPECIALCATALOGINFO_CAB1
 --------------------------------------------------------
@@ -13245,7 +13350,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASK
 --------------------------------------------------------
@@ -13254,7 +13359,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKATTACH
 --------------------------------------------------------
@@ -13263,7 +13368,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKCATEGORY
 --------------------------------------------------------
@@ -13272,7 +13377,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKCODEHISTORY
 --------------------------------------------------------
@@ -13281,7 +13386,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKCOMMENT
 --------------------------------------------------------
@@ -13290,7 +13395,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKCONFIG
 --------------------------------------------------------
@@ -13299,7 +13404,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKINSTANCESTATUS
 --------------------------------------------------------
@@ -13308,7 +13413,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKMIDDLECATEGORY
 --------------------------------------------------------
@@ -13317,7 +13422,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKREQUEST
 --------------------------------------------------------
@@ -13326,7 +13431,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKSHARE
 --------------------------------------------------------
@@ -13335,7 +13440,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASKSUBCATEGORY
 --------------------------------------------------------
@@ -13344,7 +13449,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TASK_DEPTINFO
 --------------------------------------------------------
@@ -13353,7 +13458,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TENANT
 --------------------------------------------------------
@@ -13362,7 +13467,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TENANT_CONFIG
 --------------------------------------------------------
@@ -13371,7 +13476,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TENANT_SERVERNAME
 --------------------------------------------------------
@@ -13380,7 +13485,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TMPEXPAPRDOCINFO
 --------------------------------------------------------
@@ -13389,7 +13494,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_TOPMENU_ITEMS
 --------------------------------------------------------
@@ -13398,7 +13503,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_USERLOCALINFO
 --------------------------------------------------------
@@ -13407,7 +13512,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_USERMASTER
 --------------------------------------------------------
@@ -13416,7 +13521,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK_TBL_USERMASTER_DELETE
 --------------------------------------------------------
@@ -13434,7 +13539,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index PK__TBL_CABINETCLASS__10216508
 --------------------------------------------------------
@@ -13443,7 +13548,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SIGNATURE_TEMPLATE_PK
 --------------------------------------------------------
@@ -13452,7 +13557,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0013858
 --------------------------------------------------------
@@ -13569,7 +13674,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0013957
 --------------------------------------------------------
@@ -13578,7 +13683,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0013962
 --------------------------------------------------------
@@ -13587,7 +13692,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0013978
 --------------------------------------------------------
@@ -13596,7 +13701,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0013986
 --------------------------------------------------------
@@ -13605,7 +13710,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0013994
 --------------------------------------------------------
@@ -13614,7 +13719,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0013999
 --------------------------------------------------------
@@ -13623,7 +13728,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027162
 --------------------------------------------------------
@@ -13632,7 +13737,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027165
 --------------------------------------------------------
@@ -13641,7 +13746,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027168
 --------------------------------------------------------
@@ -13650,7 +13755,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027172
 --------------------------------------------------------
@@ -13659,7 +13764,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027175
 --------------------------------------------------------
@@ -13668,7 +13773,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027178
 --------------------------------------------------------
@@ -13677,7 +13782,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027181
 --------------------------------------------------------
@@ -13686,7 +13791,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027184
 --------------------------------------------------------
@@ -13695,7 +13800,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027190
 --------------------------------------------------------
@@ -13704,7 +13809,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027193
 --------------------------------------------------------
@@ -13713,7 +13818,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027196
 --------------------------------------------------------
@@ -13722,7 +13827,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027326
 --------------------------------------------------------
@@ -13731,7 +13836,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027337
 --------------------------------------------------------
@@ -13740,7 +13845,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027345
 --------------------------------------------------------
@@ -13749,7 +13854,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027355
 --------------------------------------------------------
@@ -13758,7 +13863,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027358
 --------------------------------------------------------
@@ -13767,7 +13872,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027362
 --------------------------------------------------------
@@ -13776,7 +13881,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027366
 --------------------------------------------------------
@@ -13785,7 +13890,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027371
 --------------------------------------------------------
@@ -13794,7 +13899,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0027373
 --------------------------------------------------------
@@ -13803,7 +13908,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0028145
 --------------------------------------------------------
@@ -13812,7 +13917,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0028151
 --------------------------------------------------------
@@ -13821,7 +13926,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029172
 --------------------------------------------------------
@@ -13830,7 +13935,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029179
 --------------------------------------------------------
@@ -13839,7 +13944,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029214
 --------------------------------------------------------
@@ -13848,7 +13953,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029223
 --------------------------------------------------------
@@ -13857,7 +13962,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029249
 --------------------------------------------------------
@@ -13866,7 +13971,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029536
 --------------------------------------------------------
@@ -13875,7 +13980,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029542
 --------------------------------------------------------
@@ -13884,7 +13989,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029549
 --------------------------------------------------------
@@ -13893,7 +13998,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029554
 --------------------------------------------------------
@@ -13902,7 +14007,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029560
 --------------------------------------------------------
@@ -13911,7 +14016,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0029564
 --------------------------------------------------------
@@ -13920,7 +14025,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0031291
 --------------------------------------------------------
@@ -13929,7 +14034,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0032127
 --------------------------------------------------------
@@ -13938,7 +14043,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0032240
 --------------------------------------------------------
@@ -13947,7 +14052,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0032254
 --------------------------------------------------------
@@ -13956,7 +14061,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0032439
 --------------------------------------------------------
@@ -13965,7 +14070,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0034629
 --------------------------------------------------------
@@ -13974,7 +14079,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0034686
 --------------------------------------------------------
@@ -13983,7 +14088,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0034696
 --------------------------------------------------------
@@ -13992,7 +14097,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index SYS_C0035238
 --------------------------------------------------------
@@ -14001,7 +14106,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TABLE1_PK
 --------------------------------------------------------
@@ -14010,7 +14115,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TALK_TBLADDJOB_PK
 --------------------------------------------------------
@@ -14084,6 +14189,15 @@
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS" ;
 --------------------------------------------------------
+--  DDL for Index TBL_ACCESS_COUNTRY
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_ACCESS_COUNTRY" ON "EZEKP2017"."TBL_ACCESS_COUNTRY" ("TENANT_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
 --  DDL for Index TBL_ACCESS_ID_PK
 --------------------------------------------------------
 
@@ -14091,7 +14205,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ACCESS_IP_PK
 --------------------------------------------------------
@@ -14100,7 +14214,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ADMINRECEIPTGROUP_MAIN_PK
 --------------------------------------------------------
@@ -14109,7 +14223,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_APRATTACHINFO_PK
 --------------------------------------------------------
@@ -14118,7 +14232,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_APRDOCATTACHINFO_PK
 --------------------------------------------------------
@@ -14127,7 +14241,16 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_APRDOCGROUPINFO_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_APRDOCGROUPINFO_PK" ON "EZEKP2017"."TBL_APRDOCGROUPINFO" ("TENANT_ID", "COMPANYID", "GROUPDOCSN", "TABSN") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_APRDOCINFO_PK
 --------------------------------------------------------
@@ -14136,7 +14259,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_APRLINEINFO_PK
 --------------------------------------------------------
@@ -14145,7 +14268,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_APROPINIONINFO_PK
 --------------------------------------------------------
@@ -14154,7 +14277,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_APRRECEIPTPROCESSINFO_PK
 --------------------------------------------------------
@@ -14163,7 +14286,52 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_ATTITUDE_ANNUAL_CANAPPL_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL_PK" ON "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" ("ATTITUDE_ID", "APPL_CNT", "COMPANY_ID", "TENANT_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_ATTITUDE_ANNUAL_CONF_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF_PK" ON "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" ("COMPANY_ID", "TENANT_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_ATTITUDE_ANNUAL_HISTORY_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_ATTITUDE_ANNUAL_HISTORY_PK" ON "EZEKP2017"."TBL_ATTITUDE_ANNUAL_HISTORY" ("ANNUAL_HISTORY_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_ATTITUDE_ANNUAL_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_ATTITUDE_ANNUAL_PK" ON "EZEKP2017"."TBL_ATTITUDE_ANNUAL" ("USER_ID", "TENANT_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_ATTITUDE_APR_CONN_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_ATTITUDE_APR_CONN_PK" ON "EZEKP2017"."TBL_ATTITUDE_APR_CONN" ("ATTITUDE_ID", "COMPANY_ID", "TENANT_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ATTITUDE_INDEX1
 --------------------------------------------------------
@@ -14172,7 +14340,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_AUDIO_VISUALRECEXINFO_PK
 --------------------------------------------------------
@@ -14181,7 +14349,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_AUDIO_VISUALRECEXINFO__PK
 --------------------------------------------------------
@@ -14190,7 +14358,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_AUTODOCNUM_ITEM_PK
 --------------------------------------------------------
@@ -14199,7 +14367,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_BOARD_BOARDBACKGROUNDI_PK
 --------------------------------------------------------
@@ -14208,7 +14376,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_BOARD_LIKE_PK
 --------------------------------------------------------
@@ -14217,7 +14385,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_BOARD_NEWBOARD_ORDERIN_PK
 --------------------------------------------------------
@@ -14226,7 +14394,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CABINETCODELIST_PK
 --------------------------------------------------------
@@ -14235,7 +14403,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CABINETHISTORY_PK1
 --------------------------------------------------------
@@ -14244,7 +14412,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CABINET_VIEWAUTH_PK
 --------------------------------------------------------
@@ -14253,7 +14421,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_ADMIN_MODULE_PK
 --------------------------------------------------------
@@ -14262,7 +14430,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_ATTACH_FILE_PK
 --------------------------------------------------------
@@ -14271,7 +14439,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_CABINET_PK
 --------------------------------------------------------
@@ -14280,7 +14448,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_COMPANY_CAPACITY_PK
 --------------------------------------------------------
@@ -14289,7 +14457,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_CONFIG_PK
 --------------------------------------------------------
@@ -14298,7 +14466,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_ITEM_PK
 --------------------------------------------------------
@@ -14307,7 +14475,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_RELATION_PK
 --------------------------------------------------------
@@ -14316,7 +14484,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_REL_PK
 --------------------------------------------------------
@@ -14325,7 +14493,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_SHARE_PK
 --------------------------------------------------------
@@ -14334,7 +14502,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_USER_CAPACITY_PK
 --------------------------------------------------------
@@ -14343,7 +14511,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CB_USER_MODULE_PK
 --------------------------------------------------------
@@ -14352,7 +14520,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CODELIST_PK
 --------------------------------------------------------
@@ -14361,7 +14529,16 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_CONNDATA_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_CONNDATA_PK" ON "EZEKP2017"."TBL_CONNDATA" ("KEYID", "FORMID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CONTAINERTODOCSTATE_PK
 --------------------------------------------------------
@@ -14370,7 +14547,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CONTAINERTYPE_PK
 --------------------------------------------------------
@@ -14379,7 +14556,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CONTAINERUSEDEP_PK
 --------------------------------------------------------
@@ -14388,7 +14565,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_CONTAINER_PK
 --------------------------------------------------------
@@ -14397,7 +14574,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_DELETECABINETINFO_PK
 --------------------------------------------------------
@@ -14406,7 +14583,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_DEV_MASTER_PK
 --------------------------------------------------------
@@ -14415,7 +14592,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDAPRDOCATTACHINFO_PK
 --------------------------------------------------------
@@ -14424,7 +14601,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDAPRDOCINFO_PK
 --------------------------------------------------------
@@ -14433,7 +14610,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDAPRLINEINFO_PK
 --------------------------------------------------------
@@ -14442,7 +14619,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDAPROPINIONINFO_PK
 --------------------------------------------------------
@@ -14451,7 +14628,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDATTACHINFO_PK
 --------------------------------------------------------
@@ -14460,7 +14637,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDRECEIPTPOINTINFO_PK
 --------------------------------------------------------
@@ -14469,7 +14646,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_ENDRECEIPTPROCESSINFO_PK
 --------------------------------------------------------
@@ -14478,7 +14655,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_EXPAPRDOCINFO_PK
 --------------------------------------------------------
@@ -14487,7 +14664,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_EXPAPRLINE_PK
 --------------------------------------------------------
@@ -14496,7 +14673,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_EXPENDAPRDOCINFO_NONIDX1
 --------------------------------------------------------
@@ -14505,7 +14682,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_EXPENDAPRDOCINFO_PK
 --------------------------------------------------------
@@ -14514,7 +14691,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_EXPENDAPRLINE_PK
 --------------------------------------------------------
@@ -14523,7 +14700,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_FORMCONNINFO_PK
 --------------------------------------------------------
@@ -14541,7 +14718,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_FORMCONTUSERGROUP_PK
 --------------------------------------------------------
@@ -14550,7 +14727,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_FORMGROUP_PK
 --------------------------------------------------------
@@ -14559,7 +14736,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_FORMINFO_PK
 --------------------------------------------------------
@@ -14568,7 +14745,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_FORMPROPERTY_PK
 --------------------------------------------------------
@@ -14577,7 +14754,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_FORMRECV_PK
 --------------------------------------------------------
@@ -14586,7 +14763,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_FORMUSERINFO_PK
 --------------------------------------------------------
@@ -14595,7 +14772,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_FORM_OFFICE_PK
 --------------------------------------------------------
@@ -14604,7 +14781,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_HISTORYATTACHINFO_PK
 --------------------------------------------------------
@@ -14613,7 +14790,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_HISTORYDOCINFO_PK
 --------------------------------------------------------
@@ -14622,7 +14799,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_HISTORYLINEINFO_PK
 --------------------------------------------------------
@@ -14631,7 +14808,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_LASTAPRLINE_PK
 --------------------------------------------------------
@@ -14640,7 +14817,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_LASTDEPTLINE_PK
 --------------------------------------------------------
@@ -14649,7 +14826,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_LASTDOCID_PK
 --------------------------------------------------------
@@ -14658,7 +14835,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_LINTEMPLETDETAIL_PK
 --------------------------------------------------------
@@ -14667,7 +14844,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_LINTEMPLET_PK
 --------------------------------------------------------
@@ -14676,7 +14853,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_LISTINFO_PK
 --------------------------------------------------------
@@ -14685,7 +14862,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_LISTOPTION_PK
 --------------------------------------------------------
@@ -14694,7 +14871,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_MYTASKCODE_PK
 --------------------------------------------------------
@@ -14703,7 +14880,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_NOTIFICATION_PK
 --------------------------------------------------------
@@ -14712,7 +14889,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_OLDCABINETEXTRAINFO_PK
 --------------------------------------------------------
@@ -14721,7 +14898,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_OLDRECORDEXTRAINFO_PK
 --------------------------------------------------------
@@ -14730,7 +14907,25 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_OPENGOVDOCINFO_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_OPENGOVDOCINFO_PK" ON "EZEKP2017"."TBL_OPENGOVDOCINFO" ("DOCID", "TENANT_ID", "COMPANYID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_OPENGOVFILEINFO_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_OPENGOVFILEINFO_PK" ON "EZEKP2017"."TBL_OPENGOVFILEINFO" ("DOCID", "SN", "COMPANYID", "TENANT_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_FRAME_COMP_PK
 --------------------------------------------------------
@@ -14739,7 +14934,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_FRAME_PK
 --------------------------------------------------------
@@ -14748,7 +14943,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_LOGO_PK
 --------------------------------------------------------
@@ -14757,7 +14952,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_MENU_AUTH_PK
 --------------------------------------------------------
@@ -14766,7 +14961,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_MENU_COMP_PK
 --------------------------------------------------------
@@ -14775,7 +14970,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_MENU_NAME_PK
 --------------------------------------------------------
@@ -14784,7 +14979,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_MENU_PK
 --------------------------------------------------------
@@ -14793,7 +14988,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_MENU_USER_PK
 --------------------------------------------------------
@@ -14802,7 +14997,16 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_PORTAL_PORTLET_AUTH_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_PORTAL_PORTLET_AUTH_PK" ON "EZEKP2017"."TBL_PORTAL_PORTLET_AUTH" ("PORTLET_ID", "COMPANY_ID", "TENANT_ID", "USER_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_PORTLET_COMP_PK
 --------------------------------------------------------
@@ -14811,7 +15015,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_PORTLET_PK
 --------------------------------------------------------
@@ -14820,7 +15024,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_PORTLET_USER_PK
 --------------------------------------------------------
@@ -14829,7 +15033,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_STARTPAGE_PK
 --------------------------------------------------------
@@ -14838,7 +15042,16 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_PORTAL_THEME_AUTH_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_PORTAL_THEME_AUTH_PK" ON "EZEKP2017"."TBL_PORTAL_THEME_AUTH" ("THEME_ID", "COMPANY_ID", "TENANT_ID", "USER_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_THEME_COMP_PK
 --------------------------------------------------------
@@ -14847,7 +15060,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_THEME_PK
 --------------------------------------------------------
@@ -14856,7 +15069,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTAL_THEME_USER_PK
 --------------------------------------------------------
@@ -14865,7 +15078,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PORTLET_GENERAL_PK
 --------------------------------------------------------
@@ -14874,7 +15087,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PS_EMPMONTH_PK
 --------------------------------------------------------
@@ -14883,7 +15096,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_PS_SHAREAPPROVAL_UK1
 --------------------------------------------------------
@@ -14892,7 +15105,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECEIPTPOINTINFO_PK
 --------------------------------------------------------
@@ -14901,7 +15114,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECEXCHINFO_PK
 --------------------------------------------------------
@@ -14910,7 +15123,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECORDHISTORY_PK
 --------------------------------------------------------
@@ -14919,7 +15132,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECORD_PK
 --------------------------------------------------------
@@ -14928,7 +15141,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECORD_TEMP_PK
 --------------------------------------------------------
@@ -14937,7 +15150,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECREADHISTORY_PK
 --------------------------------------------------------
@@ -14946,7 +15159,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECRELAYINFO_PK
 --------------------------------------------------------
@@ -14955,7 +15168,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECROLEINFO_PK
 --------------------------------------------------------
@@ -14964,7 +15177,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RECROLEINFO_TEMP_PK
 --------------------------------------------------------
@@ -14973,7 +15186,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_RS_ATTACH_PK
 --------------------------------------------------------
@@ -14982,7 +15195,16 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index TBL_RS_PERSPORTLET_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "EZEKP2017"."TBL_RS_PERSPORTLET_PK" ON "EZEKP2017"."TBL_RS_PERSPORTLET" ("TENANT_ID", "CN", "BRD_COMPANY", "BRD_ID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_SCHEDULEREPETITION_DEL_PK
 --------------------------------------------------------
@@ -14991,7 +15213,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_SEPERATEATTACH_PK
 --------------------------------------------------------
@@ -15000,7 +15222,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_SEPERATEATTACH_TEMP_PK
 --------------------------------------------------------
@@ -15009,7 +15231,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_SERIALNUMGEN_PK
 --------------------------------------------------------
@@ -15018,7 +15240,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_SIGNINFO_PK1
 --------------------------------------------------------
@@ -15027,7 +15249,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_SKIN_GENERAL_PK
 --------------------------------------------------------
@@ -15036,7 +15258,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_SPECIALCATALOGINFO_REC_PK
 --------------------------------------------------------
@@ -15045,7 +15267,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_SPECIALCATALOGINFO_TMP_PK
 --------------------------------------------------------
@@ -15054,7 +15276,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_SPECIALCONTAINERINFO_PK
 --------------------------------------------------------
@@ -15063,7 +15285,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TASKCODE_PK
 --------------------------------------------------------
@@ -15072,7 +15294,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TASKGENERAL_PK
 --------------------------------------------------------
@@ -15081,7 +15303,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TASK_DEPTINFO_PK
 --------------------------------------------------------
@@ -15090,7 +15312,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TASK_INDEX
 --------------------------------------------------------
@@ -15099,7 +15321,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_THEME_GENERAL_PK
 --------------------------------------------------------
@@ -15108,7 +15330,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TMPAPRDOCATTACHINFO_PK
 --------------------------------------------------------
@@ -15117,7 +15339,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TMPAPRDOCINFO_PK
 --------------------------------------------------------
@@ -15126,7 +15348,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TMPAPRLINEINFO_PK
 --------------------------------------------------------
@@ -15135,7 +15357,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TMPAPROPINIONINFO_PK
 --------------------------------------------------------
@@ -15144,7 +15366,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TMPATTACHINFO_PK
 --------------------------------------------------------
@@ -15153,7 +15375,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TMPEXPAPRLINE_PK
 --------------------------------------------------------
@@ -15162,7 +15384,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TMPRECEIPTPOINTINFO_PK
 --------------------------------------------------------
@@ -15171,7 +15393,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_TOPMENU_GENERAL_PK
 --------------------------------------------------------
@@ -15180,7 +15402,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_USERCONTLIST_PK
 --------------------------------------------------------
@@ -15189,7 +15411,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_USERCONT_PK
 --------------------------------------------------------
@@ -15198,7 +15420,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_USERINFO_PK
 --------------------------------------------------------
@@ -15207,7 +15429,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_USERMOBILEINFO_PK
 --------------------------------------------------------
@@ -15216,7 +15438,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_USERSTARTPAGE_ITEM_PK
 --------------------------------------------------------
@@ -15225,7 +15447,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_USER_CONFIG_PK
 --------------------------------------------------------
@@ -15234,7 +15456,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_USER_JOBMASTER_PK
 --------------------------------------------------------
@@ -15243,7 +15465,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_USER_MULTILOGIN_PK
 --------------------------------------------------------
@@ -15252,7 +15474,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_WEATHER_PK
 --------------------------------------------------------
@@ -15261,7 +15483,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_WEATHER_USER_PK
 --------------------------------------------------------
@@ -15270,7 +15492,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_WEBFOLDER_PK
 --------------------------------------------------------
@@ -15279,7 +15501,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_WEBFOLDER_SHARE_HIDE_PK
 --------------------------------------------------------
@@ -15288,7 +15510,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_WEBFOLDER_SHARE_PK
 --------------------------------------------------------
@@ -15297,7 +15519,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index TBL_WEBFOLDER_SHARE_UK1
 --------------------------------------------------------
@@ -15306,7 +15528,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index U_JMS_PTN_USER_NAME
 --------------------------------------------------------
@@ -15315,7 +15537,7 @@
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER" ;
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Trigger TRG_TBL_ADMINRECEIPTGROUP_MAIN
 --------------------------------------------------------
@@ -16101,7 +16323,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."APPROVCONNKAMCO" MODIFY ("STARTTIME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."APPROVCONNKAMCO" MODIFY ("OVERTIMEDATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."APPROVCONNKAMCO" MODIFY ("DOCID" NOT NULL ENABLE);
@@ -16114,7 +16336,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."APPROVCONNKAMCO_USER" MODIFY ("WEEKTIME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."APPROVCONNKAMCO_USER" MODIFY ("USERID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16125,7 +16347,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_DOMAIN" MODIFY ("DOMAIN_NAME" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JAMES_MAIL
@@ -16135,7 +16357,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_MAIL" MODIFY ("MAIL_IS_SEEN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_MAIL" MODIFY ("MAIL_IS_RECENT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_MAIL" MODIFY ("MAIL_IS_FLAGGED" NOT NULL ENABLE);
@@ -16154,7 +16376,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_MAILBOX" MODIFY ("USER_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_MAILBOX" MODIFY ("MAILBOX_UID_VALIDITY" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_MAILBOX" MODIFY ("MAILBOX_NAMESPACE" NOT NULL ENABLE);
@@ -16171,7 +16393,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_MAIL_BLOB" MODIFY ("MAIL_BLOB_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_MAIL_BLOB" MODIFY ("MAIL_BYTES" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16182,7 +16404,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_MAIL_PROPERTY" MODIFY ("PROPERTY_VALUE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_MAIL_PROPERTY" MODIFY ("PROPERTY_NAME_SPACE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_MAIL_PROPERTY" MODIFY ("PROPERTY_LOCAL_NAME" NOT NULL ENABLE);
@@ -16196,7 +16418,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_MAIL_SEARCH" MODIFY ("MAIL_SEARCH_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JAMES_MAIL_USERFLAG
@@ -16206,7 +16428,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_MAIL_USERFLAG" MODIFY ("USERFLAG_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_MAIL_USERFLAG" MODIFY ("USERFLAG_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16217,7 +16439,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_RECIPIENT_REWRITE" MODIFY ("USER_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_RECIPIENT_REWRITE" MODIFY ("DOMAIN_NAME" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16228,12 +16450,12 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_SUBSCRIPTION" ADD PRIMARY KEY ("SUBSCRIPTION_ID")
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_SUBSCRIPTION" MODIFY ("USER_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_SUBSCRIPTION" MODIFY ("MAILBOX_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_SUBSCRIPTION" MODIFY ("SUBSCRIPTION_ID" NOT NULL ENABLE);
@@ -16245,7 +16467,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_USER" MODIFY ("PASSWORD" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_USER" MODIFY ("PASSWORD_HASH_ALGORITHM" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JAMES_USER" MODIFY ("USER_NAME" NOT NULL ENABLE);
@@ -16257,7 +16479,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_ADDJOB_MASTER" MODIFY ("DEPTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_ADDJOB_MASTER" MODIFY ("CN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_ADDJOB_MASTER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -16269,7 +16491,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_ADDRESS_FOLDER" MODIFY ("FOLDER_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_ADDRESS_GENERAL
@@ -16279,7 +16501,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_ADDRESS_GENERAL" MODIFY ("USER_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_ADDRESS_INFO
@@ -16289,7 +16511,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_ADDRESS_INFO" MODIFY ("ADDRESS_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_ADDRESS_SEARCH
@@ -16299,7 +16521,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_ADDRESS_SEARCH" MODIFY ("ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_ADDRESS_SIMPLE
@@ -16309,7 +16531,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_ADDRESS_SIMPLE" MODIFY ("SIMPLE_IDX" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_ALIAS
@@ -16319,7 +16541,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_ALIAS" MODIFY ("ALIAS_ADDRESS" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_ALIAS" MODIFY ("TARGET_ADDRESS" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16330,7 +16552,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_CONNECTION_INFO" MODIFY ("SEQUENCE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_CONNECTION_INFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_CONNECTION_INFO" MODIFY ("USERID" NOT NULL ENABLE);
@@ -16342,7 +16564,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_DEFAULT_QUOTA" MODIFY ("DOMAIN_NAME" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_DEPT_MASTER
@@ -16352,7 +16574,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_DEPT_MASTER" MODIFY ("DISPLAYNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_DEPT_MASTER" MODIFY ("CN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_DEPT_MASTER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -16364,7 +16586,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_DISTRIBUTION" MODIFY ("GROUP_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_DISTRIBUTION" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_DISTRIBUTION" MODIFY ("USER_NAME" NOT NULL ENABLE);
@@ -16378,7 +16600,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_INBOX_RULE
 --------------------------------------------------------
@@ -16387,7 +16609,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_INBOX_RULE" MODIFY ("PRIORITY" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_INBOX_RULE" MODIFY ("IS_USE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_INBOX_RULE" MODIFY ("USER_ID" NOT NULL ENABLE);
@@ -16401,7 +16623,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_INBOX_RULE_SUB" MODIFY ("KIND" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_INBOX_RULE_SUB" MODIFY ("TYPE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_INBOX_RULE_SUB" MODIFY ("RULE_ID" NOT NULL ENABLE);
@@ -16414,7 +16636,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_LETTER" MODIFY ("LETTER_NO" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_LETTERBOX
@@ -16424,7 +16646,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_LETTERBOX" MODIFY ("LETTERBOX_NO" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_COLOR
@@ -16434,17 +16656,18 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_COLOR" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_COPYRIGHT
 --------------------------------------------------------
 
-  ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_COPYRIGHT" ADD PRIMARY KEY ("TENANT_ID")
+  ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_COPYRIGHT" ADD CONSTRAINT "SYS_C0034629" PRIMARY KEY ("TENANT_ID")
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_COPYRIGHT" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_COPYRIGHT" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_COUNTRYIP
@@ -16468,7 +16691,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_DELETE" MODIFY ("FOLDER_PATH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_DELETE" MODIFY ("USER_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16479,7 +16702,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_FORWARD" MODIFY ("FORWARD_ADDRESS" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_FORWARD" MODIFY ("USERID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16490,7 +16713,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_GENERAL" MODIFY ("USER_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_OUTOFOFFICE
@@ -16500,7 +16723,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_OUTOFOFFICE" MODIFY ("EXTERNAL_AUDIENCE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_OUTOFOFFICE" MODIFY ("EXTERNAL" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_OUTOFOFFICE" MODIFY ("INTERNAL" NOT NULL ENABLE);
@@ -16516,7 +16739,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_OUTOFOFFICE_SENT" MODIFY ("SENT_TIME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_OUTOFOFFICE_SENT" MODIFY ("RECIPIENT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_OUTOFOFFICE_SENT" MODIFY ("USER_ID" NOT NULL ENABLE);
@@ -16528,7 +16751,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_POP3" MODIFY ("POP3_IDX" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_POP3_LIST
@@ -16538,7 +16761,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_POP3_LIST" MODIFY ("MESSAGE_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_POP3_LIST" MODIFY ("POP3_IDX" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16549,7 +16772,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_READ" MODIFY ("READER_EMAIL" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_READ" MODIFY ("MESSAGE_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_READ" MODIFY ("USER_ID" NOT NULL ENABLE);
@@ -16561,7 +16784,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_RECALL" MODIFY ("RECALL_IDX" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_RECALL_DETAIL
@@ -16571,7 +16794,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_RECALL_DETAIL" MODIFY ("RECEIVER_EMAIL" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_RECALL_DETAIL" MODIFY ("RECALL_IDX" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16582,7 +16805,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_RESERVE" MODIFY ("MESSAGE_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_SECURE
@@ -16592,7 +16815,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_SECURE" MODIFY ("SECURE_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_SECURE_READ
@@ -16602,7 +16825,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_SECURE_READ" MODIFY ("READER_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_SECURE_READ" MODIFY ("SECURE_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16613,7 +16836,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_SIGNATURE" MODIFY ("USER_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_MAIL_SIGNATURE_TEMPLATE
@@ -16623,7 +16846,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_SIGNATURE_TEMPLATE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_MAIL_SIGNATURE_TEMPLATE" MODIFY ("SIGN_NO" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16634,7 +16857,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_RETIRED_USER" MODIFY ("PASSWORD" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_RETIRED_USER" MODIFY ("PASSWORD_HASH_ALGORITHM" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_RETIRED_USER" MODIFY ("USER_NAME" NOT NULL ENABLE);
@@ -16646,7 +16869,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_SCHEDULER_SERVER" MODIFY ("SCHEDULER" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_SHARED_MAILBOX
@@ -16659,7 +16882,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_STAT_MAILBOXQTY_INFO
 --------------------------------------------------------
@@ -16668,7 +16891,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAILBOXQTY_INFO" MODIFY ("DT_MM" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAILBOXQTY_INFO" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAILBOXQTY_INFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -16680,7 +16903,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_COMP_FLOW_DAY" MODIFY ("RORGID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_COMP_FLOW_DAY" MODIFY ("SORGID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_COMP_FLOW_DAY" MODIFY ("DT_DD" NOT NULL ENABLE);
@@ -16693,7 +16916,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_COMP_FLOW_MON" MODIFY ("RORGID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_COMP_FLOW_MON" MODIFY ("SORGID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_COMP_FLOW_MON" MODIFY ("DT_MM" NOT NULL ENABLE);
@@ -16706,7 +16929,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_DEPT_DAY" MODIFY ("DEPTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_DEPT_DAY" MODIFY ("DT_DD" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_DEPT_DAY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -16718,7 +16941,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_DEPT_MONTH" MODIFY ("DEPTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_DEPT_MONTH" MODIFY ("DT_MM" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_DEPT_MONTH" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -16730,7 +16953,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_LOG" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_LOG" MODIFY ("IDX" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16741,7 +16964,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_USER_DAY" MODIFY ("DEPTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_USER_DAY" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_USER_DAY" MODIFY ("DT_DD" NOT NULL ENABLE);
@@ -16754,7 +16977,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_USER_MONTH" MODIFY ("DEPTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_USER_MONTH" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STAT_MAIL_USER_MONTH" MODIFY ("DT_MM" NOT NULL ENABLE);
@@ -16767,7 +16990,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_STORAGE_WARNING_SENT" MODIFY ("SENT_TIME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_STORAGE_WARNING_SENT" MODIFY ("USER_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16778,7 +17001,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_TENANT" MODIFY ("TENANT_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_TENANT" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16789,7 +17012,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_TENANT_CONFIG" MODIFY ("PROPERTY_VALUE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_TENANT_CONFIG" MODIFY ("PROPERTY_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_TENANT_CONFIG" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -16801,7 +17024,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_TENANT_SERVERNAME" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_TENANT_SERVERNAME" MODIFY ("SERVER_NAME" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -16812,7 +17035,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_LOCAL_INFO" MODIFY ("LANG" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_LOCAL_INFO" MODIFY ("TIMEZONE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_LOCAL_INFO" MODIFY ("USERID" NOT NULL ENABLE);
@@ -16825,7 +17048,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_MASTER" MODIFY ("UPDATEDT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_MASTER" MODIFY ("DEPARTMENT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_MASTER" MODIFY ("DISPLAYNAME" NOT NULL ENABLE);
@@ -16839,7 +17062,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_MASTER_RETIRE" MODIFY ("UPDATEDT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_MASTER_RETIRE" MODIFY ("DEPARTMENT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_MASTER_RETIRE" MODIFY ("DISPLAYNAME" NOT NULL ENABLE);
@@ -16853,7 +17076,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."JMOCHA_USER_QUOTA" MODIFY ("USER_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table KCMCOMBOARDGB
@@ -16863,7 +17086,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."KCMCOMBOARDGB" MODIFY ("BOARDGB" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table MINSU_TEST
@@ -16880,7 +17103,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."OPENJPA_SEQUENCE_TABLE" MODIFY ("ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TALK_TBLADDJOB
@@ -17178,6 +17401,17 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
+--  Constraints for Table TBL_ACCESS_COUNTRY
+--------------------------------------------------------
+
+  ALTER TABLE "EZEKP2017"."TBL_ACCESS_COUNTRY" ADD CONSTRAINT "TBL_ACCESS_COUNTRY" PRIMARY KEY ("TENANT_ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "EZEKP2017"."TBL_ACCESS_COUNTRY" MODIFY ("COUNTRY_CODE" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_ACCESS_COUNTRY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+--------------------------------------------------------
 --  Constraints for Table TBL_ACCESS_ID
 --------------------------------------------------------
 
@@ -17185,7 +17419,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ACCESS_ID" MODIFY ("CN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ACCESS_ID" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ACCESS_ID" MODIFY ("ACCESSNO" NOT NULL ENABLE);
@@ -17197,7 +17431,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ACCESS_IP" MODIFY ("ACCESS" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ACCESS_IP" MODIFY ("IPADDRESS" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ACCESS_IP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -17210,7 +17444,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ADDJOBMASTER" MODIFY ("DEPTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ADDJOBMASTER" MODIFY ("CN" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17221,7 +17455,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ADMINRECEIPTGROUP_MAIN" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ADMINRECEIPTGROUP_MAIN" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ADMINRECEIPTGROUP_MAIN" MODIFY ("MAINID" NOT NULL ENABLE);
@@ -17236,7 +17470,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ADMINRECEIPTGROUP_SUB" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_APRATTACHINFO
@@ -17246,7 +17480,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_APRATTACHINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRATTACHINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRATTACHINFO" MODIFY ("ATTACHFILESN" NOT NULL ENABLE);
@@ -17259,11 +17493,25 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_APRDOCATTACHINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRDOCATTACHINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRDOCATTACHINFO" MODIFY ("ATTACHSN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRDOCATTACHINFO" MODIFY ("DOCID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_APRDOCGROUPINFO
+--------------------------------------------------------
+
+  ALTER TABLE "EZEKP2017"."TBL_APRDOCGROUPINFO" ADD CONSTRAINT "TBL_APRDOCGROUPINFO_PK" PRIMARY KEY ("TENANT_ID", "COMPANYID", "GROUPDOCSN", "TABSN")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "EZEKP2017"."TBL_APRDOCGROUPINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_APRDOCGROUPINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_APRDOCGROUPINFO" MODIFY ("GROUPDOCSN" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_APRDOCGROUPINFO" MODIFY ("TABSN" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_APRDOCGROUPINFO" MODIFY ("DOCID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_APRDOCINFO
 --------------------------------------------------------
@@ -17272,7 +17520,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_APRDOCINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRDOCINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRDOCINFO" MODIFY ("DOCID" NOT NULL ENABLE);
@@ -17284,7 +17532,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_APRLINEINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRLINEINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRLINEINFO" MODIFY ("APRMEMBERSN" NOT NULL ENABLE);
@@ -17297,7 +17545,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_APROPINIONINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APROPINIONINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APROPINIONINFO" MODIFY ("OPINIONSN" NOT NULL ENABLE);
@@ -17311,7 +17559,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_APRRECEIPTPROCESSINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRRECEIPTPROCESSINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_APRRECEIPTPROCESSINFO" MODIFY ("RECEIVEDDEPTID" NOT NULL ENABLE);
@@ -17325,7 +17573,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTENDANT" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTENDANT" MODIFY ("RESPONSEDATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTENDANT" MODIFY ("STATUS" NOT NULL ENABLE);
@@ -17341,7 +17589,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE" MODIFY ("DATE_TYPE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE" MODIFY ("START_DATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE" MODIFY ("DEPT_ID" NOT NULL ENABLE);
@@ -17357,7 +17605,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL" MODIFY ("ADDITIONAL_HOLIDAY_CNT" NOT NULL ENABLE);
@@ -17368,26 +17616,26 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
 --  Constraints for Table TBL_ATTITUDE_ANNUAL_CANAPPL
 --------------------------------------------------------
 
-  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" ADD CONSTRAINT "PK_TBL_ATTITUDE_ANNUAL_CANAPPL" PRIMARY KEY ("ATTITUDE_ID", "APPL_CNT", "COMPANY_ID", "TENANT_ID")
+  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" ADD CONSTRAINT "TBL_ATTITUDE_ANNUAL_CANAPPL_PK" PRIMARY KEY ("ATTITUDE_ID", "APPL_CNT", "COMPANY_ID", "TENANT_ID")
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" MODIFY ("WRITER_DEPT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" MODIFY ("WRITER_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" MODIFY ("APPL_CNT" NOT NULL ENABLE);
-  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" MODIFY ("ATTITUDE_ID" NOT NULL ENABLE);  
+  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CANAPPL" MODIFY ("ATTITUDE_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_ATTITUDE_ANNUAL_CONF
 --------------------------------------------------------
 
-  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" ADD CONSTRAINT "PK_TBL_ATTITUDE_ANNUAL_CONF" PRIMARY KEY ("COMPANY_ID", "TENANT_ID")
+  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" ADD CONSTRAINT "TBL_ATTITUDE_ANNUAL_CONF_PK" PRIMARY KEY ("COMPANY_ID", "TENANT_ID")
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" MODIFY ("CONF_SET_DATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" MODIFY ("ROUND_OFF_RULE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" MODIFY ("USE_ANNUAL_TMNT" NOT NULL ENABLE);
@@ -17395,25 +17643,25 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" MODIFY ("ANNUAL_GNRT_STD" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" MODIFY ("USE_ANNUAL_AUTO_GNRT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" MODIFY ("TENANT_ID" NOT NULL ENABLE);
-  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" MODIFY ("COMPANY_ID" NOT NULL ENABLE);  
+  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_CONF" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_ATTITUDE_ANNUAL_HISTORY
 --------------------------------------------------------
 
-  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_HISTORY" ADD CONSTRAINT "PK_TBL_ATTITUDE_ANNUAL_HISTORY" PRIMARY KEY ("ANNUAL_HISTORY_ID")
+  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_ANNUAL_HISTORY" ADD CONSTRAINT "TBL_ATTITUDE_ANNUAL_HISTORY_PK" PRIMARY KEY ("ANNUAL_HISTORY_ID")
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_ATTITUDE_APR_CONN
 --------------------------------------------------------
 
-  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_APR_CONN" ADD CONSTRAINT "PK_TBL_ATTITUDE_APR_CONN" PRIMARY KEY ("ATTITUDE_ID", "COMPANY_ID", "TENANT_ID")
+  ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_APR_CONN" ADD CONSTRAINT "TBL_ATTITUDE_APR_CONN_PK" PRIMARY KEY ("ATTITUDE_ID", "COMPANY_ID", "TENANT_ID")
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_APR_CONN" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_APR_CONN" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_APR_CONN" MODIFY ("ANNUAL_DOC_ID" NOT NULL ENABLE);
@@ -17426,7 +17674,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_AUTH" MODIFY ("AUTH_TYPE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_AUTH" MODIFY ("AUTH_DEPT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_AUTH" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -17439,7 +17687,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_CONF" MODIFY ("CONF_SET_DATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_CONF" MODIFY ("CLOSED_DATE_ATTITUDE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_CONF" MODIFY ("ATTITUDE_MOD_APPL" NOT NULL ENABLE);
@@ -17456,7 +17704,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_FORM" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_FORM" MODIFY ("FORM_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17468,7 +17716,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_MODAPPL" MODIFY ("CHANGE_DATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_MODAPPL" MODIFY ("ORIGIN_DATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_MODAPPL" MODIFY ("WRITER_DEPT_ID" NOT NULL ENABLE);
@@ -17484,7 +17732,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_MODAPPL_HISTORY" MODIFY ("WRITER_DEPT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_MODAPPL_HISTORY" MODIFY ("WRITER_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_MODAPPL_HISTORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -17498,7 +17746,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_TYPE" MODIFY ("ISDEL" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_TYPE" MODIFY ("ISADD" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_TYPE" MODIFY ("FORM_ID" NOT NULL ENABLE);
@@ -17517,7 +17765,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_USER_CONF" MODIFY ("DEPT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_USER_CONF" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ATTITUDE_USER_CONF" MODIFY ("WORK_ENDTIME" NOT NULL ENABLE);
@@ -17536,7 +17784,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_AUDIO_VISUALRECEXINFO_TEMP
 --------------------------------------------------------
@@ -17545,7 +17793,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_AUDIO_VISUALRECEXINFO_TEMP" MODIFY ("SEPERATEATTACHNO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_AUDIO_VISUALRECEXINFO_TEMP" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_AUDIO_VISUALRECEXINFO_TEMP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -17558,7 +17806,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_AUTODOCNUM_ITEM" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_AUTODOCNUM_ITEM" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_AUTODOCNUM_ITEM" MODIFY ("FORMID" NOT NULL ENABLE);
@@ -17571,7 +17819,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_APPRLIST" MODIFY ("APPRUSERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_APPRLIST" MODIFY ("BOARDID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17582,7 +17830,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_BOARDBACKGROUNDINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_BOARDBACKGROUNDINFO" MODIFY ("BACKGROUNDID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17595,7 +17843,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_BOARD_BOARDINFO_ATTRIBUTE
 --------------------------------------------------------
@@ -17605,7 +17853,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_BOARDINFO_ATTRIBUTE" MODIFY ("TABLECOL" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_BOARDINFO_ATTRIBUTE" MODIFY ("BOARDID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17617,7 +17865,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_BOARDMANAGE" MODIFY ("ACCESSID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_BOARDMANAGE" MODIFY ("BOARDID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17630,7 +17878,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_BOARD_DELETERESERVEDBOARD
 --------------------------------------------------------
@@ -17639,7 +17887,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_DELETERESERVEDBOARD" MODIFY ("BOARDID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_DELETERESERVEDBOARD" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17651,7 +17899,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_DELETERESERVEDITEM" MODIFY ("ITEMID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_DELETERESERVEDITEM" MODIFY ("BOARDID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17662,7 +17910,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM" MODIFY ("BOARDID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM" MODIFY ("ITEMID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -17675,7 +17923,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_ATTACHMENTS" MODIFY ("FILEPATH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_ATTACHMENTS" MODIFY ("ITEMID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17687,7 +17935,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_LISTOPTION" MODIFY ("VIEW_FG" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_LISTOPTION" MODIFY ("WIDTH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_LISTOPTION" MODIFY ("COLNAME" NOT NULL ENABLE);
@@ -17702,7 +17950,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_LISTOPTION_BOAR" MODIFY ("VIEW_FG" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_LISTOPTION_BOAR" MODIFY ("WIDTH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_LISTOPTION_BOAR" MODIFY ("COLNAME" NOT NULL ENABLE);
@@ -17717,7 +17965,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_READ" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_READ" MODIFY ("ITEMID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_READ" MODIFY ("BOARDID" NOT NULL ENABLE);
@@ -17730,7 +17978,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_TEMP" MODIFY ("BOARDID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ITEM_TEMP" MODIFY ("ITEMID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17741,7 +17989,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_LIKE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_LIKE" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_LIKE" MODIFY ("ITEMID" NOT NULL ENABLE);
@@ -17756,7 +18004,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_MYBOARDS" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_BOARD_MYTREE
@@ -17766,7 +18014,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_MYTREE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_MYTREE" MODIFY ("TREESTEP" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_MYTREE" MODIFY ("TREENAME2" NOT NULL ENABLE);
@@ -17782,7 +18030,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_NEWBOARD_ORDERINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_NEWBOARD_ORDERINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -17793,7 +18041,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ONELINEREPLY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ONELINEREPLY" MODIFY ("BOARDID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_BOARD_ONELINEREPLY" MODIFY ("REPLYID" NOT NULL ENABLE);
@@ -17807,7 +18055,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_BOARD_TREECACHE" MODIFY ("QUERY" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_BUILTIN_PARAMETERS
@@ -17819,7 +18067,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_CABINET
 --------------------------------------------------------
@@ -17833,7 +18081,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CABINET" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINET" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINET" MODIFY ("CABINETCLASSNO" NOT NULL ENABLE);
@@ -17853,7 +18101,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CABINETCLASS" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINETCLASS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINETCLASS" MODIFY ("PRODUCTIONYEAR" NOT NULL ENABLE);
@@ -17866,7 +18114,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CABINETCODELIST" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINETCODELIST" MODIFY ("ISUSED" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINETCODELIST" MODIFY ("CODE" NOT NULL ENABLE);
@@ -17880,7 +18128,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CABINETHISTORY" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINETHISTORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINETHISTORY" MODIFY ("CABINETCLASSNO" NOT NULL ENABLE);
@@ -17893,7 +18141,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CABINET_VIEWAUTH" MODIFY ("MNG_FG" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINET_VIEWAUTH" MODIFY ("ACCESS_LV" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABINET_VIEWAUTH" MODIFY ("CN" NOT NULL ENABLE);
@@ -17908,7 +18156,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CABROLEINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABROLEINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CABROLEINFO" MODIFY ("CABINETCLASSNO" NOT NULL ENABLE);
@@ -17921,7 +18169,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_ADMIN_MODULE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_ADMIN_MODULE" MODIFY ("ACTIVE_STATUS" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_ADMIN_MODULE" MODIFY ("MODULE_TYPE" NOT NULL ENABLE);
@@ -17934,7 +18182,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_ATTACH_FILE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_ATTACH_FILE" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_ATTACH_FILE" MODIFY ("FILE_SIZE" NOT NULL ENABLE);
@@ -17950,7 +18198,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_CABINET" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_CABINET" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_CABINET" MODIFY ("USE_STATUS" NOT NULL ENABLE);
@@ -17978,7 +18226,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_COMPANY_CAPACITY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_COMPANY_CAPACITY" MODIFY ("CAPACITY_TYPE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_COMPANY_CAPACITY" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
@@ -17990,7 +18238,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_CONFIG" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_CONFIG" MODIFY ("CONTENT_HPERCENT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_CONFIG" MODIFY ("CONTENT_WPERCENT" NOT NULL ENABLE);
@@ -18006,7 +18254,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_ITEM" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_ITEM" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_ITEM" MODIFY ("UPDATE_ID" NOT NULL ENABLE);
@@ -18030,7 +18278,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_REL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_REL" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_REL" MODIFY ("ITEM_ID" NOT NULL ENABLE);
@@ -18043,7 +18291,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_RELATION" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_RELATION" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_RELATION" MODIFY ("RELATE_ITEM_ID" NOT NULL ENABLE);
@@ -18057,7 +18305,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_SHARE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_SHARE" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_SHARE" MODIFY ("USE_STATUS" NOT NULL ENABLE);
@@ -18079,7 +18327,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_USER_CAPACITY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_USER_CAPACITY" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_USER_CAPACITY" MODIFY ("CAPACITY_TYPE" NOT NULL ENABLE);
@@ -18092,7 +18340,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CB_USER_MODULE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_USER_MODULE" MODIFY ("ACTIVE_STATUS" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CB_USER_MODULE" MODIFY ("MODULE_TYPE" NOT NULL ENABLE);
@@ -18106,7 +18354,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR" MODIFY ("CIRCULARID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18117,7 +18365,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_BM" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_BM" MODIFY ("CIRCULARBMID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18128,7 +18376,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_BMUSER" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_BMUSER" MODIFY ("CIRCULARBMUSERID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18139,7 +18387,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_COMMENT" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_COMMENT" MODIFY ("CIRCULARCOMMENTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_COMMENT" MODIFY ("CIRCULARID" NOT NULL ENABLE);
@@ -18151,7 +18399,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_COMMENTSTATE" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_COMMENTSTATE" MODIFY ("CIRCULARCOMMENTSTATEID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18162,7 +18410,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_FILE" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_FILE" MODIFY ("CIRCULARFILEID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18173,7 +18421,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_FOLDER" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_FOLDER" MODIFY ("CIRCULARFOLDERID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18184,7 +18432,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_LINK" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_LINK" MODIFY ("CIRCULARLINKID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18195,7 +18443,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_LISTOPTION" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_LISTOPTION" MODIFY ("WIDTH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_LISTOPTION" MODIFY ("COLNAME" NOT NULL ENABLE);
@@ -18209,7 +18457,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_OPTION" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_OPTION" MODIFY ("CIRCULAROPTIONID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18220,7 +18468,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_USER" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CIRCULAR_USER" MODIFY ("CIRCULARUSERID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18231,7 +18479,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CLUBID" MODIFY ("CLUBID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CLUBID" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18242,7 +18490,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CODELIST" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CODELIST" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CODELIST" MODIFY ("CODE2" NOT NULL ENABLE);
@@ -18260,7 +18508,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_BOARDMANAGE
 --------------------------------------------------------
@@ -18272,7 +18520,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_DELETERESERVEDBOARD
 --------------------------------------------------------
@@ -18281,7 +18529,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_COMM_DELETERESERVEDBOARD" MODIFY ("BOARDID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_COMM_DELETERESERVEDBOARD" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18295,7 +18543,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_ITEM
 --------------------------------------------------------
@@ -18307,7 +18555,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_ITEM_ATTACHMENTS
 --------------------------------------------------------
@@ -18317,7 +18565,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_COMM_ITEM_ATTACHMENTS" MODIFY ("FILEPATH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_COMM_ITEM_ATTACHMENTS" MODIFY ("ITEMID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_COMM_ITEM_ATTACHMENTS" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -18333,7 +18581,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_MYBOARDS
 --------------------------------------------------------
@@ -18345,7 +18593,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_ONELINEREPLY
 --------------------------------------------------------
@@ -18358,7 +18606,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_SCHEDULE
 --------------------------------------------------------
@@ -18393,7 +18641,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_SCHEDULEATTACH
 --------------------------------------------------------
@@ -18408,7 +18656,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_SCHEDULECOMMENT
 --------------------------------------------------------
@@ -18424,7 +18672,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_SCHEDULECONFIG
 --------------------------------------------------------
@@ -18440,7 +18688,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_SCHEDULEGROUP
 --------------------------------------------------------
@@ -18454,7 +18702,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_SCHEDULEGROUPMEMBER
 --------------------------------------------------------
@@ -18469,7 +18717,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_SCHEDULESHARE
 --------------------------------------------------------
@@ -18485,7 +18733,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_SECRETARY
 --------------------------------------------------------
@@ -18499,7 +18747,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMM_TREECACHE
 --------------------------------------------------------
@@ -18510,7 +18758,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_COMPANY_CONFIG
 --------------------------------------------------------
@@ -18519,10 +18767,24 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_COMPANY_CONFIG" MODIFY ("PROPERTY_VALUE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_COMPANY_CONFIG" MODIFY ("PROPERTY_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_COMPANY_CONFIG" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_CONNDATA
+--------------------------------------------------------
+
+  ALTER TABLE "EZEKP2017"."TBL_CONNDATA" ADD CONSTRAINT "TBL_CONNDATA_PK" PRIMARY KEY ("KEYID", "FORMID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "EZEKP2017"."TBL_CONNDATA" MODIFY ("UPDATEDATE" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_CONNDATA" MODIFY ("STATUS" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_CONNDATA" MODIFY ("BODYXML" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_CONNDATA" MODIFY ("FORMID" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_CONNDATA" MODIFY ("KEYID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_CONNECTION_INFO
 --------------------------------------------------------
@@ -18531,7 +18793,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CONNECTION_INFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONNECTION_INFO" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONNECTION_INFO" MODIFY ("SEQUENCE" NOT NULL ENABLE);
@@ -18543,7 +18805,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CONTAINER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONTAINER" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONTAINER" MODIFY ("CONTAINEROWNDEPID" NOT NULL ENABLE);
@@ -18556,7 +18818,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CONTAINERTODOCSTATE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONTAINERTODOCSTATE" MODIFY ("DOCUMENTSTATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONTAINERTODOCSTATE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -18568,7 +18830,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CONTAINERTYPE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONTAINERTYPE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONTAINERTYPE" MODIFY ("CONTAINERTYPEID" NOT NULL ENABLE);
@@ -18580,7 +18842,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_CONTAINERUSEDEP" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONTAINERUSEDEP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_CONTAINERUSEDEP" MODIFY ("USEDEPID" NOT NULL ENABLE);
@@ -18599,7 +18861,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_C_BOARD" MODIFY ("READNUM" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_BOARD" MODIFY ("RE_LEVEL" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_BOARD" MODIFY ("STEP" NOT NULL ENABLE);
@@ -18611,7 +18873,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_C_CATEGORY" MODIFY ("C_CAT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_CATEGORY" MODIFY ("C_CODE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_CATEGORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -18642,7 +18904,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_C_CLUBGUEST
 --------------------------------------------------------
@@ -18651,7 +18913,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_C_CLUBGUEST" MODIFY ("NO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_CLUBGUEST" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_CLUBGUEST" MODIFY ("C_NO" NOT NULL ENABLE);
@@ -18664,7 +18926,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_C_CLUBNOTICE" MODIFY ("NO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_CLUBNOTICE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18686,7 +18948,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_C_COMCLOSE
 --------------------------------------------------------
@@ -18695,7 +18957,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_C_COMCLOSE" MODIFY ("C_CLUBNO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_COMCLOSE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18709,7 +18971,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_C_NOTICE
 --------------------------------------------------------
@@ -18718,7 +18980,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_C_NOTICE" MODIFY ("WRITEDAY" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_NOTICE" MODIFY ("READNUM" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_NOTICE" MODIFY ("CONTENT" NOT NULL ENABLE);
@@ -18734,7 +18996,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_C_OUTAPPLICATION" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_OUTAPPLICATION" MODIFY ("C_CLUBNO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_OUTAPPLICATION" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -18751,7 +19013,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_C_POLLMANAGER
 --------------------------------------------------------
@@ -18765,7 +19027,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_C_POLLQUESTION
 --------------------------------------------------------
@@ -18774,7 +19036,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_C_POLLQUESTION" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_POLLQUESTION" MODIFY ("ANSWERTYPE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_C_POLLQUESTION" MODIFY ("ANSWERCOUNT" NOT NULL ENABLE);
@@ -18797,7 +19059,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_DAILYDOCCOUNTLOG
 --------------------------------------------------------
@@ -18817,7 +19079,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_DAILYFORMCOUNTLOG
 --------------------------------------------------------
@@ -18827,7 +19089,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DAILYFORMCOUNTLOG" MODIFY ("RETURNCNT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DAILYFORMCOUNTLOG" MODIFY ("SUSINTIME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DAILYFORMCOUNTLOG" MODIFY ("SUSINENDCNT" NOT NULL ENABLE);
@@ -18846,7 +19108,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DELETECABINETINFO" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DELETECABINETINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DELETECABINETINFO" MODIFY ("CABINETID" NOT NULL ENABLE);
@@ -18859,7 +19121,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DEPTCONT" MODIFY ("DEPTCONTID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_DEPTCONTLIST
@@ -18871,7 +19133,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DEPTCONTLIST" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_DEPTMASTER
@@ -18881,7 +19143,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DEPTMASTER" MODIFY ("DISPLAYNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DEPTMASTER" MODIFY ("CN" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -18892,7 +19154,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DEPTTEMPLET" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DEPTTEMPLET" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DEPTTEMPLET" MODIFY ("APRDEPTSN" NOT NULL ENABLE);
@@ -18906,7 +19168,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DEPTTEMPLETDETAIL" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DEPTTEMPLETDETAIL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DEPTTEMPLETDETAIL" MODIFY ("APRDEPTMEMBERSN" NOT NULL ENABLE);
@@ -18921,7 +19183,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DEV_MASTER" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DEV_MASTER" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DEV_MASTER" MODIFY ("DEVID" NOT NULL ENABLE);
@@ -18934,7 +19196,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DOCDELETEHISTORY" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_DOCDELIVERY
@@ -18944,7 +19206,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_DOCDELIVERY" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DOCDELIVERY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_DOCDELIVERY" MODIFY ("DEPTID" NOT NULL ENABLE);
@@ -18958,7 +19220,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ENDAPRDOCATTACHINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDAPRDOCATTACHINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDAPRDOCATTACHINFO" MODIFY ("ATTACHSN" NOT NULL ENABLE);
@@ -18971,7 +19233,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ENDAPRDOCINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDAPRDOCINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDAPRDOCINFO" MODIFY ("DOCID" NOT NULL ENABLE);
@@ -18983,7 +19245,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ENDAPRLINEINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDAPRLINEINFO" MODIFY ("APRMEMBERSN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDAPRLINEINFO" MODIFY ("DOCID" NOT NULL ENABLE);
@@ -18996,7 +19258,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ENDAPROPINIONINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDAPROPINIONINFO" MODIFY ("OPINIONSN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDAPROPINIONINFO" MODIFY ("USERID" NOT NULL ENABLE);
@@ -19010,7 +19272,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ENDATTACHINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDATTACHINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDATTACHINFO" MODIFY ("ATTACHFILESN" NOT NULL ENABLE);
@@ -19023,7 +19285,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ENDRECEIPTPOINTINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDRECEIPTPOINTINFO" MODIFY ("PROCESSSN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDRECEIPTPOINTINFO" MODIFY ("RECEIPTPOINTID" NOT NULL ENABLE);
@@ -19037,7 +19299,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_ENDRECEIPTPROCESSINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDRECEIPTPROCESSINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_ENDRECEIPTPROCESSINFO" MODIFY ("RECEIVEDDEPTID" NOT NULL ENABLE);
@@ -19051,7 +19313,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_EXPAPRDOCINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_EXPAPRDOCINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_EXPAPRDOCINFO" MODIFY ("DOCID" NOT NULL ENABLE);
@@ -19063,7 +19325,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_EXPAPRLINE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_EXPAPRLINE" MODIFY ("ORGUSERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_EXPAPRLINE" MODIFY ("APRMEMBERSN" NOT NULL ENABLE);
@@ -19077,7 +19339,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_EXPENDAPRDOCINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_EXPENDAPRDOCINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_EXPENDAPRDOCINFO" MODIFY ("SIGNCHECK" NOT NULL ENABLE);
@@ -19090,7 +19352,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_EXPENDAPRLINE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_EXPENDAPRLINE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_EXPENDAPRLINE" MODIFY ("ORGUSERID" NOT NULL ENABLE);
@@ -19117,7 +19379,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORMCONTAINER" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMCONTAINER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMCONTAINER" MODIFY ("FORMCONTPARENTS" NOT NULL ENABLE);
@@ -19132,7 +19394,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORMCONTUSERGROUP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMCONTUSERGROUP" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMCONTUSERGROUP" MODIFY ("FORMCONTUSERDEPID" NOT NULL ENABLE);
@@ -19145,7 +19407,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORMGROUP" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMGROUP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMGROUP" MODIFY ("SN" NOT NULL ENABLE);
@@ -19157,7 +19419,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORMINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMINFO" MODIFY ("FORMFILELOCATION" NOT NULL ENABLE);
@@ -19171,7 +19433,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORMPROPERTY" MODIFY ("SN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMPROPERTY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMPROPERTY" MODIFY ("CODE" NOT NULL ENABLE);
@@ -19184,7 +19446,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORMRECV" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMRECV" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMRECV" MODIFY ("DEPTID" NOT NULL ENABLE);
@@ -19197,7 +19459,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORMUSERINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMUSERINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORMUSERINFO" MODIFY ("USERID" NOT NULL ENABLE);
@@ -19210,7 +19472,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORM_AUTORULE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORM_AUTORULE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORM_AUTORULE" MODIFY ("AUTORULEGUID" NOT NULL ENABLE);
@@ -19224,7 +19486,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORM_AUTORULELINE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORM_AUTORULELINE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORM_AUTORULELINE" MODIFY ("APRMEMBERSN" NOT NULL ENABLE);
@@ -19238,7 +19500,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_FORM_OFFICE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORM_OFFICE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_FORM_OFFICE" MODIFY ("FORMID" NOT NULL ENABLE);
@@ -19250,7 +19512,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_HISTORYATTACHINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_HISTORYATTACHINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_HISTORYATTACHINFO" MODIFY ("MODIFYSN" NOT NULL ENABLE);
@@ -19264,7 +19526,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_HISTORYDOCINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_HISTORYDOCINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_HISTORYDOCINFO" MODIFY ("CHANGESN" NOT NULL ENABLE);
@@ -19277,7 +19539,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_HISTORYLINEINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_HISTORYLINEINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_HISTORYLINEINFO" MODIFY ("MODIFYSN" NOT NULL ENABLE);
@@ -19299,7 +19561,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_HOLIDAYLIST" MODIFY ("HOLIDAYID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_JOURNAL
@@ -19309,7 +19571,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL" MODIFY ("JOURNAL_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -19320,7 +19582,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_ENV" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_ENV" MODIFY ("USER_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -19331,7 +19593,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_FILE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_FILE" MODIFY ("FILE_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -19342,7 +19604,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_FORM" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_FORM" MODIFY ("FORM_DATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_FORM" MODIFY ("TYPE_ID" NOT NULL ENABLE);
@@ -19365,7 +19627,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_ORDER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_ORDER" MODIFY ("USER_ORDER" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_ORDER" MODIFY ("RELATED_USER_ID" NOT NULL ENABLE);
@@ -19384,7 +19646,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_RECV_FAVORITE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_RECV_FAVORITE" MODIFY ("FAVORITE_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -19401,7 +19663,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_REPLY" MODIFY ("JOURNAL_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_REPLY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_REPLY" MODIFY ("REPLY_ID" NOT NULL ENABLE);
@@ -19413,7 +19675,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_SYMBOL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_SYMBOL" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_SYMBOL" MODIFY ("SYMBOL_STR" NOT NULL ENABLE);
@@ -19426,7 +19688,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_VIEW" MODIFY ("JOURNAL_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_VIEW" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_JOURNAL_VIEW" MODIFY ("USER_ID" NOT NULL ENABLE);
@@ -19442,7 +19704,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LADDER" MODIFY ("LINECNT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER" MODIFY ("DEPTNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER" MODIFY ("WRITERNAME" NOT NULL ENABLE);
@@ -19454,7 +19716,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LADDER_BM" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_BM" MODIFY ("LADDERBMID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_BM" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -19466,7 +19728,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LADDER_BMUSER" MODIFY ("USERNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_BMUSER" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_BMUSER" MODIFY ("LADDERBMID" NOT NULL ENABLE);
@@ -19480,7 +19742,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LADDER_COMMENT" MODIFY ("USERNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_COMMENT" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_COMMENT" MODIFY ("LADDERID" NOT NULL ENABLE);
@@ -19494,7 +19756,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LADDER_LINE" MODIFY ("LADDERORDER" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_LINE" MODIFY ("USERNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_LINE" MODIFY ("LADDERID" NOT NULL ENABLE);
@@ -19508,7 +19770,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LADDER_ORDER" MODIFY ("LADDERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_ORDER" MODIFY ("ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LADDER_ORDER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -19520,7 +19782,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LASTAPRLINE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LASTAPRLINE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LASTAPRLINE" MODIFY ("APRMEMBERSN" NOT NULL ENABLE);
@@ -19534,7 +19796,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LASTDEPTLINE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LASTDEPTLINE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LASTDEPTLINE" MODIFY ("RECEIPTPOINTID" NOT NULL ENABLE);
@@ -19548,7 +19810,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LASTDOCID" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LASTDOCID" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LASTDOCID" MODIFY ("LASTDOCID" NOT NULL ENABLE);
@@ -19560,7 +19822,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LINTEMPLET" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LINTEMPLET" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LINTEMPLET" MODIFY ("APRLINESN" NOT NULL ENABLE);
@@ -19574,7 +19836,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LINTEMPLETDETAIL" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LINTEMPLETDETAIL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LINTEMPLETDETAIL" MODIFY ("APRMEMBERSN" NOT NULL ENABLE);
@@ -19589,7 +19851,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LISTINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LISTINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LISTINFO" MODIFY ("DTYPE" NOT NULL ENABLE);
@@ -19605,7 +19867,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LISTOPTION" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LISTOPTION" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LISTOPTION" MODIFY ("SN" NOT NULL ENABLE);
@@ -19618,7 +19880,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LOGO_SIZE" MODIFY ("C_CLUBNO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LOGO_SIZE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -19629,7 +19891,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_LUNARUSE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_LUNARUSE" MODIFY ("USECOMPANY" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -19641,7 +19903,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_MEMO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_MEMO" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_MEMO" MODIFY ("ORDERS" NOT NULL ENABLE);
@@ -19655,7 +19917,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_MEMO_CONFIG" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_MEMO_CONFIG" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_MEMO_CONFIG" MODIFY ("FONT_SIZE" NOT NULL ENABLE);
@@ -19668,7 +19930,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_MEMO_FOLDER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_MEMO_FOLDER" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_MEMO_FOLDER" MODIFY ("USER_ID" NOT NULL ENABLE);
@@ -19684,7 +19946,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_MENUITEM_ITEMS_IMAGE
 --------------------------------------------------------
@@ -19697,7 +19959,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_MENUITEM_ITEMS_LOGOS
 --------------------------------------------------------
@@ -19709,7 +19971,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_MENUITEM_ITEMS_MENUITEMS
 --------------------------------------------------------
@@ -19720,7 +19982,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_MENUITEM_ITEMS_MENUITEMS_S
 --------------------------------------------------------
@@ -19731,7 +19993,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_MENUITEM_PARAMETERS
 --------------------------------------------------------
@@ -19743,7 +20005,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_MYTASKCODE
 --------------------------------------------------------
@@ -19752,7 +20014,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_MYTASKCODE" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_MYTASKCODE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_MYTASKCODE" MODIFY ("TASKCODE" NOT NULL ENABLE);
@@ -19767,7 +20029,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_NOTIFICATION" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_NOTIFICATION" MODIFY ("TYPE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_NOTIFICATION" MODIFY ("SUBJECT" NOT NULL ENABLE);
@@ -19784,7 +20046,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_OLDCABINETEXTRAINFO" MODIFY ("CABINETCLASSNO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_OLDCABINETEXTRAINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_OLDCABINETEXTRAINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -19796,10 +20058,35 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_OLDRECORDEXTRAINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_OLDRECORDEXTRAINFO" MODIFY ("RECORDID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_OLDRECORDEXTRAINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_OPENGOVDOCINFO
+--------------------------------------------------------
+
+  ALTER TABLE "EZEKP2017"."TBL_OPENGOVDOCINFO" ADD CONSTRAINT "TBL_OPENGOVDOCINFO_PK" PRIMARY KEY ("DOCID", "TENANT_ID", "COMPANYID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "EZEKP2017"."TBL_OPENGOVDOCINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_OPENGOVDOCINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_OPENGOVDOCINFO" MODIFY ("DOCID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_OPENGOVFILEINFO
+--------------------------------------------------------
+
+  ALTER TABLE "EZEKP2017"."TBL_OPENGOVFILEINFO" ADD CONSTRAINT "TBL_OPENGOVFILEINFO_PK" PRIMARY KEY ("DOCID", "SN", "COMPANYID", "TENANT_ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "EZEKP2017"."TBL_OPENGOVFILEINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_OPENGOVFILEINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_OPENGOVFILEINFO" MODIFY ("SN" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_OPENGOVFILEINFO" MODIFY ("DOCID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_PHOTO_IMAGEITEM
 --------------------------------------------------------
@@ -19809,7 +20096,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PHOTO_IMAGEITEM" MODIFY ("WRITEDATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PHOTO_IMAGEITEM" MODIFY ("FILEPATH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PHOTO_IMAGEITEM" MODIFY ("WRITERDEPTID" NOT NULL ENABLE);
@@ -19831,7 +20118,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_POLL_ATTACH
 --------------------------------------------------------
@@ -19846,7 +20133,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_POLL_ITEM
 --------------------------------------------------------
@@ -19870,7 +20157,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_POLL_ITEMACL
 --------------------------------------------------------
@@ -19884,7 +20171,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_POLL_ITEMREAD
 --------------------------------------------------------
@@ -19897,7 +20184,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_POLL_PERMISSION
 --------------------------------------------------------
@@ -19914,7 +20201,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_POLL_QUESTION
 --------------------------------------------------------
@@ -19923,7 +20210,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_POLL_QUESTION" MODIFY ("ITEM_NO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_POLL_QUESTION" MODIFY ("BRD_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_POLL_QUESTION" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -19944,7 +20231,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_POLL_RESPONSEPERSON
 --------------------------------------------------------
@@ -19957,7 +20244,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_POLL_TABLE_ANSWER
 --------------------------------------------------------
@@ -19971,7 +20258,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTALPAGE_CACHE
 --------------------------------------------------------
@@ -19983,7 +20270,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTALPAGE_CATEGORY
 --------------------------------------------------------
@@ -19994,7 +20281,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTALPAGE_GENERAL
 --------------------------------------------------------
@@ -20003,7 +20290,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTALPAGE_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTALPAGE_GENERAL" MODIFY ("UID_" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTALPAGE_GENERAL" MODIFY ("COMPANYID" NOT NULL ENABLE);
@@ -20020,7 +20307,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTALPAGE_ITEMS_CHANGE
 --------------------------------------------------------
@@ -20034,7 +20321,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_ACL
 --------------------------------------------------------
@@ -20046,7 +20333,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_FRAME
 --------------------------------------------------------
@@ -20055,7 +20342,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_FRAME" MODIFY ("FRAME_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_FRAME_COMP
@@ -20065,7 +20352,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_FRAME_COMP" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_LOGO
@@ -20075,7 +20362,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_LOGO" MODIFY ("LOGO_TYPE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_LOGO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_LOGO" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
@@ -20087,7 +20374,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU" MODIFY ("MENU_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_MENU_AUTH
@@ -20097,7 +20384,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU_AUTH" MODIFY ("USER_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU_AUTH" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU_AUTH" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
@@ -20110,7 +20397,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU_COMP" MODIFY ("MENU_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU_COMP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU_COMP" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
@@ -20122,7 +20409,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_MENU_USER
 --------------------------------------------------------
@@ -20131,7 +20418,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU_USER" MODIFY ("MENU_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU_USER" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_MENU_USER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -20144,8 +20431,17 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET" MODIFY ("PORTLET_ID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_PORTAL_PORTLET_AUTH
+--------------------------------------------------------
+
+  ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_AUTH" ADD CONSTRAINT "TBL_PORTAL_PORTLET_AUTH_PK" PRIMARY KEY ("PORTLET_ID", "COMPANY_ID", "TENANT_ID", "USER_ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_PORTLET_COMP
 --------------------------------------------------------
@@ -20154,7 +20450,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_COMP" MODIFY ("PORTLET_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_COMP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_COMP" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
@@ -20166,7 +20462,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_NAME" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_NAME" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_NAME" MODIFY ("PORTLET_LANG" NOT NULL ENABLE);
@@ -20180,7 +20476,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_USER" MODIFY ("THEME_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_USER" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_PORTLET_USER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -20194,7 +20490,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_STARTPAGE" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_STARTPAGE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_STARTPAGE" MODIFY ("USER_ID" NOT NULL ENABLE);
@@ -20206,8 +20502,17 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_THEME" MODIFY ("THEME_ID" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TBL_PORTAL_THEME_AUTH
+--------------------------------------------------------
+
+  ALTER TABLE "EZEKP2017"."TBL_PORTAL_THEME_AUTH" ADD CONSTRAINT "TBL_PORTAL_THEME_AUTH_PK" PRIMARY KEY ("THEME_ID", "COMPANY_ID", "TENANT_ID", "USER_ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_THEME_COMP
 --------------------------------------------------------
@@ -20216,7 +20521,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_THEME_COMP" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTAL_THEME_PORTLET
@@ -20234,7 +20539,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_THEME_USER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_THEME_USER" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTAL_THEME_USER" MODIFY ("USER_ID" NOT NULL ENABLE);
@@ -20251,7 +20556,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTLET_CATEGORY
 --------------------------------------------------------
@@ -20262,7 +20567,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTLET_GENERAL
 --------------------------------------------------------
@@ -20271,7 +20576,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PORTLET_GENERAL" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTLET_GENERAL" MODIFY ("UID_" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PORTLET_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -20285,7 +20590,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTLET_IMAGE
 --------------------------------------------------------
@@ -20296,7 +20601,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTLET_PARAMETERS
 --------------------------------------------------------
@@ -20308,7 +20613,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PORTLET_URL
 --------------------------------------------------------
@@ -20322,7 +20627,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PREVIOSLYREGI
 --------------------------------------------------------
@@ -20331,7 +20636,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PREVIOSLYREGI" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PREVIOSLYREGI" MODIFY ("USECOMPANY" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -20344,7 +20649,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PS_APPROVNOTIMAILCONF
 --------------------------------------------------------
@@ -20356,7 +20661,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PS_EMPMONTH
 --------------------------------------------------------
@@ -20365,7 +20670,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_EMPMONTH" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_EMPMONTH" MODIFY ("TERM" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_EMPMONTH" MODIFY ("DEPARTMENT" NOT NULL ENABLE);
@@ -20396,7 +20701,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PS_LIGHTPOLLRESULT
 --------------------------------------------------------
@@ -20409,7 +20714,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PS_LIGHTPOLL_OPTION
 --------------------------------------------------------
@@ -20418,7 +20723,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_LIGHTPOLL_OPTION" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_LIGHTPOLL_OPTION" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_LIGHTPOLL_OPTION" MODIFY ("LIGHTPOLLOPTIONID" NOT NULL ENABLE);
@@ -20435,7 +20740,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PS_POPUP
 --------------------------------------------------------
@@ -20450,7 +20755,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PS_POPUP_OPTION
 --------------------------------------------------------
@@ -20459,7 +20764,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_POPUP_OPTION" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_POPUP_OPTION" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_POPUP_OPTION" MODIFY ("POPUPOPTIONID" NOT NULL ENABLE);
@@ -20478,7 +20783,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_QUICKLINK" MODIFY ("REGUSERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_QUICKLINK" MODIFY ("REGDATE" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -20494,7 +20799,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PS_SHAREAPPROVAL
 --------------------------------------------------------
@@ -20503,7 +20808,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_SHAREAPPROVAL" ADD CONSTRAINT "TBL_PS_SHAREAPPROVAL_PK" PRIMARY KEY ("OWNERID", "SHAREUSERID", "TENANTID") DISABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_SHAREAPPROVAL" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_SHAREAPPROVAL" MODIFY ("SHAREUSERID" NOT NULL ENABLE);
@@ -20524,7 +20829,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_SLIDERIMAGE" MODIFY ("SLIDERID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_PS_USERWEBPART
@@ -20539,7 +20844,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_PS_WEBPARTGROUP
 --------------------------------------------------------
@@ -20548,7 +20853,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_WEBPARTGROUP" MODIFY ("ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_WEBPARTGROUP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -20559,7 +20864,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_WEBPARTITEM" MODIFY ("ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_WEBPARTITEM" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -20570,7 +20875,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PS_WEBPARTITEMACL" MODIFY ("ITEMID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PS_WEBPARTITEMACL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -20581,7 +20886,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_PWDINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PWDINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_PWDINFO" MODIFY ("PWDTYPE" NOT NULL ENABLE);
@@ -20595,7 +20900,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_QS_BRDMNG" MODIFY ("MNG_GB" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_QS_BRDMNG" MODIFY ("USER_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_QS_BRDMNG" MODIFY ("BRD_ID" NOT NULL ENABLE);
@@ -20609,7 +20914,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_RECEIPTPOINTINFO
 --------------------------------------------------------
@@ -20618,7 +20923,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_RECEIPTPOINTINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECEIPTPOINTINFO" MODIFY ("PROCESSSN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECEIPTPOINTINFO" MODIFY ("RECEIPTPOINTID" NOT NULL ENABLE);
@@ -20632,7 +20937,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_RECEXCHINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECEXCHINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -20643,7 +20948,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_RECORD" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECORD" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECORD" MODIFY ("RECORDID" NOT NULL ENABLE);
@@ -20660,7 +20965,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_RECORD_TEMP
 --------------------------------------------------------
@@ -20669,7 +20974,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_RECORD_TEMP" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECORD_TEMP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECORD_TEMP" MODIFY ("DOCID" NOT NULL ENABLE);
@@ -20681,7 +20986,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_RECREADHISTORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECREADHISTORY" MODIFY ("DOCID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECREADHISTORY" MODIFY ("SERIALNO" NOT NULL ENABLE);
@@ -20694,7 +20999,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_RECRELAYINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECRELAYINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECRELAYINFO" MODIFY ("IDX" NOT NULL ENABLE);
@@ -20711,7 +21016,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_RECROLEINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_RECROLEINFO_TEMP
@@ -20721,7 +21026,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_RECROLEINFO_TEMP" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECROLEINFO_TEMP" MODIFY ("SEPERATEATTACHNO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RECROLEINFO_TEMP" MODIFY ("COMPANYID" NOT NULL ENABLE);
@@ -20735,7 +21040,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_RS_BRD
 --------------------------------------------------------
@@ -20747,7 +21052,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_RS_FAVORITE
 --------------------------------------------------------
@@ -20756,7 +21061,20 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
+--------------------------------------------------------
+--  Constraints for Table TBL_RS_PERSPORTLET
+--------------------------------------------------------
+
+  ALTER TABLE "EZEKP2017"."TBL_RS_PERSPORTLET" ADD CONSTRAINT "TBL_RS_PERSPORTLET_PK" PRIMARY KEY ("TENANT_ID", "CN", "BRD_COMPANY", "BRD_ID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "EZEKP2017"."TBL_RS_PERSPORTLET" MODIFY ("TENANT_ID" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_RS_PERSPORTLET" MODIFY ("BRD_COMPANY" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_RS_PERSPORTLET" MODIFY ("BRD_ID" NOT NULL ENABLE);
+  ALTER TABLE "EZEKP2017"."TBL_RS_PERSPORTLET" MODIFY ("CN" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_RS_RESACL
 --------------------------------------------------------
@@ -20769,7 +21087,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_RS_SCHEDULE
 --------------------------------------------------------
@@ -20782,7 +21100,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_RS_SCHEDULEFORM
 --------------------------------------------------------
@@ -20791,7 +21109,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_RS_SCHEDULEFORM" MODIFY ("RESID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_RS_SCHEDULEFORM" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -20811,7 +21129,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULE" MODIFY ("CONTENTPATH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULE" MODIFY ("LOCATION" NOT NULL ENABLE);
@@ -20847,7 +21165,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEATTACH" MODIFY ("FILEPATH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEATTACH" MODIFY ("FILENAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEATTACH" MODIFY ("FILESIZE" NOT NULL ENABLE);
@@ -20861,7 +21179,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULECONFIG" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULECONFIG" MODIFY ("AUTODELETE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULECONFIG" MODIFY ("ENDTIME" NOT NULL ENABLE);
@@ -20877,7 +21195,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEGROUP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEGROUP" MODIFY ("DESCRIPTION" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEGROUP" MODIFY ("CREATORNAME" NOT NULL ENABLE);
@@ -20891,7 +21209,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEGROUPMEMBER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEGROUPMEMBER" MODIFY ("RESPONSEDATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEGROUPMEMBER" MODIFY ("STATUS" NOT NULL ENABLE);
@@ -20906,7 +21224,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULEREPETITION_DEL" MODIFY ("REPETITIONID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_SCHEDULE_PUBLIC_DEPT
@@ -20916,7 +21234,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULE_PUBLIC_DEPT" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULE_PUBLIC_DEPT" MODIFY ("DEPARTMENTNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHEDULE_PUBLIC_DEPT" MODIFY ("DEPARTMENTCN" NOT NULL ENABLE);
@@ -20931,7 +21249,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SCHISTORY_CAB" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHISTORY_CAB" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHISTORY_CAB" MODIFY ("SERIALNO" NOT NULL ENABLE);
@@ -20945,7 +21263,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SCHISTORY_REC" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHISTORY_REC" MODIFY ("SERIALNO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SCHISTORY_REC" MODIFY ("VERSION" NOT NULL ENABLE);
@@ -20960,7 +21278,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SEALDEPTINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SEALDEPTINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SEALDEPTINFO" MODIFY ("DEPTID" NOT NULL ENABLE);
@@ -20973,7 +21291,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SEALINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SEALINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SEALINFO" MODIFY ("SEALNUM" NOT NULL ENABLE);
@@ -20985,7 +21303,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SECRETARY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SECRETARY" MODIFY ("SECRETARYNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SECRETARY" MODIFY ("SECRETARYID" NOT NULL ENABLE);
@@ -21003,7 +21321,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SEPERATEATTACH" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_SEPERATEATTACH_TEMP
@@ -21013,7 +21331,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SEPERATEATTACH_TEMP" MODIFY ("SEPERATEATTACHNO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SEPERATEATTACH_TEMP" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SEPERATEATTACH_TEMP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -21026,7 +21344,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SERIALNUMGEN" MODIFY ("IDX" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SERIALNUMGEN" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SERIALNUMGEN" MODIFY ("REGSERIALNO" NOT NULL ENABLE);
@@ -21043,7 +21361,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SIGNINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_SKIN_GENERAL
@@ -21053,7 +21371,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SKIN_GENERAL" MODIFY ("SKINNUM" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SKIN_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -21067,7 +21385,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_SPECIALCATALOGINFO_CAB
 --------------------------------------------------------
@@ -21076,7 +21394,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCATALOGINFO_CAB" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCATALOGINFO_CAB" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCATALOGINFO_CAB" MODIFY ("SERIALNO" NOT NULL ENABLE);
@@ -21089,7 +21407,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCATALOGINFO_REC" MODIFY ("SERIALNO" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCATALOGINFO_REC" MODIFY ("RECORDID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCATALOGINFO_REC" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -21102,7 +21420,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCATALOGINFO_TMP" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCATALOGINFO_TMP" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCATALOGINFO_TMP" MODIFY ("SERIALNO" NOT NULL ENABLE);
@@ -21116,7 +21434,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCONTAINERINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCONTAINERINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SPECIALCONTAINERINFO" MODIFY ("SN" NOT NULL ENABLE);
@@ -21130,7 +21448,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SURVEY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY" MODIFY ("TOTAL_USER" NOT NULL ENABLE);
@@ -21151,7 +21469,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_ATTACHFILE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_ATTACHFILE" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_ATTACHFILE" MODIFY ("FILE_NM" NOT NULL ENABLE);
@@ -21166,7 +21484,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_CONFIG" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_CONFIG" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -21177,7 +21495,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_OPTION" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_OPTION" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_OPTION" MODIFY ("LEVELS" NOT NULL ENABLE);
@@ -21193,7 +21511,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_PARTICIPANT" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_PARTICIPANT" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_PARTICIPANT" MODIFY ("USER_ID" NOT NULL ENABLE);
@@ -21207,7 +21525,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_QUESTION" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_QUESTION" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_QUESTION" MODIFY ("LEVELS" NOT NULL ENABLE);
@@ -21222,7 +21540,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_SURVEY_RESPONSE
 --------------------------------------------------------
@@ -21231,7 +21549,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_RESPONSE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_RESPONSE" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_SURVEY_RESPONSE" MODIFY ("OPTION_ID" NOT NULL ENABLE);
@@ -21247,7 +21565,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASK" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASK" MODIFY ("TASKID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -21258,7 +21576,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKATTACH" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKATTACH" MODIFY ("FILEPATH" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKATTACH" MODIFY ("FILENAME" NOT NULL ENABLE);
@@ -21273,7 +21591,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKCATEGORY" MODIFY ("CATEGORYCODE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKCATEGORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKCATEGORY" MODIFY ("COMPANYID" NOT NULL ENABLE);
@@ -21285,7 +21603,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKCODE" MODIFY ("TASKCODE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKCODE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKCODE" MODIFY ("COMPANYID" NOT NULL ENABLE);
@@ -21298,7 +21616,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKCODEHISTORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKCODEHISTORY" MODIFY ("SN" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -21309,7 +21627,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKCOMMENT" MODIFY ("T_COMMENT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKCOMMENT" MODIFY ("COMMENTDATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKCOMMENT" MODIFY ("COMMENTORNAME" NOT NULL ENABLE);
@@ -21326,7 +21644,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKCONFIG" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKCONFIG" MODIFY ("ORIGINCOLOR" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKCONFIG" MODIFY ("COMPLETECOLOR" NOT NULL ENABLE);
@@ -21340,7 +21658,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKGENERAL" MODIFY ("USERID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKGENERAL" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKGENERAL" MODIFY ("SELECTTASKSTATUS" NOT NULL ENABLE);
@@ -21353,7 +21671,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKINSTANCESTATUS" MODIFY ("DELETESTATUS" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKINSTANCESTATUS" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKINSTANCESTATUS" MODIFY ("COMPLETERATE" NOT NULL ENABLE);
@@ -21370,7 +21688,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKMIDDLECATEGORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKMIDDLECATEGORY" MODIFY ("MCATEGORYCODE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKMIDDLECATEGORY" MODIFY ("COMPANYID" NOT NULL ENABLE);
@@ -21382,7 +21700,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKREQUEST" MODIFY ("DEPTCODE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKREQUEST" MODIFY ("ORGANCODE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKREQUEST" MODIFY ("REQUESTFLAG" NOT NULL ENABLE);
@@ -21395,7 +21713,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKSHARE" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKSHARE" MODIFY ("SHARERDEPTNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKSHARE" MODIFY ("SHARERNAME" NOT NULL ENABLE);
@@ -21410,7 +21728,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASKSUBCATEGORY" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKSUBCATEGORY" MODIFY ("SUBCATEGORYCODE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASKSUBCATEGORY" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -21422,7 +21740,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TASK_DEPTINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASK_DEPTINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TASK_DEPTINFO" MODIFY ("TASKCODE" NOT NULL ENABLE);
@@ -21437,7 +21755,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_TENANT_CONFIG
 --------------------------------------------------------
@@ -21448,7 +21766,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_TENANT_SERVERNAME
 --------------------------------------------------------
@@ -21459,7 +21777,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_THEME_GENERAL
 --------------------------------------------------------
@@ -21468,7 +21786,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_THEME_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_THEME_GENERAL" MODIFY ("UID_" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_THEME_GENERAL" MODIFY ("COMPANAYID" NOT NULL ENABLE);
@@ -21480,7 +21798,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TMPAPRDOCATTACHINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPAPRDOCATTACHINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPAPRDOCATTACHINFO" MODIFY ("ATTACHDOCURL" NOT NULL ENABLE);
@@ -21496,7 +21814,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TMPAPRDOCINFO" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPAPRDOCINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPAPRDOCINFO" MODIFY ("SN" NOT NULL ENABLE);
@@ -21509,7 +21827,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TMPAPRLINEINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPAPRLINEINFO" MODIFY ("APRMEMBERSN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPAPRLINEINFO" MODIFY ("SN" NOT NULL ENABLE);
@@ -21523,7 +21841,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TMPAPROPINIONINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPAPROPINIONINFO" MODIFY ("OPINIONSN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPAPROPINIONINFO" MODIFY ("SN" NOT NULL ENABLE);
@@ -21537,7 +21855,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TMPATTACHINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPATTACHINFO" MODIFY ("ATTACHFILESN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPATTACHINFO" MODIFY ("SN" NOT NULL ENABLE);
@@ -21551,7 +21869,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TMPEXPAPRDOCINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPEXPAPRDOCINFO" MODIFY ("SN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPEXPAPRDOCINFO" MODIFY ("OWNERID" NOT NULL ENABLE);
@@ -21564,7 +21882,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TMPEXPAPRLINE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPEXPAPRLINE" MODIFY ("APRMEMBERSN" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPEXPAPRLINE" MODIFY ("SN" NOT NULL ENABLE);
@@ -21578,7 +21896,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TMPRECEIPTPOINTINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPRECEIPTPOINTINFO" MODIFY ("RECEIPTPOINTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TMPRECEIPTPOINTINFO" MODIFY ("SN" NOT NULL ENABLE);
@@ -21592,7 +21910,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_TOPMENU_GENERAL" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TOPMENU_GENERAL" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_TOPMENU_GENERAL" MODIFY ("UID_" NOT NULL ENABLE);
@@ -21607,7 +21925,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_USERCONT
 --------------------------------------------------------
@@ -21616,7 +21934,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USERCONT" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERCONT" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERCONT" MODIFY ("OWNUSERID" NOT NULL ENABLE);
@@ -21629,7 +21947,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USERCONTLIST" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERCONTLIST" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERCONTLIST" MODIFY ("USERCONTID" NOT NULL ENABLE);
@@ -21642,7 +21960,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USERINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERINFO" MODIFY ("USERID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -21657,7 +21975,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_USERMASTER
 --------------------------------------------------------
@@ -21666,7 +21984,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USERMASTER" MODIFY ("UPDATEDT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERMASTER" MODIFY ("DEPARTMENT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERMASTER" MODIFY ("DISPLAYNAME" NOT NULL ENABLE);
@@ -21692,7 +22010,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USERMASTER_RETIRE" MODIFY ("UPDATEDT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERMASTER_RETIRE" MODIFY ("DEPARTMENT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERMASTER_RETIRE" MODIFY ("DISPLAYNAME" NOT NULL ENABLE);
@@ -21706,7 +22024,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USERMOBILEINFO" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERMOBILEINFO" MODIFY ("LISTCNT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERMOBILEINFO" MODIFY ("MAINTYPE" NOT NULL ENABLE);
@@ -21721,7 +22039,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USERSTARTPAGE_ITEM" MODIFY ("LINKURL" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERSTARTPAGE_ITEM" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USERSTARTPAGE_ITEM" MODIFY ("ACCESSID" NOT NULL ENABLE);
@@ -21736,7 +22054,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USER_CONFIG" MODIFY ("PROPERTY_NAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USER_CONFIG" MODIFY ("USER_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USER_CONFIG" MODIFY ("TENANT_ID" NOT NULL ENABLE);
@@ -21748,7 +22066,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USER_JOBMASTER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USER_JOBMASTER" MODIFY ("COMPANYID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_USER_JOBMASTER" MODIFY ("TYPE" NOT NULL ENABLE);
@@ -21761,7 +22079,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_USER_MULTILOGIN" MODIFY ("LOGIN_TIME" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table TBL_VOTE_ANSWER
@@ -21776,7 +22094,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_VOTE_COMMENT
 --------------------------------------------------------
@@ -21800,7 +22118,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_VOTE_QUESTION
 --------------------------------------------------------
@@ -21828,7 +22146,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_VOTE_QUESTION_RELATED
 --------------------------------------------------------
@@ -21844,7 +22162,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_VOTE_USER_AND_ANSWER
 --------------------------------------------------------
@@ -21860,7 +22178,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_VOTE_USER_AND_QUESTION
 --------------------------------------------------------
@@ -21873,7 +22191,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_WEATHER
 --------------------------------------------------------
@@ -21882,7 +22200,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEATHER" MODIFY ("PRIMARYLANG" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEATHER" MODIFY ("DISPLAYCITYNAME" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEATHER" MODIFY ("CITYCODE" NOT NULL ENABLE);
@@ -21895,7 +22213,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEATHER_USER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEATHER_USER" MODIFY ("USERID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -21907,7 +22225,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_CONFIG" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_CONFIG" MODIFY ("TENANT_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -21926,7 +22244,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FAVOR" MODIFY ("TARGET_TYPE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FAVOR" MODIFY ("USER_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FAVOR" MODIFY ("TARGET_ID" NOT NULL ENABLE);
@@ -21958,7 +22276,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FILETYPE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FILETYPE" MODIFY ("FILE_EXT" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FILETYPE" MODIFY ("TYPE_NAME" NOT NULL ENABLE);
@@ -21971,7 +22289,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FOLDER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FOLDER" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FOLDER" MODIFY ("CREATE_NAME2" NOT NULL ENABLE);
@@ -21991,7 +22309,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FOLDERUSER" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FOLDERUSER" MODIFY ("COMPANY_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_FOLDERUSER" MODIFY ("CREATE_DATE" NOT NULL ENABLE);
@@ -22014,7 +22332,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_SHARE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_SHARE" MODIFY ("SHARE_DATE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_SHARE" MODIFY ("FOLDERFILE_TYPE" NOT NULL ENABLE);
@@ -22027,7 +22345,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table TBL_WEBFOLDER_SHARE_HIDE
 --------------------------------------------------------
@@ -22041,7 +22359,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_SHARE_HIDE" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_SHARE_HIDE" MODIFY ("SEQ_ID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -22052,7 +22370,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_SHARE_SUB" MODIFY ("TENANT_ID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_SHARE_SUB" MODIFY ("USER_TYPE" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_SHARE_SUB" MODIFY ("USER_NAME2" NOT NULL ENABLE);
@@ -22068,7 +22386,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_TOKEN" MODIFY ("TENANTID" NOT NULL ENABLE);
   ALTER TABLE "EZEKP2017"."TBL_WEBFOLDER_TOKEN" MODIFY ("USERID" NOT NULL ENABLE);
 --------------------------------------------------------
@@ -22083,7 +22401,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USER"  ENABLE;
+  TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
 --  Constraints for Table V_ACA11_INFO
 --------------------------------------------------------
@@ -22134,7 +22452,7 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
 --------------------------------------------------------
 
   ALTER TABLE "EZEKP2017"."JMOCHA_DISTRIBUTION" ADD CONSTRAINT "FK_JMOCHA_DISTRIBUTION" FOREIGN KEY ("DOMAIN_NAME", "USER_NAME")
-	  REFERENCES "EZEKP2017"."JAMES_RECIPIENT_REWRITE" ("DOMAIN_NAME", "USER_NAME") ENABLE;
+	  REFERENCES "EZEKP2017"."JAMES_RECIPIENT_REWRITE" ("DOMAIN_NAME", "USER_NAME") ON DELETE CASCADE ENABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table JMOCHA_DISTRIBUTION_SUB
 --------------------------------------------------------

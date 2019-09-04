@@ -216,7 +216,7 @@
 			AND
 				access_yn = #accessType#
 			ORDER BY
-				user_type
+				sn, user_type
 		]]>
 	</select>
 	
@@ -343,7 +343,8 @@
 				)
 			WHEN MATCHED THEN
 				UPDATE SET
-					access_yn = #accessYN#
+					access_yn = #accessYN#,
+					sn = #sn#
 				WHERE
 					tenant_id = #tenantId#
 				AND
@@ -354,9 +355,9 @@
 					user_id = #userId#
 			WHEN NOT MATCHED THEN
 				INSERT 
-					(menu_id, user_id, user_type, access_yn, company_id, tenant_id)
+					(menu_id, user_id, user_type, access_yn, company_id, tenant_id, sn)
 				VALUES
-					(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#)
+					(#menuId#, #userId#, #userType#, #accessYN#, #companyId#, #tenantId#, #sn#)
 		]]>
 	</update>
 	

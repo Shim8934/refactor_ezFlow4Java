@@ -7,6 +7,7 @@ import java.util.Map;
 
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
@@ -41,4 +42,6 @@ public interface EzSystemAdminService {
 	public void deleteWebfolderLog (int keepLogPeriod, int tenantID) throws Exception;
 	public void setMultiLoginType(String multiLoginType, int tenantID, String companyID, String editType) throws Exception;
 	public void updateNewPortalMenuByPackageType(String newPackageType, int tenantID, String companyID) throws Exception;
+	public String getAccessCountryList(int tenantId) throws Exception;
+	public void setAccessCountry(int tenantId, String countryCode) throws Exception;
 }

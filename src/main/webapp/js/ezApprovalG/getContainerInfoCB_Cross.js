@@ -141,15 +141,19 @@ function OpenReceiptHistory() {
         var pDeptID = tr[0].getAttribute("DATA1");
         var isExtYN = tr[0].getAttribute("DATA3");
 
+        /* 2019-08-20 홍승비 - 기록물대장 하단 수신자 > 수신자(부서)명 더블클릭 시 팝업창 사이즈 조절 */
         var Url, OpenWin;
+        var windowFeature;
         if (isExtYN.toUpperCase() == "Y") {
+        	windowFeature = GetOpenWindowfeature(610, 270);
             Url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + pDocID + "&deptID=" + pDeptID;
         }
         else {
+        	windowFeature = GetOpenWindowfeature(1155, 460);
             Url = "/ezApprovalG/ezLineInfo.do?docID=" + pDocID + "&deptID=" + pDeptID + "&docState=011";
         }
 
-        var OpenWin = window.open(Url, "OpenReceiptHistory", GetOpenWindowfeature(610, 270));
+        var OpenWin = window.open(Url, "OpenReceiptHistory", windowFeature);
         try { OpenWin.focus(); } catch (e) { }
     }
 }

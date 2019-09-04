@@ -81,11 +81,12 @@
 	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '#contentlist table.mainlist th', function(){
-	    			if ($(this).attr("colname") != "") {
+	    			var order = $(this).attr("colname");
+	    			if (order != "" && order != "NO") {
 	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
 	    					src = "";
 	    					orderOption = "";
-	    					orderCell = $(this).attr("colname");
+	    					orderCell = order;
 	    				}
 	    			
 		    			if (orderOption == "" || orderOption == "DESC") {
@@ -181,6 +182,20 @@
 	    		pCompanyId = document.getElementById("ListCompany").value;
 	    		getAnnualList();
 	    	}
+	        
+	        function ShowMailProgress() {
+				var CurrenWidth = window.innerWidth;
+	        	
+			    document.getElementById("mailPanel").style.display = "";
+			    document.getElementById("MailProgress").style.top = "330px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			}
+	    	
+	    	function HiddenMailProgress() {
+			    document.getElementById("mailPanel").style.display = "none";
+			    document.getElementById("MailProgress").style.display = "none";
+			}
 	    	
 		    //리스트 가져오기
 	    	function getAnnualList() {
@@ -198,6 +213,9 @@
 	   					orderCell : orderCell,
 	   					orderOption : orderOption
     				},
+    				beforeSend : function() {
+    					ShowMailProgress();
+    				},
 	    			success : function(result){
 	    				totalCount = result.totalCount;
 	    				totalPage = parseInt(totalCount / listSize) + (totalCount % listSize != 0 ? 1 : 0);
@@ -205,6 +223,9 @@
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			},
+	    			complete : function() {
+	    				HiddenMailProgress();
 	    			}
 	    		});
 	    	}
@@ -324,11 +345,11 @@
 		    	exportExcelframe.target="_blank";
 			}
 			
-			/* //엑셀로 등록 팝업
+			//엑셀로 등록 팝업
 	    	function annualExcelUploadPop(userId, year) {
 	        	var url = "/admin/ezAttitude/annualExcelUploadPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 230));
-	        } */
+				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 200));
+	        } 
 			
 			//전체 연차 변경 팝업
 	    	function modifyAllAnnualPop() {
@@ -382,7 +403,7 @@
 	</head>
 	<body class="mainbody">
 	    <h1>
-	    	<spring:message code='ezAttitude.t237' />
+	    	<spring:message code='ezAttitude.t237' /><span id="mailBoxInfo"></span>
 	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var = "companyItem" items="${list }">
 					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
@@ -409,9 +430,9 @@
 						<a class="imgbtn"><span onclick="searchAnnualList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAnnualList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
-						<%-- <a class="imgbtn"><span onclick="annualExcelUploadPop();"><spring:message code='ezAttitude.t235' /></span></a> --%>
+						<a class="imgbtn"><span onclick="annualExcelUploadPop();"><spring:message code='ezAttitude.t235' /></span></a>
 						<a class="imgbtn"><span onclick="modifyAllAnnualPop();"><spring:message code='ezAttitude.t236' /></span></a>
-						<a class="imgbtn"><span onclick="directScheduler();">스케줄러 동작</span></a>
+<!-- 						<a class="imgbtn"><span onclick="directScheduler();">스케줄러 동작</span></a> -->
 					</td>
 				</tr>
 			</tbody>
@@ -437,6 +458,11 @@
 	  	</div>
 	  		  	
 		<div id="tblPageRayer"></div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+	    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+            <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+        </div>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
 </html>

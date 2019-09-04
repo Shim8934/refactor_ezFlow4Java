@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -717,7 +718,7 @@ public class EzJournalGWController {
 					String fileType = vo.getFileName().substring(vo.getFileName().lastIndexOf(".") + 1).toLowerCase();
 					vo.setFileType(fileType);
 					vo.setFileEncodeName(URLEncoder.encode(vo.getFileName(), "UTF-8"));
-//					vo.setFilePath(URLEncoder.encode(vo.getFilePath(), "UTF-8"));
+					vo.setFilePath(URLEncoder.encode(vo.getFilePath(), "UTF-8"));
 						
 					String fileSize = commonUtil.getSizeWithUnit(vo.getFileSize());
 					vo.setFileTransSize(fileSize);
@@ -1199,7 +1200,7 @@ public class EzJournalGWController {
 			
 			for (int i = 0; i < filePathList.size(); i++) {
 				try {
-					String filePath = filePathList.get(i);
+					String filePath = URLDecoder.decode(filePathList.get(i), "UTF-8");
 					String fileName = fileNameList.get(i);
 					
 					String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.detectPathTraversal(filePath);

@@ -2152,6 +2152,10 @@
 			                            			<option value="mobile" usedefault="0"><spring:message code='ezAddress.t999900006'/></option>
 			                            			<option value="HomePhone" usedefault="0"><spring:message code='ezAddress.t192'/></option>
 			                            			<option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezAddress.t333'/></option>
+													<c:if test="${primaryLang eq '3' }">
+                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+                                                    </c:if>
 			                            			<option value="mail" usedefault="0"><spring:message code='ezAddress.t264'/></option>
 			                            			<option value="streetAddress" usedefault="0"><spring:message code='ezAddress.t296'/></option>
 			                            		</select>

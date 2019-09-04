@@ -160,6 +160,8 @@
 		        }
 		        
 		        window_onunload_Event = true;
+		        
+		      	ifrmPreViewW.document.getElementById("ifrmPreViewW_div").style.marginTop = "-2px";
 		    };
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
@@ -795,7 +797,7 @@
 		        }
 		        
 		        try {
-					leftCountRf();
+					leftCountRf(pBoardID);
 				} catch (e) {
 				}
 		    }
@@ -845,7 +847,7 @@
                     getBoardList();
                     
                     try {
-    			        leftCountRf();
+    			        leftCountRf(pBoardID);
     				} catch (e) {
     				}
                 }
@@ -977,10 +979,10 @@
 		    }
 		    /* 2019-04-17 홍승비 - 복사 후 좌측 게시물카운트 갱신 */
 		    function CopyItem_onclick_Complete(ret) {
-		        if (typeof (ret) != "undefined") {
-		            if (ret == "OK") {
+		        if (typeof (ret) != "undefined" && ret != "") {
+		            if (ret != "ERROR") {
 			            try {
-							leftCountRf();
+							leftCountRf(ret);
 						} catch (e) {}
 		                window.location.reload();
 		                window.close();
@@ -1035,9 +1037,9 @@
 		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 		
 		            if (typeof (ret) != "undefined") {
-		                if (ret == "OK") {
+		                if (ret != "ERROR" && ret != "") {
 		                	try {
-								leftCountRf();
+								leftCountRf(ret + ";" + pBoardID);
 							} catch (e) {}
 							
 		                    window.location.reload();
@@ -1048,9 +1050,9 @@
 		    }
 		    function MoveItem_onclick_Complete(ret) {
 		        if (typeof (ret) != "undefined") {
-		            if (ret == "OK") {
+		            if (ret != "ERROR" && ret != "") {
 			            try {
-							leftCountRf();
+							leftCountRf(ret + ";" + pBoardID);
 						} catch (e) {}
 		                window.location.reload();
 		                window.close();
@@ -1344,7 +1346,7 @@
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<div id="mainmenu">
 			  <ul>
-		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321' /></span></li>
+		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02' /></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
 		        <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274' /></span></li>
 		        <li id="btn_move"><span onClick="MoveItem_onclick()"><spring:message code='ezBoard.t134' /></span></li>

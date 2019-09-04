@@ -1605,8 +1605,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
-	public List<CountryVO> getCountryInfo(Map<String, Object> map)
-			throws Exception {
+	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception {
 		return ezCommonDAO.getCountryInfo(map);
+	}
+	
+	@Override
+	public void createAccessCountry() throws Exception {
+		ezCommonDAO.createTblAccessCountry();
+	}
+
+	@Override
+	public void addSnMenuAuth() throws Exception {
+		ezCommonDAO.addSnMenuAuth();
 	}
 }

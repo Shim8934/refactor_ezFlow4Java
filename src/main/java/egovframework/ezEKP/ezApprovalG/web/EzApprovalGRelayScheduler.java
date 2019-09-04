@@ -475,7 +475,9 @@ public class EzApprovalGRelayScheduler {
         					 logger.debug("#발송문서정보갱신=" + UpdateSendDoc_ReqResend);
         					 
         					 //수신기관에서 재발송 요청시 의견 추가
-        					 strCont_Role = objXML.getElementsByTagName("content").item(0).getAttributes().getNamedItem("content-role").getTextContent();
+        					 if (objXML.getElementsByTagName("content").item(0) != null && objXML.getElementsByTagName("content").item(0).getAttributes().getNamedItem("content-role") != null) {
+        						 strCont_Role = objXML.getElementsByTagName("content").item(0).getAttributes().getNamedItem("content-role").getTextContent();
+        					 }
         					 
         					 if (strCont_Role != null && strCont_Role.equals("return")) {
         						 strCont = objXML.getElementsByTagName("content").item(0).getTextContent();

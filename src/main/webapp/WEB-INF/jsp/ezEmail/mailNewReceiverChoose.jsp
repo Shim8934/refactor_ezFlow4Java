@@ -333,6 +333,9 @@
                });
 	            
 	            ChangeListView_onClick(getOrganListType());
+	            
+	            //메일창에서 수신자설정창을 열고 메일창을 먼저 닫았을 경우, 수신사설정창도 닫히도록 처리 2019-07-31 홍대표
+	            checkMailWriteWindow();
 	        }
 	        
 		    function recevieListview(pID, pListView) {
@@ -3786,6 +3789,20 @@
 	        		receiverCount -= 1;
 	        	}
 	        }
+	        
+	        function checkMailWriteWindow(){
+	        	setInterval(function(){ 
+	        		if (isIE()) {
+		        		if(window.opener.closed) {
+		        			window.close();
+		        		} 
+	        		} else {
+	        			if(!window.opener) {
+	        				window.close();
+	        			}
+	        		}
+	        	}, 500);
+	        }
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -3924,6 +3941,10 @@
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezEmail.t99000047' /></option>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+	                                                        <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+	                                                        <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+	                                                        </c:if>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
 	                                                    </select>
 	                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height:21px">

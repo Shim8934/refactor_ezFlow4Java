@@ -163,10 +163,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("readMail ended.");
 					
-					return "ezEmail/mailRead";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -212,7 +214,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			pnFlag = request.getParameter("PNFlag");
 		}
 		
-		String contentClass = request.getParameter("CONTENTCLASS");
+		String contentClass = request.getParameter("CONTENTCLASS") != null ? request.getParameter("CONTENTCLASS") :"";
 
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
@@ -623,6 +625,22 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 				}
 				
+				if (contentClass.equals("")) {
+					if (message.isSet(Flags.Flag.ANSWERED)) {
+						contentClass = "REPLY";
+					}
+					else {
+						boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
+						
+						if (isForwarded) {
+							contentClass = "FORWARD";
+						}
+						else {
+							contentClass = "IPM.NOTE";
+						}
+					}
+				}
+				
 				// 전달, 회신 시 보낸 시간
 				if (contentClass.equals("REPLY") || contentClass.equals("FORWARD")) {
 					if (ezEmailUtil.hasSentDateFlag(message)) {
@@ -719,10 +737,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("readMailContent ended.");
 					
-					return "ezEmail/mailReadContent";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -888,10 +908,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("readMailOriginal ended.");
 					
-					return "ezEmail/mailReadOriginal";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -949,7 +971,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
-		String htmlBody = bodyInfoList.get(0).replace("{", "%7B").replace("}", "%7D");
+		String htmlBody = bodyInfoList.get(0);
 		model.addAttribute("htmlBody", htmlBody);
 		
 		logger.debug("readMailOriginal ended.");
@@ -2104,10 +2126,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("previewContent ended.");
 					
-					return "ezEmail/mailPreviewContent";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -2259,7 +2283,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
-		htmlBody = htmlBody.replace("{", "%7B").replace("}", "%7D");
         		
 		// 2018-08-03 황윤호 추가
         String memoFlag = "";
@@ -2321,10 +2344,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("mailPrint ended.");
 					
-					return "ezEmail/mailPrint";
+					return "ezCommon/error";
 				}
 				
 				userEmail = shareId + "@" + domainName;
@@ -4083,7 +4108,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 읽기 창에서 주소록에 추가 아이콘 클릭 시 나타나는 주소 추가 화면 출력
 	 */
 	@RequestMapping(value="/ezEmail/mailSelectAddress.do", method=RequestMethod.GET)
-	public String mailSelectAddress(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String mailSelectAddress(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception{
 		logger.debug("mailSelectAddress started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -4098,7 +4123,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (shareId != null) {
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
 					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailSelectAddress ended.");
+					
+					return "ezCommon/error";
 				} else {
 					model.addAttribute("shareId", shareId);
 				}

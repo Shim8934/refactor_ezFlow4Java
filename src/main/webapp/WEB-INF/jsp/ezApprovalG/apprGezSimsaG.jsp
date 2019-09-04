@@ -275,7 +275,7 @@
 		        }
 		    }
 		    function btnSetReceivLine_onclick() {
-		        DivPopUpShow(540, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext);
+		        DivPopUpShow(720, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext);
 		    }
 		    function btnOpinion_onclick() {
 		        var parameter = new Array();
@@ -332,6 +332,15 @@
 		        if (isExternal) {
 		            if (isAddress) {
 		                rtnVal = SetContainer();
+				        if (rtnVal == "TRUE") {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t206'/>";
+				            OpenAlertUI(pAlertContent);
+				            setBtnDisable();
+				        } else {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t217'/>";
+				            OpenAlertUI(pAlertContent);
+				            setMenuDisable("btnSend", false);
+				        }
 		            } else {
 		                is_Enc = OpenCheckUI();
 		            }

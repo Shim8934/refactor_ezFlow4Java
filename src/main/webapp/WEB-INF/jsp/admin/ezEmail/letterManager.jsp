@@ -35,14 +35,16 @@
 								<div style="border-top: 0px">
 									<spring:message code='ezEmail.letter1' />
 								</div>
-									<input type="text" name="" id="lmSearchInput"
+								<input type="text" name="" id="lmSearchInput"
 										class="searchInput" onkeydown="letterSearchEnter();" style="height:22px">
+								<div class="lmLetterBoxTitSearch">
 									<button id="lmSearch" onclick="letterSearch()">
 										<spring:message code='ezBoard.t188' />
 									</button>
 									<button id="lmSearchReset" onclick="inputReset()">
 										<spring:message code='ezBoard.t999035' />
 									</button>
+								</div>
 							</div>
 							<div id="divTree" class="lmLetterBoxList"></div>
 						</div>

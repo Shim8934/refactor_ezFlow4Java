@@ -45,6 +45,10 @@
 															<option          value="mobile"                   ><spring:message code="ezCabinet.t99" /></option>
 															<option          value="homePhone"                ><spring:message code="ezCabinet.t100"/></option>
 															<option          value="facsimileTelephoneNumber" ><spring:message code="ezCabinet.t101"/></option>
+															<c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 															<option          value="mail"                     ><spring:message code="ezCabinet.t102"/></option>
 															<option          value="streetAddress"            ><spring:message code="ezCabinet.t107"/></option>
 														</select>

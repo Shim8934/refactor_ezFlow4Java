@@ -763,7 +763,27 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
-	public List<CountryVO> getCountryInfo(Map<String, Object> map) {
+	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception {
 		return (List<CountryVO>) list("EzCommonDAO.getCountryInfo",map);
+	}
+
+	public void createTblAccessCountry() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAccessCountry");
+		} catch (Exception e) {
+			logger.debug("tbl_Access_Country doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAccessCountry");
+		}
+	}
+	
+	public void addSnMenuAuth() {
+		try {
+			select("EzCommonDAO.checkSnMenuAuth");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_menu_auth sn doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.snMenuAuth");
+		}
 	}
 }

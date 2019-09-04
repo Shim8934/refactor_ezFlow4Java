@@ -13,6 +13,7 @@
 	        var pNoneActiveX = "${noneActiveX}";
 	        var flag = "<c:out value='${flag}' />";
 	        var dotnetFlag = "${dotnetFlag}";
+	        var shareId = "${shareId}";
 	        
 	        window.onload = window_onload;
 	        document.onselectstart = function () { return false; };
@@ -25,16 +26,15 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            
-	            // 메일환경설정
 	            if(flag === "email") {
-	            	document.getElementById("1tab1").setAttribute("class", "tabon");
-		            Tab1_SelectID = "1tab1";
-		            ChangeTab(document.getElementById("1tab1"));	
-	            } else { // 주소록 환경설정
-	            	document.getElementById("1tab2").setAttribute("class", "tabon");
-		            Tab1_SelectID = "1tab2";
-		            ChangeTab(document.getElementById("1tab2"));	
-	            }
+					document.getElementById("1tab1").setAttribute("class", "tabon");
+					Tab1_SelectID = "1tab1";
+					ChangeTab(document.getElementById("1tab1"));	
+				} else { // 주소록 환경설정
+					document.getElementById("1tab1").setAttribute("class", "tabon");
+					Tab1_SelectID = "1tab1";
+					ChangeTab(document.getElementById("1tab1"));	
+				}
 	            
 	            window_resize();
 	        }
@@ -58,13 +58,29 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoForward.do";
 	                    break;
 	                case "MailEnv_div5":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailInboxRule.do";
+	                	var requestUrl = "/ezEmail/mailInboxRule.do";
+	                	
+	                	if (shareId != "") {
+	                		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	                	}
+	                	
+	                    document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	                case "MailEnv_div6":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoDelete.do";
+	                	var requestUrl = "/ezEmail/mailAutoDelete.do";
+	                	if (shareId != "") {
+	                		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	                	}
+	                    document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	                case "MailEnv_div7":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailSignature.do";
+	                	var requestUrl = "/ezEmail/mailSignature.do";
+	                	
+	                	if (shareId != "") {
+	                		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	                	}
+	                	
+	                    document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
 	                case "MailEnv_div8":
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOffice.do";
@@ -117,7 +133,7 @@
 	<body class="mainbody" style="min-width: 835px">
 		<c:choose>
 			<c:when test="${flag eq 'email'}">
-		    	<h1><spring:message code='ezEmail.t904' /></h1>
+		    	<h1><spring:message code='ezEmail.t904' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
 		    </c:when>
 		    <c:otherwise>
 				<h1><spring:message code='ezAddress.hyh001' /></h1>
@@ -126,7 +142,7 @@
 	        <div class="portlet_tabpart01">
 		        <div class="portlet_tabpart01_top" id="tab1">
 		        	<c:choose>
-						<c:when test="${flag eq 'email'}">
+						<c:when test="${flag eq 'email' && shareId == null}">
 					    	<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 		                    <c:if test="${useOnlyInnerMail != 'YES'}">
 		                    <p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t238' /></span></p>
@@ -137,8 +153,13 @@
 		                    <p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
 		                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
 					    </c:when>
+					    <c:when test="${flag eq 'email' && shareId != null}">
+					    	<p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab1"><spring:message code='ezEmail.t146' /></span></p>
+		                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
+		        			<p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
+					    </c:when>
 					    <c:otherwise>
-							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezPersonal.yej01' /></span></p>
+							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab1"><spring:message code='ezPersonal.yej01' /></span></p>
 					    </c:otherwise>
 				    </c:choose>
 	            </div>

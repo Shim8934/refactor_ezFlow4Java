@@ -477,21 +477,21 @@
 				        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 				            case "1":
 				            case "4":
-				                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+				                div.style.background = "url(/images/icon/section_Individualbg.png)";
 				                break;
 				            case "2":			            			            	
-				                div.style.background = "url(/images/icon/section_orderbg.gif)";
+				                div.style.background = "url(/images/icon/section_orderbg.png)";
 				                break;
 				            case "3":				            
-				                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+				                div.style.background = "url(/images/icon/section_Cooperativebg.png)";
 				                break;
 				            case "5":
 				            	flagType = 1;
-				                div.style.background = "url(/images/icon/section_orderbg.gif)";
+				                div.style.background = "url(/images/icon/section_orderbg.png)";
 				                break;
 				            case "6":
 				            	flagType = 1;
-				                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+				                div.style.background = "url(/images/icon/section_Cooperativebg.png)";
 				                break;				            	
 				        }
 	

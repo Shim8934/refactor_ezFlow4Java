@@ -177,7 +177,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함관리 및 회람판에서 이동 호출 함수
 	 */
-	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getCircularFolderList started");
@@ -1813,11 +1813,13 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularSelectAttendant started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		logger.debug("circularSelectAttendant ended");
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID()); //baonk added
+		model.addAttribute("primaryLang", primaryLang);
 		
 		return "/ezCircular/circularSelectAttendant";
 	}

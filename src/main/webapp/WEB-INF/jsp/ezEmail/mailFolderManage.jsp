@@ -27,6 +27,8 @@
 			var EventCheck = false;
 			var CurrentHeight = 0;
 			var CurrenWidth = 0;
+			var shareId = "${shareId}";
+			
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -315,7 +317,13 @@
 		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
 		        
-		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
+				var requestUrl = "/ezEmail/mailMakeFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	            }
+		        
+		        xmlHTTP.open("POST", requestUrl, false);
 		        xmlHTTP.send(xmlDOM);
 		        
 		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
@@ -343,7 +351,13 @@
 		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "CMD", deltype);
 		        
-		        xmlHTTP2.open("POST", "/ezEmail/mailMakeFolder.do", true);
+				var requestUrl = "/ezEmail/mailMakeFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	            }
+		        
+		        xmlHTTP2.open("POST", requestUrl, true);
 		        xmlHTTP2.onreadystatechange = delete_mail_complete;
 		        xmlHTTP2.send(xmlDOM);
 		        
@@ -434,11 +448,17 @@
 		        	subscribe = "1";
 		        }
 		        
+		        var requestUrl = "/ezEmail/setSubscribe.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : false,
-					url : "/ezEmail/setSubscribe.do",
+					url : requestUrl,
 					data : { 
 						folderId : folderId,
 						subscribe : subscribe
@@ -515,7 +535,7 @@
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1 style="margin-bottom:0px;"><spring:message code='ezEmail.t481' /></h1>
+		<h1 style="margin-bottom:0px;"><spring:message code='ezEmail.t481' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
 		<div id="close">
 			<ul>
 		    	<li><span onClick="manageClose()"></span></li>
@@ -532,9 +552,13 @@
 		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezEmail.t308' /></span></a>
 		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezEmail.t149' /></span></a>
+		    <c:if test="${shareId == null || deletePermission == 'Y'}">
 		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezEmail.t95' /></span></a>
+		    </c:if>
 		    <a class="imgbtn"><span onClick="move_onclick()" style="text-align:center;"><spring:message code='ezEmail.t482' /></span></a>
+		    <c:if test="${shareId == null || deletePermission == 'Y'}">
 		    <a class="imgbtn"><span onClick="delete_mail_onclick()" style="text-align:center;"><spring:message code='ezEmail.t483' /></span></a>
+		    </c:if>
 		    <a class="imgbtn"><span onClick="subscribe_onclick()" style="text-align:center;"><spring:message code='ezEmail.lhm71' /></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

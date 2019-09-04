@@ -23,6 +23,7 @@
 		<!-- module -->
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
@@ -618,6 +619,7 @@
 					shareDateColumn.textContent = resultJson["shareDate"].substring(0, 10);
 					absolutePathColumn.textContent = resultJson["folderPath"];
 					absolutePathColumn.setAttribute("title", resultJson["folderPath"]);
+					sharerColumn.setAttribute("title", resultJson["sharerName"]);
 					
 					if (resultJson["shareStatus"] == "Y") {
 						var spanElmt = document.createElement("span");

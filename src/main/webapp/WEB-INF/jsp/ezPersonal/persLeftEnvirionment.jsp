@@ -178,6 +178,10 @@
 						break;
 					case "LOGINHIST":
 						window.parent.frames.right.document.location.href = "/ezSystem/systemLoginHist.do";
+						break;
+					case "ezPMSEnv":
+						window.parent.frames.right.document.location.href = "/ezPMS/pmsSetting.do";
+						break;
 					default: 
 						break;
 				}
@@ -267,6 +271,9 @@
 	                    </c:if>
 	                    <c:if test="${isWebfolderUsed == 'Y'}">
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="webfolder" name="webfolder" onClick="Open_Func(this)"><spring:message code='ezWebFolder.t31' /></span></li>
+	                    </c:if>
+	                    <c:if test="${isPMSUsed == 'Y'}">
+                           	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ezPMSEnv" name="ezPMS" onClick="Open_Func(this)"><spring:message code='ezPMS.t171' /></span></li>
 	                    </c:if>
 					</c:if>
 		        </ul>

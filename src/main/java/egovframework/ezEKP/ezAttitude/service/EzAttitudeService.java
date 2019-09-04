@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezAttitude.service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -146,8 +147,10 @@ public interface EzAttitudeService {
 	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String startDate, String endDate, String orderCell, String orderOption, String secondYear, String companyId, int tenantId) throws Exception;
 
 	public void changeAnnual(Map<String, Object> map) throws Exception;
+
+	public void excelChangeAnnual(Map<String, Object> map) throws Exception;
 	
-	public String annualExcelUpload(List<Map<String, Object>> excelList, String changeUserId, String companyId, int tenantId, String changeReason, String flagCheck) throws Exception;
+	public String annualExcelUpload(List<Map<String, Object>> excelList, String changeUserId, String companyId, int tenantId, String changeReason, String flagCheck, Locale locale) throws Exception;
 	
 	public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception;
 	

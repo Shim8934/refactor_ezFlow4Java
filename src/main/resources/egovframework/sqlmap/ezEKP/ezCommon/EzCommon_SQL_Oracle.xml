@@ -1295,4 +1295,42 @@
 				END_IP_NUMBER >= #changeIp#
 		]]>
 	</select>
+
+	<select id="EzCommonDAO.checkTblAccessCountry">
+		<![CDATA[
+		SELECT 
+			TENANT_ID
+		FROM 
+			TBL_ACCESS_COUNTRY
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAccessCountry">
+		<![CDATA[
+		CREATE TABLE "TBL_ACCESS_COUNTRY" (
+		  "TENANT_ID" NUMBER(20,0) NOT NULL,
+		  "COUNTRY_CODE" NVARCHAR2(800) NOT NULL,
+		  CONSTRAINT "TBL_ACCESS_COUNTRY" PRIMARY KEY ("TENANT_ID")
+		)
+        ]]>
+	</statement>
+	
+	<select id="EzCommonDAO.checkSnMenuAuth">
+		SELECT
+			sn
+		FROM
+			TBL_PORTAL_MENU_AUTH
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.snMenuAuth">
+		ALTER TABLE
+			TBL_PORTAL_MENU_AUTH
+		ADD 
+			sn INT DEFAULT 0
+	</statement>
+
 </sqlMap>

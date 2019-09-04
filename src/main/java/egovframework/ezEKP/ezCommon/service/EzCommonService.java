@@ -145,5 +145,9 @@ public interface EzCommonService {
 
 	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception;
 
+	public void createAccessCountry() throws Exception;
+	
+	public void addSnMenuAuth() throws Exception;
+
 }
 

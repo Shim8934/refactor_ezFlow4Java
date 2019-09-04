@@ -409,7 +409,7 @@
 								var html = "";
 
 								if (res.itemCnt < 1) {
-									html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
+									html += "<tr><td colspan=\"8\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
 								} else {
 									var j = ((pageNum - 1) * 20) + 1;
 
@@ -420,7 +420,8 @@
 											html += "   <td>"	+ j 								+ "</td>";
 											html += "	<td title=\'" + i.usernm + "'>"	+ i.usernm	+ "</td>";
 											html += "	<td>"	+ i.deptnm							+ "</td>";
-											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
+											html += "	<td>"	+ i.companynm						+ "</td>";
+											html += "	<td>"	+ i.connectip						+ "</td>";
 											html += "	<td>"	+ i.connecttime						+ "</td>";
 											html += "	<td>"	+ i.connectbrowser					+ "</td>";
 											html += "	<td>"	+ i.connectos						+ "</td>";
@@ -435,7 +436,8 @@
 											html += "   <td>"	+ j		+ "</td>";
 											html += "	<td title=\'" + i.usernm2 + "'>"  + i.usernm2 	+ "</td>";
 											html += "	<td>"	+ i.deptnm2								+ "</td>";
-											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
+											html += "	<td>"	+ i.companynm2							+ "</td>";
+											html += "	<td>"	+ i.connectip							+ "</td>";
 											html += "	<td>"	+ i.connecttime							+ "</td>";
 											html += "	<td>"	+ i.connectbrowser						+ "</td>";
 											html += "	<td>"	+ i.connectos							+ "</td>";
@@ -570,7 +572,7 @@
 				</span> 
 				</td>
 				<td width="5%">
-					<a class="imgbtn">
+					<a class="imgbtn" style="margin-right: 5px">
 						<span onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span>
 					</a>
 				</td>
@@ -594,6 +596,7 @@
 						<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
 						<th><spring:message code="ezStatistics.t1068"></spring:message></th>
 						<th><spring:message code="ezStatistics.t113"></spring:message></th>
+						<th><spring:message code="ezEmail.t712"></spring:message></th>
 						<th><spring:message code="ezSystem.x0039"></spring:message></th>
 						<th><spring:message code="ezSystem.x0025"></spring:message></th>
 						<th><spring:message code="ezSystem.x0026"></spring:message></th>

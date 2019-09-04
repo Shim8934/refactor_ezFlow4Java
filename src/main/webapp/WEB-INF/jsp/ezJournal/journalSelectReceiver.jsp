@@ -657,6 +657,10 @@
 								                            <option value="mobile"><spring:message code='ezJournal.t211'/></option>
 								                            <option value="HomePhone"><spring:message code='ezJournal.t212'/></option>
 								                            <option value="facsimileTelephoneNumber"><spring:message code='ezJournal.t213'/></option>
+								                            <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 								                            <option value="mail"><spring:message code='ezJournal.t214'/></option>
 								                            <option value="streetAddress"><spring:message code='ezJournal.t215'/></option>
 				                                        </select>

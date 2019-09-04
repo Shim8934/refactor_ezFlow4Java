@@ -1795,32 +1795,35 @@
 								circularDeptList = "";
 								list = result.circularDeptList;
 
-								list
-										.forEach(function(vo, index) {
-											circularDeptList += ("<tr id='"
-													+ vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
-											circularDeptList += ("<td style='width:5%'>"
-													+ (index + 1) + "</td>");
-											circularDeptList += ("<td style='width:45%'>"
-													+ vo.title + "</td>");
-											circularDeptList += ("<td style='width:20%'>"
-													+ vo.regDate.substring(0,
-															16) + "</td>");
-
-											if (vo.memberNameCount == 0) {
-												circularDeptList += ("<td style='width:30%'>"
-														+ vo.memberName + "</td>");
-											} else {
-												circularDeptList += ("<td style='width:30%'>"
-														+ vo.memberName
-														+ " <spring:message code='ezCircular.t50' /> "
-														+ vo.memberNameCount
-														+ " <spring:message code='ezCircular.t51' />" + "</td>");
-											}
-
-											//circularDeptList += ("<td style='width:13%'>");
-											circularDeptList += ("</tr>");
-										});
+								if(list.length > 0) {
+									list.forEach(function(vo, index) {
+										circularDeptList += ("<tr id='"
+												+ vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
+										circularDeptList += ("<td style='width:5%'>"
+												+ (index + 1) + "</td>");
+										circularDeptList += ("<td style='width:45%'>"
+												+ vo.title + "</td>");
+										circularDeptList += ("<td style='width:20%'>"
+												+ vo.regDate.substring(0,
+														16) + "</td>");
+	
+										if (vo.memberNameCount == 0) {
+											circularDeptList += ("<td style='width:30%'>"
+													+ vo.memberName + "</td>");
+										} else {
+											circularDeptList += ("<td style='width:30%'>"
+													+ vo.memberName
+													+ " <spring:message code='ezCircular.t50' /> "
+													+ vo.memberNameCount
+													+ " <spring:message code='ezCircular.t51' />" + "</td>");
+										}
+	
+										//circularDeptList += ("<td style='width:13%'>");
+										circularDeptList += ("</tr>");
+									});
+								} else {
+									circularDeptList = "<tr><td colspan='4' style='text-align:center;'><spring:message code='ezCircular.t47' /></td></tr>";
+								}
 
 								$("#List_TBODY").html("");
 								$("#List_TBODY").append(circularDeptList);
@@ -2037,6 +2040,10 @@
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezCircular.t156' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezCircular.t157' /></option>
 	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezCircular.t158' /></option>
+	                                                        <c:if test="${primaryLang eq '3' }">
+		                                                    <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+		                                                    <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+		                                                    </c:if>
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezCircular.t159' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezCircular.t160' /></option>
 	                                                    </select>

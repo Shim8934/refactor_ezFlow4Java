@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -91,6 +92,34 @@ public class EzEmailMailSearchController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+					
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailSearchView ended.");
+					
+					return "ezCommon/error";
+				} else {
+					MailSharedMailboxUserVO shareInfo = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
+					
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
+					model.addAttribute("deletePermission", shareInfo.getDeletePermission());
+					model.addAttribute("sendPermission", shareInfo.getSendPermission());
+					
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+		}
+		
+		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 		
 		// get user credentials
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
@@ -164,7 +193,7 @@ public class EzEmailMailSearchController {
 	@RequestMapping(value="/ezEmail/mailSearch.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailSearch(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
+	public String mailSearch(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("mailSearch started.");		
 		logger.debug("bodyData=" + bodyData);
 
@@ -175,7 +204,25 @@ public class EzEmailMailSearchController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailSearch ended.");
+					
+					return "";
+				} else {
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+		}
+		
+		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		
@@ -370,7 +417,8 @@ public class EzEmailMailSearchController {
 	public String mailDeleteS(@CookieValue("loginCookie") String loginCookie, 
 			@RequestParam("cmd") String cmd,
 			@RequestBody String bodyData,
-			Locale locale, Model model) throws Exception {
+			Locale locale, Model model,
+			HttpServletRequest request) throws Exception {
 		logger.debug("mailDeleteS started.");
 		logger.debug("cmd=" + cmd);
 		logger.debug("bodyData=" + bodyData);
@@ -382,7 +430,25 @@ public class EzEmailMailSearchController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailDeleteS ended.");
+					
+					return "";
+				} else {
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+		}
+		
+		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();	
@@ -464,7 +530,7 @@ public class EzEmailMailSearchController {
 	@RequestMapping(value="/ezEmail/mailMoveCopyMessageS.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailMoveCopyMessageS(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
-			Locale locale, Model model) throws Exception {
+			Locale locale, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("mailMoveCopyMessageS started.");
 		logger.debug("bodyData=" + bodyData);
 		
@@ -476,6 +542,25 @@ public class EzEmailMailSearchController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailMoveCopyMessageS ended.");
+					
+					return "";
+				} else {
+					userEmail = shareId + "@" + domainName;
+				}
+			}
+		}
+		
+		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cmd = doc.getElementsByTagName("CMD").item(0).getTextContent();

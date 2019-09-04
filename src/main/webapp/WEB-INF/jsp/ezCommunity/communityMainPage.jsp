@@ -1860,14 +1860,14 @@
 		    <div class="community_section02">
 		    	<div class="contents_noticeCommunity">
 		        	<dl class="contents_tabCommunity">
-		                <dt><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/></dt>
+		                <dt><spring:message code='ezCommunity.khj07'/></dt>
 		            </dl>
 		            <ul id="listCommunity" class="contents_listCommunity">
 		            	<c:choose>
 		            		<c:when test="${fn:length(cNoticeList) eq 0 }"> 
 		            			<dl class="nodata_sIcon">
 									<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-								    <dd>"<spring:message code='ezCommunity.kmsc01'/>"</dd>
+								    <dd><spring:message code='ezCommunity.kmsc01'/></dd>
 								</dl>
 		            		</c:when>
 		            		<c:when test="${fn:length(cNoticeList) ne 0 }">

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -66,6 +67,9 @@ public class EzAttitudeGWController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private ExcelCellRef excelCellRef;
 	
 	@Resource(name="crypto")
 	private EgovFileScrty egovFileScrty;
@@ -369,6 +373,7 @@ public class EzAttitudeGWController {
 		try {
 	         String userId = request.getParameter("userId");
 	         String serverName = request.getHeader("x-user-host");
+	         String lang = request.getParameter("lang");
 	         MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 	         
 	         LOGGER.debug("userId : " + userId);
@@ -377,7 +382,7 @@ public class EzAttitudeGWController {
 	         if (companyId == null || companyId.equals("")) {
 	            companyId = info.getCompanyId();
 	         }
-	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), info.getPrimary());
+	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), lang);
 	         
 	         result.put("status", "ok");
 	         result.put("code", 0);
@@ -2252,10 +2257,13 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String changeUserId = (String) jsonObject.get("changeUserId");
 			String companyId = (String) jsonObject.get("companyId");
-			String changeReason = (String) jsonObject.get("changeReason");
+//			String changeReason = (String) jsonObject.get("changeReason");
+			String changeReason = egovMessageSource.getMessage("ezAttitude.t316");
 			String flagCheck = (String) jsonObject.get("flagCheck");
+			String loginCookie = (String) jsonObject.get("loginCookie");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, changeUserId);
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			MultipartFile tempFile = multiFileLists.get(0);
 			
@@ -2267,7 +2275,7 @@ public class EzAttitudeGWController {
 			
 			int numOfRows = sheet.getPhysicalNumberOfRows();
 			if(numOfRows < 2) {
-				resultMsg = "문서의 양식이 업로드 양식과 일치하지 않습니다.\n";
+				resultMsg = egovMessageSource.getMessage("ezAttitude.t317");
 				result.put("status", "ok");
 				result.put("code", 0);
 				result.put("data", resultMsg);
@@ -2283,7 +2291,7 @@ public class EzAttitudeGWController {
 	        Map<String, Object> map = null;
 	        List<Map<String, Object>> excelList = new ArrayList<Map<String, Object>>();
 	        List<String> outputColumns = new ArrayList<String>();
-	        String[] outputColumnsArray = {"A","B","C","D","E","F","G","H"};
+	        String[] outputColumnsArray = {"A","B","C"};
 	        
 	        for(String ouputColumn : outputColumnsArray) {
 	            outputColumns.add(ouputColumn);
@@ -2297,14 +2305,14 @@ public class EzAttitudeGWController {
 	                boolean emptyFlag = true;
 	                for(int cellIndex = 0; cellIndex < numOfCells; cellIndex++) {
 	                    cell = row.getCell(cellIndex);
-	                    cellName = ExcelCellRef.getName(cell, cellIndex);
+	                    cellName = excelCellRef.getName(cell, cellIndex);
 	                    if(!outputColumns.contains(cellName) ) {
 	                        continue;
 	                    }
-	                    if(!ExcelCellRef.getValue(cell).equals("")) {
+	                    if(!excelCellRef.getValue(cell).equals("")) {
 	                    	emptyFlag = false;
 	                    }
-	                    map.put(cellName, ExcelCellRef.getValue(cell));
+	                    map.put(cellName, excelCellRef.getValue(cell));
 	                }
 	                if(emptyFlag) {
 	                	break;
@@ -2317,7 +2325,7 @@ public class EzAttitudeGWController {
 	        
 	        wb.close();
 	        
-	        resultMsg = ezAttitudeService.annualExcelUpload(excelList, changeUserId, companyId, info.getTenantId(), changeReason, flagCheck);
+	        resultMsg = ezAttitudeService.annualExcelUpload(excelList, changeUserId, companyId, info.getTenantId(), changeReason, flagCheck, userInfo.getLocale());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

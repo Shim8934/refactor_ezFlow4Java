@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -1526,7 +1527,8 @@ public class EzAttitudeAdminController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userId", userInfo.getId());
+				.queryParam("userId", userInfo.getId())
+				.queryParam("lang", userInfo.getPrimary());
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -1596,7 +1598,8 @@ public class EzAttitudeAdminController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("companyId", companyId)
-				.queryParam("userId", userId);
+				.queryParam("userId", userId)
+				.queryParam("lang", userInfo.getPrimary());
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -2245,6 +2248,80 @@ public class EzAttitudeAdminController {
 	}
 	
 	/**
+	 * 엑셀 출력
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/excelAnnualFormatDownload.do")
+	public void excelAnnualFormatDownload(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
+		LOGGER.debug("excelAnnualFormatDownload started."); 
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		  
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		  
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setFillForegroundColor(HSSFColor.YELLOW.index);
+		bodyStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+		
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
+
+		HSSFFont font1 = workbook.createFont();
+		font1.setColor(font.COLOR_RED);
+		bodyStyle.setFont(font1);
+		
+		Row row;
+		      
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		
+		String pFileName = "";
+		pFileName = "annualReport_format";
+		
+		//header
+		row.createCell(0).setCellValue(egovMessageSource.getMessage("ezAttitude.t330", userInfo.getLocale()));
+		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t331", userInfo.getLocale()));
+		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t332", userInfo.getLocale()));
+		row.getCell(0).setCellStyle(headerStyle);
+		row.getCell(1).setCellStyle(headerStyle);
+		row.getCell(2).setCellStyle(headerStyle);
+		
+		//body
+		Row row1 = sheet.createRow(1);
+		row1.createCell(0).setCellValue("EX)dev000");
+		row1.createCell(1).setCellValue("2019-07-11");
+		row1.createCell(2).setCellValue("10.5");
+		row1.getCell(0).setCellStyle(bodyStyle);
+		row1.getCell(1).setCellStyle(bodyStyle);
+		row1.getCell(2).setCellStyle(bodyStyle);
+		
+		//width 조정
+		sheet.autoSizeColumn(0);
+		sheet.autoSizeColumn(1);
+		sheet.autoSizeColumn(2);
+		sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 812);
+		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 812);
+		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 812);
+		
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+		
+		workbook.close();
+		
+		LOGGER.debug("excelAnnualFormatDownload ended.");
+	}
+	
+	/**
 	 * 연차현황관리 엑셀업로드
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/annualExcelUpload.do", produces = "application/json;charset=utf-8")
@@ -2288,6 +2365,7 @@ public class EzAttitudeAdminController {
 		jsonObject.put("companyId", companyId);
 		jsonObject.put("changeReason", changeReason);
 		jsonObject.put("flagCheck", flagCheck);
+		jsonObject.put("loginCookie", loginCookie);
 		
 		map.add("data", jsonObject);
 		
@@ -2641,13 +2719,13 @@ public class EzAttitudeAdminController {
 		
 		//header
 		row.createCell(0).setCellValue("NO");
-		row.createCell(1).setCellValue("사용자 ID");
+		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezEmail.t263", locale));
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
 		row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
 		row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
-		row.createCell(5).setCellValue("입사일");
-		row.createCell(6).setCellValue("기본 연차 수");
-		row.createCell(7).setCellValue("추가 연차 수");
+		row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t289", locale));
+		row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.t290", locale));
+		row.createCell(7).setCellValue(egovMessageSource.getMessage("ezAttitude.t291", locale));
 		row.getCell(0).setCellStyle(headerStyle);
 		row.getCell(1).setCellStyle(headerStyle);
 		row.getCell(2).setCellStyle(headerStyle);
