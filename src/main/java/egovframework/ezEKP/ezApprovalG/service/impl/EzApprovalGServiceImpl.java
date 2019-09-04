@@ -2700,12 +2700,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		String result = "";
-		int tempCount = ezApprovalGDAO.checkAprLine(map);
+		int tempCount = ezApprovalGDAO.checkAprLine(map); //결재선에 포함되어있는지 체크
 		
 		if (tempCount > 0) {
 			result = "<RESULT>TRUE</RESULT>";
 		} else {
-			result = "<RESULT>FALSE</RESULT>";
+			tempCount = ezApprovalGDAO.checkProxyAprLine(map); //결재 진행중인 결재자의 대리결재자인지 체크
+			
+			if (tempCount > 0) {
+				result = "<RESULT>TRUE</RESULT>";
+			} else {
+				result = "<RESULT>FALSE</RESULT>";
+			}
 		}
 
 		logger.debug("checkAprLine ended");
@@ -6013,8 +6019,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		for (Section s : hwpFile.getBodyText().getSectionList()) {
 			for (Paragraph p : s) {
-				if (p.getControlList() == null) {
-					return false;
+				if (p == null || p.getControlList() == null) {
+					//return false; 2019.09.03 천성준 - 한글양식에 줄이 2이상 일때, 필드 검색중 줄이 넘어가면 false를 반환해버려서 찾으려는 필드가 존재해도 찾지 못하는 현상 수정
+					continue;
 				}
 
 				for (Control c : p.getControlList()) {
@@ -6171,6 +6178,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docNO = "";
 		String retNum = "";
 		String tempHwp = "";
+		String strDeptName = "";
+		String drafterDeptName = "";
+		String receiveDeptName = "";
 		
 		try {
 			// 부재자 설정인 경우 proxySign = '代'
@@ -6190,6 +6200,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
 				fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
+				receiveDeptName = aprXML.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent();
 			} else {
 				/**
 				 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
@@ -6200,6 +6211,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
 				fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
+				drafterDeptName = aprXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent();
 			}
 			
 			formURL = realPath + fileForder1;
@@ -6513,8 +6525,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
 					if (aprStateSign.equals("012")) {
 						strDeptID = receiveDept;
+						strDeptName = receiveDeptName;
 					} else {
 						strDeptID = drafterDept;
+						strDeptName = drafterDeptName;
 					}
 					
 					String ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
@@ -6534,7 +6548,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("docnumber", hwpFile)) {
-							docNO = getRecRegSNToName(userInfo.getDeptName(), createDocNO(cabinetSN , docNumZeroCnt), userInfo.getDeptID(), userInfo.getTenantId());
+							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId());
 							setHwpText("docnumber", docNO, hwpFile);
 						}
 						
@@ -6555,6 +6569,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				/** 수신 일괄결재시 채번 */
 				if (useReceiveDocNo.equals("NO") && totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
 					strDeptID = receiveDept;
+					strDeptName = receiveDeptName;
 					
 					String ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 					
@@ -6573,7 +6588,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (findHwpField("receiptnumber", hwpFile)) {
-							docNO = getRecRegSNToName(userInfo.getDeptName(), createDocNO(cabinetSN , docNumZeroCnt), userInfo.getDeptID(), userInfo.getTenantId());
+							docNO = getRecRegSNToName(strDeptName, createDocNO(cabinetSN , docNumZeroCnt), strDeptID, userInfo.getTenantId());
 							setHwpText("receiptnumber", docNO, hwpFile);
 						}
 						
@@ -11440,6 +11455,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String aprState = "";
 		String receivedSN = "";
 		String receivedDeptID = "";
+		String receivedDeptName = "";
 		String sn = "";
 		
 		if (signXML.getDocumentElement().getChildNodes().getLength() > 0) {
@@ -11449,6 +11465,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			aprState = makeXMLString(makeListField(signXML.getElementsByTagName("APRSTATE").item(0).getTextContent()));
 			receivedSN = makeXMLString(makeListField(signXML.getElementsByTagName("RECEIVESN").item(0).getTextContent()));
 			receivedDeptID = makeXMLString(makeListField(signXML.getElementsByTagName("RECEIVEDDEPTID").item(0).getTextContent()));
+			receivedDeptName = makeXMLString(makeListField(signXML.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent()));
 			sn = makeXMLString(makeListField(signXML.getElementsByTagName("SN").item(0).getTextContent()));
 		}
 		
@@ -11516,6 +11533,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append("<RECEIPTDEPTID>");
 		rtnVal.append(receivedDeptID);				
 		rtnVal.append("</RECEIPTDEPTID>");
+		rtnVal.append("<RECEIVEDDEPTNAME>");
+		rtnVal.append(receivedDeptName);
+		rtnVal.append("</RECEIVEDDEPTNAME>");
 		rtnVal.append("<DOCINFO>");
 		rtnVal.append(getDocInfo(docID, "APR", "ALL", userInfo, companyID, tenantID, "", ""));
 		rtnVal.append("</DOCINFO>");
@@ -21823,7 +21843,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} else {
 					fieldValue = docXML.getElementsByTagName(fieldName).item(j).getTextContent();
 				}
-				resultXML.append(commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
+				resultXML.append(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "</VALUE>");
 				
 				if (i == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(j).getTextContent().trim()+ "</DATA1>");
@@ -27510,7 +27530,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Override
 	public boolean isReform(String formUrl) throws Exception {
-		Matcher matcher = Pattern.compile("/fileroot/(\\d)/files/upload_approvalG/(.*)/form/(.*)\\..{0,3}").matcher(formUrl);
+		Matcher matcher = Pattern.compile("/fileroot/(\\d*)/files/upload_approvalG/(.*)/form/(.*)\\..{0,3}").matcher(formUrl);
 		
 		if (matcher.find() && matcher.groupCount() == 3) {
 			String formId = matcher.group(3);

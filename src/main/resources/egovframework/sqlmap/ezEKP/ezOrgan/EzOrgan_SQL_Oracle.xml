@@ -1330,7 +1330,10 @@
                         		' ' DISPLAYNAMEPRINTABLE  ,
                         		POSITIONCD ,
                         		BIRTH ,
-                        		BIRTHTYPE 
+                        		BIRTHTYPE ,
+                        		FURIGANA ,
+                        		EXTENSIONPHONE ,
+                        		OFFICEMOBILE
              FROM
              	TBL_USERMASTER 
              WHERE

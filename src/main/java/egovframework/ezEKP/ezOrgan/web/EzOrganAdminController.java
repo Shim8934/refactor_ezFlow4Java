@@ -168,6 +168,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
     	ezCommonService.insertSurveyTenantConfig(); // 2019-06-25 이석화 전자설문 리뉴얼 테넌트 컨피그 추가
     	ezCommonService.insertPortletInfo(); // 2019-07-02 자원, 웹폴더, 전자설문 포틀릿 데이터 확인 후 없으면 추가
+    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
     	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
     	
     	logger.debug("init ended.");
@@ -247,6 +248,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
 		String useDisablePop3Imap = ezCommonService.getTenantConfig("UseDisablePopImap", user.getTenantId());
 		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", user.getTenantId());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
 		
 		String topid = "";
 		String deptTreeTopId = "";
@@ -275,6 +277,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		model.addAttribute("useMobileManagemant", useMobileManagemant);
 		model.addAttribute("useSyncServer", useSyncServer);
+		model.addAttribute("primaryLang", primaryLang);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
@@ -2649,18 +2652,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		// dhlee - end
 		
 		for (int i = 0; i < cn.length; i++) {
-			// 타 회사로의 퇴직자 복구 막음
-			OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], "1", tenantID);
-			String userCompId = userVO.getPhysicalDeliveryOfficeName();
-			OrganDeptVO deptVO = ezOrganService.getDeptInfo(deptID, "1", tenantID);
-			String deptCompId = deptVO.getExtensionAttribute2();
+			// 2019.08.30 사간 퇴사 지원으로 인한 주석처리
+			// OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], "1", tenantID);
+			// String userCompId = userVO.getPhysicalDeliveryOfficeName();
+			//OrganDeptVO deptVO = ezOrganService.getDeptInfo(deptID, "1", tenantID);
+			// String deptCompId = deptVO.getExtensionAttribute2();
 			
-			if (!deptCompId.equals(userCompId)) {
-				logger.debug("Restoration to other companies is not possible.");
-				logger.debug("userId=" + cn[i] + ",userCompId=" + userCompId + ",deptCompId=" + deptCompId);
-				logger.debug("restoreRetireUser ended. result=DIFF_COMPANY");
-				return "DIFF_COMPANY";
-			}
+			// if (!deptCompId.equals(userCompId)) {
+			//	logger.debug("Restoration to other companies is not possible.");
+			//	logger.debug("userId=" + cn[i] + ",userCompId=" + userCompId + ",deptCompId=" + deptCompId);
+			//	logger.debug("restoreRetireUser ended. result=DIFF_COMPANY");
+			//	return "DIFF_COMPANY";
+			//}
 			
 			// dhlee
 			String mailAddr = cn[i] + "@" + domain;

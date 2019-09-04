@@ -148,6 +148,8 @@ public interface EzCommonService {
 
 	public void insertPortletInfo() throws Exception;
 
+	public void createAccessCountry() throws Exception;
+	
 	public void addSnMenuAuth() throws Exception;
 
 }

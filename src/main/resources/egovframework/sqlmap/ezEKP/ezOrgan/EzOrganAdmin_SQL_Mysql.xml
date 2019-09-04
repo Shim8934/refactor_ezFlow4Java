@@ -140,7 +140,7 @@
 			INSERT INTO
 				TBL_USERMASTER
    				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, MANUAL_FLAG, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
-                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT
+                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT, FURIGANA, EXTENSIONPHONE, OFFICEMOBILE
                 )
    			VALUES
    				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR7#, #v_EXTATTR8#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR11#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_MANUAL_FLAG#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
@@ -149,7 +149,7 @@
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    #nowDate#
+                    #nowDate#, #v_FURIGANA#, #v_EXTENSION_PHONE#, #v_OFFICE_MOBILE#
                 )
 		]]>
 	</insert>
@@ -285,7 +285,7 @@
                 COMPANY = #v_EXTENSIONATTRIBUTE3#,
                 COMPANY2 = #v_COMPNM2#
             WHERE
-                DEPARTMENT = #v_CN#
+                DEPARTMENT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE CONCAT(#v_DEPT_CD_PATH#, ',%') AND TENANT_ID = #v_TENANT_ID#)
             AND
                 TENANT_ID = #v_TENANT_ID#  
         ]]>
@@ -2539,7 +2539,7 @@
                    ('002',8,'보존방법',160,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingMethod','KeepingMethod','dtKeepMethod','기록물철 대장',null,'CONSERVATION METHOD','保存方法','如何保存',#tenantID#, #companyID#),
                    ('002',9,'보존장소',80,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingPlace','KeepingPlace','dtKeepPlace','기록물철 대장',null,'보존장소E','保存場所','保护区',#tenantID#, #companyID#),
                    ('002',10,'등록일',70,'TBL_CABINET','TBL_CABINET.CreateDate','CreateDate','dtDate','기록물철 대장',null,'RegisterDate','登録日','注册',#tenantID#, #companyID#),
-                   ('002',11,'이관여부',60,null,'미전송','TransferFlag','Default','기록물철 대장','이관여부','TransferFlag','移管有無','无论是转移',#tenantID#, #companyID#),
+                   ('002',11,'이관여부',60,null,'''미전송''','TransferFlag','Default','기록물철 대장','이관여부','TransferFlag','移管有無','无论是转移',#tenantID#, #companyID#),
                    ('002',12,'연기신청',60,null,'Case TransDelayFlag When ''1'' Then ''Y'' Else ''N'' End','DelayFlag','Default','기록물철 대장','이관연기여부','DelayFlag','延期申請','延期请求',#tenantID#, #companyID#),
                    ('003',1,'순번',30,null,null,'dtSerialNum','dtSerialNum','기록물 생상현황보고',null,'No.','順番','序号',#tenantID#, #companyID#),
                    ('003',2,'등록구분',110,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.RegisterType','RegisterType','dtRegisterType','기록물 생상현황보고',null,'RegisterType','登録区分','招生区分',#tenantID#, #companyID#),
@@ -3997,6 +3997,8 @@
 	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
 	  		<isNotNull property="mailboxUsage" prepend=","> <![CDATA[mailboxUsage = #mailboxUsage#]]></isNotNull>
 	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
+	  		<isNotNull property="extensionPhone" prepend=","> <![CDATA[extensionPhone = #extensionPhone#]]></isNotNull>
+	  		<isNotNull property="officeMobile" prepend=","> <![CDATA[officeMobile = #officeMobile#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE

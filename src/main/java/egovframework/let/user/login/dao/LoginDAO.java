@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
@@ -149,4 +150,9 @@ public class LoginDAO extends EgovAbstractDAO {
 	public int updateDeviceInfo (Map<String, Object> map) throws Exception {
 		return update("loginDAO.updateDeviceInfo", map);
 	}
+	
+	public CountryVO getLoginIPCountry(Map<String, Object> paramMap) throws Exception {
+		return (CountryVO) select("loginDAO.getLoginIPCountry", paramMap);
+	}
+
 }

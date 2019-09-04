@@ -214,7 +214,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			pnFlag = request.getParameter("PNFlag");
 		}
 		
-		String contentClass = request.getParameter("CONTENTCLASS");
+		String contentClass = request.getParameter("CONTENTCLASS") != null ? request.getParameter("CONTENTCLASS") :"";
 
 		Address[] arrFroms = null;
 		Address[] arrRecipientsTo = null;
@@ -579,6 +579,22 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						pReadFlag = "N";
 						message.setFlag(Flag.SEEN, true);
 						logger.debug("Message's seen flag changed to true.");
+					}
+				}
+				
+				if (contentClass.equals("")) {
+					if (message.isSet(Flags.Flag.ANSWERED)) {
+						contentClass = "REPLY";
+					}
+					else {
+						boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
+						
+						if (isForwarded) {
+							contentClass = "FORWARD";
+						}
+						else {
+							contentClass = "IPM.NOTE";
+						}
 					}
 				}
 				

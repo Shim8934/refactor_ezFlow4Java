@@ -499,8 +499,6 @@ function show_repetition_info() {
 	    var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
 	    var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
 
-	    if (Number(reStartHour) == 0)
-            reStartHour = 12;
 	   /* if (Number(reStartHour) < 12) {
 	        repeatinfo += "" + strLang246 + " ";
 
@@ -516,8 +514,6 @@ function show_repetition_info() {
 
 	    repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
 
-	    if (Number(reEndHour) == 0)
-            reEndHour = 12;
 	    /*if (Number(reEndHour) < 12) {
 	        repeatinfo += "" + strLang246 + " ";
 

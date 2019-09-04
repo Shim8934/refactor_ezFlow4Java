@@ -1772,4 +1772,26 @@ public class CommonUtil {
 		
 		return String.format("<DIV id=\"msgBody\" style=\"font-size: %s; font-family: %s;\" name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", fontSize, fontFamily, content);
 	}
+	
+	public Boolean checkLocalIP (String ip) {
+      Boolean result = false;
+      
+      if (ip.startsWith("10.") || ip.startsWith("127.") || ip.startsWith("192.168.") || ip.startsWith("169.254.") || ip.startsWith("0:")) {
+         result = true;
+      } else {
+         String[] iparr = ip.split("\\.");
+         long changeIp = 0;
+         
+         // 172.16.0.0 ~ 172.31.255.255
+         changeIp = (long) Math.pow(256, 3) * Integer.parseInt(iparr[0])
+                + (long) Math.pow(256, 2) * Integer.parseInt(iparr[1])
+                + (long) Math.pow(256, 1) * Integer.parseInt(iparr[2])
+                + (long) Math.pow(256, 0) * Integer.parseInt(iparr[3]);
+         if (changeIp >= 2886729728L && changeIp <= 2887778303L) {
+            result = true;
+         }
+      }
+      
+      return result;
+   }
 }

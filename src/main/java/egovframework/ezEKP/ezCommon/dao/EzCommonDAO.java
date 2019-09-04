@@ -858,6 +858,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.checkPortletForComapny", map);
 	}
 
+	public void createTblAccessCountry() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblAccessCountry");
+		} catch (Exception e) {
+			logger.debug("tbl_Access_Country doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblAccessCountry");
+		}
+	}
 	
 	public void addSnMenuAuth() {
 		try {
