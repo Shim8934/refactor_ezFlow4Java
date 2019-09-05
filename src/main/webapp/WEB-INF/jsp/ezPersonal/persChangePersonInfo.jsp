@@ -202,7 +202,11 @@
 				}
 				
 			    function checkKey() {
-			        return false;
+					if(event.keyCode == 8) {
+						event.target.value = "";
+					} else {
+						return false;
+					}
 			    }
 			    
 			    function ButtonDeleteClick() {
