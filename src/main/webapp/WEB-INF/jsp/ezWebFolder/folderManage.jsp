@@ -300,7 +300,7 @@
 			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
 			console.log("folderId moveCopy_onclick function" + folderId);
 			console.log("moveCopyFolderDlg_cross_dialogArguments delete_onclick function" + moveCopyFolderDlg_cross_dialogArguments[0]);
-			DivPopUpShow(330, 470, "/ezWebFolder/folderMove.do");
+			DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
 		}
 
 		function copy_onclick() {
@@ -321,7 +321,7 @@
 			moveCopyFolderDlg_cross_dialogArguments[0] = folderId;
 			moveCopyFolderDlg_cross_dialogArguments[1] = "copy";
 			moveCopyFolderDlg_cross_dialogArguments[2] = returnFunction;
-			DivPopUpShow(330, 470, "/ezWebFolder/folderMove.do");
+			DivPopUpShow(360, 470, "/ezWebFolder/folderMove.do");
 		}
 		
 		function share_onclick() {
