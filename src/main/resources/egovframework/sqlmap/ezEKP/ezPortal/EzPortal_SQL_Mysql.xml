@@ -803,6 +803,8 @@
 		</isNotEmpty>
 		
 		<![CDATA[
+			AND
+				TENANT_ID = #tenantID#
 			ORDER BY
 				DISPLAYNAME ASC
             LIMIT

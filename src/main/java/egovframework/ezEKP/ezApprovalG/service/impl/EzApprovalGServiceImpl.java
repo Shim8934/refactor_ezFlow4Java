@@ -16342,7 +16342,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String sendRecvMsg(String deptID, String docID, String mode, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("sendRecvMsg started");
 
-		String rtnXML = ezOrganService.getSearchList("EXACT_Department::" + deptID + ";;extensionAttribute1::a=1", "displayName", "department", "user", 50, commonUtil.getPrimaryData(lang, tenantID), tenantID);
+		String rtnXML = ezOrganService.getSearchList("EXACT_Department::" + deptID + ";;extensionAttribute1::a=1", "displayName", "department", "user", 50, commonUtil.getPrimaryData(lang, tenantID), tenantID, "n");
 		Document docXML = commonUtil.convertStringToDocument(rtnXML);
 		
 		for (int k = 0; k < docXML.getElementsByTagName("DATA2").getLength(); k++) {
@@ -20422,7 +20422,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getProxyUser started");
 		
 		String primaryData = commonUtil.getPrimaryData(userLang, tenantID);
-		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayname", "displayname;extensionAttribute5", "user", 50, primaryData, tenantID);
+		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayname", "displayname;extensionAttribute5", "user", 50, primaryData, tenantID, "n");
 		Document doc = commonUtil.convertStringToDocument(rtnXML);
 		int nodeLength = doc.getElementsByTagName("DATA2").getLength();
 		boolean chkFirst = false;
