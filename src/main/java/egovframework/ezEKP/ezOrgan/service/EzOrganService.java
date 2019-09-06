@@ -27,7 +27,7 @@ public interface EzOrganService {
 	
 	public String getDeptMemberListPagination(String deptid, String celllist, String proplist, String listtype, String lang, String page, int tenantID) throws Exception;
 	
-	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID) throws Exception;
+	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID, String adminOrgan) throws Exception;
 
 	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID) throws Exception;
 	
@@ -79,7 +79,7 @@ public interface EzOrganService {
 	
 	public String getChildrenDeptID(String parentID, String companyID, int tenantID) throws Exception;
 
-	public String getSearchList(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID, String noAddJob) throws Exception;
+	public String getSearchList(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID, String noAddJob, String adminOrgan) throws Exception;
 
 	public boolean checkRetired(String userID, String companyID, int tenantID) throws Exception;
 	

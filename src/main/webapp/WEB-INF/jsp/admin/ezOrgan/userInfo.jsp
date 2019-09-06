@@ -675,7 +675,15 @@
 					}
 				});
 		    	return rtnVal;
-		    }
+			}
+			
+			function checkKey() {
+				if(event.keyCode == 8) {
+					event.target.value = "";
+				} else {
+					return false;
+				}
+			}
 	    </script>
 	</head>
 	<body class="popup">
@@ -774,7 +782,7 @@
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t00003' /></th>
 	            <td style="width: 240px;">
-	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" readonly="readonly"/>	                
+	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" onkeydown="return checkKey()"/>
 	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
 	                <c:if test="${locale eq 'ko'}">
 	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />

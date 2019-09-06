@@ -216,7 +216,7 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
 		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
 		model.addAttribute("useCountryIP", useCountryIP);
-		model.addAttribute("systemCountryCode", systemCountryCode);
+		model.addAttribute("systemCountryCode", systemCountryCode.toLowerCase());
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
@@ -634,6 +634,7 @@ public class EzEmailMailListController {
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -848,20 +849,46 @@ public class EzEmailMailListController {
 				
 				// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
 				if (useCountryIP.equals("YES")) {
+					String countryCode = "";
+					String countryName = "";
 					try {
 						String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
-						String countryCode = "";
+						String[] mailIp = message.getHeader("X-Jmocha-IP");
+						String systemLang = userInfo.getLang();
 						
-						if (ctryCode != null && ctryCode[0] != null) {
-							countryCode = ctryCode[0].toLowerCase();
+						if (mailIp != null && !mailIp[0].equals("")) {
+							sb.append(String.format("<mailIP><![CDATA[%s]]></mailIP>", mailIp[0]));
 						}
 						
+						if (ctryCode != null && ctryCode[0] != null) {
+							String systemCountryName = "";
+							switch (systemLang) {
+								case "1":
+									systemCountryName = "ko";
+									break;
+								case "2":
+									systemCountryName = "en";
+									break;
+								case "3":
+									systemCountryName = "ja";
+									break;
+								default:
+									systemCountryName = "kr";
+									break;
+							}
+							Locale localeCountry = new Locale(systemCountryName, ctryCode[0]);
+							countryName = localeCountry.getDisplayCountry(localeCountry);
+							countryName = countryName.replaceAll(" ", "");
+							countryCode = ctryCode[0].toLowerCase();
+						}
+						sb.append(String.format("<countryName><![CDATA[%s]]></countryName>", countryName));
 						sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
-				
+				sb.append(String.format("<systemCountryCode><![CDATA[%s]]></systemCountryCode>", systemCountryCode.toLowerCase()));
 				sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 				sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));

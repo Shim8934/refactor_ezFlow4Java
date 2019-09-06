@@ -7,6 +7,7 @@
 	<typeAlias  alias="ApprovPWDVO" 				type="egovframework.ezEKP.ezCommon.vo.ApprovPWDVO"/>
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
+	<typeAlias  alias="CountryVO" 					type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
@@ -1277,6 +1278,24 @@
 							END
 	</update>
 	
+	<select id ="EzCommonDAO.getCountryInfo" resultClass="CountryVO" parameterClass="Map">
+		<![CDATA[
+			SELECT 
+				START_IP startIP,
+				END_IP endIP,
+				START_IP_NUMBER startIPNumber,
+				END_IP_NUMBER endIPNumber,
+				COUNTRY_CODE countryCode,
+				COUNTRY_NAME countryName
+			FROM
+				JMOCHA_MAIL_COUNTRYIP 
+			WHERE 
+				START_IP_NUMBER <= #changeIp#
+			AND 
+				END_IP_NUMBER >= #changeIp#
+		]]>
+	</select>
+
 	<select id="EzCommonDAO.checkTblAccessCountry">
 		<![CDATA[
 		SELECT 
@@ -1313,4 +1332,5 @@
 		ADD 
 			sn INT DEFAULT 0
 	</statement>
+
 </sqlMap>

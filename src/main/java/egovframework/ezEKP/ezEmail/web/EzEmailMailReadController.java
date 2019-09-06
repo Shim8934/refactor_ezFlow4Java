@@ -239,6 +239,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		String sentDateMsg = ""; // 전달, 회신 시 보낸 시간
 		
+		// 읽기 화면에서 리스트 출력 위한 데이터
+		String countryName = "";
+		String countryIP = "";
+		String countryCode = "";
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginInfo.getTenantId());
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", loginInfo.getTenantId());
+		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", loginInfo.getTenantId());
+		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -297,6 +305,41 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					}
 					
 					logger.debug("From=" + fromStr);
+					
+					// 메일 보낸사람 국기 표시 
+					if (useCountryIP.equals("YES")) {
+						
+						String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
+						String[] mailIp = message.getHeader("X-Jmocha-IP");
+						String systemLang = loginInfo.getLang();
+						
+						if (mailIp != null && !mailIp[0].equals("")) {
+							countryIP = mailIp[0];
+						}
+						
+						if (ctryCode != null && ctryCode[0] != null) {
+							String systemCountryName = "";
+							switch (systemLang) {
+								case "1":
+									systemCountryName = "ko";
+									break;
+								case "2":
+									systemCountryName = "en";
+									break;
+								case "3":
+									systemCountryName = "ja";
+									break;
+								default:
+									systemCountryName = "kr";
+									break;
+							}
+							Locale localeCountry = new Locale(systemCountryName, ctryCode[0]);
+							countryName = localeCountry.getDisplayCountry(localeCountry);
+							countryName = countryName.replaceAll(" ", "");
+							countryCode = ctryCode[0].toLowerCase();
+						}
+						logger.debug("countryName:" + countryName + ",ctryCode[0]:" + countryCode );
+					} 
 					
 					// TO
 					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
@@ -655,7 +698,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
-		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
+		model.addAttribute("useCabinet", use_cabinet); 
+		model.addAttribute("countryName", countryName); 
+		model.addAttribute("countryIP", countryIP); 
+		model.addAttribute("countryCode", countryCode); 
+		model.addAttribute("systemCountryCode", systemCountryCode.toLowerCase()); 
+		model.addAttribute("useCountryIP", useCountryIP); 
+		model.addAttribute("useShowSystemCountry", useShowSystemCountry); 
 		
 		logger.debug("readMail ended.");
 		
@@ -1659,6 +1708,14 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String senderProfileImageName = "";
 		Boolean emptyFlag = false;
 		
+		// 읽기 화면에서 리스트 출력 위한 데이터
+		String countryName = "";
+		String countryIP = "";
+		String countryCode = "";
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginInfo.getTenantId());
+		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", loginInfo.getTenantId());
+		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", loginInfo.getTenantId());
+		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -1707,6 +1764,41 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						}
 					}
 					logger.debug("From=" + fromStr);
+					
+					// 메일 보낸사람 국기 표시 
+					if (useCountryIP.equals("YES")) {
+						
+						String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
+						String[] mailIp = message.getHeader("X-Jmocha-IP");
+						String systemLang = loginInfo.getLang();
+						
+						if (mailIp != null && !mailIp[0].equals("")) {
+							countryIP = mailIp[0];
+						}
+						
+						if (ctryCode != null && ctryCode[0] != null) {
+							String systemCountryName = "";
+							switch (systemLang) {
+								case "1":
+									systemCountryName = "ko";
+									break;
+								case "2":
+									systemCountryName = "en";
+									break;
+								case "3":
+									systemCountryName = "ja";
+									break;
+								default:
+									systemCountryName = "kr";
+									break;
+							}
+							Locale localeCountry = new Locale(systemCountryName, ctryCode[0]);
+							countryName = localeCountry.getDisplayCountry(localeCountry);
+							countryName = countryName.replaceAll(" ", "");
+							countryCode = ctryCode[0].toLowerCase();
+						}
+						logger.debug("countryName:" + countryName + ",ctryCode[0]:" + countryCode );
+					} 
 					
 					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
 					
@@ -1994,6 +2086,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		sb.append("<ITEMID><![CDATA[" + url + "]]></ITEMID>");
 		sb.append("<SENDERPROFILEIMAGENAME><![CDATA[" + senderProfileImageName + "]]></SENDERPROFILEIMAGENAME>");
 		sb.append("<CONTENTCLASS><![CDATA[" + "]]></CONTENTCLASS>");
+		sb.append("<COUNTRYNAME><![CDATA[" + countryName + "]]></COUNTRYNAME>");
+		sb.append("<COUNTRYIP><![CDATA[" + countryIP + "]]></COUNTRYIP>");
+		sb.append("<COUNTRYCODE><![CDATA[" + countryCode + "]]></COUNTRYCODE>");
+		sb.append("<SYSTEMCOUNTRYCODE><![CDATA[" + systemCountryCode.toLowerCase() + "]]></SYSTEMCOUNTRYCODE>");
+		sb.append("<USECOUNTRYIP><![CDATA[" + useCountryIP + "]]></USECOUNTRYIP>");
+		sb.append("<USESHOWSYSTEMCOUNTRY><![CDATA[" + useShowSystemCountry + "]]></USESHOWSYSTEMCOUNTRY>");
 		sb.append("</DATA>");
 
 		response.setContentType("text/xml; charset=utf-8");
