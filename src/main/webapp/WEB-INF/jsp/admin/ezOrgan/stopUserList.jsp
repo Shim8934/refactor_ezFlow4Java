@@ -51,7 +51,7 @@
 	    			var html = "";
 
    					if (res.itemCnt < 1) {
-   						html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + "검색된 결과가 없습니다." + "</td></tr>";
+   						html += "<tr><td colspan=\"7\" style=\"text-align:center;\">" + "<spring:message code='ezOrgan.hdp25' />" + "</td></tr>";
   					} else {
    						var j = ((pageNum - 1) * 20) + 1 ;
    							
@@ -70,7 +70,7 @@
   								passwordUpdateDT = passwordUpdateDT.substr(0, 10);
   								durationDays = parseInt((new Date() - new Date(passwordUpdateDT)) / (1000 * 60 * 60 * 24))
   							} else {
-  								passwordUpdateDT = "없음";
+  								passwordUpdateDT = "<spring:message code='ezOrgan.hdp13' />";
   								durationDays = "-";
   							}
 							loginStopDT = loginStopDT.substr(0, 10);
@@ -258,8 +258,8 @@
 					<th width="15%"><spring:message code="ezEmail.lsd04"></spring:message></th>
 					<th width="15%"><spring:message code="ezStatistics.t113"></spring:message></th>
 					<th width="15%"><spring:message code="ezEmail.t712"></spring:message></th>
-					<th width="20%">암호 최종변경일자(경과일)</th>
-					<th width="20%">정지일자</th>
+					<th width="20%"><spring:message code='ezOrgan.hdp10' />(<spring:message code='ezOrgan.hdp11' />)</th>
+					<th width="20%"><spring:message code='ezOrgan.hdp12' /></th>
 				</tr>
 			</thead>
 			<tbody id="userListBody" style="overflow: auto;"></tbody>

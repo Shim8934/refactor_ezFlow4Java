@@ -408,9 +408,9 @@
 			<div class="warning_wrap" style="padding-left:20px">
 				<p style="border:0px" id="imgMnt4"></p>
 		        <dl>
-					<dt id="layerTitle1" class="layerTitle">사용 정지된 ID입니다.</dt>
-		            <dd>관리자에 의해 정지된 사용자입니다.</dd>
-		            <dd>관리자에게 문의하여 정지를 해제하세요.</dd>
+					<dt id="layerTitle1" class="layerTitle"><spring:message code="ezOrgan.hdp14" /></dt>
+		            <dd><spring:message code="ezOrgan.hdp15" /></dd>
+		            <dd><spring:message code="ezOrgan.hdp16" /></dd>
 		        </dl>
 		    </div>
 		</div>

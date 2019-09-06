@@ -176,20 +176,21 @@
 	        	var checkedCheckboxArr = [].filter.call(checkBoxArr, function(elem){
 	        		return elem.checked
 	        	});
-			    
-			    if (checkedCheckboxArr.length == 0) {
-			        alert("정지할 사원을 선택해주세요."); 
+			    var checkboxCnt = checkedCheckboxArr.length;
+	        	
+			    if (checkboxCnt == 0) {
+			        alert("<spring:message code='ezOrgan.hdp01' />"); 
 			        return;
 			    }			    
-		        var ret = confirm("정지 시 해당 사용자는 로그인을 할 수 없습니다." + "\n" + checkedCheckboxArr.length + "명을 정지하시겠습니까?");
+		        var ret = confirm("<spring:message code='ezOrgan.hdp02' />\n" + checkboxCnt + "<spring:message code='ezOrgan.hdp03' />");
 		        
 		        if (ret) {
-		        	ret = confirm("정말 정지하시겠습니까?");
+		        	ret = confirm("<spring:message code='ezOrgan.hdp04' />");
 		        }
 		        
 			    if (ret) {
 			        var data = [];
-			        for (var i = 0; i < checkedCheckboxArr.length; i++) {
+			        for (var i = 0; i < checkboxCnt; i++) {
 		            	data[data.length] = checkedCheckboxArr[i].id;
 		            }
 					
@@ -203,7 +204,7 @@
 		            	},
 		            	success : function(result) {
 	            	        if (result == "OK") {
-	            				alert(checkedCheckboxArr.length + " 명의 사원을 정지했습니다.");
+	            				alert(checkboxCnt + "<spring:message code='ezOrgan.hdp05' />");
 	            				refreshList();
 	            	        } else {
 	            	            alert("<spring:message code='ezOrgan.t30' />")
@@ -224,20 +225,17 @@
 	        	var checkedCheckboxArr = [].filter.call(checkBoxArr, function(elem){
 	        		return elem.checked
 	        	});
+	        	var checkboxCnt = checkedCheckboxArr.length;
 			    
-	        	if (checkedCheckboxArr.length == 0) {
-			        alert("해제할 사원을 선택해주세요."); 
+	        	if (checkboxCnt == 0) {
+			        alert("<spring:message code='ezOrgan.hdp06' />"); 
 			        return;
 			    }			    
-		        var ret = confirm("정지 해제 시 해당 사용자는 로그인을 할 수 있습니다." + "\n" + checkedCheckboxArr.length + "명을 정지 해제하시겠습니까?");
-		        
-// 		        if (ret) {
-// 		        	ret = confirm("정말 정지하시겠습니까?");
-// 		        }
+		        var ret = confirm("<spring:message code='ezOrgan.hdp07' />\n" + checkboxCnt + "<spring:message code='ezOrgan.hdp08' />");
 		        
 			    if (ret) {
 			        var data = [];
-			        for (var i = 0; i < checkedCheckboxArr.length; i++) {
+			        for (var i = 0; i < checkboxCnt; i++) {
 		            	data[data.length] = checkedCheckboxArr[i].id;
 		            }
 					
@@ -252,7 +250,7 @@
 		            	},
 		            	success : function(result) {
 	            	        if (result == "OK") {
-	            				alert(checkedCheckboxArr.length + " 명의 사원을 정지 해제했습니다.");
+	            				alert(checkboxCnt + "<spring:message code='ezOrgan.hdp09' />");
 	            				refreshList();
 	            	        } else {
 	            	            alert("<spring:message code='ezOrgan.t30' />")
@@ -336,14 +334,14 @@
 	</head>
 	<body class="mainbody">
 		<div>
-	    	<h1>사용자정지</h1>
-	    	<span class="txt">▒ 특정 사용자를 사용 정지시킬 수 있습니다.</span><br><br>
+	    	<h1><spring:message code='ezOrgan.hdp17' /></h1>
+	    	<span class="txt">▒ <spring:message code='ezOrgan.hdp18' /></span><br><br>
 		</div>
 		<div>
-			<span class="title_bar"><b>회사 선택 : </b></span>
+			<span class="title_bar"><b><spring:message code='ezOrgan.hdp20' /></b></span>
 			<c:if test="${rollCheck == 1}">
 				<select class="companySelect" id="ListCompany" onChange="selectCompanyID(this)">
-	           		<option value="">전체</option>
+	           		<option value=""><spring:message code='ezOrgan.hdp19' /></option>
 		        	<c:forEach var="item" items="${companylist}">
 		           		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 		           	</c:forEach>
@@ -359,15 +357,15 @@
 		</div>
 		<div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-	        	<p><span id="tagsub1">일반 사용자</span></p>
-			    <p><span id="tagsub2">정지 사용자</span></p>
+	        	<p><span id="tagsub1"><spring:message code='ezOrgan.hdp21' /></span></p>
+			    <p><span id="tagsub2"><spring:message code='ezOrgan.hdp22' /></span></p>
 	        </div>
 	    </div>
 		<br>
 		<div id="mainmenu">
 			<ul>
-                <li id="stopBtn" style="display:none"><span class="important" onClick="stop_onclick()">정지</span></li>
-                <li id="releaseBtn" style="display:none"><span class="important" onClick="release_onclick()">해제</span></li>
+                <li id="stopBtn" style="display:none"><span class="important" onClick="stop_onclick()"><spring:message code='ezOrgan.hdp23' /></span></li>
+                <li id="releaseBtn" style="display:none"><span class="important" onClick="release_onclick()"><spring:message code='ezOrgan.hdp24' /></span></li>
 		  	</ul>
 		</div>
 		<div style="width:100%; padding-bottom:5px;">
