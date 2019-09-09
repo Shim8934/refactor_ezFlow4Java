@@ -6460,15 +6460,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
 					} else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
 						String lastCnt = "";
-	
-						if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
-							lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+						
+						int tmps = signCnt - refResult;
+						strSign = signAdd + "sign" + tmps;
+						strSeumyungDate = signAdd + "seumyungdate" + tmps;
+
+						// 서명날짜필드 유/무 동작 추가 - 유>결재순번 상관없이 서명일자 기입[ex.(09.09)], 무>최종결재자만 서명일자 기입[ex.(09/09)]
+						if (findHwpField(strSeumyungDate, hwpFile)) {
+							setHwpText(strSeumyungDate, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+						} else {
+							if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
+								lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+							}
 						}
 						
 						String[] signAry = {lastCnt, proxySign + displayName};
 						
 						if (refResult > 0) {
-							int tmps = signCnt - refResult;
+							tmps = signCnt - refResult;
 							strSign = signAdd + "sign" + tmps;
 							
 							if (lastCnt.equals("")) {
@@ -6477,7 +6486,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								setHwpText(hwpFile, strSign, signAry);
 							}
 						} else {
-							int tmps = signCnt - refResult;
+							tmps = signCnt - refResult;
 							strSign = signAdd + "sign" + tmps;
 							
 							if (lastCnt.equals("")) {
@@ -6502,7 +6511,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
 						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + tmps;
-						String[] signAry = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
+						String tempSignDate = signAdd + "seumyungdate" + tmps;
+						String lastSignDate = "";
+
+						// 서명날짜필드 유/무 동작 추가 - 유>결재순번 상관없이 서명일자 기입[ex.(09.09)], 무>최종결재자만 서명일자 기입[ex.(09/09)]
+						if (findHwpField(tempSignDate, hwpFile)) {
+							setHwpText(tempSignDate, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+						} else {
+							lastSignDate = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+						}
+
+						String[] signAry = null;
+						if (lastSignDate.equals("")) {
+							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), proxySign + displayName};
+						} else {
+							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), lastSignDate, proxySign + displayName};
+						}
 						
 						setHwpText(hwpFile, tempSign, signAry);
 						
