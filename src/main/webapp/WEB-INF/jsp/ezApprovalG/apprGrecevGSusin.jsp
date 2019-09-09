@@ -1056,7 +1056,12 @@
 		                return;
 		            }
 		        	
-		        	setButtonReceiveTrue();
+		            setButtonReceiveTrue();		            
+
+		        	var Rtnxml = createXmlDom();
+		            Rtnxml = loadXMLString(ret);
+		            makeOpinionList(Rtnxml);		            
+		            SaveFile();
 		
 		            if (temppDocSN != "")
 		                hesongok = setCabinetHeSong(temppDocSN);
@@ -1065,6 +1070,28 @@
 		            	 SendMailToDrafter_Hesong();
 		                hesongok = setHeSongDocInfo();
 		            }
+		        }
+		    }
+		    function makeOpinionList(OpinionXML) {
+		    	var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "opinions");
+		        if (!field) return;
+
+		        var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+		        if (NodeList.length > 0) {
+		        	var opinionsTable = document.createElement("table");
+		        	$(opinionsTable).attr("style","font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px");
+		            for (i = NodeList.length - 1; i >= 0; i--) {
+		            	if(getNodeText(NodeList[i].childNodes[9])!='002'){
+		            		var opinionTr = '<tr style="height:25px"><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px;" bgcolor="#f8f8fa" align="center">' + getNodeText(NodeList[i].childNodes[0]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px" align="center">' + getNodeText(NodeList[i].childNodes[1]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px">' + getNodeText(NodeList[i].childNodes[6]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:30px" align="center">' + getNodeText(NodeList[i].childNodes[2]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:100px" align="center">' + getNodeText(NodeList[i].childNodes[3]) + '</td></tr>';
+		            		$(opinionsTable).append(opinionTr);
+		            	}
+		            }
+		            field.innerHTML = " ";
+		            $(field).append(opinionsTable);
+		        	SaveFile();
+		        } else {
+		            field.innerHTML = " ";
 		        }
 		    }
 		    function btnEdit_onclick() {

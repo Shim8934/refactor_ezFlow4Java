@@ -1231,6 +1231,10 @@
 		    			return;
 		    		}
 		        	
+		        	var Rtnxml = createXmlDom();
+		            Rtnxml = loadXMLString(ret);
+		            makeOpinionList(Rtnxml);
+		            
 		        	redrawMappingSign();
 		        	
 		            UpdateLineHistory();

@@ -3475,4 +3475,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public ApprGAprLineVO selectHabyuiResultAprMemberInfoVO(Map<String, Object> map) throws Exception{
 		return (ApprGAprLineVO) select("EzApprovalG.selectHabyuiResultAprMemberInfoVO", map);
 	}
+
+	public void deleteRejectOrgDocOpinions(Map<String, Object> map) {
+		delete("EzApprovalG.deleteRejectOrgDocOpinions",map);
+	}
 }

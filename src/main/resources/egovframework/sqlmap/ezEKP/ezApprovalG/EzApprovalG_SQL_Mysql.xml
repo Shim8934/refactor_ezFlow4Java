@@ -27701,7 +27701,22 @@
           AND
           	  COMPANYID = #companyID#)
    </insert>
-   
+
+	<delete id="EzApprovalG.deleteRejectOrgDocOpinions" parameterClass="Map">
+		DELETE FROM
+   			TBL_APROPINIONINFO
+    	WHERE  
+        	DOCID = #v_DOCID#
+        AND
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	COMPANYID = #companyID#
+        AND
+        <![CDATA[
+        	OPINIONGB <> '002'
+		]]>
+	</delete>
+		   
    <insert id="EzApprovalG.insertRejectEndReceiptPointInfoS" parameterClass="Map">
    		INSERT INTO 
    			TBL_ENDRECEIPTPOINTINFO

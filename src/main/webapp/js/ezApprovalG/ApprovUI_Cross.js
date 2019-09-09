@@ -918,6 +918,9 @@ function openOpinionUI_New_Complete(ret) {
 		DivPopUpHidden();
 		if (ret == "Clear") {
 			pHasOpinionYN = "N";
+			var fields = message.GetFieldsList();
+		    var field = message.GetListItem(fields, "opinions");
+		    field.innerHTML = " ";
 		} else if (ret == "cancel") {
 			//do_nothing
 		} else {
@@ -939,37 +942,24 @@ function openOpinionUI_New_Complete(ret) {
 }
 
 function makeOpinionList(OpinionXML) {
-
-    var fields = message.GetFieldsList();
+	var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, "opinions");
     if (!field) return;
-    var firstFlag = true;
+
     var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
     if (NodeList.length > 0) {
-        var strOpinion = " ";
+    	var opinionsTable = document.createElement("table");
+    	$(opinionsTable).attr("style","font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px");
         for (i = NodeList.length - 1; i >= 0; i--) {
-            if (getNodeText(GetChildNodes(NodeList[i])[9]) == "001") {
-                if (firstFlag) {
-                    strOpinion = "<P>[" + strLang27 + "</P>";
-                    firstFlag = false;
-                }
-                if (getNodeText(GetChildNodes(NodeList[i])[2]) != "")
-                    strOpinion = strOpinion + "<P>" + getNodeText(GetChildNodes(NodeList[i])[2]) + "&nbsp;&nbsp;&nbsp;";
-                else
-                    strOpinion = strOpinion + "<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
-                strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[1]) + "&nbsp;&nbsp;&nbsp;";
-                strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[6]) + "</P>";
-            }
+        	if(getNodeText(NodeList[i].childNodes[9])!='002'){
+        		var opinionTr = '<tr style="height:25px"><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px;" bgcolor="#f8f8fa" align="center">' + getNodeText(NodeList[i].childNodes[0]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px" align="center">' + getNodeText(NodeList[i].childNodes[1]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px">' + getNodeText(NodeList[i].childNodes[6]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:30px" align="center">' + getNodeText(NodeList[i].childNodes[2]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:100px" align="center">' + getNodeText(NodeList[i].childNodes[3]) + '</td></tr>';
+        		$(opinionsTable).append(opinionTr);
+        	}
         }
-        field.innerHTML = strOpinion;
-
-        if (OpinionAction == "ADD" || OpinionAction == "DEL")
-            SaveFile();
-
-        OpinionAction = "";
-    }
-    else {
+        field.innerHTML = " ";
+        $(field).append(opinionsTable);
+    	SaveFile();
+    } else {
         field.innerHTML = " ";
     }
 }
@@ -1525,6 +1515,10 @@ function SaveApproveInfo(pApproveFlag) {
         return rtnVal;
     }
 
+	var fields = message.GetFieldsList();
+    var field = message.GetListItem(fields, "opinions");
+    field.innerHTML = " ";
+    SaveFile();
     SignSave();
 
     var fields = message.GetFieldsList();
