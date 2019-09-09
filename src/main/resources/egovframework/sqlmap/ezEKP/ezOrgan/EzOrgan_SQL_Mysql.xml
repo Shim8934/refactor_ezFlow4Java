@@ -80,6 +80,22 @@
 		<result property="company" 								column="company" 						columnIndex="3"/>		
 	</resultMap>
 	
+	<sql id="organSearchTrashDept_user">
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				AND DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%') 
+			]]>
+		</isNotEqual>
+	</sql>
+
+	<sql id="organSearchTrashDept_dept">
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				AND DEPT_CD_PATH NOT LIKE '%trash\_dept%' 
+			]]>
+		</isNotEqual>
+	</sql>
+
 	<select id="EzOrganDAO.getPropertyValue_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[	
 			SELECT
@@ -1426,8 +1442,7 @@
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
             AND 
             	DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
-            AND 
-            	DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%')
+			<include refid="organSearchTrashDept_user"/>
             AND 
                 A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
             <![CDATA[
@@ -1454,7 +1469,7 @@
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
 	            $strSQLForMySQL$ 
 	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
-	            AND DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%')
+	            <include refid="organSearchTrashDept_user"/>
 	            AND A.TENANT_ID = #v_TENANT_ID# 
 	            $strSQLAddjobCom$
 	            
@@ -1482,7 +1497,7 @@
 					TBL_DEPTMASTER 
                 $strSQLForMySQL$ 
                 AND CN NOT LIKE 'shared\_mailbox\_%' 
-                AND DEPT_CD_PATH NOT LIKE '%trash\_dept%' 
+                <include refid="organSearchTrashDept_dept"/>
                 AND TENANT_ID = #v_TENANT_ID#
                 
                 <isNotEmpty property="companyId">
@@ -1505,7 +1520,7 @@
 	    		TBL_DEPTMASTER 
             $strSQLForMySQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' 
-            AND DEPT_CD_PATH NOT LIKE '%trash\_dept%' 
+            <include refid="organSearchTrashDept_dept"/>
             AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
             $strSizeForMySQL$
 	    </isEqual>
@@ -1537,6 +1552,9 @@
                              A.TENANT_ID = #v_TENANT_ID#
 		            	 AND
 		            		 CN <> 'masteradmin'
+		            	]]>
+		            		<include refid="organSearchTrashDept_user"/>
+		            	<![CDATA[
 			       
 					UNION ALL
 			            
@@ -1553,6 +1571,9 @@
 						a.cn = b.cn AND a.tenant_id = b.tenant_id
 						$strSQL$ 
 						AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+						]]>
+							<include refid="organSearchTrashDept_user"/>
+						<![CDATA[
 						AND A.TENANT_ID = #v_TENANT_ID#
 						$strSQLAddjobCom$
 						)  AA
@@ -1577,6 +1598,9 @@
 				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 			AND
 				DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+			]]>
+				<include refid="organSearchTrashDept_user"/>
+			<![CDATA[
 			AND
 				A.TENANT_ID = #v_TENANT_ID#
 
@@ -1596,6 +1620,9 @@
 				$strSQL$
 			AND 
 				DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+			]]>
+				<include refid="organSearchTrashDept_user"/>
+			<![CDATA[
 			AND 
 				A.TENANT_ID = #v_TENANT_ID#
 
@@ -1610,6 +1637,9 @@
 					TBL_DEPTMASTER A	
                 $strSQL$ 
                 AND CN NOT LIKE 'shared\_mailbox\_%' 
+				]]>
+					<include refid="organSearchTrashDept_dept"/>
+				<![CDATA[
                 AND A.TENANT_ID = #v_TENANT_ID#
                 ) AA
             LIMIT #startRowForMySQL#, #count#
@@ -1626,6 +1656,9 @@
 	    		TBL_DEPTMASTER A
             $strSQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' 
+			]]>
+				<include refid="organSearchTrashDept_dept"/>
+			<![CDATA[
             AND A.TENANT_ID = #v_TENANT_ID#
             LIMIT #startRowForMySQL#, #count#
 			]]>
@@ -1646,6 +1679,9 @@
 					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 				AND 
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+				]]>
+					<include refid="organSearchTrashDept_user"/>
+				<![CDATA[
 				AND 
 					A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
 
@@ -1661,6 +1697,9 @@
 					$strSQL$ 
 				AND 
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+				]]>
+					<include refid="organSearchTrashDept_user"/>
+				<![CDATA[
 				AND 
 					A.TENANT_ID = #v_TENANT_ID# $strSQLAddjobCom$
 				) A

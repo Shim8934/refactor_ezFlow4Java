@@ -744,7 +744,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		}
     	
     	String searchList = "extensionAttribute4::" + userInfo.getCompanyID().trim();
-    	String strRetXml = ezOrganService.getSearchList(searchList, "", "", "group", 100, userInfo.getPrimary(), tenantID);
+    	String strRetXml = ezOrganService.getSearchList(searchList, "", "", "group", 100, userInfo.getPrimary(), tenantID, "n");
     	Document xmlResult = commonUtil.convertStringToDocument(strRetXml); 
     	
     	if (xmlResult.getElementsByTagName("DATA2").getLength() > 0) {
