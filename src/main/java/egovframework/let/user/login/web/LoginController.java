@@ -118,7 +118,7 @@ public class LoginController {
     	String userOs = ClientUtil.getClientInfo(request, "os");
     	
     	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
-    		System.out.println(mobileRedirection);
+    		logger.debug("mobileRedirection : " + mobileRedirection);
     		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
     			response.sendRedirect(mobileRedirection);
     			return null;
