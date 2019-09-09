@@ -263,24 +263,29 @@ function AprrovMappingSign(ret)
 	  			else
 	  			{
 	  			    var content ="";
-					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-					{
-						HwpCtrl.SetFieldText(signID, strLang8 + arr_userinfo[2]);	
-	  			        content = strLang8 + arr_userinfo[2];						
-					}
-					else
-					{
-						HwpCtrl.SetFieldText(signID, arr_userinfo[2]);	
+					if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+						HwpCtrl.SetFieldText(signID, strLang8 + arr_userinfo[2]);
+	  			        content = strLang8 + arr_userinfo[2];
+					} else {
+						HwpCtrl.SetFieldText(signID, arr_userinfo[2]);
 						content = arr_userinfo[2];
-					}			
-					HwpCtrl.AppendFieldText(signID, strLang7 + OpinionText, true);	
+					}
+					
+					if (!HwpCtrl.CheckFieldExist(seumyungdateID)) {
+						HwpCtrl.AppendFieldText(signID, OpinionText, true);
+						content = content + OpinionText;
+					}
+					
+					HwpCtrl.AppendFieldText(signID, strLang7 + "\15", true);
+					content = content + strLang7;
+					
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
 			        SignType[signCnt] = "TEXT";
-			        SignContent[signCnt] = content + strLang7 + OpinionText;
+			        SignContent[signCnt] = content;
 	  				signCnt = signCnt + 1
-	  				SingFlag = false; 
-	  			}		
+	  				SingFlag = false;
+	  			}
 	  		
 	  			DekyulFlag = true;
 	  			pAprMemberSignSN = pAprMemberSignSN + 1;
@@ -375,13 +380,13 @@ function AprrovMappingSign(ret)
 
 					if(pAprLineType == strAprType4)
 					{
-						HwpCtrl.AppendFieldText(signID, strLang6, true);
+						HwpCtrl.AppendFieldText(signID, strLang6 + "\15", true);
 						contents = contents + strLang6;
 	  				}
 
 					if(pAprLineType == strAprType16)  
 					{
-						HwpCtrl.AppendFieldText(signID, strLang7, true);
+						HwpCtrl.AppendFieldText(signID, strLang7 + "\15", true);
 						contents = contents + strLang7;
 	  				}
 
