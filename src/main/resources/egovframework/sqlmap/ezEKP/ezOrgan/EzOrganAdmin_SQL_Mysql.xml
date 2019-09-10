@@ -5043,7 +5043,7 @@
 	
 	<select id="EzOrganAdminDAO.checkStopUser" parameterClass="map" resultClass="Integer">
 		SELECT
-			1
+			count(*)
 		FROM
 			TBL_USER_CONFIG
 		WHERE
