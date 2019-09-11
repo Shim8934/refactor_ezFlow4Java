@@ -7,6 +7,7 @@
 	<typeAlias  alias="ApprovPWDVO" 				type="egovframework.ezEKP.ezCommon.vo.ApprovPWDVO"/>
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
+	<typeAlias  alias="CountryVO" 					type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
@@ -1440,6 +1441,40 @@
 	]]>
 	</update>
 	
+	<select id ="EzCommonDAO.getCountryInfo" resultClass="CountryVO" parameterClass="Map">
+		<![CDATA[
+			SELECT 
+				START_IP startIP,
+				END_IP endIP,
+				START_IP_NUMBER startIPNumber,
+				END_IP_NUMBER endIPNumber,
+				COUNTRY_CODE countryCode,
+				COUNTRY_NAME countryName
+			FROM
+				JMOCHA_MAIL_COUNTRYIP 
+			WHERE 
+				START_IP_NUMBER <= #changeIp#
+			AND 
+				END_IP_NUMBER >= #changeIp#
+		]]>
+	</select>
+
+	<select id="EzCommonDAO.checkTblAccessCountry">
+		SELECT 
+			TENANT_ID
+		FROM 
+			TBL_ACCESS_COUNTRY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblAccessCountry">
+		CREATE TABLE `TBL_ACCESS_COUNTRY` (
+		  `TENANT_ID` int(11) NOT NULL,
+		  `COUNTRY_CODE` varchar(800) NOT NULL,
+		  PRIMARY KEY (`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+
 	<select id="EzCommonDAO.checkSnMenuAuth">
 		SELECT
 			sn

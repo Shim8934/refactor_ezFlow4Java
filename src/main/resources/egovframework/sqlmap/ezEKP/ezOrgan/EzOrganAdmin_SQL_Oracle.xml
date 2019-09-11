@@ -138,7 +138,7 @@
 			INSERT INTO
 				TBL_USERMASTER
    				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, MANUAL_FLAG, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID,
-                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT 
+                    DESCRIPTION, DESCRIPTION2, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, PASSWORD_UPDATEDT, FURIGANA, EXTENSIONPHONE, OFFICEMOBILE
                 )
    			VALUES
    				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR7#, #v_EXTATTR8#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_MANUAL_FLAG#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID#,
@@ -147,7 +147,7 @@
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')       
+                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_FURIGANA#, #v_EXTENSION_PHONE#, #v_OFFICE_MOBILE#     
                 )
 		]]>
 	</insert>
@@ -274,25 +274,20 @@
 		]]>
 	</update>
 	
-	<statement id="EzOrganAdminDAO.moveDBData_U3" parameterClass="Map">
+	<update id="EzOrganAdminDAO.moveDBData_U3" parameterClass="Map">
 		<![CDATA[
-			MERGE INTO
-				TBL_USERMASTER B
-      		USING (	SELECT B.ROWID ROW_ID, A.EXTENSIONATTRIBUTE3, COMPNM2, A.EXTENSIONATTRIBUTE2
-      					FROM TBL_DEPTMASTER A
-      					JOIN TBL_USERMASTER B   ON A.CN = B.DEPARTMENT AND A.TENANT_ID = B.TENANT_ID 
-      					WHERE A.CN = #v_CN#
-      					AND A.TENANT_ID = #v_TENANT_ID#) src
-      		ON ( B.ROWID = src.row_id )
-      		WHEN
-      			MATCHED
-      		THEN
-      			UPDATE SET
-      				COMPANY = src.EXTENSIONATTRIBUTE3,
-                    COMPANY2 = COMPNM2,
-                    PHYSICALDELIVERYOFFICENAME = src.EXTENSIONATTRIBUTE2
+            UPDATE
+                TBL_USERMASTER
+            SET 
+                PHYSICALDELIVERYOFFICENAME = #v_EXTENSIONATTRIBUTE2#,
+                COMPANY = #v_EXTENSIONATTRIBUTE3#,
+                COMPANY2 = #v_COMPNM2#
+            WHERE
+                DEPARTMENT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE #v_DEPT_CD_PATH# || ',%' AND TENANT_ID = #v_TENANT_ID#)
+            AND
+                TENANT_ID = #v_TENANT_ID#  
 		]]>
-	</statement>
+	</update>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
@@ -5737,6 +5732,8 @@
 	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
 	  		<isNotNull property="mailboxUsage" prepend=","> <![CDATA[mailboxUsage = #mailboxUsage#]]></isNotNull>
 	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
+	  		<isNotNull property="extensionPhone" prepend=","> <![CDATA[extensionPhone = #extensionPhone#]]></isNotNull>
+	  		<isNotNull property="officeMobile" prepend=","> <![CDATA[officeMobile = #officeMobile#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE

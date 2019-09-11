@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
@@ -146,6 +147,10 @@ public interface EzCommonService {
 
 	public void addMenuAndPortletCode() throws Exception;
 
+	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception;
+
+	public void createAccessCountry() throws Exception;
+	
 	public void addSnMenuAuth() throws Exception;
 
 	public void addSnThemeAndPortletAuth() throws Exception;

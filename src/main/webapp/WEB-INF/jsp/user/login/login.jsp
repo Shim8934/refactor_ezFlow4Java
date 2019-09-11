@@ -148,6 +148,9 @@
 			    } else if (message === "multiLoginNoti") {
 					$("#imgMnt3").html("<img src='/images/warning2.png'>");
 			        $("#exDiv4").modal();
+			    } else if (message === "stopUser") {
+					$("#imgMnt4").html("<img src='/images/warning2.png'>");
+			        $("#exDiv5").modal();
 			    } else if (message != "") {
 // 			        alert(message);
 					$("#layerTitle").text(message);
@@ -391,6 +394,23 @@
 					<dt id="layerTitle1" class="layerTitle"><spring:message code="ezSystem.kbh01" /></dt>
 		            <dd><spring:message code="ezSystem.kbh02" /></dd>
 		            <dd><spring:message code="ezSystem.kbh03" /></dd>
+		        </dl>
+		    </div>
+		</div>
+		
+		<!-- 2019-08-12 홍대표 정지된 사용자를 알리는 레이어 팝업 -->
+		<div id="exDiv5" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
+			<div class="warning_wrap" style="padding-left:20px">
+				<p style="border:0px" id="imgMnt4"></p>
+		        <dl>
+					<dt id="layerTitle1" class="layerTitle"><spring:message code="ezOrgan.hdp14" /></dt>
+		            <dd><spring:message code="ezOrgan.hdp15" /></dd>
+		            <dd><spring:message code="ezOrgan.hdp16" /></dd>
 		        </dl>
 		    </div>
 		</div>

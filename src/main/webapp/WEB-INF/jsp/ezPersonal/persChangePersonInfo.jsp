@@ -29,6 +29,8 @@
 			var getBirthDay = "${birthDay}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var locale = "${locale}";
+			var primaryLang = "${primaryLang}";
+			
 			$(function () {
 				var toYear = new Date().getFullYear();
 				var sYear = parseInt(toYear-70);
@@ -200,7 +202,11 @@
 				}
 				
 			    function checkKey() {
-			        return false;
+					if(event.keyCode == 8) {
+						event.target.value = "";
+					} else {
+						return false;
+					}
 			    }
 			    
 			    function ButtonDeleteClick() {
@@ -324,7 +330,9 @@
 			    			birth : document.getElementById("txtBirth").value,
 			    			birthType : birthType,
 			    			info : document.getElementById("txtInfo").value,
-			    			displayName : "${labelDisplayName }"
+			    			displayName : "${labelDisplayName }",
+			    			extensionPhone : document.getElementById("txtExtensionPhone").value,
+			    			officeMobile : document.getElementById("txtOfficeMobile").value
 			    		},
 			    		success : function(result) {   			
 			    			 if (result == "OK") {
@@ -346,7 +354,7 @@
     		<span class="txt">▒&nbsp;<spring:message code='ezPersonal.t174'/></span>
     		<table class="popuplist" width="50%" style="margin-top:5px;">
         		<tr> 
-            		<td width="130" rowspan="6" align="center">
+            		<td width="130" rowspan='<c:out value="${primaryLang eq '3' ? 7 : 6}" />' align="center">
                 		<div> 
 	  	                	<span id="LiteralPhoto">
         		          		${literalPhoto}
@@ -364,6 +372,12 @@
                 		${labelDepartment }
             		</td> 
         		</tr>
+        		<c:if test="${primaryLang eq '3'}">
+				<tr>
+					<th><spring:message code='main.ksa01' /></th>
+			  		<td>${LiteralFurigana }</td>
+				</tr>
+				</c:if>
         		<tr> 
             		<th><spring:message code='ezPersonal.t9'/></th> 
             		<td>
@@ -402,6 +416,12 @@
             		<th><spring:message code='ezPersonal.t179'/></th> 
             		<td> <input type="text" id="txtFax" size="22" value="${txtFax}" maxlength="20" style="width:100%"> </td> 
         		</tr> 
+				<tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
+				  	<th><spring:message code='main.ksa02' /></td>
+				  	<td style="width:50%"><input type="text" id="txtExtensionPhone" size="22" value="${LiteralExtensionPhone }" maxlength="50" style="width:100%"></td>
+				  	<th><spring:message code='main.ksa03' /></td>
+				  	<td><input type="text" id="txtOfficeMobile" size="22" value="${LiteralOfficeMobile }" maxlength="50" style="width:100%"></td>
+				</tr>
         		<tr> 
             		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
             		<td colspan="3" class="onlyUseKo">

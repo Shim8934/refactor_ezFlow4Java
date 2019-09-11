@@ -386,7 +386,7 @@
 					var pageSize = "-1";
 					var params = 'startDate=' + searchStartTime	+ '&endDate=' + searchEndTime;
 					params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
-					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID;
+					params += '&pageNum=' + pageNum + '&pageSize='	+ pageSize + '&companyId='	+ companyID +'&config=a';
 					var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
 					saveExcel.location.href = pURL;
 				} else {
@@ -421,7 +421,7 @@
 											html += "	<td title=\'" + i.usernm + "'>"	+ i.usernm	+ "</td>";
 											html += "	<td>"	+ i.deptnm							+ "</td>";
 											html += "	<td>"	+ i.companynm						+ "</td>";
-											html += "	<td>"	+ i.connectip						+ "</td>";
+											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
 											html += "	<td>"	+ i.connecttime						+ "</td>";
 											html += "	<td>"	+ i.connectbrowser					+ "</td>";
 											html += "	<td>"	+ i.connectos						+ "</td>";
@@ -437,7 +437,7 @@
 											html += "	<td title=\'" + i.usernm2 + "'>"  + i.usernm2 	+ "</td>";
 											html += "	<td>"	+ i.deptnm2								+ "</td>";
 											html += "	<td>"	+ i.companynm2							+ "</td>";
-											html += "	<td>"	+ i.connectip							+ "</td>";
+											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
 											html += "	<td>"	+ i.connecttime							+ "</td>";
 											html += "	<td>"	+ i.connectbrowser						+ "</td>";
 											html += "	<td>"	+ i.connectos							+ "</td>";
@@ -552,7 +552,7 @@
 					</span> 
 					&nbsp;&nbsp;
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message> : &nbsp; 
-						<select id="searchKeycode"> 
+					<select id="searchKeycode"> 
 						<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option>
 						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
 						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
@@ -597,7 +597,7 @@
 						<th><spring:message code="ezStatistics.t1068"></spring:message></th>
 						<th><spring:message code="ezStatistics.t113"></spring:message></th>
 						<th><spring:message code="ezEmail.t712"></spring:message></th>
-						<th><spring:message code="ezSystem.x0024"></spring:message></th>
+						<th><spring:message code="ezSystem.x0039"></spring:message></th>
 						<th><spring:message code="ezSystem.x0025"></spring:message></th>
 						<th><spring:message code="ezSystem.x0026"></spring:message></th>
 						<th><spring:message code="ezSystem.x0027"></spring:message></th>
@@ -607,6 +607,6 @@
 			</table>
 		</div>
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
-		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
+		<iframe id="saveExcel" name="saveExcel" style="display:none"></iframe>
 	</body>
 </html>

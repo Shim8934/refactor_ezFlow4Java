@@ -803,6 +803,8 @@
 		</isNotEmpty>
 		
 		<![CDATA[
+			AND
+				TENANT_ID = #tenantID#
 			ORDER BY
 				DISPLAYNAME ASC
             LIMIT
@@ -2646,7 +2648,7 @@
 		]]>
 	</select>
 	
-	<select id="EzPortalDAO.getEzTalkGateNoticeBoardId" parameterClass="map" resultClass="String">
+	<!-- <select id="EzPortalDAO.getEzTalkGateNoticeBoardId" parameterClass="map" resultClass="String">
 		SELECT
 			PARAMVALUE
 		FROM
@@ -2671,6 +2673,19 @@
 			PARAMNAME='companyBoardID'
 		AND
 			C.URL = '/ezPortal/wpNewBoard.do'
+	</select> -->
+	<select id="EzPortalDAO.getEzTalkGateNoticeBoardId" parameterClass="map" resultClass="String">
+		SELECT 
+			board_id
+		FROM
+			tbl_portal_portlet_comp
+		WHERE
+			portlet_id = 2
+		AND
+			menu_id = 4
+		AND
+			company_id = #v_companyID#
+		AND
+			tenant_id = #v_tenantID#
 	</select>
-	
 </sqlMap>

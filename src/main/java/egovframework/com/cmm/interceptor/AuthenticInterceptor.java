@@ -38,6 +38,7 @@ import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.web.LoginController;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -110,6 +111,18 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				request.getSession().invalidate();
 				
 				request.setAttribute("message", "oldBrowser");
+				
+		        String serverName = request.getServerName();
+		        int tenantId = loginService.getTenantId(serverName);
+	        	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
+	        	String userOs = ClientUtil.getClientInfo(request, "os");
+	        	
+	        	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+	        		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
+	        			response.sendRedirect(mobileRedirection);
+	        		}
+	        	}
+	        	
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/login.do");
 				dispatcher.forward(request, response);
 			}
@@ -131,7 +144,23 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		} 
 		
 		if (commonUtil.isLoginCookieExists(request, response)) {
-			return true;
+			try {
+		        String serverName = request.getServerName();
+		        int tenantId = loginService.getTenantId(serverName);
+	        	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
+	        	String userOs = ClientUtil.getClientInfo(request, "os");
+	        	
+	        	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+	        		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
+	        			response.sendRedirect(mobileRedirection);
+	        		}
+	        	}
+	        	
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
 		} else {
 			String ezOffice365Auth = "";			
 			int tenantId = -1;
@@ -245,7 +274,16 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	        		        	
 				try {
 		        	String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", tenantId);
-					
+		        	
+		        	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
+		        	String userOs = ClientUtil.getClientInfo(request, "os");
+		        	
+		        	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+		        		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
+		        			response.sendRedirect(mobileRedirection);
+		        		}
+		        	}
+		        	
 		        	if (!dotNetIntegration.equals("YES")) {
 		        		response.sendRedirect("/user/login/login.do");
 		        	}

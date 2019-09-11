@@ -422,7 +422,7 @@
 			<c:if test="${approvalFlag =='G'}">
 				<span class="txt">▒ <spring:message code='ezPersonal.t55' /></span><br/>
 				<span class="txt">▒ <spring:message code='ezPersonal.t56' /></span><br/>
-				<span class="txt">▒ <spring:message code='ezPersonal.t57' /></span><br/>
+				<span class="txt">&emsp;&nbsp;<spring:message code='ezPersonal.t57' /></span><br/>
 				<span class="txt">▒ <spring:message code='ezPersonal.t58' /></span><br/>
 			</c:if>
 			<c:if test="${approvalFlag !='G'}">
