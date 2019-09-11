@@ -180,6 +180,13 @@ public class EzSystemAdminController {
 				}
 			}
 		}
+
+		if (configMap.get("useSession") == null || configMap.get("useSession").equals("")) {
+			configMap.put("useSession", "0");
+		}
+		if (configMap.get("useSessionMobile") == null || configMap.get("useSessionMobile").equals("")) {
+			configMap.put("useSessionMobile", "0");
+		}
 		
 		int userCount = ezOrganAdminService.getUserCount(userInfo.getTenantId());
 		
@@ -1342,29 +1349,35 @@ public class EzSystemAdminController {
         
 		int tenantId = loginService.getTenantId(serverName);
 		
-		String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+		// 20190828 김수아 : 세션 유지 시간 모바일 추가하면서 수정
+		Map<String, String> sessionConfig = new HashMap<String, String>();
+		sessionConfig.put("useSession", ezCommonService.getTenantConfig("useSession", tenantId));
+		sessionConfig.put("useSessionMobile", ezCommonService.getTenantConfig("useSessionMobile", tenantId));
 		
 		// tenant_config 테이블에 useSession row 없으면 추가
-		if (useSession.equals("")) {
-			
-			Map<String, Object> sessionParam = new HashMap<String, Object>();
-			
-			sessionParam.put("tenantID", tenantId);
-			sessionParam.put("confName", "useSession");
-    		sessionParam.put("property_value", "0");
-			sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
-			sessionParam.put("config_name", "세션 유지 시간");
-			sessionParam.put("config_type", "일반");
-			
-			String regdate = commonUtil.getTodayUTCTime("");
-			
-			sessionParam.put("regdate", regdate);
-			
-			ezCommonService.insertUseSession(sessionParam);
-    	}
+		for (String key : sessionConfig.keySet()) {
+			if (sessionConfig.get(key).equals("")) {
+				String configName = key.equals("useSessionMobile") ? "세션 유지 시간(모바일)" : "세션 유지 시간";
+				
+				Map<String, Object> sessionParam = new HashMap<String, Object>();
+				
+				sessionParam.put("tenantID", tenantId);
+				sessionParam.put("confName", key);
+	    		sessionParam.put("property_value", "0");
+				sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
+				sessionParam.put("config_name", configName);
+				sessionParam.put("config_type", "일반");
+				
+				String regdate = commonUtil.getTodayUTCTime("");
+				
+				sessionParam.put("regdate", regdate);
+				
+				ezCommonService.insertUseSession(sessionParam);
+			}
+		}
 		
 		logger.debug("checkUseSession ended");
-		return useSession;
+		return "";
 	}
 	
 	@RequestMapping(value = "/admin/ezSystem/systemModuleMonitor.do", method=RequestMethod.GET)
