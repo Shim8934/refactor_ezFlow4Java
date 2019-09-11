@@ -430,6 +430,9 @@ public class EzTalkGateController {
         
         boardItem.setWriteDate(writeDate);
         
+        /* 2019-09-11 홍승비 - 톡에서 공지사항 게시물 읽을 경우, 조회수 업데이트 및 조회자 정보 삽입되도록 수정 */
+        ezBoardService.setAsRead(userInfo, boardItem.getBoardID(), boardItem.getItemID());
+        
         model.addAttribute("boardItem", boardItem);
         
 		logger.debug("showNoticeBoardItem ended.");
