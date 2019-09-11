@@ -449,6 +449,8 @@ public class MLoginGWController {
         					String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
         					/* 2018-11-02 배현상 - 공유결재문서 사용 유무 YES or NO */
         					String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", tenantId);
+        					/* 2019-08-30 김수아 - 모바일 세션 시간 config - useMobileSession */
+        					String useSessionMobile = ezCommonService.getTenantConfig("useSessionMobile", tenantId);
         					
         					Map<String, Object> map = new HashMap<String, Object>();
         					map.put("uid", uid);
@@ -463,6 +465,7 @@ public class MLoginGWController {
         					map.put("companyID", resultVO.getCompanyID());
         					map.put("primaryLang", primaryLang);
         					map.put("rollInfo", resultVO.getRollInfo());
+        					map.put("useSessionMobile", useSessionMobile);    				
         					
         					// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
         					Map<String, Object> mapSSO = new HashMap<String, Object>();
