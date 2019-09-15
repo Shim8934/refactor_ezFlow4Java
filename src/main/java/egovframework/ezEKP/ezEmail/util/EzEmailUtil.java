@@ -143,11 +143,32 @@ public class EzEmailUtil {
 	@Value("#{cryptos['EzEmailUtil.apb']}")
 	private String apb;
 	
+	public String getMailHeaderPath(long mailboxId, long mailUid) {
+		String realPath = config.getProperty("data_root");
+		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
+		String parentFolderName = String.valueOf(mailUid % 100);
+		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
+							realPath, "/fileroot/mail", mailboxParentFolderName, mailboxId, parentFolderName, mailUid);
+		String headerPath = String.format("%s.%s", mailPath, "head");
+
+		return headerPath;
+	}
+
+	public String getMailBodyPath(long mailboxId, long mailUid) {
+		String realPath = config.getProperty("data_root");
+		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
+		String parentFolderName = String.valueOf(mailUid % 100);
+		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
+							realPath, "/fileroot/mail", mailboxParentFolderName, mailboxId, parentFolderName, mailUid);
+		String bodyPath = String.format("%s.%s", mailPath, "body");
+
+		return bodyPath;
+	}
+	
 	public String getInboxFolderId() {
 		return "INBOX";
 	}
-	
-	
+		
 	public String getSentFolderId(Locale locale) {
 		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
 		
