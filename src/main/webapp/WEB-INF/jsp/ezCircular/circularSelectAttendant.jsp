@@ -1133,7 +1133,7 @@
 					document.getElementById("Search_txtlist_table").style.display = "none";
 
 					if (pSeach) {
-						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >"
+						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >"
 								+ strLang257
 								+ ""
 								+ "-[<span style='color:#017BEC;'>"
@@ -1153,7 +1153,7 @@
 					} else {
 						document.getElementById("Search_txtlist_table").style.display = "";
 						document.getElementById("txtlist_table").style.display = "none";
-						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >"
+						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >"
 								+ strLang257
 								+ ""
 								+ "-[<span style='color:#017BEC;'>"
