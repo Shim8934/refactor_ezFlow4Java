@@ -186,6 +186,14 @@ public class CommonUtil {
 		return src;		
 	}
     
+    public String stripScriptTagsAndFunctions(String src) {
+        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert\\(.*\\)|confirm\\(.*\\)|prompt\\(.*\\)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher m = p.matcher(src);
+        src = m.replaceAll("");
+
+        return src;
+    }
+
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
