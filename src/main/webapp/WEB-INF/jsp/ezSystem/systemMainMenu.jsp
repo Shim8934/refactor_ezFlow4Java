@@ -75,7 +75,7 @@
 					alert("<spring:message code='ezSystem.lsh001'/>: <spring:message code='ezEmail.t99000066'/>");
 				    return;
 				} else if (!paramArray[16].value.match(/^\d+$/)) {
-					alert("<spring:message code='ezSystem.ksa01'/>: <spring:message code='ezEmail.t99000066'/>");
+					alert("<spring:message code='ezSystem.ksaMobileSession'/>: <spring:message code='ezEmail.t99000066'/>");
 				    return;
 				}	
 						
@@ -121,7 +121,7 @@
 	        <tbody>
 	            <tr><th><spring:message code="main.kms1"/></th><th><spring:message code="main.kms3"/></th></tr>
 	            <tr><th><spring:message code="ezSystem.lsh001"/></th><td><input id="useSession" minlength="1" maxLength="4" type="text" value="${configMap.useSession}"> (<spring:message code="ezSystem.lsh002"/>)</td></tr>
-	            <tr><th><spring:message code="ezSystem.ksa01"/></th><td><input id="useSessionMobile" minlength="1"  maxLength="4" type="text" value="${configMap.useSessionMobile}"> (<spring:message code="ezSystem.lsh002"/>)</td></tr>
+	            <tr><th><spring:message code="ezSystem.ksaMobileSession"/></th><td><input id="useSessionMobile" minlength="1"  maxLength="4" type="text" value="${configMap.useSessionMobile}"> (<spring:message code="ezSystem.lsh002"/>)</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0001"/></th><td><input id="BigSizeMailAttachDelDay" maxlength="3" type="text" value="${configMap.BigSizeMailAttachDelDay}"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
 	            <tr><th><spring:message code="ezSystem.x0002"/></th><td><input id="totBigSizeMailAttachLimit" maxlength="4" type="text" value="${configMap.totBigSizeMailAttachLimit}"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0003"/></th><td><input id="MailAttachLimit" maxlength="3" type="text" value="${configMap.MailAttachLimit}"> (<spring:message code="ezSystem.x0011"/>)</td></tr>                              
