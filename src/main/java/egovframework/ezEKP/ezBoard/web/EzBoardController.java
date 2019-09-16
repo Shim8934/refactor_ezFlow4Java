@@ -9678,5 +9678,27 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		logger.debug("deleteMyBoards ended.");
 	}
+	
+	/**
+	 * 2019-09-16 홍승비 - 기본 게시판으로 이동하기 위한 리다이렉트용 게시판 그룹ID와 게시판ID 리턴
+	 * */
+	@RequestMapping(value = "/ezBoard/getDefaultBoardID.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getDefaultBoardID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getDefaultBoardID started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String returnStr = "";
+		String defaultBoardID = ezCommonService.getTenantConfig("boardDefaultBoardID", userInfo.getTenantId());
+		
+		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(defaultBoardID, userInfo.getTenantId());
+		
+		if (boardProp != null && boardProp.getBoardGroupID() != null && defaultBoardID != null && !defaultBoardID.trim().equals("")) {
+			returnStr = boardProp.getBoardGroupID() + ";" + defaultBoardID;
+		}
+		
+		logger.debug("getDefaultBoardID ended.");
+		return returnStr;
+	}
 }
 
