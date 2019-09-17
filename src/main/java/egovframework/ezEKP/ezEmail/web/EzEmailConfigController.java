@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -1956,13 +1957,23 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t498", locale) + mailCount 
 								+ "<BR>" + egovMessageSource.getMessage("ezEmail.t499", locale) + newCount);
 						
-						if (newCount > 40) {
-							out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t500", locale));
+						int pop3MaxFetchSize;
+						
+						try {
+							String pop3MaxFetchSizeStr = ezCommonService.getTenantConfig("Pop3MaxFetchSize", loginInfo.getTenantId());
+							pop3MaxFetchSize = Optional.ofNullable(pop3MaxFetchSizeStr).map(Integer::parseInt).orElse(40);
+						} catch (Exception ex) {
+							pop3MaxFetchSize = 40;
+						}
+						
+						if (newCount > pop3MaxFetchSize) {
+							String message = "<BR>" + egovMessageSource.getMessageExtend("ezEmail.t500", new Object[] { pop3MaxFetchSize }, locale);
+							out.write(message);
 							out.flush();
 							
-							logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t500", locale));
+							logger.debug(message);
 							
-							messages = Arrays.copyOfRange(messages, 0, 40);
+							messages = Arrays.copyOfRange(messages, 0, pop3MaxFetchSize);
 						}
 						
 						Folder innerFolder = null;

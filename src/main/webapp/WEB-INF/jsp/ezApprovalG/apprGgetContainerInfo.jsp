@@ -230,7 +230,6 @@
 	                	} else if (LoadSquery != ""){
 	                		// 후결문서함
 	                		//2018-10-30 김보미 - ie에서 includes() 지원하지 않는 문제
- 	                		//if(LoadSquery.includes('AprType')) {
 	                		if(LoadSquery.indexOf('AprType') >= 0) {
 	                			checkBujaeInfo();
 	                		}
@@ -746,7 +745,6 @@
 		
 		        if (tr.getAttribute("DATA10") != "" && tr.getAttribute("DATA10") >= GetTodayDate()) {
 		            if (CheckAprLine(tr.getAttribute("DATA1")) == "TRUE") {
-		                //if ("${approvalPWD}" != "N") {
 		                if (CheckUsePassword()) {
 		                    chk_Passwd(UserID);
 		                }
@@ -815,7 +813,8 @@
 		    }
 		    //END
 		
-	        function enforce_onclick() {
+		    //기존 시행문변환 로직 주석처리
+	        /* function enforce_onclick() {
 	            var heigth = window.screen.availHeight;
 	            var width = window.screen.availWidth;
 	
@@ -871,6 +870,46 @@
 	            openLocation = openLocation + "?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
 	            var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 	            window.open(openLocation, "enforce", param);
+	        } */
+	        var getformcont_cross_dialogArguments = new Array();
+	        function enforce_onclick() {
+				var DocList = new ListView();
+				DocList.LoadFromID("DocList");
+		        
+		        var selRow = DocList.GetSelectedRows();
+		        if (selRow.length > 0) {
+		        	var pWriterID = GetAttribute(selRow[0], "DATA3");
+		        	if (pWriterID.toLowerCase() == UserID.toLowerCase()) {
+		        		getformcont_cross_dialogArguments[0] = ""; //parameter가 없다..
+			            getformcont_cross_dialogArguments[1] = enforce_onclick_complete;
+		        		
+			            enforceDocID = GetAttribute(selRow[0], "DATA1");
+			            enforceDocHref = GetAttribute(selRow[0], "DATA2");
+			            enforceDocOrgCompanyID = GetAttribute(selRow[0], "ORGCOMPANYID");
+			            
+		        		var pURL = "/ezApprovalG/getFormCont.do?pFormType=004"; //일반버전의 FormType=004는 시행문
+		        		var getFormCont_Cross = window.open(pURL, "formCont", GetOpenWindowfeature(713, 570));
+		        		try { getFormCont_Cross.focus(); } catch (e) {}
+		        	} else {
+						alert("<spring:message code='ezApprovalG.t1519'/>");
+		        	}
+		        }
+	        }
+	        var enforceDocID = "";
+	        var enforceDocHref = "";
+	        var enforceDocOrgCompanyID = "";
+	        function enforce_onclick_complete(ret) {
+	        	if (ret[0] != "cancel") {
+	        		var pURL = "/ezApprovalG/enforceSihangDocView.do";
+	        		pURL += "?pFormURL=" + encodeURIComponent(ret[0]);
+	        		pURL += "&pFormType=" + encodeURIComponent(ret[1]);
+	        		pURL += "&pFormID=" + encodeURIComponent(ret[2]);
+	        		pURL += "&pDocID=" + encodeURIComponent(enforceDocID);
+	        		pURL += "&pDocHref=" + encodeURIComponent(enforceDocHref);
+	        		pURL += "&pOrgCompanyID=" + encodeURIComponent(enforceDocOrgCompanyID);
+	        		
+	        		window.open(pURL, "", GetOpenWindowfeature(850, 900));
+	        	}
 	        }
 			function Approval_onclick() {
 			    jobState = "APPROVAL";
@@ -1672,14 +1711,20 @@
 	        	<c:if test ="${approvalFlag == 'S'}">	        	
 		            <li class="important" id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
 		            <li class="important" id="tsendCir" style="display: none"><span id="sendCir" onClick="return sendCirCulation_onclick()" ><spring:message code='ezApprovalG.hyj25'/></span></li>
-					<!-- 	시행문 변환 추후 개발 -->
-					<div style="display: none">
-			            <li id="tenforce" style="display: none"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
-					</div>
 	            </c:if>
 	            <li id="tbar1" style="background: none; padding-right: 2px; display: none;">
 	            <li id="tdEDMFolder" style="display: none"><span id="SelEDMFolder" onclick="return SelEDMFolder_onclick()"><spring:message code='ezApprovalG.t1525'/></span></li>
 	            <c:if test ="${approvalFlag == 'S'}">
+	            	<c:choose>
+	            		<c:when test="${useEnforceSihang == 'YES'}">
+				            <li id="tenforce"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+	            		</c:when>
+	            		<c:otherwise>
+	            		<span style="display: none;">
+				            <li id="tenforce"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+	            		</span>
+	            		</c:otherwise>
+	            	</c:choose>
 	            	<li id="tViewDoc"><span id="ViewDoc" onClick="return ViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
 			        <li id="tbtnExcel"><span id="btnExcel" onclick="return btnExcel_onclick(0)"><spring:message code='ezApprovalG.t1526'/></span></li>
 	            	<li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>      

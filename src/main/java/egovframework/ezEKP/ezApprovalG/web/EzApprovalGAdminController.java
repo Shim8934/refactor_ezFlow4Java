@@ -127,9 +127,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         else {
         	useAdminBujae = "NO";
         }
+        
+        String useEnforceSihang = ezCommonService.getTenantConfig("UseEnforceSihang", userInfo.getTenantId());
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useAdminBujae", useAdminBujae);
+		model.addAttribute("useEnforceSihang", useEnforceSihang);
 		
 		logger.debug("apprGLeft ended. approvalFlag = " + approvalFlag);
 		logger.debug("apprGLeft ended. useAdminBujae = " + useAdminBujae);
@@ -152,7 +155,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		String docType = ezApprovalGService.getDocType("ALL", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale(), approvalFlag);
 		String multiData = userInfo.getPrimary();
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 //		폼프로세서 사용하려면 useEditor "" 으로 세팅
@@ -436,7 +439,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale(), approvalFlag);
 		String companyID = request.getParameter("companyID");
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
@@ -504,7 +507,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
 		String type = request.getParameter("type");
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale(), approvalFlag);
 		String companyID = request.getParameter("companyID");
 		String reformflag = request.getParameter("reformflag");
 		
@@ -4123,5 +4126,33 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		logger.debug("setDocNumZeroCnt ended | result = " + rtnVal);
 		return rtnVal;
+	}
+	
+	@RequestMapping(value = "/admin/ezApprovalG/enforceSihangSeal.do", method = RequestMethod.GET)
+	public String enforceSihangSeal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("enforceSihangSeal started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		logger.debug("enforceSihangSeal ended");
+		return "/admin/ezApprovalG/apprGManageEnforceSihangSeal";
 	}
 }

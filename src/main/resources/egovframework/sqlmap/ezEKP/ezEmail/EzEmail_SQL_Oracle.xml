@@ -96,6 +96,8 @@
 	
 	<resultMap id="mailBlob" class="MailBlobVO">
 		<result property="mailBlobId" column="MAIL_BLOB_ID" />
+		<result property="mailBoxId" column="MAILBOX_ID" />
+		<result property="mailUid" column="MAIL_UID" />		
 	</resultMap>
 	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
@@ -212,7 +214,7 @@
 	
 	<select id="EzEmailDAO.getOrphanedMailBlobList" resultMap="mailBlob">
 		<![CDATA[
-			SELECT MAIL_BLOB_ID
+			SELECT MAIL_BLOB_ID, a.MAILBOX_ID, a.MAIL_UID
 			FROM JAMES_MAIL_BLOB a
 			LEFT OUTER JOIN JAMES_MAIL b
 			ON a.MAILBOX_ID = b.MAILBOX_ID

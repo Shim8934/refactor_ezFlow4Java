@@ -1783,7 +1783,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getDocType(String selected, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
+	public String getDocType(String selected, String companyID, String lang, int tenantID, Locale locale, String approvalFlag) throws Exception {
 		logger.debug("getDocType started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1807,6 +1807,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			code2 = docTypes.get(k).getCode2();
 			name = docTypes.get(k).getName();
 
+			if (k == 0) {
+				if (selected.equals("ALL")) {
+					sb.append("<OPTION value=000 selected>" + messageSource.getMessage("ezApprovalG.t1541", locale) + "</OPTION>");
+				} else if (!selected.equals("")) {
+					sb.append("<OPTION value=000>" + messageSource.getMessage("ezApprovalG.t1541", locale) + "</OPTION>");
+				}
+			}
+			
 			if (code2.equals(selected)) {
 				sb.append("<OPTION value=" + code2 + " selected>" + name + "</OPTION>");
 			} else {
@@ -6460,15 +6468,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
 					} else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
 						String lastCnt = "";
-	
-						if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
-							lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+						
+						int tmps = signCnt - refResult;
+						strSign = signAdd + "sign" + tmps;
+						strSeumyungDate = signAdd + "seumyungdate" + tmps;
+
+						// 서명날짜필드 유/무 동작 추가 - 유>결재순번 상관없이 서명일자 기입[ex.(09.09)], 무>최종결재자만 서명일자 기입[ex.(09/09)]
+						if (findHwpField(strSeumyungDate, hwpFile)) {
+							setHwpText(strSeumyungDate, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+						} else {
+							if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
+								lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+							}
 						}
 						
 						String[] signAry = {lastCnt, proxySign + displayName};
 						
 						if (refResult > 0) {
-							int tmps = signCnt - refResult;
+							tmps = signCnt - refResult;
 							strSign = signAdd + "sign" + tmps;
 							
 							if (lastCnt.equals("")) {
@@ -6477,7 +6494,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								setHwpText(hwpFile, strSign, signAry);
 							}
 						} else {
-							int tmps = signCnt - refResult;
+							tmps = signCnt - refResult;
 							strSign = signAdd + "sign" + tmps;
 							
 							if (lastCnt.equals("")) {
@@ -6502,7 +6519,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
 						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + tmps;
-						String[] signAry = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
+						String tempSignDate = signAdd + "seumyungdate" + tmps;
+						String lastSignDate = "";
+
+						// 서명날짜필드 유/무 동작 추가 - 유>결재순번 상관없이 서명일자 기입[ex.(09.09)], 무>최종결재자만 서명일자 기입[ex.(09/09)]
+						if (findHwpField(tempSignDate, hwpFile)) {
+							setHwpText(tempSignDate, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+						} else {
+							lastSignDate = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+						}
+
+						String[] signAry = null;
+						if (lastSignDate.equals("")) {
+							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), proxySign + displayName};
+						} else {
+							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), lastSignDate, proxySign + displayName};
+						}
 						
 						setHwpText(hwpFile, tempSign, signAry);
 						
@@ -16342,7 +16374,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String sendRecvMsg(String deptID, String docID, String mode, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("sendRecvMsg started");
 
-		String rtnXML = ezOrganService.getSearchList("EXACT_Department::" + deptID + ";;extensionAttribute1::a=1", "displayName", "department", "user", 50, commonUtil.getPrimaryData(lang, tenantID), tenantID);
+		String rtnXML = ezOrganService.getSearchList("EXACT_Department::" + deptID + ";;extensionAttribute1::a=1", "displayName", "department", "user", 50, commonUtil.getPrimaryData(lang, tenantID), tenantID, "n");
 		Document docXML = commonUtil.convertStringToDocument(rtnXML);
 		
 		for (int k = 0; k < docXML.getElementsByTagName("DATA2").getLength(); k++) {
@@ -20422,7 +20454,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getProxyUser started");
 		
 		String primaryData = commonUtil.getPrimaryData(userLang, tenantID);
-		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayname", "displayname;extensionAttribute5", "user", 50, primaryData, tenantID);
+		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayname", "displayname;extensionAttribute5", "user", 50, primaryData, tenantID, "n");
 		Document doc = commonUtil.convertStringToDocument(rtnXML);
 		int nodeLength = doc.getElementsByTagName("DATA2").getLength();
 		boolean chkFirst = false;
@@ -28604,5 +28636,87 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getProxyUserInfo ended");
 		
 		return list2;
+	}
+	
+	@Override
+	public String enforceSihangDoc(String formURL, String docHref, String realPath, Locale locale, String companyID, int tenantID) throws Exception {
+		logger.debug("enforceSihangDoc started.");
+		
+		String docFileName = docHref.substring(docHref.lastIndexOf("/"), docHref.length());
+		
+		String enforcePath = realPath + docHref.substring(0, docHref.lastIndexOf("/")) + commonUtil.separator;
+		String mhtImgPath = realPath + commonUtil.getUploadPath("config.LocalPath", tenantID);
+		
+		String enforcedDocPath = docHref.substring(0, docHref.lastIndexOf("/")) + commonUtil.separator + "ENFORCE" + docFileName;
+		
+		String loadDocMht = ezCommonService.loadMHTFile(realPath + docHref);
+		String docContent = ezCommonService.startMHT2HTML(mhtImgPath, loadDocMht, mhtImgPath, realPath, locale, "", "");
+		org.jsoup.nodes.Document docDocument = Jsoup.parse(docContent);
+		
+		String loadFormMht = ezCommonService.loadMHTFile(realPath + formURL);
+		String formContent = ezCommonService.startMHT2HTML(mhtImgPath, loadFormMht, mhtImgPath, realPath, locale, "", "");
+		org.jsoup.nodes.Document formDocument = Jsoup.parse(formContent);
+		
+		if (formDocument.getElementById("body") != null && docDocument.getElementById("body") != null) {
+			formDocument.getElementById("body").html(docDocument.getElementById("body").html());
+		}
+		if (formDocument.getElementById("doctitle") != null && docDocument.getElementById("doctitle") != null) {
+			formDocument.getElementById("doctitle").html(docDocument.getElementById("doctitle").html());
+		}
+		if (formDocument.getElementById("docnumber") != null && docDocument.getElementById("docnumber") != null) {
+			formDocument.getElementById("docnumber").html(docDocument.getElementById("docnumber").html());
+		}
+		if (formDocument.getElementById("draftdate") != null && docDocument.getElementById("draftdate") != null) {
+			formDocument.getElementById("draftdate").html(docDocument.getElementById("draftdate").html());
+		}
+		if (formDocument.getElementById("draftername") != null && docDocument.getElementById("draftername") != null) {
+			formDocument.getElementById("draftername").html(docDocument.getElementById("draftername").html());
+		}
+		if (formDocument.getElementById("department") != null && docDocument.getElementById("department") != null) {
+			formDocument.getElementById("department").html(docDocument.getElementById("department").html());
+		}
+		if (formDocument.getElementById("position") != null && docDocument.getElementById("position") != null) {
+			formDocument.getElementById("position").html(docDocument.getElementById("position").html());
+		}
+		if (formDocument.getElementById("telephone") != null && docDocument.getElementById("telephone") != null) {
+			formDocument.getElementById("telephone").html(docDocument.getElementById("telephone").html());
+		}
+		if (formDocument.getElementById("keepperiod") != null && docDocument.getElementById("keepperiod") != null) {
+			formDocument.getElementById("keepperiod").html(docDocument.getElementById("keepperiod").html());
+		}
+		if (formDocument.getElementById("publication") != null && docDocument.getElementById("publication") != null) {
+			formDocument.getElementById("publication").html(docDocument.getElementById("publication").html());
+		}
+		if (formDocument.getElementById("refer") != null && docDocument.getElementById("refer") != null) {
+			formDocument.getElementById("refer").html(docDocument.getElementById("refer").html());
+		}
+		if (formDocument.getElementById("recipient") != null && docDocument.getElementById("recipient") != null) {
+			formDocument.getElementById("recipient").html(docDocument.getElementById("recipient").html());
+		}
+		
+		String tempHtml = formDocument.outerHtml();
+		String convertedMht = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+		
+		File file = new File(enforcePath + "ENFORCE");
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		OutputStream outputStream = null;
+		OutputStreamWriter outputStreamWriter = null;
+		
+		try {
+			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(enforcePath + "ENFORCE" + commonUtil.separator + docFileName)));
+			outputStreamWriter = new OutputStreamWriter(outputStream);
+			outputStreamWriter.write(convertedMht);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			outputStreamWriter.close();
+			outputStream.close();
+		}
+		
+		logger.debug("enforceSihangDoc ended.");
+		return enforcedDocPath;
 	}
 }

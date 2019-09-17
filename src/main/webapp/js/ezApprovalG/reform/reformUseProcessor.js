@@ -1303,7 +1303,6 @@ function reform_onClickHandler(event) {
 			return false;
 		}
 	} else if (controlElement.type == "button") {
-		reformUseProc.defaultChangeHandler(controlElement);
 		
 		var clickHandler = controlElement.getAttribute("data-reform_on_click");
 		if (clickHandler != null && clickHandler != "") {
@@ -1312,6 +1311,9 @@ function reform_onClickHandler(event) {
 				handler(controlElement);
 			} catch (e) {}
 		}
+		
+		// 리사이즈 관련 버그로 인해 defaultChangeHandler의 호출 순서를 뒤로 변경 2019-09-05 임민석
+		reformUseProc.defaultChangeHandler(controlElement);
 	} else if (controlElement.type == "text") {
 		controlElement.focus();
 		

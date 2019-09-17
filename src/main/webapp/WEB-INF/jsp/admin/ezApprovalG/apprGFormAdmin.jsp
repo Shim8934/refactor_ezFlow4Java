@@ -705,10 +705,7 @@
 			<tr>
 		    	<th style="border:0px"><spring:message code = 'ezApprovalG.t1540' /></th>
 		    	<td style="border:0px;background-color: #f8f8fa;">
-		    		<select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">
-		        		<option value="000" selected><spring:message code = 'ezApprovalG.t1541' /></option>
-		        		${docType}
-		      		</select>
+		    		<select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">${docType}</select>
 		      	</td>
 				<td style="white-space: nowrap;border:0px;background-color: #f8f8fa;">
 					<select id="searchoption" style="height:22px; margin-top: 3px;">

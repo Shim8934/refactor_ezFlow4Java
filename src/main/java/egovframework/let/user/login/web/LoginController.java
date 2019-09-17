@@ -114,6 +114,16 @@ public class LoginController {
         int tenantId = loginService.getTenantId(serverName);
         
         logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
+    	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
+    	String userOs = ClientUtil.getClientInfo(request, "os");
+    	
+    	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+    		logger.debug("mobileRedirection : " + mobileRedirection);
+    		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
+    			response.sendRedirect(mobileRedirection);
+    			return null;
+    		}
+    	}
     	
         String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", tenantId);
         
@@ -467,10 +477,25 @@ public class LoginController {
     	        		diff = 1;
     	        	}
     	        	
+    	        	// 사용자정지 여부를 체크
+    	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+    	        	
+    	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
+    	        		int flag = checkStopUser(tenantId, resultVO.getId());
+    	        		if(flag > 0) {
+    	        			model.addAttribute("message", "stopUser");
+    	        			return "forward:/user/login/login.do";
+    	        		}
+    	        	}
+    	        	
     				//0보다 작아지면 패스워드 변경기한 Expired
-    				if (diff <= 0) {				
+    	        	//패스워드 다음에 변경 기능 추가. 2019-09-17 홍대표
+    	        	String passwordUpdateNextTime = request.getParameter("nextTime") != null ? request.getParameter("nextTime") : "";
+    				if (diff <= 0 && !passwordUpdateNextTime.equals("YES")) {				
     					model.addAttribute("isExpireDate", "Y");
     					model.addAttribute("userId", _uid);
+    					model.addAttribute("encryptID", loginVO.getEncryptID());
+    					model.addAttribute("encryptPass", loginVO.getEncryptPass());
     					
     		        	return "forward:/user/login/login.do";
     				} else {			
@@ -1006,6 +1031,11 @@ public class LoginController {
         } 
     }   
     
+    private int checkStopUser(int tenantID, String userID) throws Exception {
+    	int flag = ezOrganAdminService.checkStopUser(userID, tenantID);
+    	return flag;
+    }   
+    
     private long changeIPtoInteger(String changeIP) throws Exception {
     	String[] iparr = changeIP.split("\\.");
     	long returnChangeIp = 0;
@@ -1019,5 +1049,4 @@ public class LoginController {
 		
 		return returnChangeIp;
     }
-
 }

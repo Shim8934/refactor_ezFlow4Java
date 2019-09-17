@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,10 +15,19 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -27,12 +38,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -60,6 +73,9 @@ public class EzApprovalGRelayScheduler {
 
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	@Resource(name = "loginService")
+    private LoginService loginService;
 	
 //	@RequestMapping(value = "/ezApprovalG/relay.do")
 	@Scheduled(cron = "0 0/1 * * * *")
@@ -571,6 +587,92 @@ public class EzApprovalGRelayScheduler {
 //                 }
 //             }
 		 logger.debug("receiverSchedulerMain ended");
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/relayTest.do")
+	public void receiverMainTest(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("receiverMainTest Started");
+		
+		String serverName = request.getServerName();
+		int tenantID = loginService.getTenantId(serverName);
+		
+		if(!ezCommonService.getTenantConfig("useRelayTest", tenantID).equals("YES")) {
+			return;
+		}
+				
+        String strRelayFolderPath = "";
+        String strAprDocPath =  "";
+        
+		strRelayFolderPath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT");
+		strAprDocPath = config.getProperty("relay_root") + commonUtil.getUploadPath("upload_relay.R_DocPath", tenantID); 
+		
+		if (!strRelayFolderPath.substring(strRelayFolderPath.length() - 1).equals(commonUtil.separator)) {
+			strRelayFolderPath = strRelayFolderPath + commonUtil.separator;
+		}
+		
+		if (!strAprDocPath.substring(strAprDocPath.length() - 1).equals(commonUtil.separator)) {
+			strAprDocPath = strAprDocPath + commonUtil.separator;
+		}
+		
+		String strFileName = "";
+		String strFilePath = "";
+		String strFileType = "";
+		File receiveTempDir = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"receivetemp"));
+		File sendTempDir = new File(commonUtil.detectPathTraversal(strRelayFolderPath + commonUtil.separator  + "data" + commonUtil.separator +"sendtemp"));
+		
+		if (sendTempDir.exists()) {
+			for (File sendTempFile : sendTempDir.listFiles()) {
+				String strReceiveID = "";
+				String strSendOrgCode = "";
+				String strSendID = "";
+				strFileName = sendTempFile.getName();
+				strFilePath = sendTempFile.getParent() + commonUtil.separator + strFileName;
+				strFileType =  strFileName.substring(strFileName.indexOf("."), strFileName.length()).toUpperCase();
+				
+				if (strFileType.equals(".XML")) {
+					logger.debug("sendFile Started");
+					logger.debug("sendFileName : " + strFileName);
+					
+					Document objXML = commonUtil.xmlLod(strFilePath);
+					
+					if(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent().indexOf("send") == -1) {
+						continue;
+					}
+					
+					strReceiveID = objXML.getElementsByTagName("receive-id").item(0).getTextContent();
+					strSendOrgCode = objXML.getElementsByTagName("send-orgcode").item(0).getTextContent();
+					strSendID = objXML.getElementsByTagName("send-id").item(0).getTextContent();
+					
+					objXML.getElementsByTagName("receive-id").item(0).setTextContent(strSendID);
+					objXML.getElementsByTagName("send-orgcode").item(0).setTextContent(strReceiveID);
+					objXML.getElementsByTagName("send-id").item(0).setTextContent(strReceiveID);
+					
+					TransformerFactory transfac = TransformerFactory.newInstance();
+					Transformer trans = transfac.newTransformer();
+					trans.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "pack.dtd");
+					
+					StringWriter sw = new StringWriter();
+					StreamResult result = new StreamResult(sw);
+					DOMSource source = new DOMSource(objXML);
+					
+					trans.transform(source, result);
+					String xmlString = sw.toString();
+					
+					OutputStream fos = new FileOutputStream(sendTempFile);
+					byte[] buf = xmlString.getBytes();
+					
+					for (int i = 0; i < buf.length; i++) {
+						fos.write(buf[i]);
+					}
+					fos.close();
+					buf = null;
+					
+					sendTempFile.renameTo(new File(receiveTempDir.getAbsolutePath() + commonUtil.separator  + strFileName));
+				}
+			}
+		}
+		logger.debug("receiverMainTest ended");
+		receiverMain();
 	}
 	
 	//수신기관에서 재발송 요청하면 요청의견 텍스트 파일로 떨어뜨리고 발송대장 화면에서 제공하기
