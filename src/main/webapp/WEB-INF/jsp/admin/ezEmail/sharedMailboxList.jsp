@@ -418,7 +418,7 @@
 				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC;" id="listCount"></span><spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
 			<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
-				<select id="searchType" style="height: 26px; width: 120px;">
+				<select id="searchType" style="height: 26px; width: 130px;">
 					<option value="displayname"><spring:message code='ezEmail.sharedMailbox18' /></option> <!-- 공유사서함 이름 -->
 					<option value="groupID"><spring:message code='ezEmail.sharedMailbox19' /></option> <!-- 공유사서함 ID -->
 					<option value="memberName"><spring:message code='ezEmail.ksaSharedMailbox25' /></option> <!-- 공유자 이름 -->
