@@ -24,6 +24,7 @@
 		    var pDeptID;
 		    var Rtnval = new Array();
 		    var DocFileType = "<c:out value = '${docFileType}'/>";
+		    var onlySihang = "<c:out value='${onlySihang}'/>";
 		    var TreeIdx;
 		    var ListIdx;
 		    var RetValue;
@@ -49,14 +50,14 @@
 		            }
 		        }
 
-		        pFormKind = RetValue[1];
+		        /* pFormKind = RetValue[1];
 		        if (pFormKind == "004") {
 		            document.getElementById('FromList').innerHTML = "";
 		            var select = document.getElementById('FromList');
 		            select.options[select.options.length] = new Option(strLangDocType4, '004');
 		            document.getElementById('FromList').value = "004";
 		            document.getElementById('Localload').style.display = "none";
-		        }
+		        } */
 		        InitFormCont();
 		
 		        Rtnval[0] = "cancel";
@@ -159,6 +160,12 @@
 		        if (selRow) {
 		            URL = selRow.getAttribute("DATA4");
 		            if ((DocFileType == "") || (URL.substr(URL.length - 3, URL.length).toLowerCase() == DocFileType)) {
+		            	if (onlySihang == "YES" && selRow.getAttribute("DATA3") != "004") {
+		            		var pAlertContent = "<spring:message code='ezApprovalG.t191'/>";
+		            		OpenAlertUI(pAlertContent);
+		            		return;
+		            	}
+		            	
 		                Rtnval[0] = selRow.getAttribute("DATA4");
 		                Rtnval[1] = selRow.getAttribute("DATA3");
 		                Rtnval[2] = selRow.getAttribute("DATA1");
@@ -331,6 +338,11 @@
 		    var tempFromList;
 		    var tempFromList2;
 		    function ChangeTab(obj) {
+		    	if (typeof(tempFromList) == "undefined" || typeof(tempFromList2) == "undefined" ) {
+		    		tempFromList = document.getElementById("FromList").selectedIndex;
+		    		tempFromList2 = document.getElementById("FromList").selectedIndex;
+		    	}
+		    	
 		        pSelectTab = obj.getAttribute("divname");
 		        switch (pSelectTab) {
 		            case "favoritelist":
@@ -485,8 +497,8 @@
 	    <table class="content" style="width:697px;">
 		    <tr>
 			    <th><spring:message code='ezApprovalG.t1540'/></th>
-			    <td style="border-right-color:white"><select name="select" onChange="return select_onchange()" id="FromList" style="height:24px">
-					    <OPTION value="000" selected><spring:message code='ezApprovalG.t1541'/></OPTION>
+			    <td style="border-right-color:white">
+			    	<select name="select" onChange="return select_onchange()" id="FromList" style="height:24px">
 					    ${docType}
 				    </select>
 			    </td>

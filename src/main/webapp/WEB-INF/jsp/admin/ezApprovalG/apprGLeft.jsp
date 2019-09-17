@@ -91,6 +91,10 @@
 						//채번 관리
 						url = "/admin/ezApprovalG/docNumZeroCnt.do";
 						break;
+					case "enforce":
+						//시행문변환 - 관인등록
+						url = "/admin/ezApprovalG/enforceSihangSeal.do";
+						break;
 				}
 				
 				window.open(url,"right");
@@ -124,6 +128,9 @@
 				<c:if test="${approvalFlag == 'S' }">
 					<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t37'/></span></h2>
 					<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='main.t38'/></span></h2>
+					<c:if test="${useEnforceSihang == 'YES'}"><!-- 시행문변환 관인등록 옵션 -->
+						<h2><span style="display:inline-block;width:100%;" onClick="goPage('enforce')"><spring:message code='main.t41'/></span></h2>
+					</c:if>
 				</c:if>
 				
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='main.t39'/></span></h2>

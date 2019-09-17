@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -788,9 +789,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String deptID = userInfo.getDeptID();
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		String pFormType = request.getParameter("pFormType") != null ? request.getParameter("pFormType") : "ALL";
+		String docType = ezApprovalGService.getDocType(pFormType, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale(), approvalFlag);
 		String userForm = ezApprovalGService.getOptionInfo("A57", "001", userInfo, "CODE");
 		String docFileType = "";
+		String useEnforceSihang = ezCommonService.getTenantConfig("UseEnforceSihang", userInfo.getTenantId());
+		
+		if (approvalFlag.equals("S") && useEnforceSihang.equals("YES") && pFormType.equals("004")) {
+			model.addAttribute("onlySihang", "YES");
+		}
 		
 		if (request.getParameter("fileType") != null) {
 			docFileType = request.getParameter("fileType");
@@ -6263,6 +6270,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
 		String susinAdmin = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String useEnforceSihang = ezCommonService.getTenantConfig("UseEnforceSihang", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -6285,6 +6293,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String deptInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
 		String buJaeInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		
+		model.addAttribute("useEnforceSihang", useEnforceSihang);
 		model.addAttribute("buJaeInfo", buJaeInfo);
 		model.addAttribute("endAprType", endAprType);
 		model.addAttribute("endAprState", endAprState);
@@ -9366,5 +9375,71 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return "ezApprovalG/apprGaprOpinionPopup";
 	}
-}
+	
+	@RequestMapping(value = "/ezApprovalG/enforceSihangDocView.do", method = RequestMethod.GET)
+	public String enforceSihangDocView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("enforceSihangDocView started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String pRealPath = commonUtil.getRealPath(request);
+		String pDocID = request.getParameter("pDocID");
+		//String pFormID = request.getParameter("pFormID");
+		String pFormURL = request.getParameter("pFormURL");
+		//String pFormType = request.getParameter("pFormType");
+		String pDocHref = request.getParameter("pDocHref");
+		String pCompanyID = request.getParameter("pOrgCompanyID") != null ? request.getParameter("pOrgCompanyID") : userInfo.getCompanyID();
+		
+		String rtnVal = ezApprovalGService.enforceSihangDoc(pFormURL, pDocHref, pRealPath, userInfo.getLocale(), pCompanyID, userInfo.getTenantId());
+		
+		model.addAttribute("docID", pDocID);
+		model.addAttribute("docHref", rtnVal);
+		model.addAttribute("orgDocHref", pDocHref);
+		model.addAttribute("companyID", pCompanyID);
+		
+		logger.debug("enforceSihangDocView ended.");
 
+		return "ezApprovalG/apprGenforceSihangDocView";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/enforceSihangSealChoose.do", method = RequestMethod.GET)
+	public String enforceSihangSealChoose(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("enforceSihangSealChoose started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		logger.debug("enforceSihangSealChoose ended.");
+		
+		return "ezApprovalG/apprGenforceSihangSealChoose";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/enforceSihangDocSave.do", method = RequestMethod.POST)
+	public String enforceSihangDocSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("enforceSihangDocSave started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String pDocHref = request.getParameter("pDocHref");
+		String pMhtBody = request.getParameter("pMhtBody");
+		String realPath = commonUtil.getRealPath(request);
+		
+		String convertedMht = ezCommonService.startHtml2Mht(pMhtBody, realPath, userInfo.getLocale());
+		
+		OutputStream outputStream = null;
+		OutputStreamWriter outputStreamWriter = null;
+		
+		try {
+			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + pDocHref)));
+			outputStreamWriter = new OutputStreamWriter(outputStream);
+			outputStreamWriter.write(convertedMht);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			outputStreamWriter.close();
+			outputStream.close();
+		}
+		
+		logger.debug("enforceSihangDocSave ended.");
+		return "";
+	}
+}
