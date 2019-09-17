@@ -187,7 +187,15 @@
 						<!-- 게시자&부서 -->
 						<tr>
 							<th style="width:10%;"><spring:message code='ezBoard.t207'/></th> 
-							<td id="WriteUserNM" style="white-space:nowrap; width:40%">
+							<%-- 2019-09-17 홍승비 - 익명게시판 게시물 작성 시 미리보기 TD 수정 --%>
+							<c:choose>
+								<c:when test="${guBun == '2'}">
+									<td id="WriteUserNM" style="white-space:nowrap; width:40%" colspan="3">
+								</c:when>
+								<c:otherwise>
+									<td id="WriteUserNM" style="white-space:nowrap; width:40%">
+								</c:otherwise>
+							</c:choose>
 								<div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer"></div>
 							</td>
 							<c:if test="${guBun != '2'}">
