@@ -350,7 +350,7 @@
 		<!-- 검색 -->
 		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box;">
 			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
-				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC;" id="listCount"></span><spring:message code='ezSystem.kyj2'/>]</span>
+				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
 			<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
 				<select id="searchType" style="height: 26px; width: 120px;">
