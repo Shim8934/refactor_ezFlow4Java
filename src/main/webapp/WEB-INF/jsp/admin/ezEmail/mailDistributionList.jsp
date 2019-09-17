@@ -26,8 +26,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var companyId = "${userCompany}";
+			var searchFlag = false;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -45,7 +47,6 @@
 		    function company_change() {
 		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
 		        document.getElementById("DIV_Member").innerHTML = "";
-		
 		        var xmlDom = createXmlDom();
 		        var xmlHTTP = createXMLHttpRequest();
 		
@@ -199,7 +200,8 @@
 				        }
 				        
 				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
-				        company_change();
+				        //company_change();
+				        selectList_Change();
 			        } else {
 			            alert("<spring:message code='ezEmail.t51' />");		            
 			        }
@@ -244,7 +246,7 @@
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
 		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
-		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
+		            mail_add_distributionlist_cross_dialogArguments[1] = mod_dl_Complete;
 		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
@@ -256,10 +258,15 @@
 		                company_change();
 		        }
 		    }
+		    function mod_dl_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined")
+		        	selectList_Change();
+		    }
 		    function search_click() {
 				var searchType = document.getElementById("searchType").value;
 		    	var searchValue = document.getElementById("searchValue").value;
 		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
+		    	searchFlag = true;
 
 		    	if (searchValue == "") {
 		    		alert("<spring:message code='ezEmail.t10' />");
@@ -315,6 +322,23 @@
 		            pUserList.DataBind("OrganListView");
 		        }
 		    } // search_onclick END
+		    
+		    function selectList_Change() {
+		    	var selectTR_Data1 = $("#lvUserList tr[selected=true]")[0].getAttribute("data1");
+		    	
+		    	if (searchFlag == true && document.getElementById("searchValue").value != "") {
+		    		search_click();
+		    	} else {
+		    		company_change();
+		    	}
+
+				var reListTR_ = $("#lvUserList tr[data1='" + selectTR_Data1 + "']")[0];
+				reListTR_ = typeof reListTR_ != "undefined"  ? reListTR_.getAttribute("id") : "";
+				
+		    	if (selectTR_Data1 != "" && reListTR_ != "") {
+		    		tr_select(reListTR_, "lvUserList", View_dl);
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="mainbody">

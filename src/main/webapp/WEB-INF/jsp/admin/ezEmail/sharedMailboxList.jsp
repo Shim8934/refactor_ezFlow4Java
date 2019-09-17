@@ -21,14 +21,17 @@
 				padding-left:10px;
 			}
 		</style>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var companyId = "${userCompany}";
+			var searchFlag = false;
+			var selectList_ChangeFlag = false;
+			var selectTR_Data1;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -86,6 +89,8 @@
 	    		            pUserList.SetHeightFree(true);
 	    		            pUserList.DataSource(headerData);
 	    		            pUserList.DataBind("sharedMailboxList");
+	    		            
+	    		            selectList_Change2();
 	    				}
 	    			},
 	    			error: function(err) {
@@ -217,7 +222,8 @@
 				    					alert("<spring:message code='ezEmail.sharedMailbox07' />");
 				    				}
 				    				
-				    				companyChange();
+				    				//companyChange();
+				    				selectList_Change();
 				    			},
 				    			error: function(err) {
 				    				alert("<spring:message code='ezEmail.sharedMailbox07' />");
@@ -271,7 +277,7 @@
 		        feature = feature + GetShowModalPosition(990, 670);
 		        
 		        if (CrossYN()) {
-		        	sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
+		        	sharedMailboxDialogArguments[0] = modSharedMailboxComplete;
 		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, "", GetOpenWindowfeature(990, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
@@ -280,6 +286,12 @@
 		            if (typeof (rtnValue) != "undefined") {
 		                companyChange();
 		            }
+		        }
+		    }
+		    
+		    function modSharedMailboxComplete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		        	selectList_Change();
 		        }
 		    }
 		    
@@ -328,6 +340,7 @@
 				var searchType = document.getElementById("searchType").value;
 		    	var searchValue = document.getElementById("searchValue").value;
 		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
+		    	searchFlag = true;
 		    	
 		    	if (searchValue == "") {
 		    		//companyChange();
@@ -371,12 +384,36 @@
 	    		            pUserList.SetHeightFree(true);
 	    		            pUserList.DataSource(headerData);
 	    		            pUserList.DataBind("sharedMailboxList");
+	    		            
+	    		            selectList_Change2();
 	    				}
 	    			},
 	    			error: function(err) {
 	    				alert("<spring:message code='ezEmail.sharedMailbox07' />");
 	    			}
 		    	});
+		    }
+		    
+		    function selectList_Change() {
+		    	selectList_ChangeFlag = true;
+		    	selectTR_Data1 = $("#sharedMailbox tr[selected=true]")[0].getAttribute("data1");
+		    	
+		    	if (searchFlag == true && document.getElementById("searchValue").value != "") {
+		    		search_click();
+		    	} else {
+		    		companyChange();
+		    	}
+		    }
+		    function selectList_Change2() {
+		    	if (selectList_ChangeFlag) {
+		    		selectList_ChangeFlag = false;
+			    	var reListTR_ = $("#sharedMailbox tr[data1='" + selectTR_Data1 + "']")[0];
+					reListTR_ = typeof reListTR_ != "undefined"  ? reListTR_.getAttribute("id") : "";
+					
+			    	if (selectTR_Data1 != "" && reListTR_ != "") {
+			    		tr_select(reListTR_, "sharedMailbox", viewSharedMailboxInfo);
+			    	}
+		    	}
 		    }
 		</script>
 	</head>
