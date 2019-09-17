@@ -76,6 +76,18 @@
 			    }
 			}
 			
+			function passwordUpdateNextTime() {
+		    	var frm = document.loginForm;
+		    	var rsa = new RSAKey();
+				rsa.setPublic(frm.publicModulus.value, frm.publicExponent.value);
+				
+				frm.encryptID.value = "<c:out value='${encryptID}' />";
+				frm.encryptPass.value = "<c:out value='${encryptPass}' />";
+				frm.nextTime.value = "YES";
+				frm.action="<c:url value='/user/login/actionLogin.do'/>";        
+				frm.submit();
+			}
+			
 			function setCookie (name, value, expires) {
 			    document.cookie = name + "=" + escape (value) + "; path=/; expires=" + expires.toGMTString();
 			}
@@ -243,6 +255,7 @@
 	                	<input type="hidden" name="publicExponent" value="${publicExponent}"/>
 	                	<input type="hidden" name="encryptID" />
 	                	<input type="hidden" name="encryptPass"/>
+	                	<input type="hidden" name="nextTime"/>
 	                	
 	                    <fieldset>
 	                    	<p class="logo"><img src="<c:out value='${logoUrl }'/>"></p>   
@@ -302,6 +315,9 @@
 			</div>
 			<div class="btnpositionLayer" style="background-color: white;border:0px">
 			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
+			    <c:if test="${isFirstLogin != 'Y'}">
+		    		<a class="imgbtn" onClick="passwordUpdateNextTime()" ><span><spring:message code='main.hdp01'/></span></a>
+			    </c:if>
 			</div>			
 			<%-- <div style="float:left">
 				<c:if test="${isFirstLogin == 'Y'}"><img src="/images/hello.png" width="52" height="52"/></c:if>

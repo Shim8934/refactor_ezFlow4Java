@@ -489,9 +489,13 @@ public class LoginController {
     	        	}
     	        	
     				//0보다 작아지면 패스워드 변경기한 Expired
-    				if (diff <= 0) {				
+    	        	//패스워드 다음에 변경 기능 추가. 2019-09-17 홍대표
+    	        	String passwordUpdateNextTime = request.getParameter("nextTime") != null ? request.getParameter("nextTime") : "";
+    				if (diff <= 0 && !passwordUpdateNextTime.equals("YES")) {				
     					model.addAttribute("isExpireDate", "Y");
     					model.addAttribute("userId", _uid);
+    					model.addAttribute("encryptID", loginVO.getEncryptID());
+    					model.addAttribute("encryptPass", loginVO.getEncryptPass());
     					
     		        	return "forward:/user/login/login.do";
     				} else {			
