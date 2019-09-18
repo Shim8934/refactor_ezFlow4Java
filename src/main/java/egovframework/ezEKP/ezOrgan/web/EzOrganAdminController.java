@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
@@ -55,10 +57,12 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -3961,5 +3965,446 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 	    logger.debug("saveUserImagebyTemp ended.");
 	    return resultMap;
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/groupList.do", method = RequestMethod.GET)
+	public String groupList(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("groupList started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(
+				auth.getPrimary(), auth.getTenantId());
+
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", auth.getCompanyID());
+		model.addAttribute("useOcs", config.getProperty("config.USE_OCS"));
+		
+		logger.debug("groupList ended.");
+
+		return "admin/ezOrgan/groupList";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/addGroup.do", method = RequestMethod.GET)
+	public String addGroup(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("addGroup started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request
+				.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request
+				.getParameter("name");
+		String useOcs = config.getProperty("config.USE_OCS");
+		String companyId = request.getParameter("companyId");
+
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("dept", auth.getDeptID());
+		
+		logger.debug("addGroup ended.");
+
+		return "admin/ezOrgan/addGroup";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/addGroup2.do", method = RequestMethod.GET)
+	public String addGroup2(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("addGroup2 started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request
+				.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request
+				.getParameter("name");
+		String useOcs = config.getProperty("config.USE_OCS");
+		String companyId = request.getParameter("companyId");
+
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("dept", auth.getDeptID());
+		
+		logger.debug("addGroup2 ended.");
+
+		return "admin/ezOrgan/addGroup2";
+	}
+	
+	public String getPermissionGroupID(){
+		// 권한그룹의 id를 숫자와 문자를 랜덤상수를 이용하여 생성
+		Random rnd = new Random();
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < 15; i++) {
+			if (rnd.nextBoolean()) {
+				sb.append((char) ((int) (rnd.nextInt(26)) + 97));
+			} else {
+				sb.append((rnd.nextInt(10)));
+			}
+		}
+		return sb.toString();
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/setPermissionGroup.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String setPermissionGroup(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("setPermissionGroup started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+		String groupName = doc.getElementsByTagName("NAME").item(0).getTextContent();
+		String groupID = doc.getElementsByTagName("ID").item(0).getTextContent();
+		
+		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
+		
+		String result = "ERROR";
+		
+		try {
+			int tenantId = auth.getTenantId();
+			List<String> memberList = new ArrayList<String>();
+			
+			// 추가
+			if (groupID == null || groupID == "") {
+			
+				int userCheck = 1;
+				
+				while (userCheck > 0) {
+					groupID = getPermissionGroupID();
+					userCheck = ezOrganAdminService.userCheck(groupID, tenantId);
+				}
+				
+				for (int i = 0; i < memberIdList.getLength(); i++) {
+					memberList.add(memberIdList.item(i).getTextContent());
+				}
+				
+				result = ezOrganAdminService.insertPermissionGroup(groupID, groupName, auth.getId(), companyId, tenantId, memberList);
+			} else {
+				for (int i = 0; i < memberIdList.getLength(); i++) {
+					memberList.add(memberIdList.item(i).getTextContent());
+				}
+				
+				result = ezOrganAdminService.updatePermissionGroup(groupID, groupName, auth.getId(), companyId, tenantId, memberList);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("setPermissionGroup ended.");
+
+		return result;
+	}
+	@RequestMapping(value = "/admin/ezOrgan/getPermissionGroupList.do", method = RequestMethod.POST)	
+	public String getPermissionGroupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getPermissionGroupList started");
+	    
+		LoginVO user = commonUtil.userInfo(loginCookie);
+        int tenantID = user.getTenantId(); 
+        String strLang = user.getPrimary();
+        String offset = user.getOffset();
+        
+        logger.debug("tenantID=" + tenantID + ",strLang=" + strLang + ",offset=" + offset);
+		
+		int pPageRow = 20;
+   		int pPage = (request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1);
+   		String searchKeycode = (request.getParameter("searchKeycode") != null ? request.getParameter("searchKeycode") : "");
+   		String searchKeyword = (request.getParameter("searchKeyword") != null ? request.getParameter("searchKeyword") : "");
+   		String searchCompanyID = (request.getParameter("searchCompanyID") != null ? request.getParameter("searchCompanyID") : "");
+   		
+   		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
+   		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
+   		
+   		logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		
+   		int totalCount = ezOrganAdminService.getPermissionGroupListCount(tenantID, searchKeycode, searchKeyword, searchCompanyID);
+   		int totalPage = 1;
+
+		if (totalCount > 0) {
+			if (totalCount > pPageRow) {
+				totalPage = totalCount / pPageRow;
+				
+				if (totalCount % pPageRow != 0) {
+				    totalPage++;
+				}
+			}
+		}
+		
+		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
+		
+		List<OrganGroupVO> list = ezOrganAdminService.getPermissionGroupList(pPage, pPageRow, tenantID, offset, searchKeycode, searchKeyword, searchCompanyID);
+		
+   		model.addAttribute("lang", strLang);
+   		model.addAttribute("list", list);
+   		model.addAttribute("pPage", pPage);
+   		model.addAttribute("totalPage", totalPage);
+   		model.addAttribute("totalCount", totalCount);
+		
+   		logger.debug("getPermissionGroupList ended");
+   		
+		return "json";
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/getPermissionGroupInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getPermissionGroupInfo(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("getPermissionGroupInfo started.");
+
+		String returnData = "";
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId(); 
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String groupID = doc.getElementsByTagName("GROUPID").item(0).getTextContent();
+		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
+
+		try {
+			List<OrganGroupVO> list = ezOrganAdminService.getPermissionGroupInfo(groupID, tenantID, companyID);
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
+			sb.append("<GROUPNAME>" + list.get(0).getGroupName() + "</GROUPNAME>");
+			for (OrganGroupVO vo : list) {
+				String pClass = (String) vo.getMemberType();
+				String pCn = (String) vo.getMemberID();
+
+				if (pClass.equalsIgnoreCase("DEPT")) {
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn,
+							userInfo.getPrimary(), userInfo.getTenantId());
+					if (dept != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(dept.getDisplayName())
+								+ "</DISPLAYNAME>");
+						sb.append("<MAIL>"
+								+ commonUtil.cleanValue(dept.getMail())
+								+ "</MAIL>");
+						sb.append("<COMPANY>"
+								+ commonUtil.cleanValue(dept
+										.getExtensionAttribute3())
+								+ "</COMPANY>");
+						sb.append("<DEPT>"
+								+ egovMessageSource.getMessage("ezOrgan.t68",
+										locale) + "</DEPT>");
+						sb.append("<TITLE>"
+								+ egovMessageSource.getMessage("ezOrgan.t68",
+										locale) + "</TITLE>");
+						sb.append("<SUBDEPTYN>"
+								+ vo.getSubDeptYN() + "</SUBDEPTYN>");
+						sb.append("</ROW>");
+					} else {
+						
+					}
+
+				} else if (pClass.equalsIgnoreCase("USER")) {
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn,
+							userInfo.getPrimary(), userInfo.getTenantId());
+					if (user != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(user.getDisplayName())
+								+ "</DISPLAYNAME>");
+						sb.append("<MAIL>"
+								+ commonUtil.cleanValue(user.getMail())
+								+ "</MAIL>");
+						sb.append("<COMPANY>"
+								+ commonUtil.cleanValue(user.getCompany())
+								+ "</COMPANY>");
+						sb.append("<DEPT>"
+								+ commonUtil.cleanValue(user.getDescription())
+								+ "</DEPT>");
+						sb.append("<TITLE>"
+								+ commonUtil.cleanValue(user.getTitle())
+								+ "</TITLE>");
+						sb.append("</ROW>");
+					} else {
+						
+					}
+				}
+			}
+
+			sb.append("</DATA>");
+			returnData = sb.toString();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("getPermissionGroupInfo ended.");
+
+		return returnData;
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/deletePermissionGroupList.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String deletePermissionGroupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    logger.debug("deletePermissionGroupList started.");
+	    
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        String result = "ERROR";
+        
+        try {
+        	int tenantID = userInfo.getTenantId();        
+            String groupList = request.getParameter("groupList");
+            String companyID = request.getParameter("companyID");
+            
+            logger.debug("tenantID=" + tenantID + ",cnList=" + groupList);
+            ezOrganAdminService.deletePermissionGroup(groupList, companyID, tenantID);
+            result = "OK";
+            
+        } catch (Exception e) {
+			e.printStackTrace();
+			result = "ERROR";
+		}
+		
+		logger.debug("deletePermissionGroupList ended.");
+
+		return result;
+	}
+	
+	
+	@RequestMapping(value="/admin/ezOrgan/getGroupList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getGroupList(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		logger.debug("getGroupList started.");
+		
+		String returnData = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+			List<OrganGroupVO> list = ezOrganAdminService.getGroupList(userInfo.getTenantId(), userInfo.getCompanyID());
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (OrganGroupVO vo : list) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getGroupName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getGroupID()));
+				sb.append("</DATA1>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getGroupList ended.");
+		
+		return returnData;
+	}
+	
+	@RequestMapping(value="/admin/ezOrgan/getJikwiList.do", produces = "text/xml; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getJikwiList(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		logger.debug("getJikwiList started.");
+		
+		String returnData = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+			List<OrganGroupVO> list = ezOrganAdminService.getGroupList(userInfo.getTenantId(), userInfo.getCompanyID());
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (OrganGroupVO vo : list) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getGroupName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getGroupID()));
+				sb.append("</DATA1>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getJikwiList ended.");
+		
+		return returnData;
 	}
 }

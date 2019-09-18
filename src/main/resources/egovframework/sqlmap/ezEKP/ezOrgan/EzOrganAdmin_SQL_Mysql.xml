@@ -6,7 +6,8 @@
 	<typeAlias alias="OrganUserVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	<typeAlias alias="OrganDeptVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganProxyVO" type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
-	<typeAlias alias="OrganJobVO" type="egovframework.ezEKP.ezOrgan.vo.OrganJobVO"/>
+	<typeAlias alias="OrganJobVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganJobVO"/>
+	<typeAlias alias="OrganGroupVO" type="egovframework.ezEKP.ezOrgan.vo.OrganGroupVO"/>
 	
 	
 	
@@ -4891,4 +4892,146 @@
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_UPDATETHUMNAILPROFILE" parameterClass="Map">
        {CALL talk_SP_CONN_UPDATETHUMNAILPROFILE(#TENANT_ID#)}
      </procedure>
+     
+     <insert id="EzOrganAdminDAO.setPermissionGroupList" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PERMISSIONGROUPLIST 
+			( GROUP_ID, GROUP_NAME, CREATE_ID, CREATE_DATE, COMPANY_ID, TENANT_ID)
+			VALUES 
+			( #v_GROUP_ID#, #v_GROUP_NAME#, #v_CREATE_ID#, #v_CREATE_DATE#, #v_COMPANY_ID#, #v_TENANT_ID#)
+		]]>
+	</insert>
+	
+	<insert id="EzOrganAdminDAO.setPermissionGroupInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PERMISSIONGROUPINFO 
+			( GROUP_ID, MEMBER_ID, MEMBER_TYPE, ADDED_DATE, SUB_DEPT_YN, COMPANY_ID, TENANT_ID)
+			VALUES 
+			( #v_GROUP_ID#, #v_MEMBER_ID#, #v_MEMBER_TYPE#, #v_ADDED_DATE#, #v_SUB_DEPT_YN#, #v_COMPANY_ID#, #v_TENANT_ID#)
+		]]>
+	</insert>
+    
+    <select id="EzOrganAdminDAO.getPermissionGroupListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(GROUP_ID) TOTALCNT
+            FROM
+            	TBL_PERMISSIONGROUPLIST
+            WHERE
+            	TENANT_ID = #v_TENANT_ID# AND COMPANY_ID = #companyId#
+            	
+		]]>
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+					<isEqual property="search_keycode" compareValue="GROUPNAME">
+						GROUP_NAME LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="CREATEID">
+						CREATE_ID LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+
+			</isNotEmpty>
+		</isNotEmpty>
+	</select>
+	
+    <select id="EzOrganAdminDAO.getPermissionGroupList" parameterClass="Map" resultClass="OrganGroupVO" remapResults="true">
+		<![CDATA[
+			SELECT
+				GROUP_ID AS GROUPID,
+				GROUP_NAME AS GROUPNAME, 
+                CREATE_ID AS CREATEID,
+                DATE_FORMAT(DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATEDATE,
+                UPDATE_ID AS UPDATEID,
+				DATE_FORMAT(DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATEDATE,
+				COMPANY_ID AS COMPANYID
+           FROM
+           		TBL_PERMISSIONGROUPLIST 
+           WHERE
+            	TENANT_ID = #v_TENANT_ID# AND COMPANY_ID = #companyId#
+		]]>
+        <isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+					<isEqual property="search_keycode" compareValue="GROUPNAME">
+						GROUP_NAME LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="CREATEID">
+						CREATE_ID LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+
+			</isNotEmpty>
+		</isNotEmpty>
+        <![CDATA[
+           ORDER BY GROUP_NAME
+           LIMIT #v_STARTROW#, #v_ROWPERPAGE#                	
+        ]]>  
+	</select> 
+    
+    <select id="EzOrganAdminDAO.getPermissionGroupInfo" parameterClass="Map" resultClass="OrganGroupVO" remapResults="true">
+		<![CDATA[
+			SELECT
+				A.GROUP_ID AS GROUPID,
+				A.GROUP_NAME AS GROUPNAME, 
+                A.CREATE_ID AS CREATEID,
+                DATE_FORMAT(DATE_ADD(A.CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATEDATE,
+                A.UPDATE_ID AS UPDATEID,
+				DATE_FORMAT(DATE_ADD(A.UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATEDATE,
+				A.COMPANY_ID AS COMPANYID,
+				B.MEMBER_ID AS MEMBERID,
+				B.MEMBER_TYPE AS MEMBERTYPE,
+				DATE_FORMAT(DATE_ADD(B.ADDED_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS ADDEDDATE,
+				B.SUB_DEPT_YN AS SUBDEPTYN
+           FROM
+           		TBL_PERMISSIONGROUPLIST A INNER JOIN TBL_PERMISSIONGROUPINFO B ON (A.GROUP_ID = B.GROUP_ID)
+           WHERE
+            	A.TENANT_ID = #v_TENANT_ID# AND A.COMPANY_ID = #v_COMPANY_ID# AND A.GROUP_ID = #v_GROUP_ID#        	
+        ]]>  
+	</select>
+
+	<update id="EzOrganAdminDAO.updatePermissionGroupList" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PERMISSIONGROUPLIST
+      		SET
+      			GROUP_NAME = #v_GROUP_NAME#,
+          		UPDATE_ID = #v_UPDATE_ID#,
+          		UPDATE_DATE = #v_UPDATE_DATE#
+       		WHERE
+       			GROUP_ID = #v_GROUP_ID#
+       		AND
+       			TENANT_ID = #v_TENANT_ID#
+       		AND
+       			COMPANY_ID = #v_COMPANY_ID#
+		]]>
+	</update>
+	
+	<delete id="EzOrganAdminDAO.deletePermissionGroup" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PERMISSIONGROUPLIST
+          	WHERE
+          		GROUP_ID = #v_GROUP_ID#
+          	AND
+       			TENANT_ID = #v_TENANT_ID#
+       		AND
+       			COMPANY_ID = #v_COMPANY_ID#
+		]]>
+	</delete>
+	
+	<select id="EzOrganAdminDAO.getGroupList" parameterClass="Map" resultClass="OrganGroupVO" remapResults="true">
+		<![CDATA[
+			SELECT
+				GROUP_ID AS GROUPID,
+				GROUP_NAME AS GROUPNAME, 
+                CREATE_ID AS CREATEID,
+                DATE_FORMAT(DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATEDATE,
+                UPDATE_ID AS UPDATEID,
+				DATE_FORMAT(DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATEDATE,
+				COMPANY_ID AS COMPANYID
+           FROM
+           		TBL_PERMISSIONGROUPLIST 
+           WHERE
+            	TENANT_ID = #v_TENANT_ID# AND COMPANY_ID = #v_COMPANY_ID#
+           ORDER BY GROUP_NAME              	
+        ]]>  
+	</select>
 </sqlMap>

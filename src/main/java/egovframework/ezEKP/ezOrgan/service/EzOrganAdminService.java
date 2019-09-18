@@ -11,6 +11,7 @@ import java.util.List;
 
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -120,4 +121,19 @@ public interface EzOrganAdminService {
 	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
 
 	public String getCompanyName(String displayName, int tenantID) throws Exception;
+	
+	public String insertPermissionGroup(String groupID, String groupName, String createID, String companyID, int tenantID, List<String> groupMemberList) throws Exception;
+	
+	public String updatePermissionGroup(String groupID, String groupName, String updateID, String companyID, int tenantID, List<String> groupMemberList) throws Exception;
+	
+	public void deletePermissionGroup(String groupList, String companyID, int tenantID) throws Exception;
+	
+	public int getPermissionGroupListCount(int tenantID, String searchKeycode, String searchKeyword, String companyID) throws Exception;
+	
+	public List<OrganGroupVO> getPermissionGroupList(int pPage, int pPageRow, int tenantID, String offset, String searchField, String searchValue, String searchCompanyID) throws Exception;
+	
+	public List<OrganGroupVO> getPermissionGroupInfo(String groupID, int tenantID, String companyID) throws Exception;
+	
+	public List<OrganGroupVO> getGroupList(int tenantID, String companyID) throws Exception;
+	
 }

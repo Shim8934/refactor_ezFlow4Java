@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.util.ADConnection;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
@@ -1796,4 +1797,207 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
     	}
     }
+	
+	@Override
+	public String insertPermissionGroup(String groupID, String groupName, String createID, String companyID, int tenantID, List<String> groupMemberList) throws Exception {
+		logger.debug("insertPermissionGroup started");
+		String result = "fail";
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_GROUP_ID", groupID);
+		map.put("v_GROUP_NAME", groupName);
+		map.put("v_CREATE_ID", createID);
+		map.put("v_CREATE_DATE", nowDate);
+		map.put("v_COMPANY_ID", companyID);
+		map.put("v_TENANT_ID", tenantID);
+
+		ezOrganAdminDao.setPermissionGroupList(map);
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		String memberID = "";
+		String memberType = "";
+		String sub_Dept_YN = "N";
+		for (int i = 0; i < groupMemberList.size(); i++) {
+			memberID = groupMemberList.get(i).split(":")[0];
+			memberType = groupMemberList.get(i).split(":")[1];
+
+			if (memberType.equalsIgnoreCase("DEPT")) {
+				sub_Dept_YN = groupMemberList.get(i).split(":")[2];
+			}
+			
+			map2.put("v_GROUP_ID", groupID);
+			map2.put("v_MEMBER_ID", memberID);
+			map2.put("v_MEMBER_TYPE", memberType);
+			map2.put("v_ADDED_DATE", nowDate);
+			map2.put("v_SUB_DEPT_YN", sub_Dept_YN);
+			map2.put("v_COMPANY_ID", companyID);
+			map2.put("v_TENANT_ID", tenantID);
+			
+			ezOrganAdminDao.setPermissionGroupInfo(map2);
+		}
+		
+		result = "OK";
+
+		logger.debug("insertPermissionGroup ended");
+		return result;
+	}
+	
+	@Override
+	public String updatePermissionGroup(String groupID, String groupName, String updateID, String companyID, int tenantID, List<String> groupMemberList) throws Exception {
+		logger.debug("updatePermissionGroup started");
+		String result = "fail";
+		
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_GROUP_ID", groupID);
+		map.put("v_GROUP_NAME", groupName);
+		map.put("v_UPDATE_ID", updateID);
+		map.put("v_UPDATE_DATE", nowDate);
+		map.put("v_COMPANY_ID", companyID);
+		map.put("v_TENANT_ID", tenantID);
+
+		ezOrganAdminDao.updatePermissionGroupList(map);
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+
+		map2.put("v_GROUP_ID", groupID);
+		map2.put("v_COMPANY_ID", companyID);
+		map2.put("v_TENANT_ID", tenantID);
+		
+		ezOrganAdminDao.deletePermissionGroupInfo(map2);
+		
+		Map<String, Object> map3 = new HashMap<String, Object>();
+		String memberID = "";
+		String memberType = "";
+		String sub_Dept_YN = "N";
+		for (int i = 0; i < groupMemberList.size(); i++) {
+			memberID = groupMemberList.get(i).split(":")[0];
+			memberType = groupMemberList.get(i).split(":")[1];
+
+			if (memberType.equalsIgnoreCase("DEPT")) {
+				sub_Dept_YN = groupMemberList.get(i).split(":")[2];
+			}
+			
+			map3.put("v_GROUP_ID", groupID);
+			map3.put("v_MEMBER_ID", memberID);
+			map3.put("v_MEMBER_TYPE", memberType);
+			map3.put("v_ADDED_DATE", nowDate);
+			map3.put("v_SUB_DEPT_YN", sub_Dept_YN);
+			map3.put("v_COMPANY_ID", companyID);
+			map3.put("v_TENANT_ID", tenantID);
+			
+			ezOrganAdminDao.setPermissionGroupInfo(map3);
+		}
+		
+		result = "OK";
+
+		logger.debug("updatePermissionGroup ended");
+		return result;
+	}
+	
+	@Override
+	public int getPermissionGroupListCount(int tenantID, String searchKeycode, String searchKeyword, String companyID) throws Exception {
+		logger.debug("getPermissionGroupListCount started");
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("search_keycode", searchKeycode);
+		map.put("search_keyword", searchKeyword);
+		map.put("companyId", companyID);
+		
+		logger.debug("getPermissionGroupListCount ended");
+		
+		return ezOrganAdminDao.getPermissionGroupListCount(map);
+	}
+	
+	@Override
+	public List<OrganGroupVO> getPermissionGroupList(int pPage, int pPageRow, int tenantID, String offset, String searchKeycode, String searchKeyword, String searchCompanyID)	throws Exception {
+        logger.debug("getPermissionGroupList started");
+        logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow);
+        logger.debug("tenantID=" + tenantID + ",offset=" + offset);
+   		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		logger.debug("searchCompanyID=" + searchCompanyID );
+
+   		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("v_ROWPERPAGE", pPageRow);
+		map.put("v_STARTROW", pPageRow*(pPage - 1));
+		map.put("search_keycode", searchKeycode);
+		map.put("search_keyword", searchKeyword);
+		map.put("companyId", searchCompanyID);
+				
+		List<OrganGroupVO> retireList = ezOrganAdminDao.getPermissionGroupList(map);
+		
+        logger.debug("getPermissionGroupList ended");
+		
+		return retireList;
+	}
+	
+	@Override
+	public List<OrganGroupVO> getPermissionGroupInfo(String groupID, int tenantID, String companyID) throws Exception{
+		logger.debug("getPermissionGroupList started");
+   		logger.debug("companyID=" + companyID );
+
+   		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_GROUP_ID", groupID);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_COMPANY_ID", companyID);
+				
+		List<OrganGroupVO> retireList = ezOrganAdminDao.getPermissionGroupInfo(map);
+		
+        logger.debug("getPermissionGroupList ended");
+		
+		return retireList;
+	}
+	
+	public void deletePermissionGroup(String groupList, String companyID, int tenantID) throws Exception{
+		logger.debug("updatePermissionGroup started");
+		String groupID[] = groupList.split(",");
+
+		for (int i = 0; i < groupID.length; i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("v_GROUP_ID", groupID[i]);
+			map.put("v_TENANT_ID", tenantID);
+			map.put("v_COMPANY_ID", companyID);
+			
+			ezOrganAdminDao.deletePermissionGroupInfo(map);
+		}
+		
+		logger.debug("updatePermissionGroup ended");
+	}
+	
+	@Override
+	public List<OrganGroupVO> getGroupList(int tenantID, String companyID) throws Exception{
+		logger.debug("getGroupList started");
+   		logger.debug("companyID=" + companyID );
+
+   		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_COMPANY_ID", companyID);
+				
+		List<OrganGroupVO> retireList = ezOrganAdminDao.getGroupList(map);
+		
+        logger.debug("getGroupList ended");
+		
+		return retireList;
+	}
 }
