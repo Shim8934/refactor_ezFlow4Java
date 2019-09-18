@@ -114,7 +114,7 @@ var buttons = (function() {
 					var result = data.status;
 					
 					if (result != "ok" && folderType != "U") {
-						alert(messages.strLang30);
+						alert(messages.strLang41);
 					} else {
 						openLeftPanel();
 						DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString()+"&folderList=" + selected.folders.toString());
@@ -162,7 +162,7 @@ var buttons = (function() {
 						var result = data.status;
 						
 						if (result != "ok" && folderType != "U") {
-							alert(messages.strLang30);
+							alert(messages.strLang42);
 						} else {
 							openLeftPanel();
 							DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);

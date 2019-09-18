@@ -39,6 +39,8 @@ var messages = {
 	strLang38 : "Please select a file or folder.",
 	strLang39 : "Please select one file or folder.",
 	strLang40 : "You can't delete a folder unless it's a folder creator.",
+	strLang41 : "You can't delete it unless you're the creator of the file or folder.",
+	strLang42 : "You cannot modify the name unless you are the creator of the file or folder.",
 	completeDuplicateJob : "Processing completed.",
 	parameterError: "Insufficient parameters.",
 	serverError: "An error has occurred.",

@@ -653,7 +653,7 @@
 		            <td><input type="text" id="searchFileName" style="width:99%" value="" name="searchFileName"></td>
 		        </tr>  
 		         <tr>
-		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
+		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 생성자 -->
 		            <td><input type="text" id="searchCreateName" style="width:99%" value="" name="searchCreateName"></td>
 		        </tr>    
 			</table>
