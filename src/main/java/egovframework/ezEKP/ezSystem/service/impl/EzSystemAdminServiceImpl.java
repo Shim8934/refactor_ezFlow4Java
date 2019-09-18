@@ -87,6 +87,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			String paramName = list.get(i).get("name");
 			String paramValue = list.get(i).get("value");
 			
+			if (paramName.equals("useSession") || paramName.equals("useSessionMobile")) {
+				int sessionParam = Integer.parseInt(paramValue);
+				paramValue = Integer.toString(sessionParam);
+			}
+			
 			sysParamVO.setName(paramName);
 			sysParamVO.setValue(paramValue);
 			
