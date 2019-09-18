@@ -1515,9 +1515,6 @@ function SaveApproveInfo(pApproveFlag) {
         return rtnVal;
     }
 
-	var fields = message.GetFieldsList();
-    var field = message.GetListItem(fields, "opinions");
-    field.innerHTML = " ";
     SaveFile();
     SignSave();
 
@@ -1545,6 +1542,11 @@ function SaveApproveInfo(pApproveFlag) {
     // 경우에 따른 DOCNO 설정.
     
     if (pApproveFlag == "2") {
+        field = message.GetListItem(fields, "opinions");
+        if (field) {
+        	field.innerHTML = " ";
+        }
+        
     	if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
     		if (field) {
     			var forTest = getfieldValue(field).slice(-1);
