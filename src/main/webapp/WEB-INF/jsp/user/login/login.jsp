@@ -223,7 +223,7 @@
 		    		dataType : "html",				    		
 		    		async : false,
 		    		data : {
-		    			USERID : rsa.encrypt(document.getElementById("chooseId").innerHTML),
+		    			USERID : rsa.encrypt(document.getElementById("chooseId").getAttribute("data-userId")),
 		    			OLDPASSWORD : rsa.encrypt(document.getElementById('txtOldPassword').value),
 		    			NEWPASSWORD : rsa.encrypt(document.getElementById('txtNewPassword').value),
 		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value)
@@ -306,7 +306,10 @@
 					<span><spring:message code='main.jjh03'/></span>
 				</p>
 				<ul class="passwordForm">
-					<li style="padding-top:10px"><span class="formText"><spring:message code='main.jjh09'/></span><span class="formID" id="chooseId">${userId}</span></li>
+					<li style="padding-top:10px;">
+						<span class="formText"><spring:message code='main.jjh09'/></span>
+						<span class="formID" id="chooseId" data-userId="${userId}">${loginId}</span>
+					</li>
 					<li><span class="formText"><spring:message code='ezPersonal.t949'/></span><span class="formInput"><input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
 					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
 					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
