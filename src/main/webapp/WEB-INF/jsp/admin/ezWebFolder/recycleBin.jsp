@@ -469,27 +469,25 @@
 				document.getElementById("ui-datepicker-div").style.display = "none";
 			}
 		}
-
-		function optionHidden() {
-	 	    document.getElementById("layer_Viewpopup").style.display = "none";
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-	 	}
+		
 		function optionView(obj) {
 	   		 if (obj.getAttribute("mode") == "off") {
 	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-//	    	        if(pAdminType == "y")
-	   	            document.getElementById("layer_Viewpopup").style.top = "100px";
-//	    	        else
-//	    	            document.getElementById("layer_Viewpopup").style.top = "100px";
+  	            document.getElementById("layer_Viewpopup").style.top = "100px";
 	   	        document.getElementById("layer_Viewpopup").style.display = "";
-	   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+	   	        obj.setAttribute("class", "icon16 btn_onarrow_down");
 	   	        obj.setAttribute("mode", "on");
 	   	    } else {
 	   	        optionHidden();
 	   	    }
 	   	}
-	   	
+  	   
+	 	function optionHidden() {
+	 	    document.getElementById("layer_Viewpopup").style.display = "none";
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
+	 	}
+		
 		function scroll() {
 			var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
 			var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;

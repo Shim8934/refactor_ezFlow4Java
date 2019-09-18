@@ -102,26 +102,6 @@
 				});
 			});
 			
-			function optionHidden() {
-		 	    document.getElementById("layer_Viewpopup").style.display = "none";
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-		 	}
-			function optionView(obj) {
-		   		 if (obj.getAttribute("mode") == "off") {
-		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-//		    	        if(pAdminType == "y")
-		   	            document.getElementById("layer_Viewpopup").style.top = "130px";
-//		    	        else
-//		    	            document.getElementById("layer_Viewpopup").style.top = "100px";
-		   	        document.getElementById("layer_Viewpopup").style.display = "";
-		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-		   	        obj.setAttribute("mode", "on");
-		   	    } else {
-		   	        optionHidden();
-		   	    }
-		   	}
-			
 	        function leftFolderCPMV(functionType, folderList, toTargetId) {
 				closeAllPopup();
 				window.close();

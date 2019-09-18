@@ -320,22 +320,22 @@
 	        document.getElementById("SearchOption").setAttribute("mode", "off");
 	    }
    	   
-		function optionView(obj){
-			if (obj.getAttribute("mode") == "off") {
-			    document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-				document.getElementById("layer_Viewpopup").style.top = "100px";
-				document.getElementById("layer_Viewpopup").style.display = "";
-				obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-				obj.setAttribute("mode", "on");
-			} else {
-				optionHidden();
-			}
-		}
-   	   
+		function optionView(obj) {
+	   		 if (obj.getAttribute("mode") == "off") {
+	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+ 	            document.getElementById("layer_Viewpopup").style.top = "100px";
+	   	        document.getElementById("layer_Viewpopup").style.display = "";
+	   	        obj.setAttribute("class", "icon16 btn_onarrow_down");
+	   	        obj.setAttribute("mode", "on");
+	   	    } else {
+	   	        optionHidden();
+	   	    }
+	   	}
+ 	   
 	 	function optionHidden() {
-			document.getElementById("layer_Viewpopup").style.display = "none";
-			document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-			document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
+	 	    document.getElementById("layer_Viewpopup").style.display = "none";
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 	 	}
          
 		function refreshView() {

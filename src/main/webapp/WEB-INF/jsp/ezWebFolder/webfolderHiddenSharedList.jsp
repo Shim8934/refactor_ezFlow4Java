@@ -21,6 +21,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
 		<script type="text/javascript">
 			var folderType = "";
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
@@ -335,25 +336,7 @@
 		        getFileList();
 		    }
 			
-			function optionView(obj){
-		   		 if (obj.getAttribute("mode") == "off") {
-		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-		   	        document.getElementById("layer_Viewpopup").style.top = "130px";
-		   	        document.getElementById("layer_Viewpopup").style.display = "";
-		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-		   	        obj.setAttribute("mode", "on");
-		   	    } else {
-		   	        optionHidden();
-		   	    }
-		   	}
-	       
-			function optionHidden() {
-		 	    document.getElementById("layer_Viewpopup").style.display = "none";
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-		 	}
-			
-			function refreshView() {
+bu			function refreshView() {
 				getFileList();
 			}
 			
