@@ -418,7 +418,7 @@
 										res.loginHistList.forEach(function(i, v) {
 											html += "<tr>";
 											html += "   <td>"	+ j 								+ "</td>";
-											html += "	<td title=\'" + i.usernm + "'>"	+ i.usernm	+ "</td>";
+											html += "	<td title=\'" + i.usernm + "'>"	+ i.usernm + "(" + i.userid	+ ")" + "</td>";
 											html += "	<td>"	+ i.deptnm							+ "</td>";
 											html += "	<td>"	+ i.companynm						+ "</td>";
 											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
@@ -434,7 +434,7 @@
 										res.loginHistList.forEach(function(i, v) {
 											html += "<tr>";
 											html += "   <td>"	+ j		+ "</td>";
-											html += "	<td title=\'" + i.usernm2 + "'>"  + i.usernm2 	+ "</td>";
+											html += "	<td title=\'" + i.usernm2 + "'>"  + i.usernm2 	+ "(" + i.userid	+ ")" + "</td>";
 											html += "	<td>"	+ i.deptnm2								+ "</td>";
 											html += "	<td>"	+ i.companynm2							+ "</td>";
 											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
@@ -455,8 +455,8 @@
 								totalCount = res.itemCnt;
 
 								if (res.searchKeycode != null) {
-									var idx = parseInt(searchKeycode) - 1;
-									$('#searchKeycode option:eq('+ idx + ')').attr('selected', 'selected');
+									var idx = parseInt(searchKeycode);
+									$('#searchKeycode option[value='+ idx + ']').attr('selected', 'selected');
 								}
 
 								$('#searchKeyword').val(res.searchKeyword);
@@ -555,6 +555,7 @@
 					<select id="searchKeycode"> 
 						<option value="1"><spring:message code="ezStatistics.t1068"></spring:message></option>
 						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
+						<option value="6"><spring:message code="ezOrgan.t218"></spring:message></option>
 						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
 						<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>
 						<option value="5"><spring:message code="ezSystem.x0027"></spring:message></option>
@@ -594,7 +595,7 @@
 				<thead style="">
 					<tr>
 						<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-						<th><spring:message code="ezStatistics.t1068"></spring:message></th>
+						<th><spring:message code="ezEmail.lsd04"></spring:message></th>
 						<th><spring:message code="ezStatistics.t113"></spring:message></th>
 						<th><spring:message code="ezEmail.t712"></spring:message></th>
 						<th><spring:message code="ezSystem.x0039"></spring:message></th>
