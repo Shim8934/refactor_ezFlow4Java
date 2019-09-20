@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezTalkGate.util.EzTalkGateUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -234,6 +235,23 @@ public class EzTalkGateController {
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(orgId, "1", tenantId);
 			String deptId = userVO.getDepartment();
 			String compId = userVO.getPhysicalDeliveryOfficeName();
+			
+			// sso 접속시에도 로그인 이력 남도록 추가  
+			String encryptPw = EgovFileScrty.encryptPassword(orgPw, orgId);
+			LoginVO setVo = new LoginVO();
+			setVo.setId(orgId);
+			setVo.setTenantId(tenantId);
+			setVo.setPassword(encryptPw);
+			
+			LoginVO vo = loginService.selectUser(setVo);
+			
+			vo.setIp(ClientUtil.getClientIP(request));
+			vo.setAgent(ClientUtil.getClientInfo(request, "agent"));
+			vo.setOs(ClientUtil.getClientInfo(request, "os"));
+			vo.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+			vo.setTenantId(tenantId);
+			
+			loginService.insertLog(vo);
 			
 			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
 			
