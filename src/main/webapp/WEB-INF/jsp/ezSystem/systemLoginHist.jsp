@@ -418,7 +418,7 @@
 										res.loginHistList.forEach(function(i, v) {
 											html += "<tr>";
 											html += "   <td>"	+ j 								+ "</td>";
-											html += "	<td title=\'" + i.usernm + "'>"	+ i.usernm + "(" + i.userid	+ ")" + "</td>";
+											html += "	<td title=\'" + i.usernm + "(" + i.userid	+ ")'>"	+ i.usernm + "(" + i.userid	+ ")" + "</td>";
 											html += "	<td>"	+ i.deptnm							+ "</td>";
 											html += "	<td>"	+ i.companynm						+ "</td>";
 											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
@@ -434,7 +434,7 @@
 										res.loginHistList.forEach(function(i, v) {
 											html += "<tr>";
 											html += "   <td>"	+ j		+ "</td>";
-											html += "	<td title=\'" + i.usernm2 + "'>"  + i.usernm2 	+ "(" + i.userid	+ ")" + "</td>";
+											html += "	<td title=\'" + i.usernm2 + "(" + i.userid	+ ")'>"  + i.usernm2 	+ "(" + i.userid	+ ")" + "</td>";
 											html += "	<td>"	+ i.deptnm2								+ "</td>";
 											html += "	<td>"	+ i.companynm2							+ "</td>";
 											html += "	<td>"	+ i.connectip + " ( " + i.connectCountryName	+ " ) " + "</td>";
