@@ -217,7 +217,7 @@ DROP TABLE IF EXISTS `james_recipient_rewrite`;
 CREATE TABLE `james_recipient_rewrite` (
   `DOMAIN_NAME` varchar(100) NOT NULL,
   `USER_NAME` varchar(100) NOT NULL,
-  `TARGET_ADDRESS` varchar(4000) NOT NULL,
+  `TARGET_ADDRESS` varchar(20000) NOT NULL,
   PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3428,6 +3428,7 @@ CREATE TABLE `tbl_board_boardmanage` (
   `BOARDGROUPACL` varchar(2) DEFAULT 'Y',
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) DEFAULT NULL,
+  `TYPE` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ACCESSID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9433,6 +9434,15 @@ CREATE TABLE `tbl_ps_linkportlet` (
   `LINK_ORDER` int(11) DEFAULT NULL,
   `TENANT_ID` mediumint(5) DEFAULT NULL,
   `COMPANYID` varchar(45) DEFAULT NULL,
+  `USE_NUM_URL` varchar(45) DEFAULT 'N',
+  `NUM_URL_USERID` varchar(45) DEFAULT 'N',
+  `NUM_URL_DEPTID` varchar(45) DEFAULT 'N',
+  `NUM_URL_COMPANYID` varchar(45) DEFAULT 'N',
+  `NUM_URL_EMPNO` varchar(45) DEFAULT 'N',
+  `URL_USERID` varchar(45) DEFAULT 'N',
+  `URL_DEPTID` varchar(45) DEFAULT 'N',
+  `URL_COMPANYID` varchar(45) DEFAULT 'N',
+  `URL_EMPNO` varchar(45) DEFAULT 'N',
   PRIMARY KEY (`LINK_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -13892,4 +13902,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-09-15 17:46:17
+-- Dump completed on 2019-09-20 10:57:27
