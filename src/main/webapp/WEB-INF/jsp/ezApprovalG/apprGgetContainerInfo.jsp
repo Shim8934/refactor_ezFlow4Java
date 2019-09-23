@@ -1492,10 +1492,10 @@
 		            }
 		
 		            if (selectSearch.item(0).selected) {
-		                condition[1] = document.getElementById("txt_keyword").value;
+		                condition[1] = replaceCond(document.getElementById("txt_keyword").value);
 		            }
 		            else if (selectSearch.item(1).selected) {
-		                condition[2] = document.getElementById("txt_keyword").value;
+		                condition[2] = replaceCond(document.getElementById("txt_keyword").value);
 		            }
 		        }
 		        else {
