@@ -85,7 +85,10 @@
 	            X.DEPTNM2,
 	            X.CONNECTIP,
 	            X.CONNECTBROWSER,
-	            X.CONNECTOS
+	            X.CONNECTOS,
+				X.COMPANYID,
+				X.COMPANYNM,
+				X.COMPANYNM2
             FROM (
 				SELECT 
 			    	ROWNUM AS rnum,
@@ -97,7 +100,10 @@
 					A.DEPTNM2,
 					A.CONNECTIP,
 					A.CONNECTBROWSER,
-					A.CONNECTOS
+					A.CONNECTOS,
+					A.COMPANYID,
+					A.COMPANYNM,
+					A.COMPANYNM2
 				FROM 
 					(
 					SELECT  
@@ -109,7 +115,10 @@
 						C.DEPTNM2,
 						C.CONNECTIP,
 						C.CONNECTBROWSER,
-						C.CONNECTOS
+						C.CONNECTOS,
+						C.COMPANYID,
+						C.COMPANYNM,
+						C.COMPANYNM2
 					FROM 
 						TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
 					ON 

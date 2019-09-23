@@ -1331,6 +1331,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				
+				// 2019-09-19 김민성 - 결재유형이 참조인 경우 결재상태(APRSTATE)가 미결이어도 진행으로 보이도록 수정
+				if(fieldValue.equals("000") && docXML.getElementsByTagName("APRTYPE").item(k).getTextContent().equals("007")) {
+					fieldValue = "002";
+				}
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
@@ -16303,7 +16308,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String sendRecvMsg(String deptID, String docID, String mode, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("sendRecvMsg started");
 
-		String rtnXML = ezOrganService.getSearchList("EXACT_Department::" + deptID + ";;extensionAttribute1::a=1", "displayName", "department", "user", 50, commonUtil.getPrimaryData(lang, tenantID), tenantID);
+		String rtnXML = ezOrganService.getSearchList("EXACT_Department::" + deptID + ";;extensionAttribute1::a=1", "displayName", "department", "user", 50, commonUtil.getPrimaryData(lang, tenantID), tenantID, "n");
 		Document docXML = commonUtil.convertStringToDocument(rtnXML);
 		
 		for (int k = 0; k < docXML.getElementsByTagName("DATA2").getLength(); k++) {
@@ -20377,7 +20382,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getProxyUser started");
 		
 		String primaryData = commonUtil.getPrimaryData(userLang, tenantID);
-		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayname", "displayname;extensionAttribute5", "user", 50, primaryData, tenantID);
+		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayname", "displayname;extensionAttribute5", "user", 50, primaryData, tenantID, "n");
 		Document doc = commonUtil.convertStringToDocument(rtnXML);
 		int nodeLength = doc.getElementsByTagName("DATA2").getLength();
 		boolean chkFirst = false;

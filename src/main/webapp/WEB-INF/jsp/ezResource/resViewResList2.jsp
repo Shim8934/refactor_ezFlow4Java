@@ -20,6 +20,9 @@
 			#resourceDataTable tr th{
 				font-weight: normal;
 			}
+			.icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
+			.icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
+
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

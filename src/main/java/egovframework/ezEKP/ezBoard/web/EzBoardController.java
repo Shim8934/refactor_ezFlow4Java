@@ -2888,8 +2888,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int j = 0; j < dlength; j++) {
 			resultXML.append("<ROW>");
 			
+			/* 2019-08-02 홍승비 - 다국어 환경에서 부서명 '익명'처리되지 않는 오류 수정 */
 			if (String.valueOf(boardList.get(j).get("GUBUN")).equals("2")) {
 				boardList.get(j).replace("WRITERDEPTNAME", anonyMsg);
+				boardList.get(j).replace("WRITERDEPTNAME2", anonyMsg);
 			}
 			
 			for (i = 0; i < hlength; i++) {
@@ -3935,6 +3937,14 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("mailShareId", request.getParameter("mailShareId"));
 		}
 		
+		/* 2019-08-06 홍승비 - 포토/썸네일 게시물 작성 시 작성자 이름 다국어 처리(임시보관함) */
+		String displayName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			displayName = userInfo.getDisplayName1();
+		} else {
+			displayName = userInfo.getDisplayName2();
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -3965,6 +3975,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("displayName", displayName);
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -4627,7 +4638,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			guBun = "error";
 		}
 		
-		String[] boardID = boardIDs.split(";");
+		/* 2019-08-08 홍승비 - 잘못된 권한체크 제거(주석처리) */
+/*		String[] boardID = boardIDs.split(";");
 		
 		for (int k = 0; k < boardID.length - 1; k++) {
 			BoardPropertyVO boardInfo = getBoardInfo(boardID[k], userInfo);
@@ -4642,7 +4654,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 			}
 		}
-		
+		*/
 		model.addAttribute("itemIDList", itemIDList);
 		model.addAttribute("boardID", boardIDs);
 		model.addAttribute("guBun", guBun);
@@ -4776,6 +4788,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardPropertyVO = sumBoardACL(boardACLList, boardPropertyVO);
 		}
 		
+		/* 2019-08-06 홍승비 - 게시판 선택 팝업창으로 게시물 작성/복사/이동 시 게시판그룹의 관리자 권한(boardGroupAdmin)을 체크하지 않는 오류 수정  */
 		if (userInfo.getRollInfo() != null && ((userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || boardPropertyVO.getBoardAdmin_FG().equals("OK")) ||
 				(isAllGroupBoard.equals("N") && (userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)))) {
 			strACLXML = "<NODES><NODE><ACCESS>1</ACCESS><BOARDADMIN>true</BOARDADMIN><LIST>true</LIST><READ>true</READ><WRITE>true</WRITE><REPLY>true</REPLY><DELETE>true</DELETE><INHERIT>false</INHERIT><POSTNOTICE></POSTNOTICE></NODE></NODES>";
@@ -4786,6 +4799,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (boardPropertyVO != null) {
 				sb.append("<NODE>");
 				sb.append("<ACCESS>" + boardPropertyVO.getAccess_() + "</ACCESS>");
+				sb.append("<BOARDGROUPADMIN>" + boardPropertyVO.getBoardGroupAdmin_FG()+ "</BOARDGROUPADMIN>"); // OK/NO
 				sb.append("<BOARDADMIN>" + boardPropertyVO.getBoardAdmin_FG() + "</BOARDADMIN>");
 				sb.append("<LIST>" + boardPropertyVO.getListView_FG() + "</LIST>");
 				sb.append("<READ>" + boardPropertyVO.getRead_FG() + "</READ>");
@@ -4801,7 +4815,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			strACLXML = sb.toString();
 		}
-
+		
+		logger.debug("strACLXML in boardACL   ::  " + strACLXML);
 		logger.debug("getACL ended");
 		return strACLXML;
 	}
@@ -5719,7 +5734,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String userID = userInfo.getDisplayName1();
+		String userID = "";
 		String userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String boardID = request.getParameter("boardID");
 		String url = request.getParameter("url");
@@ -5737,6 +5752,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		strNow = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
+		/* 2019-08-06 홍승비 - 포토/썸네일 게시물 작성 시 작성자 이름 다국어 처리 */
+		if (userInfo.getPrimary().equals("1")) {
+			userID = userInfo.getDisplayName1();
+		} else {
+			userID = userInfo.getDisplayName2();
+		}
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("userEditor", userEditor);

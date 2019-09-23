@@ -367,6 +367,11 @@
             	$( "#MsgBCC" ).autocomplete("disable");
         	</c:if>
             
+			$("textarea").keydown(function(e) {
+				if (e.keyCode == 27) {
+					return false;
+				}
+			});
 		}
 	    
 		var isAutoSave = false;

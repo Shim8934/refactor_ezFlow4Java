@@ -26,8 +26,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var companyId = "${userCompany}";
+			var searchFlag = false;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -45,7 +47,6 @@
 		    function company_change() {
 		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
 		        document.getElementById("DIV_Member").innerHTML = "";
-		
 		        var xmlDom = createXmlDom();
 		        var xmlHTTP = createXMLHttpRequest();
 		
@@ -199,7 +200,8 @@
 				        }
 				        
 				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
-				        company_change();
+				        //company_change();
+				        selectList_Change();
 			        } else {
 			            alert("<spring:message code='ezEmail.t51' />");		            
 			        }
@@ -244,7 +246,7 @@
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
 		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
-		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
+		            mail_add_distributionlist_cross_dialogArguments[1] = mod_dl_Complete;
 		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
@@ -256,10 +258,15 @@
 		                company_change();
 		        }
 		    }
+		    function mod_dl_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined")
+		        	selectList_Change();
+		    }
 		    function search_click() {
 				var searchType = document.getElementById("searchType").value;
 		    	var searchValue = document.getElementById("searchValue").value;
 		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
+		    	searchFlag = true;
 
 		    	if (searchValue == "") {
 		    		alert("<spring:message code='ezEmail.t10' />");
@@ -315,6 +322,23 @@
 		            pUserList.DataBind("OrganListView");
 		        }
 		    } // search_onclick END
+		    
+		    function selectList_Change() {
+		    	var selectTR_Data1 = $("#lvUserList tr[selected=true]")[0].getAttribute("data1");
+		    	
+		    	if (searchFlag == true && document.getElementById("searchValue").value != "") {
+		    		search_click();
+		    	} else {
+		    		company_change();
+		    	}
+
+				var reListTR_ = $("#lvUserList tr[data1='" + selectTR_Data1 + "']")[0];
+				reListTR_ = typeof reListTR_ != "undefined"  ? reListTR_.getAttribute("id") : "";
+				
+		    	if (selectTR_Data1 != "" && reListTR_ != "") {
+		    		tr_select(reListTR_, "lvUserList", View_dl);
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -348,19 +372,23 @@
 	</script>
 		<div style="width:825px;">
 		<!-- 검색 -->
-		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box;">
+		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box; line-height: 30px;">
 			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
-				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC;" id="listCount"></span><spring:message code='ezSystem.kyj2'/>]</span>
+				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
-			<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
+			<div id="userSearchRayer" style="float:right; display: inline-block;">
+				<div style="display: inline-block; float:left;">
 				<select id="searchType" style="height: 26px; width: 120px;">
 					<option value="displayName"><spring:message code='ezEmail.t710' /></option> <!-- 그룹이름 -->
 					<option value="groupID"><spring:message code='ezEmail.lhm09' /></option> <!-- 그룹아이디 -->
 					<option value="memberName"><spring:message code='ezEmail.ksaDistribution01' /></option> <!-- 구성원이름 -->
 					<option value="memberID"><spring:message code='ezEmail.ksaDistribution02' /></option> <!-- 구성원아이디 -->
 				</select>
-				<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
-				<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+				</div>
+				<div style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 519px;padding-left: 5px;">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:89%">
+					<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+				</div>
 			</div>
 		</div>
 	    <table class="mainlist" style="width:100%;">
