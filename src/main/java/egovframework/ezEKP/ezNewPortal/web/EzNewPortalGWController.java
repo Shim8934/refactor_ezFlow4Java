@@ -763,6 +763,16 @@ public class EzNewPortalGWController {
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
 			}
+			//2019-09-20 메신저 다운로드 부분 추가
+			String useUtilTalk = ezCommonService.getTenantConfig("useUtilTalk", tenantId);
+			if (useUtilTalk == null || useUtilTalk.equals("")) {
+				useUtilTalk = "NO";
+			} else {
+				String talkFilePath = ezCommonService.getTenantConfig("talkFilePath", tenantId);				
+				data.put("talkFilePath", talkFilePath);
+			}
+			data.put("useUtilTalk", useUtilTalk);
+			
 			
 			/**
 			 * 4) 팝업 공지
