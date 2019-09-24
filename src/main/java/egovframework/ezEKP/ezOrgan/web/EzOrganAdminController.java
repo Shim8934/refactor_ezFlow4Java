@@ -63,6 +63,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -4216,8 +4217,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				String pCn = (String) vo.getMemberID();
 
 				if (pClass.equalsIgnoreCase("DEPT")) {
-					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn,
-							userInfo.getPrimary(), userInfo.getTenantId());
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
 					if (dept != null) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + pClass + "</CLASS>");
@@ -4229,8 +4229,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								+ commonUtil.cleanValue(dept.getMail())
 								+ "</MAIL>");
 						sb.append("<COMPANY>"
-								+ commonUtil.cleanValue(dept
-										.getExtensionAttribute3())
+								+ commonUtil.cleanValue(dept.getExtensionAttribute2())
 								+ "</COMPANY>");
 						sb.append("<DEPT>"
 								+ egovMessageSource.getMessage("ezOrgan.t68",
@@ -4246,8 +4245,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					}
 
 				} else if (pClass.equalsIgnoreCase("USER")) {
-					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn,
-							userInfo.getPrimary(), userInfo.getTenantId());
+					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
 					if (user != null) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + pClass + "</CLASS>");
@@ -4259,7 +4257,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								+ commonUtil.cleanValue(user.getMail())
 								+ "</MAIL>");
 						sb.append("<COMPANY>"
-								+ commonUtil.cleanValue(user.getCompany())
+								+ commonUtil.cleanValue(user.getPhysicalDeliveryOfficeName())
 								+ "</COMPANY>");
 						sb.append("<DEPT>"
 								+ commonUtil.cleanValue(user.getDescription())
@@ -4270,6 +4268,36 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						sb.append("</ROW>");
 					} else {
 						
+					}
+				} else if (pClass.equalsIgnoreCase("JIKWI")) {
+					OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("001", pCn, (String) vo.getMemberCompanyID(), tenantID);
+					
+					if (jikwiVO != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(jikwiVO.getDisplayName())
+								+ "</DISPLAYNAME>");
+						sb.append("<COMPANY>"
+								+ commonUtil.cleanValue(jikwiVO.getCompanyID())
+								+ "</COMPANY>");
+						sb.append("</ROW>");
+					}
+				} else if (pClass.equalsIgnoreCase("JIKCHEK")) {
+					OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("002", pCn, vo.getMemberCompanyID(), tenantID);
+					
+					if (jikwiVO != null) {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + pClass + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(jikwiVO.getDisplayName())
+								+ "</DISPLAYNAME>");
+						sb.append("<COMPANY>"
+								+ commonUtil.cleanValue(jikwiVO.getCompanyID())
+								+ "</COMPANY>");
+						sb.append("</ROW>");
 					}
 				}
 			}
@@ -4370,41 +4398,24 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			HttpServletRequest request) throws Exception{
 		logger.debug("getJikwiList started.");
 		
-		String returnData = "";
+		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		String type = request.getParameter("type");
+		logger.debug("companyID = " + companyID + ", type = " + type);
+		
+		String result = "";
 		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-			List<OrganGroupVO> list = ezOrganAdminService.getGroupList(userInfo.getTenantId(), userInfo.getCompanyID());
-			
-			StringBuilder sb = new StringBuilder();
-			sb.append("<LISTVIEWDATA><ROWS>");
-
-			for (OrganGroupVO vo : list) {
-				sb.append("<ROW><CELL>");
-				
-				sb.append("<VALUE>");
-				sb.append(commonUtil.cleanValue(vo.getGroupName()));
-				sb.append("</VALUE>");
-				
-				sb.append("<DATA1>");
-				sb.append(commonUtil.cleanValue(vo.getGroupID()));
-				sb.append("</DATA1>");
-				
-				sb.append("</CELL></ROW>");
-			}
-			
-			sb.append("</ROWS></LISTVIEWDATA>");
-			
-			returnData = sb.toString();
+			result = ezOrganAdminService.getTitleList_group(type, companyID, userInfo.getTenantId(), userInfo.getLang());
 			
 		} catch (Exception e) {
-			returnData = "ERROR";
+			result = "ERROR";
 			e.printStackTrace();
 		}
 
 		logger.debug("getJikwiList ended.");
 		
-		return returnData;
+		return result;
 	}
 }

@@ -1821,24 +1821,31 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		String memberID = "";
 		String memberType = "";
-		String sub_Dept_YN = "N";
+		
 		for (int i = 0; i < groupMemberList.size(); i++) {
+			String sub_Dept_YN = "N";
+			String memberCompanyID = "";
+			
 			memberID = groupMemberList.get(i).split(":")[0];
 			memberType = groupMemberList.get(i).split(":")[1];
 
 			if (memberType.equalsIgnoreCase("DEPT")) {
 				sub_Dept_YN = groupMemberList.get(i).split(":")[2];
+			} else if (memberType.equalsIgnoreCase("JIKWI") || memberType.equalsIgnoreCase("JIKCHEK")) {
+				memberCompanyID = groupMemberList.get(i).split(":")[3];
 			}
 			
 			map2.put("v_GROUP_ID", groupID);
 			map2.put("v_MEMBER_ID", memberID);
 			map2.put("v_MEMBER_TYPE", memberType);
+			map2.put("v_MEMBER_COMPANYID", memberCompanyID);
 			map2.put("v_ADDED_DATE", nowDate);
 			map2.put("v_SUB_DEPT_YN", sub_Dept_YN);
 			map2.put("v_COMPANY_ID", companyID);
 			map2.put("v_TENANT_ID", tenantID);
 			
 			ezOrganAdminDao.setPermissionGroupInfo(map2);
+
 		}
 		
 		result = "OK";
@@ -1878,18 +1885,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		Map<String, Object> map3 = new HashMap<String, Object>();
 		String memberID = "";
 		String memberType = "";
-		String sub_Dept_YN = "N";
+
 		for (int i = 0; i < groupMemberList.size(); i++) {
+			String sub_Dept_YN = "N";
+			String memberCompanyID = "";
 			memberID = groupMemberList.get(i).split(":")[0];
 			memberType = groupMemberList.get(i).split(":")[1];
 
 			if (memberType.equalsIgnoreCase("DEPT")) {
 				sub_Dept_YN = groupMemberList.get(i).split(":")[2];
+			} else if (memberType.equalsIgnoreCase("JIKWI") || memberType.equalsIgnoreCase("JIKCHEK")) {
+				memberCompanyID = groupMemberList.get(i).split(":")[3];
 			}
 			
 			map3.put("v_GROUP_ID", groupID);
 			map3.put("v_MEMBER_ID", memberID);
 			map3.put("v_MEMBER_TYPE", memberType);
+			map2.put("v_MEMBER_COMPANYID", memberCompanyID);
 			map3.put("v_ADDED_DATE", nowDate);
 			map3.put("v_SUB_DEPT_YN", sub_Dept_YN);
 			map3.put("v_COMPANY_ID", companyID);
@@ -1999,5 +2011,60 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("getGroupList ended");
 		
 		return retireList;
+	}
+	
+	@Override
+	public String getTitleList_group(String type, String companyID, int tenantID, String lang) throws Exception {
+		logger.debug("getTitleList_group started.");
+
+		StringBuffer rtnVal = new StringBuffer();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList_group(map);
+		
+		rtnVal.append("<LISTVIEWDATA>");
+		rtnVal.append("<ROWS>");
+		
+		if (jobList != null && jobList.size() > 0) {
+			for (int i = 0; i < jobList.size(); i++) {
+				rtnVal.append("<ROW>");
+				if (lang.equalsIgnoreCase("1")) {
+					rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE>");
+				} else {
+					rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE>");
+				}
+				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
+				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
+				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4>");
+				rtnVal.append("<DATA5><![CDATA[" + getCompanyName(jobList.get(i).getCompanyID(), tenantID) + "]]></DATA5></CELL>");
+				rtnVal.append("</ROW>");
+			}
+		}
+		
+		rtnVal.append("</ROWS></LISTVIEWDATA>");
+		
+		logger.debug("getTitleList_group ended.");
+		
+		return rtnVal.toString();
+	}
+	
+	@Override
+	public OrganJobVO getTitleInfo_group(String type, String jobID, String companyID, int tenantID) throws Exception {
+		logger.debug("getTitleInfo_group started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_JOBID", jobID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+
+		OrganJobVO vo =  ezOrganAdminDao.getTitleInfo(map);
+		
+		logger.debug("getTitleInfo_group ended.");
+		return vo;
 	}
 }

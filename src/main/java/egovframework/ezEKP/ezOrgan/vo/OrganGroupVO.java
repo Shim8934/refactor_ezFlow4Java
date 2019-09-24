@@ -23,7 +23,16 @@ public class OrganGroupVO {
 	private String AddedDate;
 	/** 권한그룹 하위부서 포함여부 */
 	private String SubDeptYN;
+	/** 권한그룹 그룹원 소속회사ID*/
+	private String MemberCompanyID;
 	
+	
+	public String getMemberCompanyID() {
+		return MemberCompanyID;
+	}
+	public void setMemberCompanyID(String memberCompanyID) {
+		MemberCompanyID = memberCompanyID;
+	}
 	public String getGroupID() {
 		return GroupID;
 	}

@@ -12,6 +12,7 @@ import java.util.List;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -135,5 +136,9 @@ public interface EzOrganAdminService {
 	public List<OrganGroupVO> getPermissionGroupInfo(String groupID, int tenantID, String companyID) throws Exception;
 	
 	public List<OrganGroupVO> getGroupList(int tenantID, String companyID) throws Exception;
+	
+	public String getTitleList_group(String type, String companyID, int tenantID, String lang) throws Exception;
+	
+	public OrganJobVO getTitleInfo_group(String type, String jobID, String companyID, int tenantID) throws Exception;
 	
 }

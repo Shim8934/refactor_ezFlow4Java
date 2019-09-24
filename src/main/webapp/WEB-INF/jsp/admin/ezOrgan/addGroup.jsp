@@ -179,10 +179,19 @@
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[1]) + "</DATA1>";
 	                        pparsingXML = pparsingXML + "<DATA4>" + getNodeText(GetChildNodes(nodes[i])[0]) + "</DATA4>";
 		                    pparsingXML = pparsingXML + "<DATA5>" + getNodeText(GetChildNodes(nodes[i])[7]) + "</DATA5>";
+		                    
 	                        if(getNodeText(GetChildNodes(nodes[i])[0]) == "USER"){
+	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[4]) + "</DATA6>";
 	                            pparsingXML = pparsingXML + "<VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "DEPT"){
-	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[4]) + "</DATA6>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "JIKWI") {
+	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA6>";
+	                        	pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "JIKCHEK") {
+	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA6>";
+	                        	pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
 	                        }
 	                    }
 	                              
@@ -606,7 +615,7 @@
 	            }
 	            
 	            for (var i = 0; i < memberListLength; i++) {
-		        	createNodeAndInsertText(xmlDom, objNode, "MEMBERID", memberList.item(i).getAttribute("data1") + ":" + memberList.item(i).getAttribute("data4") + ":" + memberList.item(i).getAttribute("data5"));
+		        	createNodeAndInsertText(xmlDom, objNode, "MEMBERID", memberList.item(i).getAttribute("data1") + ":" + memberList.item(i).getAttribute("data4") + ":" + memberList.item(i).getAttribute("data5")+ ":" + memberList.item(i).getAttribute("data6"));
 	            }
 	            
 	            xmlHTTP.open("POST", "/admin/ezOrgan/setPermissionGroup.do", false);
@@ -1085,7 +1094,8 @@
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
 		                    pparsingXML = pparsingXML + "<DATA4>DEPT</DATA4>";
 		                    pparsingXML = pparsingXML + "<DATA5>N</DATA5>";
-		                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+		                    pparsingXML = pparsingXML + "<DATA6></DATA6>";
+		                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                    Resultxml = loadXMLString(pparsingXML2);
 		
@@ -1183,7 +1193,7 @@
 			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
 			                    pparsingXML = pparsingXML + "<DATA4>DEPT</DATA4>";
 			                    pparsingXML = pparsingXML + "<DATA5>N</DATA5>";
-			                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+			                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 			                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 			                    Resultxml = loadXMLString(pparsingXML2);
 			
@@ -1215,8 +1225,126 @@
 		                    } 
 		                }
 		            }
-	            } else if (m_selectedTree == ListViewINPUT) {
-	            	inputAddress();
+	            } else if (m_selectedTree == ListViewJikwi) {
+	            	var listid = "MsgToList";
+		            var getlistview = new ListView();
+		            getlistview.LoadFromID(listid);
+		            
+	            	var jikwelistview = new ListView();
+	                jikwelistview.LoadFromID("pListViewJikwi");
+                   
+                    var arrRows = jikwelistview.GetSelectedRows();
+                    var strName = "";
+                    var strId = "";
+                    var jikwiCompanyID = "";
+    	            if (arrRows.length > 0) {
+    	            	for (var i = 0; i < arrRows.length; i++) {
+    	            		strName = arrRows[i].innerText;
+    	                	strId = GetAttribute(arrRows[i], "data1");
+    	                	jikwiCompanyID = GetAttribute(arrRows[i], "data4");
+    	                	
+    	                	var bFlag = getlistview.ExistRow("data1", strId);
+    		                
+    	                    if (!bFlag) {
+    	                    	pparsingXML2 = "";
+        	                    pparsingXML = "";
+        	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+        	                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
+        	                    pparsingXML = pparsingXML + "<DATA4>JIKWI</DATA4>";
+        	                    pparsingXML = pparsingXML + "<DATA5>N</DATA5>";
+        	                    pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jikwiCompanyID) + "</DATA6>";
+        	                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+        	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+        	                    Resultxml = loadXMLString(pparsingXML2);
+        	                        
+        	                    var MaxID = 0;
+        	                    var InitTr = getlistview.GetDataRows();
+        	                    var MaxCntNum = 0;
+
+        	                    for (var j = 0; j < InitTr.length; j++) {
+        	                    	var curnum = Number(getlistview.GetSelectedRowID(j).substring(getlistview.GetSelectedRowID(j).lastIndexOf('_') + 1), getlistview.GetSelectedRowID(j).length);
+        	                    	if (MaxID < curnum) {
+        	                        	MaxID = curnum;
+        	                        	MaxCntNum = j;
+        	                        }
+        	                    }
+
+        	                    var objTr = getlistview.AddRow(InitTr.length);
+        	                    if (MaxCntNum != 0) {
+        	                    	MaxCntNum = MaxCntNum + 1;
+        	                    }
+
+        	                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+        	                    getlistview.AddDataRow(objTr, Resultxml);
+
+        	                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+        	                    for (var y = 0; y < _tdlength; y++) {
+        	                    	document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+        	                    	document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+        	                    }
+    	                    }
+    	                }
+    	            }
+	            }  else if (m_selectedTree == ListViewJikchek) {
+	            	var listid = "MsgToList";
+		            var getlistview = new ListView();
+		            getlistview.LoadFromID(listid);
+	            	
+	            	var jikwelistview = new ListView();
+	                jikwelistview.LoadFromID("pListViewJikchek");
+                   
+                    var arrRows = jikwelistview.GetSelectedRows();
+                    var strName = "";
+                    var strId = "";
+                    var jikwiCompanyID = "";
+    	            if (arrRows.length > 0) {
+    	            	for (var i = 0; i < arrRows.length; i++) {
+    	            		strName = arrRows[i].innerText;
+    	                	strId = GetAttribute(arrRows[i], "data1");
+    	                	jikwiCompanyID = GetAttribute(arrRows[i], "data4");
+    	                	
+							var bFlag = getlistview.ExistRow("data1", strId);
+    		                
+    	                    if (!bFlag) {
+    	                    	pparsingXML2 = "";
+    	                        pparsingXML = "";
+    	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+    	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
+    	                        pparsingXML = pparsingXML + "<DATA4>JIKCHEK</DATA4>";
+    	                        pparsingXML = pparsingXML + "<DATA5>N</DATA5>";
+    	                        pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jikwiCompanyID) + "</DATA6>";
+    	                        pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+    	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+    	                        Resultxml = loadXMLString(pparsingXML2);
+    	                            
+    	                        var MaxID = 0;
+    	                        var InitTr = getlistview.GetDataRows();
+    	                        var MaxCntNum = 0;
+
+    	                        for (var j = 0; j < InitTr.length; j++) {
+    	                        	var curnum = Number(getlistview.GetSelectedRowID(j).substring(getlistview.GetSelectedRowID(j).lastIndexOf('_') + 1), getlistview.GetSelectedRowID(j).length);
+    	                        	if (MaxID < curnum) {
+    	                            	MaxID = curnum;
+    	                            	MaxCntNum = j;
+    	                            }
+    	                        }
+
+    	                        var objTr = getlistview.AddRow(InitTr.length);
+    	                        if (MaxCntNum != 0) {
+    	                        	MaxCntNum = MaxCntNum + 1;
+    	                        }
+
+    	                        SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+    	                        getlistview.AddDataRow(objTr, Resultxml);
+
+    	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+    	                        for (var y = 0; y < _tdlength; y++) {
+    	                        	document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+    	                        	document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+    	                        }
+    	                    }
+    	                }
+    	            }
 	            }
 	        }
 	
@@ -1285,42 +1413,28 @@
 		        TreeViewTD.style.display = "none";
 		        ListViewJikwiTD.style.display = "block";
 		        ListViewJikchekTD.style.display = "none";
-		       
-		        jikwiList.style.display = "block";
-		        jikchekList.style.display = "none";
 		        
-		        m_selectedTree = ListViewGroup;
+		        m_selectedTree = ListViewJikwi;
 		        
 		        try {
-		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("POST", "/admin/ezOrgan/getGroupList.do", false);
+		        	var xmlHTTP = createXMLHttpRequest();
+		            xmlHTTP.open("POST", "/admin/ezOrgan/getJikwiList.do?companyId=" + companyId + "&type=001", false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
 			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
 		            } else {
-		            	document.getElementById("ListViewGroup").innerHTML = "";
-			            var pListViewGroup = new ListView();
-			            pListViewGroup.SetID("pListViewGroup");
-			            pListViewGroup.SetSelectFlag(false);
-			            pListViewGroup.SetMulSelectable(true);
-			            pListViewGroup.SetRowOnDblClick("ListViewNodeDblClick");
-			            pListViewGroup.DataSource(loadXMLString(document.getElementById("listviewheader1").innerHTML.toUpperCase()));
-			            pListViewGroup.DataBind("ListViewGroup");
-			            pListViewGroup.DataSource(loadXMLString(xmlHTTP.responseText));
-			            pListViewGroup.RowDataBind();
+		            	document.getElementById("ListViewJikwi").innerHTML = "";
+			            var pListViewJikwi = new ListView();
+			            pListViewJikwi.SetID("pListViewJikwi");
+			            pListViewJikwi.SetSelectFlag(false);
+			            pListViewJikwi.SetMulSelectable(true);
+			            pListViewJikwi.SetRowOnDblClick("InsertReceiver");
+			            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikwi.DataBind("ListViewJikwi");
+			            pListViewJikwi.DataSource(loadXMLString(xmlHTTP.responseText));
+			            pListViewJikwi.RowDataBind();
 			
-			            for (var i = 0; i < pListViewGroup.GetRowCount() ; i++) {
-			            	pListViewGroup.GetDataRows()[i].draggable = true;
-			                if (CrossYN())
-			                	pListViewGroup.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
-			                else
-			                	pListViewGroup.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
-			
-			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                	pListViewGroup.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
-			                }
-			            }
 		            }
 		            
 		            xmlHTTP = null;
@@ -1331,7 +1445,47 @@
 		        }
 	        }
 	        
-	        
+	        function jikchekTabButton_onClick() {
+		    	methodForTabAction(3);
+		    	selSpan = "jikchekSpan";
+		        m_tabDialogState["org"] = "normal";
+		        m_tabDialogState["jikwi"] = "normal";
+		        m_tabDialogState["jikchek"] = "select";
+
+		        TreeViewTD.style.display = "none";
+		        ListViewJikwiTD.style.display = "none";
+		        ListViewJikchekTD.style.display = "block";
+		        
+		        m_selectedTree = ListViewJikchek;
+		        
+		        try {
+		        	var xmlHTTP = createXMLHttpRequest();
+		            xmlHTTP.open("POST", "/admin/ezOrgan/getJikwiList.do?companyId=" + companyId + "&type=002", false);
+		            xmlHTTP.send("");
+		            
+		            if (xmlHTTP.status != 200) {
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+		            } else {
+		            	document.getElementById("ListViewJikchek").innerHTML = "";
+			            var pListViewJikchek = new ListView();
+			            pListViewJikchek.SetID("pListViewJikchek");
+			            pListViewJikchek.SetSelectFlag(false);
+			            pListViewJikchek.SetMulSelectable(true);
+			            pListViewJikchek.SetRowOnDblClick("InsertReceiver");
+			            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+			            pListViewJikchek.DataBind("ListViewJikchek");
+			            pListViewJikchek.DataSource(loadXMLString(xmlHTTP.responseText));
+			            pListViewJikchek.RowDataBind();
+			
+		            }
+		            
+		            xmlHTTP = null;
+		        } catch (e) {
+		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            xmlHTTP = null;
+		            return;
+		        }
+	        }
 	        
 	        function event_listdragend(evt) {
                 evt.stopPropagation();
@@ -1524,9 +1678,21 @@
 	        
 	        function methodForTabAction(target) {
             	var tab1 = document.getElementById("orgTabButton").children[0];
+            	var tab2 = document.getElementById("orgTabButton2").children[0];
+            	var tab3 = document.getElementById("orgTabButton3").children[0];
             	
             	if (target == 1) {
             		tab1.className = "tabon";
+            		tab2.className = "";
+            		tab3.className = "";
+            	} else if (target == 2) {
+            		tab1.className = "";
+            		tab2.className = "tabon";
+            		tab3.className = "";
+            	} else if (target == 3) {
+            		tab1.className = "";
+            		tab2.className = "";
+            		tab3.className = "tabon";
             	}
 	        }
        	 	var PressShiftKey = false;
@@ -2122,10 +2288,6 @@
 		        <NAME><spring:message code='ezEmail.t586' /></NAME>
 		        <WIDTH>40</WIDTH>
 		      </HEADER>
-		      <HEADER>
-		        <NAME>E-MAIL</NAME>
-		        <WIDTH>100</WIDTH>
-		      </HEADER>
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
@@ -2249,8 +2411,6 @@
 		                <table id="ListViewJikwiTD" style="display: none">
 		                    <tr>
 		                        <td>
-		                            <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
-		                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
 		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td id="jikwiList" style="display: none">
@@ -2259,9 +2419,7 @@
 		                                            </td>
 		                                        </tr>
 		                                    </table>
-		                                </div>
-		                            </div>
-		                            <div style="width: 668px; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewGroup" class="border_gray">
+		                            <div style="width: 668px; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewJikwi" class="border_gray">
 		                            </div>
 		                        </td>
 		                    </tr>
@@ -2269,8 +2427,6 @@
 	                	<table id="ListViewJikchekTD" style="display: none">
 		                    <tr>
 		                        <td>
-		                            <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
-		                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
 		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td id="JikchekList" style="display: none">
@@ -2279,9 +2435,7 @@
 		                                            </td>
 		                                        </tr>
 		                                    </table>
-		                                </div>
-		                            </div>
-		                            <div style="width: 668px; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewGroup" class="border_gray">
+		                            <div style="width: 668px; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewJikchek" class="border_gray">
 		                            </div>
 		                        </td>
 		                    </tr>

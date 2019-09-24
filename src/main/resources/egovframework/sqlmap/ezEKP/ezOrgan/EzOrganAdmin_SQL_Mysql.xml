@@ -4353,7 +4353,8 @@
 			DISPLAYNAME2, 
 			USEFLAG, 
 			SORT, 
-			CREATEDATE
+			CREATEDATE,
+			COMPANYID
 		FROM 
 			TBL_USER_JOBMASTER
 		WHERE
@@ -4905,9 +4906,9 @@
 	<insert id="EzOrganAdminDAO.setPermissionGroupInfo" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_PERMISSIONGROUPINFO 
-			( GROUP_ID, MEMBER_ID, MEMBER_TYPE, ADDED_DATE, SUB_DEPT_YN, COMPANY_ID, TENANT_ID)
+			( GROUP_ID, MEMBER_ID, MEMBER_TYPE, MEMBER_COMPANYID, ADDED_DATE, SUB_DEPT_YN, COMPANY_ID, TENANT_ID)
 			VALUES 
-			( #v_GROUP_ID#, #v_MEMBER_ID#, #v_MEMBER_TYPE#, #v_ADDED_DATE#, #v_SUB_DEPT_YN#, #v_COMPANY_ID#, #v_TENANT_ID#)
+			( #v_GROUP_ID#, #v_MEMBER_ID#, #v_MEMBER_TYPE#, #v_MEMBER_COMPANYID#, #v_ADDED_DATE#, #v_SUB_DEPT_YN#, #v_COMPANY_ID#, #v_TENANT_ID#)
 		]]>
 	</insert>
     
@@ -4979,7 +4980,8 @@
 				B.MEMBER_ID AS MEMBERID,
 				B.MEMBER_TYPE AS MEMBERTYPE,
 				DATE_FORMAT(DATE_ADD(B.ADDED_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS ADDEDDATE,
-				B.SUB_DEPT_YN AS SUBDEPTYN
+				B.SUB_DEPT_YN AS SUBDEPTYN,
+				B.MEMBER_COMPANYID AS MEMBERCOMPANYID
            FROM
            		TBL_PERMISSIONGROUPLIST A INNER JOIN TBL_PERMISSIONGROUPINFO B ON (A.GROUP_ID = B.GROUP_ID)
            WHERE
@@ -5032,6 +5034,33 @@
            WHERE
             	TENANT_ID = #v_TENANT_ID# AND COMPANY_ID = #v_COMPANY_ID#
            ORDER BY GROUP_NAME              	
-        ]]>  
+		]]>
+	</select>
+	
+	<select id="EzOrganAdminDAO.selectTitleList_group" parameterClass="Map" resultClass="OrganJobVO" remapResults="true">
+		<![CDATA[
+			SELECT 
+				JOBID,
+				TYPE, 
+				CN, 
+				DISPLAYNAME, 
+				DISPLAYNAME2, 
+				COMPANYID
+			FROM 
+				TBL_USER_JOBMASTER
+			WHERE 
+				TYPE = #v_TYPE#
+			AND 
+				TENANT_ID = #v_TENANTID#
+			AND
+				USEFLAG = 'Y'
+		]]>
+			<isNotEmpty property="v_COMPANYID" prepend="and">
+				COMPANYID = #v_COMPANYID# 
+			</isNotEmpty>
+		<![CDATA[
+			ORDER BY
+				SORT
+		]]>
 	</select>
 </sqlMap>
