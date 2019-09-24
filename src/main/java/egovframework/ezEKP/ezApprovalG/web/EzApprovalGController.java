@@ -9316,7 +9316,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// 1 : 정상 , 2 : 기록물철 변경, 3 : 겸직변경 필요, 4 : 부서변경 or 겸직삭제
 		//기안창의 부서와 현재 유저의 부서정보 비교
 		if (userInfo.getDeptID().equals(orgDeptId)) {
-			if (!orgCabinetId.equals("") && approvalFlag.equals("G")) {
+			if (!orgCabinetId.equals("") && !orgCabinetId.equals("nonElecRecTempCabinet") && approvalFlag.equals("G")) {
 				String cabinetDept = ezApprovalGService.getDeptIdOfCabinet(orgCabinetId, userInfo.getTenantId(), userInfo.getCompanyID()).trim();
 				System.out.println("cabinetDept : " + cabinetDept);
 				System.out.println("orgDeptId : " + orgDeptId);

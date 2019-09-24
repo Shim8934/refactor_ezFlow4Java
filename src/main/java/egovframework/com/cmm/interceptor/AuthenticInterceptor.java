@@ -3,6 +3,7 @@ package egovframework.com.cmm.interceptor;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -153,14 +154,44 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	        	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
 	        		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
 	        			response.sendRedirect(mobileRedirection);
+	        			
+	    				return true;	        			
 	        		}
-	        	}
-	        	
-				return true;
+	        	}	        	
 			} catch (Exception e) {
 				e.printStackTrace();
-				return false;
 			}
+
+			String referer = request.getHeader("REFERER");
+			
+			logger.debug("referer=" + referer);
+			
+			// CSRF related security code
+			// only allows requests from the same host name or domain name
+			// in order to prevent the request forgery from a different site.
+			// referer is null when a user directly enters the url in the browser location bar, in which case
+			// the access is allowed.
+			if (referer != null && !referer.isEmpty()) {
+				String hostName = request.getHeader("HOST");
+				
+				logger.debug("hostName=" + hostName);
+				
+				String hostDomainName = getDomainName(hostName);
+				
+				logger.debug("hostDomainName=" + hostDomainName);
+								
+				String refererDomainName = getDomainName(referer);
+				
+				logger.debug("refererDomainName=" + refererDomainName);
+				
+				if (!refererDomainName.equalsIgnoreCase(hostDomainName)) {
+					logger.debug("hostDomainName and refererDomainName are different.");
+					
+					return false;
+				}				
+			}
+			
+			return true;
 		} else {
 			String ezOffice365Auth = "";			
 			int tenantId = -1;
@@ -357,4 +388,46 @@ public class AuthenticInterceptor extends WebContentInterceptor {
         return result;
     }
     
+    /**
+     * tries to get the domain name if possible from the passed in parameter.
+     * may just return the host name.
+     * @param url
+     * @return
+     */
+	public String getDomainName(String url) {
+		try {
+			if (!url.contains("http://") && !url.contains("https://")) {
+				// get the host name only by removing the port number if it exists
+				if (url.indexOf(":") > -1) {
+					url = url.substring(0, url.indexOf(":"));
+				}
+			} else {
+				URL hostNameURL = new URL(url);
+				// get the host name from the url
+				url = hostNameURL.getHost();
+			}
+
+			String topLevelDomain = url.substring(url.lastIndexOf(".") + 1);
+			String[] urlSplit = url.split("\\.");
+			
+			// if the number of name components is one or two(such as vertx.io, google.com) 
+			// just return the name itself
+			// else try to extract the domain part of the name
+			if (urlSplit.length > 2) {		
+				// such as www.name.co.kr, www.vertx.io
+				if (topLevelDomain.length() == 2) {
+					// this is not correct in case the name is like www.vertx.io, but ignore the case here
+					url = urlSplit[urlSplit.length - 3] + "." + urlSplit[urlSplit.length - 2] + "."
+							+ urlSplit[urlSplit.length - 1];
+				// such as www.google.com, www.apache.org
+				} else if (topLevelDomain.length() == 3) {
+					url = urlSplit[urlSplit.length - 2] + "." + urlSplit[urlSplit.length - 1];
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    	return url;
+    }
 }
