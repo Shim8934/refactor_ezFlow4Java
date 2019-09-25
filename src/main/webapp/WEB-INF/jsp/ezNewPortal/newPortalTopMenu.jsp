@@ -276,6 +276,7 @@
 			var str = '';
 			
 				str += '<ul class="util">';
+				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="메신저다운로드"></span></li>';//메신저 다운로드 추가
 				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' +'"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
 				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
@@ -285,6 +286,13 @@
 				str += '</ul>';
 			
 			return str;
+		}
+		//2019-09-20 메신저 다운로드 추가
+		var talkDowmClick = function () {
+			if ("${talkFilePath}" != "") {
+				var DownloadUrl = "/ezCommon/talkDownloadAttach.do?filePath=" + "${talkFilePath}";
+				AttachDownFrame.location.href = DownloadUrl;				
+			}
 		}
 		
 		/* 2019-01-04 김민성 - 웹도움말 팝업창으로 변경 */
@@ -311,7 +319,10 @@
 			//setEvent('util_help', '/ezNewPortal/help/index.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
 			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');
 			
-			document.getElementById("util_help").addEventListener('click', helpDetail );	
+			document.getElementById("util_help").addEventListener('click', helpDetail );
+			if ('${useUtilTalk}' === 'YES') {
+				document.getElementById("util_messenger").addEventListener('click', talkDowmClick );	
+			}
 			/* document.getElementById("util_frmae").addEventListener("click", viewPortletEnv); */
 		}
 
@@ -992,6 +1003,7 @@
 		window.onload = function() {
 			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 		}
-		</script>	
+		</script>
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>	
 	</body>
 </html>
