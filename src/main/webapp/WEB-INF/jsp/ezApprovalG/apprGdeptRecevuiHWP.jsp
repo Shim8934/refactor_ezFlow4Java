@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDeptRecev_HWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 	    <script type="text/javascript">
 	        var pDocID = "${docID}";
 	        var DraftFlag = "${draftFlag}";
@@ -541,7 +542,7 @@
 			}
 	
 			function btnOpinion_onclick() {
-			    var ret = openOpinionUI("N");
+			    var ret = openOpinionUI_New("");
 			}
 			
 			function btnPrint_onclick() {
@@ -561,25 +562,27 @@
 			    } catch (e) { }
 			}
 	
-			function btnReturn_onclick() {
-			    var parameter = new Array();
-			    parameter[0] = pDocID;
-			    parameter[1] = "HeSong";
-			    parameter[2] = "002";
-			    parameter[3] = "";
-			    //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
-			    parameter[99] = "hwp";
-			    
-			    var url = "/ezApprovalG/aprOpinion.do";
-			    var feature = "status:no;dialogWidth:530px;dialogHeight:520px;help:no;edge:sunken;scroll:no"
-			    var ret = window.showModalDialog(url, parameter, feature);
-			
-			    if (ret != "cancel" && ret != undefined) {
-			
-			        setHeSongDocInfo();
-			    }
-			}
-	
+		    function btnReturn_onclick() {
+		        var RecevState = getDocRecevState();
+		        if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "013") {
+		            if (RecevState == "015") {
+		                var pAlertContent = strLang912;
+		                OpenAlertUI(pAlertContent);
+		            }
+		            return false;
+		        }
+		        
+		        openOpinionUI_New("HESONG");
+		    }
+		    
+		    function openOpinionUI_New_Complete(ret) {
+		        if (ret != "cancel" && ret != undefined) {
+	            	SendMailToDrafter_Hesong();
+	                setHeSongDocInfo();
+	                window.close();
+		        }
+		    }
+		    
 			function btnMail_onclick() {
 			    var pheight = window.screen.availHeight;
 			    var pwidth = window.screen.availWidth;
@@ -751,25 +754,58 @@
 	                    		}
 	                    	});
 			
-// 			                var dataNodes = GetChildNodes(loadXMLString(savexmlhttp.responseText));
-			
 			                IsSkipDrafter = "FALSE";
 			                btnSendDraftEnable = "true";
 			                GetDraftAprLineInfo(ret);
 			
-			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {
-			                    var g_SelCabXml = ret[4];
-			                    var xmlCab = createXmlDom();
-			                    xmlCab = loadXMLString(g_SelCabXml);
-			                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-			                    TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+			                if (ret[4] != undefined) {
+				                var g_SelCabXml = ret[4];
+				                var xmlCab = createXmlDom();
+				                xmlCab = loadXMLString(g_SelCabXml);
+				                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+				                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 			                }
+			            	
+				            tempSecurity = ret[7];
+			                tempUrgent = ret[8];
+			                pSummery = ret[9];
+			                tempSecurityDate = ret[14];
+			                pPublicityCode = ret[11];
+			                pPublicityYN = ret[21];
+		                	pPageNum = ret[13];
+		                	pLimitRange = ret[12];
+		                	pSpecialRecordCode = ret[10];
 			            }
 			        } catch (e) {
 			            alert("저장시 오류 발생");
 			        }
 			    }
 			}
+			
+		    function getDocRecevState() {
+		        try {
+					var result = "FALSE";
+		        	
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/ezApprovalG/getDocState.do",
+		        		data : {
+		        			docID : pDocID,
+		        			deptID: arr_userinfo[4]
+		        		},
+		        		success: function(text){
+		        			result = text;
+		        		}
+		        	});
+		        	
+		            return result;
+		        } 
+		        catch (e) {
+		            alert("getDocRecevState :: " + e.description);
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="popup" style="height:100%" onload="window_onload()" onbeforeunload="return window_onbeforeunload()">

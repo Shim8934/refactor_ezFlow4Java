@@ -2164,3 +2164,25 @@ var result = "";
 		}
 	});
 }
+
+var apropinion_cross_dialogArguments = new Array();
+function openOpinionUI_New(pOpinionType) {
+	try {
+		var parameter = new Array();
+		parameter[0] = pDocID;		//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = "";			//DRAFTFLAG 결재는 공백 고정 
+		parameter[3] = pDocState;	//DOCSTATE
+		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		parameter[99] = ext;		//EXT
+		
+		apropinion_cross_dialogArguments[0] = parameter;
+		apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+		
+		var url = "/ezApprovalG/aprOpinionNew.do";
+		var OpenWin = window.open(url, "AprOpinion_Cross", GetOpenWindowfeature(530, 520));
+        try { OpenWin.focus(); } catch (e) { }
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e.description);
+	}
+}
