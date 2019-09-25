@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_HWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docnumberG_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Recvdocnumber_HWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDeptRecev_HWP.js')}"></script>
@@ -93,6 +94,21 @@
 			var ext = "hwp";
 			var isHWP = "${isHWP}";
 			var dirPath = "${dirPath}";
+			
+			var orgCompanyID = "${userInfo.companyID}";
+			var _USE_DirectSign = "<c:out value='${useDirectSign}' />"
+			var approvalFlag = "${approvalFlag}";
+			var junGyulFlag = "${junGyulFlag}";
+			var pSignImage_Size = "${signImageSize}";
+			var docNumZeroCnt = "${docNumZeroCnt}";
+			var curDocNum = "";
+			var draftDeptID = "${draftDeptID}";
+			var useReceiveDocNo = "${useReceiveDocNo}";
+			var nonElecRec = "${nonElecRec}";
+			var SummaryFlag = true;
+			var pDocNumCode = "";
+			
+			var strLang12 = "";
 			
 			function process_AfterOpen() {
 			    try {
@@ -309,196 +325,219 @@
 				    return;
 				}
 				else {
-				    if (LastSignSN == 1 || DraftLastFlag) {
-				        getLastOpinon();
-				    }
-			
-				    if (_usepassword == "Y") {
-				        var chkpass = chk_Passwd();
-				        if (chkpass == "False") {
-				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-				            OpenAlertUI(pAlertContent);
-				            return;
-				        }
-				        else if (chkpass == "cancel"  || chkpass == undefined) {
-				            var pAlertContent = "<spring:message code='ezApprovalG.t28'/>.";
-				    	        OpenAlertUI(pAlertContent);
-				    	        return;
-				    	    }
-			        }
-			        else {
-			            var pInformationContent = "<spring:message code='ezApprovalG.t144'/>";
-				        var Ans = OpenInformationUI(pInformationContent);
-			
-				        if (!Ans) return;
-				    }
-			
-			        if (IsSkipDrafter == "FALSE") {
-			            var ret;
-			            var parameter = new Array();
-			
-			            parameter[0] = pDocID;
-			            ret = openSignUI(parameter);
-			            if (ret == "cancel") {
-			                var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
-				  		    OpenAlertUI(pAlertContent);
-				  		    return;
-				  		}
-			
-			              pOrgHtml = HwpCtrl.GetCloneData("", "HWP");
-			
-			              if (LastSignSN == 1 || DraftLastFlag) {
-			                  var rtnVal;
-			                  rtnVal = ExcuteInfo("DOCNUM_BEFORE", "")
-			                  if (!rtnVal) {
-			                      var pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  			    OpenAlertUI(pAlertContent);
-				  			    return;
-				  			}
-			              }
-			
-			              if (LastSignSN == 1 || DraftLastFlag)
-			                  rtnval = getDocNumber(arr_userinfo[4], "");
-			              else
-			                  rtnval = getDocNumber(arr_userinfo[4], "be");
-			
-			              if (!rtnval) {
-			                  var pAlertContent = "[" + "<spring:message code='ezApprovalG.t1384'/>";
-						    OpenAlertUI(pAlertContent);
-						    return;
-						}
-			
-			            if (LastSignSN == 1 || DraftLastFlag) {
-			                var rtnVal;
-			                rtnVal = ExcuteInfo("DOCNUM_AFTER", "")
-			                if (!rtnVal) {
-			                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  			    OpenAlertUI(pAlertContent);
-				  			    return;
-				  			}
-			              }
-			              rtnSignInfo = SendDraftMappingSign(ret);
-			          }
-			
-			          if ((pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") && pSusinSN != "0") {
-			              var RtnVal;
-			              var pAlertContent;
-			              RtnVal = "true";
-			              if (RtnVal == "true") {
-			                  RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_BEFORE", "")
-			                  if (!RtnVal) {
-			                      pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  			    OpenAlertUI(pAlertContent);
-				  			    return;
-				  			}
-			
-			                  if (RtnVal) RtnVal = SaveDraftDocInfo();
-			
-			                  if (RtnVal == "TRUE") {
-			                      RtnVal = setSusinUpdataDocID();
-			                      RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_AFTER", "")
-			                      if (!RtnVal) {
-			                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  				    OpenAlertUI(pAlertContent);
-				  				    return;
-				  				}
-			
-			                      if (LastSignSN == 1 || DraftLastFlag) {
-			                          RtnVal = ExcuteInfo("SUSIN_DOCNUM_END", "")
-			                          if (!RtnVal) {
-			                              pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  					    OpenAlertUI(pAlertContent);
-				  					    return;
-				  					}
-			                      }
-			                      UpdateLineHistory(pDocID, "MUST");
-			                      pAlertContent = "<spring:message code='ezApprovalG.t1499'/>";
-				  				OpenAlertUI(pAlertContent);
-				  				window.close();
-			                  } else {
-			                      UndoSignInfo(rtnSignInfo);
-			
-			                      if (LastSignSN == 1 || DraftLastFlag) {
-			                          RtnVal = ExcuteInfo("END_FAIL", "")
-			                          if (!RtnVal) {
-			                              pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  					    OpenAlertUI(pAlertContent);
-				  					    return;
-				  					}
-			                      }
-			                      pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  			    OpenAlertUI(pAlertContent);
-				  			    return;
-				  			}
-			              } else {
-			                  UndoSignInfo(rtnSignInfo);
-			
-			                  if (LastSignSN == 1 || DraftLastFlag) {
-			                      RtnVal = ExcuteInfo("END_FAIL", "")
-			                      if (!RtnVal) {
-			                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  				    OpenAlertUI(pAlertContent);
-				  				    return;
-				  				}
-			                  }
-			                  SetBtnStateTrue();
-			                  btnSendDraft.Enable = "true";
-			
-			                  pAlertContent = "[" + "<spring:message code='ezApprovalG.t1495'/>";
-				  			OpenAlertUI(pAlertContent);
-				  			return;
-			              }
-			          } else {
-			              var RtnVal = ExcuteInfo("DRAFTSAVE_BEFORE", "")
-			              var pAlertContent;
-			              if (!RtnVal) {
-			                  pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  		    OpenAlertUI(pAlertContent);
-				  		    return;
-				  		}
-			              RtnVal = SaveDraftDocInfo();
-			              if (RtnVal == "TRUE") {
-			                  RtnVal = ExcuteInfo("DRAFTSAVE_AFTER", "")
-			                  if (!RtnVal) {
-			                      pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  			    OpenAlertUI(pAlertContent);
-				  			    return;
-				  			}
-			
-			                  if (LastSignSN == 1 || DraftLastFlag) {
-			                      RtnVal = ExcuteInfo("DOCNUM_END", "")
-			                      if (!RtnVal) {
-			                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  				    OpenAlertUI(pAlertContent);
-				  				    return;
-				  				}
-			                  }
-			                  UpdateLineHistory(pDocID, "MUST");
-			                  pAlertContent = "<spring:message code='ezApprovalG.t1496'/>";
-				  			OpenAlertUI(pAlertContent);
-				  			window.close();
-			
-			              } else {
-			                  UndoSignInfo(rtnSignInfo);
-			
-			                  if (LastSignSN == 1 || DraftLastFlag) {
-			                      RtnVal = ExcuteInfo("END_FAIL", "")
-			                      if (!RtnVal) {
-			                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
-				  				    OpenAlertUI(pAlertContent);
-				  				    return;
-				  				}
-			                  }
-			                  SetBtnStateTrue();
-			                  pAlertContent = "[" + "<spring:message code='ezApprovalG.t1400'/>";
-				  			OpenAlertUI(pAlertContent);
-				  			return;
-			              }
-			          }
+                    if (CheckUsePassword()) {
+                        chk_Passwd();
+                    }
+                    else {
+                        check_skipdraft();
+                    }
 			      }
 			  } catch (e) {
 			      alert(e.description);
 			  }
+			}
+			
+			function CheckUsePassword() {
+				var result = "";
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getApprovalPWD.do",
+					success: function(text) {
+						result = text;
+					}        			
+				});
+				
+				if (result != "N") {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			
+			function check_skipdraft() {
+		        if (LastSignSN == 1 || DraftLastFlag) {
+		            getLastOpinon();
+		        }
+		
+		        if (IsSkipDrafter == "FALSE") {
+		            var ret;
+		            var parameter = new Array();
+		
+		            parameter[0] = pDocID;
+		            parameter[1] = _USE_DirectSign;
+		            ret = openSignUI(parameter);
+		            openSignUI_Complete(ret);
+		        }
+		        else {
+		            SaveRecevInfo();
+		        }
+		    }
+			
+			function saveRecevInfo() {
+		          if ((pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") && pSusinSN != "0") {
+		              var RtnVal;
+		              var pAlertContent;
+		              RtnVal = "true";
+		              if (RtnVal == "true") {
+		                  RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_BEFORE", "")
+		                  if (!RtnVal) {
+		                      pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  			    OpenAlertUI(pAlertContent);
+			  			    return;
+			  			}
+		
+		                  if (RtnVal) RtnVal = SaveDraftDocInfo();
+		
+		                  if (RtnVal == "TRUE") {
+		                      RtnVal = setSusinUpdataDocID();
+		                      RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_AFTER", "")
+		                      if (!RtnVal) {
+		                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  				    OpenAlertUI(pAlertContent);
+			  				    return;
+			  				}
+		
+		                      if (LastSignSN == 1 || DraftLastFlag) {
+		                          RtnVal = ExcuteInfo("SUSIN_DOCNUM_END", "")
+		                          if (!RtnVal) {
+		                              pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  					    OpenAlertUI(pAlertContent);
+			  					    return;
+			  					}
+		                      }
+		                      UpdateLineHistory(pDocID, "MUST");
+		                      pAlertContent = "<spring:message code='ezApprovalG.t1499'/>";
+			  				OpenAlertUI(pAlertContent);
+			  				window.close();
+		                  } else {
+		                      UndoSignInfo(rtnSignInfo);
+		
+		                      if (LastSignSN == 1 || DraftLastFlag) {
+		                          RtnVal = ExcuteInfo("END_FAIL", "")
+		                          if (!RtnVal) {
+		                              pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  					    OpenAlertUI(pAlertContent);
+			  					    return;
+			  					}
+		                      }
+		                      pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  			    OpenAlertUI(pAlertContent);
+			  			    return;
+			  			}
+		              } else {
+		                  UndoSignInfo(rtnSignInfo);
+		
+		                  if (LastSignSN == 1 || DraftLastFlag) {
+		                      RtnVal = ExcuteInfo("END_FAIL", "")
+		                      if (!RtnVal) {
+		                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  				    OpenAlertUI(pAlertContent);
+			  				    return;
+			  				}
+		                  }
+		                  SetBtnStateTrue();
+		                  btnSendDraft.Enable = "true";
+		
+		                  pAlertContent = "[" + "<spring:message code='ezApprovalG.t1495'/>";
+			  			OpenAlertUI(pAlertContent);
+			  			return;
+		              }
+		          } else {
+		              var RtnVal = ExcuteInfo("DRAFTSAVE_BEFORE", "")
+		              var pAlertContent;
+		              if (!RtnVal) {
+		                  pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  		    OpenAlertUI(pAlertContent);
+			  		    return;
+			  		}
+		              RtnVal = SaveDraftDocInfo();
+		              if (RtnVal == "TRUE") {
+		                  RtnVal = ExcuteInfo("DRAFTSAVE_AFTER", "")
+		                  if (!RtnVal) {
+		                      pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  			    OpenAlertUI(pAlertContent);
+			  			    return;
+			  			}
+		
+		                  if (LastSignSN == 1 || DraftLastFlag) {
+		                      RtnVal = ExcuteInfo("DOCNUM_END", "")
+		                      if (!RtnVal) {
+		                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  				    OpenAlertUI(pAlertContent);
+			  				    return;
+			  				  }
+		                      sendAlertMail("END", "1", "RECEV");
+		                  } else {
+		                	  sendAlertMail("APR", "1", "RECEV");
+		                  }
+		                  UpdateLineHistory(pDocID, "MUST");
+		                  pAlertContent = "<spring:message code='ezApprovalG.t1496'/>";
+			  			OpenAlertUI(pAlertContent);
+			  			window.close();
+		
+		              } else {
+		                  UndoSignInfo(rtnSignInfo);
+		
+		                  if (LastSignSN == 1 || DraftLastFlag) {
+		                      RtnVal = ExcuteInfo("END_FAIL", "")
+		                      if (!RtnVal) {
+		                          pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+			  				    OpenAlertUI(pAlertContent);
+			  				    return;
+			  				}
+		                  }
+		                  SetBtnStateTrue();
+		                  pAlertContent = "[" + "<spring:message code='ezApprovalG.t1400'/>";
+			  			OpenAlertUI(pAlertContent);
+			  			return;
+		              }
+		          }
+			}
+			
+			function openSignUI_Complete(ret) {
+	            if (ret == "cancel") {
+	                var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
+		  		    OpenAlertUI(pAlertContent);
+		  		    return;
+		  		}
+	
+	            pOrgHtml = HwpCtrl.GetCloneData("", "HWP");
+	
+	            if (LastSignSN == 1 || DraftLastFlag) {
+	                var rtnVal;
+	                rtnVal = ExcuteInfo("DOCNUM_BEFORE", "")
+	                if (!rtnVal) {
+	                  var pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+		  			  OpenAlertUI(pAlertContent);
+		  			  return;
+		  			}
+	            }
+	
+	            if (LastSignSN == 1 || DraftLastFlag)
+	                rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+	            else
+	                rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
+	
+	            if (!rtnval) {
+	                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t1384'/>";
+				    OpenAlertUI(pAlertContent);
+				    return;
+				}
+	
+	            if (LastSignSN == 1 || DraftLastFlag) {
+	                var rtnVal;
+	                rtnVal = ExcuteInfo("DOCNUM_AFTER", "")
+	                if (!rtnVal) {
+	                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t69'/>";
+		  			    OpenAlertUI(pAlertContent);
+		  			    return;
+		  			}
+	            }
+	            rtnSignInfo = SendDraftMappingSign(ret);
+	            
+	            saveRecevInfo();
 			}
 	
 			function btnOpinion_onclick() {
@@ -679,7 +718,14 @@
 			    parameter[36] = pLimitRange;
 			    parameter[37] = pPageNum;
 			    parameter[38] = tempSecurityDate;
-			    parameter[39] = true;;
+		        parameter[39] = SummaryFlag;
+		        parameter[41] = tempItemName;
+		        parameter[42] = tempItemName2;
+		        
+		        if(pDocState == "012") {
+		        	parameter[45] = "";
+		        	parameter[46] = "";
+		        }
 			
 			    if (tempItemCode != "")
 			        tempdocnumcode = tempItemCode;

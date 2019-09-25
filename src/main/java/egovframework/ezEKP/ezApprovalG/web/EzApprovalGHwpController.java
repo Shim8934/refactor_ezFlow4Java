@@ -813,6 +813,26 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String pSusinAdmin = "";
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "form" + commonUtil.separator;
 		
+		String userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
+		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		if (approvalFlag.equals("G")) {
+			String nonElecRec = ezApprovalGService.checkNonElecRec(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (!nonElecRec.equals("")) {
+				model.addAttribute("nonElecRec", nonElecRec);
+			}
+		}
+		
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+		
         if (userInfo.getRollInfo().indexOf("a=1") > -1) {
         	pSusinAdmin = "YES";
         } else {
@@ -834,6 +854,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("usePassword", usePassword);
 		model.addAttribute("isHWP", "Y");
 		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("useDirectSign", userDirectSign);
+		
+		model.addAttribute("draftDeptID", draftDeptID);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
+		model.addAttribute("signImageSize", signImageSize);
 		
 		LOGGER.debug("ezDeptRecevUI_HWP ended");
 		return "ezApprovalG/apprGdeptRecevuiHWP";

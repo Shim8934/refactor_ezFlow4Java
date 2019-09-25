@@ -89,7 +89,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         
         name = "receiptnumber";
         
-        if (LastSignSN == 1 || useReceiveDocNo != 'NO') {
+        if (LastSignSN == 1 || useReceiveDocNo != 'NO' || pDraftFlag == "HAPYUI") {
         	$.ajax({
         		type : "POST",
         		dataType : "text",
