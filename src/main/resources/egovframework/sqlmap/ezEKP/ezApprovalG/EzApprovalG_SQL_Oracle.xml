@@ -29242,7 +29242,7 @@
     </select>
     <select id="EzApprovalG.getEndAprOpinionCnt" parameterClass="Map" resultClass="int">
     	SELECT
-    		COUNT(*)
+    		NVL(MAX(OPINIONSN), 0) OPINIONSN
     	FROM
     		TBL_ENDAPROPINIONINFO
     	WHERE
