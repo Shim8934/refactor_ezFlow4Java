@@ -82,12 +82,13 @@
             btnChangeCabinet_onclick();
         }
         
-        // 등록구분에서 일반문서 접수가 디폴트로 선택 되도록 수정. 2019-09-26 홍대표
-        document.getElementById("selRegisterType").selectedIndex = 1;
-
         selRegisterType_onchange();
 
         rdoSecType_onclick("1");
+
+        // 등록구분에서 일반문서 접수가 디폴트로 선택 되도록 수정. 2019-09-26 홍대표
+        selRegisterType.value = 2;
+        selRegisterType_onchange()
     }
     function KeEventControl(obj) {
         useragt = navigator.userAgent.toUpperCase();
