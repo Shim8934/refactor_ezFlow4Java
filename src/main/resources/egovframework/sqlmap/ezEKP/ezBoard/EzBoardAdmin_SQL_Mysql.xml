@@ -84,7 +84,8 @@
 		<result property="write_FG" 				column="WRITE_FG" 					columnIndex="18"/>		
 		<result property="reply_FG" 				column="REPLY_FG" 					columnIndex="19"/>		
 		<result property="delete_FG" 				column="DELETE_FG" 					columnIndex="20"/>		
-		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>			
+		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>
+		<result property="type" 				column="TYPE" 				columnIndex="22"/>	
 	</resultMap>
 	
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
@@ -102,7 +103,7 @@
 	<select id="EzBoardAdminDAO.getBoardTree_Get2" parameterClass="Map" resultMap="getBoardTree_Get2" remapResults="true">
 		<isEqual property="v_isNormalAdmin" compareValue="true">
 			<![CDATA[
-				SELECT 
+				(SELECT 
 					CONCAT(A.BOARDID, '|', A.ACCESS_, ';') as BOARDID  
 		        FROM 
 		        	TBL_Board_BoardManage A
@@ -119,12 +120,67 @@
 		        AND 
 		        	A.PARENTBOARDID = #v_PROOTBOARDID#
 		        AND
-		        	(TRIM(B.companyid) = ''	OR	B.companyid IS NULL) 
+		        	(TRIM(B.companyid) = ''	OR	B.companyid IS NULL)
+				AND
+					(A.TYPE <> 'GROUP' OR A.TYPE IS NULL)
 			]]>
+			<isEqual property="v_ISDEPT" compareValue="1">
+				<isEqual property="v_ISEQUALDEPT" compareValue="0">
+			 		AND
+			 			BoardGroupACL = 'Y'
+				</isEqual>
+			</isEqual>
+			<![CDATA[
+			)
+			
+	        	UNION
+	        	
+	        	(SELECT 
+					CONCAT(C.BOARDID, '|', C.ACCESS_, ';') as BOARDID  
+				  FROM 
+					TBL_Board_BoardManage C
+				  LEFT JOIN 
+					TBL_Board_BoardInfo D   
+				  ON
+					C.TENANT_ID = D.TENANT_ID 
+				  AND
+					C.BoardID = D.BoardID
+                       
+				INNER JOIN
+					TBL_PERMISSIONGROUPLIST PGL
+				ON
+					C.TENANT_ID = PGL.TENANT_ID 
+				AND
+					C.ACCESSID = PGL.GROUP_ID
+				INNER JOIN
+					TBL_PERMISSIONGROUPINFO PGI
+				ON
+					PGL.TENANT_ID = PGI.TENANT_ID
+				AND
+					PGL.GROUP_ID = PGI.GROUP_ID
+                       
+				WHERE
+					C.TENANT_ID = #v_TENANTID#
+				AND 
+					PGI.MEMBER_ID = #v_PACCESSID#
+				AND 
+					C.PARENTBOARDID = #v_PROOTBOARDID#
+				AND
+					(TRIM(D.companyid) = ''	OR	D.companyid IS NULL) 
+				AND
+					C.TYPE = 'GROUP'
+			]]>
+			<isEqual property="v_ISDEPT" compareValue="1">
+				<isEqual property="v_ISEQUALDEPT" compareValue="0">
+			 		AND
+			 			PGI.SUB_DEPT_YN = 'Y'
+				</isEqual>
+			</isEqual>
+			)
 		</isEqual>
 		<isNotEqual property="v_isNormalAdmin" compareValue="true">
 			<![CDATA[
-				SELECT 
+				(SELECT 
 					CONCAT(BOARDID, '|', ACCESS_, ';') BOARDID  
 		        FROM 
 		        	TBL_Board_BoardManage 
@@ -134,14 +190,61 @@
 		        	ACCESSID = #v_PACCESSID#
 		        AND 
 		        	PARENTBOARDID = #v_PROOTBOARDID#
+		        AND
+					(TYPE <> 'GROUP' OR TYPE IS NULL)
+				]]>
+				<isEqual property="v_ISDEPT" compareValue="1">
+					<isEqual property="v_ISEQUALDEPT" compareValue="0">
+				 		AND
+				 			BoardGroupACL = 'Y'
+					</isEqual>
+				</isEqual>
+			<![CDATA[
+				)
+			
+	        	UNION
+	        	
+	        	(SELECT 
+					CONCAT(C.BOARDID, '|', C.ACCESS_, ';') as BOARDID  
+				  FROM 
+					TBL_Board_BoardManage C
+				  LEFT JOIN 
+					TBL_Board_BoardInfo D   
+				  ON
+					C.TENANT_ID = D.TENANT_ID 
+				  AND
+					C.BoardID = D.BoardID
+                       
+				INNER JOIN
+					TBL_PERMISSIONGROUPLIST PGL
+				ON
+					C.TENANT_ID = PGL.TENANT_ID 
+				AND
+					C.ACCESSID = PGL.GROUP_ID
+				INNER JOIN
+					TBL_PERMISSIONGROUPINFO PGI
+				ON
+					PGL.TENANT_ID = PGI.TENANT_ID
+				AND
+					PGL.GROUP_ID = PGI.GROUP_ID
+					
+				WHERE
+		        	C.TENANT_ID = #v_TENANTID#
+		        AND 
+		        	PGI.MEMBER_ID = #v_PACCESSID#
+		        AND 
+		        	C.PARENTBOARDID = #v_PROOTBOARDID#
+		        AND
+					C.TYPE = 'GROUP'
 			]]>
-		</isNotEqual>
-		<isEqual property="v_ISDEPT" compareValue="1">
-			<isEqual property="v_ISEQUALDEPT" compareValue="0">
-		 		AND
-		 			BoardGroupACL = 'Y'
+			<isEqual property="v_ISDEPT" compareValue="1">
+				<isEqual property="v_ISEQUALDEPT" compareValue="0">
+			 		AND
+			 			PGI.SUB_DEPT_YN = 'Y'
+				</isEqual>
 			</isEqual>
-		</isEqual>
+			)
+		</isNotEqual>
 	</select>
 	
 	<select id="EzBoardAdminDAO.getMyBoardTree_get3" parameterClass="Map" resultMap="getMyBoardTree_get3">
@@ -213,8 +316,10 @@
 	</select>
 		
 	<select id="EzBoardAdminDAO.brdBoardTree" parameterClass="Map" resultMap="brdBoardTree">
+<!-- 관리자 권한이 없는 사용자의 경우(v_pMode = 1) -->
 		<isEqual property="v_pMode" compareValue="1">
 			<isEqual property="v_pSelectBy" compareValue="3">
+<!-- 실질적으로 사용하지 않는 쿼리(2019-09-20 기준 모든 소스에서 v_pSelectBy값이 전부 0으로 넘어옴) -->
 <!-- 				쓰기 권한이 있는 게시판만 가져옴 -->
 				<![CDATA[
 					(SELECT 
@@ -307,6 +412,7 @@
 		           			A.TreeViewOrder ASC
 					]]>
 				</isEqual>
+<!-- 조직도에서 부여된 관리자 권한이 없고, 게시판 그룹에 대한 관리자 권한도 없는 경우 -->
 				<isNotEqual property="v_boardGroupAdmin_FG" compareValue="OK">
 					<![CDATA[
 						(SELECT 
@@ -321,7 +427,7 @@
 		                    A.BoardColor BoardColor  ,
 		                    A.Gubun ,
 		                    A.url ,
-		                    B.BOARDGROUPACL BOARDGROUPACL  
+		                    B.BOARDGROUPACL BOARDGROUPACL
 		                FROM 
 		                	TBL_Board_BoardInfo A
 		                JOIN 
@@ -330,7 +436,8 @@
 		                        C.AccessID ,
 		                        C.Access_ ,
 		                        C.BoardGroupACL ,
-		                        C.tenant_id
+		                        C.tenant_id,
+		                        C.TYPE
 		                      FROM 
 		                      	TBL_Board_BoardManage C
 		                      LEFT JOIN 
@@ -346,7 +453,7 @@
 		                      AND 
 		                      	C.BoardID <> #v_pExcludeBoardID#
 		                      AND 
-		                      	( C.AccessID = #v_pUserID# )
+		                      	C.AccessID = #v_pUserID#
 		                      AND 
 		                      	D.ParentBoardID = #v_pRootBoardID#
 		                      ]]>
@@ -366,13 +473,97 @@
 		                	A.TENANT_ID = #v_TENANTID#
 		                AND
 		                	(A.companyid = #v_COMPANYID# OR TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+		                AND
+							(B.TYPE <> 'GROUP' OR B.TYPE IS NULL)
 		                )
+		                
+		                UNION
+		                
+		                (SELECT 
+							DISTINCT A.BoardID BoardID  ,
+		                    A.BoardName BoardName  ,
+		                    CASE
+								WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+								THEN A.boardname
+								ELSE A.boardname2
+							END BoardName2,
+		                    A.TreeViewOrder TreeViewOrder  ,
+		                    A.BoardColor BoardColor  ,
+		                    A.Gubun ,
+		                    A.url ,
+		                    B.BOARDGROUPACL BOARDGROUPACL
+		                FROM 
+		                	TBL_Board_BoardInfo A
+		                JOIN 
+		                	( SELECT 
+		                		C.BoardID ,
+		                        C.AccessID ,
+		                        C.Access_ ,
+		                        C.BoardGroupACL ,
+		                        C.tenant_id,
+		                        C.TYPE
+		                      FROM 
+		                      	TBL_Board_BoardManage C
+		                      LEFT JOIN 
+		                      	TBL_Board_BoardInfo D   
+		                      ON
+		                      	C.TENANT_ID = D.TENANT_ID 
+		                      AND
+		                      	C.BoardID = D.BoardID
+		                      	
+							INNER JOIN
+								TBL_PERMISSIONGROUPLIST PGL
+							ON
+								C.TENANT_ID = PGL.TENANT_ID 
+							AND
+								C.ACCESSID = PGL.GROUP_ID
+							INNER JOIN
+								TBL_PERMISSIONGROUPINFO PGI
+							ON
+								PGL.TENANT_ID = PGI.TENANT_ID
+							AND
+								PGL.GROUP_ID = PGI.GROUP_ID
+		                      	
+		                      WHERE
+		                      	C.TENANT_ID = #v_TENANTID#
+		                      AND
+		                      	C.Access_ = 1
+		                      AND 
+		                      	C.BoardID <> #v_pExcludeBoardID#
+		                      AND 
+		                      	PGI.MEMBER_ID = #v_pUserID#
+		                      AND 
+		                      	D.ParentBoardID = #v_pRootBoardID#
+		                      AND
+		                      	C.TYPE = 'GROUP'
+		                      ]]>
+							<isEqual property="v_ISDEPT" compareValue="1">
+								<isEqual property="v_ISEQUALDEPT" compareValue="0">
+									AND
+										PGI.SUB_DEPT_YN = 'Y'
+								</isEqual>
+							</isEqual>
+		                      <![CDATA[
+		                      	) B   
+		                ON 
+		                	A.TENANT_ID = B.TENANT_ID
+		                AND
+		                	A.BoardID = B.BOARDID
+		                WHERE
+		                	A.TENANT_ID = #v_TENANTID#
+		                AND
+		                	(A.companyid = #v_COMPANYID# OR TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+						AND
+							B.TYPE = 'GROUP'
+		                )
+		                
 		                ORDER BY 
 		                	TreeViewOrder ASC
 		        	]]>
 	        	</isNotEqual>
 			</isNotEqual>
 		</isEqual>
+<!-- 전체/회사/게시관리자 권한 존재 -->
 		<isNotEqual property="v_pMode" compareValue="1">
 <!-- 			게시판관리자 '허용' 권한 & ADMIN권한 -->
 <!-- 2018-10-15 홍승비 - 전체관리자는 항상 그룹사게시판을 리스트에 표출하도록 수정 -->
@@ -406,6 +597,8 @@
 	           			A.TreeViewOrder ASC
 				]]>
 			</isEqual>
+<!-- 전체관리자가 아닌 일반 관리자인 경우(p_Mode=0 && v_isCompanyAdmin = false), 회사 소속 게시판은 모두 표출 / 그룹사게시판에 대해서만 권한 체크 -->
+<!-- 그룹사게시판이 아닌 회사 소속 게시판은 권한체크 없이 전부 셀렉트 -->
 			<isNotEqual property="v_isCompanyAdmin" compareValue="true">
           		<![CDATA[
           			(SELECT 
@@ -434,6 +627,7 @@
 	           		ORDER BY 
 	           			A.TreeViewOrder ASC)
 	           	]]>
+<!-- 그룹사게시판에 대해서 개별(개인, 직위직책, 부서 단독권한들) 권한 체크하여 UNION -->
 			<isEqual property="v_showAllGroupBoard" compareValue="Y">
 				<![CDATA[
           		UNION
@@ -462,7 +656,8 @@
 	                        C.AccessID ,
 	                        C.Access_ ,
 	                        C.BoardGroupACL ,
-	                        C.tenant_id
+	                        C.tenant_id,
+	                        C.TYPE
 	                      FROM 
 	                      	TBL_Board_BoardManage C
 	                      LEFT JOIN 
@@ -478,7 +673,7 @@
 	                      AND 
 	                      	C.BoardID <> #v_pExcludeBoardID#
 	                      AND 
-	                      	( C.AccessID = #v_pUserID# )
+	                      	C.AccessID = #v_pUserID#
 	                      AND 
 	                      	D.ParentBoardID = #v_pRootBoardID#
 					]]>
@@ -504,10 +699,118 @@
 		          		AND
 		          			A.PARENTBOARDID = #v_pRootBoardID#
 		                AND 
-		                	A.BoardID <> #v_pExcludeBoardID#
+		                	A.BoardID <> #v_pExcludeBoardID#	
+				]]>
+				<!-- 권한그룹이 아닌 개별 권한(PERSON, JIKWI, JIKCEHK, DEPT)만을 체크 -->
+				<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+				<![CDATA[
+	                AND
+						(B.TYPE <> 'GROUP' OR B.TYPE IS NULL)
+				]]>
+				</isEqual>
+				<![CDATA[
 		           		ORDER BY 
 		           			A.TreeViewOrder ASC)
+				]]>
+			</isEqual>
+<!-- 권한그룹(그룹사게시판) UNION -->
+		<isEqual property="v_showAllGroupBoard" compareValue="Y">
+			<![CDATA[
+          		UNION
+          		
+          			(SELECT 
+						DISTINCT AG.BoardID ,
+	                    AG.BoardName ,
+	                    CASE
+							WHEN (AG.Boardname2 = '' OR AG.Boardname2 IS NULL)
+							THEN AG.Boardname
+							ELSE AG.Boardname2
+						END BoardName2,
+	                    AG.TreeViewOrder ,
+	                    AG.BoardColor BoardColor,
+	                    AG.Gubun ,
+	                    AG.url ,
+	                    '' BoardGroupACL
+	           		FROM 
+	           			TBL_Board_BoardInfo AG
+				]]>
+	           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+	           		<![CDATA[
+	           		 JOIN 
+	                	( SELECT 
+	                		CG.BoardID ,
+	                        CG.AccessID ,
+	                        CG.Access_ ,
+	                        CG.BoardGroupACL ,
+	                        CG.tenant_id,
+	                        CG.TYPE
+	                      FROM 
+	                      	TBL_Board_BoardManage CG
+	                      LEFT JOIN 
+	                      	TBL_Board_BoardInfo DG
+	                      ON
+	                      	CG.TENANT_ID = DG.TENANT_ID 
+	                      AND
+	                      	CG.BoardID = DG.BoardID
+	                      	
+						INNER JOIN
+							TBL_PERMISSIONGROUPLIST PGL
+						ON
+							CG.TENANT_ID = PGL.TENANT_ID 
+						AND
+							CG.ACCESSID = PGL.GROUP_ID
+						INNER JOIN
+							TBL_PERMISSIONGROUPINFO PGI
+						ON
+							PGL.TENANT_ID = PGI.TENANT_ID
+						AND
+							PGL.GROUP_ID = PGI.GROUP_ID
+	                      	
+	                      WHERE
+	                      	CG.TENANT_ID = #v_TENANTID#
+	                      AND
+	                      	CG.Access_ = 1
+	                      AND 
+	                      	CG.BoardID <> #v_pExcludeBoardID#
+	                      AND 
+	                      	PGI.MEMBER_ID = #v_pUserID#
+	                      AND 
+	                      	DG.ParentBoardID = #v_pRootBoardID#
+	                      AND
+	                      	CG.TYPE = 'GROUP'
 					]]>
+					<isEqual property="v_ISDEPT" compareValue="1">
+						<isEqual property="v_ISEQUALDEPT" compareValue="0">
+							AND
+								PGI.SUB_DEPT_YN = 'Y'
+						</isEqual>
+					</isEqual>
+					<![CDATA[
+		                      	) BG
+		                ON 
+		                	AG.TENANT_ID = BG.TENANT_ID
+		                AND
+		                	AG.BoardID = BG.BOARDID
+					]]>
+				</isEqual>
+				<![CDATA[
+		          		WHERE
+		          			AG.TENANT_ID = #v_TENANTID#
+		          		AND
+			                (TRIM(AG.companyid) = ''	OR	AG.companyid IS NULL)
+		          		AND
+		          			AG.PARENTBOARDID = #v_pRootBoardID#
+		                AND 
+		                	AG.BoardID <> #v_pExcludeBoardID#
+				]]>
+				<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+		                AND
+							BG.TYPE = 'GROUP'
+				</isEqual>
+				<![CDATA[
+		           		ORDER BY 
+		           			AG.TreeViewOrder ASC)
+				]]>
 				</isEqual>
 			</isNotEqual>
 		</isNotEqual>
@@ -743,7 +1046,8 @@
 		            T1.WRITE_FG ,
 		            T1.REPLY_FG ,
 		            T1.DELETE_FG ,
-		            T1.POSTNOTICE
+		            T1.POSTNOTICE,
+		            IFNULL(T1.TYPE, '') AS TYPE
 	        	FROM
 	        		TBL_Board_BoardManage T1
 	        	JOIN
@@ -780,7 +1084,8 @@
 		            T1.WRITE_FG ,
 		            T1.REPLY_FG ,
 		            T1.DELETE_FG ,
-		            T1.POSTNOTICE 
+		            T1.POSTNOTICE,
+		            IFNULL(T1.TYPE, '') AS TYPE
 	        	FROM
 	        		TBL_Board_BoardManage T1
 	        	JOIN 
@@ -793,6 +1098,87 @@
 	       			T1.TENANT_ID = #v_TENANTID#
 	       		AND
 	       			BOARDID = #v_PBOARDID#)
+	       			
+	       		UNION
+	       		
+				(SELECT
+					NULL COMPNAY ,
+					NULL DESCRIPTION  ,
+					GROUP_NAME AS DISPLAYNAME ,
+					NULL TITLE  ,
+					NULL COMPANY2  ,
+					NULL DESCRIPTION2  ,
+					GROUP_NAME AS DISPLAYNAME2 ,
+					NULL TITLE2  ,
+					T1.ACCESSID ,
+					T1.ACCESSNAME ,
+					T1.ACCESSNAME2 ,
+					T1.BOARDGROUPACL ,
+					TBL_PERMISSIONGROUPLIST.GROUP_NAME DISPLAYNAME3,
+					T1.BOARDADMIN_FG ,
+					T1.ACCESS_ ,
+					T1.LISTVIEW_FG ,
+					T1.READ_FG ,
+					T1.WRITE_FG ,
+					T1.REPLY_FG ,
+					T1.DELETE_FG ,
+					T1.POSTNOTICE,
+					T1.TYPE
+	        	FROM
+	        		TBL_Board_BoardManage T1
+	        	JOIN
+	        		TBL_PERMISSIONGROUPLIST
+	        	ON
+	        		T1.TENANT_ID = TBL_PERMISSIONGROUPLIST.TENANT_ID
+	        	AND
+	        		T1.ACCESSID = TBL_PERMISSIONGROUPLIST.GROUP_ID
+				WHERE
+	         		T1.TENANT_ID = #v_TENANTID#
+				AND
+	         		BOARDID = #v_PBOARDID#
+	         	AND
+	         		T1.TYPE = 'GROUP')
+	         		
+	         	UNION
+	         		
+				(SELECT
+					NULL COMPNAY ,
+					NULL DESCRIPTION  ,
+					TBL_USER_JOBMASTER.DISPLAYNAME ,
+					NULL TITLE  ,
+					NULL COMPANY2  ,
+					NULL DESCRIPTION2  ,
+					TBL_USER_JOBMASTER.DISPLAYNAME2 ,
+					NULL TITLE2  ,
+					T1.ACCESSID ,
+					T1.ACCESSNAME ,
+					T1.ACCESSNAME2 ,
+					T1.BOARDGROUPACL ,
+					TBL_USER_JOBMASTER.DISPLAYNAME AS DISPLAYNAME3,
+					T1.BOARDADMIN_FG ,
+					T1.ACCESS_ ,
+					T1.LISTVIEW_FG ,
+					T1.READ_FG ,
+					T1.WRITE_FG ,
+					T1.REPLY_FG ,
+					T1.DELETE_FG ,
+					T1.POSTNOTICE,
+					T1.TYPE
+	        	FROM
+	        		TBL_Board_BoardManage T1
+	        	JOIN
+	        		TBL_USER_JOBMASTER
+	        	ON
+	        		T1.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+	        	AND
+	        		T1.ACCESSID = TBL_USER_JOBMASTER.JOBID
+				WHERE
+	         		T1.TENANT_ID = #v_TENANTID#
+				AND
+	         		BOARDID = #v_PBOARDID#
+				AND
+	         		(T1.TYPE = 'JIKWI' OR T1.TYPE = 'JIKCHEK')
+	         	)
 			]]>
 		</isEqual>
 		<isNotEqual  property="isAllGroupBoard" compareValue="Y">
@@ -818,7 +1204,8 @@
 		            T1.WRITE_FG ,
 		            T1.REPLY_FG ,
 		            T1.DELETE_FG ,
-		            T1.POSTNOTICE 
+		            T1.POSTNOTICE,
+		            IFNULL(T1.TYPE, '') AS TYPE
 	        	FROM 
 	        		TBL_Board_BoardManage T1
 	        	INNER JOIN
@@ -911,7 +1298,8 @@
 		            T1.WRITE_FG ,
 		            T1.REPLY_FG ,
 		            T1.DELETE_FG ,
-		            T1.POSTNOTICE 
+		            T1.POSTNOTICE,
+		            IFNULL(T1.TYPE, '') AS TYPE
 	        	FROM 
 	        		TBL_Board_BoardManage T1
 	        	JOIN 
@@ -924,6 +1312,91 @@
 	       			T1.TENANT_ID = #v_TENANTID#
 	       		AND  
 	       			BOARDID = #v_PBOARDID#)
+	       			
+				UNION
+	       		
+				(SELECT
+					NULL COMPNAY ,
+					NULL DESCRIPTION  ,
+					GROUP_NAME AS DISPLAYNAME ,
+					NULL TITLE  ,
+					NULL COMPANY2  ,
+					NULL DESCRIPTION2  ,
+					GROUP_NAME AS DISPLAYNAME2 ,
+					NULL TITLE2  ,
+					T1.ACCESSID ,
+					T1.ACCESSNAME ,
+					T1.ACCESSNAME2 ,
+					T1.BOARDGROUPACL ,
+					TBL_PERMISSIONGROUPLIST.GROUP_NAME DISPLAYNAME3,
+					T1.BOARDADMIN_FG ,
+					T1.ACCESS_ ,
+					T1.LISTVIEW_FG ,
+					T1.READ_FG ,
+					T1.WRITE_FG ,
+					T1.REPLY_FG ,
+					T1.DELETE_FG ,
+					T1.POSTNOTICE,
+					T1.TYPE
+	        	FROM
+	        		TBL_Board_BoardManage T1
+	        	JOIN
+	        		TBL_PERMISSIONGROUPLIST
+	        	ON
+	        		T1.TENANT_ID = TBL_PERMISSIONGROUPLIST.TENANT_ID
+	        	AND
+	        		T1.ACCESSID = TBL_PERMISSIONGROUPLIST.GROUP_ID
+				WHERE
+	         		T1.TENANT_ID = #v_TENANTID#
+	         	AND
+	         		TBL_PERMISSIONGROUPLIST.COMPANY_ID = #v_COMPANYID#
+				AND
+	         		BOARDID = #v_PBOARDID#
+				AND
+	         		T1.TYPE = 'GROUP')
+	         		
+				UNION
+	         		
+				(SELECT
+					NULL COMPNAY ,
+					NULL DESCRIPTION  ,
+					TBL_USER_JOBMASTER.DISPLAYNAME ,
+					NULL TITLE  ,
+					NULL COMPANY2  ,
+					NULL DESCRIPTION2  ,
+					TBL_USER_JOBMASTER.DISPLAYNAME2 ,
+					NULL TITLE2  ,
+					T1.ACCESSID ,
+					T1.ACCESSNAME ,
+					T1.ACCESSNAME2 ,
+					T1.BOARDGROUPACL ,
+					TBL_USER_JOBMASTER.DISPLAYNAME AS DISPLAYNAME3,
+					T1.BOARDADMIN_FG ,
+					T1.ACCESS_ ,
+					T1.LISTVIEW_FG ,
+					T1.READ_FG ,
+					T1.WRITE_FG ,
+					T1.REPLY_FG ,
+					T1.DELETE_FG ,
+					T1.POSTNOTICE,
+					T1.TYPE
+	        	FROM
+	        		TBL_Board_BoardManage T1
+	        	JOIN
+	        		TBL_USER_JOBMASTER
+	        	ON
+	        		T1.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+	        	AND
+	        		T1.ACCESSID = TBL_USER_JOBMASTER.JOBID
+				WHERE
+	         		T1.TENANT_ID = #v_TENANTID#
+				AND
+	         		BOARDID = #v_PBOARDID#
+				AND
+	         		TBL_USER_JOBMASTER.COMPANYID = #v_COMPANYID#
+				AND
+	         		(T1.TYPE = 'JIKWI' OR T1.TYPE = 'JIKCHEK')
+	         	)
 			]]>
 		</isNotEqual>
 	</select>
@@ -997,7 +1470,8 @@
                 	B.Delete_FG ,
                 	B.inherit_FG ,
                 	B.PostNotice ,
-                	B.BoardGroupACL 
+                	B.BoardGroupACL,
+                	B.TYPE
            		FROM 
            			TBL_Board_BoardManage B
                 JOIN 
@@ -1233,17 +1707,17 @@
 	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
 		INSERT INTO TBL_Board_BoardManage (
-			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID
+			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID, TYPE
 		)
         VALUES ( 
-        	#v_pBoardID#, #v_pAccessID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, <isEmpty property="v_PACCESSLEVEL">NULL,</isEmpty><isNotEmpty property="v_PACCESSLEVEL">#v_PACCESSLEVEL#,</isNotEmpty> #v_PACCESS#, #v_PPARENTBOARDID#, #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#, #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#, #v_TENANTID#, #v_COMPANYID# 
+        	#v_pBoardID#, #v_pAccessID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, <isEmpty property="v_PACCESSLEVEL">NULL,</isEmpty><isNotEmpty property="v_PACCESSLEVEL">#v_PACCESSLEVEL#,</isNotEmpty> #v_PACCESS#, #v_PPARENTBOARDID#, #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#, #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#, #v_TENANTID#, #v_COMPANYID#, #v_TYPE# 
         )
 	</insert>
 	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID 
+				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID, TYPE
 			)
             ( SELECT 
             	#v_pBoardID# ,
@@ -1263,7 +1737,8 @@
                 POSTNOTICE ,
                 BOARDGROUPACL,
                 TENANT_ID,
-                COMPANYID
+                COMPANYID,
+                IFNULL(TYPE, '') AS TYPE
       	      FROM 
       	      	TBL_Board_BoardManage A
               WHERE  
@@ -1284,7 +1759,7 @@
 	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID 
+				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID, TYPE 
 			)
         	( SELECT
         		#v_pBoardID# ,
@@ -1304,7 +1779,8 @@
                 POSTNOTICE ,
                 BOARDGROUPACL ,
                 TENANT_ID,
-                COMPANYID
+                COMPANYID,
+                IFNULL(TYPE, '') AS TYPE
           	  FROM 
           	  	TBL_Board_BoardManage A
           	  WHERE  
@@ -1395,10 +1871,10 @@
 	<insert id="EzBoardAdminDAO.saveACL_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
-				BoardID, 	  AccessID, 	 AccessName, 	  AccessName2, 		ACCESS_, 	 ParentBoardID, 	 BoardAdmin_FG, ListView_FG,   Read_FG,   Write_FG,   Reply_FG,   Delete_FG,   inherit_FG,   PostNotice, 	  BoardGroupACL, 	  tenant_id,  companyID
+				BoardID, 	  AccessID, 	 AccessName, 	  AccessName2, 		ACCESS_, 	 ParentBoardID, 	 BoardAdmin_FG, ListView_FG,   Read_FG,   Write_FG,   Reply_FG,   Delete_FG,   inherit_FG,   PostNotice, 	  BoardGroupACL, 	  tenant_id,  companyID, TYPE
 			)
         	VALUES ( 
-        		#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pAccessName2#, #v_pAccess#, #v_pParentBoardID#, #v_pAdmin#, 	#v_pListView#, #v_pRead#, #v_pWrite#, #v_pReply#, #v_pDelete#, #v_pInherit#, #v_pPostNotice#, #v_pBoardGroupACL#, #v_TENANTID#, #v_COMPANYID# 
+        		#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pAccessName2#, #v_pAccess#, #v_pParentBoardID#, #v_pAdmin#, 	#v_pListView#, #v_pRead#, #v_pWrite#, #v_pReply#, #v_pDelete#, #v_pInherit#, #v_pPostNotice#, #v_pBoardGroupACL#, #v_TENANTID#, #v_COMPANYID#, #v_pType# 
         	)
 		]]>
 	</insert>
@@ -1457,7 +1933,8 @@
 		    POSTNOTICE, 
 		    BOARDGROUPACL, 
 		    TENANT_ID, 
-		    COMPANYID
+		    COMPANYID,
+		    TYPE
 		    )
 		SELECT 
 			BOARDID, 
@@ -1476,7 +1953,8 @@
 		    'false', 
 		    #v_pBoardGroupACL#, 
 		    #v_TENANTID#, 
-		    #v_COMPANYID#
+		    #v_COMPANYID#,
+		    #v_pType#
 		FROM tbl_board_boardinfo
 		WHERE
 			BOARDID in ( $v_upperBoadList$ )
@@ -1979,7 +2457,8 @@
 	            DELETE_FG = #v_PDELETE_FG#,
 	            INHERIT_FG = #v_PINHERIT_FG#,
 	            POSTNOTICE = #v_PPOSTNOTICE#,
-	            BOARDGROUPACL = #v_PBOARDGROUPACL#
+	            BOARDGROUPACL = #v_PBOARDGROUPACL#,
+	            TYPE = #v_TYPE#
 	        WHERE  
 	        	TENANT_ID = #v_TENANTID#
 			]]>

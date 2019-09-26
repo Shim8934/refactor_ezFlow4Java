@@ -144,5 +144,7 @@ public interface EzCommonService {
 
 	public void addSnMenuAuth() throws Exception;
 
+	public void addBoardManageTypeColumn() throws Exception;
+
 }
 

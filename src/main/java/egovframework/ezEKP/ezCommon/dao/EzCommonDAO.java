@@ -771,4 +771,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.snMenuAuth");
 		}
 	}
+	
+	public void addBoardManageTypeColumn() {
+		try {
+			select("EzCommonDAO.checkBoardManageTypeColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_board_boardmanage type doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardManageTypeColumn");
+		}
+	}
 }

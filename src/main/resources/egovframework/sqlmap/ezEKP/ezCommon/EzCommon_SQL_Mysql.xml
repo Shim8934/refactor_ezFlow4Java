@@ -1202,4 +1202,19 @@
 		ADD 
 			sn INT DEFAULT 0
 	</statement>
+	
+	<select id="EzCommonDAO.checkBoardManageTypeColumn">
+		SELECT
+			TYPE
+		FROM
+			TBL_BOARD_BOARDMANAGE
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addBoardManageTypeColumn">
+		ALTER TABLE
+			TBL_BOARD_BOARDMANAGE
+		ADD 
+			TYPE VARCHAR(10) DEFAULT NULL
+	</statement>
 </sqlMap>

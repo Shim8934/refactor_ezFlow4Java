@@ -11,6 +11,7 @@ import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -1007,9 +1008,13 @@ public class MBoardGWController {
 		StringBuilder deptPathOrgan = new StringBuilder();
 		List<String> addJobDeptList = new ArrayList<String>();
 		
+		/* 2019-09-24 홍승비 - 개인ID 이후, 부서ID 이전 위치에 직위+직책ID (사내겸직 직위 포함) 추가 */
+		String userJJID = ezBoardService.getUserJJID(info.getUserId(), info.getCompanyId(), info.getTenantId());
+		
 		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
 			if (ch == 0) { // 0 : userID
 				deptPathOrgan.append(deptPath.split(",")[ch].trim());
+				deptPathOrgan.append(",").append(userJJID);
 			} else {
 				deptPathOrgan.append(",").append(deptPath.split(",")[deptPath.split(",").length - (ch)].trim());
 			}
@@ -1047,7 +1052,10 @@ public class MBoardGWController {
 			}
 		}
 		
-		Set<String> readFGSet = new HashSet<String>();
+		Set<String> readFGSetDept = new HashSet<String>();
+		Set<String> readFGSetJJ = new HashSet<String>();
+		Set<String> userJJIDSet = new HashSet<String>(Arrays.asList(userJJID.split(",")));
+		
 		boolean rtv = false;
 		boolean isUserHasACL = false;
 		String tempDeptList = addJobStr.toString();
@@ -1068,47 +1076,65 @@ public class MBoardGWController {
 					
 					int isDept = ezBoardService.isDeptChk(addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId());
 					
-					/* 2019-05-31 홍승비 - 게시판그룹의 관리자 권한 체크 시 하위부서 허용여부 (부서 직속여부) 확인 */
-					String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin2(boardID, addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept, isBoardGroup);
+					/* 2019-09-25 홍승비 - 권한그룹을 포함하여 게시판그룹 관리자권한 체크 */
+					// 권한그룹 적용 시 개인권한이 다수 존재 가능하므로, 권한을 리스트로 가져온 뒤 '허용(OK)'기준으로 취합한다.
+					String boardGroupAdmin_FG_New = "";
+					List<String> boardGroupAdmin_FG_List = ezBoardService.checkIfBoardGroupAdminNew(boardID, addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept, isBoardGroup);
+					if (boardGroupAdmin_FG_List != null && boardGroupAdmin_FG_List.size() > 0) { // 권한이 없으면 공백값을 유지 > 다음 루프 진행
+						if (boardGroupAdmin_FG_List.contains("OK")) { // 동일한 우선순위의 권한에 대해서, OK가 하나라도 존재한다면 OK로 판정
+							boardGroupAdmin_FG_New = "OK";
+						} else {
+							boardGroupAdmin_FG_New = "NO";
+						}
+					}
 					
-					if (rollInfo != null && ((rollInfo.toLowerCase().indexOf("c=1") > -1 || boardGroupAdmin_FG.equals("OK")) ||
+					if (rollInfo != null && ((rollInfo.toLowerCase().indexOf("c=1") > -1 || boardGroupAdmin_FG_New.equals("OK")) ||
 							(isAllGroupBoard.equals("N") && (rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)))) {
 						LOGGER.debug("user has admin roll, accessCheck ended");
 						return true;
 					} else {
-						int result = 0;
-						/* 2019-05-31 홍승비 - getCheckItemID메서드에 isDept와 isEqualDept 조건 추가, 게시물의 READ_FG 확인 시 하위부서 허용여부를 체크하도록 수정 */
-						result = ezBoardService.getCheckItemID(contentID, "GENERAL", addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept);
-						//2018-09-19 배현상, result가 999인 경우는 해당 ACCESSID가 권한설정이 안되어 있는 경우
-						if (result != 999) {
-							if (addJobDeptList.get(jl).split(",")[i].equals(info.getUserId())) {
-								//2018-09-19 배현상, result > 0(읽기권한이 비허용인 경우)
-								if (result > 0) {
-									rtv = false;
-								} else {
-									rtv = true;
-								}
-								isUserHasACL = true;
-							} else {
-								if (result > 0) {
-									readFGSet.add("false");
-								} else {
-									readFGSet.add("true");
-								}
+						List<String> resultNewList = new ArrayList<String>();
+						boolean resultNew = false;
+						
+						/* 2019-09-24 홍승비 - 권한그룹 적용하여 읽기권한 '허용' 기준으로 취합을 위해 리스트로 리턴 */
+						resultNewList = ezBoardService.getCheckItemIDNew(contentID, "GENERAL", addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept);
+						
+						if (resultNewList != null && resultNewList.size() > 0) { // 넘겨준 ACCESSID에  대하여 읽기권한 레코드가 존재
+							if (resultNewList.contains("true")) { // 읽기권한 '허용' 기준으로 취합
+								resultNew = true;
+							} else { // '허용'이 아예 없는 경우 '불가'로 판정
+								resultNew = false;
 							}
-							break;
-						} else {
-							readFGSet.add("false");
-						}
+							
+							/* 2019-09-24 홍승비 - 읽기권한 체크를 숫자가 아닌 문자열(true/false)로 수정 */
+							if (addJobDeptList.get(jl).split(",")[i].equals(info.getUserId())) { // 개인권한
+								rtv = resultNew;
+								isUserHasACL = true;
+								break;
+							}
+							else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위, 직책권한
+								readFGSetJJ.add(String.valueOf(resultNew));
+								// 직위, 직책권한은 전부 루프돌때까지 break 안함
+							}
+							else { // 부서권한
+								readFGSetDept.add(String.valueOf(resultNew));
+								break;
+							}
+						} // 권한이 아예 존재하지 않는 경우, 다음 루프 진행
 					}
 				}
 			}
 		}
 		
 		// 개인권한이 존재하지 않고, 각 사내겸직의 부서경로에 대하여 가져온 읽기권한 중 하나라도 true이면 true 리턴
-		if (isUserHasACL == false && readFGSet.contains("true")) {
-			rtv = true;
-		}
+		if (isUserHasACL == false) {
+			if (readFGSetJJ.size() > 0 && readFGSetJJ.contains("true")) { // 직책, 직위권한이 존재
+				rtv = true;
+			}
+			else if (readFGSetJJ.size() == 0 && readFGSetDept.contains("true")) { // 직책, 직위권한 없고 부서권한이 존재
+				rtv = true;
+			}
+		} // 개인, 직위/직책, 부서권한 전부 존재하지 않는다면 false 리턴 (rtv는 디폴트 값이 false임)
 		
 		LOGGER.debug("rtv = " + rtv);
 		LOGGER.debug("accessCheck ended2");

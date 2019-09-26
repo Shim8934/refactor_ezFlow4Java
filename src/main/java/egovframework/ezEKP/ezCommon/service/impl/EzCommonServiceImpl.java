@@ -1607,4 +1607,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addSnMenuAuth() throws Exception {
 		ezCommonDAO.addSnMenuAuth();
 	}
+	
+	@Override
+	public void addBoardManageTypeColumn() throws Exception {
+		ezCommonDAO.addBoardManageTypeColumn();
+	}
 }

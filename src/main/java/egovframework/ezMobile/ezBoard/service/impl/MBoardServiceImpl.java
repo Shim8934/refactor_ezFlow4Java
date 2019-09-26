@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -188,9 +189,13 @@ public class MBoardServiceImpl implements MBoardService {
 		StringBuilder deptPathOrgan = new StringBuilder();
 		List<String> addJobDeptList = new ArrayList<String>();
 		
+		/* 2019-09-25 홍승비 - 개인ID 이후, 부서ID 이전 위치에 직위+직책ID (사내겸직 직위 포함) 추가 */
+		String userJJID = ezBoardService.getUserJJID(info.getUserId(), info.getCompanyId(), info.getTenantId());
+		
 		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
 			if (ch == 0) { // 0 : userID
 				deptPathOrgan.append(deptPath.split(",")[ch].trim());
+				deptPathOrgan.append(",").append(userJJID);
 			} else {
 				deptPathOrgan.append(",").append(deptPath.split(",")[deptPath.split(",").length - (ch)].trim());
 			}
@@ -242,7 +247,10 @@ public class MBoardServiceImpl implements MBoardService {
 			}
 		}
 		
-		List<MBoardInfoVO> boardACLList = new ArrayList<MBoardInfoVO>();
+		List<MBoardInfoVO> boardACLListDept = new ArrayList<MBoardInfoVO>();
+		List<MBoardInfoVO> boardACLListJJ = new ArrayList<MBoardInfoVO>();
+		Set<String> userJJIDSet = new HashSet<String>(Arrays.asList(userJJID.split(",")));
+		
 		boolean isUserHasACL = false;
 		String tempDeptList = addJobStr.toString();
 		int addJobDeptListSize = addJobDeptList.size();
@@ -262,50 +270,94 @@ public class MBoardServiceImpl implements MBoardService {
 					}
 					
 					int isDept = isDeptChk(addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId());
-					MBoardInfoVO boardInfoTemp = getACL(boardID, addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept);
-					String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin2(boardID, addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept, isBoardGroup);
+					
+					/* 2019-09-25 홍승비 - 동일한 ACCESSID에 대해 리스트로 리턴된 권한을 '허용'권한 기준으로 취합 */
+					// 개인 - 직위/직책 - 부서/회사 순으로 우선순위가 적용되고, 각 루프에서 가장 우선순위가 높은 권한을 찾으면 다음 루프로 빠져나감
+					MBoardInfoVO boardInfoTempNew = new MBoardInfoVO();
+					List<MBoardInfoVO> boardInfoTempList = getACLListNew(boardID, addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept);
+					if (boardInfoTempList != null && boardInfoTempList.size() > 0) {
+						boardInfoTempNew = sumBoardACL(boardInfoTempList, boardInfoTempNew);
+					}
+					
+					/* 2019-09-25 홍승비 - 권한그룹을 포함하여 게시판그룹 관리자권한 체크 */
+					// 권한그룹 적용 시 개인권한이 다수 존재 가능하므로, 권한을 리스트로 가져온 뒤 '허용(OK)'기준으로 취합한다.
+					String boardGroupAdmin_FG_New = "";
+					List<String> boardGroupAdmin_FG_List = ezBoardService.checkIfBoardGroupAdminNew(boardID, addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept, isBoardGroup);
+					if (boardGroupAdmin_FG_List != null && boardGroupAdmin_FG_List.size() > 0) { // 권한이 없으면 공백값을 유지 > 다음 루프 진행
+						if (boardGroupAdmin_FG_List.contains("OK")) { // 동일한 우선순위의 권한에 대해서, OK가 하나라도 존재한다면 OK로 판정
+							boardGroupAdmin_FG_New = "OK";
+						} else {
+							boardGroupAdmin_FG_New = "NO";
+						}
+					}
 					
 					// 사원 개인에 대해 권한이 존재한다면 바로 빠져나오고 해당 권한 그대로 사용함 (최우선순위 권한)
-					if (boardInfoTemp != null) {
-						boardInfoTemp.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
+					if (boardInfoTempList != null && boardInfoTempList.size() > 0) {
+						boardInfoTempNew.setBoardGroupAdmin_FG(boardGroupAdmin_FG_New);
 						
 						if (addJobDeptList.get(jl).split(",")[i].trim().equals(info.getUserId())) {
-							mBoardInfoVO.setAccessID(boardInfoTemp.getAccessID());
-							mBoardInfoVO.setAccessLevel(boardInfoTemp.getAccessLevel());
-							mBoardInfoVO.setAccess_(boardInfoTemp.getAccess_());
-							mBoardInfoVO.setBoardGroupAdmin_FG(boardInfoTemp.getBoardGroupAdmin_FG());
-							mBoardInfoVO.setBoardAdmin_FG(boardInfoTemp.getBoardAdmin_FG());
-							mBoardInfoVO.setListView_FG(boardInfoTemp.getListView_FG());
-							mBoardInfoVO.setRead_FG(boardInfoTemp.getRead_FG());
-							mBoardInfoVO.setWrite_FG(boardInfoTemp.getWrite_FG());
-							mBoardInfoVO.setReply_FG(boardInfoTemp.getReply_FG());
-							mBoardInfoVO.setDelete_FG(boardInfoTemp.getDelete_FG());
-							mBoardInfoVO.setInherit_FG(boardInfoTemp.getInherit_FG());
-							mBoardInfoVO.setBoardGroupACL(boardInfoTemp.getBoardGroupACL());
+							mBoardInfoVO.setAccessID(boardInfoTempNew.getAccessID());
+							mBoardInfoVO.setAccessLevel(boardInfoTempNew.getAccessLevel());
+							mBoardInfoVO.setAccess_(boardInfoTempNew.getAccess_());
+							mBoardInfoVO.setBoardGroupAdmin_FG(boardInfoTempNew.getBoardGroupAdmin_FG());
+							mBoardInfoVO.setBoardAdmin_FG(boardInfoTempNew.getBoardAdmin_FG());
+							mBoardInfoVO.setListView_FG(boardInfoTempNew.getListView_FG());
+							mBoardInfoVO.setRead_FG(boardInfoTempNew.getRead_FG());
+							mBoardInfoVO.setWrite_FG(boardInfoTempNew.getWrite_FG());
+							mBoardInfoVO.setReply_FG(boardInfoTempNew.getReply_FG());
+							mBoardInfoVO.setDelete_FG(boardInfoTempNew.getDelete_FG());
+							mBoardInfoVO.setInherit_FG(boardInfoTempNew.getInherit_FG());
+							mBoardInfoVO.setBoardGroupACL(boardInfoTempNew.getBoardGroupACL());
 							isUserHasACL = true;
-						} else { // 부서, 회사의 권한
-							boardACLList.add(boardInfoTemp);
-							isUserHasACL = false;
+							break;
 						}
-						break;
+						else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위, 직책 권한
+							boardACLListJJ.add(boardInfoTempNew);
+							isUserHasACL = false;
+							// 직위, 직책은 게시판그룹의 관리자권한 레코드를 전부 찾을때까지 break 하지 않는다.
+						}
+						else { // 부서, 회사의 권한
+							boardACLListDept.add(boardInfoTempNew);
+							isUserHasACL = false;
+							break;
+						}
 					}
-					else if (!boardGroupAdmin_FG.equals("")) {
+					else if (!boardGroupAdmin_FG_New.equals("")) { // 하위게시판에는 권한이 없고, 게시판그룹에 관리자권한이 존재하는 경우
 						MBoardInfoVO boardGroupAdminFG = new MBoardInfoVO();
-						if (boardGroupAdmin_FG.equals("OK")) {
+						if (boardGroupAdmin_FG_New.equals("OK")) {
 							boardGroupAdminFG.setBoardGroupAdmin_FG("OK");
 							boardGroupAdminFG.setAccess_("1");
+							
+							// 게시판그룹의 관리자 권한이 '허용'인 경우에만 추가하도록 한다.
+							if (addJobDeptList.get(jl).split(",")[i].trim().equals(info.getUserId())) { // 개인의 게시판그룹 관리자 권한
+								// 개인에 대하여 게시판그룹의 관리자 권한이 존재하므로, 루프를 벗어난다.
+								mBoardInfoVO.setBoardGroupAdmin_FG(boardGroupAdmin_FG_New);
+								isUserHasACL = true;
+								break; // 게시판그룹의 관리자 권한이 '허용'인 경우에만 루프를 break시킨다.
+							}
+							else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위, 직책의 게시판그룹 관리자  권한
+								boardGroupAdminFG.setAccessID(addJobDeptList.get(jl).split(",")[i]);
+								boardACLListJJ.add(boardGroupAdminFG);
+							}
+							else { // 부서, 회사의 게시판그룹 관리자  권한
+								boardGroupAdminFG.setAccessID(addJobDeptList.get(jl).split(",")[i]);
+								boardACLListDept.add(boardGroupAdminFG);
+								break;
+							}
 						} else {
 							boardGroupAdminFG.setBoardGroupAdmin_FG("NO");
 						}
-						boardGroupAdminFG.setAccessID(addJobDeptList.get(jl).split(",")[i]);
-						boardACLList.add(boardGroupAdminFG);
 					}
 				}
 			}
 		}
 		
 		if (isUserHasACL == false) { // 개인 권한이 존재하지 않는 경우에만 권한 취합
-			mBoardInfoVO = sumBoardACL(boardACLList, mBoardInfoVO);
+			if (boardACLListJJ.size() > 0) { // 직위, 직책권한 부여
+				mBoardInfoVO = sumBoardACL(boardACLListJJ, mBoardInfoVO);
+			} else { // 직위, 직책권한이 없다면 부서권한 부여
+				mBoardInfoVO = sumBoardACL(boardACLListDept, mBoardInfoVO);
+			}
 		}
 		
 		/* 2018-10-26 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
@@ -1054,6 +1106,10 @@ public class MBoardServiceImpl implements MBoardService {
 		String[] reverseDeptPath = ezOrganService.getDeptFullPath(deptID, tenantID).split(",");
 		List<String> addJobDeptList = new ArrayList<String>();
 		
+		/* 2019-09-18 홍승비 - 개인ID 이후, 부서ID 이전 위치에 직위+직책ID (사내겸직 직위 포함) 추가 */
+		String userJJID = ezBoardService.getUserJJID(info.getUserId(), companyID, tenantID);
+		pAccessID.add(userJJID);
+		
 		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
 			pAccessID.add(reverseDeptPath[i]);
 		}
@@ -1104,8 +1160,10 @@ public class MBoardServiceImpl implements MBoardService {
 		List<MBoardTreeVO> brdBoardTreeList = new ArrayList<MBoardTreeVO>();
 		List<HashSet<String>> strBanBoardIDListSetDept = new ArrayList<HashSet<String>>();
 		HashSet<String> strBanBoardIDListSetUser = new HashSet<String>();
+		HashSet<String> strBanBoardIDListSetJJ = new HashSet<String>();
+		HashSet<String> userJJIDSet = new HashSet<String>(Arrays.asList(userJJID.split(",")));
 		String tempDeptList = addJobStr.toString();
-	    
+		
 		if ((mode == 0 && isCompanyAdmin == true) || boardGroupAdmin_FG.equals("OK")) {
 			brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, companyID, tenantID, primary, 0, 0, isCompanyAdmin, boardGroupAdmin_FG);
 		} else {
@@ -1158,9 +1216,16 @@ public class MBoardServiceImpl implements MBoardService {
 						for (int r = 0; r < boardTreeList.size(); r++) {
 							boardID = boardTreeList.get(r).getBoardId();
 							
+							/* 2019-09-24 그룹권한 적용으로 그룹에 속한 개인권한 다수 저장 가능 */
 							if (addJobDeptList.get(jl).split(",")[i].equals(info.getUserId())) { // 개인권한은 따로 저장 (맨 처음 한 번만 동작)
 								strBanBoardIDListSetUser.add(boardID);
-							} else {
+							}
+							else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위/직책권한 저장
+								strBanBoardIDListSetJJ.add(boardID);
+							}
+							else { // 부서권한 저장
+								// 하위부서와 상위부서가 동일한 게시판에 대해 권한을 가져서 충돌하는 경우, 하위부서를 우선으로 적용한다.
+								// 즉, contains로 strBanBoardIDListSetTemp의 게시판ID 존재 여부를 체크하여 동일한 게시판ID가 이미 존재한다면 스킵한다.
 								if (strBanBoardIDListSetTemp.contains(boardID.substring(0, boardID.indexOf("|")) + "|0;") || 
 										strBanBoardIDListSetTemp.contains(boardID.substring(0, boardID.indexOf("|")) + "|1;")) {
 									continue;
@@ -1180,9 +1245,9 @@ public class MBoardServiceImpl implements MBoardService {
 			}
 		}
 		
-		HashSet<String> strBanBoardIDListSet = new HashSet<String>();
+		HashSet<String> strBanBoardIDListSetDept2 = new HashSet<String>();
 		for (int i = 0; i < strBanBoardIDListSetDept.size(); i++) {
-			strBanBoardIDListSet.addAll(strBanBoardIDListSetDept.get(i));
+			strBanBoardIDListSetDept2.addAll(strBanBoardIDListSetDept.get(i));
 		}
 		
 	    /* 2018-10-05 홍승비 - 게시판순서 오름차순 정렬 시 o1=o2(0), o1>o2(1), o1<o2(-1) 분기 추가 */
@@ -1200,12 +1265,31 @@ public class MBoardServiceImpl implements MBoardService {
 	    	
 	    	if (!isCompanyAdmin) {
 	    		// 개인권한 최우선 확인 (strBanBoardIDListSetUser 직접 사용)
-				if (strBanBoardIDListSetUser.contains(tempMBoardTree.getBoardId() + "|0;") ||
-						(!strBanBoardIDListSetUser.contains(tempMBoardTree.getBoardId() + "|1;") && strBanBoardIDListSet.contains(tempMBoardTree.getBoardId() + "|0;") && !strBanBoardIDListSet.contains(tempMBoardTree.getBoardId() + "|1;"))) {
-					// 접근권한이 없는(표출되지 않는) 게시판은 리스트에서 제거하고, 다음 루프로 간다.
+	    		/* 2019-09-24 홍승비 - 그룹권한에 포함된 개인/직위,직책권한도 고려하도록 수정 (동일한 우선순위 권한 간의 불가/허용 충돌 시 '허용' 기준으로 판정) */
+				if (strBanBoardIDListSetUser.contains(tempMBoardTree.getBoardId() + "|0;") && !strBanBoardIDListSetUser.contains(tempMBoardTree.getBoardId() + "|1;")) {
 					it.remove();
 					brdBoardTreeList.remove(tempMBoardTree);
 					continue;
+				}
+				// 개인권한에 대해 '허용'권한과 '불가'권한이 모두 존재하지 않음 => 직위, 직책을 체크
+				// 개인권한 미존재
+				else if (!strBanBoardIDListSetUser.contains(tempMBoardTree.getBoardId() + "|0;") && !strBanBoardIDListSetUser.contains(tempMBoardTree.getBoardId() + "|1;")) {
+					// 직위,직책권한 중 '불가'만 존재
+					if  (strBanBoardIDListSetJJ.contains(tempMBoardTree.getBoardId() + "|0;") && !strBanBoardIDListSetJJ.contains(tempMBoardTree.getBoardId() + "|1;")) {
+						it.remove();
+						brdBoardTreeList.remove(tempMBoardTree);
+						continue;
+					}
+					// 개인권한에 대해 '허용'권한과 '불가'권한이 모두 존재하지 않음 + 직위, 직책에 대해 '허용'권한과 '불가'권한이 모두 존재하지 않음 => 부서권한을 체크
+					// 직위,직책권한 미존재
+					else if (!strBanBoardIDListSetJJ.contains(tempMBoardTree.getBoardId() + "|0;") && !strBanBoardIDListSetJJ.contains(tempMBoardTree.getBoardId() + "|1;")) {
+						 // 부서권한 중 '불가'만 존재
+						if (strBanBoardIDListSetDept2.contains(tempMBoardTree.getBoardId() + "|0;") && !strBanBoardIDListSetDept2.contains(tempMBoardTree.getBoardId() + "|1;")) {
+							it.remove();
+							brdBoardTreeList.remove(tempMBoardTree);
+							continue;
+						}
+					}
 				}
 			}
 	    	
@@ -1536,7 +1620,11 @@ public class MBoardServiceImpl implements MBoardService {
 		StringJoiner pAccessID = new StringJoiner(",");
 		List<String> addJobDeptList = new ArrayList<String>();
 		
+		/* 2019-09-18 홍승비 - 개인ID 이후, 부서ID 이전 위치에 직위+직책ID (사내겸직 직위 포함) 추가 */
+		String userJJID = ezBoardService.getUserJJID(userInfo.getUserId(), userInfo.getCompanyId(), userInfo.getTenantId());
+		
 		pAccessID.add(userInfo.getUserId());
+		pAccessID.add(userJJID);
 		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
 			pAccessID.add(reverseDeptPath[i]);
 		}
@@ -1581,7 +1669,10 @@ public class MBoardServiceImpl implements MBoardService {
 			}
 		}
 		
-		Set<String> boardGroupAdminFGSet = new HashSet<String>();
+		Set<String> boardGroupAdminFGSetDept = new HashSet<String>();
+		Set<String> boardGroupAdminFGSetJJ = new HashSet<String>();
+		Set<String> userJJIDSet = new HashSet<String>(Arrays.asList(userJJID.split(",")));
+		
 		boolean isUserHasACL = false;
 		String tempDeptList = addJobStr.toString();
 		int addJobDeptListSize = addJobDeptList.size();
@@ -1600,28 +1691,68 @@ public class MBoardServiceImpl implements MBoardService {
 					}
 					
 					int isDept = isDeptChk(addJobDeptList.get(jl).split(",")[i].trim(), userInfo.getTenantId());
-					String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin2(pBoardGroupID, addJobDeptList.get(jl).split(",")[i].trim(), userInfo.getTenantId(), isDept, isEqualDept, isBoardGroup);
 					
-					if (!boardGroupAdmin_FG.equals("")) {
-						if (addJobDeptList.get(jl).split(",")[i].trim().equals(userInfo.getUserId())) { // 개인의 권한
-							result = boardGroupAdmin_FG;
-							isUserHasACL = true;
-						} else { // 부서, 회사의 권한
-							boardGroupAdminFGSet.add(boardGroupAdmin_FG);
-							isUserHasACL = false;
+					/* 2019-09-24 홍승비 - 권한그룹을 포함하여 게시판그룹 관리자권한 체크 */
+					// 권한그룹 적용 시 개인권한이 다수 존재 가능하므로, 권한을 리스트로 가져온 뒤 '허용(OK)'기준으로 취합한다.
+					List<String> boardGroupAdminNew_FG_List = ezBoardService.checkIfBoardGroupAdminNew(pBoardGroupID, addJobDeptList.get(jl).split(",")[i].trim(), userInfo.getTenantId(), isDept, isEqualDept, isBoardGroup);
+					String boardGroupAdminNew_FG = ""; // 공백으로 설정해야 제대로 루프를 돈다 (하단 equals 분기 참고)
+					// 전달한 ACCESSID에 대한 게시판 관리자권한 리스트 (OK, NO)
+					if (boardGroupAdminNew_FG_List != null && boardGroupAdminNew_FG_List.size() > 0) { // 권한이 없으면 공백값을 유지 > 다음 루프 진행
+						if (boardGroupAdminNew_FG_List.contains("OK")) { // 동일한 우선순위의 권한에 대해서, OK가 하나라도 존재한다면 OK로 판정
+							boardGroupAdminNew_FG = "OK";
+						} else {
+							boardGroupAdminNew_FG = "NO";
 						}
-						break;
+					}
+					
+					if (!boardGroupAdminNew_FG.equals("")) {
+						if (addJobDeptList.get(jl).split(",")[i].trim().equals(userInfo.getUserId())) { // 개인의 권한
+							result = boardGroupAdminNew_FG;
+							isUserHasACL = true;
+							break;
+						}
+						else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위, 직책 권한
+							boardGroupAdminFGSetJJ.add(boardGroupAdminNew_FG);
+							isUserHasACL = false;
+							// 직위, 직책권한은 레코드 전부 찾을때까지 break 안함
+						}
+						else { // 부서, 회사의 권한
+							boardGroupAdminFGSetDept.add(boardGroupAdminNew_FG);
+							isUserHasACL = false;
+							break;
+						}
 					}
 				}
 			}
 		}
 		
-		if (isUserHasACL == false && boardGroupAdminFGSet.contains("OK")) {
-			result = "OK";
+		// 개인권한이 있다면 개인권한을  result로 사용함(상단 루프 내부 참고) / 개인권한이 없다면 직위, 직책권한 -> 부서권한 순으로 체크
+		if (isUserHasACL == false) {
+			if (boardGroupAdminFGSetJJ.size() > 0 && boardGroupAdminFGSetJJ.contains("OK")) { // 직위, 직책권한이 존재하고 OK를 가지는 경우
+				result = "OK";
+			} else if (boardGroupAdminFGSetJJ.size() == 0 && boardGroupAdminFGSetDept.contains("OK")) { // 직위, 직책권한이 없고 부서권한이 OK를 가지는 경우
+				result = "OK";
+			} // 이외의 경우는 직위, 직책권한이 존재하고 NO만 가지는 경우 || 직위, 직잭권한이 없고 부서권한이 NO만 가지는 경우
 		}
 		
 		logger.debug("result in checkIfBoardGroupAdmin   ::   " + result);
 		logger.debug("checkIfBoardGroupAdmin ended");
 		return result;
+	}
+	
+	/* 2019-09-25 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 메서드  */
+	public List<MBoardInfoVO> getACLListNew(String pBoardID, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception {
+		logger.debug("getACL started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("boardID", pBoardID);
+		map.put("userDeptPath", userDeptPath);
+		map.put("tenantID", tenantID);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
+		
+		logger.debug("getACL ended");
+		return mBoardDAO.getACLListNew(map);
 	}
 }

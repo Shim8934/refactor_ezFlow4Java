@@ -1029,6 +1029,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				sb.append("<REPLY_FG>" + obj.getReply_FG() + "</REPLY_FG>");
 				sb.append("<DELETE_FG>" + obj.getDelete_FG() + "</DELETE_FG>");
 				sb.append("<POSTNOTICE>" + obj.getPostNotice() + "</POSTNOTICE>");
+				/* 2019-09-19 게시판 권한의 TYPE값 추가 */
+				sb.append("<TYPE><![CDATA[" + obj.getType() + "]]></TYPE>");
 				sb.append("</ROW>");
 			}
 		}
@@ -1140,6 +1142,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				map.put("v_pAccessName2", pAccessName2);
 				map.put("v_pBoardGroupACL", doc.getElementsByTagName("TARGETGROUP").item(i).getTextContent());
 				map.put("isAllGroupBoard", doc.getElementsByTagName("ISALLGROUPBOARD").item(i).getTextContent());
+				/* 2019-09-19 홍승비 - 개인, 부서, 그룹권한 여부 파라미터 추가 */
+				map.put("v_pType", doc.getElementsByTagName("TYPE").item(i).getTextContent());
 			}
 			
 			/* 2018-06-25 홍승비 - 게시판 권한설정 시 companyID 부여 */
@@ -1314,6 +1318,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 					vo2.setIsAllGroupBoard(isAllGroupBoard);
 					vo2.setParentBoardID(vo1.getParentBoardID());
 					
+					if (vo2.getType() == null) {
+						vo2.setType("");
+					}
+					
 					ezBoardAdminService.setUnderBoardIDAcl(vo2);
 				}				
 			}			
@@ -1443,5 +1451,29 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		logger.debug("saveForm ended");
 		return "OK";
+	}
+	
+	/**
+	 * 2019-09-19 홍승비 - 그룹권한이 포함된 새로운 게시판관리 조직도 선택화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezBoard/selectTargetGroup.do", method = RequestMethod.GET)
+	public String selectTargetGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("selectTargetGroup started");
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String topid = "";
+		
+		if (user.getRollInfo().indexOf("c=1") == -1) { // 전체관리자가 아님
+			topid = user.getCompanyID();
+		} else { // 전체관리자 (모든 회사를 조직도에서 표출)
+			topid = "Top";
+		}
+		
+		model.addAttribute("topid", topid);
+		model.addAttribute("primary", user.getPrimary());
+		model.addAttribute("deptID", user.getDeptID());
+		
+		logger.debug("selectTargetGroup ended");
+		return "admin/ezBoard/selectTargetGroup";
 	}
 }

@@ -2067,4 +2067,64 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("getTitleInfo_group ended.");
 		return vo;
 	}
+
+	@Override
+	public List<OrganGroupVO> getGroupListBoard(int tenantID, String companyID, String isAllGroupBoard) throws Exception{
+		logger.debug("getGroupListBoard started");
+   		logger.debug("companyID=" + companyID );
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_COMPANY_ID", companyID);
+		map.put("isAllGroupBoard", isAllGroupBoard); // 그룹사게시판이라면 companyID조건을 무시하고 모든 권한그룹 리턴
+		
+		List<OrganGroupVO> retireList = ezOrganAdminDao.getGroupListBoard(map);
+		
+        logger.debug("getGroupListBoard ended");
+		
+		return retireList;
+	}
+	
+	/* 2019-09-25 홍승비 - 게시판 권한설정용 > 직위,직책 리스트 호출 시 다국어 이름도 함께 가져옴 */
+	@Override
+	public String getTitleListBoard(String type, String companyID, int tenantID, String lang) throws Exception {
+		logger.debug("getTitleListBoard started.");
+
+		StringBuffer rtnVal = new StringBuffer();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TYPE", type);
+		map.put("v_COMPANYID", companyID); // 이 값이 없다면 모든 회사의 직위,직책을 가져온다. (그룹사게시판에서는 "top"으로 전달됨)
+		map.put("v_TENANTID", tenantID);
+		
+		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList_group(map);
+		
+		rtnVal.append("<LISTVIEWDATA>");
+		rtnVal.append("<ROWS>");
+		
+		if (jobList != null && jobList.size() > 0) {
+			for (int i = 0; i < jobList.size(); i++) {
+				rtnVal.append("<ROW>");
+				if (lang.equalsIgnoreCase("1")) {
+					rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE>");
+				} else {
+					rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE>");
+				}
+				rtnVal.append("<DATA1>" + jobList.get(i).getJobID() + "</DATA1>");
+				rtnVal.append("<DATA2>" + jobList.get(i).getType()  + "</DATA2>");
+				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4>");
+				rtnVal.append("<DATA5><![CDATA[" + getCompanyName(jobList.get(i).getCompanyID(), tenantID) + "]]></DATA5>");
+				rtnVal.append("<DISPLAYNAME><![CDATA[" + jobList.get(i).getDisplayName() + "]]></DISPLAYNAME>");
+				rtnVal.append("<DISPLAYNAME2><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></DISPLAYNAME2>");
+				rtnVal.append("</CELL></ROW>");
+			}
+		}
+		
+		rtnVal.append("</ROWS></LISTVIEWDATA>");
+		
+		logger.debug("getTitleListBoard ended.");
+		
+		return rtnVal.toString();
+	}
 }

@@ -171,6 +171,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
     	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
     	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
+    	ezCommonService.addBoardManageTypeColumn(); //2019-09-19 홍승비 - 게시판 권한그룹 적용을 위한 TYPE 칼럼 추가
     	
     	logger.debug("init ended.");
     }
@@ -4416,6 +4417,79 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		logger.debug("getJikwiList ended.");
 		
+		return result;
+	}
+	
+	/* 2019-09-19 홍승비 - 게시판 권한설정용 > 그룹권한리스트 호출 시 하위부서 허용/불가 여부도 함께 가져옴 */
+	@RequestMapping(value="/admin/ezOrgan/getGroupListBoard.do", produces = "text/xml; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getGroupListBoard(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("getGroupListBoard started.");
+		
+		String returnData = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String isAllGroupBoard = request.getParameter("isAllGroupBoard");
+			if (isAllGroupBoard == null) {
+				isAllGroupBoard = "";
+			}
+
+			List<OrganGroupVO> list = ezOrganAdminService.getGroupListBoard(userInfo.getTenantId(), userInfo.getCompanyID(), isAllGroupBoard);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (OrganGroupVO vo : list) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getGroupName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getGroupID()));
+				sb.append("</DATA1>");
+				
+				sb.append("</CELL></ROW>");
+			}
+			
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getGroupListBoard ended.");
+		return returnData;
+	}
+	
+	/* 2019-09-25 홍승비 - 게시판 권한설정용 > 직위,직책 리스트 호출 시 다국어 이름도 함께 가져옴 */
+	@RequestMapping(value="/admin/ezOrgan/getJikwiListBoard.do", produces = "text/xml; charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getJikwiListBoard(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("getJikwiListBoard started.");
+		
+		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		String type = request.getParameter("type");
+		logger.debug("companyID = " + companyID + ", type = " + type);
+		
+		String result = "";
+		
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+			result = ezOrganAdminService.getTitleListBoard(type, companyID, userInfo.getTenantId(), userInfo.getLang());
+			
+		} catch (Exception e) {
+			result = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getJikwiListBoard ended.");
 		return result;
 	}
 }
