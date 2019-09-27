@@ -1232,12 +1232,12 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
+		        
+	        	var nowyear = nowDate.substring(0,4);
+	            var nowmonth = parseInt(nowDate.substring(5,7));
+	            var nowday = parseInt(nowDate.substring(8,10)); 
 	
 		        if (document.getElementById("sel_year").value.toLowerCase() == "all" && isSearch == false) {
-		        	var nowyear = nowDate.substring(0,4);
-		            var nowmonth = parseInt(nowDate.substring(5,7));
-		            var nowday = parseInt(nowDate.substring(8,10)); 
-		            
 	            	/* if (condition[5] != null && condition[5] != "" && condition[5].length >= 10) {
 			            period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
 	            	} else if (condition[3] != null && condition[3] != "" && condition[3].length >= 10) {
