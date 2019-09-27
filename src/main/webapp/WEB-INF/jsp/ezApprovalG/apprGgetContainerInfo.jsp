@@ -1263,7 +1263,7 @@
 	            	
 		        }
 		        else {
-		        	if (GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") {
+		        	if ((GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") && isSearch == false) {
 		                if (GetSelectVal("sel_year") != "ALL")
 				            period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
 		                else
@@ -1523,6 +1523,7 @@
 		
 		    function search() {
 		        if (document.getElementById("txt_keyword").value != "") {
+		        	isSearch = true;
 		            var selectSearch = document.getElementById('selectType');
 		
 		            for (var i = 0; i < 25; i++) {
