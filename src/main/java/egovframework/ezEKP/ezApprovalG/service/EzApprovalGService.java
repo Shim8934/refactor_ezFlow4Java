@@ -604,6 +604,8 @@ public interface EzApprovalGService {
 	 */
 	boolean isReformTempDoc(String docSN, String companyId, int tenantId) throws Exception;
 
+	boolean isReformTempDoc(String formUrl) throws Exception;
+
 	/**
 	 * 결재 문서 양식의 폼빌더 여부를 반환
 	 * 
