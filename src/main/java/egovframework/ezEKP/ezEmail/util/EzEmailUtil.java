@@ -1958,7 +1958,7 @@ public class EzEmailUtil {
     		
     		logger.debug("folderPath=" + folderPath);
     		
-    		messages = advancedSearchFolder(ia, userAccount, folderPath, searchField, searchValue, startDate, endDate, 
+    		messages = advancedSearchFolder(ia, userAccount, folder, folderPath, searchField, searchValue, startDate, endDate, 
     				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap);
     		
     		// pre-fetch
@@ -2453,6 +2453,7 @@ public class EzEmailUtil {
 	public Message[] advancedSearchFolder(
 			IMAPAccess ia,
 			String userAccount,
+			Folder folder,
 			String folderPath, 
 			String[] searchField, 
 			final String[] searchValue,
@@ -2489,6 +2490,8 @@ public class EzEmailUtil {
 		Folder mailFolder = null;
 		Message message = null;
 		
+		folderMap.put(folderPath, folder);
+
 		for (String mailUrl : mailList) {
 			mailFolderPath = mailUrl.split("/")[0];
 			mailUid = Long.parseLong(mailUrl.split("/")[1]);
