@@ -155,5 +155,9 @@ var SurveyMessages = {
 	strAttUrl    : "URL",
 	strSkipQs    : "질문선택",
 	strPrivate   : "이 설문은 비공개 설문입니다.",
-	strNpbPeriod : "공개기간이 끝난 설문입니다."
+	strNpbPeriod : "공개기간이 끝난 설문입니다.",
+	strSendMail  : "메일 발송 여부를 지정해 주세요.",
+	strPopup     : "팝업 공지 여부를 지정해 주세요.",
+	strSend      : "발송",
+	strNotSend   : "미발송"
 }
