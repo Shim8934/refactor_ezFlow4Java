@@ -703,6 +703,8 @@
 				INFORMATION_SCHEMA.TABLES
 			WHERE
 				TABLE_NAME = "TBL_PS_POPUP"
+			AND
+				table_schema = 'jmocha';
 		</selectKey>
 		<![CDATA[
 			INSERT INTO
