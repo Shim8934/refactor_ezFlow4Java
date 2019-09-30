@@ -52,6 +52,12 @@
 				<span><spring:message code="ezSurvey.t97"/><c:out value=" ${survey.openDays}"/> <spring:message code="ezSurvey.t45"/></span>
 			</li>
 		</c:if>
+		<li><span class="srvyInfo"></span><span><spring:message code="ezSurvey.t112" /> : </span>
+			<span><spring:message code="${survey.mailFlag == 1 ? 'ezSurvey.t114' : 'ezSurvey.t115'}"/></span>
+		</li>
+		<li><span class="srvyInfo"></span><span><spring:message code="ezSurvey.t113" /> : </span>
+			<span><spring:message code="${survey.popupFlag == 1 ? 'ezSurvey.t114' : 'ezSurvey.t115'}"/></span>
+		</li>
 	</ul>
 	
 	<div class="surveydetail-body" id="mainSurveyBody">

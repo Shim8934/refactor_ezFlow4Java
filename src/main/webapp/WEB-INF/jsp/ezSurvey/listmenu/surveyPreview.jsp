@@ -37,7 +37,7 @@
 			
 			<tr>
 				<th class="left-Th"><spring:message code="ezSurvey.t112"/></th> <%-- mail setting --%>
-				<td class="right-Td"><div id="mail-cfdiv" class="surveyinf-divcf"></div></td>
+				<td class="right-Td"><div id="cf-mail" class="surveyinf-divcf"></div></td>
 				<th class="left-Th"><spring:message code="ezSurvey.t113"/></th> <%-- popup setting --%>
 				<td class="right-Td"><div id="cf-popup" class="surveyinf-divcf"></div></td>
 			</tr>

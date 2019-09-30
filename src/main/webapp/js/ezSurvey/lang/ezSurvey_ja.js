@@ -155,5 +155,9 @@ var SurveyMessages = {
 	strAttUrl    : "URL",
 	strSkipQs    : "質問を選択",
 	strPrivate   : "非公開設定されているアンケートです。",
-	strNpbPeriod : "公開期間が終了したアンケートです。"
+	strNpbPeriod : "公開期間が終了したアンケートです。",
+	strSendMail  : "메일 발송 여부를 지정해 주세요.",
+	strPopup     : "팝업 공지 여부를 지정해 주세요.",
+	strSend      : "발송",
+	strNotSend   : "미발송"
 }

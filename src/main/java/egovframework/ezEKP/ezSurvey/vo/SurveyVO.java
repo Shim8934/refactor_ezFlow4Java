@@ -32,6 +32,8 @@ public class SurveyVO {
 	private int updateMode;
 	private List<SurveyParticipantVO> userList;
 	private List<AttachVO> attachList;
+	private int mailFlag;
+	private int popupFlag;
 	
 	public int getUpdateMode() {
 		return updateMode;
@@ -263,5 +265,21 @@ public class SurveyVO {
 	
 	public void setResponseFlag(int responseFlag) {
 		this.responseFlag = responseFlag;
+	}
+
+	public int getMailFlag() {
+		return mailFlag;
+	}
+
+	public void setMailFlag(int mailFlag) {
+		this.mailFlag = mailFlag;
+	}
+
+	public int getPopupFlag() {
+		return popupFlag;
+	}
+
+	public void setPopupFlag(int popupFlag) {
+		this.popupFlag = popupFlag;
 	}
 }

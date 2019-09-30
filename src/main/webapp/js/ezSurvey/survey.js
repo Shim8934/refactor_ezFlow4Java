@@ -249,6 +249,8 @@ var SurveyCreate     = function() {
 		var anonymousFlag  = parseInt(document.querySelector('input[name="anonymousSpan"]:checked').value);
 		var multipleFlag   = parseInt(document.querySelector('input[name="multipleSpan"]:checked').value);
 		var userFlag       = parseInt(document.querySelector('input[name="targetSpan"]:checked').value);
+		var mailFlag       = parseInt(document.querySelector('input[name="mailSpan"]:checked').value);
+		var popupFlag       = parseInt(document.querySelector('input[name="popupSpan"]:checked').value);
 		var liFileList     = surveyAttWrap.querySelector("ul[class='ulFiles']").children;
 		var attachList     = [];
 		
@@ -265,6 +267,8 @@ var SurveyCreate     = function() {
 		surveyObj["infor"]["startDate"] = startDate;
 		surveyObj["infor"]["endDate"]   = endDate;
 		surveyObj["infor"]["userflag"]  = userFlag;
+		surveyObj["infor"]["mail"]  = mailFlag;
+		surveyObj["infor"]["popup"]  = popupFlag;
 		
 		if (liFileList.length > 0) {
 			for (var i = 0, len = liFileList.length; i < len; i++) {
@@ -470,6 +474,10 @@ var SurveyCreate     = function() {
 		var eDate      = document.getElementById("endDate").value;
 		var publicFlag = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
 		var userFlag   = parseInt(document.querySelector('input[name="targetSpan"]:checked').value);
+		
+		var mailFlag   = parseInt(document.querySelector('input[name="mailSpan"]:checked').value);
+		var popupFlag   = parseInt(document.querySelector('input[name="popupSpan"]:checked').value);
+		
 		var userList   = surveyObj["infor"]["users"];
 //		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
 		ppContent      = replaceAll(ppContent, '<p style="font-size:13px;font-family:맑은 고딕"><br></p>', '');
@@ -3692,6 +3700,8 @@ var SurveyCreate     = function() {
 		document.getElementById("cf-endDate").textContent    = qstInf["endDate"];
 		document.getElementById("cf-anoynymous").textContent = qstInf["anonymous"] == 0 ? SurveyMessages.strAnoynym1  : SurveyMessages.strAnoynym2;
 		document.getElementById("cf-multiple").textContent   = qstInf["multiple"]  == 0 ? SurveyMessages.strMultiple1 : SurveyMessages.strMultiple2;
+		document.getElementById("cf-mail").textContent   = qstInf["mail"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
+		document.getElementById("cf-popup").textContent   = qstInf["popup"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
 		
 		var surveyUserElmt = document.getElementById("cf-userdiv");
 		
