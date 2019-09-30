@@ -28838,6 +28838,22 @@
 			AND TENANT_ID = #tenantId#
 	</select>
 	
+	<select id="EzApprovalG.getReformFlagOfTempDoc" parameterClass="Map" resultClass="String">
+		SELECT
+			FORM.REFORMFLAG
+		FROM
+			TBL_TMPAPRDOCINFO TMP
+		RIGHT JOIN
+			TBL_FORMINFO FORM
+		ON
+			FORM.FORMID = TMP.FORMID
+			AND FORM.TENANT_ID = TMP.TENANT_ID
+			AND FORM.COMPANYID = TMP.COMPANYID
+		WHERE
+			TMP.HREF = #formUrl#
+			AND ROWNUM = 1
+	</select>
+	
 	<select id="EzApprovalG.getFormIdOfTempDocument" parameterClass="Map" resultClass="String">
 		SELECT
 			FORMID
@@ -29242,7 +29258,7 @@
     </select>
     <select id="EzApprovalG.getEndAprOpinionCnt" parameterClass="Map" resultClass="int">
     	SELECT
-    		COUNT(*)
+    		NVL(MAX(OPINIONSN), 0) OPINIONSN
     	FROM
     		TBL_ENDAPROPINIONINFO
     	WHERE

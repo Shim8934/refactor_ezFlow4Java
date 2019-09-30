@@ -3048,13 +3048,15 @@ public class EzNewPortalGWController {
 				LOGGER.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);
 
 				Folder folder = ia.getFolder(folderPath);
+				int unreadCount = ia.getUnreadCount(folderPath);
+				
 				folder.open(Folder.READ_ONLY);
 
 				Message[] messages = null;
 
 				// set mailCount
 				int mailCount = 7;
-				int unreadCount = ia.getUnreadCount(folderPath);
+
 				// if (unreadCount < mailCount) {
 				// mailCount = unreadCount;
 				// }

@@ -1540,19 +1540,19 @@
 	   				APRTYPE,
 	   				C.NAME$v_LANG$
 			]]>
-			<isEqual property="userFlag" compareValue="0">
+			<isEqual property="userFlag" compareValue="1">
 				ORDER BY
 					APRTYPE,
 					APRMEMBERDEPTNAME,
 					APRMEMBERNAME
 			</isEqual>
-			<isEqual property="userFlag" compareValue="1">
+			<isEqual property="userFlag" compareValue="2">
 				ORDER BY
 					APRMEMBERDEPTNAME,
 					APRMEMBERNAME,
 					APRTYPE
 			</isEqual>
-			<isEqual property="userFlag" compareValue="2">
+			<isEqual property="userFlag" compareValue="3">
 				ORDER BY
 					APRMEMBERNAME,
 					APRMEMBERDEPTNAME,

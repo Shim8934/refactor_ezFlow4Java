@@ -1232,12 +1232,12 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
+		        
+	        	var nowyear = nowDate.substring(0,4);
+	            var nowmonth = parseInt(nowDate.substring(5,7));
+	            var nowday = parseInt(nowDate.substring(8,10)); 
 	
 		        if (document.getElementById("sel_year").value.toLowerCase() == "all" && isSearch == false) {
-		        	var nowyear = nowDate.substring(0,4);
-		            var nowmonth = parseInt(nowDate.substring(5,7));
-		            var nowday = parseInt(nowDate.substring(8,10)); 
-		            
 	            	/* if (condition[5] != null && condition[5] != "" && condition[5].length >= 10) {
 			            period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
 	            	} else if (condition[3] != null && condition[3] != "" && condition[3].length >= 10) {
@@ -1263,7 +1263,7 @@
 	            	
 		        }
 		        else {
-		        	if (GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") {
+		        	if ((GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") && isSearch == false) {
 		                if (GetSelectVal("sel_year") != "ALL")
 				            period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
 		                else
@@ -1271,15 +1271,53 @@
 		            }		        
 	            	//2019-01-24 김민성 - 검색시 기간 설정 수정
 	            	else {
-		            	if(condition[3] != null && condition[3] != "") {
-			            	period = condition[3].substring(0,4)+strLang1028+" "+parseInt(condition[3].substring(5,7))+strLang1029+" "+parseInt(condition[3].substring(8,10))+strLang1030+" ~ "+condition[4].substring(0,4)+strLang1028+" "+parseInt(condition[4].substring(5,7))+strLang1029+" "+parseInt(condition[4].substring(8,10))+strLang1030;
-		            	}
-		            	else if(condition[5] != null && condition[5] != "") {
-		            		period = condition[5].substring(0,4)+strLang1028+" "+parseInt(condition[5].substring(5,7))+strLang1029+" "+parseInt(condition[5].substring(8,10))+strLang1030+" ~ "+condition[6].substring(0,4)+strLang1028+" "+parseInt(condition[6].substring(5,7))+strLang1029+" "+parseInt(condition[6].substring(8,10))+strLang1030;
-		            	}
-		            	else if(condition[7] != null && condition[7] != "") {
-		            		period = condition[7].substring(0,4)+strLang1028+" "+parseInt(condition[7].substring(5,7))+strLang1029+" "+parseInt(condition[7].substring(8,10))+strLang1030+" ~ "+condition[8].substring(0,4)+strLang1028+" "+parseInt(condition[8].substring(5,7))+strLang1029+" "+parseInt(condition[8].substring(8,10))+strLang1030;
-		            	}
+	            		//S와 G가 날짜조건을 다른 배열에 담아와서 구분함.
+	            		if (approvalFlag == "G") {
+	            			var tempStartDate = "";
+	            			var tempEndDate = "";
+	            			
+	            			if (condition[3] != null && condition[3] != "" && condition[6] != null && condition[6] != "") {
+	            				tempStartDate = condition[3] + strLang1028 + " ";
+	            				tempStartDate += parseInt(condition[4]) + strLang1029 + " ";
+	            				tempStartDate += parseInt(condition[5]) + strLang1030;
+	            				tempEndDate = condition[6] + strLang1028 + " ";
+	            				tempEndDate += parseInt(condition[7]) + strLang1029 + " ";
+	            				tempEndDate += parseInt(condition[8]) + strLang1030;
+	            			} else if (condition[9] != null && condition[9] != "" && condition[12] != null && condition[12] != "") {
+	            				tempStartDate = condition[9] + strLang1028 + " ";
+	            				tempStartDate += parseInt(condition[10]) + strLang1029 + " ";
+	            				tempStartDate += parseInt(condition[11]) + strLang1030;
+	            				tempEndDate = condition[12] + strLang1028 + " ";
+	            				tempEndDate += parseInt(condition[13]) + strLang1029 + " ";
+	            				tempEndDate += parseInt(condition[14]) + strLang1030;
+	            			} else if (condition[15] != null && condition[15] != "" && condition[18] != null && condition[18] != "") {
+	            				tempStartDate = condition[15] + strLang1028 + " ";
+	            				tempStartDate += parseInt(condition[16]) + strLang1029 + " ";
+	            				tempStartDate += parseInt(condition[17]) + strLang1030;
+	            				tempEndDate = condition[18] + strLang1028 + " ";
+	            				tempEndDate += parseInt(condition[19]) + strLang1029 + " ";
+	            				tempEndDate += parseInt(condition[20]) + strLang1030;
+	            			} else {
+	            				tempStartDate = (nowyear - 1) + strLang1028 + " ";
+	            				tempStartDate += nowmonth + strLang1029 + " ";
+	            				tempStartDate += nowday + strLang1030;
+	            				tempEndDate = nowyear + strLang1028 + " ";
+	            				tempEndDate += nowmonth + strLang1029 + " ";
+	            				tempEndDate += nowday + strLang1030;
+	            			}
+	            			
+	            			period = tempStartDate + " ~ " + tempEndDate;
+	            		} else {
+			            	if(condition[3] != null && condition[3] != "") {
+				            	period = condition[3].substring(0,4)+strLang1028+" "+parseInt(condition[3].substring(5,7))+strLang1029+" "+parseInt(condition[3].substring(8,10))+strLang1030+" ~ "+condition[4].substring(0,4)+strLang1028+" "+parseInt(condition[4].substring(5,7))+strLang1029+" "+parseInt(condition[4].substring(8,10))+strLang1030;
+			            	}
+			            	else if(condition[5] != null && condition[5] != "") {
+			            		period = condition[5].substring(0,4)+strLang1028+" "+parseInt(condition[5].substring(5,7))+strLang1029+" "+parseInt(condition[5].substring(8,10))+strLang1030+" ~ "+condition[6].substring(0,4)+strLang1028+" "+parseInt(condition[6].substring(5,7))+strLang1029+" "+parseInt(condition[6].substring(8,10))+strLang1030;
+			            	}
+			            	else if(condition[7] != null && condition[7] != "") {
+			            		period = condition[7].substring(0,4)+strLang1028+" "+parseInt(condition[7].substring(5,7))+strLang1029+" "+parseInt(condition[7].substring(8,10))+strLang1030+" ~ "+condition[8].substring(0,4)+strLang1028+" "+parseInt(condition[8].substring(5,7))+strLang1029+" "+parseInt(condition[8].substring(8,10))+strLang1030;
+			            	}
+	            		}
 	            	}
 		        }
 		
@@ -1485,6 +1523,7 @@
 		
 		    function search() {
 		        if (document.getElementById("txt_keyword").value != "") {
+		        	isSearch = true;
 		            var selectSearch = document.getElementById('selectType');
 		
 		            for (var i = 0; i < 25; i++) {

@@ -585,10 +585,11 @@ public class EzEmailMailListController {
 				sb.append("</response>");
 			}
 			
+			folder.close(false);
+			
 			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
 					start, end, totalCount, folder.getMessageCount(), folder.getUnreadMessageCount()));
 			sb.append("</maillist>");
-			folder.close(false);
 			
 			// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
@@ -962,12 +963,12 @@ public class EzEmailMailListController {
 				sb.append("</response>");
 			}
 			
+			folder.close(false);
+			
 			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
 					start, end, totalCount, folder.getMessageCount(), folder.getUnreadMessageCount()));
 			sb.append("</maillist>");
 		    
-			folder.close(false);
-			
 			// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
 			
@@ -1686,13 +1687,14 @@ public class EzEmailMailListController {
 					
 			logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);		
 			
-			Folder folder = ia.getFolder(folderPath);		
+			Folder folder = ia.getFolder(folderPath);
+ 			int unreadCount = ia.getUnreadCount(folderPath);
+ 			
 			folder.open(Folder.READ_ONLY);
 	        
 	        Message[] messages = null;
 	        
  			int mailCount = 7;
- 			int unreadCount = ia.getUnreadCount(folderPath);
  			
 	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, 
 	        		false, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());

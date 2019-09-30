@@ -27577,16 +27577,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			return isReform(formId, companyId, tenantId);
 		} else {
-			matcher = Pattern.compile("/fileroot/(\\d*)/files/upload_approvalG/(.*)/doc/.*/(.*)\\..{0,3}").matcher(formUrl);
+			matcher = Pattern.compile("/fileroot/(\\d*)/files/upload_approvalG/(.*)/doc/(.*)/(.*)\\..{0,3}").matcher(formUrl);
 			
-			if (matcher.find() && matcher.groupCount() == 3) {
-				String docId = matcher.group(3);
+			if (matcher.find() && matcher.groupCount() == 4) {
+				boolean isTempDir = matcher.group(3).endsWith("/TMP");
+				
+				if (isTempDir) {
+					return isReformTempDoc(formUrl);
+				}
+				
+				String docId = matcher.group(4);
 				String companyId = matcher.group(2);
 				
 				int tenantId = Integer.parseInt(matcher.group(1));
 				
 				ApprGFormVO formInfo = getReformInfoApprovalDocument(docId, companyId, tenantId);
-				
 				if (formInfo == null) {
 					return false;
 				}
@@ -27631,6 +27636,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String formId = ezApprovalGDAO.getFormIdOfTempDocument(parameterMap);
 
 		return isReform(formId, companyId, tenantId);
+	}
+
+	@Override
+	public boolean isReformTempDoc(String formUrl) throws Exception {
+		return "Y".equalsIgnoreCase(ezApprovalGDAO.getReformFlagOfTempDoc(formUrl));
 	}
 
 	@Override
