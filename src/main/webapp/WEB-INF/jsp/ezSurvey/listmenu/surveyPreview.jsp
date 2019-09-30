@@ -34,14 +34,12 @@
 				<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
 				<td class="right-Td"><div id="cf-anoynymous" class="surveyinf-divcf"></div></td>
 			</tr>
-			
 			<tr>
 				<th class="left-Th"><spring:message code="ezSurvey.t112"/></th> <%-- mail setting --%>
 				<td class="right-Td"><div id="cf-mail" class="surveyinf-divcf"></div></td>
 				<th class="left-Th"><spring:message code="ezSurvey.t113"/></th> <%-- popup setting --%>
 				<td class="right-Td"><div id="cf-popup" class="surveyinf-divcf"></div></td>
 			</tr>
-			
 			<tr>
 				<th class="left-Th"><spring:message code="ezSurvey.t30"/></th> <%-- respondent setting --%>
 				<td class="right-Td"><div id="cf-userdiv" class="surveyinf-divcf flex-cf"></div></td>

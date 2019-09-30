@@ -39,7 +39,6 @@
 						</div>
 					</td>
 				</tr>
-				
 				<tr>
 					<th class="left-Th"><spring:message code="ezSurvey.t112"/></th> <%-- mail setting --%>
 					<td class="right-Td">
@@ -56,7 +55,6 @@
 						</div>
 					</td>
 				</tr>
-				
 				<tr>
 					<th class="left-Th"><spring:message code="ezSurvey.t30"/></th> <%-- respondent setting --%>
 					<td class="right-Td">
