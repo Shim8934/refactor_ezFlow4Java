@@ -10,6 +10,7 @@
 	<typeAlias  alias="PersonalSliderImageVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
 	<typeAlias  alias="PersonalLightPollConfigVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO"/>
 	<typeAlias  alias="PersonalPopopConfigVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO"/>
+	<typeAlias  alias="PersonalPopupUserVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO"/>
 	
 	<resultMap class="PersonalNoticeVO" id="personalNoticeVO">
 		<result property="title"						column="TITLE"					columnIndex="1"/>
@@ -695,6 +696,14 @@
 	
 	<!-- 	TBL_PS_POPUP 테이블에 ITEMSEQ 컬럼 AUTO_INCREMENT 추가하기 -->
 	<insert id="EzPersonalAdmin.EZSP_INSERTPOPUP" parameterClass="Map">
+		<selectKey keyProperty="menuId" resultClass="Integer">
+			SELECT
+				AUTO_INCREMENT
+			FROM
+				INFORMATION_SCHEMA.TABLES
+			WHERE
+				TABLE_NAME = "TBL_PS_POPUP"
+		</selectKey>
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_POPUP
@@ -1306,4 +1315,62 @@
 				TENANT_ID = #tenantID#
 		]]>
 	</select>
+	
+	<update id="EzPersonalAdmin.updatePopupUser" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_PS_POPUP_USER
+				(itemseq, user_id, user_type, tenant_id, companyid, subdept_permitted, sn)
+			VALUES
+				(#itemSeq#, #userId#, #userType#, #tenantId#, #companyId#, #subdeptPermitted#, #sn#)
+			ON DUPLICATE KEY UPDATE
+				subdept_permitted = #subdeptPermitted#,
+				sn = #sn#
+		]]>
+	</update>
+	
+	<select id="EzPersonalAdmin.getPopupUserList" parameterClass="Map" resultClass="PersonalPopupUserVO">
+		<![CDATA[
+			SELECT
+				A.itemseq,
+				A.user_id as userid,
+				A.user_type as usertype,
+				CASE 
+					WHEN user_type = 'USER'
+						THEN IFNULL((SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id), '')
+					WHEN user_type = 'DEPT'	
+						THEN IFNULL((SELECT displayname$lang$ FROM TBL_DEPTMASTER WHERE tenant_id = #tenantId# AND extensionattribute2 = #companyId# AND cn = user_id), '')
+					WHEN user_type = 'JIKWI'
+						THEN IFNULL((SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '001'), '')
+					WHEN user_type = 'JIKCHEK'
+						THEN IFNULL((SELECT displayname$lang$ FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND companyid = #companyId# AND jobid = user_id AND type = '002'), '')
+					WHEN user_type = 'GROUP'
+						THEN IFNULL((SELECT group_name FROM tbl_permissiongrouplist WHERE tenant_id = #tenantId# AND company_id = #companyId# AND group_id = user_id), '')
+				END AS username,
+				A.tenant_id as tenantid,
+				A.companyid,
+				A.subdept_permitted as subdeptPermitted,
+				A.sn
+			FROM
+				TBL_PS_POPUP_USER A
+			WHERE
+				A.itemseq = #itemSeq#
+			AND
+				A.tenant_id = #tenantId#
+			AND
+				A.companyid = #companyId#
+			ORDER BY
+				A.sn
+		]]>
+	</select>
+	
+	<delete id="EzPersonalAdmin.deletePopupUser" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PS_POPUP_USER
+			WHERE
+				itemseq = #v_pItemSeq#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</delete>
 </sqlMap>

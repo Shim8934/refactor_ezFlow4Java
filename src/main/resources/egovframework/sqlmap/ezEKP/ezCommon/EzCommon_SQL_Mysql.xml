@@ -1217,4 +1217,25 @@
 		ADD 
 			TYPE VARCHAR(10) DEFAULT NULL
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblPsPopupUser">
+		SELECT 
+			USER_ID
+		FROM 
+			TBL_PS_POPUP_USER
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPsPopupUser">
+		CREATE TABLE `tbl_ps_popup_user` (
+		  `itemseq` bigint(20) NOT NULL,
+		  `user_id` varchar(100) NOT NULL,
+		  `user_type` varchar(10) NOT NULL,
+		  `tenant_id` int(11) NOT NULL,
+		  `companyid` varchar(100) NOT NULL,
+		  `subdept_permitted` int(11) DEFAULT NULL,
+		  `sn` int(11) DEFAULT 0,
+		  PRIMARY KEY (`itemseq`,`user_id`,`user_type`,`tenant_id`,`companyid`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='팝업 공지 대상자 관련 테이블'
+	</statement>
 </sqlMap>

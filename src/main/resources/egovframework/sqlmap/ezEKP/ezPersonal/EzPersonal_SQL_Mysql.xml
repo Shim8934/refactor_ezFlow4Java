@@ -899,5 +899,117 @@
      	AND
      		SHAREUSERID = #shareUserID#
      </select>
+     
+     <select id="EzPersonalDAO.getpopupPermitYN" parameterClass="Map" resultClass="Integer">
+     	<![CDATA[
+     		SELECT
+     			COUNT(user_id)
+     		FROM
+     			tbl_ps_popup_user
+     		WHERE
+     			itemseq = #itemSeq#
+     		AND
+     			companyid = #companyId#
+     		AND
+     			tenant_id = #tenantId#
+     		AND (
+     			  	(user_type = 'USER' AND user_id = #userId#)
+     			  OR
+     			  	(user_type = 'DEPT' AND subdept_permitted = 0 AND user_id = #deptId#)
+     			  OR
+     			  	(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+     			  OR
+     			  	(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+     			  OR
+     			  	(#deptId# IN (
+     			  					SELECT 
+     			  						cn 
+     			  					FROM 
+     			  						tbl_deptmaster 
+     			  					WHERE 
+     			  						dept_cd_path REGEXP(
+     			  								SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+     			  								FROM tbl_deptmaster
+     			  								WHERE cn IN (
+     			  												SELECT user_id
+     			  												FROM tbl_ps_popup_user
+     			  												WHERE 
+     			  													itemseq = #itemSeq#
+     			  												AND
+     			  													user_type = 'DEPT'
+     			  												AND 
+     			  													subdept_permitted = 1
+     			  											)
+     			  								)
+     			  					)
+     			  	)
+     			) 				
+     	]]>
+     </select>
+     
+     <select id="EzPersonalDAO.getPopupUserGroupList" parameterClass="Map" resultClass="String">
+     	<![CDATA[
+     		SELECT
+     			user_id
+     		FROM
+     			tbl_ps_popup_user
+     		WHERE
+     			itemseq = #itemSeq#
+     		AND
+     			companyid = #companyId#
+     		AND
+     			tenant_id = #tenantId#
+     		AND
+     			user_type = 'GROUP'
+     	]]>
+     </select>
+     
+     <select id="EzPersonalDAO.getPermissionGroupAccessYN" parameterClass="Map" resultClass="Integer">
+     	<![CDATA[
+			SELECT
+				COUNT(member_id)
+			FROM
+				tbl_permissiongroupinfo
+			WHERE
+				group_id = #groupId#
+			AND
+				company_id = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				(
+					(member_type = 'USER' AND member_id = #userId#)
+				  OR
+					(member_type = 'DEPT' AND sub_dept_yn = 'N' AND member_id = #deptId#)
+				  OR 
+					(member_type = 'JIKWI' AND member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+				  OR
+					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+				  OR
+					(#deptId# IN (
+								SELECT
+									CN
+								FROM
+									tbl_deptmaster
+								WHERE
+									dept_cd_path REGEXP(
+											SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+			                                FROM tbl_deptmaster
+			                                WHERE cn IN (
+															SELECT member_id
+			                                                FROM tbl_permissiongroupinfo
+			                                                WHERE 
+																group_id = #groupId#
+															AND
+																member_type = 'DEPT'
+															AND
+																sub_dept_yn = 'Y'
+														)
+									)
+								)
+						)
+				)
+     	]]>
+     </select>
 </sqlMap>
 

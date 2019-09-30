@@ -146,5 +146,7 @@ public interface EzCommonService {
 
 	public void addBoardManageTypeColumn() throws Exception;
 
+	public void createPersonalPopupUser() throws Exception;
+
 }
 
