@@ -14,6 +14,7 @@ import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalShareApprovalVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -333,9 +335,64 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
-
+		
+		List<PersonalGetPopUpListUserVO> popupList = ezPersonalDAO.getPopUpListUser(map);
+		
 		logger.debug("getPopUpListUser ended");
-		return (List<PersonalGetPopUpListUserVO>) ezPersonalDAO.getPopUpListUser(map);
+		return popupList;
+	}
+	
+	@Override
+	public List<PersonalGetPopUpListUserVO> getPopUpListUserWithAuth(String pComapnyID, int tenantID, String offset, String userId, String deptId) throws Exception {
+		logger.debug("getPopUpListUser started");
+		logger.debug("[params] companyId=" + pComapnyID + ", tenantId=" + tenantID + ", userId = " + userId + ", deptId = " + deptId);
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		//String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		// 2018-11-23 황윤호 offset 적용 
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
+
+		map.put("v_pCompanyID", pComapnyID);
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
+		
+		List<PersonalGetPopUpListUserVO> popupList = ezPersonalDAO.getPopUpListUser(map);
+		List<PersonalGetPopUpListUserVO> popupListWithAuth = new ArrayList<PersonalGetPopUpListUserVO>();
+		
+		if (popupList != null) {
+			for (PersonalGetPopUpListUserVO popup : popupList) {
+				map.put("companyId", pComapnyID);
+				map.put("tenantId", tenantID);
+				map.put("userId", userId);
+				map.put("itemSeq", popup.getItemSeq());
+				map.put("deptId", deptId);
+				
+				boolean popupYN = ezPersonalDAO.getPopupPermitYN(map);
+				
+				logger.debug("[popupAuth] popupSeq = " + popup.getItemSeq() + ", popupYN = " + popupYN);
+				
+				if (popupYN) {
+					popupListWithAuth.add(popup);
+				} else {
+					// popupYN이 false일 때 권한 그룹리스트 가져와서 체크
+					List<String> groupList = ezPersonalDAO.getPopupUserGroupList(map);
+					
+					if (groupList != null) {
+						for (String groupId : groupList) {
+							map.put("groupId", groupId);
+							boolean groupPermissionYN = ezPersonalDAO.getPermissionGroupAccessYN(map);
+							
+							if (groupPermissionYN) {
+								popupListWithAuth.add(popup);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		logger.debug("getPopUpListUser ended");
+		return popupListWithAuth;
 	}
 	
 	@Override

@@ -781,4 +781,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardManageTypeColumn");
 		}
 	}
+
+	public void createPersonalPopupUser() {
+		try {
+			select("EzCommonDAO.checkTblPsPopupUser");
+		} catch (Exception e) {
+			logger.debug("tbl_ps_popup_user doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblPsPopupUser");
+		}
+	}
 }

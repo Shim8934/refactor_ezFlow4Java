@@ -38,6 +38,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -50,6 +53,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
@@ -879,6 +883,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 				endDate = endDate.substring(0, endDate.indexOf("."));
 				vo.setEndDate(endDate);
 			}
+			
 		} else {
 			vo.setWidth(600);
 			vo.setHeight(600);
@@ -901,23 +906,52 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 팝업공지 공지사항 등록,수정 실행 함수
 	 */
 	
-	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String savePopup(@CookieValue("loginCookie") String loginCookie,PersonalPopupVO vo) throws Exception {
+	public String savePopup(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jObj) throws Exception {
 		logger.debug("savePopup started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		
+		PersonalPopupVO vo = new PersonalPopupVO();
+		vo.setCompanyID(jObj.get("companyID").toString());
+		
+		if (jObj.get("itemSeq") == null || jObj.get("itemSeq").toString().equals("null") || jObj.get("itemSeq").toString().equals("")) {
+			vo.setItemSeq(null);
+		} else {
+			vo.setItemSeq(Integer.parseInt(jObj.get("itemSeq").toString()));
+		}
+		
+		vo.setTitle(jObj.get("title").toString());
+		vo.setTitle2(jObj.get("title2").toString());
+		vo.setStartDate(jObj.get("startDate").toString());
+		vo.setEndDate(jObj.get("endDate").toString());
+		vo.setWidth(Integer.parseInt(jObj.get("width").toString()));
+		vo.setHeight(Integer.parseInt(jObj.get("height").toString()));
+		vo.setPosition(jObj.get("position").toString());
+		vo.setContent(jObj.get("content").toString());
+		vo.setSkinValue(Integer.parseInt(jObj.get("skinValue").toString()));
+		 ObjectMapper mapper = new ObjectMapper();
+		List<PersonalPopupUserVO> authList = mapper.convertValue(jObj.get("authList"), new TypeReference<List<PersonalPopupUserVO>>() {});
 		
 		if (vo.getTitle2().equals("")) {
 			vo.setTitle2(vo.getTitle());
 		}
 		
 		if (vo.getItemSeq() == null) {
-			ezPersonalAdminService.insertPopup(vo, userInfo.getTenantId(), userInfo.getOffset());
+			int itemSeq = ezPersonalAdminService.insertPopup(vo, userInfo.getTenantId(), userInfo.getOffset());
+			
+			//update authList
+			ezPersonalAdminService.updatePopupUser(authList, tenantId, vo.getCompanyID(), itemSeq);
 		} else {
 			ezPersonalAdminService.updatePopup(vo, userInfo.getTenantId(), userInfo.getOffset());
+			
+			//update authList
+			ezPersonalAdminService.updatePopupUser(authList, tenantId, vo.getCompanyID(), vo.getItemSeq());
 		}
-
+		
 		logger.debug("savePopup ended");
 		return "OK";
 	}
@@ -1650,6 +1684,68 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		json.put("userId", userInfo.getId());
 		
 		logger.debug("showLayerPopup ended");
+		return json;
+	}
+	
+	@RequestMapping(value = "/admin/ezPersonal/personalPopupUser.do", method = RequestMethod.GET)
+	public String personalPopupUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("personalPopupUser started");
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String deptID = auth.getDeptID();
+		String cn = request.getParameter("cn") == null ? "" : request
+				.getParameter("cn");
+		String textName = request.getParameter("name") == null ? "" : request
+				.getParameter("name");
+		String useOcs = config.getProperty("config.USE_OCS");
+		String companyId = request.getParameter("companyId");
+		String lang = auth.getLang();
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("cn", cn);
+		model.addAttribute("textName", textName);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("dept", auth.getDeptID());
+		model.addAttribute("lang", lang);
+		
+		logger.debug("personalPopupUser ended");
+		return "/admin/ezPersonal/personalPopupUser";
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/personalPopupGetUserList", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject personalPopupGetUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("personalPopupGetUserList started");
+		JSONObject json = new JSONObject();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String itemSeq = request.getParameter("itemSeq");
+		logger.debug("itemSeq = " + itemSeq);
+		
+		if (itemSeq != null && !itemSeq.equals("")) {
+			int itemId = Integer.parseInt(itemSeq);
+			int tenantId = userInfo.getTenantId();
+			String companyId = request.getParameter("companyId");
+			String lang = commonUtil.getMultiData(userInfo.getLang(), tenantId);
+			List<PersonalPopupUserVO> userList = ezPersonalAdminService.getPopupUserList(itemId, tenantId, companyId, lang);
+			
+			if (userList != null && userList.size() > 0) {
+				json.put("status", "ok");
+				json.put("userList", userList);
+			} else {
+				json.put("status", "no");
+			}
+		} else {
+			json.put("status", "no");
+		}
+		
+		logger.debug("personalPopupGetUserList ended");
 		return json;
 	}
 }
