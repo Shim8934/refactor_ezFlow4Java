@@ -81,7 +81,11 @@
 		    
 		    function btnOpinion_onclick() {
 		        //openOpinionViewUI();
-		        openOpinionUI_New("Show");
+		        if (ListTypeValue == "99") {
+			        openOpinionUI_New("");
+		        } else {
+			        openOpinionUI_New("Show");
+		        }
 		    }
 		    function DocumentComplete() {
 		        if (flag == false) {
