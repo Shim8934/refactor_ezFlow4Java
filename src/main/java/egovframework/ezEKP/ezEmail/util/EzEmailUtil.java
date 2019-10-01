@@ -2490,6 +2490,8 @@ public class EzEmailUtil {
 		Folder mailFolder = null;
 		Message message = null;
 		
+		// 폴더 오픈 시 IMAP select 커맨드가 호출되는데 폴더 안에 메일이 많은 경우 오버헤드가 큰 관계로
+		// 패러메터로 넘어온 이미 오픈된 folder를 folderMap에 미리 넣는다.
 		folderMap.put(folderPath, folder);
 
 		for (String mailUrl : mailList) {
