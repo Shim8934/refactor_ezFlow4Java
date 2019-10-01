@@ -1390,7 +1390,7 @@ function openSignUI(parameter)
 	});
   
 	SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW"); 
-    if(SignNodeList.length != 0 || signOption == "YES") //결재창처럼 signOption 조건 없앨지 확인
+    if(SignNodeList.length != 0)
     { 
 		var parameter	= pUserID;
 		var url = "/ezApprovalG/aprSign.do";
@@ -1510,24 +1510,32 @@ function getGyulJeDate() {
 
 function setSusinUpdataDocID()
 {
-  try{
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
+	try{
+    	var result = "";
+    	
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/setSusinUpdateDocID.do",
+    		data : {
+    			orgDocID : pOrgDocID,
+    			docID    : pDocID,
+    			deptID   : arr_userinfo[4]
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}        			
+    	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pOrgDocID", pOrgDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
+        return getNodeText(GetChildNodes(loadXMLString(result))[0]);
 
-	xmlhttp.open("POST","/ezApprovalG/setSusinUpdateDocID.do",false);
-	xmlhttp.send(xmlpara);
+    }
+    catch(e){
 
-	return xmlhttp.responseText;
+        alert("setSusinUpdataDocID : " + e.description);
 
-  }catch(e){
-    alert(e.description);
-  }
+    }
 }
 
 var ezapropinion_cross_dialogArguments = new Array();
