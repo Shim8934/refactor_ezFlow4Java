@@ -585,6 +585,9 @@ public class EzEmailMailListController {
 				sb.append("</response>");
 			}
 			
+			// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+			// 통해 비효율적으로 구하는 관계로 여기서 folder를 close 하도록 수정함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+			// 더 효율적임.			
 			folder.close(false);
 			
 			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
@@ -963,6 +966,9 @@ public class EzEmailMailListController {
 				sb.append("</response>");
 			}
 			
+			// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+			// 통해 비효율적으로 구하는 관계로 여기서 folder를 close 하도록 수정함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+			// 더 효율적임.
 			folder.close(false);
 			
 			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
@@ -1688,6 +1694,10 @@ public class EzEmailMailListController {
 			logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);		
 			
 			Folder folder = ia.getFolder(folderPath);
+			
+			// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+			// 통해 비효율적으로 구하는 관계로 folder open 전에 호출함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+			// 더 효율적임.							
  			int unreadCount = ia.getUnreadCount(folderPath);
  			
 			folder.open(Folder.READ_ONLY);
