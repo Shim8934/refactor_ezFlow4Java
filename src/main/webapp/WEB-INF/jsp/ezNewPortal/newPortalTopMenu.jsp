@@ -631,7 +631,25 @@
 			}
 		}
 		
+		var setLayer = function () {
+			document.getElementById("menu_toggle").style.display = "none";
+			var topMenuFull = document.getElementById('topMenuFull');
+			var topFrame = parent.document.getElementById('topFrame');
+			var bodyTag = document.getElementsByTagName('Body')[0];
+			
+			var screenHeight = screen.height;
+			topFrame.style.position = 'relative';
+			topFrame.style.minHeight = screenHeight+"px";
+			bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+			
+			var popupArea = parent.document.getElementById("popupArea");
+			popupArea.style.height = (screenHeight) + "px";
+			popupArea.style.width = "100%";
+			showProgress("notice");
+		}
+		
 		var getNotiPopup = function () {
+			var surveyNotiList = ${surveyNotiList};
 			var notiList = JSON.parse('${popupNotiList}');
 			var position0Count = 0;
 			var position1Count = 0;
@@ -666,22 +684,21 @@
 					
 					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
 					
+				} 
+				
+				if (surveyNotiList != null && surveyNotiList.length != 0) {
+					index = ++position0Count;
+					openSurveyPopup(surveyNotiList, 600, 600, 0, index);
+					setLayer();
 				}
 				
-				document.getElementById("menu_toggle").style.display = "none";
-				var topMenuFull = document.getElementById('topMenuFull');
-				var topFrame = parent.document.getElementById('topFrame');
-				var bodyTag = document.getElementsByTagName('Body')[0];
+			} else {
 				
-				var screenHeight = screen.height;
-				topFrame.style.position = 'relative';
-				topFrame.style.minHeight = screenHeight+"px";
-				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-				
-				var popupArea = parent.document.getElementById("popupArea");
-				popupArea.style.height = (screenHeight) + "px";
-				popupArea.style.width = "100%";
-				showProgress("notice");
+				if (surveyNotiList != null && surveyNotiList.length != 0) {
+					index = ++position0Count;
+					openSurveyPopup(surveyNotiList, 600, 600, 0, index);
+					setLayer();
+				}
 			}
 			
 		}
@@ -870,6 +887,177 @@
 			}
 			
 			this.style.zIndex = popupZIndex;
+		}
+		
+		//위치 지정하여 팝업 열기 --- 전자설문 팝업 공지사항
+		var openSurveyPopup = function (surveyList, wWidth, wHeight, wPosition, index) {
+		    var wVertical, wHorizontal;
+		    
+			if(wPosition == 0) {
+		        wVertical = Math.floor(window.outerHeight/2) - (wHeight/2) - 56 + (index * 10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
+		    }
+
+		    if(wVertical < 0)
+		        wVertical = 0;
+
+		    if(wHorizontal < 0)
+		        wHorizontal = 0;
+
+		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
+		        wHeight = eval(wHeight) - 60;
+ 			
+    		var wLeft = 0;
+    		var wTop = 0;
+    		
+    		var popupDiv = document.createElement("div");
+    		popupDiv.id = "surv_popup";
+    		popupDiv.className = "popup_notice popup_type0";
+    		
+    		var formElement = document.createElement("form");
+    		formElement.style.height = "100%";
+    		
+    		var layoutDiv = document.createElement("div");
+    		layoutDiv.className = "popup_noticeLayout";
+    		
+    		var titleDl = document.createElement("dl");
+    		titleDl.className = "popup_noticeTitle";
+    		
+    		var titleDt = document.createElement("dt");
+    		titleDt.className = "title_type0";
+    		
+    		var titleDd = document.createElement("dd");
+    		titleDd.className = "name_type0";
+    		titleDd.textContent = "전자설문";
+    		
+    		titleDl.appendChild(titleDt);
+    		titleDl.appendChild(titleDd);
+    		
+    		var contentDiv = document.createElement("div");
+    		contentDiv.className = "popup_noticeList";
+    		
+    		/* 테이블만들기 */
+    		
+    		var oTable = document.createElement("TABLE");
+    		oTable.className = "popuplist";
+    		oTable.setAttribute("width" , "100%");
+            var oTBody = document.createElement("TBODY");
+            var oTr = document.createElement("TR");
+            
+            var oTh1 = document.createElement("TH");
+            oTh1.setAttribute("style", "white-space:nowrap")
+            oTh1.setAttribute("width", "350px")
+            oTh1.innerHTML = '제목'
+            oTr.appendChild(oTh1);
+            
+            var oTh2 = document.createElement("TH");
+            oTh2.setAttribute("style", "white-space:nowrap")
+            oTh2.setAttribute("width", "60px")
+            oTh2.innerHTML = '작성자'
+            oTr.appendChild(oTh2);
+            
+            var oTh3 = document.createElement("TH");
+            oTh3.setAttribute("style", "white-space:nowrap")
+            oTh3.setAttribute("width", "90px")
+            oTh3.innerHTML = '종료일'
+            oTr.appendChild(oTh3);
+            
+            oTBody.appendChild(oTr);
+            
+            for (var i = 0; i < surveyList.length; i++) {
+            	var surveyInfo =  surveyList[i];
+            	
+            	if (surveyInfo.popupFlag === 1) {
+	            	var oTr = document.createElement("TR");
+	            	
+		            var oTd1 = document.createElement("TD");
+		            oTd1.style.overflow = 'hidden';
+		            oTd1.style.textOverflow = 'ellipsis';
+		            oTd1.style.whiteSpace = 'nowrap';
+		            oTd1.style.maxWidth  = '350px';
+			        oTd1.innerHTML = surveyInfo.title;
+		            oTr.appendChild(oTd1);
+		            
+		            var oTd2 = document.createElement("TD");
+		            oTd2.style.overflow = 'hidden';
+		            oTd2.style.textOverflow = 'ellipsis';
+		            oTd2.style.whiteSpace = 'nowrap';
+		            oTd2.style.maxWidth  = '60px';
+			        oTd2.innerHTML = surveyInfo.creatorName;
+		            oTr.appendChild(oTd2);
+		            
+		            var oTd3 = document.createElement("TD");
+		            oTd3.style.overflow = 'hidden';
+		            oTd3.style.textOverflow = 'ellipsis';
+		            oTd3.style.whiteSpace = 'nowrap';
+		            oTd3.style.maxWidth  = '90px';
+			        oTd3.innerHTML = surveyInfo.endDate.substr(0, 10);
+		            oTr.appendChild(oTd3);
+		            
+		            oTBody.appendChild(oTr);
+            	}
+            }
+            
+            oTable.appendChild(oTBody);
+            contentDiv.appendChild(oTable);
+            
+    		var btnDiv = document.createElement("div");
+    		btnDiv.className = "notice_btn";
+    		
+    		var btnPElem = document.createElement("p");
+    		btnPElem.className = "btn_checkbox";
+    		
+    		var checkInput = document.createElement("input");
+    		checkInput.type = "checkbox";
+    		checkInput.setAttribute("name", "checkbox");
+    		checkInput.className = "inp_noticeCheck";
+    		checkInput.id = "surv_inp_noticeCheck";
+    		
+    		var labelElem = document.createElement("label");
+    		labelElem.className = "name_type0";
+    		labelElem.setAttribute("for", "inp_noticeCheck");
+    		labelElem.textContent = "<spring:message code = 'ezPersonal.t267' />";
+    		
+    		var closePElem = document.createElement("p");
+    		closePElem.className = "notice_btnClose close_type0";
+    		closePElem.id = "surv_closeBtn";
+    		
+    		btnPElem.appendChild(checkInput);
+    		btnPElem.appendChild(labelElem);
+    		btnDiv.appendChild(btnPElem);
+    		
+    		layoutDiv.appendChild(titleDl);
+    		layoutDiv.appendChild(contentDiv);
+    		layoutDiv.appendChild(btnDiv);
+    		formElement.appendChild(layoutDiv);
+    		popupDiv.appendChild(closePElem);
+    		popupDiv.appendChild(formElement);
+    		 
+    		parent.document.getElementById("popupArea").querySelector("#noticePopupLayer").appendChild(popupDiv);
+    		
+    		parent.document.getElementById("surv_popup").style.height = wHeight - 40 + "px";
+    		parent.document.getElementById("surv_popup").style.width = wWidth - 40 + "px";
+    		parent.document.getElementById("surv_popup").style.left = wLeft + "px";
+    		parent.document.getElementById("surv_popup").style.top = wTop + "px";
+    		parent.document.getElementById("surv_popup").style.zIndex = index + 1;
+    		parent.document.getElementById("surv_popup").addEventListener("click", changeZIndex);
+    		parent.document.getElementById("surv_inp_noticeCheck").addEventListener("change", function() {
+    			notice_close("", result.userId, "checkbox");
+    		});
+    		
+    		parent.document.getElementById("surv_closeBtn").addEventListener("click", function() {
+    			notice_close("", result.userId, "btn");
+    		});
+    		
+    		var popupContent = parent.document.getElementById("surv_popup").getElementsByClassName("popup_noticeList")[0];
+    		popupContent.style.height = parent.document.getElementById("surv_popup").clientHeight - 175 + "px"; 
+    		
+    		parent.$("#surv_popup").draggable({
+				containment : parent.$("#popupArea"),
+				cancel : parent.$(".popup_noticeList"),
+				scroll: false 
+			});
+		    
 		}
 		
 		var notice_close = function (popupId, userId, position) {

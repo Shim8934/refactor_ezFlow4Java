@@ -75,6 +75,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
+import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -126,6 +127,9 @@ public class EzNewPortalGWController {
 
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGSerivce;
+	
+	@Autowired
+	private EzSurveyService ezSurveyService;
 
 	@Autowired
 	private Properties config;
@@ -768,7 +772,8 @@ public class EzNewPortalGWController {
 			/**
 			 * 4) 팝업 공지
 			 */
-			
+			JSONObject surveyNotiList = ezSurveyService.getItemsBySearching("processing", 1, 10, "", "", "", "", "", "0", "title", "", "", commonUtil.getUserForGw(userId, serverName), 1);
+			data.put("surveyNotiList", surveyNotiList);
 			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUserWithAuth(companyId, tenantId, offset, userId, deptId);
 			data.put("popupNotiList", popupNotiList);
 			
