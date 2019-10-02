@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
@@ -135,6 +136,9 @@ public class EzNewPortalGWController {
 
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+
+	@Autowired
+	private EzEmailService ezEmailService;
 
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -1575,20 +1579,14 @@ public class EzNewPortalGWController {
 
 			// 읽지 않은 메일 가져오기
 			if (useMail.equals("YES")) {
-				IMAPAccess ia = null;
-				String folderName = "INBOX";
 				int unreadMailCount = 0;
 
 				try {
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					unreadMailCount = ia.getUnreadCount(folderName);
+					unreadMailCount = (int) ezEmailService.getUnreadCountAll(null, userId, locale, tenantId).get("totalUnreadCountInAllAccounts");
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					if (ia != null) {
-						ia.close();
-					}
 				}
+
 				data.put("unreadMailCount", unreadMailCount);
 			}
 
