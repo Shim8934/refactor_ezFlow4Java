@@ -772,8 +772,6 @@ public class EzNewPortalGWController {
 			/**
 			 * 4) 팝업 공지
 			 */
-			JSONObject surveyNotiList = ezSurveyService.getItemsBySearching("processing", 1, 10, "", "", "", "", "", "0", "title", "", "", commonUtil.getUserForGw(userId, serverName), 1);
-			data.put("surveyNotiList", surveyNotiList);
 			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUserWithAuth(companyId, tenantId, offset, userId, deptId);
 			data.put("popupNotiList", popupNotiList);
 			

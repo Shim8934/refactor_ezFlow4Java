@@ -649,7 +649,6 @@
 		}
 		
 		var getNotiPopup = function () {
-			var surveyNotiList = ${surveyNotiList};
 			var notiList = JSON.parse('${popupNotiList}');
 			var position0Count = 0;
 			var position1Count = 0;
@@ -685,20 +684,15 @@
 					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
 					
 				} 
-				
-				if (surveyNotiList != null && surveyNotiList.length != 0) {
-					index = ++position0Count;
-					openSurveyPopup(surveyNotiList, 600, 600, 0, index);
-					setLayer();
-				}
+				index = ++position0Count;
+				getSurveyPopupList(index);
+				setLayer();
 				
 			} else {
 				
-				if (surveyNotiList != null && surveyNotiList.length != 0) {
-					index = ++position0Count;
-					openSurveyPopup(surveyNotiList, 600, 600, 0, index);
-					setLayer();
-				}
+				index = ++position0Count;
+				getSurveyPopupList(index);
+				setLayer();
 			}
 			
 		}
@@ -870,23 +864,6 @@
 					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0"); */
 		}
 		
-		var getDetailSurvey = function (event, thisEl) {
-			event.stopPropagation();
-			
-			var surveyId = thisEl.getAttribute('surveyId');
-			var heigth   = window.screen.availHeight;
-			var width    = window.screen.availWidth;
-			var left     = 0;
-			var top      = 0;
-			var pleftpos = parseInt(width) - 780;
-			var heigth   = parseInt(heigth) - 750;
-			var left     = pleftpos / 2;
-			var top      = heigth / 2;
-			
-			var itemPopup;
-			itemPopup = window.open("/ezSurvey/surveyDetail.do?itemId=" + surveyId, "fileDetail", "height = " + 750 + "px, width = " + 780 + "px, left=" + left + ", top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
-		}
-		
 		var changeZIndex = function () {
 			var popupList = parent.document.getElementsByClassName("popup_notice");
 			var popupListCount = popupList.length;
@@ -904,6 +881,39 @@
 			}
 			
 			this.style.zIndex = popupZIndex;
+		}
+		
+		var getSurveyPopupList = function(index) {
+			var searchObj = {
+					currentPage : 1,
+					pageMode: 'processing',
+					srchMode : 0,
+					listCnt : 5,
+					title : "",
+					creatorName : "",
+					startDate : "",
+					endDate : "",
+					column : "",
+					order : "",
+					srchMode : 0,
+					srchOption : "title",
+					listCntSize : 5
+				};
+			
+			$.ajax({
+				type: "GET",
+				url: "/ezSurvey/getSurveyItems.do",
+				data: searchObj,
+				dataType: "JSON",
+				async: false,
+				cache: false,
+				success : function(data) {
+					openSurveyPopup(data.itemList, 600, 600, 0, index);
+				},
+				error : function(error) {
+					alert(error);
+				}
+			});
 		}
 		
 		//위치 지정하여 팝업 열기 --- 전자설문 팝업 공지사항
@@ -1078,6 +1088,23 @@
 				scroll: false 
 			});
 		    
+		}
+		
+		var getDetailSurvey = function (event, thisEl) {
+			event.stopPropagation();
+			
+			var surveyId = thisEl.getAttribute('surveyId');
+			var heigth   = window.screen.availHeight;
+			var width    = window.screen.availWidth;
+			var left     = 0;
+			var top      = 0;
+			var pleftpos = parseInt(width) - 780;
+			var heigth   = parseInt(heigth) - 750;
+			var left     = pleftpos / 2;
+			var top      = heigth / 2;
+			
+			var itemPopup;
+			itemPopup = window.open("/ezSurvey/surveyDetail.do?itemId=" + surveyId, "fileDetail", "height = " + 750 + "px, width = " + 780 + "px, left=" + left + ", top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
 		}
 		
 		var notice_close = function (popupId, userId, position) {

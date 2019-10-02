@@ -158,11 +158,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			JSONObject data = (JSONObject) resultBody.get("data");
 			
 			logger.debug("TopMenu : " + data.toJSONString());
-			JSONObject surveyList = (JSONObject) data.get("surveyNotiList");
-			JSONArray surveyNotiList = (JSONArray) surveyList.get("itemList");
-			JSONArray surveyNotiListAfter = new JSONArray();
-			surveyNotiListAfter.addAll(surveyNotiList);
-			
 			JSONArray popupNotiList = (JSONArray) data.get("popupNotiList");
 			int popupNotiListCount = popupNotiList.size();
 			JSONArray popupNotiListAfter = new JSONArray();
@@ -203,7 +198,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("logoUrl", data.get("logoUrl"));
 			model.addAttribute("roleInfo", data.get("roleInfo"));
 			model.addAttribute("menuList", data.get("menuList"));
-			model.addAttribute("surveyNotiList", surveyNotiListAfter);
 			model.addAttribute("popupNotiList", popupNotiListAfter);
 			model.addAttribute("useActiveX", data.get("useActiveX"));
 			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
