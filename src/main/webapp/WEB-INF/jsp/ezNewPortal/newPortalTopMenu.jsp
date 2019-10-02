@@ -631,6 +631,43 @@
 			}
 		}
 		
+		var getSurveyPopupList = function() {
+			var returnList;
+			var searchObj = {
+					currentPage : 1,
+					pageMode: 'processing',
+					srchMode : 0,
+					listCnt : 5,
+					title : "",
+					creatorName : "",
+					startDate : "",
+					endDate : "",
+					column : "",
+					order : "",
+					srchMode : 0,
+					srchOption : "title",
+					listCntSize : 5
+				};
+			
+			$.ajax({
+				type: "GET",
+				url: "/ezSurvey/getSurveyItems.do",
+				data: searchObj,
+				dataType: "JSON",
+				async: false,
+				cache: false,
+				success : function(data) {
+					//openSurveyPopup(data.itemList, 600, 600, 0, index);
+					returnList = data.itemList;
+				},
+				error : function(error) {
+					console.log(error);
+					returnList = null;
+				}
+			});
+			return returnList;
+		}
+		
 		var setLayer = function () {
 			document.getElementById("menu_toggle").style.display = "none";
 			var topMenuFull = document.getElementById('topMenuFull');
@@ -684,15 +721,23 @@
 					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
 					
 				} 
-				index = ++position0Count;
-				getSurveyPopupList(index);
-				setLayer();
+				var surveyPopupList = getSurveyPopupList();
+				
+				if (surveyPopupList != 0 && surveyPopupList != null) {
+					index = ++position0Count;
+					openSurveyPopup(surveyPopupList, 600, 600, 0, index);
+					setLayer();
+				}
 				
 			} else {
+				var surveyPopupList = getSurveyPopupList();
 				
-				index = ++position0Count;
-				getSurveyPopupList(index);
-				setLayer();
+				if (surveyPopupList != 0 && surveyPopupList != null) {
+					index = ++position0Count;
+					openSurveyPopup(surveyPopupList, 600, 600, 0, index);
+					setLayer();
+				}
+				
 			}
 			
 		}
@@ -883,39 +928,6 @@
 			this.style.zIndex = popupZIndex;
 		}
 		
-		var getSurveyPopupList = function(index) {
-			var searchObj = {
-					currentPage : 1,
-					pageMode: 'processing',
-					srchMode : 0,
-					listCnt : 5,
-					title : "",
-					creatorName : "",
-					startDate : "",
-					endDate : "",
-					column : "",
-					order : "",
-					srchMode : 0,
-					srchOption : "title",
-					listCntSize : 5
-				};
-			
-			$.ajax({
-				type: "GET",
-				url: "/ezSurvey/getSurveyItems.do",
-				data: searchObj,
-				dataType: "JSON",
-				async: false,
-				cache: false,
-				success : function(data) {
-					openSurveyPopup(data.itemList, 600, 600, 0, index);
-				},
-				error : function(error) {
-					alert(error);
-				}
-			});
-		}
-		
 		//위치 지정하여 팝업 열기 --- 전자설문 팝업 공지사항
 		var openSurveyPopup = function (surveyList, wWidth, wHeight, wPosition, index) {
 		    var wVertical, wHorizontal;
@@ -933,7 +945,11 @@
 
 		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
 		        wHeight = eval(wHeight) - 60;
- 			
+		    var survPopoup = document.getElementById("surv_popup");
+ 			if (survPopoup != null) {
+ 				survPopoup.remove();
+ 			}
+		    
     		var wLeft = 0;
     		var wTop = 0;
     		
