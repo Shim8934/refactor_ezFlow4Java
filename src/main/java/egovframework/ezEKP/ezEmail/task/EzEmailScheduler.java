@@ -617,7 +617,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 							//보낸편지함에 저장
 							ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 									userAccount, password, egovMessageSource, locale, ezEmailUtil);
-							Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+							Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 							
 							if (folder.exists()) {
 								message.setFlag(Flags.Flag.SEEN, true);
