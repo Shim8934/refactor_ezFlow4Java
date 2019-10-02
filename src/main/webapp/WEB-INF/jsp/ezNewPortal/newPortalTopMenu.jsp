@@ -870,6 +870,23 @@
 					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0"); */
 		}
 		
+		var getDetailSurvey = function (event, thisEl) {
+			event.stopPropagation();
+			
+			var surveyId = thisEl.getAttribute('surveyId');
+			var heigth   = window.screen.availHeight;
+			var width    = window.screen.availWidth;
+			var left     = 0;
+			var top      = 0;
+			var pleftpos = parseInt(width) - 780;
+			var heigth   = parseInt(heigth) - 750;
+			var left     = pleftpos / 2;
+			var top      = heigth / 2;
+			
+			var itemPopup;
+			itemPopup = window.open("/ezSurvey/surveyDetail.do?itemId=" + surveyId, "fileDetail", "height = " + 750 + "px, width = " + 780 + "px, left=" + left + ", top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
+		}
+		
 		var changeZIndex = function () {
 			var popupList = parent.document.getElementsByClassName("popup_notice");
 			var popupListCount = popupList.length;
@@ -969,6 +986,9 @@
             	
             	if (surveyInfo.popupFlag === 1) {
 	            	var oTr = document.createElement("TR");
+	            	oTr.style.cursor = "pointer";
+	            	oTr.setAttribute('surveyId', surveyInfo.surveyId); 
+	            	oTr.addEventListener('click', function(event) { getDetailSurvey(event, this); }, false);
 	            	
 		            var oTd1 = document.createElement("TD");
 		            oTd1.style.overflow = 'hidden';
