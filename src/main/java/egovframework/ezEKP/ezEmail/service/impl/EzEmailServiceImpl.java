@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -66,6 +67,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -104,6 +106,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Autowired
 	private EzEmailDAO ezEmailDAO;
+
+	@Resource(name = "jspw")
+	private String jspw;
 
 	@Override
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception {
@@ -3250,5 +3255,86 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("getTotalUnreadCount ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		return totalUnreadCount;
+	}
+	
+	/** 
+	 * 공유사서함까지 포함하여 전체 메일함 안 읽은 갯수 가져오기
+	 * @param requestObject null 값을 허용하며 unreadCountMap 이 필요할때만 넘김
+	 */
+	@Override
+	public JSONObject getUnreadCountAll(JSONObject requestObject, String userId, Locale locale, int tenantId) throws Exception {
+		Map<String, Object> resultObject = new HashMap<>();
+		IMAPAccess ia = null;
+
+		try {
+			requestObject = Optional.ofNullable(requestObject).orElse(new JSONObject());
+			JSONArray requestMailboxList = (JSONArray) requestObject.get("mailboxList");
+
+			String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String userAccount = userId + "@" + domainName;
+
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+			String shareId = null;
+
+			if (useSharedMailbox.equals("YES")) {
+				shareId = (String) requestObject.get("shareId");
+
+				if (shareId != null) {
+					logger.debug("shareId=" + shareId);
+
+					if (!checkUserShareId(userId, shareId, tenantId)) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("getFolderUnreadCount ended.");
+
+						throw new Exception("CANNOT_ACCESS_SHAREID");
+					}
+
+					userAccount = shareId + "@" + domainName;
+				}
+			}
+
+			logger.debug("userId=" + userId + ",userAccount=" + userAccount);
+
+			Map<String, Object> unreadCountMap = new HashMap<>();
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userAccount, jspw, egovMessageSource, locale, ezEmailUtil);
+
+			if (requestMailboxList != null) {
+				for (int i = 0; i < requestMailboxList.size(); i++) {
+					String mailboxName = (String) requestMailboxList.get(i);
+					unreadCountMap.put(mailboxName, ia.getUnreadCount(mailboxName));
+				}
+			}
+
+			int totalUnreadCount = getTotalUnreadCount(userId, tenantId);
+			int totalUnreadCountInAllAccounts = totalUnreadCount;
+
+			if (useSharedMailbox.equals("YES")) {
+				List<Map<String, String>> shareInfoList = getUserSharedMailboxList(userId, true, tenantId);
+				resultObject.put("shareInfoList", shareInfoList);
+
+				for (Map<String, String> item : shareInfoList) {
+					String unreadCountStr = item.get("totalUnreadCount");
+
+					if (unreadCountStr != null) {
+						try {
+							int unreadCountInShared = Integer.parseInt(unreadCountStr);
+
+							totalUnreadCountInAllAccounts += unreadCountInShared;
+						} catch (NumberFormatException ne) {
+							ne.printStackTrace();
+						}
+					}
+				}
+			}
+
+			resultObject.put("shareId", shareId == null ? "" : shareId);
+			resultObject.put("unreadCountMap", unreadCountMap);
+			resultObject.put("totalUnreadCount", totalUnreadCount);
+			resultObject.put("totalUnreadCountInAllAccounts", totalUnreadCountInAllAccounts);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new JSONObject(resultObject);
 	}
 }
