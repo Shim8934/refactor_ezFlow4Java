@@ -930,6 +930,12 @@
 		
 		//위치 지정하여 팝업 열기 --- 전자설문 팝업 공지사항
 		var openSurveyPopup = function (surveyList, wWidth, wHeight, wPosition, index) {
+		    var survPopoup = document.getElementById("surv_popup");
+ 			
+		    if (survPopoup != null) {
+ 				survPopoup.remove();
+ 			}
+ 			
 		    var wVertical, wHorizontal;
 		    
 			if(wPosition == 0) {
@@ -945,10 +951,6 @@
 
 		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
 		        wHeight = eval(wHeight) - 60;
-		    var survPopoup = document.getElementById("surv_popup");
- 			if (survPopoup != null) {
- 				survPopoup.remove();
- 			}
 		    
     		var wLeft = 0;
     		var wTop = 0;
