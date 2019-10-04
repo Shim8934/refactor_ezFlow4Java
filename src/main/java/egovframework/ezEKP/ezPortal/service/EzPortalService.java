@@ -245,4 +245,10 @@ public interface EzPortalService {
 	public Map<String, String> getMainMenuItemUIDList(String pAccessID, Map<String, String> linkURL, String userLang, String companyID, int tenantID, String topMenuID) throws Exception;
 
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
+	
+	public String getTotalSearchURL(LoginVO userInfo, Map<String, Object> param) throws Exception;
+	
+	public Map<String, Object> callSearchServerForResult(String searchURL, String offset) throws Exception;
+	
+	public String chkBoardReadAuthor(String boardID, String accessID, int tenantID) throws Exception;
 }
