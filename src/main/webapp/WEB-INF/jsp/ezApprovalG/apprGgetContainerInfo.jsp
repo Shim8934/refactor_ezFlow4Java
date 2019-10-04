@@ -588,6 +588,26 @@
 	    		    condition[i] = replaceCond(returnvalue[i]);
 		        }
 	    	   
+				var nowyear = nowDate.substring(0,4);
+				var nowmonth = nowDate.substring(5,7);
+				var nowday = nowDate.substring(8,10);
+	    	   
+				if (approvalFlag == "G") {
+					if (condition[3] == "" && condition[9] == "" && condition[15] == "") {
+	    			   	condition[9] = (nowyear-1);
+						condition[10] = nowmonth;
+						condition[11] = nowday;
+						condition[12] = nowyear;
+						condition[13] = nowmonth;
+						condition[14] = nowday;
+	    		   }
+				} else {
+					if (condition[3] == "" && condition[5] == "" && condition[7] == "") {
+						condition[5] = (nowyear-1) + "-" + nowmonth + "-" + nowday + " 00:00:01";
+						condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+					}
+				}
+	    	   
 	    	    if (LoadSquery == "usercontlist") {
 	    	    	MakeSubCondition();
 	    	    	GetUserContList();
@@ -1317,6 +1337,9 @@
 			            	else if(condition[7] != null && condition[7] != "") {
 			            		period = condition[7].substring(0,4)+strLang1028+" "+parseInt(condition[7].substring(5,7))+strLang1029+" "+parseInt(condition[7].substring(8,10))+strLang1030+" ~ "+condition[8].substring(0,4)+strLang1028+" "+parseInt(condition[8].substring(5,7))+strLang1029+" "+parseInt(condition[8].substring(8,10))+strLang1030;
 			            	}
+			            	else {
+			            		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+			            	}
 	            		}
 	            	}
 		        }
@@ -1535,6 +1558,22 @@
 		            }
 		            else if (selectSearch.item(1).selected) {
 		                condition[2] = replaceCond(document.getElementById("txt_keyword").value);
+		            }
+		            
+		            var nowyear = nowDate.substring(0,4);
+		            var nowmonth = nowDate.substring(5,7);
+		            var nowday = nowDate.substring(8,10);
+		            
+		            if (approvalFlag == "G") {
+		            	condition[9] = (nowyear-1);
+		            	condition[10] = nowmonth;
+		            	condition[11] = nowday;
+		            	condition[12] = nowyear;
+		            	condition[13] = nowmonth;
+		            	condition[14] = nowday;
+		            } else {
+		            	condition[5] = (nowyear-1) + "-" + nowmonth + "-" + nowday + " 00:00:01";
+		            	condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
 		            }
 		        }
 		        else {
