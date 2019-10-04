@@ -719,13 +719,14 @@
 					}
 					
 					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
-					
+					setLayer();
 				} 
 				var surveyPopupList = getSurveyPopupList();
 				
 				if (surveyPopupList != 0 && surveyPopupList != null) {
 					index = ++position0Count;
 					openSurveyPopup(surveyPopupList, 600, 600, 0, index);
+					
 					setLayer();
 				}
 				
@@ -735,6 +736,7 @@
 				if (surveyPopupList != 0 && surveyPopupList != null) {
 					index = ++position0Count;
 					openSurveyPopup(surveyPopupList, 600, 600, 0, index);
+					
 					setLayer();
 				}
 				
@@ -938,9 +940,31 @@
  			
 		    var wVertical, wHorizontal;
 		    
-			if(wPosition == 0) {
+		    if(wPosition == 0) {
+				console.log(window.outerHeight);
 		        wVertical = Math.floor(window.outerHeight/2) - (wHeight/2) - 56 + (index * 10);
 		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
+		    } else if(wPosition == 1) {
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = 100 + (index*10);
+		    } else if(wPosition == 2) {
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = 100 + (index * 10);
+		    } else if(wPosition == 3) {
+		        wVertical = 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
+		    } else if(wPosition == 4) {
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
+		    } else if(wPosition == 5) {
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
+		    } else if(wPosition == 6) {
+		        wVertical = window.outerHeight - wHeight - 100 - (index * 10); 
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
+		    } else {
+		        wVertical = 0 + (index*10); 
+		        wHorizontal = 0 + (index*10);
 		    }
 
 		    if(wVertical < 0)
@@ -952,8 +976,9 @@
 		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
 		        wHeight = eval(wHeight) - 60;
 		    
-    		var wLeft = 0;
-    		var wTop = 0;
+    		var wLeft = wHorizontal;
+    		
+    		var wTop = wVertical;
     		
     		var popupDiv = document.createElement("div");
     		popupDiv.id = "surv_popup";
