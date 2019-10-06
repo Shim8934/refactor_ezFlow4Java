@@ -5006,7 +5006,7 @@
 		]]>
 	</update>
 	
-	<delete id="EzOrganAdminDAO.deletePermissionGroup" parameterClass="Map">
+	<delete id="EzOrganAdminDAO.deletePermissionGroupList" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
 				TBL_PERMISSIONGROUPLIST
@@ -5063,4 +5063,17 @@
 				SORT
 		]]>
 	</select>
+	
+	<delete id="EzOrganAdminDAO.deletePermissionGroupInfo" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_PERMISSIONGROUPINFO
+          	WHERE
+          		GROUP_ID = #v_GROUP_ID#
+          	AND
+       			TENANT_ID = #v_TENANT_ID#
+       		AND
+       			COMPANY_ID = #v_COMPANY_ID#
+		]]>
+	</delete>
 </sqlMap>
