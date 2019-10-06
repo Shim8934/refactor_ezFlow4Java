@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopupUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
@@ -102,8 +103,8 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 		insert("EzPersonalAdmin.EZSP_SETQUICKLINK_ACL", map);
 	}
 	
-	public void insertPopup(Map<String, Object> map) throws Exception {
-		insert("EzPersonalAdmin.EZSP_INSERTPOPUP", map);
+	public int insertPopup(Map<String, Object> map) throws Exception {
+		return (int) insert("EzPersonalAdmin.EZSP_INSERTPOPUP", map);
 	}
 	
 	public void insertPoll(Map<String, Object> map) throws Exception {
@@ -277,5 +278,18 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 
 	public int checkJoinPoll(Map<String, Object> map) {
 		return (int) select("EzPersonalAdmin.EZSP_CheckJoinPoll", map);
+	}
+	
+	public void updatePopupUser(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.updatePopupUser", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalPopupUserVO> getPopupUserList (Map<String, Object> map) throws Exception {
+		return (List<PersonalPopupUserVO>) list("EzPersonalAdmin.getPopupUserList", map);
+	}
+	
+	public void deletePopupUser(Map<String, Object> map) throws Exception {
+		delete("EzPersonalAdmin.deletePopupUser", map);
 	}
 }

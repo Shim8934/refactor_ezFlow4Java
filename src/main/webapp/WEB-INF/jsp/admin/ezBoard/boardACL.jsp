@@ -33,6 +33,7 @@
 	        var selectedTargetName = "";
 	        var selectedTargetName2 = "";
 	        var selectTargetListXML = "";
+	        var selectTargetNewListXML = "";
 	
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -64,8 +65,8 @@
 	                    for (j = 4; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
 	                        
-	                       /* 동그라미로 플래그를 그린다.(13~20) */
-	                       if (j >=13) {
+	                       /* 동그라미로 플래그를 그린다.(13~20) / 21값은 권한의 TYPE으로, 속성으로만 부여한다. */
+	                       if (j >=13 && j < 21) {
 		                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true" || getNodeText(xmldomNode[i].childNodes[j]) == "1") {
 		                            listTDText = document.createTextNode("●");
 		                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false" || getNodeText(xmldomNode[i].childNodes[j]) == "0") {
@@ -73,7 +74,9 @@
 		                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
 		                            listTDText = document.createTextNode("");
 		                        }
-	                       }  
+	                       } else if (j == 21) { // 권한의 TYPE인 경우 스킵
+	                    	   continue;
+	                       }
 	                       /* 회사(4), 부서(5), 이름(6), 직위직책(7) 부분은 값이 1이더라도 동그라미를 찍지 않도록 한다. */
 	                       else {
 	                    	   listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
@@ -81,7 +84,7 @@
 	                        if (j == 7) {
 	                            j = 12;
 	                        }
-	                        if (j >= 13) {
+	                        if (j >= 13 && j < 21) {
 								listTD.setAttribute("style", "text-align:center;color:#268fff;");
 	                        }
 	                        listTD.appendChild(listTDText);
@@ -94,6 +97,7 @@
 	                    listTR.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
 	                    listTR.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
 	                    listTR.setAttribute("DATA3", SelectSingleNodeValue(xmldomNode[i], "BOARDGROUPACL"));
+	                    listTR.setAttribute("TYPE", SelectSingleNodeValue(xmldomNode[i], "TYPE")); // 권한의 TYPE값 부여
 	                    listTR = null;
 	                }
 	            }
@@ -103,7 +107,7 @@
 	                    for (j = 0; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
 	                        
-	                        if (j >= 13) {
+	                        if (j >= 13 && j < 21) {
 		                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true" || getNodeText(xmldomNode[i].childNodes[j]) == "1") {
 		                            listTDText = document.createTextNode("●");
 		                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false" || getNodeText(xmldomNode[i].childNodes[j]) == "0") {
@@ -111,7 +115,9 @@
 		                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
 		                            listTDText = document.createTextNode("");
 		                        }
-	                        }
+	                        } else if (j == 21) { // 권한의 TYPE인 경우 스킵
+								continue;
+		                    }
 	                        /* 회사(0), 부서(1), 이름(2), 직위직책(3) 부분은 값이 1이더라도 동그라미를 찍지 않도록 한다. */
 	                        else {
 								listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
@@ -119,7 +125,7 @@
 	                        if (j == 3) {
 	                            j = 12;
 	                        }
-	                        if (j >= 13) {
+	                        if (j >= 13 && j < 21) {
 	                            listTD.setAttribute("style", "text-align:center;color:#268fff;");
 	                        }
 	                        listTD.appendChild(listTDText);
@@ -132,6 +138,7 @@
 	                    listTR.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
 	                    listTR.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
 	                    listTR.setAttribute("DATA3", SelectSingleNodeValue(xmldomNode[i], "BOARDGROUPACL"));
+	                    listTR.setAttribute("TYPE", SelectSingleNodeValue(xmldomNode[i], "TYPE")); // 권한의 TYPE값 부여
 	                    listTR = null;
 	                }
 	            }
@@ -156,6 +163,7 @@
 	                strXML += "<TARGETID>" + getNodeText(xmldom2.getElementsByTagName("CN")[i]) + "</TARGETID>";
 	                strXML += "<TARGETNAME>" + MakeXMLString(getNodeText(xmldom2.getElementsByTagName("NAME")[i])) + "</TARGETNAME>";
 	                strXML += "<TARGETNAME2>" + MakeXMLString(getNodeText(xmldom2.getElementsByTagName("NAME2")[i])) + "</TARGETNAME2>";
+	                // 하위부서 허용 여부 (TARGETGROUP -> BoardGroupACL)
 	                strXML += "<TARGETGROUP>" + MakeXMLString(getNodeText(xmldom2.getElementsByTagName("GROUP")[i])) + "</TARGETGROUP>";
 	                strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
 	                strXML += "<PARENTBOARDID>" + pParentBoardID + "</PARENTBOARDID>";
@@ -170,6 +178,8 @@
 	                strXML += "<DELETE>" + delete_OK.checked + "</DELETE>";
 	                strXML += "<POSTNOTICE>" + PostNotice.checked + "</POSTNOTICE>";
 	                strXML += "<ISALLGROUPBOARD>${isAllGroupBoard}</ISALLGROUPBOARD>";
+	                /* 2019-09-19 홍승비 - 개인, 직위직책, 부서, 그룹권한 여부 파라미터 추가 */
+	                strXML += "<TYPE>" + MakeXMLString(getNodeText(xmldom2.getElementsByTagName("DEPT")[i])) + "</TYPE>";
 	                strXML += "</NODE>";
 	                strXML += "</NODES>";
 	                xmldom = loadXMLString(strXML);
@@ -433,10 +443,17 @@
 	                    selectTargetListXML += "<NAME><![CDATA[" + selectedTargetName + "]]></NAME>";
 	                    selectTargetListXML += "<NAME2><![CDATA[" + selectedTargetName2 + "]]></NAME2>";
 	                    selectTargetListXML += "<GROUP><![CDATA[" + selectedTargetGroup + "]]></GROUP>";
-	                    if (selnode[0].cells[0].innerHTML == "" || selnode[0].cells[0].innerHTML == null)
-	                        selectTargetListXML += "<DEPT><![CDATA[DEPT]]></DEPT>";
-	                    else
-	                        selectTargetListXML += "<DEPT><![CDATA[PERSON]]></DEPT>";
+	                    
+	                    /* 2019-09-19 홍승비 - 권한 타입 체크 추가 (PERSON, DEPT, JIKWI, JIKCHEK, GROUP) */
+	                    if (GetAttribute(selnode[0],"type") != null &&  GetAttribute(selnode[0],"type") != "") { // TYPE값이 있는 경우
+							selectTargetListXML += "<DEPT><![CDATA[" + GetAttribute(selnode[0],"type") + "]]></DEPT>";
+	                    } else { // TYPE값이 없는 경우(기존에 등록된 권한들)
+		                    if (selnode[0].cells[0].innerHTML == "" || selnode[0].cells[0].innerHTML == null) {
+		                        selectTargetListXML += "<DEPT><![CDATA[DEPT]]></DEPT>";
+		                    } else {
+		                        selectTargetListXML += "<DEPT><![CDATA[PERSON]]></DEPT>";
+		                    }
+	                    }
 	                } else {
 	                    setNodeText(selectedTarget, "");
 	
@@ -453,10 +470,17 @@
 	                        selectTargetListXML += "<NAME><![CDATA[" + selectedTargetName + "]]></NAME>";
 	                        selectTargetListXML += "<NAME2><![CDATA[" + selectedTargetName2 + "]]></NAME2>";
 	                        selectTargetListXML += "<GROUP><![CDATA[" + selectedTargetGroup + "]]></GROUP>";
-	                        if (selnode[i].cells[0].innerHTML == "" || selnode[i].cells[0].innerHTML == null)
-	                            selectTargetListXML += "<DEPT><![CDATA[DEPT]]></DEPT>";
-	                        else
-	                            selectTargetListXML += "<DEPT><![CDATA[PERSON]]></DEPT>";
+	                        
+		                    /* 2019-09-19 홍승비 - 권한 타입 체크 추가 (PERSON, DEPT, GROUP...) */
+		                    if (GetAttribute(selnode[i],"type") != null &&  GetAttribute(selnode[i],"type") != "") { // TYPE값이 있는 경우
+								selectTargetListXML += "<DEPT><![CDATA[" + GetAttribute(selnode[i],"type") + "]]></DEPT>";
+		                    } else { // TYPE값이 없는 경우(기존에 등록된 권한들)
+			                    if (selnode[i].cells[0].innerHTML == "" || selnode[i].cells[0].innerHTML == null) {
+			                        selectTargetListXML += "<DEPT><![CDATA[DEPT]]></DEPT>";
+			                    } else {
+			                        selectTargetListXML += "<DEPT><![CDATA[PERSON]]></DEPT>";
+			                    }
+		                    }
 	                    }
 	                }
 	                selectTargetListXML += "</DATA>";
@@ -705,6 +729,36 @@
 	            pwidth = pwidth - 260;
 	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + encodeURIComponent(pBoardID) + "&isAllGroupBoard=${isAllGroupBoard}", "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
+	        
+	        /* 2019-09-19 홍승비 - 권한그룹이 추가된 새로운 권한설정 기능 추가 */
+			var selecttargetNew_dialogArguments = new Array();
+	        function SelectTargetNew() {
+	            var receiverData = new Array();
+	            receiverData["window"] = this;
+	            receiverData["selectTargetListXML"] = selectTargetListXML;
+	            selecttargetNew_dialogArguments[0] = receiverData;
+	            selecttargetNew_dialogArguments[1] = SelectTargetNew_Complete;
+	            selecttargetNew_dialogArguments[2] = "${isAllGroupBoard}"; // 그룹사게시판인 경우, 조직도에 전체 회사 + 전체 권한그룹 표출 필요
+	            var SelectTarget = window.open("/admin/ezBoard/selectTargetGroup.do", "SelectTargetNew", GetOpenWindowfeature(970, 645));
+	            try { SelectTarget.focus(); } catch (e) {
+	            }
+	        }
+	        
+	        function SelectTargetNew_Complete(ret) {
+	            _type = false;
+	            if (typeof (ret) != "undefined") {
+	                selectTargetListXML = ret;
+	                
+	                if (admin_OK.checked == false && admin_NO.checked == false) {
+	                    CheckBoxInit2();
+	                }
+	            }
+	            
+	            if (selectTargetListXML == "" || selectTargetListXML == "<DATA></DATA>") {
+	                CheckBoxInit();
+	            }
+	        }
+	        
 	    </script>
 		</head>
 		<c:if test="${pParentNeed == 'Y'}">
@@ -863,7 +917,9 @@
 	                <li><span onclick="goBoardList()"><spring:message code='ezBoard.t72'/></span></li>
 	                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 				</c:if>
-            	<li class="important"><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>
+				<%-- 2019-09-19 홍승비 - 권한그룹 추가된 새로운 권한설정팝업 UI 추가, 기존권한 추가버튼 주석처리 --%>
+            	<li class="important"><span onclick="SelectTargetNew()"><spring:message code='ezBoard.t602'/></span></li>
+            	<%--<li class="important"><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>--%>
             	<li><span onclick="SaveACL()"><spring:message code='ezBoard.t98'/></span></li>
                 <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
             <%-- 2019-01-22 홍승비 - 그룹사게시판 -> 권한설정기능 표출, 권한복사 숨김 --%>

@@ -5064,6 +5064,7 @@
 		]]>
 	</select>
 	
+
 	<delete id="EzOrganAdminDAO.deletePermissionGroupInfo" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
@@ -5076,4 +5077,40 @@
        			COMPANY_ID = #v_COMPANY_ID#
 		]]>
 	</delete>
+
+	<select id="EzOrganAdminDAO.getGroupListBoard" parameterClass="Map" resultClass="OrganGroupVO" remapResults="true">
+		<![CDATA[
+			SELECT
+				DISTINCT TBL_PERMISSIONGROUPLIST.GROUP_ID AS GROUPID,
+				GROUP_NAME AS GROUPNAME, 
+                CREATE_ID AS CREATEID,
+                DATE_FORMAT(DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS CREATEDATE,
+                UPDATE_ID AS UPDATEID,
+				DATE_FORMAT(DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS UPDATEDATE,
+				TBL_PERMISSIONGROUPLIST.COMPANY_ID AS COMPANYID
+           FROM
+           		TBL_PERMISSIONGROUPLIST
+           	INNER JOIN
+           		TBL_PERMISSIONGROUPINFO
+           	ON
+           		TBL_PERMISSIONGROUPLIST.GROUP_ID = TBL_PERMISSIONGROUPINFO.GROUP_ID
+           	AND
+           		TBL_PERMISSIONGROUPLIST.TENANT_ID = TBL_PERMISSIONGROUPINFO.TENANT_ID
+           	AND
+           		TBL_PERMISSIONGROUPLIST.COMPANY_ID = TBL_PERMISSIONGROUPINFO.COMPANY_ID
+           WHERE
+            	TBL_PERMISSIONGROUPLIST.TENANT_ID = #v_TENANT_ID#
+            ]]>
+		<isNotEqual property="isAllGroupBoard" compareValue="Y">
+    		<![CDATA[
+    		AND
+				TBL_PERMISSIONGROUPLIST.COMPANY_ID = #v_COMPANY_ID#
+    		]]>
+		</isNotEqual>
+		<![CDATA[
+           ORDER BY
+				GROUP_NAME              	
+        ]]>  
+	</select>
+
 </sqlMap>

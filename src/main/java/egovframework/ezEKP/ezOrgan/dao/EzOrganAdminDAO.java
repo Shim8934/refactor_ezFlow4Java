@@ -2252,4 +2252,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public List<OrganJobVO> getTitleList_group(Map<String, Object> map) throws Exception {
 		return (List<OrganJobVO>) list("EzOrganAdminDAO.selectTitleList_group", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganGroupVO> getGroupListBoard(Map<String, Object> map) throws Exception {
+        return (List<OrganGroupVO>) list("EzOrganAdminDAO.getGroupListBoard", map);
+    }
 }

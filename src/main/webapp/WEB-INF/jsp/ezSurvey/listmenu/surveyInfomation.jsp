@@ -39,6 +39,24 @@
 						</div>
 					</td>
 				</tr>
+				
+				<tr>
+					<th class="left-Th"><spring:message code="ezSurvey.t112"/></th> <%-- mail setting --%>
+					<td class="right-Td">
+						<div>
+							<span class="inf-spanTxt"><input type="radio" name="mailSpan" value="1" checked><spring:message code="ezSurvey.t114"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="mailSpan" value="0"><spring:message code="ezSurvey.t115"/></span>
+						</div>
+					</td>
+					<th class="left-Th"><spring:message code="ezSurvey.t113"/></th> <%-- popup setting --%>
+					<td class="right-Td">
+						<div>
+							<span class="inf-spanTxt"><input type="radio" name="popupSpan" value="1" checked><spring:message code="ezSurvey.t114"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="popupSpan" value="0"><spring:message code="ezSurvey.t115"/></span>
+						</div>
+					</td>
+				</tr>
+				
 				<tr>
 					<th class="left-Th"><spring:message code="ezSurvey.t30"/></th> <%-- respondent setting --%>
 					<td class="right-Td">

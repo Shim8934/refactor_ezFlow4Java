@@ -79,6 +79,8 @@
 		<result property="draftFlag"        column="draft_flag"          columnIndex="24"/>
 		<result property="responseFlag"     column="response_flag"       columnIndex="25"/>
 		<result property="totalUser"        column="total_user"          columnIndex="26"/>
+		<result property="mailFlag"         column="mail_flag"           columnIndex="27"/>
+		<result property="popupFlag"        column="popup_flag"          columnIndex="28"/>
 		
 	</resultMap>
 	
@@ -195,7 +197,9 @@
 			modify_flag,
 			draft_flag,
 			response_flag,
-			total_user
+			total_user,
+			mail_flag,
+			popup_flag
 		from tbl_survey
 	</sql>
 	
@@ -594,12 +598,14 @@
 			insert into tbl_survey (
 				survey_id,     title,         purpose,            user_id,        create_date,       start_date,        end_date,    user_name1,  user_name2,
 				use_status,    open_days,     result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,  attach_flag,  modify_flag, draft_flag,
-				response_flag, delete_user,   update_user,        update_date,    total_user,        company_id,        tenant_id
+				response_flag, delete_user,   update_user,        update_date,    total_user,        company_id,        tenant_id,
+				mail_flag,     popup_flag
 			)
 			values (
 				#surveyId#,     #title#,      #purpose#,          #creatorId#,     #createDate#,      #startDate#,      #endDate#,      #creatorName1#, #creatorName2#,
 				#useStatus#,    #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#, #attachFlag#,   #modifyFlag#,   #draftFlag#,
-				#responseFlag#, #deleteUser#, #updateUser#,       #updateDate#,    #totalUser#,       #companyId#,      #tenantId#
+				#responseFlag#, #deleteUser#, #updateUser#,       #updateDate#,    #totalUser#,       #companyId#,      #tenantId#,
+				#mailFlag#,     #popupFlag#
 			)
 		]]>
 	</insert>

@@ -2636,6 +2636,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		StringJoiner pAccessID = new StringJoiner(",");
 		pAccessID.add(pUserID);
+		
+		/* 2019-09-18 홍승비 - 개인ID 이후, 부서ID 이전 위치에 직위+직책ID (사내겸직 직위 포함) 추가 */
+		String userJJID = getUserJJID(pUserID, pCompanyID, tenantID);
+		pAccessID.add(userJJID);
+		
 		String[] reverseDeptPath = ezOrganService.getDeptFullPath(pDeptID, tenantID).split(",");
 		List<String> addJobDeptList = new ArrayList<String>();
 		
@@ -2687,9 +2692,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			showAllGroupBoard = "N";
 		}
 		
+		/* 2019-09-24 홍승비 - 게시판 접근 허용/불가 판정을 위해 직위, 직책 Set 추가 */
 		List<BoardTreeVO> brdBoardTreeList = new ArrayList<BoardTreeVO>();
 		List<HashSet<String>> strBanBoardIDListSetDept = new ArrayList<HashSet<String>>();
 		HashSet<String> strBanBoardIDListSetUser = new HashSet<String>();
+		HashSet<String> strBanBoardIDListSetJJ = new HashSet<String>();
+		HashSet<String> userJJIDSet = new HashSet<String>(Arrays.asList(userJJID.split(",")));
 		String tempDeptList = addJobStr.toString();
 		
 		/* 2019-06-03 홍승비 - 전체관리자와 해당 게시판/게시판그룹 관리자(해당 pRootBoardID에 대하여 관리자권한 설정됨)의 게시판 트리 생성 분기를 for 바깥으로 분리 (그룹사게시판을 포함하여 모든 게시판 접근 가능) */
@@ -2700,6 +2708,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			/* 2019-06-05 홍승비 - 게시판 트리 생성 시 사내겸직 부서경로 각각에 대해 게시판 가져오고, 접근불가 게시판 제거하도록 수정 */
 			int addJobDeptListSize = addJobDeptList.size();
 			for (int jl = 0; jl < addJobDeptListSize; jl++) {
+				// 부서권한은 우선순위가 하위부서 > 상위부서이므로, 하위부서에서 이미 동일한 게시판ID에 대해 권한 레코드가 존재한다면
+				// 상위부서에서 해당 게시판ID에 권한 레코드가 있더라도 스킵한다. (strBanBoardIDListSetTemp에 저장)
 				HashSet<String> strBanBoardIDListSetTemp = new HashSet<String>();
 				int addJobDeptListPathSize = addJobDeptList.get(jl).split(",").length;
 				for (int i = 0; i < addJobDeptListPathSize; i++) {
@@ -2746,9 +2756,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						for (int r = 0; r < boardTreeList.size(); r++) {
 							boardID = boardTreeList.get(r).getBoardId();
 							
-							if (addJobDeptList.get(jl).split(",")[i].equals(pUserID)) { // 개인권한은 따로 저장 (맨 처음 한 번만 동작)
+							/* 2019-09-20 그룹권한 적용으로 그룹에 속한 개인권한 다수 저장 가능 */
+							if (addJobDeptList.get(jl).split(",")[i].equals(pUserID)) { // 개인권한은 따로 저장
 								strBanBoardIDListSetUser.add(boardID);
-							} else {
+							}
+							else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위/직책권한 저장
+								strBanBoardIDListSetJJ.add(boardID);
+							}
+							else { // 부서권한 저장
+								// 하위부서와 상위부서가 동일한 게시판에 대해 권한을 가져서 충돌하는 경우, *하위부서를 우선*으로 적용한다.
+								// 즉, contains로 strBanBoardIDListSetTemp의 게시판ID 존재 여부를 체크하여 동일한 게시판ID가 이미 존재한다면 스킵한다.
 								if (strBanBoardIDListSetTemp.contains(boardID.substring(0, boardID.indexOf("|")) + "|0;") || 
 										strBanBoardIDListSetTemp.contains(boardID.substring(0, boardID.indexOf("|")) + "|1;")) {
 									continue;
@@ -2768,9 +2785,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		}
 		
-		HashSet<String> strBanBoardIDListSet = new HashSet<String>();
+		HashSet<String> strBanBoardIDListSetDept2 = new HashSet<String>();
 		for (int i = 0; i < strBanBoardIDListSetDept.size(); i++) {
-			strBanBoardIDListSet.addAll(strBanBoardIDListSetDept.get(i));
+			strBanBoardIDListSetDept2.addAll(strBanBoardIDListSetDept.get(i));
 		}
 		
 		StringBuilder result = new StringBuilder();
@@ -2792,10 +2809,26 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		/* 2019-06-04 홍승비 - 접근 불가한 게시판 체크 시 전체관리자가 아닌 관리자도 해당 분기 타도록 수정 */
 		for (int i = 0; i < brdBoardTreeList.size(); i++) {
 			if (!isCompanyAdmin) {
-				// 개인권한 최우선 확인 (strBanBoardIDListSetUser 직접 사용)
-				if (strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") ||
-						(!strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|1;") && strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSet.contains(brdBoardTreeList.get(i).getBoardId() + "|1;"))) {
+				/* 2019-09-20 홍승비 - 그룹권한에 포함된 개인/직위,직책권한도 고려하도록 수정 (동일한 우선순위 권한 간의 불가/허용 충돌 시 '허용' 기준으로 판정) */
+				// 개인권한 최우선 확인 (strBanBoardIDListSetUser 직접 사용, '허용' 기준으로 판정)
+				if (strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|1;")) {
 					continue;
+				}
+				// 개인권한에 대해 '허용'권한과 '불가'권한이 모두 존재하지 않음 => 직위, 직책을 체크
+				// 개인권한 미존재
+				else if (!strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSetUser.contains(brdBoardTreeList.get(i).getBoardId() + "|1;")) {
+					// 직위,직책권한 중 '불가'만 존재
+					if  (strBanBoardIDListSetJJ.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSetJJ.contains(brdBoardTreeList.get(i).getBoardId() + "|1;")) {
+						continue;
+					}
+					// 개인권한에 대해 '허용'권한과 '불가'권한이 모두 존재하지 않음 + 직위, 직책에 대해 '허용'권한과 '불가'권한이 모두 존재하지 않음 => 부서권한을 체크
+					// 직위,직책권한 미존재
+					else if (!strBanBoardIDListSetJJ.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSetJJ.contains(brdBoardTreeList.get(i).getBoardId() + "|1;")) {
+						 // 부서권한 중 '불가'만 존재
+						if (strBanBoardIDListSetDept2.contains(brdBoardTreeList.get(i).getBoardId() + "|0;") && !strBanBoardIDListSetDept2.contains(brdBoardTreeList.get(i).getBoardId() + "|1;")) {
+							continue;	
+						}
+					}
 				}
 			}
 			
@@ -4398,4 +4431,93 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.isDeptChk(map);
 	}
 	
+	/* 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 전부 문자열로 이어붙여 리턴하는 메서드 (사내겸직 포함) */
+	@Override
+	public String getUserJJID(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("getUserJJID started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		StringJoiner result = new StringJoiner(",");
+		
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		
+		List<String> userJJID = ezBoardDAO.getUserJJID(map);
+		
+		int userJJSize = userJJID.size();
+		if (userJJID != null && userJJSize > 0) {
+			for (int i = 0; i < userJJSize; i ++) {
+				result.add(userJJID.get(i));
+			}
+		}
+		
+		logger.debug("result in getUserJJID    ::   " + result);
+		logger.debug("getUserJJID ended.");
+		return result.toString();
+	}
+	
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 메서드 */
+	@Override
+	public List<BoardPropertyVO> getACLListNew(String pBoardID, String accessID, int tenantID, int isDept, int isEqualDept) throws Exception {
+		logger.debug("getACLListNew started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("pBoardID", pBoardID);
+		map.put("accessID", accessID);
+		map.put("tenantID", tenantID);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
+		
+		logger.debug("map in getACLListNew  ::  " + map.toString());
+		logger.debug("getACLListNew ended");
+		return ezBoardDAO.getACLListNew(map);
+	}
+	
+	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 그룹의 관리자 권한을 리스트로 리턴하는 메서드 */
+	public List<String> checkIfBoardGroupAdminNew(String pRootBoardID, String accessID, int tenantID, int isDept, int isEqualDept, boolean isBoardGroup) throws Exception {
+		logger.debug("checkIfBoardGroupAdminNew started");
+		
+		List<String> result = new ArrayList<String>();
+		
+		if (pRootBoardID.equalsIgnoreCase("top") || pRootBoardID.equalsIgnoreCase("all")) {
+			logger.debug("checkIfBoardGroupAdminNew : pRootBoardID is '" + pRootBoardID + "', return empty String");
+			return result;
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", pRootBoardID);
+		map.put("v_pAccessID", accessID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
+		map.put("isBoardGroup", isBoardGroup);
+
+		logger.debug("map in checkIfBoardGroupAdminNew  ::  " + map.toString());
+		result = ezBoardDAO.checkIfBoardGroupAdminNew(map);
+		
+		logger.debug("result in checkIfBoardGroupAdminNew   ::   " + result);
+		logger.debug("checkIfBoardGroupAdminNew ended");
+		return result;
+	}
+	
+	/* 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 읽기권한을 리스트로 리턴하는 메서드 */
+	@Override
+	public List<String> getCheckItemIDNew(String itemID, String boardType, String userDeptPath, int tenantID, int isDept, int isEqualDept) throws Exception {
+		logger.debug("getCheckItemIDNew started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_ITEMID", itemID);
+		map.put("v_BOARDTYPE", boardType);
+		map.put("v_ACCESSID", userDeptPath);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_ISDEPT", isDept);
+		map.put("v_ISEQUALDEPT", isEqualDept);
+
+		logger.debug("getCheckItemIDNew ended");
+		return ezBoardDAO.getCheckItemIDNew(map);
+	}
 }

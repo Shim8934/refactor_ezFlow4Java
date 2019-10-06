@@ -631,6 +631,7 @@ public class EzNewPortalGWController {
 			String langType = info.getLang();
 			String logoType = "P";
 			JSONObject data = new JSONObject();
+			
 			/**
 			 * 1) 로고
 			 */
@@ -767,7 +768,8 @@ public class EzNewPortalGWController {
 			/**
 			 * 4) 팝업 공지
 			 */
-			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUser(companyId, tenantId, offset);
+			
+			List<PersonalGetPopUpListUserVO> popupNotiList = ezPersonalService.getPopUpListUserWithAuth(companyId, tenantId, offset, userId, deptId);
 			data.put("popupNotiList", popupNotiList);
 			
 			data.put("logoUrl", logoUrl);

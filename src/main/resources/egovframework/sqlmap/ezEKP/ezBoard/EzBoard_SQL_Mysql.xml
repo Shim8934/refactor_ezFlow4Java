@@ -5378,4 +5378,351 @@
 		]]>
 	</select>
 	
+		<!-- 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 리턴하는 쿼리 -->
+	<select id="EzBoardDAO.getUserJJID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				TBL_USER_JOBMASTER.JOBID
+			FROM 
+				TBL_USER_JOBMASTER
+			INNER JOIN
+				TBL_USERMASTER
+			ON
+				(TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+				OR
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID)
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND
+				TBL_USERMASTER.CN = #v_USERID#
+
+			UNION
+			
+			SELECT
+				TBL_USER_JOBMASTER.JOBID
+			FROM
+				TBL_USER_JOBMASTER
+			INNER JOIN 
+				TBL_ADDJOBMASTER
+			ON
+				TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			INNER JOIN
+				TBL_USERMASTER
+			ON
+				TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+			AND
+				TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			INNER JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+			AND
+				TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.COMPANYID = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND
+				TBL_USERMASTER.CN = #v_USERID#
+		]]>
+	</select>
+	
+	<!-- 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 권한정보를 리스트로 리턴하는 쿼리 -->
+	<!-- 리스트로 리턴된 권한은 서버단에서 '허용' 기준으로 취합됨(sumBoardACL) -->
+	<select id="EzBoardDAO.getACLListNew"  parameterClass="Map" resultClass="BoardPropertyVO">
+		<![CDATA[
+			(SELECT 
+				boardid,
+	            accessid ,
+	            accessname ,
+	            accessname2 ,
+	            accesslevel ,
+	            access_ ,
+	            parentboardid ,
+	            boardadmin_fg ,
+	            listview_fg ,
+	            read_fg ,
+	            write_fg ,
+	            reply_fg ,
+	            delete_fg ,
+	            inherit_fg ,
+	            postnotice ,
+	            boardgroupacl
+	       FROM 
+	        	TBL_BOARD_BOARDMANAGE 
+	       WHERE  
+	       		TENANT_ID = #tenantID#
+	       AND
+	       		boardid = #pBoardID# 
+	       AND 
+	       		accessid = #accessID#
+	       	AND
+				(TYPE <> 'GROUP' OR TYPE IS NULL)
+		]]>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+	 			AND
+	 				boardgroupacl = 'Y'
+			</isEqual>
+		</isEqual>
+			)
+		<![CDATA[
+			UNION
+			
+			(SELECT 
+				boardid,
+	            accessid ,
+	            accessname ,
+	            accessname2 ,
+	            accesslevel ,
+	            access_ ,
+	            parentboardid ,
+	            boardadmin_fg ,
+	            listview_fg ,
+	            read_fg ,
+	            write_fg ,
+	            reply_fg ,
+	            delete_fg ,
+	            inherit_fg ,
+	            postnotice ,
+	            PGI.SUB_DEPT_YN AS boardgroupacl
+			FROM 
+	        	TBL_BOARD_BOARDMANAGE TBB
+	        	
+			INNER JOIN
+				TBL_PERMISSIONGROUPLIST PGL
+			ON
+				TBB.TENANT_ID = PGL.TENANT_ID
+			AND
+				TBB.ACCESSID = PGL.GROUP_ID
+			INNER JOIN
+				TBL_PERMISSIONGROUPINFO PGI
+			ON
+				PGL.TENANT_ID = PGI.TENANT_ID
+			AND
+				PGL.GROUP_ID = PGI.GROUP_ID
+				
+			WHERE  
+	       		TBB.TENANT_ID = #tenantID#
+	       AND
+	       		boardid = #pBoardID# 
+	       AND 
+	       		PGI.MEMBER_ID = #accessID#
+	       	AND
+				TBB.TYPE = 'GROUP'
+		]]>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+	 			AND
+	 				PGI.SUB_DEPT_YN = 'Y'
+			</isEqual>
+		</isEqual>
+			)
+	</select>	
+	
+	<!-- 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 그룹의 관리자 권한을 리스트로 리턴하는 쿼리 -->
+	<!-- 리스트로 리턴된 권한은 서버단에서 'OK' 기준으로 취합됨(contains) -->
+	<select id="EzBoardDAO.checkIfBoardGroupAdminNew" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			(SELECT
+				IF(BoardAdmin_FG = 'true', 'OK', 'NO')
+        	FROM 
+        		TBL_Board_BoardManage
+        	WHERE 
+        		TENANT_ID = #v_TENANTID#
+            AND 
+            	AccessID = #v_pAccessID#
+            AND
+				(TYPE <> 'GROUP' OR TYPE IS NULL)
+            AND 
+		]]>
+		<isEqual property="isBoardGroup" compareValue="true">
+		<![CDATA[
+			BoardID = #v_pBoardID#
+		]]>
+		</isEqual>
+		<isNotEqual property="isBoardGroup" compareValue="true">
+		<![CDATA[
+			BoardID = 
+				(SELECT 
+					BoardGroupID 
+				FROM 
+					TBL_Board_BoardInfo 
+				WHERE  
+					TENANT_ID = #v_TENANTID#
+				AND 
+					BoardID = #v_pBoardID#)
+		]]>
+		</isNotEqual>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+				<![CDATA[
+					AND
+						BoardGroupACL = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
+		)
+		
+<!-- 2019-09-20 홍승비 - 권한그룹 체크 추가 -->		
+		UNION
+
+		<![CDATA[
+			(SELECT
+				IF(BoardAdmin_FG = 'true', 'OK', 'NO')
+        	FROM 
+        		TBL_Board_BoardManage TBB
+
+			INNER JOIN
+				TBL_PERMISSIONGROUPLIST PGL
+			ON
+				TBB.TENANT_ID = PGL.TENANT_ID 
+			AND
+				TBB.ACCESSID = PGL.GROUP_ID
+			INNER JOIN
+				TBL_PERMISSIONGROUPINFO PGI
+			ON
+				PGL.TENANT_ID = PGI.TENANT_ID
+			AND
+				PGL.GROUP_ID = PGI.GROUP_ID
+                
+        	WHERE 
+        		TBB.TENANT_ID = #v_TENANTID#
+            AND 
+            	PGI.MEMBER_ID = #v_pAccessID#
+            AND
+            	TBB.TYPE = 'GROUP'
+            AND 
+		]]>
+		<isEqual property="isBoardGroup" compareValue="true">
+		<![CDATA[
+			TBB.BoardID = #v_pBoardID#
+		]]>
+		</isEqual>
+		<isNotEqual property="isBoardGroup" compareValue="true">
+		<![CDATA[
+			TBB.BoardID = 
+				(SELECT 
+					BoardGroupID 
+				FROM 
+					TBL_Board_BoardInfo 
+				WHERE  
+					TENANT_ID = #v_TENANTID#
+				AND 
+					BoardID = #v_pBoardID#)
+		]]>
+		</isNotEqual>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+				<![CDATA[
+					AND
+						PGI.SUB_DEPT_YN = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
+		)
+	</select>
+	
+	<!-- 2019-09-24 홍승비 - 권한그룹의 읽기권한까지 체크하는 쿼리 -->
+	<select id="EzBoardDAO.getCheckItemIDNew" parameterClass="Map" resultClass="String" remapResults="true">
+		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
+			<![CDATA[
+				(SELECT
+					READ_FG
+				FROM 
+					TBL_Board_BoardManage 
+				WHERE
+					TENANT_ID = #v_TENANTID#
+				AND 
+					ACCESSID = #v_ACCESSID#
+				AND
+					(TYPE <> 'GROUP' OR TYPE IS NULL)
+				AND 
+					BOARDID = ( SELECT 
+									BOARDID
+								FROM 
+									TBL_Board_Item 
+								WHERE
+									TENANT_ID = #v_TENANTID#
+								AND  
+									ITEMID = #v_ITEMID# )
+			]]>
+			<isEqual property="v_ISDEPT" compareValue="1">
+				<isEqual property="v_ISEQUALDEPT" compareValue="0">
+					AND
+						BoardGroupACL = 'Y'
+				</isEqual>
+			</isEqual>
+			)
+			
+			UNION
+			<![CDATA[
+				(SELECT
+					READ_FG
+				FROM 
+					TBL_Board_BoardManage TBB
+					
+				INNER JOIN
+					TBL_PERMISSIONGROUPLIST PGL
+				ON
+					TBB.TENANT_ID = PGL.TENANT_ID
+				AND
+					TBB.ACCESSID = PGL.GROUP_ID
+				INNER JOIN
+					TBL_PERMISSIONGROUPINFO PGI
+				ON
+					PGL.TENANT_ID = PGI.TENANT_ID
+				AND
+					PGL.GROUP_ID = PGI.GROUP_ID
+					
+				WHERE
+					TBB.TENANT_ID = #v_TENANTID#
+				AND 
+					PGI.MEMBER_ID = #v_ACCESSID#
+				AND
+            		TBB.TYPE = 'GROUP'
+				AND 
+					BOARDID = ( SELECT 
+									BOARDID
+								FROM 
+									TBL_Board_Item 
+								WHERE
+									TENANT_ID = #v_TENANTID#
+								AND  
+									ITEMID = #v_ITEMID# )
+			]]>
+			<isEqual property="v_ISDEPT" compareValue="1">
+				<isEqual property="v_ISEQUALDEPT" compareValue="0">
+					AND
+						PGI.SUB_DEPT_YN = 'Y'
+				</isEqual>
+			</isEqual>
+				)
+			
+		</isNotEqual>
+		<!-- 임시저장된 게시물용 분기(수정 불필요) -->
+		<isEqual property="v_BOARDTYPE" compareValue="TEMP">
+			<![CDATA[
+				SELECT 
+					COUNT(BOARDID) cnt
+              	FROM 
+              		TBL_Board_Item_temp 
+              	WHERE
+              		TENANT_ID = #v_TENANTID#
+              	AND  
+              		ITEMID = #v_ITEMID#
+                AND 
+                	WRITERID = #v_ACCESSID#
+			]]>
+		</isEqual>
+	</select>
+	
 </sqlMap>
