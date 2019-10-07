@@ -214,14 +214,4 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 	public List<String> getPopupUserGroupList(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzPersonalDAO.getPopupUserGroupList", map);
 	}
-	
-	public boolean getPermissionGroupAccessYN(Map<String, Object> map) throws Exception {
-		int permit = (int) select("EzPersonalDAO.getPermissionGroupAccessYN", map);
-		
-		if (permit > 0) {
-			return true;
-		}
-		
-		return false;
-	}
 }

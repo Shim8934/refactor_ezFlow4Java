@@ -379,8 +379,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 					
 					if (groupList != null) {
 						for (String groupId : groupList) {
-							map.put("groupId", groupId);
-							boolean groupPermissionYN = ezPersonalDAO.getPermissionGroupAccessYN(map);
+							boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, pComapnyID, tenantID, userId, deptId, true);
 							
 							if (groupPermissionYN) {
 								popupListWithAuth.add(popup);

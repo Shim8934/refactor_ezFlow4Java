@@ -2221,8 +2221,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		insert("EzOrganAdminDAO.setPermissionGroupInfo", map);
 	}
 	
+	public void deletePermissionGroupList(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deletePermissionGroupList", map);
+    }
+	
 	public void deletePermissionGroupInfo(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.deletePermissionGroup", map);
+        delete("EzOrganAdminDAO.deletePermissionGroupInfo", map);
     }
 	
 	public int getPermissionGroupListCount(Map<String, Object> map) throws Exception {

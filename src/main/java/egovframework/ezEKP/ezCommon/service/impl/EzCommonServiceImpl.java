@@ -1623,4 +1623,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createPersonalPopupUser();
 	}
 
+	@Override
+	public boolean getPermissionGroupAccessYN(String groupId, String companyId, int tenantId, String userId,
+			String deptId, boolean applySubDeptYN) throws Exception {
+		logger.debug("getPermissionGroupAccessYN started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("deptId", deptId);
+		map.put("applySubDeptYN", applySubDeptYN);
+		
+		boolean accessYN = ezCommonDAO.getPermissionGroupAccessYN(map);
+		
+		logger.debug("getPermissionGroupAccessYN ended.");
+		return accessYN;
+	}
+	
 }

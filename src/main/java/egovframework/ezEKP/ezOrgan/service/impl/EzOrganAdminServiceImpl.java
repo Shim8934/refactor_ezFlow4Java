@@ -1863,17 +1863,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put("v_GROUP_ID", groupID);
-		map.put("v_GROUP_NAME", groupName);
-		map.put("v_UPDATE_ID", updateID);
-		map.put("v_UPDATE_DATE", nowDate);
-		map.put("v_COMPANY_ID", companyID);
-		map.put("v_TENANT_ID", tenantID);
-
-		ezOrganAdminDao.updatePermissionGroupList(map);
-		
 		Map<String, Object> map2 = new HashMap<String, Object>();
 
 		map2.put("v_GROUP_ID", groupID);
@@ -1901,7 +1890,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			map3.put("v_GROUP_ID", groupID);
 			map3.put("v_MEMBER_ID", memberID);
 			map3.put("v_MEMBER_TYPE", memberType);
-			map2.put("v_MEMBER_COMPANYID", memberCompanyID);
+			map3.put("v_MEMBER_COMPANYID", memberCompanyID);
 			map3.put("v_ADDED_DATE", nowDate);
 			map3.put("v_SUB_DEPT_YN", sub_Dept_YN);
 			map3.put("v_COMPANY_ID", companyID);
@@ -1909,6 +1898,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			ezOrganAdminDao.setPermissionGroupInfo(map3);
 		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_GROUP_ID", groupID);
+		map.put("v_GROUP_NAME", groupName);
+		map.put("v_UPDATE_ID", updateID);
+		map.put("v_UPDATE_DATE", nowDate);
+		map.put("v_COMPANY_ID", companyID);
+		map.put("v_TENANT_ID", tenantID);
+
+		ezOrganAdminDao.updatePermissionGroupList(map);
 		
 		result = "OK";
 
@@ -1989,7 +1989,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			map.put("v_TENANT_ID", tenantID);
 			map.put("v_COMPANY_ID", companyID);
 			
-			ezOrganAdminDao.deletePermissionGroupInfo(map);
+			ezOrganAdminDao.deletePermissionGroupList(map);
 		}
 		
 		logger.debug("updatePermissionGroup ended");
