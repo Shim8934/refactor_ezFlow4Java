@@ -209,7 +209,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			if (data.get("useUtilTalk").toString().equalsIgnoreCase("YES")) {
 				model.addAttribute("talkFilePath", data.get("talkFilePath"));
 			}
-			
+			//2019-10-04 통합검색 추가
+			model.addAttribute("useTotalSearch", data.get("useTotalSearch"));
 		}
 		
 		logger.debug("portalTopMenu End");

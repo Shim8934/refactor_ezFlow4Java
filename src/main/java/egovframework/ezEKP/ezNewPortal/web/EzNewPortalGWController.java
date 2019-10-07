@@ -776,6 +776,12 @@ public class EzNewPortalGWController {
 				data.put("talkFilePath", talkFilePath);
 			}
 			data.put("useUtilTalk", useUtilTalk);
+			//2019-10-04 통합검색 부분 추가
+			String useTotalSearch = ezCommonService.getTenantConfig("useTotalSearch", tenantId);
+			if (useTotalSearch == null || useTotalSearch.equals("")) {
+				useTotalSearch = "NO";
+			}
+			data.put("useTotalSearch", useTotalSearch);
 			
 			
 			/**
