@@ -27,6 +27,14 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (SimpleDeptVO)select("EzSurveyDAO.getSimpleCompany", map);
 	}
 	
+	public SimpleUserVO getSurveyUserInfo(Map<String, Object> map) {
+		return (SimpleUserVO)select("EzSurveyDAO.getSurveyUserInfo", map);
+	}
+	
+	public SimpleDeptVO getSurveyDeptInfo(Map<String, Object> map) {
+		return (SimpleDeptVO)select("EzSurveyDAO.getSurveyDeptInfo", map);
+	}
+	
 	public List<SimpleDeptVO> getAllSimpleSubDepts(Map<String, Object> map) {
 		return (List<SimpleDeptVO>)list("EzSurveyDAO.getAllSimpleSubDepts", map);
 	}

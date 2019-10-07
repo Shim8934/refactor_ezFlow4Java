@@ -752,6 +752,24 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		SurveyVO survey                     = ezSurveyDAO.getSurveyInfo(map);
 		List<SurveyParticipantVO> listUsers = ezSurveyDAO.getSurveyUsers(map);
+		// 구현중
+		for (SurveyParticipantVO surveyParticipant : listUsers) {
+			String userType = surveyParticipant.getUserType();
+			
+			if (userType != null) {
+				switch (userType.toLowerCase()) {
+				case "user":
+					setSurveyUserInfo(surveyParticipant, userInfo.getPrimary());
+					break;
+				case "dept":
+				case "comp":
+					setSurveyDeptInfo(surveyParticipant, userInfo.getPrimary());
+					break;
+				default:
+					break;
+				}
+			}
+		}
 		List<AttachVO> surveyAttach         = ezSurveyDAO.getSurveyAttachList(map);
 		
 		//Clone attach files
@@ -1351,6 +1369,43 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		result.put("status", "ok");
 		result.put("code", 0);
 		return result;
+	}
+	
+	@SuppressWarnings("unused")
+	private void setSurveyUserInfo(SurveyParticipantVO participant, String primary) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", participant.getCompanyId());
+		map.put("tenantId", participant.getTenantId());
+		map.put("userId", participant.getUserId());
+		map.put("primary", primary);
+		
+		SimpleUserVO user = ezSurveyDAO.getSurveyUserInfo(map);
+		participant.setDeptId(user.getDeptId());
+		participant.setDeptName(user.getDeptName());
+		participant.setDeptName1(user.getDeptName());
+		participant.setDeptName2(user.getDeptName2());
+		participant.setEmail(user.getMail());
+		participant.setUserName(user.getUserName());
+		participant.setUserName1(user.getUserName());
+		participant.setUserName2(user.getUserName2());
+	}
+	
+	@SuppressWarnings("unused")
+	private void setSurveyDeptInfo(SurveyParticipantVO participant, String primary) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", participant.getTenantId());
+		map.put("deptId", participant.getUserId());
+		map.put("primary", primary);
+		
+		SimpleDeptVO dept = ezSurveyDAO.getSurveyDeptInfo(map);
+		participant.setDeptId(dept.getDeptId());
+		participant.setDeptName(dept.getDeptName());
+		participant.setDeptName1(dept.getDeptName());
+		participant.setDeptName2(dept.getDeptName2());
+		participant.setEmail(dept.getMail());
+		participant.setUserName(dept.getDeptName());
+		participant.setUserName1(dept.getDeptName());
+		participant.setUserName2(dept.getDeptName2());
 	}
 	
 	private List<SimpleUserVO> getAllMembersOfCompany(String companyId, String primary, int tenantId) {
