@@ -723,22 +723,22 @@
 				} 
 				var surveyPopupList = getSurveyPopupList();
 				
-				if (surveyPopupList != 0 && surveyPopupList != null) {
+				/* if (surveyPopupList != 0 && surveyPopupList != null) {
 					index = ++position0Count;
 					openSurveyPopup(surveyPopupList, 600, 600, 0, index);
 					
 					setLayer();
-				}
+				} */
 				
 			} else {
 				var surveyPopupList = getSurveyPopupList();
 				
-				if (surveyPopupList != 0 && surveyPopupList != null) {
+				/* if (surveyPopupList != 0 && surveyPopupList != null) {
 					index = ++position0Count;
 					openSurveyPopup(surveyPopupList, 600, 600, 0, index);
 					
 					setLayer();
-				}
+				} */
 				
 			}
 			
