@@ -279,6 +279,16 @@
                				TBL_DEPTMASTER 
                			WHERE
                				EXTENSIONATTRIBUTE1 = #v_CN#
+		]]>
+						<isEmpty property="displayTrashDept">
+							<![CDATA[
+								AND
+									EXTENSIONATTRIBUTE1 NOT LIKE 'trash\_dept\_%' 
+								AND 
+									CN NOT LIKE 'trash\_dept\_%'
+							]]>
+						</isEmpty>
+		<![CDATA[
                			AND
                				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY

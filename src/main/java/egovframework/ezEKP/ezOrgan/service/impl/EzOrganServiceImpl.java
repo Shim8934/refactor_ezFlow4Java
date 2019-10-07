@@ -222,7 +222,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	// 지정된 부서의 자식 부서 목록을 XML 형식으로 반환한다.
 	@Override
-	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID) throws Exception {
+	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID, boolean displayTrashDept) throws Exception {
 	    logger.debug("getDeptSubTreeInfo started");
 	    logger.debug("pDeptID=" + pDeptID + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
 	    
@@ -231,6 +231,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CN", pDeptID);
 		map.put("v_LANGDATA", primary);
 		map.put("v_TENANT_ID", tenantID);
+		
+		if (displayTrashDept) {
+			map.put("displayTrashDept", true);
+		}
 		
 		// 지정된 부서의 자식 부서 목록을 가져온다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptSubTreeInfo(map);
