@@ -1238,4 +1238,66 @@
 		  PRIMARY KEY (`itemseq`,`user_id`,`user_type`,`tenant_id`,`companyid`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='팝업 공지 대상자 관련 테이블'
 	</statement>
+	
+	
+    <select id="EzCommonDAO.getPermissionGroupAccessYN" parameterClass="Map" resultClass="Integer">
+     	<![CDATA[
+			SELECT
+				COUNT(member_id)
+			FROM
+				tbl_permissiongroupinfo
+			WHERE
+				group_id = #groupId#
+			AND
+				company_id = #companyId#
+			AND
+				tenant_id = #tenantId#
+			AND
+				(
+					(member_type = 'USER' AND member_id = #userId#)
+				  OR
+					(member_type = 'DEPT' AND sub_dept_yn = 'N' AND member_id = #deptId#)
+				  OR 
+					(member_type = 'JIKWI' AND member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+				  OR
+					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+			]]>
+			<isEqual property="applySubDeptYN" compareValue="true">
+			<![CDATA[
+				  OR
+					(#deptId# IN (
+								SELECT
+									CN
+								FROM
+									tbl_deptmaster
+								WHERE
+									dept_cd_path REGEXP(
+											SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+			                                FROM tbl_deptmaster
+			                                WHERE cn IN (
+															SELECT member_id
+			                                                FROM tbl_permissiongroupinfo
+			                                                WHERE 
+																group_id = #groupId#
+															AND
+																member_type = 'DEPT'
+															AND
+																sub_dept_yn = 'Y'
+														)
+									)
+								)
+						)
+			
+			]]>
+			</isEqual>
+			<isNotEqual property="applySubDeptYN" compareValue="true">
+			<![CDATA[
+				OR
+				  (member_type = 'DEPT' AND sub_dept_yn = 'Y' AND member_id = #deptId#)
+			]]>
+			</isNotEqual>
+			<![CDATA[
+				)
+     	]]>
+     </select>
 </sqlMap>
