@@ -29,7 +29,7 @@ public interface EzOrganService {
 	
 	public String getSearchList(String searchlist, String celllist,	String proplist, String listtype, int i, String lang, int tenantID, String adminOrgan) throws Exception;
 
-	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID) throws Exception;
+	public String getDeptSubTreeInfo(String deptID, String propList, String primary, int tenantID, boolean displayTrashDept) throws Exception;
 	
 	public String convertAddandConvert(String pClass, String pProvValue) throws Exception;
 	
