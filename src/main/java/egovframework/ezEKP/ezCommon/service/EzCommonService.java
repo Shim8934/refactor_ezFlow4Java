@@ -136,6 +136,8 @@ public interface EzCommonService {
 
 	public void addMemoExtensionColumns() throws Exception;
 
+	public void addSurveyAlamColums() throws Exception;
+	
 	public void addAddJobMasterProxy() throws Exception;
 
 	public void createAttitudeAnnual() throws Exception;
@@ -147,6 +149,5 @@ public interface EzCommonService {
 	public void addBoardManageTypeColumn() throws Exception;
 
 	public void createPersonalPopupUser() throws Exception;
-
 }
 

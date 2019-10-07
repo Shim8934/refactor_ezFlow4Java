@@ -651,6 +651,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addMemoExtensionColumns");
 		}
 	}
+	
+	public void addSurveyAlamColums() {
+		try {
+			select("EzCommonDAO.checkSurveyAlamColums");
+		} catch (Exception e) {
+			logger.debug("tbl_survey addSurveyAlamColums doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSurveyAlamColums");
+		}
+	}
 		
 	public void addMsgInMailSearch() {
 		try {
@@ -791,4 +801,5 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblPsPopupUser");
 		}
 	}
+
 }
