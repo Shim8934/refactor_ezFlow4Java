@@ -17,9 +17,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -700,6 +703,46 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return result;
 	}
 	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getPopupItems(String mode, String startDate, String endDate, LoginVO userInfo) throws Exception {
+		JSONObject result   = new JSONObject();
+		String userId       = userInfo.getId();
+		int tenantId        = userInfo.getTenantId();
+		String primary      = userInfo.getPrimary();
+		String offset       = userInfo.getOffset();
+		String offsetMinute = commonUtil.getMinuteUTC(offset);
+		
+		if (!startDate.equals("")) {
+			startDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
+			endDate   = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("primary", primary);
+		map.put("offset", offsetMinute);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("mode", mode);
+		if (mode != null && mode.equals("popup")) {
+			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
+			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+			map.put("surveyIds", listReceivedSurvey);
+			map.put("today", timeUTC);
+		}
+		List<SurveyVO> itemList = ezSurveyDAO.getTotalPopupSurveyItems(map);
+		
+		result.put("itemList", itemList);
+		result.put("userId", userId);
+		result.put("status", "ok");
+		result.put("code", 0);
+		
+		return result;
+	}
+	
 	@Override
 	public void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -752,6 +795,24 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		SurveyVO survey                     = ezSurveyDAO.getSurveyInfo(map);
 		List<SurveyParticipantVO> listUsers = ezSurveyDAO.getSurveyUsers(map);
+		// 구현중
+		for (SurveyParticipantVO surveyParticipant : listUsers) {
+			String userType = surveyParticipant.getUserType();
+			
+			if (userType != null) {
+				switch (userType.toLowerCase()) {
+				case "user":
+					setSurveyUserInfo(surveyParticipant, userInfo.getPrimary());
+					break;
+				case "dept":
+				case "comp":
+					setSurveyDeptInfo(surveyParticipant, userInfo.getPrimary());
+					break;
+				default:
+					break;
+				}
+			}
+		}
 		List<AttachVO> surveyAttach         = ezSurveyDAO.getSurveyAttachList(map);
 		
 		//Clone attach files
@@ -1353,6 +1414,43 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return result;
 	}
 	
+	@SuppressWarnings("unused")
+	private void setSurveyUserInfo(SurveyParticipantVO participant, String primary) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", participant.getCompanyId());
+		map.put("tenantId", participant.getTenantId());
+		map.put("userId", participant.getUserId());
+		map.put("primary", primary);
+		
+		SimpleUserVO user = ezSurveyDAO.getSurveyUserInfo(map);
+		participant.setDeptId(user.getDeptId());
+		participant.setDeptName(user.getDeptName());
+		participant.setDeptName1(user.getDeptName());
+		participant.setDeptName2(user.getDeptName2());
+		participant.setEmail(user.getMail());
+		participant.setUserName(user.getUserName());
+		participant.setUserName1(user.getUserName());
+		participant.setUserName2(user.getUserName2());
+	}
+	
+	@SuppressWarnings("unused")
+	private void setSurveyDeptInfo(SurveyParticipantVO participant, String primary) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", participant.getTenantId());
+		map.put("deptId", participant.getUserId());
+		map.put("primary", primary);
+		
+		SimpleDeptVO dept = ezSurveyDAO.getSurveyDeptInfo(map);
+		participant.setDeptId(dept.getDeptId());
+		participant.setDeptName(dept.getDeptName());
+		participant.setDeptName1(dept.getDeptName());
+		participant.setDeptName2(dept.getDeptName2());
+		participant.setEmail(dept.getMail());
+		participant.setUserName(dept.getDeptName());
+		participant.setUserName1(dept.getDeptName());
+		participant.setUserName2(dept.getDeptName2());
+	}
+	
 	private List<SimpleUserVO> getAllMembersOfCompany(String companyId, String primary, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -1361,4 +1459,5 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return ezSurveyDAO.getAllMembersOfCompany(map);
 	}
+
 }

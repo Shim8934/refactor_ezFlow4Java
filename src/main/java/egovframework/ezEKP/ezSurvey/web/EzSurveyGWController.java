@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
@@ -524,6 +527,35 @@ public class EzSurveyGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, order, column, userInfo, userMode);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/survey-popupItem/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getPopupItems(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName    = request.getHeader("host-name")      != null ? request.getHeader("host-name")    : "";
+		String mode          = request.getParameter("mode")        != null ? request.getParameter("mode")      : "";
+		String userId        = request.getParameter("userId")      != null ? request.getParameter("userId")    : "";
+		String startDate     = request.getParameter("startDate")   != null ? request.getParameter("startDate") : "";
+		String endDate       = request.getParameter("endDate")     != null ? request.getParameter("endDate")   : "";
+		JSONObject result    = new JSONObject();
+		
+		if (userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			result = surveyService.getPopupItems(mode, startDate, endDate, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

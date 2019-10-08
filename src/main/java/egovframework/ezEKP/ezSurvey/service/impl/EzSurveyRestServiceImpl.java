@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.compress.utils.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -37,6 +39,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 
 @Service
@@ -193,6 +196,18 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		param.put("listCntSize", listCntSize);
 		param.put("currentPage", currentPage);
 		param.put("userMode", userMode);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getSurveyPopupItems(HttpServletRequest request, String userId, String mode, String startDate, String endDate) throws Exception {
+		String url                = "/rest/ezsurvey/survey-popupItem/get";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",    userId);
+		param.put("mode",      mode);
+		param.put("startDate", startDate);
+		param.put("endDate",   endDate);
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
@@ -426,4 +441,5 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
+
 }

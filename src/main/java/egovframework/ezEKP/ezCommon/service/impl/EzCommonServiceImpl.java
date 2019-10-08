@@ -1577,6 +1577,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addMemoExtensionColumns() throws Exception {
 		ezCommonDAO.addMemoExtensionColumns();
 	}
+	
+	@Override
+	public void addSurveyAlamColums() throws Exception {
+		ezCommonDAO.addSurveyAlamColums();
+	}
 
 	@Override
 	public void addFormVersion() throws Exception {
@@ -1635,4 +1640,5 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("getPermissionGroupAccessYN ended.");
 		return accessYN;
 	}
+	
 }

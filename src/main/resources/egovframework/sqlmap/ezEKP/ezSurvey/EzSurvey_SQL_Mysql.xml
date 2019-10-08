@@ -577,13 +577,19 @@
 	</select>
 	
 	<select id="EzSurveyDAO.getReceivedSurveyList" resultClass="Long">
-		select survey_id from tbl_survey_participant where
+		SELECT survey_id FROM tbl_survey_participant WHERE
 			(
-				(user_id = #userId# and user_type = 'user') or (user_id in 
+				(user_id = #userId# and user_type = 'user') 
+				OR 
+				(user_id in 
 					<iterate property="deptList" open="(" close=")" conjunction=",">
 						#deptList[]#
 					</iterate> and (user_type = 'dept' or user_type = 'comp')
 				)
+				OR
+				(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+				OR
+				(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
 			)
 			and tenant_id = #tenantId# and company_id = #companyId#
 			<isNotEmpty property="surveyId" prepend=" and ">survey_id = #surveyId#</isNotEmpty>
@@ -681,6 +687,40 @@
 				<isEmpty property="sqlOrder">update_date desc, survey_id desc</isEmpty>
 				<isNotEmpty property="sqlOrder">$sqlOrder$, update_date desc, survey_id desc</isNotEmpty>
 			limit #startPoint#, #listCount#
+	</select>
+	
+	<select id="EzSurveyDAO.getTotalPopupSurveyItems" resultMap="surveyVO">
+		<include refid="surveySelect"/>
+		WHERE
+			use_status = 1
+		AND
+			tenant_id = #tenantId#
+		AND
+			modify_flag = 0
+		<isEqual property="mode" compareValue="popup" prepend=" AND ">
+			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
+			
+			<isNotEmpty property="surveyIds" prepend=" AND ">
+				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
+			</isNotEmpty>
+			AND 
+				draft_flag = 0
+			AND
+				popup_flag = 1
+			AND
+				survey_id NOT IN (
+					SELECT
+						DISTINCT(SURV.survey_id)
+					FROM
+						tbl_survey SURV
+					INNER JOIN
+						tbl_survey_respondent RESP
+					ON
+						SURV.survey_id = RESP.survey_id
+			    )
+		</isEqual>	
+		ORDER BY
+			update_date DESC, survey_id DESC
 	</select>
 	
 	<update id="EzSurveyDAO.deleteItems" parameterClass="Map">
@@ -841,6 +881,47 @@
 	<delete id="EzSurveyDAO.deleteSurveyUsers" parameterClass="SurveyVO">
 		delete from tbl_survey_participant where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
 	</delete>
+	
+	<select id="EzSurveyDAO.getSurveyUserInfo" parameterClass="Map" resultMap="deptMemberInfo">
+		SELECT 
+			cn																	as cn
+			, case when #primary# = '1'then title else title2 end           	as position
+			, case when #primary# = '1' then displayname else displayname2 end	as displayName
+			, displayname														as displayName1
+			, displayname2														as displayName2
+			, department														as department
+			, case when #primary# = '1' then description else description2 end 	as departmentName
+			, description														as departmentName1
+			, description2														as departmentName2
+			, telephonenumber                                               	as telephonenumber
+			, mail																as mail
+			, extensionattribute2                                            	as userimage
+		FROM 
+			tbl_usermaster
+		WHERE
+			cn = #userId#
+		AND
+			physicaldeliveryofficename = #companyId#
+		AND
+			tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzSurveyDAO.getSurveyDeptInfo" parameterClass="Map" resultMap="simpleDeptVO">
+		select
+			a.cn                                                                                                                                        as dept_id,
+			case when '1' = '1' then a.displayname else a.displayname2 end                                                                        		as dept_name,
+			a.displayname                                                                                                                               as dept_name1,
+			a.displayname2                                                                                                                              as dept_name2,
+			a.mail                                                                                                                                      as mail, 
+		    a.deptlevel																																	as dept_level,
+			case when (select count(b.cn) from jmocha.tbl_deptmaster b where a.cn = b.extensionattribute1 and a.tenant_id = b.tenant_id) = 0 then 0 else 1 end as has_sub
+		from
+			tbl_deptmaster a
+		where
+			a.cn = #deptId# 
+		and 
+			a.tenant_id = #tenantId#
+	</select>
 	
 	<!--***********************************************************************************
 	**                                Survey Response process                            **

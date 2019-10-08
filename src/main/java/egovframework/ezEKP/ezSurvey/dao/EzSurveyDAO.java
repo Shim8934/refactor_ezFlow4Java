@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezSurvey.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Repository;
+
 import egovframework.ezEKP.ezSurvey.vo.AttachVO;
 import egovframework.ezEKP.ezSurvey.vo.OptionVO;
 import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
@@ -25,6 +27,14 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	
 	public SimpleDeptVO getSimpleCompany(Map<String, Object> map) {
 		return (SimpleDeptVO)select("EzSurveyDAO.getSimpleCompany", map);
+	}
+	
+	public SimpleUserVO getSurveyUserInfo(Map<String, Object> map) {
+		return (SimpleUserVO)select("EzSurveyDAO.getSurveyUserInfo", map);
+	}
+	
+	public SimpleDeptVO getSurveyDeptInfo(Map<String, Object> map) {
+		return (SimpleDeptVO)select("EzSurveyDAO.getSurveyDeptInfo", map);
 	}
 	
 	public List<SimpleDeptVO> getAllSimpleSubDepts(Map<String, Object> map) {
@@ -181,6 +191,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	
 	public int getUserResponseCntForSurvey(Map<String, Object> map) {
 		return (int)select("EzSurveyDAO.getUserResponseCntForSurvey", map);
+	}
+
+	public List<SurveyVO> getTotalPopupSurveyItems(Map<String, Object> map) {
+		return (List<SurveyVO>)list("EzSurveyDAO.getTotalPopupSurveyItems", map);
 	}
 
 }

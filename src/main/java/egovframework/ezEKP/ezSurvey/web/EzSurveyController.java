@@ -500,6 +500,24 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezSurvey/getSurveyPopupItems.do", method=RequestMethod.GET)
+	@ResponseBody
+	public String jsonGetSurveyPopupItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetSurveyPopupItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String mode          = request.getParameter("mode")        != null ? request.getParameter("mode")        : "";
+		String startDate     = request.getParameter("startDate")   != null ? request.getParameter("startDate")   : "";
+		String endDate       = request.getParameter("endDate")     != null ? request.getParameter("endDate")     : "";
+		JSONObject userObj = surveyRestService.getUserInformation(request, user.getId());
+		
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj = surveyRestService.getSurveyPopupItems(request, user.getId(), mode, startDate, endDate);
+		
+		logger.debug("jsonGetSurveyPopupItems end");
+		return resultObj.toString();
+	}
+	
 	@RequestMapping(value="/ezSurvey/getCompanyTree.do", method=RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{

@@ -926,6 +926,23 @@
 			)
 	</statement>
 
+	<select id="EzCommonDAO.checkSurveyAlamColums">
+		SELECT
+			MAIL_FLAG
+		FROM
+			TBL_SURVEY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyAlamColums">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD (
+			mail_flag TINYINT(4) DEFAULT '0',
+			popup_flag TINYINT(4) DEFAULT '0'
+			)
+	</statement>
+
 	<select id="EzCommonDAO.checkMsgInMailSearch" resultClass="int" >
 		SELECT 
 			COUNT(*) 

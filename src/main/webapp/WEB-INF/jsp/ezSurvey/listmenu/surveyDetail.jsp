@@ -466,6 +466,7 @@
 				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
 						 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
+						 if (window.opener && window.opener.getSurveyPopupList) {window.close();}
 						 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr)  ; resposeObj.responses = []; break;
