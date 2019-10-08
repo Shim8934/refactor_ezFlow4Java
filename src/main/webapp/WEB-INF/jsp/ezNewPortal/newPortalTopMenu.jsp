@@ -632,40 +632,30 @@
 		}
 		
 		var getSurveyPopupList = function() {
-			var returnList;
+			var returnObj = {};
 			var searchObj = {
-					currentPage : 1,
-					pageMode: 'processing',
-					srchMode : 0,
-					listCnt : 5,
-					title : "",
-					creatorName : "",
+					mode: 'popup',
 					startDate : "",
-					endDate : "",
-					column : "",
-					order : "",
-					srchMode : 0,
-					srchOption : "title",
-					listCntSize : 5
+					endDate : ""
 				};
 			
 			$.ajax({
 				type: "GET",
-				url: "/ezSurvey/getSurveyItems.do",
+				url: "/ezSurvey/getSurveyPopupItems.do",
 				data: searchObj,
 				dataType: "JSON",
 				async: false,
 				cache: false,
 				success : function(data) {
-					//openSurveyPopup(data.itemList, 600, 600, 0, index);
-					returnList = data.itemList;
+					returnObj.surveyPopupList = data.itemList;
+					returnObj.userId = data.userId;
 				},
 				error : function(error) {
 					console.log(error);
 					returnList = null;
 				}
 			});
-			return returnList;
+			return returnObj;
 		}
 		
 		var setLayer = function () {
@@ -721,24 +711,24 @@
 					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
 					setLayer();
 				} 
-				var surveyPopupList = getSurveyPopupList();
+				var surveyPopupObj = getSurveyPopupList();
 				
-				/* if (surveyPopupList != 0 && surveyPopupList != null) {
+				if (surveyPopupObj.surveyPopupList != null) {
 					index = ++position0Count;
-					openSurveyPopup(surveyPopupList, 600, 600, 0, index);
+					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
 					
 					setLayer();
-				} */
+				}
 				
 			} else {
-				var surveyPopupList = getSurveyPopupList();
+				var surveyPopupObj = getSurveyPopupList();
 				
-				/* if (surveyPopupList != 0 && surveyPopupList != null) {
+				if (surveyPopupObj.surveyPopupList != null) {
 					index = ++position0Count;
-					openSurveyPopup(surveyPopupList, 600, 600, 0, index);
+					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
 					
 					setLayer();
-				} */
+				}
 				
 			}
 			
@@ -931,7 +921,10 @@
 		}
 		
 		//위치 지정하여 팝업 열기 --- 전자설문 팝업 공지사항
-		var openSurveyPopup = function (surveyList, wWidth, wHeight, wPosition, index) {
+		var openSurveyPopup = function (surveyPopupObj, wWidth, wHeight, wPosition, index) {
+			var surveyList = surveyPopupObj.surveyPopupList;
+			var userId = surveyPopupObj.userId;
+			
 		    var survPopoup = document.getElementById("surv_popup");
  			
 		    if (survPopoup != null) {
@@ -1115,11 +1108,11 @@
     		parent.document.getElementById("surv_popup").style.zIndex = index + 1;
     		parent.document.getElementById("surv_popup").addEventListener("click", changeZIndex);
     		parent.document.getElementById("surv_inp_noticeCheck").addEventListener("change", function() {
-    			notice_close("", result.userId, "checkbox");
+    			notice_close("", userId, "checkbox");
     		});
     		
     		parent.document.getElementById("surv_closeBtn").addEventListener("click", function() {
-    			notice_close("", result.userId, "btn");
+    			notice_close("", userId, "btn");
     		});
     		
     		var popupContent = parent.document.getElementById("surv_popup").getElementsByClassName("popup_noticeList")[0];
@@ -1151,16 +1144,39 @@
 		}
 		
 		var notice_close = function (popupId, userId, position) {
-			var isChecked = parent.document.getElementById("inp_noticeCheck" + popupId).checked;
+			var isChecked;			// 팝업 공지
+			var isScheChecked;		// 일정 팝업
+			var isSurvChecked;		// 설문 팝업
+			
+			if (parent.document.getElementById("inp_noticeCheck" + popupId)) {						// 팝업 공지
+				isChecked = parent.document.getElementById("inp_noticeCheck" + popupId).checked;
+			} else if (parent.document.getElementById("sche_inp_noticeCheck")) {					// 일정 팝업
+				isScheChecked = parent.document.getElementById("sche_inp_noticeCheck").checked;
+			} else if (parent.document.getElementById("surv_inp_noticeCheck")) {					// 설문 팝업
+				isSurvChecked = parent.document.getElementById("surv_inp_noticeCheck").checked;
+			}
 			
 			if (isChecked) {
 				setCookie("POPUP_" + popupId + "_" + userId, "1", 1); 
+			} else if (isScheChecked) {
+				setCookie("SCHE_POPUP_" + userId, "1", 1); 
+			} else if (isSurvChecked) {
+				setCookie("SURV_POPUP_" + userId, "1", 1); 
 			}
 			
 			var popupList = parent.document.getElementsByClassName("popup_notice");
 			
 			var popup = parent.document.getElementById("popup" + popupId);
-			popup.parentNode.removeChild(popup);
+			var sche_popup = parent.document.getElementById("sche_popup");
+			var surv_popup = parent.document.getElementById("surv_popup");
+			
+			if (popup) {
+				popup.parentNode.removeChild(popup);
+			} else if (sche_popup) {
+				sche_popup.parentNode.removeChild(sche_popup);
+			} else if (surv_popup) {
+				surv_popup.parentNode.removeChild(surv_popup);
+			}
 			
 			if (popupList.length < 1) {
 				hideProgress("notice");

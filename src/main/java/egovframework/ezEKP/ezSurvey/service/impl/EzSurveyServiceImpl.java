@@ -17,9 +17,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -694,6 +697,46 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		result.put("totalPages",  totalPages);
 		result.put("totalRows",   totalItems);
 		result.put("currentPage", currentPage);
+		result.put("status", "ok");
+		result.put("code", 0);
+		
+		return result;
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getPopupItems(String mode, String startDate, String endDate, LoginVO userInfo) throws Exception {
+		JSONObject result   = new JSONObject();
+		String userId       = userInfo.getId();
+		int tenantId        = userInfo.getTenantId();
+		String primary      = userInfo.getPrimary();
+		String offset       = userInfo.getOffset();
+		String offsetMinute = commonUtil.getMinuteUTC(offset);
+		
+		if (!startDate.equals("")) {
+			startDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
+			endDate   = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		map.put("primary", primary);
+		map.put("offset", offsetMinute);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("mode", mode);
+		if (mode != null && mode.equals("popup")) {
+			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
+			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+			map.put("surveyIds", listReceivedSurvey);
+			map.put("today", timeUTC);
+		}
+		List<SurveyVO> itemList = ezSurveyDAO.getTotalPopupSurveyItems(map);
+		
+		result.put("itemList", itemList);
+		result.put("userId", userId);
 		result.put("status", "ok");
 		result.put("code", 0);
 		
@@ -1416,4 +1459,5 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return ezSurveyDAO.getAllMembersOfCompany(map);
 	}
+
 }
