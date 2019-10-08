@@ -30,6 +30,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -1537,6 +1538,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return ezSurveyDAO.getSurveyParticipantListForMail(map);
 	}
 	
+	@Async
 	private void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception {
 		String userAccount = userinfo.getEmail();
 		String password = jspw;
