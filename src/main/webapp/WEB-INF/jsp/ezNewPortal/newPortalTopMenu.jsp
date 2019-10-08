@@ -633,16 +633,13 @@
 		
 		var getSurveyPopupList = function() {
 			var returnObj = {};
-			var searchObj = {
-					mode: 'popup',
-					startDate : "",
-					endDate : ""
-				};
 			
 			$.ajax({
 				type: "GET",
 				url: "/ezSurvey/getSurveyPopupItems.do",
-				data: searchObj,
+				data: {
+					mode: 'popup'
+				},
 				dataType: "JSON",
 				async: false,
 				cache: false,

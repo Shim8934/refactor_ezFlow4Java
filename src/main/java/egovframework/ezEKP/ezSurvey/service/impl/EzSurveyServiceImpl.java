@@ -710,7 +710,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getPopupItems(String mode, String startDate, String endDate, LoginVO userInfo) throws Exception {
+	public JSONObject getPopupItems(String mode, /*String startDate, String endDate,*/ LoginVO userInfo) throws Exception {
 		JSONObject result   = new JSONObject();
 		String userId       = userInfo.getId();
 		int tenantId        = userInfo.getTenantId();
@@ -720,18 +720,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		String deptId       = userInfo.getDeptID();
 		String offsetMinute = commonUtil.getMinuteUTC(offset);
 		
-		if (!startDate.equals("")) {
-			startDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
-			endDate   = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
-		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		map.put("primary", primary);
 		map.put("offset", offsetMinute);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
 		map.put("mode", mode);
+		
 		if (mode != null && mode.equals("popup")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
 			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -748,23 +743,20 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		// map.clear();
 		for (SurveyVO survey : surveyPopupList) {
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("companyId", companyId);
-			paramMap.put("tenantId", tenantId);
-			paramMap.put("userId", userId);
-			paramMap.put("deptId", deptId);
-			List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(paramMap);
-			paramMap.put("deptList", userDeptList);
-			paramMap.put("surveyId", survey.getSurveyId());
+			map.put("companyId", companyId);
+			map.put("deptId", deptId);
+			List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
+			map.put("deptList", userDeptList);
+			map.put("surveyId", survey.getSurveyId());
 			
 			// 조직도, 직위, 직책 체크
-			boolean popupYN = ezSurveyDAO.getSurveyPopupPermitYN(paramMap);
+			boolean popupYN = ezSurveyDAO.getSurveyPopupPermitYN(map);
 			
 			if (popupYN) {
 				surveyPopupListWithAuth.add(survey);
 			} else {
 				// 권한그룹 체크
-				List<String> surveyGroupList = ezSurveyDAO.getSurveyGroupList(paramMap);
+				List<String> surveyGroupList = ezSurveyDAO.getSurveyGroupList(map);
 				
 				if (surveyGroupList != null) {
 					for (String groupId : surveyGroupList) {
