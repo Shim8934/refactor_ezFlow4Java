@@ -28,6 +28,8 @@
 	                A.TENANT_ID = #tenantID#
 	            AND 
 	            	B.CN IS NULL
+	            AND
+	            	A.DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%')
         ]]>        
         <isNotEmpty property="pSearchText">
             <![CDATA[
@@ -71,6 +73,8 @@
                 A.PHYSICALDELIVERYOFFICENAME = #companyID#
             AND
                 A.TENANT_ID = #tenantID#
+            AND
+            	A.DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%')
         ]]>        
         <isNotEmpty property="pSearchText">
             <![CDATA[
@@ -203,6 +207,8 @@
 						TENANT_ID = #tenantID#
 					AND       
 						EXTENSIONATTRIBUTE2 = #companyId#
+					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 					)
 					
 					UNION ALL
@@ -246,6 +252,8 @@
 									FROM 
 										TBL_DEPTMASTER 
 									WHERE 
+										DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+									AND
 										EXTENSIONATTRIBUTE2 = #companyId#)	
 				)
 				]]>    
@@ -311,6 +319,8 @@
 					WHERE
 						CN = #deptID#
 					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+					AND
 						TENANT_ID = #tenantID#)
 					
 					UNION ALL
@@ -344,6 +354,8 @@
 									TBL_USERMASTER_RETIRE
 								WHERE
 									TENANT_ID = #tenantID#)
+				AND
+					DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%')
 				AND
 					TENANT_ID = #tenantID#)
 			]]>    
@@ -403,6 +415,8 @@
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+				AND
 					CN = 'Top')
 					
 				UNION ALL
@@ -423,6 +437,8 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 				AND
 					EXTENSIONATTRIBUTE1 = 'Top')
 				ORDER BY 
@@ -450,6 +466,8 @@
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+				AND
 					CN = #companyID#)
 					
 				UNION ALL
@@ -470,6 +488,8 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 				AND
 					EXTENSIONATTRIBUTE1 = #companyID#)
 				ORDER BY 
@@ -499,6 +519,8 @@
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
+				DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+			AND
 				CN = #deptID#)
 				
 			UNION ALL
@@ -519,6 +541,8 @@
 				TBL_DEPTMASTER A
 			WHERE
 				TENANT_ID = #tenantID#
+			AND
+				DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 			AND
 				EXTENSIONATTRIBUTE1 = #deptID#)
 			ORDER BY 
@@ -548,6 +572,8 @@
 					WHERE
 						TENANT_ID = #tenantID#
 					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+					AND
 						EXTENSIONATTRIBUTE1 = 'Top'
 					ORDER BY
 		        		A.EXTENSIONATTRIBUTE15,
@@ -572,6 +598,8 @@
 						TBL_DEPTMASTER A
 					WHERE
 						TENANT_ID = #tenantID#
+					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 					AND
 						CN IN ( SELECT
 									EXTENSIONATTRIBUTE1
@@ -600,6 +628,8 @@
 						TBL_DEPTMASTER A
 					WHERE
 						TENANT_ID = #tenantID#
+					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 					AND
 						EXTENSIONATTRIBUTE1 IN ( SELECT
 													EXTENSIONATTRIBUTE1
@@ -642,6 +672,8 @@
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+				AND
 					CN IN ( SELECT
 								EXTENSIONATTRIBUTE1
 							FROM
@@ -671,6 +703,8 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 				AND
 					EXTENSIONATTRIBUTE1 IN ( SELECT
 												EXTENSIONATTRIBUTE1
