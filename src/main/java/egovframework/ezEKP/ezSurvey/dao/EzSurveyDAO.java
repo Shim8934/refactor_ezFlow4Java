@@ -121,6 +121,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<SurveyVO>)list("EzSurveyDAO.getTotalReceivedSurveyItems", searchVO);
 	}
 	
+	public List<SurveyVO> getTotalPopupSurveyItems(Map<String, Object> map) {
+		return (List<SurveyVO>)list("EzSurveyDAO.getTotalPopupSurveyItems", map);
+	}
+
 	public void deleteItems(Map<String, Object> map) {
 		update("EzSurveyDAO.deleteItems", map);
 	}
@@ -191,10 +195,6 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	
 	public int getUserResponseCntForSurvey(Map<String, Object> map) {
 		return (int)select("EzSurveyDAO.getUserResponseCntForSurvey", map);
-	}
-
-	public List<SurveyVO> getTotalPopupSurveyItems(Map<String, Object> map) {
-		return (List<SurveyVO>)list("EzSurveyDAO.getTotalPopupSurveyItems", map);
 	}
 
 }

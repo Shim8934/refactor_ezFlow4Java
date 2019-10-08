@@ -733,9 +733,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			map.put("surveyIds", listReceivedSurvey);
 			map.put("today", timeUTC);
 		}
-		List<SurveyVO> itemList = ezSurveyDAO.getTotalPopupSurveyItems(map);
+		List<SurveyVO> surveyPopupList = ezSurveyDAO.getTotalPopupSurveyItems(map);
 		
-		result.put("itemList", itemList);
+		result.put("itemList", surveyPopupList);
 		result.put("userId", userId);
 		result.put("status", "ok");
 		result.put("code", 0);
