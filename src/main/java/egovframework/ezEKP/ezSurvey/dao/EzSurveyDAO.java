@@ -215,4 +215,12 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<String>) list("EzPersonalDAO.getSurveyGroupList", map);
 	}
 
+	
+	public List<SurveyVO> getTodaySurveyList(Map<String, Object> map) {
+		return (List<SurveyVO>) list("EzSurveyDAO.getTodaySurveyList", map);
+	}
+	
+	public List<SurveyParticipantVO> getSurveyParticipantListForMail(Map<String, Object> map) {
+		return (List<SurveyParticipantVO>) list("EzSurveyDAO.getSurveyParticipantListForMail", map);
+	}
 }
