@@ -197,4 +197,22 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (int)select("EzSurveyDAO.getUserResponseCntForSurvey", map);
 	}
 
+	public boolean getSurveyPopupPermitYN(Map<String, Object> map) {
+		try {
+			int count = (int) select("EzPersonalDAO.getSurveyPopupPermitYN", map);
+			
+			if (count > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+
+	public List<String> getSurveyGroupList(Map<String, Object> map) {
+		return (List<String>) list("EzPersonalDAO.getSurveyGroupList", map);
+	}
+
 }

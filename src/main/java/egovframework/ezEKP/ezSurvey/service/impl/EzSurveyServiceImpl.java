@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSurvey.dao.EzSurveyDAO;
@@ -71,6 +72,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@Override
 	public List<SimpleDeptVO> getAllSubDepts(String companyId, int level, String primary, int tenantId) throws Exception {
@@ -712,6 +716,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		int tenantId        = userInfo.getTenantId();
 		String primary      = userInfo.getPrimary();
 		String offset       = userInfo.getOffset();
+		String companyId    = userInfo.getCompanyID();
+		String deptId       = userInfo.getDeptID();
 		String offsetMinute = commonUtil.getMinuteUTC(offset);
 		
 		if (!startDate.equals("")) {
@@ -733,9 +739,47 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			map.put("surveyIds", listReceivedSurvey);
 			map.put("today", timeUTC);
 		}
+		
+		// 설문 팝업에 실질적으로 나타낼 리스트
+		List<SurveyVO> surveyPopupListWithAuth = new ArrayList<SurveyVO>();
+		
+		// 조직도, 직위, 직책, 권한그룹 모든 것에 해당되는 설문 목록
 		List<SurveyVO> surveyPopupList = ezSurveyDAO.getTotalPopupSurveyItems(map);
 		
-		result.put("itemList", surveyPopupList);
+		// map.clear();
+		for (SurveyVO survey : surveyPopupList) {
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("companyId", companyId);
+			paramMap.put("tenantId", tenantId);
+			paramMap.put("userId", userId);
+			paramMap.put("deptId", deptId);
+			List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(paramMap);
+			paramMap.put("deptList", userDeptList);
+			paramMap.put("surveyId", survey.getSurveyId());
+			
+			// 조직도, 직위, 직책 체크
+			boolean popupYN = ezSurveyDAO.getSurveyPopupPermitYN(paramMap);
+			
+			if (popupYN) {
+				surveyPopupListWithAuth.add(survey);
+			} else {
+				// 권한그룹 체크
+				List<String> surveyGroupList = ezSurveyDAO.getSurveyGroupList(paramMap);
+				
+				if (surveyGroupList != null) {
+					for (String groupId : surveyGroupList) {
+						boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, companyId, tenantId, userId, deptId, false);
+						
+						if (groupPermissionYN) {
+							surveyPopupListWithAuth.add(survey);
+							break;
+						}
+						
+					}
+				}
+			}
+		}
+		result.put("surveyPopupList", surveyPopupListWithAuth);
 		result.put("userId", userId);
 		result.put("status", "ok");
 		result.put("code", 0);
