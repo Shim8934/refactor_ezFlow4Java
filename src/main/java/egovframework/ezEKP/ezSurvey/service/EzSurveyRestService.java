@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezSurvey.service;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -30,6 +32,7 @@ public interface EzSurveyRestService {
 	//Survey item process(check, save, get, delete, change state)
 	public JSONObject saveSurveyItem(HttpServletRequest request, JSONObject surveyItem) throws Exception;
 	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage, int userMode) throws Exception;
+	public JSONObject getSurveyPopupItems(HttpServletRequest request, String id, String mode, String startDate, String endDate) throws Exception;
 	public JSONObject deleteItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception;
 	public JSONObject checkSurveyItems(HttpServletRequest request, String userId) throws Exception;
 	public JSONObject getSurveyInformation(HttpServletRequest request, String userId, String itemId, String mode) throws Exception;

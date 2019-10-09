@@ -235,6 +235,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		return (String) select("EzCommonDAO.selectMultiLoginUser", map);
 	}
 	
+	public boolean getPermissionGroupAccessYN(Map<String, Object> map) throws Exception {
+		int permit = (int) select("EzCommonDAO.getPermissionGroupAccessYN", map);
+		
+		if (permit > 0) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public void createTblUserMultiLogin() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblUserMultiLogin");
@@ -651,6 +661,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addMemoExtensionColumns");
 		}
 	}
+	
+	public void addSurveyAlamColums() {
+		try {
+			select("EzCommonDAO.checkSurveyAlamColums");
+		} catch (Exception e) {
+			logger.debug("tbl_survey addSurveyAlamColums doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSurveyAlamColums");
+		}
+	}
 		
 	public void addMsgInMailSearch() {
 		try {
@@ -791,4 +811,5 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblPsPopupUser");
 		}
 	}
+
 }

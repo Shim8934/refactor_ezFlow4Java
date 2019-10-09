@@ -1537,7 +1537,7 @@
 		        ListViewJikchekTD.style.display = "none";
 		        ListViewGroupTD.style.display = "block";
 		       
-		        groupMember.style.display = "block";
+		        /* groupMember.style.display = "block"; */
 		        m_selectedTree = ListViewGroup;
 		        
 		        try {
@@ -2248,7 +2248,7 @@
 		                <table id="ListViewGroupTD" style="display: none">
 		                    <tr>
 		                        <td>
-		                            <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+		                            <%-- <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 		                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
 		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
@@ -2259,8 +2259,8 @@
 		                                        </tr>
 		                                    </table>
 		                                </div>
-		                            </div>
-		                            <div style="width: 668px; height: 477px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewGroup" class="border_gray">
+		                            </div> --%>
+		                            <div style="width: 668px; height: 494px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewGroup" class="border_gray">
 		                            </div>
 		                        </td>
 		                    </tr>
