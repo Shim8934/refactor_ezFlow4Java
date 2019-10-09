@@ -4023,7 +4023,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
 		String companyId = request.getParameter("companyId");
-
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(auth.getPrimary(), auth.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (auth.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(auth.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("list", resultList);
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
@@ -4273,6 +4285,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					}
 				} else if (pClass.equalsIgnoreCase("JIKWI")) {
 					OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("001", pCn, (String) vo.getMemberCompanyID(), tenantID);
+					OrganDeptVO dept = ezOrganService.getDeptInfo(jikwiVO.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 					
 					if (jikwiVO != null) {
 						sb.append("<ROW>");
@@ -4284,10 +4297,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						sb.append("<COMPANY>"
 								+ commonUtil.cleanValue(jikwiVO.getCompanyID())
 								+ "</COMPANY>");
+						sb.append("<COMPANYNAME>"
+								+ commonUtil.cleanValue(dept.getDisplayName())
+								+ "</COMPANYNAME>");
 						sb.append("</ROW>");
 					}
 				} else if (pClass.equalsIgnoreCase("JIKCHEK")) {
 					OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("002", pCn, vo.getMemberCompanyID(), tenantID);
+					OrganDeptVO dept = ezOrganService.getDeptInfo(jikwiVO.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 					
 					if (jikwiVO != null) {
 						sb.append("<ROW>");
@@ -4299,6 +4316,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						sb.append("<COMPANY>"
 								+ commonUtil.cleanValue(jikwiVO.getCompanyID())
 								+ "</COMPANY>");
+						sb.append("<COMPANYNAME>"
+								+ commonUtil.cleanValue(dept.getDisplayName())
+								+ "</COMPANYNAME>");
 						sb.append("</ROW>");
 					}
 				}
