@@ -991,6 +991,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			}
 		}
 		
+		map.put("lang", 1);
 		//테마별 포틀릿에도 추가
 		//테마 리스트 불러오기
 		List<ThemeInfoVO> themeList = ezNewPortalDAO.getCompanyThemes(map);

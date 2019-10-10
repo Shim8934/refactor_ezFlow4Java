@@ -124,4 +124,5 @@ public interface EzEmailService {
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 	public JSONObject recallMailByMessageId(String address, String messageId) throws Exception;
 	public int getTotalUnreadCount(String userId, int tenantId) throws Exception;
+	public JSONObject getUnreadCountAll(JSONObject requestObject, String userId, Locale locale, int tenantId) throws Exception;
 }

@@ -21,16 +21,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezTalkGate.util.EzTalkGateUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -73,6 +78,12 @@ public class EzTalkGateController {
     @Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
     
+	@Autowired
+	private EzEmailService ezEmailService;
+
+	@Resource(name = "EzApprovalGService")
+	private EzApprovalGService ezApprovalGService;
+
     @RequestMapping("/ezTalkGate/tokenLogin.do")
     @ResponseBody
     public String ezTalkTokenLogin(
@@ -234,6 +245,23 @@ public class EzTalkGateController {
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(orgId, "1", tenantId);
 			String deptId = userVO.getDepartment();
 			String compId = userVO.getPhysicalDeliveryOfficeName();
+			
+			// sso 접속시에도 로그인 이력 남도록 추가  
+			String encryptPw = EgovFileScrty.encryptPassword(orgPw, orgId);
+			LoginVO setVo = new LoginVO();
+			setVo.setId(orgId);
+			setVo.setTenantId(tenantId);
+			setVo.setPassword(encryptPw);
+			
+			LoginVO vo = loginService.selectUser(setVo);
+			
+			vo.setIp(ClientUtil.getClientIP(request));
+			vo.setAgent(ClientUtil.getClientInfo(request, "agent"));
+			vo.setOs(ClientUtil.getClientInfo(request, "os"));
+			vo.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+			vo.setTenantId(tenantId);
+			
+			loginService.insertLog(vo);
 			
 			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
 			
@@ -430,6 +458,9 @@ public class EzTalkGateController {
         
         boardItem.setWriteDate(writeDate);
         
+        /* 2019-09-11 홍승비 - 톡에서 공지사항 게시물 읽을 경우, 조회수 업데이트 및 조회자 정보 삽입되도록 수정 */
+        ezBoardService.setAsRead(userInfo, boardItem.getBoardID(), boardItem.getItemID());
+        
         model.addAttribute("boardItem", boardItem);
         
 		logger.debug("showNoticeBoardItem ended.");
@@ -465,6 +496,93 @@ public class EzTalkGateController {
 		logger.debug("showNoticeBoardItemContent ended.");
 		
 		return "ezTalkGate/showNoticeBoardItemContent";
+	}
+	
+	@RequestMapping("/ezTalkGate/checkBlockedByIP.do")
+	@ResponseBody
+	public String checkBlockedByIP(@RequestParam String ezTalkId, @RequestParam String ip, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("checkBlockedByIP started.");
+		// FAIL 에러발생, 0 밴 된 유저, 1 정상 유저
+		String result = "FAIL";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+
+			logger.debug("serverName={}, tenantId={}, orgId={}, ip={}", serverName, tenantId, userId, ip);
+
+			LoginVO loginVO = new LoginVO();
+			loginVO.setId(userId);
+			loginVO.setTenantId(tenantId);
+			loginVO.setDn("NOPASSWORD");
+			loginVO = loginService.selectUser(loginVO);
+			loginVO.setIp(ip);
+
+			result = loginController.ipAccessCheck(loginVO) ? "1" : "0";
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		logger.debug("checkBlockedByIP ended. result={}", result);
+
+		return result;
+	}
+	
+	@RequestMapping("/ezTalkGate/getModuleNotice.do")
+	@ResponseBody
+	// jwseo99 리팩토링 해야됨
+	public String getModuleNotice(@RequestParam String ezTalkId, @RequestParam String type, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getModuleNotice started.");
+		String result = "FAIL";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+
+			logger.debug("serverName={}, tenantId={}, orgId={}, type={}", serverName, tenantId, userId, type);
+
+			int mailCount = 0;
+			int approvalCount = 0;
+			boolean isMailType = type.contains("M");
+			boolean isApprovalType = type.contains("A");
+			boolean firstTypeIsMail = type.startsWith("M");
+			boolean isAll = isMailType && isApprovalType;
+
+			LoginVO loginVO = new LoginVO();
+			loginVO.setId(userId);
+			loginVO.setTenantId(tenantId);
+			loginVO.setDn("NOPASSWORD");
+			loginVO = loginService.selectUser(loginVO);
+			
+			
+			if (isMailType) {
+				mailCount = (int) ezEmailService.getUnreadCountAll(null, userId, loginVO.getLocale(), tenantId).get("totalUnreadCountInAllAccounts");
+			}
+
+			if (isApprovalType) {
+				approvalCount = ezApprovalGService.getWebPartListCount("1", userId, loginVO.getDeptID(), "", "COUNT", "", loginVO.getCompanyID(), "1", tenantId, "");
+			}
+			
+			if (isAll) {
+				if (firstTypeIsMail) {
+					result = String.format("%d/%d", mailCount, approvalCount);
+				} else {
+					result = String.format("%d/%d", approvalCount, mailCount);
+				}
+			} else {
+				result = Integer.toString(Math.max(mailCount, approvalCount));
+				
+				
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		logger.debug("getModuleNotice ended. result={}", result);
+
+		return result;
 	}
 	
 	private boolean checkIfUserExists(String id, String pw, int tenantId) throws Exception {

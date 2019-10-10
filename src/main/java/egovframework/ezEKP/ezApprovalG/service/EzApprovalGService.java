@@ -63,7 +63,7 @@ public interface EzApprovalGService {
 
 	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getDocType(String selected, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
+	public String getDocType(String selected, String companyID, String lang, int tenantID, Locale locale, String approvalFlag) throws Exception;
 	
 	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception;
 
@@ -604,6 +604,8 @@ public interface EzApprovalGService {
 	 */
 	boolean isReformTempDoc(String docSN, String companyId, int tenantId) throws Exception;
 
+	boolean isReformTempDoc(String formUrl) throws Exception;
+
 	/**
 	 * 결재 문서 양식의 폼빌더 여부를 반환
 	 * 
@@ -656,4 +658,6 @@ public interface EzApprovalGService {
 	public String getProxyUser2(String userID, String userLang, int tenantID, String offset) throws Exception;
 
 	public List<ApprGProxyVO> getProxyUserInfo(String userID, String userLang, int tenantID, String offSet) throws Exception;
+	
+	public String enforceSihangDoc(String formURL, String docHref, String realPath, Locale locale, String companyID, int tenantID) throws Exception;
 }

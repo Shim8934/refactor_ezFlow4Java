@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
@@ -92,6 +93,9 @@ public class MLoginGWController {
     
     @Autowired
     private EzEmailUtil ezEmailUtil;
+    
+    @Autowired
+	private EzOrganAdminService ezOrganAdminService;
     
     /**
 	 * 모바일 G/W 사용자 [GET] 로그인
@@ -289,6 +293,21 @@ public class MLoginGWController {
     	        	        return result;
     	    			}
     	    		}
+    	    		
+    	    		// 사용자정지 여부를 체크
+    	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+    	        	
+    	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
+    	        		int flag = checkStopUser(tenantId, resultVO.getId());
+    	        		if(flag > 0) {
+    	        			LOGGER.debug("stopUser");
+    	        			result.put("status", "error");
+        					result.put("code", "8");			
+        					result.put("data", "stopUser");
+        					
+        					return result;
+    	        		}
+    	        	}
     				
     				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
                 	
@@ -449,6 +468,8 @@ public class MLoginGWController {
         					String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
         					/* 2018-11-02 배현상 - 공유결재문서 사용 유무 YES or NO */
         					String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", tenantId);
+        					/* 2019-08-30 김수아 - 모바일 세션 시간 config - useMobileSession */
+        					String useSessionMobile = ezCommonService.getTenantConfig("useSessionMobile", tenantId);
         					
         					Map<String, Object> map = new HashMap<String, Object>();
         					map.put("uid", uid);
@@ -463,6 +484,7 @@ public class MLoginGWController {
         					map.put("companyID", resultVO.getCompanyID());
         					map.put("primaryLang", primaryLang);
         					map.put("rollInfo", resultVO.getRollInfo());
+        					map.put("useSessionMobile", useSessionMobile);    				
         					
         					// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
         					Map<String, Object> mapSSO = new HashMap<String, Object>();
@@ -777,6 +799,11 @@ public class MLoginGWController {
     	LOGGER.debug("ipAccessCheck ended.");
     	return returnValue;
     }
+    
+    private int checkStopUser(int tenantID, String userID) throws Exception {
+    	int flag = ezOrganAdminService.checkStopUser(userID, tenantID);
+    	return flag;
+    }   
     
     private long changeIPtoInteger(String changeIP) throws Exception {
     	String[] iparr = changeIP.split("\\.");

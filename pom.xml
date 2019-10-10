@@ -44,6 +44,16 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+                <repository>
+                        <id>egovframe2</id>
+                        <url>http://maven.egovframe.kr:8080/maven/</url>
+                        <releases>
+                                <enabled>true</enabled>
+                        </releases>
+                        <snapshots>
+                                <enabled>false</enabled>
+                        </snapshots>
+                </repository>
 	</repositories>
 
 	<dependencies>
@@ -403,9 +413,9 @@
 		<dependency>
 			<groupId>kr.dogfoot.hwplib</groupId>
 			<artifactId>hwplib</artifactId>
-			<version>1.5</version>
+			<version>1.6</version>
 			<scope>system</scope>
-			<systemPath>${webappLib}/hwplib-1.5.jar</systemPath>
+			<systemPath>${webappLib}/hwplib-1.6.jar</systemPath>
 		</dependency>
 		<!-- apach httpclient : restTemplate에 httpMethod patch 적용-->
 		<dependency>

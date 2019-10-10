@@ -276,9 +276,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				}
 				
 				// 레코드가 하나씩 삭제될 때마다 즉시 반영되도록 하기 위해 Service Layer를 거치지 않고 직접 DAO에 접근하도록 함.
-				ezEmailDAO.deleteOrphanedMailBlob(mailBlobVO);
-				
-				Thread.sleep(500);
+				long sleepTime = ezEmailDAO.deleteOrphanedMailBlob(mailBlobVO);
+								
+				Thread.sleep(sleepTime);
 			}
 		}
 		
@@ -617,7 +617,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 							//보낸편지함에 저장
 							ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 									userAccount, password, egovMessageSource, locale, ezEmailUtil);
-							Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+							Folder folder = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
 							
 							if (folder.exists()) {
 								message.setFlag(Flags.Flag.SEEN, true);

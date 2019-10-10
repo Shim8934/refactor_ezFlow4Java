@@ -1,6 +1,11 @@
 package egovframework.ezEKP.ezPortal.service.impl;
 
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -3993,5 +3999,248 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
 		return ezPortalDAO.getAllCompanyList(map);
+	}
+	
+	/**
+	 *  통합검색 - 검색엔진 URL 만들기
+	 *  w : 검색영역
+	 *	q : 검색어
+	 *	csq : 제목, 내용, 첨부에서 찾을 내용
+	 *	outmax : 출력 갯수
+	 *	pg : page 번호
+	 *	view : 권한 aa|bb|cc 의 형태 생성
+	 *	d1 : 검색범위(날짜)
+	 *	dsort : 정렬
+	 * */
+	public String getTotalSearchURL(LoginVO userInfo, Map<String, Object> param) throws Exception {
+		
+		StringBuffer queryStr = new StringBuffer();
+		String type = (String) param.get("type") != null ? (String) param.get("type") : "";
+		String keyword = (String) param.get("keyword") != null ? (String) param.get("keyword") : "";
+		String searchRange = (String) param.get("searchRange") != null ? (String) param.get("searchRange") : "";
+		String startDate = (String) param.get("startDate") != null ? (String) param.get("startDate") : "";
+		String endDate = (String) param.get("endDate") != null ? (String) param.get("endDate") : "";
+		String automax = (String) param.get("automax") != null ? (String) param.get("automax") : "";
+		String userID = userInfo.getId();
+		String page = (String) param.get("page") != null ? (String) param.get("page") : "";
+		int tenantID = (int) userInfo.getTenantId() ;
+		String companyID = (String) userInfo.getCompanyID();
+
+		logger.debug("companyID : " + companyID);
+		
+		// 검색 위치 필수값.
+		if(type.equalsIgnoreCase("approval")) {
+			queryStr.append("?w=approval");
+		} else if (type.equalsIgnoreCase("board")) {
+			queryStr.append("?w=board");
+		}
+		
+		// base64 디코더를 사용하지 않으면 필수로 넣어야함.
+		queryStr.append("&base64=n");
+		
+		// section test
+		//queryStr.append("&section=title");
+		
+		// 한 페이지에 출력되는 리스트 갯수
+		// default : 10
+		if(automax!= ""){
+			queryStr.append("&outmax=").append(automax);
+		}
+		
+		// 원하는 페이지 번호
+		queryStr.append("&pg=").append(page);		
+		
+		// 날짜 정렬 11 내림차순, 10 오름차순
+		queryStr.append("&dsort=11");		
+		
+		// 키워드는 필수값.
+		queryStr.append("&q=");
+		
+		/**
+		 * UTF-8 인코딩을 해서 넘겨줘야함.
+		 * 1. title:제목, 2.content:내용, 3.attach:첨부, 4.name:작성자, 5.dept:부서
+		 * */ 		
+		keyword = URLEncoder.encode(keyword, "UTF-8");
+		
+		queryStr.append(keyword);
+		logger.debug("searchRange : " + searchRange);
+		// 범위 '전체'는 포함되지 않음.
+		
+		if(!searchRange.equalsIgnoreCase("ALL")) {
+			StringBuffer csq = new StringBuffer();
+			String range[] = searchRange.split("\\|");
+			List<String> rangeList = new ArrayList<String>();
+
+			for(int i=0; i<range.length; i++) {
+				if(range[i].equalsIgnoreCase("TITLE")) {
+					rangeList.add("{title:" + keyword + "}");
+				} else if(range[i].equalsIgnoreCase("CONTENTS")) {
+					rangeList.add("{contents:" + keyword + "}");
+				} else if(range[i].equalsIgnoreCase("ATTACH")) {
+					rangeList.add("{attach:" + keyword + "}");
+				} else if(range[i].equalsIgnoreCase("WRITER")) {
+					rangeList.add("{name:" + keyword + "}");
+				}
+			}
+			
+			csq.append("&csq=");
+			csq.append("(");
+			for(int i=0; i<rangeList.size(); i++) {
+				if(i==0) {
+					csq.append(rangeList.get(i));
+				} else {
+					csq.append(" ^[OR ");
+					csq.append(rangeList.get(i));
+				}
+			}
+			csq.append(")");
+			//TENANT_ID, COMPANYID 설정
+			csq.append(" ^[AND {tenant:").append(tenantID+"").append("}");
+			
+			if(type.equalsIgnoreCase("approval")) {
+				csq.append(" ^[AND {company:").append(companyID).append("}");
+			}
+			
+			queryStr.append(csq);
+		} else {
+			//TENANT_ID, COMPANYID 설정
+			queryStr.append("&csq={tenant:").append(tenantID+"").append("}");
+			
+			if(type.equalsIgnoreCase("approval")) {
+				queryStr.append(" ^[AND {company:").append(companyID).append("}");
+			}
+		}
+		
+
+		// 권한 체크
+		if(queryStr.toString().contains("&csq=")) {
+			queryStr.append(" ^[AND {view:"+userID+"}");
+		} else {
+			queryStr.append("&csq={view:"+userID+"}");
+		}
+		
+		if(startDate != "" && endDate != "" ) {
+			
+			String dateRange = "";
+			
+			startDate = startDate.replaceAll("-", "");
+			endDate = endDate.replaceAll("-", "");
+			
+			dateRange = startDate + "~" + endDate;
+			queryStr.append("&d1=");
+			queryStr.append(dateRange);
+		}
+		
+		logger.debug("queryStr : " + queryStr.toString());
+		
+		return queryStr.toString();
+	}
+	
+	
+	/**
+	 * 통합검색 - 검색엔진 서버에 검색 결과 호출하기.
+	 * */
+	public Map<String, Object> callSearchServerForResult(String searchURL, String offset) throws Exception {
+		
+		Map<String, Object> ret = new HashMap<String, Object>();
+		
+		//접속하고자 하는 url.
+		String totalSearchURL = config.getProperty("config.totalSearchURL");
+		// 중간에 인코딩되지 않은 공백이 있기 때문에 강제 변환.
+		String urlStr = totalSearchURL + searchURL.replaceAll(" ", "%20");
+		logger.debug("urlStr : " + urlStr);
+		URL url = new URL(urlStr);
+		URLConnection conn = url.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestProperty("content-type", "text/xml");
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+
+		String inputLine;
+		StringBuffer sb = new StringBuffer();
+		
+		// 내용을 저장한다.
+		while((inputLine = in.readLine()) != null) {
+			sb.append(inputLine.trim());
+		}
+		
+		// List 데이터 변환
+		int totcnt = getCntTotalSearchResult(sb.toString());
+		List<Map<String, Object>> retList = converTotalSearchResult(sb.toString(), offset);
+		
+		ret.put("totcnt", totcnt);
+		ret.put("list", retList);
+		
+		return ret;
+	}
+	
+	/**
+	 * 통합검색 - 리스트 총 갯수 확인
+	 * */
+	public int getCntTotalSearchResult(String searchResult) throws Exception {
+	
+		Document xmlDom = commonUtil.convertStringToDocument(searchResult);
+		
+		int cnt = Integer.parseInt(xmlDom.getElementsByTagName("totcnt").item(0).getTextContent());
+		
+		return cnt;
+	}
+	
+	/**
+	 * 통합검색 - xml 데이터 파싱
+	 * */
+	public List<Map<String, Object>> converTotalSearchResult(String searchResult, String offset) throws Exception {
+
+		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+		
+		Document xmlDom = commonUtil.convertStringToDocument(searchResult);
+		NodeList docList = xmlDom.getElementsByTagName("doc");
+		//String totalCnt = xmlDom.getElementsByTagName("totcnt").item(0).getTextContent();
+		
+		//logger.debug("totalCnt : " + totalCnt);
+		
+		int dListLen = docList.getLength();
+		
+		for(int i=0; i<dListLen; i++){
+			int childLen = docList.item(i).getChildNodes().getLength();
+			NodeList childNodeList = docList.item(i).getChildNodes();
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			for(int j=0; j<childLen; j++) {
+				String key = childNodeList.item(j).getAttributes().getNamedItem("name").getTextContent().replaceAll("\\^", "").replaceAll(":","");
+				String value = childNodeList.item(j).getFirstChild() != null ? childNodeList.item(j).getFirstChild().getNodeValue() : "";
+				
+				// WriteDate, StartDate, EndDate
+				if (key.equalsIgnoreCase("WriteDate") || key.equalsIgnoreCase("StartDate") || key.equalsIgnoreCase("EndDate")) {
+					if(value != null && !value.equalsIgnoreCase("")) {
+						value = commonUtil.getDateStringInUTC(value.substring(0,16), offset, false);
+						logger.debug("return value: " + value);
+					}
+				}
+				// trim()으로 제거되지 않는 앞뒤 공백제거.
+				value = value.replaceAll("(^\\p{Z}+|\\p{Z}+$)", "");
+				map.put(key, value);
+			}
+			list.add(map);
+		}
+		
+		//logger.debug("arrayList : " + list.toString());
+		
+		return list;
+	}
+	
+	/**
+	 * 통합검색 - 게시물 읽기 권한 확인
+	 * */
+	public String chkBoardReadAuthor(String boardID, String accessID, int tenantID) throws Exception {
+	
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("boardID", boardID);
+		param.put("accessID", accessID);
+		param.put("tenantID", tenantID);
+		
+		String readFlag = ezPortalDAO.chkBoardReadAuthor(param) != null ? ezPortalDAO.chkBoardReadAuthor(param) : "";
+		
+		return readFlag;
 	}
 }

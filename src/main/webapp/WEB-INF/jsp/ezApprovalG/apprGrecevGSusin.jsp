@@ -1033,7 +1033,15 @@
 		    	}
 		        var hesongok = true;
 		        if (ret != "cancel") {
-		            setButtonReceiveTrue();
+		            
+					var RtnVal = ExcuteInfo("HESONG_BEFORE", "");
+		        	
+		        	if (!RtnVal) {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t7'/>");
+		                return;
+		            }
+		        	
+		        	setButtonReceiveTrue();
 		
 		            if (temppDocSN != "")
 		                hesongok = setCabinetHeSong(temppDocSN);

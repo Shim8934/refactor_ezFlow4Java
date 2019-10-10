@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.FavoriteBoardVO;
@@ -144,6 +145,9 @@ public class EzNewPortalGWController {
 
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+
+	@Autowired
+	private EzEmailService ezEmailService;
 
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -793,6 +797,22 @@ public class EzNewPortalGWController {
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
 			}
+			//2019-09-20 메신저 다운로드 부분 추가
+			String useUtilTalk = ezCommonService.getTenantConfig("useUtilTalk", tenantId);
+			if (useUtilTalk == null || useUtilTalk.equals("")) {
+				useUtilTalk = "NO";
+			} else {
+				String talkFilePath = ezCommonService.getTenantConfig("talkFilePath", tenantId);				
+				data.put("talkFilePath", talkFilePath);
+			}
+			data.put("useUtilTalk", useUtilTalk);
+			//2019-10-04 통합검색 부분 추가
+			String useTotalSearch = ezCommonService.getTenantConfig("useTotalSearch", tenantId);
+			if (useTotalSearch == null || useTotalSearch.equals("")) {
+				useTotalSearch = "NO";
+			}
+			data.put("useTotalSearch", useTotalSearch);
+			
 			
 			/**
 			 * 4) 팝업 공지
@@ -1603,20 +1623,14 @@ public class EzNewPortalGWController {
 
 			// 읽지 않은 메일 가져오기
 			if (useMail.equals("YES")) {
-				IMAPAccess ia = null;
-				String folderName = "INBOX";
 				int unreadMailCount = 0;
 
 				try {
-					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
-					unreadMailCount = ia.getUnreadCount(folderName);
+					unreadMailCount = (int) ezEmailService.getUnreadCountAll(null, userId, locale, tenantId).get("totalUnreadCountInAllAccounts");
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					if (ia != null) {
-						ia.close();
-					}
 				}
+
 				data.put("unreadMailCount", unreadMailCount);
 			}
 
@@ -3085,18 +3099,24 @@ public class EzNewPortalGWController {
 				LOGGER.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);
 
 				Folder folder = ia.getFolder(folderPath);
+				
+				// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+				// 통해 비효율적으로 구하는 관계로 folder open 전에 호출함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+				// 더 효율적임.				
+				int unreadCount = ia.getUnreadCount(folderPath);
+				
 				folder.open(Folder.READ_ONLY);
 
 				Message[] messages = null;
 
 				// set mailCount
 				int mailCount = 7;
-				int unreadCount = ia.getUnreadCount(folderPath);
+
 				// if (unreadCount < mailCount) {
 				// mailCount = unreadCount;
 				// }
 
-				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId());
+				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId());
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));

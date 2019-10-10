@@ -257,6 +257,11 @@ public class EzEmailMailSearchController {
 		Date startDateObj = startDate.equals("") ? null : sdfForParsing.parse(startDate);
 		Date endDateObj = endDate.equals("") ? null : new Date(sdfForParsing.parse(endDate).getTime() + 60*60*24*1000);
 		
+		// 가온누리에서 분석 결과 endDate가 없는 경우 null보다 현재 시각으로 지정하는 것이 성능이 훨씬 좋게 나와 추가함.
+		if (endDateObj == null) {
+			endDateObj = new Date();
+		}
+		
 		String returnData = "";
 		IMAPAccess ia = null;
 		

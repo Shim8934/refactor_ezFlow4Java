@@ -216,7 +216,7 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
 		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
 		model.addAttribute("useCountryIP", useCountryIP);
-		model.addAttribute("systemCountryCode", systemCountryCode);
+		model.addAttribute("systemCountryCode", systemCountryCode.toLowerCase());
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
@@ -336,7 +336,7 @@ public class EzEmailMailListController {
 					+ ",isAscending=" + isAscending + ",startNo=" + startNo + ",endNo=" + endNo + ",listCount=" + listCount);
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
-			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, null, false, 
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, new Date(), false, 
 					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
 			
 			totalCount = (int)extraMap.get("totalCount");
@@ -585,10 +585,14 @@ public class EzEmailMailListController {
 				sb.append("</response>");
 			}
 			
+			// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+			// 통해 비효율적으로 구하는 관계로 여기서 folder를 close 하도록 수정함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+			// 더 효율적임.			
+			folder.close(false);
+			
 			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
 					start, end, totalCount, folder.getMessageCount(), folder.getUnreadMessageCount()));
 			sb.append("</maillist>");
-			folder.close(false);
 			
 			// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
@@ -634,6 +638,7 @@ public class EzEmailMailListController {
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
 		String useCountryIP = ezCommonService.getTenantConfig("useCountryIP", userInfo.getTenantId());
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -744,7 +749,7 @@ public class EzEmailMailListController {
 			}
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
-			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, null, false, 
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, new Date(), false, 
 					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
 			
 			totalCount = (int)extraMap.get("totalCount");
@@ -848,20 +853,46 @@ public class EzEmailMailListController {
 				
 				// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
 				if (useCountryIP.equals("YES")) {
+					String countryCode = "";
+					String countryName = "";
 					try {
 						String[] ctryCode = message.getHeader("X-Jmocha-Country-Code");
-						String countryCode = "";
+						String[] mailIp = message.getHeader("X-Jmocha-IP");
+						String systemLang = userInfo.getLang();
 						
-						if (ctryCode != null && ctryCode[0] != null) {
-							countryCode = ctryCode[0].toLowerCase();
+						if (mailIp != null && !mailIp[0].equals("")) {
+							sb.append(String.format("<mailIP><![CDATA[%s]]></mailIP>", mailIp[0]));
 						}
 						
+						if (ctryCode != null && ctryCode[0] != null) {
+							String systemCountryName = "";
+							switch (systemLang) {
+								case "1":
+									systemCountryName = "ko";
+									break;
+								case "2":
+									systemCountryName = "en";
+									break;
+								case "3":
+									systemCountryName = "ja";
+									break;
+								default:
+									systemCountryName = "kr";
+									break;
+							}
+							Locale localeCountry = new Locale(systemCountryName, ctryCode[0]);
+							countryName = localeCountry.getDisplayCountry(localeCountry);
+							countryName = countryName.replaceAll(" ", "");
+							countryCode = ctryCode[0].toLowerCase();
+						}
+						sb.append(String.format("<countryName><![CDATA[%s]]></countryName>", countryName));
 						sb.append(String.format("<countryCode><![CDATA[%s]]></countryCode>", countryCode));
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
-				
+				sb.append(String.format("<systemCountryCode><![CDATA[%s]]></systemCountryCode>", systemCountryCode.toLowerCase()));
 				sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 				sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
@@ -935,12 +966,15 @@ public class EzEmailMailListController {
 				sb.append("</response>");
 			}
 			
+			// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+			// 통해 비효율적으로 구하는 관계로 여기서 folder를 close 하도록 수정함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+			// 더 효율적임.
+			folder.close(false);
+			
 			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
 					start, end, totalCount, folder.getMessageCount(), folder.getUnreadMessageCount()));
 			sb.append("</maillist>");
 		    
-			folder.close(false);
-			
 			// skyblue0o0 20180402 : 특정 유니코드 문자 포함 시 xml파싱 에러나서 빈칸으로 치환
 			returnData = sb.toString().replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", " ");
 			
@@ -1659,15 +1693,20 @@ public class EzEmailMailListController {
 					
 			logger.debug("mailPercent=" + mailPercent + ",mailboxDetail=" + mailboxDetail + ",mailboxQuotaStr=" + mailboxQuotaStr);		
 			
-			Folder folder = ia.getFolder(folderPath);		
+			Folder folder = ia.getFolder(folderPath);
+			
+			// Folder.getUnreadMessageCount() 메소드 동작 방식이 folder가 open 상태일 때는 읽지 않은 메일 갯수를 IMAP search 명령을
+			// 통해 비효율적으로 구하는 관계로 folder open 전에 호출함. open 상태가 아닐 때는 IMAP status 명령을 사용하며 status 명령이
+			// 더 효율적임.							
+ 			int unreadCount = ia.getUnreadCount(folderPath);
+ 			
 			folder.open(Folder.READ_ONLY);
 	        
 	        Message[] messages = null;
 	        
  			int mailCount = 7;
- 			int unreadCount = ia.getUnreadCount(folderPath);
  			
-	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, 
+	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, 
 	        		false, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
 	        
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");

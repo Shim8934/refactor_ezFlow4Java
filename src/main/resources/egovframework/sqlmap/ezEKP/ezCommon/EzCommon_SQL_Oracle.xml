@@ -8,6 +8,7 @@
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
 	<typeAlias  alias="CompanyInfoVO" 				type="egovframework.ezEKP.ezCommon.vo.CompanyInfoVO"/>
+	<typeAlias  alias="CountryVO" 					type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
@@ -667,14 +668,12 @@
 	
 	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
 		<![CDATA[
-			SELECT 
-					COLUMN_NAME 
+			SELECT
+				HOLIDAYFLAG
 			FROM 
-					ALL_TAB_COLUMNS
-			WHERE 
-					TABLE_NAME = 'TBL_HOLIDAYLIST'
-			AND 
-					COLUMN_NAME = 'HOLIDAYFLAG'
+				TBL_HOLIDAYLIST
+			where 
+				ROWNUM <= 1			
 		]]>
 	</select>
 	
@@ -687,14 +686,12 @@
 	
 	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
 		<![CDATA[
-			SELECT 
-					COLUMN_NAME 
+			SELECT
+				HOLIDAYREPEAT
 			FROM 
-					ALL_TAB_COLUMNS
-			WHERE 
-					TABLE_NAME = 'TBL_HOLIDAYLIST'
-			AND 
-					COLUMN_NAME = 'HOLIDAYREPEAT'
+				TBL_HOLIDAYLIST
+			where 
+				ROWNUM <= 1			
 		]]>
 	</select>
 	
@@ -1415,6 +1412,24 @@
 			(#portletId#, #companyId#, #tenantId#, #companyId#, 1, 0)
 	</insert>
 
+	<select id ="EzCommonDAO.getCountryInfo" resultClass="CountryVO" parameterClass="Map">
+		<![CDATA[
+			SELECT 
+				START_IP startIP,
+				END_IP endIP,
+				START_IP_NUMBER startIPNumber,
+				END_IP_NUMBER endIPNumber,
+				COUNTRY_CODE countryCode,
+				COUNTRY_NAME countryName
+			FROM
+				JMOCHA_MAIL_COUNTRYIP 
+			WHERE 
+				START_IP_NUMBER <= #changeIp#
+			AND 
+				END_IP_NUMBER >= #changeIp#
+		]]>
+	</select>
+
 	<select id="EzCommonDAO.checkTblAccessCountry">
 		<![CDATA[
 		SELECT 
@@ -1451,4 +1466,5 @@
 		ADD 
 			sn INT DEFAULT 0
 	</statement>
+
 </sqlMap>

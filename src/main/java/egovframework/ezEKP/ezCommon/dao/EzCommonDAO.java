@@ -20,6 +20,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
@@ -856,6 +857,10 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	
 	private String checkPortletForComapny(Map<String, Object> map) {
 		return (String) select("EzCommonDAO.checkPortletForComapny", map);
+	}
+
+	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception {
+		return (List<CountryVO>) list("EzCommonDAO.getCountryInfo",map);
 	}
 
 	public void createTblAccessCountry() throws Exception {

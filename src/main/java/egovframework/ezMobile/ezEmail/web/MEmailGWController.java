@@ -555,6 +555,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
 			
+			if (ed == null) {
+				ed = new Date();
+			}
+			
 			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, sd, ed, searchSubFolder, 
 					isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId());
 			

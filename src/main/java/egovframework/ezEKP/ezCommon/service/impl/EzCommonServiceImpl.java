@@ -52,6 +52,7 @@ import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
@@ -1607,6 +1608,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addThemeContentLang() throws Exception {
 		ezCommonDAO.addThemeContent2();
 		ezCommonDAO.addThemeContent3();
+	}
+
+	@Override
+	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception {
+		return ezCommonDAO.getCountryInfo(map);
 	}
 	
 	@Override

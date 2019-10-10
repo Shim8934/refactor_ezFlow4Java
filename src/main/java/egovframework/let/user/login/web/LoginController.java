@@ -114,6 +114,16 @@ public class LoginController {
         int tenantId = loginService.getTenantId(serverName);
         
         logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
+    	String mobileRedirection = ezCommonService.getTenantConfig("mobileRedirection", tenantId);
+    	String userOs = ClientUtil.getClientInfo(request, "os");
+    	
+    	if (userOs.equals("iPhone") || userOs.equals("Android") || userOs.equals("BlackBerry") || userOs.equals("iPod") || userOs.equals("iPad")) {
+    		logger.debug("mobileRedirection : " + mobileRedirection);
+    		if (!mobileRedirection.equals("") && !mobileRedirection.equals("*")) {
+    			response.sendRedirect(mobileRedirection);
+    			return null;
+    		}
+    	}
     	
         String ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", tenantId);
         
@@ -198,12 +208,12 @@ public class LoginController {
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
-		
 		if (_uid == null || _uid.equals("")) {
 		    logger.debug("invalid _uid=" + _uid);		    
 		    return "";
 		}
 		
+		String loginId = _uid;
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
         int tenantId = loginService.getTenantId(serverName);
@@ -467,10 +477,26 @@ public class LoginController {
     	        		diff = 1;
     	        	}
     	        	
+    	        	// 사용자정지 여부를 체크
+    	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+    	        	
+    	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
+    	        		int flag = checkStopUser(tenantId, resultVO.getId());
+    	        		if(flag > 0) {
+    	        			model.addAttribute("message", "stopUser");
+    	        			return "forward:/user/login/login.do";
+    	        		}
+    	        	}
+    	        	
     				//0보다 작아지면 패스워드 변경기한 Expired
-    				if (diff <= 0) {				
+    	        	//패스워드 다음에 변경 기능 추가. 2019-09-17 홍대표
+    	        	String passwordUpdateNextTime = request.getParameter("nextTime") != null ? request.getParameter("nextTime") : "";
+    				if (diff <= 0 && !passwordUpdateNextTime.equals("YES")) {				
     					model.addAttribute("isExpireDate", "Y");
     					model.addAttribute("userId", _uid);
+    					model.addAttribute("encryptID", loginVO.getEncryptID());
+    					model.addAttribute("encryptPass", loginVO.getEncryptPass());
+    					model.addAttribute("loginId", loginId);
     					
     		        	return "forward:/user/login/login.do";
     				} else {			
@@ -769,7 +795,8 @@ public class LoginController {
 		}
 		
 		// Cookie 생성
-		String cInfo = serverName + "///" + userId + "///" + encryptedUserPw + "///" + ipAddress + "///" + userPw + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID;
+		//2019-09-16 김보미 - 사용하지 않으므로 패스워드 부분 주석 : userPw 값이 '/'로 끝나면 나중에 "///"으로 split할때 locale앞에 '/'가 붙어 문제 발생 
+		String cInfo = serverName + "///" + userId + "///" + "encryptedUserPw" + "///" + ipAddress + "///" + "userPw" + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId+ "///" + deptID + "///" + companyID;
 		String loginCookie = egovFileScrty.encryptAES(cInfo);
 		
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);
@@ -1006,6 +1033,11 @@ public class LoginController {
         } 
     }   
     
+    private int checkStopUser(int tenantID, String userID) throws Exception {
+    	int flag = ezOrganAdminService.checkStopUser(userID, tenantID);
+    	return flag;
+    }   
+    
     private long changeIPtoInteger(String changeIP) throws Exception {
     	String[] iparr = changeIP.split("\\.");
     	long returnChangeIp = 0;
@@ -1019,5 +1051,4 @@ public class LoginController {
 		
 		return returnChangeIp;
     }
-
 }

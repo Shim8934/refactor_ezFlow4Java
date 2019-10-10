@@ -143,11 +143,32 @@ public class EzEmailUtil {
 	@Value("#{cryptos['EzEmailUtil.apb']}")
 	private String apb;
 	
+	public String getMailHeaderPath(long mailboxId, long mailUid) {
+		String realPath = config.getProperty("data_root");
+		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
+		String parentFolderName = String.valueOf(mailUid % 100);
+		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
+							realPath, "/fileroot/mail", mailboxParentFolderName, mailboxId, parentFolderName, mailUid);
+		String headerPath = String.format("%s.%s", mailPath, "head");
+
+		return headerPath;
+	}
+
+	public String getMailBodyPath(long mailboxId, long mailUid) {
+		String realPath = config.getProperty("data_root");
+		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
+		String parentFolderName = String.valueOf(mailUid % 100);
+		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
+							realPath, "/fileroot/mail", mailboxParentFolderName, mailboxId, parentFolderName, mailUid);
+		String bodyPath = String.format("%s.%s", mailPath, "body");
+
+		return bodyPath;
+	}
+	
 	public String getInboxFolderId() {
 		return "INBOX";
 	}
-	
-	
+		
 	public String getSentFolderId(Locale locale) {
 		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
 		
@@ -1937,7 +1958,7 @@ public class EzEmailUtil {
     		
     		logger.debug("folderPath=" + folderPath);
     		
-    		messages = advancedSearchFolder(ia, userAccount, folderPath, searchField, searchValue, startDate, endDate, 
+    		messages = advancedSearchFolder(ia, userAccount, folder, folderPath, searchField, searchValue, startDate, endDate, 
     				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap);
     		
     		// pre-fetch
@@ -2432,6 +2453,7 @@ public class EzEmailUtil {
 	public Message[] advancedSearchFolder(
 			IMAPAccess ia,
 			String userAccount,
+			Folder folder,
 			String folderPath, 
 			String[] searchField, 
 			final String[] searchValue,
@@ -2468,6 +2490,10 @@ public class EzEmailUtil {
 		Folder mailFolder = null;
 		Message message = null;
 		
+		// 폴더 오픈 시 IMAP select 커맨드가 호출되는데 폴더 안에 메일이 많은 경우 오버헤드가 큰 관계로
+		// 패러메터로 넘어온 이미 오픈된 folder를 folderMap에 미리 넣는다.
+		folderMap.put(folderPath, folder);
+
 		for (String mailUrl : mailList) {
 			mailFolderPath = mailUrl.split("/")[0];
 			mailUid = Long.parseLong(mailUrl.split("/")[1]);

@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -3107,6 +3107,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public String getReformFlag(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getReformFlag", map);
+	}
+	
+	public String getReformFlagOfTempDoc(String formUrl) throws Exception {
+		return (String) select("EzApprovalG.getReformFlagOfTempDoc", Collections.singletonMap("formUrl", formUrl));
 	}
 	
 	public ApprGFormVO getReformInfoForApprovalDocument(Map<String, Object> map) throws Exception {
