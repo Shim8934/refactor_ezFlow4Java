@@ -895,6 +895,32 @@
 		delete from tbl_survey_option where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
 	</delete>
 	
+	<select id="EzSurveyDAO.getMailSentFlag" parameterClass="SurveyVO" resultClass="Integer">
+		SELECT 
+			mail_sent_flag
+		FROM 
+			tbl_survey
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</select>
+	
+	<update id="EzSurveyDAO.updateMailSentFlag" parameterClass="Map">
+		UPDATE 
+			tbl_survey
+		SET 
+			mail_sent_flag = #mailSentFlag#
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</update>
+	
 	<!--***********************************************************************************
 	**                                Attach item process                                **
 	************************************************************************************-->

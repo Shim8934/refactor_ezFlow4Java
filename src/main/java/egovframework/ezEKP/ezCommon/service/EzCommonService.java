@@ -151,5 +151,7 @@ public interface EzCommonService {
 	public void createPersonalPopupUser() throws Exception;
 
 	public boolean getPermissionGroupAccessYN (String groupId, String companyId, int tenantId, String userId, String deptId, boolean applySubDeptYN) throws Exception;
+	
+	public void addSurveyMailSentFlagColumn() throws Exception;
 }
 

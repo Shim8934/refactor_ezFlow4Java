@@ -188,10 +188,20 @@
 	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "JIKWI") {
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA6>";
-	                        	pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        	
+	                        	if (companyId == "Top") {
+	                        		pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + " (" + getNodeText(GetChildNodes(nodes[i])[4]) + ")</VALUE></CELL></ROW>";
+	                        	} else {
+	                        		pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        	}
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "JIKCHEK") {
 	                        	pparsingXML = pparsingXML + "<DATA6>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA6>";
-	                        	pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        	
+	                        	if (companyId == "Top") {
+		                        	pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + " (" + getNodeText(GetChildNodes(nodes[i])[4]) + ")</VALUE></CELL></ROW>";
+	                        	} else {
+		                        	pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
+	                        	}
 	                        }
 	                    }
 	                              
@@ -1237,11 +1247,13 @@
                     var strName = "";
                     var strId = "";
                     var jikwiCompanyID = "";
+                    var jikwiCompanyName = "";
     	            if (arrRows.length > 0) {
     	            	for (var i = 0; i < arrRows.length; i++) {
     	            		strName = arrRows[i].innerText;
     	                	strId = GetAttribute(arrRows[i], "data1");
     	                	jikwiCompanyID = GetAttribute(arrRows[i], "data4");
+    	                	jikwiCompanyName = GetAttribute(arrRows[i], "data5");
     	                	
     	                	var bFlag = getlistview.ExistRow("data1", strId);
     		                
@@ -1253,7 +1265,7 @@
         	                    pparsingXML = pparsingXML + "<DATA4>JIKWI</DATA4>";
         	                    pparsingXML = pparsingXML + "<DATA5>N</DATA5>";
         	                    pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jikwiCompanyID) + "</DATA6>";
-        	                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+        	                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t28' /> : " + MakeXMLString(strName) + " (" + jikwiCompanyName + ")</VALUE></CELL></ROW>";
         	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
         	                    Resultxml = loadXMLString(pparsingXML2);
         	                        
@@ -1297,11 +1309,13 @@
                     var strName = "";
                     var strId = "";
                     var jikwiCompanyID = "";
+                    var jikwiCompanyName = "";
     	            if (arrRows.length > 0) {
     	            	for (var i = 0; i < arrRows.length; i++) {
     	            		strName = arrRows[i].innerText;
     	                	strId = GetAttribute(arrRows[i], "data1");
     	                	jikwiCompanyID = GetAttribute(arrRows[i], "data4");
+    	                	jikwiCompanyName = GetAttribute(arrRows[i], "data5");
     	                	
 							var bFlag = getlistview.ExistRow("data1", strId);
     		                
@@ -1313,7 +1327,7 @@
     	                        pparsingXML = pparsingXML + "<DATA4>JIKCHEK</DATA4>";
     	                        pparsingXML = pparsingXML + "<DATA5>N</DATA5>";
     	                        pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jikwiCompanyID) + "</DATA6>";
-    	                        pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+    	                        pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t281' /> : " + MakeXMLString(strName) + " (" + jikwiCompanyName + ")</VALUE></CELL></ROW>";
     	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
     	                        Resultxml = loadXMLString(pparsingXML2);
     	                            
@@ -1598,9 +1612,11 @@
                     pparsingXML = "";
                     pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
                     pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
-                    pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
-                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+                    pparsingXML = pparsingXML + "<DATA4>DEPT</DATA4>";
+                    pparsingXML = pparsingXML + "<DATA5>N</DATA5>";
+                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
                     pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+                    
                     Resultxml = loadXMLString(pparsingXML2);
 
                     var MaxID = 0;
@@ -2278,6 +2294,70 @@
 				arrRows[0].setAttribute("DATA5", checkFlag);
 
 			}
+	        
+	        function getAddjobList(type) {
+	        	try {
+	        		
+	        		var selectCompanyId = "";
+	        		
+	        		if (type == "001") {
+	        			selectCompanyId = $("#ListJikwi option:selected").val();
+	        			
+	        			var xmlHTTP = createXMLHttpRequest();
+			            xmlHTTP.open("POST", "/admin/ezOrgan/getJikwiList.do?companyId=" + selectCompanyId + "&type=" + type, false);
+			            xmlHTTP.send("");
+			            
+			            if (xmlHTTP.status != 200) {
+				            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            } else {
+			            	document.getElementById("ListViewJikwi").innerHTML = "";
+				            var pListViewJikwi = new ListView();
+				            pListViewJikwi.SetID("pListViewJikwi");
+				            pListViewJikwi.SetSelectFlag(false);
+				            pListViewJikwi.SetMulSelectable(true);
+				            pListViewJikwi.SetRowOnDblClick("InsertReceiver");
+				            pListViewJikwi.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+				            pListViewJikwi.DataBind("ListViewJikwi");
+				            pListViewJikwi.DataSource(loadXMLString(xmlHTTP.responseText));
+				            pListViewJikwi.RowDataBind();
+				
+			            }
+			            
+			            xmlHTTP = null;
+	        		} else if (type == "002") {
+	        			selectCompanyId = $("#ListJikchek option:selected").val();
+	        			
+	        			var xmlHTTP = createXMLHttpRequest();
+			            xmlHTTP.open("POST", "/admin/ezOrgan/getJikwiList.do?companyId=" + selectCompanyId + "&type=" + type, false);
+			            xmlHTTP.send("");
+			            
+			            if (xmlHTTP.status != 200) {
+				            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+			            } else {
+			            	document.getElementById("ListViewJikchek").innerHTML = "";
+				            var pListViewJikchek = new ListView();
+				            pListViewJikchek.SetID("pListViewJikchek");
+				            pListViewJikchek.SetSelectFlag(false);
+				            pListViewJikchek.SetMulSelectable(true);
+				            pListViewJikchek.SetRowOnDblClick("InsertReceiver");
+				            pListViewJikchek.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+				            pListViewJikchek.DataBind("ListViewJikchek");
+				            pListViewJikchek.DataSource(loadXMLString(xmlHTTP.responseText));
+				            pListViewJikchek.RowDataBind();
+				
+			            }
+			            
+			            xmlHTTP = null;
+	        		}
+	        		
+		        	
+		        } catch (e) {
+		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            xmlHTTP = null;
+		            return;
+		        }
+	        }
+	         
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -2411,6 +2491,27 @@
 		                <table id="ListViewJikwiTD" style="display: none">
 		                    <tr>
 		                        <td>
+		                        	<c:if test="${ companyId eq 'Top' }">
+		                        	<div class="" style="background-color: #f8f8f8; margin-top: 4px;">
+		                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
+		                                    <table style="margin-top: 4px; width: 100%;">
+		                                        <tr>
+		                                            <td>
+		                                                <div style="margin-left: 5px; float:right;">
+		                                                	<select name="ListJikwi" id="ListJikwi" onchange="getAddjobList('001')" style="margin-bottom: 10px;">
+																<c:forEach var="item" items="${list}">
+																	<option value="<c:out value='${item.cn}'/>"
+																		${item.cn == companyId ? 'selected' : ''}><c:out
+																			value='${item.displayName}' /></option>
+																</c:forEach>
+															</select>
+		                                                </div>
+		                                            </td>
+		                                        </tr>
+		                                    </table>
+		                                </div>
+		                            </div>
+		                            </c:if>
 		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td id="jikwiList" style="display: none">
@@ -2427,6 +2528,27 @@
 	                	<table id="ListViewJikchekTD" style="display: none">
 		                    <tr>
 		                        <td>
+		                        	<c:if test="${ companyId eq 'Top' }">
+		                        	<div class="" style="background-color: #f8f8f8; margin-top: 4px;">
+		                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
+		                                    <table style="margin-top: 4px; width: 100%;">
+		                                        <tr>
+		                                            <td>
+		                                                <div style="margin-left: 5px; float:right;">
+		                                                	<select name="ListJikchek" id="ListJikchek" onchange="getAddjobList('002')" style="margin-bottom: 10px;">
+																<c:forEach var="item" items="${list}">
+																	<option value="<c:out value='${item.cn}'/>"
+																		${item.cn == companyId ? 'selected' : ''}><c:out
+																			value='${item.displayName}' /></option>
+																</c:forEach>
+															</select>
+		                                                </div>
+		                                            </td>
+		                                        </tr>
+		                                    </table>
+		                                </div>
+		                            </div>
+		                            </c:if>
 		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td id="JikchekList" style="display: none">

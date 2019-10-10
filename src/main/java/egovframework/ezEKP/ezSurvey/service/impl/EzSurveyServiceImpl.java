@@ -30,6 +30,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -606,9 +607,19 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			ezSurveyDAO.saveSurveyUsers(surveyUser);
 		}
 		
-		if (mailFlag == 1) {
-			List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
-			sendMail(userList, survey);
+		//Send notice mail
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Boolean notiMailFlag = mailFlag == 1 && dateFormat.format(new Date()).equals(startDate);
+		if (notiMailFlag) {
+			int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
+			
+			if(mailSentFlag == 0) {
+				logger.debug("start send mail");
+				List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
+				sendMail(userList, survey);
+				updateMailSentFlag(surveyId, 1, companyId, tenantId);
+			}
+			
 		}
 		
 		result.put("status", "ok");
@@ -1513,29 +1524,35 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 	@Override
 	public List<SurveyVO> getTodaySurveyList(int offset) {
+		logger.debug("getTodaySurveyList started.");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("offset", offset);
 		
+		logger.debug("getTodaySurveyList ended.");
 		return ezSurveyDAO.getTodaySurveyList(map);
 	}
 
 	@Override
 	public List<SurveyParticipantVO> getSurveyParticipantListForMail(long surveyId, String companyId, int tenantId) {
+		logger.debug("getTodaySurveyList started.");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("surveyId", surveyId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
+		logger.debug("getTodaySurveyList ended.");
 		return ezSurveyDAO.getSurveyParticipantListForMail(map);
 	}
 	
-	private void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception {
+	@Async
+	@Override
+	public void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception {
 		String userAccount = userinfo.getEmail();
 		String password = jspw;
 		
 		String userId = userAccount.split("@")[0];
 		String domainName = userAccount.split("@")[1];
-		int tenantId = survey.getTenantId();
+		int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 		String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 		logger.debug("userAccount : " + userAccount + ", locale=" + locale);
@@ -1567,9 +1584,23 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, content.toString(), false, EmailImportance.NORMAL);
 	}
 	
-	private void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception {
+	@Override
+	public void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception {
 		for (int i = 0; i < userList.size(); i++) {
 			sendMail(userList.get(i), survey);
 		}
+	}
+
+	@Override
+	public void updateMailSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception {
+		logger.debug("updateMailSentFlag started.");
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("mailSentFlag", mailSentFlag);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezSurveyDAO.updateMailSentFlag(map);
+		logger.debug("updateMailSentFlag ended.");
 	}
 }

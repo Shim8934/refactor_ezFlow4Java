@@ -1317,4 +1317,19 @@
 				)
      	]]>
      </select>
+     
+   	<select id="EzCommonDAO.checkSurveyMailSentFlagColumn">
+		SELECT
+			MAIL_SENT_FLAG
+		FROM
+			TBL_SURVEY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyMailSentFlagColumn">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD 
+			MAIL_SENT_FLAG TINYINT(4) DEFAULT '0'
+	</statement>
 </sqlMap>

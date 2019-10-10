@@ -1640,5 +1640,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("getPermissionGroupAccessYN ended.");
 		return accessYN;
 	}
-	
+
+	@Override
+	public void addSurveyMailSentFlagColumn() throws Exception {
+		ezCommonDAO.addSurveyMailSentFlagColumn();
+	}
 }
