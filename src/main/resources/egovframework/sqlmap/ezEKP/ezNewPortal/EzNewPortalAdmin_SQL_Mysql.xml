@@ -194,8 +194,16 @@
 				menu_id AS menuid,
 				user_id AS userid,
 				CASE
-				WHEN user_type = 1
-					THEN (SELECT displayname$lang$ FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
+					WHEN user_type = 1
+						THEN (SELECT displayname FROM TBL_USERMASTER WHERE tenant_id = #tenantId# AND cn = user_id)
+					WHEN user_type = 2
+						THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '001' AND companyid = #companyId#)
+					WHEN
+						user_type = 3
+						THEN (SELECT displayname FROM TBL_USER_JOBMASTER WHERE tenant_id = #tenantId# AND jobid = user_id AND type = '002' AND companyid = #companyId#)
+					WHEN
+						user_type = 4
+	                    THEN (SELECT group_name FROM TBL_PERMISSIONGROUPLIST WHERE tenant_id = #tenantId# AND group_id = user_id AND company_id = #companyId#)
 					ELSE ''
 				END AS username,
 				CASE WHEN user_type = 1	

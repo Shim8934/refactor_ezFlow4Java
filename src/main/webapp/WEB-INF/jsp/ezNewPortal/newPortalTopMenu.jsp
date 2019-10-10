@@ -717,7 +717,7 @@
 					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
 					
 					setLayer();
-				}
+				} 
 				
 			} else {
 				var surveyPopupObj = getSurveyPopupList();

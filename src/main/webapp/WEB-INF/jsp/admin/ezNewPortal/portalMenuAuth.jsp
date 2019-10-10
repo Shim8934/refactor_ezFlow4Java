@@ -25,10 +25,14 @@
 			
 			.nameTD {width:70%;}
 			.authTD {position:relative;}
+			.portlet_tabpart01_top{text-align:center;} 
+			#portalJikwi, #portalJikcheck, #portalGroup {width: 100%; height: 510px; overflow: auto; background-color: #ffffff;}
+			.titleListTR:hover, .groupListTR:hover {background-color : #f4f5f5; cursor:pointer;}
+			.titleListTR.selectTR, .groupListTR.selectTR {background-color:#f1f8ff;}
 	    </style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
-        <h1><spring:message code='ezNewPortal.t070' /></h1>
+        <h1 style="height:20px;"><spring:message code='ezNewPortal.t070' /></h1>
         <div id="close">
 	        <ul>
 	            <li><span onclick="close_Click()"></span></li>
@@ -40,61 +44,111 @@
 					<table id="TreeViewTD">
 					 	<tr>
 				        	<td id="journalOrgan_content" style='vertical-align: top'>
-				        		<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 680px;">
-		                            <h2 class="receiver_tltype01" style='margin-top:4px; border-bottom:none;'>
+				        		<div class="portlet_tabpart01" style="width: 680px;">
+					        		<div class="portlet_tabpart01_top" id="tab1" style="margin-top: 25px;margin-bottom: 2px;">
+						            	<p><span id="1tab1" tdname="portalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="tabon"><spring:message code='ezNewPortal.t024' /></span></p>
+										<p><span id="1tab2" tdname="portalJikwi" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="">직위</span></p>
+										<p><span id="1tab3" tdname="portalJikcheck" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="">직책</span></p>
+										<p><span id="1tab4" tdname="portalGroup" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="">권한그룹</span></p>
+						        	</div>
+		                            <%-- <h2 class="receiver_tltype01" style='margin-top:4px; border-bottom:none;'>
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezNewPortal.t024' /></span>
-									</h2>
+									</h2> --%>
 								</div>
-				        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 2px; padding:0px; border-top: none;">
-				                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
-				                        <table style="margin-top: 5px; width: 100%;">
-				                            <tr>
-				                                <td>
-				                                    <div style="float: left; margin-left: 5px;">
-				                                        <select id="search_type" style="height:22px">
-				                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
-								                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
-								                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
-								                            <option value="title"><spring:message code='ezOrgan.t69'/></option>
-								                            <option value="telephonenumber"><spring:message code='ezOrgan.t95'/></option>
-								                            <option value="mobile"><spring:message code='ezOrgan.t96'/></option>
-								                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
-								                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
-								                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
-								                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
-				                                        </select>
-				                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" value="" style="width: 130px; margin: 0px;height:22px" />
-				                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezOrgan.t101'/></span></a>
-				                                    </div>
-				                                </td>
-				                                <td>
-				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                    	<a class="imgbtn"><span onclick="setAuthorViewUser('dept')"><spring:message code='ezNewPortal.t071' /></span></a>
-				                                    	<a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>  
-				                                    </div>
-				                                </td> 
-				                                <td></td>   
-				                            </tr>
-				                        </table>
-				                    </div>
-			                  	</div>
-								<table style="margin-top: 3px;">
-						            <tr>
-						                <td class="box" style="border-right: 0px; height: 465px;">
-						                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
-						                </td>
-						                <td></td>
-						                <td class="listview" style="width: 426px" id="orglistView">
-						                </td>    
-						            </tr>
-						        </table>
+								<div id="portalOrgan_content">
+					        		<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 2px; padding:0px; border-top: none;">
+					                    <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #eaeaea;">
+					                        <table style="margin-top: 5px; width: 100%;">
+					                            <tr>
+					                                <td>
+					                                    <div style="float: left; margin-left: 5px;">
+					                                        <select id="search_type" style="height:22px">
+					                                            <option selected value="displayname"><spring:message code='ezOrgan.t67'/></option>
+									                            <option value="cn"><spring:message code='ezOrgan.t94'/></option>
+									                            <option value="description"><spring:message code='ezOrgan.t68'/></option>
+									                            <option value="title"><spring:message code='ezOrgan.t69'/></option>
+									                            <option value="telephonenumber"><spring:message code='ezOrgan.t95'/></option>
+									                            <option value="mobile"><spring:message code='ezOrgan.t96'/></option>
+									                            <option value="HomePhone"><spring:message code='ezOrgan.t97'/></option>
+									                            <option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98'/></option>
+									                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
+									                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
+					                                        </select>
+					                                        <input id="keyword" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" value="" style="width: 130px; margin: 0px;height:22px" />
+					                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezOrgan.t101'/></span></a>
+					                                    </div>
+					                                </td>
+					                                <td>
+					                                    <div style="float: right; margin-right: 5px; position: relative;">
+					                                    	<a class="imgbtn"><span onclick="setAuthorViewUser('dept')"><spring:message code='ezNewPortal.t071' /></span></a>
+					                                    	<a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>  
+					                                    </div>
+					                                </td> 
+					                                <td></td>   
+					                            </tr>
+					                        </table>
+					                    </div>
+				                  	</div>
+									<table style="margin-top: 3px;">
+							            <tr>
+							                <td class="box" style="border-right: 0px; height: 465px;">
+							                    <div style="width: 250px; height: 470px; overflow-x: auto; overflow-y: auto;" id="treeview"></div>
+							                </td>
+							                <td></td>
+							                <td class="listview" style="width: 426px" id="orglistView">
+							                </td>    
+							            </tr>
+							        </table>
+						        </div>
+								<div id="portalJikwi_content" style="display:none;">
+									<div class="border_gray">
+										<div id="portalJikwi">
+											<table id="pListViewJikwi" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
+												<thead id="pListViewJikwi_THEAD">
+													<tr id="pListViewJikwi_TH">
+														<th id="pListViewJikwi_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px">이 름</th>
+													</tr>
+												</thead>
+												<tbody id="pListViewJikwi_TBODY"></tbody>
+											</table>
+										</div>
+									</div>
+						        </div>
+								<div id="portalJikcheck_content" style="display:none;">
+									<div class="border_gray">
+										<div id="portalJikcheck">
+											<table id="pListViewJikcheck" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
+												<thead id="pListViewJikcheck_THEAD">
+													<tr id="pListViewJikcheck_TH">
+														<th id="pListViewJikcheck_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px">이 름</th>
+													</tr>
+												</thead>
+												<tbody id="pListViewJikcheck_TBODY"></tbody>
+											</table>
+										</div>
+									</div>
+						        </div>
+								<div id="portalGroup_content" style="display:none;">
+									<div class="border_gray">
+										<div id="portalGroup">
+											<table id="pListViewGroup" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
+												<thead id="pListViewGroup_THEAD">
+													<tr id="pListViewGroup_TH">
+														<th id="pListViewGroup_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px">이 름</th>
+													</tr>
+												</thead>
+												<tbody id="pListViewGroup_TBODY"></tbody>
+											</table>
+										</div>
+									</div>
+						        </div>
 		                  	</td>   
 	                        <td style="width: 30px; text-align: center;">                            
 	                            <img id='addAuthBtn' src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;"><br>
 	                            <img id='deleteAuthBtn' src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;">
 	                        </td>
 	                        <td style='vertical-align: top'>
-	                        	<div style="display: inline-flex; display: -ms-inline-flexbox; border-bottom: 1px solid #565b66; width: 252px;">
+	                        	<div style="margin-top: 27px;margin-bottom: 2px; border-bottom: 1px solid #565b66; width: 252px;">
 		                            <h2 class="receiver_tltype01" style='margin-top:4px; border-bottom:none;'>
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezNewPortal.t072' /> </span>
 									</h2>
@@ -142,6 +196,7 @@
 	   		
 	   		var CurPage = "1";
 	   		var totalPage = "";
+	        var Tab1_SelectID = "1tab1";
 	   		
 	   		document.onselectstart = function () { return false; };
 	   		function close_Click(){
@@ -423,29 +478,209 @@
 	   			//user / dept 구분
 	   		}
 	   		
+	   		function Tab1_MouseClick(obj) {
+	            obj.className = "tabon";
+	            if (obj.id != Tab1_SelectID) {
+	                if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+	                    document.getElementById(Tab1_SelectID).className = "";
+
+	                obj.className = "tabon";
+	                Tab1_SelectID = obj.id;
+	                ChangeTab(obj);
+	            }
+	        }
+	   		
+	   		function tabover(tabObj) {
+	        	tabObj.setAttribute("class", "tabon");
+	        }
+	        function tabout(tabObj) {
+	        	if (tabObj.id != Tab1_SelectID) {
+	        		tabObj.setAttribute("class", "");
+	        	}
+	        }
+	   		
+		    function ChangeTab(obj) {
+		    	var pSelectTab = GetAttribute(obj, "tdname");
+		    	curTab = pSelectTab;
+		    	
+		        switch (pSelectTab) {
+		            case "portalOrgan":
+	                    document.getElementById("portalOrgan_content").style.display = "";
+	                    document.getElementById("portalJikwi_content").style.display = "none";
+	                    document.getElementById("portalJikcheck_content").style.display = "none";
+	                    document.getElementById("portalGroup_content").style.display = "none";
+		                break;
+		            case "portalJikwi":
+	                    document.getElementById("portalOrgan_content").style.display = "none";
+	                    document.getElementById("portalJikwi_content").style.display = "";
+	                    document.getElementById("portalJikcheck_content").style.display = "none";
+	                    document.getElementById("portalGroup_content").style.display = "none";
+	                    getTitleList('001');
+		                break;
+		            case "portalJikcheck":
+	                    document.getElementById("portalOrgan_content").style.display = "none";
+	                    document.getElementById("portalJikwi_content").style.display = "none";
+	                    document.getElementById("portalJikcheck_content").style.display = "";
+	                    document.getElementById("portalGroup_content").style.display = "none";
+	                    getTitleList('002');
+		                break;
+		            case "portalGroup":
+	                    document.getElementById("portalOrgan_content").style.display = "none";
+	                    document.getElementById("portalJikwi_content").style.display = "none";
+	                    document.getElementById("portalJikcheck_content").style.display = "none";
+	                    document.getElementById("portalGroup_content").style.display = "";
+	                    getPermissionGroup();
+		                break;
+		    	}
+		        selMainListUserId = "";
+				selUserId = "";
+		    }
+		    
+		    var getTitleList = function(type) {
+		    	var request = new XMLHttpRequest();
+		    	request.open('POST', '/admin/ezNewPortal/getTitleList.do', true);
+				request.setRequestHeader('Content-Type', 'application/json');
+
+		    	request.onload = function() {
+		    		if (this.status >= 200 && this.status < 400) {
+		    			var titleList = JSON.parse(request.responseText);
+		    			//pListViewJikwi_TBODY
+		    			var titleListCount = titleList.length;
+		    			
+		    			if (type == "001") {
+		    		    	document.getElementById("pListViewJikwi_TBODY").innerHTML = "";
+		    			} else {
+		    		    	document.getElementById("pListViewJikcheck_TBODY").innerHTML = "";
+		    			}
+		    			
+		    			for (var i = 0; i < titleListCount; i++) {
+		    				var titleTR = document.createElement("tr");
+		    				var titleTD = document.createElement("td");
+		    				titleTR.className="titleListTR";
+		    				titleTR.id = "title_" + titleList[i].jobID + "_" + titleList[i].type;
+		    				titleTR.setAttribute("data1", titleList[i].jobID);
+		    				titleTR.setAttribute("data2", titleList[i].type);
+		    				titleTR.setAttribute("data3", titleList[i].displayName);
+		    				titleTR.setAttribute("ondblclick", "applyReceiver()");
+		    				titleTR.setAttribute("onclick", "setSelectTR(this)");
+		    				titleTD.textContent = titleList[i].displayName;
+		    				titleTD.style.height = "24px";
+		    				
+		    				titleTR.appendChild(titleTD);
+		    				
+			    			if (type == "001") {
+			    		    	document.getElementById("pListViewJikwi_TBODY").appendChild(titleTR);
+			    			} else {
+			    				document.getElementById("pListViewJikcheck_TBODY").appendChild(titleTR);
+			    			}
+		    			}
+		    		} else {
+
+		    		}
+		    	};
+
+		    	request.onerror = function() {
+		    		// There was a connection error of some sort
+		    	};
+		    	
+		    	var data = JSON.stringify({
+		    		companyId : "<c:out value='${companyId}'/>",
+		    		type : type
+		    	});
+		    	
+		    	request.send(data);
+		    }
+		    
+		    var getPermissionGroup = function() {
+		    	var request = new XMLHttpRequest();
+		    	request.open('POST', '/admin/ezNewPortal/getGroupList.do', true);
+				request.setRequestHeader('Content-Type', 'application/json');
+
+		    	request.onload = function() {
+		    		if (this.status >= 200 && this.status < 400) {
+		    			var groupList = JSON.parse(request.responseText);
+		    			//pListViewJikwi_TBODY
+		    			var groupListCount = groupList.length;
+		    		    document.getElementById("pListViewGroup_TBODY").innerHTML = "";
+		    		    
+		    			for (var i = 0; i < groupListCount; i++) {
+		    				var groupTR = document.createElement("tr");
+		    				var groupTD = document.createElement("td");
+		    				groupTR.className="groupListTR";
+		    				groupTR.id = "group_" + groupList[i].groupID;
+		    				groupTR.setAttribute("data1", groupList[i].groupID);
+		    				groupTR.setAttribute("data3", groupList[i].groupName);
+		    				groupTR.setAttribute("ondblclick", "applyReceiver()");
+		    				groupTR.setAttribute("onclick", "setSelectTR(this)");
+		    				groupTD.textContent = groupList[i].groupName;
+		    				groupTD.style.height = "24px";
+		    				
+		    				groupTR.appendChild(groupTD);
+			    			document.getElementById("pListViewGroup_TBODY").appendChild(groupTR);
+		    			}
+		    		} else {
+
+		    		}
+		    	};
+
+		    	request.onerror = function() {
+		    		// There was a connection error of some sort
+		    	};
+		    	
+		    	var data = JSON.stringify({
+		    		companyId : "<c:out value='${companyId}'/>",
+		    		type : type
+		    	});
+		    	
+		    	request.send(data);
+		    }
+		    
+		    var setSelectTR = function(elem) {
+		    	$(".selectTR").removeClass("selectTR");
+		    	$(elem).addClass("selectTR");
+		    }
+		    
 	   		// 선택한 사람을 수신자에 추가
 	   		function setAuthorViewUser(isUser) {
 	   			
 	   			var receiverId = "";
-	   			var userType = true;
+	   			var userType = 1;
+		   		var userDeptName = "";
+		   		
+		   		if (isUser == undefined) {
+		   			isUser = "user";
+		   		}
 	   			
-	   			if (isUser == undefined) {
-	   				isUser = "user";
-	   			}
-	   			
-	   			if (isUser == "user") {
-	   				receiverId = selUserId;
-		   			userType = true;
-			   		userName = selUserName;
-	   			} else {
+	   			if (isUser == "dept"){
 	   				receiverId = $(".jstree-clicked").attr("id");
 	   				receiverId = receiverId.substring(0, receiverId.lastIndexOf("_anchor"));
-	   				userType = false;
+	   				userType = 0;
 	   				userName = $(".jstree-clicked").text();
+	   				userDeptName = $(".jstree-clicked").text();
+	   			} else if (isUser == "jikwi") {
+	   				userType = 2;
+	   				var selectedElem = document.getElementById("pListViewJikwi_TBODY").querySelector(".selectTR");
+	   				receiverId = selectedElem.getAttribute("data1");
+	   				userName = selectedElem.getAttribute("data3");
+	   			} else if (isUser == "jikcheck") {
+	   				userType = 3;
+	   				var selectedElem = document.getElementById("pListViewJikcheck_TBODY").querySelector(".selectTR");
+	   				receiverId = selectedElem.getAttribute("data1");
+	   				userName = selectedElem.getAttribute("data3");
+	   			} else if (isUser == "group") {
+	   				userType = 4;
+	   				var selectedElem = document.getElementById("pListViewGroup_TBODY").querySelector(".selectTR");
+	   				receiverId = selectedElem.getAttribute("data1");
+	   				userName = selectedElem.getAttribute("data3"); 
+	   			} else if (isUser == "user") {
+	   				receiverId = selUserId;
+					userType = 1;
+			   		userName = selUserName;
+			   		userDeptName = $(".jstree-clicked").text();
 	   			}
 		   		
 		   		var chkFlag = true;
-	   			var userDeptName = $(".jstree-clicked").text();
+	   			
 	   			var menuId = Number("<c:out value='${menuId}'/>");
 	   				
 		   		for(var i = 0; i < menuAuths.length; i++) {
@@ -492,11 +727,13 @@
 					authsHTML += " onclick='setMainListUserAuthorDept(this)' ondblclick='deleteAuth()'>";
 					authsHTML += "<td class='nameTD'>";
 					
-					if (item.userType) {
+					if (item.userType == 1) {
 						authsHTML += item.userName;
 						authsHTML += "(" + item.userDeptName + ")";
-					} else {
+					} else if(item.userType == 0) {
 						authsHTML += item.userDeptName;
+					} else {
+						authsHTML += item.userName;
 					}
 					
 					authsHTML += "</td>";
@@ -529,20 +766,43 @@
 		    }
 	   		
 	   		function applyReceiver() {
-	   			var selId = $("#txtlist_Layer").find(".selectTR");
-	   			var isUser = true;
+	   			var selId = "";
 	   			
-	   			if (selId.length == 0) {
-	   				isUser = false;
-	   			}
-	   			
-	   			if (isUser) {
-	   				//사람추가 조건은 음 사람셀렉트안됫을떄?
-	   				setAuthorViewUser("user");
+	   			if (Tab1_SelectID === "1tab1") {
+	   				selId = $("#txtlist_Layer").find(".selectTR");
+		   			
+		   			var isUser = true;
+		   			
+		   			if (selId.length == 0) {
+		   				isUser = false;
+		   			}
+		   			
+		   			if (isUser) {
+		   				//사람추가 조건은 음 사람셀렉트안됫을떄?
+		   				setAuthorViewUser("user");
+		   				
+		   			} else {
+		   				//부서추가
+		   				setAuthorViewUser("dept");
+		   			}
+	   			} else if (Tab1_SelectID === "1tab2") {
+	   				selId = $("#pListViewJikwi_TBODY").find(".selectTR");
 	   				
-	   			} else {
-	   				//부서추가
-	   				setAuthorViewUser("dept");
+	   				if (selId.length != 0) {
+	   					setAuthorViewUser("jikwi");
+	   				}
+	   			} else if (Tab1_SelectID === "1tab3") {
+	   				selId = $("#pListViewJikcheck_TBODY").find(".selectTR");
+	   				
+	   				if (selId.length != 0) {
+	   					setAuthorViewUser("jikcheck");
+	   				}
+	   			} else if (Tab1_SelectID === "1tab4") {
+	   				selId = $("#pListViewGroup_TBODY").find(".selectTR");
+	   				
+	   				if (selId.length != 0) {
+	   					setAuthorViewUser("group");
+	   				}
 	   			}
   				
 	   		}
@@ -581,11 +841,13 @@
 				var menuAuthsYList = "";
 				
 				menuAuthsY.forEach(function(item, index) {
-					if (item.userType) {
+					if (item.userType == 1) {
 						menuAuthsYList += ", " + item.userName;
 						menuAuthsYList += "(" + item.userDeptName + ")";
-					} else {
+					} else if (item.userType == 0) {
 						menuAuthsYList += ", " + item.userDeptName;
+					} else {
+						menuAuthsYList += ", " + item.userName;
 					}
 				});
 					
@@ -594,11 +856,13 @@
 				var menuAuthsNList = "";
 				
 				menuAuthsN.forEach(function(item, index) {
-					if (item.userType) {
+					if (item.userType == 1) {
 						menuAuthsNList += ", " + item.userName;
 						menuAuthsNList += "(" + item.userDeptName + ")";
-					} else {
+					} else if (item.userType == 0) {
 						menuAuthsNList += ", " + item.userDeptName;
+					} else {
+						menuAuthsNList += ", " + item.userName;
 					}
 				});
 					

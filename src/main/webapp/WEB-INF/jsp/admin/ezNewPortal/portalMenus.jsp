@@ -293,11 +293,13 @@
 						var menuAuthsYList = "";
 						
 						menuAuthsY.forEach(function(item, index) {
-							if (item.userType) {
+							if (item.userType == 1) {
 								menuAuthsYList += ", " + item.userName;
 								menuAuthsYList += "(" + item.userDeptName + ")";
-							} else {
+							} else if (item.userType == 0) {
 								menuAuthsYList += ", " + item.userDeptName;
+							} else {
+								menuAuthsYList += ", " + item.userName;
 							}
 						});
 						
@@ -310,11 +312,13 @@
 						var menuAuthsNList = "";
 						
 						menuAuthsN.forEach(function(item, index) {
-							if (item.userType) {
+							if (item.userType == 1) {
 								menuAuthsNList += ", " + item.userName;
 								menuAuthsNList += "(" + item.userDeptName + ")";
-							} else {
+							} else if (item.userType == 0) {
 								menuAuthsNList += ", " + item.userDeptName;
+							} else {
+								menuAuthsNList += ", " + item.userName;
 							}
 						});
 						
