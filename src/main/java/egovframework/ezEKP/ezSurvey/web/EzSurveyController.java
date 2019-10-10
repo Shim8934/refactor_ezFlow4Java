@@ -325,6 +325,11 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("listType", listType);
 		}
 		
+		model.addAttribute("cn",user.getId());
+		model.addAttribute("companyId",user.getCompanyID());
+		model.addAttribute("dept",user.getDeptID());
+		model.addAttribute("lang",user.getLang());
+		
 		logger.debug("jspGetSelectUesrPage ended");
 		return "ezSurvey/user/selectUser";
 	}
