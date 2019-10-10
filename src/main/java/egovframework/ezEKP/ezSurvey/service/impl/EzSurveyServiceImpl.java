@@ -607,9 +607,19 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			ezSurveyDAO.saveSurveyUsers(surveyUser);
 		}
 		
-		if (mailFlag == 1) {
-			List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
-			sendMail(userList, survey);
+		//Send notice mail
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Boolean notiMailFlag = mailFlag == 1 && dateFormat.format(new Date()).equals(startDate);
+		if (notiMailFlag) {
+			int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
+			
+			if(mailSentFlag == 0) {
+				logger.debug("start send mail");
+				List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
+				sendMail(userList, survey);
+				updateMailSentFlag(surveyId, 1, companyId, tenantId);
+			}
+			
 		}
 		
 		result.put("status", "ok");
@@ -1522,19 +1532,23 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 	@Override
 	public List<SurveyVO> getTodaySurveyList(int offset) {
+		logger.debug("getTodaySurveyList started.");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("offset", offset);
 		
+		logger.debug("getTodaySurveyList ended.");
 		return ezSurveyDAO.getTodaySurveyList(map);
 	}
 
 	@Override
 	public List<SurveyParticipantVO> getSurveyParticipantListForMail(long surveyId, String companyId, int tenantId) {
+		logger.debug("getTodaySurveyList started.");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("surveyId", surveyId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
+		logger.debug("getTodaySurveyList ended.");
 		return ezSurveyDAO.getSurveyParticipantListForMail(map);
 	}
 	
@@ -1583,5 +1597,18 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		for (int i = 0; i < userList.size(); i++) {
 			sendMail(userList.get(i), survey);
 		}
+	}
+
+	@Override
+	public void updateMailSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception {
+		logger.debug("updateMailSentFlag started.");
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("mailSentFlag", mailSentFlag);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezSurveyDAO.updateMailSentFlag(map);
+		logger.debug("updateMailSentFlag ended.");
 	}
 }

@@ -65,7 +65,7 @@ public class EzSurveyScheduler {
 		
 		List<SurveyVO> todaySurveyList = ezSurveyService.getTodaySurveyList(offset);
 		
-		if (todaySurveyList == null) {
+		if (todaySurveyList == null || todaySurveyList.size() == 0) {
 			return;
 		}
 		
@@ -78,6 +78,7 @@ public class EzSurveyScheduler {
 			List<SurveyParticipantVO> participantList = ezSurveyService.getSurveyParticipantListForMail(surveyId, companyId, tenantId);
 			
 			ezSurveyService.sendMail(participantList, survey);
+			ezSurveyService.updateMailSentFlag(surveyId, 1, companyId, tenantId);
 		}
 		
 		logger.debug("sendMailToSurveyParticipant scheduler ended.");
