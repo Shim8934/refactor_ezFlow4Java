@@ -119,4 +119,13 @@ public interface EzEmailService {
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 	public JSONObject recallMailByMessageId(String address, String messageId) throws Exception;
 	public int getTotalUnreadCount(String userId, int tenantId) throws Exception;
+	/**
+	 * 멀티도메인
+	 */
+	public String getMultiDomainList(int tenantId) throws Exception;
+	public int addMultiDomain(int tenantId, String domainName) throws Exception;
+	public int delMultiDomain(int tenantId, String delDomain, String saveDomainList) throws Exception;
+	public String getCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
+	public int saveCompanyMultiDomain(int tenantId, String companyId, String primaryDomain, String saveDomainList) throws Exception;
+	
 }

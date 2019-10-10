@@ -2478,6 +2478,156 @@ public class EzEmailAdminController {
 
 	}
 	
+	/**
+	 * 전체 도메인 관리 화면 
+	 */
+	@RequestMapping(value = "/admin/ezEmail/multiDomain.do")
+	public String multiDomainMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("multiDomainMain started.");
+		
+		// 전체 권한체크
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		if (user.getRollInfo().indexOf("c=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		logger.debug("multiDomainMain ended.");
+		return "admin/ezEmail/multiDomainMain";
+	}
+	
+	/**
+	 * 전체 도메인 추가 팝업 화면
+	 */
+	@RequestMapping(value = "/admin/ezEmail/addMultiDomainPopUp.do")
+	public String addMultiDomainPopUp(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("addMultiDomainMainPopUp started.");
+		
+		// 전체 권한체크
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		if (user.getRollInfo().indexOf("c=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		logger.debug("addMultiDomainMainPopUp ended.");
+		return "admin/ezEmail/addMultiDomainPopUp";
+	}
+	
+
+	/**
+	 * 전체 도메인 리스트
+	 */
+	@RequestMapping(value = "/admin/ezEmail/getMultiDomainList.do")
+	@ResponseBody
+	public String getMultiDomainList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("getMultiDomainList started.");
+		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		int tenantId = user.getTenantId();
+		String innerDomain = ezEmailService.getMultiDomainList(tenantId);
+		
+		logger.debug("getMultiDomainList ended.");
+		return innerDomain;
+	}
+	
+	/**
+	 * 전체 도메인 추가
+	 */
+	@RequestMapping(value = "/admin/ezEmail/addMultiDomain.do")
+	@ResponseBody
+	public int addMultiDomain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("addMultiDomain started.");
+		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		int tenantId = user.getTenantId();
+		String domain = request.getParameter("domain");
+		
+		int reasonCode = ezEmailService.addMultiDomain(tenantId, domain);
+
+		logger.debug("addMultiDomain ended.");
+		return reasonCode;
+	}
+
+	/**
+	 * 전체 도메인 삭제
+	 */
+	@RequestMapping(value = "/admin/ezEmail/delMultiDomain.do")
+	@ResponseBody
+	public int delMultiDomain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("delMultiDomain started.");
+		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		int tenantId = user.getTenantId();
+		String delDomain = request.getParameter("delDomain");
+		String saveDomainList = request.getParameter("saveDomainList");
+
+		int reasonCode = ezEmailService.delMultiDomain(tenantId, delDomain, saveDomainList);
+		
+		logger.debug("delMultiDomain ended.");
+		return reasonCode;
+	}
+	
+	/**
+	 * 회사 도메인 관리 화면
+	 */
+	@RequestMapping(value = "/admin/ezEmail/companyMultiDomain.do")
+	public String companyMultiDomain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("companyMultiDomain started.");
+		
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		logger.debug("companyMultiDomain started.");
+		return "admin/ezEmail/companyMultiDomainMain";
+	}
+	
+	/**
+	 * 회사 도메인 리스트
+	 */
+	@RequestMapping(value = "/admin/ezEmail/getCompanyMultiDomainList.do")
+	@ResponseBody
+	public JSONObject getCompanyMultiDomainList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("getCompanyMultiDomainList started.");
+		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		int tenantId = user.getTenantId();
+		String companyId = user.getCompanyID();
+		
+		String innerDomain = ezEmailService.getCompanyConfig(tenantId, companyId, "MailInnerDomain");
+		String primaryDomain = ezEmailService.getCompanyConfig(tenantId, companyId, "DomainName");
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("primaryDomain", primaryDomain);
+		jsonObj.put("innerDomain", innerDomain);
+		
+		logger.debug("getCompanyMultiDomainList ended.");
+		return jsonObj;
+	}
+	
+	/**
+	 * 회사 도메인 저장
+	 */
+	@RequestMapping(value = "/admin/ezEmail/saveCompanyMultiDomain.do")
+	@ResponseBody
+	public int saveCompanyMultiDomain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("saveCompanyMultiDomain started.");
+		
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		int tenantId = user.getTenantId();
+		String companyId = user.getCompanyID();
+		String primaryDomain = request.getParameter("primaryDomain");
+		String saveDomainList = request.getParameter("saveDomainList");
+		
+		int reasonCode = ezEmailService.saveCompanyMultiDomain(tenantId, companyId, primaryDomain, saveDomainList);
+
+		logger.debug("saveCompanyMultiDomain ended.");
+		return reasonCode;
+	}
+	
+	
+	
 	private String replaceUserInfo(OrganUserVO _vo, String content) {
 		content = content.replace("${company}", _vo.getCompany1()).replace("${engCompany}", _vo.getCompany2()).replace("${name}", _vo.getDisplayName1()).replace("${engName}", _vo.getDisplayName2())
 				.replace("${department}", _vo.getDescription1()).replace("${email}", _vo.getMail()).replace("${title}", _vo.getTitle1() == null ? "" : _vo.getTitle1())

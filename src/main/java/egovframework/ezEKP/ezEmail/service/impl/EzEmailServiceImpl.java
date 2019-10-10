@@ -3146,4 +3146,168 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getTotalUnreadCount ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		return totalUnreadCount;
 	}
+	
+	/**
+	 * 전체 도메인 가져오기(tbl_tenant_config:MailInnerDomain)
+	 */
+	@Override
+	public String getMultiDomainList(int tenantId) throws Exception {
+		logger.debug("getMultiDomainList started.");
+		logger.debug("tenantId=" + tenantId);
+		
+		String domainList = "";
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaAccess/getMailInnerDomain";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			String resultCode = (String) responseObj.get("resultCode");
+
+			if (resultCode.equalsIgnoreCase("OK")) {
+				domainList = (String)responseObj.get("result");
+			}
+		}
+
+		logger.debug("getMultiDomainList ended.");
+		return domainList;
+	}
+	
+	/**
+	 * 전체 도메인 추가
+	 */
+	@Override
+	public int addMultiDomain(int tenantId, String domainName) throws Exception { 
+		logger.debug("addMultiDomain started.");
+		logger.debug("tenantId=" + tenantId + ", domainName=" + domainName);
+		
+		String resultCode = "";
+		int reasonCode = -100;
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8")
+				+ "&domain=" + URLEncoder.encode(domainName, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaAccess/addMailDomain";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			resultCode = (String)responseObj.get("resultCode");	
+			reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			logger.debug("resultCode=" + resultCode + ", reasonCode=" + reasonCode);
+		}
+		
+		logger.debug("addMultiDomain ended.");
+		return reasonCode;
+	}
+	
+	/**
+	 * 전체 도메인 삭제
+	 */
+	@Override
+	public int delMultiDomain(int tenantId, String delDomain, String saveDomainList) throws Exception { 
+		logger.debug("delMultiDomain started.");
+		logger.debug("tenantId=" + tenantId + ", delDomain=" + delDomain + ", saveDomainList=" + saveDomainList);
+		
+		String resultCode = "";
+		int reasonCode = -100;
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8")
+				+ "&delDomain=" + URLEncoder.encode(delDomain, "UTF-8") 
+				+ "&saveDomainList=" + URLEncoder.encode(saveDomainList, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaAccess/delMailDomain";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			resultCode = (String)responseObj.get("resultCode");	
+			reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			logger.debug("resultCode=" + resultCode + ", reasonCode=" + reasonCode);
+		}
+		
+		logger.debug("delMultiDomain ended.");
+		return reasonCode;
+	}
+	
+	/**
+	 * companyConfig 가져오기
+	 */
+	@Override
+	public String getCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception {
+		logger.debug("getCompanyConfig started.");
+		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId + ", propertyName=" + propertyName);
+
+		String returnStr = "";
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8")
+				+ "&companyId=" + URLEncoder.encode(companyId, "UTF-8") 
+				+ "&propertyName=" + URLEncoder.encode(propertyName, "UTF-8") ;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaEzHrMaster/getTblCompanyConfig";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			String resultCode = (String) responseObj.get("resultCode");
+			int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			if (resultCode.equalsIgnoreCase("OK") && reasonCode == 0) {
+				JSONObject re = (JSONObject) responseObj.get("result");
+				returnStr = (String) re.get("propertyValue");
+			}
+		}
+
+		logger.debug("getCompanyConfig ended.");
+		return returnStr;
+	}
+
+	/**
+	 * 회사 도메인 저장
+	 */
+	@Override
+	public int saveCompanyMultiDomain(int tenantId, String companyId, String primaryDomain, String saveDomainList) throws Exception {
+		logger.debug("saveCompanyMultiDomain started.");
+		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId + ", primaryDomain=" + primaryDomain + ", saveDomainList=" + saveDomainList);
+
+		String resultCode = "";
+		int reasonCode = -100;
+		
+		String inputParams = "tenantId=" + URLEncoder.encode(Integer.toString(tenantId), "UTF-8")
+				+ "&companyId=" + URLEncoder.encode(companyId, "UTF-8") 
+				+ "&primaryDomain=" + URLEncoder.encode(primaryDomain, "UTF-8")
+				+ "&saveDomainList=" + URLEncoder.encode(saveDomainList, "UTF-8") ;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL")+ "/jMochaAccess/saveCompanyMailDomain";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			resultCode = (String)responseObj.get("resultCode");	
+			reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+
+			logger.debug("resultCode=" + resultCode + ", reasonCode=" + reasonCode);
+		}
+		
+		logger.debug("saveCompanyMultiDomain ended.");
+		return reasonCode;
+	}
+	
+	
 }

@@ -118,6 +118,12 @@
 				    case 33:
 					 	url = "/admin/ezEmail/showSharedMailboxList.do";
 				    	break;
+				    case 35:
+						url = "/admin/ezEmail/multiDomain.do";
+						break;
+					case 36:
+						url = "/admin/ezEmail/companyMultiDomain.do";
+						break;
 				}
 				window.open(url,"right");
 			}
@@ -169,6 +175,14 @@
   				<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
     			<ul></ul>
   			</h2>
+  			</c:if>
+  			<c:if test="${cChk == '1'}">
+			<h2>
+				<span onClick="goPage(35)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa01' /></span>
+			</h2> 
+			<h2>
+				<span onClick="goPage(36)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa02' /></span>
+			</h2>
   			</c:if>
   			<!-- 2016-04-05 장진혁 편지지등록 / REQUEST에 MSIE 또는 TRIDENT가 포함될 시에만 메뉴 보여줌으로 되어있었음  -->
   			
