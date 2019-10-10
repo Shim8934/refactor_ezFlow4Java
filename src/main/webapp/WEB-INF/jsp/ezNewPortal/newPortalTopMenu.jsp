@@ -708,22 +708,22 @@
 					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
 					setLayer();
 				} 
-				/* var surveyPopupObj = getSurveyPopupList();
+				var surveyPopupObj = getSurveyPopupList();
 				if (surveyPopupObj.surveyPopupList.length > 0 && surveyPopupObj.surveyPopupList != null) {
 					index = ++position0Count;
 					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
 					
 					setLayer();
-				} */
+				}
 				
 			} else {
-				/* var surveyPopupObj = getSurveyPopupList();
+				var surveyPopupObj = getSurveyPopupList();
 				if (surveyPopupObj.surveyPopupList.length > 0 && surveyPopupObj.surveyPopupList != null) {
 					index = ++position0Count;
 					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
 					
 					setLayer();
-				} */
+				}
 				
 			}
 			

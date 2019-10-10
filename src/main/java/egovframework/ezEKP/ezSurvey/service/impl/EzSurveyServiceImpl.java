@@ -736,14 +736,12 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getPopupItems(String mode, /*String startDate, String endDate,*/ LoginVO userInfo) throws Exception {
+	public JSONObject getPopupItems(String mode, LoginVO userInfo) throws Exception {
 		JSONObject result   = new JSONObject();
 		String userId       = userInfo.getId();
 		int tenantId        = userInfo.getTenantId();
 		String primary      = userInfo.getPrimary();
 		String offset       = userInfo.getOffset();
-		String companyId    = userInfo.getCompanyID();
-		String deptId       = userInfo.getDeptID();
 		String offsetMinute = commonUtil.getMinuteUTC(offset);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -761,43 +759,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			map.put("today", timeUTC);
 		}
 		
-		// 설문 팝업에 실질적으로 나타낼 리스트
-		List<SurveyVO> surveyPopupListWithAuth = new ArrayList<SurveyVO>();
-		
 		// 조직도, 직위, 직책, 권한그룹 모든 것에 해당되는 설문 목록
 		List<SurveyVO> surveyPopupList = ezSurveyDAO.getTotalPopupSurveyItems(map);
 		
-		// map.clear();
-		for (SurveyVO survey : surveyPopupList) {
-			map.put("companyId", companyId);
-			map.put("deptId", deptId);
-			List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
-			map.put("deptList", userDeptList);
-			map.put("surveyId", survey.getSurveyId());
-			
-			// 조직도, 직위, 직책 체크
-			boolean popupYN = ezSurveyDAO.getSurveyPopupPermitYN(map);
-			
-			if (popupYN) {
-				surveyPopupListWithAuth.add(survey);
-			} else {
-				// 권한그룹 체크
-				List<String> surveyGroupList = ezSurveyDAO.getSurveyGroupList(map);
-				
-				if (surveyGroupList != null) {
-					for (String groupId : surveyGroupList) {
-						boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, companyId, tenantId, userId, deptId, false);
-						
-						if (groupPermissionYN) {
-							surveyPopupListWithAuth.add(survey);
-							break;
-						}
-						
-					}
-				}
-			}
-		}
-		result.put("surveyPopupList", surveyPopupListWithAuth);
+		result.put("surveyPopupList", surveyPopupList);
 		result.put("userId", userId);
 		result.put("status", "ok");
 		result.put("code", 0);
