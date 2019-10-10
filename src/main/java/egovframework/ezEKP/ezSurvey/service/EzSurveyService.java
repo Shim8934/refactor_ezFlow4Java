@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSurvey.service;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzSurveyService {
@@ -48,4 +51,10 @@ public interface EzSurveyService {
 	JSONObject changeSurveyState(String itemId, LoginVO userInfo) throws Exception;
 	JSONObject saveResponseItem(JSONArray responses, long surveyId, LoginVO userInfo) throws Exception;
 	JSONObject getSurveyStatistic(Long surveyId, String realPath, LoginVO userInfo, String adminYN) throws Exception;
+	
+	//Get survey List
+	List<SurveyVO> getTodaySurveyList(int offset);
+	List<SurveyParticipantVO> getSurveyParticipantListForMail(long surveyId, String companyId, int tenantId);
+	void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception;
+	void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception;
 }

@@ -121,6 +121,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (List<SurveyVO>)list("EzSurveyDAO.getTotalReceivedSurveyItems", searchVO);
 	}
 	
+	public List<SurveyVO> getTotalPopupSurveyItems(Map<String, Object> map) {
+		return (List<SurveyVO>)list("EzSurveyDAO.getTotalPopupSurveyItems", map);
+	}
+
 	public void deleteItems(Map<String, Object> map) {
 		update("EzSurveyDAO.deleteItems", map);
 	}
@@ -193,8 +197,30 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		return (int)select("EzSurveyDAO.getUserResponseCntForSurvey", map);
 	}
 
-	public List<SurveyVO> getTotalPopupSurveyItems(Map<String, Object> map) {
-		return (List<SurveyVO>)list("EzSurveyDAO.getTotalPopupSurveyItems", map);
+	public boolean getSurveyPopupPermitYN(Map<String, Object> map) {
+		try {
+			int count = (int) select("EzPersonalDAO.getSurveyPopupPermitYN", map);
+			
+			if (count > 0) {
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 
+	public List<String> getSurveyGroupList(Map<String, Object> map) {
+		return (List<String>) list("EzPersonalDAO.getSurveyGroupList", map);
+	}
+
+	
+	public List<SurveyVO> getTodaySurveyList(Map<String, Object> map) {
+		return (List<SurveyVO>) list("EzSurveyDAO.getTodaySurveyList", map);
+	}
+	
+	public List<SurveyParticipantVO> getSurveyParticipantListForMail(Map<String, Object> map) {
+		return (List<SurveyParticipantVO>) list("EzSurveyDAO.getSurveyParticipantListForMail", map);
+	}
 }

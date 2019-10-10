@@ -647,7 +647,7 @@
 				async: false,
 				cache: false,
 				success : function(data) {
-					returnObj.surveyPopupList = data.itemList;
+					returnObj.surveyPopupList = data.surveyPopupList;
 					returnObj.userId = data.userId;
 				},
 				error : function(error) {
@@ -712,8 +712,7 @@
 					setLayer();
 				} 
 				var surveyPopupObj = getSurveyPopupList();
-				
-				if (surveyPopupObj.surveyPopupList != null) {
+				if (surveyPopupObj.surveyPopupList.length > 0 && surveyPopupObj.surveyPopupList != null) {
 					index = ++position0Count;
 					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
 					
@@ -722,8 +721,7 @@
 				
 			} else {
 				var surveyPopupObj = getSurveyPopupList();
-				
-				if (surveyPopupObj.surveyPopupList != null) {
+				if (surveyPopupObj.surveyPopupList.length > 0 && surveyPopupObj.surveyPopupList != null) {
 					index = ++position0Count;
 					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
 					

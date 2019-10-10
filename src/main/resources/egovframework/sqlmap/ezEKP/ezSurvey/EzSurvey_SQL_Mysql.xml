@@ -577,19 +577,21 @@
 	</select>
 	
 	<select id="EzSurveyDAO.getReceivedSurveyList" resultClass="Long">
-		SELECT survey_id FROM tbl_survey_participant WHERE
+		SELECT DISTINCT(survey_id) FROM tbl_survey_participant WHERE
 			(
-				(user_id = #userId# and user_type = 'user') 
+				(user_id = #userId# AND user_type = 'user') 
 				OR 
 				(user_id in 
 					<iterate property="deptList" open="(" close=")" conjunction=",">
 						#deptList[]#
-					</iterate> and (user_type = 'dept' or user_type = 'comp')
+					</iterate> and (user_type = 'dept' OR user_type = 'comp')
 				)
 				OR
-				(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+				(user_type = 'jikwi' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
 				OR
-				(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+				(user_type = 'jikchek' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+				OR
+				user_type = 'group'
 			)
 			and tenant_id = #tenantId# and company_id = #companyId#
 			<isNotEmpty property="surveyId" prepend=" and ">survey_id = #surveyId#</isNotEmpty>
@@ -742,6 +744,97 @@
 	<select id="EzSurveyDAO.getSurveyInfo" resultMap="surveyVO">
 		<include refid="surveySelect"/>
 			where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzSurveyDAO.getTodaySurveyList" resultClass="SurveyVO">
+		<![CDATA[
+			select
+				survey_id as surveyId,
+				title,
+				user_id as creatorId,
+				user_name1 as creatorName1,
+				user_name2 as creatorName2,
+				start_date as startDate,
+				end_date as endDate,
+				tenant_id as tenantId,
+				company_id as companyId
+			from
+				tbl_survey
+			where
+				date_add(start_date, interval #offset# minute) <= current_date
+			and
+				date_add(end_date, interval #offset# minute) >= current_date
+		 	and
+		 		use_status = 1
+		 	and
+		 		mail_flag = 1;
+ 		]]>
+	</select>
+	
+	<select id="EzSurveyDAO.getSurveyParticipantListForMail" resultClass="ParticipantVO">
+		<![CDATA[
+			select distinct
+				a.survey_id as surveyId,
+				b.cn as userId,
+				b.displayname as userName1,
+				b.displayname2 as userName2,
+				b.mail as email,
+				a.company_id as companyId,
+				a.tenant_id as tenantId
+			from
+				tbl_survey_participant a
+			join
+				tbl_usermaster b
+			on
+				a.tenant_Id = b.tenant_Id
+			and
+				a.tenant_Id = #tenantId#
+			and
+				(
+					(a.user_type = 'jikchek' and b.extensionattribute8 = a.user_id)
+				or
+					(a.user_type = 'jikwi' and b.extensionattribute7 = a.user_id)
+				or
+					(a.user_type = 'comp' and b.physicaldeliveryofficename = a.user_id)
+				or
+					(a.user_type = 'user' and b.cn = a.user_id)
+				or
+					(a.user_type = 'dept' and b.department = a.user_id)
+				or
+					(a.user_type = 'group' and b.cn in 
+						(
+							select distinct
+								d.cn
+							from
+								tbl_permissiongroupinfo c
+							join
+								tbl_usermaster d
+							on
+								d.tenant_Id = #tenantId#
+							and
+								(
+									(c.member_type = 'JIKCHEK' and d.extensionattribute8 = c.member_id)
+								or
+									(c.member_type = 'JIKWI' and d.extensionattribute7 = c.member_id)
+								or
+									(c.member_type = 'ORGAN' and d.physicaldeliveryofficename = c.member_id)
+								or
+									(c.member_type = 'USER' and d.CN = c.member_id)
+								or
+									(c.member_type = 'DEPT' and d.department = c.member_id)
+								)
+							where
+								c.group_id = a.user_id
+						)
+					)
+				)
+			where
+				a.survey_id = #surveyId#
+			and
+				a.tenant_id = #tenantId#
+			and
+				a.company_id = #companyId#
+ 		]]>
 	</select>
 	
 	<!--***********************************************************************************
@@ -1004,4 +1097,46 @@
 		]]>
 	</insert>
 	
+	<!--***********************************************************************************
+	**                                Survey Permit Check process                          **
+	************************************************************************************-->
+	<select id="EzPersonalDAO.getSurveyPopupPermitYN" parameterClass="Map" resultClass="Integer">
+		SELECT 
+			COUNT(user_id)
+		FROM 
+			tbl_survey_participant
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			( 
+				(user_type = 'user' AND user_id = #userId#)
+		        OR
+		        (user_id IN <iterate property="deptList" open="(" close=")" conjunction=",">
+								#deptList[]#
+							</iterate> AND (user_type = 'dept' OR user_type = 'comp') )
+				OR
+				(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+				OR
+				(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+			)
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</select>
+	
+	<select id="EzPersonalDAO.getSurveyGroupList" parameterClass="Map" resultClass="String">
+		SELECT 
+			user_id
+		FROM 
+			tbl_survey_participant
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			user_type = 'group'
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</select>
 </sqlMap>

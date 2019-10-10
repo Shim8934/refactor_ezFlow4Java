@@ -13,12 +13,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,12 +30,16 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSurvey.dao.EzSurveyDAO;
@@ -53,7 +59,7 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
-@Service
+@Service("EzSurveyService")
 public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyService {
 	private static final Logger logger = LoggerFactory.getLogger(EzSurveyServiceImpl.class);
 	
@@ -69,8 +75,17 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	@Resource(name="loginService")
 	private LoginService loginService;
 	
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+	
+	@Resource(name = "jspw")
+    private String jspw;
 	
 	@Override
 	public List<SimpleDeptVO> getAllSubDepts(String companyId, int level, String primary, int tenantId) throws Exception {
@@ -592,6 +607,11 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			ezSurveyDAO.saveSurveyUsers(surveyUser);
 		}
 		
+		if (mailFlag == 1) {
+			List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
+			sendMail(userList, survey);
+		}
+		
 		result.put("status", "ok");
 		result.put("code", 0);
 		return result;
@@ -712,6 +732,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		int tenantId        = userInfo.getTenantId();
 		String primary      = userInfo.getPrimary();
 		String offset       = userInfo.getOffset();
+		String companyId    = userInfo.getCompanyID();
+		String deptId       = userInfo.getDeptID();
 		String offsetMinute = commonUtil.getMinuteUTC(offset);
 		
 		if (!startDate.equals("")) {
@@ -733,9 +755,47 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			map.put("surveyIds", listReceivedSurvey);
 			map.put("today", timeUTC);
 		}
-		List<SurveyVO> itemList = ezSurveyDAO.getTotalPopupSurveyItems(map);
 		
-		result.put("itemList", itemList);
+		// 설문 팝업에 실질적으로 나타낼 리스트
+		List<SurveyVO> surveyPopupListWithAuth = new ArrayList<SurveyVO>();
+		
+		// 조직도, 직위, 직책, 권한그룹 모든 것에 해당되는 설문 목록
+		List<SurveyVO> surveyPopupList = ezSurveyDAO.getTotalPopupSurveyItems(map);
+		
+		// map.clear();
+		for (SurveyVO survey : surveyPopupList) {
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("companyId", companyId);
+			paramMap.put("tenantId", tenantId);
+			paramMap.put("userId", userId);
+			paramMap.put("deptId", deptId);
+			List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(paramMap);
+			paramMap.put("deptList", userDeptList);
+			paramMap.put("surveyId", survey.getSurveyId());
+			
+			// 조직도, 직위, 직책 체크
+			boolean popupYN = ezSurveyDAO.getSurveyPopupPermitYN(paramMap);
+			
+			if (popupYN) {
+				surveyPopupListWithAuth.add(survey);
+			} else {
+				// 권한그룹 체크
+				List<String> surveyGroupList = ezSurveyDAO.getSurveyGroupList(paramMap);
+				
+				if (surveyGroupList != null) {
+					for (String groupId : surveyGroupList) {
+						boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, companyId, tenantId, userId, deptId, false);
+						
+						if (groupPermissionYN) {
+							surveyPopupListWithAuth.add(survey);
+							break;
+						}
+						
+					}
+				}
+			}
+		}
+		result.put("surveyPopupList", surveyPopupListWithAuth);
 		result.put("userId", userId);
 		result.put("status", "ok");
 		result.put("code", 0);
@@ -1460,4 +1520,68 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return ezSurveyDAO.getAllMembersOfCompany(map);
 	}
 
+	@Override
+	public List<SurveyVO> getTodaySurveyList(int offset) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("offset", offset);
+		
+		return ezSurveyDAO.getTodaySurveyList(map);
+	}
+
+	@Override
+	public List<SurveyParticipantVO> getSurveyParticipantListForMail(long surveyId, String companyId, int tenantId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		return ezSurveyDAO.getSurveyParticipantListForMail(map);
+	}
+	
+	@Async
+	@Override
+	public void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception {
+		String userAccount = userinfo.getEmail();
+		String password = jspw;
+		
+		String userId = userAccount.split("@")[0];
+		String domainName = userAccount.split("@")[1];
+		int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+		String lang = ezCommonService.selectUserGetLang(userId, tenantId);
+		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
+		logger.debug("userAccount : " + userAccount + ", locale=" + locale);
+		
+		String creatorId = survey.getCreatorId();
+		String title = survey.getTitle();
+		long surveyId = survey.getSurveyId();
+		String creatorName = locale.toString().equals("ko") ? survey.getCreatorName1() : survey.getCreatorName2();
+		
+		String subject = title;
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezSurvey/surveyDetail.do?itemId=" + surveyId + "', '', 'width=835, height=900, scrollbars=yes, resizable=yes')\">");
+		sb.append("새로운 설문이 추가되었습니다.</span>");
+		
+		String content = commonUtil.createNotiMailContent(sb.toString(), tenantId, locale);
+		
+		InternetAddress from;
+		from = new InternetAddress(creatorId + "@" + domainName);
+		from.setPersonal(creatorName);
+		
+		InternetAddress toMember = new InternetAddress();
+		String toMemberName = locale.toString().equals("ko") ? userinfo.getUserName1() : userinfo.getUserName2();
+		toMember.setAddress(userinfo.getEmail());
+		toMember.setPersonal(toMemberName);
+		
+		InternetAddress[] toArr = new InternetAddress[]{toMember};
+		
+		ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, content.toString(), false, EmailImportance.NORMAL);
+	}
+	
+	@Override
+	public void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception {
+		for (int i = 0; i < userList.size(); i++) {
+			sendMail(userList.get(i), survey);
+		}
+	}
 }
