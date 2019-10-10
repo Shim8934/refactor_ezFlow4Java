@@ -32,7 +32,16 @@
 	</style>
 	<body class="mainbody" id="mainBody">
 		<h1><spring:message code='ezEmail.multiDomain.ksa02' /></h1>
-		
+		<div id="mainmenu"> <!-- mainmenu -->    
+   		   <span><b><spring:message code='ezOrgan.t00006' /> : </b>    		           
+	        <select id="ListCompany" onchange="company_change()">
+	        	<c:forEach var="item" items="${companylist}">
+	        		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	        	</c:forEach>
+	        </select>
+	        </span>
+   		</div>
+	        
 		<div style="width: 655px;">
 			<table style="width: 100%; height: 400px;">
 				<colgroup>
@@ -90,11 +99,18 @@
 		var companyInnerDomain;
 		var oriPrimaryDomain;
 		var saveParam = new Array();
+		var companyId = "${companyId}";
 		
 		window.onload = function () {
+			company_change();
+	    }
+		
+		function company_change() {
+			companyId = document.getElementById("ListCompany").value;
+			
 			get_domainList();
 			get_Company_domainList();
-	    }
+		}
 		
 		function get_domainList() {
 			$.ajax({
@@ -127,6 +143,7 @@
 			$.ajax({
 				type : "POST",
 				url : "/admin/ezEmail/getCompanyMultiDomainList.do",
+				data : {companyId:companyId},
 				dataType : "json",
 				success : function(data) {
 					companyInnerDomain = data.innerDomain;
@@ -160,7 +177,7 @@
 			$.ajax({
 				type : "POST",
 				url : "/admin/ezEmail/saveCompanyMultiDomain.do",
-				data : {primaryDomain:primaryDomain, saveDomainList:saveDomainList},
+				data : {primaryDomain:primaryDomain, saveDomainList:saveDomainList, companyId:companyId},
 				success : function(data) {
 					if (data == 0) {
 						alert("<spring:message code='ezEmail.multiDomain.ksa09' />");

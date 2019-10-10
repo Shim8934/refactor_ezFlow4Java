@@ -2575,9 +2575,25 @@ public class EzEmailAdminController {
 		
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
+		
+		String companyId = user.getCompanyID();
+		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+   		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < companylist.size(); i++) {
+			OrganDeptVO vo = companylist.get(i);			
+			
+			if (user.getRollInfo().indexOf("c=1") > -1 || (user.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(user.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("companylist", resultList);
 		
 		logger.debug("companyMultiDomain started.");
 		return "admin/ezEmail/companyMultiDomainMain";
@@ -2593,7 +2609,8 @@ public class EzEmailAdminController {
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		int tenantId = user.getTenantId();
-		String companyId = user.getCompanyID();
+		String companyId = request.getParameter("companyId");
+		companyId = companyId == null ?  user.getCompanyID() : companyId;
 		
 		String innerDomain = ezEmailService.getCompanyConfig(tenantId, companyId, "MailInnerDomain");
 		String primaryDomain = ezEmailService.getCompanyConfig(tenantId, companyId, "DomainName");
@@ -2616,7 +2633,8 @@ public class EzEmailAdminController {
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		int tenantId = user.getTenantId();
-		String companyId = user.getCompanyID();
+		String companyId = request.getParameter("companyId");
+		companyId = companyId == null ?  user.getCompanyID() : companyId;
 		String primaryDomain = request.getParameter("primaryDomain");
 		String saveDomainList = request.getParameter("saveDomainList");
 		
