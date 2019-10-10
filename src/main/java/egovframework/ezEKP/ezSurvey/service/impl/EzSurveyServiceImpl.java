@@ -609,7 +609,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		//Send notice mail
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Boolean notiMailFlag = mailFlag == 1 && dateFormat.format(new Date()).equals(startDate);
+		Boolean notiMailFlag = mailFlag == 1 && dateFormat.format(new Date()).equals(startDate) && draftMode == 0;
 		if (notiMailFlag) {
 			int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
 			

@@ -806,7 +806,9 @@
 		 	and
 		 		use_status = 1
 		 	and
-		 		mail_flag = 1;
+		 		mail_flag = 1
+		 	and
+		 		draft_flag = 0
  		]]>
 	</select>
 	
