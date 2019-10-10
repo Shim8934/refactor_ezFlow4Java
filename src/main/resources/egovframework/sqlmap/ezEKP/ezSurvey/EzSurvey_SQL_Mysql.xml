@@ -789,6 +789,8 @@
 				a.tenant_Id = b.tenant_Id
 			and
 				a.tenant_Id = #tenantId#
+           	and
+           		b.cn not in (select cn from tbl_usermaster_retire where tenant_id = #tenantId#)
 			and
 				(
 					(a.user_type = 'jikchek' and b.extensionattribute8 = a.user_id)
