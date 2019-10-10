@@ -821,4 +821,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addSurveyMailSentFlagColumn");
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getPermissionGroupMembers(Map<String, Object> map) throws Exception {
+		return (List<LoginVO>) list("EzCommonDAO.getPermissionGroupMembers", map);
+	}
 }

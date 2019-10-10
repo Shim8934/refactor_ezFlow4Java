@@ -153,5 +153,7 @@ public interface EzCommonService {
 	public boolean getPermissionGroupAccessYN (String groupId, String companyId, int tenantId, String userId, String deptId, boolean applySubDeptYN) throws Exception;
 	
 	public void addSurveyMailSentFlagColumn() throws Exception;
+	
+	public List<LoginVO> getPermissionGroupMembers (String groupId, String companyId, int tenantId, boolean applySubDeptYN) throws Exception;
 }
 
