@@ -177,7 +177,6 @@
 					selectedDept = document.getElementById("deptList").value;
 				}
 				
-				document.getElementById("deptList").value;
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments[1] = select_person_Complete;
@@ -423,7 +422,7 @@
 			<c:if test="${approvalFlag =='G'}">
 				<span class="txt">▒ <spring:message code='ezPersonal.t55' /></span><br/>
 				<span class="txt">▒ <spring:message code='ezPersonal.t56' /></span><br/>
-				<span class="txt">▒ <spring:message code='ezPersonal.t57' /></span><br/>
+				<span class="txt">&emsp;&nbsp;<spring:message code='ezPersonal.t57' /></span><br/>
 				<span class="txt">▒ <spring:message code='ezPersonal.t58' /></span><br/>
 			</c:if>
 			<c:if test="${approvalFlag !='G'}">

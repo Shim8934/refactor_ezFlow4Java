@@ -1,5 +1,6 @@
 package egovframework.com.cmm.util;
 import java.io.File;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -62,6 +63,11 @@ public class BeanLogic {
 		}
 		
 		return msgFilePath;
-	}	
+	}
+	
+	public String enCodeURL(String keyword) throws Exception {
+		keyword = URLEncoder.encode(keyword, "UTF-8");
+		return keyword;
+	}
 }
 

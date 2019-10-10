@@ -201,7 +201,7 @@
 		                var retVal = window.showModalDialog(url, parameter, "dialogWidth:500px;dialogHeight:420px;status:no;help:no;scroll:no;edge:sunken" + feature);
 		            }
 		        } else {
-		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
+		            var pInformationString = "<spring:message code = 'ezApprovalG.deptSeal001' />";
 		            OpenAlertUI(pInformationString);
 		            
 		            return;

@@ -98,7 +98,8 @@
 	                    document.getElementById("ProgressBar").style.display = "none";
 	                    document.getElementById("AddressListTr").style.display = "";
 
-	                    XmlNode = loadXMLString(g_xmlHTTP.responseText);
+	                    //주소에 & 가 들어가 있는 주소가 있을 경우 파싱 에러 수정(ex: 수&수 빌딩, S&C 빌딩). 2019-09-23 홍대표
+	                    XmlNode = loadXMLString(g_xmlHTTP.responseText.replace(/&/g, "&amp;"));
 	                    _html = "<table class='mainlist' style='width:100%;'>";
 	                    if (SelectNodes(XmlNode, "DATA/ROW").length > 0) {
 	                        for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {

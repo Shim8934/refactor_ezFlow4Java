@@ -1340,7 +1340,7 @@
 		        var width = window.screen.availWidth;
 		        var heigth = heigth - 50;
 		        var width = width/2;
-		        var left = 0;
+		        var left = width/2;
 		        var top = 0;
 		        var pDocID = tr.getAttribute("DATA1");
 		        var pOrgDocID = tr.getAttribute("DATA7");

@@ -103,9 +103,17 @@
 		                ReservationItem_onclick();
 		            }
 		            else {
+		            	/* 2019-09-16 홍승비 - 게시판 리다이렉트로 이동하는 경우, 게시판 좌측메뉴 스크롤 미생성 오류 수정 */
 		                if (RedirectBoardID != "") {
 		                    if (RedirectBoardGroupID != "" && RedirectBoardGroupID != "null" && g_ReadyState == "") {
 		                        BoardRedirect();
+		                        
+		                        document.getElementById('TreeCtrl_MyBoardTree').scrollTop = 0;
+		                        leftResize();
+		        		        $(".boardListBox").mCustomScrollbar({
+		        	        		theme : "dark"
+		        	        	});
+		        		        
 		                        return;
 		                    }
 

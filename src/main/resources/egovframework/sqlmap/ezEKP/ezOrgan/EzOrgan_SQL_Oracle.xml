@@ -80,6 +80,22 @@
 		<result property="company" 								column="company" 					columnIndex="3"/>			
 	</resultMap>
 	
+	<sql id="organSearchTrashDept_user">
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				AND DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' ESCAPE '\' ) 
+			]]>
+		</isNotEqual>
+	</sql>
+
+	<sql id="organSearchTrashDept_dept">
+		<isNotEqual property="adminOrgan" compareValue="y">
+			<![CDATA[
+				AND DEPT_CD_PATH NOT LIKE '%trash\_dept%' ESCAPE '\' 
+			]]>
+		</isNotEqual>
+	</sql>
+
 	<select id="EzOrganDAO.getPropertyValue_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[	
 			SELECT
@@ -264,6 +280,16 @@
                				TBL_DEPTMASTER 
                			WHERE
                				EXTENSIONATTRIBUTE1 = #v_CN#
+		]]>
+						<isEmpty property="displayTrashDept">
+							<![CDATA[
+								AND
+									EXTENSIONATTRIBUTE1 NOT LIKE 'trash\_dept\_%' ESCAPE '\'
+								AND
+									CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
+							]]>
+						</isEmpty>
+		<![CDATA[
                			AND
                				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY
@@ -1330,7 +1356,10 @@
                         		' ' DISPLAYNAMEPRINTABLE  ,
                         		POSITIONCD ,
                         		BIRTH ,
-                        		BIRTHTYPE 
+                        		BIRTHTYPE ,
+                        		FURIGANA ,
+                        		EXTENSIONPHONE ,
+                        		OFFICEMOBILE
              FROM
              	TBL_USERMASTER 
              WHERE
@@ -1534,15 +1563,14 @@
 	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
-			<isNotEqual property="class" compareValue="all">
 			SELECT * FROM(
-			</isNotEqual>
 
 			SELECT 
 				cn,
 				department as displayName,
 				n'' as extensionAttribute15,
-				'user' as type				
+				'user' as type,
+				displayname as NAME			
 			FROM 
 	    		TBL_USERMASTER A 
             $strSQL$
@@ -1550,6 +1578,7 @@
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
             AND 
             	DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\' 
+			<include refid="organSearchTrashDept_user"/>
             AND 
                 A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
 	    	<![CDATA[
@@ -1570,11 +1599,13 @@
 		      		A.cn,
 		      		deptid as displayName,
 		      		n'' as extensionAttribute15,
-		      		'user' as type
+		      		'user' as type,
+					displayname as NAME	
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
 	            $strGyumjikForOracle$ 
 	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+				<include refid="organSearchTrashDept_user"/>
 	            AND A.TENANT_ID = #v_TENANT_ID#
 				$strSQLAddjobCom$
 				<isNotEmpty property="companyId">
@@ -1583,9 +1614,9 @@
 		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#) 
 		    	</isNotEmpty>
 		    	
-		    	<isNotEqual property="class" compareValue="all">
+		    	<!-- <isNotEqual property="class" compareValue="all">
             		) ORDER BY  displayname asc, TO_NUMBER(EXTENSIONATTRIBUTE15) ASC
-	            </isNotEqual>
+	            </isNotEqual> -->
 		    	
     		</isNotEqual>
 	
@@ -1596,11 +1627,13 @@
 					cn,
 					n'' as displayName,
 					n'' as extensionAttribute15,
-					'group' as type
+					'group' as type,
+					displayname as NAME
 				FROM
 					TBL_DEPTMASTER 
                 $strSQL$ 
                 AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+				<include refid="organSearchTrashDept_dept"/>
                 AND TENANT_ID = #v_TENANT_ID#
                 
                 <isNotEmpty property="companyId">
@@ -1609,7 +1642,8 @@
 		    	</isNotEmpty>
 			</isEqual>	  
 			
-			$strSize$    				
+			$strSize$
+			) ORDER BY type DESC, NAME ASC	 			
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -1621,6 +1655,7 @@
 	    		TBL_DEPTMASTER 
             $strSQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+			<include refid="organSearchTrashDept_dept"/>
             AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
 	    </isEqual>
 	</select>
@@ -1651,6 +1686,9 @@
                              CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                                                
                          AND 
                          	DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+						]]>
+							<include refid="organSearchTrashDept_user"/>
+						<![CDATA[
                          AND 
                              A.TENANT_ID = #v_TENANT_ID#
 			       		 AND
@@ -1671,6 +1709,9 @@
 						a.cn = b.cn AND a.tenant_id = b.tenant_id
 						$strSQL$ 
 						AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+					]]>
+						<include refid="organSearchTrashDept_user"/>
+					<![CDATA[
 						AND A.TENANT_ID = #v_TENANT_ID#
 						$strSQLAddjobCom$
 					)  A) B 
@@ -1691,6 +1732,9 @@
 				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 			AND 
 				DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+			]]>
+				<include refid="organSearchTrashDept_user"/>
+			<![CDATA[
 			AND
 				A.TENANT_ID = #v_TENANT_ID#
 
@@ -1708,6 +1752,9 @@
 			ON
 				A.CN = B.CN $strSQL$ 
 				AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+				]]>
+					<include refid="organSearchTrashDept_user"/>
+				<![CDATA[
 				AND A.TENANT_ID = B.TENANT_ID
 
 			UNION ALL
@@ -1720,6 +1767,9 @@
 				FROM
 					TBL_DEPTMASTER $strSize$ 
 				AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+				]]>
+					<include refid="organSearchTrashDept_dept"/>
+				<![CDATA[
 				AND TENANT_ID = #v_TENANT_ID#	
 			]]>
           </isEqual>
@@ -1734,6 +1784,9 @@
 	    		TBL_DEPTMASTER 
             $strSQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+			]]>
+				<include refid="organSearchTrashDept_dept"/>
+			<![CDATA[
             AND TENANT_ID = #v_TENANT_ID#
 			]]>
 	      </isEqual>
@@ -1753,6 +1806,9 @@
 					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 				AND 
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+				]]>
+					<include refid="organSearchTrashDept_user"/>
+				<![CDATA[
 				AND 
 					A.TENANT_ID = #v_TENANT_ID#
 				AND
@@ -1769,6 +1825,9 @@
 					$strSQL$ 
 				AND 
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+				]]>
+					<include refid="organSearchTrashDept_user"/>
+				<![CDATA[
 				AND 
 					A.TENANT_ID = #v_TENANT_ID#
 				) A
@@ -2058,7 +2117,7 @@
       	AND
       		TENANT_ID = #tenantId#
 		ORDER BY
-			CN
+			DISPLAYNAME
 	</select>
 	
 	<select id="EzOrganDAO.getDeptMasterName" parameterClass="Map" resultClass="String">

@@ -20,6 +20,7 @@ public class ConnectionInfoVO {
 	private String companynm;  
 	private String companynm2; 
 	private String connectip;
+	private String connectCountryName;
 	private String connectinfo; 
 	private String connecttime;
 	private String connectbrowser; 
@@ -166,6 +167,12 @@ public class ConnectionInfoVO {
 	}
 	public void setTime(String time) {
 		this.time = time;
+	}
+	public String getConnectCountryName() {
+		return connectCountryName;
+	}
+	public void setConnectCountryName(String connectCountryName) {
+		this.connectCountryName = connectCountryName;
 	}
 	
 	

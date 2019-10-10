@@ -27,11 +27,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
+
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
+import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
@@ -79,13 +83,19 @@ public class MLoginGWController {
     
 	/** EgovMessageSource */
     @Resource(name="egovMessageSource")
-    private EgovMessageSource egovMessageSource;   
+    private EgovMessageSource egovMessageSource;  
+    
+    @Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
 	
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(MLoginGWController.class);
     
     @Autowired
     private EzEmailUtil ezEmailUtil;
+    
+    @Autowired
+	private EzOrganAdminService ezOrganAdminService;
     
     /**
 	 * 모바일 G/W 사용자 [GET] 로그인
@@ -283,6 +293,21 @@ public class MLoginGWController {
     	        	        return result;
     	    			}
     	    		}
+    	    		
+    	    		// 사용자정지 여부를 체크
+    	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+    	        	
+    	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
+    	        		int flag = checkStopUser(tenantId, resultVO.getId());
+    	        		if(flag > 0) {
+    	        			LOGGER.debug("stopUser");
+    	        			result.put("status", "error");
+        					result.put("code", "8");			
+        					result.put("data", "stopUser");
+        					
+        					return result;
+    	        		}
+    	        	}
     				
     				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
                 	
@@ -443,6 +468,8 @@ public class MLoginGWController {
         					String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", tenantId);
         					/* 2018-11-02 배현상 - 공유결재문서 사용 유무 YES or NO */
         					String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", tenantId);
+        					/* 2019-08-30 김수아 - 모바일 세션 시간 config - useMobileSession */
+        					String useSessionMobile = ezCommonService.getTenantConfig("useSessionMobile", tenantId);
         					
         					Map<String, Object> map = new HashMap<String, Object>();
         					map.put("uid", uid);
@@ -457,6 +484,7 @@ public class MLoginGWController {
         					map.put("companyID", resultVO.getCompanyID());
         					map.put("primaryLang", primaryLang);
         					map.put("rollInfo", resultVO.getRollInfo());
+        					map.put("useSessionMobile", useSessionMobile);    				
         					
         					// LoginCookieSSO는 모바일용 쿠키가 아니라 웹버전 연동 쿠키임
         					Map<String, Object> mapSSO = new HashMap<String, Object>();
@@ -732,13 +760,63 @@ public class MLoginGWController {
     				}
     				checkCnt = 0;
     			} 
-    		} else { // 대역이 등록 안되어있으면 무조건 false (userIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
+    		} /*else { // 대역이 등록 안되어있으면 무조건 false (userIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
     			return false;
-    		}
+    		}*/
+    		
+    		// 허용 국가 리스트
+        	String countryCodeList = ezSystemAdminService.getAccessCountryList(loginVO.getTenantId());
+        	if (!countryCodeList.trim().equals("")) {
+        		// 1. 사설 아이피인지 확인 후 
+        		String loginCountryCode = "";
+        		String loginCountryName = "";
+        		
+        		Boolean localIpChk = commonUtil.checkLocalIP(loginVO.getIp());
+        		
+        		if (localIpChk) {
+        			loginCountryCode = ezCommonService.getTenantConfig("systemCountryCode", loginVO.getTenantId());
+        		} else { // 2.아니면 db에서 어떤 국가인지 체크
+            		long changeIP = changeIPtoInteger(loginVO.getIp());
+            		LOGGER.debug("changeIP=" + changeIP);
+            		
+            		CountryVO countryVo = loginService.getLoginIPCountry(changeIP);
+            		if (countryVo != null){
+            			loginCountryCode = countryVo.getCountryCode();
+            			loginCountryName = countryVo.getCountryName();
+            		}
+        		} // localIPChk end
+
+    			LOGGER.debug("countryCodeList=" + countryCodeList);
+    			LOGGER.debug("LoginIpCountry=" + loginCountryCode + ":" + loginCountryName);
+    			
+    			if (countryCodeList.indexOf(loginCountryCode) > -1){
+    				returnValue = true;
+    			}
+        	}
+    		
     	}
 
     	LOGGER.debug("ipAccessCheck ended.");
     	return returnValue;
+    }
+    
+    private int checkStopUser(int tenantID, String userID) throws Exception {
+    	int flag = ezOrganAdminService.checkStopUser(userID, tenantID);
+    	return flag;
+    }   
+    
+    private long changeIPtoInteger(String changeIP) throws Exception {
+    	String[] iparr = changeIP.split("\\.");
+    	long returnChangeIp = 0;
+    	
+		if (iparr.length == 4) {
+			returnChangeIp = (long) Math.pow(256, 3) * Integer.parseInt(iparr[0])
+					+ (long) Math.pow(256, 2) * Integer.parseInt(iparr[1])
+					+ (long) Math.pow(256, 1) * Integer.parseInt(iparr[2])
+					+ (long) Math.pow(256, 0) * Integer.parseInt(iparr[3]);
+		}
+		
+		return returnChangeIp;
     }
     
 }

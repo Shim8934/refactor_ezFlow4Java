@@ -5,6 +5,7 @@
 
 	<typeAlias  alias="egovMap" 				type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
 	<typeAlias  alias="loginVO" 				type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias 	alias="CountryVO" 				type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 
 	<!-- 로그인 처리를 위한 resultMap -->
 	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
@@ -38,7 +39,16 @@
     <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
         <result property="serverName"           column="SERVER_NAME"                columnIndex="1"/>    
         <result property="tenantId"             column="TENANT_ID"                  columnIndex="2"/>
-    </resultMap>    
+    </resultMap>   
+    
+    <resultMap id="CountryVO" class="CountryVO">
+        <result property="startIP"           		column="START_IP" />    
+        <result property="endIP"             		column="END_IP"   />
+        <result property="startIPNumber"           	column="START_IP_NUMBER" />    
+        <result property="endIPNumber"             	column="END_IP_NUMBER"   />
+        <result property="countryCode"           	column="COUNTRY_CODE" />    
+        <result property="countryName"             	column="COUNTRY_NAME"   />
+    </resultMap> 
  
 	<!-- 일반 로그인 -->
 	<select id="loginDAO.selectUser" resultMap="login">
@@ -420,4 +430,15 @@
 				tenant_id = #tenantId#
         ]]>
     </select>
+    
+   <select id="loginDAO.getLoginIPCountry" parameterClass="Map" resultMap="CountryVO">
+		SELECT 
+			START_IP, END_IP, START_IP_NUMBER, END_IP_NUMBER, 
+			COUNTRY_CODE, COUNTRY_NAME
+		FROM 
+			JMOCHA_MAIL_COUNTRYIP
+		WHERE 
+			#loginIP# BETWEEN START_IP_NUMBER AND END_IP_NUMBER;
+	</select>
+	
 </sqlMap>

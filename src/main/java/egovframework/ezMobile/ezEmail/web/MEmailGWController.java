@@ -555,6 +555,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
 			
+			if (ed == null) {
+				ed = new Date();
+			}
+			
 			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, sd, ed, searchSubFolder, 
 					isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId());
 			
@@ -1211,8 +1215,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								orgMessageSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 							}
 						}	
+						
+						sb.append("<hr tabindex=\"-1\">");
 						if (textOption.equalsIgnoreCase("HTML")) {
-							sb.append("<hr tabindex=\"-1\">");
 				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
 							sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
 				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));

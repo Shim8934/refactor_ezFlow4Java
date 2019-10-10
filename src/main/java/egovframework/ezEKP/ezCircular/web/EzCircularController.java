@@ -1813,11 +1813,13 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularSelectAttendant started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		logger.debug("circularSelectAttendant ended");
 		
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID()); //baonk added
+		model.addAttribute("primaryLang", primaryLang);
 		
 		return "/ezCircular/circularSelectAttendant";
 	}

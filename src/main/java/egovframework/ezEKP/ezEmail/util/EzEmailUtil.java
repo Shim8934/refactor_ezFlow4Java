@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -24,6 +25,7 @@ import java.security.spec.RSAPublicKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -32,12 +34,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.activation.DataHandler;
 import javax.annotation.Resource;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -49,15 +54,19 @@ import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Header;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.mail.Transport;
 import javax.mail.UIDFolder;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.ContentDisposition;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
@@ -65,6 +74,7 @@ import javax.mail.search.DateTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
+import javax.mail.util.ByteArrayDataSource;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
@@ -133,11 +143,32 @@ public class EzEmailUtil {
 	@Value("#{cryptos['EzEmailUtil.apb']}")
 	private String apb;
 	
+	public String getMailHeaderPath(long mailboxId, long mailUid) {
+		String realPath = config.getProperty("data_root");
+		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
+		String parentFolderName = String.valueOf(mailUid % 100);
+		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
+							realPath, "/fileroot/mail", mailboxParentFolderName, mailboxId, parentFolderName, mailUid);
+		String headerPath = String.format("%s.%s", mailPath, "head");
+
+		return headerPath;
+	}
+
+	public String getMailBodyPath(long mailboxId, long mailUid) {
+		String realPath = config.getProperty("data_root");
+		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
+		String parentFolderName = String.valueOf(mailUid % 100);
+		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
+							realPath, "/fileroot/mail", mailboxParentFolderName, mailboxId, parentFolderName, mailUid);
+		String bodyPath = String.format("%s.%s", mailPath, "body");
+
+		return bodyPath;
+	}
+	
 	public String getInboxFolderId() {
 		return "INBOX";
 	}
-	
-	
+		
 	public String getSentFolderId(Locale locale) {
 		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
 		
@@ -1927,7 +1958,7 @@ public class EzEmailUtil {
     		
     		logger.debug("folderPath=" + folderPath);
     		
-    		messages = advancedSearchFolder(ia, userAccount, folderPath, searchField, searchValue, startDate, endDate, 
+    		messages = advancedSearchFolder(ia, userAccount, folder, folderPath, searchField, searchValue, startDate, endDate, 
     				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap);
     		
     		// pre-fetch
@@ -2422,6 +2453,7 @@ public class EzEmailUtil {
 	public Message[] advancedSearchFolder(
 			IMAPAccess ia,
 			String userAccount,
+			Folder folder,
 			String folderPath, 
 			String[] searchField, 
 			final String[] searchValue,
@@ -2458,6 +2490,10 @@ public class EzEmailUtil {
 		Folder mailFolder = null;
 		Message message = null;
 		
+		// 폴더 오픈 시 IMAP select 커맨드가 호출되는데 폴더 안에 메일이 많은 경우 오버헤드가 큰 관계로
+		// 패러메터로 넘어온 이미 오픈된 folder를 folderMap에 미리 넣는다.
+		folderMap.put(folderPath, folder);
+
 		for (String mailUrl : mailList) {
 			mailFolderPath = mailUrl.split("/")[0];
 			mailUid = Long.parseLong(mailUrl.split("/")[1]);
@@ -4580,6 +4616,336 @@ public class EzEmailUtil {
 		}
 
 		return false;
+	}
+
+	public SimpleMailer createMail(String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userId + "@" + domainName;
+		String password  = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+
+		return createMail(userAccount, password);
+	}
+
+	/** 메일을 간단히 보낼 수 있는 SimpleMailer 객체를 반환 */
+	public SimpleMailer createMail(String userEmail, String password) throws Exception {
+		return new SimpleMailer(userEmail, password);
+	}
+
+	public class SimpleMailer {
+		private String userEmail;
+		private String password;
+
+		/** 제목 */
+		private String subject;
+		/** 내용 (HTML) */
+		private String content;
+		/**
+		 * 사용자 로케일<br>
+		 * useStandardFolderId 모드가 NO 일 때 메일함 다국어 지원을 위함
+		 */
+		private Locale locale;
+		/** 중요성 */
+		private EmailImportance importance;
+		/** 보낸 사람 */
+		private InternetAddress from;
+		/** 받는 사람 */
+		private List<InternetAddress> toList;
+		/** 참조 */
+		private List<InternetAddress> ccList;
+		/** 숨은 참조 */
+		private List<InternetAddress> bccList;
+		/** 실제 SMTP 레벨의 수신자 */
+		;
+		private List<InternetAddress> recipientList;
+		/** 첨부파일 */
+		private List<EmailAttachment> attachmentList;
+
+		/** 보낸 편지함 저장 여부, 기본값: false */
+		private boolean isSentSave = false;
+
+		private SimpleMailer(String userEmail, String password) {
+			this.userEmail = userEmail;
+			this.password = password;
+		}
+
+		public SimpleMailer subject(String subject) {
+			this.subject = subject;
+			return this;
+		}
+
+		public SimpleMailer content(String content) {
+			this.content = content;
+			return this;
+		}
+
+		public SimpleMailer locale(Locale locale) {
+			this.locale = locale;
+			return this;
+		}
+
+		public SimpleMailer importance(EmailImportance importance) {
+			this.importance = importance;
+			return this;
+		}
+
+		public SimpleMailer from(InternetAddress from) {
+			this.from = from;
+			return this;
+		}
+
+		public SimpleMailer from(String from) throws AddressException {
+			this.from = new InternetAddress(from);
+			return this;
+		}
+
+		public SimpleMailer to(String... array) {
+			return to(strArrayToAddress(array));
+		}
+
+		public SimpleMailer to(InternetAddress... array) {
+			toList = addAll(toList, array);
+			return this;
+		}
+
+		public SimpleMailer to(List<InternetAddress> list) {
+			toList = addAll(toList, list);
+			return this;
+		}
+
+		public SimpleMailer cc(String... array) {
+			return cc(strArrayToAddress(array));
+		}
+
+		public SimpleMailer cc(InternetAddress... array) {
+			ccList = addAll(ccList, array);
+			return this;
+		}
+
+		public SimpleMailer cc(List<InternetAddress> list) {
+			ccList = addAll(ccList, list);
+			return this;
+		}
+
+		public SimpleMailer bcc(String... array) throws AddressException {
+			return bcc(strArrayToAddress(array));
+		}
+
+		public SimpleMailer bcc(InternetAddress... array) {
+			bccList = addAll(bccList, array);
+			return this;
+		}
+
+		public SimpleMailer bcc(List<InternetAddress> list) {
+			bccList = addAll(bccList, list);
+			return this;
+		}
+
+		public SimpleMailer attach(String name, InputStream inputStream) {
+			return attach(name, null, inputStream);
+		}
+
+		public SimpleMailer attach(String name, String contentType, InputStream inputStream) {
+			attachmentList = addAll(attachmentList, new EmailAttachment(name, contentType, inputStream));
+			return this;
+		}
+
+		public SimpleMailer attach(List<EmailAttachment> list) {
+			attachmentList = addAll(attachmentList, list);
+			return this;
+		}
+
+		public SimpleMailer smtpRecipients(String... array) throws AddressException {
+			return smtpRecipients(strArrayToAddress(array));
+		}
+
+		public SimpleMailer smtpRecipients(InternetAddress... array) {
+			recipientList = addAll(recipientList, array);
+			return this;
+		}
+
+		public SimpleMailer smtpRecipients(List<InternetAddress> list) {
+			recipientList = addAll(recipientList, list);
+			return this;
+		}
+
+		private InternetAddress[] strArrayToAddress(String... array) {
+			return Arrays.stream(array).map(address -> {
+				try {
+					return new InternetAddress(address);
+				} catch (AddressException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}).filter(Objects::nonNull).toArray(InternetAddress[]::new);
+		}
+
+		@SuppressWarnings("unchecked")
+		private <T> List<T> addAll(List<T> origin, T... others) {
+			if (others == null) {
+				return origin;
+			}
+
+			return addAll(origin, Arrays.asList(others));
+		}
+
+		private <T> List<T> addAll(List<T> origin, List<T> others) {
+			if (others == null) {
+				return origin;
+			}
+
+			if (origin == null) {
+				if (others instanceof ArrayList) {
+					return others;
+				}
+
+				return new ArrayList<>(others);
+			}
+
+			origin.addAll(others);
+			return origin;
+		}
+
+		public SimpleMailer saveSentMailbox(boolean isSentSave) {
+			this.isSentSave = isSentSave;
+			return this;
+		}
+
+		public void send() {
+			IMAPAccess ia = null;
+			boolean hasAttchment = attachmentList != null && !attachmentList.isEmpty();
+			logger.debug("send started");
+
+			try {
+				SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"), userEmail, password);
+
+				MimeMessage message = sa.createMimeMessage();
+
+				// set from
+				logger.debug("from=" + from.getAddress());
+				message.setFrom(from);
+
+				// set to
+				for (InternetAddress to : toList) {
+					logger.debug("to=" + to.getAddress());
+					message.addRecipient(RecipientType.TO, to);
+				}
+
+				// set cc
+				if (ccList != null) {
+					for (InternetAddress cc : ccList) {
+						logger.debug("cc=" + cc.getAddress());
+						message.addRecipient(RecipientType.CC, cc);
+					}
+				}
+
+				// set bcc
+				if (bccList != null) {
+					for (InternetAddress bcc : bccList) {
+						logger.debug("bcc=" + bcc.getAddress());
+						message.addRecipient(RecipientType.BCC, bcc);
+					}
+				}
+
+				// set subject
+				logger.debug("subject=" + subject);
+				message.setSubject(subject, "UTF-8");
+
+				// set content and attachment
+				if (hasAttchment) {
+					BodyPart htmlContentPart = new MimeBodyPart();
+					htmlContentPart.setContent(content, "text/html; charset=utf-8");
+
+					MimeMultipart multipartContent = new MimeMultipart();
+					multipartContent.addBodyPart(htmlContentPart);
+
+					for (EmailAttachment attachment : attachmentList) {
+						InputStream attachInputStream = attachment.getInputStream();
+						BodyPart attachPart = new MimeBodyPart();
+
+						// 첨부파일 이름 자소결합, UTF-8 인코드 및 폴딩
+						String nfcFilename = commonUtil.normalizeFileName(attachment.getName());
+						String encodedFileName = MimeUtility.encodeText(nfcFilename, "UTF-8", "B");
+						encodedFileName = MimeUtility.fold(0, encodedFileName);
+
+						// 첨부파일의 Content-Type을 구한다. (디폴트는
+						// application/octet-stream로 설정)
+						String contentType = attachment.getContentType();
+
+						// Content-Type을 구할 수 없다면 application/octet-stream 를
+						// 기본값으로 함
+						if (contentType == null) {
+							contentType = Optional.ofNullable(URLConnection.guessContentTypeFromStream(attachInputStream)).orElse("application/octet-stream");
+						}
+
+						attachPart.setDataHandler(new DataHandler(new ByteArrayDataSource(attachInputStream, contentType)));
+						attachPart.setHeader("Content-Disposition", "attachment;\r\n filename=\"" + encodedFileName + "\"");
+						attachPart.setHeader("Content-Type", contentType);
+
+						multipartContent.addBodyPart(attachPart);
+					}
+
+					message.setContent(multipartContent);
+				} else {
+					message.setContent(content, "text/html; charset=utf-8");
+				}
+
+				// set sentDate
+				message.setSentDate(Calendar.getInstance().getTime());
+
+				// set User-Agent header
+				message.setHeader("User-Agent", "JMocha Mail 1.0");
+
+				// set importance header
+				if (importance != null && importance != EmailImportance.NORMAL) {
+					message.setHeader("Importance", importance.getMappingValue());
+					message.setHeader("X-Priority", importance.getPriority());
+				}
+
+				// set X-JMocha-Noti header
+				message.setHeader("X-JMocha-Noti", "true");
+
+				if (recipientList == null) {
+					Transport.send(message);
+				} else {
+					Transport.send(message, recipientList.toArray(new InternetAddress[recipientList.size()]));
+				}
+
+				logger.debug("Mail send success.");
+
+				if (isSentSave) {
+					// 유저 로케일이 없을시 시스템 로케일로 설정
+					if (locale == null) {
+						locale = Locale.getDefault();
+					}
+					// 보낸편지함에 저장
+					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale,
+							EzEmailUtil.this);
+
+					Folder sentFolder = ia.getFolder(getSentFolderId(locale));
+
+					if (!sentFolder.exists()) {
+						ia.createFolder(sentFolder.getFullName());
+					}
+
+					message.setFlag(Flags.Flag.SEEN, true);
+					sentFolder.open(Folder.READ_WRITE);
+					sentFolder.appendMessages(new Message[] { message });
+					sentFolder.close(true);
+					logger.debug("Mail is successfully saved in sent folder.");
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+
+			logger.debug("send ended");
+		}
 	}
 }
 

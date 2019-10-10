@@ -57,6 +57,12 @@
 		    var sendPermission = "${sendPermission}";
 		    var mailWritePreview = "${mailWritePreview}"; // 메일 작성 > 미리보기
 		    var g_uid = "${uid}";
+		    var countryName = "${countryName}";
+		    var countryIP = "${countryIP}";
+		    var countryCode = "${countryCode}";
+		    var systemCountryCode = "${systemCountryCode}";
+		    var useCountryIP = "${useCountryIP}";
+		    var useShowSystemCountry = "${useShowSystemCountry}";
 		    
 		    window.onresize = window_onresize;
 		    
@@ -117,6 +123,28 @@
 		        	btnMove.style.display = "none";
 		        	btnDelete.style.display = "none";
 		        }
+		        
+		        if (useCountryIP == "YES") {
+		        	if (useShowSystemCountry == "YES") {
+		        		if (countryCode != "") {
+		        			if (countryCode == "unknown") {
+		        				countryCode = "qm";
+        					}
+				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
+				        	document.getElementById("nationalFlag").style.display = "";
+		        		}
+		        	} else {
+		        		if (countryCode != systemCountryCode) {
+		        			if (countryCode == "unknown") {
+		        				countryCode = "qm";
+        					}
+				        	document.getElementById("nationalFlag").src = "/images/countryIcon/" + countryCode + ".png";
+				        	document.getElementById("nationalFlag").style.display = "";
+		        		} else {
+		        			document.getElementById("nationalFlag").style.display = "none";
+		        		}
+		        	}
+		        } 
 		        
 		        try{
 		            if(ReadCountCheck=="N")
@@ -562,7 +590,27 @@
 			                        <a onClick="show_senderprofile()">					
 			                            <span id="LabelFromName">${fromStr}</span>
 			                            <span id="LabelSenderInfo"></span>	
-			                        </a>					
+			                        </a>
+				                    <c:if test="${useCountryIP == 'YES'}">
+				                    	<span id="country" title= ${countryName}> 
+				                    	<c:set var="data" value="${useShowSystemCountry}" />
+										<c:if test="${countryName != ''}">	
+											<c:choose>
+												<c:when test="${useShowSystemCountry eq 'YES'}">
+						                        	<img id="nationalFlag" src="" style="vertical-align: middle; padding: 0px 0px 3px;display:none;">
+												</c:when>
+												<c:otherwise>
+													<c:if test="${countryIP != systemCountryCode}">
+							                        	<img id="nationalFlag" src="" style="vertical-align: middle; padding: 0px 0px 3px;display:none;">
+							                        </c:if>
+												</c:otherwise>
+											</c:choose>
+										</c:if>
+										<c:if test="${countryIP != ''}">
+											<span> ( ${countryIP} )</span>
+										</c:if>
+										</span>		
+				                    </c:if>		                    
 		                        </DIV>
 		                    </td>
 		                    <th>

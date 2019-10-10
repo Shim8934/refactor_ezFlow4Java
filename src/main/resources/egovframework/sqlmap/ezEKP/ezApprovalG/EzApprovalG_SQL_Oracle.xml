@@ -7263,6 +7263,10 @@
           AND
           		DOCSTATE = #v_CHAMSTATE#
           </isNotEmpty>
+          <isEmpty property="v_CHAMSTATE">
+          AND
+          		DOCSTATE != '017'
+          </isEmpty>
           </isNotNull> 
            	<![CDATA[    		
          	 AND 
@@ -7867,6 +7871,19 @@
 						             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
 					        	AND
 					             	 TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTID  ,
+				              (
+		                        SELECT 
+		                        	 TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME 
+						        FROM 
+						        	 TBL_APRRECEIPTPROCESSINFO 
+						     	WHERE  
+						     		 TBL_APRRECEIPTPROCESSINFO.DOCID = #v_DOCID#
+						        AND 
+						        	 TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+						        AND
+						             TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+					        	AND
+					             	 TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#) RECEIVEDDEPTNAME  ,
 		                      (
 		                       SELECT 
 		                      	  *  
@@ -28821,6 +28838,22 @@
 			AND TENANT_ID = #tenantId#
 	</select>
 	
+	<select id="EzApprovalG.getReformFlagOfTempDoc" parameterClass="Map" resultClass="String">
+		SELECT
+			FORM.REFORMFLAG
+		FROM
+			TBL_TMPAPRDOCINFO TMP
+		RIGHT JOIN
+			TBL_FORMINFO FORM
+		ON
+			FORM.FORMID = TMP.FORMID
+			AND FORM.TENANT_ID = TMP.TENANT_ID
+			AND FORM.COMPANYID = TMP.COMPANYID
+		WHERE
+			TMP.HREF = #formUrl#
+			AND ROWNUM = 1
+	</select>
+	
 	<select id="EzApprovalG.getFormIdOfTempDocument" parameterClass="Map" resultClass="String">
 		SELECT
 			FORMID
@@ -29225,7 +29258,7 @@
     </select>
     <select id="EzApprovalG.getEndAprOpinionCnt" parameterClass="Map" resultClass="int">
     	SELECT
-    		COUNT(*)
+    		NVL(MAX(OPINIONSN), 0) OPINIONSN
     	FROM
     		TBL_ENDAPROPINIONINFO
     	WHERE
@@ -29363,5 +29396,30 @@
 				AND
 					COMPANYID = #companyID#
 			)
+	</select>
+	<select id="EzApprovalG.checkProxyAprLine" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_USERMASTER
+		WHERE
+			EXTENSIONATTRIBUTE5 LIKE CONCAT(#v_USERID#, ':%')
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			CN IN (
+					SELECT
+						DISTINCT APRMEMBERID
+					FROM
+						TBL_APRLINEINFO
+					WHERE
+						DOCID = #v_DOCID#
+					AND
+						APRSTATE = '002'
+					AND
+						TENANT_ID = #v_TENANTID#
+					AND
+						COMPANYID = #companyID#
+				)
 	</select>
 </sqlMap>

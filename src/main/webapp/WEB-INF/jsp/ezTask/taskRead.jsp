@@ -1584,7 +1584,7 @@
 				                
 				                for (i = 0; i < dateArray.length; i++) {		                	
 				                    if($.inArray(test, dateArray) != -1) {		                        
-				                        return [true, 'css-class-to-highlight', ''];
+				                        return [true, 'css-class-to-highlight'];
 				                    }
 				                }
 				                return [true];
@@ -1724,7 +1724,7 @@
 				}						
 				
 				if (test == 0) {
-					dateArray = dateList.split(",");
+					//dateArray = dateList.split(",");
 					//repeatCount = backupCount;
 					alert("<spring:message code='ezTask.t200912' />");
 					$("#Sdatepicker").datepicker("setDate", date);
@@ -1736,7 +1736,7 @@
 		</script>
 	</head>
 	
-	<body class="popup" style="overflow:auto; height:99%">
+	<body class="popup" style="overflow:auto; height:99%" scroll="auto">
 		<div id="menu" style="margin-bottom:10px;">
 			<ul>
 				<c:if test="${userInfo.id == taskInfoVO.creatorID }">

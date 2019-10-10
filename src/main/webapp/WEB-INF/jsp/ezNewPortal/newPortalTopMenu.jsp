@@ -22,6 +22,9 @@
 			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
 			#logoUrl {width:106px; height:42px;}
+			/*-- top_totalSearch --*/
+			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:9px 30px 0px 0px; padding:0px; width:243px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
+			#input_totalSearch { float:left; width:196px; height:31px; border:0px ;padding:1px 0px 0px 9px; margin:1px 0px 0px 1px;  color:#555555; font-size:12px;}
 		</style>
 	</head>
 	<body>
@@ -276,6 +279,9 @@
 			var str = '';
 			
 				str += '<ul class="util">';
+				//통합검색
+				if ('${useTotalSearch}' === 'YES') str += "<li><div class='top_totalSearch'><input id='input_totalSearch' class='input_text' type='text' onkeyup='totalSearch_key_event(event);' onfocus=\"this.placeholder=' '\"/><input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' id='topsearch_btn' class=\"topsearch_btn\" ></div></li>";
+				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="메신저다운로드"></span></li>';//메신저 다운로드 추가
 				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' +'"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
 				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
@@ -285,6 +291,22 @@
 				str += '</ul>';
 			
 			return str;
+		}
+		
+		/* 통합검색 */
+		var totalSearch = function () {
+			var keyword = $("#input_totalSearch").val();
+			$("#input_totalSearch").val("");
+// 			OpenWindow(event, "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
+			window.open("/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
+		}
+		
+		//2019-09-20 메신저 다운로드 추가
+		var talkDowmClick = function () {
+			if ("${talkFilePath}" != "") {
+				var DownloadUrl = "/ezCommon/talkDownloadAttach.do?filePath=" + "${talkFilePath}";
+				AttachDownFrame.location.href = DownloadUrl;				
+			}
 		}
 		
 		/* 2019-01-04 김민성 - 웹도움말 팝업창으로 변경 */
@@ -311,8 +333,15 @@
 			//setEvent('util_help', '/ezNewPortal/help/index.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
 			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');
 			
-			document.getElementById("util_help").addEventListener('click', helpDetail );	
+			document.getElementById("util_help").addEventListener('click', helpDetail );
+			if ('${useUtilTalk}' === 'YES') {
+				document.getElementById("util_messenger").addEventListener('click', talkDowmClick );	
+			}
 			/* document.getElementById("util_frmae").addEventListener("click", viewPortletEnv); */
+			/*통합검색*/
+			if ('${useTotalSearch}' === 'YES') {				
+				document.getElementById("topsearch_btn").addEventListener("click", totalSearch);
+			}
 		}
 
 		/* //포틀릿 및 프레임 환경설정 열기
@@ -691,26 +720,27 @@
 		    var wVertical, wHorizontal;
 		    
 			if(wPosition == 0) {
-		        wVertical = Math.floor(window.innerHeight/2) - (wHeight/2) - 90 + (index*10);
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+				console.log(window.outerHeight);
+		        wVertical = Math.floor(window.outerHeight/2) - (wHeight/2) - 56 + (index * 10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else if(wPosition == 1) {
 		        wVertical = 100 + (index*10); 
 		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 2) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
-		        wHorizontal = 100 + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = 100 + (index * 10);
 		    } else if(wPosition == 3) {
-		        wVertical = 100 + (index*10); 
-		        wHorizontal = screen.width - wWidth - 100 + (index*10);
+		        wVertical = 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
 		    } else if(wPosition == 4) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
-		        wHorizontal = screen.width - wWidth - 100 + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 + (index * 10); 
+		        wHorizontal = window.outerWidth - wWidth - 100 + (index * 10);
 		    } else if(wPosition == 5) {
 		        wVertical = 100 + (index*10); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else if(wPosition == 6) {
-		        wVertical = screen.height - wHeight - 100 - (index*10); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
+		        wVertical = window.outerHeight - wHeight - 100 - (index * 10); 
+		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else {
 		        wVertical = 0 + (index*10); 
 		        wHorizontal = 0 + (index*10);
@@ -991,6 +1021,7 @@
 		window.onload = function() {
 			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 		}
-		</script>	
+		</script>
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>	
 	</body>
 </html>

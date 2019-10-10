@@ -263,24 +263,29 @@ function AprrovMappingSign(ret)
 	  			else
 	  			{
 	  			    var content ="";
-					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-					{
-						HwpCtrl.SetFieldText(signID, strLang8 + arr_userinfo[2]);	
-	  			        content = strLang8 + arr_userinfo[2];						
-					}
-					else
-					{
-						HwpCtrl.SetFieldText(signID, arr_userinfo[2]);	
+					if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+						HwpCtrl.SetFieldText(signID, strLang8 + arr_userinfo[2]);
+	  			        content = strLang8 + arr_userinfo[2];
+					} else {
+						HwpCtrl.SetFieldText(signID, arr_userinfo[2]);
 						content = arr_userinfo[2];
-					}			
-					HwpCtrl.AppendFieldText(signID, strLang7 + OpinionText, true);	
+					}
+					
+					if (!HwpCtrl.CheckFieldExist(seumyungdateID)) {
+						HwpCtrl.AppendFieldText(signID, OpinionText, true);
+						content = content + OpinionText;
+					}
+					
+					HwpCtrl.AppendFieldText(signID, strLang7 + "\15", true);
+					content = content + strLang7;
+					
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
 			        SignType[signCnt] = "TEXT";
-			        SignContent[signCnt] = content + strLang7 + OpinionText;
+			        SignContent[signCnt] = content;
 	  				signCnt = signCnt + 1
-	  				SingFlag = false; 
-	  			}		
+	  				SingFlag = false;
+	  			}
 	  		
 	  			DekyulFlag = true;
 	  			pAprMemberSignSN = pAprMemberSignSN + 1;
@@ -375,13 +380,13 @@ function AprrovMappingSign(ret)
 
 					if(pAprLineType == strAprType4)
 					{
-						HwpCtrl.AppendFieldText(signID, strLang6, true);
+						HwpCtrl.AppendFieldText(signID, strLang6 + "\15", true);
 						contents = contents + strLang6;
 	  				}
 
 					if(pAprLineType == strAprType16)  
 					{
-						HwpCtrl.AppendFieldText(signID, strLang7, true);
+						HwpCtrl.AppendFieldText(signID, strLang7 + "\15", true);
 						contents = contents + strLang7;
 	  				}
 
@@ -695,7 +700,13 @@ function SaveApproveInfo(pApproveFlag)
             
             for (i = 0; i < rows.length; i++) {
                 sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                
+                if (SelectSingleNodeValue(rows[i], "SEPCABINETID") != "") {
+                	Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "SEPCABINETID"));
+                } else {
+                	Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i], "CABINETID"));
+                }
+                
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
@@ -703,25 +714,6 @@ function SaveApproveInfo(pApproveFlag)
                 Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
             }
             
-            createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
-            
-		} else if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW").length > 0) {
-			var sepAtt, Data, i;
-			var rtnXml = createXmlDom();
-	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
-			var sepLVXml = createXmlDom();
-            	sepLVXml = loadXMLString(nonElecRecInfoXml);
-            var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/ROWS/ROW");
-            
-            for (i = 0; i < rows.length; i++) {
-                sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i],"SEPCABINETID"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i], "SEPTITLE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i], "SEPNUMOFPAGE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i], "SEPREGTYPE"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i], "SEPSUMMARY"));
-                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i], "SEPRECORDTYPE"));
-            }
             createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
 		}
 		

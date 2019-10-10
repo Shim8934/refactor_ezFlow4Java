@@ -864,9 +864,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (req.getParameter("searchString") != null && !req.getParameter("searchString").equals("")) {
 			searchString = req.getParameter("searchString");
 		}
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("searchString", searchString);
+		model.addAttribute("primaryLang", primaryLang);
 
 		logger.debug("personSearch ended");
 		return "/ezPersonal/persPersonSearch";
@@ -1081,6 +1083,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 				model.addAttribute("isJournalUsed", "Y");
 			} else if (menuId == 10) {
 				model.addAttribute("isWebfolderUsed", "Y");
+			} else if (menuId == 12) {
+				model.addAttribute("isPMSUsed", "Y");
 			}
 		}
 		
@@ -1130,7 +1134,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		//String radBirthType2 = "";
 		String literalPhoto = "";
 		
-		String propList = "postalCode;streetAddress;homePhone;facsimileTelephoneNumber;extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;extensionAttribute10;birth;birthType;password";
+		String propList = "postalCode;streetAddress;homePhone;facsimileTelephoneNumber;extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;extensionAttribute10;birth;birthType;password;FURIGANA;EXTENSIONPHONE;OFFICEMOBILE";
 		
 		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(result);
@@ -1150,6 +1154,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String birthDay = xmlDom.getElementsByTagName("BIRTH").item(0).getTextContent();
 		String birthType = xmlDom.getElementsByTagName("BIRTHTYPE").item(0).getTextContent();
 		String password = xmlDom.getElementsByTagName("PASSWORD").item(0).getTextContent();
+		String literalFurigana = xmlDom.getElementsByTagName("FURIGANA").item(0).getTextContent();
+		String literalExtensionPhone = xmlDom.getElementsByTagName("EXTENSIONPHONE").item(0).getTextContent();
+		String literalOfficeMobile = xmlDom.getElementsByTagName("OFFICEMOBILE").item(0).getTextContent();
 		
 		/*if (userInfo.getLang().equals("1") || userInfo.getLang().equals("4")) {
 			radBirthType1 = messageSource.getMessage("ezPersonal.t2001", locale);
@@ -1209,6 +1216,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("userMobileManaged", userMobileManaged);
+		model.addAttribute("LiteralFurigana", literalFurigana);
+		model.addAttribute("LiteralExtensionPhone", literalExtensionPhone);
+		model.addAttribute("LiteralOfficeMobile", literalOfficeMobile);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";

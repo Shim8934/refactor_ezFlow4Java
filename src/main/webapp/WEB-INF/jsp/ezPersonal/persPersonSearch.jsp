@@ -998,6 +998,10 @@
                             			<option value="HomePhone" usedefault="0"><spring:message code='ezPersonal.t70'/></option>
                             			<option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezPersonal.t179'/></option>
                             			<option value="mail" usedefault="0"><spring:message code='ezPersonal.t75'/></option>
+                            			<c:if test="${primaryLang eq '3' }">
+                                        <option value="extensionPhone" usedefault="0"><spring:message code='main.ksa02' /></option>
+                                        <option value="officeMobile" usedefault="0"><spring:message code='main.ksa03' /></option>
+                                        </c:if>
                             			<option value="streetAddress" usedefault="0"><spring:message code='ezPersonal.t180'/></option>
                             		</select>
                             		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:120px;margin:0px;height: 22px;">

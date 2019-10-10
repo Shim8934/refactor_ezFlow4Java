@@ -824,6 +824,7 @@ function CheckNeedsApproval(pURL) {
 }
 
 var g_saveHttp = null;
+var gInvalidAddressArr = null;
 
 function checkMailStatusAndSave(savemode) {
     console.log("savemode=" + savemode + ",MailStatus=" + MailStatus);
@@ -933,6 +934,8 @@ function Save_onClick_Complete(ReturnValue) {
             
             ConvertEmbedPath(xmlDoc, xmlDoc);
             ConvertEmbedImagToXml(xmlDoc, xmlDoc);
+            
+            gInvalidAddressArr = null;
 
             if (Org_cmd == "docsend" || Org_cmd == "docsenddoc" || Org_cmd == "board" || Org_cmd == "Community" || Org_cmd == "report")
                 DocFileIntoXML(xmlDoc, rootNode);
@@ -1063,6 +1066,8 @@ function event_SaveonClick() {
                 	invalidAddresses = invalidAddressArr.join("\n");
                 	
                 	if (confirm(strLangLHM16 + "\n" + invalidAddresses + "\n" + strLangLHM17)) {
+                	    gInvalidAddressArr = invalidAddressArr;
+                	    
                 		for (var i=0; i<invalidAddressArr.length; i++) {
                 			try { deleteMailUser(invalidAddressArr[i],"0"); } catch (e) {}
                 			try { deleteMailUser(invalidAddressArr[i],"1"); } catch (e) {}
@@ -3240,10 +3245,38 @@ function GetAddrFormatForSend(receiveCol) {
         }
     }
 
-    if (ReplaceText(retAddr, " ", "") != "")
-        return retAddr.substr(0, retAddr.length - 2);
-    else
+    if (ReplaceText(retAddr, " ", "") != "") {
+        retAddr = retAddr.substr(0, retAddr.length - 2);
+        
+        if (gInvalidAddressArr != null) {
+            var retAddrArr = retAddr.split(", ");
+            var newRetAddr = "";
+        
+            for (var i = 0; i < retAddrArr.length; i++) {
+                var addr = retAddrArr[i];
+                var isInvalidAddr = false;
+                
+                for (var j = 0; j < gInvalidAddressArr.length; j++) {            
+                    if (addr.indexOf("<" + gInvalidAddressArr[j] + ">") > -1) {
+                        isInvalidAddr = true;
+                        break;
+                    }
+                }
+                
+                if (!isInvalidAddr) {
+                    if (addr != "") {
+                        newRetAddr += addr + ", ";
+                    }
+                }
+            }
+            
+            retAddr = newRetAddr;
+        }
+        
+        return retAddr;
+    } else {
         return "";
+    }
 }
 function GetAddrFormatEmail(receiveCol, ptype) {
     var retAddr = "";
