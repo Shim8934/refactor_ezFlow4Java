@@ -581,19 +581,19 @@
 			(
 				(user_id = #userId# AND user_type = 'user') 
 				OR 
-				(user_id in 
+				(user_id IN 
 					<iterate property="deptList" open="(" close=")" conjunction=",">
 						#deptList[]#
 					</iterate> and (user_type = 'dept' OR user_type = 'comp')
 				)
 				OR
-				(user_type = 'jikwi' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+				(user_type = 'jikwi' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND company_id = #companyId#))
 				OR
-				(user_type = 'jikchek' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+				(user_type = 'jikchek' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND company_id = #companyId#))
 				OR
 				user_type = 'group'
 			)
-			and tenant_id = #tenantId# and company_id = #companyId#
+			AND tenant_id = #tenantId# AND company_id = #companyId#
 			<isNotEmpty property="surveyId" prepend=" and ">survey_id = #surveyId#</isNotEmpty>
 	</select>
 	
