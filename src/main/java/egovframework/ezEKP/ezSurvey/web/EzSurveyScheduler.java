@@ -77,54 +77,9 @@ public class EzSurveyScheduler {
 			
 			List<SurveyParticipantVO> participantList = ezSurveyService.getSurveyParticipantListForMail(surveyId, companyId, tenantId);
 			
-			sendMail(participantList, survey);
+			ezSurveyService.sendMail(participantList, survey);
 		}
 		
 		logger.debug("sendMailToSurveyParticipant scheduler ended.");
 	}
-	
-	private void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception {
-		String userAccount = userinfo.getEmail();
-		String password = jspw;
-		
-		String userId = userAccount.split("@")[0];
-		String domainName = userAccount.split("@")[1];
-		int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
-		String lang = ezCommonService.selectUserGetLang(userId, tenantId);
-		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
-		logger.debug("userAccount : " + userAccount + ", locale=" + locale);
-		
-		String creatorId = survey.getCreatorId();
-		String title = survey.getTitle();
-		long surveyId = survey.getSurveyId();
-		String creatorName = locale.toString().equals("ko") ? survey.getCreatorName1() : survey.getCreatorName2();
-		
-		String subject = title;
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append("<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezSurvey/surveyDetail.do?itemId=" + surveyId + "', '', 'width=835, height=900, scrollbars=yes, resizable=yes')\">");
-		sb.append("새로운 설문이 추가되었습니다.</span>");
-		
-		String content = commonUtil.createNotiMailContent(sb.toString(), tenantId, locale);
-		
-		InternetAddress from;
-		from = new InternetAddress(creatorId + "@" + domainName);
-		from.setPersonal(creatorName);
-		
-		InternetAddress toMember = new InternetAddress();
-		String toMemberName = locale.toString().equals("ko") ? userinfo.getUserName1() : userinfo.getUserName2();
-		toMember.setAddress(userinfo.getEmail());
-		toMember.setPersonal(toMemberName);
-		
-		InternetAddress[] toArr = new InternetAddress[]{toMember};
-		
-		ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, content.toString(), false, EmailImportance.NORMAL);
-	}
-	
-	private void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception {
-		for (int i = 0; i < userList.size(); i++) {
-			sendMail(userList.get(i), survey);
-		}
-	}
-	
 }

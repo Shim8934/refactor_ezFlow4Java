@@ -1539,13 +1539,14 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	}
 	
 	@Async
-	private void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception {
+	@Override
+	public void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception {
 		String userAccount = userinfo.getEmail();
 		String password = jspw;
 		
 		String userId = userAccount.split("@")[0];
 		String domainName = userAccount.split("@")[1];
-		int tenantId = survey.getTenantId();
+		int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 		String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 		logger.debug("userAccount : " + userAccount + ", locale=" + locale);
@@ -1577,7 +1578,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, content.toString(), false, EmailImportance.NORMAL);
 	}
 	
-	private void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception {
+	@Override
+	public void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception {
 		for (int i = 0; i < userList.size(); i++) {
 			sendMail(userList.get(i), survey);
 		}

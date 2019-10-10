@@ -55,4 +55,6 @@ public interface EzSurveyService {
 	//Get survey List
 	List<SurveyVO> getTodaySurveyList(int offset);
 	List<SurveyParticipantVO> getSurveyParticipantListForMail(long surveyId, String companyId, int tenantId);
+	void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception;
+	void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception;
 }
