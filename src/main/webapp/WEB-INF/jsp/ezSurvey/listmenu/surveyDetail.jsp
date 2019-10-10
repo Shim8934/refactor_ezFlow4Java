@@ -456,17 +456,14 @@
 		
 		function afterSaveSuccessfully(data) {
 			var code = data.code;
-			//console.log('오프너-> ', window.opener);
-			//console.log('부모-> ', parent);
 			
 			switch(code) {
 				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
 						 
-						 if (window.opener.frameElement != null) {
-							 var openerEl = window.opener; 
+						 if (window.opener.getPotletSurveyList != undefined) {
 							 window.opener.getPotletSurveyList();
-							// window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+							 window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
 							 window.close();
 						 }
 						 
