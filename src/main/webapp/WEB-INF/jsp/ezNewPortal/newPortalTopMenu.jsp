@@ -14,7 +14,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/lang/ezSurvey_ko.js')}"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<style type="text/css">
 			#editBtn {float: right;}
@@ -54,6 +55,9 @@
 				
 			return str;
 		}
+		
+		// 전자설문 팝업 인덱스
+		var surveyPopupIndex;
 		
 		// 메인메뉴 조합하는 함수
 		var setMainMenuList = function (reData) {
@@ -644,7 +648,13 @@
 				async: false,
 				cache: false,
 				success : function(data) {
-					returnObj.surveyPopupList = data.surveyPopupList;
+					
+					if (data.surveyPopupList === undefined) {
+						returnObj.surveyPopupList = [];	
+					} else {
+						returnObj.surveyPopupList = data.surveyPopupList;
+					}
+					
 					returnObj.userId = data.userId;
 				},
 				error : function(error) {
@@ -711,18 +721,16 @@
 				var surveyPopupObj = getSurveyPopupList();
 				if (surveyPopupObj.surveyPopupList.length > 0 && surveyPopupObj.surveyPopupList != null) {
 					index = ++position0Count;
+					surveyPopupIndex = index; 
 					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
-					
-					setLayer();
-				} 
+				}
 				
 			} else {
 				var surveyPopupObj = getSurveyPopupList();
 				if (surveyPopupObj.surveyPopupList.length > 0 && surveyPopupObj.surveyPopupList != null) {
 					index = ++position0Count;
+					surveyPopupIndex = index;
 					openSurveyPopup(surveyPopupObj, 600, 600, 0, index);
-					
-					setLayer();
 				}
 				
 			}
@@ -917,19 +925,28 @@
 		
 		//위치 지정하여 팝업 열기 --- 전자설문 팝업 공지사항
 		var openSurveyPopup = function (surveyPopupObj, wWidth, wHeight, wPosition, index) {
-			var surveyList = surveyPopupObj.surveyPopupList;
-			var userId = surveyPopupObj.userId;
+			var surveyList;
+			var userId;
 			
-		    var survPopoup = document.getElementById("surv_popup");
- 			
+		    var survPopoup = parent.document.getElementById('surv_popup');
 		    if (survPopoup != null) {
  				survPopoup.remove();
  			}
- 			
+		    // 로그인 직후 설문 팝업 생성하는 경우
+			if (surveyPopupObj !== "") {
+				surveyList = surveyPopupObj.surveyPopupList;
+				userId = surveyPopupObj.userId;
+				
+			// 유저가 설문 팝업에서 설문에 응한 경우
+			} else {
+				var surveyPopupObj = getSurveyPopupList();
+				surveyList = surveyPopupObj.surveyPopupList;
+				userId = surveyPopupObj.userId;
+			}
+			
 		    var wVertical, wHorizontal;
 		    
 		    if(wPosition == 0) {
-				console.log(window.outerHeight);
 		        wVertical = Math.floor(window.outerHeight/2) - (wHeight/2) - 56 + (index * 10);
 		        wHorizontal = Math.floor(window.outerWidth/2) - (wWidth/2) + (index * 10);
 		    } else if(wPosition == 1) {
@@ -971,6 +988,7 @@
     		var popupDiv = document.createElement("div");
     		popupDiv.id = "surv_popup";
     		popupDiv.className = "popup_notice popup_type0";
+    		surveyPopupDom = popupDiv;
     		
     		var formElement = document.createElement("form");
     		formElement.style.height = "100%";
@@ -1022,43 +1040,58 @@
             
             oTBody.appendChild(oTr);
             
-            for (var i = 0; i < surveyList.length; i++) {
-            	var surveyInfo =  surveyList[i];
-            	
-            	if (surveyInfo.popupFlag === 1) {
-	            	var oTr = document.createElement("TR");
-	            	oTr.style.cursor = "pointer";
-	            	oTr.setAttribute('surveyId', surveyInfo.surveyId); 
-	            	oTr.addEventListener('click', function(event) { getDetailSurvey(event, this); }, false);
+            if (surveyList.length > 0) {
+	            for (var i = 0; i < surveyList.length; i++) {
+	            	var surveyInfo =  surveyList[i];
 	            	
-		            var oTd1 = document.createElement("TD");
-		            oTd1.style.overflow = 'hidden';
-		            oTd1.style.textOverflow = 'ellipsis';
-		            oTd1.style.whiteSpace = 'nowrap';
-		            oTd1.style.maxWidth  = '350px';
-			        oTd1.innerHTML = surveyInfo.title;
-		            oTr.appendChild(oTd1);
-		            
-		            var oTd2 = document.createElement("TD");
-		            oTd2.style.overflow = 'hidden';
-		            oTd2.style.textOverflow = 'ellipsis';
-		            oTd2.style.whiteSpace = 'nowrap';
-		            oTd2.style.maxWidth  = '60px';
-			        oTd2.innerHTML = surveyInfo.creatorName;
-		            oTr.appendChild(oTd2);
-		            
-		            var oTd3 = document.createElement("TD");
-		            oTd3.style.overflow = 'hidden';
-		            oTd3.style.textOverflow = 'ellipsis';
-		            oTd3.style.whiteSpace = 'nowrap';
-		            oTd3.style.maxWidth  = '90px';
-			        oTd3.innerHTML = surveyInfo.endDate.substr(0, 10);
-		            oTr.appendChild(oTd3);
-		            
-		            oTBody.appendChild(oTr);
-            	}
+	            	if (surveyInfo.popupFlag === 1) {
+		            	var oTr = document.createElement("TR");
+		            	oTr.style.cursor = "pointer";
+		            	oTr.setAttribute('surveyId', surveyInfo.surveyId); 
+		            	oTr.addEventListener('click', function(event) { getDetailSurvey(event, this); }, false);
+		            	
+			            var oTd1 = document.createElement("TD");
+			            oTd1.style.overflow = 'hidden';
+			            oTd1.style.textOverflow = 'ellipsis';
+			            oTd1.style.whiteSpace = 'nowrap';
+			            oTd1.style.maxWidth  = '350px';
+				        oTd1.innerHTML = surveyInfo.title;
+			            oTr.appendChild(oTd1);
+			            
+			            var oTd2 = document.createElement("TD");
+			            oTd2.style.overflow = 'hidden';
+			            oTd2.style.textOverflow = 'ellipsis';
+			            oTd2.style.whiteSpace = 'nowrap';
+			            oTd2.style.maxWidth  = '60px';
+				        oTd2.innerHTML = surveyInfo.creatorName;
+			            oTr.appendChild(oTd2);
+			            
+			            var oTd3 = document.createElement("TD");
+			            oTd3.style.overflow = 'hidden';
+			            oTd3.style.textOverflow = 'ellipsis';
+			            oTd3.style.whiteSpace = 'nowrap';
+			            oTd3.style.maxWidth  = '90px';
+				        oTd3.innerHTML = surveyInfo.endDate.substr(0, 10);
+			            oTr.appendChild(oTd3);
+			            
+			            oTBody.appendChild(oTr);
+	            	}
+	            }
+            } else {
+            	var oTr = document.createElement("TR");
+            	
+            	var oTd1 = document.createElement("TD");
+	            oTd1.style.overflow = 'hidden';
+	            oTd1.style.textOverflow = 'ellipsis';
+	            oTd1.style.whiteSpace = 'nowrap';
+	            oTd1.style.maxWidth  = '500px';
+	            oTd1.style.textAlign = 'center';
+		        oTd1.innerHTML = SurveyMessages.strNoData;
+		        oTd1.colSpan = 3;
+	            oTr.appendChild(oTd1);
+	            
+	            oTBody.appendChild(oTr);
             }
-            
             oTable.appendChild(oTBody);
             contentDiv.appendChild(oTable);
             
@@ -1118,7 +1151,8 @@
 				cancel : parent.$(".popup_noticeList"),
 				scroll: false 
 			});
-		    
+    		setLayer();
+    		
 		}
 		
 		var getDetailSurvey = function (event, thisEl) {
