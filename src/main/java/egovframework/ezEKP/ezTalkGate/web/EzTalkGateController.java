@@ -268,7 +268,7 @@ public class EzTalkGateController {
 			
 			String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
 			
-        	if (!useSession.equals("")) {
+        	if (!useSession.isEmpty()) {
         		int sessionTime = 0;
         		
         		try {
@@ -278,12 +278,10 @@ public class EzTalkGateController {
         		}
         		
 	        	if (sessionTime != 0) {
-	        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
-	        		HttpSession session = request.getSession();			// 세션 필요로 주석 해제
-		        	session.setMaxInactiveInterval(sessionTime * 60);		// 세션의 유지 시간 설정
+	        		HttpSession session = request.getSession();
+		        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
 	        	}
-        	}			
-			
+        	}						
 			
 			logger.debug("ezTalkGateMain ended.");
 			
@@ -366,9 +364,29 @@ public class EzTalkGateController {
 				
 				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, deptId, compId);
 				
-				redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
-								+ URLEncoder.encode(ezTalkGateNoticeBoardId) + "&boardType=" + boardType;
-				logger.debug("redirectUrl=" + redirectUrl);
+				String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+				
+	        	if (!useSession.isEmpty()) {
+	        		int sessionTime = 0;
+	        		
+	        		try {
+	        			sessionTime = Integer.parseInt(useSession);
+	        		} catch (NumberFormatException nfe) {  
+	        			nfe.printStackTrace();
+	        		}
+	        		
+		        	if (sessionTime != 0) {
+		        		HttpSession session = request.getSession();
+			        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
+		        	}
+	        	}						
+				
+	        	if (ezTalkGateNoticeBoardId != null) {
+					redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
+									+ URLEncoder.encode(ezTalkGateNoticeBoardId, "UTF-8") + "&boardType=" + boardType;
+	        	}
+
+	        	logger.debug("redirectUrl=" + redirectUrl);
 			}
 			 
 		} catch (Exception e) {
