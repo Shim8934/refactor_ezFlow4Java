@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -537,6 +538,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/rest/ezsurvey/survey-popupItem/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getPopupItems(Locale locale, HttpServletRequest request) throws Exception {
 		String serverName    = request.getHeader("host-name")      != null ? request.getHeader("host-name")    : "";
