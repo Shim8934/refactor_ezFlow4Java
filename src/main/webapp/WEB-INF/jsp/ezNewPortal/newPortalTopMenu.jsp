@@ -1195,8 +1195,8 @@
 		
 		function setCookie(name, value, expiredays) {
 			var todayDate = new Date();
-			todayDate.setDate( todayDate.getDate() + expiredays );
-			document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+			var expireDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate(), 23, 59, 59);
+			document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + expireDate.toGMTString() + ";";
 		}
 		
 		var officeBugPatch = function() {
