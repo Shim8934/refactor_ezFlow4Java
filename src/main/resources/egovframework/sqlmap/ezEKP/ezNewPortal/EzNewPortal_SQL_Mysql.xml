@@ -818,9 +818,9 @@ AND
            			TBL_PORTAL_MENU_AUTH
            		WHERE
            			(
-           				(user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#) AND user_type = 2 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           				(user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 2 AND tenant_id = #tenantId# AND company_id = #companyId#)
            			OR
-           				(user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#) AND user_type = 3 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           				(user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 3 AND tenant_id = #tenantId# AND company_id = #companyId#)
            			OR 
            				(user_id IN (
            						SELECT
@@ -837,9 +837,9 @@ AND
            							G.tenant_id = F.tenant_id
            						AND
            							(
-           							 (F.member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#) AND member_type = 'JIKWI')
+           							 (F.member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKWI')
            							OR
-           							 (F.member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#) AND member_type = 'JIKCHEK')
+           							 (F.member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKCHEK')
            							)
            						AND
            							F.tenant_id = #tenantId#
@@ -1711,9 +1711,9 @@ LIMIT
            			TBL_PORTAL_MENU_AUTH
            		WHERE
            			(
-           				(user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#) AND user_type = 2 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           				(user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 2 AND tenant_id = #tenantId# AND company_id = #companyId#)
            			OR
-           				(user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#) AND user_type = 3 AND tenant_id = #tenantId# AND company_id = #companyId#)
+           				(user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND user_type = 3 AND tenant_id = #tenantId# AND company_id = #companyId#)
            			OR 
            				(user_id IN (
            						SELECT
@@ -1730,9 +1730,9 @@ LIMIT
            							G.tenant_id = F.tenant_id
            						AND
            							(
-           							 (F.member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#) AND member_type = 'JIKWI')
+           							 (F.member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKWI')
            							OR
-           							 (F.member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#) AND member_type = 'JIKCHEK')
+           							 (F.member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#) AND member_type = 'JIKCHEK')
            							)
            						AND
            							F.tenant_id = #tenantId#

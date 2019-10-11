@@ -390,6 +390,8 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 				}
 			}
 		}
+		
+		logger.debug("test popupList : " + popupListWithAuth.size());
 		logger.debug("getPopUpListUser ended");
 		return popupListWithAuth;
 	}

@@ -917,9 +917,9 @@
      			  OR
      			  	(user_type = 'DEPT' AND subdept_permitted = 0 AND user_id = #deptId#)
      			  OR
-     			  	(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+     			  	(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
      			  OR
-     			  	(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+     			  	(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
      			  OR
      			  	(#deptId# IN (
      			  					SELECT 
