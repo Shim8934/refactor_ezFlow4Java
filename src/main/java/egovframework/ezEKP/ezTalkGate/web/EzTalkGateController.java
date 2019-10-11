@@ -8,6 +8,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -264,6 +265,25 @@ public class EzTalkGateController {
 			loginService.insertLog(vo);
 			
 			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
+			
+			String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+			
+        	if (!useSession.equals("")) {
+        		int sessionTime = 0;
+        		
+        		try {
+        			sessionTime = Integer.parseInt(useSession);
+        		} catch (NumberFormatException nfe) {  
+        			nfe.printStackTrace();
+        		}
+        		
+	        	if (sessionTime != 0) {
+	        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
+	        		HttpSession session = request.getSession();			// 세션 필요로 주석 해제
+		        	session.setMaxInactiveInterval(sessionTime * 60);		// 세션의 유지 시간 설정
+	        	}
+        	}			
+			
 			
 			logger.debug("ezTalkGateMain ended.");
 			
