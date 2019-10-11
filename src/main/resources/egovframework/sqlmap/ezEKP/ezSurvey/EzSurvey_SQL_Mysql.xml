@@ -584,6 +584,8 @@
 				a.tenant_id = b.tenant_id 
 			and 
 				a.company_id = b.PHYSICALDELIVERYOFFICENAME
+			and 
+				b.cn = #userId#
 		WHERE
 		(
 			(user_id = #userId# AND user_type = 'user')
@@ -598,10 +600,10 @@
 			OR
 			(a.user_type = 'jikwi' and b.extensionattribute7 = a.user_id)
 			OR
-			(user_type = 'group' and b.cn in 
+			(user_type = 'group' and a.user_id  in 
 				(
 					select 
-						distinct d.cn
+						distinct c.group_id 
 					from
 						tbl_permissiongroupinfo c
 					join
@@ -609,7 +611,13 @@
 					on
 						d.tenant_id = c.tenant_id
 					and 
-						d.PHYSICALDELIVERYOFFICENAME = c.company_id
+						d.tenant_id = #tenantId#
+					AND 
+						c.company_id = #companyId#	
+					and 
+						d.cn = #userId#
+					where
+						c.group_id = a.user_id
 					and
 						(
 							(c.member_type = 'JIKCHEK' and d.extensionattribute8 = c.member_id)
@@ -622,8 +630,6 @@
 						or
 							(c.member_type = 'DEPT' and d.department = c.member_id)
 						)
-					where
-						c.group_id = a.user_id
 				)
             )
 		)
