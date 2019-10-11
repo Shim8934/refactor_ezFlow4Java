@@ -811,5 +811,19 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblPsPopupUser");
 		}
 	}
-
+	
+	public void addSurveyMailSentFlagColumn() {
+		try {
+			select("EzCommonDAO.checkSurveyMailSentFlagColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_survey mail_sent_flag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addSurveyMailSentFlagColumn");
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LoginVO> getPermissionGroupMembers(Map<String, Object> map) throws Exception {
+		return (List<LoginVO>) list("EzCommonDAO.getPermissionGroupMembers", map);
+	}
 }

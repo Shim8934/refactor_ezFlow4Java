@@ -223,4 +223,12 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public List<SurveyParticipantVO> getSurveyParticipantListForMail(Map<String, Object> map) {
 		return (List<SurveyParticipantVO>) list("EzSurveyDAO.getSurveyParticipantListForMail", map);
 	}
+	
+	public int getMailSentFlag(SurveyVO survey) {
+		return (int) select("EzSurveyDAO.getMailSentFlag", survey);
+	}
+	
+	public void updateMailSentFlag(Map<String, Object> map) {
+		update("EzSurveyDAO.updateMailSentFlag", map);
+	}
 }
