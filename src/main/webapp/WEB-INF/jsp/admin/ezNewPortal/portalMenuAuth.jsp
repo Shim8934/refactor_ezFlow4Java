@@ -47,9 +47,9 @@
 				        		<div class="portlet_tabpart01" style="width: 680px;">
 					        		<div class="portlet_tabpart01_top" id="tab1" style="margin-top: 25px;margin-bottom: 2px;">
 						            	<p><span id="1tab1" tdname="portalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="tabon"><spring:message code='ezNewPortal.t024' /></span></p>
-										<p><span id="1tab2" tdname="portalJikwi" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="">직위</span></p>
-										<p><span id="1tab3" tdname="portalJikcheck" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="">직책</span></p>
-										<p><span id="1tab4" tdname="portalGroup" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class="">권한그룹</span></p>
+										<p><span id="1tab2" tdname="portalJikwi" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code='ezEmail.t28'/></span></p>
+										<p><span id="1tab3" tdname="portalJikcheck" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code='ezEmail.t281'/></span></p>
+										<p><span id="1tab4" tdname="portalGroup" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)" onmouseover="tabover(this)" onmouseout="tabout(this)" class=""><spring:message code='ezPersonal.yej05'/></span></p>
 						        	</div>
 		                            <%-- <h2 class="receiver_tltype01" style='margin-top:4px; border-bottom:none;'>
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezNewPortal.t024' /></span>
@@ -106,7 +106,7 @@
 											<table id="pListViewJikwi" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
 												<thead id="pListViewJikwi_THEAD">
 													<tr id="pListViewJikwi_TH">
-														<th id="pListViewJikwi_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px">이 름</th>
+														<th id="pListViewJikwi_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px"><spring:message code='ezPersonal.yej07'/></th>
 													</tr>
 												</thead>
 												<tbody id="pListViewJikwi_TBODY"></tbody>
@@ -120,7 +120,7 @@
 											<table id="pListViewJikcheck" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
 												<thead id="pListViewJikcheck_THEAD">
 													<tr id="pListViewJikcheck_TH">
-														<th id="pListViewJikcheck_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px">이 름</th>
+														<th id="pListViewJikcheck_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px"><spring:message code='ezPersonal.yej07'/></th>
 													</tr>
 												</thead>
 												<tbody id="pListViewJikcheck_TBODY"></tbody>
@@ -134,7 +134,7 @@
 											<table id="pListViewGroup" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
 												<thead id="pListViewGroup_THEAD">
 													<tr id="pListViewGroup_TH">
-														<th id="pListViewGroup_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px">이 름</th>
+														<th id="pListViewGroup_TH_0" class="h4_center" bgcolor="#CCCCCC" width="70px"><spring:message code='ezPersonal.yej07'/></th>
 													</tr>
 												</thead>
 												<tbody id="pListViewGroup_TBODY"></tbody>
@@ -729,9 +729,15 @@
 					
 					if (item.userType == 1) {
 						authsHTML += item.userName;
-						authsHTML += "(" + item.userDeptName + ")";
+						/* authsHTML += "(" + item.userDeptName + ")"; */
 					} else if(item.userType == 0) {
-						authsHTML += item.userDeptName;
+						authsHTML +=  "<spring:message code='ezBoard.t9'/>" + " : " + item.userDeptName;
+					} else if (item.userType == 2){
+						authsHTML += "<spring:message code='ezEmail.t28'/>" + " : " + item.userName;
+					} else if (item.userType == 3) {
+						authsHTML += "<spring:message code='ezEmail.t281'/>" + " : " + item.userName;
+					} else if (item.userType == 4) {
+						authsHTML += "<spring:message code='ezPersonal.yej05'/>" + " : " + item.userName;
 					} else {
 						authsHTML += item.userName;
 					}
