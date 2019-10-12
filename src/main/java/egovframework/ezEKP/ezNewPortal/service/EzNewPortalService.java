@@ -22,6 +22,8 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganGroupVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -196,4 +198,8 @@ public interface EzNewPortalService {
 	public void updateSlideOrder(JSONArray slideList, String companyId,	int tenantId) throws Exception;
 
 	public int getApprovalDoingListCount(String userId, String companyId, int tenantId, String offset, String approvalFlag, String lang) throws Exception;
+	
+	/* 직위, 직책, 권한그룹 불러오는 부분 (xml로 받지 않도록)*/
+	public List<OrganJobVO> getTitleList(String type, int tenantId, String companyId) throws Exception;
+	public List<OrganGroupVO> getGroupList(int tenantId, String companyId) throws Exception;
 }

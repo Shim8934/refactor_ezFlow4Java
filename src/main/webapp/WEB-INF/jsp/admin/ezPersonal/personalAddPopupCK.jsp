@@ -349,7 +349,7 @@
 				}
 				
 				if (authList == null || authList.length < 1) {
-					alert("대상자를 선택해 주십시오.");
+					alert("<spring:message code= 'ezPersonal.yej02'/>");
 					return;
 				}
 				
@@ -572,7 +572,7 @@
 			<tr> 
 				<th>
 					<a class="imgbtn" style="user-select: auto;">
-						<span id="setAuth" style="width: 37px; text-align: center; user-select: auto;">대상자</span>
+						<span id="setAuth" style="width: 37px; text-align: center; user-select: auto;"><spring:message code="ezPersonal.yej03"/></span>
 					</a>
 				</th>
 				<td id="authList_td"><div id="authList_div">&nbsp;</div></td> 

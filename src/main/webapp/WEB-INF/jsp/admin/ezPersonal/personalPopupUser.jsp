@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>대상자 설정</title>
+	    <title><spring:message code="ezPersonal.yej04"/></title>
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">
@@ -161,13 +161,13 @@
 	                var strName = "";
 	                
 	                if (userType == "DEPT") {
-	                	strName = "부서 : " + userName;
-	                } else if (userType == "JIKWE") {
-	                	strName = "직위 : " + userName;
-	                } else if (userType == "JIKCHECK") {
-	                	strName = "직책 : " + userName;
+	                	strName = "<spring:message code='ezSurvey.t59'/>" + " : " + userName;
+	                } else if (userType == "JIKWI") {
+	                	strName = "<spring:message code='ezSurvey.t60'/>" + " : " + userName;
+	                } else if (userType == "JIKCHEK") {
+	                	strName = "<spring:message code='ezSurvey.t107'/>" + " : " + userName;
 	                } else if (userType == "GROUP") {
-	                	strName = "권한그룹 : " + userName;
+	                	strName = "<spring:message code='ezPersonal.yej05'/>" + " : " + userName;
 	                } else {
 	                	strName = userName;
 	                }
@@ -1427,7 +1427,7 @@
 			                    pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
 	                            pparsingXML = pparsingXML + "<DATA4>GROUP</DATA4>";
 	                            pparsingXML = pparsingXML + "<DATA5>N</DATA5>";
-	                            pparsingXML = pparsingXML + "<VALUE>권한그룹 : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezPersonal.yej05' /> : " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -2148,14 +2148,14 @@
 		  <LISTVIEWDATA>
 		    <HEADERS>
 		      <HEADER>
-		        <NAME>권한그룹</NAME>
+		        <NAME><spring:message code='ezPersonal.yej05' /></NAME>
 		        <WIDTH>70</WIDTH>
 		      </HEADER>
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
 		<form method="post">
-			<h1>대상자 설정</h1>
+			<h1><spring:message code='ezPersonal.yej04' /></h1>
 	        <div id="close">
 	            <ul>
 	                <li><span onclick="window.close()"></span></li>
@@ -2176,7 +2176,7 @@
 		            				<span id="jikchekSpan" onclick="jikchekTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t281' /></span>
 		            			</p>
 		            			<p id="orgTabButton4">
-		            				<span id="groupSpan" onclick="groupTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.zNo001' /></span>
+		            				<span id="groupSpan" onclick="groupTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezPersonal.yej05' /></span>
 		            			</p>
 		            		</div>
 	            		</div>
@@ -2322,7 +2322,7 @@
 		                        </td>
 		                        <td style="vertical-align: top;">
 		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
-		                                <span style="min-width: 45px;" id="ToTitleStr">대상자 목록</span>
+		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezPersonal.yej06' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox" style="border-bottom:none;">
 		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 472px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
@@ -2330,10 +2330,10 @@
 		                            <table class="content" style="width: 100%;">
 						            	<tbody>
 						                	<tr>
-						                    	<th>하위 부서</th>
+						                    	<th><spring:message code='ezBoard.t999025' /></th>
 						                    	<td>
-							                        <input type="checkbox" id="admin_OK" name="admin_OK" onclick="checkbox_onclick(event)">&nbsp;허용
-							                        <input type="checkbox" id="admin_NO" name="admin_NO" onclick="checkbox_onclick(event)">&nbsp;불가
+							                        <input type="checkbox" id="admin_OK" name="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t51' />
+							                        <input type="checkbox" id="admin_NO" name="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code='ezSurvey.t50' />
 							                    </td>
 						                	</tr>
 						            	</tbody>
@@ -2345,7 +2345,7 @@
 		        </tr>
 		    </table>
 		    <div class="btnposition btnpositionNew">
-	    		<a class="imgbtn" onclick="OK_Click()"><span>확인</span></a>
+	    		<a class="imgbtn" onclick="OK_Click()"><span><spring:message code='ezPersonal.t12' /></span></a>
 			</div>
 			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

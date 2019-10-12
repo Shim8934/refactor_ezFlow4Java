@@ -577,24 +577,69 @@
 	</select>
 	
 	<select id="EzSurveyDAO.getReceivedSurveyList" resultClass="Long">
-		SELECT DISTINCT(survey_id) FROM tbl_survey_participant WHERE
-			(
-				(user_id = #userId# AND user_type = 'user') 
-				OR 
-				(user_id in 
-					<iterate property="deptList" open="(" close=")" conjunction=",">
-						#deptList[]#
-					</iterate> and (user_type = 'dept' OR user_type = 'comp')
-				)
-				OR
-				(user_type = 'jikwi' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
-				OR
-				(user_type = 'jikchek' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
-				OR
-				user_type = 'group'
+		SELECT
+			DISTINCT(survey_id)
+		FROM tbl_survey_participant a join tbl_usermaster b 
+			on 
+				a.tenant_id = b.tenant_id 
+			and 
+				a.company_id = b.PHYSICALDELIVERYOFFICENAME
+			and 
+				b.cn = #userId#
+		WHERE
+		(
+			(user_id = #userId# AND user_type = 'user')
+			OR
+			(user_id IN
+				<iterate property="deptList" open="(" close=")" conjunction=",">
+					#deptList[]#
+				</iterate> and (user_type = 'dept' OR user_type = 'comp')
 			)
-			and tenant_id = #tenantId# and company_id = #companyId#
-			<isNotEmpty property="surveyId" prepend=" and ">survey_id = #surveyId#</isNotEmpty>
+			OR
+			(a.user_type = 'jikchek' and b.extensionattribute8 = a.user_id)
+			OR
+			(a.user_type = 'jikwi' and b.extensionattribute7 = a.user_id)
+			OR
+			(user_type = 'group' and a.user_id  in 
+				(
+					select 
+						distinct c.group_id 
+					from
+						tbl_permissiongroupinfo c
+					join
+						tbl_usermaster d
+					on
+						d.tenant_id = c.tenant_id
+					and 
+						d.tenant_id = #tenantId#
+					AND 
+						c.company_id = #companyId#	
+					and 
+						d.cn = #userId#
+					where
+						c.group_id = a.user_id
+					and
+						(
+							(c.member_type = 'JIKCHEK' and d.extensionattribute8 = c.member_id)
+						or
+							(c.member_type = 'JIKWI' and d.extensionattribute7 = c.member_id)
+						or
+							(c.member_type = 'ORGAN' and d.physicaldeliveryofficename = c.member_id)
+						or
+							(c.member_type = 'USER' and d.CN = c.member_id)
+						or
+							(c.member_type = 'DEPT' and d.department = c.member_id)
+						)
+				)
+            )
+		)
+		AND 
+			a.tenant_id = #tenantId# 
+		AND 
+			a.company_id = #companyId#	
+			
+		<isNotEmpty property="surveyId" prepend=" and ">survey_id = #surveyId#</isNotEmpty>	
+			
 	</select>
 	
 	<!--***********************************************************************************
@@ -767,7 +812,9 @@
 		 	and
 		 		use_status = 1
 		 	and
-		 		mail_flag = 1;
+		 		mail_flag = 1
+		 	and
+		 		draft_flag = 0
  		]]>
 	</select>
 	
@@ -789,6 +836,8 @@
 				a.tenant_Id = b.tenant_Id
 			and
 				a.tenant_Id = #tenantId#
+           	and
+           		b.cn not in (select cn from tbl_usermaster_retire where tenant_id = #tenantId#)
 			and
 				(
 					(a.user_type = 'jikchek' and b.extensionattribute8 = a.user_id)
@@ -894,6 +943,32 @@
 	<delete id="EzSurveyDAO.deleteSurveyOptions" parameterClass="SurveyVO">
 		delete from tbl_survey_option where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
 	</delete>
+	
+	<select id="EzSurveyDAO.getMailSentFlag" parameterClass="SurveyVO" resultClass="Integer">
+		SELECT 
+			mail_sent_flag
+		FROM 
+			tbl_survey
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</select>
+	
+	<update id="EzSurveyDAO.updateMailSentFlag" parameterClass="Map">
+		UPDATE 
+			tbl_survey
+		SET 
+			mail_sent_flag = #mailSentFlag#
+		WHERE 
+			survey_id = #surveyId#
+		AND 
+			company_id = #companyId#
+		AND 
+			tenant_id = #tenantId#
+	</update>
 	
 	<!--***********************************************************************************
 	**                                Attach item process                                **
@@ -1115,9 +1190,9 @@
 								#deptList[]#
 							</iterate> AND (user_type = 'dept' OR user_type = 'comp') )
 				OR
-				(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+				(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND company_id = #companyId#))
 				OR
-				(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+				(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND company_id = #companyId#))
 			)
 		AND 
 			company_id = #companyId#

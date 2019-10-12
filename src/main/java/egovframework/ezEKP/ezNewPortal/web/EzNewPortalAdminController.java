@@ -1398,4 +1398,60 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		LOGGER.debug("updateSlideOrder ended.");
 	}
+	
+	/**
+	 * 권한 불러올때, 직위직책 리스트, 권한그룹 리스트 불러오기 함수 추가
+	 */
+	
+	//직위, 직책 리스트 불러오기
+	@RequestMapping(value = "/admin/ezNewPortal/getTitleList.do", method=RequestMethod.POST)
+	@ResponseBody
+	public JSONArray getTitleList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap,
+			HttpServletRequest req, Model model) throws Exception {
+		LOGGER.debug("getTitleList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = paramMap.get("companyId").toString();
+		
+		String url = "/rest/admin/ezPortal/menus/authorities/titles/companies/" + companyId;
+		
+		paramMap.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "get", null);
+		String result = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
+		
+		if (result.equals("ok")) {
+			json = (JSONArray) resultBody.get("data");
+		}
+		LOGGER.debug("json : " + json);
+		LOGGER.debug("getTitleList Ended");
+		return json;
+	}
+	
+	//권한그룹 리스트 불러오기
+	@RequestMapping(value = "/admin/ezNewPortal/getGroupList.do", method=RequestMethod.POST)
+	@ResponseBody
+	public JSONArray getGroupList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramMap,
+			HttpServletRequest req, Model model) throws Exception {
+		LOGGER.debug("getGroupList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String companyId = paramMap.get("companyId").toString();
+		
+		String url = "/rest/admin/ezPortal/menus/authorities/groups/companies/" + companyId;
+		
+		paramMap.put("userId", userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, req, "get", null);
+		String result = resultBody.get("status").toString();
+		JSONArray json = new JSONArray();
+		
+		if (result.equals("ok")) {
+			json = (JSONArray) resultBody.get("data");
+		}
+		LOGGER.debug("json : " + json);
+		LOGGER.debug("getGroupList Ended");
+		return json;
+	}
 }

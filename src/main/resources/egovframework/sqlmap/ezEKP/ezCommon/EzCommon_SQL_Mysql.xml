@@ -7,6 +7,36 @@
 	<typeAlias  alias="ApprovPWDVO" 				type="egovframework.ezEKP.ezCommon.vo.ApprovPWDVO"/>
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
+    <typeAlias  alias="loginVO"                 	type="egovframework.let.user.login.vo.LoginVO"/>
+	
+	<!-- 로그인 처리를 위한 resultMap -->
+    <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
+        <result property="id"                   column="cn"                         columnIndex="1"/>
+        <result property="password"             column="password"                   columnIndex="2"/>
+        <result property="displayName1"         column="displayname"                columnIndex="3"/>
+        <result property="displayName2"         column="displayname2"               columnIndex="4"      nullValue=""/>
+        <result property="deptID"               column="department"                 columnIndex="5"/>
+        <result property="deptName1"            column="description"                columnIndex="6"/>
+        <result property="deptName2"            column="description2"               columnIndex="7"      nullValue=""/>
+        <result property="title1"               column="title"                      columnIndex="8"/>
+        <result property="title2"               column="title2"                     columnIndex="9"      nullValue=""/>
+        <result property="companyID"            column="companyid"                  columnIndex="10"/>
+        <result property="companyName1"         column="company"                    columnIndex="11"/>
+        <result property="companyName2"         column="company2"                   columnIndex="12"     nullValue=""/>      
+        <result property="updateDT"             column="updatedt"                   columnIndex="13"/>
+        <result property="rollInfo"             column="rollinfo"                   columnIndex="14"/>
+        <result property="phone"                column="telephonenumber"            columnIndex="15"/>
+        <result property="email"                column="mail"                       columnIndex="16"/>
+        <result property="jikChek"              column="jikchek"                    columnIndex="17"/>
+        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+        <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
+        <result property="primary"              column="primaryLang"                columnIndex="20"/>
+        <result property="loginCnt"             column="loginCnt"                	columnIndex="21"/>
+        <result property="gyumJik"              column="gyumJik"                	columnIndex="22"/>
+        <result property="userFileUrl"          column="userFileUrl"                columnIndex="23"/>
+        <result property="sabun"              	column="sabun"                		columnIndex="24"/>
+        <result property="password_updatedt"    column="password_updatedt"          columnIndex="25"/>
+    </resultMap>    
 	
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
@@ -1316,5 +1346,105 @@
 			<![CDATA[
 				)
      	]]>
+     </select>
+     
+   	<select id="EzCommonDAO.checkSurveyMailSentFlagColumn">
+		SELECT
+			MAIL_SENT_FLAG
+		FROM
+			TBL_SURVEY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addSurveyMailSentFlagColumn">
+		ALTER TABLE
+			TBL_SURVEY
+		ADD 
+			MAIL_SENT_FLAG TINYINT(4) DEFAULT '0'
+	</statement>
+	
+     <select id="EzCommonDAO.getPermissionGroupMembers" parameterClass="Map" resultMap="login">
+     	<![CDATA[
+            SELECT  
+                a.cn, 
+				a.password,                
+				a.displayname, 
+				a.displayname2, 
+				a.department,               
+				a.description, 
+				a.description2, 
+				a.title, 
+				a.title2, 
+				a.physicaldeliveryofficename as companyid, 
+				a.company, 
+				a.company2, 
+				a.updatedt, 
+				a.extensionattribute1 as rollinfo, 
+				a.telephonenumber, 
+				a.mail, 
+				a.extensionattribute10 as jikchek, 
+				a.tenant_id, 
+				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode, 
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang, 
+				a.loginCnt, 
+				a.extensionattribute4 as gyumJik, 
+				a.extensionattribute2 as userFileUrl, 
+				a.extensionattribute14 as sabun,
+				a.password_updatedt
+            FROM  
+                tbl_usermaster a
+            JOIN
+            	tbl_permissiongroupinfo b
+            ON
+           		a.tenant_id = b.tenant_id
+           	AND
+           		a.tenant_id = #tenantId#
+           	AND
+           		a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+           	AND
+        ]]>
+            	(
+					(b.member_type = 'JIKCHEK' AND a.extensionattribute8 = b.member_id)
+				OR
+					(b.member_type = 'JIKWI' AND a.extensionattribute7 = b.member_id)
+				OR
+					(b.member_type = 'ORGAN' AND a.physicaldeliveryofficename = b.member_id)
+				OR
+					(b.member_type = 'USER' AND a.cn = b.member_id)
+				OR
+					(b.member_type = 'DEPT' AND a.department = b.member_id)
+		        <isEqual property="applySubDeptYN" compareValue="true">
+				<![CDATA[
+				  OR
+					(a.department IN (
+								SELECT
+									CN
+								FROM
+									tbl_deptmaster
+								WHERE
+									dept_cd_path REGEXP(
+											SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+			                                FROM tbl_deptmaster
+			                                WHERE cn IN (
+															SELECT member_id
+			                                                FROM tbl_permissiongroupinfo
+			                                                WHERE 
+																group_id = #groupId#
+															AND
+																member_type = 'DEPT'
+															AND
+																sub_dept_yn = 'Y'
+														)
+									)
+								)
+						)
+				
+				]]>
+				</isEqual>	
+				)
+            WHERE  
+                b.group_id = #groupId#
+            AND
+            	a.tenant_id = #tenantId#
      </select>
 </sqlMap>

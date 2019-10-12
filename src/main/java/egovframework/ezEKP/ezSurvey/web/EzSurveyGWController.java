@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -537,13 +538,12 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
+	@SuppressWarnings("unused")
 	@RequestMapping(value="/rest/ezsurvey/survey-popupItem/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getPopupItems(Locale locale, HttpServletRequest request) throws Exception {
 		String serverName    = request.getHeader("host-name")      != null ? request.getHeader("host-name")    : "";
 		String mode          = request.getParameter("mode")        != null ? request.getParameter("mode")      : "";
 		String userId        = request.getParameter("userId")      != null ? request.getParameter("userId")    : "";
-		String startDate     = request.getParameter("startDate")   != null ? request.getParameter("startDate") : "";
-		String endDate       = request.getParameter("endDate")     != null ? request.getParameter("endDate")   : "";
 		JSONObject result    = new JSONObject();
 		
 		if (userId.equals("")) {
@@ -555,7 +555,7 @@ public class EzSurveyGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result = surveyService.getPopupItems(mode, startDate, endDate, userInfo);
+			result = surveyService.getPopupItems(mode, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

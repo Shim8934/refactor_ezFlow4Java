@@ -183,6 +183,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 					if (cookieValue != null && !cookieValue.equals("")) {
 						popupNotiListAfter.remove(popupNoti);
 					}
+					
+					cookieValue = "";
 				}
 			}
 			

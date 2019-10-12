@@ -607,9 +607,19 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			ezSurveyDAO.saveSurveyUsers(surveyUser);
 		}
 		
-		if (mailFlag == 1) {
-			List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
-			sendMail(userList, survey);
+		//Send notice mail
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Boolean notiMailFlag = mailFlag == 1 && dateFormat.format(new Date()).equals(startDate) && draftMode == 0;
+		if (notiMailFlag) {
+			int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
+			
+			if(mailSentFlag == 0) {
+				logger.debug("start send mail");
+				List<SurveyParticipantVO> userList = getSurveyParticipantListForMail(crrSurveyId, companyId, tenantId);
+				sendMail(userList, survey);
+				updateMailSentFlag(surveyId, 1, companyId, tenantId);
+			}
+			
 		}
 		
 		result.put("status", "ok");
@@ -726,28 +736,21 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getPopupItems(String mode, String startDate, String endDate, LoginVO userInfo) throws Exception {
+	public JSONObject getPopupItems(String mode, LoginVO userInfo) throws Exception {
 		JSONObject result   = new JSONObject();
 		String userId       = userInfo.getId();
 		int tenantId        = userInfo.getTenantId();
 		String primary      = userInfo.getPrimary();
 		String offset       = userInfo.getOffset();
-		String companyId    = userInfo.getCompanyID();
-		String deptId       = userInfo.getDeptID();
 		String offsetMinute = commonUtil.getMinuteUTC(offset);
 		
-		if (!startDate.equals("")) {
-			startDate = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
-			endDate   = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
-		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
 		map.put("primary", primary);
 		map.put("offset", offsetMinute);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
 		map.put("mode", mode);
+		
 		if (mode != null && mode.equals("popup")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
 			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -756,46 +759,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			map.put("today", timeUTC);
 		}
 		
-		// 설문 팝업에 실질적으로 나타낼 리스트
-		List<SurveyVO> surveyPopupListWithAuth = new ArrayList<SurveyVO>();
-		
 		// 조직도, 직위, 직책, 권한그룹 모든 것에 해당되는 설문 목록
 		List<SurveyVO> surveyPopupList = ezSurveyDAO.getTotalPopupSurveyItems(map);
 		
-		// map.clear();
-		for (SurveyVO survey : surveyPopupList) {
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("companyId", companyId);
-			paramMap.put("tenantId", tenantId);
-			paramMap.put("userId", userId);
-			paramMap.put("deptId", deptId);
-			List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(paramMap);
-			paramMap.put("deptList", userDeptList);
-			paramMap.put("surveyId", survey.getSurveyId());
-			
-			// 조직도, 직위, 직책 체크
-			boolean popupYN = ezSurveyDAO.getSurveyPopupPermitYN(paramMap);
-			
-			if (popupYN) {
-				surveyPopupListWithAuth.add(survey);
-			} else {
-				// 권한그룹 체크
-				List<String> surveyGroupList = ezSurveyDAO.getSurveyGroupList(paramMap);
-				
-				if (surveyGroupList != null) {
-					for (String groupId : surveyGroupList) {
-						boolean groupPermissionYN = ezCommonService.getPermissionGroupAccessYN(groupId, companyId, tenantId, userId, deptId, false);
-						
-						if (groupPermissionYN) {
-							surveyPopupListWithAuth.add(survey);
-							break;
-						}
-						
-					}
-				}
-			}
-		}
-		result.put("surveyPopupList", surveyPopupListWithAuth);
+		result.put("surveyPopupList", surveyPopupList);
 		result.put("userId", userId);
 		result.put("status", "ok");
 		result.put("code", 0);
@@ -1522,30 +1489,35 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 	@Override
 	public List<SurveyVO> getTodaySurveyList(int offset) {
+		logger.debug("getTodaySurveyList started.");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("offset", offset);
 		
+		logger.debug("getTodaySurveyList ended.");
 		return ezSurveyDAO.getTodaySurveyList(map);
 	}
 
 	@Override
 	public List<SurveyParticipantVO> getSurveyParticipantListForMail(long surveyId, String companyId, int tenantId) {
+		logger.debug("getTodaySurveyList started.");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("surveyId", surveyId);
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
+		logger.debug("getTodaySurveyList ended.");
 		return ezSurveyDAO.getSurveyParticipantListForMail(map);
 	}
 	
 	@Async
-	private void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception {
+	@Override
+	public void sendMail(SurveyParticipantVO userinfo, SurveyVO survey) throws Exception {
 		String userAccount = userinfo.getEmail();
 		String password = jspw;
 		
 		String userId = userAccount.split("@")[0];
 		String domainName = userAccount.split("@")[1];
-		int tenantId = survey.getTenantId();
+		int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
 		String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 		logger.debug("userAccount : " + userAccount + ", locale=" + locale);
@@ -1577,9 +1549,23 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		ezEmailService.sendMail(userAccount, password, locale, from, toArr, null, null, subject, content.toString(), false, EmailImportance.NORMAL);
 	}
 	
-	private void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception {
+	@Override
+	public void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) throws Exception {
 		for (int i = 0; i < userList.size(); i++) {
 			sendMail(userList.get(i), survey);
 		}
+	}
+
+	@Override
+	public void updateMailSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception {
+		logger.debug("updateMailSentFlag started.");
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("mailSentFlag", mailSentFlag);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		ezSurveyDAO.updateMailSentFlag(map);
+		logger.debug("updateMailSentFlag ended.");
 	}
 }

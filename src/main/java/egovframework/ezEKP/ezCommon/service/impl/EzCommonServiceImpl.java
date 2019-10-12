@@ -1640,5 +1640,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("getPermissionGroupAccessYN ended.");
 		return accessYN;
 	}
+
+	@Override
+	public void addSurveyMailSentFlagColumn() throws Exception {
+		ezCommonDAO.addSurveyMailSentFlagColumn();
+	}
 	
+	@Override
+	public List<LoginVO> getPermissionGroupMembers(String groupId, String companyId, int tenantId, boolean applySubDeptYN) throws Exception {
+		logger.debug("getPermissionGroupMembers started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("groupId", groupId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("applySubDeptYN", applySubDeptYN);
+		
+		logger.debug("getPermissionGroupMembers ended.");
+		return ezCommonDAO.getPermissionGroupMembers(map);
+	}
 }

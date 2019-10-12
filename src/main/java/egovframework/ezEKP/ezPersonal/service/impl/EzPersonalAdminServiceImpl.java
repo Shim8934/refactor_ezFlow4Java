@@ -1126,7 +1126,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		for (int i = 0; i < userListCount; i++) {
 			map.put("userId", userList.get(i).getUserId());
 			map.put("userType", userList.get(i).getUserType());
-			map.put("tenantId", userList.get(i).getTenantId());
 			map.put("subdeptPermitted", userList.get(i).isSubdeptPermitted());
 			map.put("sn", userList.get(i).getSn());
 			
