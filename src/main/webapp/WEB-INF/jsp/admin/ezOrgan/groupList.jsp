@@ -521,7 +521,7 @@
 <body class="mainbody">
 	<form id="Form1" method="post">
 		<h1>
-			권한그룹관리<span id="TitleInfo"></span> <span class="title_bar"><img
+			<spring:message code='ezOrgan.zNo004' /><span id="TitleInfo"></span> <span class="title_bar"><img
 				src="/images/name_bar.gif"></span> <select name="ListCompany"
 				id="ListCompany" onchange="getPermissionGroupList()"
 				style="margin-bottom: 10px;">
@@ -534,8 +534,8 @@
 		</h1>
 		<div id="mainmenu">
 			<ul>
-				<li class="important"><span onClick="add_dl()">그룹추가</span></li>
-				<li><span onClick="mod_dl()">그룹편집</span></li>
+				<li class="important"><span onClick="add_dl()"><spring:message code='ezOrgan.zNo005' /></span></li>
+				<li><span onClick="mod_dl()"><spring:message code='ezOrgan.zNo006' /></span></li>
 				<li><span onClick="add_dl2()">권한등록창(예시)</span></li>
 				<li><span class="icon16 icon16_delete" onClick="del_dl()"></span></li>
 			</ul>
@@ -547,7 +547,7 @@
 					<option value="GROUPNAME"><spring:message
 							code='ezEmail.t710' /></option>
 					<!-- 그룹이름 -->
-					<option value="CREATEID">등록자ID</option>
+					<option value="CREATEID"><spring:message code='ezOrgan.zNo007' /></option>
 					<!-- 그룹아이디 -->
 				</select> <input id="searchKeyword"
 					onkeypress="if(event.keyCode==13) {search(); return false;}"
@@ -575,11 +575,11 @@
 							<tr id="mainListHeaderTr">
 								<th style="width: 30px;"><input type='checkbox'
 									name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
-								<th style="width: 15%;">이름</th>
-								<th style="width: 15%;">등록자</th>
-								<th style="width: 15%;">등록일자</th>
-								<th style="width: 15%;">수정자</th>
-								<th style="width: 15%;">수정일자</th>
+								<th style="width: 15%;">main.t76</th>
+								<th style="width: 15%;"><spring:message code="ezOrgan.zNo008" /></th>
+								<th style="width: 15%;"><spring:message code="ezOrgan.zNo009" /></th>
+								<th style="width: 15%;"><spring:message code="ezAttitude.t62" /></th>
+								<th style="width: 15%;"><spring:message code="ezAttitude.t63" /></th>
 							</tr>
 						</thead>
 					</table>

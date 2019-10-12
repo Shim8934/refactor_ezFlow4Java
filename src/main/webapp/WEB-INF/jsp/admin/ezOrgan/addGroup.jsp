@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>권한그룹 추가/편집</title>
+	    <title><spring:message code='ezOrgan.zNo010' /></title>
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">
@@ -2574,7 +2574,7 @@
 		                        </td>
 		                        <td style="vertical-align: top;">
 		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
-		                                <span style="min-width: 45px;" id="ToTitleStr">권한그룹 구성원 목록</span>
+		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezOrgan.zNo002' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox" style=" border-bottom:none;">
 		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 472px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>

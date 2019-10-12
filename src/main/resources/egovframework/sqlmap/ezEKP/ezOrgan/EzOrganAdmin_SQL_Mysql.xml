@@ -4985,7 +4985,16 @@
            FROM
            		TBL_PERMISSIONGROUPLIST A INNER JOIN TBL_PERMISSIONGROUPINFO B ON (A.GROUP_ID = B.GROUP_ID)
            WHERE
-            	A.TENANT_ID = #v_TENANT_ID# AND A.COMPANY_ID = #v_COMPANY_ID# AND A.GROUP_ID = #v_GROUP_ID#        	
+            	A.TENANT_ID = #v_TENANT_ID#
+       	 ]]>
+       	 
+		<isNotEmpty property="v_COMPANY_ID" prepend="and"> 
+           		A.COMPANY_ID = #v_COMPANY_ID# 
+		</isNotEmpty>
+        <![CDATA[
+           AND 
+           		A.GROUP_ID = #v_GROUP_ID#
+           ORDER BY MEMBERTYPE 	
         ]]>  
 	</select>
 

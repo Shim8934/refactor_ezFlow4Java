@@ -1537,7 +1537,7 @@
 		        ListViewJikchekTD.style.display = "none";
 		        ListViewGroupTD.style.display = "block";
 		       
-		        /* groupMember.style.display = "block"; */
+		        groupMember.style.display = "block"; 
 		        m_selectedTree = ListViewGroup;
 		        
 		        try {
@@ -2113,6 +2113,22 @@
 		            return;
 		        }
 	        }
+	        
+	        var mail_select_groupmember_cross_dialogArguments = new Array();
+	        function groupmember_click() {
+	            var groupList = new ListView();
+	            groupList.LoadFromID("pListViewGroup");
+	            var arrRows = groupList.GetSelectedRows();
+	            if (arrRows.length < 1) {
+	                alert("<spring:message code='ezOrgan.zNo003' />");
+	                return;
+	            }
+	            
+	            var groupID = GetAttribute(arrRows[0], "DATA1")
+	            mail_select_groupmember_cross_dialogArguments[0] = DivPopUpHidden;
+	            DivPopUpShow(601, 470, "/admin/ezOrgan/permissionGroupUserListView.do?groupID=" + groupID + "&companyID=" + companyId);
+	            
+	        }
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -2160,7 +2176,7 @@
 		            				<span id="jikchekSpan" onclick="jikchekTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t281' /></span>
 		            			</p>
 		            			<p id="orgTabButton4">
-		            				<span id="groupSpan" onclick="groupTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)">권한그룹</span>
+		            				<span id="groupSpan" onclick="groupTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezOrgan.zNo001' /></span>
 		            			</p>
 		            		</div>
 	            		</div>
@@ -2248,8 +2264,6 @@
 		                <table id="ListViewGroupTD" style="display: none">
 		                    <tr>
 		                        <td>
-		                            <%-- <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
-		                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
 		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td id="groupMember" style="display: none">
@@ -2258,8 +2272,6 @@
 		                                            </td>
 		                                        </tr>
 		                                    </table>
-		                                </div>
-		                            </div> --%>
 		                            <div style="width: 668px; height: 494px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewGroup" class="border_gray">
 		                            </div>
 		                        </td>

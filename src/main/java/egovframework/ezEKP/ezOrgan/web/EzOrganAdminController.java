@@ -28,6 +28,7 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
@@ -51,6 +52,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -4513,5 +4515,76 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		logger.debug("getJikwiListBoard ended.");
 		return result;
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/permissionGroupUserListView.do", method = RequestMethod.GET)
+	public String permissionGroupUserListView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model) throws Exception {		
+		logger.debug("permissionGroupUserListView started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String groupID = request.getParameter("groupID");
+		String companyID = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		
+		logger.debug("groupID = " + groupID);
+		logger.debug("companyID = " + companyID);
+		
+		int tenantID = userInfo.getTenantId();
+		List<OrganGroupVO> groupUserList = ezOrganAdminService.getPermissionGroupInfo(groupID, tenantID, companyID);
+		
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		for (OrganGroupVO vo : groupUserList) {
+			String pClass = (String) vo.getMemberType();
+			String pCn = (String) vo.getMemberID();
+			
+			Map<String, String> map = new HashMap<String, String>();
+			
+			if (pClass.equalsIgnoreCase("DEPT")) {
+				OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+				if (dept != null) {
+					map.put("type", egovMessageSource.getMessage("main.t75", locale));
+					map.put("company", dept.getExtensionAttribute3());
+					map.put("dept", dept.getDisplayName());
+					map.put("name", "-");
+				}
+
+			} else if (pClass.equalsIgnoreCase("USER")) {
+				OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+				if (user != null) {
+					map.put("type", egovMessageSource.getMessage("ezSchedule.t999", locale));
+					map.put("company", user.getCompany());
+					map.put("dept", user.getDescription());
+					map.put("name", user.getDisplayName() + "(" + pCn + ")");
+				}
+				
+			} else if (pClass.equalsIgnoreCase("JIKWI")) {
+				OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("001", pCn, (String) vo.getMemberCompanyID(), tenantID);
+				OrganDeptVO dept = ezOrganService.getDeptInfo(jikwiVO.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+				
+				if (jikwiVO != null) {
+					map.put("type", egovMessageSource.getMessage("ezEmail.t28", locale));
+					map.put("company", dept.getExtensionAttribute3());
+					map.put("dept", "-");
+					map.put("name", jikwiVO.getDisplayName());
+				}
+			} else if (pClass.equalsIgnoreCase("JIKCHEK")) {
+				OrganJobVO jikwiVO =  ezOrganAdminService.getTitleInfo_group("002", pCn, vo.getMemberCompanyID(), tenantID);
+				OrganDeptVO dept = ezOrganService.getDeptInfo(jikwiVO.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+				
+				if (jikwiVO != null) {
+					map.put("type", egovMessageSource.getMessage("ezEmail.t281", locale));
+					map.put("company", dept.getExtensionAttribute3());
+					map.put("dept", "-");
+					map.put("name", jikwiVO.getDisplayName());
+				}
+			}
+			list.add(map);
+		}
+		
+		model.addAttribute("list", list);
+		
+		logger.debug("permissionGroupUserListView ended.");
+		
+		return "admin/ezOrgan/permissionGroupUserListView";
 	}
 }

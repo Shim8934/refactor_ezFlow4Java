@@ -1352,7 +1352,7 @@
 		        ListViewGroupTD.style.display = "block";
 		       
 		        // 권한그룹의 구성원 확인 및 선택 제대로 구현되어있지 않아 주석처리
-		     //   groupMember.style.display = "block";
+		        groupMember.style.display = "block"; 
 		        m_selectedTree = ListViewGroup;
 		        
 		        try {
@@ -1936,7 +1936,24 @@
 					listview.AddDataRow(objTr, Resultxml);
 				}
 			}
-			
+	        
+			var mail_select_groupmember_cross_dialogArguments = new Array();
+	        function groupmember_click() {
+	            var groupList = new ListView();
+	            groupList.LoadFromID("pListViewGroup");
+	            var arrRows = groupList.GetSelectedRows();
+	            if (arrRows.length < 1) {
+	                alert("<spring:message code='ezOrgan.zNo003' />");
+	                return;
+	            }
+	            
+	            var groupID = GetAttribute(arrRows[0], "DATA1")
+	            mail_select_groupmember_cross_dialogArguments[0] = DivPopUpHidden;
+	            DivPopUpShow(601, 470, "/admin/ezOrgan/permissionGroupUserListView.do?groupID=" + groupID);
+	            
+	        }
+	        
+	        
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -2072,28 +2089,13 @@
 	                    <tr>
 	                        <td>
 								<table style="margin-top: 4px; width: 100%;">
-                                       <tr>
-                                           <td id="groupMember" style="display: none">
-                                               <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()">
-                                                   <spring:message code='ezEmail.t598' /></span></a>
-                                           </td>
-                                       </tr>
-                                   </table>
-	                        <%-- 권한그룹의 구성원보기 및 선택 제대로 구현되어있지 않아 주석처리 --%>
-	                        <%--
-	                            <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
-	                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
-	                                    <table style="margin-top: 4px; width: 100%;">
-	                                        <tr>
-	                                            <td id="groupMember" style="display: none">
-	                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()">
-	                                                    <spring:message code='ezEmail.t598' /></span></a>
-	                                            </td>
-	                                        </tr>
-	                                    </table>
-	                                </div>
-	                            </div>
-	                            --%>
+		                                        <tr>
+		                                            <td id="groupMember" style="display: none">
+		                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()">
+		                                                    <spring:message code='ezEmail.t598' /></span></a>
+		                                            </td>
+		                                        </tr>
+		                                    </table>
 	                            <div style="width: 668px; height: 489px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewGroup" class="border_gray">
 	                            </div>
 	                        </td>

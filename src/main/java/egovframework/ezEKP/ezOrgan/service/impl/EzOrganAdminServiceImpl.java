@@ -1969,7 +1969,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		map.put("v_GROUP_ID", groupID);
 		map.put("v_TENANT_ID", tenantID);
-		map.put("v_COMPANY_ID", companyID);
+		
+		if (!companyID.equals("")) {
+			map.put("v_COMPANY_ID", companyID);
+		}
 				
 		List<OrganGroupVO> retireList = ezOrganAdminDao.getPermissionGroupInfo(map);
 		
