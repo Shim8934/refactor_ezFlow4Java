@@ -764,6 +764,8 @@
 						tbl_survey_respondent RESP
 					ON
 						SURV.survey_id = RESP.survey_id
+					AND
+						RESP.user_id = #userId#
 			    )
 		</isEqual>	
 		ORDER BY
