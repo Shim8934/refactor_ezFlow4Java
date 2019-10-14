@@ -1305,9 +1305,9 @@
 				  OR
 					(member_type = 'DEPT' AND sub_dept_yn = 'N' AND member_id = #deptId#)
 				  OR 
-					(member_type = 'JIKWI' AND member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId#))
+					(member_type = 'JIKWI' AND member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
 				  OR
-					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId#))
+					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
 			]]>
 			<isEqual property="applySubDeptYN" compareValue="true">
 			<![CDATA[
