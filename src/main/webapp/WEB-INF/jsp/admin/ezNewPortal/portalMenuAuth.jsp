@@ -889,7 +889,7 @@
 	   	 	var mail_select_groupmember_cross_dialogArguments = new Array();
 			function groupmember_click() {
 				var selectGroup = document.getElementById("pListViewGroup").querySelector(".selectTR");
-				console.log(selectGroup);
+				
 				if (selectGroup == null || selectGroup == undefined) {
 					alert("<spring:message code='ezOrgan.zNo003' />");
 					return;
