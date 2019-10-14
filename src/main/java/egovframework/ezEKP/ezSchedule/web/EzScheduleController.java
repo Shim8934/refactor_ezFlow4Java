@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -604,8 +605,13 @@ public class EzScheduleController extends EgovFileMngUtil {
         	idList = idTypeChk;
         }
         
-        
-
+        List<String> publicIds = pubScheDeptVO.stream().map(s -> s.getDeptId()).collect(Collectors.toList());
+        JSONArray jsonArray = new JSONArray();
+        for (int j = 0; j < publicIds.size(); j++) {
+        	JSONObject obj = new JSONObject();
+			obj.put("id", publicIds.get(j));
+			jsonArray.add(j, obj);
+		}
         pOffset = loginVO.getOffset().split("\\|")[1];      
         timeZone = (Integer.parseInt(pOffset.split(":")[0]) * 60) + Integer.parseInt(pOffset.split(":")[1]);
 
@@ -632,6 +638,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("defaultTitle",	defaultTitle);
         model.addAttribute("shareList",		sb.toString());
         model.addAttribute("useScheduleIcs",useScheduleIcs);
+        model.addAttribute("publicIds",jsonArray);
         
 		return "/ezSchedule/scheduleMain";
 	}

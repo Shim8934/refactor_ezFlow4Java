@@ -72,6 +72,7 @@
 		    var pDefaultview = "<c:out value='${defaultView}'/>";
 		    var pStartday = "<c:out value='${startDay}'/>";
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
+		    var publicIds = JSON.parse('${publicIds}');
 		    var LunarUse = false;		    
 		    var primaryLang = "<c:out value='${userInfo.primary}'/>";		// 2018-12-26 김민성 - 일정관리 기념일 다국어 처리
 		    select_memorialDays(uselang);
