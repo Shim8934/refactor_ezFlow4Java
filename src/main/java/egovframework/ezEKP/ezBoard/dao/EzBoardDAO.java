@@ -748,7 +748,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	/* 2019-09-18 홍승비 - 사용자의 직위와 직책 ID를 리턴하는 쿼리 (사내겸직 포함) */
 	@SuppressWarnings("unchecked")
-	public List<String> getUserJJID(Map<String, Object> map) {
+	public List<String> getUserJJID(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzBoardDAO.getUserJJID", map);
 	}
 	
@@ -760,13 +760,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 
 	/* 2019-09-18 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 그룹의 관리자 권한을 리스트로 리턴하는 쿼리 */
 	@SuppressWarnings("unchecked")
-	public List<String> checkIfBoardGroupAdminNew(Map<String, Object> map) {
+	public List<String> checkIfBoardGroupAdminNew(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzBoardDAO.checkIfBoardGroupAdminNew", map);
 	}
 
 	/* 2019-09-24 홍승비 - 그룹권한을 포함하여 ACCESSID에 대한 게시판 읽기권한을 리스트로 리턴하는 쿼리 */
 	@SuppressWarnings("unchecked")
-	public List<String> getCheckItemIDNew(Map<String, Object> map) {
+	public List<String> getCheckItemIDNew(Map<String, Object> map) throws Exception {
 		return (List<String>) list("EzBoardDAO.getCheckItemIDNew", map);
 	}
 
@@ -788,5 +788,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	/* 2020-06-15 홍승비 - 주어진 게시판ID에 대하여 즐겨찾기 여부를 판단하는 쿼리 */
 	public int getIsMyBoardExist(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.getIsMyBoardExist", map);
+	}
+	
+	/* 2019-10-11 홍승비 - 회사별 공지사항 게시판ID를 리턴하는 쿼리 */
+	public String getCompanyNoticeBoardID(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getCompanyNoticeBoardID", map);
 	}
 }

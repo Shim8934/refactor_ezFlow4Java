@@ -5929,4 +5929,17 @@
 		]]>
 	</select>
 	
+	<select id="EzBoardDAO.getCompanyNoticeBoardID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				IFNULL(BOARDID, '')
+			FROM
+				TBL_BOARD_NOTICEBOARD
+			WHERE
+				COMPANYID = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
 </sqlMap>

@@ -1584,6 +1584,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("getPermissionGroupMembers ended.");
 		return ezCommonDAO.getPermissionGroupMembers(map);
+	}	
+	
+	@Override
+	public void createTblNoticeBoard() throws Exception {
+		ezCommonDAO.createTblNoticeBoard();
 	}
 
 	@Override

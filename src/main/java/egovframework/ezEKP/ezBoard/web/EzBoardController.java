@@ -9689,7 +9689,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String returnStr = "";
-		String defaultBoardID = ezCommonService.getTenantConfig("boardDefaultBoardID", userInfo.getTenantId());
+		
+		/* 2019-10-11 홍승비 - 테넌트 컨피그가 아니라 회사별로 지정한 공지사항 게시판으로 이동하도록 수정 */
+		String defaultBoardID = ezBoardService.getCompanyNoticeBoardID(userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		BoardPropertyVO boardProp = ezBoardService.getBoardProperty(defaultBoardID, userInfo.getTenantId());
 		
