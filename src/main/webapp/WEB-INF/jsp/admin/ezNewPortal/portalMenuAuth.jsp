@@ -26,9 +26,11 @@
 			.nameTD {width:70%;}
 			.authTD {position:relative;}
 			.portlet_tabpart01_top{text-align:center;} 
-			#portalJikwi, #portalJikcheck, #portalGroup {width: 100%; height: 510px; overflow: auto; background-color: #ffffff;}
+			#portalJikwi, #portalJikcheck {width: 100%; height: 510px; overflow: auto; background-color: #ffffff;}
 			.titleListTR:hover, .groupListTR:hover {background-color : #f4f5f5; cursor:pointer;}
 			.titleListTR.selectTR, .groupListTR.selectTR {background-color:#f1f8ff;}
+			#portalGroup {height:478px;width: 100%; overflow: auto; background-color: #ffffff;}
+			#portalGroup_btn {width:100%;padding:0;}
 	    </style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
@@ -129,6 +131,13 @@
 									</div>
 						        </div>
 								<div id="portalGroup_content" style="display:none;">
+									<table id="portalGroup_btn" class="mainlist">
+										<tr>
+											<td>
+												<a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()"><spring:message code='ezEmail.t598' /></span></a>
+											</td>
+										</tr>
+									</table>
 									<div class="border_gray">
 										<div id="portalGroup">
 											<table id="pListViewGroup" cellspacing="0" cellpadding="0" multiselectable="true" useocs="false" rowondblclick="InsertReceiver" width="100%" border="0" class="mainlist">
@@ -876,6 +885,21 @@
 
 	   			window.close();
 	   		}
+	   		
+	   	 	var mail_select_groupmember_cross_dialogArguments = new Array();
+			function groupmember_click() {
+				var selectGroup = document.getElementById("pListViewGroup").querySelector(".selectTR");
+				console.log(selectGroup);
+				if (selectGroup == null || selectGroup == undefined) {
+					alert("<spring:message code='ezOrgan.zNo003' />");
+					return;
+				}
+				
+				var groupID = selectGroup.getAttribute("data1");
+				mail_select_groupmember_cross_dialogArguments[0] = DivPopUpHidden;
+				var companyId = "<c:out value='${companyId}'/>";
+				DivPopUpShow(601, 470, "/admin/ezOrgan/permissionGroupUserListView.do?groupID=" + groupID + "&companyID=" + companyId);
+			}
 	   		
 	   		/** get MenuAuth data */
 	   		var getMenuAuths = function() {
