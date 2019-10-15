@@ -760,12 +760,11 @@
 		function afterDeleteSuccessfully() {
 			alert(SurveyMessages.strDel);
 			
-			if (window.opener.frameElement != null) {
-				 var openerEl = window.opener; 
+			if (window.opener.getPotletSurveyList != undefined) {
 				 window.opener.getPotletSurveyList();
-				// window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+				 window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
 				 window.close();
-			}
+			 }
 			
 			if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
 			window.close();
