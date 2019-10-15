@@ -133,6 +133,12 @@ public class EzTalkGateController {
 						logger.debug("userId=" + userId + ", no use mobile login by deviceInfo.");
 						result = "N";
 					}
+
+					if ("YES".equals(ezCommonService.getTenantConfig("useLoginStop", tenantId)) && ezOrganAdminService.checkStopUser(userId, tenantId) > 0) {
+						// 사용자 정지 리턴
+						logger.debug("userId={}, stoped user.", userId);
+						result = "S";
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -202,6 +208,16 @@ public class EzTalkGateController {
 								result = "NOTUSE";
 							}
 						}
+					}
+				}
+				
+				// 사용자정지 여부를 체크
+				String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+				
+				if (useLoginStop != null && useLoginStop.equals("YES")) {
+					int flag = ezOrganAdminService.checkStopUser(userId, tenantId);
+					if(flag > 0) {
+						result = "STOPUSER";
 					}
 				}
 			}
