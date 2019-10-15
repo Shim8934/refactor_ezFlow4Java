@@ -733,7 +733,7 @@ public class EzPollController extends EgovFileMngUtil {
 		int numberOfCmt = -1;
 		String[] files = null;
 		String userPhoto = "";
-		String params = (request.getParameter("params") != null) ? request.getParameter("params") : "";
+		String params = (request.getParameter("params") != null) ? request.getParameter("params") : ""; // currentPage, checkSeeAll, radioBttn, mode1, pollType
 		String searchStr = (request.getParameter("search") != null) ? request.getParameter("search") : "";
 		String searchN = (request.getParameter("searchN") != null) ? request.getParameter("searchN") : "";
 		int resultFirst = 0; //0:투표 종료 후 결과보기, 1:투표 종료 전 결과보기, 2:작성자만 결과보기.
@@ -801,9 +801,11 @@ public class EzPollController extends EgovFileMngUtil {
 		//게시자만 결과 보기 판별 2018-04-16 홍대표
 		resultFirst = pollQuestionVO.getResultFirst();
 		if(resultFirst == 2 && !pollQuestionVO.getCreator().equals(loginVO.getId()) && pollQuestionVO.getStatus() == 0){
+			String pollType = params.split(",")[4];
 			redirectAttributes.addAttribute("brdID", 6);
 			redirectAttributes.addAttribute("resultFirst", resultFirst);
 			redirectAttributes.addAttribute("status", pollQuestionVO.getStatus());
+			redirectAttributes.addAttribute("pollType", pollType);
 			return "redirect:/ezPoll/pollList.do";
 		}
 		
