@@ -840,7 +840,7 @@
 	 	    		}
 	 	    		
 	 	    		if (numberOfMultiSelect != 0 && numberOfSelected >= numberOfMultiSelect) {
-	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
+	 					alert("<spring:message code = 'ezPoll.t171'/>" + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
 	 					return;
 	 	    		}
 	 	    		
