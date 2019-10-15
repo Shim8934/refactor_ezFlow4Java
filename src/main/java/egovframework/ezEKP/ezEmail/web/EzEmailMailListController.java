@@ -336,7 +336,7 @@ public class EzEmailMailListController {
 					+ ",isAscending=" + isAscending + ",startNo=" + startNo + ",endNo=" + endNo + ",listCount=" + listCount);
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
-			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, null, false, 
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, new Date(), false, 
 					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
 			
 			totalCount = (int)extraMap.get("totalCount");
@@ -749,7 +749,7 @@ public class EzEmailMailListController {
 			}
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
-			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, null, false, 
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, new Date(), false, 
 					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
 			
 			totalCount = (int)extraMap.get("totalCount");
@@ -1706,7 +1706,7 @@ public class EzEmailMailListController {
 	        
  			int mailCount = 7;
  			
-	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, 
+	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, 
 	        		false, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
 	        
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");

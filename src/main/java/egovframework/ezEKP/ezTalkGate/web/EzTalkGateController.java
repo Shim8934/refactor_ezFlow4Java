@@ -8,6 +8,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -281,6 +282,23 @@ public class EzTalkGateController {
 			
 			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
 			
+			String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+			
+        	if (!useSession.isEmpty()) {
+        		int sessionTime = 0;
+        		
+        		try {
+        			sessionTime = Integer.parseInt(useSession);
+        		} catch (NumberFormatException nfe) {  
+        			nfe.printStackTrace();
+        		}
+        		
+	        	if (sessionTime != 0) {
+	        		HttpSession session = request.getSession();
+		        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
+	        	}
+        	}						
+			
 			logger.debug("ezTalkGateMain ended.");
 			
 			if (ezTalkSsoType.equals("mail")) {
@@ -362,9 +380,29 @@ public class EzTalkGateController {
 				
 				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, deptId, compId);
 				
-				redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
-								+ URLEncoder.encode(ezTalkGateNoticeBoardId) + "&boardType=" + boardType;
-				logger.debug("redirectUrl=" + redirectUrl);
+				String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+				
+	        	if (!useSession.isEmpty()) {
+	        		int sessionTime = 0;
+	        		
+	        		try {
+	        			sessionTime = Integer.parseInt(useSession);
+	        		} catch (NumberFormatException nfe) {  
+	        			nfe.printStackTrace();
+	        		}
+	        		
+		        	if (sessionTime != 0) {
+		        		HttpSession session = request.getSession();
+			        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
+		        	}
+	        	}						
+				
+	        	if (ezTalkGateNoticeBoardId != null) {
+					redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
+									+ URLEncoder.encode(ezTalkGateNoticeBoardId, "UTF-8") + "&boardType=" + boardType;
+	        	}
+
+	        	logger.debug("redirectUrl=" + redirectUrl);
 			}
 			 
 		} catch (Exception e) {

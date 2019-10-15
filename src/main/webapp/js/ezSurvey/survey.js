@@ -474,11 +474,13 @@ var SurveyCreate     = function() {
 //		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
 		ppContent      = replaceAll(ppContent, '<p style="font-size:13px;font-family:맑은 고딕"><br></p>', '');
 		var ttlValue   = replaceAll(surveyTtl.value, " ", "");
+		var today = getToday();
 		
 		if (!ttlValue)     {returnObj["error"] = SurveyMessages.strTitle  ; surveyTtl.value = ""; surveyTtl.focus(); return returnObj;}
 		if (!ppContent)    {returnObj["error"] = SurveyMessages.strPurpose; surveyPp.focus() ; return returnObj;}
 		if (!sDate)        {returnObj["error"] = SurveyMessages.strSvDate3; return returnObj;}
 		if (!eDate)        {returnObj["error"] = SurveyMessages.strSvDate2; return returnObj;}
+		if (sDate < today) {returnObj["error"] = SurveyMessages.strSvDate4; return returnObj;}
 		if (sDate > eDate) {returnObj["error"] = SurveyMessages.strSvDate1; return returnObj;}
 		
 		if (publicFlag == 1) {
@@ -500,6 +502,19 @@ var SurveyCreate     = function() {
 		
 		if (lastStep == 1) {saveSurveyInformation();}
 		return returnObj;
+	}
+	
+	function getToday() {
+		var today     = new Date();
+		var yyyy      = today.getFullYear();
+		var MM        = today.getMonth() + 1;
+		var dd        = today.getDate();
+		
+		if (dd < 10) {dd = '0' + dd;}
+		if (MM < 10) {MM = '0' + MM;}
+		
+		today = yyyy + "-" + MM + "-" + dd;
+		return today;
 	}
 	
 	function checkStep2() {
