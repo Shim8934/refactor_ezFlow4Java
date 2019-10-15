@@ -123,6 +123,7 @@
 		    var receiverCount = 0;
 	        var groupAddressCountMap = {};
 	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+	        var previewChk = false; // 메일 미리보기
 	        
 			function window_onload() {
 	            if (!CrossYN()) {
@@ -1088,6 +1089,41 @@
 					.appendTo(ul);
 				};
 			})
+			
+			/*
+			   20190807 김수아 : 메일 작성 창의 미리보기 버튼 클릭 시
+			*/
+			function mailWritePreview() { // pCDOMessageId
+				if (MailStatus == "SEND" && !previewChk) { // 저장 중
+					setTimeout(function() {
+						mailWritePreview();
+			        }, 1000);
+				} else if (!previewChk){
+					previewChk = true;
+					Save_onClick('preview');
+				}
+			}
+			
+			function delDrafts(del_uid) {
+		    	var delDraftsURL = g_url;
+		    	var delDraftsFiledate = filedate;
+		    	
+		    	if (typeof del_uid != "undefined"){
+		    		delDraftsURL = del_uid;
+		    		delDraftsFiledate = "";
+		    	}
+		    	
+		        var xmlhttp = createXMLHttpRequest();
+		        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(delDraftsURL) + "&delid=" + delDraftsFiledate;
+		    	if (typeof(shareId) != "undefined" && shareId != "") {
+		    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
+		    	}
+		        
+		        xmlhttp.open("GET", requestUrl, false);
+		        xmlhttp.send();
+		        xmlhttp = null;
+		        isDelted = true;
+		    }
 		    
 		</script>
         <c:if test="${isCrossBrowser != true}">
@@ -1116,6 +1152,7 @@
 		            <li style="display:none;"><span onClick="LoadFormat_onClick()"><spring:message code='ezEmail.t824' /></span></li>
 		            <li style="display:none;"><span onClick="NameCertify_onClick()"><spring:message code='ezEmail.t331' /></span></li>
 		              <li><span onClick="Option_onClick('M')" id="Span1"><spring:message code='ezEmail.t353' /></span></li>
+		            <li><span onclick="mailWritePreview()"><spring:message code='ezEmail.t487' /></span></li>
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
 		                 <img src="/images/pbar.gif" align="absmiddle"></li> 
 					<li id="menuTable" class="sel" style="background:none; border:none; margin:0; vertical-align:top;">

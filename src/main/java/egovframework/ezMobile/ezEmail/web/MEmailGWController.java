@@ -538,10 +538,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         	String searchValue = search;
         	
         	if (searchField.isEmpty()) {
-				searchField = "SUBJECT&FROM";
+        		// 검색어가 없을 때는 검색 필드를 설정하지 않는다.
+        		if (!searchValue.isEmpty()) {
+        			searchField = "SUBJECT&FROM";
+        		}
 				
 				if (senderReceiverFlag) {
-					searchField = "SUBJECT&TO";
+					// 검색어가 없을 때는 검색 필드를 설정하지 않는다.
+					if (!searchValue.isEmpty()) {
+						searchField = "SUBJECT&TO";
+					}
 				}
 			}
 			

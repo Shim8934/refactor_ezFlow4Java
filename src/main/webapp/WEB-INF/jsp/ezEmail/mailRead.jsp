@@ -55,6 +55,8 @@
 		    var shareId = "${shareId}";
 		    var deletePermission = "${deletePermission}";
 		    var sendPermission = "${sendPermission}";
+		    var mailWritePreview = "${mailWritePreview}"; // 메일 작성 > 미리보기
+		    var g_uid = "${uid}";
 		    var countryName = "${countryName}";
 		    var countryIP = "${countryIP}";
 		    var countryCode = "${countryCode}";
@@ -152,6 +154,10 @@
 		        } 
 			    catch (e) { }
 			    
+			    if (mailWritePreview == "true") {
+			    	$("#menu > ul:first-child").css("display","none");
+			    }
+			    
 			}
 		    function btnPrint_onClick()
 		    {
@@ -221,6 +227,8 @@
 			{
 			   if(searchPage == "1" && usedMoveDel == "1")
 			        opener.callback();
+			   
+			   mailWritePreviewDel();
 			}
 			
 			function deliver()
@@ -524,6 +532,17 @@
 		    		$("#message").height(messageH - sentDateHeight);
 		    	}
 		    }
+		    
+		    window.onbeforeunload = function () {
+		    	mailWritePreviewDel();
+		    }
+		    
+		    function mailWritePreviewDel() {
+		    	if (mailWritePreview != "true") {return; }
+		    	// 메일 작성 > 미리보기 메일 삭제
+				window.opener.parent.delDrafts(g_uid);
+				window.parent.opener.parent.previewChk = false;
+		    }
 		</script>
 	</head>
 
@@ -608,10 +627,12 @@
 		                        </div>
 		                    </td>
 		                    <td nowrap class="pos2" id="btnInsertAddr">
-		                    	<a style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
-		                    	<c:if test="${shareId == null or shareId == ''}">
-		                    		<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
-		                    	</c:if>
+		                    	<c:if test="${mailWritePreview != true}">
+			                    	<a style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
+			                    	<c:if test="${shareId == null or shareId == ''}">
+			                    		<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
+			                    	</c:if>
+			                    </c:if>
 		                    </td>
 		                </tr>
 		                <tr>
