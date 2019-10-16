@@ -755,6 +755,7 @@
 		
 		function afterDeleteSuccessfully() {
 			alert(SurveyMessages.strDel);
+			if (window.opener && window.opener.openSurveyPopup)    {window.opener.openSurveyPopup("", 600, 600, 0, window.opener.surveyPopupIndex); window.close();}
 			if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
 			window.close();
 		}

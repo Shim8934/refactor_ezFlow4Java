@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
@@ -44,6 +45,9 @@ public class EzSurveyScheduler {
 	
 	@Autowired
 	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzEmailAsync ezEmailAsync;
 	
 	@Resource(name = "jspw")
     private String jspw;
@@ -77,7 +81,7 @@ public class EzSurveyScheduler {
 			
 			List<SurveyParticipantVO> participantList = ezSurveyService.getSurveyParticipantListForMail(surveyId, companyId, tenantId);
 			
-			ezSurveyService.sendMail(participantList, survey);
+			ezEmailAsync.sendMail(participantList, survey, Integer.toString(offset));
 			ezSurveyService.updateMailSentFlag(surveyId, 1, companyId, tenantId);
 		}
 		

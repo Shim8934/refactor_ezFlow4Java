@@ -30,6 +30,7 @@ var SurveyMessages = {
 	strSvDate1   : "アンケート開始日の指定が正しくありません。",
 	strSvDate2   : "アンケート終了日を指定してください。",
 	strSvDate3   : "アンケート開始日を指定してください。",
+	strSvDate4   : "日付を正しく入力してください",
 	strAddOther  : "その他を追加",
 	strParamErr  : "正しくないパラメータ値が存在します。",
 	strTreeErr   : "データエラー",
