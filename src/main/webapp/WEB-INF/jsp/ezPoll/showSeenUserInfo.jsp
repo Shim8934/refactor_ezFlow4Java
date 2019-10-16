@@ -65,7 +65,7 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float:left; display: block; width:100%; text-align:left; padding-left:5px;">
-			        <h1><spring:message code='ezPoll.t135'/></h1>
+			        <h1><spring:message code='ezPoll.t112'/></h1>
 			    </div>				
 			</div>
 			<div id="close">
