@@ -3299,7 +3299,7 @@ input::-ms-clear {display: none;}
 .quesDiv .qstnRow .dd-container .dd-select {height: 40px; width: 100%; position:relative; cursor:pointer; border: none; background:#fff !important;}
 .quesDiv .qstnRow .dd-container .dd-options {display:none; list-style:none; overflow:auto; position:absolute; right:-1px; top: 44px; width:540px !important; z-index:2000; margin:0px 0px 0px 0px; padding:0; background:#fff; border:solid 1px #c7c7c7; border-bottom:none;}
 .quesDiv .qstnRow .dd-container .dd-options >li {display: block; float:left; width: 33.33%;}
-.quesDiv .qstnRow .dd-container .dd-option {display:block; overflow:hidden; height:25px; line-height:25px; padding:10px 20px; color:#333; text-align:left; border-bottom:solid 1px #ddd; text-decoration:none; cursor:pointer; -webkit-transition: all 0.25s ease-in-out; -moz-transition: all 0.25s ease-in-out;-o-transition: all 0.25s ease-in-out;-ms-transition: all 0.25s ease-in-out;}
+.quesDiv .qstnRow .dd-container .dd-option {display:block; overflow:hidden; height:25px; line-height:25px; padding:10px 17px; color:#333; text-align:left; border-bottom:solid 1px #ddd; text-decoration:none; cursor:pointer; -webkit-transition: all 0.25s ease-in-out; -moz-transition: all 0.25s ease-in-out;-o-transition: all 0.25s ease-in-out;-ms-transition: all 0.25s ease-in-out;}
 .quesDiv .qstnRow .dd-container .dd-desc { color:#aaa; display:block; overflow: hidden; font-weight:normal; line-height: 1.4em; }
 .quesDiv .qstnRow .dd-container .dd-selected{overflow:hidden; display:block; line-height:40px;}
 .quesDiv .qstnRow .dd-container .dd-pointer{ width:0; height:0; position:absolute; right:10px; top:50%; margin-top:-3px;}
