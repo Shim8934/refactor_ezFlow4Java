@@ -915,35 +915,48 @@
      		AND (
      			  	(user_type = 'USER' AND user_id = #userId#)
      			  OR
-     			  	(user_type = 'DEPT' AND subdept_permitted = 0 AND user_id = #deptId#)
+     			  	(user_type = 'DEPT' AND subdept_permitted = 0 AND (user_id = #deptId# or user_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
      			  OR
-     			  	(user_type = 'JIKWI' AND user_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
+     			  	(user_type = 'JIKWI' AND user_id IN 
+						(
+							SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+							UNION DISTINCT
+							SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+						)
+					)
      			  OR
      			  	(user_type = 'JIKCHEK' AND user_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
-     			  OR
-     			  	(#deptId# IN (
-     			  					SELECT 
-     			  						cn 
-     			  					FROM 
-     			  						tbl_deptmaster 
-     			  					WHERE 
-     			  						dept_cd_path REGEXP(
-     			  								SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
-     			  								FROM tbl_deptmaster
-     			  								WHERE cn IN (
-     			  												SELECT user_id
-     			  												FROM tbl_ps_popup_user
-     			  												WHERE 
-     			  													itemseq = #itemSeq#
-     			  												AND
-     			  													user_type = 'DEPT'
-     			  												AND 
-     			  													subdept_permitted = 1
-     			  											)
-     			  								)
-     			  					)
-     			  	)
-     			) 				
+     			)
+     	]]>
+     </select>
+     
+     <select id="EzPersonalDAO.getpopupPermitSubDeptYN" parameterClass="Map" resultClass="int">
+     	<![CDATA[
+			SELECT 
+				COUNT(cn)
+			FROM 
+				tbl_deptmaster 
+			WHERE 
+				dept_cd_path REGEXP(
+						SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+						FROM tbl_deptmaster
+						WHERE cn IN (
+										SELECT user_id
+										FROM tbl_ps_popup_user
+										WHERE 
+											itemseq = #itemSeq#
+										AND
+											user_type = 'DEPT'
+										AND 
+											subdept_permitted = 1
+									)
+						)
+			AND
+				(
+					cn = #deptId#
+				OR
+					cn IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)
+				)
      	]]>
      </select>
      

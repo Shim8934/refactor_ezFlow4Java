@@ -205,6 +205,12 @@ public class EzPersonalDAO extends EgovAbstractDAO {
 		
 		if (permit > 0) {
 			return true;
+		} else {
+			permit = (int) select("EzPersonalDAO.getpopupPermitSubDeptYN", map);
+			
+			if (permit > 0) {
+				return true;
+			}
 		}
 		
 		return false;
