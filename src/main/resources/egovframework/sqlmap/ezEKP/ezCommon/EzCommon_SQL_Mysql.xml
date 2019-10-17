@@ -1738,7 +1738,15 @@
 		ADD 
 			sn INT DEFAULT 0
 	</statement>
-	
+
+	<select id="EzCommonDAO.checkTblShareDocDir">
+		SELECT 
+			OWNER_ID
+		FROM 
+			TBL_SHARE_DOC_DIR
+		LIMIT 1
+	</select>
+
 	<select id="EzCommonDAO.checkBoardManageTypeColumn">
 		SELECT
 			TYPE

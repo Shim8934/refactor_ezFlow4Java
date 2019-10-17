@@ -216,6 +216,8 @@ public interface EzCommonService {
 	public void createPwPolicyPatternTable() throws Exception;
 	
 	public void addAprAttachViewOrder() throws Exception;
+
+	public void createTblShareDocDir() throws Exception;
 	
 	public void addAprEndAttachViewOrder() throws Exception;
 	

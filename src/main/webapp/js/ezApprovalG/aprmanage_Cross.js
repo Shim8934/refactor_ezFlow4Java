@@ -1078,6 +1078,9 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
         openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
         openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
+        if(shareUser = "shareUser"){
+        	openLocation += "&pageType=admin";
+        }
     }
     openwindow(openLocation, "", 880, 570);
 }
@@ -2292,7 +2295,9 @@ function setbuttonenable() {
 	        }     
 	    }
 	    if (pListTypeValue == "3") {
-            document.getElementById("tbtnDraft").style.display = "";   
+	    	if(!shareUser || shareUser != 'shareUser'){
+	    		document.getElementById("tbtnDraft").style.display = "";   
+	    	}
 	    }
 	    if (pListTypeValue == "2") {
             document.getElementById("tbtnDraft").style.display = "";      

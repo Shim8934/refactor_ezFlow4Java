@@ -23,6 +23,8 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -4314,7 +4316,54 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		if (resultCnt > 0) {
 			result = ezApprovalGAdminDAO.getAttachLimit(map);
 		}
+		return result;
+	}
 		
+
+	@Override
+	public List<KEDAuthorUserInfo> getDocDirOwnerList(String companyId, int tenantId) throws Exception {
+		logger.debug("getDocDirOwnerList start");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<KEDAuthorUserInfo> ownerList = ezApprovalGAdminDAO.getShareDocDirOwnerList(map);
+		
+		logger.debug("getDocDirOwnerList end");
+		return ownerList;	
+	}
+
+	@Override
+	public List<KEDSharedUserInfo> getDocDirShareList(String ownerId, int tenantId) throws Exception {
+		logger.debug("getDocDirShareList start");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("ownerId", ownerId);
+		map.put("tenantId", tenantId);
+		
+		List<KEDSharedUserInfo> shareList = ezApprovalGAdminDAO.getShareDocDirShareList(map);
+		
+		logger.debug("getDocDirShareList end");
+		return shareList;
+	}
+	
+	@Override
+	public String insertShareDocDir(String ownerId, String ownerType, List<KEDSharedUserInfo> shareList, int tenantId) throws Exception {
+		logger.debug("getDocDirShareList start");
+		String result = "NO";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("ownerId", ownerId);
+		map.put("ownerType", ownerType);
+		map.put("shareList", shareList);
+		map.put("tenantId", tenantId);
+		
+		ezApprovalGAdminDAO.deleteShareDocDir(map);
+		
+		result = ezApprovalGAdminDAO.insertShareDocDir(map);
+		
+		logger.debug("getDocDirShareList end");
 		return result;
 	}
 	
@@ -4350,4 +4399,22 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		ezApprovalGAdminDAO.deleteAttachLimit(map);
 	}
 	
+	@Override
+	public String deleteShareDocDir(String ownerId, int tenantId) throws Exception {
+		logger.debug("deleteShareDocDir start");
+		String result = "NO";
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("ownerId", ownerId);
+		map.put("tenantId", tenantId);
+		
+		int resultNum = ezApprovalGAdminDAO.deleteShareDocDir(map);
+		
+		if(resultNum > 0){
+			result = "YES";
+		}
+		
+		logger.debug("deleteShareDocDir end");
+		return result;
+	}
 }

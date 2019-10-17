@@ -10,6 +10,8 @@
 	<typeAlias alias="ApprGContInfoVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO"/>
 	<typeAlias alias="ApprGFormConnInfoVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO"/>
 	<typeAlias alias="ApprGOpenGovModifyHistoryVO"  type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovModifyHistoryVO"/>
+	<typeAlias alias="KEDAuthorUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDAuthorUserInfo"/>
+	<typeAlias alias="KEDSharedUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo"/>
 
 	<!-- <procedure id="EzApprovalGAdmin.getContainerInfoManage" parameterClass="Map" 
 		resultClass="ApprGLeftVO"> -->
@@ -4518,6 +4520,76 @@
 			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 		AND
 			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+	</select>
+	
+	<insert id="EzApprovalGAdmin.insertShareDocDir" parameterClass="Map">
+		INSERT INTO TBL_SHARE_DOC_DIR(OWNER_ID, SHARE_ID, SHARE_TYPE, TENANT_ID, OWNER_TYPE)
+		VALUES
+			<iterate property="shareList" conjunction=",">
+				(#ownerId#, #shareList[].shareId#, #shareList[].shareType#, #tenantId#,  #ownerType#)
+			</iterate>
+	</insert>
+	
+	<delete id="EzApprovalGAdmin.deleteShareDocDir" parameterClass="Map">
+		DELETE FROM 
+			TBL_SHARE_DOC_DIR
+		WHERE
+			OWNER_ID = #ownerId#
+		AND
+			TENANT_ID = #tenantId# 
+	</delete>
+	
+	<select id="EzApprovalGAdmin.getShareDocDirOwnerList" parameterClass="Map" resultClass="KEDAuthorUserInfo">
+		SELECT
+			DISTINCT
+			A.OWNER_ID as ownerId, 
+			CASE 
+				WHEN A.OWNER_TYPE = 'U'
+		        THEN B.DISPLAYNAME
+		        WHEN A.OWNER_TYPE = 'D'
+		        THEN C.DISPLAYNAME
+		        END AS ownerName,
+			A.OWNER_TYPE as ownerType
+		FROM
+			TBL_SHARE_DOC_DIR A
+		LEFT JOIN
+			TBL_USERMASTER B
+		ON 
+			(A.OWNER_ID = B.CN AND A.TENANT_ID = B.TENANT_ID)
+		LEFT JOIN
+			TBL_DEPTMASTER C
+		ON 
+			(A.OWNER_ID = C.CN AND A.TENANT_ID = C.TENANT_ID)
+		WHERE	
+			(B.PHYSICALDELIVERYOFFICENAME = #companyId# OR C.EXTENSIONATTRIBUTE2 = #companyId#)
+		AND
+			A.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzApprovalGAdmin.getShareDocDirShareList" parameterClass="Map" resultClass="KEDSharedUserInfo">
+		SELECT
+			A.SHARE_ID as shareId, 
+			CASE 
+				WHEN A.SHARE_TYPE = 'U'
+		        THEN B.DISPLAYNAME
+		        WHEN A.SHARE_TYPE = 'D'
+		        THEN C.DISPLAYNAME
+		        END AS shareName,
+			A.SHARE_TYPE as shareType
+		FROM
+			TBL_SHARE_DOC_DIR A
+		LEFT JOIN
+			TBL_USERMASTER B
+		ON 
+			(A.SHARE_ID = B.CN AND A.TENANT_ID = B.TENANT_ID)
+		LEFT JOIN
+			TBL_DEPTMASTER C
+		ON 
+			(A.SHARE_ID = C.CN AND A.TENANT_ID = C.TENANT_ID)
+		WHERE	
+			A.OWNER_ID = #ownerId#
+		AND
+			A.TENANT_ID = #tenantId#
 	</select>
 	
 	<insert id="EzApprovalGAdmin.insertDelDoc" parameterClass="Map">

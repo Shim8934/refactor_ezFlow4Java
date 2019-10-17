@@ -45,6 +45,7 @@
 	<typeAlias  alias="ApprGOpenGovAttachVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO"/>
 	<typeAlias  alias="ApprGDocListForOpenGovVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO"/>
 	<typeAlias  alias="ApprGOpenGovInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO"/>
+	<typeAlias alias="KEDSharedUserInfo" 			type="egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo"/>
 	
 	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
 		<result property="companyID"					column="companyID"						/>
@@ -31941,5 +31942,35 @@
 			E.TENANT_ID = #tenantId#
 		AND
 			E.COMPANYID = #companyId#		
+	</select>
+	
+	<select id="EzApprovalG.getShareList" parameterClass="Map" resultClass="KEDSharedUserInfo">
+		SELECT DISTINCT
+			A.SHARE_ID as shareId, 
+			CASE 
+				WHEN A.SHARE_TYPE = 'U'
+		        THEN B.DISPLAYNAME
+		        WHEN A.SHARE_TYPE = 'D'
+		        THEN C.DISPLAYNAME
+		        END AS shareName,
+			A.SHARE_TYPE as shareType
+		FROM
+			TBL_SHARE_DOC_DIR A
+		LEFT JOIN
+			TBL_USERMASTER B
+		ON 
+			(A.SHARE_ID = B.CN AND A.TENANT_ID = B.TENANT_ID)
+		LEFT JOIN
+			TBL_DEPTMASTER C
+		ON 
+			(A.SHARE_ID = C.CN AND A.TENANT_ID = C.TENANT_ID)
+		WHERE	
+			(A.OWNER_ID = #userId# 
+				OR 
+			A.OWNER_ID = #deptId#)
+		AND
+			A.SHARE_TYPE = #shareType#
+		AND
+			A.TENANT_ID = #tenantId#
 	</select>
 </sqlMap>

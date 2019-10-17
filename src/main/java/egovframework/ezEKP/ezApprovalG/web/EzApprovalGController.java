@@ -25,6 +25,37 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.security.PrivateKey;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -83,6 +114,29 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 사용자 - 전자결재G
@@ -231,7 +285,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					subContCount += 1;
 				}
 			}
+			List<KEDSharedUserInfo> deptShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "D", userInfo.getTenantId());
+			Map<String, List<ApprGFormVO>> shareUsersItemList = new HashMap<String, List<ApprGFormVO>>(); 
+			for (KEDSharedUserInfo kedSharedUserInfo : deptShareList) {
+				List<ApprGFormVO> shareUserItemList = ezApprovalGService.getFormContainer(userInfo.getTenantId(), userInfo.getCompanyID(), kedSharedUserInfo.getShareId());
+				shareUsersItemList.put(kedSharedUserInfo.getShareId(), shareUserItemList);
+			}
+			List<KEDSharedUserInfo> userShareList = ezApprovalGService.getShareList(userInfo.getId(), userInfo.getDeptID(), "U", userInfo.getTenantId());
 			
+			model.addAttribute("deptShareList", deptShareList);
+			model.addAttribute("userShareList", userShareList);
+			model.addAttribute("shareUsersItemList", shareUsersItemList);
 			model.addAttribute("specialContTreeList", apprContInfoVOs2);
 			model.addAttribute("specialContTreeCount", apprContInfoVOs2.size());
 			model.addAttribute("subContCount", subContCount);
@@ -396,6 +460,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String subQuery = request.getParameter("SubQuery");
 		OrganProxyVO proxyInfo = ezOrganService.getProxyInfo(userInfo.getId(), userInfo.getTenantId(), userInfo.getOffset());
 		String userLang = userInfo.getLang();
+		String shareUserId = request.getParameter("shareUserId");
+		
 		//문서유통 문서 타입
 		String relayG_type = ezCommonService.getTenantConfig("UserInfo_RelayG_Type", userInfo.getTenantId()); 
 		
@@ -420,6 +486,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
 		}
 		
+		if(shareUserId != null && !shareUserId.equals("")){
+			userRealDeptId = ezOrganService.getUserOrgDeptId(shareUserId, userInfo.getTenantId(), userInfo.getCompanyID());
+			userInfo.setId(shareUserId);
+			userInfo.setDeptID(userRealDeptId);
+			model.addAttribute("shareUser", "shareUser");
+		}
 		
 		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -459,7 +531,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userID = request.getParameter("userID");
 //		쓰는곳 없어서 내가 씀
 //		String deptID = request.getParameter("deptID");
-		String deptID = userInfo.getDeptID();
+		String deptID = request.getParameter("deptID");
 		String pageSize = request.getParameter("pageSize");
 		String pageNum = request.getParameter("pageNum");
 		String companyID = request.getParameter("companyID");
@@ -6508,6 +6580,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String useEnforceSihang = ezCommonService.getTenantConfig("UseEnforceSihang", userInfo.getTenantId());
 		String userLang = userInfo.getLang();
+		//부서공유함의 부서,사용자 아이디
+		String shareDeptId = request.getParameter("shareDeptId");
+		String shareUserId = request.getParameter("shareUserId");
 		
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -6529,6 +6604,48 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String deptInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
 		String buJaeInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+		
+		if(shareDeptId != null && !shareDeptId.equals("")){
+			StringBuffer containers = new StringBuffer();
+			LoginVO userInfo2 = new LoginVO();
+			userInfo2.setDeptID(shareDeptId);
+			userInfo2.setCompanyID(userInfo.getCompanyID());
+			userInfo2.setLocale(userInfo.getLocale());
+			userInfo2.setTenantId(userInfo.getTenantId());
+			userInfo2.setLang(userInfo.getLang());
+			
+			List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo2, "2");
+			for (int k = 0; k < apprGLeftVOList.size(); k++) {
+				if (k == 0) {
+				    containers.append("'" + apprGLeftVOList.get(k).getContainerID() + "'");
+				} else {
+					containers.append(", '" + apprGLeftVOList.get(k).getContainerID() + "'");
+				}
+			}
+			contID = containers.toString();
+			model.addAttribute("share", "share");
+		} else if(shareUserId != null && !shareUserId.equals("")){
+			StringBuffer containers = new StringBuffer();
+			LoginVO userInfo2 = new LoginVO();
+			String userRealDeptId = ezOrganService.getUserOrgDeptId(shareUserId, userInfo.getTenantId(), userInfo.getCompanyID());
+			userInfo2.setId(shareUserId);
+			userInfo2.setDeptID(userRealDeptId);
+			userInfo2.setCompanyID(userInfo.getCompanyID());
+			userInfo2.setLocale(userInfo.getLocale());
+			userInfo2.setTenantId(userInfo.getTenantId());
+			userInfo2.setLang(userInfo.getLang());
+			
+			List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo2, "2");
+			for (int k = 0; k < apprGLeftVOList.size(); k++) {
+				if (k == 0) {
+					containers.append("'" + apprGLeftVOList.get(k).getContainerID() + "'");
+				} else {
+					containers.append(", '" + apprGLeftVOList.get(k).getContainerID() + "'");
+				}
+			}
+			contID = containers.toString();
+			model.addAttribute("share", "share");
+		}
 		
 		model.addAttribute("useEnforceSihang", useEnforceSihang);
 		model.addAttribute("buJaeInfo", buJaeInfo);

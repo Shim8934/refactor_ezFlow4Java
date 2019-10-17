@@ -97,6 +97,8 @@
  	     	//개인문서함 엑셀내보내기시에 필요한 파일명.
  	        var excelFileName = "<c:out value = '${excelFileName}'/>";
 		    var userLang = "<c:out value = '${userLang}'/>";
+ 	        var shareDeptId = "<c:out value = '${shareDeptId}'/>";
+ 	        var share = "<c:out value = '${share}'/>";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -1817,6 +1819,7 @@
 			        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 			        <li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
 			        <c:if test ="${tmpValue !='' && contID !=''}">
+			        <c:if test ="${share != 'share'}">			<!-- 구문서함 아닐때만 나오도록 수정 -->
 			            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
 		            </c:if>
 				    <li id="tSearchCondi"><span class="icon16 icon16_search" id="SearchCondi" onClick="return SearchCondi_onclick()" ></span></li>

@@ -109,6 +109,7 @@
 			var userLang = "<c:out value = '${userLang}'/>";
 			var useAdditionalRole = "${useAdditionalRole}";
 			var userLang = "${userInfo.lang}";
+		    var shareUser = "<c:out value = '${shareUser}'/>";
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    

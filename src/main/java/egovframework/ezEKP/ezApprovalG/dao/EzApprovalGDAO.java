@@ -40,6 +40,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -3464,5 +3465,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ApprGFormVO> getFormContainer(Map<String, Object> map) {
 		return (List<ApprGFormVO>) list("EzApprovalG.getFormContainer", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<KEDSharedUserInfo> getShareList(Map<String, Object> map) {
+		return (List<KEDSharedUserInfo>)list("EzApprovalG.getShareList", map);
 	}
 }
