@@ -54,7 +54,7 @@ var SurveyMessages = {
 	strSlider    : "スライド",
 	strRanking   : "順位",
 	strDropdown  : "ドロップダウン",
-	strSelect4   : "アンケートを選択してください。",
+	strSelect4   : "選択したアンケートがありません",
 	strNoData    : "データが存在しません",
 	strTitle     : "タイトルを入力してください。",
 	strPurpose   : "アンケートの目的を入力してください。",
