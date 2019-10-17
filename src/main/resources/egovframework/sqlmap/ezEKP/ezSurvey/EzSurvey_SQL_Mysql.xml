@@ -596,9 +596,11 @@
 				</iterate> and (user_type = 'dept' OR user_type = 'comp')
 			)
 			OR
-			(a.user_type = 'jikchek' and b.extensionattribute8 = a.user_id)
+			(a.user_type = 'jikchek' and (b.extensionattribute8 = a.user_id
+				or a.user_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
 			OR
-			(a.user_type = 'jikwi' and b.extensionattribute7 = a.user_id)
+			(a.user_type = 'jikwi' and (b.extensionattribute7 = a.user_id 
+				or a.user_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) )   )
 			OR
 			(user_type = 'group' and a.user_id  in 
 				(
@@ -620,15 +622,20 @@
 						c.group_id = a.user_id
 					and
 						(
-							(c.member_type = 'JIKCHEK' and d.extensionattribute8 = c.member_id)
+							(c.member_type = 'JIKCHEK' and (d.extensionattribute8 = c.member_id
+								or c.member_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
 						or
-							(c.member_type = 'JIKWI' and d.extensionattribute7 = c.member_id)
+							(c.member_type = 'JIKWI' and (d.extensionattribute7 = c.member_id 
+								or c.member_id in (select jobid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
 						or
 							(c.member_type = 'ORGAN' and d.physicaldeliveryofficename = c.member_id)
 						or
+						
 							(c.member_type = 'USER' and d.CN = c.member_id)
 						or
-							(c.member_type = 'DEPT' and d.department = c.member_id)
+						
+							(c.member_type = 'DEPT' and (d.department = c.member_id
+								or c.member_id in (select deptid from tbl_addjobmaster where cn = #userId# and tenant_id = #tenantId#) ))
 						)
 				)
             )
@@ -801,8 +808,8 @@
 				user_id as creatorId,
 				user_name1 as creatorName1,
 				user_name2 as creatorName2,
-				start_date as startDate,
-				end_date as endDate,
+				date_add(start_date, interval #offset# minute)  as startDate,
+				date_add(end_date, interval #offset# minute)    as endDate,
 				tenant_id as tenantId,
 				company_id as companyId
 			from
@@ -822,6 +829,9 @@
 	
 	<select id="EzSurveyDAO.getSurveyParticipantListForMail" resultClass="ParticipantVO">
 		<![CDATA[
+		select distinct	*
+		from 
+		(
 			select distinct
 				a.survey_id as surveyId,
 				b.cn as userId,
@@ -851,6 +861,7 @@
 					(a.user_type = 'user' and b.cn = a.user_id)
 				or
 					(a.user_type = 'dept' and b.department = a.user_id)
+					
 				or
 					(a.user_type = 'group' and b.cn in 
 						(
@@ -861,7 +872,13 @@
 							join
 								tbl_usermaster d
 							on
+								d.tenant_id = c.tenant_id
+							AND
 								d.tenant_Id = #tenantId#
+							AND 
+								c.company_id = #companyId#	
+							where
+								c.group_id = a.user_id
 							and
 								(
 									(c.member_type = 'JIKCHEK' and d.extensionattribute8 = c.member_id)
@@ -873,9 +890,8 @@
 									(c.member_type = 'USER' and d.CN = c.member_id)
 								or
 									(c.member_type = 'DEPT' and d.department = c.member_id)
+									
 								)
-							where
-								c.group_id = a.user_id
 						)
 					)
 				)
@@ -885,6 +901,57 @@
 				a.tenant_id = #tenantId#
 			and
 				a.company_id = #companyId#
+				
+			union  
+			select distinct
+				b.survey_id as surveyId,
+				cn as userId,
+				displayname as userName1,
+				displayname2 as userName2,
+				mail as email,
+				PHYSICALDELIVERYOFFICENAME as companyId,
+				tenant_id as tenantId 
+			from (
+				select distinct p.member_id as member_id ,
+			    p.member_type as member_type,
+			    s.survey_id as survey_id,
+			    s.user_type as user_type
+			    from tbl_permissiongroupinfo p 
+			    join tbl_survey_participant s on s.user_id = p.group_id and p.tenant_id = s.tenant_id and s.survey_id = #surveyId#
+			    
+			    ) b 
+			join tbl_usermaster a on cn in (
+				select ad.cn 
+				from tbl_addjobmaster ad 
+				where tenant_id = #tenantId# and 
+					(	b.user_type = 'dept' and b.member_id = ad.deptid 
+					 or (b.user_type = 'jikwi' and 	b.member_id = ad.jobid) 
+					 or (b.user_type = 'jikchek' and b.member_id = ad.jobid) ))
+			where a.PHYSICALDELIVERYOFFICENAME = #companyId# and tenant_id = #tenantId#
+			union 
+			select distinct 
+				d.survey_id as surveyId,
+				a.cn as userId,
+				a.displayname as userName1,
+				a.displayname2 as userName2,
+				a.mail as email,
+				a.PHYSICALDELIVERYOFFICENAME as companyId,
+				a.tenant_id as tenantId 
+			 from tbl_usermaster a 
+			join (
+				select distinct ad.cn as cn, s.survey_id as survey_id
+				from tbl_addjobmaster ad 
+			    join tbl_survey_participant s 
+				on ad.tenant_id = s.tenant_id and s.survey_id = #surveyId# and s.tenant_id = #tenantId#
+				where  (s.user_type = 'dept' and s.user_id = ad.deptid )
+					or (s.user_type = 'jikwi' and s.user_id = ad.jobid )
+			        or (s.user_type = 'jikchek' and s.user_id = ad.jobid )
+			    ) d
+			 on d.cn = a.cn
+			 where a.PHYSICALDELIVERYOFFICENAME = #companyId# and tenant_id = #tenantId#
+
+
+		) as plusaddjob
  		]]>
 	</select>
 	
