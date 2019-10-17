@@ -759,6 +759,7 @@
 		<isEqual property="mode" compareValue="popup" prepend=" AND ">
 			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
 			
+			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
 			<isNotEmpty property="surveyIds" prepend=" AND ">
 				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
 			</isNotEmpty>
