@@ -23,6 +23,7 @@
 		<result property="title2" 								column="T2" 							columnIndex="9"/>		
 		<result property="jobID" 								column="JOBID" 							columnIndex="10"/>
 		<result property="physicalDeliveryOfficeName" 			column="physicaldeliveryofficename" 	columnIndex="11"/>
+		<result property="manualFlag"							column="MANUAL_FLAG"					columnIndex="12"/>
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -3331,7 +3332,8 @@
                 	COMPANYNAME  ,
              	A.TITLE T1  ,
              	A.TITLE2 T2,
-             	A.JOBID  
+             	A.JOBID  ,
+             	A.MANUAL_FLAG
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN
@@ -3370,9 +3372,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_ADDJOBMASTER
-              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID )
+              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID, MANUAL_FLAG )
            VALUES
-           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0 , #v_JOBID#)
+           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0 , #v_JOBID#, #v_MANUAL_FLAG#)
 		]]>
 	</insert>
 	

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -45,6 +46,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -137,6 +139,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createJMochaDistributionSub();
     	ezCommonService.addUserMasterManualFlag();
     	ezCommonService.addDeptMasterManualFlag();
+    	ezCommonService.addAddJobMasterManualFlag();
     	ezCommonService.createJMochaMailSignatureTemplate();
     	ezCommonService.createJobMasterTable();
     	ezCommonService.addUserMasterPasswordUpdateDT();
@@ -2132,12 +2135,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String titleInfo = "";
+		String titleInfoWithManualFlag = "";
 		String deleteTitleInfo = "";
 		String jobID = "";
 		String delType = doc.getElementsByTagName("DEPTID").item(0).getTextContent().equals("")? "ALL" : ""; //삭제타입(ALL인경우 전체겸직삭제)
 		
 		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
 			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
+			String manualFlag = Optional.ofNullable(doc.getElementsByTagName("MANUAL_FLAG").item(i)).map(Node::getTextContent).filter(str -> !str.isEmpty()).orElse(null);
 			
 		    if (!titleValue.equals("")) {
 		    	String[] titleArray = titleValue.split(":");
@@ -2149,8 +2154,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		    	
     			if (titleInfo.equals("")) {
     				titleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
+    				titleInfoWithManualFlag = titleInfo + ":" + manualFlag;
     			} else {
     				titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
+    				titleInfoWithManualFlag += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue + ":" + manualFlag;
     			}
             } else { //선택삭제, 전체겸직삭제인경우
             	if (doc.getElementsByTagName("DEPTID").item(i).getTextContent().equals("")) { //전체겸직삭제인경우
@@ -2220,40 +2227,45 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		        String sTitle1 = "";
 		        String sTitle2 = "";
 		        String pDeptID = "";
+		        String manualFlag = "";
 		        
-	            String[] addJobinfo = titleInfo.split(";");
+	            String[] addJobinfo = titleInfoWithManualFlag.split(";");
 	            StringBuilder sb = new StringBuilder();
 	            
 	            for (int i = 0; i < addJobinfo.length; i++) {
 	                String[] jobInfo = addJobinfo[i].split(":");
+	                int jobInfoLength = jobInfo.length;
 	                pDeptID = jobInfo[0];
 	                sTitle1 = "";
+	                manualFlag = null;
 	                
-	                if (jobInfo.length > 1) {
+	                if (jobInfoLength > 2) {
 	                    sTitle1 = jobInfo[1];
+	                    manualFlag = jobInfo[jobInfoLength - 1];
 	                }
 	                
 	                sTitle2 = "";
 	                
-	                if (jobInfo.length > 2) {
+	                if (jobInfoLength > 3) {
 	                    sTitle2 = jobInfo[2];
 	                } else {
 	                    sTitle2 = sTitle1;
 	                }
 	                
+	                
 	                if (i == 0) {
-	                    sb.append(pDeptID + ":" + sTitle1 + ":" + sTitle2);
+	                    sb.append(pDeptID + ":" + sTitle1 + ":" + sTitle2 + ":" + manualFlag);
 	                } else {
-	                    sb.append(";" + pDeptID + ":" + sTitle1 + ":" + sTitle2);
+	                    sb.append(";" + pDeptID + ":" + sTitle1 + ":" + sTitle2 + ":" + manualFlag);
 	                }
 	            }		
 	            
-	            titleInfo = sb.toString();
+	            titleInfoWithManualFlag = sb.toString();
 	            
-	            logger.debug("new titleInfo=" + titleInfo);
+	            logger.debug("new titleInfo with manualFlag=" + titleInfoWithManualFlag);
 	            
 	            // 새로운 겸직 목록을 설정한다.
-	            ezOrganAdminService.addJob(userID, titleInfo, jobID, tenantID);	            
+	            ezOrganAdminService.addJob(userID, titleInfoWithManualFlag, jobID, tenantID);
 		    }		    
 		}
 		
