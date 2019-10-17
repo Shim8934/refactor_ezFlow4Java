@@ -130,7 +130,7 @@
 	                }
 	            }
 	            orgTabButton_onClick();
-	            
+	            /*
 	            if ("${cn}" != "") {
 	                var xmlpara = createXmlDom();
 	                var objRoot, objNode;
@@ -142,7 +142,7 @@
 	                xmlHTTP2.onreadystatechange = event_GetDistributionList;
 	                xmlHTTP2.send(xmlpara);
 	            }
-	            
+	            */
 	            ChangeListView_onClick(getOrganListType());
 	        }
 		
@@ -1207,6 +1207,7 @@
 		                organTree.LoadFromID("FromTreeView");
 		                var nodeIdx = organTree.GetSelectNode();
 		                var strId = nodeIdx.GetNodeData("CN");
+		                var nodelevel = nodeIdx.GetNodeData("nodelevel");
 		                var strName = nodeIdx.NodeName;
 						
 		                var listid = "MsgToList";
@@ -1220,8 +1221,17 @@
 		                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
 		                    pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
-		                    pparsingXML = pparsingXML + "<DATA4>dept</DATA4>";
-		                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+		                    if (nodelevel== "0") {
+			                    pparsingXML = pparsingXML + "<DATA4>comp</DATA4>";
+		                    } else {
+			                    pparsingXML = pparsingXML + "<DATA4>dept</DATA4>";
+		                    }
+		                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(strName) + "</VALUE>";
+		                    pparsingXML = pparsingXML + "<deptId>" + MakeXMLString(strId) + "</deptId>";
+                            pparsingXML = pparsingXML + "<userName2>" + MakeXMLString(strName) + "</userName2>";
+                            pparsingXML = pparsingXML + "<userName1>" + MakeXMLString(strName) + "</userName1>";
+                            pparsingXML = pparsingXML + "<deptName2>" + MakeXMLString(strName) + "</deptName2>";
+                            pparsingXML = pparsingXML + "<deptName1>" + MakeXMLString(strName) + "</deptName1></CELL></ROW>";
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		                    Resultxml = loadXMLString(pparsingXML2);
 		
@@ -1328,6 +1338,7 @@
 		                    if (!bFlag) {
 		                    	pparsingXML2 = "";
 			                    pparsingXML = "";
+			                    /*
 			                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
 			                    pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
@@ -1338,6 +1349,13 @@
 	                            pparsingXML = pparsingXML + "<userName1>" + MakeXMLString(strName) + "</userName1>";
 	                            pparsingXML = pparsingXML + "<deptName2>" + MakeXMLString(strName) + "</deptName2>";
 	                            pparsingXML = pparsingXML + "<deptName1>" + MakeXMLString(strName) + "</deptName1></CELL></ROW>";
+			                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+			                    */
+			                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+			                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
+			                    pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
+			                    pparsingXML = pparsingXML + "<DATA4>comp</DATA4>";
+			                    pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
 			                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 			                    Resultxml = loadXMLString(pparsingXML2);
 			
@@ -1785,6 +1803,7 @@
 	            var getlistview = new ListView();
 	            getlistview.LoadFromID(listid);
 	            var bFlag = getlistview.ExistRow("data1", strId);
+	            var nodelevel = nodeIdx.GetNodeData("nodelevel");
 				
 	            if (!bFlag) {
                     pparsingXML2 = "";
@@ -1792,7 +1811,11 @@
                     pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
                     pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
                     pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(strName) + "</DATA2>";
-                    pparsingXML = pparsingXML + "<DATA4>comp</DATA4>";
+                    if (nodelevel== "0") {
+	                    pparsingXML = pparsingXML + "<DATA4>comp</DATA4>";
+                    } else {
+	                    pparsingXML = pparsingXML + "<DATA4>dept</DATA4>";
+                    }
                     pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' /> " + MakeXMLString(strName) + "</VALUE>";
                     pparsingXML = pparsingXML + "<deptId>" + MakeXMLString(strId) + "</deptId>";
                     pparsingXML = pparsingXML + "<userName2>" + MakeXMLString(strName) + "</userName2>";
@@ -2243,6 +2266,22 @@
 		            return;
 		        }
 	        }
+	        
+	        var mail_select_groupmember_cross_dialogArguments = new Array();
+	        function groupmember_click() {
+	            var groupList = new ListView();
+	            groupList.LoadFromID("pListViewGroup");
+	            var arrRows = groupList.GetSelectedRows();
+	            if (arrRows.length < 1) {
+	                alert("<spring:message code='ezOrgan.zNo003' />");
+	                return;
+	            }
+	            
+	            var groupID = GetAttribute(arrRows[0], "DATA1")
+	            mail_select_groupmember_cross_dialogArguments[0] = DivPopUpHidden;
+	            DivPopUpShow(601, 470, "/admin/ezOrgan/permissionGroupUserListView.do?groupID=" + groupID + "&companyID=" + companyId);
+	            
+	        }
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -2378,18 +2417,14 @@
 		                <table id="ListViewGroupTD" style="display: none">
 		                    <tr>
 		                        <td>
-		                            <div class="portlet_tabpart03" style="background-color: white; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
-		                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
-		                                    <table style="margin-top: 4px; width: 100%;">
-		                                        <tr>
-		                                            <td id="groupMember" style="display: none">
-		                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()">
-		                                                    <spring:message code='ezEmail.t598' /></span></a>
-		                                            </td>
-		                                        </tr>
-		                                    </table>
-		                                </div>
-		                            </div>
+                                    <table style="margin-top: 4px; width: 100%;">
+                                        <tr>
+                                            <td id="groupMember" style="display: none">
+                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()">
+                                                    <spring:message code='ezEmail.t598' /></span></a>
+                                            </td>
+                                        </tr>
+                                    </table>
 		                            <div style="width: 668px; height: 461px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewGroup" class="border_gray">
 		                            </div>
 		                        </td>
