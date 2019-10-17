@@ -306,15 +306,17 @@
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = "";
 				
+				var deptInfoURL = "/admin/ezOrgan/deptInfo.do?selectCN=" + args[0]; 
+				
 				if (CrossYN()) {
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = add_dept_Complete;
 				    
-				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 320));
+				    var OpenWin = window.open(deptInfoURL , "DeptInfo", GetOpenWindowfeature(435, 350));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else{
-				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args,"dialogHeight:320px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 320));
+				    var rtnValue = window.showModalDialog(deptInfoURL, args,"dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 350));
                     
 				    if (typeof (rtnValue) != "undefined"){
 				        getDeptFullTree(rtnValue);
@@ -392,16 +394,18 @@
 				args[0] = treeNode.GetNodeData("CN");
 				args[1] = treeNode.GetNodeData("VALUE");
 				
+				var deptInfoURL = "/admin/ezOrgan/deptInfo.do?selectCN=" + args[0] + "&pageType=modify"; 
+				
 				if (CrossYN()) {
 				    deptinfo_dialogArguments = new Array();
 				    deptinfo_dialogArguments[0] = args;
 				    deptinfo_dialogArguments[1] = info_dept_Complete;
 				    
-				    var OpenWin = window.open("/admin/ezOrgan/deptInfo.do", "DeptInfo", GetOpenWindowfeature(335, 320));
+				    var OpenWin = window.open(deptInfoURL, "DeptInfo", GetOpenWindowfeature(435, 350));
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				}else {
-				    var rtnValue = window.showModalDialog("/admin/ezOrgan/deptInfo.do", args, "dialogHeight:320px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 320));
+				    var rtnValue = window.showModalDialog(deptInfoURL, args, "dialogHeight:350px; dialogWidth:435px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(435, 350));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.t7' />");

@@ -502,7 +502,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						}
 				    	
     					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
-    					
     					removeEmailAddressBasedOnCompanyDomainName(cn, dept.getExtensionAttribute2(), userInfo);
     					
     					result = "OK";
@@ -534,7 +533,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 부서정보 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/deptInfo.do")	
-	public String deptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String deptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 	    logger.debug("deptInfo started");
 	    
         userInfo = commonUtil.userInfo(loginCookie);
@@ -543,14 +542,34 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         logger.debug("tenantID=" + tenantID);       
         
+        String selectCN = request.getParameter("selectCN");
+        selectCN = selectCN == null ? "" : selectCN;
+        String pageType = request.getParameter("pageType");
+        pageType = pageType == null ? "add" : pageType;
+        logger.debug("selectCN=" + selectCN + ", pageType=" + pageType);
+        
         String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), tenantID);
         String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), tenantID);
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);    
+        
+        OrganDeptVO organDeptVO = ezOrganService.getDeptInfo(selectCN, userInfo.getPrimary(), userInfo.getTenantId());		
+        String deptCompanyID = organDeptVO.getExtensionAttribute2();        
+        String deptMail = organDeptVO.getMail();
+        logger.debug("deptCompanyID=" + deptCompanyID + ", deptMail=" + deptMail);
+        
+        String companyMailDomain = ezCommonService.getCompanyConfig(tenantID, deptCompanyID, "DomainName");
+        companyMailDomain = pageType.equals("modify") ? deptMail.split("@")[1] : companyMailDomain; // 수정이면 수정할 부서의 도메인
+		String companyDomainList = ezCommonService.getCompanyConfig(tenantID, deptCompanyID, "MailInnerDomain");
+		String[] domainList = companyDomainList.split(";");
        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
         model.addAttribute("secondary", secondary);
         model.addAttribute("locale", userInfo.getLocale());
+        model.addAttribute("companyMailDomain", companyMailDomain);
+        model.addAttribute("domainList", domainList);
+        model.addAttribute("deptMail", deptMail);
+        model.addAttribute("pageType", pageType);
         
         logger.debug("deptInfo ended");
         
@@ -600,8 +619,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         int tenantID = userInfo.getTenantId();                              
 	    
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String selectDomain = request.getParameter("selectDomain");
 		
-		logger.debug("tenantID=" + tenantID + ",domain=" + domain + ",parentCn=" + vo.getParentCn()); 
+		logger.debug("tenantID=" + tenantID + ",domain=" + domain + ",parentCn=" + vo.getParentCn() + ", selectDomain=" + selectDomain); 
 		
 		String result = "";
 
@@ -671,7 +691,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								}						
 							}
 							
-							mailAddr = getEmailAddressBasedOnCompanyDomainName(mailAddr, cn, vo.getParentCn(), userInfo);
+							mailAddr = getEmailAddressBasedOnCompanyDomainName(mailAddr, cn, vo.getParentCn(), userInfo, selectDomain);
 									
 							vo.setMail(mailAddr);
 							
@@ -702,7 +722,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	}
 	
 	private String getEmailAddressBasedOnCompanyDomainName(
-			String originalMailAddr, String cn, String parentCn, LoginVO userInfo) {
+			String originalMailAddr, String cn, String parentCn, LoginVO userInfo, String selectDomain) {
 		try {
 			// 상위 부서를 통해 Company ID를 구한다.
 			OrganDeptVO parentDeptVO = ezOrganService.getDeptInfo(parentCn, userInfo.getPrimary(), userInfo.getTenantId());
@@ -713,17 +733,30 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			if (!parentCompanyId.isEmpty()) {
 				String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), parentCompanyId, "DomainName");
-				
-				logger.debug("companyDomainName=" + companyDomainName);
+				companyDomainName = selectDomain != "" ? selectDomain : companyDomainName;
+				String tenantDomain = originalMailAddr.split("@")[1];
+				logger.debug("companyDomainName=" + companyDomainName + ", tenantDomain=" + tenantDomain);
 	
 				// 회사별 이메일 도메인명이 설정되어 있으면 tbl_tenant_config에 있는 DomainName 대신에
-				// 해당 도메인명을 사용해 이메일 주소를 생성한다.								
-				if (!companyDomainName.isEmpty()) {
+				// 해당 도메인명을 사용해 이메일 주소를 생성한다.	
+				// companyDomainName != tenantDomain > 선택한 도메인이 tenant domain일 경우 아래의 처리는 하지 않는다.
+				if (!companyDomainName.isEmpty() && !companyDomainName.equals(tenantDomain)) {
 					logger.debug("Setting originalMailAddr based on companyDomainName...");
 					
 					String newMailAddr = cn + "@" + companyDomainName;
 					
-					// 해당 주소를 Alias 주소로 등록한다.
+					/* jmocha_alias 추가 */
+					String targetAddr = cn + "@" + tenantDomain;
+					
+					String setAliasResult = ezEmailService.setIndividualAliasForMig(cn, userInfo.getTenantId(), targetAddr, newMailAddr);
+
+					if (!setAliasResult.equals("OK")) {
+						logger.debug("set Alias address failed.");
+					} else {
+						originalMailAddr = newMailAddr;
+					}
+					
+					/*// 해당 주소를 Alias 주소로 등록한다.
 					int rc = ezEmailUserAdminService.addGroup(newMailAddr);
 					
 					logger.debug("addGroup rc=" + rc);
@@ -742,7 +775,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						} else {
 							ezEmailUserAdminService.removeGroup(newMailAddr);
 						}
-					}
+					}*/
 				}
 			}		
 		} catch (Exception e) {
@@ -761,7 +794,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			if (!companyId.isEmpty()) {
 				String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyId, "DomainName");
-				
 				logger.debug("companyDomainName=" + companyDomainName);
 	
 				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 james_recipient_rewrite 테이블에서 제거한다.								
@@ -771,7 +803,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					String newMailAddr = cn + "@" + companyDomainName;
 					
 					// 해당 주소를 james_recipient_rewrite 테이블에서 제거한다.
-					ezEmailUserAdminService.removeGroup(newMailAddr);					
+					// ezEmailUserAdminService.removeGroup(newMailAddr);					
+
+					/* jmocha_alias, james_recipient_rewrite 삭제 */
+					int delAliasResult = ezEmailService.deleteIndividualAlias(cn, userInfo.getTenantId());
+
+					if (delAliasResult == -100) {
+						logger.debug("delete Alias address failed.");
+					}
+					
 				}
 			}		
 		} catch (Exception e) {

@@ -64,6 +64,8 @@
 	        var selSpan = "";
 	        var AddressTreeView = null;
 	        var searchgubun = "N";
+	        var selectDomain = "${companyMailDomain}";
+	        var distributionMail = "${distributionMail}";
 	        
 	        window.onload = function () {
 	            try {
@@ -608,6 +610,11 @@
 	            	return;
 	            }
 	            
+	           	if (cn == "" && $("#selectDomain").val() == "") {
+					alert("<spring:message code='ezEmail.multiDomain.ksa17' />");
+					return;	
+	            }
+	            
 	            var xmlDom = createXmlDom();
 	            var xmlHTTP = createXMLHttpRequest();
 	            var objNode = "";
@@ -616,6 +623,7 @@
 	            createNodeAndInsertText(xmlDom, objNode, "CN", cn);
 	            createNodeAndInsertText(xmlDom, objNode, "NAME", document.all("TextName").value);
 	            createNodeAndInsertText(xmlDom, objNode, "ID", document.all("TextId").value);
+	            createNodeAndInsertText(xmlDom, objNode, "SELECTDOMAIN", selectDomain);
 	            
 	            var memberList = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children;
 	            var memberListLength = memberList.length;
@@ -2624,6 +2632,13 @@
 	
 	            makePageSelPage();
 	        }
+	        
+	        $(document).on("change", "#selectDomain", function() {
+				var mailDomain = "@" + $(this).val();
+	        	$("#mailDomain").text(mailDomain);
+	        	
+	        	selectDomain = $(this).val();
+	        });
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -2714,9 +2729,25 @@
 		                <th><spring:message code='ezEmail.lhm09' /></th>
 		                <td>
 		                    <input name="TextId" type="text" id="TextId" maxlength="20" class="txtClass" style="width:40%;" value="${cn}">
-		                    <span id="mailDomain" style="width:60%; font-weight: bold;">@${mailDomain}</span>
+		                    <span id="mailDomain" style="width:60%; font-weight: bold; display:none;">@${mailDomain}</span>
+							<c:if test="${cn eq ''}">
+								<span style="font-weight: bold; ">@</span>
+								<select id="selectDomain" style="width: 220px; ">
+									<c:forEach var="item" items="${domainList}">
+										<option value="<c:out value='${item}'/>" ${item eq companyMailDomain ? 'selected' : ''}><c:out value='${item}'/></option>
+									</c:forEach>
+								</select>
+							</c:if>
 		                </td>
 		            </tr>
+		            <c:if test="${cn ne ''}">
+			            <tr>
+			            	<th><spring:message code='main.t78' /></th>
+							<td style="width:100%">
+								${distributionMail}
+							</td>	
+			            </tr>
+		            </c:if>
 		        </table>
 		    <table style="width:100%;margin-top:10px">
 		        <tr>

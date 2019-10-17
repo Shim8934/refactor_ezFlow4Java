@@ -24,6 +24,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.tools.ant.taskdefs.GenerateKey.DistinguishedName;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -290,12 +291,34 @@ public class EzEmailAdminController {
 			mailDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
 		}
 		
+		String companyMailDomain = mailDomain;
+		String companyDomainList = ezCommonService.getCompanyConfig(tenantId, companyId, "MailInnerDomain");
+		String[] domainList = companyDomainList.split(";");
+		logger.debug("mailDomain=" + mailDomain + ", companyDomainList=" + companyDomainList);
+		
+		String distributionMail = "";
+		if (!cn.equals("")) { // 편집일 경우
+			List<MailDistributionVO> distributionList = ezEmailService.getDistributionSearchList(companyId, tenantId, cn);
+			
+			if (distributionList != null && distributionList.size() > 0) {	
+				logger.debug("distributionListSize=" + distributionList.size());
+				for (MailDistributionVO distribution : distributionList) {
+					distributionMail = distribution.getMail();
+					companyMailDomain = distributionMail.split("@")[1];
+				}				
+			}		
+		}
+		logger.debug("distributionMail=" + distributionMail + ", companyMailDomain=" + companyMailDomain);
+		
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("mailDomain", mailDomain);
+		model.addAttribute("domainList", domainList);
+		model.addAttribute("distributionMail", distributionMail);
+		model.addAttribute("companyMailDomain", companyMailDomain);
 		
 		logger.debug("mailAddDistributionList ended.");
 
@@ -323,6 +346,8 @@ public class EzEmailAdminController {
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String name = doc.getElementsByTagName("NAME").item(0).getTextContent();
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
+		String selectDomain = doc.getElementsByTagName("SELECTDOMAIN").item(0).getTextContent();
+		selectDomain = selectDomain != null ? selectDomain : "";
 		
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
 		NodeList addressIdList = doc.getElementsByTagName("ADDRESSID");
@@ -334,6 +359,7 @@ public class EzEmailAdminController {
 		
 		int reasonCode = -100;
 		String result = "ERROR";
+		String setAliasResult = "ERROR";
 		
 		try {
 			String bizmekaResult = "ERROR";
@@ -402,8 +428,8 @@ public class EzEmailAdminController {
 					}
 				}
 
-				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID);
 				
+				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID, selectDomain);
 			// 기존 공용배포그룹을 수정하는 경우
 			} else {
 				if (useBizmekaSpambox.equals("YES")) {
@@ -432,6 +458,8 @@ public class EzEmailAdminController {
 			result = "GROUP_NAME";
 		} else if (reasonCode == -2) {
 			result = "GROUP_ID";
+		} else if (setAliasResult.equals("ERROR")) {
+			result = "ALIAS_ERROR";
 		}
 
 		logger.debug("mailSaveDistributionList ended. result=" + result);
@@ -671,8 +699,14 @@ public class EzEmailAdminController {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject responseObj = (JSONObject) jsonParser
 						.parse(response);
-
 				result = (String) responseObj.get("resultCode");
+				
+				if (result.equals("OK")) {
+					logger.debug("delete Alias address.");
+					int delAliasResult = ezEmailService.deleteIndividualAlias(cn, tenantID);
+					result = delAliasResult == -100 ? "ERROR" : result;
+				}
+				
 			}
 
 		} catch (Exception e) {
@@ -1614,10 +1648,26 @@ public class EzEmailAdminController {
 			mailDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
 		}
 		
+		String companyDomainList = ezCommonService.getCompanyConfig(tenantId, compId, "MailInnerDomain");
+		String[] domainList = companyDomainList.split(";");
+		logger.debug("mailDomain=" + mailDomain + ", companyDomainList=" + companyDomainList);
+		
+		String companyMailDomain = mailDomain;
+		String sharedMailboxMail = "";
+		if (shareId != null && !shareId.equals("")) { // 편집일 경우
+			OrganUserVO sharedMailbox = ezOrganAdminService.getUserInfo(shareId, auth.getPrimary(), tenantId);
+			sharedMailboxMail = sharedMailbox.getMail();
+			companyMailDomain = sharedMailboxMail.split("@")[1];
+		}
+		logger.debug("sharedMailboxMail=" + sharedMailboxMail);
+		
 		model.addAttribute("shareId", shareId);
 		model.addAttribute("deptId", deptId);
 		model.addAttribute("compId", compId);
 		model.addAttribute("mailDomain", mailDomain);
+		model.addAttribute("domainList", domainList);
+		model.addAttribute("sharedMailboxMail", sharedMailboxMail);
+		model.addAttribute("companyMailDomain", companyMailDomain);
 		
 		logger.debug("showAddSharedMailbox ended.");
 		return "admin/ezEmail/addSharedMailbox";
@@ -1654,12 +1704,16 @@ public class EzEmailAdminController {
 			String oriPass = (String)jsonObj.get("password");
 			JSONArray userList = (JSONArray)jsonObj.get("userList");
 			int userListSize = userList.size();
-			logger.debug("shareId=" + shareId + ",shareName=" + shareName + ",compId=" + compId + ",userListSize=" + userListSize);
+			String selectDomain = (String)jsonObj.get("selectDomain");
+			logger.debug("shareId=" + shareId + ",shareName=" + shareName + ",compId=" + compId + ",userListSize=" + userListSize + ", selectDomain=" + selectDomain);
 			
 			int tenantId = auth.getTenantId();
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
 			String companyDomain = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
 			logger.debug("tenantId=" + tenantId + ",domain=" + domain + ",companyDomain=" + companyDomain); 
+			
+			String setDomain = !selectDomain.equals("") ? selectDomain : companyDomain;
+			logger.debug("##### setDomain=" + setDomain);
 			
 			// 공유사서함 부서가 존재하는지 확인
 			String deptId = "shared_mailbox_" + compId;
@@ -1775,8 +1829,8 @@ public class EzEmailAdminController {
 				return "json";
 			}
 			
-			if (!companyDomain.isEmpty()) {
-				String newMailAddr = shareId + "@" + companyDomain;				
+			if (!setDomain.isEmpty()) { 
+				String newMailAddr = shareId + "@" + setDomain;				
 				String returnValue = ezEmailService.checkIndividualAlias(newMailAddr, tenantId);
 				
 				if (!returnValue.equals("OK")) {
@@ -1886,9 +1940,10 @@ public class EzEmailAdminController {
 			// 해당 도메인명을 사용해 이메일 주소를 생성한다.
 			String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
 			logger.debug("companyDomainName=" + companyDomainName);
+			logger.debug("setDomain=" + setDomain);
 
-			if (!companyDomainName.isEmpty()) {
-				String newMailAddr = shareId + "@" + companyDomainName;
+			if (!setDomain.isEmpty()) {
+				String newMailAddr = shareId + "@" + setDomain;
 				
 				List<String> mailList = new ArrayList<>();
 				mailList.add(newMailAddr);

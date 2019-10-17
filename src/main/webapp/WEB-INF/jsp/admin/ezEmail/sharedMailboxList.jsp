@@ -273,12 +273,12 @@
 		        }
 		        
 		        var shareId = selnode[0].getAttribute("DATA1");
-		        var feature = "dialogHeight:670px; dialogWidth:990px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(990, 670);
+		        var feature = "dialogHeight:690px; dialogWidth:990px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(990, 690);
 		        
 		        if (CrossYN()) {
 		        	sharedMailboxDialogArguments[0] = modSharedMailboxComplete;
-		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, "", GetOpenWindowfeature(990, 670));
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, "", GetOpenWindowfeature(990, 690));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, feature);

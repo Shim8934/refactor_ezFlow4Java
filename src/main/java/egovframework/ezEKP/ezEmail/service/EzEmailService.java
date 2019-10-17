@@ -128,4 +128,7 @@ public interface EzEmailService {
 	public String getCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
 	public int saveCompanyMultiDomain(int tenantId, String companyId, String primaryDomain, String saveDomainList) throws Exception;
 	
+	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId, String selectDomain) throws Exception;
+	public String setIndividualAliasForMig(String userId, int tenantID, String targetAddr, String individualAliasList) throws Exception;
+	
 }

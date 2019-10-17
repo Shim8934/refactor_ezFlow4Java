@@ -3033,6 +3033,67 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	/**
+	 * 공용배포그룹 추가 (도메인 설정)
+	 */
+	@Override
+	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, 
+			String compId, int tenantId, String selectDomain) throws Exception {
+		logger.debug("addDistributionList started.");
+		logger.debug("id=" + id + ",name=" + name + ",memberList.size=" + memberList.size() + ",subList.size=" + subList.size() 
+			+ ",compId=" + compId + ",tenantId=" + tenantId + ", selectDomain=" + selectDomain);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
+		companyDomainName = !selectDomain.equals("") ? selectDomain : companyDomainName;
+
+		String inputParams = "companyId=" + URLEncoder.encode(compId, "UTF-8") 
+			+ "&name=" + URLEncoder.encode(name, "UTF-8") 
+			+ "&id=" + URLEncoder.encode(id, "UTF-8") 
+			+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
+
+		// 공용배포그룹 맴버가 조직도 or 공용그룹인 경우
+		for (int i = 0; i < memberList.size(); i++) {
+			inputParams += "&memberId=" + URLEncoder.encode(memberList.get(i), "UTF-8");
+		}
+
+		// 공용배포그룹 멤버가 주소록 or 직접입력인 경우
+		for (int i = 0; i < subList.size(); i++) {
+			String subName = subList.get(i).get("subName");
+			String subEmail = subList.get(i).get("subEmail");
+			inputParams += "&subName=" + URLEncoder.encode(subName, "UTF-8") + "&subEmail=" + URLEncoder.encode(subEmail, "UTF-8");
+		}
+		
+		// companyDomainName != tenantDomain > 선택한 도메인이 tenant domain일 경우 아래의 처리는 하지 않는다.
+		if (!companyDomainName.isEmpty() && !companyDomainName.equals(domain)) {
+		// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.
+			String email = id + "@" + companyDomainName;
+			inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
+		}
+
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setDistributionList";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			resultCode = (String)responseObj.get("resultCode");		
+
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+
+		logger.debug("addDistributionList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return reasonCode;
+	}
+	
+	/**
 	 * 공용배포그룹 수정
 	 */
 	@Override
@@ -3309,5 +3370,34 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return reasonCode;
 	}
 	
+	@Override
+	public String setIndividualAliasForMig(String userId, int tenantID, String targetAddr, String individualAlias) throws Exception {
+		logger.debug("setIndividualAliasForMig started.");
+		logger.debug("targetAddr=" + targetAddr + ",individualAlias=" + individualAlias);
+
+		String returnValue = "ERROR";
+		
+		String inputParams = "userId=" + URLEncoder.encode(targetAddr, "UTF-8")
+						+ "&individualAlias=" + URLEncoder.encode(individualAlias, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setIndividualAliasForMig";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				logger.debug("setIndividualAliasForMig OK");
+				returnValue = "OK";
+			}
+		}						
+		
+		logger.debug("setIndividualAliasForMig ended. returnValue=" + returnValue);
+		
+		return returnValue;
+	}
 	
 }

@@ -17,6 +17,8 @@
 			var RetValue;
 			var approvalFlag = "${approvalFlag}";
 			var isAdd = true;
+			var pageType = "${pageType}";
+	        var selectDomain = "${companyMailDomain}";
 			
 			$(document).ready(function(){
 			    if (CrossYN()){
@@ -138,6 +140,11 @@
 					return;
 				}
 				
+				if (pageType == "add" && $("#selectDomain").val() == "") {
+					OpenAlertUI("<spring:message code='ezEmail.multiDomain.ksa17' />");
+	            	return;
+	            }
+				
 				if (DeptName.value.trim() == "") {
                 	OpenAlertUI("<spring:message code='ezOrgan.t213'/>");
 					return;
@@ -181,7 +188,8 @@
 					async : false,
 					data : {parentCn: parentCn, cn: DeptID.value, displayName: DeptName.value.trim(), displayName2: DeptName2.value.trim(), extensionAttribute10: SusinSymbol.value, 
 						    extensionAttribute15: SortNum.value, extensionAttribute9: Manager.value, extensionAttribute5: BalsinPerson.value, extensionAttribute6: SimpleName.value, 
-						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11, manualFlag: "Y"},
+						    extensionAttribute4: DocManage.value, extensionAttribute8: extensionattribute8, extensionAttribute11: extensionattribute11, manualFlag: "Y",
+						    selectDomain: selectDomain},
 					success : function(result){						
 						if (result == "PRE"){
 							OpenAlertUI("<spring:message code='ezOrgan.t119'/>");
@@ -236,6 +244,10 @@
 		    function OpenAlertUI_Complete() {
 		        DivPopUpHidden();
 		    }
+		    
+		    $(document).on("change", "#selectDomain", function() {
+	        	selectDomain = $(this).val();
+	        });
 	    </script>
 	</head>
 	<body class="popup">
@@ -249,12 +261,28 @@
 		<table class="content"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t218' /><span style="color:red"> *</span></th> 
-		    	<td><input type="text" id=DeptID maxlength="20"></td> 
+		    	<td>
+		    		<input type="text" id=DeptID maxlength="20"  style="width: 130px; ">
+			    	<c:if test="${pageType eq 'add' }">
+				    	<span style="font-weight: bold; ">@</span>
+						<select id="selectDomain" style="width: 150px; ">
+							<c:forEach var="item" items="${domainList}">
+								<option value="<c:out value='${item}'/>" ${item eq companyMailDomain ? 'selected' : ''}><c:out value='${item}'/></option>
+							</c:forEach>
+						</select>
+					</c:if>
+		    	</td> 
 		  	</tr> 
 		  	<tr> 
 			    <th ><spring:message code='ezOrgan.t219' /></th> 
 		    	<td><input type="text" id=ParentID readonly="readonly"> </td> 
 		  	</tr> 
+		  	<c:if test="${pageType eq 'modify' }">
+			  	<tr>
+			  		<th><spring:message code='main.t78' /></th>
+			  		<td>${deptMail}</td>
+			  	</tr>
+		  	</c:if>
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t220' /><span style="color:red"> *</span></th> 
 		    	<td style="padding:0">
