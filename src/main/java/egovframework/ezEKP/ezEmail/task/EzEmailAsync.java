@@ -202,8 +202,8 @@ public class EzEmailAsync {
 				//[게시판 게시알림-공지사항] 메일발송테스트
 				String subject = "[전자설문 게시알림] " + title;
 				
-				String startDateUTC   = commonUtil.getDateStringInUTC(survey.getStartDate() + " 00:00:00", offset, true);
-				String endDateUTC     = commonUtil.getDateStringInUTC(survey.getEndDate()   + " 23:59:59", offset, true);
+				String startDateUTC   = commonUtil.getDateStringInUTC(survey.getStartDate() + " 00:00:00", offset, false);
+				String endDateUTC     = commonUtil.getDateStringInUTC(survey.getEndDate()   + " 23:59:59", offset, false);
 				
 				StringBuilder sb = new StringBuilder();
 				
