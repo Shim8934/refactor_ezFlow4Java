@@ -1303,47 +1303,55 @@
 				(
 					(member_type = 'USER' AND member_id = #userId#)
 				  OR
-					(member_type = 'DEPT' AND sub_dept_yn = 'N' AND member_id = #deptId#)
+					(member_type = 'DEPT' AND sub_dept_yn = 'N' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)))
 				  OR 
-					(member_type = 'JIKWI' AND member_id = (SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
+					(member_type = 'JIKWI' AND member_id IN 
+						(
+							SELECT extensionattribute7 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#
+							UNION DISTINCT
+							SELECT jobid FROM tbl_addjobmaster WHERE cn = #userId# AND tenant_id = #tenantId#
+						)
+					)
 				  OR
 					(member_type = 'JIKCHEK' AND member_id = (SELECT extensionattribute8 FROM tbl_usermaster WHERE cn = #userId# AND tenant_id = #tenantId# AND PHYSICALDELIVERYOFFICENAME = #companyId#))
 			]]>
-			<isEqual property="applySubDeptYN" compareValue="true">
-			<![CDATA[
-				  OR
-					(#deptId# IN (
-								SELECT
-									CN
-								FROM
-									tbl_deptmaster
-								WHERE
-									dept_cd_path REGEXP(
-											SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
-			                                FROM tbl_deptmaster
-			                                WHERE cn IN (
-															SELECT member_id
-			                                                FROM tbl_permissiongroupinfo
-			                                                WHERE 
-																group_id = #groupId#
-															AND
-																member_type = 'DEPT'
-															AND
-																sub_dept_yn = 'Y'
-														)
-									)
-								)
-						)
-			
-			]]>
-			</isEqual>
 			<isNotEqual property="applySubDeptYN" compareValue="true">
 			<![CDATA[
 				OR
-				  (member_type = 'DEPT' AND sub_dept_yn = 'Y' AND member_id = #deptId#)
+				  (member_type = 'DEPT' AND sub_dept_yn = 'Y' AND (member_id = #deptId# or member_id IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#))
 			]]>
 			</isNotEqual>
 			<![CDATA[
+				)
+     	]]>
+     </select>
+     
+     <select id="EzCommonDAO.getPermissionGroupAccessSubDeptY" parameterClass="Map" resultClass="int">
+     	<![CDATA[
+			SELECT
+				COUNT(CN)
+			FROM
+				tbl_deptmaster
+			WHERE
+				dept_cd_path REGEXP(
+						SELECT GROUP_CONCAT(dept_cd_path SEPARATOR '|')
+                              FROM tbl_deptmaster
+                              WHERE cn IN (
+										SELECT member_id
+                                              FROM tbl_permissiongroupinfo
+                                              WHERE 
+											group_id = #groupId#
+										AND
+											member_type = 'DEPT'
+										AND
+											sub_dept_yn = 'Y'
+									)
+				)
+			AND
+				(
+					cn = #deptId#
+				OR
+					cn IN (SELECT deptid FROM tbl_addjobmaster WHERE cn = #userId# and tenant_id = #tenantId#)
 				)
      	]]>
      </select>

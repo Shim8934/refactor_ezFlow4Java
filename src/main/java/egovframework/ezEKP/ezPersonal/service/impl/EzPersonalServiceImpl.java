@@ -350,7 +350,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 
 		//String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 		// 2018-11-23 황윤호 offset 적용 
-		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, true);
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
 
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("nowDate", nowDate);

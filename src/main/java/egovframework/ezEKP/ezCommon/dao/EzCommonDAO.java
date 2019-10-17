@@ -240,6 +240,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		
 		if (permit > 0) {
 			return true;
+		} else {
+			if (map.get("applySubDeptYN").toString().equals("true")) {
+				permit = (int) select("EzCommonDAO.getPermissionGroupAccessSubDeptY", map);
+				
+				if (permit > 0) {
+					return true;
+				}
+			}
 		}
 		
 		return false;
