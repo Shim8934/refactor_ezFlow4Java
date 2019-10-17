@@ -14156,7 +14156,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							map.put("v_DOCID", docID);
 							map.put("v_TENANTID", userInfo.getTenantId());
 							// ProcessYN(진행여부)를 O으로 변경
-							ezApprovalGDAO.updateReceiptPointInfo(map);
+							//ezApprovalGDAO.updateReceiptPointInfo(map);
 						}
 					}
 					//시행문일때만 발신함

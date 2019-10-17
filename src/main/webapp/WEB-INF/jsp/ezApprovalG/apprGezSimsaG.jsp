@@ -331,6 +331,16 @@
 		        if (isExternal) {
 		            if (isAddress) {
 		                rtnVal = SetContainer();
+		                
+				        if (rtnVal == "TRUE") {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t206'/>";
+				            OpenAlertUI(pAlertContent);
+				            setBtnDisable();
+				        } else {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t217'/>";
+				            OpenAlertUI(pAlertContent);
+				            setMenuDisable("btnSend", false);
+				        }
 		            } else {
 		                is_Enc = OpenCheckUI();
 		            }
