@@ -932,7 +932,7 @@
 			join tbl_usermaster a on cn in (
 				select ad.cn 
 				from tbl_addjobmaster ad 
-				where tenant_id = #tenantId# and PHYSICALDELIVERYOFFICENAME = #companyId# and 
+				where tenant_id = #tenantId# and 
 					(	(b.user_type = 'dept' 		and b.member_id = ad.deptid	) 
 					 or (b.user_type = 'jikwi' 		and b.member_id = ad.jobid	) 
 					 or (b.user_type = 'jikchek' 	and b.member_id = ad.jobid	) ))
