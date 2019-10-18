@@ -1136,11 +1136,11 @@
     		parent.document.getElementById("surv_popup").style.zIndex = index + 1;
     		parent.document.getElementById("surv_popup").addEventListener("click", changeZIndex);
     		parent.document.getElementById("surv_inp_noticeCheck").addEventListener("change", function() {
-    			notice_close("", userId, "checkbox");
+    			notice_close("surv_popup", userId, "checkbox");
     		});
     		
     		parent.document.getElementById("surv_closeBtn").addEventListener("click", function() {
-    			notice_close("", userId, "btn");
+    			notice_close("surv_popup", userId, "btn");
     		});
     		
     		var popupContent = parent.document.getElementById("surv_popup").getElementsByClassName("popup_noticeList")[0];
@@ -1179,9 +1179,9 @@
 			
 			if (parent.document.getElementById("inp_noticeCheck" + popupId)) {						// 팝업 공지
 				isChecked = parent.document.getElementById("inp_noticeCheck" + popupId).checked;
-			} else if (parent.document.getElementById("sche_inp_noticeCheck")) {					// 일정 팝업
+			} else if (popupId === "" && parent.document.getElementById("sche_inp_noticeCheck")) {					// 일정 팝업
 				isScheChecked = parent.document.getElementById("sche_inp_noticeCheck").checked;
-			} else if (parent.document.getElementById("surv_inp_noticeCheck")) {					// 설문 팝업
+			} else if (popupId === "surv_popup" && parent.document.getElementById("surv_inp_noticeCheck")) {					// 설문 팝업
 				isSurvChecked = parent.document.getElementById("surv_inp_noticeCheck").checked;
 			}
 			
@@ -1201,9 +1201,9 @@
 			
 			if (popup) {
 				popup.parentNode.removeChild(popup);
-			} else if (sche_popup) {
+			} else if (popupId === "" && sche_popup) {
 				sche_popup.parentNode.removeChild(sche_popup);
-			} else if (surv_popup) {
+			} else if (popupId === "surv_popup" && surv_popup) {
 				surv_popup.parentNode.removeChild(surv_popup);
 			}
 			
