@@ -1709,7 +1709,7 @@ public class EzBoardController extends EgovFileMngUtil{
     						resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
     						resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
     						resultXML.append("<DATA10>" + noticeList.get(k).get("GUBUN") + "</DATA10>");
-    						resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
+    						resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(noticeList.get(k).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
     					}
     					
     					resultXML.append("</CELL>");
@@ -3285,7 +3285,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA8>" + boardListItem.get(j).get("ITEMLEVEL") + "</DATA8>");
 					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10></DATA10>");
-					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
+					resultXML.append("<DATA11>" + ezBoardService.getOneLineCNT(boardListItem.get(j).get("ITEMID").toString(), userInfo.getTenantId()) + "</DATA11>");
 					
 					if (globals.getProperty("Globals.DbType").equals("oracle")) {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
