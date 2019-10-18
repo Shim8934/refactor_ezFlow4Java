@@ -923,16 +923,19 @@
 			    s.survey_id as survey_id,
 			    s.user_type as user_type
 			    from tbl_permissiongroupinfo p 
-			    join tbl_survey_participant s on s.user_id = p.group_id and p.tenant_id = s.tenant_id and s.survey_id = #surveyId#
-			    
+			    join tbl_survey_participant s on 
+			    		s.user_id = p.group_id 
+			    	and p.tenant_id = s.tenant_id 
+			    	and s.survey_id = #surveyId# 
+			    	and s.company_id = #companyId#
 			    ) b 
 			join tbl_usermaster a on cn in (
 				select ad.cn 
 				from tbl_addjobmaster ad 
-				where tenant_id = #tenantId# and 
-					(	b.user_type = 'dept' and b.member_id = ad.deptid 
-					 or (b.user_type = 'jikwi' and 	b.member_id = ad.jobid) 
-					 or (b.user_type = 'jikchek' and b.member_id = ad.jobid) ))
+				where tenant_id = #tenantId# and PHYSICALDELIVERYOFFICENAME = #companyId# and 
+					(	(b.user_type = 'dept' 		and b.member_id = ad.deptid	) 
+					 or (b.user_type = 'jikwi' 		and b.member_id = ad.jobid	) 
+					 or (b.user_type = 'jikchek' 	and b.member_id = ad.jobid	) ))
 			where a.PHYSICALDELIVERYOFFICENAME = #companyId# and tenant_id = #tenantId#
 			union 
 			select distinct 
@@ -948,9 +951,12 @@
 				select distinct ad.cn as cn, s.survey_id as survey_id
 				from tbl_addjobmaster ad 
 			    join tbl_survey_participant s 
-				on ad.tenant_id = s.tenant_id and s.survey_id = #surveyId# and s.tenant_id = #tenantId#
-				where  (s.user_type = 'dept' and s.user_id = ad.deptid )
-					or (s.user_type = 'jikwi' and s.user_id = ad.jobid )
+					on 		ad.tenant_id = s.tenant_id 
+						and s.survey_id = #surveyId# 
+						and s.tenant_id = #tenantId# 
+			    		and s.company_id = #companyId#
+				where  (s.user_type = 'dept' 	and s.user_id = ad.deptid )
+					or (s.user_type = 'jikwi' 	and s.user_id = ad.jobid )
 			        or (s.user_type = 'jikchek' and s.user_id = ad.jobid )
 			    ) d
 			 on d.cn = a.cn
