@@ -216,10 +216,10 @@
 	            
 	            if (type == "config") {
 	                if (CrossYN())
-	                    document.getElementById("h1Title").textContent = strLang314 + " <spring:message code='ezEmail.t832' />";
+	                    document.getElementById("h1Title").textContent = strLang314 + "<spring:message code='ezEmail.t832' />";
 	                else
-	                    document.getElementById("h1Title").innerText = strLang314 + " <spring:message code='ezEmail.t832' />";
-	                document.title = strLang314 + " <spring:message code='ezEmail.t832' />";
+	                    document.getElementById("h1Title").innerText = strLang314 + "<spring:message code='ezEmail.t832' />";
+	                document.title = strLang314 + "<spring:message code='ezEmail.t832' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "";
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");

@@ -52,7 +52,7 @@
 
 .voteComment #sendBttn:active{background:#00346d;}
 .voteComment .sendBttn{display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;}
-.voteCancelBttn{cursor: pointer; width:46px; height:24px; margin:0px 4px 0px 0px; padding:0px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
+.voteCancelBttn{cursor: pointer; min-width:46px; height:24px; margin:0px 4px 0px 0px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
 .voteSaveBttn{cursor: pointer; width:46px; height:24px; color:#FFF; background:#0470e4; border:none; border-radius:3px;}
 
 
