@@ -17023,6 +17023,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			insertNotifyItem(nextUserID, notyStr, docTitle, "2", docID, tenantID, companyID);
+			
+			String useEzTalkNotification = ezCommonService.getTenantConfig("useEzTalkNotification", tenantID);
+			
+			// useEzTalkNotification이 YES일 때는 ezTalk으로 결재 알림을 보낸다.
+			if (useEzTalkNotification.equals("YES")) {
+				ezEmailService.addEzTalkNotification(nextUserID, notyStr, docTitle, "2");
+			}
 		}
 		logger.debug("sendMsg ended");
 
