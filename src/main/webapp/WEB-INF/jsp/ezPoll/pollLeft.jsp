@@ -139,7 +139,7 @@
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 				<ul class="lnbUL">
-					<li class="pollDiv"><span class="sub_iconLNB tree_poll_all"></span><span class="node_normal" onclick="pollClick(this)" pollId="1"><spring:message code="ezPoll.t237" /></span></li>
+					<li class="pollDiv"><span class="sub_iconLNB tree_poll_all"></span><span class="node_normal" onclick="pollClick(this)" pollId="1"><spring:message code="ezPoll.hdp17" /></span></li>
 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ing"></span><span class="node_selected" onclick="pollClick(this)" pollId="2"><spring:message code="ezPoll.psb256" /></span></li>
 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_wait"></span><span class="node_normal" onclick="pollClick(this)" pollId="4"><spring:message code="ezPoll.psb257" /></span></li>
 					<li class="pollDiv"><span class="sub_iconLNB tree_poll_ok"></span><span class="node_normal" onclick="pollClick(this)" pollId="3"><spring:message code="ezPoll.psb258" /></span></li>
