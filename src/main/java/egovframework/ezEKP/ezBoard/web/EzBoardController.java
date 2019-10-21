@@ -4308,9 +4308,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		fileName = fileName.replace("=", "%3d");
 		
 		String fileExt = "";
+		String extension = "";
 		
 		if (fileName.length() > 4) {
 			fileExt = fileName.substring(fileName.length() - 4).toLowerCase();
+			extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 		}
 		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
@@ -4379,7 +4381,13 @@ public class EzBoardController extends EgovFileMngUtil{
 				nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
 			}
 			
-			BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+			BufferedImage bufferedImage = null;
+			/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
+			if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+				bufferedImage = new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_4BYTE_ABGR);
+			} else {
+				bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+			}
 			bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
 			ImageIO.write(bufferedImage, ext, new File(mapPath + "s_" + uploadSN + fileExt));
 		}
@@ -5902,7 +5910,13 @@ public class EzBoardController extends EgovFileMngUtil{
 						nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
 					}
 					
-					BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+					BufferedImage bufferedImage = null;
+					/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
+					if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+						bufferedImage = new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_4BYTE_ABGR);
+					} else {
+						bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+					}
 					bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
 					ImageIO.write(bufferedImage, extension, new File(serverPath + thumbnailName));
 				}
@@ -7633,11 +7647,18 @@ public class EzBoardController extends EgovFileMngUtil{
 			int width = Integer.parseInt(request.getParameter("WIDTH"));
 			int height = Integer.parseInt(request.getParameter("HEIGHT"));
 			
-			File imageFile = new File(serverPath + commonUtil.separator + fileName);	
+			File imageFile = new File(serverPath + commonUtil.separator + fileName);
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 			
 			if (imageFile.exists()) {			
-				BufferedImage bi = ImageIO.read(imageFile);			    
-                BufferedImage bufferedImage = new BufferedImage(width, height, bi.getType());
+				BufferedImage bi = ImageIO.read(imageFile);
+				BufferedImage bufferedImage = null;
+				/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
+				if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+					bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+				} else {
+					bufferedImage = new BufferedImage(width, height, bi.getType());
+				}
                 bufferedImage.createGraphics().drawImage(bi, 0, 0, width, height, null);
                 ImageIO.write(bufferedImage, "png", new File(savePath + commonUtil.separator + "S_" + fileName));
 			}
