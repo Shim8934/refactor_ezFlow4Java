@@ -2012,7 +2012,8 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -2088,7 +2089,8 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -2165,7 +2167,9 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									// useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 추가함.
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
