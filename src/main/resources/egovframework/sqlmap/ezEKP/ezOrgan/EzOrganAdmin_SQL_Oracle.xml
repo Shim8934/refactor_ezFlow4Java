@@ -6055,6 +6055,19 @@
 		]]>
 	</select>
 	
+	<update id="EzOrganAdminDAO.setDeptMail" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_DEPTMASTER
+			SET
+     			mail = #MAIL#
+     		WHERE
+      			cn = #CN#
+      		AND 
+            	tenant_id = #TENANT_ID#
+		]]>
+	</update>
+	
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>

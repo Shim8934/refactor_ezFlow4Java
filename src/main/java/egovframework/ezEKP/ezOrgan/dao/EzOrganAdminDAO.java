@@ -2160,4 +2160,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getDeptAddJobUserList(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getDeptAddJobUserList", map);
 	}
+	
+	public void setDeptPrimaryMail (Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.setDeptMail", map);
+	}
 }

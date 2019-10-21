@@ -415,6 +415,20 @@
 			    	}
 		    	}
 		    }
+		    
+		    function mail_manage(){
+		    	var listview = new ListView();
+		        listview.LoadFromID("sharedMailbox");
+		        
+		        if (listview.GetSelectedRows().length == 0) {
+					alert("<spring:message code='ezEmail.multiDomain.ksa18' />");
+					return;
+				}
+
+		        var selectId = GetAttribute(listview.GetSelectedRows()[0],"DATA1");
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=share" + "&companyId=" + companyId;
+			    window.open(url , "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -443,6 +457,7 @@
 		    	<li><span onClick="modSharedMailbox()"><spring:message code='ezEmail.sharedMailbox04' /></span></li>
 		      	<li><span onClick="delSharedMailbox()"><spring:message code='ezEmail.sharedMailbox05' /></span></li>
 		      	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t231' /></span></li>
+		      	<li><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
 		    </ul>
 		</div>
 		<script type="text/javascript">

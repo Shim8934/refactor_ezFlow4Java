@@ -1036,6 +1036,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("setIndividualAlias started.");
 		logger.debug("userId=" + userId + ",tenantID=" + tenantID + ",primaryMail=" + primaryMail);
 		
+		return  setIndividualAlias(userId, tenantID, primaryMail, individualAliasList, "user", "");
+	}
+	
+	@Override
+	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList, String type, String companyId) throws Exception {
+		logger.debug("setIndividualAlias(2) started.");
+		type = type.equals("") ? "user" : type;
+		logger.debug("userId=" + userId + ",tenantID=" + tenantID + ",primaryMail=" + primaryMail, ", type=" + type + ", companyId=" + companyId);
+		
 		String returnValue = "ERROR";
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1055,13 +1064,30 @@ public class EzEmailServiceImpl implements EzEmailService {
 			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
 			
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
-				ezOrganAdminDao.setUserPrimaryMail(userId, tenantID, primaryMail);
+				logger.debug("== setPrimaryMail");
+
+				if (type.equals("user") || type.equals("share")) {
+					ezOrganAdminDao.setUserPrimaryMail(userId, tenantID, primaryMail);
+				} else if (type.equals("dept")) {
+					Map<String, Object> deptMap = new HashMap<String, Object>();
+					
+					deptMap.put("MAIL", primaryMail);
+					deptMap.put("CN", userId);
+					deptMap.put("TENANT_ID", tenantID);
+					
+					ezOrganAdminDao.setDeptPrimaryMail(deptMap);
+				} else if (type.equals("ml")) {
+					inputParams = "userId=" + userId + "&companyId=" + companyId + "&primaryMail=" + primaryMail;
+					requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setDistributionPrimaryMail";
+					response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+					logger.debug("ml response=" + response);
+				}
 				
 				returnValue = "OK";
 			}
 		}						
 		
-		logger.debug("setIndividualAlias ended. returnValue=" + returnValue);
+		logger.debug("setIndividualAlias(2) ended. returnValue=" + returnValue);
 		
 		return returnValue;
 	}

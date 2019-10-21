@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,6 +57,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -2716,8 +2718,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         logger.debug("tenantID=" + tenantID);
 		
 		String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));
+		String configEmailType = request.getParameter("type") == null ? "user" : request.getParameter("type"); // 사용자, 부서, 공용배포그룹, 공유사서함
+		String companyId = request.getParameter("companyId") == null ? userInfo.getCompanyID() : request.getParameter("companyId");
+		logger.debug("userId=" + userId + ", configEmailType=" + configEmailType + ", companyId=" + companyId);
 		
-		OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, userInfo.getPrimary(), tenantID);
+		String primaryAddr = "";
+		if (configEmailType.equals("dept")) { // 부서
+			OrganDeptVO organDeptVO = ezOrganService.getDeptInfo(userId, userInfo.getPrimary(), tenantID);
+			primaryAddr = organDeptVO.getMail();
+		} else if (configEmailType.equals("ml")) { // 공용배포그룹
+			List<MailDistributionVO> distributionTotalList = 
+					ezEmailService.getDistributionSearchListByItem(companyId, tenantID, userId, "groupid");
+			
+			for (MailDistributionVO vo : distributionTotalList) {
+				primaryAddr = vo.getMail();
+			}
+		} else if (configEmailType.equals("user") || configEmailType.equals("share")) { // 사용자, 공유사서함
+			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, userInfo.getPrimary(), tenantID);
+			primaryAddr = userVO.getMail();
+		}
+		logger.debug("primaryAddr=" + primaryAddr);
 		
 		List<String[]> aliasAddressList = ezEmailService.getAliasAddress(userId, tenantID);
 		
@@ -2725,7 +2745,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;background:none;'>");
 		
 		for (String[] aliasAddress : aliasAddressList) {
-			if (aliasAddress[0].equals(userVO.getMail())) {
+			if (aliasAddress[0].equals(primaryAddr)) {
 				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + "</option>");
 			} else {
 				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + "</option>");
@@ -2737,6 +2757,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("userId", userId);
 		model.addAttribute("listEmailHtml", listEmailHtml);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("configEmailType", configEmailType);
 		
 		logger.debug("configEmail ended.");
 		
@@ -2767,6 +2789,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String userId = xmldom.getElementsByTagName("CN").item(0).getTextContent();
 			String primaryMail = xmldom.getElementsByTagName("PRIMARYMAIL").item(0).getTextContent();
 			int tenantID = userInfo.getTenantId();
+			String type = xmldom.getElementsByTagName("TYPE").item(0).getTextContent();
+			String companyId = xmldom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+			logger.debug("type=" + type + ", companyId=" + companyId);
 			
 			List<String> mailList = new ArrayList<String>();
 			NodeList mailNodeList = xmldom.getElementsByTagName("MAIL");
@@ -2797,12 +2822,24 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			date.setTimeZone(TimeZone.getTimeZone("GMT"));
 			String nowDate = date.format(new Date()); 
 			
-			organVO.setCn(userId);
-			organVO.setTenantId(tenantID);
-			organVO.setNowDate(nowDate);
+			returnValue = ezEmailService.setIndividualAlias(userId, tenantID, primaryMail, mailList, type, companyId);
 			
-			returnValue = ezEmailService.setIndividualAlias(userId, tenantID, primaryMail, mailList);
-			ezOrganAdminService.updateDBData_user(organVO);
+			if (returnValue.equals("OK")) {
+				// updatedt
+				if (type.equals("user") || type.equals("share")) {
+					organVO.setCn(userId);
+					organVO.setTenantId(tenantID);
+					organVO.setNowDate(nowDate);
+					
+					ezOrganAdminService.updateDBData_user(organVO);
+				} else if (type.equals("dept")){
+					OrganDeptVO deptVo = ezOrganService.getDeptInfo(userId, userInfo.getPrimary(), tenantID);
+					deptVo.setTenantId(tenantID);
+					deptVo.setNowDate(nowDate);
+					
+					ezOrganAdminService.updateDBData_dept(deptVo);
+				}
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3657,4 +3694,33 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    logger.debug("saveUserImagebyTemp ended.");
 	    return resultMap;
 	}
+	
+	/**
+	 * 메일주소 > 추가  레이어팝업
+	 */
+ 	@RequestMapping(value = "/admin/ezOrgan/configEmailAdd.do")
+ 	public String configEmailAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+ 		logger.debug("configEmailAdd started.");
+ 		
+ 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+ 		//관리자 권한 체크
+ 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+ 			return "cmm/error/adminDenied";
+ 		}
+ 		
+ 		int tenantID = userInfo.getTenantId();
+ 		String configEmailCompanyID = request.getParameter("companyId") == null ? userInfo.getCompanyID() : request.getParameter("companyId");
+ 		logger.debug("tenantID=" + tenantID + ", configEmailCompanyID=" + configEmailCompanyID);
+ 		
+ 		String companyDomainList = ezEmailService.getCompanyConfig(tenantID, configEmailCompanyID, "MailInnerDomain");
+ 		String companyMailDomain = ezEmailService.getCompanyConfig(tenantID, configEmailCompanyID, "DomainName"); 
+		String[] domainList = companyDomainList.split(";");
+		logger.debug("companyDomainList=" + companyDomainList + ", companyMailDomain=" + companyMailDomain);
+
+ 		model.addAttribute("companyMailDomain", companyMailDomain);
+ 		model.addAttribute("domainList", domainList);
+ 		
+ 		logger.debug("configEmailAdd ended.");
+ 		return "admin/ezOrgan/configEmailAdd";
+ 	}
 }

@@ -727,6 +727,13 @@
 		    function mail_manage(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
+		        
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
 
 		        if (listview.GetSelectedRows().length == 0) {
 					alert("<spring:message code='ezOrgan.t50' />");
@@ -742,8 +749,33 @@
 					return;
 			    }
 
-			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+		        var selectId = GetAttribute(listview.GetSelectedRows()[0],"DATA2");
+		        var selectCompanyId = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=user" + "&companyId=" + selectCompanyId;
+			    window.open(url, "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
 			}
+		    
+		    function deptMail_manage() {
+		    	var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+				
+		        if (nodeIdx.length == 0) {
+		        	alert("<spring:message code='ezEmail.multiDomain.ksa23' />");
+					return;
+		        } else if (treeNode.GetNodeData("EXTENSIONATTRIBUTE2") == treeNode.GetNodeData("CN")) {
+		        	alert(strLangKSM01);
+		        	return;
+		        }
+				
+		        var selectId = treeNode.GetNodeData("CN");
+		        var selectCompanyId = treeNode.GetNodeData("EXTENSIONATTRIBUTE2");
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=dept" + "&companyId=" + selectCompanyId;
+			    window.open(url, "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+		    }
 		    
 			function Change_List(){
 		        var treeView = new TreeView();
@@ -1685,6 +1717,9 @@
 						<tr>
 							<td><a class="imgbtn" id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></a></td>
 						</tr>		
+						<tr>
+							<td><a class="imgbtn" id="usermenu6"><span onClick="deptMail_manage()"><spring:message code='ezEmail.multiDomain.ksa22' /></span></a></td>
+						</tr>
 						<tr>
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
 						</tr>

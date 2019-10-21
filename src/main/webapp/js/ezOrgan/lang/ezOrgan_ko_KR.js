@@ -1,4 +1,4 @@
-﻿var strLang1 = "명을 퇴직자 관리로 이동하시겠습니까?"
+﻿﻿var strLang1 = "명을 퇴직자 관리로 이동하시겠습니까?"
 var strLang2 = "퇴직자 관리로 이동 할 사원을 선택해 주세요."
 var strLang3 = "선택한 사원을 퇴직자 처리 하였습니다."
 var strLang4 = "선택한 사원을 퇴직 처리에 실패 하였습니다."
@@ -34,3 +34,4 @@ var strLang535 = "데이터가 없습니다.";
 var strLangLHM01 = "타 회사로의 복구는 지원되지 않습니다.";
 var strLangLHM02 = "삭제 시 해당 사용자와 관련된 데이터가 삭제되며 복구할 수 없습니다.";
 var strLangLHM03 = "정말로 삭제하시겠습니까?";
+var strLangKSM01 = "부서를 선택하세요.";

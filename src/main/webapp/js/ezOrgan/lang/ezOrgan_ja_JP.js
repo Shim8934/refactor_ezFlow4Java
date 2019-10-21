@@ -34,3 +34,4 @@ var strLang535 = "データが存在しません";
 var strLangLHM01 = "復職処理は元所属していた会社にのみ可能です。";
 var strLangLHM02 = "削除すると該当ユーザと関わりのあるデータは削除され、復元できなくなります。";
 var strLangLHM03 = "本当に削除してよろしいですか？";
+var strLangKSM01 = "部署を選択してください。";
