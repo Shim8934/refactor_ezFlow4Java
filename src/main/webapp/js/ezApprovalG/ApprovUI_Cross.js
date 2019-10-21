@@ -2072,7 +2072,8 @@ function SReAprLineSingMapping(ret) {
     if (typeof ret == "object") {
     	xmlKuljea = ret[1];
     	xmlReDraft = ret[5];
-    	DrawAutoAprLine(ret[1], pDraftFlag);
+    	//DrawAutoAprLine(ret[1], pDraftFlag);
+    	New_DrawAutoLine(ret[1], pDraftFlag);
     } else {
     	reMappingSign = true;
     	xmlKuljea = ret;
@@ -2379,6 +2380,12 @@ function SReAprLineSingMapping(ret) {
                 //field.innerHTML = OrderName[i];
             }
             
+            fieldname = susinSN + "seumyung" + idx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	field.innerHTML = OrderName[i];
+            }
+            
             fieldname = susinSN + "approdept" + idx;
             field = message.GetListItem(fields, fieldname);
             if (field) {
@@ -2398,6 +2405,12 @@ function SReAprLineSingMapping(ret) {
             field = message.GetListItem(fields, fieldname);
             if (field) {
                 //setNodeText(field , OrderName[i]);
+            }
+            
+            fieldname = susinSN + "habyuija" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field , OrderName[i]);
             }
 
             fieldname = susinSN + "habyuipositon" + hidx;

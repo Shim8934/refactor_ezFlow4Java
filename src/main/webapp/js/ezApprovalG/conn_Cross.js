@@ -1147,6 +1147,8 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 	try {
 		var signCnt = 0;
 		var habyCnt = 0;
+		var reSignCnt = 0;
+		var reHabyCnt = 0;
 		
 		var xmlDom = createXmlDom();
 			xmlDom = loadXMLString(ret);
@@ -1154,11 +1156,28 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 		var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
 		for (var i = 0; i < oRows.length; i++) {
 			var tempAprType = getNodeText(GetChildNodes(oRows[i])[16]);
+			var tempAprStat = getNodeText(GetChildNodes(oRows[i])[17]);
+			
 			if (tempAprType == "001" || tempAprType == "003" || tempAprType == "004" || tempAprType == "015" || tempAprType == "040") {
 				signCnt++;
+				
+				if (tempAprStat == "003") {
+					reSignCnt++;
+				}
 			} else if (tempAprType == "008" || tempAprType == "009" || tempAprType == "011" || tempAprType == "012") {
 				habyCnt++;
+
+				if (tempAprStat == "003") {
+					reHabyCnt++;
+				}
 			}
+		}
+		
+		var tempFields;
+		var reDrawSignFlag = false;
+		if (reSignCnt > 0 || reHabyCnt > 0) {
+			tempFields = message.GetFieldsList();
+			reDrawSignFlag = true;
 		}
 		
 		var aprLineRowCnt = parseInt(signCnt / 10);
@@ -1410,6 +1429,55 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 		} else {
 			if (field) {
 				field.innerHTML = "";
+			}
+		}
+		
+		if (reDrawSignFlag) {
+			var fields = message.GetFieldsList();
+			var field;
+			
+			for (var i = 1; i <= reSignCnt; i++) {
+				field = message.GetListItem(fields, SusinSN + "sign" + i);
+				if (field) {
+					field.innerHTML = message.GetListItem(tempFields, SusinSN + "sign" + i).innerHTML;
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "jikwe" + i);
+				if (field) {
+					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "jikwe" + i)));
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "seumyung" + i);
+				if (field) {
+					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "seumyung" + i)));
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "seumyungdate" + i);
+				if (field) {
+					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "seumyungdate" + i)));
+				}
+			}
+			
+			for (var i = 1; i <= reHabyCnt; i++) {
+				field = message.GetListItem(fields, SusinSN + "habyuisign" + i);
+				if (field) {
+					field.innerHTML = message.GetListItem(tempFields, SusinSN + "habyuisign" + i).innerHTML;
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "habyuipositon" + i);
+				if (field) {
+					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "habyuipositon" + i)));
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "habyuija" + i);
+				if (field) {
+					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "habyuija" + i)));
+				}
+				
+				field = message.GetListItem(fields, SusinSN + "habyuidate" + i);
+				if (field) {
+					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "habyuidate" + i)));
+				}
 			}
 		}
 	} catch (e) {
