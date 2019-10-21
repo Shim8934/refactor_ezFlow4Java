@@ -3390,7 +3390,7 @@
 		        	<div id="attachedFile" class="vote_attachedFile" style="position:relative; overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7; margin:0px 0px 20px 0px;">
 		        		<img src="/images/poll/attach_file_vote.png" class="attach_img" style="float: left;display:block;" >
 		        		<div class="txt" style="float: left;display:block; width:100%;">
-		        			<spring:message code='ezEmail.t99000003' /> - <c:out value='${numOfFile}'/> <spring:message code='ezPoll.hdp16' />(<c:out value='${totalFilesSize}'/>)
+		        			<spring:message code='ezEmail.t99000003' /> - <c:out value='${numOfFile}'/> 개(<c:out value='${totalFilesSize}'/>)
 		        		</div>
 		        		<div class="all_save" style="display:block;">
 		        			<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);" style="display:inline-block;"></span> 
