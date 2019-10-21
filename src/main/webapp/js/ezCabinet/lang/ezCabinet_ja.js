@@ -31,6 +31,7 @@ var CabinetMessages = {
 	strTxt1      : "中",
 	strTxt2      : "使用中です。",
 	strNolimit   : "無制限",
+	strLimit   	 : "制限",
 	strSelect    : "フォルダを選択してください。",
 	strAdd       : "追加されました。",
 	strRoot      : "基本フォルダは削除できません。",
