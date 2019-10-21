@@ -3346,14 +3346,14 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 1}">
 										<li class="voteIconImg_li_info icon">
-											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t253'/>" >
-											<span><spring:message code = 'ezPoll.t253'/></span>
+											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp17'/>" >
+											<span><spring:message code = 'ezPoll.hdp17'/></span>
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li_info icon">
-											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
-											<span><spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/></span>
+											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/>" >
+											<span><spring:message code = 'ezPoll.t240'/></span>
 										</li>
 									</c:otherwise>
 								</c:choose>
