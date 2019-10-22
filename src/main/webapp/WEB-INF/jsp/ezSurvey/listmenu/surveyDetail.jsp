@@ -463,7 +463,9 @@
 						 
 						 if (window.opener.getPotletSurveyList != undefined) {
 							 window.opener.getPotletSurveyList();
-							 window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+							 // 일단 현 상황에 맞춰 주석처리
+							 // 나중에 필요하면 주석 풀면 됌
+							 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
 							 window.close();
 						 }
 						 
@@ -762,7 +764,9 @@
 			
 			if (window.opener.getPotletSurveyList != undefined) {
 				 window.opener.getPotletSurveyList();
-				 window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
+				 // 일단 현 상황에 맞춰 주석처리
+				 // 나중에 필요하면 주석 풀면 됌
+				 // window.opener.getUnreadCounts('YES', 'YES', 'YES', 'YES', 'YES');
 				 window.close();
 			 }
 			
