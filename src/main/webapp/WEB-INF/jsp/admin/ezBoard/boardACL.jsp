@@ -34,7 +34,7 @@
 	        var selectedTargetName2 = "";
 	        var selectTargetListXML = "";
 	        var selectTargetNewListXML = "";
-	
+			
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -240,7 +240,8 @@
 		              
 	            }
 	         }
-	
+	        
+/* 	// 기존 권한설정 기능 주석처리
 	        var selecttarget_dialogArguments = new Array();
 	        function SelectTarget() {
 	            var receiverData = new Array();
@@ -267,7 +268,8 @@
 	                CheckBoxInit();
 	            }
 	        }
-	
+	 */
+	 
 	        /* 2018-09-03 홍승비 - 관리자 권한 체크 시 모든 동작 '허용'으로 고정 */
 	        function checkbox_onclick(e) {
 	            if (CrossYN()) {
@@ -738,8 +740,8 @@
 	            receiverData["selectTargetListXML"] = selectTargetListXML;
 	            selecttargetNew_dialogArguments[0] = receiverData;
 	            selecttargetNew_dialogArguments[1] = SelectTargetNew_Complete;
-	            selecttargetNew_dialogArguments[2] = "${isAllGroupBoard}"; // 그룹사게시판인 경우, 조직도에 전체 회사 + 전체 권한그룹 표출 필요
-	            var SelectTarget = window.open("/admin/ezBoard/selectTargetGroup.do", "SelectTargetNew", GetOpenWindowfeature(970, 645));
+	            //selecttargetNew_dialogArguments[2] = "${isAllGroupBoard}"; // 그룹사게시판인 경우, 조직도에 전체 회사 + 전체 권한그룹 표출 필요
+	            var SelectTarget = window.open("/admin/ezBoard/selectTargetGroup.do?isAllGroupBoard=${isAllGroupBoard}" , "SelectTargetNew", GetOpenWindowfeature(970, 645));
 	            try { SelectTarget.focus(); } catch (e) {
 	            }
 	        }

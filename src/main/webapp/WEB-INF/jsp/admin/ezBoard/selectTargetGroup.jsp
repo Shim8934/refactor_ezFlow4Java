@@ -66,21 +66,18 @@
 	        var selSpan = "";
 	        var searchgubun = "N";
 	        var deptId = "<c:out value='${deptID}'/>";
-	        
 	        var topid = "<c:out value='${topid}'/>";
 	        var primary = "<c:out value='${primary}'/>";
-		    var isAllGroupBoard;
+		    var isAllGroupBoard = "<c:out value='${isAllGroupBoard}'/>";
 	        
 	        window.onload = function () {
 				try {
 					RetValue = parent.selecttargetNew_dialogArguments[0]; // receiverData
 		            ReturnFunction = parent.selecttargetNew_dialogArguments[1]; // SelectTargetNew_Complete
-		            isAllGroupBoard = parent.selecttargetNew_dialogArguments[2]; // isAllGroupBoard
 		        } catch (e) {
 		            try {
 		            	RetValue = opener.selecttargetNew_dialogArguments[0];
 		                ReturnFunction = opener.selecttargetNew_dialogArguments[1];
-		                isAllGroupBoard = opener.selecttargetNew_dialogArguments[2];
 		            } catch (e) {
 		            }
 		        }
@@ -1350,15 +1347,13 @@
 		        ListViewJikwiTD.style.display = "none";
 		        ListViewJikchekTD.style.display = "none";
 		        ListViewGroupTD.style.display = "block";
-		       
-		        // 권한그룹의 구성원 확인 및 선택 제대로 구현되어있지 않아 주석처리
-		        groupMember.style.display = "block"; 
+		        
 		        m_selectedTree = ListViewGroup;
 		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            //xmlHTTP.open("POST", "/admin/ezOrgan/getGroupList.do", false);
-		            // 게시판용 하위부서 허용/불가여부 설정값까지 리턴하는 그룹권한 리스트 호출 (그룹사게시판이면 모든 회사의 권한그룹을 가져옴)
+		            // 게시판용 하위부서 허용/불가여부 설정값까지 리턴하는 그룹권한 리스트 호출
+		            /* 2019-10-22 홍승비 - 그룹사게시판이면 기본적으로 top회사와 자신이 속한 회사의 권한그룹을 가져오도록 수정 (이후 셀렉트박스로 회사변경 가능) */
 		            xmlHTTP.open("GET", "/admin/ezOrgan/getGroupListBoard.do?isAllGroupBoard=" + isAllGroupBoard, false);
 		            xmlHTTP.send("");
 		            
@@ -1953,6 +1948,51 @@
 	            
 	        }
 	        
+	        /* 2019-10-22 홍승비 - 셀렉트박스로 회사 선택 시 해당 회사의 그룹권한 리스트 표출 (전체관리자만 가능함) */
+	        function changeCompany() {
+	        	var selectedCompanyID = $("#companyListSelect option:selected").val();
+	        	
+		        try {
+		            var xmlHTTP = createXMLHttpRequest();
+		            // 게시판용 하위부서 허용/불가여부 설정값까지 리턴하는 그룹권한 리스트 호출
+		            /* 2019-10-22 홍승비 - 그룹사게시판이면 기본적으로 top회사와 자신이 속한 회사의 권한그룹을 가져오도록 수정 (이후 셀렉트박스로 회사변경 가능) */
+		            xmlHTTP.open("GET", "/admin/ezOrgan/getGroupListBoard.do?selectedCompanyID=" + selectedCompanyID + "&isAllGroupBoard=" + isAllGroupBoard, false);
+		            xmlHTTP.send("");
+		            
+		            if (xmlHTTP.status != 200) {
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+		            } else {
+		            	document.getElementById("ListViewGroup").innerHTML = "";
+			            var pListViewGroup = new ListView();
+			            pListViewGroup.SetID("pListViewGroup");
+			            pListViewGroup.SetSelectFlag(false);
+			            pListViewGroup.SetMulSelectable(true);
+			            pListViewGroup.SetRowOnDblClick("ListViewNodeDblClick");
+			            pListViewGroup.DataSource(loadXMLString(document.getElementById("listviewheader1").innerHTML.toUpperCase()));
+			            pListViewGroup.DataBind("ListViewGroup");
+			            pListViewGroup.DataSource(loadXMLString(xmlHTTP.responseText));
+			            pListViewGroup.RowDataBind();
+			
+			            for (var i = 0; i < pListViewGroup.GetRowCount() ; i++) {
+			            	pListViewGroup.GetDataRows()[i].draggable = true;
+			                if (CrossYN())
+			                	pListViewGroup.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+			                else
+			                	pListViewGroup.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+			
+			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                	pListViewGroup.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+			                }
+			            }
+		            }
+		            
+		            xmlHTTP = null;
+		        } catch (e) {
+		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            xmlHTTP = null;
+		            return;
+		        }
+	        }
 	        
     	</script>
 	</head>
@@ -2089,14 +2129,24 @@
 	                    <tr>
 	                        <td>
 								<table style="margin-top: 4px; width: 100%;">
-		                                        <tr>
-		                                            <td id="groupMember" style="display: none">
-		                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()">
-		                                                    <spring:message code='ezEmail.t598' /></span></a>
-		                                            </td>
-		                                        </tr>
-		                                    </table>
-	                            <div style="width: 668px; height: 489px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewGroup" class="border_gray">
+									<tr>
+										<td id="companyListTD">
+											<select id="companyListSelect" onchange="changeCompany()" style="float:left;">
+												<c:forEach var="item" items="${list}">
+													<option value="<c:out value='${item.cn}'/>" ${item.cn == companyID ? 'selected' : ''}>
+														<c:out value='${item.displayName}' />
+													</option>
+												</c:forEach>
+											</select>
+										</td>
+										<td id="groupMember">
+											<a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="groupmember_click()">
+												<spring:message code='ezEmail.t598' /></span>
+											</a>
+										</td>
+									</tr>
+								</table>
+	                            <div style="width: 668px; height: 465px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewGroup" class="border_gray">
 	                            </div>
 	                        </td>
 	                    </tr>

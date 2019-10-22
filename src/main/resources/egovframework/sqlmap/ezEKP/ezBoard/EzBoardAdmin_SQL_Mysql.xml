@@ -1675,36 +1675,6 @@
 		)
 	</select>
 	
-	<!-- 2018-10-17 홍승비 - 모든 회사의 ID와 이름을 가져오는 쿼리 -->
-	<select id="EzBoardAdminDAO.getCompanyList" parameterClass="Map" resultClass="BoardPropertyVO">
-		<![CDATA[
-			SELECT 
-				A.CN as ACCESSID,
-             	A.DISPLAYNAME as ACCESSNAME, 
-             	A.DISPLAYNAME2 as ACCESSNAME2 
-        	FROM 
-        		( SELECT 
-        			CN,
-        			CASE #v_LANG#
-        				WHEN '1' THEN DISPLAYNAME
-        				ELSE DISPLAYNAME2   
-        				END DISPLAYNAME,
-                    CASE #v_LANG#
-                    	WHEN '1' THEN DISPLAYNAME2
-                        ELSE DISPLAYNAME   
-                        END DISPLAYNAME2,
-                  CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15                    
-               	  FROM 
-               	  	TBL_DEPTMASTER 
-               	  WHERE
-               	  	TENANT_ID = #v_TENANTID#
-               	  AND  
-               	  	(DEPTLEVEL = 1
-               	  OR 
-               	  	CN = 'Top') ) A
-		]]>
-	</select>
-	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
 		INSERT INTO TBL_Board_BoardManage (
 			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID, COMPANYID, TYPE

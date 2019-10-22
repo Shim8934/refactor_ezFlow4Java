@@ -5116,6 +5116,14 @@
 				TBL_PERMISSIONGROUPLIST.COMPANY_ID = #v_COMPANY_ID#
     		]]>
 		</isNotEqual>
+		<isEqual property="isAllGroupBoard" compareValue="Y">
+    		<![CDATA[
+    		AND
+				(TBL_PERMISSIONGROUPLIST.COMPANY_ID = #v_COMPANY_ID#
+				OR
+				TBL_PERMISSIONGROUPLIST.COMPANY_ID = 'Top')
+    		]]>
+		</isEqual>
 		<![CDATA[
            ORDER BY
 				GROUP_NAME              	

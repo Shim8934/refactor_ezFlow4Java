@@ -3,13 +3,16 @@ package egovframework.ezEKP.ezBoard.web;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -33,6 +37,8 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -63,6 +69,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardAdminController.class);
 
@@ -1461,7 +1470,12 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("selectTargetGroup started");
 
 		LoginVO user = commonUtil.userInfo(loginCookie);
+		String isAllGroupBoard = request.getParameter("isAllGroupBoard");
 		String topid = "";
+		
+		if (isAllGroupBoard == null || isAllGroupBoard.equals("")) {
+			isAllGroupBoard = "N";
+		}
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) { // 전체관리자가 아님
 			topid = user.getCompanyID();
@@ -1469,9 +1483,25 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			topid = "Top";
 		}
 		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			// 권한을 설정할 게시판이 그룹사게시판이고, 접근한 관리자가 전체관리자인 경우에만 다른 회사를 리스트에 추가
+			// 자신이 소속한 회사는 반드시 리스트에 추가
+			if ((user.getRollInfo().indexOf("c=1") > -1 && isAllGroupBoard.equals("Y")) || vo.getCn().equals(user.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 		model.addAttribute("topid", topid);
 		model.addAttribute("primary", user.getPrimary());
 		model.addAttribute("deptID", user.getDeptID());
+		model.addAttribute("companyID", user.getCompanyID());
+		model.addAttribute("list", resultList);
 		
 		logger.debug("selectTargetGroup ended");
 		return "admin/ezBoard/selectTargetGroup";

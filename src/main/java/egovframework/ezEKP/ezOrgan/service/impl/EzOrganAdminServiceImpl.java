@@ -2080,13 +2080,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANY_ID", companyID);
-		map.put("isAllGroupBoard", isAllGroupBoard); // 그룹사게시판이라면 companyID조건을 무시하고 모든 권한그룹 리턴
+		map.put("isAllGroupBoard", isAllGroupBoard);
 		
-		List<OrganGroupVO> retireList = ezOrganAdminDao.getGroupListBoard(map);
+		/* 2019-10-22 홍승비 - 그룹사게시판이라면 기본적으로 top회사의 권한그룹과 자신이 소속한 회사의 권한그룹을 리턴 */
+		List<OrganGroupVO> groupList = ezOrganAdminDao.getGroupListBoard(map);
 		
         logger.debug("getGroupListBoard ended");
 		
-		return retireList;
+		return groupList;
 	}
 	
 	/* 2019-09-25 홍승비 - 게시판 권한설정용 > 직위,직책 리스트 호출 시 다국어 이름도 함께 가져옴 */

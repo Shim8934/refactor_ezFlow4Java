@@ -4459,8 +4459,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (isAllGroupBoard == null) {
 				isAllGroupBoard = "";
 			}
+			
+			// 셀렉트박스로 선택한 회사가 존재한다면, 그 값을 쿼리에 전달한다.
+			String pCompanyID = userInfo.getCompanyID();
+			String selectedCompanyID = request.getParameter("selectedCompanyID");
+			if (selectedCompanyID != null && !selectedCompanyID.trim().equals("")) {
+				pCompanyID = selectedCompanyID;
+			}
 
-			List<OrganGroupVO> list = ezOrganAdminService.getGroupListBoard(userInfo.getTenantId(), userInfo.getCompanyID(), isAllGroupBoard);
+			List<OrganGroupVO> list = ezOrganAdminService.getGroupListBoard(userInfo.getTenantId(), pCompanyID, isAllGroupBoard);
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<LISTVIEWDATA><ROWS>");
