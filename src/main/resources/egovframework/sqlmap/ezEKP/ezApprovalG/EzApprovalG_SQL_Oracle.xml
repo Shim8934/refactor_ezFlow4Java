@@ -11851,18 +11851,20 @@
 <!-- 		{CALL EZSP_DOBANSONG_APRTYPE(#v_DOCID#, #v_APRMEMBERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doBanSongAprType" parameterClass="Map" resultClass="ApprGDocListVO">
-		SELECT 
-				APRTYPE 
-	    FROM 
-	    		TBL_APRLINEINFO 
-	    WHERE  
-	    		DOCID = #v_DOCID#
-	    AND 
-	    		APRMEMBERID = #v_APRMEMBERID#
+		SELECT
+			APRTYPE
+	    FROM
+			TBL_APRLINEINFO
+	    WHERE
+			DOCID = #v_DOCID#
 	    AND
-	    		TENANT_ID = #v_TENANTID#
+			APRMEMBERID = #v_APRMEMBERID#
 	    AND
-           		COMPANYID = #companyID#	    		
+        	(APRSTATE = #v_STAASJINHANG# OR APRSTATE = #v_STAASBORYU#)
+	    AND
+			TENANT_ID = #v_TENANTID#
+	    AND
+			COMPANYID = #companyID#
 	</select>
 <!-- 	<procedure id="EzApprovalG.getLastOpinionContent" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETLASTOPINIONCONTENT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -22409,6 +22411,8 @@
    			DOCID = #v_DOCID#
    		AND
    			APRTYPE = #v_APRTYPE#
+   		AND
+   			APRSTATE != '003'
    		AND
    			APRMEMBERID != #v_APRMEMBERID#
    		AND
