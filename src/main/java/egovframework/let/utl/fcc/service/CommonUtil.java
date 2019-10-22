@@ -197,9 +197,11 @@ public class CommonUtil {
 	}
     
     public String stripScriptTagsAndFunctions(String src) {
-        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert\\(.*\\)|confirm\\(.*\\)|prompt\\(.*\\)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-        Matcher m = p.matcher(src);
-        src = m.replaceAll("");
+    	if (src != null && !src.isEmpty()) {
+	        Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert\\(.*\\)|confirm\\(.*\\)|prompt\\(.*\\)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+	        Matcher m = p.matcher(src);
+	        src = m.replaceAll("");
+    	}
 
         return src;
     }
