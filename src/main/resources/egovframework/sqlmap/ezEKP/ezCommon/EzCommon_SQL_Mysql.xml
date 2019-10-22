@@ -445,9 +445,19 @@
 		]]>
 	</select>
 	
-	<statement id="EzCommonDAO.addDeptMasterManualFlag"> 
+	<select id="EzCommonDAO.checkAddJobMasterManualFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MANUAL_FLAG
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterManualFlag"> 
 		ALTER TABLE 
-			TBL_DEPTMASTER
+			TBL_ADDJOBMASTER
 		ADD 
 			MANUAL_FLAG VARCHAR(4) DEFAULT NULL
 	</statement>

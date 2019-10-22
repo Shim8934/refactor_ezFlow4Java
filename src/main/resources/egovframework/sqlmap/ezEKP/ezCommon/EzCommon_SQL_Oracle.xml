@@ -464,6 +464,24 @@
 			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkAddJobMasterManualFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MANUAL_FLAG
+			FROM 
+				TBL_ADDJOBMASTER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterManualFlag"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			MANUAL_FLAG NVARCHAR2(2) DEFAULT NULL
+	</statement>
+	
 	<select id="EzCommonDAO.checkJMochaMailSignatureTemplate" resultClass="String">
 		<![CDATA[
 			SELECT 

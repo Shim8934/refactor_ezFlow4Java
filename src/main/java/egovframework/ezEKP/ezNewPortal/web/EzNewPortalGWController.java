@@ -1771,10 +1771,26 @@ public class EzNewPortalGWController {
 			}
 
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-
 			resultList = ezOrganAdminService.getCompanyList(lang, tenantId);
-
-			result.put("data", resultList);
+			
+			if (userInfo != null) {
+				String roleInfo = userInfo.getRollInfo();
+				//회사관리자일 때는 회사리스트만 나오도록
+				List<OrganDeptVO> companyList = new ArrayList<OrganDeptVO>();
+				
+				if (roleInfo != null) {
+					for (OrganDeptVO companyInfo : resultList) {
+						if (roleInfo.indexOf("c=1") > -1 || (roleInfo.indexOf("k=1") > -1 && companyInfo.getCn().equals(userInfo.getCompanyID()))) {
+							companyList.add(companyInfo);
+						}
+					}
+				}
+				
+				result.put("data", companyList);
+			} else {
+				result.put("data", resultList);
+			}
+			
 			result.put("primary", primary);
 			result.put("usePrimaryLangOnly", usePrimaryLangOnly);
 			result.put("status", "ok");
@@ -4042,7 +4058,9 @@ public class EzNewPortalGWController {
 			}
 			
 			String offset = info.getOffSet();
-			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat adf = new SimpleDateFormat("yyyy-MM-dd");
+			String nowDate = adf.format(cal.getTime());
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 			String password = jspw;

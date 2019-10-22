@@ -5396,8 +5396,28 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				pAddressFilter = tempNode.getTextContent();
 			}
 		}
+
+        String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
         
-        String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);
+        // useShowAllCompanies가 YES이고 company 패러메터가 전달된 경우에는
+        // Company ID를 ""로 세트하여 그룹사 전체 조직도를 대상으로 검색하도록 한다.
+        String orgCompanyId = userInfo.getCompanyID();
+        
+        if (useShowAllCompanies.equals("YES")) {
+			String companyId  = request.getParameter("company");
+			
+			if (companyId != null) {
+				userInfo.setCompanyID("");
+			}
+        }        
+		
+        String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);	
+        
+        if (useShowAllCompanies.equals("YES")) {
+        	// Company ID를 본래값으로 복원한다.
+        	userInfo.setCompanyID(orgCompanyId);
+        }
+        
         String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
         String sharedMailboxXML = getSharedMailboxSearch(pSharedMailboxSearchList, userInfo);
@@ -5576,6 +5596,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		model.addAttribute("primaryLang", primaryLang);
+		
+		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
 		
 		logger.debug("mailNewReceiverChoose ended.");
 		return "ezEmail/mailNewReceiverChoose";
@@ -6195,8 +6218,28 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pSharedMailboxSearchList = "displayname::" + searchValue;
 
 		try {
+	        String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+			
+	        // useShowAllCompanies가 YES이고 company 패러메터가 전달된 경우에는
+	        // Company ID를 ""로 세트하여 그룹사 전체 조직도를 대상으로 검색하도록 한다.
+	        String orgCompanyId = userInfo.getCompanyID();
+	        
+	        if (useShowAllCompanies.equals("YES")) {
+				String companyId  = request.getParameter("company");
+				
+				if (companyId != null) {
+					userInfo.setCompanyID("");
+				}
+	        }
+			
 			Document organXML = commonUtil.convertStringToDocument(
 					getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo));
+			
+	        if (useShowAllCompanies.equals("YES")) {
+	        	// Company ID를 본래값으로 복원한다.
+	        	userInfo.setCompanyID(orgCompanyId);
+	        }
+	        
 			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));
 			Document addressXML = commonUtil.convertStringToDocument(getAddressSearch(pAddressFilter, userInfo));
 			Document sharedMailboxXML = commonUtil.convertStringToDocument(getSharedMailboxSearch(pSharedMailboxSearchList, userInfo));

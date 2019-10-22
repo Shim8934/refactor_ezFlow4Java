@@ -367,6 +367,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void addAddJobMasterManualFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddJobMasterManualFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster MANUAL_FLAG column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterManualFlag");
+		}
+	}
+	
 	public void createJmochaMailSignatureTemplate() throws Exception {
 		try {
 			select("EzCommonDAO.checkJMochaMailSignatureTemplate");

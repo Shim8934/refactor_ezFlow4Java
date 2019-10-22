@@ -4131,7 +4131,21 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 						
 			if (!pOrganSearchList.isEmpty()) {
+				String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", info.getTenantId());
+				
+		        // useShowAllCompanies가 YES이면 Company ID를 ""로 세트하여 그룹사 전체 조직도를 대상으로 검색하도록 한다.
+		        String orgCompanyId = info.getCompanyId();
+		        
+		        if (useShowAllCompanies.equals("YES")) {
+		        	info.setCompanyId("");
+		        }
+				
 				organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, info);
+				
+		        if (useShowAllCompanies.equals("YES")) {
+		        	// Company ID를 본래값으로 복원한다.
+		        	info.setCompanyId(orgCompanyId);
+		        }				
 			}
 			
 			if (!pDLSearchList.isEmpty()) {

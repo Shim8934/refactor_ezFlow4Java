@@ -11,7 +11,7 @@
 		<link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style>
-			.node_selected
+			/* .node_selected
 			{
 			    font-size: 13px;
 			    height: 30px;
@@ -27,7 +27,7 @@
 			    overflow: hidden;
 			    box-sizing: border-box;
 			    font-weight: bold;
-			}
+			} */
 			
 			.node_div {height:30px;}
 			

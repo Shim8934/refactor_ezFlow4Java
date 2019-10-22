@@ -1372,7 +1372,8 @@ function GetMailAddresses(name) {
     createNodeAndInsertText(xmlDOM, objNode, "FIELD", "AddressID,SNAME,SEMAIL,STYPE");
     createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
     createNodeAndInsertText(xmlDOM, objNode, "SHAREDMAILBOXSEARCH", "displayname::" + name);
-    xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
+    // useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 company 패러메터를 빈 값으로 추가함.
+    xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do?company=", false);
     xmlHTTP.send(xmlDOM);
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);

@@ -397,7 +397,7 @@
 				
 				tdElmt6.textContent = getFileSize(capacityList[i]["totalUsed"]);
 				tdElmt7.textContent = capacityList[i]["capacityType"] == 0 ? "-" : capacityList[i]["totalCapacity"] + "MB";
-				tdElmt8.textContent = capacityList[i]["capacityType"] == 0 ? "무제한" : "제한";
+				tdElmt8.textContent = capacityList[i]["capacityType"] == 0 ? CabinetMessages.strNolimit : CabinetMessages.strLimit;
 				
 				var span        = document.createElement("span");
 				span.className  = "workProgressBar";

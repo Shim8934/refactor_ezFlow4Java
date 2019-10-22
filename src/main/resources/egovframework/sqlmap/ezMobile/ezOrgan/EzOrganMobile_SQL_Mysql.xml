@@ -23,14 +23,20 @@
 	            AND
 	            	A.PHYSICALDELIVERYOFFICENAME = B.PHYSICALDELIVERYOFFICENAME
 	            WHERE
-	                A.PHYSICALDELIVERYOFFICENAME = #companyID#
-	            AND
-	                A.TENANT_ID = #tenantID#
+	                A.TENANT_ID = #tenantID#	                
 	            AND 
 	            	B.CN IS NULL
+                AND
+                    A.CN <> 'masteradmin'	            	
 	            AND
 	            	A.DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%')
-        ]]>        
+        ]]>
+        <isNotEmpty property="companyID">
+            <![CDATA[
+	            AND
+	            	A.PHYSICALDELIVERYOFFICENAME = #companyID#            
+            ]]>
+        </isNotEmpty>                
         <isNotEmpty property="pSearchText">
             <![CDATA[
                 AND
@@ -69,13 +75,19 @@
             	A.TENANT_ID = B.TENANT_ID
             WHERE
             	B.CN is null
-			AND
-                A.PHYSICALDELIVERYOFFICENAME = #companyID#
             AND
                 A.TENANT_ID = #tenantID#
             AND
+                A.CN <> 'masteradmin'	            	                
+            AND
             	A.DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%')
         ]]>        
+        <isNotEmpty property="companyID">
+            <![CDATA[
+	            AND
+	            	A.PHYSICALDELIVERYOFFICENAME = #companyID#            
+            ]]>
+        </isNotEmpty>                        
         <isNotEmpty property="pSearchText">
             <![CDATA[
                 AND
