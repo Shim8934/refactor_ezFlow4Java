@@ -12052,6 +12052,8 @@
 	    AND 
 	    	APRMEMBERID = #v_APRMEMBERID#
 	    AND
+        	(APRSTATE = #v_STAASJINHANG# OR APRSTATE = #v_STAASBORYU#)
+	    AND
 	    	TENANT_ID = #v_TENANTID#
 	    AND
             COMPANYID = #companyID#
@@ -22421,6 +22423,8 @@
    		AND
    			APRTYPE = #v_APRTYPE#
    		AND
+   			APRSTATE != '003'
+   		AND
    			APRMEMBERID != #v_APRMEMBERID#
    		AND
    			TENANT_ID = #v_TENANTID#
@@ -26542,15 +26546,15 @@
 	</select>
 	
    	<select id="EzApprovalG.doBanSongAprTypeS" parameterClass="Map" resultClass="ApprGDocListVO">
-   		SELECT 
-   			APRTYPE 
-        FROM 
-        	TBL_APRLINEINFO 
-       	WHERE  
+   		SELECT
+   			APRTYPE
+        FROM
+        	TBL_APRLINEINFO
+       	WHERE
        		DOCID = #v_DOCID#
-        AND 
+        AND
         	APRMEMBERID = #v_APRMEMBERID#
-        AND 
+        AND
         	( APRSTATE = #v_STAASJINHANG# OR APRSTATE = #v_STAASBORYU# )
         AND
         	TENANT_ID = #v_TENANTID#
