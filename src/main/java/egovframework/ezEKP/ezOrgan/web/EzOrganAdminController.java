@@ -3860,10 +3860,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 권한관리 삭제 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/chooseDeletege.do", method = RequestMethod.GET)
-	public String chooseDeletege(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-
+	public String chooseDeletege(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		
 		String type = (request.getParameter("type") != null ? request.getParameter("type") : "");
 		model.addAttribute("type", type);
+		model.addAttribute("lang", user.getLang());
 
 		return "admin/ezOrgan/chooseDeletege";
 	}
