@@ -1357,7 +1357,9 @@
  					BOARDID = #v_PBOARDID#
 		]]>
 			<isEqual property="adminType" compareValue="false" prepend="AND">
-				TOPWRITERID = #v_PUSERID#
+				(TOPWRITERID = #v_PUSERID#
+				OR
+				WRITERID = #v_PUSERID#)
 			</isEqual>
 			<isEqual property="type" compareValue="1">
 			  	<![CDATA[
@@ -2660,8 +2662,10 @@
                    	ENDDATE > #nowDate#
 			]]>
                <isEqual property="v_PADMINTYPE" compareValue="false">
-                   AND 
-                   	TOPWRITERID = #v_PUSERID#
+				AND 
+					(TOPWRITERID = #v_PUSERID#
+					OR
+					WRITERID = #v_PUSERID#)
 			</isEqual>
 		</isEqual>
 		<isEqual property="v_PTYPE" compareValue="2">
@@ -2701,8 +2705,10 @@
                    	D.TOTALCOUNT IS NULL
 			]]>
                <isEqual property="v_PADMINTYPE" compareValue="false">
-                   AND 
-                   	TOPWRITERID = #v_PUSERID#
+				AND 
+					(TOPWRITERID = #v_PUSERID#
+					OR
+					WRITERID = #v_PUSERID#)
 			</isEqual>
 		</isEqual>
 		<isEqual property="v_PTYPE" compareValue="3">
@@ -2721,8 +2727,10 @@
                    	ENDDATE < #nowDate#
 			]]>
 			<isEqual property="v_PADMINTYPE" compareValue="false">
-                   AND 
-                   	TOPWRITERID = #v_PUSERID#
+					AND 
+	                   	(TOPWRITERID = #v_PUSERID#
+						OR
+						WRITERID = #v_PUSERID#)
 			</isEqual>
 		</isEqual>
 	</select>
@@ -5215,7 +5223,9 @@
 				]]>
 				</isNotEmpty>
 					<![CDATA[
-					A.TOPWRITERID = #v_PUSERID# 
+					(A.TOPWRITERID = #v_PUSERID#
+					OR
+					A.WRITERID = #v_PUSERID#)
 					AND
 					I.BOARDID IN ]]>
 					<iterate property="v_qnaItemList" open="(" close=")" conjunction=","> #v_qnaItemList[]# </iterate>
@@ -5283,7 +5293,9 @@
 				]]>
 				</isNotEmpty>
 					<![CDATA[
-					A.TOPWRITERID = #v_PUSERID# 
+					(A.TOPWRITERID = #v_PUSERID#
+					OR
+					A.WRITERID = #v_PUSERID#)
 					AND
 					I.BOARDID IN ]]>
 					<iterate property="v_qnaItemList" open="(" close=")" conjunction=","> #v_qnaItemList[]# </iterate>
