@@ -853,8 +853,8 @@
 		                                    return;
 		                                }
 		                                if (checkboard.indexOf("mailReadContent.do") < 0) {
-		                                	/* 2019-10-24 홍승비 - 게시물 임시저장 시, 임시보관함에서 미리보기가 열려있으면 전체 새로고침 */
-		                					if ((pMode == "temp" && window.opener.location.href.indexOf("/ezBoard/boardItemListTemp.do") > -1) &&
+		                                	/* 2019-10-24 홍승비 - 게시물 임시보관함에서 저장 또는 임시저장 시, 미리보기가 열려있으면 전체 새로고침 (일반/QNA게시판) */
+		                					if ((window.opener.location.href.indexOf("/ezBoard/boardItemListTemp.do") > -1) &&
 		                							((window.opener.document.getElementById("PreviewRayerH").style.display != "none" && window.opener.document.getElementById("PreviewRayerH").style.display != "") ||
 		                							(window.opener.document.getElementById("PreviewRayerW").style.display != "none" && window.opener.document.getElementById("PreviewRayerW").style.display != ""))) {
 		                						window.opener.refresh_onclick();
