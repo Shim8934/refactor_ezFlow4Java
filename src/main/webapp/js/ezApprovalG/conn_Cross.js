@@ -1479,8 +1479,11 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "habyuidate" + i)));
 				}
 			}
+
 		}
-	} catch (e) {
+
+        SetAutoPropertyValue();
+    } catch (e) {
 		alert("New_DrawAutoLine ERROR!!");
 	}
 }
