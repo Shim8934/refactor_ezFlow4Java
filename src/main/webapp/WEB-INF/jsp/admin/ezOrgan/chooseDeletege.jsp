@@ -34,7 +34,7 @@
 			if (ReturnFunction == "ALL") {
 				cData = "<spring:message code='ezAddress.t362' />" + strLang20;
 			} else {
-				cData = type + " " + strLang20;
+				cData = type + strLang20;
 			}
 			
 			var checked = (confirm(cData));
@@ -69,7 +69,12 @@
 			<tr>
 		    	<td>
 		    		<input type="radio" id="radio1" name="radiobutton" value="radiobutton"  checked>
-		      		<label for="radio1"><spring:message code='ezOrgan.mse6' arguments='${type}' /></label>
+		    		<c:if test="${lang eq  '3'}">
+		      			<label for="radio1"><c:out value='${type}'/><spring:message code='ezOrgan.mse6' /></label>
+		      		</c:if>
+		      		<c:if test="${lang ne '3'}">
+		      			<label for="radio1"><c:out value='${type}'/> <spring:message code='ezOrgan.mse6' /></label>
+		      		</c:if>
 		      	</td>
 		  	</tr>
 		  	<tr>

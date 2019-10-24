@@ -221,15 +221,15 @@ var strLang321 = "承認待ち";
 var strLang322 = "却下";
 var strLang323 = "承認";
 var strLang324 = "使用中";
-var strLang325 = "반납";
-var strLang326 = "미반납";
+var strLang325 = "返却";
+var strLang326 = "使用中";
 var strLang327 = "終了";
-var strLang331 = "반납 요청을 하시겠습니까?";
-var strLang332 = "반납 요청을 승인하시겠습니까?";
-var strLang333 = "반납하시겠습니까?";
-var strLang334 = "반납 요청이 완료되었습니다.";
-var strLang335 = "반납되었습니다.";
-var strLang336 = "자원이 사용안함으로 설정된 경우 예약할 수 없습니다.";
+var strLang331 = "返却要請をしますか？";
+var strLang332 = "返却要請を承認しますか？";
+var strLang333 = "返却しますか？";
+var strLang334 = "返却要請しました。";
+var strLang335 = "返却しました。";
+var strLang336 = "設備の設定が’使用しない’になっているため予約できません。";
 
 //2019-05-28
-var strLang337 = "승인거부 되었습니다."
+var strLang337 = "申請が却下されました。"
