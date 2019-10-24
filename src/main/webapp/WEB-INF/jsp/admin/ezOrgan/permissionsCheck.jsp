@@ -798,10 +798,10 @@
 		            		pparsingXML2 = "<LISTVIEWDATA><ROWS>";
 		            		pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
 		            		pparsingXML = pparsingXML + "<DATA2>" + strData + "</DATA2>";
-		            		pparsingXML = pparsingXML + "<DATA3>" + strName + "</DATA3>";
+		            		pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(strName) + "</DATA3>";
 		            		pparsingXML = pparsingXML + "<DATA4>" + strMail + "</DATA4>";
-		            		pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL>";
-		            		pparsingXML = pparsingXML + "<CELL><VALUE>" + strDept + "</VALUE></CELL></ROW>";
+		            		pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL>";
+		            		pparsingXML = pparsingXML + "<CELL><VALUE>" + MakeXMLString(strDept) + "</VALUE></CELL></ROW>";
 		            		pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
 		            		Resultxml = loadXMLString(pparsingXML2);
 			                
