@@ -491,14 +491,13 @@ function SGetDraftAprLineInfo(ret) {
             //DrawAutoAprLine(ret[0], pDraftFlag);
             New_DrawAutoLine(ret[0], pDraftFlag);
         } else {
-	        TempsaveAprlineinfo = ret[1];
-	        xmlKuljea = ret[1];
-	        setAprLinesXML(xmlKuljea);
-	        //DrawAutoAprLine(ret[1], pDraftFlag);
-	        New_DrawAutoLine(ret[1], pDraftFlag);
+            TempsaveAprlineinfo = ret[1];
+            xmlKuljea = ret[1];
+            setAprLinesXML(xmlKuljea);
+            DrawAutoAprLine(ret[1], pDraftFlag);
         }
         
-        // FieldsAvailable(); 가온누리 살리려고 우선 주석 -> 가변결재선 체크해보고 수정필요
+        FieldsAvailable();
         xmlReDraft = "R";
 
         if (xmlReDraft == "C") {
