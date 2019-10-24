@@ -1044,7 +1044,7 @@
 		                 <div id="preview_nodata" class="preview_nodata" style="margin-top: 70px;">
 			                  <dl class="nodata_sIcon">
 				              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-				              <dd id="nodata_title" style="font-family: malgun gothic"><spring:message code='ezOrgan.mse5'/></dd>
+				              <dd id="nodata_title"><spring:message code='ezOrgan.mse5'/></dd>
 			                  </dl>
 		                 </div>
 		              <div class="previewmail" id="previewmail">

@@ -603,7 +603,7 @@ function showPreview(isPreview, itemseq) {
 		doc.getElementById('Preview_HeaderH').style.visibility ="hidden";
 		doc.getElementById("ifrmPreViewH").style.width = "96%";
 		doc.getElementById("ifrmPreViewH").style.height = "96%";
-		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm";
+//		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm"; //일본어일때 폰트 문제로 주석
 		
 		setTimeout(function(){
 			doc.getElementById("ifrmPreViewH").style.display = "";
