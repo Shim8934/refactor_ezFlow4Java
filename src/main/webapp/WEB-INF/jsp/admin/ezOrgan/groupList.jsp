@@ -575,7 +575,7 @@
 							<tr id="mainListHeaderTr">
 								<th style="width: 30px;"><input type='checkbox'
 									name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
-								<th style="width: 15%;">main.t76</th>
+								<th style="width: 15%;"><spring:message code="main.t76" /></th>
 								<th style="width: 15%;"><spring:message code="ezOrgan.zNo008" /></th>
 								<th style="width: 15%;"><spring:message code="ezOrgan.zNo009" /></th>
 								<th style="width: 15%;"><spring:message code="ezAttitude.t62" /></th>
