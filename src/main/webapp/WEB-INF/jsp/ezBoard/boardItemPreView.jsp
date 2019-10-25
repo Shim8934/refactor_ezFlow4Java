@@ -84,7 +84,7 @@
 		        	WriteDate = "${strNow}";
 		        }
 		        
-		        document.getElementById('PostDate').innerHTML = WriteDate;
+		        document.getElementById('PostDate').innerHTML = WriteDate.substring(0, 16);
 		        
 		        if (pEndDate.substr(0, 4) == "9999") {
 		        	pEndDate = "<spring:message code='ezBoard.t287'/>";

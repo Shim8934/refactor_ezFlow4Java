@@ -431,7 +431,7 @@ function event_ItemPreviewRead_photo() {
 
             setNodeText(document.getElementById("PreH_sub_subject"), Title);
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
-            setNodeText(document.getElementById("PreH_date"), WriteDate);
+            setNodeText(document.getElementById("PreH_date"), WriteDate.substring(0, 16));
             var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + javaURLEncode(ContentLocation);
             if (location.href.toLowerCase().indexOf('temp') > -1)
                 document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
@@ -520,7 +520,7 @@ function previewItemSet() {
     } else {
         document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
         document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;
-        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate;
+        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate.substring(0, 16);
         var readHTML = WriteContent(ContentLocation, ItemID);
         var tempText = xmlhttp2.responseText;
 
@@ -565,7 +565,7 @@ function loadsetInterval(readHTML, responseText) {
 function event_downContent(result, result2) {
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_sub_subject").textContent = Title;
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_MailReceiver").innerHTML = pOCS;
-        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate;
+        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate.substring(0, 16);
         document.getElementById("ifrmPreView" + pPreviewShow_HOW.trim()).contentWindow.makeWriteContent(result, result2);
 }
 

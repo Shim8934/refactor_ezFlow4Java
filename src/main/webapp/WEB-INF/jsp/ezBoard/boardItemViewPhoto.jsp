@@ -1537,7 +1537,7 @@
 		              <th style="width:10%"><spring:message code='ezBoard.t290'/></th>
 		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_JobTitle">${boardItem.extensionAttribute3}</td>
 		              <th style="width:10%"><spring:message code='ezBoard.t224'/></th>
-		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_WriteDate">${boardItem.writeDate} </td>
+		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_WriteDate">${boardItem.writeDate.substring(0, 16)} </td>
 		            </tr>
 		            <tr>
 		              <th><spring:message code='ezBoard.t291'/></th>

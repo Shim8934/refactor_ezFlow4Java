@@ -191,7 +191,7 @@
 		        	<!-- 게시일&게시종료일 -->
 		        	<tr>
 						<th><spring:message code='ezBoard.t224'/></th>
-		        		<td id="PostDate" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writeDate}</td>
+		        		<td id="PostDate" style="width:40%; white-space:nowrap">&nbsp;${boardItem.writeDate.substring(0, 16)}</td>
 						<th><spring:message code='ezBoard.t288'/></th>
 						<c:set var="t287" value="<spring:message code='ezBoard.t287'/>"/>
 						<c:choose>
