@@ -11,7 +11,20 @@
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>	    
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
+		<style>
+			#divList {
+				width: 100%; height: 35px;
+			}
+			#divList tr{
+		    	border: 1px solid #d2d2d2;
+		    }
+			#divList td {
+				border: none;
+			    box-sizing: border-box;
+			    padding: 3px;
+			}
+		</style>	
 	</head>
 	<body class="popup">
 		<div id="menu">
@@ -25,16 +38,25 @@
             </ul>
         </div>
 		
-		<div style="width: 100%; height: 50px; text-align: center; border: 1px solid #e4e4e4; box-sizing: border-box; padding: 10px 20px;">
+		<div id="divList">
 			<table style="width:100%; ">
 				<tr>
+					<th style="width: 20%; height:100%">
+						<spring:message code='ezEmail.multiDomain.ksa05' />
+					</th>
+					<td>
+						<input id="addDomain" maxlength="20" type="text" style="width:100%; ime-mode:disabled;"/>
+					</td>	
+				</tr>
+				
+				<%-- <tr>
 					<th style="width: 20%; background: none; border: none; text-align: left;">
 						※ <spring:message code='ezEmail.multiDomain.ksa05' /> : 
 					</th>
 					<td>
 						<input id="addDomain" maxlength="50" type="text" style="width:100%;" />
 					</td>	
-				</tr>			
+				</tr> --%>			
 			</table>
 		</div>
 	</body>
@@ -45,6 +67,15 @@
 		
 		function btnSave() {
 			var email = $("#addDomain").val().trim();
+			var regex = /^[a-z0-9\_\-\.]{1,20}@[a-zA-Z0-9\_\-\.]+$/;
+			
+			if (email == "") {
+				alert("<spring:message code='ezEmail.multiDomain.ksa25' />");
+				return ;
+			} else if (regex.test(email)) {
+				alert("<spring:message code='ezEmail.multiDomain.ksa27' />");
+				return ;
+			}
 			saveDomain(email);
 		}
 		
@@ -57,7 +88,7 @@
 					if (data == 0) {
 						alert("<spring:message code='ezEmail.multiDomain.ksa09' />");
 						window.opener.get_domainList();
-						window.close();
+						btnClose();
 					} else if (data == -2) {
 						alert("<spring:message code='ezEmail.multiDomain.ksa10' />");
 					} else {
@@ -69,6 +100,14 @@
 				}
 			});
 		}
+		
+		$(document).on({
+			"keyup" : function(event) {
+				var thisVal = event.currentTarget.value;
+				event.currentTarget.value = thisVal.replace(/[^a-zA-Z0-9\_\-\.]/gi, '');
+			}
+		}, "#addDomain");
+	
 	</script>
 </html>
 

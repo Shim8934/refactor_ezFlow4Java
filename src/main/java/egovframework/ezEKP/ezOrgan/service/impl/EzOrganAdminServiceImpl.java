@@ -1045,6 +1045,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	
 	    	deleteUserAddJob(cn, tenantID);
 	    	
+	    	// company_config 삭제
+	    	deleteCompanyConfig(cn, tenantID);
+	    	
 	        ezOrganAdminDao.deleteDBData(map);
 	        
 	        //회사 삭제시 넣었던 초기데이터 테이블 삭제
@@ -1722,5 +1725,21 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
     	}
     }
+	
+	private void deleteCompanyConfig(String compId, int tenantId) throws Exception {
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_CN", compId);
+		map1.put("v_TENANT_ID", tenantId);
+    	
+		Map<String, Object> map2 = new HashMap<String, Object>(map1);
+		map2.put("v_FIELD", "EXTENSIONATTRIBUTE2");
+		
+    	String extensionAttr2 = ezOrganDao.getPropertyValue_S5(map2);
+    	logger.debug("companyID=" + compId + "extenstionAttr2=" + extensionAttr2);
+    	
+    	if (compId.equals(extensionAttr2)) { // 회사면
+        	ezOrganAdminDao.deleteCompanyConfig(map1);    		
+    	}
+     }
 	
 }

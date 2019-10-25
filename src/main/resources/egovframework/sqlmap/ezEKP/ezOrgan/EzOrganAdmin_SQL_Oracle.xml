@@ -6068,6 +6068,17 @@
 		]]>
 	</update>
 	
+	<delete id="EzOrganAdminDAO.deleteCompanyConfig" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_COMPANY_CONFIG
+          	WHERE
+          		COMPANY_ID = #v_CN#
+          	AND
+          		TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</delete>
+	
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>

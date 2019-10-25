@@ -2573,15 +2573,20 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezEmail/getMultiDomainList.do")
 	@ResponseBody
-	public String getMultiDomainList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+	public JSONObject getMultiDomainList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("getMultiDomainList started.");
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		int tenantId = user.getTenantId();
 		String innerDomain = ezEmailService.getMultiDomainList(tenantId);
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("innerDomain", innerDomain);
+		jsonObj.put("tenantDomain", tenantDomain);
 		
 		logger.debug("getMultiDomainList ended.");
-		return innerDomain;
+		return jsonObj;
 	}
 	
 	/**
@@ -2614,8 +2619,29 @@ public class EzEmailAdminController {
 		int tenantId = user.getTenantId();
 		String delDomain = request.getParameter("delDomain");
 		String saveDomainList = request.getParameter("saveDomainList");
+		
+		int reasonCode = 0;
+		
+		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
+		String propertyName = "MailInnerDomain";
+		
+		for(OrganDeptVO companyVO : companylist) {
+			String companyId = companyVO.getCn();
+			String innerDomainList = ezEmailService.getCompanyConfig(tenantId, companyId, propertyName);
+			logger.debug("companyId=" + companyId + ", innerDomainList=" + innerDomainList);
+			
+			String[] innerDomainArr = innerDomainList.split(";");
+			for (String innerDomain : innerDomainArr) {
+				if (delDomain.equals(innerDomain)) {
+					logger.debug("delMultiDomain ended.");
+					return 1;
+				}
+			}
+		}
 
-		int reasonCode = ezEmailService.delMultiDomain(tenantId, delDomain, saveDomainList);
+		if (reasonCode == 0) {
+			reasonCode = ezEmailService.delMultiDomain(tenantId, delDomain, saveDomainList);
+		}
 		
 		logger.debug("delMultiDomain ended.");
 		return reasonCode;

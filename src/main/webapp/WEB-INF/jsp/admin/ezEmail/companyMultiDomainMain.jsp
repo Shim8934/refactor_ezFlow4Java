@@ -116,15 +116,18 @@
 			$.ajax({
 				type : "POST",
 				url : "/admin/ezEmail/getMultiDomainList.do",
+				dataType : "json",
 				success : function(data) {
-					innerDomain = data;
-					var htmlSample = "<tr data-domain='{domainTxt}'><td>{domainTxt}</td></tr>";
+					innerDomain = data.innerDomain;
+					var tt = data.tenantDomain;
+					var htmlSample = "<tr data-domain='{domainTxt}' type='{type}'><td>{domainTxt}</td></tr>";
 					var htmlList = "";
 					
-					if (data != "") {
-						$.each(data.split(";"), function(index, dd) {
+					if (innerDomain != "") {
+						$.each(innerDomain.split(";"), function(index, dd) {
 							if (dd.trim() != "") {
-								htmlList += htmlSample.replace(/{domainTxt}/gi, dd);								
+								var domainType = dd == tt ? '1' : '0';
+								htmlList += htmlSample.replace(/{domainTxt}/gi, dd).replace(/{type}/gi, domainType);								
 							}
 						});
 					} else {
@@ -260,7 +263,7 @@
 		
 		function btnSave() {
 			var primaryDomain = $("#companyListTable tr#primary").attr("data-domain");
-			var saveDomainListObj = $("#companyListTable tr").get();
+			var saveDomainListObj = $("#companyListTable tr:not('.noDataTR')").get();
 			var saveDomainArr = new Array();
 			var saveDomainList = companyInnerDomain;
 			
@@ -274,6 +277,8 @@
 				saveParam[1] = saveDomainList;
 				
 				save_company_domain();
+			} else {
+				alert("<spring:message code='ezEmail.multiDomain.ksa11' />");
 			}
 		}
 		

@@ -44,7 +44,7 @@
 			<table class="mainlist_free" cellspacing="0" cellpadding="0" width="100%" border="0">
 				<thead>
 					<tr>
-						<th style="padding-left:10px;"><spring:message code='ezEmail.multiDomain.ksa13' /></th>
+						<th style="padding-left:10px; border-top:0;"><spring:message code='ezEmail.multiDomain.ksa05' /></th>
 					</tr>
 				</thead>
 			</table>
@@ -68,15 +68,18 @@
 			$.ajax({
 				type : "POST",
 				url : "/admin/ezEmail/getMultiDomainList.do",
+				dataType : "json",
 				success : function(data) {
-					innerDomain = data;
-					var htmlSample = "<tr data-domain='{domainTxt}'><td>{domainTxt}</td></tr>";
+					innerDomain = data.innerDomain;
+					var tt = data.tenantDomain;
+					var htmlSample = "<tr data-domain='{domainTxt}' type='{type}'><td>{domainTxt}</td></tr>";
 					var htmlList = "";
 					
-					if (data != "") {
-						$.each(data.split(";"), function(index, dd) {
+					if (innerDomain != "") {
+						$.each(innerDomain.split(";"), function(index, dd) {
 							if (dd.trim() != "") {
-								htmlList += htmlSample.replace(/{domainTxt}/gi, dd);							
+								var domainType = dd == tt ? '1' : '0';
+								htmlList += htmlSample.replace(/{domainTxt}/gi, dd).replace(/{type}/gi, domainType);	
 							}
 						});
 					} else {
@@ -103,6 +106,8 @@
 					if (data == 0) {
 						alert("<spring:message code='ezEmail.multiDomain.ksa12' />");
 						get_domainList();
+					} else if (data == 1){
+						alert("<spring:message code='ezEmail.multiDomain.ksa26' />");
 					} else {
 						alert("<spring:message code='ezEmail.lhm14' />");
 					}
@@ -120,15 +125,23 @@
 	        var pLeft = (pwidth - 420) / 2;
 			var url = "/admin/ezEmail/addMultiDomainPopUp.do?";
 			
-	        var popup = window.open(url, "popup", "height=110px,width=450px, top=" + pTop.toString() + ", left=" + pLeft.toString());
-	        popup.focus();
+	        var popup = window.open(url, "popup", "height=90px,width=450px, top=" + pTop.toString() + ", left=" + pLeft.toString());
 		}
 		
 		function btnDel() {
+			var clickTR = $("#listTable tr.trClick");
+			if (!(clickTR.length > 0)) {
+				alert("<spring:message code='ezEmail.multiDomain.ksa24' />");
+				return;
+			} else if (clickTR.attr("type") == "1") {
+				alert("<spring:message code='ezOrgan.lhm1' />");
+				return;
+			}
+			
 			var delChk = confirm("<spring:message code='ezEmail.multiDomain.ksa08' />");
 			if (delChk) {
 				var delDomainListObj = $("#listTable tr:not(.trClick)").get();
-				var delDomain = $("#listTable tr.trClick").attr("data-domain");
+				var delDomain = clickTR.attr("data-domain");
 				var saveDomainArr = new Array();
 				var saveDomainList = innerDomain;
 				
