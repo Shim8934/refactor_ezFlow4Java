@@ -300,6 +300,12 @@
 // 			OpenWindow(event, "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
 			window.open("/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
 		}
+		function totalSearch_key_event(e,obj) {
+		    var curevent = (typeof event == 'undefined' ? e : event)
+		        if (curevent.keyCode == "13") {
+		            totalSearch();
+		        }
+		}
 		
 		//2019-09-20 메신저 다운로드 추가
 		var talkDowmClick = function () {
