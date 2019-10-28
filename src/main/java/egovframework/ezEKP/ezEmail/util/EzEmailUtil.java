@@ -799,6 +799,18 @@ public class EzEmailUtil {
 	                                                
 	                        subject = MimeUtility.decodeText(rawHeader);
 	                    } 
+	                    
+	                    // 료비에서 의뢰한 메일 중 제목이
+	                    // Subject: =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4
+	                    //  10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
+	                    // 와 같은 경우 여전히 subject가
+	                    // =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4 10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
+	                    // 로 디코딩되지 않은 형태로 나온다. 이 때 공백 문자를 =20으로 변경하면 제대로 디코딩이 이루어진다. 
+	                    if (subject.startsWith("=?")) {
+	                    	if (encoding.equalsIgnoreCase("Q")) {
+	                    		subject = MimeUtility.decodeText(subject.replace(" ", "=20"));
+	                    	}
+	                    }
 	                }
 	            }
 	            
