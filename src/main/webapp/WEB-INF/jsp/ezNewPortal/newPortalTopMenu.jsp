@@ -930,7 +930,8 @@
 			
 		    var survPopoup = parent.document.getElementById('surv_popup');
 		    if (survPopoup != null) {
- 				survPopoup.remove();
+ 				var notipopup = parent.document.getElementById('noticePopupLayer');
+ 				notipopup.removeChild(survPopoup);
  			}
 		    // 로그인 직후 설문 팝업 생성하는 경우
 			if (surveyPopupObj !== "") {
