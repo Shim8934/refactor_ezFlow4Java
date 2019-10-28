@@ -1177,14 +1177,7 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 				}
 			}
 		}
-		
-		var tempFields;
-		var reDrawSignFlag = false;
-		if (reSignCnt > 0 || reHabyCnt > 0) {
-			tempFields = message.GetFieldsList();
-			reDrawSignFlag = true;
-		}
-		
+
 		var aprLineRowCnt = parseInt(signCnt / 10);
 		if (signCnt % 10 > 0) {
 			aprLineRowCnt++;
@@ -1201,7 +1194,61 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 			Recv = "Recv";
 			SusinSN = "1";
 		}
-		
+
+        var reDrawSignFlag = false;
+        var arrayReSign = new Map();
+        var arrayReHaby = new Map();
+
+        if (reSignCnt > 0 || reHabyCnt > 0) {
+            fields = message.GetFieldsList();
+
+            for (var i = 1; i <= reSignCnt; i++) {
+                field = message.GetListItem(fields, SusinSN + "sign" + i);
+                if (field) {
+                    arrayReSign.set(SusinSN + "sign" + i, message.GetListItem(fields, SusinSN + "sign" + i).innerHTML);
+                }
+
+                field = message.GetListItem(fields, SusinSN + "jikwe" + i);
+                if (field) {
+                    arrayReSign.set(SusinSN + "jikwe" + i, getNodeText(message.GetListItem(fields, SusinSN + "jikwe" + i)));
+                }
+
+                field = message.GetListItem(fields, SusinSN + "seumyung" + i);
+                if (field) {
+                    arrayReSign.set(SusinSN + "seumyung" + i, getNodeText(message.GetListItem(fields, SusinSN + "seumyung" + i)));
+                }
+
+                field = message.GetListItem(fields, SusinSN + "seumyungdate" + i);
+                if (field) {
+                    arrayReSign.set(SusinSN + "seumyungdate" + i, getNodeText(message.GetListItem(fields, SusinSN + "seumyungdate" + i)));
+                }
+            }
+
+            for (var i = 1; i <= reHabyCnt; i++) {
+                field = message.GetListItem(fields, SusinSN + "habyuisign" + i);
+                if (field) {
+                    arrayReHaby.set(SusinSN + "habyuisign" + i, message.GetListItem(fields, SusinSN + "habyuisign" + i).innerHTML);
+                }
+
+                field = message.GetListItem(fields, SusinSN + "habyuipositon" + i);
+                if (field) {
+                    arrayReHaby.set(SusinSN + "habyuipositon" + i, getNodeText(message.GetListItem(fields, SusinSN + "habyuipositon" + i)));
+                }
+
+                field = message.GetListItem(fields, SusinSN + "habyuija" + i);
+                if (field) {
+                    arrayReHaby.set(SusinSN + "habyuija" + i, getNodeText(message.GetListItem(fields, SusinSN + "habyuija" + i)));
+                }
+
+                field = message.GetListItem(fields, SusinSN + "habyuidate" + i);
+                if (field) {
+                    arrayReHaby.set(SusinSN + "habyuidate" + i, getNodeText(message.GetListItem(fields, SusinSN + "habyuidate" + i)));
+                }
+            }
+
+            reDrawSignFlag = true;
+        }
+
 		var fields = message.GetFieldsList();
 		var field = message.GetListItem(fields, Recv + "autoAprLine");
 		if (field && signCnt > 0) {
@@ -1440,51 +1487,50 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 		if (reDrawSignFlag) {
 			var fields = message.GetFieldsList();
 			var field;
-			
+
 			for (var i = 1; i <= reSignCnt; i++) {
 				field = message.GetListItem(fields, SusinSN + "sign" + i);
 				if (field) {
-					field.innerHTML = message.GetListItem(tempFields, SusinSN + "sign" + i).innerHTML;
+					field.innerHTML = arrayReSign.get(SusinSN + "sign" + i);
 				}
 				
 				field = message.GetListItem(fields, SusinSN + "jikwe" + i);
 				if (field) {
-					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "jikwe" + i)));
+					setNodeText(field, arrayReSign.get(SusinSN + "jikwe" + i));
 				}
 				
 				field = message.GetListItem(fields, SusinSN + "seumyung" + i);
 				if (field) {
-					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "seumyung" + i)));
+					setNodeText(field, arrayReSign.get(SusinSN + "seumyung" + i));
 				}
 				
 				field = message.GetListItem(fields, SusinSN + "seumyungdate" + i);
 				if (field) {
-					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "seumyungdate" + i)));
+					setNodeText(field, arrayReSign.get(SusinSN + "seumyungdate" + i));
 				}
 			}
 			
 			for (var i = 1; i <= reHabyCnt; i++) {
 				field = message.GetListItem(fields, SusinSN + "habyuisign" + i);
 				if (field) {
-					field.innerHTML = message.GetListItem(tempFields, SusinSN + "habyuisign" + i).innerHTML;
+					field.innerHTML = arrayReHaby.get(SusinSN + "habyuisign" + i);
 				}
 				
 				field = message.GetListItem(fields, SusinSN + "habyuipositon" + i);
 				if (field) {
-					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "habyuipositon" + i)));
+					setNodeText(field, arrayReHaby.get(SusinSN + "habyuipositon" + i));
 				}
 				
 				field = message.GetListItem(fields, SusinSN + "habyuija" + i);
 				if (field) {
-					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "habyuija" + i)));
+					setNodeText(field, arrayReHaby.get(SusinSN + "habyuija" + i));
 				}
 				
 				field = message.GetListItem(fields, SusinSN + "habyuidate" + i);
 				if (field) {
-					setNodeText(field, getNodeText(message.GetListItem(tempFields, SusinSN + "habyuidate" + i)));
+					setNodeText(field, arrayReHaby.get(SusinSN + "habyuidate" + i));
 				}
 			}
-
 		}
     } catch (e) {
 		alert("New_DrawAutoLine ERROR!!");
