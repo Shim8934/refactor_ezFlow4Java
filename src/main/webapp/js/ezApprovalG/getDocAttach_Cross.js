@@ -117,6 +117,9 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                     fileImage = "/images/pdf.png";
                 else if (strFileExt.indexOf(".ecm") != -1)
                     fileImage = "/images/ecm.png";
+                //확장자가 hwp인 파일을 첨부할 경우 아래아한글 아이콘이 나타나도록 수정. 2019-10-25 홍대표
+                else if (strFileExt.indexOf(".hwp") != -1)
+                	fileImage = "/images/hwp.png";
                 else
                     fileImage = "/images/attach-small.gif";
 

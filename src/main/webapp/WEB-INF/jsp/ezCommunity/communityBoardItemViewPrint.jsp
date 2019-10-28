@@ -246,7 +246,7 @@
 		    		<!-- 게시일&게시종료일 -->
 		    		<tr>
 		    			<th style="width:10%;"><spring:message code = 'ezCommunity.t209' /></th>
-					    <td id="PostDate" style="padding-right:15px;width:40%;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.writeDate }' /></div></td>
+					    <td id="PostDate" style="padding-right:15px;width:40%;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.writeDate.substring(0, 16)}' /></div></td>
 					    <th style="width:10%;"><spring:message code = 'ezCommunity.t931' /></th>
 					    
 					    <c:set var="t930"><spring:message code='ezCommunity.t930'/></c:set>
@@ -257,7 +257,7 @@
 		                 	</c:when>
 		                 	
 		                 	<c:otherwise>
-		                 		<td id="EndDate" style="padding-right:15px;width:40%;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.endDate }' /></div></td>
+		                 		<td id="EndDate" style="padding-right:15px;width:40%;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.endDate.split(" ")[0]}' /></div></td>
 		                 	</c:otherwise>
 		                 </c:choose>
 		    		</tr>
