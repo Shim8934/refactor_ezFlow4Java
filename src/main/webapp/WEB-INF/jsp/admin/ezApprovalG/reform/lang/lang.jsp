@@ -19,6 +19,7 @@
 		"attr.header": "<spring:message code='reform.attr.header' />",
 		"attr.footer": "<spring:message code='reform.attr.footer' />",
 		"attr.columncount": "<spring:message code='reform.attr.columncount' />",
-		"attr.tabindex": "<spring:message code='reform.attr.tabindex' />"
+		"attr.tabindex": "<spring:message code='reform.attr.tabindex' />",
+		"attr.format": "<spring:message code='reform.attr.format' />"
 	}
 </script>
