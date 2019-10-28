@@ -103,11 +103,14 @@
 				url : "/admin/ezEmail/delMultiDomain.do",
 				data : {delDomain:delDomain, saveDomainList:saveDomainList},
 				success : function(data) {
-					if (data == 0) {
+					var reasonCode = data.reasonCode;
+					var resultData = data.result;
+					
+					if (reasonCode == 0) {
 						alert("<spring:message code='ezEmail.multiDomain.ksa12' />");
 						get_domainList();
-					} else if (data == 1){
-						alert("<spring:message code='ezEmail.multiDomain.ksa26' />");
+					} else if (reasonCode == 1){
+						alert("<spring:message code='ezEmail.multiDomain.ksa26' />\n" + resultData);
 					} else {
 						alert("<spring:message code='ezEmail.lhm14' />");
 					}

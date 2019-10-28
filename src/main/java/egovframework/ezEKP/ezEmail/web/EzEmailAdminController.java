@@ -2612,7 +2612,7 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezEmail/delMultiDomain.do")
 	@ResponseBody
-	public int delMultiDomain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+	public JSONObject delMultiDomain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("delMultiDomain started.");
 		
 		LoginVO user = commonUtil.userInfo(loginCookie);
@@ -2625,16 +2625,21 @@ public class EzEmailAdminController {
 		List<OrganDeptVO> companylist = ezOrganAdminService.getCompanyList(user.getPrimary(), tenantId);
 		String propertyName = "MailInnerDomain";
 		
+		String resultCompany = "";
 		for(OrganDeptVO companyVO : companylist) {
 			String companyId = companyVO.getCn();
+			String companyName = companyVO.getDisplayName();
 			String innerDomainList = ezEmailService.getCompanyConfig(tenantId, companyId, propertyName);
-			logger.debug("companyId=" + companyId + ", innerDomainList=" + innerDomainList);
+			logger.debug("companyId=" + companyId + "companyName=" + companyName + ", innerDomainList=" + innerDomainList);
 			
 			String[] innerDomainArr = innerDomainList.split(";");
+			
 			for (String innerDomain : innerDomainArr) {
 				if (delDomain.equals(innerDomain)) {
-					logger.debug("delMultiDomain ended.");
-					return 1;
+					logger.debug("companyName=" + companyName);
+					reasonCode = 1;
+					resultCompany += resultCompany.equals("") ? companyName : ", " + companyName;
+					break;
 				}
 			}
 		}
@@ -2643,8 +2648,12 @@ public class EzEmailAdminController {
 			reasonCode = ezEmailService.delMultiDomain(tenantId, delDomain, saveDomainList);
 		}
 		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("reasonCode", reasonCode);
+		jsonObj.put("result", resultCompany);
+		
 		logger.debug("delMultiDomain ended.");
-		return reasonCode;
+		return jsonObj;
 	}
 	
 	/**
