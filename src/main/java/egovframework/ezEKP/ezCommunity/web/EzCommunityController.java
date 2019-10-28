@@ -1689,7 +1689,21 @@ public class EzCommunityController extends EgovFileMngUtil{
 					nextTitle = cBoardList.get(i+1).getTitle();
 				}
 			}
-		} 
+		}
+		
+		/* 2019-10-28 홍승비 - 기본 폰트 스타일값 적용 */
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "'";
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "font-size:" + fontSize + ";font-family:" + fontFamily + ";";
+			}
+		}
 		
 		model.addAttribute("bName", bName);
 		model.addAttribute("no", no);
@@ -1710,6 +1724,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("previousItemID", previousItemID);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strContentLocation", cBoardGet1.getFileName());
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		
 		logger.debug("bbsViewNew ended.");
 		
@@ -1797,6 +1812,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
+		/* 2019-10-28 홍승비 - 기본 폰트 스타일값 적용 */
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "'";
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+			}
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mode", mode);
 		model.addAttribute("no", no);
@@ -1815,6 +1844,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("level", level);
 		model.addAttribute("gref", ref);
 		model.addAttribute("dirPath", commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()));
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		
 		logger.debug("bbsEditNew ended.");
 		
