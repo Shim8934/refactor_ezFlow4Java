@@ -171,7 +171,7 @@
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
 		
-		                    if (pHasOpinionYN == "Y") {
+		                    /* if (pHasOpinionYN == "Y") {
 		                        if (pAprState == "006")
 		                            pInformationContent = "<spring:message code='ezApprovalG.t124'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		                        else
@@ -179,7 +179,7 @@
 		
 		                        Ans = OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                        return;
-		                    }
+		                    } */
 		                }
 		                else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
 		                    var len;
@@ -198,14 +198,14 @@
 		                        btnReturn_onclick();
 		                    }
 		                    else {
-		                        if (pHasOpinionYN == "Y") {
+		                        /* if (pHasOpinionYN == "Y") {
 		                            var pInformationContent;
 		                            var Ans;
 		
 		                            pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		                            Ans = OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                            return;
-		                        }
+		                        } */
 		                    }
 		                }
 		                else if (pDraftFlag == "HAPYUI") {
@@ -220,14 +220,14 @@
 		                    setAttachInfo(pDocID, "APR", lstAttachLink);
 		                    getDocInfo();
 		
-		                    if (pHasOpinionYN == "Y") {
+		                    /* if (pHasOpinionYN == "Y") {
 		                        var pInformationContent;
 		                        var Ans;
 		
 		                        pInformationContent = "<spring:message code='ezApprovalG.t126'/>" + "<br>" + "<spring:message code='ezApprovalG.t125'/>";
 		                        Ans = OpenInformationUI(pInformationContent, process_AfterOpen_Complete);
 		                        return;
-		                    }
+		                    } */
 		                }
 		                else {
 		                    SetBtnStateTrue();
@@ -1091,7 +1091,7 @@
 		        var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
 		        if (NodeList.length > 0) {
 		        	var opinionsTable = document.createElement("table");
-		        	$(opinionsTable).attr("style","font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px");
+		        	$(opinionsTable).attr("style","font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:100%;");
 		            for (i = NodeList.length - 1; i >= 0; i--) {
 		            	if(getNodeText(NodeList[i].childNodes[9])!='002'){
 		            		var opinionTr = '<tr style="height:25px"><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px;" bgcolor="#f8f8fa" align="center">' + getNodeText(NodeList[i].childNodes[0]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px" align="center">' + getNodeText(NodeList[i].childNodes[1]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px">' + getNodeText(NodeList[i].childNodes[6]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:30px" align="center">' + getNodeText(NodeList[i].childNodes[2]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:100px" align="center">' + getNodeText(NodeList[i].childNodes[3]) + '</td></tr>';
