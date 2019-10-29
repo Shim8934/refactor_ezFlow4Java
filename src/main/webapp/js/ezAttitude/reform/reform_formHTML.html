@@ -1,0 +1,183 @@
+<p>
+	<span id="__reform_date_picker_list" style="display: none;" value="[&quot;date1&quot;,&quot;date2&quot;]">
+		r
+	</span>
+	<span id="__reform_no_data_bound_control_list" style="display: none;" value="[&quot;reform-title&quot;,&quot;date1&quot;,&quot;date2&quot;,&quot;control10&quot;]">
+		r
+	</span>
+	<span id="__reform_control_list" style="display: none;" value="[&quot;reform-title&quot;,&quot;date1&quot;,&quot;date2&quot;,&quot;control10&quot;]">
+		r
+	</span>
+	<span id="__reform_next_auto_id" style="display: none;" value="13">
+		r
+	</span>
+	<span id="__reform_annual_data_length" style="display: none;" value="0">
+		r
+	</span>
+	<span id="__reform_datapicker_length" style="display: none;" value="2">
+		r
+	</span>
+</p>
+<p id="reform-style" style="display: none;" css="#reform-title {height:43px !important; padding-top: 10px;} #reform-date-title > p {padding-top: 5px;} ul li {font-size: 13px; font-family: '굴림';} [viewer-args-regexp] {  -webkit-user-select: none;    -moz-user-select: none;      -ms-user-select: none;        user-select: none;} #typeTable td {transition: all 0.1s;} #typeTable td:hover {background:#eee;}">
+	&nbsp;
+</p>
+<p id="reform-script" style="display: none;" code="var target = document.getElementById('reform-title-checkbox');var titleToggle = function(target) { tag.remove('title-checkbox'); query('#reform-title')[0].disabled = !target.checked; if (!target.checked) {  tag.addStyle('title-checkbox', '#reform-date-title{display:block !important;}'); }};titleToggle(target);target.addEventListener('change', function(event) { titleToggle(event.target);});query('[viewer-args-regexp]').forEach(function(element) { element.addEventListener('mousedown', function(event) {  event.preventDefault(); });})">
+	&nbsp;
+</p>
+<table width="700" height="240" style="border: 1px rgb(0, 0, 0); border-image: none; width: 650px; height: 247px; text-align: center; font-family: 굴림; font-size: 13px; border-collapse: collapse; -ms-word-break: break-all; overflow-wrap: break-word;">
+	<tbody>
+		<tr>
+			<td width="114" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 114px; vertical-align: middle;" bgcolor="#edf3f8">
+				<p>
+					총 휴 가 기 간
+				</p>
+			</td>
+			<td width="517" height="30" id="totalAnnualDateTD" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 517px; vertical-align: middle;" colspan="2">
+				<input id="totalAnnualDate" style="border: currentColor; border-image: none; width: 100%; height: 100%; text-align: center; color: black; letter-spacing: 0px; font-family: 굴림; font-size: 13px; box-sizing: border-box; background-color: transparent;"
+				 onkeyup="reform_onKeyUpHandler(event);" onclick="return reform_onClickHandler(event);" type="text" value="년  월  일 ~  년  월  일 [  일 ]" data-reform_flag="1">
+			</td>
+		</tr>
+		<tr id="annualDataTr_0">
+			<td width="114" id="annualDataTitleTd" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 114px; vertical-align: middle;" bgcolor="#edf3f8">
+				<p>
+					휴 가 기 간
+				</p>
+			</td>
+			<td width="517" height="30" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 517px; vertical-align: middle; position: relative;" colspan="2">
+				<div id="reform-title-checkbox-div" style="left: 0px; top: 2px; display: none; position: absolute; z-index: 2;">
+					<input id="reform-title-checkbox" style="margin: 0px 0px 0px 5px; vertical-align: middle; box-sizing: border-box;" onchange="" type="checkbox">
+					<label style="color: rgb(102, 102, 102); padding-right: 5px; font-family: 굴림; font-size: 11px; font-weight: bold;" for="reform-title-checkbox">
+						직접 입력
+					</label>
+				</div>
+				<div id="reform-date-title" style="top: 0px; width: 100%; height: 100%; vertical-align: middle; display: none; position: absolute; z-index: 1;">
+					<table style="width: 100%; height: 100%; border-collapse: collapse;">
+						<tbody>
+							<tr>
+								<td style="padding: 0px; border: currentColor; border-image: none;">
+									<p style="height: 80%; text-align: center; font-family: 굴림; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt; opacity: 1;">
+										<input id="date1" style="border: currentColor; border-image: none; width: 125px; height: 100%; text-align: center; color: transparent; font-family: 굴림; font-size: 13px; box-sizing: border-box; background-color: transparent;" onkeyup="reform_onKeyUpHandler(event);"
+										 onclick="return reform_onClickHandler(event);" type="text" readonly="readonly" value="" data-reform_flag="1" viewer-args-regexp="/(\d{4})-(\d{2})-(\d{2})/" viewer-args-build="{0} 년 {1} 월 {2} 일" data-reform_date_picker_flag="1">
+										<input id="date2" style="border: currentColor; border-image: none; width: 125px; height: 100%; text-align: center; color: transparent; font-family: 굴림; font-size: 13px; margin-left: 15px; box-sizing: border-box; background-color: transparent;"
+										 onkeyup="reform_onKeyUpHandler(event);" onclick="return reform_onClickHandler(event);" type="text" readonly="readonly" value="" data-reform_flag="1" viewer-args-regexp="/(\d{4})-(\d{2})-(\d{2})/" viewer-args-build="{0} 년 {1} 월 {2} 일" data-reform_date_picker_flag="1">
+										<span id="date-additional" style="visibility: hidden;" selectid="control10">
+											&nbsp;
+										</span>
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p style="height: 100%; padding-left: 20px; font-family: 굴림; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+					<input id="reform-title" style="border: currentColor; border-image: none; width: 83%; height: 100%; text-align: center; color: black; letter-spacing: 0px; padding-left: 7px; font-family: 굴림; font-size: 12px; box-sizing: border-box; background-color: transparent;"
+					 onkeyup="reform_onKeyUpHandler(event);" onclick="return reform_onClickHandler(event);" type="text" value="년  월  일 ~  년  월  일  [  일 ]" data-reform_flag="1" viewer-listener="setAdditional(&quot;date1&quot;,&quot;date2&quot;,&quot;control10&quot;,&quot;date-additional&quot;);"
+					 viewer-format="{0} ~ {1}" viewer-can-build="query('#reform-title-checkbox')[0].checked" viewer="date1,date2" data-reform_on_key_up="setDocTitle">
+					<select id="control10" style="left: 4px; top: 17px; width: 65px; overflow: auto; position: absolute; z-index: 2;" onclick="return reform_onClickHandler(event);" onchange="selectChange('control10');" size="0" data-reform_flag="1" data-reform_on_change="selectChange('control10')"></select>
+					<input id="control11" style="padding: 0px; top: 17px; width: 16px; height: 16px; right: 27px; position: absolute; z-index: 2;" onclick="return reform_onClickHandler(event);" type="button" value="-" data-reform_flag="1" data-reform_on_click="minusBtnClick('annualDataTr_0')">
+					<input id="control12" style="padding: 0px; top: 17px; width: 16px; height: 16px; right: 4px; position: absolute; z-index: 2;" onclick="return reform_onClickHandler(event);" type="button" value="+" data-reform_flag="1" data-reform_on_click="plusBtnClick('annualDataTr_0')">
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td width="114" height="79" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 114px; height: 79px; vertical-align: middle;" bgcolor="#edf3f8" rowspan="2" colspan="1">
+				<p>
+					연 차 휴 가
+				</p>
+				<p>
+					사 용 현 황
+				</p>
+			</td>
+			<td width="236" height="39" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 236px; vertical-align: middle;" colspan="1">
+				<p>
+					부여 연차휴가 (
+					<span id="total_annual_cnt">
+						&nbsp;
+					</span>
+					)일
+				</p>
+			</td>
+			<td width="283" height="39" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 283px; vertical-align: middle;" colspan="1">
+				<p>
+					금번 사용 연차 휴가 (
+					<span id="use_annual_cnt">
+						&nbsp;
+					</span>
+					)일
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td width="236" height="39" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 236px; vertical-align: middle;" colspan="1">
+				<p>
+					기 사용 연차 휴가 (
+					<span id="accum_annual_cnt">
+						&nbsp;
+					</span>
+					)일
+				</p>
+			</td>
+			<td width="284" height="39" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 284px; vertical-align: middle;" colspan="1">
+				<p>
+					잔여 연차 휴가 (
+					<span id="remain_annual_cnt">
+						&nbsp;
+					</span>
+					)일
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td width="173" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 173px; text-align: left; vertical-align: middle;" bgcolor="#edf3f8" rowspan="1" colspan="2">
+				<p style="text-align: left;">
+					&nbsp; 비상연락처1 (본인)
+				</p>
+			</td>
+			<td width="280" height="36" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 280px; vertical-align: middle;" colspan="1">
+				<input id="mobile" style="border: currentcolor; width: 100%; height: 100%; text-align: center; color: black; letter-spacing: 0px; font-family: 굴림; font-size: 13px; box-sizing: border-box; background-color: transparent;" onkeyup="reform_onKeyUpHandler(event);"
+				 onclick="return reform_onClickHandler(event);" type="text" value="" data-reform_flag="1" data-reform_on_key_up="mobileKeyUp('mobile');">
+				<p id="p_mobile" style="display: none;">
+					&nbsp;
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td width="173" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 173px; text-align: left; vertical-align: middle;" bgcolor="#edf3f8" rowspan="1" colspan="2">
+				<p style="text-align: left;">
+					&nbsp; 비상연락처2 (본인외 부모님, 배우자, 형재자매 등)
+				</p>
+			</td>
+			<td width="287" height="36" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 287px; vertical-align: middle;" colspan="1">
+				<input id="mobile2" style="border: currentColor; border-image: none; width: 100%; height: 100%; text-align: center; color: black; letter-spacing: 0px; font-family: 굴림; font-size: 13px; box-sizing: border-box; background-color: transparent;" onkeyup="reform_onKeyUpHandler(event);"
+				 onclick="return reform_onClickHandler(event);" type="text" value="" data-reform_flag="1" data-reform_on_key_up="mobileKeyUp('mobile2');">
+				<p id="p_mobile2" style="display: none;">
+					&nbsp;
+				</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<p>
+	&nbsp;
+</p>
+<p align="left" style="margin: 0px; padding: 7px 0px; font-family: 굴림; font-size: 9pt;">
+	<span style="color: rgb(0, 102, 204);">
+		<b>
+			기타사항
+		</b>
+	</span>
+</p>
+<table width="640" bordercolorlight="#000000" bordercolordark="#ffffff" style="border: 1px solid black; border-image: none; width: 650px; height: 384px; overflow: hidden; font-family: 굴림; font-size: 9pt; table-layout: fixed; Design_Time_Lock: true;" cellspacing="0"
+ cellpadding="0" kaoni="1">
+	<tbody>
+		<tr>
+			<td width="640" id="reform-editor" valign="top" style="overflow: auto;" ordertab="13">
+				<p>
+					&nbsp;
+				</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<input id="cursorStartPosition" type="hidden" value="0">
+<input id="cursorEndPosition" type="hidden" value="0">
