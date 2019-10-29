@@ -1714,6 +1714,31 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	@RequestMapping(value = "/admin/ezOrgan/createDefaultMailFolders.do", method = RequestMethod.POST, produces = "text/html;charset=utf-8")
+	@ResponseBody
+	public String createDefaultMailFolders(@CookieValue("loginCookie") String loginCookie, @RequestParam String userEmail, Locale locale) throws Exception{
+	    logger.debug("createDefaultMailFolders started. userEmail=" + userEmail + ",locale=" + locale);
+	    
+	    LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+	    
+        //관리자 권한 체크
+        if (userInfo == null) {
+        	return "EMAIL_ERROR";
+        }
+        
+        String result = "OK";	
+        
+		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
+		
+		if (useStandardFolderId != null && useStandardFolderId.equals("YES")) {							
+			createDefaultFolders(loginCookie, userEmail, locale);
+		}
+        
+		logger.debug("createDefaultMailFolders ended. result=" + result);
+		
+		return result;        
+	}
+	
 	/**
 	 * 조직도관리 사원정보 사진등록/변경 호출 함수
 	 */
