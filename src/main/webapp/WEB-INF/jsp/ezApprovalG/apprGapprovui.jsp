@@ -1108,7 +1108,7 @@
 		    /**
 		    * '반송'
 		    */
-		    function btnReject_option_Complete(ret) {
+		    function btnReject_option_Complete(ret) { 
 		        DivPopUpHidden();
 		        if (ret != "cancel") {
 		        	pHasOpinionYN = "Y";
@@ -1130,7 +1130,19 @@
 		            redrawMappingSign();
 		            
 		            signInfo = putBansongSign(); // '서명' 관련 정보 출력
-
+					
+		            var objXML = createXmlDom();
+			        objXML = loadXMLString(ret);
+			        
+			        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+			        if (NodeList.length != 0) {
+			            pHasOpinionYN = "Y";
+			        } else {
+			            pHasOpinionYN = "N";
+			            ret = "cancel";
+			        }
+			        makeOpinionList(objXML);
+			        
 		            var RtnVal = SaveApproveInfo("2");
 		            if (RtnVal != "TRUE") {
 		            	UndoSignInfo(signInfo);
@@ -1166,6 +1178,11 @@
 	    		        	attitude_annual_conn(pDocID);
 	    		        }
 		            }
+		            
+		            objXML = createXmlDom();
+			        objXML = loadXMLString(ret);
+			        makeOpinionList4Bansong(objXML);
+			        
 		        } else if (ret == "cancel") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
 		            OpenAlertUI(pAlertContent);

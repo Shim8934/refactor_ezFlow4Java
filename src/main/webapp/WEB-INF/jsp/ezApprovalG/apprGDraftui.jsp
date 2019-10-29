@@ -767,11 +767,16 @@
 			            /* 2020-03-31 홍승비 - 재기안 시 반송의견 유지여부 컨피그 추가 */
 			            if (pDraftFlag == "REDRAFT" && useRedraftOpinionKeep != "YES") {
 			                delOpinionInfo();
+			            	delOpinionsExceptDrafters();
 			            }
 
 			            if (nonElecRec != "Y" && (LastSignSN == 1 || DraftLastFlag)) {
-							var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
-							OpenInformationUI(pInformationContent, check_btnSendDraft4);
+				            if (LastSignSN == 1 || DraftLastFlag) {
+				                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
+				                OpenInformationUI(pInformationContent, check_btnSendDraft4);
+				            }
+				            else
+				                CheckPassWord();
 			            } else {
 			                CheckPassWord();
 			            }
@@ -782,7 +787,22 @@
 		            alert("btnSendDraft_onclick()" + e.description);
 		        }
 		    }
-		
+			
+		    function delOpinionsExceptDrafters() {
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/delOpinionsExceptDrafters.do",
+		    		data : {
+		    			docID : pDocID,
+		    			userID : pUserID
+		    		},
+		    		success: function(result) {
+		    			
+		    		}
+		    	});
+		    }
 		    function check_ReUsed(ans) {
 		    	DivPopUpHidden();
 		    	if (ans) {

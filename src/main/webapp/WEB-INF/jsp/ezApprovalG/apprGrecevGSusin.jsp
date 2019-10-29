@@ -1060,8 +1060,8 @@
 
 		        	var Rtnxml = createXmlDom();
 		            Rtnxml = loadXMLString(ret);
-		            makeOpinionList(Rtnxml);		            
-		            SaveFile();
+		            makeOpinionList4Bansong(Rtnxml);		            
+		            // SaveFile();
 		
 		            if (temppDocSN != "")
 		                hesongok = setCabinetHeSong(temppDocSN);
@@ -1072,6 +1072,17 @@
 		            }
 		        }
 		    }
+		    
+		 	// 반송/회송용으로 추가
+		    function makeOpinionList4Bansong(OpinionXML) { 
+		    	var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "opinions");
+		        if (!field) return;
+
+		        field.innerHTML = " ";
+		    	SaveFile();   
+		    }
+		 
 		    function makeOpinionList(OpinionXML) {
 		    	var fields = message.GetFieldsList();
 		        var field = message.GetListItem(fields, "opinions");

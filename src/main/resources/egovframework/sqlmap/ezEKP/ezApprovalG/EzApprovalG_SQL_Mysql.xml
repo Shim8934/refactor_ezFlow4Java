@@ -32036,4 +32036,19 @@
 		AND
 			A.TENANT_ID = #tenantId#
 	</select>
+	
+	<delete id="EzApprovalG.delOpinionsExceptDrafters" parameterClass="map">
+		DELETE 
+			FROM tbl_apropinioninfo
+		WHERE 
+			`DOCID` = #docID#
+		AND
+			`TENANT_ID` = #tenantID#
+		AND 
+			`COMPANYID` = #companyID#
+		AND 
+			`USERID` != #userID#
+		AND 
+			`OPINIONGB` != '001'
+	</delete>
 </sqlMap>

@@ -9451,6 +9451,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "json";
 	}
 	
+	@RequestMapping(value = "/ezApprovalG/delOpinionsExceptDrafters", method = RequestMethod.POST)
+	public String delOpinionsExceptDrafters(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("delOpinionsExceptDrafters started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String userID = request.getParameter("userID");
+		
+		ezApprovalGService.delOpinionsExceptDrafters(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("delOpinionsExceptDrafters ended.");
+		
+		return "json";
+	}
+	
 	/**
 	 * 전자결재G 재배부 후 재배부의견을 제외한 모든의견 삭제
 	 */

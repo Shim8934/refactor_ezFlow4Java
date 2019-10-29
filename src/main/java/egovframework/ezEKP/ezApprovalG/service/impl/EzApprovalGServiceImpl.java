@@ -16796,6 +16796,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							ezApprovalGDAO.insertDocSendAprAttachInfo(map);
 							ezApprovalGDAO.insertDocSendAprDocAttachInfo(map);
 							
+							// 원기안부서의 의견을 수신문서로 복사 2019-10-29 임민석
+							ezApprovalGDAO.copyOpinionsFromOrgDoc(map);
+							
 							String susinSN = ezApprovalGDAO.getReceiptProcessInfoRecS(map3);
 							
 							if (susinSN == null) {
@@ -30895,5 +30898,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("shareList ended.");
 		return ezApprovalGDAO.getShareList(map);
+	}
+
+	@Override
+	public void delOpinionsExceptDrafters(String docID, String userID, String companyID, int tenantId) throws Exception {
+		logger.debug("delOpinionsExceptDrafters started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		
+		ezApprovalGDAO.delOpinionsExceptDrafters(map);
+		ezApprovalGDAO.updateHasOpinionYN(map);
+		
+		logger.debug("delOpinionsExceptDrafters ended");
 	}
 }
