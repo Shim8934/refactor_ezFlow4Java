@@ -1060,7 +1060,8 @@
 
 		        	var Rtnxml = createXmlDom();
 		            Rtnxml = loadXMLString(ret);
-		            makeOpinionList4Bansong(Rtnxml);		            
+		            makeOpinionList4Hesong(Rtnxml);
+		            // delOpinionsExceptHesong();
 		            // SaveFile();
 		
 		            if (temppDocSN != "")
@@ -1073,14 +1074,28 @@
 		        }
 		    }
 		    
-		 	// 반송/회송용으로 추가
-		    function makeOpinionList4Bansong(OpinionXML) { 
+		    function delOpinionsExceptHesong() {
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezApprovalG/delOpinionsExceptHesong.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(result) {
+		    			
+		    		}
+		    	});
+		    }
+		    
+		    function makeOpinionList4Hesong(OpinionXML) {
 		    	var fields = message.GetFieldsList();
 		        var field = message.GetListItem(fields, "opinions");
 		        if (!field) return;
 
 		        field.innerHTML = " ";
-		    	SaveFile();   
+		    	SaveFile();
 		    }
 		 
 		    function makeOpinionList(OpinionXML) {

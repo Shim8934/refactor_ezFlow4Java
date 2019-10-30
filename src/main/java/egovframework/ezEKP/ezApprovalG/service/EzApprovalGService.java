@@ -691,6 +691,8 @@ public interface EzApprovalGService {
 	public List<ApprGFormVO> getFormContainer(int tenantId, String companyId, String deptId);
 
 	public List<KEDSharedUserInfo> getShareList(String userId, String deptId, String shareType, int tenantId) throws Exception;
+	
+	public void delOpinionsExceptHesong(String docID, String companyID, int tenantId) throws Exception;
 
 	public void delOpinionsExceptDrafters(String docID, String userID, String companyID, int tenantId) throws Exception;
 }

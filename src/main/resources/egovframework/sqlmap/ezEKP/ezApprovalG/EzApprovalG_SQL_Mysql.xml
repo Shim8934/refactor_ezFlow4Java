@@ -27710,8 +27710,6 @@
         AND
         	TENANT_ID = #v_TENANTID#
         AND
-        	COMPANYID = #companyID#
-        AND
         <![CDATA[
         	OPINIONGB <> '002'
 		]]>
@@ -28400,8 +28398,6 @@
 				TBL_APROPINIONINFO
 			WHERE
 				tenant_id = #tenantID#
-			AND
-				companyid = #companyID#
 			AND
 				docid= #docID#
 			AND
@@ -32037,7 +32033,7 @@
 			A.TENANT_ID = #tenantId#
 	</select>
 	
-	<delete id="EzApprovalG.delOpinionsExceptDrafters" parameterClass="map">
+	<delete id="EzApprovalG.delOpinionsExceptHesong" parameterClass="map">
 		DELETE 
 			FROM tbl_apropinioninfo
 		WHERE 
@@ -32045,7 +32041,18 @@
 		AND
 			`TENANT_ID` = #tenantID#
 		AND 
-			`COMPANYID` = #companyID#
+			`OPINIONGB` != '004'
+		AND 
+			OPINIONGB != '002'
+	</delete>
+	
+	<delete id="EzApprovalG.delOpinionsExceptDrafters" parameterClass="map">
+		DELETE 
+			FROM tbl_apropinioninfo
+		WHERE 
+			`DOCID` = #docID#
+		AND
+			`TENANT_ID` = #tenantID#
 		AND 
 			`USERID` != #userID#
 		AND 

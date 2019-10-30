@@ -3480,6 +3480,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		delete("EzApprovalG.deleteRejectOrgDocOpinions",map);
 	}
 
+	public void delOpinionsExceptHesong(Map<String, Object> map) {
+		delete("EzApprovalG.delOpinionsExceptHesong", map);
+	}
+	
 	public void delOpinionsExceptDrafters(Map<String, Object> map) {
 		delete("EzApprovalG.delOpinionsExceptDrafters", map);
 	}

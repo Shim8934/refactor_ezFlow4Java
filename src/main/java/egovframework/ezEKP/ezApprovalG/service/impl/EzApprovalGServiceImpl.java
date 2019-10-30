@@ -30901,6 +30901,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public void delOpinionsExceptHesong(String docID, String companyID, int tenantId) throws Exception {
+		logger.debug("delOpinionsExceptHesong started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		
+		ezApprovalGDAO.delOpinionsExceptHesong(map);
+		ezApprovalGDAO.updateHasOpinionYN(map);
+		logger.debug("delOpinionsExceptHesong ended");
+	}
+	
+	@Override
 	public void delOpinionsExceptDrafters(String docID, String userID, String companyID, int tenantId) throws Exception {
 		logger.debug("delOpinionsExceptDrafters started");
 		Map<String, Object> map = new HashMap<String, Object>();
