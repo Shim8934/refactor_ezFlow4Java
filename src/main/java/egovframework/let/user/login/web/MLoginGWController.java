@@ -730,7 +730,7 @@ public class MLoginGWController {
     		
     		// 부서 체크
     		if (!(accessDeptList == null || accessDeptList.size() == 0)) {
-    			for (int i = 0; i < accessIdList.size(); i++) {
+    			for (int i = 0; i < accessDeptList.size(); i++) {
     				String getListDept = accessDeptList.get(i).getCn();
     				if (deptID.equals(getListDept) || topID.equals(getListDept)) {
     					LOGGER.debug("dept checked");
