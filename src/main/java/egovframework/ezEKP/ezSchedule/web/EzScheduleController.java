@@ -452,11 +452,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			if(dList != null && dList.size()>0){
 				for (int i = 0; i < dList.size(); i++) {
-					if(tList == null || tList.size()<=0){
 						if (i == 0) {
 							pidListSub += ",";
 						}	
-					}
 					ScheduleDeptVO data = dList.get(i);			
 					pidListSub += "\'" + data.getDeptId()+ "\',";				
 				}				

@@ -72,6 +72,8 @@
             iframeStyle += "TABLE TD    { text-indent: 0px }";
             iframeStyle += "BLOCKQUOTE  { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          
+            //투표 내용이 언어에 따라 폰트가 변하도록 수정. 2019-10-25 홍대표.
+            iframeStyle += "<link rel='stylesheet' href=\"${util.addVer('ezPoll.i1', 'msg')}\" type='text/css'>";
             
     		window.onunload = function() {
     		    if (stompClient !== null) {

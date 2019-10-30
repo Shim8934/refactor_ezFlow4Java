@@ -225,12 +225,12 @@
 											SELECT 
 												docid 
 											FROM
-												tbl_aprlineinfo
+												TBL_ENDAPRLINEINFO
 											WHERE
-												APRMEMBERID = #v_USERID#
-											AND TENANT_ID = #v_TENANTID# 
-											AND COMPANYID = #companyID#
-							                AND APRMEMBERDEPTID = #deptID#
+												aprmemberid = #v_USERID#
+											AND tenant_id = #v_TENANTID#
+											AND companyid = #companyID#
+							                AND aprmemberdeptid = #deptID#
 											)	
 										</isEqual>
 					      				<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
@@ -330,16 +330,16 @@
 													)
 													  AND docid in (
 														SELECT 
-															docid 
+															docid
 														FROM
-															tbl_aprlineinfo
+															TBL_ENDAPRLINEINFO
 														WHERE
-															APRMEMBERID = #proxyList[].id#
-														AND TENANT_ID = #v_TENANTID# 
-														AND COMPANYID = #companyID#
-										                AND APRMEMBERDEPTID = #proxyList[].dept#
-														)	
-										]]>
+															aprmemberid = #v_USERID#
+														AND tenant_id = #v_TENANTID#
+														AND companyid = #companyID#
+														AND aprmemberdeptid = #deptID#
+														)
+											]]>
 										<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		  AND 
 							      		 	$v_SPSUBQUERY$
@@ -1523,12 +1523,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -3934,12 +3934,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -10488,12 +10488,12 @@
 						SELECT 
 							docid 
 						FROM
-							tbl_aprlineinfo
+							TBL_ENDAPRLINEINFO
 						WHERE
-							APRMEMBERID = #v_USERID#
-						AND TENANT_ID = #v_TENANTID# 
-						AND COMPANYID = #companyID#
-		                AND APRMEMBERDEPTID = #v_DEPTID#
+							aprmemberid = #v_USERID#
+						AND tenant_id = #v_TENANTID#
+						AND companyid = #companyID#
+		                AND aprmemberdeptid = #v_DEPTID#
 						)	
    			]]>
 			<!-- 부재자설정한 유저의 결재할문서 리스트 -->
@@ -10544,7 +10544,7 @@
 					tbl_aprlineinfo
 				WHERE
 					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
+				AND TENANT_ID = #v_TENANTID#
 				AND COMPANYID = #companyID#
                 AND APRMEMBERDEPTID = #proxyList[].dept#
 				)	
@@ -10590,12 +10590,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -12342,7 +12342,7 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
 								APRMEMBERID = #v_USERID#
 							AND TENANT_ID = #v_TENANTID# 
@@ -12445,12 +12445,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -14991,12 +14991,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -15596,12 +15596,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -28596,12 +28596,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
