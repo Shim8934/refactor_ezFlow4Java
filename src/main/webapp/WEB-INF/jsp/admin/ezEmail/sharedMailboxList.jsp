@@ -421,7 +421,7 @@
 		        listview.LoadFromID("sharedMailbox");
 		        
 		        if (listview.GetSelectedRows().length == 0) {
-					alert("<spring:message code='ezEmail.multiDomain.ksa18' />");
+					alert("<spring:message code='ezEmail.sharedMailbox20' />");
 					return;
 				}
 
