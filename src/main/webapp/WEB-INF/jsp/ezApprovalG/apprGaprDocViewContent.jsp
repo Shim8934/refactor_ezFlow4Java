@@ -82,6 +82,16 @@
 	                if (!inputRows.item(i).disabled)
 	                    inputRows.item(i).disabled = true;
 	            }
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (!element.disabled) {
+						element.disabled = true;
+					}
+				}
 	            return HtmlObject;
 	        }
 	        function Set_EditorContentURL(url) {

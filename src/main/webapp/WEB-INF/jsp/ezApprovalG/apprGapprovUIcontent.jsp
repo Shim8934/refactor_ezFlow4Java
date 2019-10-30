@@ -243,6 +243,12 @@
 	                    }
 	                }
 	            } catch (e) { }
+	            
+	            validateAllTextArea(obj);
+                var textAreaElements = obj.getElementsByTagName("textarea");
+                for (i = 0; i < textAreaElements.length; i++) {
+                	textAreaElements.item(i).oninput = onInputTextarea;
+                }
 	        }
 	        function Set_EditorContentURL(url) {
 	            try {
@@ -308,9 +314,7 @@
  	                    BodyTagsDisabled(document.getElementById('div_Content'));
  	                    parent.FieldsAvailable();
  	                    
- 						<c:if test="${isReform}">
- 							validateAllTextArea(document.getElementById('div_Content'));
- 						</c:if>
+ 						validateAllTextArea(document.getElementById('div_Content'));
 	                }
 	            } catch (e)
 	            { }
@@ -338,6 +342,12 @@
 							} else if (CheckRows.item(i).type == "radio") {
 								CheckRows.item(i).onchange = RadioOnClick;
 							}
+	                    }
+	                    
+	                    validateAllTextArea(document.getElementById('div_Content'));
+	                    var textAreaElements = document.getElementById('div_Content').getElementsByTagName("textarea");
+	                    for (i = 0; i < textAreaElements.length; i++) {
+	                    	textAreaElements.item(i).oninput = onInputTextarea;
 	                    }
 	                    
 	                    var Body_innerHTML = "";
@@ -441,9 +451,7 @@
 	                     BodyTagsDisabled(document.getElementById('div_Content'));
 	                     document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
 	                     
-	                     <c:if test="${isReform}">
-		                     validateAllTextArea(document.getElementById('div_Content'));
-	                     </c:if>
+		                 validateAllTextArea(document.getElementById('div_Content'));
 	                }
 	            }
 	            catch (e) {
@@ -785,7 +793,7 @@
 	            } catch (e)
 	            { return ""; }
 	        }
-	    </script>
+		</script>
 	</head>
 	<body>
 	    <div id="div_Content"></div>

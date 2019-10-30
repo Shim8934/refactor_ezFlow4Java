@@ -258,6 +258,11 @@
 	                        TDRows.item(i).appendChild(Div_);
 	                    }
 	                }
+	                
+                    var textAreaElements = obj.getElementsByTagName("textarea");
+                    for (i = 0; i < textAreaElements.length; i++) {
+                    	textAreaElements.item(i).oninput = onInputTextarea;
+                    }
 	            } catch (e) { }
 	        }
 	        function Set_EditorContentURL(url) {
@@ -361,6 +366,10 @@
 									CheckRows.item(i).onchange = RadioOnClick;
 								}
 	                        }
+		                    var textAreaElements = document.getElementById('div_Content').getElementsByTagName("textarea");
+		                    for (i = 0; i < textAreaElements.length; i++) {
+		                    	textAreaElements.item(i).oninput = onInputTextarea;
+		                    }
 	                        if (document.getElementById("body") != null) {
 	                        	// class가 FIELD를 포함한 두 개 이상일 때도 조건문에 포함되어야 함 2019-05-14 임민석
 	                        	if (document.getElementById("body").getAttribute("class").indexOf("FIELD") != -1) {
@@ -529,7 +538,6 @@
 	            } catch (e)
 	            { return ""; }
 	        }
-	
 	        function GetFieldsList() {
 	            try {
 	                var FieldsList = new Array();
