@@ -1829,7 +1829,7 @@ public class EzEmailAdminController {
 				return "json";
 			}
 			
-			if (!setDomain.isEmpty()) { 
+			if (!setDomain.isEmpty() && !setDomain.equals(domain)) { 
 				String newMailAddr = shareId + "@" + setDomain;				
 				String returnValue = ezEmailService.checkIndividualAlias(newMailAddr, tenantId);
 				
@@ -1942,7 +1942,7 @@ public class EzEmailAdminController {
 			logger.debug("companyDomainName=" + companyDomainName);
 			logger.debug("setDomain=" + setDomain);
 
-			if (!setDomain.isEmpty()) {
+			if (!setDomain.isEmpty() && !setDomain.equals(domain)) {
 				String newMailAddr = shareId + "@" + setDomain;
 				
 				List<String> mailList = new ArrayList<>();
