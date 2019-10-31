@@ -158,15 +158,41 @@
 											<isEqual property="v_LISTTYPE" compareValue="1">
 											  AND docid in (
 												SELECT 
-													docid 
+													docid
 												FROM
-													tbl_aprlineinfo
+													TBL_APRLINEINFO
 												WHERE
 													APRMEMBERID = #v_USERID#
-												AND TENANT_ID = #v_TENANTID# 
-												AND COMPANYID = #companyID#
-								                AND APRMEMBERDEPTID = #deptID#
-												)	
+												AND
+													(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+												AND
+													tenant_id = #v_TENANTID#
+												AND
+													companyid IN (
+                                                        SELECT
+                                                            extensionattribute2
+                                                        FROM
+                                                            TBL_DEPTMASTER
+                                                        INNER JOIN
+                                                            TBL_ADDJOBMASTER
+                                                        ON
+                                                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                                        AND
+                                                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                                        WHERE
+                                                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                                        AND
+                                                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                                                        UNION ALL
+                                                        SELECT
+                                                            physicaldeliveryofficename
+                                                        FROM
+                                                            TBL_USERMASTER
+                                                        WHERE
+                                                            cn = #v_USERID#
+                                                        AND
+                                                            tenant_id = #v_TENANTID#)
+												)
 											</isEqual>
 					      				  <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		  AND 
@@ -221,20 +247,53 @@
 													)
 					      					]]>
 										<isEqual property="v_LISTTYPE" compareValue="1">
-										  AND docid in (
-											SELECT 
-												docid 
-											FROM
-												TBL_ENDAPRLINEINFO
-											WHERE
-												aprmemberid = #v_USERID#
-											AND tenant_id = #v_TENANTID#
-											AND companyid = #companyID#
-							                AND aprmemberdeptid = #deptID#
-											)	
+											<![CDATA[
+										  	AND docid in
+										  		(SELECT
+													docid
+												FROM
+													TBL_ENDAPRLINEINFO
+												WHERE
+													aprmemberid = #v_USERID#
+												AND
+													aprstate <> '002'
+												AND
+													aprstate <> '005'
+												AND
+													aprstate = '000'
+												AND
+													tenant_id = #v_TENANTID#
+												AND
+													companyid IN(
+                                                        SELECT
+                                                            extensionattribute2
+                                                        FROM
+                                                            TBL_DEPTMASTER
+                                                        INNER JOIN
+                                                            TBL_ADDJOBMASTER
+                                                        ON
+                                                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                                        AND
+                                                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                                        WHERE
+                                                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                                        AND
+                                                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                                                        UNION ALL
+                                                        SELECT
+                                                            physicaldeliveryofficename
+                                                        FROM
+                                                            TBL_USERMASTER
+                                                        WHERE
+                                                            cn = #v_USERID#
+                                                        AND
+                                                            tenant_id = #v_TENANTID#
+													)
+                                                )
+											]]>
 										</isEqual>
 					      				<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
-							      		  AND 
+							      		  AND
 							      		 	$v_SPSUBQUERY$
 				      					</isGreaterThan>
 				      					<!-- 부재자설정한 유저의 결재할문서 리스트 -->
@@ -283,12 +342,41 @@
 											SELECT 
 												docid 
 											FROM
-												tbl_aprlineinfo
+												TBL_APRLINEINFO
 											WHERE
-												APRMEMBERID = #proxyList[].id#
-											AND TENANT_ID = #v_TENANTID# 
-											AND COMPANYID = #companyID#
-							                AND APRMEMBERDEPTID = #proxyList[].dept#
+												aprmemberid = #proxyList[].id#
+											AND
+												aprmemberdeptid = #proxyList[].dept#
+											AND
+												(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+											AND
+												tenant_id = #v_TENANTID#
+											AND
+												COMPANYID IN (
+                                                    SELECT
+                                                        EXTENSIONATTRIBUTE2
+                                                    FROM
+                                                        TBL_DEPTMASTER
+                                                    INNER JOIN
+                                                        TBL_ADDJOBMASTER
+                                                    ON
+                                                        (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+                                                        AND
+                                                        TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+                                                    WHERE
+                                                        TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+                                                    AND
+                                                        TBL_ADDJOBMASTER.CN = #v_PUSERID#
+                                                    UNION ALL
+                                                    SELECT
+                                                        PHYSICALDELIVERYOFFICENAME
+                                                    FROM
+                                                        TBL_USERMASTER
+                                                    WHERE
+                                                        CN = #v_PUSERID#
+                                                    AND
+                                                        TENANT_ID = #v_TENANTID#
+                                                    )
 											)	
 										UNION ALL
 										
@@ -328,17 +416,51 @@
 													AND
 														TENANT_ID = #v_TENANTID# 
 													)
-													  AND docid in (
-														SELECT 
-															docid
-														FROM
-															TBL_ENDAPRLINEINFO
-														WHERE
-															aprmemberid = #v_USERID#
-														AND tenant_id = #v_TENANTID#
-														AND companyid = #companyID#
-														AND aprmemberdeptid = #deptID#
-														)
+
+										AND docid in (
+											SELECT
+												docid
+											FROM
+												TBL_ENDAPRLINEINFO
+											WHERE
+												aprmemberid = #proxyList[].id#
+											AND
+												aprmemberdeptid = #proxyList[].dept#
+											AND
+												aprstate <> '002'
+											AND
+												aprstate <> '005'
+											AND
+												aprstate = '000'
+											AND
+												tenant_id = #v_TENANTID#
+											AND
+												COMPANYID IN (
+                                                    SELECT
+                                                        EXTENSIONATTRIBUTE2
+                                                    FROM
+                                                        TBL_DEPTMASTER
+                                                    INNER JOIN
+                                                        TBL_ADDJOBMASTER
+                                                    ON
+                                                        (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+                                                        AND
+                                                        TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+                                                    WHERE
+                                                        TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+                                                    AND
+                                                        TBL_ADDJOBMASTER.CN = #v_PUSERID#
+                                                    UNION ALL
+                                                    SELECT
+                                                        PHYSICALDELIVERYOFFICENAME
+                                                    FROM
+                                                        TBL_USERMASTER
+                                                    WHERE
+                                                        CN = #v_PUSERID#
+                                                    AND
+                                                        TENANT_ID = #v_TENANTID#
+                                                    )
+											)
 											]]>
 										<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		  AND 
@@ -599,12 +721,39 @@
 												SELECT 
 													docid 
 												FROM
-													tbl_aprlineinfo
+													TBL_APRLINEINFO
 												WHERE
-													APRMEMBERID = #v_USERID#
-												AND TENANT_ID = #v_TENANTID# 
-												AND COMPANYID = #companyID#
-								                AND APRMEMBERDEPTID = #deptID#
+													aprmemberid = #v_USERID#
+												AND
+													(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+												AND
+													tenant_id = #v_TENANTID#
+												AND
+                                                    companyid IN(
+                                                        SELECT
+                                                            extensionattribute2
+                                                        FROM
+                                                            TBL_DEPTMASTER
+                                                        INNER JOIN
+                                                            TBL_ADDJOBMASTER
+                                                        ON
+                                                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                                        AND
+                                                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                                        WHERE
+                                                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                                        AND
+                                                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                                                        UNION ALL
+                                                        SELECT
+                                                            physicaldeliveryofficename
+                                                        FROM
+                                                            TBL_USERMASTER
+                                                        WHERE
+                                                            cn = #v_USERID#
+                                                        AND
+                                                            tenant_id = #v_TENANTID#
+                                                    )
 												)	
 											</isEqual>
            
@@ -1438,13 +1587,42 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
-				)	
+					aprmemberid = #proxyList[].id#
+				AND
+				    aprmemberdeptid = #proxyList[].dept#
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+					tenant_id = #v_TENANTID#
+				AND
+				 	COMPANYID IN (
+						SELECT
+							EXTENSIONATTRIBUTE2
+						FROM
+							TBL_DEPTMASTER
+						INNER JOIN
+							TBL_ADDJOBMASTER
+						ON
+							(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+							AND
+							TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+						WHERE
+							TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+						AND
+							TBL_ADDJOBMASTER.CN = #v_PUSERID#
+						UNION ALL
+						SELECT
+							PHYSICALDELIVERYOFFICENAME
+						FROM
+							TBL_USERMASTER
+						WHERE
+							CN = #v_PUSERID#
+						AND
+							TENANT_ID = #v_TENANTID#
+						)
+				)
 			UNION ALL
 			
 			SELECT 
@@ -1526,10 +1704,43 @@
 								TBL_ENDAPRLINEINFO
 							WHERE
 								aprmemberid = #proxyList[].id#
-							AND tenant_id = #v_TENANTID#
-							AND companyid = #companyID#
-			                AND aprmemberdeptid = #proxyList[].dept#
-							)	
+							AND
+							    aprmemberdeptid = #proxyList[].dept#
+							AND
+								aprstate <> '002'
+							AND
+								aprstate <> '005'
+							AND
+								aprstate = '000'
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                                    SELECT
+                                        extensionattribute2
+                                    FROM
+                                        TBL_DEPTMASTER
+                                    INNER JOIN
+                                        TBL_ADDJOBMASTER
+                                    ON
+                                        (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                    AND
+                                        TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                    WHERE
+                                        TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                    AND
+                                        TBL_ADDJOBMASTER.cn = #v_USERID#
+                                    UNION ALL
+                                    SELECT
+                                        physicaldeliveryofficename
+                                    FROM
+                                        TBL_USERMASTER
+                                    WHERE
+                                        cn = #v_USERID#
+                                    AND
+                                        tenant_id = #v_TENANTID#
+                                )
+							)
 			]]>
 			</iterate>
 			</isNotEmpty>
@@ -3904,17 +4115,70 @@
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#
-			  AND docid in (
+				companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+			AND docid in (
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
+					aprmemberid = #proxyList[].id#
+				AND
+                 	aprmemberdeptid = #proxyList[].dept
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+                AND
+					tenant_id = #v_TENANTID#
+                AND
+                    companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 				)	
 			UNION ALL
 			
@@ -3929,18 +4193,76 @@
 			AND
 				TENANT_ID = #v_TENANTID#
 			AND
-				COMPANYID = #companyID#
-						  AND docid in (
-							SELECT 
-								docid 
-							FROM
-								TBL_ENDAPRLINEINFO
-							WHERE
-								aprmemberid = #proxyList[].id#
-							AND tenant_id = #v_TENANTID#
-							AND companyid = #companyID#
-			                AND aprmemberdeptid = #proxyList[].dept#
-							)	
+				companyid IN(
+                    SELECT
+                        extensionattribute2
+                    FROM
+                        TBL_DEPTMASTER
+                    INNER JOIN
+                        TBL_ADDJOBMASTER
+                    ON
+                        (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                    AND
+                        TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                    WHERE
+                        TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                    AND
+                        TBL_ADDJOBMASTER.cn = #v_USERID#
+                    UNION ALL
+                    SELECT
+                        physicaldeliveryofficename
+                    FROM
+                        TBL_USERMASTER
+                    WHERE
+                        cn = #v_USERID#
+                    AND
+                        tenant_id = #v_TENANTID#
+                )
+            AND docid in (
+                SELECT
+                    docid
+                FROM
+                    TBL_ENDAPRLINEINFO
+                WHERE
+                    aprmemberid = #proxyList[].id#
+                AND
+                    aprmemberdeptid = #proxyList[].dept#
+                AND
+                    aprstate <> '002'
+                AND
+                    aprstate <> '005'
+                AND
+                    aprstate = '000'
+                AND
+                    tenant_id = #v_TENANTID#
+                AND
+                   companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+
+                )
 			]]>
 			</iterate>
 			</isNotEmpty>
@@ -10435,12 +10757,39 @@
 					SELECT 
 						docid 
 					FROM
-						tbl_aprlineinfo
+						TBL_APRLINEINFO
 					WHERE
-						APRMEMBERID = #v_USERID#
-					AND TENANT_ID = #v_TENANTID# 
-					AND COMPANYID = #companyID#
-	                AND APRMEMBERDEPTID = #v_DEPTID#
+						aprmemberid = #v_USERID#
+					AND
+						(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+					AND
+					 	tenant_id = #v_TENANTID#
+					AND
+					 	companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 					)	
 			   		UNION ALL
 			   			
@@ -10491,9 +10840,40 @@
 							TBL_ENDAPRLINEINFO
 						WHERE
 							aprmemberid = #v_USERID#
-						AND tenant_id = #v_TENANTID#
-						AND companyid = #companyID#
-		                AND aprmemberdeptid = #v_DEPTID#
+						AND
+							aprstate <> '002'
+						AND
+							aprstate <> '005'
+						AND
+							aprstate = '000'
+						AND
+							tenant_id = #v_TENANTID#
+						AND
+						 	companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 						)	
    			]]>
 			<!-- 부재자설정한 유저의 결재할문서 리스트 -->
@@ -10541,12 +10921,41 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID#
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
+					aprmemberid = #proxyList[].id#
+				AND
+					aprmemberdeptid = #proxyList[].dept#
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+				 	tenant_id = #v_TENANTID#
+				AND
+					companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 				)	
 			UNION ALL
 			
@@ -10593,9 +11002,42 @@
 								TBL_ENDAPRLINEINFO
 							WHERE
 								aprmemberid = #proxyList[].id#
-							AND tenant_id = #v_TENANTID#
-							AND companyid = #companyID#
-			                AND aprmemberdeptid = #proxyList[].dept#
+							AND
+								aprstate <> '002'
+							AND
+								aprstate <> '005'
+							AND
+								aprstate = '000'
+							AND
+			                 	aprmemberdeptid = #proxyList[].dept#
+			                AND
+							 	tenant_id = #v_TENANTID#
+							AND
+							 	companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 							)	
 			]]>
 			</iterate>
@@ -10656,12 +11098,39 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #v_USERID#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-	               AND APRMEMBERDEPTID = #v_DEPTID#
+					aprmemberid = #v_USERID#
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+				 	tenant_id = #v_TENANTID#
+				AND
+				 	companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 			)
    		]]>
 	<!--기안한 문서-->
@@ -12277,17 +12746,46 @@
 						)
 			]]>
 			<isEqual property="v_LISTTYPE" compareValue="1">
-			  AND docid in (
-				SELECT 
-					docid 
-				FROM
-					tbl_aprlineinfo
-				WHERE
-					APRMEMBERID = #v_USERID#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #deptID#
-				)	
+				<![CDATA[
+					AND docid in
+						(SELECT
+						docid
+					FROM
+						TBL_APRLINEINFO
+					WHERE
+						APRMEMBERID = #v_USERID#
+					AND
+						(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+					AND
+						tenant_id = #v_TENANTID#
+					AND
+						companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+					)
+				]]>
 			</isEqual>
 			<![CDATA[
 			UNION ALL
@@ -12338,17 +12836,49 @@
 						)
 			]]>
 						<isEqual property="v_LISTTYPE" compareValue="1">
-						  AND docid in (
-							SELECT 
-								docid 
-							FROM
-								TBL_ENDAPRLINEINFO
-							WHERE
-								APRMEMBERID = #v_USERID#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #deptID#
-							)	
+							<![CDATA[
+								AND docid in
+									(SELECT
+										docid
+									FROM
+										TBL_ENDAPRLINEINFO
+									WHERE
+										aprmemberid = #v_USERID#
+									AND
+										aprstate <> '002'
+									AND
+										aprstate <> '005'
+									AND
+										aprstate = '000'
+									AND
+										tenant_id = #v_TENANTID#
+									AND
+										companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    ))
+							]]>
 						</isEqual>
 			<!-- 부재자설정한 유저의 결재할문서 리스트 -->
 			<isEqual property="v_LISTTYPE" compareValue="1"> 
@@ -12392,17 +12922,45 @@
 						AND
 							TENANT_ID = #v_TENANTID# 
 						)
-			  AND docid in (
-				SELECT 
-					docid 
-				FROM
-					tbl_aprlineinfo
-				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
-				)	
+						AND docid in
+							(SELECT
+								docid
+							FROM
+								TBL_APRLINEINFO
+							WHERE
+								aprmemberid = #proxyList[].id#
+							AND
+							 	aprmemberdeptid = #proxyList[].dept#
+							AND
+								(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    ))
 			UNION ALL
 			
 			SELECT 
@@ -12448,10 +13006,42 @@
 								TBL_ENDAPRLINEINFO
 							WHERE
 								aprmemberid = #proxyList[].id#
-							AND tenant_id = #v_TENANTID#
-							AND companyid = #companyID#
-			                AND aprmemberdeptid = #proxyList[].dept#
-							)	
+							AND
+								aprmemberdeptid = #proxyList[].dept#
+							AND
+								aprstate <> '002'
+							AND
+								aprstate <> '005'
+							AND
+								aprstate = '000'
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    ))
 			]]>
 			</iterate>
 			</isNotEmpty>
@@ -12554,17 +13144,43 @@
 						AND
 							TENANT_ID = #v_TENANTID# 
 						)
-			AND docid in (
-							SELECT 
-								docid 
-							FROM
-								tbl_aprlineinfo
-							WHERE
-								APRMEMBERID = #v_USERID#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #deptID#
-							)	
+			AND docid in
+				(SELECT
+					docid
+				FROM
+					TBL_APRLINEINFO
+				WHERE
+					aprmemberid = #v_USERID#
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+					tenant_id = #v_TENANTID#
+				AND
+            companyid IN(
+            SELECT
+            extensionattribute2
+            FROM
+            TBL_DEPTMASTER
+            INNER JOIN
+            TBL_ADDJOBMASTER
+            ON
+            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+            AND
+            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+            WHERE
+            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+            AND
+            TBL_ADDJOBMASTER.cn = #v_USERID#
+            UNION ALL
+            SELECT
+            physicaldeliveryofficename
+            FROM
+            TBL_USERMASTER
+            WHERE
+            cn = #v_USERID#
+            AND
+            tenant_id = #v_TENANTID#
+            ))
 		
 		</isEqual>
 		<!-- 공람할 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
@@ -14942,12 +15558,41 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
+					aprmemberid = #proxyList[].id#
+				AND
+				    aprmemberdept = #proxyList[].dept#
+				AND
+					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+					tenant_id = #v_TENANTID#
+				AND
+					companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
 				)	
 			UNION ALL
 			
@@ -14994,9 +15639,42 @@
 								TBL_ENDAPRLINEINFO
 							WHERE
 								aprmemberid = #proxyList[].id#
-							AND tenant_id = #v_TENANTID#
-							AND companyid = #companyID#
-			                AND aprmemberdeptid = #proxyList[].dept#
+							AND
+							    aprmemberdeptid = #proxyList[].dept#
+							AND
+								aprstate <> '002'
+							AND
+								aprstate <> '005'
+							AND
+								aprstate = '000'
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                                    SELECT
+                                        extensionattribute2
+                                    FROM
+                                        TBL_DEPTMASTER
+                                    INNER JOIN
+                                        TBL_ADDJOBMASTER
+                                    ON
+                                        (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                    AND
+                                        TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                    WHERE
+                                        TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                    AND
+                                        TBL_ADDJOBMASTER.cn = #v_USERID#
+                                    UNION ALL
+                                    SELECT
+                                        physicaldeliveryofficename
+                                    FROM
+                                        TBL_USERMASTER
+                                    WHERE
+                                        cn = #v_USERID#
+                                    AND
+                                        tenant_id = #v_TENANTID#
+                                )
 							)	
 			]]>
 			</iterate>
@@ -15547,13 +16225,42 @@
 				SELECT 
 					docid 
 				FROM
-					tbl_aprlineinfo
+					TBL_APRLINEINFO
 				WHERE
-					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
-				)	
+					aprmemberid = #proxyList[].id#
+				AND
+				    aprmemberdeptid = #proxyList[].dept#
+				AND
+				    (aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+				    tenant_id = #v_TENANTID#
+				AND
+				    companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+				)
 			UNION ALL
 			
 			SELECT 
@@ -15599,9 +16306,42 @@
 								TBL_ENDAPRLINEINFO
 							WHERE
 								aprmemberid = #proxyList[].id#
-							AND tenant_id = #v_TENANTID#
-							AND companyid = #companyID#
-			                AND aprmemberdeptid = #proxyList[].dept#
+							AND
+							    aprmemberdeptid = #proxyList[].dept#
+							AND
+                                aprstate <> '002'
+                            AND
+                                aprstate <> '005'
+                            AND
+                                aprstate = '000'
+							AND
+								tenant_id = #v_TENANTID#
+							AND
+								companyid IN(
+                                    SELECT
+                                        extensionattribute2
+                                    FROM
+                                        TBL_DEPTMASTER
+                                    INNER JOIN
+                                        TBL_ADDJOBMASTER
+                                    ON
+                                        (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                                    AND
+                                        TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                                    WHERE
+                                        TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                                    AND
+                                        TBL_ADDJOBMASTER.cn = #v_USERID#
+                                    UNION ALL
+                                    SELECT
+                                        physicaldeliveryofficename
+                                    FROM
+                                        TBL_USERMASTER
+                                    WHERE
+                                        cn = #v_USERID#
+                                    AND
+                                        tenant_id = #v_TENANTID#
+                                )
 							)	
 			]]>
 			</iterate>
@@ -28550,10 +29290,39 @@
 					tbl_aprlineinfo
 				WHERE
 					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
-				AND COMPANYID = #companyID#
-                AND APRMEMBERDEPTID = #proxyList[].dept#
-				)	
+				AND
+				    APRMEMBERDEPTID = #proxyList[].dept#
+				AND
+				    (aprstate = '002' OR aprstate = '005' OR aprstate = '000')
+				AND
+				    TENANT_ID = #v_TENANTID#
+				AND
+				    companyid IN(
+                        SELECT
+                            extensionattribute2
+                        FROM
+                            TBL_DEPTMASTER
+                        INNER JOIN
+                            TBL_ADDJOBMASTER
+                        ON
+                            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+                        AND
+                            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+                        WHERE
+                            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+                        AND
+                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                        UNION ALL
+                        SELECT
+                            physicaldeliveryofficename
+                        FROM
+                            TBL_USERMASTER
+                        WHERE
+                            cn = #v_USERID#
+                        AND
+                            tenant_id = #v_TENANTID#
+                    )
+				)
 			UNION ALL
 			
 			SELECT 
@@ -28599,10 +29368,43 @@
 								TBL_ENDAPRLINEINFO
 							WHERE
 								aprmemberid = #proxyList[].id#
-							AND tenant_id = #v_TENANTID#
-							AND companyid = #companyID#
-			                AND aprmemberdeptid = #proxyList[].dept#
-							)	
+                            AND
+                                aprmemberdeptid = #proxyList[].dept#
+                            AND
+                                aprstate <> '002'
+                            AND
+                                aprstate <> '005'
+                            AND
+                                aprstate = '000'
+							AND
+							    tenant_id = #v_TENANTID#
+							AND
+							    COMPANYID IN (
+                                    SELECT
+                                        EXTENSIONATTRIBUTE2
+                                    FROM
+                                        TBL_DEPTMASTER
+                                    INNER JOIN
+                                        TBL_ADDJOBMASTER
+                                    ON
+                                        (TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+                                        AND
+                                        TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+                                    WHERE
+                                        TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
+                                    AND
+                                        TBL_ADDJOBMASTER.CN = #v_PUSERID#
+                                    UNION ALL
+                                    SELECT
+                                        PHYSICALDELIVERYOFFICENAME
+                                    FROM
+                                        TBL_USERMASTER
+                                    WHERE
+                                        CN = #v_PUSERID#
+                                    AND
+                                        TENANT_ID = #v_TENANTID#
+                                    )
+							)
 			]]>
 			</iterate>
 			</isNotEmpty>
