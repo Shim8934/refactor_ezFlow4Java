@@ -977,7 +977,7 @@ function totalSearchEnterEevnt() {
 	                <tbody>
 	                    <tr>
 	                        <td align="right" height="23px">
-	                            <a onclick="clickTab('approval')" href="#"><img src="/images/totalsearch/total_search_icon02.png" width="16" height="16" style="vertical-align:top; border:0px none;" /><spring:message code="ezTotalSearch.t0027" /></a>
+	                            <a onclick="clickTab('approval')"><img src="/images/totalsearch/total_search_icon02.png" width="16" height="16" style="vertical-align:top; border:0px none;" /><spring:message code="ezTotalSearch.t0027" /></a>
 	                        </td>
 	                    </tr>
 	                </tbody>
@@ -1018,7 +1018,7 @@ function totalSearchEnterEevnt() {
 	                <tbody>
 	                    <tr>
 	                        <td align="right" height="23px">
-	                            <a onclick="clickTab('board')" href="#"><img src="/images/totalsearch/total_search_icon02.png" width="16" height="16" style="vertical-align:top; border:0px none;" /><spring:message code="ezTotalSearch.t0027" /></a>
+	                            <a onclick="clickTab('board')"><img src="/images/totalsearch/total_search_icon02.png" width="16" height="16" style="vertical-align:top; border:0px none;" /><spring:message code="ezTotalSearch.t0027" /></a>
 	                        </td>
 	                    </tr>
 	                </tbody>

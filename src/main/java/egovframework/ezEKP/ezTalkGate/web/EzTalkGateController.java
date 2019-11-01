@@ -8,6 +8,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -133,6 +134,12 @@ public class EzTalkGateController {
 						logger.debug("userId=" + userId + ", no use mobile login by deviceInfo.");
 						result = "N";
 					}
+
+					if ("YES".equals(ezCommonService.getTenantConfig("useLoginStop", tenantId)) && ezOrganAdminService.checkStopUser(userId, tenantId) > 0) {
+						// 사용자 정지 리턴
+						logger.debug("userId={}, stoped user.", userId);
+						result = "S";
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -204,6 +211,16 @@ public class EzTalkGateController {
 						}
 					}
 				}
+				
+				// 사용자정지 여부를 체크
+				String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+				
+				if (useLoginStop != null && useLoginStop.equals("YES")) {
+					int flag = ezOrganAdminService.checkStopUser(userId, tenantId);
+					if(flag > 0) {
+						result = "STOPUSER";
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -264,6 +281,23 @@ public class EzTalkGateController {
 			loginService.insertLog(vo);
 			
 			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
+			
+			String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+			
+        	if (!useSession.isEmpty()) {
+        		int sessionTime = 0;
+        		
+        		try {
+        			sessionTime = Integer.parseInt(useSession);
+        		} catch (NumberFormatException nfe) {  
+        			nfe.printStackTrace();
+        		}
+        		
+	        	if (sessionTime != 0) {
+	        		HttpSession session = request.getSession();
+		        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
+	        	}
+        	}						
 			
 			logger.debug("ezTalkGateMain ended.");
 			
@@ -346,9 +380,29 @@ public class EzTalkGateController {
 				
 				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, deptId, compId);
 				
-				redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
-								+ URLEncoder.encode(ezTalkGateNoticeBoardId) + "&boardType=" + boardType;
-				logger.debug("redirectUrl=" + redirectUrl);
+				String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+				
+	        	if (!useSession.isEmpty()) {
+	        		int sessionTime = 0;
+	        		
+	        		try {
+	        			sessionTime = Integer.parseInt(useSession);
+	        		} catch (NumberFormatException nfe) {  
+	        			nfe.printStackTrace();
+	        		}
+	        		
+		        	if (sessionTime != 0) {
+		        		HttpSession session = request.getSession();
+			        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
+		        	}
+	        	}						
+				
+	        	if (ezTalkGateNoticeBoardId != null) {
+					redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
+									+ URLEncoder.encode(ezTalkGateNoticeBoardId, "UTF-8") + "&boardType=" + boardType;
+	        	}
+
+	        	logger.debug("redirectUrl=" + redirectUrl);
 			}
 			 
 		} catch (Exception e) {

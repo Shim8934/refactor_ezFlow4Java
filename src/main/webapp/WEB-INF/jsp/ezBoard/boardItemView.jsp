@@ -1388,7 +1388,7 @@
 								<tr>
 									<th><spring:message code='ezBoard.t224' /></th>
 									<td id="PostDate" style = "white-space:nowrap; padding-right:5px">
-										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate}</div>
+										<div style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;">${boardItem.writeDate.substring(0, 16)}</div>
 									</td>
 									<!-- 게시일 end -->
 									<!-- 게시 종료일 -->

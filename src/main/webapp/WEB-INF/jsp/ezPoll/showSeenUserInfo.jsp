@@ -65,7 +65,7 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float:left; display: block; width:100%; text-align:left; padding-left:5px;">
-			        <h1><spring:message code='ezPoll.t135'/></h1>
+			        <h1><spring:message code='ezPoll.t112'/></h1>
 			    </div>				
 			</div>
 			<div id="close">
@@ -87,7 +87,7 @@
 								<img src="${list1.userFileUrl}" style="display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;" onClick="menuQst_DetailUserInfo('${list1.id}','${list1.deptID}')">
 								<a style="cursor:pointer; display:inline-block; float:left; width:80px; line-height:50px; padding:0px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" onClick="menuQst_DetailUserInfo('${list1.id}','${list1.deptID}')">	
 									<c:choose>
-										<c:when test="${list1.primary == '1'}">
+										<c:when test="${primaryLang == '1'}">
 											<c:out value ="${list1.displayName1}"/>
 										</c:when>
 										<c:otherwise>

@@ -1978,6 +1978,48 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
+	public boolean addEzTalkNotification(String userId, String senderName, String subject, String type) {
+		logger.debug("addEzTalkNotification started. userId=" + userId + ",senderName=" + senderName + ",type=" + type);
+		
+		boolean returnValue = false;
+		
+		try {
+			// null 인 경우는 empty string으로 대체한다.
+			userId = userId != null ? userId : "";
+			senderName = senderName != null ? senderName : "";
+			subject = subject != null ? subject : "";
+			type = type != null ? type : "";
+			
+			String userIdParam = "userId=" + userId;
+			String senderNameParam = "senderName=" + URLEncoder.encode(senderName, "UTF-8");
+			String subjectParam = "subject=" + URLEncoder.encode(subject, "UTF-8");
+			String typeParam = "type=" + type;
+			
+			String inputParams = userIdParam + "&" + senderNameParam + "&" + subjectParam + "&" + typeParam;
+	
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/ezTalkGate/addNotification";			
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+				
+				if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+					returnValue = true;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("addEzTalkNotification ended. returnValue=" + returnValue);
+		
+		return returnValue;
+	}
+	
+	@Override
 	public boolean setInitInboxRule(int tenantId, String userId) throws Exception {
 		logger.debug("setInitInboxRule started.");
 		logger.debug("tenantId=" + tenantId + ",userId=" + userId);

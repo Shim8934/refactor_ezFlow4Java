@@ -776,6 +776,12 @@ public class EzNewPortalGWController {
 				data.put("talkFilePath", talkFilePath);
 			}
 			data.put("useUtilTalk", useUtilTalk);
+			//2019-10-04 통합검색 부분 추가
+			String useTotalSearch = ezCommonService.getTenantConfig("useTotalSearch", tenantId);
+			if (useTotalSearch == null || useTotalSearch.equals("")) {
+				useTotalSearch = "NO";
+			}
+			data.put("useTotalSearch", useTotalSearch);
 			
 			
 			/**
@@ -1727,10 +1733,26 @@ public class EzNewPortalGWController {
 			}
 
 			List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-
 			resultList = ezOrganAdminService.getCompanyList(lang, tenantId);
-
-			result.put("data", resultList);
+			
+			if (userInfo != null) {
+				String roleInfo = userInfo.getRollInfo();
+				//회사관리자일 때는 회사리스트만 나오도록
+				List<OrganDeptVO> companyList = new ArrayList<OrganDeptVO>();
+				
+				if (roleInfo != null) {
+					for (OrganDeptVO companyInfo : resultList) {
+						if (roleInfo.indexOf("c=1") > -1 || (roleInfo.indexOf("k=1") > -1 && companyInfo.getCn().equals(userInfo.getCompanyID()))) {
+							companyList.add(companyInfo);
+						}
+					}
+				}
+				
+				result.put("data", companyList);
+			} else {
+				result.put("data", resultList);
+			}
+			
 			result.put("primary", primary);
 			result.put("usePrimaryLangOnly", usePrimaryLangOnly);
 			result.put("status", "ok");
@@ -3063,7 +3085,7 @@ public class EzNewPortalGWController {
 				// mailCount = unreadCount;
 				// }
 
-				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId());
+				messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, new Date(), false, false, false, "receivedDate", false, 0, mailCount, false, null, info.getTenantId());
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -3972,7 +3994,9 @@ public class EzNewPortalGWController {
 			}
 			
 			String offset = info.getOffSet();
-			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat adf = new SimpleDateFormat("yyyy-MM-dd");
+			String nowDate = adf.format(cal.getTime());
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
 			String password = jspw;

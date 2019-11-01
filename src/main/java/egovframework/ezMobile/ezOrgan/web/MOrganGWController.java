@@ -70,9 +70,17 @@ public class MOrganGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			String filePath = commonUtil.getUploadPath("upload_personal.PHOTO", info.getTenantId()) + commonUtil.separator;
+			String companyId = info.getCompanyId();
 			
-			List <MPersonListVO> list = mOrganService.getPersonList(info.getCompanyId(), info.getTenantId(),pSearchText,rowNum);
-			int listCount = mOrganService.getPersonListCount(info.getCompanyId(), info.getTenantId(), pSearchText);
+			String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", info.getTenantId());
+			
+	        // useShowAllCompanies가 YES이면 Company ID를 ""로 세트하여 그룹사 전체 조직도를 대상으로 검색하도록 한다.			
+			if (useShowAllCompanies.equals("YES")) {
+				companyId = "";
+			}
+			
+			List <MPersonListVO> list = mOrganService.getPersonList(companyId, info.getTenantId(),pSearchText,rowNum);
+			int listCount = mOrganService.getPersonListCount(companyId, info.getTenantId(), pSearchText);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

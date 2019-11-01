@@ -64,6 +64,7 @@
 		        createNodeInsert(xmlpara, objNode, "DATA");
 		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 		        createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;mail;displayName");
+		        createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
 
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(xmlpara);

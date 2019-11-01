@@ -225,12 +225,12 @@
 											SELECT 
 												docid 
 											FROM
-												tbl_aprlineinfo
+												TBL_ENDAPRLINEINFO
 											WHERE
-												APRMEMBERID = #v_USERID#
-											AND TENANT_ID = #v_TENANTID# 
-											AND COMPANYID = #companyID#
-							                AND APRMEMBERDEPTID = #deptID#
+												aprmemberid = #v_USERID#
+											AND tenant_id = #v_TENANTID#
+											AND companyid = #companyID#
+							                AND aprmemberdeptid = #deptID#
 											)	
 										</isEqual>
 					      				<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
@@ -330,16 +330,16 @@
 													)
 													  AND docid in (
 														SELECT 
-															docid 
+															docid
 														FROM
-															tbl_aprlineinfo
+															TBL_ENDAPRLINEINFO
 														WHERE
-															APRMEMBERID = #proxyList[].id#
-														AND TENANT_ID = #v_TENANTID# 
-														AND COMPANYID = #companyID#
-										                AND APRMEMBERDEPTID = #proxyList[].dept#
-														)	
-										]]>
+															aprmemberid = #v_USERID#
+														AND tenant_id = #v_TENANTID#
+														AND companyid = #companyID#
+														AND aprmemberdeptid = #deptID#
+														)
+											]]>
 										<isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 							      		  AND 
 							      		 	$v_SPSUBQUERY$
@@ -1523,12 +1523,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -3934,12 +3934,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -10488,12 +10488,12 @@
 						SELECT 
 							docid 
 						FROM
-							tbl_aprlineinfo
+							TBL_ENDAPRLINEINFO
 						WHERE
-							APRMEMBERID = #v_USERID#
-						AND TENANT_ID = #v_TENANTID# 
-						AND COMPANYID = #companyID#
-		                AND APRMEMBERDEPTID = #v_DEPTID#
+							aprmemberid = #v_USERID#
+						AND tenant_id = #v_TENANTID#
+						AND companyid = #companyID#
+		                AND aprmemberdeptid = #v_DEPTID#
 						)	
    			]]>
 			<!-- 부재자설정한 유저의 결재할문서 리스트 -->
@@ -10544,7 +10544,7 @@
 					tbl_aprlineinfo
 				WHERE
 					APRMEMBERID = #proxyList[].id#
-				AND TENANT_ID = #v_TENANTID# 
+				AND TENANT_ID = #v_TENANTID#
 				AND COMPANYID = #companyID#
                 AND APRMEMBERDEPTID = #proxyList[].dept#
 				)	
@@ -10590,12 +10590,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -12052,6 +12052,8 @@
 	    AND 
 	    	APRMEMBERID = #v_APRMEMBERID#
 	    AND
+        	(APRSTATE = #v_STAASJINHANG# OR APRSTATE = #v_STAASBORYU#)
+	    AND
 	    	TENANT_ID = #v_TENANTID#
 	    AND
             COMPANYID = #companyID#
@@ -12340,7 +12342,7 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
 								APRMEMBERID = #v_USERID#
 							AND TENANT_ID = #v_TENANTID# 
@@ -12443,12 +12445,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -14225,7 +14227,7 @@
 	<select id ="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int">
 	<![CDATA[
 		SELECT 
-			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID)
+			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID,IFNULL(E.PROCESSYN,'S'))
    		FROM 
    			TBL_ENDAPRDOCINFO 
    		LEFT OUTER JOIN 
@@ -14989,12 +14991,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -15594,12 +15596,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>
@@ -22421,6 +22423,8 @@
    		AND
    			APRTYPE = #v_APRTYPE#
    		AND
+   			APRSTATE != '003'
+   		AND
    			APRMEMBERID != #v_APRMEMBERID#
    		AND
    			TENANT_ID = #v_TENANTID#
@@ -26542,15 +26546,15 @@
 	</select>
 	
    	<select id="EzApprovalG.doBanSongAprTypeS" parameterClass="Map" resultClass="ApprGDocListVO">
-   		SELECT 
-   			APRTYPE 
-        FROM 
-        	TBL_APRLINEINFO 
-       	WHERE  
+   		SELECT
+   			APRTYPE
+        FROM
+        	TBL_APRLINEINFO
+       	WHERE
        		DOCID = #v_DOCID#
-        AND 
+        AND
         	APRMEMBERID = #v_APRMEMBERID#
-        AND 
+        AND
         	( APRSTATE = #v_STAASJINHANG# OR APRSTATE = #v_STAASBORYU# )
         AND
         	TENANT_ID = #v_TENANTID#
@@ -28592,12 +28596,12 @@
 							SELECT 
 								docid 
 							FROM
-								tbl_aprlineinfo
+								TBL_ENDAPRLINEINFO
 							WHERE
-								APRMEMBERID = #proxyList[].id#
-							AND TENANT_ID = #v_TENANTID# 
-							AND COMPANYID = #companyID#
-			                AND APRMEMBERDEPTID = #proxyList[].dept#
+								aprmemberid = #proxyList[].id#
+							AND tenant_id = #v_TENANTID#
+							AND companyid = #companyID#
+			                AND aprmemberdeptid = #proxyList[].dept#
 							)	
 			]]>
 			</iterate>

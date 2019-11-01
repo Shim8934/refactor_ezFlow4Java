@@ -980,6 +980,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		List<String> m_ListImageLocation = new ArrayList<String>();
 		List<String> m_ListImageLocalLocation = new ArrayList<String>();
 		String extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
+		boolean isUTF8;
 		
 		strBoundary = getBoundaryText(m_strMHT);
 		logger.debug("strBoundary="+strBoundary);
@@ -991,6 +992,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				m_Mimechunk = m_strMHT.split(strBoundary);
 				logger.debug("m_Mimechunk="+m_Mimechunk);
 				
+				//문서 인코딩 방식 추출 
+                if (m_Mimechunk[0].indexOf("(UTF-8)") > -1) 
+                    isUTF8 = true; 
+                else 
+                    isUTF8 = false; 
+				
 				for (int i = 1; i < m_Mimechunk.length; i++) {
 					String[] strMimeChunk = m_Mimechunk[i].split(commonUtil.CRLF + commonUtil.CRLF);
 					String[] strMime_info_p = strMimeChunk[0].trim().split(commonUtil.CRLF);
@@ -998,7 +1005,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 					
 					if (strMime_info_tupe[0].equals("Content-Type")) {
 						if (strMime_info_tupe[1].equals("Text/HTML")) {
-							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML);
+							m_strHTML = doMHTDecoding(strMimeChunk[1].trim(), m_strHTML, isUTF8);
 						}
 						/* 2018-08-14 홍승비 - mht->html 변환 시 이미지 디코딩(content-type) 수정 */
 						else if (strMime_info_tupe[1].contains("Image/") || strMime_info_tupe[1].contains("application/octet-stream")) {
@@ -1078,11 +1085,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 mht디코딩 표출 Method
 	 */
-	private String doMHTDecoding(String strMht, String m_strHTML) {
+	private String doMHTDecoding(String strMht, String m_strHTML, boolean isUTF8) {
 		byte[] arr = Base64.getMimeDecoder().decode(strMht);
 		
 		try {
-			m_strHTML = new String(arr, "utf-8");
+			//m_strHTML = new String(arr, "utf-8");
+			if(isUTF8)
+                m_strHTML = new String(arr, "utf-8");
+            else
+                m_strHTML = new String(arr, "ks_c_5601-1987");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -1451,6 +1462,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addDeptMasterManualFlag() throws Exception {
 		ezCommonDAO.addDeptMasterManualFlag();
+	}
+	
+	@Override
+	public void addAddJobMasterManualFlag() throws Exception {
+		ezCommonDAO.addAddJobMasterManualFlag();
 	}
 	
 	@Override

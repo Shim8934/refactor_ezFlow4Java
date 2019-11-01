@@ -2778,7 +2778,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if(useAnnualCnt > 11.0) {
 				useAnnualCnt = 11.0;
 			}
-			double totalAnnualCnt = Double.parseDouble(list.get(0).getTotalAnnualCnt());
+			double totalAnnualCnt = Double.parseDouble(v.getTotalAnnualCnt());
 			if (v.getJoinDate() != null) {
 				list.get(0).setTotalAnnualCnt(totalAnnualCnt - useAnnualCnt + "");
 			}

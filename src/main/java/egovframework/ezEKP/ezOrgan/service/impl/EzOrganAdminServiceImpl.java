@@ -1172,6 +1172,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String sTitle1 = "";
         String sTitle2 = "";
         String pDeptID = "";
+        String manualFlag = "";
         
         if (!titleInfo.equals("")) {
             String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1182,14 +1183,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             for (int i = 0; i < addJobinfo.length; i++) {
             	String[] userInfo = addJobinfo[i].split(":");
             	pDeptID = userInfo[0];
+            	manualFlag = userInfo[userInfo.length - 1];
+            	
+            	if (manualFlag.equals("null")) {
+            		manualFlag = null;
+            	}
             	            	
-            	if (userInfo.length > 1) {
+            	if (userInfo.length > 2) {
             		sTitle1 = userInfo[1];
             	}
                 
                 sTitle2 = "";
                 
-                if (userInfo.length > 2) {
+                if (userInfo.length > 3) {
                     sTitle2 = userInfo[2];
                 } else {
                     sTitle2 = sTitle1;
@@ -1213,6 +1219,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
             		map.put("v_JOBID", jobIDinfo[i]);
+            		map.put("v_MANUAL_FLAG", manualFlag);
             		
             		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1250,6 +1257,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         					
         				}       
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
+            			e.printStackTrace();
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
             		}
                 } else {

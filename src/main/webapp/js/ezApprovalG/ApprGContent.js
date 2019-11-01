@@ -53,3 +53,14 @@ function RadioOnClick() {
 		radio.setAttribute("checked", "checked");
 	}
 }
+
+function onInputTextarea() {
+	var textarea = event.target;
+	textarea.setAttribute("value", textarea.value);
+	textarea.innerHTML = textarea.value;
+	
+	if (textarea.hasAttribute("auto-height")) {
+		textarea.style.height = "0px";
+		textarea.style.height = (10 + textarea.scrollHeight) + "px";
+	}
+}
