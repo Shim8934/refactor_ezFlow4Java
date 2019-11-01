@@ -2165,8 +2165,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 			endDate = sdf.format(cal.getTime());
 			
 			description = "[" + msg.getMessage("ezSchedule.t278", locale) + " " + startDate + " ~ " + endDate;			
-		} else if (view.equals("0")) {			
-			cal.add(Calendar.DATE, 41);
+		} else if (view.equals("0")) {
+			if(cal.DATE != 1){
+				cal.add(Calendar.MONTH, 1);
+				cal.set(Calendar.DATE, 1);
+				startDate = sdf.format(cal.getTime());
+			}
+			cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
 			endDate = sdf.format(cal.getTime());
 			
 			description = "[" + msg.getMessage("ezSchedule.t279", locale) + " " + startDate + " ~ " + endDate;			
