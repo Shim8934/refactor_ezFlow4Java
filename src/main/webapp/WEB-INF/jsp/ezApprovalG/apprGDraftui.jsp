@@ -168,6 +168,7 @@
 			var newpDocID = "";
 			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
 			var formAprOption = "<c:out value='${formAprOption}'/>";
+			var passAprLine = "";
 			
 		    window.onload = function ()
 		    {
@@ -979,7 +980,10 @@ s
 		                	Gyuljedate = GetDocInfoData("APR", "STARTDATE");
 	                        CurrentAprType = "001";
 	                        CurrentAprUserID = pUserID;
-	                        sendAlertMail("APR", 1, "DRAFT");
+	                        
+	                        if (passAprLine != "Y") { //기결재통과 알림메일은 자바단에서 구현
+		                        sendAlertMail("APR", 1, "DRAFT");
+	                        }
 		                }
 		                UpdateLineHistory();
 		
@@ -1679,6 +1683,8 @@ s
 
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
+		        
+		        parameter[60] = passAprLine;
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
@@ -1721,7 +1727,9 @@ s
 		                    btnSendDraftEnable = "true";
 		                    
 		                    if (approvalFlag == "S") {
-			                    SGetDraftAprLineInfo(ret);
+		                    	if (ret[32] != "Y") {
+			                    	SGetDraftAprLineInfo(ret);
+		                    	}
 		                    } else {
 			                    GetDraftAprLineInfo(ret);
 		                    }
@@ -1857,6 +1865,8 @@ s
 		                	tempPublic = ret[11];
 		                	SetDocOption(ret[20]);
 		                }
+		                
+		                passAprLine = ret[32];
 		                
 		                SummaryFlag = true;
 		                isUsed = ""; // 재사용 여부 초기화

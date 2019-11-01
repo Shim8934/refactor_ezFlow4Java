@@ -933,6 +933,7 @@
 					formfilelocation,
 					formconnflag,
 					keepPeriod,
+					passaprlineflag,
 					TBL_AUTODOCNUM_ITEM.securityLevel,
 					TBL_AUTODOCNUM_ITEM.isPublic,
 					TBL_AUTODOCNUM_ITEM.itemCode,
@@ -971,7 +972,8 @@
 					formfilelocation,
 					formconnflag,
 					opengovflag,
-					aproption 
+					aproption ,
+					passaprlineflag
 				FROM
 					TBL_FORMINFO
 				WHERE
@@ -1696,6 +1698,7 @@
 				formfilelocation,
 				formconnflag,
 				reformflag,
+				passaprlineflag,
 				companyid,
 				tenant_id,
 				opengovflag,
@@ -1710,6 +1713,7 @@
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
 				#v_PREFORMFLAG#,
+				#v_PPASSAPRLINEFLAG#,
 				#companyID#,
 				#tenantID#,
 				#v_POPENGOVFLAG#,
@@ -1732,7 +1736,9 @@
 				reformflag = #v_PREFORMFLAG#,
 				formversion = formversion + 1,
 				opengovflag = #v_POPENGOVFLAG#,
-				aprOption = #v_formAprOption#
+				aprOption = #v_formAprOption#,
+				passaprlineflag = #v_PPASSAPRLINEFLAG#,
+				formversion = formversion + 1
 			WHERE
 				tenant_id = #tenantID#
 			AND

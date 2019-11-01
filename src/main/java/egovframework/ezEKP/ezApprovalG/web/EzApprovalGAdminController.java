@@ -567,6 +567,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String reformflag = request.getParameter("reformflag");
 		String openGovFlag = request.getParameter("openGovFlag");
 		
+		String usePassAprLine = ezCommonService.getTenantConfig("usePassAprLine", userInfo.getTenantId());
+		String passAprLineFlag = request.getParameter("passAprLineFlag");
+		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
 		if (approvalFlag.equals("S")) {
@@ -617,6 +620,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			model.addAttribute("openGovFlag", openGovFlag);
 		} else {
 			model.addAttribute("openGovFlag", "N");
+		}
+		if (usePassAprLine.equals("YES")) {
+			model.addAttribute("usePassAprLine", usePassAprLine);
+			model.addAttribute("passAprLineFlag", passAprLineFlag);
+		} else {
+			model.addAttribute("usePassAprLine", "NO");
+			model.addAttribute("passAprLineFlag", "N");
 		}
 		
 		/* FormBuilder */

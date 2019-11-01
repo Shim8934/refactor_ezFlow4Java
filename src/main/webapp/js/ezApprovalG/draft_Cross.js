@@ -52,7 +52,7 @@ function GetDraftAprLineInfo(ret) {
 	}
 	else if(xmlReDraft == "R")
 	{
-		ClearDocCellInfo();
+		ClearDocCellInfo(ret);
 	}
     
 	 
@@ -99,7 +99,7 @@ function GetDraftAprLineInfo(ret) {
             name = "habyuidate" + i;
 	  		field = message.GetListItem(fields, name);
 	  		
-            if(field) {
+            if(field && ret[32] != "Y") {
 	  	        field.textContent= "";
 	  	        if(new RegExp(/Firefox/).test(navigator.userAgent))
 	            field.innerHTML = "<br type='_moz'>";
@@ -209,7 +209,7 @@ function GetDraftAprLineInfo(ret) {
 			fieldname = "sign" + i;
 			field = message.GetListItem(fields, fieldname);
 			
-			if(field) {
+			if(field && ret[32] != "Y") {
 				field.textContent= " ";	
 				if(new RegExp(/Firefox/).test(navigator.userAgent))
 	                field.innerHTML = "<br type='_moz'>";
@@ -339,7 +339,7 @@ function SGetDraftAprLineInfo(ret) {
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
         } else if (xmlReDraft == "R") {
-            ClearDocCellInfo();
+            ClearDocCellInfo(ret);
         }
 
         xmldom = loadXMLString(xmlKuljea);
@@ -1530,7 +1530,7 @@ function setRecevInfo(ret) {
     }
 }
 
-function ClearDocCellInfo() {
+function ClearDocCellInfo(ret) {
     try {
         var i;
         var j;
@@ -1545,7 +1545,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "sign" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1554,7 +1554,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "seumyung" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1563,7 +1563,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "seumyungdate" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1572,7 +1572,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "jikwe" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1582,7 +1582,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "approdept" + i;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1592,7 +1592,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "habyui" + j;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1601,7 +1601,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "habyuipositon" + j;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1610,7 +1610,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "habyuidate" + j;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -1619,7 +1619,7 @@ function ClearDocCellInfo() {
             fieldname = susunSN + "habyuisign" + j;
             field = message.GetListItem(fields, fieldname);
 
-            if (field) {
+            if (field && (typeof ret == "undefined" || ret[32] != "Y")) {
                 field.textContent = " ";
                 if (new RegExp(/Firefox/).test(navigator.userAgent))
                     field.innerHTML = "<br type='_moz'>";
@@ -2679,7 +2679,9 @@ function openOpinionUI_New_Complete(ret) {
 			pHasOpinionYN = "N";
 			var fields = message.GetFieldsList();
 		    var field = message.GetListItem(fields, "opinions");
-		    field.innerHTML = " ";
+		    if (field) {
+		    	field.innerHTML = " ";
+		    }
 		} else if (ret == "cancel") {
 			//do_nothing
 		} else {
@@ -2913,6 +2915,8 @@ function SaveDraftDocInfo_ilban(pState) {
        } else {
        	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
        }
+        
+        createNodeAndInsertText(xmlpara, objNode, "PASSAPRLINE", passAprLine);
         
         /*
     	 * 2018-06-14 천성준

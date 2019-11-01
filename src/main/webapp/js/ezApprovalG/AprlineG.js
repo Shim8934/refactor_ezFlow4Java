@@ -600,9 +600,13 @@ function APRLINEXMLParsing()
 		switch(pReDraftFlag)
 		{
 			case "REDRAFT":
-				
-				GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
-				GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+				if ($(AprLineRow[i]).attr("DATA12") == "002" || ($(AprLineRow[i]).attr("DATA12") == "003") && $("input:checkbox[id='passAprLine']").is(":checked")) {
+					GetXml = GetXml + "<DATA name='ProcessDate'>" + MakeXMLString(GetAttribute(AprLineRow[i],"DATA1")) + "</DATA>";
+					GetXml = GetXml + "<DATA name='ReceivedDate'>" + MakeXMLString(GetAttribute(AprLineRow[i],"DATA2")) + "</DATA>";
+				} else {
+					GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
+					GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+				}
        			break;
 			
 			default :

@@ -920,7 +920,9 @@ function openOpinionUI_New_Complete(ret) {
 			pHasOpinionYN = "N";
 			var fields = message.GetFieldsList();
 		    var field = message.GetListItem(fields, "opinions");
-		    field.innerHTML = " ";
+		    if (field) {
+		    	field.innerHTML = " ";
+		    }
 		} else if (ret == "cancel") {
 			//do_nothing
 		} else {

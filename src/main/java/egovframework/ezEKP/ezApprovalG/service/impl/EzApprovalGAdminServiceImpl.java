@@ -2486,8 +2486,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String tbItemName2 = "";
 		String useFlag = "";
 		String formConnFlag = "";
+<<<<<<< HEAD
 		String openGovFlag = "";
 		String formAprOption = "";
+=======
+		String passAprLineFlag = "";
+>>>>>>> 1a53445b50... * 한국경제신문 > 기결재통과 기능 반영
 		
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
@@ -2508,6 +2512,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
 		}
 		formAprOption = doc.getElementsByTagName("APPROPTION").item(0).getTextContent();
+		
+		passAprLineFlag = doc.getElementsByTagName("passAprLineFlag").item(0).getTextContent();
 
 		String recevGroupXML = "";
 		if (formRecevGroup != null && !formRecevGroup.equals("")) {
@@ -2557,7 +2563,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PFORMKIND", formKind);
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PFORMCONNFLAG", formConnFlag);
+<<<<<<< HEAD
 		map.put("v_POPENGOVFLAG", openGovFlag);
+=======
+		map.put("v_PPASSAPRLINEFLAG", passAprLineFlag);
+>>>>>>> 1a53445b50... * 한국경제신문 > 기결재통과 기능 반영
 		map.put("companyID", companyID);
 		map.put("tenantID", userInfo.getTenantId());
 		// FormBuilder

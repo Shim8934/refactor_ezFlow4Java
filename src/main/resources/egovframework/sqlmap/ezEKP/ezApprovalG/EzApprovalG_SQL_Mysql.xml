@@ -32071,4 +32071,38 @@
 		AND
 			COMPANYID = #companyID#
 	</insert>
+	
+	<select id="EzApprovalG.doApproveLineInfoForPassAprLine" parameterClass="Map" resultClass="ApprGAprLineVO">
+		SELECT
+			APRMEMBERSN ,
+			APRTYPE ,
+			APRSTATE ,
+			PROCESSDATE ,
+			RECEIVEDDATE ,
+			APRMEMBERID
+		FROM
+			TBL_APRLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			APRSTATE = '004'
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</select>
+	<update id="EzApprovalG.updateDrafterToApproved" parameterClass="Map">
+		UPDATE
+			TBL_APRLINEINFO
+		SET
+			APRSTATE = '003'
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			APRSTATE = '002'
+	</update>
 </sqlMap>

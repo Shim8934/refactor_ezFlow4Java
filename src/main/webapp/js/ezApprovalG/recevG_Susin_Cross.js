@@ -489,7 +489,9 @@ function SGetDraftAprLineInfo(ret) {
             xmlKuljea = ret[0];
             setAprLinesXML(xmlKuljea);
             //DrawAutoAprLine(ret[0], pDraftFlag);
-            New_DrawAutoLine(ret[0], pDraftFlag);
+            if (ret[32] != "Y") {
+            	New_DrawAutoLine(ret[0], pDraftFlag);
+            }
         } else {
             TempsaveAprlineinfo = ret[1];
             xmlKuljea = ret[1];
@@ -503,7 +505,7 @@ function SGetDraftAprLineInfo(ret) {
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
         } else if (xmlReDraft == "R") {
-            ClearDocCellInfo();
+            ClearDocCellInfo(ret);
         }
 
         xmldom = loadXMLString(xmlKuljea);
@@ -947,7 +949,7 @@ function SGetDraftAprLineInfo(ret) {
     }
 }
 
-function ClearDocCellInfo() {
+function ClearDocCellInfo(ret) {
     try {
         var i;
         var j;
@@ -964,51 +966,51 @@ function ClearDocCellInfo() {
 	        for (i = 1; i <= SignCount ; i++) {
 	            fieldname = susunSN + "sign" + i;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "seumyung" + i;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "seumyungdate" + i;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "jikwe" + i;
 	            field = message.GetListItem(fields, fieldname);
 	
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	            
 	            // 부서 출력
 	            fieldname = susunSN + "approdept" + i;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	            	field.textContent = " ";
 	        }
 	
 	        for (j = 1 ; j <= hapyuiCount ; j++) {
 	            fieldname = susunSN + "habyui" + j;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "habyuipositon" + j;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "habyuidate" + j;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	
 	            fieldname = susunSN + "habyuisign" + j;
 	            field = message.GetListItem(fields, fieldname);
-	            if (field)
+	            if (field && (typeof ret == "undefined" || ret[32] != "Y"))
 	                field.textContent = " ";
 	        }
         } else if (ext == "hwp") {
@@ -2053,6 +2055,8 @@ function SaveDraftDocInfo_susin() {
           } else {
           	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
           }
+        
+        createNodeAndInsertText(xmlpara, objNode, "PASSAPRLINE", passAprLine);
         
         if (nonElecRec == "Y") {
     		var NonElecXML = createXmlDom();

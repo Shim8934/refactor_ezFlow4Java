@@ -170,6 +170,8 @@ public interface EzApprovalGService {
     public String getDocInfo(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID, String isUsed, String beforeDocID) throws Exception;
 
     public void saveRecReadHist(String readRecXML, int tenantID) throws Exception;
+    
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN, String passAprLine) throws Exception;
 
     public String receiverChk(String deptID, String companyID, int tenantID) throws Exception;
 
@@ -483,8 +485,6 @@ public interface EzApprovalGService {
 
     public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
 
-    public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo, String curDocNum, String chamState, String nonElecRecYN) throws Exception;
-
     public void deleteOpinionTypeInfo(String docID, String opinionType, String companyID, int tenantID) throws Exception;
     
 	public void OpinionDel2(String docID, String companyID, int tenantId) throws Exception;
@@ -695,4 +695,8 @@ public interface EzApprovalGService {
 	public void delOpinionsExceptHesong(String docID, String companyID, int tenantId) throws Exception;
 
 	public void delOpinionsExceptDrafters(String docID, String userID, String companyID, int tenantId) throws Exception;
+	
+	public void sendMailToPassAprMember(String docID, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception;
+	
+	public String isPassAprLineShow(String docID, String formID, String companyID, int tenantId) throws Exception;
 }

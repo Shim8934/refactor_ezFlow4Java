@@ -3491,4 +3491,13 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void copyOpinionsFromOrgDoc(Map<String, Object> map) {
 		insert("EzApprovalG.copyOpinionsFromOrgDoc", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> doApproveLineInfoForPassAprLine(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.doApproveLineInfoForPassAprLine", map);
+	}
+	
+	public void updateDrafterToApproved(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateDrafterToApproved", map);
+	}
 }

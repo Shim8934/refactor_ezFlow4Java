@@ -67,6 +67,9 @@
 		    // FormBuilder end
 		    var useOpenGov = "<c:out value = '${useOpenGov}'/>";
 		    var openGovFlag = "<c:out value = '${openGovFlag}'/>";
+		    
+		    var usePassAprLine = "<c:out value = '${usePassAprLine}'/>";
+		    var passAprLineFlag = "<c:out value='${passAprLineFlag}'/>";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -290,6 +293,10 @@
 								}
 							}
 			            }
+						
+						if (usePassAprLine == "YES" && result.vo.passAprLineFlag == "Y") {
+							document.getElementById("setPassAprLineFlag").checked = true;
+						}
 						
 						<c:if test="${isReform}">
 							document.getElementById("reform-checkbox").checked = true;
@@ -1033,7 +1040,16 @@
 					$("#" + this).prop("checked", true);
 				});
 			}		
-			//
+		    
+		    //G버전 연동양식 및 일괄기안 체크박스 있을때 쓰는놈
+		    /* function changePassAprFlag() {
+				if ($("input:checkbox[id='setConnFlag']").is(":checked") || $("input:checkbox[id='setDraftAllFlag']").is(":checked")) {
+					$("input:checkbox[id='setPassAprLineFlag']").attr("checked", false);
+					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", true);
+				} else {
+					$("input:checkbox[id='setPassAprLineFlag']").attr("disabled", false);
+				}
+			} */
 		</script>
 		<!-- FormBuilder -->
 		<c:if test="${useReform}">
@@ -1115,8 +1131,11 @@
                 <tr>
 					<td colspan="8" style="width:10%; text-align:center; <c:if test="${approvalFlag == 'S' }">display:none;</c:if>">
 						<input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
+					</td>
+					<td colspan="8" style="width:10%; text-align:center;">
+					<c:if test="${approvalFlag eq 'G'}">
 						<!-- FormBuilder -->
-						<c:if test="${useReform && approvalFlag == 'G'}">
+						<c:if test="${useReform}">
 							<input type="checkbox" id="reform-checkbox" name="reform-checkbox" onchange="onReformCheckboxClickEvent()"/>
 							<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
 						</c:if>
@@ -1124,6 +1143,8 @@
                         <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
                         <%--<input type="checkbox" id="setDraftAllFlag" onclick="changePassAprFlag()" style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"/> 일괄기안
 						<input type="checkbox" id="setPassAprLineFlag" /> 기결재통과--%>
+					</c:if>
+					<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 					</td>
 				</tr>
 			</table>

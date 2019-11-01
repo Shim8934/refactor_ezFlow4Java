@@ -133,6 +133,7 @@
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			
 			var useRedraftOpinionKeep = "<c:out value='${useRedraftOpinionKeep}'/>";
+			var passAprLine = "";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -310,7 +311,11 @@
 				        }
                 	}
 		        } else {
-		        	setFirstDrafter();
+		        	if (g_DraftFlag != "REDRAFT") {
+			        	setFirstDrafter();
+		        	} else {
+		        		LastSignSN = 1;
+		        	}
 		        	setAutoProperty();
 		        }
 		        getGongRamDocInfo();
@@ -1266,6 +1271,7 @@
 	                        } else {
 	    	                    GetDraftAprLineInfo(retvalue);
 	                        }
+	    		            passAprLine = "N";
 	    		            btnSendDraftEnable = "true";
 	    		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
 	    		            LastSignSN = "1";
@@ -1562,6 +1568,8 @@
 			        parameter[56] = limitDate;
 		        }
 		        
+		        parameter[60] = passAprLine;
+		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
@@ -1601,7 +1609,7 @@
 		                    btnSendDraftEnable = "true";
 
 		                    if (approvalFlag == "S") {
-			                    SGetDraftAprLineInfo(ret);
+		                    	SGetDraftAprLineInfo(ret);
 		                    } else {
 			                    GetDraftAprLineInfo(ret);
 		                    }
@@ -1698,7 +1706,7 @@
 		                	tempPublic = ret[11];
 		                	SetDocOption(ret[20]);
 		                }
-		                
+		                passAprLine = ret[32];
 		                SummaryFlag = true;
 		
 		            }

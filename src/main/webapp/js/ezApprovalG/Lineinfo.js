@@ -754,13 +754,18 @@ function APRLINESNDownFunction() {
     		var pAPRLINE = new ListView();
             pAPRLINE.LoadFromID("lvAPRLINE");
             var pSelectedRow = pAPRLINE.GetSelectedRows();
+            
+            if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRow[0], "DATA12") == "004" || GetAttribute(pSelectedRow[0], "DATA12") == "003" || GetAttribute(pSelectedRow[0], "DATA12") == "002")) {
+            	OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.");
+            	return;
+            }
 
             if (pSelectedRow[0] == undefined) {
                 OpenAlertUI(strLangS574);
                 return;
             }
 
-            if ((GetAttribute(pSelectedRow[0], "DATA4") != null ? GetAttribute(pSelectedRow[0], "DATA4").toLowerCase() : "") == pUserID.toLowerCase() && pSelectedRow[0].childNodes[0].innerHTML == "1") {
+            if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRow[0], "DATA4") != null ? GetAttribute(pSelectedRow[0], "DATA4").toLowerCase() : "") == pUserID.toLowerCase() && pSelectedRow[0].childNodes[0].innerHTML == "1") {
                 OpenAlertUI(strLangS575);
                 return;
             }
@@ -769,6 +774,12 @@ function APRLINESNDownFunction() {
             if (pSelectedRow.length != 0) {
                 var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
 
+                if (p_NextSelRow.getAttribute("data12") != null && (p_NextSelRow.getAttribute("data12") == "003" || p_NextSelRow.getAttribute("data12") == "004")) {
+                	OpenAlertUI(strLangS576);
+                	return;
+                }
+
+                
                 if ((GetAttribute(p_NextSelRow, "DATA4") != null ? GetAttribute(p_NextSelRow, "DATA4").toLowerCase() : "") == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
                     OpenAlertUI(strLangS576);
                     return;
@@ -849,6 +860,11 @@ function APRLINESNDownFunction() {
     		pAPRLINE.LoadFromID("lvAPRLINE");
     		var pSelectedRow = pAPRLINE.GetSelectedRows();
     		
+    		if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRow[0], "DATA12") == "004" || GetAttribute(pSelectedRow[0], "DATA12") == "003" || GetAttribute(pSelectedRow[0], "DATA12") == "002")) {
+				OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.");
+				return;
+    		}
+    		
     		if(pSelectedRow[0] == undefined){
     			OpenAlertUI(strLangS574);
     			return;            
@@ -864,6 +880,11 @@ function APRLINESNDownFunction() {
     		var pSelAprLineState = pSelectedRow[0].getAttribute("DATA12");
     		if (pSelectedRow.length != 0) {
     			var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
+    			
+    			if ($("input:checkbox[id='passAprLine']").is(":checked") && p_NextSelRow.getAttribute("data12") != null && (p_NextSelRow.getAttribute("data12") == "003" || p_NextSelRow.getAttribute("data12") == "004")) {
+    				OpenAlertUI(strLangS576);
+    				return;
+    			}
     			
     			if(p_NextSelRow == undefined || p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
     				OpenAlertUI(strLangS576);
@@ -1082,6 +1103,11 @@ function APRLINESNUPPERFunction() {
     		var pAPRLINE = new ListView();
             pAPRLINE.LoadFromID("lvAPRLINE");
             var pSelectedRows = pAPRLINE.GetSelectedRows();
+            
+            if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRows[0], "DATA12") == "003" || GetAttribute(pSelectedRows[0], "DATA12") == "002")) {
+            	OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.");
+            	return;
+            }
 
             if (pSelectedRows[0] == undefined) {
                 OpenAlertUI(strLangS574);
@@ -1167,6 +1193,11 @@ function APRLINESNUPPERFunction() {
     		var pAPRLINE = new ListView();
     		pAPRLINE.LoadFromID("lvAPRLINE");
     		var pSelectedRows = pAPRLINE.GetSelectedRows();
+    		
+    		if ($("input:checkbox[id='passAprLine']").is(":checked") && (GetAttribute(pSelectedRows[0], "DATA12") == "004" || GetAttribute(pSelectedRows[0], "DATA12") == "003" || GetAttribute(pSelectedRows[0], "DATA12") == "002")) {
+    			OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.");
+    			return;
+    		}
     		
     		if (pSelectedRows.length != 0) {
     			if (pSelectedRows[0].childNodes[0].innerHTML.replace("★","").replace("⊙","") == 1) {
@@ -1305,6 +1336,9 @@ function AprLineChangeType() {
         var pTmpAprLineStateName = strLangAprState1;
 
         for (i = 0; i < pTotalRowsLen - 1; i++) {
+        	if ($("input:checkbox[id='passAprLine']").is(":checked") && ($(pTotalRows[i]).attr("DATA12") == "004" || $(pTotalRows[i]).attr("DATA12") == "003" || $(pTotalRows[i]).attr("DATA12") == "002")) {
+        		continue;
+        	}
             SetAttribute(pTotalRows[i], "DATA12", pTmpAprLineState);
             pTotalRows[i].cells[5].innerHTML = pTmpAprLineStateName;
             if(GetAttribute(pTotalRows[i], "DATA11", pTmpAprLineState) == strAprType14){
@@ -2026,6 +2060,14 @@ function APRLINEATTENDERDELFunction()
 	  if (approvalFlag == "S") {
 		  var pAPRLINE = new ListView();
 	        pAPRLINE.LoadFromID("lvAPRLINE");
+	        
+	        var aprState = $(pAPRLINE.GetSelectedRows()).attr("DATA12");
+	        
+	        if ($("input:checkbox[id='passAprLine']").is(":checked") && (aprState == "004" || aprState == "003" || aprState == "004")) {
+	        	OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.")
+	        	return;
+	        }
+
 	        var pSelectedRow = pAPRLINE.GetSelectedRows();
 
 	        pSelAprLineState = GetAttribute(pSelectedRow[0], "DATA12");
@@ -2075,6 +2117,13 @@ function APRLINEATTENDERDELFunction()
 		  var pAPRLINE = new ListView();      //// ListView 선언
 		  pAPRLINE.LoadFromID("lvAPRLINE");
 		  var pSelectedRow = pAPRLINE.GetSelectedRows();
+		  
+		  var aprState = $(pAPRLINE.GetSelectedRows()).attr("DATA12");
+	        
+		if ($("input:checkbox[id='passAprLine']").is(":checked") && (aprState == "004" || aprState == "003" || aprState == "004")) {
+			OpenAlertUI("기결재통과시 기결재자의 결재선은 변경할 수 없습니다.")
+			return;
+		}
 		  
 		  //var pSelectedRow = APRLINE.multiselects;
 		  //if(pSelectedRow.length != 0 && pSelectedRow != null && pSelectedRow.item(0).index != -1)
@@ -2352,8 +2401,13 @@ function SAPRLINETEMPLETXMLParsing() {
             }
 
         if (pReDraftFlag == "REDRAFT") {
-            GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
-            GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+        	if ($(tr).attr("DATA12") == "002" || ($(tr).attr("DATA12") == "003") && $("input:checkbox[id='passAprLine']").is(":checked")) {
+				GetXml = GetXml + "<DATA name='ProcessDate'>" + MakeXMLString(GetAttribute(tr, "DATA1")) + "</DATA>";
+				GetXml = GetXml + "<DATA name='ReceivedDate'>" + MakeXMLString(GetAttribute(tr, "DATA2")) + "</DATA>";
+			} else {
+				GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
+				GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+			}
         }
         else {
             GetXml = GetXml + "<DATA name='ProcessDate'>" + GetAttribute(tr, "DATA1") + "</DATA>";
