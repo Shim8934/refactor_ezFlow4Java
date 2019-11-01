@@ -725,8 +725,6 @@
 												WHERE
 													aprmemberid = #v_USERID#
 												AND
-													(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
-												AND
 													tenant_id = #v_TENANTID#
 												AND
                                                     companyid IN(
@@ -13152,35 +13150,33 @@
 				WHERE
 					aprmemberid = #v_USERID#
 				AND
-					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
-				AND
 					tenant_id = #v_TENANTID#
 				AND
-            companyid IN(
-            SELECT
-            extensionattribute2
-            FROM
-            TBL_DEPTMASTER
-            INNER JOIN
-            TBL_ADDJOBMASTER
-            ON
-            (TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
-            AND
-            TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
-            WHERE
-            TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
-            AND
-            TBL_ADDJOBMASTER.cn = #v_USERID#
-            UNION ALL
-            SELECT
-            physicaldeliveryofficename
-            FROM
-            TBL_USERMASTER
-            WHERE
-            cn = #v_USERID#
-            AND
-            tenant_id = #v_TENANTID#
-            ))
+					companyid IN(
+						SELECT
+							extensionattribute2
+						FROM
+							TBL_DEPTMASTER
+						INNER JOIN
+							TBL_ADDJOBMASTER
+						ON
+							(TBL_ADDJOBMASTER.tenant_id = TBL_DEPTMASTER.tenant_id
+						AND
+							TBL_DEPTMASTER.cn = TBL_ADDJOBMASTER.deptid)
+						WHERE
+							TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
+						AND
+							TBL_ADDJOBMASTER.cn = #v_USERID#
+						UNION ALL
+						SELECT
+							physicaldeliveryofficename
+						FROM
+							TBL_USERMASTER
+						WHERE
+							cn = #v_USERID#
+						AND
+							tenant_id = #v_TENANTID#
+					))
 		
 		</isEqual>
 		<!-- 공람할 문서 --><!-- 2018-04-30 천성준 (#12468) 대리 결재자여도 회람(공람)문서는 제외 -->
