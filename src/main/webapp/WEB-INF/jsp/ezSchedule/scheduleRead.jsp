@@ -19,7 +19,7 @@
 			<c:if test="${scheduleInfo.scheduleType == 3}"><spring:message code='ezSchedule.t323' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 7}"><spring:message code='ezSchedule.t324' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 8}"><spring:message code='ezSchedule.t322' /></c:if>
-			<c:if test="${scheduleInfo.scheduleType != 1 && scheduleInfo.scheduleType != 2 && scheduleInfo.scheduleType != 3 && scheduleInfo.scheduleType != 7 && scheduleInfo.scheduleType != 8}">(</c:if>
+			<c:if test="${scheduleInfo.scheduleType == 9}">(</c:if>
 			<c:if test="${primary == '1' && scheduleInfo.ownerName != 'undefined'}"><c:out value="${scheduleInfo.ownerName}" /></c:if>
 	        <c:if test="${primary != '1' && scheduleInfo.ownerName2 != 'undefined'}"><c:out value="${scheduleInfo.ownerName2}" /></c:if> )
 		</title>
@@ -106,7 +106,7 @@
 	                document.all.message.style.width = document.body.clientWidth - 25;
 	
 	            if ((scheduletype != "1" && scheduletype != "6" && scheduletype != "7") || (scheduletype != "7" && scheduletype != "1")) {
-	                if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6")) {
+	                if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6" && scheduletype != "9")) {
 	                    document.getElementById("messagetd").style.height = document.body.clientHeight - 250 + "PX";
 	                }
 	            } else {
