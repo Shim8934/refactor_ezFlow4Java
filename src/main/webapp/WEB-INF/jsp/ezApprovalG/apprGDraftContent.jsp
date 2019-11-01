@@ -28,6 +28,10 @@
 	            var ret = false;
 	            var obj = event.srcElement;
 	            try {
+					if (obj.nodeName == "TEXTAREA") {
+						return true;
+					}
+
 	                if (obj.nodeName == "#text")
 	                    obj = obj.parentElement;
 	
@@ -65,6 +69,10 @@
 	                parent.DocumentComplete();
 	                document.execCommand("AutoUrlDetect", false, false);
 	                document.querySelector("div").addEventListener("paste", function(e) {
+						if (e.target.tagName === "TEXTAREA") {
+							return;
+						}
+
 	                    e.preventDefault();
 	                    var text = '';
 	                    if (e.clipboardData) {
