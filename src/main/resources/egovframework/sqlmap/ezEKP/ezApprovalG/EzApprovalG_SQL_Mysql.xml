@@ -524,7 +524,7 @@
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="2">
-			
+
 				<![CDATA[
 				SELECT 
 					* 
@@ -11099,8 +11099,6 @@
 					TBL_APRLINEINFO
 				WHERE
 					aprmemberid = #v_USERID#
-				AND
-					(aprstate = '002' OR aprstate = '005' OR aprstate = '000')
 				AND
 				 	tenant_id = #v_TENANTID#
 				AND
