@@ -1720,6 +1720,19 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("primaryLang", primaryLang);
 		
+		int pop3MaxFetchSize;
+		
+		try {
+			String pop3MaxFetchSizeStr = ezCommonService.getTenantConfig("Pop3MaxFetchSize", userInfo.getTenantId());
+			pop3MaxFetchSize = Optional.ofNullable(pop3MaxFetchSizeStr).map(Integer::parseInt).orElse(40);
+		} catch (Exception ex) {
+			pop3MaxFetchSize = 40;
+		}
+		
+		String pop3MaxFetchSizeMessage = egovMessageSource.getMessageExtend("ezEmail.t500", new Object[] { pop3MaxFetchSize }, locale);
+		
+		model.addAttribute("pop3MaxFetchSizeMessage", pop3MaxFetchSizeMessage);
+		
 		logger.debug("infoXML=" + infoXML);
 		logger.debug("publicModulus=" + publicModulus);
 		logger.debug("publicExponent=" + publicExponent);
