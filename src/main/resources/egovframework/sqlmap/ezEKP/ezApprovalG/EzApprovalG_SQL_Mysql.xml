@@ -14837,7 +14837,13 @@
 	<select id ="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int">
 	<![CDATA[
 		SELECT 
-			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID,IFNULL(E.PROCESSYN,'S'))
+			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
+   	]]>
+			<isEqual property="approvalFlag" compareValue="S">
+			,IFNULL(E.PROCESSYN,'S')
+			</isEqual>
+	<![CDATA[
+			)
    		FROM 
    			TBL_ENDAPRDOCINFO 
    		LEFT OUTER JOIN 
