@@ -6196,7 +6196,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String listImage = photoViewList.get(k).getImageID();
 			
 			if (imageID.equals(listImage)) {
-				imageContent = photoViewList.get(k).getFileContent();
+				imageContent = commonUtil.cleanValue(photoViewList.get(k).getFileContent());
 				String filePath = photoViewList.get(k).getFilePath();
 				int idx = filePath.lastIndexOf(commonUtil.separator);
 				
