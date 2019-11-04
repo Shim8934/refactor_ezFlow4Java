@@ -1221,6 +1221,11 @@ public class EzEmailUtil {
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";
 		} else if(part.isMimeType("text/html")){
+			// multipart/related가 중첩되어 있는 경우
+			// 이전 multipart/related 파트에서 이미 text/html 파트가 발견된 경우가 있어
+			// 이를 나타내기 위해 추가함.
+			extraMap.put("htmlPartFound", true);
+			
 			String strContent = null;			
 			String contentType = part.getContentType();
 			
@@ -1673,11 +1678,16 @@ public class EzEmailUtil {
 				}
 			}
 			
+			// multipart/related가 중첩되어 있는 경우
+			// 이전 multipart/related 파트에서 이미 text/html 파트가 발견된 경우가 있어
+			// 이를 확인함.
+			boolean htmlPartFound = (boolean)extraMap.get("htmlPartFound");
+			
 			// text/html 파트 혹은 multipart/alternative 파트가 발견되지 않았을 경우엔 
 			// text/plain 파트를 찾는다.
 			// pacific에서 보낸 메일 중에 multipart/related안에 text/plain 파트만 있고 인라인 이미지가 첨부된 
 			// 경우가 있어 추가함.
-			if (!isHtmlOrAlternativeFound) {
+			if (!htmlPartFound && !isHtmlOrAlternativeFound) {
 				logger.debug("isHtmlOrAlternativeFound is false. Trying to find the text/plain part..");
 				
 				for (int i = 0; i < count; i++) {
@@ -2733,7 +2743,11 @@ public class EzEmailUtil {
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
-				if (p instanceof MimePart) {
+				if (p.isMimeType("multipart/related")) {
+					if (copyInlineParts(p, dest, includeAttachment, convertInlineImageToAttachment)) {
+						return true;
+					}					
+				} else if (p instanceof MimePart) {
 					// text/html 파트가 없으면 인라인 이미지 파트를 첨부파일 파트로 변환한다.(이미지를 첨부로 대신 표시하기 위해)
 					if (convertInlineImageToAttachment) {
 						if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {
@@ -3015,7 +3029,15 @@ public class EzEmailUtil {
 				Part p = mp.getBodyPart(i);
 				
 				if (p instanceof MimePart) {
-					if (((MimePart)p).getContentID() != null && ((MimePart)p).getContentID().equals(contentId)) {
+					if (p.isMimeType("multipart/related")) {
+						p = getInlinePart(p, contentId);
+						
+						if (p != null) {
+							logger.debug("getInlinePart ended.");
+							
+							return p;
+						}						
+					} else if (((MimePart)p).getContentID() != null && ((MimePart)p).getContentID().equals(contentId)) {
 						logger.debug("getInlinePart ended.");
 						
 						return p;
