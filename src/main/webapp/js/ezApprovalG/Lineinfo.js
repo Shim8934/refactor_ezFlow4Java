@@ -2047,7 +2047,7 @@ function APRLINEATTENDERDELFunction()
 	                if (pReDraftAprLineFlag) {
 	                    var TmpAprLineState = GetAttribute(pSelectedRow[0], "DATA12");
 	                    var tempcellvalue = getNodeText(pSelectedRow[0].cells[0]);
-	                    if ((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRow[0], "DATA4") == pUserID || tempcellvalue == "1") {
+	                    if ((TmpAprLineState == "002" || TmpAprLineState == "005") || tempcellvalue == "1") {
 	                        var pAlertContent = strLangS249;
 	                        OpenAlertUI(pAlertContent);
 	                        return;
