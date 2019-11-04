@@ -366,14 +366,14 @@
                                                     WHERE
                                                         TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
                                                     AND
-                                                        TBL_ADDJOBMASTER.CN = #v_PUSERID#
+                                                        TBL_ADDJOBMASTER.CN = #v_USERID#
                                                     UNION ALL
                                                     SELECT
                                                         PHYSICALDELIVERYOFFICENAME
                                                     FROM
                                                         TBL_USERMASTER
                                                     WHERE
-                                                        CN = #v_PUSERID#
+                                                        CN = #v_USERID#
                                                     AND
                                                         TENANT_ID = #v_TENANTID#
                                                     )
@@ -449,14 +449,14 @@
                                                     WHERE
                                                         TBL_ADDJOBMASTER.TENANT_ID = #v_TENANTID#
                                                     AND
-                                                        TBL_ADDJOBMASTER.CN = #v_PUSERID#
+                                                        TBL_ADDJOBMASTER.CN = #v_USERID#
                                                     UNION ALL
                                                     SELECT
                                                         PHYSICALDELIVERYOFFICENAME
                                                     FROM
                                                         TBL_USERMASTER
                                                     WHERE
-                                                        CN = #v_PUSERID#
+                                                        CN = #v_USERID#
                                                     AND
                                                         TENANT_ID = #v_TENANTID#
                                                     )
@@ -15576,14 +15576,14 @@
                         WHERE
                             TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
                         AND
-                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                            TBL_ADDJOBMASTER.cn = #v_PUSERID#
                         UNION ALL
                         SELECT
                             physicaldeliveryofficename
                         FROM
                             TBL_USERMASTER
                         WHERE
-                            cn = #v_USERID#
+                            cn = #v_PUSERID#
                         AND
                             tenant_id = #v_TENANTID#
                     )
@@ -15665,7 +15665,7 @@
                                     FROM
                                         TBL_USERMASTER
                                     WHERE
-                                        cn = #v_USERID#
+                                        cn = #v_PUSERID#
                                     AND
                                         tenant_id = #v_TENANTID#
                                 )
@@ -29305,14 +29305,14 @@
                         WHERE
                             TBL_ADDJOBMASTER.tenant_id = #v_TENANTID#
                         AND
-                            TBL_ADDJOBMASTER.cn = #v_USERID#
+                            TBL_ADDJOBMASTER.cn = #v_PUSERID#
                         UNION ALL
                         SELECT
                             physicaldeliveryofficename
                         FROM
                             TBL_USERMASTER
                         WHERE
-                            cn = #v_USERID#
+                            cn = #v_PUSERID#
                         AND
                             tenant_id = #v_TENANTID#
                     )
