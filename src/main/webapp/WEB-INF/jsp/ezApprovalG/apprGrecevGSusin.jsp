@@ -1107,7 +1107,7 @@
 		        field.innerHTML = " ";
 		        if (NodeList.length > 0) {
 		            for (i = NodeList.length - 1; i >= 0; i--) {
-		        		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><table style="font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:100%;"><tbody><tr style="height:25px"><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px">' + getNodeText(NodeList[i].childNodes[6]) + '</td></tr></tbody></table>';
+		        		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;margin-bottom: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><p style="margin-top: 0px;margin-left: 10px;margin-bottom: 0px;">' + getNodeText(NodeList[i].childNodes[6]) + '</p>';
 		        		$(field).append(opinionsTable);
 		            }
 		        	SaveFile();
