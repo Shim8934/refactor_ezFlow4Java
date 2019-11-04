@@ -54,13 +54,20 @@ function RadioOnClick() {
 	}
 }
 
-function onInputTextarea() {
+function onInputTextarea(event) {
 	var textarea = event.target;
-	textarea.setAttribute("value", textarea.value);
-	textarea.innerHTML = textarea.value;
+	var value = textarea.value;
+	
+	if (textarea.oldValue === value) {
+		return;
+	}
+	
+	textarea.oldValue = value;
+	textarea.setAttribute("value", value);
+	textarea.innerHTML = value;
 	
 	if (textarea.hasAttribute("auto-height")) {
 		textarea.style.height = "0px";
-		textarea.style.height = (10 + textarea.scrollHeight) + "px";
+		textarea.style.height = textarea.scrollHeight + "px";
 	}
 }

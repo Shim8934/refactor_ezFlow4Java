@@ -1720,6 +1720,19 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("primaryLang", primaryLang);
 		
+		int pop3MaxFetchSize;
+		
+		try {
+			String pop3MaxFetchSizeStr = ezCommonService.getTenantConfig("Pop3MaxFetchSize", userInfo.getTenantId());
+			pop3MaxFetchSize = Optional.ofNullable(pop3MaxFetchSizeStr).map(Integer::parseInt).orElse(40);
+		} catch (Exception ex) {
+			pop3MaxFetchSize = 40;
+		}
+		
+		String pop3MaxFetchSizeMessage = egovMessageSource.getMessageExtend("ezEmail.t500", new Object[] { pop3MaxFetchSize }, locale);
+		
+		model.addAttribute("pop3MaxFetchSizeMessage", pop3MaxFetchSizeMessage);
+		
 		logger.debug("infoXML=" + infoXML);
 		logger.debug("publicModulus=" + publicModulus);
 		logger.debug("publicExponent=" + publicExponent);
@@ -1828,6 +1841,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ "<script type='text/javascript'>"
 				/*+ "selToggleList(document.getElementById('close'), 'ul', 'li', '0');"*/
 				+ "</script>"
+				+ "<a  class='imgbtn'><span onClick='location.reload()'>" + egovMessageSource.getMessage("ezEmail.ldh05", locale) + "</span></a>"				
 				+ "<div class='nobox' id='status_view' style='background-color:#FFFFFF; border-style:solid; border-width:1px; border-color:#ddd; overflow-y:auto; height:265px; overflow-x:auto; width:98%; padding-top:5px; padding-left:5px; padding-right:3px; margin-top:7px;'>");
 		out.write(egovMessageSource.getMessage("ezEmail.t491", locale));
 		out.flush();
