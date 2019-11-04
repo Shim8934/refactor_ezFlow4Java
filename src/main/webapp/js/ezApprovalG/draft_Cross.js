@@ -2694,25 +2694,17 @@ function openOpinionUI_New_Complete(ret) {
 }
 
 function makeOpinionList(OpinionXML) {
-    var fields = message.GetFieldsList();
+	var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, "opinions");
     if (!field) return;
 
-    var firstFlag = true;
     var NodeList = SelectNodes(OpinionXML, "LISTVIEWDATA/ROWS/ROW");
+    field.innerHTML = " ";
     if (NodeList.length > 0) {
-    	var opinionsTable = document.createElement("table");
-    	$(opinionsTable).attr("style","font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:100%;");
         for (i = NodeList.length - 1; i >= 0; i--) {
-        	if(getNodeText(NodeList[i].childNodes[5]) == pUserID){
-        		var opinionTr = '<tr style="height:25px"><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px;" bgcolor="#f8f8fa" align="center">' + getNodeText(NodeList[i].childNodes[0]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:60px" align="center">' + getNodeText(NodeList[i].childNodes[1]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px">' + getNodeText(NodeList[i].childNodes[6]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:30px" align="center">' + getNodeText(NodeList[i].childNodes[2]) + '</td><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:100px" align="center">' + getNodeText(NodeList[i].childNodes[3]) + '</td></tr>';
-        		$(opinionsTable).append(opinionTr);
-        	}
+    		var opinionsTable = '<p style="margin-top: 10px;margin-left: 3px;">▶ ' + getNodeText(NodeList[i].childNodes[3]) + ' - ' + getNodeText(NodeList[i].childNodes[2]) + ' - ' + getNodeText(NodeList[i].childNodes[1]) + '</p><table style="font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:100%;"><tbody><tr style="height:25px"><td style="BORDER-BOTTOM: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-RIGHT: black 1px solid; width:373px">' + getNodeText(NodeList[i].childNodes[6]) + '</td></tr></tbody></table>';
+    		$(field).append(opinionsTable);
         }
-        field.innerHTML = " ";
-        $(field).append(opinionsTable);
-    } else {
-        field.innerHTML = " ";
     }
 }
 
