@@ -13963,17 +13963,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.updateAprLineInfo(map3);
 			
+			//처리하고있는 결재유형이 병렬협조일때
 			if (curAprType.equals(staATByungRyulHyubJo)) {
 				for (int i = 0; i < dlength; i++) {
 					String tmpAprType = docXML2.getElementsByTagName("APRTYPE").item(i).getTextContent();
 					String tmpAprStat = docXML2.getElementsByTagName("APRSTATE").item(i).getTextContent();
 					
+					//병렬협조로 같이 걸려있는 사람들 중 반송한사람들만 같이 진행으로 수정처리
 					if (tmpAprType.equals(staATByungRyulHyubJo)) {
 						if (tmpAprStat.equals(staASBanSong)) {
 							map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(i).getTextContent());
 							ezApprovalGDAO.updateAprLineInfo(map3);
+							
+							//병렬협조 반송한사람들 중 부재사유가 있는 부재자가 있을 경우, 부재사유 기입 및 승인처리
+							absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getCompanyID());
+							if (!absentReason.trim().equals("")) {
+								subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId(), userInfo.getLocale(), userInfo.getRealPath());
+								if (!subSQL.toUpperCase().equals("FALSE")) {
+									map3.put("v_APRSTATE", staASSungIn);
+									map3.put("v_REASONDONOTAPPROV", makeXMLString(absentReason));
+									
+									ezApprovalGDAO.updateAprLineInfo3(map3);
+								}
+							}
 						}
 					} else {
+						//병렬협조로 같이 걸려있는 사람이 없으면 끝
 						break;
 					}
 				}
