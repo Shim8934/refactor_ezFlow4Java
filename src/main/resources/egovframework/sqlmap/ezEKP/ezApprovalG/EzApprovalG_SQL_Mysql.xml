@@ -7111,6 +7111,7 @@
 			SELECT 
 					DOCID ,
 		            APRTYPE ,
+		            APRSTATE ,
 		            APRMEMBERSN ,
 		            APRMEMBERID ,
 		            APRMEMBERNAME ,
@@ -32104,5 +32105,20 @@
 			COMPANYID = #companyID#
 		AND
 			APRSTATE = '002'
+	</update>
+	
+	<update id="EzApprovalG.setAprLineStateBanSongToStay" parameterClass="Map">
+		UPDATE
+			TBL_APRLINEINFO
+		SET
+			APRSTATE = '001'
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			APRSTATE = '004'
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
 	</update>
 </sqlMap>

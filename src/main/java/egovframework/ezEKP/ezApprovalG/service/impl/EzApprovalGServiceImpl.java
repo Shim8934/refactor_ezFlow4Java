@@ -13963,6 +13963,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.updateAprLineInfo(map3);
 			
+			if (curAprType.equals(staATByungRyulHyubJo)) {
+				for (int i = 0; i < dlength; i++) {
+					String tmpAprType = docXML2.getElementsByTagName("APRTYPE").item(i).getTextContent();
+					String tmpAprStat = docXML2.getElementsByTagName("APRSTATE").item(i).getTextContent();
+					
+					if (tmpAprType.equals(staATByungRyulHyubJo)) {
+						if (tmpAprStat.equals(staASBanSong)) {
+							map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(i).getTextContent());
+							ezApprovalGDAO.updateAprLineInfo(map3);
+						}
+					} else {
+						break;
+					}
+				}
+			}
+			
+			ezApprovalGDAO.setAprLineStateBanSongToStay(map);
 			logger.debug("doApprove passAprLine ended");
 			return "TRUE";
 		} else {

@@ -3500,4 +3500,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateDrafterToApproved(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateDrafterToApproved", map);
 	}
+	
+	public void setAprLineStateBanSongToStay(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setAprLineStateBanSongToStay", map);
+	}
 }
