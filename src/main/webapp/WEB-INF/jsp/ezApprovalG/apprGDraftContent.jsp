@@ -351,6 +351,7 @@
 	                    }
 	                    
 	                    if (parent.pDraftFlag != "REDRAFT") {
+	                    	BodyTagsEnabled(document.getElementById('div_Content'));
   							var Body_innerHTML = "";
 	                        if (document.getElementById("body") != null) {
 	                            if (document.getElementById("body").getAttribute("class") == "FIELD") {
