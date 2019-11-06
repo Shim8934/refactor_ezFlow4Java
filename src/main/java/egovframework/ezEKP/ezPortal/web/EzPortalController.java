@@ -24,6 +24,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -4118,7 +4119,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * */
 	@RequestMapping(value="/ezPortal/getTotalSearchList.do")
 	@ResponseBody
-	public Object getTotalSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo , Locale locale, @RequestBody Map<String, Object> paramData) throws Exception {
+	public Object getTotalSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo , Locale locale, @RequestBody Map<String, Object> paramData, HttpServletRequest req) throws Exception {
 		logger.debug("getTotalSearchList is started.");
 		
 		logger.debug("paramData : " + paramData.toString());
@@ -4126,43 +4127,54 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		//List<Map<String, Object>> searchList = new ArrayList<Map<String, Object>>();
-		Map<String, Object> searchResult = new HashMap<String, Object>();
+		JSONObject searchResult = new JSONObject();
 		Map<String, Object> ret = new HashMap<String, Object>();
 		
 		//타입이 전체인 경우, 결재인 경우, 게시판인 경우
 		String type = (String) paramData.get("type");
 		String searchURL = "";
+		
+		searchResult = ezPortalService.callSearchServerForResult2(userInfo, paramData, searchURL, userInfo.getOffset());
 
-		if(type.equalsIgnoreCase("all")) {
-			//결재인 경우
-			paramData.put("type", "approval");
+		//호출  url 불러오기
+		
+		//접속하고자 하는 url.
+		String totalSearchURL = config.getProperty("config.totalSearchURL");
+		
+		JSONObject result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult);
+		
+		logger.debug("result : " + result.toJSONString());
+		
+		/*if(type.equalsIgnoreCase("all")) {
+			//전체인 경우
+			paramData.put("type", "all");
 			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
-			searchResult = ezPortalService.callSearchServerForResult(searchURL, userInfo.getOffset());      // 데이터 추출
+			searchResult = ezPortalService.callSearchServerForResult(userInfo, paramData, searchURL, userInfo.getOffset());      // 데이터 추출
 			
 			ret.put("approvalList", searchResult);
 			
 			// 게시판인 경우
 			paramData.put("type", "board");
 			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
-			searchResult = ezPortalService.callSearchServerForResult(searchURL, userInfo.getOffset());      // 데이터 추출
+			searchResult = ezPortalService.callSearchServerForResult(userInfo, paramData, searchURL, userInfo.getOffset());      // 데이터 추출
 			
 			ret.put("boardList", searchResult);
 		} else if(type.equalsIgnoreCase("approval")) {
 			paramData.put("type", "approval");
 			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
-			searchResult = ezPortalService.callSearchServerForResult(searchURL, userInfo.getOffset());      // 데이터 추출
+			searchResult = ezPortalService.callSearchServerForResult(userInfo, paramData, searchURL, userInfo.getOffset());      // 데이터 추출
 			
 			ret.put("approvalList", searchResult);
 		} else if(type.equalsIgnoreCase("board")) {
 			paramData.put("type", "board");
 			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
-			searchResult = ezPortalService.callSearchServerForResult(searchURL, userInfo.getOffset());      // 데이터 추출
+			searchResult = ezPortalService.callSearchServerForResult(userInfo, paramData, searchURL, userInfo.getOffset());      // 데이터 추출
 			
 			ret.put("boardList", searchResult);			
-		}
+		}*/
 		
 		logger.debug("getTotalSearchList is ended.");
-		return ret;
+		return result;
 	}
 	
 	/**

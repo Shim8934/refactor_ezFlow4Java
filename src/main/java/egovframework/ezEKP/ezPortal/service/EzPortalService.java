@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
+
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetMainMenuHtmlVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetPortletParametersVO;
@@ -251,4 +253,6 @@ public interface EzPortalService {
 	public Map<String, Object> callSearchServerForResult(String searchURL, String offset) throws Exception;
 	
 	public String chkBoardReadAuthor(String boardID, String accessID, int tenantID) throws Exception;
+	
+	public JSONObject callSearchServerForResult2(LoginVO userInfo, Map<String, Object> param, String searchURL, String offset) throws Exception;
 }

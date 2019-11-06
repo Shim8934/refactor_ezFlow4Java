@@ -358,7 +358,7 @@ function dblClickBoard(boardID, itemID) {
 	
 	if(readAuthor === "true") {
 		boardList.filter(function(e){
-			return e.BoardID === boardID && e.ItemID === itemID ? gubun = e.GUBUN : "";
+			return e.boardId === boardID && e.itemId === itemID ? gubun = e.gubun : "";
 		});
 	
 		//포토게시판:3, 썸네일게시판:4
@@ -390,10 +390,10 @@ function dblClickApproval(docID) {
 	}); */
 	
 	appList.filter(function(e){
-		e.DocID === docID ? docInfo = e : null;
+		e.docId === docID ? docInfo = e : null;
 	});
 
-	url += "?docID=" + encodeURI(docInfo.DocID) + "&docHref=" + encodeURI(docInfo.Href);
+	url += "?docID=" + encodeURI(docInfo.docId) + "&docHref=" + encodeURI(docInfo.href);
 	
 	openwindow(url, "", "", "");
 }
@@ -597,8 +597,8 @@ function callSearchController() {
 			data : JSON.stringify(data),
 			success : function (res) {
 				
-				var approvalList = res.approvalList;
-				var boardList = res.boardList;
+				var approvalList = res.approval;
+				var boardList = res.board;
 				var listCnt = 1;
 				
 				$("#approvalResult").empty();
@@ -644,8 +644,10 @@ function callSearchController() {
 					$("#boardResult").append(noData());
 				}
 				
-				// pagenation.
-				pagenation(pageObj(listCnt));
+				if (data.type !== "all") {
+					// pagenation.
+					pagenation(pageObj(listCnt));
+				}
 				
 				//전체 검색량
 				if(approvalList !== undefined && boardList !== undefined) {
@@ -690,14 +692,14 @@ function noData() {
 function boardDataAssembler(data) {
 	var str = "";	
 
-	str += "<tr boardid='"+ data.BoardID +"' itemid='"+ data.ItemID +"'>";
-	str += "<td>"+ data.BoardName + "</td>";
-	str += "<td>"+ data.Title + "</td>";
-	str += "<td>"+ data.WriterDeptName + "</td>";
-	str += "<td>"+ data.WriterName + "</td>";
-	str += "<td>"+ data.WriteDate + "</td>";
+	str += "<tr boardid='"+ data.boardId +"' itemid='"+ data.itemId +"'>";
+	str += "<td>"+ data.boardName + "</td>";
+	str += "<td>"+ data.title + "</td>";
+	str += "<td>"+ data.writerDeptName + "</td>";
+	str += "<td>"+ data.writerName + "</td>";
+	str += "<td>"+ data.writeDate + "</td>";
 	
-	if(data.Attachments !== '0') {
+	if(data.attachments != 0) {
 		str += "<td><img src='/images/newAttach.gif'></td>";	
 	} else {
 		str += "<td></td>";
@@ -713,14 +715,14 @@ function boardDataAssembler(data) {
 function approvalDataAssembler(data) {
 	var str = "";
 
-	str += "<tr docid='"+ data.DocID +"'>";
-	str += "<td>"+ data.DocNo + "</td>";
-	str += "<td>"+ data.DocTitle + "</td>";
-	str += "<td>"+ data.WriterDeptName + "</td>";
-	str += "<td>"+ data.WriterName + "</td>";
-	str += "<td>"+ data.EndDate + "</td>";
+	str += "<tr docid='"+ data.docId +"'>";
+	str += "<td>"+ data.docNo + "</td>";
+	str += "<td>"+ data.docTitle + "</td>";
+	str += "<td>"+ data.writerDeptName + "</td>";
+	str += "<td>"+ data.writerName + "</td>";
+	str += "<td>"+ data.endDate + "</td>";
 	
-	if(data.HasAttachYN === "Y") {
+	if(data.hasAttachYN === "Y") {
 		str += "<td><img src='/images/newAttach.gif'></td>";
 	} else {
 		str += "<td></td>";
