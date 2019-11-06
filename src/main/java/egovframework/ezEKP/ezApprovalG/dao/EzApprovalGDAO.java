@@ -3497,11 +3497,20 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGAprLineVO>) list("EzApprovalG.doApproveLineInfoForPassAprLine", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> doApproveLineInfoForCancelToPassAprLine(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.doApproveLineInfoForCancelToPassAprLine", map);
+	}
+	
 	public void updateDrafterToApproved(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateDrafterToApproved", map);
 	}
 	
 	public void setAprLineStateBanSongToStay(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.setAprLineStateBanSongToStay", map);
+	}
+	
+	public String getPassAprLineFlagByDocID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getPassAprLineFlagByDocID", map);
 	}
 }

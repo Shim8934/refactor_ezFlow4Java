@@ -10267,7 +10267,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 		String docID = request.getParameter("docID");
 		String formID = request.getParameter("formID");
-		String result = ezApprovalGService.isPassAprLineShow(docID, formID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGService.isPassAprLineShow(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 	
 		logger.debug("isPassAprLineShow result =" + result );
 		logger.debug("isPassAprLineShow ended.");

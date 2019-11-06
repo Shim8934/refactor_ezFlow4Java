@@ -1727,7 +1727,9 @@ s
 		                    btnSendDraftEnable = "true";
 		                    
 		                    if (approvalFlag == "S") {
-		                    	if (ret[32] != "Y") {
+		                    	if (ret[32] == "Y") {
+		                    		SReAprLineSingMapping(ret);
+		                    	} else {
 			                    	SGetDraftAprLineInfo(ret);
 		                    	}
 		                    } else {

@@ -698,5 +698,5 @@ public interface EzApprovalGService {
 	
 	public void sendMailToPassAprMember(String docID, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception;
 	
-	public String isPassAprLineShow(String docID, String formID, String companyID, int tenantId) throws Exception;
+	public String isPassAprLineShow(String docID, String formID, String userID, String companyID, int tenantId) throws Exception;
 }

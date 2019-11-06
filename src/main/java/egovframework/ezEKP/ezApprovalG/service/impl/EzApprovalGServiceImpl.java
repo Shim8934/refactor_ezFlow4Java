@@ -13815,15 +13815,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		List<ApprGAprLineVO> apprGAprLineVOList = null;
 		if (passAprLine != null && passAprLine.equals("Y")) {
 			apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfoForPassAprLine(map);
-			ezApprovalGDAO.updateDrafterToApproved(map);
 		} else {
 			apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
 		}
 		 
 		if (apprGAprLineVOList.size() < 1) {
-			ingFlag = "END";
-			map.put("v_MODE", ingFlag);
-			apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
+			if (passAprLine != null && passAprLine.equals("Y")) {
+				apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfoForCancelToPassAprLine(map);
+			} else {
+				ingFlag = "END";
+				map.put("v_MODE", ingFlag);
+				apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
+			}
 		}
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
@@ -13958,6 +13961,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map3.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		
 		if (passAprLine != null && passAprLine.equals("Y")) {
+			ezApprovalGDAO.updateDrafterToApproved(map);
+			
 			map3.put("v_APRSTATE", staASJinHang);
 			map3.put("v_APRMEMBERSN", curAprMemberSN);
 			
@@ -13969,9 +13974,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					String tmpAprType = docXML2.getElementsByTagName("APRTYPE").item(i).getTextContent();
 					String tmpAprStat = docXML2.getElementsByTagName("APRSTATE").item(i).getTextContent();
 					
-					//병렬협조로 같이 걸려있는 사람들 중 반송한사람들만 같이 진행으로 수정처리
+					//병렬협조로 같이 걸려있는 사람들 중 반송한사람들 같이 진행으로 수정처리
 					if (tmpAprType.equals(staATByungRyulHyubJo)) {
-						if (tmpAprStat.equals(staASBanSong)) {
+						if (tmpAprStat.equals(staASBanSong) || tmpAprStat.equals(staASDaeGi)) {
 							map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(i).getTextContent());
 							ezApprovalGDAO.updateAprLineInfo(map3);
 							
@@ -24445,6 +24450,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			if(aprMemberSn > 0) {
 				if(aprMemberSn == 1) {
+					String passAprFlag = ezApprovalGDAO.getPassAprLineFlagByDocID(map);
+					if (passAprFlag.equals("Y")) {
+						map.put("v_PASSAPRFLAG", passAprFlag);
+					}
+					
 					ezApprovalGDAO.updateDoCallBack(map);
 				}
 				map.put("v_APRMEMBERSN", aprMemberSn);
@@ -31178,16 +31188,54 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public String isPassAprLineShow(String docID, String formID, String companyID, int tenantId) throws Exception {
+	public String isPassAprLineShow(String docID, String formID, String userID, String companyID, int tenantId) throws Exception {
 		logger.debug("isPassAprLineShow started.");
+		
 		String result = "N";
+		boolean callBackFlag = false;
+		
+		String formInfo = getFormInfoDetail(formID, companyID, tenantId);
+		Document formDoc = commonUtil.convertStringToDocument(formInfo);
+		
+		String passAprLineFlag = formDoc.getElementsByTagName("PASSAPRLINEFLAG").item(0).getTextContent();
+		if (passAprLineFlag.equals("Y")) {
+			
+			String lineInfo = getAprLineInfoDB(docID, "1", userID, formID, companyID, tenantId, "", "", "APR");
+			Document lineDoc = commonUtil.convertStringToDocument(lineInfo);
+			
+			int lineLength = lineDoc.getElementsByTagName("ROW").getLength();
+			for (int i = 0; i < lineLength; i++) {
+				String pAprState = lineDoc.getElementsByTagName("APRSTATE").item(i).getTextContent();
+				String pAprType = lineDoc.getElementsByTagName("APRTYPE").item(i).getTextContent();
+				
+				if (!pAprType.equals("011") && !pAprType.equals("012")) {
+					if (pAprState.equals("004") || pAprState.equals("015")) {
+						result = "Y";
+						break;
+					} else if (pAprState.equals("003")) {
+						callBackFlag = true;
+					}
+				}
+			}
+			
+			if (result.equals("N") && callBackFlag) {
+				String functionType = getDocInfoDState(docID, "FUNCTIONTYPE", companyID, tenantId);
+				if (functionType.equals("006")) {
+					result = "Y";
+				}
+			}
+		}
+		
+		/*
+		String result = "N";
+		
 		Map<String, Object> map = new HashMap<>();
 		map.put("v_FORMID", formID);
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
 		map.put("v_FLAG", "1");
-
+		
 		List<ApprGFormVO> formList = ezApprovalGDAO.getFormInfoDetail(map);
 
 		for (ApprGFormVO form : formList) {
@@ -31215,7 +31263,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (bansongHesongFlag.equals("N")) {
 			logger.debug("isPassAprLineShow ended.");
 			return "N";
-		}
+		}*/
 
 		logger.debug("isPassAprLineShow ended.");
 		return result;

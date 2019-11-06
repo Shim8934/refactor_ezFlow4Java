@@ -4496,3 +4496,181 @@ function setFormAprOption(){
     if(formAprOption.indexOf("_a3_"))  //문서첨부
         setMenuBar("btnAprDocAttach", false);	
 }
+    
+//기결재통과 시, 기결재자 제외하고 사인칸 다시 그리고 정보 세팅해주는 메소드.. 급하게 만드느라 디버깅 거의 불가하게 만들어버림
+function SReAprLineSingMapping(ret) {
+	var lineXml = "";
+	
+	if (typeof(ret) == "object") {
+		lineXml = ret[1];
+		New_DrawAutoLine(lineXml, pDraftFlag);
+	} else {
+		return false;
+	}
+	
+	var SusinSN = "";
+	if (pDraftFlag == "SUSIN") {
+		SusinSN = "1";
+	}
+	
+	var reOrderSignName = new Array();
+	var reOrderSignTitle = new Array();
+	var reOrderHabyName = new Array();
+	var reOrderHabyTitle = new Array();
+	
+	var OrderName = new Array();
+	var OrderDept = new Array();
+	var OrderType = new Array();
+	var OrderTypeName = new Array();
+	var OrderStat = new Array();
+	var OrderStatName = new Array();
+	var OrderJobtitle = new Array();
+	var OrderReason = new Array();
+	
+	var xmlDom = createXmlDom();
+	xmlDom = loadXMLString(lineXml);
+	
+	var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
+	var oCount = oRows.length;
+	
+	var dataNodes, tempSn;
+	for (var i = 0; i < oCount; i++) {
+		dataNodes = GetChildNodes(oRows[i]);
+		tempSn = getNodeText(dataNodes[0]);
+		
+		OrderName[tempSn] = getNodeText(dataNodes[1]);
+		OrderDept[tempSn] = getNodeText(dataNodes[3]);
+		OrderType[tempSn] = getNodeText(dataNodes[16]);
+		OrderStat[tempSn] = getNodeText(dataNodes[17]);
+		OrderReason[tempSn] = getNodeText(dataNodes[12]);
+		OrderTypeName[tempSn] = getNodeText(dataNodes[4]);
+		OrderStatName[tempSn] = getNodeText(dataNodes[5]);
+		OrderJobtitle[tempSn] = getNodeText(dataNodes[2]);
+	}
+	
+	var signMax = 0;
+	var habyMax = 0;
+	var startSignIdx = 1;
+	var startHabyIdx = 1;
+	for (var j = 1; j <= oCount; j++) {
+		if (OrderType[j] == strAprType1 || OrderType[j] == strAprType3 || OrderType[j] == strAprType4 || OrderType[j] == strAprType15 || OrderType[j] == strAprType40) {
+			if (OrderStat[j] == strAprState3) {
+				startSignIdx++;
+			} else if (OrderStat[j] == strAprState2 && j == 1) {
+				startSignIdx++;
+			} else {
+				reOrderSignName.push(OrderName[j]);
+				reOrderSignTitle.push(OrderJobtitle[j]);
+			}
+			signMax++;
+		} else if (OrderType[j] == strAprType8 || OrderType[j] == strAprType9 || OrderType[j] == strAprType11 || OrderType[j] == strAprType12) {
+			if (OrderStat[j] == strAprState3) {
+				startHabyIdx++;
+			} else {
+				reOrderHabyName.push(OrderName[j]);
+				reOrderHabyTitle.push(OrderJobtitle[j]);
+			}
+			habyMax++;
+		}
+	}
+	
+	var fields = message.GetFieldsList();
+	var field;
+	
+	for (var p = startSignIdx; p <= signMax; p++) {
+		field = message.GetListItem(fields, SusinSN + "jikwe" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "sign" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "seumyung" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "seumyungdate" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+	}
+	
+	for (var p = startHabyIdx; p <= habyMax; p++) {
+		field = message.GetListItem(fields, SusinSN + "habyuipositon" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "habyuisign" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "habyuija" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+		
+		field = message.GetListItem(fields, SusinSN + "habyuidate" + p);
+		if (field) {
+			setNodeText(field , " ");
+			if (new RegExp(/Firefox/).test(navigator.userAgent)) {
+				field.innerHTML = "<br type='_moz'>";
+			}
+		}
+	}
+	
+	var sIdx = startSignIdx;
+	var hIdx = startHabyIdx;
+	for (var p = 0; p < reOrderSignName.length; p++) {
+		field = message.GetListItem(fields, SusinSN + "jikwe" + sIdx);
+		if (field) {
+			setNodeText(field , reOrderSignTitle[p]);
+		}
+		field = message.GetListItem(fields, SusinSN + "seumyung" + sIdx);
+		if (field) {
+			setNodeText(field , reOrderSignName[p]);
+		}
+		
+		sIdx++;
+	}
+	
+	for (var p = 0; p < reOrderHabyName.length; p++) {
+		field = message.GetListItem(fields, SusinSN + "habyuipositon" + hIdx);
+		if (field) {
+			setNodeText(field , reOrderHabyTitle[p]);
+		}
+		field = message.GetListItem(fields, SusinSN + "habyuija" + hIdx);
+		if (field) {
+			setNodeText(field , reOrderHabyName[p]);
+		}
+		
+		hIdx++;
+	}
+	
+}

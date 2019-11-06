@@ -20281,8 +20281,10 @@
 		 UPDATE 
 		 	TBL_APRLINEINFO
          SET 
-         	 APRSTATE = '002',
-             PROCESSDATE = NULL
+         	 APRSTATE = '002'
+		<isEmpty property="v_PASSAPRFLAG">
+         	 , PROCESSDATE = NULL
+		</isEmpty>
          WHERE 
          	 TENANT_ID = #v_TENANTID#
          AND
@@ -20312,6 +20314,10 @@
         AND
         	 APRTYPE != '007'
        	</isNotEqual>
+       	<isNotEmpty property="v_PASSAPRFLAG">
+       	AND
+       		APRSTATE != '003'
+       	</isNotEmpty>
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
 	</update>
@@ -32092,6 +32098,25 @@
 		AND
 			COMPANYID = #companyID#
 	</select>
+	<select id="EzApprovalG.doApproveLineInfoForCancelToPassAprLine" parameterClass="Map" resultClass="ApprGAprLineVO">
+		SELECT
+			APRMEMBERSN ,
+			APRTYPE ,
+			APRSTATE ,
+			PROCESSDATE ,
+			RECEIVEDDATE ,
+			APRMEMBERID
+		FROM
+			TBL_APRLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			APRSTATE = '001'
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</select>
 	<update id="EzApprovalG.updateDrafterToApproved" parameterClass="Map">
 		UPDATE
 			TBL_APRLINEINFO
@@ -32121,4 +32146,30 @@
 		AND
 			COMPANYID = #companyID#
 	</update>
+	
+	<select id="EzApprovalG.getPassAprLineFlagByDocID" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			IFNULL(PASSAPRLINEFLAG, 'N') AS PASSAPRLINEFLAG
+		FROM
+			TBL_FORMINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			FORMID = (
+						SELECT
+							FORMID
+						FROM
+							TBL_APRDOCINFO
+						WHERE
+							DOCID = #v_DOCID#
+						AND
+							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#
+					)
+	]]>
+	</select>
 </sqlMap>

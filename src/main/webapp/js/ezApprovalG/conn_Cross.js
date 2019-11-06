@@ -1155,6 +1155,7 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 			
 		var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
 		for (var i = 0; i < oRows.length; i++) {
+			var tempAprSn = getNodeText(GetChildNodes(oRows[i])[0]);
 			var tempAprType = getNodeText(GetChildNodes(oRows[i])[16]);
 			var tempAprStat = getNodeText(GetChildNodes(oRows[i])[17]);
 			
@@ -1162,6 +1163,10 @@ function New_DrawAutoLine(ret, pDraftFlag) {
 				signCnt++;
 				
 				if (tempAprStat == "003") {
+					reSignCnt++;
+				}
+				//기결재통과 결재정보 세팅 시, 사인칸 다시 그릴때 기안자는 진행이라 추가
+				if (tempAprStat == "002" && tempAprSn == "1") {
 					reSignCnt++;
 				}
 			} else if (tempAprType == "008" || tempAprType == "009" || tempAprType == "011" || tempAprType == "012") {

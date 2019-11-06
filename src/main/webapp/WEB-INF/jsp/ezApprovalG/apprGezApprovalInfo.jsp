@@ -351,7 +351,6 @@
 	                     if (pHapYuiCount == 0) {
 	                         document.getElementById("deptaddbtn").style.display = "none";
 	                 }
-
 	            }
 	            
 	            if (approvalFlag != "G" || useOpenGov != "YES") {
