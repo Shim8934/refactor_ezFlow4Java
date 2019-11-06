@@ -71,6 +71,8 @@
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
 				var gubun = "${boardInfo.guBun}";
 				var commentCount = "${commentCount}";
+			    var nowCommentCount = ""; // 댓글 옵션처리를 위해 전역변수로 변경
+			    var userInfoID = "${userInfo.id}"; // 댓글 삭제가능여부 판단을 위해 자신의 userID 사용
 				var refreshFlag = "N";
 		        var ImageCount = "";
 		        var viewimage = "";
@@ -108,6 +110,14 @@
 		            
 		            /* 2018-07-24 홍승비 - 투표 모듈의 이미지 레이어팝업 포토+썸넬게시물에도 적용 */
 		            addThumbnailEvent();
+		            
+		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
+ 		            if (OneLineReplyFlag == "2") {
+ 		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
+ 		            	document.getElementById("bodyPopup").style.overflowY = "auto";
+ 		            	self.resizeTo(794, 914);
+ 		            	getBoardComment();
+ 		            }
 		        };
 		        //강민수92 댓글 클릭 이벤트
 			    function btn_One_Line_Reply_Onclick() {
@@ -1455,9 +1465,11 @@
 			  	
 			    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
 			    function checkRefreshFlag () {
-			    	var nowCommentCount = document.getElementById("commentCount").innerText;
+			    	if (OneLineReplyFlag == "1") { // 레이어팝업의 경우 텍스트로 표출된 현재 댓글갯수를 가져옴
+			    		nowCommentCount = document.getElementById("commentCount").innerText;
+			    		nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
+			    	}
 			    	var opnenerHref = window.opener.location.href;
-			    	nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
 			    	
 			    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
 			    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
@@ -1469,7 +1481,7 @@
 			    
 		</script>
 	</head>
-	<body class="popup">
+	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
 		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; min-width:745px;">
 		  <tr>
 		    <td style="height:20px; vertical-align:top">
@@ -1665,6 +1677,23 @@
 <!-- 		 	 	</tr> -->
 <%-- 		  	</c:otherwise> --%>
 <%-- 		  </c:choose> --%>
+			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+	        <c:if test="${oneLineReplyFlag == '2'}">
+	        	<div style='height:auto;'>
+					<table class="mainlist" style="width:100%; min-width:745px; margin-top:1px;" >
+						<tr>
+							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+							</th>
+							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
+								<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+							</th>
+						</tr>
+					</table>
+					<table id="commentList" style="width:100%; min-width:745px; margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+				</div>
+	        </c:if>
+	        <%-- 본문하단 댓글영역 끝 --%>
 		  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 			  <tr>
 			    <td style="height:20px">

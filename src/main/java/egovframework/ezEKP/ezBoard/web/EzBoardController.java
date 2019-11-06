@@ -920,7 +920,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
 		
-		if (boardProperty != null && boardProperty.getOneLineReply() != null && boardProperty.getOneLineReply().equals("1")) {
+		if (boardProperty != null && boardProperty.getOneLineReply() != null && !boardProperty.getOneLineReply().equals("") && !boardProperty.getOneLineReply().equals("0")) {
 			use_oneLineCount = "YES";
 		} else {
 			use_oneLineCount = "NO";
@@ -1108,6 +1108,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setUrl(strProp.getUrl());
 			boardInfo.setApprMail_FG(strProp.getApprMailFlag());
 			boardInfo.setAttributeYN(strProp.getAttributeYN());
+			boardInfo.setOneLineReply(strProp.getOneLineReply()); // 댓글옵션정보 추가
 			
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
@@ -3635,7 +3636,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
 		}
 		//2017.12.29 강민수92 댓글 갯수 구하기
-		if (boardPropertyVO.getOneLineReply() != null && boardPropertyVO.getOneLineReply().equals("1")) {
+		if (boardPropertyVO.getOneLineReply() != null && !boardPropertyVO.getOneLineReply().equals("") && !boardPropertyVO.getOneLineReply().equals("0")) {
 			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
 			model.addAttribute("commentCount", commentCount);
 		}
@@ -5554,7 +5555,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
 		
 		//2017.12.29 강민수92 댓글 갯수 구하기
-		if (boardProperty.getOneLineReply().equals("1")) {
+		if (boardProperty.getOneLineReply() != null && !boardProperty.getOneLineReply().equals("") && !boardProperty.getOneLineReply().equals("0")) {
 			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
 			model.addAttribute("commentCount", commentCount);
 		}
@@ -6774,7 +6775,34 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 미리보기게시물 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/boardItemPreviewContent.do")
-	public String boardItemPreviewContent() throws Exception {
+	public String boardItemPreviewContent(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardItemPreviewContent started");
+		
+		/* 2019-11-06 홍승비 - 미리보기 시 댓글옵션에 따라 댓글정보 표출해주기 위한 파라미터 추가 */
+		userInfo = commonUtil.userInfo(loginCookie);
+		String publicModulus = egovFileScrty.getPbm();
+        String publicExponent = "10001";
+		
+		String OneLineReplyFlag = request.getParameter("OneLineReplyFlag");
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		
+		if (OneLineReplyFlag == null) {
+			OneLineReplyFlag = "";
+		}
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
+		model.addAttribute("gubun", boardInfo.getGuBun());
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("userInfoID", userInfo.getId());
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
+		
+		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
 	}
 	

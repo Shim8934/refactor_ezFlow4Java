@@ -372,6 +372,9 @@ var WriterName;
 var WriterDeptName;
 var WriterCompanyName;
 var ContentLocation;
+var OneLineReplyFlag;
+var Gubun;
+var BoardID;
 
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
@@ -465,16 +468,19 @@ function event_ItemPreviewRead() {
             WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
             Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
             ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
+            /* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 표출용 변수 추가 */
+            OneLineReplyFlag = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ONELINEREPLY");
+            BoardID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/BoardID");
            
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
-                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do";
+                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + ItemID + "&boardID=" + BoardID + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do";
+                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + ItemID + "&boardID=" + BoardID + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";
