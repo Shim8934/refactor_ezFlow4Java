@@ -514,7 +514,7 @@ function showPreview(isPreview, itemseq) {
 	// row 선택 X
 	if(itemseq == 0) {
 		doc.getElementById('Preview_HeaderH').style.visibility ="hidden";
-		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm";
+//		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm"; //일본어일때 폰트 문제로 주석
 		setTimeout(function(){
 			ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLanghyh2;
 		}, 500);

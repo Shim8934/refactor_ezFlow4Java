@@ -987,8 +987,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					messageCount++;
 				}
 			} catch (Exception e) {
-				charset = Charset.forName("EUC-KR");
-				logger.debug("charset is changed as EUC-KR.");
+				charset = Charset.forName("ms949");
+				logger.debug("charset is changed as ms949.");
 				
 				if (zis1 != null) {
 					try { zis1.closeEntry(); } catch (Exception e1) {}

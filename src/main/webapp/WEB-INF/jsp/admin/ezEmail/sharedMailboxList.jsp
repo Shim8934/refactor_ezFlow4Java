@@ -21,14 +21,17 @@
 				padding-left:10px;
 			}
 		</style>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var companyId = "${userCompany}";
+			var searchFlag = false;
+			var selectList_ChangeFlag = false;
+			var selectTR_Data1;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -86,6 +89,8 @@
 	    		            pUserList.SetHeightFree(true);
 	    		            pUserList.DataSource(headerData);
 	    		            pUserList.DataBind("sharedMailboxList");
+	    		            
+	    		            selectList_Change2();
 	    				}
 	    			},
 	    			error: function(err) {
@@ -193,7 +198,8 @@
 				    					alert("<spring:message code='ezEmail.sharedMailbox07' />");
 				    				}
 				    				
-				    				companyChange();
+				    				//companyChange();
+				    				selectList_Change();
 				    			},
 				    			error: function(err) {
 				    				alert("<spring:message code='ezEmail.sharedMailbox07' />");
@@ -247,8 +253,9 @@
 		        feature = feature + GetShowModalPosition(1080, 670);
 		        
 		        if (CrossYN()) {
-		        	sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
+		        	sharedMailboxDialogArguments[0] = modSharedMailboxComplete;
 		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1080, 670));
+
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), feature);
@@ -256,6 +263,12 @@
 		            if (typeof (rtnValue) != "undefined") {
 		                companyChange();
 		            }
+		        }
+		    }
+		    
+		    function modSharedMailboxComplete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		        	selectList_Change();
 		        }
 		    }
 		    
@@ -304,6 +317,7 @@
 				var searchType = document.getElementById("searchType").value;
 		    	var searchValue = document.getElementById("searchValue").value;
 		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
+		    	searchFlag = true;
 		    	
 		    	if (searchValue == "") {
 		    		//companyChange();
@@ -347,12 +361,36 @@
 	    		            pUserList.SetHeightFree(true);
 	    		            pUserList.DataSource(headerData);
 	    		            pUserList.DataBind("sharedMailboxList");
+	    		            
+	    		            selectList_Change2();
 	    				}
 	    			},
 	    			error: function(err) {
 	    				alert("<spring:message code='ezEmail.sharedMailbox07' />");
 	    			}
 		    	});
+		    }
+		    
+		    function selectList_Change() {
+		    	selectList_ChangeFlag = true;
+		    	selectTR_Data1 = $("#sharedMailbox tr[selected=true]")[0].getAttribute("data1");
+		    	
+		    	if (searchFlag == true && document.getElementById("searchValue").value != "") {
+		    		search_click();
+		    	} else {
+		    		companyChange();
+		    	}
+		    }
+		    function selectList_Change2() {
+		    	if (selectList_ChangeFlag) {
+		    		selectList_ChangeFlag = false;
+			    	var reListTR_ = $("#sharedMailbox tr[data1='" + selectTR_Data1 + "']")[0];
+					reListTR_ = typeof reListTR_ != "undefined"  ? reListTR_.getAttribute("id") : "";
+					
+			    	if (selectTR_Data1 != "" && reListTR_ != "") {
+			    		tr_select(reListTR_, "sharedMailbox", viewSharedMailboxInfo);
+			    	}
+		    	}
 		    }
 		</script>
 	</head>
@@ -391,17 +429,21 @@
 		<!-- 검색 -->
 		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box;">
 			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
-				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC;" id="listCount"></span><spring:message code='ezSystem.kyj2'/>]</span>
+				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
-			<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
-				<select id="searchType" style="height: 26px; width: 120px;">
+			<div id="userSearchRayer" style="float:right; display: inline-block; line-height: 30px;">
+				<div style="display: inline-block; float:left;">
+				<select id="searchType" style="height: 26px; width: 130px;">
 					<option value="displayname"><spring:message code='ezEmail.sharedMailbox18' /></option> <!-- 공유사서함 이름 -->
 					<option value="groupID"><spring:message code='ezEmail.sharedMailbox19' /></option> <!-- 공유사서함 ID -->
 					<option value="memberName"><spring:message code='ezEmail.ksaSharedMailbox25' /></option> <!-- 공유자 이름 -->
 					<option value="memberID"><spring:message code='ezEmail.ksaSharedMailbox26' /></option> <!-- 공유자 ID -->
 				</select>
-				<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
-				<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+				</div>
+				<div style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 518px;padding-left: 5px;">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:89%">
+					<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+				</div>
 			</div>
 		</div>
 		<table class="mainlist" style="width:100%;">

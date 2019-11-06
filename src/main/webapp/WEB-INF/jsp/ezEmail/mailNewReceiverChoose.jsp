@@ -184,7 +184,16 @@
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
+	                
+	                <c:choose>
+	                <c:when test="${useShowAllCompanies eq 'YES'}">
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+	                </c:when>
+	                <c:otherwise>
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	                </c:otherwise>
+	                </c:choose>
+	                
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	                xmlHTTP.send(xmlpara);
@@ -216,10 +225,10 @@
 	            
 	            if (type == "config") {
 	                if (CrossYN())
-	                    document.getElementById("h1Title").textContent = strLang314 + " <spring:message code='ezEmail.t832' />";
+	                    document.getElementById("h1Title").textContent = strLang314 + "<spring:message code='ezEmail.t832' />";
 	                else
-	                    document.getElementById("h1Title").innerText = strLang314 + " <spring:message code='ezEmail.t832' />";
-	                document.title = strLang314 + " <spring:message code='ezEmail.t832' />";
+	                    document.getElementById("h1Title").innerText = strLang314 + "<spring:message code='ezEmail.t832' />";
+	                document.title = strLang314 + "<spring:message code='ezEmail.t832' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "";
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
@@ -1575,7 +1584,13 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group"},
+		        	data : {search : "displayname::" + keyword.value, 
+		        	    cell : "extensionAttribute3;displayName;extensionAttribute9", 
+		        	    prop : "", 		        	    
+		        	    <c:if test="${useShowAllCompanies eq 'YES'}">
+		        	    company : "", 
+		        	    </c:if>		        	    
+		        	    type : "group"},
 		        	success : function(result){	
 		        		xmlDom = loadXMLString(result);
 		                adCount = xmlDom.getElementsByTagName("ROW").length;
@@ -1594,10 +1609,20 @@
 	                bSearch = true;
 	                g_xmlHTTP = createXMLHttpRequest();
 	
-	                if (CrossYN())
-	                    var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-	                else
-	                    var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery;
+	                
+	                if (CrossYN()) {
+		                <c:choose>
+		                <c:when test="${useShowAllCompanies eq 'YES'}">
+		                strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP></DATA>";
+		                </c:when>
+		                <c:otherwise>
+		                strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		                </c:otherwise>
+		                </c:choose>	                    	                    
+	                } else {
+	                    strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                }
 	
 	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -1618,7 +1643,16 @@
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		            
+	                <c:choose>
+	                <c:when test="${useShowAllCompanies eq 'YES'}">
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP></DATA>";
+	                </c:when>
+	                <c:otherwise>
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                </c:otherwise>
+	                </c:choose>
+		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -2194,7 +2228,10 @@
 		        			search : document.getElementById("search_type").value + "::" + keyword.value, 
 		        			cell : "company;description;displayName;title;telephoneNumber;"+ document.getElementById("search_type").value, 
 		        			prop : "mail;displayName;description;title;company;telephonenumber;extensionAttribute2;department", 
-		        			page : CurPage, 
+		        			page : CurPage, 		        			
+			                <c:if test="${useShowAllCompanies eq 'YES'}">
+		        			company : "",
+			                </c:if>		        			
 		        			type : "user"},
 		        	success : function(result){	
 		        		pListXML_Info = loadXMLString(result);
@@ -2239,7 +2276,13 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
-		        	data : {search : "displayname::" + document.getElementById("cnkeyword").value, cell : "displayName;description;title;telephoneNumber", prop : "mail", type : "user"},
+		        	data : {search : "displayname::" + document.getElementById("cnkeyword").value, 
+		        	    cell : "displayName;description;title;telephoneNumber", 
+		        	    prop : "mail", 		        	    
+		        	    <c:if test="${useShowAllCompanies eq 'YES'}">
+		        	    company : "", 
+		        	    </c:if>		        	    
+		        	    type : "user"},
 		        	success : function(result){	
 		        		pListXML_Info = loadXMLString(result);
 		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0) {

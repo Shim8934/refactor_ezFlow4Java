@@ -870,6 +870,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("searchString", searchString);
 		model.addAttribute("primaryLang", primaryLang);
 
+		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
+		
 		logger.debug("personSearch ended");
 		return "/ezPersonal/persPersonSearch";
 	}

@@ -1691,7 +1691,7 @@
 	<select id="EzQuestionDAO.callGetItemSeq" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				MAX(ITEM_NO)  MAXNO  
+				NVL(MAX(ITEM_NO), 0)  MAXNO  
         	FROM
         		TBL_QS_ITEMSEQ 
        		WHERE

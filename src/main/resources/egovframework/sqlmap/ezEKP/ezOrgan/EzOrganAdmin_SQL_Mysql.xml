@@ -23,6 +23,7 @@
 		<result property="title2" 								column="T2" 							columnIndex="9"/>		
 		<result property="jobID" 								column="JOBID" 							columnIndex="10"/>
 		<result property="physicalDeliveryOfficeName" 			column="physicaldeliveryofficename" 	columnIndex="11"/>
+		<result property="manualFlag"							column="MANUAL_FLAG"					columnIndex="12"/>
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -2987,8 +2988,8 @@
 	    		(4, 15, 1, #tenantID#, #companyID#, '투표'),
 	    		(4, 15, 2, #tenantID#, #companyID#, 'Vote'),
 	    		(4, 15, 3, #tenantID#, #companyID#, '投票'),
-	    		(5, 14, 1, #tenantID#, #companyID#, '전자설문'),
-	    		(5, 14, 2, #tenantID#, #companyID#, 'Poll'),
+	    		(5, 14, 1, #tenantID#, #companyID#, '빠른설문'),
+	    		(5, 14, 2, #tenantID#, #companyID#, 'QuickPoll'),
 	    		(5, 14, 3, #tenantID#, #companyID#, '電子アンケート'),
 	    		(6, 2, 1, #tenantID#, #companyID#, '일정'),
 	    		(6, 2, 2, #tenantID#, #companyID#, 'Schedule'),
@@ -3368,7 +3369,8 @@
                 	COMPANYNAME  ,
              	A.TITLE T1  ,
              	A.TITLE2 T2,
-             	A.JOBID  
+             	A.JOBID  ,
+             	A.MANUAL_FLAG
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN
@@ -3407,9 +3409,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_ADDJOBMASTER
-              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID )
+              	( CN, DEPTID, TITLE, TITLE2, TENANT_ID, ORDERBY, JOBID, MANUAL_FLAG )
            VALUES
-           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0 , #v_JOBID#)
+           		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID#, 0 , #v_JOBID#, #v_MANUAL_FLAG#)
 		]]>
 	</insert>
 	

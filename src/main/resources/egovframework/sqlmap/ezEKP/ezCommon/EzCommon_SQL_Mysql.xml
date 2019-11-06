@@ -444,9 +444,19 @@
 		]]>
 	</select>
 	
-	<statement id="EzCommonDAO.addDeptMasterManualFlag"> 
+	<select id="EzCommonDAO.checkAddJobMasterManualFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				MANUAL_FLAG
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterManualFlag"> 
 		ALTER TABLE 
-			TBL_DEPTMASTER
+			TBL_ADDJOBMASTER
 		ADD 
 			MANUAL_FLAG VARCHAR(4) DEFAULT NULL
 	</statement>
@@ -614,14 +624,11 @@
 	
 	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
 		<![CDATA[
-			SELECT 
-					1 
+			SELECT
+				HOLIDAYFLAG
 			FROM 
-					INFORMATION_SCHEMA.COLUMNS
-			WHERE 
-					TABLE_NAME = 'TBL_HOLIDAYLIST'
-			AND 
-					COLUMN_NAME = 'HOLIDAYFLAG'
+				TBL_HOLIDAYLIST
+			LIMIT 1
 		]]>
 	</select>
 			
@@ -644,14 +651,11 @@
 	
 	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
 		<![CDATA[
-			SELECT 
-					1 
+			SELECT
+				HOLIDAYREPEAT
 			FROM 
-					INFORMATION_SCHEMA.COLUMNS
-			WHERE 
-					TABLE_NAME = 'TBL_HOLIDAYLIST'
-			AND 
-					COLUMN_NAME = 'HOLIDAYREPEAT'
+				TBL_HOLIDAYLIST
+			LIMIT 1
 		]]>
 	</select>
 	

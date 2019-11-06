@@ -143,11 +143,32 @@ public class EzEmailUtil {
 	@Value("#{cryptos['EzEmailUtil.apb']}")
 	private String apb;
 	
+	public String getMailHeaderPath(long mailboxId, long mailUid) {
+		String realPath = config.getProperty("data_root");
+		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
+		String parentFolderName = String.valueOf(mailUid % 100);
+		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
+							realPath, "/fileroot/mail", mailboxParentFolderName, mailboxId, parentFolderName, mailUid);
+		String headerPath = String.format("%s.%s", mailPath, "head");
+
+		return headerPath;
+	}
+
+	public String getMailBodyPath(long mailboxId, long mailUid) {
+		String realPath = config.getProperty("data_root");
+		String mailboxParentFolderName = String.valueOf(mailboxId % 100);
+		String parentFolderName = String.valueOf(mailUid % 100);
+		String mailPath = String.format("%s/%s/%s/%d/%s/%d", 
+							realPath, "/fileroot/mail", mailboxParentFolderName, mailboxId, parentFolderName, mailUid);
+		String bodyPath = String.format("%s.%s", mailPath, "body");
+
+		return bodyPath;
+	}
+	
 	public String getInboxFolderId() {
 		return "INBOX";
 	}
-	
-	
+		
 	public String getSentFolderId(Locale locale) {
 		String useStandardFolderId = config.getProperty("config.useStandardFolderId");
 		
@@ -778,6 +799,18 @@ public class EzEmailUtil {
 	                                                
 	                        subject = MimeUtility.decodeText(rawHeader);
 	                    } 
+	                    
+	                    // 료비에서 의뢰한 메일 중 제목이
+	                    // Subject: =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4
+	                    //  10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
+	                    // 와 같은 경우 여전히 subject가
+	                    // =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4 10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
+	                    // 로 디코딩되지 않은 형태로 나온다. 이 때 공백 문자를 =20으로 변경하면 제대로 디코딩이 이루어진다. 
+	                    if (subject.startsWith("=?")) {
+	                    	if (encoding.equalsIgnoreCase("Q")) {
+	                    		subject = MimeUtility.decodeText(subject.replace(" ", "=20"));
+	                    	}
+	                    }
 	                }
 	            }
 	            
@@ -1188,6 +1221,11 @@ public class EzEmailUtil {
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";
 		} else if(part.isMimeType("text/html")){
+			// multipart/related가 중첩되어 있는 경우
+			// 이전 multipart/related 파트에서 이미 text/html 파트가 발견된 경우가 있어
+			// 이를 나타내기 위해 추가함.
+			extraMap.put("htmlPartFound", true);
+			
 			String strContent = null;			
 			String contentType = part.getContentType();
 			
@@ -1640,11 +1678,16 @@ public class EzEmailUtil {
 				}
 			}
 			
+			// multipart/related가 중첩되어 있는 경우
+			// 이전 multipart/related 파트에서 이미 text/html 파트가 발견된 경우가 있어
+			// 이를 확인함.
+			boolean htmlPartFound = (boolean)extraMap.get("htmlPartFound");
+			
 			// text/html 파트 혹은 multipart/alternative 파트가 발견되지 않았을 경우엔 
 			// text/plain 파트를 찾는다.
 			// pacific에서 보낸 메일 중에 multipart/related안에 text/plain 파트만 있고 인라인 이미지가 첨부된 
 			// 경우가 있어 추가함.
-			if (!isHtmlOrAlternativeFound) {
+			if (!htmlPartFound && !isHtmlOrAlternativeFound) {
 				logger.debug("isHtmlOrAlternativeFound is false. Trying to find the text/plain part..");
 				
 				for (int i = 0; i < count; i++) {
@@ -1937,7 +1980,7 @@ public class EzEmailUtil {
     		
     		logger.debug("folderPath=" + folderPath);
     		
-    		messages = advancedSearchFolder(ia, userAccount, folderPath, searchField, searchValue, startDate, endDate, 
+    		messages = advancedSearchFolder(ia, userAccount, folder, folderPath, searchField, searchValue, startDate, endDate, 
     				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap);
     		
     		// pre-fetch
@@ -2432,6 +2475,7 @@ public class EzEmailUtil {
 	public Message[] advancedSearchFolder(
 			IMAPAccess ia,
 			String userAccount,
+			Folder folder,
 			String folderPath, 
 			String[] searchField, 
 			final String[] searchValue,
@@ -2468,6 +2512,10 @@ public class EzEmailUtil {
 		Folder mailFolder = null;
 		Message message = null;
 		
+		// 폴더 오픈 시 IMAP select 커맨드가 호출되는데 폴더 안에 메일이 많은 경우 오버헤드가 큰 관계로
+		// 패러메터로 넘어온 이미 오픈된 folder를 folderMap에 미리 넣는다.
+		folderMap.put(folderPath, folder);
+
 		for (String mailUrl : mailList) {
 			mailFolderPath = mailUrl.split("/")[0];
 			mailUid = Long.parseLong(mailUrl.split("/")[1]);
@@ -2695,7 +2743,11 @@ public class EzEmailUtil {
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
-				if (p instanceof MimePart) {
+				if (p.isMimeType("multipart/related")) {
+					if (copyInlineParts(p, dest, includeAttachment, convertInlineImageToAttachment)) {
+						return true;
+					}					
+				} else if (p instanceof MimePart) {
 					// text/html 파트가 없으면 인라인 이미지 파트를 첨부파일 파트로 변환한다.(이미지를 첨부로 대신 표시하기 위해)
 					if (convertInlineImageToAttachment) {
 						if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {
@@ -2977,7 +3029,15 @@ public class EzEmailUtil {
 				Part p = mp.getBodyPart(i);
 				
 				if (p instanceof MimePart) {
-					if (((MimePart)p).getContentID() != null && ((MimePart)p).getContentID().equals(contentId)) {
+					if (p.isMimeType("multipart/related")) {
+						p = getInlinePart(p, contentId);
+						
+						if (p != null) {
+							logger.debug("getInlinePart ended.");
+							
+							return p;
+						}						
+					} else if (((MimePart)p).getContentID() != null && ((MimePart)p).getContentID().equals(contentId)) {
 						logger.debug("getInlinePart ended.");
 						
 						return p;

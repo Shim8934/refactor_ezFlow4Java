@@ -21,13 +21,14 @@
 	    	var result;
 	    	var rtnVal;
 	    	
+	    	/* 2019-10-29 홍승비 - 에디터 영역 > personalizedPortal 스타일에 맞게 좌우폭 수정 */
 	    	window.onload = function () {
-	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth + "px";
 	        	document.getElementById("divCross").style.height = window.innerHeight - 111 + "px";
 	        }
 	    	
 	    	window.onresize = function () {
-	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth + "px";
 	        	document.getElementById("divCross").style.height = window.innerHeight - 111 + "px";
 	        }
 	    	

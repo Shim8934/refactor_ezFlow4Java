@@ -28,3 +28,4 @@ var strLang27 = "Leave a comment";
 var strLang28 = "These circulars are not.";
 var strLang29 = "/blank_us.htm";
 var strLang30 = "no circulation.";
+var strLang50 = "No results were found for your search.";

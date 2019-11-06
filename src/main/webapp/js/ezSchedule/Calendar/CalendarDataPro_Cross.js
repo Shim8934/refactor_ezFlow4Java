@@ -4,29 +4,54 @@ var xmlhttp;
 var delFlag = false;
 
 function CalViewSource(chk_str) {
-    $.ajax({
-		type : "POST",
-		dataType : "text",
-		async : (!delFlag ? true : false),
-		url : "/ezSchedule/scheduleGetList.do",
-		data : {
-			STARTDATE : sStartDate,
-			ENDDATE : sEndDate,
-			GROUPID : groupid,
-			IDLIST : chk_str
-		},
-		success: function(text){
-			if (typeCal == 0) {
-				getCalMonthViewSource_after(text);
-			} else if (typeCal == 1) {
-				getCalWeekViewSource_after(text);
-			} else if (typeCal == 2) {
-				getCalDayViewSource_after(text);
-			}
-			delFlag = false;
-		}
-    }); 
+	xmlhttp = createXMLHttpRequest();
+	var xmlpara;
+    
+    xmlpara ="STARTDATE="+sStartDate+"&ENDDATE="+sEndDate+"&APP="+chk_str+"&GROUPID="+groupid+"&IDLIST=T";
+    
+    
+    if (!delFlag) {
+    	xmlhttp.open("POST", "/ezSchedule/scheduleGetList.do", true);
+    } else {
+    	xmlhttp.open("POST", "/ezResource/scheduleGetList.do", false);
+    }
+    
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    
+    if (typeCal == 0) {
+        if (!delFlag) {
+            xmlhttp.onreadystatechange = getCalMonthViewSource_after;
+            xmlhttp.send(xmlpara);
+        }
+        else {
+            xmlhttp.send(xmlpara);
+            getCalMonthViewSource_after();
+        }
+    }
+    else if (typeCal == 1) {
+        if (!delFlag) {
+            xmlhttp.onreadystatechange = getCalWeekViewSource_after;
+            xmlhttp.send(xmlpara);
+        }
+        else {
+        	xmlhttp.send(xmlpara);
+            getCalWeekViewSource_after();
+        }
+
+    }
+    else if (typeCal == 2) {
+        if (!delFlag) {
+            xmlhttp.onreadystatechange = getCalDayViewSource_after;
+            xmlhttp.send(xmlpara);
+        }
+        else {
+            xmlhttp.send(xmlpara);
+            getCalDayViewSource_after();
+        }
+    }
+    delFlag = false;
 }
+
 //2018-06-19 구해안 이동할때 css 적용하는 함수 제작
 function chk_scheduleCSS() {
 	if(typeCal == 0){		
@@ -101,11 +126,13 @@ function dateDiff(_date1, _date2) {
 
 var OrgDataSDT;
 var OrgDataEDT;
-function getCalMonthViewSource_after(text) {
+function getCalMonthViewSource_after() {
     var tempData = new Array();
-
+    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+    
     try {        
-        var listNode = loadXMLString(text);
+    	if (xmlhttp.responseText == "") return;
+    	var listNode = loadXMLString(xmlhttp.responseText);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
@@ -149,11 +176,13 @@ function getCalMonthViewSource_after(text) {
 
 
 
-function getCalWeekViewSource_after(text) {
+function getCalWeekViewSource_after() {
     var tempData = new Array();
-
+    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+    
     try {        
-        var listNode = loadXMLString(text);
+    	if (xmlhttp.responseText == "") return;
+    	var listNode = loadXMLString(xmlhttp.responseText);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
@@ -266,11 +295,13 @@ function getCalWeekViewSource_after(text) {
 }
 
 
-function getCalDayViewSource_after(text) {
+function getCalDayViewSource_after() {
     var tempData = new Array();
-
+    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+    
     try {        
-        var listNode = loadXMLString(text);
+    	if (xmlhttp.responseText == "") return;
+    	var listNode = loadXMLString(xmlhttp.responseText);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
@@ -696,6 +727,14 @@ function CalMonthDataBind(oAppointment) {
             oTd.className = "department";
             oSpan.className = "department";
         }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+        		oTd.className = "calendar_data_public_department";
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
 
         oTd.appendChild(oSpan);
 
@@ -822,6 +861,13 @@ function CalWeekDataBind(oAppointment, order) {
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+        }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
         }
 
         oTd.appendChild(oSpan);
@@ -957,6 +1003,13 @@ function CalWeekAllDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
 
         oDiv.appendChild(oSpan);
 
@@ -1071,6 +1124,13 @@ function CalDayDataBind(oAppointment, order) {
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+        }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
         }
 
         oTd.appendChild(oSpan);
@@ -1206,6 +1266,13 @@ function CalDayAllDataBind(oAppointment, order) {
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+        }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
         }
 
         oDiv.appendChild(oSpan);

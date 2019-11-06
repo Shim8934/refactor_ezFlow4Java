@@ -66,6 +66,7 @@ public class EzLadderGWController {
 		int[] pages = new int[4]; //0 totalPage //1 startPoint //2 endPoint //3 currPage
 		int block = newBlock;
 		pages[0] = (int) Math.ceil(total/(double) block);	// totalPage
+		pages[0] = pages[0] == 0 ? 1 : pages[0];
 		if( currPage > pages[0]) {
 			currPage = pages[0];
 		}

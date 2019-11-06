@@ -88,7 +88,7 @@
         var approvalRoot = "<c:out value = '${approvalRoot}'/>";
         var ext = "hwp";
         var orgCompanyID = "<c:out value='${orgCompanyID}' />";
-        var docTitle = "<c:out value = '${docTitle}'/>";
+        var docTitle = "";
         
         function btnPrint_onclick() {
             HwpCtrl.PrintDocument("", true);
@@ -420,6 +420,9 @@
 	    		
 	            var ResultXML = result;
 	            if (getNodeText(GetChildNodes(ResultXML)[0]) == "TRUE") {
+	            	if (HwpCtrl.CheckFieldExist("doctitle")) {
+	            		docTitle = HwpCtrl.GetFieldText("doctitle");
+	            	}
 	            	//여기다 발송의뢰반송 메일알람 추가
 	                SendSimsaBansong(docTitle);
 	                var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";

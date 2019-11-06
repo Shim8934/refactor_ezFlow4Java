@@ -416,7 +416,7 @@
 				var docnumber = $("#DocNumber").val();
 				var doctitle = $("#DocTitle").val();
 				var drafter = $("#drafter").val();
-				var drafterdept = $("#drafterdept").val();
+				var drafterdept = $("#drafterdept").attr("CN");
 				
 				if (!$("#usedate").prop("checked")) {
 					searchStartTime = "";
@@ -428,6 +428,7 @@
 				
 				var pURL = "/admin/ezApprovalG/getDocListjson.do";
 
+				/* 2019-10-29 홍승비 - 기안부서 검색 시 부서명이 아니라 CN을 전달하도록 수정 */
 				$.ajax({
 						url : pURL,
 						type : "POST",
@@ -442,7 +443,7 @@
 							drafter    : drafter,//기안자
 							aprFrom    : searchStartTime,//완료일자
 							aprTo      : searchEndTime,//완료일자
-							deptName   : drafterdept,//기안부서
+							drafterdept   : drafterdept,//기안부서
 							pSelectTab : pSelectTab//탭구분	
 						},
 						success : function(res) {
@@ -735,6 +736,7 @@
 				$("#DocTitle").val("");
 				$("#drafter").val("");
 				$("#drafterdept").val("");
+				$("#drafterdept").attr("CN", "");
 				
 				getDocDeleteHist(1);
 // 		    	makePageSelPage();
@@ -839,6 +841,7 @@
 						$("#DocTitle").val("");
 						$("#drafter").val("");
 						$("#drafterdept").val("");
+						$("#drafterdept").attr("CN", "");
 
 						strListIDInfo = "";
 						strListWriterNameInfo = "";
@@ -860,9 +863,11 @@
 		            var result = GetOpenWindow("/admin/ezApprovalG/apprGOrgan.do", "Organ_Cross", 400, 485, "NO");
 		        }
 		        
+			    /* 2019-10-29 홍승비 - 부서명과 CN을 구분하여 가져오도록 수정 */
 		        function bt_TDeptSelect_onclick_Complete(retVal) {
 		            if (typeof (retVal) != "undefined") {
-		                $("#drafterdept").val(retVal[1]);
+						$("#drafterdept").attr("CN", retVal[0]); // CN
+		                $("#drafterdept").val(retVal[1]); // deptName
 		            }
 		        }
 			    
@@ -995,7 +1000,7 @@
 					 <spring:message code='ezApproval.t437'/>
 				</td>
 				<td style="width:12%;">
-					<input type="text" id="drafterdept" name="drafterdept" style="width:82%; height: 23px;" maxlength="50" readonly="readonly"/>
+					<input type="text" id="drafterdept" name="drafterdept" style="width:82%; height: 23px;" maxlength="50" readonly="readonly" cn=""/>
 					<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
 				</td>
 				<td style="width:3%;">

@@ -74,6 +74,7 @@ public interface EzEmailService {
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchListByItem(String companyId, int tenantId, String searchValue, String searchType) throws Exception;
 	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception;
+	public boolean addEzTalkNotification(String userId, String senderName, String subject, String type);
 	public boolean setInitInboxRule(int tenantId, String userId) throws Exception;
 	public List<String> getInitInboxRuleMailbox(int tenantId) throws Exception;
 	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount, String maxReadDate) throws Exception;
@@ -124,4 +125,5 @@ public interface EzEmailService {
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 	public JSONObject recallMailByMessageId(String address, String messageId) throws Exception;
 	public int getTotalUnreadCount(String userId, int tenantId) throws Exception;
+	public JSONObject getUnreadCountAll(JSONObject requestObject, String userId, Locale locale, int tenantId) throws Exception;
 }

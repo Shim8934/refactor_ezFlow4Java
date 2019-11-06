@@ -130,6 +130,7 @@
 		        createNodeInsert(xmlpara, objNode, "DATA");
 		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 		        createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayName");
+		        createNodeAndInsertText(xmlpara, objNode, "DISPLAY_TRASH_DEPT", "");
 
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 		        xmlHTTP.send(xmlpara);
@@ -383,6 +384,9 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA6>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("JOBID")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA6>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<MANUAL_FLAG>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("MANUALFLAG")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</MANUAL_FLAG>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "</CELL></ROW>";
 	                    }
 	                    LISTVIEWDATA = LISTVIEWDATA + "</ROWS></LISTVIEWDATA>";
@@ -802,6 +806,7 @@
 					pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(jobTitle2) + "</DATA4>";
 					pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(dept[1]) + "</DATA5>";
 					pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jobID) + "</DATA6>";
+					pparsingXML = pparsingXML + "<MANUAL_FLAG>Y</MANUAL_FLAG>";
 					pparsingXML = pparsingXML + "</CELL></ROW>";
 					pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 					Resultxml = loadXMLString(pparsingXML2);
@@ -853,6 +858,7 @@
 					createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(Addjoblistview.GetDataRows()[i], "data1"));
 					createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4"));
 					createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(Addjoblistview.GetDataRows()[i], "data6"));
+					createNodeAndInsertText(xmlDom, objNode, "MANUAL_FLAG", GetAttribute(Addjoblistview.GetDataRows()[i], "manual_flag"));
 					AddjobText = AddjobText + "- " + GetAttribute(Addjoblistview.GetDataRows()[i], "data5") + " (" + GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4") + ")<BR>";
 				}
 
