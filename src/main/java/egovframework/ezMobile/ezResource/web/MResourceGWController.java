@@ -241,7 +241,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 				authYn = "A";
 			}*/
 			
-			// 2018-11-07 김민성 - 자원 관리자 권한 가진 자원 체크
+			// 2018-11-07 김민성 - 자원 관리자 권한 가진 자원분류 체크
 			List<MResourceGetAdmSubClsTreeVO> adminCheckList = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
 
 			if(adminCheckList.size() > 0) {
