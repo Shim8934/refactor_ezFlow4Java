@@ -167,7 +167,7 @@ var getVoteInfo = function() {
 				
 				contentsDiv.appendChild(listUL);
 				document.getElementById("voteDiv").appendChild(contentsDiv);
-				$("#" + portletId + "Portlet").find(".voteBtn").on("click", votePoll);
+				$("#voteList").find(".voteBtn").on("click", votePoll);
 			}
 		}
 	};

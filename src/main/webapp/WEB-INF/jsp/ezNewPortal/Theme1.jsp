@@ -228,7 +228,7 @@
             			</dl>
             		</div>
 				</article>
-				<article class="bestEmployee">
+				<article id="bestEmployee" class="bestEmployee">
 					<p class="emPic" id="emPic"><img src="/images/ezNewPortal/bestEmployee_pic_none.png"></p>
 					<dl class="emDL">
             			<dt class="emTit"><spring:message code='ezNewPortal.t019' /></dt>
@@ -641,18 +641,41 @@
 		
 		if (refreshInterval != null && refreshInterval != "0") {
 			window.setInterval(function() {
-				refreshPortlet();
+				var request = new XMLHttpRequest();
+				request.open('GET', '/ezNewPortal/getPortalInfo.do' , false);
+				request.setRequestHeader('Content-Type', 'application/json');
+
+				request.onload = function() {
+					if (request.status >= 200 && request.status < 400) {
+						if (request.responseText == null) {
+							return;
+						}
+						
+						var result = JSON.parse(request.responseText);
+						var refreshTheme = result.usedTheme;
+						var refreshFrame = result.usedFrame;
+						
+						if (refreshTheme == usedTheme && frameId == refreshFrame) {
+							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+							/* portletOrder = result.portletOrder;
+							var useQuestion = result.useQuestion;
+							var useCircular = result.useCircular;
+							var useMail = result.useMail;
+							var useApproval = result.useApproval;
+							var useSchedule = result.useSchedule;
+							var useAttitude = result.useAttitude;
+							refreshPortlet(useQuestion, useCircular, useMail, useApproval, useSchedule, useAttitude); */
+						} else {
+							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+						}
+					}
+				};
+
+				request.onerror = function() {
+				  // There was a connection error of some sort
+				};
 				
-				var useQuestion = "<c:out value='${useQuestion}'/>";
-				var useCircular = "<c:out value='${useCircular}'/>";
-				var useMail = "<c:out value='${useMail}'/>";
-				var useApproval = "<c:out value='${useApproval}'/>";
-				var useSchedule = "<c:out value='${useSchedule}'/>";
-				
-				//ajax로 count 불러오기
-				getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
-				//이달의 우수사원 불러오기
-				getMonthlyBestEmployee();
+				request.send();
 			}, Number(refreshInterval) * 60000);
 		}
 	}

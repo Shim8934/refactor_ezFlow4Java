@@ -379,7 +379,7 @@
 		
 		if (refreshInterval != null && refreshInterval != "0") {
 			window.setInterval(function() {
-				refreshPortlet();
+				parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
 			}, Number(refreshInterval) * 60000);
 		}
 	}

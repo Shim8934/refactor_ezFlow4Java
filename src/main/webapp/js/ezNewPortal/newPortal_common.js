@@ -1312,9 +1312,17 @@ var notice_all_close = function () {
 	}
 }
 
-var refreshPortlet = function() {
+var refreshPortlet = function(useQuestion, useCircular, useMail, useApproval, useSchedule) {
 	if (portletOrder != null && portletOrder.length != 0) {
 		var portletCount = portletOrder.length;
+		var portletHTML = "";
+		
+		for (var i = 0; i < portletCount; i++) {
+			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
+		}
+		
+		//$(".portlet_area").html(portletHTML);
+		document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
 		
  		//포틀릿별로 정보 및 포틀릿 jsp불러오기
 		for (var i = 0; i < portletCount; i++) {
@@ -1322,7 +1330,96 @@ var refreshPortlet = function() {
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
 			var portletCode = portletOrder[i].portletCode;
-			eventSetting(portletId, usedTheme, portletCode, true);
+			
+			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
+		  		(function (portletId, portletUrl, portletName, portletCode) {
+					$.ajax({
+						type : "GET",
+						dataType : "html",
+						data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
+						url : portletUrl,
+						tryCount : 0,
+						retryLimit : 3,
+						success : function(result) {
+							$("#" + portletId + "Portlet").append(result);
+							
+							if (portletId == 6) {
+								document.getElementById(portletId + "Portlet").style.background = "none";
+							}
+							
+							eventSetting(portletId, usedTheme, portletCode, false);
+							
+							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+								sortableEvent();
+							}
+						},
+						error : function() {
+							this.url = "/ezNewPortal/errorPortlet.do";
+							this.tryCount++;
+							
+							if (this.tryCount <= this.retryLimit) {
+								//try again
+								$.ajax(this);
+								return;
+							}
+							
+							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+								sortableEvent();
+							}
+							
+							return;
+						}
+					});
+				}(portletId, portletUrl, portletName, portletCode));
+			/* } */
 		}
+	} 
+	
+	//메뉴 이동(왼쪽)
+	if (useMail !== "NO") {
+		document.getElementById("NewMail").addEventListener('click', function(){quickMenuOpen('NewMail');}, false);
+	}
+	
+	if (useSchedule !== "NO") {
+		document.getElementById("Schedule").addEventListener('click', function(){quickMenuOpen('Schedule');}, false);
+	}
+	
+	if (useQuestion !== "NO") {
+		document.getElementById("Poll").addEventListener('click', function(){quickMenuOpen('Poll');}, false);
+	}
+	
+	if (useCircular !== "NO") {
+		document.getElementById("Circular").addEventListener('click', function(){quickMenuOpen('Circular');}, false);
+	}
+	
+	if (useApproval !== "NO") {
+		document.getElementById("AprSign").addEventListener('click', function(){quickMenuOpen('ApprG');}, false);
+	}
+	
+	//ajax로 count 불러오기
+	getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
+	
+	//근태관리 연동
+	if (useAttitude === "YES") {
+		parseDate(usedTheme);
+		attiClock();
+		setAttiBtnHover();
+		getAttitudeList(usedTheme);
+		getHolidayList();
+	} else {
+		parseDate(usedTheme);
+		attiClock();
+		//$(".time_check").css("display", "none");
+	}
+	
+	
+	//이번달 생일자 목록 불러오기
+	getMonthlyBirthdayEmployees();
+	
+	//이달의 우수사원 불러오기
+	getMonthlyBestEmployee();
+	//포틀릿 드래그 앤 드롭
+	if (navigator.userAgent.toLowerCase().indexOf("firefox") == -1) {
+		sortableEvent();
 	}
 }

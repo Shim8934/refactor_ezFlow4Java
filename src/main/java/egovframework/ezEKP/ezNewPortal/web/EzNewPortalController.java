@@ -750,6 +750,62 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
 	}
 	
+	@RequestMapping(value = "/ezNewPortal/getPortalInfo.do", method=RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getPortalInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getPortalInfo Start");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String url = "/rest/ezPortal/settingInfo/users/" + userId;
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "get", null);
+		String status = resultBody.get("status").toString();
+		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		Calendar cal = Calendar.getInstance();
+		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
+		
+		JSONObject result = new JSONObject();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			result = data;
+			model.addAttribute("portletOrder", data.get("portletOrder"));
+			model.addAttribute("usedTheme", data.get("usedTheme"));
+			model.addAttribute("usedFrame", data.get("usedFrame"));
+			model.addAttribute("sliderList", data.get("sliderList"));
+			model.addAttribute("userPhoto", data.get("userPhoto"));
+			model.addAttribute("userName", data.get("userName"));
+			model.addAttribute("userTitle", data.get("userTitle"));
+			model.addAttribute("deptName", data.get("deptName"));
+			model.addAttribute("serverTime", serverTime);
+			model.addAttribute("nowMonth", nowMonth);
+			model.addAttribute("useAttitude", data.get("useAttitude"));
+			model.addAttribute("useQuestion", data.get("useQuestion"));
+			model.addAttribute("useCircular", data.get("useCircular"));
+			model.addAttribute("useMail", data.get("useMail"));
+			model.addAttribute("useApproval", data.get("useApproval"));
+			model.addAttribute("useSchedule", data.get("useSchedule"));
+			model.addAttribute("useEzWorkspace", data.get("useEzWorkspace"));
+			model.addAttribute("lastLogin", data.get("lastLogin"));
+			model.addAttribute("userEmail", data.get("userEmail"));
+			model.addAttribute("userId", userId);
+			model.addAttribute("usePortalAutoRefreshInterval", data.get("usePortalAutoRefreshInterval"));
+			
+		}
+		
+		//김보미 추가 - calenderMini는 ie와 크롬일 때랑 파일이 틀려서 구분값 필요함.
+		boolean checkBrowser;
+		if (req.getHeader("User-Agent").indexOf("Trident") > 0 || req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+			checkBrowser = true;
+		} else {
+			checkBrowser = false;
+		}
+		
+		result.put("checkBrowser", checkBrowser);
+		
+		logger.debug("getPortalInfo End");
+		return result;
+	}
+	
 	/**
 	 * 2019-01-03 김민성
 	 * 포탈 - 웹가이드 메인 화면 호출 함수
