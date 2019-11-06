@@ -4141,7 +4141,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		//접속하고자 하는 url.
 		String totalSearchURL = config.getProperty("config.totalSearchURL");
 		
-		JSONObject result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "post", searchResult);
+		JSONObject result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "put", searchResult);
 		
 		logger.debug("result : " + result.toJSONString());
 		

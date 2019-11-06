@@ -4314,18 +4314,16 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			}
 			
 			keyRange += ")";
-			keyRange += " ^[AND {tenant:" + tenantID + "}";
-			keyRange += " ^[AND {company:" + companyID + "}";
 			
 			json.put("csq", keyRange);
 		} else {
 			String keyRange = "";
-			keyRange += "{tenant:" + tenantID + "}";
-			keyRange += " ^[AND {company:" + companyID + "}";
 			json.put("csq", keyRange);
 		}
 		
 		json.put("view", userID);
+		json.put("tenant", tenantID);
+		json.put("company", companyID);
 		
 		if(startDate != "" && endDate != "" ) {
 			
