@@ -760,7 +760,18 @@
 		
 		if (refreshInterval != null && refreshInterval != "0") {
 			window.setInterval(function() {
-				parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+				refreshPortlet();
+				
+				var useQuestion = "<c:out value='${useQuestion}'/>";
+				var useCircular = "<c:out value='${useCircular}'/>";
+				var useMail = "<c:out value='${useMail}'/>";
+				var useApproval = "<c:out value='${useApproval}'/>";
+				var useSchedule = "<c:out value='${useSchedule}'/>";
+				
+				//ajax로 count 불러오기
+				getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
+				getScheduleList_Top(nowDay, "P"); // 스케쥴
+				getMonthlyBestEmployeeTheme2(); //우수사원
 			}, Number(refreshInterval) * 60000);
 		}
 	}
@@ -796,7 +807,7 @@
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
 							
-							eventSetting(portletId, usedTheme, portletCode);
+							eventSetting(portletId, usedTheme, portletCode, false);
 							
 							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
 								sortableEvent();

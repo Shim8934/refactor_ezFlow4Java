@@ -514,7 +514,7 @@
 									document.getElementById(portletId + "Portlet").style.background = "none";
 								}
 								
-								eventSetting(portletId, usedTheme, portletCode);
+								eventSetting(portletId, usedTheme, portletCode, false);
 								
 								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
 									sortableEvent();
@@ -641,7 +641,18 @@
 		
 		if (refreshInterval != null && refreshInterval != "0") {
 			window.setInterval(function() {
-				parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+				refreshPortlet();
+				
+				var useQuestion = "<c:out value='${useQuestion}'/>";
+				var useCircular = "<c:out value='${useCircular}'/>";
+				var useMail = "<c:out value='${useMail}'/>";
+				var useApproval = "<c:out value='${useApproval}'/>";
+				var useSchedule = "<c:out value='${useSchedule}'/>";
+				
+				//ajax로 count 불러오기
+				getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule);
+				//이달의 우수사원 불러오기
+				getMonthlyBestEmployee();
 			}, Number(refreshInterval) * 60000);
 		}
 	}
@@ -818,7 +829,7 @@
 			}
 		}
 	}
-	</script>
+</script>
 <!-- 협업 시작-->
 <c:if test="${useEzWorkspace eq 'YES' }">
     <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js"></script>

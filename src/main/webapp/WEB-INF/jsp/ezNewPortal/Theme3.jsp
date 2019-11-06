@@ -285,7 +285,7 @@
 								$("#" + portletId + "Portlet").css("background", "none");
 							}
 							
-							eventSetting(portletId, usedTheme, portletCode);
+							eventSetting(portletId, usedTheme, portletCode, false);
 							
 							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
 								sortableEvent();
@@ -379,7 +379,7 @@
 		
 		if (refreshInterval != null && refreshInterval != "0") {
 			window.setInterval(function() {
-				parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+				refreshPortlet();
 			}, Number(refreshInterval) * 60000);
 		}
 	}

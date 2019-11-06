@@ -23,4 +23,12 @@ var messages = {
 	strLang22 : "メモ作成",
 	strLang23 : "新着",
 	strLang24 : "参加",
+	strLang25 : "받은메일",
+	strLang26 : "결재할문서",
+	strLang27 : "오늘일정",
+	strLang28 : "전자설문",
+	strLang29 : "회람판",
+	strLang30 : "진행문서",
+	strLang31 : "기안문서",
+	strLang32 : "부서수신함",
 }
