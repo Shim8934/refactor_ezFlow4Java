@@ -294,8 +294,8 @@
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
 		        		
-	                    headerData = loadXMLString(result);
-// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	                    // headerData = loadXMLString(result);
+	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	
 	                    if (CrossYN()) {
 	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
@@ -306,8 +306,7 @@
 				            	}
 				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
-	                        //headerData.documentElement.appendChild(Node);
-	                        headerData.documentElement.prepend(Node);
+	                        headerData.documentElement.appendChild(Node);
 	                    }
 	                    else {
 	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
@@ -430,8 +429,8 @@
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
-	                    headerData = loadXMLString(result);
-// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	                    // headerData = loadXMLString(result);
+ 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 						
 	                    var xmlDom = loadXMLString(result);
 	                    if (CrossYN()) {
@@ -444,8 +443,7 @@
 				            	}
 				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
-	                        //headerData.documentElement.appendChild(Node);
-	                        headerData.documentElement.prepend(Node);
+	                        headerData.documentElement.appendChild(Node);
 	                    }
 	                    else {
 	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];

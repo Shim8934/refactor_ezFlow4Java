@@ -51,6 +51,8 @@
 		    var g_progresswin;
 		    var OneLineReplyFlag = "${boardPropertyVO.oneLineReply}";
 		    var commentCount = "${commentCount}";
+		    var nowCommentCount = ""; // 댓글 옵션처리를 위해 전역변수로 변경
+		    var userInfoID = "${userInfo.id}"; // 댓글 삭제가능여부 판단을 위해 자신의 userID 사용
 			var gubun = "${guBun}";
 			var refreshFlag = "N";
 		    var pUse_Editor = "${useEditor}";
@@ -166,22 +168,27 @@
 		            if("${boardAttrCount}" > 0){
 						addheight = AtttributeCount * 30;
 		            }
-		
-// 		            if (OneLineReplyFlag == "1") {
-// 		                getOneLineReply();
-						if (gubun != "2") {
-			                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-			                    self.resizeTo(760, (800 + addheight));
-			                } else {
-			                    self.resizeTo(785, (830 + addheight));
-			                }
-						} else {
-							if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-			                    self.resizeTo(760, (775 + addheight));
-							} else  {
-			                    self.resizeTo(785, (805 + addheight));
-			                }
-						}
+		            
+		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
+ 		            if (OneLineReplyFlag == "2") {
+ 		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
+ 		            	document.getElementById("bodyPopup").style.overflowY = "auto";
+ 		            	getBoardComment();
+ 		            }
+		            
+					if (gubun != "2") {
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+		                    self.resizeTo(760, (800 + addheight));
+		                } else {
+		                    self.resizeTo(785, (830 + addheight));
+		                }
+					} else {
+						if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+		                    self.resizeTo(760, (775 + addheight));
+						} else  {
+		                    self.resizeTo(785, (805 + addheight));
+		                }
+					}
 // 		            }
 // 		            else {
 // 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
@@ -271,7 +278,7 @@
 		    
 		    /* 2018-12-26 홍승비 - 저해상도 대응을 위해 리사이즈 함수 분리 */
 		    function resizeMessageFrame() {
-		    	 if (gubun != "3") { 
+		    	 if (gubun != "3") {
 //	 			        if (OneLineReplyFlag == "1") {
 //	 				        if (pAttributeYN == "Y") {
 //	 				            var contentHeight;
@@ -291,22 +298,40 @@
 //	 				            document.getElementById("pad1").style.height = contentHeight + "PX";
 //	 				        }
 //	 				    } else {
+							/* 2019-11-05 홍승비 - 하단댓글 사용 시 메세지 프레임 높이 조정 추가 */
 							/* 2019-05-08 홍승비 - 익명게시판에 확장컬럼 존재 시 세로 리사이즈 오류 수정 */
+							var replyOffsetH = 0;
+							if (OneLineReplyFlag == "2") {
+								if (pAttributeYN == "Y") {
+									if (gubun == "2") {
+										replyOffsetH = -8; // 확장칼럼 존재 익명게시판
+									} else {
+										replyOffsetH = 16; // 확장칼럼 존재 일반, QNA게시판
+									}
+								} else {
+									if (gubun == "2") {
+										replyOffsetH = -14; // 확장칼럼 없는 익명게시판
+									} else {
+										replyOffsetH = 12; // 확장칼럼 없는 일반, QNA게시판
+									}
+								}
+							}
+							
 					        if (pAttributeYN == "Y") {
 					            var contentHeight;
 					            if (gubun == "2") {
-					                contentHeight = document.documentElement.clientHeight - 239 - addheight;
+					                contentHeight = document.documentElement.clientHeight - 239 - addheight + replyOffsetH;
 					            } else {
-					                contentHeight = document.documentElement.clientHeight - 268 - addheight;
+					                contentHeight = document.documentElement.clientHeight - 268 - addheight + replyOffsetH
 					            }
 					            document.getElementById("message").style.height = contentHeight + "PX";
 					            document.getElementById("pad1").style.height = contentHeight + "PX";
 					        } else {
 					            var contentHeight;
 					            if (gubun == "2") {
-					                contentHeight = document.documentElement.clientHeight - 243;
+					                contentHeight = document.documentElement.clientHeight - 243 + replyOffsetH;
 					            } else {
-					                contentHeight = document.documentElement.clientHeight - 268;
+					                contentHeight = document.documentElement.clientHeight - 268 + replyOffsetH;
 					            }
 					            document.getElementById("message").style.height = contentHeight + "PX";
 					            document.getElementById("pad1").style.height = contentHeight + "PX";
@@ -1176,10 +1201,12 @@
 		    }
 		    
 		    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
-		    function checkRefreshFlag () {
-		    	var nowCommentCount = document.getElementById("commentCount").innerText;
+		    function checkRefreshFlag() {
+		    	if (OneLineReplyFlag == "1") { // 레이어팝업의 경우 텍스트로 표출된 현재 댓글갯수를 가져옴
+		    		nowCommentCount = document.getElementById("commentCount").innerText;
+		    		nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
+		    	}
 		    	var opnenerHref = window.opener.location.href;
-		    	nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
 		    	
 		    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
 		    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
@@ -1191,7 +1218,7 @@
 		    
 		</script>
 	</head>
-	<body class="popup" style="overflow:hidden; height:100%;">
+	<body id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
 		<table class="layout" style="height:100%">
 		  <tr>
 		    <td style="vertical-align: top; height: 10px;">
@@ -1508,6 +1535,52 @@
 			  <c:when test="${guBun != '3'}">
 			    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
 			        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:495px; overflow:auto; border:1px solid #ddd"></iframe>
+			        <%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+			        <c:if test="${boardPropertyVO.oneLineReply == '2'}">
+			        	<div style='height:auto;'>
+							<table class="mainlist" style="width:100%" >
+								<c:choose>
+									<c:when test="${guBun == 2}">
+										<tr>
+											<th colspan="2" style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
+													 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
+												<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+											</th>
+									</c:when>
+									<c:otherwise>
+										<tr>
+											<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+												<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+											</th>
+									</c:otherwise>	
+								</c:choose>
+								<c:choose>
+									<c:when test="${guBun == 2}">
+										</tr>
+									</c:when>
+									<c:otherwise>
+											<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
+												<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+											</th>
+										</tr>
+									</c:otherwise>
+								</c:choose>
+								</tr>
+								<c:if test="${guBun == 2}">
+									<tr>
+										<th colspan="2" style="width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #f8f8fa; border-right:1px solid #e2e2e2; text-align:right;
+												border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle">
+											<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
+											<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
+											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+										</th>
+									</tr>
+								</c:if>
+							</table>
+							<table id="commentList" style="width:100%;margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+						</div>
+			        </c:if>
+			        <%-- 본문하단 댓글영역 끝 --%>
 			    </td>
 			  </c:when>
 			  <c:otherwise>
@@ -1590,8 +1663,8 @@
 				          	  <div style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left" id="lstAttachLink"></div>
 				          </td>
 				          <td class="pos2">
-				              <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-				              <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+				              <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+				              <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 				          </td>
 				          <td id="Td1"></td>
 				        </tr>
@@ -1631,8 +1704,8 @@
 		                      <td class="pos2">
 					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left"></div></td>
 	  				          <td class="pos2">'
-					          <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-					          <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+					          <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+					          <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 					          </td>
 					          <td id="Td3"></td>
 					        </tr>

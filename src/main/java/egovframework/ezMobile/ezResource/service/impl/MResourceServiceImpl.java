@@ -18,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
@@ -40,6 +43,12 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 
 	@Override
 	public List<MResourceGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID, String companyID, String treeType, int tenantID) {
@@ -1484,7 +1493,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) {	
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) throws Exception {	
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDCOMPANY", brdCompany);
 		map.put("v_PUSERID", userId);
@@ -1494,7 +1503,45 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("tenantID", tenantId);
 		
 		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResApprBrdListCheck(map);
+		
+		String deptPath = ezOrganService.getDeptPath(userDept, tenantId);
 
+		List<String> deptIds = new ArrayList<String>();
+		Collections.addAll(deptIds, deptPath.split(","));
+		Collections.reverse(deptIds);
+		deptIds.remove(0);		// 현재 부서ID 삭제
+		
+		for(int i=0; i<deptIds.size(); i++) {
+			map.put("v_PUSERDEPT", userDept);
+			List<MResourceGetAdmSubClsTreeVO> result2 = mResourceDAO.getResApprBrdListCheck2(map);
+			
+			if(result2.size() > 0)
+				return result2;
+		}
+		
+		// 사내 겸직 권한 체크
+		List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(userId, "1", tenantId);
+
+		if(userAddJobList.size() > 0) {
+			for(int i=0; i<userAddJobList.size(); i++) {
+				String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantId);
+				List<String> addJobDeptIds = new ArrayList<String>();
+				Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
+				addJobDeptIds.remove(0);				// companyID 삭제
+				if(addJobDeptIds.size() > 0) {
+					Collections.reverse(addJobDeptIds);
+					
+					for(int j=0; j<addJobDeptIds.size(); j++) {
+						map.put("v_PUSERDEPT", userDept);
+						List<MResourceGetAdmSubClsTreeVO> result2 = mResourceDAO.getResApprBrdListCheck2(map);
+						
+						if(result2.size() > 0)
+							return result2;
+					}
+				}
+			}
+		}
+					
 		if(Integer.parseInt(langStr) != 1){
 			for (MResourceGetAdmSubClsTreeVO resultVO : result) {
 					resultVO.setBrdNm(resultVO.getBrdNm2());
