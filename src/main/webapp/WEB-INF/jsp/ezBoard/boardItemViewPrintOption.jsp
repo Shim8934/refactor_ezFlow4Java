@@ -19,6 +19,8 @@
 		    var gubun = "${gubun}";
 		    var rvalue = new Array();
 		    var ReturnFunction;
+		    var oneLineReplyFlag = "${oneLineReplyFlag}";
+		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -30,7 +32,7 @@
 		        } catch (e) { }
 		
 		        GetAttachmentCount();
-		        if ("${oneLineReplyFlag}" == "1") {
+		        if (oneLineReplyFlag == "1" || oneLineReplyFlag == "2") {
 		            getOneLineReplyCount();
 		
 		            if (eOneline != "true") {
@@ -167,7 +169,7 @@
 		<h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezBoard.t485'/></h2>
 		<span id="pMessageContent"></span>
 		<table class="content">
-		<c:if test="${oneLineReplyFlag == '1'}">
+		<c:if test="${oneLineReplyFlag == '1' || oneLineReplyFlag == '2'}">
 			<tr>
 			    <th><input id='onl' name ='onl'  type='checkbox' /></th>
 			    <td><span id="ext1">&nbsp;<spring:message code='ezBoard.jjh06'/></span></td>

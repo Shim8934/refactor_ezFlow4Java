@@ -1989,6 +1989,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}			
 			sb.append("<UserIMG>" + commonUtil.cleanValue(userImg) + "</UserIMG>");
 			
+			/* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 정보 추가 */
+			sb.append("<ONELINEREPLY>" + commonUtil.cleanValue(itemInfo.getOneLineReply()) + "</ONELINEREPLY>");
 			sb.append("</NODE>");
 			sb.append("</NODES>");
 		} else {
