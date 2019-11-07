@@ -183,6 +183,11 @@
 	        }
 	
 	        function ChangeTab(obj) {
+	        	if(obj.id = '1tab1'){
+		            document.getElementById("mainmenu").style.display = "none";
+	        	} else {
+		            document.getElementById("mainmenu").style.display = "";
+	        	}
 	        	
 	        	var SelectedTabID = obj.getAttribute("DATA1");
 	        	//TO-DO get방식에 companyList 가 너무 길어서 추후 터질 우려가 있음. 줄여야한다
