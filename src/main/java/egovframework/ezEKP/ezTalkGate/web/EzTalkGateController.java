@@ -302,7 +302,7 @@ public class EzTalkGateController {
 			logger.debug("ezTalkGateMain ended.");
 			
 			if (ezTalkSsoType.equals("mail")) {
-				return "redirect:/ezEmail/mailList.do";
+				return "redirect:/ezEmail/mailMain.do";
 			} else if (ezTalkSsoType.equals("approval")) { 
 				return "redirect:/ezApprovalG/aprManage.do?listType=1&subQuery=";
 			} else if (ezTalkSsoType.equals("portal")) { 
