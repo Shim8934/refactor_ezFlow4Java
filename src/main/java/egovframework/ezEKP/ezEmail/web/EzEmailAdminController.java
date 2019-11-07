@@ -304,6 +304,14 @@ public class EzEmailAdminController {
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("mailDomain", mailDomain);
 		
+		String cChk = "0";
+		
+		if (auth.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			cChk = "1";
+		}
+		
+		model.addAttribute("cChk", cChk);
+		
 		logger.debug("mailAddDistributionList ended.");
 
 		return "admin/ezEmail/mailAddDistributionList";
