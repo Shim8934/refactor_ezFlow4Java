@@ -830,6 +830,8 @@
 		 		mail_flag = 1
 		 	and
 		 		draft_flag = 0
+		 	and 
+		 		mail_sent_flag = 0
  		]]>
 	</select>
 	
@@ -1048,6 +1050,7 @@
 		AND 
 			company_id = #companyId#
 		AND 
+		
 			tenant_id = #tenantId#
 	</update>
 	
