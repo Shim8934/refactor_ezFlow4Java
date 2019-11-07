@@ -15,11 +15,11 @@
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <style type="text/css">
-#portletAuthList {width:381px;height:223px;}
+#portletAuthList {width:381px;height:223px;margin : 10px 0px 0px 0px}
 #portletAuthList .menuIconTH, #portletAuthList .menuIconTD {height:100px;}
-#portletAuthList .menuIconTD {border:1px solid #dfdfdf; width:278px;}
-#portletAuthList .menuIconTD {padding:0px;}
-#portletAuthList .menuIconTD div {height:100%; overflow:auto; padding:5px;}
+#portletAuthList .menuIconTD {border:1px solid #dfdfdf; width:278px;height:100px;}
+#portletAuthList .menuIconTD {padding:4px;}
+#portletAuthList .menuIconTD div {height:100px; overflow:auto; padding:0px 2px 6px 2px;}
 </style>
 </head>
 <body class="popup">
