@@ -27583,7 +27583,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
-	public boolean isReform(String formUrl) throws Exception {
+	public boolean isReform(String formUrl, String userId) throws Exception {
 		Matcher matcher = Pattern.compile("/fileroot/(\\d*)/files/upload_approvalG/(.*)/form/(.*)\\..{0,3}").matcher(formUrl);
 		
 		if (matcher.find() && matcher.groupCount() == 3) {
@@ -27608,7 +27608,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				int tenantId = Integer.parseInt(matcher.group(1));
 				
-				ApprGFormVO formInfo = getReformInfoApprovalDocument(docId, companyId, tenantId);
+				ApprGFormVO formInfo = getReformInfoApprovalDocument(docId, userId, companyId, tenantId);
 				if (formInfo == null) {
 					return false;
 				}
@@ -27661,9 +27661,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public ApprGFormVO getReformInfoApprovalDocument(String docId, String companyId, int tenantId) throws Exception {
+	public ApprGFormVO getReformInfoApprovalDocument(String docId, String userId, String companyId, int tenantId) throws Exception {
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("docId", docId);
+		parameterMap.put("userId", userId);
 		parameterMap.put("companyId", companyId);
 		parameterMap.put("tenantId", tenantId);
 
