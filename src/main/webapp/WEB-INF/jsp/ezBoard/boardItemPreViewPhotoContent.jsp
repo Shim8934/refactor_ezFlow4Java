@@ -986,7 +986,7 @@
    			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 	        <c:if test="${boardInfo.oneLineReply == '2' && mode != 'temp'}">
 	        	<div style='height:auto;'>
-					<table class="mainlist" style="width:100%; min-width:732px; margin-top:1px;" >
+					<table class="mainlist" style="width:100%; min-width:732px; margin-top:1px; padding-bottom: 15px;" >
 						<tr>
 							<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 								<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>

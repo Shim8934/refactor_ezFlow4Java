@@ -323,7 +323,7 @@
 		</div>
 		<%-- 2019-11-06 홍승비 - 하단댓글 영역 추가 --%>
         <c:if test="${OneLineReplyFlag == '2'}">
-        	<div style='height:auto;'>
+        	<div style='height:auto; padding-bottom: 15px;'>
 				<table class="mainlist" style="width:100%" >
 					<c:choose>
 						<c:when test="${gubun == 2}">
