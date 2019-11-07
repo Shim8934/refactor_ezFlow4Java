@@ -50,6 +50,8 @@
 		    var Delete_FG = "${boardInfo.delete_FG}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var rsa = new RSAKey(); // 댓글기능 비밀번호 관련
+		    var checkpassword_dialogArguments = new Array(); // 익명게시물 댓글삭제 시 레이어팝업 관련
+		    var scrollValue = 0;
 	        
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
@@ -60,6 +62,11 @@
 	            	getBoardComment();
 	            }
 	        };
+	        
+	        /* 2019-11-07 홍승비 - 댓글삭제 레이어팝업 스크롤 위치 관련 */
+	        $(window).scroll(function () {
+				scrollValue = $(document).scrollTop();
+	        });
 			
 	        //보기설정 레이어팝업 바깥 클릭시 close되게 하기위한 코드 2018.03.05 강민수92
 	        $(document).ready(function() {
@@ -371,5 +378,11 @@
 		<iframe name="AttachDownFrame" id="AttachDownFrame" style="display:none"></iframe>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
+	    
+		<%-- 2019-11-07 홍승비 - 익명게시물 댓글삭제 시 비밀번호 확인을 위한 레이어팝업 추가 --%>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel2">&nbsp;</div>
+	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel2">
+	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer2"></iframe>
+	    </div>
 	</body>
 </html>

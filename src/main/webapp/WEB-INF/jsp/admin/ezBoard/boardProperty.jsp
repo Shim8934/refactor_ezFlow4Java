@@ -430,7 +430,10 @@
                     document.getElementById("chkbackgroundimage").checked = false;
                     document.getElementById("chkform").checked = false;
                     document.getElementById("chkNotify").checked = false;
-                    document.getElementById("chkOneLine").checked = false;
+                   // document.getElementById("chkOneLine").checked = false;
+                    document.getElementById("chkOneLineBottom").checked = false;
+                    document.getElementById("chkOneLineLayer").checked = false;
+                    document.getElementById("chkOneLineNone").checked = true; // 댓글옵션  '사용안함' 체크
 	            } else {
 					document.getElementById("txtURL").style.display = "none";
                     document.getElementById("tr1").style.display = "";
