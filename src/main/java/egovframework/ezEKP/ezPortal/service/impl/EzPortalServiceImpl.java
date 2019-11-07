@@ -4286,6 +4286,33 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		json.put("q", keyword);
 		
 		if (!type.equalsIgnoreCase("all")) {
+			String searchType = "";
+			String range[] = searchRange.split("\\|");
+			int rangeCount = range.length;
+			
+			for (int i = 0; i < rangeCount; i++) {
+				
+				if (i != 0) {
+					searchType += "|";
+				}
+				
+				if(range[i].equalsIgnoreCase("TITLE")) {
+					searchType += "title";
+				} else if(range[i].equalsIgnoreCase("CONTENTS")) {
+					searchType += "contents";
+				} else if(range[i].equalsIgnoreCase("ATTACH")) {
+					searchType += "attach";
+				} else if(range[i].equalsIgnoreCase("WRITER")) {
+					searchType += "writer";
+				}
+			}
+			
+			logger.debug("[searchRange] : " + searchType);
+			json.put("searchRange", searchType);
+		} else {
+			json.put("searchRange", "title|contents|attach|writer");
+		}
+		/*if (!type.equalsIgnoreCase("all")) {
 			String range[] = searchRange.split("\\|");
 			int rangeCount = range.length;
 			List<String> rangeList = new ArrayList<String>();
@@ -4319,7 +4346,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		} else {
 			String keyRange = "";
 			json.put("csq", keyRange);
-		}
+		}*/
 		
 		json.put("view", userID);
 		json.put("tenant", tenantID);
