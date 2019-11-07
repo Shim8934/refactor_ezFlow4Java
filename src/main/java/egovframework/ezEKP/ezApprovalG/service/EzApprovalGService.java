@@ -578,7 +578,7 @@ public interface EzApprovalGService {
 	 * @param formUrl
 	 *            양식 경로
 	 */
-	boolean isReform(String formUrl) throws Exception;
+	boolean isReform(String formUrl, String userId) throws Exception;
 	
 	/**
 	 * 폼빌더 양식 여부를 반환
@@ -616,7 +616,7 @@ public interface EzApprovalGService {
 	 * @param tenantId
 	 *            테넌트 아이디
 	 */
-	ApprGFormVO getReformInfoApprovalDocument(String docId, String companyId, int tenantId) throws Exception;
+	ApprGFormVO getReformInfoApprovalDocument(String docId, String userId, String companyId, int tenantId) throws Exception;
 	/* FormBuilder end */
 	
 //	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
