@@ -124,4 +124,7 @@ public interface EzBoardAdminService {
 	
 	/* 2019-05-29 홍승비 - 하위부서 허용/불가여부 체크하여 게시판그룹의 관리자 권한 가져오는 쿼리 추가(하위게시판이 아닌 게시판그룹의 관리자 권한만을 체크함) */
 	public String checkIfBoardGroupAdmin2(String pRootBoardID, String accessID, int tenantID, int isDept, int isEqualDept, boolean isBoardGroup) throws Exception;
+
+	/* 2019-11-08 홍승비 - 전달된 값으로 BOARDTREEPATH를 업데이트하는 메서드 */
+	public void updateBoardTreePath(String boardID, String newBoardTreePath, int tenantID) throws Exception;
 }

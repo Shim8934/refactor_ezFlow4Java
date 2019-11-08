@@ -81,6 +81,7 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="32"/>
         <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
         <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="34"/>
+        <result property="oneLineReply" 		column="ONELINEREPLY" 		columnIndex="35"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -2515,7 +2516,8 @@
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10 ,
 	            A.BOARDID ,
-	            A.DOCNO
+	            A.DOCNO,
+	            B.ONELINEREPLY
 	        FROM 
 	        	TBL_Board_Item A
             JOIN 
@@ -5375,6 +5377,19 @@
 			AND
 				TENANT_ID = #v_TENANTID#
 		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getAllSubBoardProperty" parameterClass="Map" resultClass="BoardPropertyVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_BOARD_BOARDINFO 
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				(BOARDID = #v_BOARDID# OR BOARDTREEPATH LIKE CONCAT('%', #v_BOARDID#, '%'))
+		]]>		
 	</select>
 	
 </sqlMap>

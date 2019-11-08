@@ -1974,6 +1974,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
 			sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
 			sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
+			/* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 정보 추가 */
+			sb.append("<ONELINEREPLY>" + commonUtil.cleanValue(itemInfo.getOneLineReply()) + "</ONELINEREPLY>");
 			sb.append("</NODE>");
 			sb.append("</NODES>");
 		} else {
@@ -4341,4 +4343,40 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.isDeptChk(map);
 	}
 	
+	/* 2019-11-08 홍승비 - 해당 게시판을 포함하여 하위에 속한 모든 게시판들을 가져오는 메서드 */
+	@Override
+	public List<BoardPropertyVO> getAllSubBoardProperty(String boardID, int tenantID) throws Exception {
+		logger.debug("getAllSubBoardProperty started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getAllSubBoardProperty ended");
+		return ezBoardDAO.getAllSubBoardProperty(map);
+	}
+	
+	/* 2019-11-08 홍승비 - 주어진 게시판ID에 대하여, 새로운 BOARDTREEPATH를 생성해 리턴하는 메서드 */
+	@Override
+	public String getNewBoardTreePath(String boardID, int tenantID) throws Exception {
+		logger.debug("getNewBoardTreePath started");
+		
+		StringJoiner addJobStr = new StringJoiner(",");
+		String tempParentBoardID = boardID;
+		
+		boolean isBoardPropertyExist = true;
+		while (isBoardPropertyExist == true) {
+			BoardPropertyVO boardProperty = getBoardProperty(tempParentBoardID, tenantID);
+			if (boardProperty != null && !boardProperty.getParentBoardID().equals("top")) {
+				addJobStr.add(boardProperty.getParentBoardID());
+				tempParentBoardID = boardProperty.getParentBoardID();
+			} else {
+				isBoardPropertyExist = false;
+			}
+		}
+		
+		logger.debug("getNewBoardTreePath ended");
+		return addJobStr.toString();
+	}
 }

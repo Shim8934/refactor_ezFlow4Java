@@ -251,10 +251,12 @@
 	            }
 	            
 	            var oneLineReply = "";            
-	            if ($("#chkOneLine").is(":checked") == false) {
-	            	oneLineReply = 0;
-	            } else {
+	            if ($("#chkOneLineBottom").is(":checked") == true) {
+	            	oneLineReply = 2;
+	            } else if ($("#chkOneLineLayer").is(":checked") == true) {
 	            	oneLineReply = 1;
+	            } else {
+	            	oneLineReply = 0;
 	            }
 	            
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
@@ -428,7 +430,10 @@
                     document.getElementById("chkbackgroundimage").checked = false;
                     document.getElementById("chkform").checked = false;
                     document.getElementById("chkNotify").checked = false;
-                    document.getElementById("chkOneLine").checked = false;
+                   // document.getElementById("chkOneLine").checked = false;
+                    document.getElementById("chkOneLineBottom").checked = false;
+                    document.getElementById("chkOneLineLayer").checked = false;
+                    document.getElementById("chkOneLineNone").checked = true; // 댓글옵션  '사용안함' 체크
 	            } else {
 					document.getElementById("txtURL").style.display = "none";
                     document.getElementById("tr1").style.display = "";
@@ -700,6 +705,25 @@
 		    		$("#txtAttachLimit").val(2048);
 		    	}
 			}
+		    
+		    /* 2019-11-05 홍승비 - 댓글 사용여부 체크 시 처리 추가 */
+		    function checkReplyType(chkObj) {
+		    	var chkBottom = document.getElementById("chkOneLineBottom");
+		    	var chkLayer = document.getElementById("chkOneLineLayer");
+		    	var chkNone = document.getElementById("chkOneLineNone");
+		    	if (chkObj.id == "chkOneLineBottom" && chkObj.checked) {
+		    		chkLayer.checked = false;
+		    		chkNone.checked = false;
+		    	} else if (chkObj.id == "chkOneLineLayer" && chkObj.checked) {
+		    		chkBottom.checked = false;
+		    		chkNone.checked = false;
+		    	} else { // 기존에 체크된 체크박스를 다시 클릭하는 경우, '사용안함'으로 체크 이동
+		    		chkBottom.checked = false;
+		    		chkLayer.checked = false;
+		    		chkNone.checked = true;
+		    	}
+		    }
+		    
 	    </script>
 	    <style type="text/css">
 	    	.mainlist tr {
@@ -962,17 +986,42 @@
 	                </c:if>		                 
 	            </td>
 	        </tr>
+	        <%-- 2019-11-05 홍승비 - 댓글의 옵션처리 추가 --%>
 	        <%--2011-04 : 한줄 답변 옵션화 처리.--%>
 	        <tr id="oneLineTr" style="${style}">
 	            <th><spring:message code="ezBoard.t81" /></th>
 	            <td>
-	            	<c:if test="${model.oneLineReply == '1'}">	                
+<%-- 	            	<c:if test="${model.oneLineReply == '1'}">	                
 	                	<input type="checkbox" id="chkOneLine" onclick="checkboardtype()" checked />
 	                	<spring:message code="ezBoard.t496" />
 	                </c:if>
 	                <c:if test="${model.oneLineReply != '1'}">	                  
 	                	<input type="checkbox" id="chkOneLine" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t496" />
+	                </c:if> --%>
+	                <c:if test="${model.oneLineReply == '2'}">	                
+	                	<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);" checked/>
+	                	<spring:message code="ezBoard.hsbRp02" />
+	                </c:if>
+					<c:if test="${model.oneLineReply != '2'}">	                
+	                	<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);"/>
+	                	<spring:message code="ezBoard.hsbRp02" />
+	                </c:if>
+	            	<c:if test="${model.oneLineReply == '1'}">	                
+	                	<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);" checked/>
+	                	<spring:message code="ezBoard.hsbRp01" />
+	                </c:if>
+					<c:if test="${model.oneLineReply != '1'}">	                
+	                	<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);"/>
+	                	<spring:message code="ezBoard.hsbRp01" />
+	                </c:if>
+	            	<c:if test="${model.oneLineReply == '0'}">	                
+	                	<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);" checked/>
+	                	<spring:message code="ezBoard.hsbRp03" />
+	                </c:if>
+					<c:if test="${model.oneLineReply != '0'}">	                
+	                	<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);"/>
+	                	<spring:message code="ezBoard.hsbRp03" />
 	                </c:if>
 	            </td>
 	        </tr>	

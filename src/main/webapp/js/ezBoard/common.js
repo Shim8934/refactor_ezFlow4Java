@@ -126,6 +126,8 @@ function getBoardComment() {
 			document.getElementById('onelinereply').value = "";
 			$("#headTitle").html(updateCount);
 			var a = $('#commentCount', parent.document).text(strLang186 + "[" + result.totalCommentCount + "]");
+			
+			nowCommentCount = result.totalCommentCount; // 댓글 옵션처리를 위해 전역변수에 최신 댓글갯수를 부여
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -150,8 +152,19 @@ function delete_onelinereply_Complete(ret) {
 }
 //강민수92
 function deleteBoardCommentPopup() {
-	DivPopUpShow2($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.3, "/ezBoard/checkPassWord.do?itemID=" 
-			+ pItemID + "&replyID=" + delpReplyID + "&replyFlag=true");
+	/* 2019-11-07 홍승비 - 하단댓글의 경우 레이어팝업 표출영역 수정 */
+	if (OneLineReplyFlag == "1") {
+		DivPopUpShow2($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.3, "/ezBoard/checkPassWord.do?itemID=" 
+				+ pItemID + "&replyID=" + delpReplyID + "&replyFlag=true");
+	}
+	else if (OneLineReplyFlag == "2") {
+		if ($(window).height() < $('body').prop('scrollHeight')) {
+			document.getElementById("mailPanel2").style.height = ($('body').prop('scrollHeight') + "px");
+		} else {
+			document.getElementById("mailPanel2").style.height = ($(window).height() + "px");
+		}
+		DivPopUpShow2(376, 191, "/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + delpReplyID + "&replyFlag=true");
+	}
 }
 //강민수92
 function closePopup2() {
@@ -170,7 +183,7 @@ function deleteBoardComment(obj) {
                 deleteBoardCommentPopup();
                 try { OpenWin.focus(); } catch (e) { }
             	
-            } else {		                	
+            } else {
             	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
                 feature = feature + GetShowModalPosition(330, 200);
                 var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + delpReplyID, "", feature);
@@ -217,6 +230,11 @@ function deleteBoardComment(obj) {
     }
     getBoardComment();
     xmlhttp = null;
+    
+	/* 2019-11-06 홍승비 - 게시물 미리보기 영역에서 댓글 삭제 시 게시물 리스트 갱신 */
+	if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1) {
+		window.parent.getBoardList();
+	}
 }
 //강민수92
 function OneLineReply_onkeydown() {
@@ -228,7 +246,8 @@ function Save_OneLineReply() {
         alert(strLang173);
 	    return;
 	}
-    if (OneLineReplyFlag == "1") {
+    /* 2019-11-05 홍승비 - 게시물 본문하단 댓글옵션 추가 */
+    if (OneLineReplyFlag == "1" || OneLineReplyFlag == "2") {
     	var text = document.getElementById('onelinereply').value.replace(/\s|　/gi, '');
         if (text == "") {
             alert(strLang182);
@@ -245,7 +264,7 @@ function Save_OneLineReply() {
     pReplyID = "{" + GetGUID().toUpperCase() + "}";
 
 	var content,password;
-	if (OneLineReplyFlag == "1"){
+	if (OneLineReplyFlag == "1" || OneLineReplyFlag == "2"){
 		content = MakeXMLString(document.getElementById('onelinereply').value);
 	}else{
 		content = "";
@@ -272,6 +291,11 @@ function Save_OneLineReply() {
 		success: function(){
 			getBoardComment();
 			$('#txtPassWord').val("");
+			
+			/* 2019-11-06 홍승비 - 게시물 미리보기 영역에서 댓글 작성 시 게시물 리스트 갱신 */
+			if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1) {
+				window.parent.getBoardList();
+			}
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert("ajax error");
@@ -287,6 +311,12 @@ function OpenUserInfo(pUserID, pDeptID) {
 function DivPopUpShow2(popUpW, popUpH, URL) {
     try {
         var Position = DivPopUpPosition(popUpW, popUpH);
+        
+         /* 2019-11-07 홍승비 - 하단댓글의 경우 레이어팝업 표출영역 수정 */
+        if (OneLineReplyFlag == "2") {
+        	Position[0] = scrollValue + ($(window).height() / 2) - 85;
+        }
+        
         document.getElementById("iFrameLayer2").src = URL;
         document.getElementById("iFramePanel2").style.top = Position[0] + "px";
         document.getElementById("iFramePanel2").style.left = Position[1] + "px";
