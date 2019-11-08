@@ -171,6 +171,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
     	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
     	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
+    	ezCommonService.alterChamjoView();
     	
     	logger.debug("init ended.");
     }
