@@ -840,9 +840,11 @@ reformUseProc.onLoadHandler = function() {
 	
 	var stageName = reformUseProc.getCurrentStage();
 	var isRedraft = false;
+	var isReuse = false;
 	
 	if (window.parent && parent.parent) {
 		isRedraft = parent.parent.pDraftFlag === "REDRAFT";
+		isReuse = parent.parent.isUsed === "reuse";
 	}
 	
 	// hide hidden controls
@@ -1010,7 +1012,7 @@ reformUseProc.onLoadHandler = function() {
 					});					
 				}
 				
-				if (stageName == "draft" && (!isRedraft || $(controlElement).val() === "")) {
+				if (stageName == "draft" && (!(isRedraft || isReuse) || $(controlElement).val() === "")) {
 					$(controlElement).datepicker('setDate', new Date());
 				}
 			}
@@ -1056,7 +1058,7 @@ reformUseProc.onLoadHandler = function() {
 					'step': timeGap
 				});
 				
-				if (stageName == "draft" && (!isRedraft || $(controlElement).val() === "")) {
+				if (stageName == "draft" && (!(isRedraft || isReuse) || $(controlElement).val() === "")) {
 					$(controlElement).timepicker('setTime', new Date());
 				}
 			}

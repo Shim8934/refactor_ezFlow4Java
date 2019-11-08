@@ -152,8 +152,19 @@ function delete_onelinereply_Complete(ret) {
 }
 //강민수92
 function deleteBoardCommentPopup() {
-	DivPopUpShow2($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.3, "/ezBoard/checkPassWord.do?itemID=" 
-			+ encodeURIComponent(pItemID) + "&replyID=" + encodeURIComponent(delpReplyID) + "&replyFlag=true");
+	/* 2019-11-07 홍승비 - 하단댓글의 경우 레이어팝업 표출영역 수정 */
+	if (OneLineReplyFlag == "1") {
+		DivPopUpShow2($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.3, "/ezBoard/checkPassWord.do?itemID=" 
+				+ encodeURIComponent(pItemID) + "&replyID=" + encodeURIComponent(delpReplyID) + "&replyFlag=true");
+	}
+	else if (OneLineReplyFlag == "2") {
+		if ($(window).height() < $('body').prop('scrollHeight')) {
+			document.getElementById("mailPanel2").style.height = ($('body').prop('scrollHeight') + "px");
+		} else {
+			document.getElementById("mailPanel2").style.height = ($(window).height() + "px");
+		}
+		DivPopUpShow2(376, 191, "/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + delpReplyID + "&replyFlag=true");
+	}
 }
 //강민수92
 function closePopup2() {
@@ -221,7 +232,7 @@ function deleteBoardComment(obj) {
     xmlhttp = null;
     
 	/* 2019-11-06 홍승비 - 게시물 미리보기 영역에서 댓글 삭제 시 게시물 리스트 갱신 */
-	if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1) {
+	if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewMovieContent.do") > -1) {
 		window.parent.getBoardList();
 	}
 }
@@ -282,7 +293,7 @@ function Save_OneLineReply() {
 			$('#txtPassWord').val("");
 			
 			/* 2019-11-06 홍승비 - 게시물 미리보기 영역에서 댓글 작성 시 게시물 리스트 갱신 */
-			if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1) {
+			if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewMovieContent.do") > -1) {
 				window.parent.getBoardList();
 			}
 		},
@@ -300,6 +311,12 @@ function OpenUserInfo(pUserID, pDeptID) {
 function DivPopUpShow2(popUpW, popUpH, URL) {
     try {
         var Position = DivPopUpPosition(popUpW, popUpH);
+        
+         /* 2019-11-07 홍승비 - 하단댓글의 경우 레이어팝업 표출영역 수정 */
+        if (OneLineReplyFlag == "2") {
+        	Position[0] = scrollValue + ($(window).height() / 2) - 85;
+        }
+        
         document.getElementById("iFrameLayer2").src = URL;
         document.getElementById("iFramePanel2").style.top = Position[0] + "px";
         document.getElementById("iFramePanel2").style.left = Position[1] + "px";
