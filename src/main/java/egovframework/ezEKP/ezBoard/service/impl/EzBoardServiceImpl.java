@@ -4343,4 +4343,40 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.isDeptChk(map);
 	}
 	
+	/* 2019-11-08 홍승비 - 해당 게시판을 포함하여 하위에 속한 모든 게시판들을 가져오는 메서드 */
+	@Override
+	public List<BoardPropertyVO> getAllSubBoardProperty(String boardID, int tenantID) throws Exception {
+		logger.debug("getAllSubBoardProperty started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getAllSubBoardProperty ended");
+		return ezBoardDAO.getAllSubBoardProperty(map);
+	}
+	
+	/* 2019-11-08 홍승비 - 주어진 게시판ID에 대하여, 새로운 BOARDTREEPATH를 생성해 리턴하는 메서드 */
+	@Override
+	public String getNewBoardTreePath(String boardID, int tenantID) throws Exception {
+		logger.debug("getNewBoardTreePath started");
+		
+		StringJoiner addJobStr = new StringJoiner(",");
+		String tempParentBoardID = boardID;
+		
+		boolean isBoardPropertyExist = true;
+		while (isBoardPropertyExist == true) {
+			BoardPropertyVO boardProperty = getBoardProperty(tempParentBoardID, tenantID);
+			if (boardProperty != null && !boardProperty.getParentBoardID().equals("top")) {
+				addJobStr.add(boardProperty.getParentBoardID());
+				tempParentBoardID = boardProperty.getParentBoardID();
+			} else {
+				isBoardPropertyExist = false;
+			}
+		}
+		
+		logger.debug("getNewBoardTreePath ended");
+		return addJobStr.toString();
+	}
 }
