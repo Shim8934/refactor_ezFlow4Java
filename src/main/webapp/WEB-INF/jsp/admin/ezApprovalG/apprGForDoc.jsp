@@ -35,6 +35,8 @@
 			var SearchCond = new Array();
 			var approvalFlag = "<c:out value = '${approvalFlag}' />";
 			var type = "<c:out value = '${type}' />";
+			var nowDate = "<c:out value = '${nowDateUTC}'/>";
+			var pOpenYear = "<c:out value = '${openYear}'/>";
 			
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -59,6 +61,13 @@
 				if (type == 'admin') {
 					document.getElementById("SCompID").value = pCompanyID;
 				}
+				
+				var toDayYear = parseInt(nowDate.substring(0,4));
+	            var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYear);
+	            for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
+	                AddOption(sel_year, i, i);
+                
+                pChackYN = "INIT";
 				
 				GetDocList();
 			});
@@ -106,6 +115,24 @@
 				        SearchCond[i] = "";
 				    }
 				} else if (pChackYN == "SEARCH") {
+					
+				} else if (pChackYN == "INIT") {
+					 for (var i = 0; i < 20; i++) {
+					        SearchCond[i] = "";
+					 }
+					 
+					var nowyear = nowDate.substring(0,4);
+			        var nowmonth = nowDate.substring(5,7);
+			        var nowday = nowDate.substring(8,10);
+			        
+					SearchCond[3] = nowyear-1;
+	            	SearchCond[4] = nowmonth;
+	            	SearchCond[5] = nowday;
+	            	SearchCond[6] = nowyear
+	            	SearchCond[7] = nowmonth;
+	                SearchCond[8] = nowday;
+					 
+	                pChackYN == "FALSE";
 				}
 				
 				$.ajax({
@@ -650,6 +677,9 @@
 			function SearchCondi_onclick() {
 				var para;
 				
+				flag = "END";
+				$('#sel_year').val("ALL");
+				
 				if (CrossYN()) {
 				    ezStatisticsSearch_Cross_dialogArguments[0] = para;
 				    ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
@@ -810,6 +840,8 @@
 			    
 			    pageNum = 1;
 			    GetDocList();
+  
+			    $('#sel_year').val("ALL");
 			}
 			
 			//2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
@@ -867,6 +899,33 @@
 		            }
 		        }
 		    }
+		    
+	        function onSelect_Year() {
+	            pChackYN = "SEARCH";
+	            pageNum = 1;
+	            
+	            if (GetSelectVal("sel_year") != "ALL") {
+	            	SearchCond[3] = GetSelectVal("sel_year");
+	            	SearchCond[4] = "01";
+	            	SearchCond[5] = "01";
+	            	SearchCond[6] = GetSelectVal("sel_year");
+	            	SearchCond[7] = "12";
+	                SearchCond[8] = "31";
+	            }
+	            else {
+	            	var nowyear = nowDate.substring(0,4);
+			        var nowmonth = nowDate.substring(5,7);
+			        var nowday = nowDate.substring(8,10);
+	            	SearchCond[3] = nowyear-1;
+	            	SearchCond[4] = nowmonth;
+	            	SearchCond[5] = nowday;
+	            	SearchCond[6] = nowyear
+	            	SearchCond[7] = nowmonth;
+	                SearchCond[8] = nowday;
+                }
+	            
+	            GetDocList();
+	        }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -901,6 +960,13 @@
 	            <!-- 폐기버튼 숨김처리 -->
 	            <%-- <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li> --%>	            
 	            <li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
+
+	      	 	<!-- 전체 문서 조회 년도별 select box 추가 -->
+	      	 	<li style="vertical-align: middle; float:right">
+	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
+		            	<option value="ALL"><spring:message code ='ezApprovalG.kmsg01'/></option>
+		        	</select>
+		        </li>
 	        </ul>
 	    </div>
 	
