@@ -3075,16 +3075,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 				return returnValue;
 			}
-			
-			String ezTalkServerUrl = ezCommonService.getTenantConfig("ezTalkSyncServerUrl", userInfo.getTenantId());
-			String queryString = "/ezTalkSyncServer/syncAccounts";
-			String inputParams = "tenantId=" + userInfo.getTenantId();
-			
-			String resultCode = ezEmailUtil.getWebServiceResult(ezTalkServerUrl + queryString, inputParams);
-			
-			JSONParser parser = new JSONParser();
-			JSONObject obj = (JSONObject) parser.parse(resultCode);
-			logger.debug("ezTalkSyncServer getWebServerResult=" + obj.toJSONString());
+									
+			JSONObject obj = invokeEzTalkSyncServer(userInfo.getTenantId());
 			
 			if (!obj.get("resultCode").equals("ERROR") && obj.get("resultCode") != null) {
 				returnValue = "OK";
@@ -3097,6 +3089,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("syncWithBizmekaTalkAccounts ended.");
 		
 		return returnValue;
+	}
+	
+	public JSONObject invokeEzTalkSyncServer(int tenantId) throws Exception {
+		String ezTalkServerUrl = ezCommonService.getTenantConfig("ezTalkSyncServerUrl", tenantId);
+		String queryString = "/ezTalkSyncServer/syncAccounts";
+		String inputParams = "tenantId=" + tenantId;
+		
+		String resultCode = ezEmailUtil.getWebServiceResult(ezTalkServerUrl + queryString, inputParams);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject obj = (JSONObject) parser.parse(resultCode);
+		logger.debug("ezTalkSyncServer getWebServerResult=" + obj.toJSONString());
+
+		return obj;
 	}
 	
 	/**
