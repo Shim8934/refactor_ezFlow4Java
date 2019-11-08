@@ -1243,6 +1243,16 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute2", "", "user", userInfo.getTenantId());
 
+        String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", userInfo.getTenantId());
+        
+        if (useBizmekaTalk.equals("YES")) {
+        	try {
+        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        }
+		
 		logger.debug("deletePicture ended");
 		return result;
 	}
