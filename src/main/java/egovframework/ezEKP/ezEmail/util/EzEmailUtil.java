@@ -4888,11 +4888,14 @@ public class EzEmailUtil {
 
 				// set content and attachment
 				if (hasAttchment) {
-					BodyPart htmlContentPart = new MimeBodyPart();
-					htmlContentPart.setContent(content, "text/html; charset=utf-8");
-
 					MimeMultipart multipartContent = new MimeMultipart();
-					multipartContent.addBodyPart(htmlContentPart);
+
+					if (content != null) {
+						BodyPart htmlContentPart = new MimeBodyPart();
+						htmlContentPart.setContent(content, "text/html; charset=utf-8");
+
+						multipartContent.addBodyPart(htmlContentPart);
+					}
 
 					for (EmailAttachment attachment : attachmentList) {
 						InputStream attachInputStream = attachment.getInputStream();
