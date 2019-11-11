@@ -69,7 +69,7 @@ function OpenSendOfferUI() {
         ezselectone_cross_dialogArguments[0] = parameter;
         ezselectone_cross_dialogArguments[1] = SendOffer_Complete;
 
-        var OpenWin = window.open("/ezApprovalG/ezSelectOne.do", "ezSelectOne_Cross", GetOpenWindowfeature(605, 505));
+        var OpenWin = window.open("/ezApprovalG/ezSelectOne.do", "ezSelectOne_Cross", GetOpenWindowfeature(605, 515));
         try { OpenWin.focus(); } catch (e) { }
     //}
 }

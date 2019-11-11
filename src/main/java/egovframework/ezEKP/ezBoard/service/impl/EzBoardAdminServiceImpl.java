@@ -1213,4 +1213,19 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("checkIfBoardGroupAdmin2 ended");
 		return result;
 	}
+	
+	/* 2019-11-08 홍승비 - 전달된 값으로 BOARDTREEPATH를 업데이트하는 메서드 */
+	@Override
+	public void updateBoardTreePath(String boardID, String newBoardTreePath, int tenantID) throws Exception {
+		logger.debug("updateBoardTreePath started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_BOARDTREEPATH", newBoardTreePath);
+		map.put("v_TENANTID", tenantID);
+		
+		ezBoardAdminDAO.updateBoardTreePath(map);
+		logger.debug("updateBoardTreePath ended");
+	}
 }

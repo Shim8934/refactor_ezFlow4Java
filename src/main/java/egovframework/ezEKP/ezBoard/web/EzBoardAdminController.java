@@ -737,8 +737,29 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		/* 2019-11-08 홍승비 - 상위게시판을 자신의 하위게시판 아래로 이동하지 못하도록 수정 */
+		boolean canMove = true;
+		BoardPropertyVO newParentBoardProperty = ezBoardService.getBoardProperty(newParentBoardID, userInfo.getTenantId());
+		if (newParentBoardProperty != null && newParentBoardProperty.getBoardTreePath() != null && newParentBoardProperty.getBoardTreePath().indexOf(orgBoardID) > -1) {
+			canMove = false; // 이동할 목표 게시판의 boardtreepath에 이동할 대상이 되는 게시판ID가 포함된다면, 상위게시판을 자신의 하위로 이동시키는 것임
+		}
+		
 		if (isAllGroupBoardORG.equals(isAllGroupBoardNEW)) {
-			ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID,	newBoardGroupID, userInfo.getTenantId());
+			if (canMove == true) {
+				ezBoardAdminService.moveBoard(orgBoardID, newParentBoardID,	newBoardGroupID, userInfo.getTenantId());
+				
+				/* 2019-11-08 홍승비 - 게시판 이동 시 BOARDTREEPATH 업데이트되지 않는 오류 수정 */
+				List<BoardPropertyVO> allSubBoardProperty = ezBoardService.getAllSubBoardProperty(orgBoardID, userInfo.getTenantId());
+				
+				int subBoardSize = allSubBoardProperty.size();
+				for (int i = 0; i < subBoardSize; i++) {
+					String subBoardID = allSubBoardProperty.get(i).getBoardID();
+					String subNewBoardTreePath= ezBoardService.getNewBoardTreePath(subBoardID, userInfo.getTenantId());
+					ezBoardAdminService.updateBoardTreePath(subBoardID, subNewBoardTreePath, userInfo.getTenantId());
+				}
+			} else {
+				response.sendError(501);
+			}
 		}
 		else {
 			response.sendError(500);

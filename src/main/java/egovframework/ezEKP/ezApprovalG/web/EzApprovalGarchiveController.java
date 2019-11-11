@@ -753,11 +753,18 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     		mDeptInfo = xmlResult.getElementsByTagName("DATA2").item(0).getTextContent();
     	}
     	
+    	String simsaListByDept = ezCommonService.getTenantConfig("simsaListByDepartment", userInfo.getTenantId());
+    	
+    	if (simsaListByDept == null || simsaListByDept.equals("")) {
+    		simsaListByDept = "YES";
+    	}
+    	
     	model.addAttribute("userInfo", userInfo);
     	model.addAttribute("susinAdmin", susinAdmin);
     	model.addAttribute("serverName", serverName);
     	model.addAttribute("susinXML", susinXML);
     	model.addAttribute("mDeptInfo", mDeptInfo);
+    	model.addAttribute("simsaListByDept", simsaListByDept);
     	
     	logger.debug("ezSelectOne ended");
     	
