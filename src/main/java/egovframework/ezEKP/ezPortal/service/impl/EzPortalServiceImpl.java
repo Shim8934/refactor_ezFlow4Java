@@ -4285,7 +4285,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 		json.put("dsort", "11");
 		json.put("q", keyword);
 		
-		if (!type.equalsIgnoreCase("all")) {
+		if (!searchRange.equalsIgnoreCase("all")) {
 			String searchType = "";
 			String range[] = searchRange.split("\\|");
 			int rangeCount = range.length;

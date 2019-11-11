@@ -531,7 +531,7 @@ function btn_searchStart() {
 	*/
 	var isAllChk = $("#chkAllRange").prop("checked");
 	if(isAllChk) {
-		searchRange = "ALL";	
+		searchRange = "ALL";
 	} else {
 		$("#chkRange input").each(function(i, elem){
 			$(elem).prop("checked") && i > 1 ? searchRange += "|" : "";
@@ -571,7 +571,7 @@ function btn_searchStart() {
 		,searchRange : searchRange
 		,automax : "5"     //한페이지에 출력하는 양.
 		,page : "1"        //페이지정보도 받아서 처리하는 거로 변경해야함.
-		,type : "all"
+		,type : type
 		,btnStart : true  // 검색버튼으로 실행했을 경우.
 	}
 	
@@ -596,6 +596,19 @@ function callSearchController() {
 			contentType : "application/json",
 			data : JSON.stringify(data),
 			success : function (res) {
+				
+				console.log(res);
+				
+				if (res == null) {
+					alert("에러가 발생하였습니다.");
+					return;
+				}
+				
+				if (res.error != null) {
+					console.log(res.error);
+					alert("에러가 발생하였습니다.");
+					return;
+				}
 				
 				var approvalList = res.approval;
 				var boardList = res.board;

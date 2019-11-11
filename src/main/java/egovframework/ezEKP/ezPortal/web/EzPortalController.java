@@ -4123,27 +4123,29 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("getTotalSearchList is started.");
 		
 		logger.debug("paramData : " + paramData.toString());
+		JSONObject result = new JSONObject();
 		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		//List<Map<String, Object>> searchList = new ArrayList<Map<String, Object>>();
-		JSONObject searchResult = new JSONObject();
-		Map<String, Object> ret = new HashMap<String, Object>();
-		
-		//타입이 전체인 경우, 결재인 경우, 게시판인 경우
-		String type = (String) paramData.get("type");
-		String searchURL = "";
-		
-		searchResult = ezPortalService.callSearchServerForResult2(userInfo, paramData, searchURL, userInfo.getOffset());
+		try{
+			userInfo = commonUtil.userInfo(loginCookie);
+			
+			//List<Map<String, Object>> searchList = new ArrayList<Map<String, Object>>();
+			JSONObject searchResult = new JSONObject();
+			Map<String, Object> ret = new HashMap<String, Object>();
+			String searchURL = "";
+			
+			searchResult = ezPortalService.callSearchServerForResult2(userInfo, paramData, searchURL, userInfo.getOffset());
 
-		//호출  url 불러오기
-		
-		//접속하고자 하는 url.
-		String totalSearchURL = config.getProperty("config.totalSearchURL");
-		
-		JSONObject result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "put", searchResult);
-		
-		logger.debug("result : " + result.toJSONString());
+			//호출  url 불러오기
+			
+			//접속하고자 하는 url.
+			String totalSearchURL = config.getProperty("config.totalSearchURL");
+			
+			result = commonUtil.getJsonFromRestApi(totalSearchURL, "", null, req, "put", searchResult);
+			
+			logger.debug("result : " + result.toJSONString());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		/*if(type.equalsIgnoreCase("all")) {
 			//전체인 경우
