@@ -27,7 +27,7 @@
 .calendar_month .td_list td .individual{border-radius: 7px;display:inline-block;width: 5px;height: 5px;border:1px solid #018bfa;background:#018bfa;overflow:hidden;margin:-2px 5px 0px 0px;padding:0;vertical-align:middle;}/* 개인 */
 .calendar_month .td_list td.department{color:#666666;}
 .calendar_month .td_list td .department{border-radius:7px; display:inline-block; width:5px; height:5px; border:1px solid #01b43f; background:#01b43f; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 부서 */
-.calendar_month .td_list td.public_department{color:#666666;}
+.calendar_month .td_list td.calendar_data_public_department{color:#666666;}
 .calendar_month .td_list td .public_department{border-radius:7px; display:inline-block; width:5px; height:5px; border:1px solid #b200ff; background:#b200ff; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 부서 */
 .calendar_month .td_list td.company{color:#666666;}
 .calendar_month .td_list td .company{border-radius: 7px;display:inline-block;width: 5px;height: 5px;border:1px solid #ff1c71;background:#ff1c71;overflow:hidden;margin:-2px 5px 0px 0px;padding:0;vertical-align:middle;}/* 회사 */
@@ -100,7 +100,7 @@
 .calendar_data_department{height:18px; background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* PIMS 데이터 백그라운드 부서 */
 .calendar_data_department table td{background:#eaeaea !important; color:black;}
 .calendar_data_department .department{border-radius:7px; display:inline-block; width:5px; height:5px; border:1px solid #01b43f; background:#01b43f; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 부서 */
-.calendar_data_department .public_department{border-radius:2px;display:inline-block; width:10px; height:10px; border:1px solid #b200ff; background:#b200ff; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}
+.calendar_data_department .public_department{border-radius:7px;display:inline-block; width:5px; height:5px; border:1px solid #b200ff; background:#b200ff; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}
 .calendar_data_department .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
 .calendar_data_department .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
 
