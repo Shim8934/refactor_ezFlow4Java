@@ -610,8 +610,23 @@ function callSearchController() {
 					return;
 				}
 				
-				var approvalList = res.approval;
-				var boardList = res.board;
+				var approvalList = [];
+				var boardList = [];
+				
+				if (data.type == "all") {
+					for (var i = 0; i < res.result.length; i++) {
+						if (res.result[i].type == "board") {
+							boardList = res.result[i];
+						} else {
+							approvalList = res.result[i];
+						}
+					}
+				} else if (data.type == "board") {
+					boardList = res.result[0];
+				} else {
+					approvalList = res.result[0];
+				}
+				
 				var listCnt = 1;
 				
 				$("#approvalResult").empty();
@@ -710,7 +725,12 @@ function boardDataAssembler(data) {
 	str += "<td>"+ data.title + "</td>";
 	str += "<td>"+ data.writerDeptName + "</td>";
 	str += "<td>"+ data.writerName + "</td>";
-	str += "<td>"+ data.writeDate + "</td>";
+	
+	var writeDate = data.writeDate;
+	var writeDateStr = writeDate.substring(0,4); //년도
+	writeDateStr += "-" + writeDate.substring(4,6); //월
+	writeDateStr += "-" + writeDate.substring(6,8); //일
+	str += "<td>"+ writeDateStr + "</td>";
 	
 	if(data.attachments != 0) {
 		str += "<td><img src='/images/newAttach.gif'></td>";	
@@ -733,7 +753,13 @@ function approvalDataAssembler(data) {
 	str += "<td>"+ data.docTitle + "</td>";
 	str += "<td>"+ data.writerDeptName + "</td>";
 	str += "<td>"+ data.writerName + "</td>";
-	str += "<td>"+ data.endDate + "</td>";
+	
+	var endDate = data.endDate;
+	var endDateStr = endDate.substring(0,4); //년도
+	endDateStr += "-" + endDate.substring(4,6); //월
+	endDateStr += "-" + endDate.substring(6,8); //일
+	
+	str += "<td>"+ endDateStr + "</td>";
 	
 	if(data.hasAttachYN === "Y") {
 		str += "<td><img src='/images/newAttach.gif'></td>";
