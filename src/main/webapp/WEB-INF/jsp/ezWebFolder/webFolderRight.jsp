@@ -281,10 +281,16 @@
 			
 			if (folderUpp == 'root' && folderType == 'C') {
 				$('#upload').css('display','none');
-				$('#newFolder').css('display','none');				
-				dragDropAreaElmt.ondragenter = null;
-				dragDropAreaElmt.ondragover  = null;
-				dragDropAreaElmt.ondragover  = null;
+				$('#newFolder').css('display','none');		
+				dragDropAreaElmt.ondragenter = function(e) {
+					e.stopPropagation();e.preventDefault();
+				};
+				dragDropAreaElmt.ondragover  = function(e) {
+					e.stopPropagation();e.preventDefault();
+				};
+				dragDropAreaElmt.ondrop      = function(e) {
+					e.stopPropagation();e.preventDefault();
+				};
 			} else {
 				$('#upload').css('display','inline');
 				$('#newFolder').css('display','inline');				
