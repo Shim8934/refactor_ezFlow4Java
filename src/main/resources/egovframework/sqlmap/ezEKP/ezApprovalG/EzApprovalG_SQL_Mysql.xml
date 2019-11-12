@@ -14833,9 +14833,9 @@
 		SELECT 
 			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
    	]]>
-			<isEqual property="approvalFlag" compareValue="S">
+			<isNotEqual property="approvalFlag" compareValue="G">
 			,IFNULL(E.PROCESSYN,'S')
-			</isEqual>
+			</isNotEqual>
 	<![CDATA[
 			)
    		FROM 
