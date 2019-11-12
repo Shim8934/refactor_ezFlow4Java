@@ -726,7 +726,7 @@ function boardDataAssembler(data) {
 	str += "<td>"+ data.writerDeptName + "</td>";
 	str += "<td>"+ data.writerName + "</td>";
 	
-	var writeDate = data.writeDate;
+	var writeDate = data.writerDate;
 	var writeDateStr = writeDate.substring(0,4); //년도
 	writeDateStr += "-" + writeDate.substring(4,6); //월
 	writeDateStr += "-" + writeDate.substring(6,8); //일
