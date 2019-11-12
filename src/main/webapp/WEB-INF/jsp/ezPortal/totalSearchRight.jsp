@@ -392,8 +392,21 @@ function dblClickApproval(docID) {
 	appList.filter(function(e){
 		e.docId === docID ? docInfo = e : null;
 	});
+	
+	var docHref = docInfo.href;
+	var formUrlExt = docHref.substr(docHref.length - 3, docHref.length).toLowerCase();
+	
+	if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+		if (CrossYN() && isIE()) {
+			url = "/ezApprovalG/ezViewEnd_HWP.do";
+		} else {
+			var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+			alert(pAlertContent);
+			return;
+		}
+	}
 
-	url += "?docID=" + encodeURI(docInfo.docId) + "&docHref=" + encodeURI(docInfo.href);
+	url += "?docID=" + encodeURI(docInfo.docId) + "&docHref=" + encodeURI(docHref);
 	
 	openwindow(url, "", "", "");
 }
