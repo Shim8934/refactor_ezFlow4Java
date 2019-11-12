@@ -1360,10 +1360,10 @@
 	 	<![CDATA[
 				) A
 			GROUP BY A.TRASHCAN_ID
-			ORDER BY SLEVEL,
+			ORDER BY SLEVEL
 		]]>
 		<isNotEqual property="orderByData" compareValue="">
-			$orderByData$,
+			$orderByData$
 		</isNotEqual>
 		<isNotEqual property="realColmn" compareValue="">
 				<isEqual property="realColmn" compareValue="TRASHCAN_SIZE">
@@ -1372,11 +1372,11 @@
 				<isNotEqual property="realColmn" compareValue="TRASHCAN_SIZE">
 					$realColmn$ $order$,
 				</isNotEqual>
-				UPDATE_DATE DESC, TRASHCAN_EXT DESC
+				, UPDATE_DATE DESC, TRASHCAN_EXT DESC
 		</isNotEqual>
 		<isEqual property="realColmn" compareValue="">
 			<![CDATA[
-				UPDATE_DATE DESC, TRASHCAN_EXT DESC
+				, UPDATE_DATE DESC, TRASHCAN_EXT DESC
 			]]>
 		</isEqual>
 		
