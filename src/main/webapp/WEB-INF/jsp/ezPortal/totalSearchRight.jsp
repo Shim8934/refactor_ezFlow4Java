@@ -610,8 +610,8 @@ function callSearchController() {
 					return;
 				}
 				
-				var approvalList = [];
-				var boardList = [];
+				var approvalList;
+				var boardList;
 				
 				if (data.type == "all") {
 					for (var i = 0; i < res.result.length; i++) {
@@ -633,9 +633,9 @@ function callSearchController() {
 				$("#boardResult").empty();	
 				
 				//리스트에 출력하는 로직.
-				if(approvalList !== undefined && approvalList.list.length > 0) {
+				if(approvalList !== undefined && approvalList.doc.length > 0) {
 					$("#approvalResultCnt").empty().append(approvalList.totcnt);
- 					$(approvalList.list).each(function(i, e){
+ 					$(approvalList.doc).each(function(i, e){
 						$("#approvalResult").append(approvalDataAssembler(this));
 					});
 /* 					approvalList.list.map(function(e){
@@ -646,15 +646,15 @@ function callSearchController() {
 					listCnt = approvalList.totcnt*1;
 					
 					//결과 담아두기.
-					totalSearch.approval = approvalList.list;
+					totalSearch.approval = approvalList.doc;
 				} else {
 					$("#approvalResultCnt").empty().append("0");
 					$("#approvalResult").append(noData());
 				}
 				
-				if(boardList != undefined && boardList.list.length > 0) {
+				if(boardList != undefined && boardList.doc.length > 0) {
 					$("#boardResultCnt").empty().append(boardList.totcnt);
- 					$(boardList.list).each(function(i, e){
+ 					$(boardList.doc).each(function(i, e){
 						$("#boardResult").append(boardDataAssembler(this));
 					});
 					
@@ -666,7 +666,7 @@ function callSearchController() {
 					listCnt = boardList.totcnt*1;
 					
 					//결과 담아두기.
-					totalSearch.board = boardList.list;				
+					totalSearch.board = boardList.doc;				
 				} else {
 					$("#boardResultCnt").empty().append("0");
 					$("#boardResult").append(noData());
