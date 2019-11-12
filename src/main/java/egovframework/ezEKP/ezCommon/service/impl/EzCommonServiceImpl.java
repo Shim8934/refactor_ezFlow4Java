@@ -1652,4 +1652,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addSnThemeAuth();
 		ezCommonDAO.addSnPortletAuth();
 	}
+	
+	@Override
+	public void alterChamjoView() throws Exception {
+		ezCommonDAO.alterChamjoView();
+	}
 }

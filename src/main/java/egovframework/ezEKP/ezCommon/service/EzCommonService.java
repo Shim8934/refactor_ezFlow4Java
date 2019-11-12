@@ -157,5 +157,6 @@ public interface EzCommonService {
 
 	public void addSnThemeAndPortletAuth() throws Exception;
 
+	public void alterChamjoView() throws Exception;
 }
 

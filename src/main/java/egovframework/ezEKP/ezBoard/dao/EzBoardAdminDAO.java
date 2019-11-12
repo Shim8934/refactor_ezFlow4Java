@@ -334,5 +334,9 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public String checkIfBoardGroupAdmin2(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardAdminDAO.checkIfBoardGroupAdmin2", map);
 	}
-	
+
+	/* 2019-11-08 홍승비 - 전달된 값으로 BOARDTREEPATH를 업데이트하는 쿼리 */
+	public void updateBoardTreePath(Map<String, Object> map) {
+		update("EzBoardAdminDAO.updateBoardTreePath", map);
+	}
 }

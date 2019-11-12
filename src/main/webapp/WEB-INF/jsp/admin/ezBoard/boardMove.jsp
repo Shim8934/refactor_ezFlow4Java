@@ -84,7 +84,11 @@
 			    		parent.window.location.reload();
 		    		},
 		    		error : function(request, status, error){
-						alert("<spring:message code='ezBoard.t127'/>");
+		    			if (request.status == 500) {
+							alert("<spring:message code='ezBoard.t127'/>");
+		    			} else if (request.status == 501) {
+		    				alert("<spring:message code='ezBoard.hsbMv01'/>");
+		    			}
 		    		}
 		    	});		    	
 		    }

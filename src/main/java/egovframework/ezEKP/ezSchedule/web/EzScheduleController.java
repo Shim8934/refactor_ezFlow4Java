@@ -1734,6 +1734,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 					//부서일정
 					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(loginVO.getDeptName1()) + "</option>");
 					count++;
+					
+					//겸직일정
+					for (ScheduleCumulerVO vo : cList) {
+						if (loginVO.getDeptID().equals(vo.getDeptId())) {
+							continue;
+						} else {
+							strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
+							count++;
+						}
+	            	}
+					
 					//공유일정
 					dept_schedule:
 					for (ScheduleDeptVO vo : pdList) {
@@ -1746,15 +1757,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 						count++;
 					}
 					
-					//겸직일정
-					for (ScheduleCumulerVO vo : cList) {
-						if (loginVO.getDeptID().equals(vo.getDeptId())) {
-							continue;
-						} else {
-							strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
-							count++;
-						}
-	            	}
 					//회사일정
 					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t374", locale) + " " + commonUtil.cleanValue(loginVO.getCompanyName1()) + "</option>");
 					count++;					
@@ -1772,6 +1774,17 @@ public class EzScheduleController extends EgovFileMngUtil {
 					//부서일정
 					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(loginVO.getDeptName2()) + "</option>");
 					count++;
+					
+					//겸직일정
+					for (ScheduleCumulerVO vo : cList) {
+						if (loginVO.getDeptID().equals(vo.getDeptId())) {
+							continue;
+						} else {
+							strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
+							count++;
+						}
+	            	}
+					
 					//공유일정
 					dept_schedule:
 					for (ScheduleDeptVO vo : pdList) {
@@ -1783,16 +1796,6 @@ public class EzScheduleController extends EgovFileMngUtil {
 						strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getDeptName()) + "</option>");
 						count++;
 					}
-					
-					//겸직일정
-					for (ScheduleCumulerVO vo : cList) {
-						if (loginVO.getDeptID().equals(vo.getDeptId())) {
-							continue;
-						} else {
-							strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
-							count++;
-						}
-	            	}
 					
 					//회사일정
 					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t374", locale) + " " + commonUtil.cleanValue(loginVO.getCompanyName2()) + "</option>");

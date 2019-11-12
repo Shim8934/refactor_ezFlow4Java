@@ -232,7 +232,7 @@ function deleteBoardComment(obj) {
     xmlhttp = null;
     
 	/* 2019-11-06 홍승비 - 게시물 미리보기 영역에서 댓글 삭제 시 게시물 리스트 갱신 */
-	if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1) {
+	if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewMovieContent.do") > -1) {
 		window.parent.getBoardList();
 	}
 }
@@ -293,7 +293,7 @@ function Save_OneLineReply() {
 			$('#txtPassWord').val("");
 			
 			/* 2019-11-06 홍승비 - 게시물 미리보기 영역에서 댓글 작성 시 게시물 리스트 갱신 */
-			if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1) {
+			if (window.location.href.indexOf("/ezBoard/boardItemPreviewContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewPhotoContent.do") > -1 || window.location.href.indexOf("/ezBoard/boardItemPreViewMovieContent.do") > -1) {
 				window.parent.getBoardList();
 			}
 		},
