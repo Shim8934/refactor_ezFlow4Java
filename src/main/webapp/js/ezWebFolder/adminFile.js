@@ -183,7 +183,9 @@ function search_Set(pPage) {
 			"column"      : orderInf.col ? orderInf.col : "",
 			"order"       : orderInf.ord ? orderInf.ord : "",
 			"listCntSize" : listCnt,
-			"folderId"    : folderId
+			"folderId"    : folderId,
+			"sortType"	  : sortType,
+			"sortColumn"  : sortColumn
 		},
 		dataType: "JSON",
 		async: false,

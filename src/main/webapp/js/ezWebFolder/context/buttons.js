@@ -139,7 +139,7 @@ var buttons = (function() {
 				return;
 			}
 			
-			if (folderType == "C") {
+			if (folderType == "C" || selected.targetFunction[0] == "C") {
 				if (parentId == 'root' || selected.targetPath[0] < 2) {
 					alert(messages.strLang36);
 					return;

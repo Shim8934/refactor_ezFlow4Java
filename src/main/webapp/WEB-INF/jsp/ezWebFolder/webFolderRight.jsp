@@ -54,6 +54,10 @@
 		var parentId = "${parentId}";
 		var userId = "";
 		var folderTypeCheck = "N";
+		var _selectedCell = null;
+		var _cellInfo        = {};
+		var sortColumn = null;
+		var sortType = null;
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -114,6 +118,13 @@
 				optionView(event.target);
 			});
 			
+			var listHeader = document.getElementsByClassName("headListClick");
+			for(var i = 0 ; i <listHeader.length; i++) {
+				listHeader[i].addEventListener("click", function(event) {
+					sortByHeader(this);
+				});
+			}
+			
 			document.getElementById("listcount").addEventListener("change", function() {
 				optionHidden();
 				pagination.setListSize(this.value);
@@ -159,7 +170,40 @@
 	        
 	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	     }
-	    
+		
+		function sortByHeader(cell) {
+			var column = cell.getAttribute("headers");
+			
+			if (!column) {return;}
+			
+			if (_selectedCell != null) {
+				var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+				cell.setAttribute("orderoption", orderOption);
+				
+				if (cell.cellIndex != _selectedCell) {
+					var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+					lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+					var spanElmt = document.createElement("span");
+					cell.appendChild(spanElmt);
+				}
+				
+				var spanImg       = cell.lastElementChild;
+				spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+			} else {
+				cell.setAttribute("orderoption", "DESC");
+				var spanElmt       = document.createElement("span");
+				spanElmt.className = "spanDown";
+				cell.appendChild(spanElmt);
+			}
+			
+			_selectedCell = cell.cellIndex;
+			
+			var order     = cell.getAttribute("orderoption");
+			this.sortType = order;
+			this.sortColumn = column;
+			getFileList(folderId);
+		}
+		
 	    // 폴더관리
 	    function folder_Manage() {
         	var OpenWin = window.open("/ezWebFolder/folderManage.do", "", GetOpenWindowfeature(500, 500));
@@ -191,7 +235,9 @@
 					 "searchFileType" 	: searchContext.getFileType(),
 					 "searchStartDate" 	: searchRequirement.startDate,
 					 "searchEndDate" 	: searchRequirement.endDate,
-					 "allFileFlag"		: allFileFlag
+					 "allFileFlag"		: allFileFlag,
+					 "sortType"			: sortType,
+					 "sortColumn"		: sortColumn
 					},
 				dataType: "JSON",
 				success : function (data) {
@@ -784,16 +830,16 @@
 				<table class="mainlist" style="width:100%"  id="tblFileList1">
 					<thead id ="BoardList_THEAD">
 						<tr>
-							<th class="wfFilecheck" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
-							<th class="wfFileFavorite" style="text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
-							<th class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
-							<th class="wfFileName"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
-							<th class="wfFileSize" style="text-align: center;"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
-							<th class="wfFileCreator"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
-							<th class="wfFileUploadDate"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
-							<th class="wfFileUpdateDate"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
-							<th class="wfFilePath"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
-							<th class="wfFileShare"style="text-align: center;"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
+							<th class="wfFilecheck 		headListClick" style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+							<th class="wfFileFavorite 	headListClick" style="text-align: center;" headers="FAVORITE_STATUS"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
+							<th class="wfFileType 		headListClick" style="text-align: center;" headers="TYPE_ICON"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
+							<th class="wfFileName 		headListClick" headers="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
+							<th class="wfFileSize 		headListClick" style="text-align: center;" headers="FILE_SIZE"><spring:message code='ezWebFolder.t157'/></th><!-- 파일크기 -->
+							<th class="wfFileCreator 	headListClick" headers="CREATE_NAME1"><spring:message code='ezWebFolder.t189'/></th><!-- 게시자 -->
+							<th class="wfFileUploadDate headListClick" headers="CREATE_DATE"><spring:message code='ezWebFolder.t190'/></th><!-- 등록일 -->
+							<th class="wfFileUpdateDate headListClick" headers="UPDATE_DATE"><spring:message code='ezWebFolder.t198'/></th><!-- 갱신일 -->
+							<th class="wfFilePath 		" headers="FILE_PATH"><spring:message code='ezWebFolder.t199'/></th><!-- 위치 -->
+							<th class="wfFileShare 		headListClick" style="text-align: center;" headers="FILESHARE_STATUS"><spring:message code='ezWebFolder.t278'/></th><!-- 공유상태 -->
 						</tr>
 					</thead>
 				</table>

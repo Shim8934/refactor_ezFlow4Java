@@ -43,6 +43,10 @@
 			var actTypeStr   = "";
 			var tableView    = new TableView();
 			var exportingExcel = false;
+			var _selectedCell = null;
+			var _cellInfo        = {};
+			var sortColumn = null;
+			var sortType = null;
 			
 			window.onload = function () {
 				closeAllPopup();
@@ -141,6 +145,13 @@
 				});
 				scroll();
 				
+				var listHeader = document.getElementsByClassName("headListClick");
+				for(var i = 0 ; i <listHeader.length; i++) {
+					listHeader[i].addEventListener("click", function(event) {
+						sortByHeader(this);
+					});
+				}
+				
 			});
 			
 			function preProcessing() {
@@ -207,7 +218,9 @@
 						"order"       : orderInf.ord ? orderInf.ord : "",
 						"fileType"    : document.getElementById("fileTypeSelect").value,
 						"listCntSize" : listCnt,
-						"companyId"   : document.getElementById("companyList").value
+						"companyId"   : document.getElementById("companyList").value,
+						"sortType"	  : sortType,
+						"sortColumn"  : sortColumn
 					},
 					dataType: "JSON",
 					async: true,
@@ -247,6 +260,39 @@
 				tableView.setDataSource(result);
 				tableView.renderTable();
 				scroll();
+			}
+			
+			function sortByHeader(cell) {
+				var column = cell.getAttribute("data-column");
+				
+				if (!column) {return;}
+				
+				if (_selectedCell != null) {
+					var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+					cell.setAttribute("orderoption", orderOption);
+					
+					if (cell.cellIndex != _selectedCell) {
+						var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+						lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+						var spanElmt = document.createElement("span");
+						cell.appendChild(spanElmt);
+					}
+					
+					var spanImg       = cell.lastElementChild;
+					spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+				} else {
+					cell.setAttribute("orderoption", "DESC");
+					var spanElmt       = document.createElement("span");
+					spanElmt.className = "spanDown";
+					cell.appendChild(spanElmt);
+				}
+				
+				_selectedCell = cell.cellIndex;
+				
+				var order     = cell.getAttribute("orderoption");
+				this.sortType = order;
+				this.sortColumn = column;
+				search_Set(currentPage);
 			}
 			
 			function startSearch() {
@@ -536,12 +582,12 @@
 				<table class="mainlist" style="width:100%"  id="tblFileList1">
 					<thead id ="BoardList_THEAD">
 						<tr>
-							<th headers="ft" class="wfFileType" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
-							<th headers="fn" class="wfFileLogName"><spring:message code='ezWebFolder.t156'/></th>
-							<th headers="fs" class="wfFileFavoriteSize"><spring:message code='ezWebFolder.t157'/></th>
-							<th headers="un" class="wfFileLogMember" ><spring:message code='ezWebFolder.t339'/></th>
-							<th headers="at" class="wfActive" ><spring:message code='ezWebFolder.t158'/></th>
-							<th headers="ad" class="wfFileLogDate" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
+							<th headers="ft" class="wfFileType			headListClick" data-column="FILE_TYPE" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th>
+							<th headers="fn" class="wfFileLogName		headListClick" data-column="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th>
+							<th headers="fs" class="wfFileFavoriteSize	headListClick" data-column="FILE_SIZE"><spring:message code='ezWebFolder.t157'/></th>
+							<th headers="un" class="wfFileLogMember		headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t339'/></th>
+							<th headers="at" class="wfActive			headListClick" data-column="LOG_TYPE" ><spring:message code='ezWebFolder.t158'/></th>
+							<th headers="ad" class="wfFileLogDate		headListClick" data-column="CREATE_DATE" style="text-align: center;"><spring:message code='ezWebFolder.t159'/></th>
 						</tr>
 					</thead>
 				</table>

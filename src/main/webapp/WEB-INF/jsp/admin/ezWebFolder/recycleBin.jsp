@@ -50,6 +50,10 @@
 		var searchFileName   = "";
 		var searchCreateName = "";
 		var tableView        = new TableView();
+		var _selectedCell = null;
+    	var _cellInfo        = {};
+    	var sortColumn = null;
+    	var sortType = null;
 		
 		window.onresize = function () {
 			var divList          = document.getElementById("dragDropArea");
@@ -123,6 +127,13 @@
 			document.addEventListener("mouseup", listOptionHidden, true);
 			parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
 			
+			var listHeader = document.getElementsByClassName("headListClick");
+			for(var i = 0 ; i <listHeader.length; i++) {
+				listHeader[i].addEventListener("click", function(event) {
+					sortByHeader(this);
+				});
+			}
+			
 			// listoption 클릭 이벤트
 			document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
 				event.stopPropagation();
@@ -136,6 +147,39 @@
 			});
 			
 		});
+		
+		function sortByHeader(cell) {
+			var column = cell.getAttribute("data-column");
+			
+			if (!column) {return;}
+			
+			if (_selectedCell != null) {
+				var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+				cell.setAttribute("orderoption", orderOption);
+				
+				if (cell.cellIndex != _selectedCell) {
+					var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+					lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+					var spanElmt = document.createElement("span");
+					cell.appendChild(spanElmt);
+				}
+				
+				var spanImg       = cell.lastElementChild;
+				spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+			} else {
+				cell.setAttribute("orderoption", "DESC");
+				var spanElmt       = document.createElement("span");
+				spanElmt.className = "spanDown";
+				cell.appendChild(spanElmt);
+			}
+			
+			_selectedCell = cell.cellIndex;
+			
+			var order     = cell.getAttribute("orderoption");
+			sortType = order;
+			sortColumn = column;
+			renderFileList();
+		}
 		
 		function keyPressPanel(e) {
 			if (e.which == 27 && document.getElementById("mailPanel").style.display == "") {
@@ -183,7 +227,9 @@
 					"column"           : orderInf.col ? orderInf.col : "",
 					"order"            : orderInf.ord ? orderInf.ord : "",
 					"listCount"        : listCnt,
-					"mode"             : "admin"
+					"mode"             : "admin",
+					"sortType"		   : sortType,
+					"sortColumn"	   : sortColumn
 				},
 				success : function (data) {
 					hideProgress();
@@ -582,14 +628,14 @@
 				<thead id ="BoardList_THEAD">
 					<tr>
 						<th class = "wfFilecheck"><input type="checkbox"></th>
-						<th headers="ft" class = "wfFileType" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
-						<th headers="fn" class = "wfFileName" ><spring:message code='ezWebFolder.t156'/></th>
-						<th headers="fs" class = "wfFileSize" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal;" ><spring:message code='ezWebFolder.t157'/></th>
-						<th headers="un" class = "wfFileCreator" ><spring:message code='ezWebFolder.t189'/></th>
-						<th headers="cd" class = "wfFileFavoriteDate" ><spring:message code='ezWebFolder.t190'/></th>
-						<th headers="dd" class = "wfFileFavoriteDate" ><spring:message code='ezWebFolder.t288'/></th>
-						<th              class = "wfFilePath"><spring:message code='ezWebFolder.t199'/></th>
-					</tr>
+						<th headers="ft" class = "wfFileType		 headListClick" data-column="TRASHCAN_ICON_URL" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
+						<th headers="fn" class = "wfFileName		 headListClick" data-column="TRASHCAN_NAME" ><spring:message code='ezWebFolder.t156'/></th>
+						<th headers="fs" class = "wfFileSize		 headListClick" data-column="TRASHCAN_SIZE" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal;" ><spring:message code='ezWebFolder.t157'/></th>
+						<th headers="un" class = "wfFileCreator		 headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t189'/></th>
+						<th headers="cd" class = "wfFileFavoriteDate headListClick" data-column="CREATE_DATE" ><spring:message code='ezWebFolder.t190'/></th>
+						<th headers="dd" class = "wfFileFavoriteDate headListClick" data-column="UPDATE_DATE" ><spring:message code='ezWebFolder.t288'/></th>
+						<th              class = "wfFilePath		 " data-column="TRASHCAN_PATH"><spring:message code='ezWebFolder.t199'/></th>
+					</tr>  
 				</thead>
 			</table>
 			<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">

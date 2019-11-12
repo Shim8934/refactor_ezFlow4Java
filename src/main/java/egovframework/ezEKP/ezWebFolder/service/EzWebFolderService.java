@@ -49,8 +49,12 @@ public interface EzWebFolderService {
 	List<DuplicateInfoVO> getAllDuplicateInfo(String fileName, String targetFolderId, String offset, int tenantId) throws Exception;
 	List<DuplicateInfoVO> getAllDuplicateInfo(DuplicateInfoVO.Type originElementType, String originElementId, String targetFolderId, String offset, int tenantId) throws Exception;
 	List<DuplicateInfoVO> getAllDuplicateInfoForRename(DuplicateInfoVO.Type originElementType, String originElementId, String newName, String targetFolderId, String offset, int tenantId) throws Exception;
-	List<FileVO> getAllFilesInFolder(String sqlCode, String order, String folderId, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
-	List<FileVO> getAllFiles(String sqlCode, String order, String folderPath, String originalPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception;
+	List<FileVO> getAllFilesInFolder(String sqlCode, String order, String folderId, String originalPath, String searchChk, 
+			String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, int startPoint, 
+			int pageSize, String primary, String offset, int tenantId, String sortType, String sortColumn) throws Exception;
+	List<FileVO> getAllFiles(String sqlCode, String order, String folderPath, String originalPath, String searchChk, 
+			String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, 
+			int startPoint, int pageSize, String primary, String offset, int tenantId, String sortType, String SortColumn) throws Exception;
 	int getTotalFileCnt(String folderId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, int tenantId) throws Exception;
 	int getTotalFileCnt2(String folderPath, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String primary, int tenantId) throws Exception;
 	List<FolderVO> getAllSubFolders(String folderId, String offset, int tenantId) throws Exception;

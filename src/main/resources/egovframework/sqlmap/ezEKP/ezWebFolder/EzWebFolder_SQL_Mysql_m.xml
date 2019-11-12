@@ -402,7 +402,7 @@
 			<include refid="searchTerm"/>
 		<![CDATA[	
 			AND DF.TENANT_ID = #tenantId#
-		    ORDER BY DF.FOLDERFILE_TYPE, S.SHARE_DATE DESC
+		    ORDER BY DF.FOLDERFILE_TYPE $orderByData$
 			LIMIT #startPoint#, #pageSize#
 		]]>
 	</select>
@@ -524,7 +524,7 @@
 			<include refid="searchTerm"/>
 		<![CDATA[
 			AND S.TENANT_ID = #tenantId#
-			ORDER BY DF.FOLDERFILE_TYPE, S.SHARE_DATE DESC
+			ORDER BY DF.FOLDERFILE_TYPE $orderByData$
 			LIMIT #startPoint#, #pageSize#
 		]]>
 	</select>
@@ -1141,7 +1141,7 @@
 			AND FV.USER_ID = #userId#
 			WHERE DF.USE_STATUS = 'Y'
 			AND DF.TENANT_ID = #tenantId#
-			ORDER BY DF.FOLDERFILE_TYPE, S.SHARE_DATE DESC
+			ORDER BY DF.FOLDERFILE_TYPE $orderByData$
 			LIMIT #startPoint#, #pageSize#
 		]]>
 	</select>
@@ -1360,21 +1360,23 @@
 	 	<![CDATA[
 				) A
 			GROUP BY A.TRASHCAN_ID
+			ORDER BY SLEVEL,
 		]]>
-		
+		<isNotEqual property="orderByData" compareValue="">
+			$orderByData$,
+		</isNotEqual>
 		<isNotEqual property="realColmn" compareValue="">
-			ORDER BY
 				<isEqual property="realColmn" compareValue="TRASHCAN_SIZE">
 					CAST($realColmn$ AS INT) $order$,
 				</isEqual>
 				<isNotEqual property="realColmn" compareValue="TRASHCAN_SIZE">
 					$realColmn$ $order$,
 				</isNotEqual>
-				SLEVEL, UPDATE_DATE DESC, TRASHCAN_EXT DESC
+				UPDATE_DATE DESC, TRASHCAN_EXT DESC
 		</isNotEqual>
 		<isEqual property="realColmn" compareValue="">
 			<![CDATA[
-				ORDER BY SLEVEL, UPDATE_DATE DESC, TRASHCAN_EXT DESC
+				UPDATE_DATE DESC, TRASHCAN_EXT DESC
 			]]>
 		</isEqual>
 		
@@ -1584,7 +1586,8 @@
 					FILES.CREATE_NAME2,
 					FILES.CREATE_DATE,
 					FILES.TENANT_ID,
-					FILES.USE_STATUS
+					FILES.USE_STATUS,
+					1 AS TEMP_TARGET_TYPE
 				FROM
 					TBL_WEBFOLDER_FILE FILES
 					INNER JOIN
@@ -1609,7 +1612,8 @@
 					FOLDER.CREATE_NAME2,
 					FOLDER.CREATE_DATE,
 					FOLDER.TENANT_ID,
-					FOLDER.USE_STATUS
+					FOLDER.USE_STATUS,
+					0 AS TEMP_TARGET_TYPE
 				FROM
 					TBL_WEBFOLDER_FOLDER FOLDER
 					INNER JOIN
@@ -1657,7 +1661,7 @@
 		<include refid="searchFavorite"/>
 		<![CDATA[
 			ORDER BY
-				RESULT.TARGET_TYPE ASC, RESULT.CREATE_DATE DESC
+				RESULT.TEMP_TARGET_TYPE $orderByData$
 			LIMIT
 				#startIndex#, #listCount#
 		]]>
