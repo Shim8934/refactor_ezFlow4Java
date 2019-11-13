@@ -2219,5 +2219,18 @@
 	    		QUERY = #v_PQUERY#
     	]]>
 	</delete>
+	
+	<update id="EzBoardAdminDAO.updateBoardTreePath" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_BOARD_BOARDINFO
+		    SET 
+		    	BOARDTREEPATH = #v_BOARDTREEPATH#
+            WHERE
+            	BOARDID = #v_BOARDID#
+            AND  
+            	TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 
 </sqlMap>

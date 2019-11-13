@@ -1241,5 +1241,158 @@
 		ADD 
 			sn INT DEFAULT 0
 	</statement>
-
+	
+	<select id="EzCommonDAO.checkAlterChamjoView" resultClass="int">
+		SELECT
+			(SELECT COUNT(*) FROM TBL_APRLINEINFO WHERE APRTYPE = '007' AND APRSTATE = '002') +
+			(SELECT COUNT(*) FROM TBL_ENDAPRLINEINFO WHERE APRTYPE = '007' AND APRSTATE = '002') AS CNT
+		FROM
+			DUAL
+	</select>
+	
+	<statement id="EzCommonDAO.alterAprDoingView">
+		<![CDATA[
+		ALTER VIEW 
+			vaprdoingdoclist 
+		AS
+			SELECT
+		        tbl_aprdocinfo.DOCID AS DOCID,
+		        tbl_aprdocinfo.FORMID AS FORMID,
+		        tbl_aprdocinfo.ORGDOCID AS ORGDOCID,
+		        tbl_aprdocinfo.DOCTYPE AS DOCTYPE,
+		        CASE
+		            WHEN
+		                (tbl_aprlineinfo.APRSTATE = '002'
+		                    AND tbl_aprlineinfo.APRTYPE = '007')
+		            THEN
+		                '017'
+		            ELSE tbl_aprdocinfo.DOCSTATE
+		        END AS DOCSTATE,
+		        CASE
+		            WHEN
+		                (tbl_aprlineinfo.APRSTATE = '000'
+		                    AND tbl_aprdocinfo.FUNCTIONTYPE <> '004')
+		            THEN
+		                '002'
+		            ELSE tbl_aprdocinfo.FUNCTIONTYPE
+		        END AS FUNCTIONTYPE,
+		        tbl_aprdocinfo.HREF AS HREF,
+		        tbl_aprdocinfo.DOCTITLE AS DOCTITLE,
+		        tbl_aprdocinfo.DOCNO AS DOCNO,
+		        tbl_aprdocinfo.HASATTACHYN AS HASATTACHYN,
+		        tbl_aprdocinfo.HASOPINIONYN AS HASOPINIONYN,
+		        tbl_aprdocinfo.STARTDATE AS STARTDATE,
+		        tbl_aprdocinfo.ENDDATE AS ENDDATE,
+		        tbl_aprdocinfo.WRITERID AS WRITERID,
+		        tbl_aprdocinfo.WRITERNAME AS WRITERNAME,
+		        tbl_aprdocinfo.WRITERJOBTITLE AS WRITERJOBTITLE,
+		        tbl_aprdocinfo.WRITERDEPTID AS WRITERDEPTID,
+		        tbl_aprdocinfo.WRITERDEPTNAME AS WRITERDEPTNAME,
+		        tbl_aprdocinfo.ISPUBLIC AS ISPUBLIC,
+		        tbl_aprdocinfo.WRITERNAME2 AS WRITERNAME2,
+		        tbl_aprdocinfo.WRITERJOBTITLE2 AS WRITERJOBTITLE2,
+		        tbl_aprdocinfo.WRITERDEPTNAME2 AS WRITERDEPTNAME2,
+		        tbl_aprdocinfo.TENANT_ID AS TENANT_ID,
+		        tbl_aprdocinfo.COMPANYID AS COMPANYID,
+		        tbl_aprlineinfo.APRMEMBERSN AS APRMEMBERSN,
+		        tbl_aprlineinfo.APRTYPE AS APRTYPE,
+		        tbl_aprlineinfo.APRSTATE AS APRSTATE,
+		        tbl_aprlineinfo.APRMEMBERID AS APRMEMBERID,
+		        tbl_aprlineinfo.APRMEMBERNAME AS APRMEMBERNAME,
+		        tbl_aprlineinfo.APRMEMBERNAME2 AS APRMEMBERNAME2,
+		        tbl_aprlineinfo.APRMEMBERJOBTITLE AS APRMEMBERJOBTITLE,
+		        tbl_aprlineinfo.APRMEMBERJOBTITLE2 AS APRMEMBERJOBTITLE2,
+		        tbl_aprlineinfo.APRMEMBERDEPTID AS APRMEMBERDEPTID,
+		        tbl_aprlineinfo.APRMEMBERDEPTNAME AS APRMEMBERDEPTNAME,
+		        tbl_aprlineinfo.APRMEMBERDEPTNAME2 AS APRMEMBERDEPTNAME2,
+		        tbl_aprlineinfo.RECEIVEDDATE AS RECEIVEDDATE,
+		        tbl_expaprdocinfo.FORMNAME AS FORMNAME,
+		        tbl_expaprdocinfo.FORMNAME2 AS FORMNAME2,
+		        tbl_expaprdocinfo.URGENTAPPROVAL AS URGENTAPPROVAL,
+		        tbl_deptmaster.EXTENSIONATTRIBUTE3 AS companyName,
+		        tbl_deptmaster.COMPNM2 AS companyName2
+		    FROM
+		        (((tbl_aprdocinfo
+		        JOIN tbl_aprlineinfo 
+		        ON (tbl_aprdocinfo.DOCID = tbl_aprlineinfo.DOCID
+		            AND tbl_aprdocinfo.TENANT_ID = tbl_aprlineinfo.TENANT_ID
+		            AND tbl_aprdocinfo.COMPANYID = tbl_aprlineinfo.COMPANYID))
+		        JOIN tbl_expaprdocinfo 
+		        ON (tbl_aprdocinfo.DOCID = tbl_expaprdocinfo.DOCID
+		            AND tbl_aprdocinfo.TENANT_ID = tbl_expaprdocinfo.TENANT_ID
+		            AND tbl_aprdocinfo.COMPANYID = tbl_expaprdocinfo.COMPANYID))
+		        JOIN tbl_deptmaster 
+		        ON (tbl_aprdocinfo.COMPANYID = tbl_deptmaster.CN
+		            AND tbl_aprdocinfo.TENANT_ID = tbl_deptmaster.TENANT_ID))
+		    WHERE
+		        (tbl_aprlineinfo.APRSTATE = '002'
+		            OR tbl_aprlineinfo.APRSTATE = '005')
+		            AND tbl_aprdocinfo.STARTDATE IS NOT NULL
+		]]>
+	</statement>
+	<statement id="EzCommonDAO.alterChamjoView">
+	<![CDATA[
+		ALTER VIEW 
+			vendchamjodocinfo 
+		AS
+		    SELECT 
+		        tbl_endaprdocinfo.DOCID AS DOCID,
+		        tbl_endaprdocinfo.FORMID AS FORMID,
+		        tbl_endaprdocinfo.ORGDOCID AS ORGDOCID,
+		        tbl_endaprdocinfo.DOCTYPE AS DOCTYPE,
+		        '017' AS DOCSTATE,
+		        '002' AS FUNCTIONTYPE,
+		        tbl_endaprdocinfo.HREF AS HREF,
+		        tbl_endaprdocinfo.DOCTITLE AS DOCTITLE,
+		        tbl_endaprdocinfo.DOCNO AS DOCNO,
+		        tbl_endaprdocinfo.HASATTACHYN AS HASATTACHYN,
+		        tbl_endaprdocinfo.HASOPINIONYN AS HASOPINIONYN,
+		        tbl_endaprdocinfo.STARTDATE AS STARTDATE,
+		        tbl_endaprdocinfo.ENDDATE AS ENDDATE,
+		        tbl_endaprdocinfo.WRITERID AS WRITERID,
+		        tbl_endaprdocinfo.WRITERNAME AS WRITERNAME,
+		        tbl_endaprdocinfo.WRITERJOBTITLE AS WRITERJOBTITLE,
+		        tbl_endaprdocinfo.WRITERDEPTID AS WRITERDEPTID,
+		        tbl_endaprdocinfo.WRITERDEPTNAME AS WRITERDEPTNAME,
+		        tbl_endaprdocinfo.ISPUBLIC AS ISPUBLIC,
+		        tbl_endaprdocinfo.WRITERNAME2 AS WRITERNAME2,
+		        tbl_endaprdocinfo.WRITERJOBTITLE2 AS WRITERJOBTITLE2,
+		        tbl_endaprdocinfo.WRITERDEPTNAME2 AS WRITERDEPTNAME2,
+		        tbl_endaprdocinfo.TENANT_ID AS TENANT_ID,
+		        tbl_endaprdocinfo.COMPANYID AS COMPANYID,
+		        tbl_endaprlineinfo.APRMEMBERSN AS APRMEMBERSN,
+		        tbl_endaprlineinfo.APRTYPE AS APRTYPE,
+		        tbl_endaprlineinfo.APRSTATE AS APRSTATE,
+		        tbl_endaprlineinfo.APRMEMBERID AS APRMEMBERID,
+		        tbl_endaprlineinfo.APRMEMBERNAME AS APRMEMBERNAME,
+		        tbl_endaprlineinfo.APRMEMBERNAME2 AS APRMEMBERNAME2,
+		        tbl_endaprlineinfo.APRMEMBERJOBTITLE AS APRMEMBERJOBTITLE,
+		        tbl_endaprlineinfo.APRMEMBERJOBTITLE2 AS APRMEMBERJOBTITLE2,
+		        tbl_endaprlineinfo.APRMEMBERDEPTID AS APRMEMBERDEPTID,
+		        tbl_endaprlineinfo.APRMEMBERDEPTNAME AS APRMEMBERDEPTNAME,
+		        tbl_endaprlineinfo.APRMEMBERDEPTNAME2 AS APRMEMBERDEPTNAME2,
+		        tbl_endaprlineinfo.RECEIVEDDATE AS RECEIVEDDATE,
+		        tbl_expendaprdocinfo.FORMNAME AS FORMNAME,
+		        tbl_expendaprdocinfo.FORMNAME2 AS FORMNAME2,
+		        tbl_expendaprdocinfo.URGENTAPPROVAL AS URGENTAPPROVAL,
+		        tbl_deptmaster.EXTENSIONATTRIBUTE3 AS companyName,
+		        tbl_deptmaster.COMPNM2 AS companyName2
+		    FROM
+		        (((tbl_endaprdocinfo
+		        JOIN tbl_endaprlineinfo 
+		        ON (tbl_endaprdocinfo.DOCID = tbl_endaprlineinfo.DOCID
+		            AND tbl_endaprdocinfo.TENANT_ID = tbl_endaprlineinfo.TENANT_ID
+		            AND tbl_endaprdocinfo.COMPANYID = tbl_endaprlineinfo.COMPANYID))
+		        JOIN tbl_expendaprdocinfo 
+		        ON (tbl_endaprdocinfo.DOCID = tbl_expendaprdocinfo.DOCID
+		            AND tbl_endaprdocinfo.TENANT_ID = tbl_expendaprdocinfo.TENANT_ID
+		            AND tbl_endaprdocinfo.COMPANYID = tbl_expendaprdocinfo.COMPANYID))
+		        JOIN tbl_deptmaster 
+		        ON (tbl_endaprdocinfo.COMPANYID = tbl_deptmaster.CN
+		            AND tbl_endaprdocinfo.TENANT_ID = tbl_deptmaster.TENANT_ID))
+		    WHERE
+		        tbl_endaprlineinfo.APRTYPE = '007'
+		            AND tbl_endaprlineinfo.APRSTATE = '002'
+           ]]>
+	</statement>
 </sqlMap>

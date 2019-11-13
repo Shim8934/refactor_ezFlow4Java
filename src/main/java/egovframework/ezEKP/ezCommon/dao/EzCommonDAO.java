@@ -796,4 +796,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.snMenuAuth");
 		}
 	}
+	
+	public void alterChamjoView() {
+		try {
+			if ((int) select("EzCommonDAO.checkAlterChamjoView") <= 0) {
+				update("EzCommonDAO.alterAprDoingView");
+				update("EzCommonDAO.alterChamjoView");
+			}
+		} catch (Exception e) {
+			logger.debug("alterChamjoView() ERROR...");
+			e.printStackTrace();
+		}
+	}
 }

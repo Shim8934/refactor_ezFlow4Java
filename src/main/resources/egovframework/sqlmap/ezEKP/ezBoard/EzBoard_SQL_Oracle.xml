@@ -5566,4 +5566,17 @@
 		]]>
 	</select>
 	
+	<select id="EzBoardDAO.getAllSubBoardProperty" parameterClass="Map" resultClass="BoardPropertyVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_BOARD_BOARDINFO 
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				(BOARDID = #v_BOARDID# OR BOARDTREEPATH LIKE '%' || #v_BOARDID# || '%')
+		]]>		
+	</select>
+	
 </sqlMap>

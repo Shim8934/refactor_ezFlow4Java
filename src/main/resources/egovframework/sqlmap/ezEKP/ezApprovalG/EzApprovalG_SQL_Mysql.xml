@@ -255,12 +255,10 @@
 													TBL_ENDAPRLINEINFO
 												WHERE
 													aprmemberid = #v_USERID#
-												AND
-													aprstate <> '002'
-												AND
-													aprstate <> '005'
-												AND
-													aprstate = '000'
+												AND	
+													APRTYPE = '007'
+												AND 
+													APRSTATE = '002'
 												AND
 													tenant_id = #v_TENANTID#
 												AND
@@ -426,12 +424,10 @@
 												aprmemberid = #proxyList[].id#
 											AND
 												aprmemberdeptid = #proxyList[].dept#
-											AND
-												aprstate <> '002'
-											AND
-												aprstate <> '005'
-											AND
-												aprstate = '000'
+											AND	
+												APRTYPE = '007'
+											AND 
+												APRSTATE = '002'
 											AND
 												tenant_id = #v_TENANTID#
 											AND
@@ -7054,7 +7050,9 @@
 		    	APRMEMBERID = #v_USERID#
 		      <isEqual property="v_CHAMSTATE" compareValue="017">
 	      	AND 
-	      	 	APRSTATE = '000'
+	      	 	(APRSTATE = '000' OR APRSTATE = '002')
+	      	AND
+	      		APRTYPE = '007'
 		      </isEqual> 
 		      <isNotEqual property="v_CHAMSTATE" compareValue="017">
 		    AND 
@@ -12841,11 +12839,9 @@
 									WHERE
 										aprmemberid = #v_USERID#
 									AND
-										aprstate <> '002'
+										APRTYPE = '007'
 									AND
-										aprstate <> '005'
-									AND
-										aprstate = '000'
+										APRSTATE = '002'
 									AND
 										tenant_id = #v_TENANTID#
 									AND
@@ -13005,11 +13001,9 @@
 							AND
 								aprmemberdeptid = #proxyList[].dept#
 							AND
-								aprstate <> '002'
+								APRTYPE = '007'
 							AND
-								aprstate <> '005'
-							AND
-								aprstate = '000'
+								APRSTATE = '002'
 							AND
 								tenant_id = #v_TENANTID#
 							AND
@@ -14839,9 +14833,9 @@
 		SELECT 
 			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
    	]]>
-			<isEqual property="approvalFlag" compareValue="S">
+			<isNotEqual property="approvalFlag" compareValue="G">
 			,IFNULL(E.PROCESSYN,'S')
-			</isEqual>
+			</isNotEqual>
 	<![CDATA[
 			)
    		FROM 
@@ -29529,7 +29523,30 @@
 			AND FORMINFO.TENANT_ID = DOCINFO.TENANT_ID
 		WHERE
 			DOCINFO.DOCID = #docId#
-			AND DOCINFO.COMPANYID = #companyId#
+			AND DOCINFO.COMPANYID IN (
+					SELECT
+						EXTENSIONATTRIBUTE2
+					FROM
+						TBL_DEPTMASTER
+					INNER JOIN
+						TBL_ADDJOBMASTER
+					ON
+						(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+						AND
+						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+					WHERE
+						TBL_ADDJOBMASTER.TENANT_ID = #tenantId#
+					AND
+						TBL_ADDJOBMASTER.CN = #userId#
+					UNION ALL
+					SELECT
+						PHYSICALDELIVERYOFFICENAME
+					FROM
+						TBL_USERMASTER
+					WHERE
+						CN = #userId#
+					AND
+						TENANT_ID = #tenantId#)
 			AND DOCINFO.TENANT_ID = #tenantId#
 	</select>
 	
@@ -30033,7 +30050,9 @@
 							AND
 								APRMEMBERSN = #v_APRMEMBERSN#
 							AND
-								APRSTATE IN ('000')
+								APRTYPE = '007'
+							AND
+								APRSTATE = '002'
 							AND
 								COMPANYID = #v_COMPANYID#
 							AND

@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezTalkGate.web;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -26,12 +28,9 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
-import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezEKP.ezTalkGate.util.EzTalkGateUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -79,9 +78,6 @@ public class EzTalkGateController {
     @Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
     
-	@Autowired
-	private EzEmailService ezEmailService;
-
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
 
@@ -335,7 +331,6 @@ public class EzTalkGateController {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@RequestMapping("/ezTalkGate/noticeBoardDetailList.do")
 	public String noticeBoardDetailList(
 			@RequestParam String boardType,
@@ -604,21 +599,28 @@ public class EzTalkGateController {
 			boolean firstTypeIsMail = type.startsWith("M");
 			boolean isAll = isMailType && isApprovalType;
 
-			LoginVO loginVO = new LoginVO();
-			loginVO.setId(userId);
-			loginVO.setTenantId(tenantId);
-			loginVO.setDn("NOPASSWORD");
-			loginVO = loginService.selectUser(loginVO);
-			
-			
-			if (isMailType) {
-				mailCount = (int) ezEmailService.getUnreadCountAll(null, userId, loginVO.getLocale(), tenantId).get("totalUnreadCountInAllAccounts");
+			Map<String, Object> parameters = new HashMap<>();
+			// "{"useQuestion":"NO","useCircular":"NO","useMail":"YES","useApproval":"YES","useSchedule":"YES"}"
+			parameters.put("useQuestion", "NO");
+			parameters.put("useCircular", "NO");
+			parameters.put("useSchedule", "NO");
+			parameters.put("useMail", "YES");
+			parameters.put("useApproval", "YES");
+
+			String url = "/rest/ezPortal/settingInfo/unreadCounts/users/" + userId;
+
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, parameters, request, "get", null);
+			String status = resultBody.get("status").toString();
+
+			if (status.equals("ok")) {
+				JSONObject data = (JSONObject) resultBody.get("data");
+				// data.get("pollCount");
+				// data.get("circularCount");
+				// data.get("scheduleCount");
+				mailCount = Optional.ofNullable(data.get("unreadMailCount")).map(Object::toString).map(Integer::parseInt).orElse(0);
+				approvalCount = Optional.ofNullable(data.get("approvalCount")).map(Object::toString).map(Integer::parseInt).orElse(0);
 			}
 
-			if (isApprovalType) {
-				approvalCount = ezApprovalGService.getWebPartListCount("1", userId, loginVO.getDeptID(), "", "COUNT", "", loginVO.getCompanyID(), "1", tenantId, "");
-			}
-			
 			if (isAll) {
 				if (firstTypeIsMail) {
 					result = String.format("%d/%d", mailCount, approvalCount);
@@ -627,8 +629,6 @@ public class EzTalkGateController {
 				}
 			} else {
 				result = Integer.toString(Math.max(mailCount, approvalCount));
-				
-				
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

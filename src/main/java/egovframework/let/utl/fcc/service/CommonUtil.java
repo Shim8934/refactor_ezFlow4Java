@@ -612,6 +612,7 @@ public class CommonUtil {
 	public Document convertStringToDocument(String xmlStr) {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
 		replaceData = replaceData.replace("&shy;", "");
+		replaceData = replaceData.replace("\uffff", "");
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;
