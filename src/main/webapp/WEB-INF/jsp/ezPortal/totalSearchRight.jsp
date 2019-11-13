@@ -521,7 +521,7 @@ function btn_searchStart() {
 	var startDate = "";
 	var endDate = "";
 	var searchRange="";
-	var type =""; //전체검색 || 전자결재 || 게시판
+	var type = totalSearch.data.type == undefined? "all" : totalSearch.data.type; //전체검색 || 전자결재 || 게시판
 	/**
 		검색기간 확인
 	*/
@@ -577,18 +577,22 @@ function btn_searchStart() {
 	
 	txtKeyword = changeToHenkaku + ' | ' + changeToZenkaku;
 	
+	var automax = totalSearch.data.automax;
+	var page = totalSearch.data.page;
+	
 	totalSearch.data = {
 		 keyword : txtKeyword
 		,startDate : startDate
 		,endDate : endDate
 		,searchRange : searchRange
-		,automax : "5"     //한페이지에 출력하는 양.
-		,page : "1"        //페이지정보도 받아서 처리하는 거로 변경해야함.
+		,automax : automax     //한페이지에 출력하는 양.
+		,page : page       //페이지정보도 받아서 처리하는 거로 변경해야함.
 		,type : type
 		,btnStart : true  // 검색버튼으로 실행했을 경우.
 	}
 	
-	clickTab("all");
+	clickTab(type);
+	//clickTab("all");
 }
 
 /**
