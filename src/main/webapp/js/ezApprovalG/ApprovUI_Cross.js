@@ -1462,7 +1462,7 @@ function getCurApproverAprLine(type) {
     LastTotalKyulSN = getLastTotalSignSN(objNodes);
     LastSignSN = objNodes.length;
 
-    for (var i = 0; i < objNodes.length; i++) {
+    for (var i = objNodes.length - 1; i < objNodes.length; i--) {
         var params = new Array();
         params[0] = "0";
         var dataNodes = GetLastChildNodes(objNodes[i], params);
