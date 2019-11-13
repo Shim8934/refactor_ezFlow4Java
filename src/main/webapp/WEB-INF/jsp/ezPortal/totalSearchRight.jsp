@@ -342,7 +342,7 @@ function dblClickBoard(boardID, itemID) {
 	/**
 		게시판 읽기 권한 체크
 	*/
-	$.ajax({
+	/* $.ajax({
 		method: "POST",
 		url: "/ezPortal/chkBoardReadAuthor.do",
 		type: "json",
@@ -354,7 +354,9 @@ function dblClickBoard(boardID, itemID) {
 		success: function (result) {
 			readAuthor = result;
 		}
-	});
+	}); */
+	
+	readAuthor = "true";
 	
 	if(readAuthor === "true") {
 		boardList.filter(function(e){
@@ -592,6 +594,7 @@ function btn_searchStart() {
 	}
 	
 	clickTab(type);
+	parent.parent.document.getElementById("topFrame").contentWindow.deleteTotalSearchValue();
 	//clickTab("all");
 }
 
