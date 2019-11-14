@@ -445,6 +445,9 @@
 			  height: 10px;
 			  background-color: #82b9f6;
 			}
+			.headListClick {
+				cursor:pointer;
+			}
 		</style>
 	</head>
 	<body class="mainbody">
@@ -485,13 +488,13 @@
 				<table class="mainlist" style="width:100%;" id="mainList">
 					<thead style="" id="listHeader">
 						<tr>
-							<th width="80px;" 	class="headListClick" ><spring:message code="ezSystem.kyj1"></spring:message></th>
+							<th width="80px;" 	><spring:message code="ezSystem.kyj1"></spring:message></th>
 							<th width="15%;"	class="headListClick" headers="displayName"><spring:message code="ezEmail.lsd04"></spring:message></th>
 							<th width="15%;"	class="headListClick" headers="department"><spring:message code="ezStatistics.t113"></spring:message></th>
 							<th width="15%;"	class="headListClick" headers="mailboxusage"><spring:message code="ezEmail.lsd02"></spring:message></th>
 							<th width="15%;"	class="headListClick" headers="mailboxquota"><spring:message code="ezEmail.lsd03"></spring:message></th>
 							<th					class="headListClick" headers="persent"><spring:message code="main.t00011"></spring:message></th>
-							<th style="width:140px;" class="headListClick" ><spring:message code="ezOrgan.t92"></spring:message></th>
+							<th style="width:140px;" ><spring:message code="ezOrgan.t92"></spring:message></th>
 						</tr>
 					</thead>
 					<tbody id="userListBody" style="overflow: auto;"></tbody>
