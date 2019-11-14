@@ -26,7 +26,7 @@ function letterSearch() {
 		type : "POST",
 		url : "/ezEmail/searchLetter.do",
 		datatype : 'json',
-		data : {'search': encodeURI(encodeURIComponent(search))},
+		data : {'search': encodeURIComponent(search), "companyId" : returnCompany},
 		error : function(data) {
 			alert("error");
 			//console.log(data);

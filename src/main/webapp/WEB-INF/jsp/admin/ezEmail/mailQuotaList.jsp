@@ -451,7 +451,16 @@
 		</style>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
+		<h1>
+			<spring:message code="ezEmail.lsd01" /><span id="listInfo"></span>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			
+			<select id="ListCompany" onChange="selectCompanyID()" class="companySelect" style="margin-bottom:10px;">
+				<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>    		
+	      	</select>	
+		</h1>
 		<div style="width:100%; padding-bottom:5px;">
 		<table style="width: 100%; background-color: #f8f8fa; border: 1px solid #ddd;">
 			<tr>
