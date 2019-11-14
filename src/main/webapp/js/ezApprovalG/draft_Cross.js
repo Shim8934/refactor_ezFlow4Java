@@ -4563,8 +4563,16 @@ function SReAprLineSingMapping(ret) {
 				reOrderSignTitle.push(OrderJobtitle[j]);
 			}
 			signMax++;
-		} else if (OrderType[j] == strAprType8 || OrderType[j] == strAprType9 || OrderType[j] == strAprType11 || OrderType[j] == strAprType12) {
+		} else if (OrderType[j] == strAprType8 || OrderType[j] == strAprType11) {
 			if (OrderStat[j] == strAprState3) {
+				startHabyIdx++;
+			} else {
+				reOrderHabyName.push(OrderName[j]);
+				reOrderHabyTitle.push(OrderJobtitle[j]);
+			}
+			habyMax++;
+		} else if (OrderType[j] == strAprType9 || OrderType[j] == strAprType12) {
+			if (OrderStat[j] == strAprState3 || OrderStat[j] == strAprState4) {
 				startHabyIdx++;
 			} else {
 				reOrderHabyName.push(OrderName[j]);
