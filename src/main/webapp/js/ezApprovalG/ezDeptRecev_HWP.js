@@ -2174,7 +2174,7 @@ var result = "";
 }
 
 var apropinion_cross_dialogArguments = new Array();
-function openOpinionUI_New(pOpinionType) {
+function openOpinionUI_New(pOpinionType, CompleteFunction) {
 	try {
 		var parameter = new Array();
 		parameter[0] = pDocID;		//DOCID
@@ -2185,7 +2185,11 @@ function openOpinionUI_New(pOpinionType) {
 		parameter[99] = ext;		//EXT
 		
 		apropinion_cross_dialogArguments[0] = parameter;
-		apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+		if (typeof(CompleteFunction) != "undefined") {
+			apropinion_cross_dialogArguments[1] = CompleteFunction;
+		} else {
+			apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+		}
 		
 		var url = "/ezApprovalG/aprOpinionNew.do";
 		var OpenWin = window.open(url, "AprOpinion_Cross", GetOpenWindowfeature(530, 520));

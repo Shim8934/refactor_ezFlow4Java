@@ -572,15 +572,46 @@
 		            return false;
 		        }
 		        
-		        openOpinionUI_New("HESONG");
+		        openOpinionUI_New("HESONG", btnReturn_onclick_Complete);
 		    }
 		    
 		    function openOpinionUI_New_Complete(ret) {
-		        if (ret != "cancel" && ret != undefined) {
+		    	try {
+		    		if (ret == "Clear") {
+		    			pHasOpinionYN = "N";
+		    		} else if (ret == "cancel") {
+		    			//do_nothing
+		    		} else {
+		    	        var objXML = createXmlDom();
+		    	        objXML = loadXMLString(ret);
+		    	        
+		    	        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+		    	        if (NodeList.length != 0) {
+		    	            pHasOpinionYN = "Y";
+		    	        } else {
+		    	            pHasOpinionYN = "N";
+		    	            ret = "cancel";
+		    	        }
+		    		}
+		    	} catch (e) {
+		    		alert("openOpinionUI_New_Complete ::: " + e.description);
+		    	}
+		    }
+		    
+		    function btnReturn_onclick_Complete(ret) {
+		        if (ret != "cancel") {
+		            
+					var RtnVal = ExcuteInfo("HESONG_BEFORE", "");
+		        	
+		        	if (!RtnVal) {
+		                OpenAlertUI("연동처리]를 실패하였습니다.");
+		                return;
+		            }
+		        	
 	            	SendMailToDrafter_Hesong();
 	                setHeSongDocInfo();
-	                window.close();
 		        }
+                window.close();
 		    }
 		    
 			function btnMail_onclick() {
