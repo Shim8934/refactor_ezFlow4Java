@@ -176,3 +176,4 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 #capacity-wrapper > div.progressbar {float: inherit; width: 150px; display: inline-block; vertical-align: middle; margin-left: 15px; border-radius: 15px;}
 #capacity-bar {background-color: #82b9f6; height: 15px; border-radius: 15px; width: 0px;}
 #capacity-percent {display: inline-block; text-align: right; border-radius: 15px;}
+.headListClick {cursor:pointer;}

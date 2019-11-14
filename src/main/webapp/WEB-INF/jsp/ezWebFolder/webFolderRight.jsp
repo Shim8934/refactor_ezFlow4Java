@@ -836,7 +836,7 @@
 				<table class="mainlist" style="width:100%"  id="tblFileList1">
 					<thead id ="BoardList_THEAD">
 						<tr>
-							<th class="wfFilecheck 		headListClick" style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+							<th class="wfFilecheck " style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
 							<th class="wfFileFavorite 	headListClick" style="text-align: center;" headers="FAVORITE_STATUS"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
 							<th class="wfFileType 		headListClick" style="text-align: center;" headers="TYPE_ICON"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 							<th class="wfFileName 		headListClick" headers="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
