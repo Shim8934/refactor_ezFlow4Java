@@ -81,7 +81,8 @@ public interface EzOrganAdminService {
 	
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,String companyId) throws Exception;
+	public List<OrganUserVO> getUserList(int tenantID, int startPage, int maxItemPerPage, String keycode,String keyword,
+			String companyId, String sortColumn, String sortType) throws Exception;
 	
 	public int getUserCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
 	
