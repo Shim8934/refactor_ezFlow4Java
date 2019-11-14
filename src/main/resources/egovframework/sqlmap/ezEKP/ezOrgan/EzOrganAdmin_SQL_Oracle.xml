@@ -5939,6 +5939,9 @@
  				tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
  				<include refid="EzOrganAdminDAO.searchQuery"/>
  			ORDER BY
+ 			<isNotEmpty property="sortColumn">
+		    	$orderbyData$,
+		    </isNotEmpty>
  				displayName
  			)
  		<isNotEqual property="v_start" compareValue="-1">
