@@ -15,6 +15,7 @@
 	        var treeView = new TreeView();
 	        var pSelID = "${selID}";
 	        var pNodeTreeID = "${nodeID}";
+	        var orgSelectedBoardtype = "${selectedBoardtype}";
 	        var ReturnFunction;
 	        
 	        window.onload = function () {
@@ -91,7 +92,13 @@
 	                alert("<spring:message code='ezBoard.t10047'/>"); 
 	                return;
 	            }
-	            if (selectedBoardtype == "BOARD") {
+	            // 하위게시판 아래에 게시판을 이동하려는 경우 (게시판 하위에 추가할 수 없습니다.)
+	            if (orgSelectedBoardtype == "BOARD" && selectedBoardtype == "BOARD") {
+	                alert("<spring:message code='ezBoard.t10041'/>");
+	                return;
+	            }
+	        	// 하위게시판 아래에 분류를 이동하려는 경우 (게시판에는 하위를 추가할 수 없습니다.)
+	            if (orgSelectedBoardtype == "TREE" && selectedBoardtype == "BOARD") {
 	                alert("<spring:message code='ezBoard.t10036'/>");
 	                return;
 	            }
@@ -147,7 +154,7 @@
 	    <table class="popuplist" style="width: 100%">
 	        <tr>
 	            <td class="pos1" style="border:1px solid #ddd">
-	                <div class="tree" style='width: 255px; overflow-x: auto; overflow-y: auto; height: 255px;' id='TreeCtrl_MyBoardTree'></div>
+	                <div class="tree" style='width: 294px; overflow-x: auto; overflow-y: auto; height: 255px;' id='TreeCtrl_MyBoardTree'></div>
 	            </td>	
 	        </tr>
 	    </table>

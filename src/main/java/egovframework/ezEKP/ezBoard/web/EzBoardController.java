@@ -5062,9 +5062,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (request.getParameter("nodeID") != null) {
 			nodeID = request.getParameter("nodeID");
 		}
+		String selectedBoardtype = request.getParameter("selectedBoardtype");
 		
 		model.addAttribute("selID", selID);
 		model.addAttribute("nodeID", nodeID);
+		model.addAttribute("selectedBoardtype", selectedBoardtype);
 
 		logger.debug("myBoardmovecopy ended");
 		return "ezBoard/boardMyBoardMoveCopy";
