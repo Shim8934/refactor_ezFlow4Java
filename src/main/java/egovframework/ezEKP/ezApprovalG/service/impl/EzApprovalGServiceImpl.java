@@ -31140,6 +31140,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				targetUserDeptID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(6).getTextContent();
 				targetUserCompanyID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
 				targetUserEmail = ezOrganService.getPropertyValue(targetUserID, "mail", tenantID);
+				
+				xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(targetUserID, targetUserID, tenantID);
+				notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
 
 				logger.debug("target : " + targetUserID + "/" + targetUserName + "/" + targetUserEmail);
 
@@ -31157,6 +31160,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				bodyContent.append("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
 
 				if (aprState.equals("002")) {
+					if (notiDoc.getElementsByTagName("ALERT").item(0).getTextContent().equals("0")) {
+						continue;
+					}
 					Subject = messageSource.getMessage("ezEmail.csj12", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재문서도착알림] + DOCTITLE
 					bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span>");
 					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
@@ -31172,10 +31178,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
 					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
 				} else {
+					if (notiDoc.getElementsByTagName("LINEPASS").item(0).getTextContent().equals("0")) {
+						continue;
+					}
 					Subject = "[" + messageSource.getMessage("ezApprovalG.garm09", userInfo.getLocale()) + "] " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재문서도착알림] + DOCTITLE
+					bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
 					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
 					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
 					bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
+					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
+					bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
+					bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
+					bodyContent.append("&allFlag=0&mailchk=Y&orgCompanyID=" + targetUserCompanyID);
+					bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
+					bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
+					bodyContent.append("</a><br>");
 				}
 				bodyContent.append("</td></tr></table>");
 

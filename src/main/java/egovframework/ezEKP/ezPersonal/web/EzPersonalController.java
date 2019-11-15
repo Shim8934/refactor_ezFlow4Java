@@ -492,6 +492,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String hesong = "0";
 		String callBack = "0";
 		String saveMailFlag = "0";
+		String linePass = "0";
 		
 		String result = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
 		
@@ -504,6 +505,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			hesong = xmlDom.getElementsByTagName("HESONG").item(0).getTextContent();
 			callBack = xmlDom.getElementsByTagName("CALLBACK").item(0).getTextContent();
 			saveMailFlag = xmlDom.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent();
+			linePass = xmlDom.getElementsByTagName("LINEPASS").item(0).getTextContent();
 		}
 		
 		model.addAttribute("alert", alert);
@@ -514,6 +516,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("saveMailFlag", saveMailFlag);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useSaveSentMail", "YES".equalsIgnoreCase(config.getProperty("config.SentMailStoredInSentbox", "YES")));
+		model.addAttribute("linePass", linePass);
 
 		logger.debug("setApprovNoticeMail ended");
 		return "ezPersonal/persSetApprovNoticeMail";
@@ -531,8 +534,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String[] flagList = request.getParameter("email").split(";");
 		String saveMailFlag = request.getParameter("sentBoxSave");
+		String linePass = request.getParameter("linePass");
 		
-		String result = ezPersonalService.setApprovNotiMail(userInfo.getId(), flagList[0], flagList[1], flagList[2], flagList[3], flagList[4], saveMailFlag, userInfo.getTenantId());
+		String result = ezPersonalService.setApprovNotiMail(userInfo.getId(), flagList[0], flagList[1], flagList[2], flagList[3], flagList[4], saveMailFlag, userInfo.getTenantId(), linePass);
 
 		logger.debug("setPersonalNotiMail ended");
 		return result;

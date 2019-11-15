@@ -222,6 +222,8 @@ public interface EzCommonService {
 	public void addAprEndAttachViewOrder() throws Exception;
 	
 	public void addAprTmpAttachViewOrder() throws Exception;
+	
+	public void alterTblPsApprovNotiMailConf() throws Exception;
 
 	public void createAprAttachLimit() throws Exception;
 	

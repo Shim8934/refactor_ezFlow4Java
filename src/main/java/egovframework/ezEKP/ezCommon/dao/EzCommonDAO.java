@@ -1487,4 +1487,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createMobileAttitudeColumn");
 		}
 	}
+	
+	public void alterTblPsApprovNotiMailConf() {
+		try {
+			select("EzCommonDAO.checkTblPsApprovNotiMailConf");
+		} catch (Exception e) {
+			logger.debug("tbl_ps_approvnotimailconf linePass doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.alterTblPsApprovNotiMailConf");
+		}
+	}
 }

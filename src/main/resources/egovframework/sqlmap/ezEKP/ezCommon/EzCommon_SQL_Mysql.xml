@@ -2814,4 +2814,18 @@
   			LONGITUDE float(20,15) DEFAULT NULL
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblPsApprovNotiMailConf" resultClass="String">
+		SELECT
+			LINEPASS
+		FROM
+			TBL_PS_APPROVNOTIMAILCONF
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.alterTblPsApprovNotiMailConf">
+		ALTER TABLE
+			TBL_PS_APPROVNOTIMAILCONF
+		ADD 
+			LINEPASS VARCHAR(4) DEFAULT '0'
+	</statement>
 </sqlMap>
