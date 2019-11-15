@@ -36,11 +36,11 @@ public interface MResourceService {
 	
 	public MResourceScheduleVO getResScheduleDetail(String resourceId, String scheduleId, String companyId, int tenantId, String langStr);
 	
-	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId, String brdCompany,  String userId, String userCompany, String userDept , int tenantId, String langStr, String authYn);
+	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId, String brdCompany,  String userId, String userCompany, String userDept , int tenantId, String langStr, String authYn) throws Exception;
 	
 	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdList(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn);
 	
-	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn);
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn, String brdID) throws Exception;
 	
 	public List<MResourceScheduleVO> getResFavoriteList(String userId, String companyId, int tenantId, String langStr);
 	

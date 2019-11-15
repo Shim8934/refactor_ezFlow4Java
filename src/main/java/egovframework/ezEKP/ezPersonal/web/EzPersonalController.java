@@ -64,6 +64,7 @@ import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.web.EzOrganAdminController;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
@@ -137,6 +138,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	@Autowired
     private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private EzOrganAdminController ezOrganAdminController;
 	
     // dhlee
     @Autowired
@@ -870,6 +874,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("searchString", searchString);
 		model.addAttribute("primaryLang", primaryLang);
 
+		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
+		
 		logger.debug("personSearch ended");
 		return "/ezPersonal/persPersonSearch";
 	}
@@ -1236,6 +1243,23 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute2", "", "user", userInfo.getTenantId());
 
+	    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        date.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String nowDate = date.format(new Date()); 
+
+        // 비즈메카톡과의 프로필 사진 연동을 위해 updateDT 필드를 갱신한다.
+        ezOrganAdminService.updateProperty(userInfo.getId(), "updateDT", nowDate, "user", userInfo.getTenantId());
+		
+        String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", userInfo.getTenantId());
+        
+        if (useBizmekaTalk.equals("YES")) {
+        	try {
+        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        }
+		
 		logger.debug("deletePicture ended");
 		return result;
 	}
@@ -1261,6 +1285,16 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		ezOrganAdminService.updateDBData_user(vo);
 
+        String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", userInfo.getTenantId());
+        
+        if (useBizmekaTalk.equals("YES")) {
+        	try {
+        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        }
+		
 		logger.debug("saveUserInfo ended");
 		return "OK";
 	}
@@ -1479,6 +1513,16 @@ public class EzPersonalController extends EgovFileMngUtil {
         // 비즈메카톡과의 프로필 사진 연동을 위해 updateDT 필드를 갱신한다.
         ezOrganAdminService.updateProperty(userInfo.getId(), "updateDT", nowDate, "user", userInfo.getTenantId());
 		
+        String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", userInfo.getTenantId());
+        
+        if (useBizmekaTalk.equals("YES")) {
+        	try {
+        		ezOrganAdminController.invokeEzTalkSyncServer(userInfo.getTenantId());
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
+        }
+        
 		logger.debug("photoUploadByUser ended");
 	}
 	

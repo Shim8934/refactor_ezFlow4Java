@@ -558,7 +558,7 @@
 	            return get_unreadcount_2010();
 	        }
 	        function check_pop3() {
-	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 360));
+	            var OpenWin = window.open("/ezEmail/mailGetPop3.do", "mail_getpop3_cross", GetOpenWindowfeature(460, 375));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        var mail_foldermanage_Cross_dialogArguments = new Array();

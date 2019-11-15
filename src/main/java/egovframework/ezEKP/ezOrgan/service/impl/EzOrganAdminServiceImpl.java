@@ -1172,6 +1172,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String sTitle1 = "";
         String sTitle2 = "";
         String pDeptID = "";
+        String manualFlag = "";
         
         if (!titleInfo.equals("")) {
             String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1182,14 +1183,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             for (int i = 0; i < addJobinfo.length; i++) {
             	String[] userInfo = addJobinfo[i].split(":");
             	pDeptID = userInfo[0];
+            	manualFlag = userInfo[userInfo.length - 1];
+            	
+            	if (manualFlag.equals("null")) {
+            		manualFlag = null;
+            	}
             	            	
-            	if (userInfo.length > 1) {
+            	if (userInfo.length > 2) {
             		sTitle1 = userInfo[1];
             	}
                 
                 sTitle2 = "";
                 
-                if (userInfo.length > 2) {
+                if (userInfo.length > 3) {
                     sTitle2 = userInfo[2];
                 } else {
                     sTitle2 = sTitle1;
@@ -1213,6 +1219,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_EXTATTR15", "0");
             		map.put("v_PARENTCN", pDeptID);
             		map.put("v_JOBID", jobIDinfo[i]);
+            		map.put("v_MANUAL_FLAG", manualFlag);
             		
             		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1250,6 +1257,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         					
         				}       
             		} catch (Exception e) { // Exception이 발생하면 Group Email 주소로부터 취소 처리를 한다.
+            			e.printStackTrace();
             		    ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
             		}
                 } else {
@@ -1366,7 +1374,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword,String companyId) throws Exception {     
+    									 String keycode,String keyword,String companyId, String sortColumn, String sortType) throws Exception {     
     	logger.debug("getUserList started");
     	
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1378,7 +1386,22 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		params.put("companyId", companyId);
+		params.put("sortColumn", sortColumn);      
+		params.put("sortType", sortType);
 		
+		String orderByData = "";
+		if(!sortColumn.equals("")){
+			if(sortColumn.equals("persent")){
+				orderByData = " (MAILBOXUSAGE/MAILBOXQUOTA)*100 " + sortType;
+			}else if (sortColumn.equals("mailboxusage")){
+				orderByData = sortColumn +"/1024 " + sortType;
+			}				
+			 else {
+				orderByData = sortColumn + " " + sortType;
+			}
+		}
+		
+		params.put("orderbyData", orderByData);
     	List<OrganUserVO> list = ezOrganAdminDao.getUserList(params);
     	
     	logger.debug("getUserList ended");

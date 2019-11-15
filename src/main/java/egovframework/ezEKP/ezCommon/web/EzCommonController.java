@@ -632,4 +632,23 @@ public class EzCommonController extends EgovFileMngUtil{
 
 		logger.debug("convertSaveImage ended");
 	}
+	//2019-09-20 메신저 다운로드 추가
+	@RequestMapping(value = "/ezCommon/talkDownloadAttach.do", method = RequestMethod.GET)
+	public void talkDownloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("talkDownloadAttach started");
+
+		String filePath = request.getParameter("filePath");
+		String fileName = "";
+		String realPath = commonUtil.getRealPath(request);
+		
+		if (request.getParameter("fileName") != null) {
+			fileName = request.getParameter("fileName");
+		} else {
+			fileName = filePath.substring(filePath.lastIndexOf(commonUtil.separator) + 1); 
+		}
+		
+		downFile(request, response, realPath + filePath, fileName);
+		
+		logger.debug("talkDownloadAttach ended");
+	}
 }

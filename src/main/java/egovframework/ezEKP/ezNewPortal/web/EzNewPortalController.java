@@ -204,6 +204,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			if (data.get("roleInfo").toString().equalsIgnoreCase("admin")) {
 				model.addAttribute("utilAdminUrl", data.get("utilAdminUrl"));
 			}
+			//2019-09-20 메신저 설치 부분 추가
+			model.addAttribute("useUtilTalk", data.get("useUtilTalk"));
+			if (data.get("useUtilTalk").toString().equalsIgnoreCase("YES")) {
+				model.addAttribute("talkFilePath", data.get("talkFilePath"));
+			}
+			//2019-10-04 통합검색 추가
+			model.addAttribute("useTotalSearch", data.get("useTotalSearch"));
 		}
 		
 		logger.debug("portalTopMenu End");

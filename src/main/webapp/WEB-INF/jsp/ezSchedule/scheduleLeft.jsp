@@ -498,17 +498,6 @@
 						  	<span class="list_text"><spring:message code='ezSchedule.t222'/></span>
 						</label>
 					</li>					
-					<c:if test='${!empty scheDept}'>
-						<c:forEach var="dep" items="${scheDept}">
-							<li>
-								<label class="IDcontainer" onchange="chk_DisplayChange()">
-							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
-							  		<span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
-							  		<span class="list_text" title="${dep.deptName }"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
-								</label>
-							</li>	
-						</c:forEach>
-					</c:if>
 					<c:if test='${!empty scheCum}'>
 						<c:forEach var="cum" items="${scheCum}">
 							<c:if test="${cum.deptId ne loginVO.deptID}">
@@ -520,6 +509,17 @@
 									</label>
 								</li>	
 							</c:if>
+						</c:forEach>
+					</c:if>
+					<c:if test='${!empty scheDept}'>
+						<c:forEach var="dep" items="${scheDept}">
+							<li>
+								<label class="IDcontainer" onchange="chk_DisplayChange()">
+							  		<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
+							  		<span class="checkmark" style="background-color:#b200ff;"></span>
+							  		<span class="list_text" title="${dep.deptName }"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
+								</label>
+							</li>	
 						</c:forEach>
 					</c:if>
 					<li>
@@ -587,7 +587,7 @@
 					<c:forEach var="dep" items="${scheDept}">
 						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${dep.deptName }"style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
 						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
-						  <span class="checkmark" style="background-color:rgb(1, 179, 63);"></span>
+						  <span class="checkmark" style="background-color:#b200ff;"></span>
 						</label>
 					</c:forEach>
 				</c:if>

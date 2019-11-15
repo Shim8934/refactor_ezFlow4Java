@@ -350,7 +350,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			JSONArray resultList = (JSONArray) data.get("list");
 			
 			model.addAttribute("resultList", resultList);
-			model.addAttribute("imgPath", commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId()));
+			model.addAttribute("imgPath", commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()));
 			
 			//진행중인 문서일 경우에만 aprLines
 			if (data.containsKey("aprLines")) {

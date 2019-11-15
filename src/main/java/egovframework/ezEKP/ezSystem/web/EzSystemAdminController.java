@@ -701,18 +701,8 @@ public class EzSystemAdminController {
 				userDeptName = infoVo.getDeptnm2();
 				userCompanyName = infoVo.getCompanynm2();
 			}
-			String userConnectIp = infoVo.getConnectip();
-			String userConnectTime = infoVo.getConnecttime();
-			String userConnectBrowser = infoVo.getConnectbrowser();
-			String userConnectOS = infoVo.getConnectos();
 			
-			String[] userHist = null;
-			if (config.equals("u")){
-				userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
-			} else {
-				userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
-			}
-			
+			// countryIP 관련 국가명 표시 위함 시작.
 			String ip = loginHistList.get(i-j).getConnectip();
 			String countryName = "";
 			String countryCode = "";
@@ -758,15 +748,20 @@ public class EzSystemAdminController {
 				countryName = countryName.replaceAll(" ", "");
 			}
 			loginHistList.get(i-j).setConnectCountryName(countryName);
+			// countryIP 관련 국가명 표시 위함 끝.
 			
-			cell = row.createCell(2); cell.setCellValue((String) loginHistList.get(i-j).getConnectip() + "(" + loginHistList.get(i-j).getConnectCountryName() + ")");
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(3); cell.setCellValue((String) loginHistList.get(i-j).getConnecttime());
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(4); cell.setCellValue((String) loginHistList.get(i-j).getConnectbrowser());
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(5); cell.setCellValue((String) loginHistList.get(i-j).getConnectos());
-			cell.setCellStyle(bodyStyle);
+			String userConnectIp = infoVo.getConnectip() + "(" + loginHistList.get(i-j).getConnectCountryName() + ")";
+			String userConnectTime = infoVo.getConnecttime();
+			String userConnectBrowser = infoVo.getConnectbrowser();
+			String userConnectOS = infoVo.getConnectos();
+			
+			String[] userHist = null;
+			
+			if (config.equals("u")){
+				userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
+			} else {
+				userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
+			}
 			
 			for (int k = 0; k < histHeaderLen; k ++) {
 				cell = row.createCell(k);	cell.setCellValue((String) userHist[k]); 

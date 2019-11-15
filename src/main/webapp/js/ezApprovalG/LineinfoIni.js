@@ -5,7 +5,7 @@ function Lineinfo_ini() {
             Tree_setconfig();
             Lineinfoini = true;
             InitListView();
-            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "", orgCompanyID);
+            TreeViewinitialize(arr_userinfo[4], companyID + "/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "", orgCompanyID);
             displayUserList(DeptID);
             ChangeLineTab("Organ");
             initJunGyul();

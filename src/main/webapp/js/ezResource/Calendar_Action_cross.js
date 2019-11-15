@@ -572,7 +572,7 @@ function tableListControl_Week()
             _mtd.setAttribute("class", "weektd_01");
             _mtd.setAttribute("DATA1", title_name[k].split("/")[0]);
             _mtd.setAttribute("DATA2", title_name[k].split("/")[1]);
-            _mtd.setAttribute("title", _mtd.getAttribute("DATA2"));
+            _mtd.setAttribute("title", _mtd.getAttribute("DATA2").replace(/&#40;/gi, "\(").replace(/&#41;/gi, "\)"));
             _mtd.align = "left";
             _mtd.style.height = "60px";
             //_mtd.onselectstart = "return false";

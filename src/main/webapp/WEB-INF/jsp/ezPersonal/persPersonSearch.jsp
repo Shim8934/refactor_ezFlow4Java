@@ -67,8 +67,17 @@
 	            	var xmlHTTP = createXMLHttpRequest();
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
-	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.companyID}");
+	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");	            	
+	            	
+	                <c:choose>
+	                <c:when test="${useShowAllCompanies eq 'YES'}">
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+	                </c:when>
+	                <c:otherwise>
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+	                </c:otherwise>
+	                </c:choose>
+	            	
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            	xmlHTTP.send(xmlpara);
@@ -550,6 +559,9 @@
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;userType",
 						page : CurPage ,
+		                <c:if test="${useShowAllCompanies eq 'YES'}">
+	        			company : "",
+		                </c:if>		        			
 						type : "user"
 					} ,
    					success : function(xml) {
@@ -608,7 +620,13 @@
 					method : 'POST',
 					dataType : "text",
 					async : false,
-					data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
+					data : {search : "displayname::" + document.all("deptkeyword").value, 
+					    cell : "extensionAttribute3;displayname;extensionAttribute9;", 
+					    prop : "", 
+		        	    <c:if test="${useShowAllCompanies eq 'YES'}">
+		        	    company : "", 
+		        	    </c:if>		        	     
+					    type : 'group'}, 
    					success : function(result) {
    						xmlDOM = loadXMLString(result);
    						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
@@ -627,10 +645,20 @@
 	            	bSearch = true;
 	            	g_xmlHTTP = createXMLHttpRequest();
 
-	            	if(CrossYN())
-		                var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
-	            	else
-	                	var strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	            	var strQuery;
+	            	
+	            	if (CrossYN()) {
+		                <c:choose>
+		                <c:when test="${useShowAllCompanies eq 'YES'}">
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top/organ</TOPID><PROP></PROP></DATA>";
+		                </c:when>
+		                <c:otherwise>
+		                strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		                </c:otherwise>
+		                </c:choose>	                    	                    	            	    
+	            	} else {
+	                	strQuery = "<DATA><DEPTID>" + SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	            	}
 
 	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	            	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -664,8 +692,17 @@
 	    	function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
-	    	        g_xmlHTTP = createXMLHttpRequest();
-	            	var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	    	        g_xmlHTTP = createXMLHttpRequest();	            	
+	            	
+	                <c:choose>
+	                <c:when test="${useShowAllCompanies eq 'YES'}">
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top/organ</TOPID><PROP>mail</PROP></DATA>";
+	                </c:when>
+	                <c:otherwise>
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                </c:otherwise>
+	                </c:choose>
+	            	
 	            	g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	            	g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	            	g_xmlHTTP.send(strQuery);

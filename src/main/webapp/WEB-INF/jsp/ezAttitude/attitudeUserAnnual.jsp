@@ -196,7 +196,7 @@
 	            var startDate = "";
 	            var endDate = "";
 	    		
-				if ($("#searchYear").val() == null && $("#searchYear").val() == "") {
+				if ($("#searchYear").val() == null || $("#searchYear").val() == "") {
 					selyear = joinDate.split("-")[0];
 	    		}
 

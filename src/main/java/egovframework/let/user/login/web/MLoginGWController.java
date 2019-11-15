@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
@@ -92,6 +93,9 @@ public class MLoginGWController {
     
     @Autowired
     private EzEmailUtil ezEmailUtil;
+    
+    @Autowired
+	private EzOrganAdminService ezOrganAdminService;
     
     /**
 	 * 모바일 G/W 사용자 [GET] 로그인
@@ -289,6 +293,21 @@ public class MLoginGWController {
     	        	        return result;
     	    			}
     	    		}
+    	    		
+    	    		// 사용자정지 여부를 체크
+    	        	String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+    	        	
+    	        	if (useLoginStop != null && useLoginStop.equals("YES")) {
+    	        		int flag = checkStopUser(tenantId, resultVO.getId());
+    	        		if(flag > 0) {
+    	        			LOGGER.debug("stopUser");
+    	        			result.put("status", "error");
+        					result.put("code", "8");			
+        					result.put("data", "stopUser");
+        					
+        					return result;
+    	        		}
+    	        	}
     				
     				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
                 	
@@ -711,7 +730,7 @@ public class MLoginGWController {
     		
     		// 부서 체크
     		if (!(accessDeptList == null || accessDeptList.size() == 0)) {
-    			for (int i = 0; i < accessIdList.size(); i++) {
+    			for (int i = 0; i < accessDeptList.size(); i++) {
     				String getListDept = accessDeptList.get(i).getCn();
     				if (deptID.equals(getListDept) || topID.equals(getListDept)) {
     					LOGGER.debug("dept checked");
@@ -780,6 +799,11 @@ public class MLoginGWController {
     	LOGGER.debug("ipAccessCheck ended.");
     	return returnValue;
     }
+    
+    private int checkStopUser(int tenantID, String userID) throws Exception {
+    	int flag = ezOrganAdminService.checkStopUser(userID, tenantID);
+    	return flag;
+    }   
     
     private long changeIPtoInteger(String changeIP) throws Exception {
     	String[] iparr = changeIP.split("\\.");

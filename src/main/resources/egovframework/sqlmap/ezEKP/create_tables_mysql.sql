@@ -97,6 +97,7 @@ CREATE TABLE `james_mail` (
   KEY `I_JMS_MIL_MAIL_IS_RECENT` (`MAIL_IS_RECENT`),
   KEY `I_JMS_MIL_MAIL_IS_SEEN` (`MAIL_IS_SEEN`),
   KEY `I_JMS_MIL_MAIL_MODSEQ` (`MAIL_MODSEQ`),
+  KEY `IDX_MAIL_DATE` (`MAIL_DATE`),
   CONSTRAINT `james_mail_ibfk_1` FOREIGN KEY (`MAILBOX_ID`) REFERENCES `james_mailbox` (`MAILBOX_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -217,7 +218,7 @@ DROP TABLE IF EXISTS `james_recipient_rewrite`;
 CREATE TABLE `james_recipient_rewrite` (
   `DOMAIN_NAME` varchar(100) NOT NULL,
   `USER_NAME` varchar(100) NOT NULL,
-  `TARGET_ADDRESS` varchar(4000) NOT NULL,
+  `TARGET_ADDRESS` varchar(20000) NOT NULL,
   PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3428,6 +3429,7 @@ CREATE TABLE `tbl_board_boardmanage` (
   `BOARDGROUPACL` varchar(2) DEFAULT 'Y',
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) DEFAULT NULL,
+  `TYPE` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ACCESSID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3537,7 +3539,8 @@ CREATE TABLE `tbl_board_item` (
   `DELFLAG` char(1) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`),
   KEY `writedate` (`WRITEDATE`,`PARENTWRITEDATE`),
-  KEY `writedate1` (`WRITEDATE`)
+  KEY `writedate1` (`WRITEDATE`),
+  KEY `idx_boardid` (`BOARDID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3677,7 +3680,8 @@ CREATE TABLE `tbl_board_item_read` (
   `READDATE` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) DEFAULT NULL,
-  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ITEMID`,`USERID`)
+  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ITEMID`,`USERID`),
+  KEY `idx_readdate` (`READDATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -9433,6 +9437,15 @@ CREATE TABLE `tbl_ps_linkportlet` (
   `LINK_ORDER` int(11) DEFAULT NULL,
   `TENANT_ID` mediumint(5) DEFAULT NULL,
   `COMPANYID` varchar(45) DEFAULT NULL,
+  `USE_NUM_URL` varchar(45) DEFAULT 'N',
+  `NUM_URL_USERID` varchar(45) DEFAULT 'N',
+  `NUM_URL_DEPTID` varchar(45) DEFAULT 'N',
+  `NUM_URL_COMPANYID` varchar(45) DEFAULT 'N',
+  `NUM_URL_EMPNO` varchar(45) DEFAULT 'N',
+  `URL_USERID` varchar(45) DEFAULT 'N',
+  `URL_DEPTID` varchar(45) DEFAULT 'N',
+  `URL_COMPANYID` varchar(45) DEFAULT 'N',
+  `URL_EMPNO` varchar(45) DEFAULT 'N',
   PRIMARY KEY (`LINK_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -13892,4 +13905,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-09-15 17:46:17
+-- Dump completed on 2019-09-20 10:57:27

@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+			    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
 		<STYLE title="ezform_style_1">
 			P {
 					MARGIN-TOP: 0mm;
@@ -46,7 +47,6 @@
 		    var Delete_FG = "${boardInfo.delete_FG}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var pReservedItem = "";
-		    var OneLineReplyFlag = "";
 			var gubun = "${boardInfo.guBun}";
 		    var ImageCount = "";
 		    var viewimage = "";
@@ -59,11 +59,20 @@
 		    var imagetotalcount = "";
 		    var imgWidth = "57px";
 		    var imgHeight = "37px";
+		    /* 2019-11-06 홍승비 - 댓글기능관련 변수 추가 */
+		    var OneLineReplyFlag = "${boardInfo.oneLineReply}";
+		    var userInfoID = "${userInfo.id}";
+		    var mode = "${mode}";
 		    
 		    window.onresize = window_resize;
 		    window.onload = function () {
 		        imageViewInit();
 		        window_resize();
+		        
+		        /* 2019-11-06 홍승비 - 본문 하단에 댓글영역 표출 */
+	            if (OneLineReplyFlag == "2" && mode != "temp") {
+	            	getBoardComment();
+	            }
 		    }
 		    
 		    function window_resize() {
@@ -282,6 +291,11 @@
 			  <tr>
 			    <td style="width:100%;  text-align:center; vertical-align:top;" >
 			        <table style="width:100%; min-height:635px;">
+				        <c:if test="${boardInfo.oneLineReply == '2' && mode != 'temp'}">
+							<tr>
+				        		<td style="height:65px;"></td>
+							</tr>
+						</c:if>
 				        <tr id="trheight" style="display:table-cell;">
 				            <td style="display:inline-block;">
 				                <table id="movieTable" style="text-align:center; border:0px;">
@@ -289,9 +303,28 @@
 				                    	<td>
 										<video id="mainVideo" style="width: 640px; height: 360px;" src="" controls /> 
 				                        </td>
-				                    </tr>			                    
-				            </table>
+				                    </tr>
+				            	</table>
 				            </td>
+				            <%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+				            <td>
+						        <c:if test="${boardInfo.oneLineReply == '2' && mode != 'temp'}">
+						        	<div style='height:auto; margin-top:55px; padding-bottom: 15px;'>
+										<table class="mainlist" style="width:100%; min-width:732px; margin-top:1px;" >
+											<tr>
+												<th style="text-align:center; width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+													<textarea id="onelinereply" rows="3" style = "resize:none; width:98%" maxlength="600"></textarea>
+												</th>
+												<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
+													<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a>
+												</th>
+											</tr>
+										</table>
+										<table id="commentList" style="width:100%; min-width:732px; margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+									</div>
+						        </c:if>
+				            </td>
+				            <%-- 본문하단 댓글영역 끝 --%>
 				        </tr>
 			        </table>
 			    </td>

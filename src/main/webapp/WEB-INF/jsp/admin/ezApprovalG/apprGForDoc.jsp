@@ -691,7 +691,11 @@
 				    pChackYN = "SEARCH";
 				    
 				    for (var i = 0; i < 20; i++) {
-				        SearchCond[i] = condition[i];
+				    	if (condition[i] == null) {
+				    		condition[i] = "";
+				    	}
+				    	
+				        SearchCond[i] = replaceCond(condition[i]);
 				    }
 				
 				    pageNum = 1;
@@ -791,9 +795,9 @@
 			        }
 			
 			        if (selectSearch.item(0).selected) {
-			            SearchCond[1] = document.getElementById("txt_keyword").value;
+			            SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
 			        } else if (selectSearch.item(1).selected) {
-			            SearchCond[2] = document.getElementById("txt_keyword").value;
+			            SearchCond[2] = replaceCond(document.getElementById("txt_keyword").value);
 			        }
 			    } else {
 			        alert(strLang1106);
@@ -802,6 +806,11 @@
 			    
 			    pageNum = 1;
 			    GetDocList();
+			}
+			
+			//2018-10-01 김보미 - 년도가 string값이 아니라 발생하는 버그 수정
+			function replaceCond(condStr){//검색조건 수정(% _ ' 추가)
+				return condStr.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 			}
 			
 			var Tab1_SelectID = "";

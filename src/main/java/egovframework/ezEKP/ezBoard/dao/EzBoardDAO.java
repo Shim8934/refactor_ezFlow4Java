@@ -722,7 +722,12 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 	
 	/* 2019-05-15 홍승비 - 해당 부서ID로 상위부서ID(회사포함) 가져오기*/
-	public String getUpperDeptID(Map<String, Object> map) throws Exception{
+	public String getUpperDeptID(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardDAO.getUpperDeptID", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardPropertyVO> getAllSubBoardProperty(Map<String, Object> map) throws Exception {
+		return (List<BoardPropertyVO>) list("EzBoardDAO.getAllSubBoardProperty", map);
 	}
 }

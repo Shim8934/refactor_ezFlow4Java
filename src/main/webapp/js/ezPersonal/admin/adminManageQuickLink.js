@@ -91,7 +91,7 @@ function event_QuickList(result) {
 	dlElmt.appendChild(dtElmt);
 	dlElmt.className = "listTop";
 	
-	dtElmt2.textContent = strLangkhj5 + " " +strLangkhj6;
+	dtElmt2.textContent = strLangkhj5 + strLangkhj6;
 	dtElmt2.className = "quickLink_info";
 	dlElmt2.appendChild(dtElmt2);
 	dlElmt2.className = "listBottom";

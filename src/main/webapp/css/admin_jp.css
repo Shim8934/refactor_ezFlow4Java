@@ -224,7 +224,7 @@ li {float:left;}
 .admin_quickList{ margin:0px; padding:0px; width:926px; height:auto; font-family:Malgun Gothic;}
 .quickTable01{ margin:0px 0px 0px 0px; padding:0px; float:left; width:334px; height:171px; border:1px solid #dfdfdf; border-collapse:collapse; clear:none !important }
 .quickTable02{ margin:0px 0px 0px 10px; padding:0px; float:left; height:171px; width:275px; border:1px solid #dfdfdf; border-collapse:collapse; clear:none !important }
-.quickLinkTH{ margin:0px; padding:0px 0px 0px 10px; width:90px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:left;}
+.quickLinkTH{ margin:0px; padding:0px 0px 0px 10px; width:93px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:left;}
 .quickLinkTH02{margin:0px; padding:0px 0px 0px 10px; width:275px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
 .quickLinkTH02 .adminPlusBtn{ display:inline-block; float:right; padding:2px 10px 0px 0px; cursor:pointer;}
 .quickTD{ height:174px;}

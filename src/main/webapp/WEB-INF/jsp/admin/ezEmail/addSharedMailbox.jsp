@@ -313,21 +313,30 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
 		        		
-	                    headerData = loadXMLString(result);
+	                    // headerData = loadXMLString(result);
 	
 	                    if (CrossYN()) {
-	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
+	                    	var xmlRtn = resultXML.documentElement;
+	                        var xmlRtn2 = xmlRtn.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn2.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
-	                        headerData.documentElement.appendChild(Node);
+	                        headerData.appendChild(Node);
 	                    }
 	                    else {
-	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
-	                        headerData.documentElement.appendChild(xmlRtn);
+	                        /* var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
+	                        headerData.documentElement.appendChild(xmlRtn); */
+	                        var xmlRtn = resultXML.documentElement;
+	                        headerData.appendChild(xmlRtn);
 	                    }
 	                    pListXML_Info = headerData;
 	                    pSeach = false;
@@ -398,22 +407,31 @@
 		        	data : {
 		        		search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", 
 		        		type : "user"
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
-	                    headerData = loadXMLString(result);
+	                    // headerData = loadXMLString(result);
 						
 	                    var xmlDom = loadXMLString(result);
 	                    if (CrossYN()) {
-	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
+	                    	var xmlRtn = xmlDom.documentElement;
+	                        var xmlRtn2 = xmlRtn.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn2.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
-	                        headerData.documentElement.appendChild(Node);
+	                        headerData.appendChild(Node);
 	                    }
 	                    else {
-	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
-	                        headerData.documentElement.appendChild(xmlRtn);
+	                        /* var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
+	                        headerData.documentElement.appendChild(xmlRtn); */
+	                    	var xmlRtn = xmlDom.documentElement;
+	                        headerData.appendChild(xmlRtn);
 	                    }
 	                    pListXML_Info = headerData;
 	                    pSeach = true;

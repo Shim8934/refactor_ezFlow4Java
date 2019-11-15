@@ -142,6 +142,8 @@ public class BoardListVO {
 	private String content;
 	/** 작성자 사진 파일  **/
 	private String userImageFile;
+	/** 2019-11-06 홍승비 - 미리보기 시 댓글옵션 변수 추가 */
+	private String oneLineReply;
 
 	public int getrNum() {
 		return rNum;
@@ -562,6 +564,12 @@ public class BoardListVO {
 	}
 	public void setUserImageFile(String userImageFile) {
 		this.userImageFile = userImageFile;
+	}
+	public String getOneLineReply() {
+		return oneLineReply;
+	}
+	public void setOneLineReply(String oneLineReply) {
+		this.oneLineReply = oneLineReply;
 	}
 	
 }

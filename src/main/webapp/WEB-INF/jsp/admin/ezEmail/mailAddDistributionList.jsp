@@ -104,13 +104,23 @@
                 var objNode;
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
-                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
-                //createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+                <c:choose>
+                <c:when test="${cChk == '1'}">
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+                createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "false");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+                </c:when>
+                <c:otherwise>
                 createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
                 createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+                </c:otherwise>
+                </c:choose>
+                
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            ListTypeChangeIcon();
@@ -289,16 +299,22 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
 		        		
-	                    headerData = loadXMLString(result);
-// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	                    // headerData = loadXMLString(result);
+	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 	
 	                    if (CrossYN()) {
 	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
 	                        headerData.documentElement.appendChild(Node);
 	                    }
@@ -418,17 +434,27 @@
 		        	data : {
 		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype",
+		        		<c:if test="${cChk == '1'}">		        		
+		        		company : "",
+		        		</c:if>
 		        		type : "user"
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
-	                    headerData = loadXMLString(result);
-// 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	                    // headerData = loadXMLString(result);
+ 	                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 						
 	                    var xmlDom = loadXMLString(result);
 	                    if (CrossYN()) {
 	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            		//$(this).find("CELL").eq(3).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
 	                        headerData.documentElement.appendChild(Node);
 	                    }
@@ -1553,16 +1579,19 @@
 	            pListViewDL.DataSource(loadXMLString(xmlHTTP.responseText));
 	            pListViewDL.RowDataBind();
 	
-	            for (var i = 0; i < pListViewDL.GetRowCount() ; i++) {
-	                pListViewDL.GetDataRows()[i].draggable = true;
+	            var dataRows = pListViewDL.GetDataRows();
+	            var dataRowCount = pListViewDL.GetRowCount();
+	            
+	            for (var i = 0; i < dataRowCount; i++) {
+	                dataRows[i].draggable = true;
 	                if (CrossYN()) {
-	                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+	                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 	                } else {
-	                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+	                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
 	                }
 	
 	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    pListViewDL.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+	                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
 	                }
 	                
 	            }

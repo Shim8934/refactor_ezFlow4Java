@@ -1181,7 +1181,7 @@ form{display:inline;margin:0}
 
 .icon_01{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}
 .icon_02{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -260px -52px;}
-
+.icon_03{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -312px -52px;}
 
 
 
@@ -2632,7 +2632,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .mainmenuTab .mainmenuTabUL li span { display: inline-block; height:31px; line-height:29px; padding: 0px 21px; margin: 0px 1px 0px 1px; text-align: center; font-size: 14px; font-weight: bold; color: #777; cursor: pointer; background: #e4e7ea; border:1px solid #e4e7ea; box-sizing:border-box; }
 .mainmenuTab .mainmenuTabUL li:hover span { position: relative; background: #3d8fea; color: #fff; border:1px solid #3d8fea; box-sizing:border-box; }
 .mainmenuTab .mainmenuTabUL li.on span { position: relative; background: #3d8fea; color: #fff; border:1px solid #3d8fea; box-sizing:border-box;}
-
+.calendar_layout {position: absolute;left: 90%;top:15px;width: 269px;margin-left: -134px;}
 /* admin */
 
 /* admin menu */
@@ -2993,7 +2993,7 @@ h2, #menu span {font-size: 12px;}
 .searchDiv .srchTtl{font-size: 11pt; font-weight: bold;color: black; height: 44px; margin-left: 1px; margin-bottom: 8px; line-height: 36px;}
 .srchBttnDiv {text-align: center; margin: -9px; margin-top: 10px; padding: 7px; border-top: 1px solid #eee; background-color: #fcfcfc;}
 .srchBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
-.srchBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: solid; font-size: 12px; color: #000;}
+.srchBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
 .srchDate {width: 100px !important; text-align: center; padding: 0px 5px;}
 
 /* survey draft button */
@@ -3299,7 +3299,7 @@ input::-ms-clear {display: none;}
 .quesDiv .qstnRow .dd-container .dd-select {height: 40px; width: 100%; position:relative; cursor:pointer; border: none; background:#fff !important;}
 .quesDiv .qstnRow .dd-container .dd-options {display:none; list-style:none; overflow:auto; position:absolute; right:-1px; top: 44px; width:540px !important; z-index:2000; margin:0px 0px 0px 0px; padding:0; background:#fff; border:solid 1px #c7c7c7; border-bottom:none;}
 .quesDiv .qstnRow .dd-container .dd-options >li {display: block; float:left; width: 33.33%;}
-.quesDiv .qstnRow .dd-container .dd-option {display:block; overflow:hidden; height:25px; line-height:25px; padding:10px 20px; color:#333; text-align:left; border-bottom:solid 1px #ddd; text-decoration:none; cursor:pointer; -webkit-transition: all 0.25s ease-in-out; -moz-transition: all 0.25s ease-in-out;-o-transition: all 0.25s ease-in-out;-ms-transition: all 0.25s ease-in-out;}
+.quesDiv .qstnRow .dd-container .dd-option {display:block; overflow:hidden; height:25px; line-height:25px; padding:10px 17px; color:#333; text-align:left; border-bottom:solid 1px #ddd; text-decoration:none; cursor:pointer; -webkit-transition: all 0.25s ease-in-out; -moz-transition: all 0.25s ease-in-out;-o-transition: all 0.25s ease-in-out;-ms-transition: all 0.25s ease-in-out;}
 .quesDiv .qstnRow .dd-container .dd-desc { color:#aaa; display:block; overflow: hidden; font-weight:normal; line-height: 1.4em; }
 .quesDiv .qstnRow .dd-container .dd-selected{overflow:hidden; display:block; line-height:40px;}
 .quesDiv .qstnRow .dd-container .dd-pointer{ width:0; height:0; position:absolute; right:10px; top:50%; margin-top:-3px;}

@@ -30,6 +30,7 @@ var SurveyMessages = {
 	strSvDate1   : "Set poll start date to be faster than end date.",
 	strSvDate2   : "Please specify the end date of the survey.",
 	strSvDate3   : "Please specify the start date of the survey.",
+	strSvDate4   : "Please enter the correct date.",
 	strAddOther  : "Add other",
 	strParamErr  : "Insufficient parameters.",
 	strTreeErr   : "Data error",

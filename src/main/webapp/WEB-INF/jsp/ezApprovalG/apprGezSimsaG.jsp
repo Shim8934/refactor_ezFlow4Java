@@ -366,14 +366,15 @@
 		    function OpenCheckUI() {
 		    	var parameter = "";
 
-		    	selectenc_dialogArguments[0] = parameter;
+		    	/* selectenc_dialogArguments[0] = parameter;
 		    	selectenc_dialogArguments[1] = OpenCheckUI_Complete;
 
-		    	DivPopUpShow(330, 205, "/ezApprovalG/selectEnc.do");
+		    	DivPopUpShow(330, 205, "/ezApprovalG/selectEnc.do"); */
+		    	OpenCheckUI_Complete("NONE");
 		    }
 		    
 		    function OpenCheckUI_Complete(returnvalue) {
-		        DivPopUpHidden();
+		        //DivPopUpHidden();
 		        is_Enc = returnvalue;
 		        rtnVal = sendExt();
 		        

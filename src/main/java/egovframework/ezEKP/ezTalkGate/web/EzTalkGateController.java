@@ -3,11 +3,14 @@ package egovframework.ezEKP.ezTalkGate.web;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -31,6 +35,7 @@ import egovframework.ezEKP.ezTalkGate.util.EzTalkGateUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -73,6 +78,9 @@ public class EzTalkGateController {
     @Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
     
+	@Resource(name = "EzApprovalGService")
+	private EzApprovalGService ezApprovalGService;
+
     @RequestMapping("/ezTalkGate/tokenLogin.do")
     @ResponseBody
     public String ezTalkTokenLogin(
@@ -121,6 +129,12 @@ public class EzTalkGateController {
 					if (mobileUsed > 0) {
 						logger.debug("userId=" + userId + ", no use mobile login by deviceInfo.");
 						result = "N";
+					}
+
+					if ("YES".equals(ezCommonService.getTenantConfig("useLoginStop", tenantId)) && ezOrganAdminService.checkStopUser(userId, tenantId) > 0) {
+						// 사용자 정지 리턴
+						logger.debug("userId={}, stoped user.", userId);
+						result = "S";
 					}
 				}
 			}
@@ -193,6 +207,16 @@ public class EzTalkGateController {
 						}
 					}
 				}
+				
+				// 사용자정지 여부를 체크
+				String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+				
+				if (useLoginStop != null && useLoginStop.equals("YES")) {
+					int flag = ezOrganAdminService.checkStopUser(userId, tenantId);
+					if(flag > 0) {
+						result = "STOPUSER";
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -235,12 +259,46 @@ public class EzTalkGateController {
 			String deptId = userVO.getDepartment();
 			String compId = userVO.getPhysicalDeliveryOfficeName();
 			
+			// sso 접속시에도 로그인 이력 남도록 추가  
+			String encryptPw = EgovFileScrty.encryptPassword(orgPw, orgId);
+			LoginVO setVo = new LoginVO();
+			setVo.setId(orgId);
+			setVo.setTenantId(tenantId);
+			setVo.setPassword(encryptPw);
+			
+			LoginVO vo = loginService.selectUser(setVo);
+			
+			vo.setIp(ClientUtil.getClientIP(request));
+			vo.setAgent(ClientUtil.getClientInfo(request, "agent"));
+			vo.setOs(ClientUtil.getClientInfo(request, "os"));
+			vo.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+			vo.setTenantId(tenantId);
+			
+			loginService.insertLog(vo);
+			
 			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
+			
+			String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+			
+        	if (!useSession.isEmpty()) {
+        		int sessionTime = 0;
+        		
+        		try {
+        			sessionTime = Integer.parseInt(useSession);
+        		} catch (NumberFormatException nfe) {  
+        			nfe.printStackTrace();
+        		}
+        		
+	        	if (sessionTime != 0) {
+	        		HttpSession session = request.getSession();
+		        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
+	        	}
+        	}						
 			
 			logger.debug("ezTalkGateMain ended.");
 			
 			if (ezTalkSsoType.equals("mail")) {
-				return "redirect:/ezEmail/mailList.do";
+				return "redirect:/ezEmail/mailMain.do";
 			} else if (ezTalkSsoType.equals("approval")) { 
 				return "redirect:/ezApprovalG/aprManage.do?listType=1&subQuery=";
 			} else if (ezTalkSsoType.equals("portal")) { 
@@ -273,7 +331,6 @@ public class EzTalkGateController {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@RequestMapping("/ezTalkGate/noticeBoardDetailList.do")
 	public String noticeBoardDetailList(
 			@RequestParam String boardType,
@@ -318,9 +375,29 @@ public class EzTalkGateController {
 				
 				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, deptId, compId);
 				
-				redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
-								+ URLEncoder.encode(ezTalkGateNoticeBoardId) + "&boardType=" + boardType;
-				logger.debug("redirectUrl=" + redirectUrl);
+				String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+				
+	        	if (!useSession.isEmpty()) {
+	        		int sessionTime = 0;
+	        		
+	        		try {
+	        			sessionTime = Integer.parseInt(useSession);
+	        		} catch (NumberFormatException nfe) {  
+	        			nfe.printStackTrace();
+	        		}
+	        		
+		        	if (sessionTime != 0) {
+		        		HttpSession session = request.getSession();
+			        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
+		        	}
+	        	}						
+				
+	        	if (ezTalkGateNoticeBoardId != null) {
+					redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
+									+ URLEncoder.encode(ezTalkGateNoticeBoardId, "UTF-8") + "&boardType=" + boardType;
+	        	}
+
+	        	logger.debug("redirectUrl=" + redirectUrl);
 			}
 			 
 		} catch (Exception e) {
@@ -468,6 +545,98 @@ public class EzTalkGateController {
 		logger.debug("showNoticeBoardItemContent ended.");
 		
 		return "ezTalkGate/showNoticeBoardItemContent";
+	}
+	
+	@RequestMapping("/ezTalkGate/checkBlockedByIP.do")
+	@ResponseBody
+	public String checkBlockedByIP(@RequestParam String ezTalkId, @RequestParam String ip, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("checkBlockedByIP started.");
+		// FAIL 에러발생, 0 밴 된 유저, 1 정상 유저
+		String result = "FAIL";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+
+			logger.debug("serverName={}, tenantId={}, orgId={}, ip={}", serverName, tenantId, userId, ip);
+
+			LoginVO loginVO = new LoginVO();
+			loginVO.setId(userId);
+			loginVO.setTenantId(tenantId);
+			loginVO.setDn("NOPASSWORD");
+			loginVO = loginService.selectUser(loginVO);
+			loginVO.setIp(ip);
+
+			result = loginController.ipAccessCheck(loginVO) ? "1" : "0";
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		logger.debug("checkBlockedByIP ended. result={}", result);
+
+		return result;
+	}
+	
+	@RequestMapping("/ezTalkGate/getModuleNotice.do")
+	@ResponseBody
+	// jwseo99 리팩토링 해야됨
+	public String getModuleNotice(@RequestParam String ezTalkId, @RequestParam String type, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getModuleNotice started.");
+		String result = "FAIL";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			String userId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+
+			logger.debug("serverName={}, tenantId={}, orgId={}, type={}", serverName, tenantId, userId, type);
+
+			int mailCount = 0;
+			int approvalCount = 0;
+			boolean isMailType = type.contains("M");
+			boolean isApprovalType = type.contains("A");
+			boolean firstTypeIsMail = type.startsWith("M");
+			boolean isAll = isMailType && isApprovalType;
+
+			Map<String, Object> parameters = new HashMap<>();
+			// "{"useQuestion":"NO","useCircular":"NO","useMail":"YES","useApproval":"YES","useSchedule":"YES"}"
+			parameters.put("useQuestion", "NO");
+			parameters.put("useCircular", "NO");
+			parameters.put("useSchedule", "NO");
+			parameters.put("useMail", "YES");
+			parameters.put("useApproval", "YES");
+
+			String url = "/rest/ezPortal/settingInfo/unreadCounts/users/" + userId;
+
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, parameters, request, "get", null);
+			String status = resultBody.get("status").toString();
+
+			if (status.equals("ok")) {
+				JSONObject data = (JSONObject) resultBody.get("data");
+				// data.get("pollCount");
+				// data.get("circularCount");
+				// data.get("scheduleCount");
+				mailCount = Optional.ofNullable(data.get("unreadMailCount")).map(Object::toString).map(Integer::parseInt).orElse(0);
+				approvalCount = Optional.ofNullable(data.get("approvalCount")).map(Object::toString).map(Integer::parseInt).orElse(0);
+			}
+
+			if (isAll) {
+				if (firstTypeIsMail) {
+					result = String.format("%d/%d", mailCount, approvalCount);
+				} else {
+					result = String.format("%d/%d", approvalCount, mailCount);
+				}
+			} else {
+				result = Integer.toString(Math.max(mailCount, approvalCount));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		logger.debug("getModuleNotice ended. result={}", result);
+
+		return result;
 	}
 	
 	private boolean checkIfUserExists(String id, String pw, int tenantId) throws Exception {

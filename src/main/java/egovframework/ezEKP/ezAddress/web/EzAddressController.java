@@ -746,6 +746,9 @@ public class EzAddressController{
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		model.addAttribute("primaryLang", primaryLang);
 		
+		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
+		
 		logger.debug("addressWriteGroup ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",ownerId=" + ownerId + ",folderType=" + folderType
 				 + ",changeKey=" + changeKey + ",userNM=" + userNM + ",userNM2=" + userNM2 + ",useOcs=" + useOcs

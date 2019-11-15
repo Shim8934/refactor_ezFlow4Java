@@ -238,6 +238,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		boolean isSecureMail = false;
 		IMAPAccess ia = null;
 		String sentDateMsg = ""; // 전달, 회신 시 보낸 시간
+		boolean mailWritePreview = false; // 메일 작성 > 미리보기 
 		
 		// 읽기 화면에서 리스트 출력 위한 데이터
 		String countryName = "";
@@ -596,13 +597,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					// subject
 					subject = ezEmailUtil.getSubject(message);
-					
-					if(subject == null || subject.trim().equals("")){
+					if((subject == null || subject.trim().equals("")) && !contentClass.equalsIgnoreCase("PREVIEW")){
 						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
 					}
 					
 					subject = commonUtil.cleanValue(subject);
-					title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
+					if(contentClass.equalsIgnoreCase("PREVIEW")){
+						title = egovMessageSource.getMessage("ezEmail.t487", locale) + " -" + subject;
+					} else {
+						title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
+					}
 					
 					logger.debug("subject=" + subject);
 					
@@ -659,6 +663,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						sentDateMsg = String.format(sentDateStr, sentDate);
 						logger.debug("sentDateMsg=" + sentDateMsg);
 					}
+				} else if (contentClass.equalsIgnoreCase("PREVIEW")) {
+					mailWritePreview = true;
+					dateStr = "";
+					logger.debug("mailWritePreview=" + mailWritePreview + ", dateStr=" + dateStr);
 				}
 				
 				f.close(true);
@@ -698,6 +706,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
+		model.addAttribute("mailWritePreview", mailWritePreview); // 메일작성 > 미리보기
 		model.addAttribute("useCabinet", use_cabinet); 
 		model.addAttribute("countryName", countryName); 
 		model.addAttribute("countryIP", countryIP); 

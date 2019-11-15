@@ -208,12 +208,12 @@ public class LoginController {
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
-		
 		if (_uid == null || _uid.equals("")) {
 		    logger.debug("invalid _uid=" + _uid);		    
 		    return "";
 		}
 		
+		String loginId = _uid;
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
         int tenantId = loginService.getTenantId(serverName);
@@ -496,6 +496,7 @@ public class LoginController {
     					model.addAttribute("userId", _uid);
     					model.addAttribute("encryptID", loginVO.getEncryptID());
     					model.addAttribute("encryptPass", loginVO.getEncryptPass());
+    					model.addAttribute("loginId", loginId);
     					
     		        	return "forward:/user/login/login.do";
     				} else {			

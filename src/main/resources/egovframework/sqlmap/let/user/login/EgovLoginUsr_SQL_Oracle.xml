@@ -41,13 +41,13 @@
         <result property="tenantId"             column="TENANT_ID"                  columnIndex="2"/>
     </resultMap>   
     
-    <resultMap id="resCountryVO" class="CountryVO">
-        <result property="startIP"           column="START_IP" />    
-        <result property="endIP"             column="END_IP"   />
-        <result property="startIPNumber"           column="START_IP_NUMBER" />    
-        <result property="endIPNumber"             column="END_IP_NUMBER"   />
-        <result property="countryCode"           column="COUNTRY_CODE" />    
-        <result property="countryName"             column="COUNTRY_NAME"   />
+    <resultMap id="CountryVO" class="CountryVO">
+        <result property="startIP"           		column="START_IP" />    
+        <result property="endIP"             		column="END_IP"   />
+        <result property="startIPNumber"           	column="START_IP_NUMBER" />    
+        <result property="endIPNumber"             	column="END_IP_NUMBER"   />
+        <result property="countryCode"           	column="COUNTRY_CODE" />    
+        <result property="countryName"             	column="COUNTRY_NAME"   />
     </resultMap> 
  
 	<!-- 일반 로그인 -->
@@ -431,7 +431,7 @@
         ]]>
     </select>
     
-   <select id="loginDAO.getLoginIPCountry" parameterClass="Map" resultMap="countryVO">
+   <select id="loginDAO.getLoginIPCountry" parameterClass="Map" resultMap="CountryVO">
 		SELECT 
 			START_IP, END_IP, START_IP_NUMBER, END_IP_NUMBER, 
 			COUNTRY_CODE, COUNTRY_NAME

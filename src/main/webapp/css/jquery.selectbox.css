@@ -96,7 +96,6 @@
 .sbOptions a:focus,
 .sbOptions a.sbFocus{
 	color: #ffffff;
-	font-family: Malgun Gothic;
 }
 .sbOptions di.last a{
 	border-bottom: none;

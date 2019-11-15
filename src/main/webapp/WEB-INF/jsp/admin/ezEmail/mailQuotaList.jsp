@@ -26,12 +26,24 @@
 			var totalCount = "";
 			var BlockSize = 10;
 			var companyID = "${companyId}"; // 회사 셀랙트 박스 변경 시 변경됨
+			var _selectedCell = null;
+	        var _cellInfo        = {};
+	        var sortColumn = "";
+	        var sortType = "";
 
 			// 화면 호출시 실행 함수
 			window.onload = function(){
 				getUserList(1);
 				makePageSelPage();
 				windowResize();
+
+				var listHeader = document.getElementsByClassName("headListClick");
+	            for(var i = 0 ; i <listHeader.length; i++) {
+	                listHeader[i].addEventListener("click", function(event) {
+	                    sortByHeader(this);
+	                });
+	            }
+
 			}
 			
 			// 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -140,6 +152,39 @@
 		        td_Create1(PagingHTML);
 		    }
 		    
+		    function sortByHeader(cell) {
+	            var column = cell.getAttribute("headers");
+
+	            if (!column) {return;}
+
+	            if (_selectedCell != null) {
+	                var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+	                cell.setAttribute("orderoption", orderOption);
+
+	                if (cell.cellIndex != _selectedCell) {
+	                    var lastSelectedCell = document.getElementById("listHeader").rows[0].cells[_selectedCell];
+	                    lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+	                    var spanElmt = document.createElement("span");
+	                    cell.appendChild(spanElmt);
+	                }
+
+	                var spanImg       = cell.lastElementChild;
+	                spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+	            } else {
+	                cell.setAttribute("orderoption", "DESC");
+	                var spanElmt       = document.createElement("span");
+	                spanElmt.className = "spanDown";
+	                cell.appendChild(spanElmt);
+	            }
+
+	            _selectedCell = cell.cellIndex;
+
+	            var order     = cell.getAttribute("orderoption");
+	            this.sortType = order;
+	            this.sortColumn = column;
+	            getUserList(CurPage);
+	        }
+		    
 		    function goToPageByNum(Value) {
 		        CurPage = Value;
 		        makePageSelPage();
@@ -218,9 +263,9 @@
 					 if (pageNum == "-1") {
 						 var pageSize = "-1";
 						 var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
-							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&companyId=' + companyIdChk;
+							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&companyId=' + companyIdChk + '&sortType=' + sortType + "&sortColumn=" + sortColumn;
 
-						 var pURL = "/admin/ezEmail/mailBoxQuotaUpdate.do";
+						 var pURL = "/admin/ezEmail/mailBoxQuotaUpdate.do" + "?" + params;
 
 						 var leftProgress = window.parent.frames[0].document.getElementsByClassName("progressPanel");
                          var rightProgress = window.parent.frames[1].document.getElementsByClassName("progressPanel");
@@ -258,7 +303,9 @@
 			    					'searchKeycode' : searchKeycode,
 			    					'searchKeyword' : searchKeyword,
 			    					'pageNum' : pageNum,
-			    					'companyId' : companyIdChk
+			    					'companyId' : companyIdChk,
+			    					'sortColumn' : sortColumn,
+			    					'sortType' : sortType
 			    				   }    
 			    			,success: function(res) {
 			    				var html = "";
@@ -398,10 +445,22 @@
 			  height: 10px;
 			  background-color: #82b9f6;
 			}
+			.headListClick {
+				cursor:pointer;
+			}
 		</style>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
+		<h1>
+			<spring:message code="ezEmail.lsd01" /><span id="listInfo"></span>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			
+			<select id="ListCompany" onChange="selectCompanyID()" class="companySelect" style="margin-bottom:10px;">
+				<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>    		
+	      	</select>	
+		</h1>
 		<div style="width:100%; padding-bottom:5px;">
 		<table style="width: 100%; background-color: #f8f8fa; border: 1px solid #ddd;">
 			<tr>
@@ -435,16 +494,16 @@
 		</div>
 		<div id="contentlist" style="width:100%; overflow: auto;">
 			<div>
-				<table class="mainlist" style="width:100%;">
-					<thead style="">
+				<table class="mainlist" style="width:100%;" id="mainList">
+					<thead style="" id="listHeader">
 						<tr>
-							<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-							<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
-							<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
-							<th width="15%;"><spring:message code="ezEmail.lsd02"></spring:message></th>
-							<th width="15%;"><spring:message code="ezEmail.lsd03"></spring:message></th>
-							<th><spring:message code="main.t00011"></spring:message></th>
-							<th style="width:140px;"><spring:message code="ezOrgan.t92"></spring:message></th>
+							<th width="80px;" 	><spring:message code="ezSystem.kyj1"></spring:message></th>
+							<th width="15%;"	class="headListClick" headers="displayName"><spring:message code="ezEmail.lsd04"></spring:message></th>
+							<th width="15%;"	class="headListClick" headers="department"><spring:message code="ezStatistics.t113"></spring:message></th>
+							<th width="15%;"	class="headListClick" headers="mailboxusage"><spring:message code="ezEmail.lsd02"></spring:message></th>
+							<th width="15%;"	class="headListClick" headers="mailboxquota"><spring:message code="ezEmail.lsd03"></spring:message></th>
+							<th					class="headListClick" headers="persent"><spring:message code="main.t00011"></spring:message></th>
+							<th style="width:140px;" ><spring:message code="ezOrgan.t92"></spring:message></th>
 						</tr>
 					</thead>
 					<tbody id="userListBody" style="overflow: auto;"></tbody>

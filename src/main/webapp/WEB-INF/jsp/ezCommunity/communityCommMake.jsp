@@ -14,7 +14,18 @@
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
+			var lang = "<c:out value='${lang}'/>";
 		
+			/* 2019-11-15 홍승비 - 일본어 환경에서 '공통' 카테고리가 기본으로 선택되도록 수정 */
+			window.onload = function () {
+				if (lang == "3") {
+					var selectCateA = $("select[name='cCateA']");
+					if (selectCateA.length > 0) {
+						selectCateA.val("AA").prop("selected", true);
+					}
+				}
+			};
+			
 			/* 2018-05-15 홍승비 - 커뮤니티 만들기 팝업창으로 수정 */
 			function check() {
 		        var newID = "{" + GetGUID().toUpperCase() + "}";

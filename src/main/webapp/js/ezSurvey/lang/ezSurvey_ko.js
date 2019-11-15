@@ -30,6 +30,7 @@ var SurveyMessages = {
 	strSvDate1   : "설문 시작일을 종료일보다 빠르게 지정하세요.",
 	strSvDate2   : "설문 종료일을 지정해 주세요.",
 	strSvDate3   : "설문 시작일을 지정해 주세요.",
+	strSvDate4   : "날짜를 정확하게 입력하세요.",
 	strAddOther  : "기타추가",
 	strParamErr  : "파라미터가 부족합니다.",
 	strTreeErr   : "데이터 오류",
