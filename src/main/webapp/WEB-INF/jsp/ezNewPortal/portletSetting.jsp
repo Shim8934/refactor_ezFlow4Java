@@ -150,7 +150,7 @@
 						if (xhr.status >= 200 && xhr.status < 300) {
 							var ul = document.getElementById('frameUl');
 							var frameList = JSON.parse(xhr.responseText).data.frameList;
-							var usedIndex = 0;
+							var usedIndex = -1;
 							
 							frameList.forEach(function (item, index) {
 								var li = document.createElement('li');
@@ -158,7 +158,7 @@
 								div.className = 'flipsterLi';
 								
 								// 최초 회사 frame 설정
-								if(item.frameDefault) {
+								if(usedIndex == -1 && item.frameDefault) {
 									div.classList.add('select-flipster');
 									portletSetting.selectedFrame = item.usedFrame;
 									portletSetting.usedTheme = item.themeId;	
