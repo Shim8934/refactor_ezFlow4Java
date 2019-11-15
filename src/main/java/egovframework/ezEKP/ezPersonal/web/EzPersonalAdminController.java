@@ -342,7 +342,19 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("getQuickLinkList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang());
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
+		logger.debug("[getQuickLinkList] primaryLang : " + primaryLang + ", lang : " + lang);
+		
+		String userLang = "1";
+		
+		if (primaryLang.equals(lang)) {
+			userLang = "1";
+		} else {
+			userLang = lang;
+		}
+		
+		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang(), userLang);
 		
 		JSONObject json = new JSONObject();
 		json.put("list", list);
