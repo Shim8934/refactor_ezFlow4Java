@@ -623,15 +623,18 @@
 			            pListViewDL.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewDL.RowDataBind();
 			
-			            for (var i = 0; i < pListViewDL.GetRowCount() ; i++) {
-			                pListViewDL.GetDataRows()[i].draggable = true;
+			            var dataRows = pListViewDL.GetDataRows();
+			            var dataRowCount = pListViewDL.GetRowCount();
+			            
+			            for (var i = 0; i < dataRowCount; i++) {
+			                dataRows[i].draggable = true;
 			                if (CrossYN())
-			                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
-			                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
 			
 			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                    pListViewDL.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
 			                }
 			            }
 		            }
@@ -680,15 +683,18 @@
 			            pListViewSharedMailbox.DataSource(loadXMLString(xmlHTTP.responseText));
 			            pListViewSharedMailbox.RowDataBind();
 			
-			            for (var i = 0; i < pListViewSharedMailbox.GetRowCount() ; i++) {
-			            	pListViewSharedMailbox.GetDataRows()[i].draggable = true;
+			            var dataRows = pListViewSharedMailbox.GetDataRows();
+			            var dataRowCount = pListViewSharedMailbox.GetRowCount();
+			            
+			            for (var i = 0; i < dataRowCount; i++) {
+			                dataRows[i].draggable = true;
 			                if (CrossYN())
-			                	pListViewSharedMailbox.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 			                else
-			                	pListViewSharedMailbox.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
 			
 			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                	pListViewSharedMailbox.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
 			                }
 			            }
 		            }

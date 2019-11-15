@@ -567,7 +567,7 @@
 			  <li id="btnDelList"><span style="padding-top:1px" onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 	        </ul>
 			<ul id="trChangeCabinet" style="display:none">
-	          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
+	          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.kmsg03'/></span></li>
 	        </ul>
 		</div>
 		<div id="close">

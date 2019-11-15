@@ -852,10 +852,10 @@
 			            		if (tasktype == "1" || tasktype == "4") {	
 			            			document.getElementById("editTaskWork").style.display = "none";
 			            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.jjh02' />";
-			            			document.getElementById("editTaskChisi").style.display = "";			            					            			
+			            			document.getElementById("editTaskChisi").style.display = "none";			            					            			
 			            		}
 			            		else {
-			            			document.getElementById("editTaskWork").style.display = "";
+			            			document.getElementById("editTaskWork").style.display = "none";
 			            		}			            		
 			            	}
 			            	else {

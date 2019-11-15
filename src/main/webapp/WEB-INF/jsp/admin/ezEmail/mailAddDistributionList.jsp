@@ -104,13 +104,23 @@
                 var objNode;
                 
                 createNodeInsert(xmlpara, objNode, "DATA");
-                //createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
-                //createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+                <c:choose>
+                <c:when test="${cChk == '1'}">
+                createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
+                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
+                createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "false");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+                </c:when>
+                <c:otherwise>
                 createNodeAndInsertText(xmlpara, objNode, "DEPTID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
                 createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+                </c:otherwise>
+                </c:choose>
+                
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            ListTypeChangeIcon();
@@ -424,7 +434,10 @@
 		        	data : {
 		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype",
+		        		<c:if test="${cChk == '1'}">		        		
+		        		company : "",
+		        		</c:if>
 		        		type : "user"
 		        	},
 		        	success : function(result){	
@@ -1566,16 +1579,19 @@
 	            pListViewDL.DataSource(loadXMLString(xmlHTTP.responseText));
 	            pListViewDL.RowDataBind();
 	
-	            for (var i = 0; i < pListViewDL.GetRowCount() ; i++) {
-	                pListViewDL.GetDataRows()[i].draggable = true;
+	            var dataRows = pListViewDL.GetDataRows();
+	            var dataRowCount = pListViewDL.GetRowCount();
+	            
+	            for (var i = 0; i < dataRowCount; i++) {
+	                dataRows[i].draggable = true;
 	                if (CrossYN()) {
-	                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+	                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
 	                } else {
-	                    pListViewDL.GetDataRows()[i].ondragstart = function (event) { event_listdragstart(this); };
+	                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
 	                }
 	
 	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    pListViewDL.GetDataRows()[i].ondragend = function (event) { event_listdragend(event); };
+	                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
 	                }
 	                
 	            }
