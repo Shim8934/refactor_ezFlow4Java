@@ -418,7 +418,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 권한등록화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/selectTarget.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezPersonal/selectTargetQuickLink.do", method = RequestMethod.GET)
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("selectTarget started");
 
@@ -436,7 +436,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("topID", topID);
 
 		logger.debug("selectTarget ended");
-		return "admin/ezPersonal/personalSelectTarget";
+		return "admin/ezPersonal/personalSelectTargetQuickLink";
 	}
 	
 	/**
