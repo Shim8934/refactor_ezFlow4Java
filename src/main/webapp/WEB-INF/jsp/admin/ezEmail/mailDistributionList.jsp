@@ -341,14 +341,17 @@
 	  </LISTVIEWDATA>
 	</xml>
 	<form id="Form1" method="post">
-		<h1><spring:message code='ezEmail.t58' /></h1>
-		<div id="mainmenu">
-			<span style="display:none;"><b> <spring:message code='ezEmail.t59' /></b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px; display:none;">
+		<h1>
+			<spring:message code='ezEmail.t58' />
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			
+			<select name="ListCompany" id="ListCompany" class="companySelect" onchange="company_change()" style="margin-bottom:10px;">
 				<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>	      		
 	      	</select>
+		</h1>
+		<div id="mainmenu">
 			<ul>
 				<li class="important"><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
 		    	<li><span onClick="mod_dl()"><spring:message code='ezEmail.t61' /></span></li>
