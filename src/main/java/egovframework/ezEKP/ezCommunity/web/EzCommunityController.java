@@ -258,6 +258,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("lang", userInfo.getLang());
 		model.addAttribute("userInfoDisplayName", userInfoDisplayName);
 		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
