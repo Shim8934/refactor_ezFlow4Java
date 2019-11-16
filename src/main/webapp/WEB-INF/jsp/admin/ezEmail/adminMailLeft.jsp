@@ -145,10 +145,10 @@
 				<h2>
 					<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
 				</h2>  
+				</c:if>
 				<h2>
 					<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
 				</h2>  
-				</c:if>
 				<c:if test="${useSharedMailbox == 'YES'}">
 					<h2>
 						<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
