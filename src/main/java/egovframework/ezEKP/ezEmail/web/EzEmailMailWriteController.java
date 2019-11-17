@@ -3437,6 +3437,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		// 클라이언트로부터 전달된 XML 형태의 요청 데이터를 XML 문서로 변환한다.
 		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
+		
+		if (xmlDoc == null) {
+			return "<DATA>parse error</DATA>";
+		}
+		
 		Element root = xmlDoc.getDocumentElement();
 		
 		Node tempNode = null;
