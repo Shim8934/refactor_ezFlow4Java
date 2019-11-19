@@ -155,7 +155,7 @@
 	    <table class="popuplist" style="width: 100%">
 	        <tr>
 	            <td class="pos1" style="border:1px solid #ddd">
-	                <div class="tree" style='width: 294px; overflow-x: auto; overflow-y: auto; height: 255px;' id='TreeCtrl_MyBoardTree'></div>
+	                <div class="tree" style='width: 277px; overflow-x: auto; overflow-y: auto; height: 255px;' id='TreeCtrl_MyBoardTree'></div>
 	            </td>	
 	        </tr>
 	    </table>
