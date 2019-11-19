@@ -499,11 +499,11 @@ public class EzEmailAdminLetterController {
 	 * 편지지함 이동(변경) 팝업 (수아)
 	 */
 	@RequestMapping(value = "/admin/ezEmail/letterBoxMovePopUp.do", method = RequestMethod.GET)
-	public String letterAdminBoxMovePopUp(@CookieValue("loginCookie") String loginCookie, String letterBox, @RequestParam("letterNo") String letterNo, @RequestParam("letterId") String letterId,
+	public String letterAdminBoxMovePopUp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, String letterBox, @RequestParam("letterNo") String letterNo, @RequestParam("letterId") String letterId,
 			Model model) throws Exception {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String companyId = userInfo.getCompanyID();
+		String companyId = request.getParameter("companyId") != null ? request.getParameter("companyId") : userInfo.getCompanyID();
 		String userLang = userInfo.getPrimary();
 		
 		model.addAttribute("letterBox", letterBox);

@@ -242,10 +242,15 @@ public class MResourceGWController extends EgovFileMngUtil {
 			}*/
 			
 			// 2018-11-07 김민성 - 자원 관리자 권한 가진 자원분류 체크
-			List<MResourceGetAdmSubClsTreeVO> adminCheckList = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
+			List<MResourceGetAdmSubClsTreeVO> adminCheckList = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn, brdId);
 
 			if(adminCheckList.size() > 0) {
-				authYn = "Y";
+				authYn = "U";
+				for(int i=0; i<adminCheckList.size(); i++) {
+					if(adminCheckList.get(i).getAccessLvl() == 1) {
+						authYn = "Y";
+					}
+				}
 			}
 			LOGGER.debug("authYn : " + authYn);
 			
@@ -1137,7 +1142,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			LOGGER.debug("authYn: " + authYn);
 			if(!authYn.equals("A")) {
 				
-				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
+				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn, "");
 				if(!ownerId.equals("") && !ownerId.equals("1")) {
 					for(int i=0; i<list.size(); i++) {
 						if(list.get(i).getBrdId().equals(ownerId)) {
