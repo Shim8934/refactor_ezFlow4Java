@@ -127,4 +127,7 @@ public interface EzBoardAdminService {
 
 	/* 2019-11-08 홍승비 - 전달된 값으로 BOARDTREEPATH를 업데이트하는 메서드 */
 	public void updateBoardTreePath(String boardID, String newBoardTreePath, int tenantID) throws Exception;
+	
+	/* 2019-11-13 홍승비 - 주어진 게시판ID에 대하여 자신을 포함한 모든 상위게시판들을 문자열로 이어붙여 가져오는 메서드 */
+	public String getAllUpperBoardID(String boardID, int tenantID) throws Exception;
 }
