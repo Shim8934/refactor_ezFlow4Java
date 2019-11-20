@@ -253,6 +253,19 @@ public class EzTalkGateController {
 		logger.debug("isUserExists=" + isUserExists);
 		
 		if (isUserExists) {
+			// 정지된 사용자는 그룹웨어로 접속할 수 없게 해야함
+			String useLoginStop = ezCommonService.getTenantConfig("useLoginStop", tenantId);
+
+			if ("YES".equals(useLoginStop)) {
+				int flag = ezOrganAdminService.checkStopUser(orgId, tenantId);
+				if (flag > 0) {
+					logger.debug("stoped user: {}", orgId);
+					logger.debug("ezTalkGateMain ended.");
+
+					return "cmm/error/stopedUserDenied";
+				}
+			}
+
 			String encryptedPw = EgovFileScrty.encryptPassword(orgPw, orgId);
 			
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(orgId, "1", tenantId);

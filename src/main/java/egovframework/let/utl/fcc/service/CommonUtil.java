@@ -613,6 +613,7 @@ public class CommonUtil {
 		String replaceData = xmlStr.trim().replaceFirst("^([\\W]+)<","<");
 		replaceData = replaceData.replace("&shy;", "");
 		replaceData = replaceData.replace("\uffff", "");
+		replaceData = replaceData.replaceAll("[\\u0000-\\u0008\\u000B-\\u000C\\u000E-\\u001F]", "");
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
         DocumentBuilder builder;

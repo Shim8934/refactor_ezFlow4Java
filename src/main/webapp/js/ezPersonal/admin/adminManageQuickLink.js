@@ -468,12 +468,12 @@ function regit() {
 		selecttarget_dialogArguments[0] = g_attendant;
 		selecttarget_dialogArguments[1] = regit_Complete;
 		
-		var SelectTarget = window.open("/admin/ezPersonal/selectTarget.do", "SelectTarget", GetOpenWindowfeature(840, 480));
+		var SelectTarget = window.open("/admin/ezPersonal/selectTargetQuickLink.do", "SelectTarget", GetOpenWindowfeature(840, 480));
 		try { SelectTarget.focus(); } catch (e) { }
 	} 
 	else {
 		var config = "status:false;dialogWidth:840px;dialogHeight:480px;scroll:no;status:no;edge:sunken" + GetShowModalPosition(840, 480);
-		var ret = window.showModalDialog("/admin/ezPersonal/selectTarget.do", g_attendant, config);
+		var ret = window.showModalDialog("/admin/ezPersonal/selectTargetQuickLink.do", g_attendant, config);
 		
 		if (ret == undefined)
 			return;

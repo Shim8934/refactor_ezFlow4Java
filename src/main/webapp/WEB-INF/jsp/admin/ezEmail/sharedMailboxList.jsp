@@ -320,8 +320,8 @@
 		    	searchFlag = true;
 		    	
 		    	if (searchValue == "") {
-		    		//companyChange();
 		    		alert("<spring:message code='ezEmail.t10' />");
+		    		companyChange();
 		    		return;
 		    	}
 		    	

@@ -256,7 +256,7 @@
 
 		    	if (searchValue == "") {
 		    		alert("<spring:message code='ezEmail.t10' />");
-		    		return;
+		    		// return;
 		    	}
 		    	
 		        var xmlDom = createXmlDom();

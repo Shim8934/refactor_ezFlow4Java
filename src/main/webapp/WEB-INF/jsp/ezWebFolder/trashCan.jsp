@@ -247,8 +247,10 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; 폴더 " + "<span style='color:#017BEC;'>" 
-					+ folderCnt +" </span> / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>";
+					
+					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCnt +" </span>"
+					 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+						+ fileCnt +" </span>";
 					hideProgress();
 				},
 				error : function(error) {
@@ -364,22 +366,22 @@
 	        document.getElementById("SearchOption").setAttribute("mode", "off");
 	    }
    	   
-		function optionView(obj){
-			if (obj.getAttribute("mode") == "off") {
-			    document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-				document.getElementById("layer_Viewpopup").style.top = "100px";
-				document.getElementById("layer_Viewpopup").style.display = "";
-				obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-				obj.setAttribute("mode", "on");
-			} else {
-				optionHidden();
-			}
-		}
-   	   
+		function optionView(obj) {
+	   		 if (obj.getAttribute("mode") == "off") {
+	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+ 	            document.getElementById("layer_Viewpopup").style.top = "100px";
+	   	        document.getElementById("layer_Viewpopup").style.display = "";
+	   	        obj.setAttribute("class", "icon16 btn_onarrow_down");
+	   	        obj.setAttribute("mode", "on");
+	   	    } else {
+	   	        optionHidden();
+	   	    }
+	   	}
+ 	   
 	 	function optionHidden() {
-			document.getElementById("layer_Viewpopup").style.display = "none";
-			document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-			document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
+	 	    document.getElementById("layer_Viewpopup").style.display = "none";
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 	 	}
          
 		function refreshView() {
@@ -697,7 +699,7 @@
 		            <td><input type="text" id="searchFileName" style="width:99%" value="" name="searchFileName"></td>
 		        </tr>  
 		         <tr>
-		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 작성자 -->
+		            <th style="text-align:center"><spring:message code='ezWebFolder.t154' /></th><!-- 생성자 -->
 		            <td><input type="text" id="searchCreateName" style="width:99%" value="" name="searchCreateName"></td>
 		        </tr>    
 			</table>

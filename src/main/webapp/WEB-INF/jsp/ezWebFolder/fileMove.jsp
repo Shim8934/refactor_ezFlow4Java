@@ -497,7 +497,7 @@
 <body class="popup" style="overflow: hidden;">
 	<h1 id="topMenu" >
 		<c:if test="${type eq 'copy'}"><spring:message code='ezWebFolder.t316'/></c:if>
-		<c:if test="${type ne 'copy'}"><spring:message code='ezWebFolder.t120'/></c:if>
+		<c:if test="${type ne 'copy'}"><spring:message code='ezWebFolder.t251'/></c:if>
 	</h1>
 	<div id="close">
         <ul>

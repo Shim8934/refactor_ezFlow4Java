@@ -43,6 +43,7 @@
 			var _cellInfo        = {};
 			var sortColumn = null;
 			var sortType = null;
+			var strLang43  = "<spring:message code='ezWebFolder.t308'/>";
 			
 			capacity.setFolderIdProvider(function() {
 				return "<c:out value='${folderId}'/>";
@@ -231,7 +232,7 @@
 		
 		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
 		<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
-			<h1><spring:message code='ezWebFolder.t21'/></h1> 
+			<h1><spring:message code='ezWebFolder.t22'/></h1> 
 			<div id="wfSearchCloseBttn" class="wfClose"><ul><li><span></span></li></ul></div>
 			<div style="margin: 10px 0px 15px;">
 				<table class="content wftable">
@@ -269,7 +270,7 @@
 			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
+				<a class="webfolderBttn" style="display:none"><span><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
 		</div>
 		</div>
