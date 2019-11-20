@@ -1075,8 +1075,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         }
         
 		// 현재 관리자의 암호를 구한다.
-		List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
-		String adminPassword = userCookieInfo.get(1);
+		/* List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
+		String adminPassword = userCookieInfo.get(1); */
+        
+        // UUID로 pass 변경
+        String adminPassword = UUID.randomUUID().toString();
         
         int tenantID = userInfo.getTenantId();
         String offset = userInfo.getOffset();
