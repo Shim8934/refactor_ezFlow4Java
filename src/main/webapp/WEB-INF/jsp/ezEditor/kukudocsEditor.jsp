@@ -223,6 +223,7 @@
 		    };
 			
 			var kukudocsEditor = new KuKudocsEditor('editor1', {
+				licPathURL: '/js/ezEditor/kukudocsEditor/kukudocs.lic',
 	            minHeight : 0,
 	            maxHeight : 0,
 	            width : '100%',

@@ -61,7 +61,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	private CommonUtil commonUtil;
 	
 	@Override
-	public List<ShareVO> getSharingList(String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public List<ShareVO> getSharingList(String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, 
+			SearchVO searchInfo, int tenantId, String sortColumn, String sortType) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -84,6 +85,22 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchStartDate",   searchStartDate);
 		map.put("searchEndDate",     searchEndDate);
 		map.put("subSearchFlag",     subSearchFlag);
+		map.put("sortColumn",     	 sortColumn);
+		map.put("sortType",     	 sortType);
+		
+		String secondSort = "";
+		if (sortType.equals("")){
+			secondSort = ", S.SHARE_DATE DESC";
+		} else {
+			if (sortColumn.equals("TYPE_ICON") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = " , " + sortColumn + " " + sortType;
+			}
+			secondSort += ", SHARE_DATE DESC " ;
+		}
+		
+		map.put("orderByData", secondSort); 
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getSharingList(map);
 		
@@ -103,7 +120,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<ShareVO> getSharedList(String subSearchFlag, String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
+	public List<ShareVO> getSharedList(String subSearchFlag, String userId, String deptId, String compId, String primary, String offset, 
+			int startPoint, int pageSize, SearchVO searchInfo, int tenantId, String sortColumn, String sortType) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
 		
@@ -129,6 +147,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("searchStartDate",   searchStartDate);
 		map.put("searchEndDate",     searchEndDate);
 		map.put("subSearchFlag",     subSearchFlag);
+		map.put("sortColumn",     	 sortColumn);
+		map.put("sortType",     	 sortType);
+
+		String secondSort = "";
+		
+		if (sortType.equals("")){
+			secondSort = ", S.SHARE_DATE DESC";
+		} else {
+			if (sortColumn.equals("TYPE_ICON") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = " , " + sortColumn + " " + sortType;
+			}
+			secondSort += ", S.SHARE_DATE DESC";
+		}
+		
+		map.put("orderByData", secondSort); 
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getSharedList(map);
 		
@@ -527,7 +562,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception {
+	public List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, 
+			int startPoint, int pageSize, int tenantId, String sortType, String sortColumn) throws Exception {
 		List<Map<String, String>> idList = getPermissionIdMapList(userId, deptId, compId, tenantId);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -538,6 +574,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("pageSize",	         pageSize);
 		map.put("idList",	         idList);
 		map.put("tenantId",	         tenantId);
+		map.put("sortType",	         sortType);
+		map.put("sortColumn",	     sortColumn);
+		
+		String secondSort = "";
+		
+		if (sortType.equals("")){
+			secondSort = ", S.SHARE_DATE DESC";
+		} else {
+			if (sortColumn.equals("TYPE_ICON") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = " , " + sortColumn + " " + sortType;
+			}
+			secondSort += ", S.SHARE_DATE DESC";
+		}
+		
+		map.put("orderByData", secondSort);
 		
 		List<ShareVO> list = ezWebFolderDAO_m.getHiddenSharedList(map);
 		
@@ -665,7 +718,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	@Override
 	public JSONObject getTrashCanList(String realColmn, String order, String userId, String offset, int tenantId, int currPage, int pEnd, 
 			String searchExt, String searchFileName, String searchCreateName,String searchFileType, String enrollStartDate, String enrollEndDate,
-			String delStartDate, String delEndDate, String mode) throws Exception {
+			String delStartDate, String delEndDate, String mode, String sortType, String sortColumn) throws Exception {
 		int totalRows  = 0;
 		int totalPages = 0;
 		int pStart 	   = 0;
@@ -695,6 +748,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("realColmn", realColmn);
 		map.put("order", order);
 		map.put("mode", mode);
+		map.put("sortType", sortType);
+		map.put("sortColumn", sortColumn);
 		
 		JSONObject result = new JSONObject();
 		
@@ -709,6 +764,17 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		map.put("pStart", pStart);
 		map.put("pEnd", pEnd);
+		
+		String secondSort = "";
+		if (!sortType.equals("")){
+			if (sortColumn.equals("TRASHCAN_ICON_URL") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = " , " + sortColumn + " " + sortType;
+			}
+		} 
+		
+		map.put("orderByData", secondSort);
 		
 		List<TrashCanVO> trashCanList = ezWebFolderDAO.getTrashCanList(map);
 		
@@ -1199,7 +1265,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 			
 	@Override
-	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception {
+	public List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, 
+			int startIndex, int listCount, String sortType, String sortColumn) throws Exception {
 		SearchVO searchDateInfo = createSearchDateInfo(searchInfo, offset);
 		
 		Map<String, Object> parameterMap = new HashMap<>();
@@ -1216,6 +1283,8 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		parameterMap.put("searchEndDate", searchDateInfo.getSearchEndDate());
 		parameterMap.put("startIndex", startIndex);
 		parameterMap.put("listCount", listCount);
+		parameterMap.put("sortType", sortType);
+		parameterMap.put("sortColumn", sortColumn);
 		
 		String[] searchTargets = { searchInfo.getSearchExt(), searchInfo.getSearchFileName(), searchInfo.getSearchCreateName() };
 		boolean hasSearchKeyword = Arrays.stream(searchTargets).anyMatch(str -> !str.toString().isEmpty());
@@ -1223,7 +1292,32 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		if (hasSearchKeyword) {
 			parameterMap.put("isContainsSubList", "test");
 		}
-		 
+		
+		String secondSort = "";
+		String dbType = commonUtil.getDatabaseType();
+		
+		if (sortType.equals("")){
+			if(!dbType.equals("oracle")){
+				secondSort = ", RESULT.CREATE_DATE DESC" ;
+			} else {
+				secondSort = "ASC, CREATE_DATE DESC" ;
+			}
+		} else {
+			if (sortColumn.equals("TARGET_ICON_URL") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			} else {
+				secondSort = ", " + sortColumn + " " + sortType;
+			}
+			
+			if(!dbType.equals("oracle")){
+				secondSort += ", RESULT.CREATE_DATE DESC" ;
+			} else {
+				secondSort += ", CREATE_DATE DESC" ;
+			}
+		}
+		
+		parameterMap.put("orderByData", secondSort);
+		
 		List<FavoriteVO> result = ezWebFolderDAO.getFavorites(parameterMap);
 		String targetPath;
 		

@@ -17,9 +17,11 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzWebFolderService_m {
 
-	List<ShareVO> getSharingList(String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
+	List<ShareVO> getSharingList(String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, 
+			SearchVO searchInfo, int tenantId, String sortColumn, String sortType) throws Exception;
 	
-	List<ShareVO> getSharedList(String isSubSearching, String userId, String  deptId, String compId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
+	List<ShareVO> getSharedList(String isSubSearching, String userId, String  deptId, String compId, String primary, String offset, 
+			int startPoint, int pageSize, SearchVO searchInfo, int tenantId, String sortColumn, String sortType) throws Exception;
 	
 	Map<String, Long> getSharingCount(String subSearchFlag, String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception;
 	
@@ -41,7 +43,8 @@ public interface EzWebFolderService_m {
 	
 	void deleteShareWithSub(String folderFileId, String folderFileType, int tenantId) throws Exception;
 	
-	List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, int pageSize, int tenantId) throws Exception;
+	List<ShareVO> getHiddenSharedList(String userId, String deptId, String compId, String primary, String offset, int startPoint, 
+			int pageSize, int tenantId, String sortType, String sortColumn) throws Exception;
 
 	Map<String, Long> getHiddenSharedCount(String userId, String deptId, String compId, String primary, String offset, int pageSize, int tenantId) throws Exception;
 	
@@ -49,7 +52,9 @@ public interface EzWebFolderService_m {
 
 	void showShare(String folderFileId, String folderFileType, String userId, String deptId, String compId, String offset, int tenantId) throws Exception;
 	
-	JSONObject getTrashCanList(String realColmn, String order, String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, String searchFileName, String searchFileType, String searchCreateName, String enrollStartDate, String enrollEndDate, String delStartDate, String delEndDate, String mode) throws Exception;
+	JSONObject getTrashCanList(String realColmn, String order, String userId, String offset, int tenantId, int pStart, int pEnd, String searchExt, 
+			String searchFileName, String searchFileType, String searchCreateName, String enrollStartDate, String enrollEndDate, String delStartDate, 
+			String delEndDate, String mode, String sortType, String sortColumn) throws Exception;
 
 	String getFolderPath(String folderId, int tenantId) throws Exception;
 
@@ -67,7 +72,8 @@ public interface EzWebFolderService_m {
 
 	List<TrashCanVO> getFolderByFolderPath(String folderPath, int tenantId, String companyId) throws Exception;
 	
-	List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, int startIndex, int listCount) throws Exception;
+	List<FavoriteVO> getFavorites(String userId, String primary, String offset, int tenantId, SearchVO searchInfo, 
+			int startIndex, int listCount, String sortType, String sortColumn) throws Exception;
 	
 	/**
 	 * @return key : value<br>

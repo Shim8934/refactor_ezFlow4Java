@@ -523,7 +523,7 @@
 		</isNotEqual>
 			
 		<![CDATA[
-			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
+			ORDER BY FOLDER_SORT $orderByData$
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -724,8 +724,7 @@
 			]]>
 			<include refid="searchAll"/>
 			<![CDATA[
-				
-			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
+			ORDER BY FOLDER_SORT $orderByData$
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
