@@ -215,7 +215,7 @@
 		    	var data = this.treeData;
 		    	for ( var i = 0; i < data.length ; i++  ) {
 		    		var dataId = data[i]["id"] + "_anchor";
-		    		var folderName = data[i]["folderName1"];
+		    		var folderName = data[i]["text"];
 		    		var childE = document.getElementById(dataId);
 		    		if (childE != null){
 						childE.setAttribute("title", folderName);

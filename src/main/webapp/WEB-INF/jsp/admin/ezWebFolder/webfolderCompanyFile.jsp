@@ -38,6 +38,7 @@
 			var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 			var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 			var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+			var strLang43  = "<spring:message code='ezWebFolder.t308'/>";
 			
 			capacity.setFolderIdProvider(function() {
 				return "<c:out value='${folderId}'/>";
@@ -100,26 +101,6 @@
 					refreshView();
 				});
 			});
-			
-			function optionHidden() {
-		 	    document.getElementById("layer_Viewpopup").style.display = "none";
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-		 	}
-			function optionView(obj) {
-		   		 if (obj.getAttribute("mode") == "off") {
-		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-//		    	        if(pAdminType == "y")
-		   	            document.getElementById("layer_Viewpopup").style.top = "130px";
-//		    	        else
-//		    	            document.getElementById("layer_Viewpopup").style.top = "100px";
-		   	        document.getElementById("layer_Viewpopup").style.display = "";
-		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-		   	        obj.setAttribute("mode", "on");
-		   	    } else {
-		   	        optionHidden();
-		   	    }
-		   	}
 			
 	        function leftFolderCPMV(functionType, folderList, toTargetId) {
 				closeAllPopup();
@@ -223,7 +204,7 @@
 			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
-				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
+				<a class="webfolderBttn" style="display:none"><span><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
 		</div>
 		</div>

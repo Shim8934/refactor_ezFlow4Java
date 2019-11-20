@@ -521,8 +521,9 @@
 					extension: $('#searchExt').val()
 				};
 	        	
-				if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" && requirement.startDate == "") {
-					alert(messages.strLang20);// 검색조건을 입력하세요 
+				if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" 
+						&& requirement.startDate == "" && requirement.endDate == "") {
+					alert(messages.strLang20);
 					return;
 				}
 	
@@ -581,25 +582,7 @@
 	    function searchOptionHidden() {
 	    	$.modal.close();
 	    }
-   	   
-	    function optionView(obj) {
-	   		 if (obj.getAttribute("mode") == "off") {
-	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-   	            document.getElementById("layer_Viewpopup").style.top = "130px";
-	   	        document.getElementById("layer_Viewpopup").style.display = "";
-	   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-	   	        obj.setAttribute("mode", "on");
-	   	    } else {
-	   	        optionHidden();
-	   	    }
-	   	}
-   	   
-	 	function optionHidden() {
-	 	    document.getElementById("layer_Viewpopup").style.display = "none";
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-	 	}
-	 	
+
 		function refreshView() {
 			getFileList(folderId);
 		}
@@ -709,7 +692,7 @@
 				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
 				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
-				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t275' /></span></li>
+				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t251' /></span></li>
 				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->
 				<li><span class="icon16 icon16_star" onclick="favoriteContext.toggleAll()"></span></li>

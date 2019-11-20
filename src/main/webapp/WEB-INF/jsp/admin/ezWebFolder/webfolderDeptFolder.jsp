@@ -646,7 +646,7 @@
 										<td>
 											<div style="margin: 20px 20px 5px 20px;">
 												<img src="/images/kr/left/left_dot02.gif" />
-												<span><spring:message code='ezWebFolder.t226'/></span>
+												<span style="display:inline-block; width:110px;"><spring:message code='ezWebFolder.t226'/></span>
 												<input id="fldName" type="text" maxlength="50" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
 											</div>
 										</td>
@@ -655,7 +655,7 @@
 										<td>
 											<div style="margin: 5px 20px 10px 20px;">
 												<img src="/images/kr/left/left_dot02.gif" />
-												<span><spring:message code='ezWebFolder.t227'/></span>
+												<span style="display:inline-block; width:110px;"><spring:message code='ezWebFolder.t227'/></span>
 												<input id="fldName2" type="text" maxlength="50" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
 											</div>
 										</td>
@@ -664,7 +664,7 @@
 									<tr>
 										<td>
 											<div style="margin: 20px 20px 5px; min-height: 36px;">
-												<div style="display: inline-block; width: 60px; line-height: 30px;" id= "displayUsers">
+												<div style="display: inline-block; width: 70px; line-height: 30px;" id= "displayUsers">
 													<img src="/images/kr/left/left_dot02.gif"/>
 													<span id="displayUsers"><spring:message code='ezWebFolder.t204'/></span>
 												</div>

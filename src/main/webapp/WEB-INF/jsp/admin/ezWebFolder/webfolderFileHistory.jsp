@@ -258,10 +258,10 @@
 				var fileTypeIdx = document.getElementById("fileTypeVal").selectedIndex;
 				var actTypeVal  = document.getElementById("actionType").value;
 				
-				/* if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
+				if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) {
 					alert("<spring:message code='ezWebFolder.t163'/>");
 					return;
-				} */
+				} 
 				
 				if (sDateVal != "" && eDateVal == "") {
 					alert("<spring:message code='ezWebFolder.t308' />");
@@ -275,7 +275,7 @@
 				
 				if (sDateVal && eDateVal) {
 					if (sDateVal > eDateVal) {
-						alert("<spring:message code='ezWebFolder.t164'/>");
+						alert("<spring:message code='ezWebFolder.t309'/>");
 						return;
 					}
 				}
@@ -383,27 +383,24 @@
 					exportingExcel = false;
 				});
 			}
-
+/*
 			function optionHidden() {
-		 	    document.getElementById("layer_Viewpopup").style.display = "none";
+				document.getElementById("layer_Viewpopup").style.display = "none";
 		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+				document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 		 	}
 			function optionView(obj) {
 		   		 if (obj.getAttribute("mode") == "off") {
 		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-//		    	        if(pAdminType == "y")
-		   	            document.getElementById("layer_Viewpopup").style.top = "130px";
-//		    	        else
-//		    	            document.getElementById("layer_Viewpopup").style.top = "100px";
+	   	            document.getElementById("layer_Viewpopup").style.top = "130px";
 		   	        document.getElementById("layer_Viewpopup").style.display = "";
-		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+		   	     	obj.setAttribute("class", "icon16 btn_onarrow_down");
 		   	        obj.setAttribute("mode", "on");
 		   	    } else {
 		   	        optionHidden();
 		   	    }
 		   	}
-		   	
+*/		   	
 			function scroll() {
 				var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
 				var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
@@ -446,10 +443,10 @@
 			</select>
 		</div>
 		
-		<div id="mainmenu2" style="position: relative; margin-left: 5px;">
+		<div id="mainmenu" style="position: relative; margin-left: 5px;">
 			<ul>
-				<li id=""><a id="btnSearch"  style="margin-top: 3px;" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123' /></span></a></li>
-				<li id=""><a id="btnRefresh" style="margin-top: 3px;" onClick="refreshView();"    ><span><spring:message code='ezWebFolder.t139' /></span></a></li>
+				<li id="SearchOption" mode="off" onclick="openSearchPanel()"><span class="icon16 icon16_search"></span></li>
+				<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
 				<li id=""><a id="btnSave"    style="margin-top: 3px;" onClick="excelExport();"    ><span><spring:message code='ezStatistics.t1003'/></span></a></li>
 				<li id="">
 					<select id="fileTypeSelect" onchange="search_Set('1');">
@@ -462,12 +459,16 @@
 						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
-				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
+				<div class="sub_frameIcon" style="float:right">
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+					</div>
+				</div>
 			</ul>
 		</div>
 		
 		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
 		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
@@ -526,7 +527,7 @@
 			</div>
 			<div class="wfdivBttn">
 				<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
-				<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+				<a class="webfolderBttn" style="display:none"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
 		</div>
 		</div>

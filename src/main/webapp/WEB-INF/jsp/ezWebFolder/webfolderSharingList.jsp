@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
@@ -884,23 +885,24 @@
 						extension: $('#searchExt').val()
 					};
 		        	
-					if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" && requirement.startDate == "") {
+					if (requirement.extension == "" && requirement.name == "" && requirement.creatorName == "" 
+							&& requirement.startDate == "" && requirement.endDate == "") {
 						alert(messages.strLang20);
 						return;
 					}
 		
 					if (requirement.startDate != "" && requirement.endDate == "") {
-						alert(messages.strLang18);
+						alert(messages.strLang21);
 						return;
 					}
 		           
 					if (requirement.startDate == "" && requirement.endDate != "") {
-						alert(messages.strLang18);
+						alert(messages.strLang21);
 						return;
 					}
 		
 					if (new Date(requirement.startDate) > new Date(requirement.endDate)) {
-						alert(messages.strLang19);
+						alert(messages.strLang21);
 						return;
 					}
 	           		
@@ -942,24 +944,6 @@
 		    	$.modal.close();
 		    }
 			
-			function optionView(obj){
-		   		 if (obj.getAttribute("mode") == "off") {
-		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-		   	        document.getElementById("layer_Viewpopup").style.top = "130px";
-		   	        document.getElementById("layer_Viewpopup").style.display = "";
-		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
-		   	        obj.setAttribute("mode", "on");
-		   	    } else {
-		   	        optionHidden();
-		   	    }
-		   	}
-	   	   
-			function optionHidden() {
-		 	    document.getElementById("layer_Viewpopup").style.display = "none";
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-		 	}
-		 	
 			function refreshView() {
 				getFileList();
 			}
@@ -1051,7 +1035,7 @@
 					<li class="important" id="uploadBtn" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
 					<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 					<li><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t508'/></span></a></li>
-					<li><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
+					<li><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t251'/></span></a></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li id="addShareBtn" style="display:none"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>
 					<li id="modifyShareBtn"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t217'/></span></a></li>
