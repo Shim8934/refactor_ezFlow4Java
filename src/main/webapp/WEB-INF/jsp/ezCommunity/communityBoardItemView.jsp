@@ -1030,7 +1030,7 @@
 	                        <!-- 게시일 -->
 	                        <th style="width:10%"><spring:message code='ezCommunity.t209'/></th>
 	                        <td id="PostDate" style="padding-right: 15px; white-space: nowrap; width:40%">
-	                        	<div id="Div3" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.writeDate}' /></div>
+	                        	<div id="Div3" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.writeDate.substring(0, 16)}' /></div>
 	                        </td>
 	                        <!-- 게시일 end -->
 	                        <!-- 게시종료일 -->
@@ -1045,7 +1045,7 @@
 	                        	
 	                        	<c:otherwise>
 	                        		<td id="Td8" style="padding-right: 15px; white-space: nowrap; width: 40%;">
-	                            		<div id="Div5" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.endDate}' /></div>
+	                            		<div id="Div5" style="vertical-align: middle; width: 100%; height: 16px; overflow-y: auto;"><c:out value='${item.endDate.split(" ")[0]}' /></div>
 	                        		</td>
 	                        	</c:otherwise>
 	                        </c:choose>

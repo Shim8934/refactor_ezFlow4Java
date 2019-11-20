@@ -541,7 +541,7 @@
 				</isNotEqual>
 				
 			<![CDATA[
-				ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
+				ORDER BY FOLDER_SORT $orderByData$
                 ) pchk 
 			where ROWNUM <= #pEnd# + #pStart#
             )
@@ -756,7 +756,7 @@
 					]]>
 					<include refid="searchAll"/>
 					<![CDATA[
-					ORDER BY FOLDER_SORT, CREATE_DATE DESC, FILE_ID
+					ORDER BY FOLDER_SORT $orderByData$
 	                ) pchk 
 				where ROWNUM <= #pEnd# + #pStart#
 	            )

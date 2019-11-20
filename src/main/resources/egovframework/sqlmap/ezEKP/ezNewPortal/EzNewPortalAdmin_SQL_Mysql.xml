@@ -342,6 +342,8 @@
 				INFORMATION_SCHEMA.TABLES
 			WHERE
 				TABLE_NAME = "TBL_PORTAL_MENU"
+			AND
+				table_schema = 'jmocha';
 		</selectKey>
 		
 		<![CDATA[
@@ -457,6 +459,8 @@
 				INFORMATION_SCHEMA.TABLES
 			WHERE
 				TABLE_NAME = "TBL_PORTAL_PORTLET"
+			AND
+				table_schema = 'jmocha';
 		</selectKey>
 		
 		<![CDATA[

@@ -97,6 +97,7 @@ CREATE TABLE `james_mail` (
   KEY `I_JMS_MIL_MAIL_IS_RECENT` (`MAIL_IS_RECENT`),
   KEY `I_JMS_MIL_MAIL_IS_SEEN` (`MAIL_IS_SEEN`),
   KEY `I_JMS_MIL_MAIL_MODSEQ` (`MAIL_MODSEQ`),
+  KEY `IDX_MAIL_DATE` (`MAIL_DATE`),
   CONSTRAINT `james_mail_ibfk_1` FOREIGN KEY (`MAILBOX_ID`) REFERENCES `james_mailbox` (`MAILBOX_ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3538,7 +3539,8 @@ CREATE TABLE `tbl_board_item` (
   `DELFLAG` char(1) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`),
   KEY `writedate` (`WRITEDATE`,`PARENTWRITEDATE`),
-  KEY `writedate1` (`WRITEDATE`)
+  KEY `writedate1` (`WRITEDATE`),
+  KEY `idx_boardid` (`BOARDID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3678,7 +3680,8 @@ CREATE TABLE `tbl_board_item_read` (
   `READDATE` datetime DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) DEFAULT NULL,
-  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ITEMID`,`USERID`)
+  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ITEMID`,`USERID`),
+  KEY `idx_readdate` (`READDATE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

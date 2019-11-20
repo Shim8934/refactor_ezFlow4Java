@@ -349,8 +349,29 @@ var SurveyItem = function() {
 		var divElmtId  = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
 		var prevHElmt  = document.getElementById(divElmtId);
 		var frameElmt  = prevHElmt.parentElement.querySelector("iframe[class='pr-frame']");
+		var prevHeader = prevHElmt.querySelector(".prevHeaderWwrapper");
+
+		if (prevHeader != null) {
+			prevHeader.remove();
+		}
 		
-		prevHElmt.innerHTML = "<span class='notSelected'>" + SurveyMessages.strSelect4 + "</span>";
+		var divElmt = document.createElement("div");
+		divElmt.className = "nodataDiv";
+		
+		var dlElmt = document.createElement("dl");
+		var dtElmt = document.createElement("dt");
+		var imgElmt = document.createElement("img");
+		imgElmt.src = "/images/kr/main/noData_sIcon.png";
+		
+		var ddElmt = document.createElement("dd");
+		ddElmt.textContent = SurveyMessages.strSelect4;
+		
+		dtElmt.appendChild(imgElmt);
+		dlElmt.appendChild(dtElmt);
+		dlElmt.appendChild(ddElmt);
+		divElmt.appendChild(dlElmt);
+		prevHElmt.appendChild(divElmt);
+		
 		if (frameElmt) {frameElmt.src = "";}
 	}
 	/* Search Panel end*/

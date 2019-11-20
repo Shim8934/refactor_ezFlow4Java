@@ -186,7 +186,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public List<PersonalQuickLinkVO> getQuickLinkList(LoginVO userInfo, String lang) throws Exception {
+	public List<PersonalQuickLinkVO> getQuickLinkList(LoginVO userInfo, String lang, String userLang) throws Exception {
 		logger.debug("getQuickLinkList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -194,6 +194,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("lang", userInfo.getLang());
+		map.put("userLang", userLang);
 		
 		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkList(map);
 		for (PersonalQuickLinkVO vo : list) {

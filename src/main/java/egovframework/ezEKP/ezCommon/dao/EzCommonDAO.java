@@ -366,6 +366,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void addAddJobMasterManualFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddJobMasterManualFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster MANUAL_FLAG column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterManualFlag");
+		}
+	}
+	
 	public void createJmochaMailSignatureTemplate() throws Exception {
 		try {
 			select("EzCommonDAO.checkJMochaMailSignatureTemplate");
@@ -784,6 +794,18 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_portal_menu_auth sn doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.snMenuAuth");
+		}
+	}
+	
+	public void alterChamjoView() {
+		try {
+			if ((int) select("EzCommonDAO.checkAlterChamjoView") <= 0) {
+				update("EzCommonDAO.alterAprDoingView");
+				update("EzCommonDAO.alterChamjoView");
+			}
+		} catch (Exception e) {
+			logger.debug("alterChamjoView() ERROR...");
+			e.printStackTrace();
 		}
 	}
 }

@@ -114,7 +114,7 @@ var buttons = (function() {
 					var result = data.status;
 					
 					if (result != "ok" && folderType != "U") {
-						alert(messages.strLang30);
+						alert(messages.strLang41);
 					} else {
 						openLeftPanel();
 						DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString()+"&folderList=" + selected.folders.toString());
@@ -139,7 +139,7 @@ var buttons = (function() {
 				return;
 			}
 			
-			if (folderType == "C") {
+			if (folderType == "C" || selected.targetFunction[0] == "C") {
 				if (parentId == 'root' || selected.targetPath[0] < 2) {
 					alert(messages.strLang36);
 					return;
@@ -162,7 +162,7 @@ var buttons = (function() {
 						var result = data.status;
 						
 						if (result != "ok" && folderType != "U") {
-							alert(messages.strLang30);
+							alert(messages.strLang42);
 						} else {
 							openLeftPanel();
 							DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
@@ -272,7 +272,16 @@ var buttons = (function() {
 		},
 		
 		fileCopy: function() {
-			var selected = getSelectedFoldersAndFiles();
+			var selectedRows = rowContext.getSelectedRows();
+			var selectedLength = selectedRows.length;
+			var selected ;
+			
+			if (selectedLength <= 0) {
+				alert(messages.strLang1);
+				selected = undefined;
+			} else {
+				selected = getSelectedFoldersAndFiles();
+			}
 			
 			if (selected === undefined) {
 				return;
@@ -330,4 +339,22 @@ var buttons = (function() {
 		}
 	};
 })();
+
+function optionView(obj) {
+		 if (obj.getAttribute("mode") == "off") {
+	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+          document.getElementById("layer_Viewpopup").style.top = "130px";
+	        document.getElementById("layer_Viewpopup").style.display = "";
+	        obj.setAttribute("class", "icon16 btn_onarrow_down");
+	        obj.setAttribute("mode", "on");
+	    } else {
+	        optionHidden();
+	    }
+	}
+ 
+function optionHidden() {
+    document.getElementById("layer_Viewpopup").style.display = "none";
+    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
+}
 

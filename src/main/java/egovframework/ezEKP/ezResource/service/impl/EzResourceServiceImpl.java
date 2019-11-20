@@ -2063,7 +2063,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 			
 			logger.debug("everyone or user accessLvl : " + accessLvl);
-			
+		}
 			if(accessLvl.equals("1")) {			// everyone 혹은 user 권한이 관리자 이면 Y 리턴, 그 외 U + 부서권한 체크
 				return "Y";
 			} /*else {
@@ -2202,7 +2202,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			if (AccessDeptLvl != null && !AccessDeptLvl.equals("")) {
 				accessLvl = AccessDeptLvl;
 			} */
-		}
 		}
 		
 		if(accessLvl.trim().equals("1")) {

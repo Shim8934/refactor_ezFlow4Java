@@ -226,6 +226,11 @@
 			<isEqual property="userMode" compareValue="0" prepend=" and ">
 				draft_flag = 0
 			</isEqual>
+			<isEqual property="userMode" compareValue="1" prepend=" and ">
+				(
+					survey_id not in ( select survey_id from tbl_survey where draft_flag = 1 and user_id != #userId# and tenant_id = #tenantId# )
+				)
+			</isEqual>
 			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
 			<isNotEmpty property="surveyIds" prepend=" and ">
 				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)

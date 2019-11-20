@@ -181,6 +181,11 @@
 	    var receiverCount = 0;
         var groupAddressCountMap = {};
         var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+        var preview_g_url = "";
+        var preview_g_url_delete = "";
+        var preview_g_url_forRead = "";
+        var previewChk = false;
+        var ReadMailOpenNewWin;
         
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -381,6 +386,11 @@
             	$( "#MsgBCC" ).autocomplete("disable");
         	</c:if>
             
+			$("textarea").keydown(function(e) {
+				if (e.keyCode == 27) {
+					return false;
+				}
+			});
 		}
 	    
 		var isAutoSave = false;
@@ -476,10 +486,17 @@
 	            window.close();
 	    }
 	    var isDelted = false;
-	    function delDrafts() {
+	    function delDrafts(del_uid) {
+	    	var delDraftsURL = g_url;
+	    	var delDraftsFiledate = filedate;
+	    	
+	    	if (typeof del_uid != "undefined"){
+	    		delDraftsURL = del_uid;
+	    		delDraftsFiledate = "";
+	    	}
+	    	
 	        var xmlhttp = createXMLHttpRequest();
-	        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(g_url) + "&delid=" + filedate;
-	        
+	        var requestUrl = "/ezEmail/delDrafts.do?itemid=" + encodeURIComponent(delDraftsURL) + "&delid=" + delDraftsFiledate;
 	    	if (typeof(shareId) != "undefined" && shareId != "") {
 	    		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	    	}
@@ -1995,7 +2012,8 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -2071,7 +2089,8 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -2148,7 +2167,9 @@
 								url : "/ezEmail/autoCompleteList.do",
 								dataType : "json",
 								data : {
-									value : request.term
+									value : request.term,
+									// useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 추가함.
+									company : ''
 								},
 								success : function(data) {
 									var susinList = data.susinList;
@@ -2223,6 +2244,21 @@
 				evt.stopPropagation();
 				evt.preventDefault();
 		}
+		
+		/*
+		   20190807 김수아 : 메일 작성 창의 미리보기 버튼 클릭 시
+		*/
+		function mailWritePreview() {
+			if (Save_onClick_Complete.savemode == "tempsave" && MailStatus == "SEND" && !previewChk) { // 저장 중
+				setTimeout(function() {
+					mailWritePreview();
+		        }, 1000);
+			} else if (!previewChk){
+				previewChk = true;
+				Save_onClick('preview');
+			}
+		}
+		
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -2254,6 +2290,8 @@
 	                            <spring:message code='ezEmail.t331' /></span></li>
 	                        <li><span onclick="Option_onClick()" id="Span1">
 	                            <spring:message code='ezEmail.t353' /></span></li>
+	                        <li><span onclick="mailWritePreview()">
+	                            <spring:message code='ezEmail.t487' /></span></li>
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
 	                    	<li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">

@@ -373,7 +373,6 @@ public class EzAttitudeGWController {
 		try {
 	         String userId = request.getParameter("userId");
 	         String serverName = request.getHeader("x-user-host");
-	         String lang = request.getParameter("lang");
 	         MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 	         
 	         LOGGER.debug("userId : " + userId);
@@ -382,7 +381,7 @@ public class EzAttitudeGWController {
 	         if (companyId == null || companyId.equals("")) {
 	            companyId = info.getCompanyId();
 	         }
-	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), lang);
+	         List<DeptViewVO> deptList = ezAttitudeService.getDeptViewList(userId, companyId, info.getTenantId(), info.getPrimary());
 	         
 	         result.put("status", "ok");
 	         result.put("code", 0);

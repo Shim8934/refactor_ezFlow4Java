@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -4068,5 +4069,134 @@ public class EzPortalController extends EgovFileMngUtil {
 		popupCookie.setMaxAge(60*60*24);
     	response.addCookie(popupCookie);
 		logger.debug("setPopupCookie is ended.");
+	}
+	
+	
+	/**
+	 * 포탈 - 통합검색기능
+	 * */
+	@RequestMapping(value="/ezPortal/totalSearch.do")
+	public String totalSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req) throws Exception{
+		logger.debug("totalSearch is started.");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String keyword = req.getParameter("keyword") != null ? req.getParameter("keyword") : "";
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("keyword", keyword);
+		
+		logger.debug("totalSearch is ended.");
+		return "/ezPortal/totalSearchMain";
+	}
+	
+	/**
+	 * 포탈 - 통합검색 왼쪽메뉴
+	 * */
+	@RequestMapping(value="/ezPortal/totalSearchLeft.do")
+	public String totalSearchLeft(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req) throws Exception {
+		return "/ezPortal/totalSearchLeft";
+	}
+	
+	/**
+	 * 포탈 - 통합검색 오른쪽화면
+	 * */
+	@RequestMapping(value="/ezPortal/totalSearchRight.do")
+	public String totalSearchRight(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req) throws Exception {
+		logger.debug("totalSearchRight is started.");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String keyword = req.getParameter("keyword") != null ? req.getParameter("keyword") : "";
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("keyword", keyword);
+		logger.debug("totalSearchRight is ended.");
+		return "/ezPortal/totalSearchRight";
+	}
+	
+	/**
+	 * 포탈 - 통합검색 검색리스트
+	 * */
+	@RequestMapping(value="/ezPortal/getTotalSearchList.do")
+	@ResponseBody
+	public Object getTotalSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo , Locale locale, @RequestBody Map<String, Object> paramData) throws Exception {
+		logger.debug("getTotalSearchList is started.");
+		
+		logger.debug("paramData : " + paramData.toString());
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		//List<Map<String, Object>> searchList = new ArrayList<Map<String, Object>>();
+		Map<String, Object> searchResult = new HashMap<String, Object>();
+		Map<String, Object> ret = new HashMap<String, Object>();
+		
+		//타입이 전체인 경우, 결재인 경우, 게시판인 경우
+		String type = (String) paramData.get("type");
+		String searchURL = "";
+
+		if(type.equalsIgnoreCase("all")) {
+			//결재인 경우
+			paramData.put("type", "approval");
+			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
+			searchResult = ezPortalService.callSearchServerForResult(searchURL, userInfo.getOffset());      // 데이터 추출
+			
+			ret.put("approvalList", searchResult);
+			
+			// 게시판인 경우
+			paramData.put("type", "board");
+			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
+			searchResult = ezPortalService.callSearchServerForResult(searchURL, userInfo.getOffset());      // 데이터 추출
+			
+			ret.put("boardList", searchResult);
+		} else if(type.equalsIgnoreCase("approval")) {
+			paramData.put("type", "approval");
+			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
+			searchResult = ezPortalService.callSearchServerForResult(searchURL, userInfo.getOffset());      // 데이터 추출
+			
+			ret.put("approvalList", searchResult);
+		} else if(type.equalsIgnoreCase("board")) {
+			paramData.put("type", "board");
+			searchURL = ezPortalService.getTotalSearchURL(userInfo, paramData);       // URL 생성
+			searchResult = ezPortalService.callSearchServerForResult(searchURL, userInfo.getOffset());      // 데이터 추출
+			
+			ret.put("boardList", searchResult);			
+		}
+		
+		logger.debug("getTotalSearchList is ended.");
+		return ret;
+	}
+	
+	/**
+	 * 포탈 - 게시판 읽기 권한 체크
+	 * */
+	@RequestMapping(value="/ezPortal/chkBoardReadAuthor.do")
+	@ResponseBody
+	public String chkBoardReadAuthor(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody Map<String, Object> paramData) throws Exception {
+		logger.debug("chkBoardReaddAuthor is started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = (String) paramData.get("boardID");
+		String userID = userInfo.getId();
+		String deptID = userInfo.getDeptID();
+		int tenantID = userInfo.getTenantId();
+		String readAuthor = "";
+
+		// 관리자 권한인 경우 readAuthor는 true로 return
+		if(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+			readAuthor = "true";
+			
+			return readAuthor;
+		}			
+		
+		// 유저 권한이 부서 권한보다 우선시 된다.
+		// 유저 권한이 없을 경우 부서 권한을 찾아보기.
+		readAuthor = ezPortalService.chkBoardReadAuthor(boardID, userID, tenantID);
+		
+		if(readAuthor.equalsIgnoreCase("")) {
+			readAuthor = ezPortalService.chkBoardReadAuthor(boardID, deptID, tenantID);
+		}
+		
+		logger.debug("chkBoardReadAuthor is ended.");
+		return readAuthor;
 	}
 }

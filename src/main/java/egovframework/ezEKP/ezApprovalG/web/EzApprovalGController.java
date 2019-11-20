@@ -1065,11 +1065,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("nonElecRec", nonElecRec);
 		// FormBuilder
 		if (docID == null || docID.isEmpty()) {
-			model.addAttribute("reformflag", ezApprovalGService.isReform(formURL) ? "Y" : "N");
+			model.addAttribute("reformflag", ezApprovalGService.isReform(formURL, userInfo.getId()) ? "Y" : "N");
 		} else if (listType.equals("21") ) {
 			model.addAttribute("reformflag", ezApprovalGService.isReformTempDoc(docSN, userInfo.getCompanyID(), tenantID) ? "Y" : "N");
 		} else {
-			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), tenantID).getReformFlag());
+			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), userInfo.getCompanyID(), tenantID).getReformFlag());
 		}
 		
 		logger.debug("draftui ended.");
@@ -1079,8 +1079,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	@RequestMapping(value = "/ezApprovalG/getReformFlag.do", method = RequestMethod.GET)
 	@ResponseBody
-	public String getReformFlag(String formHref, HttpServletRequest request) throws Exception {
-		return ezApprovalGService.isReform(formHref) ? "Y" : "N";
+	public String getReformFlag(String formHref, HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		return ezApprovalGService.isReform(formHref, userInfo.getId()) ? "Y" : "N";
 	}
 	
 	/**
@@ -4029,7 +4030,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		boolean isReform = false;
 		
 		// FormBuilder
-		ApprGFormVO reformInfo = ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), tenantID);
+		ApprGFormVO reformInfo = ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), userInfo.getCompanyID(), tenantID);
 		if (reformInfo != null) {
 			formId = reformInfo.getFormID();
 			isReform = "Y".equals(reformInfo.getReformFlag());

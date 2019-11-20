@@ -845,7 +845,7 @@ function checkMailStatusAndSave(savemode) {
 
 function Save_onClick(savemode) {
     // 이미 저장 혹은 발송 중이면 저장 작업을(자동 저장) 수행하지 않고 그냥 반환한다.
-    if (savemode == "tempsave" && MailStatus == "SEND") {
+    if (savemode == "tempsave" && MailStatus == "SEND" && !previewChk) {
         return;
     }
     
@@ -856,7 +856,7 @@ function Save_onClick_Complete(ReturnValue) {
     try {
         if (ReturnValue) {
             var Subject = eSubject.value;
-            if (TrimText(Subject) == "")
+            if (TrimText(Subject) == "" && !previewChk)
                 Subject = strLang97;
 
             if (m_rgParams4PostOption["SecurityMail"] == "Security")
@@ -901,6 +901,7 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "ISRESERVE", isReserve);
             createNodeAndInsertText(xmlDoc, rootNode, "RESERVEDID", pCDOMessageId);
             createNodeAndInsertText(xmlDoc, rootNode, "STATENAME", filedate);
+            createNodeAndInsertText(xmlDoc, rootNode, "MODEFLAG", Save_onClick_Complete.savemode); // 20190807 김수아 : 메일 작성 미리보기
             if (m_rgParams4PostOption["delaySendDate"] == "") {
                 createNodeAndInsertText(xmlDoc, rootNode, "DELAYSENDTIME", "");
             }
@@ -963,7 +964,9 @@ function Save_onClick_Complete(ReturnValue) {
                         MailSend_Show_Progress();                        
                     }
 
-                    g_saveHttp.timeout = 20000;
+                    if (window.iseachMail == "false") {
+                    	g_saveHttp.timeout = 20000;
+                    }
                     g_saveHttp.onreadystatechange = event_SaveonClick;
                     g_saveHttp.send(xmlDoc);
                 }
@@ -1035,7 +1038,7 @@ function event_SaveonClick() {
         if (event_SaveonClick.savemode == "sendsave") {
         	// status code가 200~300이 아닐 경우
         	if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
-        		alert(strLang105);
+        		alert(strLang105 + " error=-1");
         		MailSend_Hidden_Progress();
                 g_saveHttp = null;
                 MailStatus = "NO";
@@ -1083,6 +1086,9 @@ function event_SaveonClick() {
                 // 잘못된 도메인 주소가 있을 경우 (ex> mailtotest@tes:t.com)
                 else if (pRtnMessage.indexOf("Domain contains illegal character") > -1) { 
                 	alert(strLangLHM22);
+                }
+                else if (pRtnMessage.indexOf("parse error") > -1) {
+                    alert(strLang105 + " error=-2");
                 }
                 // 그 외
                 else {
@@ -1136,11 +1142,11 @@ function event_SaveonClick() {
                 window.close();
         	}
         }
-        //메일 저장 or 자동임시저장인 경우
+        //메일 저장 or 자동임시저장인 경우 or 미리보기
         else {
         	// status code가 200~300이 아닐 경우
         	if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
-        		alert(strLang105);
+        	    alert(strLang105 + " error=-1");
             }
             // 메일쓰기 도중 로그아웃된 경우
             else if (g_saveHttp.responseText.indexOf("actionLogin()") > -1) {
@@ -1157,12 +1163,33 @@ function event_SaveonClick() {
                 	var messageArr = pRtnMessage.split(":");
                 	alert(strLangLHM13 + "\n(" + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2] + ")");
                 }
+                else if (pRtnMessage.indexOf("parse error") > -1) {
+                    alert(strLang105 + " error=-2");
+                }                
                 // 그 외
                 else {
             		alert(pRtnMessage);
                 }
+        	} 
+        	// 정상적으로 처리된 경우(메일작성 미리보기의 임시저장인 경우) 
+        	else if (event_SaveonClick.savemode == "preview"){
+                var result = pRtnMessage;
+                var xmlID = "";
+                xmlID = loadXMLString(g_saveHttp.responseText);
+                var xmlItem = xmlID.childNodes.item(0).childNodes;
+                
+                if (!CrossYN()) {
+                	preview_g_url = xmlItem.item(1).text;
+                	preview_g_url_forRead = xmlItem.item(2).text + "/" + preview_g_url;
+                }
+                else if (CrossYN()) {
+                	preview_g_url = xmlItem.item(1).textContent;
+                	preview_g_url_forRead = xmlItem.item(2).textContent + "/" + preview_g_url;
+                }
+                
+        		preMailRead(preview_g_url_forRead);
         	}
-        	// 정상적으로 처리된 경우
+        	// 정상적으로 처리된 경우(메일 저장 or 자동임시저장인 경우)
         	else {
         		g_bDirty = false;
                 g_originalHTML = message.GetEditorContent();
@@ -1195,6 +1222,7 @@ function event_SaveonClick() {
                 
                 if (!isAutoSave) {
                 	alert(strLang108);
+                	MailSend_Hidden_Progress();
                 }
                 
                 try {
@@ -1202,10 +1230,9 @@ function event_SaveonClick() {
                 } catch (e) { }
         	}
         	
-        	if (!isAutoSave) {
+    		/*if (!isAutoSave) {
         		MailSend_Hidden_Progress();
-        	}
-        	
+        	}*/
         	g_saveHttp = null;
         	MailStatus = "NO";
         	isAutoSave = false;
@@ -1353,7 +1380,8 @@ function GetMailAddresses(name) {
     createNodeAndInsertText(xmlDOM, objNode, "FIELD", "AddressID,SNAME,SEMAIL,STYPE");
     createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
     createNodeAndInsertText(xmlDOM, objNode, "SHAREDMAILBOXSEARCH", "displayname::" + name);
-    xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
+    // useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 company 패러메터를 빈 값으로 추가함.
+    xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do?company=", false);
     xmlHTTP.send(xmlDOM);
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);
@@ -4080,4 +4108,30 @@ function decreaseReceiverCount(pType, pHref) {
 	} else {
 		receiverCount -= 1;
 	}
+}
+
+function preMailRead(Href) {
+	if(event_SaveonClick.savemode != 'preview' && !previewChk) {return; }
+
+    var pheight = window.screen.availHeight;
+    var conHeight = pheight * 0.8;
+    var pwidth = window.screen.availWidth;
+    var conWidth = pwidth * 0.8;
+    if (conWidth > 890)
+        conWidth = 890;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - 890) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    
+	var pURI = "/ezEmail/mailRead.do?iptURL=" + encodeURIComponent(Href) + "&PNFlag=Y&CONTENTCLASS=PREVIEW";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	pURI += "&shareId=" + encodeURIComponent(shareId);
+    }
+    
+    ReadMailOpenNewWin = window.open(pURI, "ReadMailOpenNewWin", feature);
+    
+    if (ReadMailOpenNewWin != null) {
+    	window.ReadMailOpenNewWin.focus();
+    }
 }

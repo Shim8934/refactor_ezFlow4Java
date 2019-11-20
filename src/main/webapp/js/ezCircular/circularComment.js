@@ -266,6 +266,11 @@ function getCommentShareUser() {
 			shareUserList = "<colgroup><col width='10%' /><col width='90%' /></colgroup>";
 			
 			list = result.shareUserList;
+			
+			if(result.shareUserList.length == 0) {
+				shareUserList += "<td style='border-top:0px;border-right:0px;border-left:0px;text-align:center;background-color:white;' colspan='2'>"+ strLang50 + "</td>";
+			}
+			
 			list.forEach(function(vo, index) {
 				if (vo.memberID != userInfoID) {
 					shareUserList += "<tr class='shareUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";

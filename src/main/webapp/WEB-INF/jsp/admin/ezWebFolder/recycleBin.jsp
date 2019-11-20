@@ -50,6 +50,10 @@
 		var searchFileName   = "";
 		var searchCreateName = "";
 		var tableView        = new TableView();
+		var _selectedCell = null;
+    	var _cellInfo        = {};
+    	var sortColumn = null;
+    	var sortType = null;
 		
 		window.onresize = function () {
 			var divList          = document.getElementById("dragDropArea");
@@ -123,6 +127,13 @@
 			document.addEventListener("mouseup", listOptionHidden, true);
 			parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
 			
+			var listHeader = document.getElementsByClassName("headListClick");
+			for(var i = 0 ; i <listHeader.length; i++) {
+				listHeader[i].addEventListener("click", function(event) {
+					sortByHeader(this);
+				});
+			}
+			
 			// listoption 클릭 이벤트
 			document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
 				event.stopPropagation();
@@ -136,6 +147,39 @@
 			});
 			
 		});
+		
+		function sortByHeader(cell) {
+			var column = cell.getAttribute("data-column");
+			
+			if (!column) {return;}
+			
+			if (_selectedCell != null) {
+				var orderOption = cell.getAttribute("orderoption") == "DESC" ? "ASC" : "DESC";
+				cell.setAttribute("orderoption", orderOption);
+				
+				if (cell.cellIndex != _selectedCell) {
+					var lastSelectedCell = document.getElementById("BoardList_THEAD").rows[0].cells[_selectedCell];
+					lastSelectedCell.removeChild(lastSelectedCell.lastElementChild);
+					var spanElmt = document.createElement("span");
+					cell.appendChild(spanElmt);
+				}
+				
+				var spanImg       = cell.lastElementChild;
+				spanImg.className = orderOption == "DESC" ? "spanDown" : "spanUp";
+			} else {
+				cell.setAttribute("orderoption", "DESC");
+				var spanElmt       = document.createElement("span");
+				spanElmt.className = "spanDown";
+				cell.appendChild(spanElmt);
+			}
+			
+			_selectedCell = cell.cellIndex;
+			
+			var order     = cell.getAttribute("orderoption");
+			sortType = order;
+			sortColumn = column;
+			renderFileList();
+		}
 		
 		function keyPressPanel(e) {
 			if (e.which == 27 && document.getElementById("mailPanel").style.display == "") {
@@ -183,7 +227,9 @@
 					"column"           : orderInf.col ? orderInf.col : "",
 					"order"            : orderInf.ord ? orderInf.ord : "",
 					"listCount"        : listCnt,
-					"mode"             : "admin"
+					"mode"             : "admin",
+					"sortType"		   : sortType,
+					"sortColumn"	   : sortColumn
 				},
 				success : function (data) {
 					hideProgress();
@@ -207,8 +253,11 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; 폴더 " + "<span style='color:#017BEC;'>" 
-					+ folderCnt +" </span> / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>";
+					
+					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + folderCnt +" </span>"
+					+ " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
+					+ fileCnt +" </span>";
+					
 				},
 				error : function(error) {
 					hideProgress();
@@ -466,27 +515,25 @@
 				document.getElementById("ui-datepicker-div").style.display = "none";
 			}
 		}
-
-		function optionHidden() {
-	 	    document.getElementById("layer_Viewpopup").style.display = "none";
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
-	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
-	 	}
+		
 		function optionView(obj) {
 	   		 if (obj.getAttribute("mode") == "off") {
 	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-//	    	        if(pAdminType == "y")
-	   	            document.getElementById("layer_Viewpopup").style.top = "100px";
-//	    	        else
-//	    	            document.getElementById("layer_Viewpopup").style.top = "100px";
+  	            document.getElementById("layer_Viewpopup").style.top = "100px";
 	   	        document.getElementById("layer_Viewpopup").style.display = "";
-	   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+	   	        obj.setAttribute("class", "icon16 btn_onarrow_down");
 	   	        obj.setAttribute("mode", "on");
 	   	    } else {
 	   	        optionHidden();
 	   	    }
 	   	}
-	   	
+  	   
+	 	function optionHidden() {
+	 	    document.getElementById("layer_Viewpopup").style.display = "none";
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+	 	    document.getElementById("webfolderlistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
+	 	}
+		
 		function scroll() {
 			var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
 			var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
@@ -517,12 +564,12 @@
 </head>
 <body class="mainbody" onkeydown="keyPressPanel(event);">
     <h1><spring:message code='ezWebFolder.t269'/><span id="mailBoxInfo"></span></h1>
-	<div id="mainmenu2" style="margin-left: 5px;">
+	<div id="mainmenu" style="margin-left: 5px;">
 		<ul>
 			<li id=""><a onClick="restoreTrashCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t287'/></span></a></li>
 			<li id=""><a onClick="moveTraschCan()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t282'/></span></a></li>
 			<li id=""><a onClick="filePermanentDelete()"   style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t19'/></span></a></li>
-			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><a style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
+			<li id="SearchOption" mode="off" onclick="doLayerPopup(this)" class="off"><span class="icon16 icon16_search"></span></li>
 			<li style="float:left;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);" style="height: 29px; border-radius: 3px; padding: 0px; width: 85px;">
 					<option value="all" selected><spring:message code='ezWebFolder.t191'/></option>
@@ -535,11 +582,15 @@
 					<option value="unknown"><spring:message code='ezWebFolder.t311'/></option>
 				</select>
 			</li>
-			<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
+			<div class="sub_frameIcon" style="float:right">
+				<div class="sub_frameIconUL02">
+				  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+				</div>
+			</div>
 		</ul>
 	</div>
 	<script type="text/javascript">
-		selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
+		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	</script>
 	<!-- 파일 리스트 10~ 50 선택 -->
     <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
@@ -582,14 +633,14 @@
 				<thead id ="BoardList_THEAD">
 					<tr>
 						<th class = "wfFilecheck"><input type="checkbox"></th>
-						<th headers="ft" class = "wfFileType" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
-						<th headers="fn" class = "wfFileName" ><spring:message code='ezWebFolder.t156'/></th>
-						<th headers="fs" class = "wfFileSize" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal;" ><spring:message code='ezWebFolder.t157'/></th>
-						<th headers="un" class = "wfFileCreator" ><spring:message code='ezWebFolder.t189'/></th>
-						<th headers="cd" class = "wfFileFavoriteDate" ><spring:message code='ezWebFolder.t190'/></th>
-						<th headers="dd" class = "wfFileFavoriteDate" ><spring:message code='ezWebFolder.t288'/></th>
-						<th              class = "wfFilePath"><spring:message code='ezWebFolder.t199'/></th>
-					</tr>
+						<th headers="ft" class = "wfFileType		 headListClick" data-column="TRASHCAN_ICON_URL" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
+						<th headers="fn" class = "wfFileName		 headListClick" data-column="TRASHCAN_NAME" ><spring:message code='ezWebFolder.t156'/></th>
+						<th headers="fs" class = "wfFileSize		 headListClick" data-column="TRASHCAN_SIZE" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal;" ><spring:message code='ezWebFolder.t157'/></th>
+						<th headers="un" class = "wfFileCreator		 headListClick" data-column="CREATE_NAME1" ><spring:message code='ezWebFolder.t189'/></th>
+						<th headers="cd" class = "wfFileFavoriteDate headListClick" data-column="CREATE_DATE" ><spring:message code='ezWebFolder.t190'/></th>
+						<th headers="dd" class = "wfFileFavoriteDate headListClick" data-column="UPDATE_DATE" ><spring:message code='ezWebFolder.t288'/></th>
+						<th              class = "wfFilePath		 " data-column="TRASHCAN_PATH"><spring:message code='ezWebFolder.t199'/></th>
+					</tr>  
 				</thead>
 			</table>
 			<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
@@ -642,7 +693,7 @@
 		</div>
 		<div class="wfdivBttn">
 			<a class="webfolderBttn"><span onclick="search('basic');"><spring:message code='ezWebFolder.t123'/></span></a>
-			<a class="webfolderBttn"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>
+			<a class="webfolderBttn" style="display:none"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>
 		</div>
 	</div>
 	</div>

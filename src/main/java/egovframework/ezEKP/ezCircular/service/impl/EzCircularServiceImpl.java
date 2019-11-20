@@ -702,7 +702,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 			String circularID = idsArr[0];
 			String memberID = idsArr[1];
 
-			deleteDirectory(circularID, pDirpath, tenantID);
 
 			logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || userID = " + userID + " || tenantID = " + tenantID);
 			
@@ -713,6 +712,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.deleteCircular(map);
 				ezCircularDAO.deleteCircularUser(map);
 				ezCircularDAO.deleteCircularAttach(map);
+				deleteDirectory(circularID, pDirpath, tenantID);
 			} else {
 				ezCircularDAO.updateDeleteFlag(map);
 				map.put("memberID", userID);

@@ -356,7 +356,7 @@
 		            
 		            if (recvfrom != "")
 		            	recvfrom = recvfrom + " 00:00:01";
-		            else myapprfrom = "";
+		            else recvfrom = "";
 
 		            if (recvto != "")
 		            	recvto = recvto + " 23:59:59";

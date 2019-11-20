@@ -206,7 +206,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 //	}
 
 	@Override
-	public List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String actionType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
+	public List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, 
+			String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, 
+			String actionType, int startPoint, int pageSize, String primary, String offset, int tenantId, String sortType, String sortColumn) throws Exception {
 		logger.debug("Action Type: " + actionType);
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("realColmn",  realColmn);
@@ -225,6 +227,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		map.put("offset",     commonUtil.getMinuteUTC(offset));
 		map.put("primary",    primary);
 		map.put("tenantId",   tenantId);
+		map.put("sortType",   sortType);
+		map.put("sortColumn", sortColumn);
+		map.put("orderByData", sortColumn + " " + sortType);
 		return ezWebFolderAdminDAO.getListFileLogs(map);
 	}
 
@@ -780,7 +785,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 
 	private void copyFile(String folderId, String newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
-		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId());
+		List<FileVO> fileList = ezWebFolderService.getAllFilesInFolder("", "", folderId, "", "0", "", "", "", "", "", "1", 0, 0, 
+				userInfo.getPrimary(), userInfo.getOffset(), userInfo.getTenantId(), "", "");
 		
 		if (fileList != null && fileList.size() > 0) {
 			for (FileVO file : fileList) {

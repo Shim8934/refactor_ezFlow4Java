@@ -69,6 +69,8 @@ public class EzWebFolderController_m {
 		param.put("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""));
 		param.put("searchStartDate", orElse(request.getParameter("searchStartDate"), ""));
 		param.put("searchEndDate", orElse(request.getParameter("searchEndDate"), ""));
+		param.put("sortType", orElse(request.getParameter("sortType"), ""));
+		param.put("sortColumn", orElse(request.getParameter("sortColumn"), ""));
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/sharing", param, request, "get", null);
 		
@@ -100,6 +102,8 @@ public class EzWebFolderController_m {
 		param.put("searchCreatorName", orElse(request.getParameter("searchCreatorName"), ""));
 		param.put("searchStartDate", orElse(request.getParameter("searchStartDate"), ""));
 		param.put("searchEndDate", orElse(request.getParameter("searchEndDate"), ""));
+		param.put("sortType", orElse(request.getParameter("sortType"), ""));
+		param.put("sortColumn", orElse(request.getParameter("sortColumn"), ""));
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared", param, request, "get", null);
 		
@@ -334,6 +338,8 @@ public class EzWebFolderController_m {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("pageNum", orElse(request.getParameter("pageNum"), "1"));
 		param.put("pageSize", orElse(request.getParameter("pageSize"), "0"));
+		param.put("sortType", orElse(request.getParameter("sortType")			, ""));
+		param.put("sortColumn", orElse(request.getParameter("sortColumn")			, ""));
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + userInfo.getId() + "/shared-hide", param, request, "get", null);
 		
@@ -412,6 +418,8 @@ public class EzWebFolderController_m {
 		param.put("column", orElse(request.getParameter("column"), ""));
 		param.put("order", orElse(request.getParameter("order"), ""));
 		param.put("mode", orElse(request.getParameter("mode"), "" ));
+		param.put("sortType"		, orElse(request.getParameter("sortType")			, ""));
+		param.put("sortColumn"		, orElse(request.getParameter("sortColumn")			, ""));
 		
 		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/" + user.getId() + "/getTrashCanList", param, request, "post", null);
 		
@@ -557,6 +565,9 @@ public class EzWebFolderController_m {
 		// limit info
 		param.put("startIndex", orElse(request.getParameter("startIndex"), "0"));
 		param.put("listCount", orElse(request.getParameter("listCount"), "0"));
+		param.put("sortType", orElse(request.getParameter("sortType") , ""));
+		param.put("sortColumn", orElse(request.getParameter("sortColumn") , ""));
+		
 		
 		JSONObject result = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/users/" + user.getId() + "/favorites", param, request, "get", null);
 		

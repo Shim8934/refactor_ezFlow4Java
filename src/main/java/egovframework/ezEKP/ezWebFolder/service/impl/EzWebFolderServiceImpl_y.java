@@ -274,7 +274,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			String searchFileName, String searchStartDate,
 			String searchEndDate, String searchCreateName,
 			String searchFileType, String searchPageCount, int pStart,
-			int pEnd, String offset, String primary) throws Exception {
+			int pEnd, String offset, String primary, String sortType, String sortColumn) throws Exception {
 		LOGGER.debug("getFileList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -302,6 +302,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("pEnd", pEnd);
 		map.put("primary", primary);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("sortType", sortType);
+		map.put("sortColumn", sortColumn);
 		
 		LOGGER.debug("offset : " + commonUtil.getMinuteUTC(offset));
 		
@@ -327,12 +329,36 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("idList", idList);
 		map.put("flag", flag);
 		
+		if (sortType.equals("")){
+			map.put("orderByData", ", UPDATE_DATE DESC" );
+		} else {
+			if (sortColumn.equals("CREATE_NAME") || sortColumn.equals("CREATOR_NAME")){
+				sortColumn = "CREATE_NAME1";
+			} else if (sortColumn.equals("SHARE_STATUS")){
+				sortColumn = "FILESHARE_STATUS";
+			} else if (sortColumn.equals("TARGET_PATH")){
+				sortColumn = "FILE_PATH";
+			} else if (sortColumn.equals("TARGET_SIZE")){
+				sortColumn = "FILE_SIZE";
+			} else if (sortColumn.equals("TARGET_NAME")){
+				sortColumn = "FILE_NAME";
+			}  else if (sortColumn.equals("TARGET_TYPE") || sortColumn.equals("TARGET_ICON_URL")){
+				sortColumn = "TYPE_ICON";
+			}  
+			
+			String secondSort = "";
+			secondSort = " , " + sortColumn + " " + sortType;
+			
+			if (sortColumn.equals("TYPE_ICON") && sortType.equals("DESC")){
+				secondSort = " DESC , " + sortColumn + " " + sortType;
+			}
+			
+			secondSort += ", UPDATE_DATE DESC " ;
+			map.put("orderByData", secondSort);
+		}
+		
 		if (flag.equals("1")) {
-//			if (parentId.equals("root")) {
-//				filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileListR(map);
-//			} else {
-				filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList2(map);
-//			}
+			filevo = (List<FileVO>) ezWebFolderDAO_y.searchFileList2(map);
 		} else {
 			filevo = (List<FileVO>) ezWebFolderDAO_y.getFileList2(map);
 		}

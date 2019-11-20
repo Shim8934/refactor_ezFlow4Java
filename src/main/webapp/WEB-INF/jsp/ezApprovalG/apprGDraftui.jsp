@@ -433,7 +433,6 @@
 				                	if( apprReuseConfig != '1' ){
 			                			getDocInfo();
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
-				                		// message.SetEditable(true);
 				                	}
 			                	}
 		                    }

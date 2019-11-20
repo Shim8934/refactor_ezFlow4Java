@@ -38,7 +38,13 @@
 			var newName = document.getElementById("nameInput").value;
 			
 			if (newName == "") {
-				alert('<spring:message code='ezWebFolder.t400'/>');
+				if (functionType == "insert" && fileId == 0) {
+					alert('<spring:message code='ezWebFolder.t265'/>');
+				} else if (functionType == "update" && fileId == 0){
+					alert('<spring:message code='ezWebFolder.t304'/>');
+				} else {
+					alert('<spring:message code='ezWebFolder.t400'/>');
+				}
 				return;
 			}
 
@@ -79,11 +85,9 @@
 			if (functionType == "insert" && fileId == 0) {
             	$('#topMenu').text("<spring:message code='ezWebFolder.t302'/>");
             	$('#fileNamediv').text('<spring:message code='ezWebFolder.t514'/>');
-            	$('#nameInput').attr("placeholder","<spring:message code='ezWebFolder.t314'/>");
             } else if(functionType == "update" && fileId == 0) {
             	$('#topMenu').text("<spring:message code='ezWebFolder.t303'/>");
             	$('#fileNamediv').text('<spring:message code='ezWebFolder.t514'/>');
-            	$('#nameInput').attr("placeholder","<spring:message code='ezWebFolder.t314'/>");
             } 		
 		}
 		
@@ -109,7 +113,13 @@
 			newName = document.getElementById("nameInput").value;
 			
 			if (newName == "") {
-				alert('<spring:message code='ezWebFolder.t400'/>');
+				if (functionType == "insert" && fileId == 0) {
+					alert('<spring:message code='ezWebFolder.t265'/>');
+				} else if (functionType == "update" && fileId == 0){
+					alert('<spring:message code='ezWebFolder.t304'/>');
+				} else {
+					alert('<spring:message code='ezWebFolder.t400'/>');
+				}
 				return;
 			}
 
@@ -241,7 +251,7 @@
 	<div style="margin: 0px; height:112px; border:1px solid #ddd; padding:15px; margin-bottom:10px">
 		<div style="text-align:left; font-size:12px" id ="fileNamediv"><spring:message code='ezWebFolder.t119'/></div>
 		<div style="height: 40px; line-height: 40px; margin-top: 10px;">
-			<input id="nameInput" type="text" placeholder="<spring:message code='ezWebFolder.t212'/>" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #ddd;">
+			<input id="nameInput" type="text" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #ddd;">
 		</div>
 	</div>	
 	<div class="btnpositionNew">

@@ -490,17 +490,18 @@ function SGetDraftAprLineInfo(ret) {
             setAprLinesXML(xmlKuljea);
             DrawAutoAprLine(ret[0], pDraftFlag);
         } else {
-        TempsaveAprlineinfo = ret[1];
-        xmlKuljea = ret[1];
-        setAprLinesXML(xmlKuljea);
-        DrawAutoAprLine(ret[1], pDraftFlag);
+            TempsaveAprlineinfo = ret[1];
+            xmlKuljea = ret[1];
+            setAprLinesXML(xmlKuljea);
+            DrawAutoAprLine(ret[1], pDraftFlag);
         }
+        
+        FieldsAvailable();
         xmlReDraft = "R";
+
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
-
         } else if (xmlReDraft == "R") {
-
             ClearDocCellInfo();
         }
 

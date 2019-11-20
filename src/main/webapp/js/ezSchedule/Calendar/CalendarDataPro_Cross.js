@@ -727,6 +727,14 @@ function CalMonthDataBind(oAppointment) {
             oTd.className = "department";
             oSpan.className = "department";
         }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+        		oTd.className = "calendar_data_public_department";
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
 
         oTd.appendChild(oSpan);
 
@@ -853,6 +861,13 @@ function CalWeekDataBind(oAppointment, order) {
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+        }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
         }
 
         oTd.appendChild(oSpan);
@@ -988,6 +1003,13 @@ function CalWeekAllDataBind(oAppointment, order) {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
         }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
+        }
 
         oDiv.appendChild(oSpan);
 
@@ -1102,6 +1124,13 @@ function CalDayDataBind(oAppointment, order) {
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+        }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
         }
 
         oTd.appendChild(oSpan);
@@ -1237,6 +1266,13 @@ function CalDayAllDataBind(oAppointment, order) {
         else {
             oDiv.className = "calendar_data_department";
             oSpan.className = "department";
+        }
+        
+        for (var i = 0; i < publicIds.length; i++) {
+        	if (oAppointment.OwnerID == publicIds[i].id) {
+                oSpan.className = "public_department";
+                break;
+        	}
         }
 
         oDiv.appendChild(oSpan);

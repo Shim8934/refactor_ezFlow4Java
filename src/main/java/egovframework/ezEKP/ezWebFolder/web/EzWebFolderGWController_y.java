@@ -738,6 +738,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String searchEndDate = request.getParameter("searchEndDate") 		!= null ? request.getParameter("searchEndDate") 	: "" ;
 		String searchPageCount = request.getParameter("searchPageCount") 	!= null ? request.getParameter("searchPageCount") 	: "" ;
 		String isExplorer = request.getParameter("isExplorer") 				!= null ? request.getParameter("isExplorer") 		: "" ;
+		String sortType 		= request.getParameter("sortType") 			!= null ? request.getParameter("sortType") 			: "" ;
+		String sortColumn 		= request.getParameter("sortColumn") 		!= null ? request.getParameter("sortColumn") 		: "" ;
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
 		searchExt = commonUtil.getWildcardEscapedString(searchExt, dbName);
@@ -834,7 +836,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 			fileList = service.getFileList2(folderId, userId, deptId, tenantId , comId,
 					searchExt, searchFileName, searchStartDate, searchEndDate, searchCreateName, searchFileType,
-					searchPageCount, pStart, pEnd, offset, primary);
+					searchPageCount, pStart, pEnd, offset, primary, sortType, sortColumn);
 			
 			LOGGER.debug("fileListSize : " + fileList.size()+ " || searchStartDate : " +searchStartDate+" || searchEndDate : "+searchEndDate );
 			

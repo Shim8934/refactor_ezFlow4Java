@@ -54,9 +54,9 @@
 
 		    window.onload = function () {
 		    	//2018-02-13 주홍선 IE10에서 창이 정상적으로 열리지 않던 것 수정
-		    	if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
-		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
-		    	}
+		    	//2019-09-20 김민성 - 크롬 & CK 에디터 환경에서 회람 작성창 하단 첨부파일 영역 나타나지 않는 현상 수정
+		    	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
+		    	
 				if (listSize != 0) {
 		        	document.getElementById("title").value = "${result.title}";
 		        	document.getElementById("receiverlist").innerHTML = "<c:out value='${userName}'/>";

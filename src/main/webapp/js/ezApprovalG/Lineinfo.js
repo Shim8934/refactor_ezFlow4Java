@@ -2047,7 +2047,7 @@ function APRLINEATTENDERDELFunction()
 	                if (pReDraftAprLineFlag) {
 	                    var TmpAprLineState = GetAttribute(pSelectedRow[0], "DATA12");
 	                    var tempcellvalue = getNodeText(pSelectedRow[0].cells[0]);
-	                    if ((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRow[0], "DATA4") == pUserID || tempcellvalue == "1") {
+	                    if ((TmpAprLineState == "002" || TmpAprLineState == "005") || tempcellvalue == "1") {
 	                        var pAlertContent = strLangS249;
 	                        OpenAlertUI(pAlertContent);
 	                        return;
@@ -3294,16 +3294,16 @@ function chkLastKyuljea(AprLineRow) {
 	
 	for(i=0;i < AprLineRow.length - 1; i++) {
 		aprtype = GetAttribute(AprLineRow[i],"DATA11");
-		
+
 		if (addLastKyulJeYN == "1") {
-			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType8 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType9 || aprtype == strAprType12 || aprtype == strAprType11) {
 				rtnVal = false;
 				break;
 			}
 
 		} else if (addLastKyulJeYN == "2") {
-			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType15 || aprtype == strLangS264) break;
+			if (aprtype == strAprType1 || aprtype == strAprType4 || aprtype == strAprType8 || aprtype == strAprType15 || aprtype == strLangS264) break;
 			if (aprtype == strAprType9 || (GetAttribute(AprLineRow[0],"DATA11") != strAprType11 && GetAttribute(AprLineRow[0],"DATA11") != strAprType8 && aprtype == strAprType12)) {
 				rtnVal = false;
 				break;
