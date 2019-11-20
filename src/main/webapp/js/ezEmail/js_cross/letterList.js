@@ -205,7 +205,7 @@ function addLetterList(jsonArr) {
 			$(".lmLetterTitle").html("<span id='span1'>" + letterListMsg + "</span><b id='b1'>" + letterPathMsg + "</b>");
 		}
 		
-    	letterListHtml = "<li class='lmNoData'>" + dataNoMsg + "</li>";
+    	letterListHtml = "<li class='lmNoData'><span style='width:100%'>" + dataNoMsg + "<span></li>";
 	}
 	
 	$(".lmLetterListUl").html(letterListHtml);
