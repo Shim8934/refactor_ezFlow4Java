@@ -329,6 +329,7 @@
 	        WHERE USE_STATUS = 'Y'
 	        AND FOLDER_TYPE = 'D'
 	        AND TENANT_ID = #tenantId#
+	        AND COMPANY_ID = #compId#
 	        AND OWNER_ID IN
 		]]>
 			<iterate property="idList" open="(" close=")" conjunction=",">
@@ -366,6 +367,7 @@
 				ON FF.FOLDER_ID = FU.FOLDER_ID
 				AND FF.TENANT_ID = FU.TENANT_ID
 				AND FF.FOLDER_TYPE = 'C'
+				AND FF.COMPANY_ID = #compId#
 				AND FU.USER_ID IN 
 		]]>
 			<iterate property="idList" open="(" close=")" conjunction=",">
@@ -392,6 +394,7 @@
 			    FOLDER_PATH	 AS FOLDERPATH 
 	        FROM TBL_WEBFOLDER_FOLDER
 	        WHERE OWNER_ID = #compId#
+	        AND COMPANY_ID = #compId#
 	        AND FOLDER_TYPE = 'C'
 	        AND FOLDER_UPPER = 'root'
 	        AND USE_STATUS = 'Y'
