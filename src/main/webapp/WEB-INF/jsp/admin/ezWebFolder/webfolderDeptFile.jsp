@@ -207,7 +207,7 @@
 				<li><span class="icon16 icon16_delete" onclick="fileDelete();"></span></li>
 				<li><span class="icon16 icon16_refresh" onclick="refreshView();"></span></li>
 				<li id="">
-					<select id="fileTypeSelect">
+					<select id="fileTypeSelect" onchange="search_Set('1');">
 						<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
 						<option value="2"         ><spring:message code='ezWebFolder.t192'/></option>
 						<option value="3"         ><spring:message code='ezWebFolder.t193'/></option>

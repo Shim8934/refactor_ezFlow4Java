@@ -693,11 +693,11 @@ public class EzSystemAdminController {
 			int j = 2;
 			
 			ConnectionInfoVO infoVo = loginHistList.get(i-j);
-			String userName = infoVo.getUsernm();
+			String userName = infoVo.getUsernm() + "(" + infoVo.getUserid() + ")";
 			String userDeptName = infoVo.getDeptnm();
 			String userCompanyName = infoVo.getCompanynm();
 			if (!sysLang.equals("primary")) {
-				userName = infoVo.getUsernm2();
+				userName = infoVo.getUsernm2() + "(" + infoVo.getUserid() + ")";
 				userDeptName = infoVo.getDeptnm2();
 				userCompanyName = infoVo.getCompanynm2();
 			}
