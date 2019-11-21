@@ -26098,7 +26098,7 @@
    	</update>
    	
    	<update id="EzApprovalG.updateBanSongChamJoAprLineInfo" parameterClass="Map"> 
-   		UPDATE 
+   		<!-- UPDATE 
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_AprState#, 
@@ -26110,7 +26110,21 @@
 		AND 
 			TENANT_ID= #v_TENANTID#
 		AND
-         	COMPANYID = #companyID#
+         	COMPANYID = #companyID# -->
+		UPDATE
+			TBL_APRLINEINFO
+		SET
+			APRSTATE = '000'
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			APRTYPE = '007'
+		AND
+			APRSTATE = '002'
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
    	</update>
    	
    	<update id="EzApprovalG.updateBanSongAprDocInfo" parameterClass="Map"> 
