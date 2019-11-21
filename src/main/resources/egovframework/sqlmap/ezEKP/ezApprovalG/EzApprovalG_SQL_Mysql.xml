@@ -26077,22 +26077,24 @@
 			TBL_CABINETCLASS.COMPANYID= #companyID#
    	</update>
    	
-   	<update id="EzApprovalG.updateBanSongAprLineInfo" parameterClass="Map"> 
-   		UPDATE 
-   			TBL_APRLINEINFO 
-   		SET 
-   			AprState = #v_AprState#, 
-   			ProcessDate = #v_SYSDATE#
-		WHERE 
-			DocID = #v_DOCID# 
-		AND                
-			AprMemberID = #v_APRMEMBERID# 
-		AND 
-			(AprState = #v_AprState2# OR AprState = #v_AprState3# ) 
-		AND 
-			TENANT_ID= #v_TENANTID#
-		AND
-         	COMPANYID = #companyID#
+   	<update id="EzApprovalG.updateBanSongAprLineInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRLINEINFO
+			SET
+				AprState = #v_AprState#,
+				ProcessDate = #v_SYSDATE#
+			WHERE
+				DocID = #v_DOCID#
+			AND
+				AprMemberID = #v_APRMEMBERID#
+			AND
+				((AprState = #v_AprState2# OR AprState = #v_AprState3#) AND AprType <> '007')
+			AND
+				TENANT_ID= #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+        ]]>
    	</update>
    	
    	<update id="EzApprovalG.updateBanSongChamJoAprLineInfo" parameterClass="Map"> 
