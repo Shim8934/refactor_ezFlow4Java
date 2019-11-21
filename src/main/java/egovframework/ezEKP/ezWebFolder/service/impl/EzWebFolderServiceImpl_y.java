@@ -115,6 +115,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		LOGGER.debug("getFolderTree. userId :" + userId + ", folderType :" + folderType);
 		map.put("primary", primary);
 		map.put("tenantId", tenantId);
+		map.put("compId", compId);
 
 		if (folderType.equals("U") || folderType.equals("")) {
 			map.put("userId", userId);
