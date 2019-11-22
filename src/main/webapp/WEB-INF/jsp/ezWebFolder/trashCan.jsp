@@ -409,7 +409,7 @@
 				}
 			}
 			
-			showPanel(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+			showPanel(450, 200, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
 			refreshView();
 		}
 

@@ -326,7 +326,7 @@ function fileDelete() {
 	if (filesList == null) {alert(strLang38); return;}
 	
 	openLeftPanel();
-	DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
+	DivPopUpShow(450, 200, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 }
 
 function fileRename() {
@@ -337,7 +337,7 @@ function fileRename() {
 	
 	var fileId = filesList[0];
 	openLeftPanel();
-	DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+	DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 }
 
 function fileMove() {

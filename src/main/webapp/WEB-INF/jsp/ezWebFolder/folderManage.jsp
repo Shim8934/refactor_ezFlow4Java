@@ -166,7 +166,7 @@
 			inputNameDlg_cross_dialogArguments[3] = functionType;
 			inputNameDlg_cross_dialogArguments[4] = folderName1;
 			inputNameDlg_cross_dialogArguments[5] = folderName2;
-			DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+			DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
 			functionType = "";
 		}
 
@@ -214,7 +214,7 @@
 			inputNameDlg_cross_dialogArguments[3] = functionType;
 			inputNameDlg_cross_dialogArguments[4] = folderName1;
 			inputNameDlg_cross_dialogArguments[5] = folderName2;
-			DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+			DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
 			functionType = "";
 		}
 
@@ -257,7 +257,7 @@
 			deleteFolderDlg_cross_dialogArguments[1] = add_onclick_Complete;
 			console.log("folderId delete_onclick function" + folderId);
 			console.log("deleteFolderDlg_cross_dialogArguments delete_onclick function" + deleteFolderDlg_cross_dialogArguments[0]);
-			DivPopUpShow(335, 225, "/ezWebFolder/folderDelete.do");
+			DivPopUpShow(335, 200, "/ezWebFolder/folderDelete.do");
 		}
 
 		function move_onclick() {

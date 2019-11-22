@@ -117,7 +117,7 @@ var buttons = (function() {
 						alert(messages.strLang41);
 					} else {
 						openLeftPanel();
-						DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString()+"&folderList=" + selected.folders.toString());
+						DivPopUpShow(450, 200, "/ezWebFolder/deleteConfirm.do?fileList=" + selected.files.toString()+"&folderList=" + selected.folders.toString());
 					}
 					
 				},
@@ -165,7 +165,7 @@ var buttons = (function() {
 							alert(messages.strLang42);
 						} else {
 							openLeftPanel();
-							DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+							DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 						}
 					},
 					error : function(error) {
@@ -208,7 +208,7 @@ var buttons = (function() {
 				inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
 				inputNameDlg_cross_dialogArguments[3] = functionType;
 				openLeftPanel();
-				DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+				DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
 				
 			}
 			functionType = "";
@@ -334,7 +334,7 @@ var buttons = (function() {
 			inputNameDlg_cross_dialogArguments[4] = folderName1;
 			inputNameDlg_cross_dialogArguments[5] = folderName2;
 			openLeftPanel();
-			DivPopUpShow(450, 250,  "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+			DivPopUpShow(450, 200,  "/ezWebFolder/fileRenameConfirm.do?fileId=0");
 			functionType = "";
 		}
 	};
