@@ -603,7 +603,7 @@ function makeXML(newDocID) {
 //
 //        if (HwpCtrl.CheckFieldExist("receiptdate")) {
 //            setNodeText(tempNode3 , HwpCtrl.GetFieldText("receiptdate"));
-		}
+//		}
 	}
 
 	var Nodes = eNodes.selectNodes("foot/sendinfo");
