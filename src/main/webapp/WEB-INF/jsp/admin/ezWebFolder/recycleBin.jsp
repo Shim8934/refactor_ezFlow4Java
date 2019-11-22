@@ -421,7 +421,7 @@
 			}
 			
 			openLeftPanel();
-			DivPopUpShow(450, 250, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
+			DivPopUpShow(450, 200, "/ezWebFolder/permanentDeleteConfirm.do?fileList=" + filesList.toString() + "&folderList=" + folderList.toString());
 		
 			refreshView();
 		}
