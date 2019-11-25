@@ -349,7 +349,8 @@ function dblClickBoard(boardID, itemID) {
 		async: false,
 		contentType: "application/json",
 		data : JSON.stringify({
-			boardID: boardID
+			boardID: boardID,
+			itemID : itemID
 		}),
 		success: function (result) {
 			readAuthor = result;

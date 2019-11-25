@@ -2688,4 +2688,17 @@
 		AND
 			tenant_id = #v_tenantID#
 	</select>
+	
+	<select id="EzPortalDAO.chkBoardReadAuthor" parameterClass="Map" resultClass="String">
+		SELECT 
+			read_fg 
+		FROM 
+			tbl_board_boardmanage
+		WHERE 
+			TENANT_ID = #tenantID#
+		AND 
+			boardid = #boardID#
+		AND 
+			ACCESSID = #accessID#    	
+	</select>
 </sqlMap>
