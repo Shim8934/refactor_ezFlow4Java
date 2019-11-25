@@ -113,7 +113,7 @@
 				<ul style="margin-top:15px">	            	
 					<li class="important"><span id="add"><spring:message code = 'ezPersonal.hyh2' /></span></li>
 					<li><span id="mod"><spring:message code = 'ezPersonal.hyh3' /></span></li>
-					<li><span id="del"><spring:message code = 'ezPersonal.hyh4' /></span></li>
+					<li><span class="icon16 icon16_delete" id="del"></span></li>
 					<div class="sub_frameIcon" style="float:right;">	
 						<div class="sub_frameIconUL" style="width:100% !important;">
 							<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
