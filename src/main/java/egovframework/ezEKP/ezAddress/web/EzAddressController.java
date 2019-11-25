@@ -1397,7 +1397,7 @@ public class EzAddressController{
 	/**
 	 * 최상위 주소록 정보 호출 함수
 	 */
-	@RequestMapping(value = "/ezAddress/getRootAddressXML.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/getRootAddressXML.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getRootAddressXML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception {		
 		logger.debug("getRootAddressXML started.");
