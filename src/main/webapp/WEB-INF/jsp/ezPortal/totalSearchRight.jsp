@@ -356,6 +356,8 @@ function dblClickBoard(boardID, itemID) {
 		}
 	});
 	
+	//readAuthor = "true";
+	
 	if(readAuthor === "true") {
 		boardList.filter(function(e){
 			return e.BoardID === boardID && e.ItemID === itemID ? gubun = e.GUBUN : "";
@@ -575,7 +577,9 @@ function btn_searchStart() {
 		,btnStart : true  // 검색버튼으로 실행했을 경우.
 	}
 	
-	clickTab("all");
+	clickTab(type);
+	parent.parent.document.getElementById("topFrame").contentWindow.deleteTotalSearchValue();
+	//clickTab("all");
 }
 
 /**
