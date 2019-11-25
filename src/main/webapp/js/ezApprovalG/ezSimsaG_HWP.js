@@ -205,6 +205,9 @@ function covBody(pbody) {
 	var re = /&nbsp;/g; 
 	var BodyStr = "<content>" + newSTR.replace(re,"&amp;nbsp;") + "</content>";
 	
+	//스타일 속성안에 요소가 아무것도 없을 경우 파싱 에러 처리 2019-11-25 홍대표
+    BodyStr = BodyStr.replace(/style=''/g, "");
+	
 	BodyStr = BodyStr.replace(/: '/g,":");
 	BodyStr = BodyStr.replace(/'' /g,"' ");
 	BodyStr = BodyStr.replace(/''>/g,"'>");
@@ -227,34 +230,9 @@ function covBody(pbody) {
     BodyStr = BodyStr.replace(/[^-]height='height:\d+'/ig, "");
     BodyStr = BodyStr.replace(/([^-]height:)(\d+[\w?]*)/ig, pxToMm).replace(/(width:)(\d+[\w?]*)/ig, pxToMm);
     BodyStr = BodyStr.replace(/(border-)(left|right|top|bottom):[\w\d\s#.(),]*;/g, "");
-    //BodyStr = BodyStr.replace(/width="(.*?)[0-9]*/ig, " $&mm");
-    //BodyStr = BodyStr.replace(/width='(.*?)[0-9]*/ig, " $&mm");
-    //BodyStr = BodyStr.replace(/hight="(.*?)[0-9]*/ig, " $&mm");
-    //BodyStr = BodyStr.replace(/hight='(.*?)[0-9]*/ig, " $&mm");
     
     BodyStr = BodyStr.replace(/(\?(\w)*?\w=)((')(\w*?)['])/ig, "$1$5$4");
     BodyStr = BodyStr.replace(/\n|\r|\t/g, "");
-    
-//    // rgb to hex
-//    var rgbRegexp = /rgb[(](\d), (\d), (\d)[)]/g;
-//    var rgbMatch = rgbRegexp.exec(BodyStr);
-//    
-//    var rgbToHex = function(regexpResult) {
-//    	var out = "#";
-//    	var integer;
-//    	
-//    	regexpResult.slice(1).forEach(function(color) {
-//    		integer = parseInt(color);
-//    		out += (integer < 16 ? '0' : '') + integer.toString(16);
-//    	});
-//    	
-//    	return out;
-//    };
-//    
-//    while (rgbMatch !== null) {
-//    	BodyStr = [BodyStr.slice(0, rgbMatch.index), rgbToHex(rgbMatch), BodyStr.slice(rgbMatch.index + rgbMatch[0].length)].join('');
-//    	rgbMatch = rgbRegexp.exec(BodyStr);
-//    }
     
 	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
 	xmlpara.async = false;
@@ -678,6 +656,9 @@ function makeXML(newDocID) {
 	}
 
 	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//한글기안기 심볼, 로고 이미지 경로 하드코딩 추후 유동적으로 사용할 수 있도록 수정필요 2019-11-25 홍대표.
+	//로고와 심볼 파일을 ex) fileroot/0/files/upload_approvalG\Top/ 에 위치시킴
+	SetDocumentElement(HwpCtrl, "symbolurl", "symbol.gif");
     if (HwpCtrl.CheckFieldExist("symbol")) {
 		symbolName = GetDocumentElement(HwpCtrl, "symbolurl");
 		
@@ -694,8 +675,6 @@ function makeXML(newDocID) {
             var tempSize = GetHTMLBody(HwpCtrl.GetCloneData("symbol", "HTML"));
             var tmpDiv = document.createElement("div");
             tmpDiv.innerHTML = tempSize;
-            //var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0],'height'));
-            //var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0],'width'));
             var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'height'));
             var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'width'));
 
@@ -712,6 +691,9 @@ function makeXML(newDocID) {
 	}
 
 	var Nodes = eNodes.selectNodes("foot/sendinfo");
+	//한글기안기 심볼, 로고 이미지 경로 하드코딩 추후 유동적으로 사용할 수 있도록 수정필요 2019-11-25 홍대표.
+	//로고와 심볼 파일을 ex) fileroot/0/files/upload_approvalG\Top/ 에 위치시킴
+	SetDocumentElement(HwpCtrl, "logourl", "logo.gif");
     if (HwpCtrl.CheckFieldExist("logo")) {
 		logoName = GetDocumentElement(HwpCtrl, "logourl");
 		
@@ -728,8 +710,6 @@ function makeXML(newDocID) {
             var tempSize = GetHTMLBody(HwpCtrl.GetCloneData("logo", "HTML"));
             var tmpDiv = document.createElement("div");
             tmpDiv.innerHTML = tempSize;
-            //var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0],'height'));
-            //var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.childNodes[0].childNodes[0].childNodes[0], 'width'));
             var tmpH = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'height'));
             var tmpW = PixelToMillimeter(GetAttribute(tmpDiv.getElementsByTagName("IMG")[0], 'width'));
 
