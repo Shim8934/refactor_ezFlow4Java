@@ -25306,17 +25306,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				doc.getElementsByAttribute("class").get(0).removeAttr("class");
 			}
 			
-			//센터정렬 없는 p태그 추가 hwp에서 html로 변환할 때 센터정렬값만 안가져와서 추가해줌
-			for (int i = 0; i < doc.getElementsByTag("p").size(); i++) {
-				String style = doc.getElementsByTag("p").get(i).attr("style").toString();
-				
-				if (style.indexOf("text-align") > -1) {
-					
-				} else {
-					 doc.getElementsByTag("p").get(i).attr("style", "text-align:center;" + style );
-				}
-			}
-			
 			String fontFamily = "";
 			String fontSize = "";
 			String strStyle = "";
