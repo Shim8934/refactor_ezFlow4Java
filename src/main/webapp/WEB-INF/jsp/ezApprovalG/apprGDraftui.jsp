@@ -257,8 +257,15 @@
 						setFirstDrafter("", "");
 					}
 		            
-		            if (approvalFlag == "S" && ListType != "21") {
-			            SetAutoDocnumItem();
+		            if (approvalFlag == "S") {
+		            	// 임시보관함에서 기안할 때, 자동분류코드가 로드안되는 문제 해결 | 임시저장문서 재기안 시, 기존에 저장한 분류코드 설정이 있기 때문에 양식에 설정된 자동분류코드를 로드하지 않는다.
+	            		if (ListType == "21") {
+	            			if (pDraftFlag != "REDRAFT") {
+					            SetAutoDocnumItem();
+	            			}
+		            	} else {
+				            SetAutoDocnumItem();
+		            	}
 		            }
 		        }
 		    }
