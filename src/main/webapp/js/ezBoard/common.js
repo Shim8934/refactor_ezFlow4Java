@@ -87,7 +87,9 @@ function getBoardComment() {
 										+ " onclick='OpenUserInfo(\"" + vo.userID + "\", \"" + vo.deptID + "\")'>" + vo.userName + "</span></td>";	
 				}
 				boardCommentList += "</td>";
-				boardCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5'>"
+				
+				/* 2019-11-22 홍승비 - 댓글 작성 시의 공백과 줄바꿈 전부 표출하도록 수정 */
+				boardCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5; white-space:pre-wrap;'>"
 									+ vo.content + "&nbsp;&nbsp;";
 					
 				if ( typeof userInfoID == "undefined") {

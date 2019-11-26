@@ -1254,8 +1254,13 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			LoginVO userInfoAdmin = commonUtil.getUserForGw(adminId, serverName);
 			
 			String folderIdTypeU = service.folderIdByUserIdAndFolderType(userId, userInfo.getTenantId());
-			folderIDList[0] = folderIdTypeU;
-			
+			if (folderIdTypeU == null){
+	            LOGGER.debug("The user folder does not exist.");
+	            result.put("status", "ok");
+	            result.put("code", 3);
+	            return result;
+	         }
+	         folderIDList[0] = folderIdTypeU;
 			
 			if (!isWebfolderAdmin(userInfoAdmin)) {
 				result.put("status", "error");
