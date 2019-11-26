@@ -538,8 +538,15 @@
 		            alert("<spring:message code='ezBoard.t303' />");
 		            return;
 		        }
+		        
 	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply";
-		        window.resizeTo(785, 780);
+	            
+	            /* 2019-11-22 홍승비 - 익명게시물에 답변 작성하는 경우, 게시암호만큼 높이 조정 */
+	            if (gubun == 2) {
+	            	window.resizeTo(785, 820);
+	            } else {
+		        	window.resizeTo(785, 780);
+	            }
 		    }
 		    function btn_Modify_Onclick() {
 		        if (Write_FG != "true" && gubun != "2") {
