@@ -296,7 +296,7 @@
 		/* 통합검색 */
 		var totalSearch = function () {
 			var keyword = $("#input_totalSearch").val();
-			$("#input_totalSearch").val("");
+			//$("#input_totalSearch").val("");
 // 			OpenWindow(event, "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
 			window.open("/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
 		}
