@@ -46,8 +46,8 @@ var messages = {
 	permissionError: "접근 권한이 없습니다.",
 	resultErrDuplicateRename : "중복되는 이름으로 변경할 수 없습니다.",
 	resultErrDuplicateCreate : "중복되는 이름으로 생성할 수 없습니다.",
-	successMoveFile: "이동을 성공하셨습니다.",
-	successCopyFile: "복사를 성공하셨습니다.",
+	successMoveFile: "파일 또는 폴더를 이동하였습니다.",
+	successCopyFile: "파일 또는 폴더를 복사하였습니다.",
 	outOfStorageSpaceForOneTime: "1회 업로드 용량을 초과하였습니다.",
 	outOfStorageSpace: "용량을 초과하였습니다."
 }
