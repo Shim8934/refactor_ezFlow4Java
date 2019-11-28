@@ -546,7 +546,7 @@
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 789) / 2;
-		        var pLeft = (pwidth - 764) / 2;
+		        var pLeft = (pwidth - 790) / 2;
 	    	    if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
 	    	    	var height = 789;
 	    	    } else {
@@ -564,7 +564,7 @@
 					}
 		        }
 	    	    
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=790,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
 		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */

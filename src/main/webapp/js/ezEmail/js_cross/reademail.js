@@ -995,7 +995,7 @@ function Item_View_New(pBoardID, pItemID, pBoardType) {
         /* 2018-11-06 홍승비 - 포토, 썸네일게시물 메일 내부에서 접근 시 .aspx->.do로 수정, 동영상게시판 구분 추가 */
         else if (getNodeText(xmlDoc.documentElement) != "0" && pBoardType != "7") {
           //  window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
-            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
+            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=790, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
         } else if (getNodeText(xmlDoc.documentElement) != "0" && pBoardType == "7") {
           //  window.open("/myoffice/ezBoardSTD/BoardItemView_Photo.aspx?&ItemID=" + pItemID + "&BoardID=" + pBoardID + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
             window.open("/ezBoard/boardItemViewMovie.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");   
@@ -1079,7 +1079,7 @@ function Item_View_APPR(pBoardID, pItemID, pgubun) {
     /* 2018-11-06 홍승비 - 포토, 썸네일게시물 승인을 위해 .aspx->.do로 수정, 동영상게시판 구분 추가 */
     else if (getNodeText(xmlDoc.documentElement) != "0") {
         if (pgubun == "3" || pgubun == "4") {
-            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+            window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=793,width=790, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         } else if (pgubun == "7") {
         	 window.open("/ezBoard/boardItemViewMovie.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&location=GENERAL", "", "height=679,width=764, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
         }

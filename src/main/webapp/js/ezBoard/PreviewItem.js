@@ -820,7 +820,8 @@ function MailReadOpen() {
 		}
 		
 		pTop = (pheight - 789) / 2;
-		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height +",width=765,top=" + pTop + ",left=" + pLeft, "");
+		pLeft = (pwidth - 790) / 2;
+		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height +",width=790,top=" + pTop + ",left=" + pLeft, "");
     } else if (previewType == "MOVIE" || selobj.getAttribute("DATA10") == "7" ) {
     	 pTop = (pheight - 679) / 2;
          window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
