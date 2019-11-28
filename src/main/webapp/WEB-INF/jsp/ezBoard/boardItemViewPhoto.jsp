@@ -654,8 +654,9 @@
 					if (strItemID != "") window.location.href = window.location.href.replace(pItemID, strItemID);
 				}
 				
+				/* 2019-11-28 홍승비 - 사용하지 않는 함수 주석처리 */
 				// 게시 보기(새거)
-				function Item_View_New(pBoardID, pItemID)
+/* 				function Item_View_New(pBoardID, pItemID)
 				{
 					var pheigth = window.screen.availHeight;
 					var pwidth = window.screen.availWidth;
@@ -665,7 +666,7 @@
 					pwidth = pwidth - 359;
 							
 					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");	
-				}
+				} */
 				function GoTop()
 				{
 				    message.AGoTop.click();
