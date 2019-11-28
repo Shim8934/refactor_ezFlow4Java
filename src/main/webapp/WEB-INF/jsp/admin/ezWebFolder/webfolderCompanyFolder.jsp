@@ -487,12 +487,12 @@
 					document.getElementById("fldName2").focus;
 					return;
 				}
-				
+				/* 조직도에 아무도 선택하지 않고 저장할 수 있도록 주석처리
 				if (!target.replace(/\s/g,'')) {
 					alert("<spring:message code='ezWebFolder.t202'/>");
 					return;
 				}
-				
+				*/
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/changeCompanyFolder.do",
@@ -640,7 +640,7 @@
 										<td>
 											<div style="margin: 20px 20px 5px 20px;">
 												<img src="/images/kr/left/left_dot02.gif" />
-												<span><spring:message code='ezWebFolder.t226'/></span>
+												<span style="display:inline-block; width:110px;"><spring:message code='ezWebFolder.t226'/></span>
 												<input id="fldName" type="text" maxlength="50" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
 											</div>
 										</td>
@@ -649,7 +649,7 @@
 										<td>
 											<div style="margin: 5px 20px 10px 20px;">
 												<img src="/images/kr/left/left_dot02.gif" />
-												<span><spring:message code='ezWebFolder.t227'/></span>
+												<span style="display:inline-block; width:110px;"><spring:message code='ezWebFolder.t227'/></span>
 												<input id="fldName2" type="text" maxlength="50" style="height: 25px; border-radius: 3px; border: 1px solid #ddd; width: 200px; margin-left: 2px; padding-left: 5px;">
 											</div>
 										</td>
@@ -657,7 +657,7 @@
 									<tr>
 										<td>
 											<div style="margin: 20px 20px 5px; min-height: 36px;">
-												<div style="display: inline-block; width: 60px;" id= "displayUsers">
+												<div style="display: inline-block; width: 70px;" id= "displayUsers">
 													<img src="/images/kr/left/left_dot02.gif" />
 													<span id=""><spring:message code='ezWebFolder.t204'/></span>&nbsp;
 												</div>

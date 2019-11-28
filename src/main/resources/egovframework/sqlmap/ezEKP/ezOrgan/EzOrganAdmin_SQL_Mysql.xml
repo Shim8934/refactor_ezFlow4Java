@@ -2411,10 +2411,10 @@
                  ('S109', 1, '소속문서함', 'Special doc. folder type', '所属文書フォルダ', '所属文件夹', 100, NULL, NULL, NULL, NULL, '문서함관리-특수문서함', '문서함관리-특수문서함', #companyID#, #tenantID#),
                  ('S109', 2, '문서함명', 'Special doc. folder name', '文書フォルダ名', '文件夹名', 100, NULL, NULL, NULL, NULL, '문서함관리-특수문서함', '문서함관리-특수문서함', #companyID#, #tenantID#),
                  ('S109', 3, '서브쿼리', 'Query', 'サーブクイーリー', '查询', 100, NULL, NULL, NULL, NULL, '문서함관리-특수문서함', '문서함관리-특수문서함', #companyID#, #tenantID#),
-                 ('S200', 2, '코 드', 'Code', 'コード', '代码', 50, NULL, 'ITEMCODE', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
+                 ('S200', 2, '코 드', 'Code', 'コード', '代码', 70, NULL, 'ITEMCODE', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
                  ('S200', 3, '기 능 명 칭', 'Name', '機能名', '功能名称', 180, NULL, 'ITEMNAME', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
-                 ('S200', 4, '보존기간', 'Keeping period', '保存期間', '保留时间', 80, NULL, 'ITEMLIMIT', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
-                 ('S200', 5, '보안등급', 'Security level', '保安等級', '安全级别', 80, NULL, 'ITEMSECURITY', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
+                 ('S200', 4, '보존기간', 'Keeping period', '保存期間', '保留时间', 70, NULL, 'ITEMLIMIT', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
+                 ('S200', 5, '보안등급', 'Security level', '保安等級', '安全级别', 70, NULL, 'ITEMSECURITY', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
                  ('S200', 6, '공개여부', 'Public', '公開設定', '是否共享', 60, NULL, 'ITEMPUBLIC', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
                  ('SU200', 1, '문서분류', 'Classified document', '文書の分類', '文件分类', 105, NULL, 'GROUPNAME', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
                  ('SU200', 2, '코 드', 'Code', 'コード', '代码', 50, NULL, 'ITEMCODE', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
@@ -2957,7 +2957,7 @@
 	    		(#companyID#, #tenantID#, 1, 1, 1, 2, null),
 	    		(#companyID#, #tenantID#, 2, 4, 1, 1, null),
 	    		(#companyID#, #tenantID#, 4, 15, 1, 3, null),
-	    		(#companyID#, #tenantID#, 5, 14, 1, 4, null),
+	    		(#companyID#, #tenantID#, 5, 0, 1, 4, null),
 	    		(#companyID#, #tenantID#, 6, 2, 1, 5, null),
 	    		(#companyID#, #tenantID#, 7, 3, 1, 6, null),
 	    		(#companyID#, #tenantID#, 8, 3, 1, 7, null),
@@ -2988,9 +2988,9 @@
 	    		(4, 15, 1, #tenantID#, #companyID#, '투표'),
 	    		(4, 15, 2, #tenantID#, #companyID#, 'Vote'),
 	    		(4, 15, 3, #tenantID#, #companyID#, '投票'),
-	    		(5, 14, 1, #tenantID#, #companyID#, '빠른설문'),
-	    		(5, 14, 2, #tenantID#, #companyID#, 'QuickPoll'),
-	    		(5, 14, 3, #tenantID#, #companyID#, '電子アンケート'),
+	    		(5, 0, 1, #tenantID#, #companyID#, '빠른설문'),
+	    		(5, 0, 2, #tenantID#, #companyID#, 'Quick Poll'),
+	    		(5, 0, 3, #tenantID#, #companyID#, 'Quick Poll'),
 	    		(6, 2, 1, #tenantID#, #companyID#, '일정'),
 	    		(6, 2, 2, #tenantID#, #companyID#, 'Schedule'),
 	    		(6, 2, 3, #tenantID#, #companyID#, '日程'),
@@ -3041,7 +3041,7 @@
 	    		(1, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(1, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(1, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
-	    		(1, #tenantID#, #companyID#, 5, 1, 4, 14, 0),
+	    		(1, #tenantID#, #companyID#, 5, 1, 4, 0, 0),
 	    		(1, #tenantID#, #companyID#, 6, 1, 5, 2, 0),
 	    		(1, #tenantID#, #companyID#, 7, 1, 6, 3, 0),
 	    		(1, #tenantID#, #companyID#, 8, 1, 7, 3, 0),
@@ -3059,7 +3059,7 @@
 	    		(2, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(2, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(2, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
-	    		(2, #tenantID#, #companyID#, 5, 1, 4, 14, 0),
+	    		(2, #tenantID#, #companyID#, 5, 1, 4, 0, 0),
 	    		(2, #tenantID#, #companyID#, 6, 1, 5, 2, 0),
 	    		(2, #tenantID#, #companyID#, 7, 1, 6, 3, 0),
 	    		(2, #tenantID#, #companyID#, 8, 1, 7, 3, 0),
@@ -3077,7 +3077,7 @@
 	    		(3, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(3, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(3, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
-	    		(3, #tenantID#, #companyID#, 5, 1, 4, 14, 0),
+	    		(3, #tenantID#, #companyID#, 5, 1, 4, 0, 0),
 	    		(3, #tenantID#, #companyID#, 6, 1, 5, 2, 0),
 	    		(3, #tenantID#, #companyID#, 7, 1, 6, 3, 0),
 	    		(3, #tenantID#, #companyID#, 8, 1, 7, 3, 0),
@@ -4304,6 +4304,9 @@
             tenant_id = #tenantID#  AND PHYSICALDELIVERYOFFICENAME = #companyId#
 			<include refid="EzOrganAdminDAO.searchQuery"/>
 	    ORDER BY 
+	    <isNotEmpty property="sortColumn">
+	    	$orderbyData$,
+	    </isNotEmpty>
 	    	displayName
 	    <isNotEqual property="v_start" compareValue="-1">
 	    LIMIT

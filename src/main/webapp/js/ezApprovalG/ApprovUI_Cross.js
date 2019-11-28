@@ -1462,7 +1462,7 @@ function getCurApproverAprLine(type) {
     LastTotalKyulSN = getLastTotalSignSN(objNodes);
     LastSignSN = objNodes.length;
 
-    for (var i = 0; i < objNodes.length; i++) {
+    for (var i = objNodes.length - 1; i < objNodes.length; i--) {
         var params = new Array();
         params[0] = "0";
         var dataNodes = GetLastChildNodes(objNodes[i], params);
@@ -2114,7 +2114,7 @@ function SReAprLineSingMapping(ret) {
             break;
         }
         else {
-            if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5) {
+            if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5) {
                 startIdx = startIdx + 1;
                 IngFlag = true;
             }
@@ -2230,7 +2230,7 @@ function SReAprLineSingMapping(ret) {
     var hidx = hapyuiCnt;
     var startOrder = 1;
     for (i = 1; i < OrderStat.length; i++) {
-        if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5)
+        if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
             break;
         else
             startOrder = startOrder + 1;
@@ -2480,7 +2480,7 @@ function ReAprLineSingMapping(ret) {
             break;
         }
         else {
-            if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5)
+            if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
                 startIdx = startIdx + 1;
             else if (OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType9 & OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
                 startIdx = startIdx + 1;
@@ -2583,7 +2583,7 @@ function ReAprLineSingMapping(ret) {
     var hidx = hapyuiCnt;
     var startOrder = 1;
     for (i = 1; i < OrderStat.length; i++) {
-        if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5)
+        if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
             break;
         else
             startOrder = startOrder + 1;

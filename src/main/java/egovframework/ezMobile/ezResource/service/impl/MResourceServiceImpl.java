@@ -112,7 +112,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 	@Override
 	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId,
-			String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) {	
+			String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) throws Exception {	
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDID", brdId);
 		map.put("v_PBRDCOMPANY", brdCompany);
@@ -1493,7 +1493,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn) throws Exception {	
+	public List<MResourceGetAdmSubClsTreeVO> getResApprBrdListCheck(String brdCompany, String userId, String userCompany, String userDept, int tenantId, String langStr, String authYn, String brdID) throws Exception {	
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PBRDCOMPANY", brdCompany);
 		map.put("v_PUSERID", userId);
@@ -1501,6 +1501,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PUSERDEPT", userDept);
 		map.put("v_PAUTHYN", authYn);
 		map.put("tenantID", tenantId);
+		
+		if(!brdID.equals("")) {
+			map.put("v_brdID", brdID);
+		}
 		
 		List<MResourceGetAdmSubClsTreeVO> result = mResourceDAO.getResApprBrdListCheck(map);
 		
@@ -1512,11 +1516,11 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		deptIds.remove(0);		// 현재 부서ID 삭제
 		
 		for(int i=0; i<deptIds.size(); i++) {
-			map.put("v_PUSERDEPT", userDept);
+			map.put("v_PUSERDEPT", deptIds.get(i));
 			List<MResourceGetAdmSubClsTreeVO> result2 = mResourceDAO.getResApprBrdListCheck2(map);
 			
 			if(result2.size() > 0)
-				return result2;
+				result.addAll(result2);
 		}
 		
 		// 사내 겸직 권한 체크
@@ -1532,11 +1536,11 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 					Collections.reverse(addJobDeptIds);
 					
 					for(int j=0; j<addJobDeptIds.size(); j++) {
-						map.put("v_PUSERDEPT", userDept);
+						map.put("v_PUSERDEPT", addJobDeptIds.get(j));
 						List<MResourceGetAdmSubClsTreeVO> result2 = mResourceDAO.getResApprBrdListCheck2(map);
 						
 						if(result2.size() > 0)
-							return result2;
+							result.addAll(result2);
 					}
 				}
 			}

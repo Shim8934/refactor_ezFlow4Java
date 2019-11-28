@@ -81,6 +81,7 @@ function TreeNode() {
         treeDiv.setAttribute("ENDNODE", String(pEndNode));
         //노드 DIV에 노드 데이터 세팅.
         var arrNodeData = GetChildNodes(pNodeData);
+        var spanNodeName = "";
         for (var i = 0; i < arrNodeData.length; i++) {
             var strDataName = arrNodeData[i].tagName.toUpperCase();
             var strDataValue = SelectSingleNodeValue(pNodeData, strDataName);
@@ -88,7 +89,10 @@ function TreeNode() {
 
             if (strDataName == "DATA4" && strDataValue != "")
                 color = strDataValue;
-
+            
+            if (strDataName == "DATA2" && strDataValue != "") {
+            	spanNodeName = strDataValue;
+            }
         }
 
         //확장하는 노드인지 체크
@@ -198,9 +202,8 @@ function TreeNode() {
             //imgNode.setAttribute("onClick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
         	spanNode.setAttribute("onClick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + spanNode.id + "\");");
         }
-
-        //treeDiv.innerHTML += imgNode.outerHTML;
         
+        //treeDiv.innerHTML += imgNode.outerHTML;
         treeDiv.innerHTML += spanNode.outerHTML;
         
         //
@@ -238,6 +241,11 @@ function TreeNode() {
         }
         
         spnNode.style.paddingLeft = "1px";*/
+        
+        /* 2019-11-25 홍승비 - 게시판과 게시판그룹(폴더) 부분에 title 툴팁 속성 추가 */
+        if (window.location.href.indexOf("/ezBoard/") > -1) {
+        	spnNode.setAttribute("title", spanNodeName);
+        }
         
         if (IMAGETYPE == "BOARD") {
         	spnNode.style.padding = "0px 0px 0px 2px";
@@ -278,7 +286,7 @@ function TreeNode() {
                 spnNode.setAttribute("ondblclick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + spanNode.id + "\");");
             }
         }
-
+        
         treeDiv.innerHTML += spnNode.outerHTML;
 
         //하위 노드용 DIV 생성

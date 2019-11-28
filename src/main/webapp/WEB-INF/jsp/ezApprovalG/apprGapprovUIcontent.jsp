@@ -223,7 +223,7 @@
 	                        //Div_.style.textAlign = "left";
 	                        if (navigator.userAgent.indexOf('Firefox') != -1)
 	                            Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
-	                        Div_.innerHTML = TDRows.item(i).innerHTML;
+	                        Div_.innerHTML = TDRows.item(i).innerHTML.replace(/(<div>|<\/div>)/gi, "");
 	                        TDRows.item(i).innerHTML = "";
 	                        TDRows.item(i).appendChild(Div_);
 	                    }

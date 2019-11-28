@@ -349,12 +349,15 @@ function dblClickBoard(boardID, itemID) {
 		async: false,
 		contentType: "application/json",
 		data : JSON.stringify({
-			boardID: boardID
+			boardID: boardID,
+			itemID : itemID
 		}),
 		success: function (result) {
 			readAuthor = result;
 		}
 	});
+	
+	//readAuthor = "true";
 	
 	if(readAuthor === "true") {
 		boardList.filter(function(e){
@@ -575,7 +578,9 @@ function btn_searchStart() {
 		,btnStart : true  // 검색버튼으로 실행했을 경우.
 	}
 	
-	clickTab("all");
+	clickTab(type);
+	parent.parent.document.getElementById("topFrame").contentWindow.deleteTotalSearchValue();
+	//clickTab("all");
 }
 
 /**

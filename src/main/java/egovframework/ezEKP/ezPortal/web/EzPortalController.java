@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
@@ -131,6 +132,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzPollService")
 	private EzPollService ezPollService;
+	
+	@Resource(name = "EzBoardController")
+	private EzBoardController ezBoardController;
 	/**
 	 * 포탈 메인 화면 호출 함수
 	 */
@@ -4176,6 +4180,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String boardID = (String) paramData.get("boardID");
+		String itemID = (String) paramData.get("itemID");
+		
 		String userID = userInfo.getId();
 		String deptID = userInfo.getDeptID();
 		int tenantID = userInfo.getTenantId();
@@ -4188,13 +4194,22 @@ public class EzPortalController extends EgovFileMngUtil {
 			return readAuthor;
 		}			
 		
+		boolean readCheck = ezBoardController.accessCheck(boardID, itemID, "GENERAL", userInfo);
+		logger.debug("totalSearch readCheck : " + readCheck);
+		
+		if (readCheck) {
+			readAuthor = "true";
+		} else {
+			readAuthor = "false";
+		}
+		
 		// 유저 권한이 부서 권한보다 우선시 된다.
 		// 유저 권한이 없을 경우 부서 권한을 찾아보기.
-		readAuthor = ezPortalService.chkBoardReadAuthor(boardID, userID, tenantID);
+		/*readAuthor = ezPortalService.chkBoardReadAuthor(boardID, userID, tenantID);
 		
 		if(readAuthor.equalsIgnoreCase("")) {
 			readAuthor = ezPortalService.chkBoardReadAuthor(boardID, deptID, tenantID);
-		}
+		}*/
 		
 		logger.debug("chkBoardReadAuthor is ended.");
 		return readAuthor;

@@ -1038,7 +1038,7 @@ function event_SaveonClick() {
         if (event_SaveonClick.savemode == "sendsave") {
         	// status code가 200~300이 아닐 경우
         	if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
-        		alert(strLang105);
+        		alert(strLang105 + " error=-1");
         		MailSend_Hidden_Progress();
                 g_saveHttp = null;
                 MailStatus = "NO";
@@ -1086,6 +1086,9 @@ function event_SaveonClick() {
                 // 잘못된 도메인 주소가 있을 경우 (ex> mailtotest@tes:t.com)
                 else if (pRtnMessage.indexOf("Domain contains illegal character") > -1) { 
                 	alert(strLangLHM22);
+                }
+                else if (pRtnMessage.indexOf("parse error") > -1) {
+                    alert(strLang105 + " error=-2");
                 }
                 // 그 외
                 else {
@@ -1143,7 +1146,7 @@ function event_SaveonClick() {
         else {
         	// status code가 200~300이 아닐 경우
         	if (g_saveHttp.status < 200 || g_saveHttp.status > 300) {
-        		alert(strLang105);
+        	    alert(strLang105 + " error=-1");
             }
             // 메일쓰기 도중 로그아웃된 경우
             else if (g_saveHttp.responseText.indexOf("actionLogin()") > -1) {
@@ -1160,6 +1163,9 @@ function event_SaveonClick() {
                 	var messageArr = pRtnMessage.split(":");
                 	alert(strLangLHM13 + "\n(" + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2] + ")");
                 }
+                else if (pRtnMessage.indexOf("parse error") > -1) {
+                    alert(strLang105 + " error=-2");
+                }                
                 // 그 외
                 else {
             		alert(pRtnMessage);
@@ -1949,11 +1955,12 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	            var filepath = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
 	            var filename = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
 	            var filesize = SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
-	            if (filesize == "0" && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "hwp") {
+	            var fileExt = getOriginalFileExtension(filepath);
+	            if (filesize == "0" && fileExt == "hwp") {
 	                filename = filename + ".hwp";
 	                filesize = strLang116;
 	            }
-	            else if ((filesize == "0" || filesize == "") && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
+	            else if ((filesize == "0" || filesize == "") && fileExt == "mht") {
 	                filename = filename + ".mht";
 	                filesize = strLang116;
 	            }
@@ -2120,6 +2127,23 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 >>>>>>> master*/
         }
     }
+}
+
+function getOriginalFileExtension(filePath) {
+	var pathLength = filePath.length;
+	var lastIndexOfDot = filePath.lastIndexOf(".");
+
+	if (lastIndexOfDot < 0) {
+		return "";
+	}
+
+	var ext = trim_Cross(filePath.substr(lastIndexOfDot + 1, filePath.length).toLowerCase());
+
+	if (ext === "ezd") {
+		return getOriginalFileExtension(filePath.substr(0, lastIndexOfDot));
+	}
+
+	return ext;
 }
 
 function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {

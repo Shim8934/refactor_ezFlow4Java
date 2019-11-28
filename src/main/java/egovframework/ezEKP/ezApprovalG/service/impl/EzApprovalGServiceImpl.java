@@ -13647,7 +13647,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			// 마지막 합의자가 아닌 경우
 			if (subCount >= 1) {
-				return strSQL.toString();
+				return "TRUE";
 			}
 			
 			
@@ -13674,7 +13674,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map1.put("v_APRSTATE", staASBanSong);
 						ezApprovalGDAO.updateDocInfoAprstate(map1);
 						doBansong(docID, "", proxyUserID, "004", dirPath, deptID, companyID, lang, userInfo, curDocNum);
-						return strSQL.toString();
+						return "TRUE";
 					}	
 				}				
 			}
@@ -16023,7 +16023,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.insertApprovExpEndAprLine(map);
 					
 					// 2018.06.20 - mht 문서는 KLIB 암호화 제공 안 함 (추후에 개발)
-					if ("hwp".equals(extFileName) && "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantID)) && "G".equals(ezCommonService.getTenantConfig("ApprovalFlag", tenantID))) {
+					if ("yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantID)) && "G".equals(ezCommonService.getTenantConfig("ApprovalFlag", tenantID))) {
 						ezApprovalGKlibService.encryptCompleteApproveFiles(docID, companyID, tenantID);
 					}
 				}
@@ -25621,17 +25621,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			int tagsWithClasses = doc.getElementsByAttribute("class").size();
 			for (int i = 0; i < tagsWithClasses; i++) {
 				doc.getElementsByAttribute("class").get(0).removeAttr("class");
-			}
-			
-			//센터정렬 없는 p태그 추가 hwp에서 html로 변환할 때 센터정렬값만 안가져와서 추가해줌
-			for (int i = 0; i < doc.getElementsByTag("p").size(); i++) {
-				String style = doc.getElementsByTag("p").get(i).attr("style").toString();
-				
-				if (style.indexOf("text-align") > -1) {
-					
-				} else {
-					 doc.getElementsByTag("p").get(i).attr("style", "text-align:center;" + style );
-				}
 			}
 			
 			String fontFamily = "";

@@ -849,16 +849,19 @@
 								TBL_WEBFOLDER_LOG l LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON LOWER(l.FILE_EXT) = LOWER(t.FILE_EXT) AND l.TENANT_ID = t.TENANT_ID
 						]]>
 						<include refid="fileHistoryCondition"/>
-						
-						<isNotEqual property="realColmn" compareValue="">
+						<![CDATA[
 							ORDER BY
-								$realColmn$ $order$,
-								l.CREATE_DATE DESC,
-								TO_NUMBER(l.LOG_ID) DESC
+						]]>
+						<isNotEqual property="sortColumn" compareValue="">
+							$orderByData$,
+						</isNotEqual>	
+						<isNotEqual property="realColmn" compareValue="">
+							$realColmn$ $order$,
+							l.CREATE_DATE DESC,
+							TO_NUMBER(l.LOG_ID) DESC
 						</isNotEqual>
 						<isEqual property="realColmn" compareValue="">
 							<![CDATA[
-							ORDER BY
 								l.CREATE_DATE DESC,
 								TO_NUMBER(l.LOG_ID) DESC
 							]]>

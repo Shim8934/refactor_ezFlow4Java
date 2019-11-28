@@ -551,10 +551,10 @@
 	<div style="margin-top: 10px;">
 			<div style="position: relative; height: 27px; margin-bottom: 10px;">
 				<div style="position: relative;">
-					<div id="mainmenu2">
+					<div id="mainmenu">
 						<ul>
-							<li><a id="btnSearch" onClick="openSearchPanel();"><span><spring:message code='ezWebFolder.t123'/></span></a></li>
-							<li><a id="btnRefresh" onClick="refreshView();"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+							<li id="SearchOption" mode="off" onclick="openSearchPanel()"><span class="icon16 icon16_search"></span></li>
+							<li><span class="icon16 icon16_refresh" onclick="refreshView()"></span></li>
 						</ul>
 					</div>
 					<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">

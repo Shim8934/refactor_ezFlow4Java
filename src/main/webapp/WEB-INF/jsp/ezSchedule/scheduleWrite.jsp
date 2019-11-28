@@ -83,6 +83,10 @@
 	                document.getElementById("HolderWriteTr1").style.display = "none";
 	                document.getElementById("HolderWriteTr2").style.display = "none";
 
+                    if (scheduletype != '1') {
+                        document.getElementById("HolderEdit2").style.display = "none";
+                    }
+
 	                /* if (scheduletype == "7") {
 		                //document.getElementById("HolderEdit2").style.display = "none";
                     } */ 
@@ -153,17 +157,20 @@
 		        setDate();
 		         }
 		    }
-		    
-		    window.onresize = function () {   	
+
+		    window.onresize = function () {
 		        switch (pSelectTab) {
 		            case "schedule1":
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
 		                break;
 		            case "schedule2":
-		                if(document.getElementById("receiverTr1").style.display == "none")
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
-		                else
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
+		                if (document.getElementById("receiverTr1").style.display == "none" && document.getElementById("HolderEdit2").style.display == "none") {
+                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 305 + "PX";
+                        } else if ((document.getElementById("receiverTr1").style.display == "none" && document.getElementById("HolderEdit2").style.display != "none") || document.getElementById("receiverTr1").style.display != "none" && document.getElementById("HolderEdit2").style.display == "none") {
+                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
+						} else {
+                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
+                        }
 		                break;
 		            case "schedule3":
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
@@ -312,11 +319,13 @@
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
 		                break;
 		            case "schedule2":
-		                if (document.getElementById("receiverTr1").style.display == "none") {		                	
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
-		                } else {		                	
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
-		                }
+                        if (document.getElementById("receiverTr1").style.display == "none" && document.getElementById("HolderEdit2").style.display == "none") {
+                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 305 + "PX";
+                        } else if ((document.getElementById("receiverTr1").style.display == "none" && document.getElementById("HolderEdit2").style.display != "none") || document.getElementById("receiverTr1").style.display != "none" && document.getElementById("HolderEdit2").style.display == "none") {
+                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
+                        } else {
+                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
+                        }
 		                break;
 		            case "schedule3":
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";

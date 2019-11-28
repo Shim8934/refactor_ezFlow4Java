@@ -7,8 +7,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t055' /></title>
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
@@ -53,6 +53,7 @@
 	        .admin_menu .menuIconTD {padding:0px;}
 	        .admin_menu .menuIconTD div {height:100%; overflow:auto; padding:5px;}
 			li.menu dl dd span {white-space:normal; line-height:1.2; word-wrap:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+			.bottomBtn .btnA:hover{text-decoration:none;}
 		</style>
 	</head>
 	

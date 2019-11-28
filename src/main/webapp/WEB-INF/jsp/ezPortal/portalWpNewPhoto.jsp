@@ -199,14 +199,14 @@
 		        var pheight = window.screen.availHeight;
 	    	    var pwidth = window.screen.availWidth;
 	        	var pTop = (pheight - 789) / 2;
-	        	var pLeft = (pwidth - 765) / 2;
+	        	var pLeft = (pwidth - 790) / 2;
 	    	    if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
 	    	    	var height = 789;
 	    	    } else {
 	    	    	var height = 785;
 	    	    }
 
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=790,top=" + pTop + ",left=" + pLeft, "");
 		    }
 	    	
 	    	function Boardmore_btnClick() {

@@ -1318,9 +1318,9 @@
 		                for (i = 0; i < nodes.length; i++) {
 		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 		                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
-		                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
-		                    	filepath = filepath + ".ezd";
-		                    }
+		                    //if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
+		                    //	filepath = filepath + ".ezd";
+		                    //}
 		                    
 		                    strRet += "tempUploadFile/" + filepath + "|";
 		                }
@@ -2289,7 +2289,8 @@
 	                        <th><spring:message code='ezBoard.t156' /></th>
 	                        <td>
 	                        	<c:choose>
-	                        		<c:when test="${(mode != 'modify' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999') || (url != '') }">
+	                        	<%-- 2019-11-22 홍승비 - 임시저장한 게시물 재작성 시에도 게시만료일 설정 여부가 제대로 반영되도록 수정 --%>
+	                        		<c:when test="${(mode != 'modify' && mode != 'temp' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999') || (url != '') }">
 			                            <span id="Chkbox">
 			                                <span style="line-height: 20px; height: 20px; display: inline-block;">
 			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t433' /></span>

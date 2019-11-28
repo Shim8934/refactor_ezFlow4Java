@@ -174,7 +174,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
     	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
     	ezCommonService.addSnThemeAndPortletAuth();
-    	ezCommonService.alterChamjoView();
+    	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
     	
     	logger.debug("init ended.");
     }
@@ -1121,8 +1121,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         }
         
 		// 현재 관리자의 암호를 구한다.
-		List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
-		String adminPassword = userCookieInfo.get(1);
+		/* List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
+		String adminPassword = userCookieInfo.get(1); */
+        
+        // UUID로 pass 변경
+        String adminPassword = UUID.randomUUID().toString();
         
         int tenantID = userInfo.getTenantId();
         String offset = userInfo.getOffset();

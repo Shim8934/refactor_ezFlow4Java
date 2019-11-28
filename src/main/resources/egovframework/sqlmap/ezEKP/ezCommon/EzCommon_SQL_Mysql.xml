@@ -1609,6 +1609,8 @@
 		    WHERE
 		        (tbl_aprlineinfo.APRSTATE = '002'
 		            OR tbl_aprlineinfo.APRSTATE = '005')
+		    AND
+		    	NOT (TBL_APRDOCINFO.functiontype = '004' AND TBL_APRLINEINFO.aprtype = '007')
 		            AND tbl_aprdocinfo.STARTDATE IS NOT NULL
 		]]>
 	</statement>
@@ -1675,6 +1677,8 @@
 		    WHERE
 		        tbl_endaprlineinfo.APRTYPE = '007'
 		            AND tbl_endaprlineinfo.APRSTATE = '002'
+		    AND
+		    	TBL_ENDAPRDOCINFO.docstate <> '031'
            ]]>
 	</statement>
 </sqlMap>

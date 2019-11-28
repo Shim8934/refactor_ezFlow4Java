@@ -1,0 +1,14 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
+</head>
+<body class="mainbody">
+	<div style="text-align: center; margin-top: 200px">
+		<spring:message code='ezOrgan.hdp15' />
+	</div>
+</body>
+</html>

@@ -4872,7 +4872,7 @@
 		AND
 		  COMPANYID = #companyID#
 		ORDER BY 
-		  APRMEMBERSN DESC 
+		  APRMEMBERSN 
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormInfoDetail" parameterClass="Map" resultClass="ApprGFormVO"> -->
@@ -14833,9 +14833,9 @@
 		SELECT 
 			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
    	]]>
-			<isEqual property="approvalFlag" compareValue="S">
+			<isNotEqual property="approvalFlag" compareValue="G">
 			,IFNULL(E.PROCESSYN,'S')
-			</isEqual>
+			</isNotEqual>
 	<![CDATA[
 			)
    		FROM 
@@ -26077,26 +26077,28 @@
 			TBL_CABINETCLASS.COMPANYID= #companyID#
    	</update>
    	
-   	<update id="EzApprovalG.updateBanSongAprLineInfo" parameterClass="Map"> 
-   		UPDATE 
-   			TBL_APRLINEINFO 
-   		SET 
-   			AprState = #v_AprState#, 
-   			ProcessDate = #v_SYSDATE#
-		WHERE 
-			DocID = #v_DOCID# 
-		AND                
-			AprMemberID = #v_APRMEMBERID# 
-		AND 
-			(AprState = #v_AprState2# OR AprState = #v_AprState3# ) 
-		AND 
-			TENANT_ID= #v_TENANTID#
-		AND
-         	COMPANYID = #companyID#
+   	<update id="EzApprovalG.updateBanSongAprLineInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_APRLINEINFO
+			SET
+				AprState = #v_AprState#,
+				ProcessDate = #v_SYSDATE#
+			WHERE
+				DocID = #v_DOCID#
+			AND
+				AprMemberID = #v_APRMEMBERID#
+			AND
+				((AprState = #v_AprState2# OR AprState = #v_AprState3#) AND AprType <> '007')
+			AND
+				TENANT_ID= #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+        ]]>
    	</update>
    	
    	<update id="EzApprovalG.updateBanSongChamJoAprLineInfo" parameterClass="Map"> 
-   		UPDATE 
+   		<!-- UPDATE 
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_AprState#, 
@@ -26108,7 +26110,21 @@
 		AND 
 			TENANT_ID= #v_TENANTID#
 		AND
-         	COMPANYID = #companyID#
+         	COMPANYID = #companyID# -->
+		UPDATE
+			TBL_APRLINEINFO
+		SET
+			APRSTATE = '000'
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			APRTYPE = '007'
+		AND
+			APRSTATE = '002'
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
    	</update>
    	
    	<update id="EzApprovalG.updateBanSongAprDocInfo" parameterClass="Map"> 

@@ -4631,22 +4631,28 @@ public class EzEmailUtil {
 		
 		Object partContent;
 
-		for (int i = 0; i < partCount; i++) {
-			BodyPart bodyPart = multipart.getBodyPart(i);
-			
-			if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
-				continue;
+		try {
+			for (int i = 0; i < partCount; i++) {
+				BodyPart bodyPart = multipart.getBodyPart(i);
+				
+				if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
+					continue;
+				}
+				
+				partContent = bodyPart.getContent();
+				
+				if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
+					return true;
+				}
+	
+				if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
+					return true;
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 			
-			partContent = bodyPart.getContent();
-			
-			if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
-				return true;
-			}
-
-			if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
-				return true;
-			}
+			return true;
 		}
 
 		return false;
