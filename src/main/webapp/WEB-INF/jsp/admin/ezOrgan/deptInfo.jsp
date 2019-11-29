@@ -248,7 +248,7 @@
 		<span style="color:red"><spring:message code='ezOrgan.t00018' /></span>
 		<table class="content"> 
 			<tr> 
-		    	<th><spring:message code='ezOrgan.t218' /><span style="color:red"> *</span></th> 
+		    	<th><spring:message code='ezOrgan.pyy1' /><span style="color:red"> *</span></th> 
 		    	<td><input type="text" id=DeptID maxlength="20"></td> 
 		  	</tr> 
 		  	<tr> 
