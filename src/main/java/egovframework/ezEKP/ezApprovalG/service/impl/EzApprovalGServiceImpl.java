@@ -13647,7 +13647,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			// 마지막 합의자가 아닌 경우
 			if (subCount >= 1) {
-				return strSQL.toString();
+				return "TRUE";
 			}
 			
 			
@@ -13674,7 +13674,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map1.put("v_APRSTATE", staASBanSong);
 						ezApprovalGDAO.updateDocInfoAprstate(map1);
 						doBansong(docID, "", proxyUserID, "004", dirPath, deptID, companyID, lang, userInfo, curDocNum);
-						return strSQL.toString();
+						return "TRUE";
 					}	
 				}				
 			}

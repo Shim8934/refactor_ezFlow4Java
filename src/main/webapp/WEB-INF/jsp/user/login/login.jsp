@@ -274,7 +274,7 @@
 	                        		<span id="LoginBtnSpan" style="font-size:24px;">LOGIN</span>
 	                        	</label>
 	                        </p>
-	                        <p class="address">COPYRIGHT (C) KAONI. All RIGHT RESERVED.</p>
+	                        <p class="address">ⓒ 2000-2019. KAONi Co., Ltd. All rights reserved.</p>
 	                    </fieldset>
 	                    <input type="hidden" name="message" value="${message}" />		                    
 				    </form>

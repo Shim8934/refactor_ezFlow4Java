@@ -4872,7 +4872,7 @@
 		AND
 		  COMPANYID = #companyID#
 		ORDER BY 
-		  APRMEMBERSN DESC 
+		  APRMEMBERSN 
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormInfoDetail" parameterClass="Map" resultClass="ApprGFormVO"> -->
