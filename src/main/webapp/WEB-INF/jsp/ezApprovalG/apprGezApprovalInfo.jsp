@@ -955,9 +955,18 @@
 		        
 		        return true;
 		    }
-		
-		    function btn_OK() {
-		        try {
+		    		    
+			function btn_OK() {
+				if(document.getElementById('passAprLine').checked && pReDraftFlag === 'REDRAFT') {
+	        		OpenConfirmUI('기결재통과가 체크되어 있습니다.<br>계속 진행하시겠습니까?', btn_OK_Confirm);
+	        		return;
+	        	} else {
+	        		btn_OK_Confirm();
+	        	}
+			}
+			
+			function btn_OK_Confirm() {
+		        try {		    		        	
 		            if (!onlydocinfiview) {
 		                var line = Checkline();
 		                if (line == false) {
@@ -2150,24 +2159,28 @@
 					$("#passAprLineSpan").hide();
 					return;
 				}
-
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezApprovalG/isPassAprLineShow.do",
-					data : {
-						docID : pDocID,
-						formID : pFormID
-					},
-					success: function(xml) {
-						if (xml == "Y") {
-							$("#passAprLineSpan").show();
-						} else {
-							$("#passAprLineSpan").hide();
+				
+		    	// 반송 시에는 기결재 통과를 막는다고 고객과 협의 2019-11-15 임민석
+				if(parent.pAprState !== '004') {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezApprovalG/isPassAprLineShow.do",
+						data : {
+							docID : pDocID,
+							formID : pFormID
+						},
+						success: function(xml) {
+							if (xml == "Y") {
+								$("#passAprLineSpan").show();
+								document.getElementById('passAprLine').checked = true;
+							} else {
+								$("#passAprLineSpan").hide();
+							}
 						}
-					}
-				});
+					});
+				}
 				
 				if (passAprLine == "Y") {
 					$("#passAprLine").prop("checked", true);

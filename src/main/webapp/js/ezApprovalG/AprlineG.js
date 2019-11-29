@@ -1750,6 +1750,34 @@ function OpenInformationUI_Complete() {
     DivPopUpHidden();
 }
 
+var confirmInfo;
+function OpenConfirmUI(pInformationContent, confirmFunction) {
+    var parameter = pInformationContent;
+    var url = "/ezApprovalG/confirmPopup.do";
+    confirmInfo = new Array();
+    
+    if (CrossYN() && ext != 'hwp') {
+    	confirmInfo[0] = parameter;     
+    	confirmInfo[1] = OpenConfirmUI_Complete;
+    	confirmInfo[2] = confirmFunction;
+        DivPopUpShow(330, 205, url);
+    } else {
+        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(330, 205);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+    }
+	return RtnVal;
+}
+
+function OpenConfirmUI_Complete(confirmFlag) {
+    DivPopUpHidden();
+    
+    if(confirmFlag) {
+    	var confirmFunction = confirmInfo[2];
+    	confirmFunction();
+    }
+}
+
 var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
