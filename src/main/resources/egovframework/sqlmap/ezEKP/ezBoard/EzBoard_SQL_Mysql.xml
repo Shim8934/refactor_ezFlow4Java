@@ -116,6 +116,7 @@
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
         <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
 		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
+		<result property="isReserved" 		column="ISRESERVED" 		columnIndex="32"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -2566,7 +2567,15 @@
 	            EXTENSIONATTRIBUTE8 ,
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10 ,
-	            DOCNO
+	            DOCNO,
+	            CASE
+					WHEN
+						STARTDATE < #nowDate#
+					THEN
+						'false'
+					ELSE
+						'true'
+					END AS ISRESERVED
 	        FROM 
 	        	TBL_Board_Item_temp 
        		WHERE
