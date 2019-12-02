@@ -546,7 +546,8 @@
 		        xmlhttp = null;
 		    }
 		
-		    function ShowMyBoardItem(val01) {		// 마이 게시판 선택
+		    /* 2019-12-02 홍승비 - 게시판 좌측메뉴에서 마이게시판 설정 아이콘 표출, 의미없는 함수 파라미터 제거 */
+		    function ShowMyBoardItem() {		// 마이 게시판 선택
 		    	/* $(".on").attr("class", "off");
 		    	$(".myb h2").attr("class", "on");
 		    	$(".myb").next().attr("class", "on"); */
@@ -879,7 +880,10 @@
 		       		window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 				}
 		    }
+		    /* 2019-12-02 홍승비 - 마이게시판 설정 아이콘 표출, 이벤트 전파 방지 */
 		    function ConfigMyBoard() {
+		    	event.stopPropagation();
+		    	
 		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(525, 418));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1056,8 +1060,8 @@
 			            <span class="sub_iconLNB tree_board_star"></span><span class="h2Title"><spring:message code="ezBoard.t00010" /></span>
 			        </h2>
 			        <c:if test="${MyBoardTopFlag != 'NO'}">
-				        <h2 class="off" id="myBoardList">
-				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem()"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+				        <h2 class="off" id="myBoardList"  onclick="ShowMyBoardItem()">
+				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>
@@ -1089,8 +1093,8 @@
 			        	</script>
 			        </div>
 			        <c:if test="${MyBoardTopFlag == 'NO'}">
-			        	<h2 class="off" id="myBoardList">
-				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="ShowMyBoardItem(this)"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
+			        	<h2 class="off" id="myBoardList" onclick="ShowMyBoardItem()">
+				            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" style="display:inline-block;"><spring:message code="ezBoard.t360" /></span><span onclick="ConfigMyBoard()" class="sub_iconLNB tree_manage"></span>
 				        </h2>
 				        <ul class="lnbUL off" id="TreeCtrl_MyBoardTree_ul" style="overflow:hidden">
 				        	<div class="tree onlytree" id='TreeCtrl_MyBoardTree'></div>
