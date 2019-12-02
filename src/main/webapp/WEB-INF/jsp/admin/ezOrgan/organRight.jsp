@@ -1268,7 +1268,7 @@
 	    		}
 		    	
 	    		var trIdx = listview.GetSelectedRows()[0];
-	    		var mobileOwner = $(trIdx).children().eq(0).text();
+	    		var mobileOwner = $(trIdx).children().eq(1).text();
 	    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
 		    	document.getElementById("userSend").value = data;
 		    	
