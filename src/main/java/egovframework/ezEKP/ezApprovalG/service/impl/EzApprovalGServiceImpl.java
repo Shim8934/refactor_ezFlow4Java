@@ -3381,6 +3381,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return sb.toString();
 	}
 
+    @Override
+    public ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception {
+        logger.debug("getFormPath started. formId = " + formId + ", companyId = " + companyId + ", tenantId = " + tenantId);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("formId", formId);
+        map.put("companyId", companyId);
+        map.put("tenantId", tenantId);
+
+        ApprGFormVO vo = ezApprovalGDAO.getFormPath(map);
+
+        logger.debug("getFormPath ended");
+
+        return vo;
+    }
+
 	@Override
 	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID, String useReceiveInfoName) throws Exception {
 		logger.debug("getFormRecvApr started");

@@ -608,6 +608,7 @@
 		    		url : "/ezApprovalG/saveEndFile.do",
 		    		data : {
 		    			docID : pOrgDocID,
+                        // formId : pFormID,
 		    			html  : mhtBody
 		    		},
 		    		success: function(xml){
@@ -622,6 +623,7 @@
 		    		url : "/ezApprovalG/saveFile.do",
 		    		data : {
 		    			docID : pDocID,
+						// formId : pFormID,
 		    			html  : mhtBody,
 		    			orgCompanyID : orgCompanyID
 		    		},
