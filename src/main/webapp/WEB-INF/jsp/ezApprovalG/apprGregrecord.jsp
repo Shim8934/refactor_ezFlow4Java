@@ -158,8 +158,9 @@
             alert("<spring:message code='ezApprovalG.t1049'/>");
             return false;
         }
-
-        if (!ValidateNumber(txtRegMi.value)) {
+        
+     	// 등록일자의 분에 00을 입력할 경우, 등록되지 않던 버그 수정. 2019-12-03 홍대표.
+        if (!ValidateMinuteNumber(txtRegMi.value)) {
             alert("<spring:message code='ezApprovalG.t1050'/>");
             return false;
         }
