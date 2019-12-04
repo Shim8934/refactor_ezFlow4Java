@@ -187,7 +187,7 @@
 		    }		    
 		    
 		    function schedule_get_lunaruse() {
-		    	if (uselang != 3) {
+		    	if (uselang == 1) {
 				    $.ajax({
 			    		type : "POST",
 			    		dataType : "text",
