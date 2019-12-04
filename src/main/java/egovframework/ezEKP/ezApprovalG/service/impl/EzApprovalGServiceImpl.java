@@ -3406,6 +3406,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return sb.toString();
 	}
 
+    @Override
+    public ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception {
+        logger.debug("getFormPath started. formId = " + formId + ", companyId = " + companyId + ", tenantId = " + tenantId);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("formId", formId);
+        map.put("companyId", companyId);
+        map.put("tenantId", tenantId);
+
+        ApprGFormVO vo = ezApprovalGDAO.getFormPath(map);
+
+        logger.debug("getFormPath ended");
+
+        return vo;
+    }
+
 	@Override
 	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID, String useReceiveInfoName) throws Exception {
 		logger.debug("getFormRecvApr started");
@@ -22036,6 +22053,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//(2007.08.10 김상건) : 수기기록물이고 첨부파일이 있을 경우 docid 필요
 			docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 			registerDate = xmlDom.getElementsByTagName("REGISTERDATE").item(0).getTextContent().trim();
+			registerDate = commonUtil.getDateStringInUTC(registerDate, offset, true);
 			specialCatalogFlag = xmlDom.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent().trim();
 			
 			// 2011.04.04 수기등록시 첨부등록 추가
@@ -22114,7 +22132,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ProcessDeptName2", deptName2);
 		map.put("v_ProcessDeptCode",  deptCode);
 		map.put("v_RegisterYear", regYear);
-		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_SYSDATE", registerDate);
 		map.put("v_RegisterNo", registerSN);
 		map.put("v_AprMemberTitle", aprMemberTitle);
 		map.put("v_AprMemberTitle2", aprMemberTitle2);

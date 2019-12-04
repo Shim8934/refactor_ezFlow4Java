@@ -389,14 +389,14 @@ function tempInsert(objNodes, DataSDT, DataEDT) {
     pTempData.oImportance = SelectSingleNodeValue(objNodes, "importance");
     pTempData.oApproveFlag = SelectSingleNodeValue(objNodes, "approveFlag");
     pTempData.oReturnFlag = SelectSingleNodeValue(objNodes, "returnFlag");
-    if (uselang == "1") {
+    //if (uselang == "1") {
         pTempData.oOwner_nm = SelectSingleNodeValue(objNodes, "owner_nm");
         pTempData.oDept_name = SelectSingleNodeValue(objNodes, "dept_name");
-    }
-    else {
+    //}
+    /*else {
         pTempData.oOwner_nm = SelectSingleNodeValue(objNodes, "owner_nm2");
         pTempData.oDept_name = SelectSingleNodeValue(objNodes, "dept_name2");
-    }
+    }*/
     pTempData.timeCount = timeCnt;
     pTempData.endDiv = DataSDT.getFullYear() + "-" + leadingZeros((DataSDT.getMonth() + 1), 2) + "-" + leadingZeros(DataSDT.getDate(), 2) + "_" + parseInt(endHour, 10) + ":" + endMin.toString().substring(0, 1);
 

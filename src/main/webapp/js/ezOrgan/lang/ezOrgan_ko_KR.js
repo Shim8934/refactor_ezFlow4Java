@@ -1,4 +1,4 @@
-﻿var strLang1 = "명을 퇴직자 관리로 이동하시겠습니까?"
+﻿﻿var strLang1 = "명을 퇴직자 관리로 이동하시겠습니까?"
 var strLang2 = "퇴직자 관리로 이동 할 사원을 선택해 주세요."
 var strLang3 = "선택한 사원을 퇴직자 처리 하였습니다."
 var strLang4 = "선택한 사원을 퇴직 처리에 실패 하였습니다."
@@ -17,7 +17,7 @@ var strLang16 = "명";
 var strLang17 = "권한 설정을 하였습니다.";
 var strLang18 = "관리자 권한 알림 메일";
 var strLang19 = "의 ";
-var strLang20 = "권한을 삭제하시겠습니까 ?";
+var strLang20 = "권한을 삭제하시겠습니까?";
 var strLang21 = "전체 권한을 삭제하였습니다.";
 var strLang22 = "권한을 삭제하였습니다.";
 var strLang23 = "총";

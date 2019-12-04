@@ -485,6 +485,23 @@ public class EzCommonController extends EgovFileMngUtil{
 					literalExtensionPhone = xmldom.getElementsByTagName("EXTENSIONPHONE").item(0).getTextContent();
 					literalOfficeMobile = xmldom.getElementsByTagName("OFFICEMOBILE").item(0).getTextContent();
 				}
+				OrganDeptVO deptVO = ezOrganService.getDeptInfo(id, loginVO.getPrimary(), loginVO.getTenantId());
+				
+				// 이메일 아이디에 match되는 부서가 있는 경우
+				if (deptVO != null) {
+					if (loginVO.getPrimary().equals("1")) {
+						literalCompany = deptVO.getExtensionAttribute3();
+					} else {
+						literalCompany = deptVO.getCompNm2();
+					}
+					
+					literalEmail = deptVO.getMail();
+					literalDisplayName = deptVO.getDisplayName();
+					
+					if (!deptVO.getExtensionAttribute2().equals(deptVO.getCn())){
+						literalDept = deptVO.getDisplayName();
+					}
+				} 
 			}
 		} else {
 			String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
@@ -506,6 +523,10 @@ public class EzCommonController extends EgovFileMngUtil{
 							literalCompany = deptVO.getExtensionAttribute3();
 						} else {
 							literalCompany = deptVO.getCompNm2();
+						}
+						
+						if (!deptVO.getExtensionAttribute2().equals(deptVO.getCn())){
+							literalDept = deptVO.getDisplayName();
 						}
 						
 						literalEmail = deptVO.getMail();

@@ -30,6 +30,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -3478,35 +3479,62 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String docID = request.getParameter("docID");
-		String formText = request.getParameter("html");
-		String path = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String formId = request.getParameter("formId");
+		String formText = request.getParameter("html") == null ? "" : request.getParameter("html");
+		String realPath = commonUtil.getRealPath(request);
+		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String ret = "";
 		InputStream stream = null;
 		OutputStream bos = null;
 		
 		try {
-			File file = new File(commonUtil.detectPathTraversal(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000"));
-			File file1 = new File(commonUtil.detectPathTraversal(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
-	
-			if (!file.exists()) {
-				file.mkdirs();
+			String tmpPath = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + "TMP";
+			
+			File tmpDir = new File(commonUtil.detectPathTraversal(tmpPath));
+			
+			if (!tmpDir.exists()) {
+                tmpDir.mkdirs();
 			}
 			
-			if (!file1.exists()) {
-				file1.mkdir();
-			}
-			
-			String tmpPath = path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
-			
-			File file2 = new File(commonUtil.detectPathTraversal(tmpPath + commonUtil.separator + "TMP"));
-			
-			if (!file2.exists()) {
-				file2.mkdirs();
-			}
-			
-			String saveFileName = tmpPath + commonUtil.separator + "TMP" + commonUtil.separator + docID + extension;
-		
+			String saveFileName = tmpPath + commonUtil.separator + docID + extension;
+
+            ApprGFormVO formVO = ezApprovalGService.getFormPath(formId, userInfo.getCompanyID(), userInfo.getTenantId());
+            File formFile = new File(realPath + formVO.getFormFileLocation());
+            File targetFile = new File(saveFileName);
+
+            logger.debug("formId = " + formId + ", formText.length = " + formText + ", formFile.length = " + formFile.length() + ", targetFile.length = " + targetFile.length());
+
+            if (targetFile.exists()) {
+                //update
+                if (formText.equals("") || formFile.length() >= targetFile.length()) {
+                    logger.debug("update oriTmpFile backup started.");
+
+                    File backupDir = new File(tmpPath + commonUtil.separator + "backUp");
+
+                    if (!backupDir.exists()) {
+                        backupDir.mkdirs();
+                    }
+
+                    FileUtils.copyFile(targetFile, new File(tmpPath + commonUtil.separator + "backUp" + commonUtil.separator + docID + extension));
+
+                    ret = "FALSE";
+
+                    logger.debug("update oriTmpFile backup ended.");
+
+					return ret;
+                }
+            } else {
+                //create
+                if (formText.equals("")) {
+					ret = "FALSE";
+
+					logger.debug("create oriTmpFile backup failed.");
+
+					return ret;
+                }
+            }
+
 			if (extension.equals(".hwp")) {
 				stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
 			} else {
@@ -3758,12 +3786,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String docID = request.getParameter("docID");
-		String formText = request.getParameter("html");
+		String formId = request.getParameter("formId") == null ? "" : request.getParameter("formId");
+		String formText = request.getParameter("html") == null ? "" : request.getParameter("html");
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
+
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String saveFileName = "";
@@ -3780,7 +3810,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("<<<path : " + path);
 		logger.debug("<<<saveFileName : " + saveFileName);
 		logger.debug("<<<saveDir : " + saveDir);
-		
+
 		try {
 			File file = new File(commonUtil.detectPathTraversal(saveDir));
 			
@@ -3788,6 +3818,50 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				file.mkdirs();
 			}
 			
+
+			if (!"".equals(formId) && !"2003000007".equals(formId) && !"2016000001".equals(formId)) {
+				/*Recvdocnumber_Cross.js
+				Recvdocnumber_HWP.js
+				ezSimsaG.jsp
+				ezSimsagHWP.jsp*/
+
+				ApprGFormVO formVO = ezApprovalGService.getFormPath(formId, userInfo.getCompanyID(), userInfo.getTenantId());
+				File formFile = new File(realPath + formVO.getFormFileLocation());
+				File targetFile = new File(saveFileName);
+
+				logger.debug("formId = " + formId + ", formText.length = " + formText + ", formFile.length = " + formFile.length() + ", targetFile.length = " + targetFile.length());
+
+				if (targetFile.exists()) {
+					//update
+					if (formText.equals("") || formFile.length() >= targetFile.length()) {
+						logger.debug("update oriFile backup started.");
+
+						File backupDir = new File(saveDir + commonUtil.separator + "backUp");
+
+						if (!backupDir.exists()) {
+							backupDir.mkdirs();
+						}
+
+						FileUtils.copyFile(targetFile, new File(saveDir + commonUtil.separator + "backUp" + commonUtil.separator + docID + extension));
+
+						ret = "FALSE";
+
+						logger.debug("update oriFile backup ended.");
+
+						return ret;
+					}
+				} else {
+					//create
+					if (formText.equals("")) {
+						ret = "FALSE";
+
+						logger.debug("create oriFile backup failed.");
+
+						return ret;
+					}
+				}
+			}
+
 			if (extension.equals(".hwp")) {
 				stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
 			} else {

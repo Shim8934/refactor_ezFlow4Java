@@ -3264,4 +3264,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public int checkProxyAprLine(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.checkProxyAprLine", map);
 	}
+	
+	public ApprGFormVO getFormPath(Map<String, Object> map) throws Exception {
+		return (ApprGFormVO) select("EzApprovalG.getFormPath", map);
+	}
 }

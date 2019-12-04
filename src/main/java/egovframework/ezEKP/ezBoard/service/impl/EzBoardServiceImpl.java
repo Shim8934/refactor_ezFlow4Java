@@ -1364,7 +1364,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pItemID", itemID);
 		map.put("lang", multiLang);
 		map.put("v_TENANTID", tenantID);
-
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
 		logger.debug("getBrdGetItemInfoTemp ended");
 		return ezBoardDAO.getBrdGetItemInfoTemp(map);
 	}

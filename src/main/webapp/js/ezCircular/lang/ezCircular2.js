@@ -1,6 +1,6 @@
 ﻿var strLang1 = "Failed to delete";
 var strLang2 = "List of opinions";
-var strLang3 = "right opinion";
+var strLang3 = "save";
 var strLang4 = "private";
 var strLang5 = "Please enter a comment.";
 var strLang6 = "comment was deleted.";

@@ -1509,7 +1509,12 @@ function getCurApproverAprLine(type) {
  * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
  * */
 function SaveApproveInfo(pApproveFlag) {
-    SaveFile();
+    var rtnVal = SaveFile();
+
+    if(rtnVal.toUpperCase() != "TRUE") {
+        return rtnVal;
+    }
+
     SignSave();
 
     var fields = message.GetFieldsList();
@@ -1842,6 +1847,7 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
+            formId : pFormID,
 			html  : mhtBody,
 			orgCompanyID : orgCompanyID
 		},
@@ -1855,20 +1861,24 @@ function SaveFile() {
 function SaveOrgFile() {
 	var result = "";
     var objNode;
-
     var mhtBody = "";
     var HTML = document.createElement("HTML");
     var HEAD = document.createElement("HEAD");
     var META = document.createElement("META");
+    var META2 = document.createElement("META");
+    var BODY = document.createElement("BODY");
+
     META.content = "text/html; charset=utf-8";
     META.httpEquiv = "Content-Type";
-    var META2 = document.createElement("META");
+
     META2.name = "GENERATOR";
     META2.content = "MSHTML 10.00.9200.16721";
+
     HEAD.appendChild(META);
     HEAD.appendChild(META2);
+
     HTML.appendChild(HEAD);
-    var BODY = document.createElement("BODY");
+
     Doc_ContentHtml = document.createElement("DIV");
     Doc_ContentHtml.innerHTML = OrgHtml;
     BODY.appendChild(Doc_ContentHtml);
@@ -1884,6 +1894,7 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
+            formId : pFormID,
 			html  : mhtBody,
 			orgCompanyID : orgCompanyID
 		},
