@@ -3641,7 +3641,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String docID = request.getParameter("docID");
-		String formId = request.getParameter("formId");
+		String formId = request.getParameter("formId") == null ? "" : request.getParameter("formId");
 		String formText = request.getParameter("html") == null ? "" : request.getParameter("html");
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		
