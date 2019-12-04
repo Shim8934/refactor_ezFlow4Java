@@ -95,7 +95,7 @@
 		  </ul>
 		</div>
 		<div style="margin-bottom: 7px;">
-			<span><spring:message code='ezEmail.ksa06' /></span>
+			<span><spring:message code='ezEmail.ksaReservation01' /></span>
 		</div>
 		<div class="box" id="maillist" style="overflow:auto; height:250px;margin:0px;padding:0px;border-top:0px;border-right:1px solid #ddd">
 			<table class="mainlist" style="table-layout:fixed;width:100%;">
