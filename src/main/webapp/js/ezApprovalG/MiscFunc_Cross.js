@@ -141,6 +141,21 @@ function ValidateNumber(strValue) {
     }
 }
 
+//등록일자의 분에 00을 입력할 경우, 등록되지 않던 버그 수정. 2019-12-03 홍대표.
+function ValidateMinuteNumber(strValue) {
+	if (strValue.length > 0) {
+		var strMatch = strValue.match(/^[0-9]+$/);
+		if (!strMatch) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	else {
+		return true;
+	}
+}
+
 function GetTwoDigitNumber(szVal) {
     if (szVal.length == 0)
         return "00";

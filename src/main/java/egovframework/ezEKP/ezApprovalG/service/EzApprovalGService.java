@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
@@ -660,4 +661,6 @@ public interface EzApprovalGService {
 	public List<ApprGProxyVO> getProxyUserInfo(String userID, String userLang, int tenantID, String offSet) throws Exception;
 	
 	public String enforceSihangDoc(String formURL, String docHref, String realPath, Locale locale, String companyID, int tenantID) throws Exception;
+
+	ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception;
 }

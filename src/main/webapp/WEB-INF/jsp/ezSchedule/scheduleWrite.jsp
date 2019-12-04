@@ -383,7 +383,7 @@
 		        }
 
 		        printIsPublic = document.getElementById("publicSelect").options[document.getElementById("publicSelect").selectedIndex].textContent;
-		        printImportance = document.getElementById("importantSelect").options[document.getElementById("importantSelect").selectedIndex].textContent.substring(4,6);
+		        printImportance = document.getElementById("importantSelect").options[document.getElementById("importantSelect").selectedIndex].textContent.split(" ")[1];
 		        printRepetition = document.getElementById("repeatinfo").textContent;
 
 		        if ($.trim(repetition) == "") {

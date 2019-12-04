@@ -549,11 +549,13 @@ function openFileAttachUI()
 	return ret;
 }
 
-function SaveApproveInfo(pApproveFlag)
-{
-	if (SaveFile() != "TRUE")
-		return "FALSE";
-	
+function SaveApproveInfo(pApproveFlag) {
+	var rtnVal = SaveFile();
+
+	if (rtnVal.toUpperCase() != "TRUE") {
+        return rtnVal;
+	}
+
 	SignSave();
 	
 	var xmlpara = createXmlDom();
@@ -777,6 +779,7 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFileHWP.do",
 		data : {
 			docID : pDocID,
+			formId : pFormID,
 			html  : HwpCtrl.GetCloneData("", "HWP"),
 			orgCompanyID : orgCompanyID
 		},
@@ -798,6 +801,7 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFileHWP.do",
 		data : {
 			docID : pDocID,
+			formId : pFormID,
 			html  : OrgHtml
 		},
 		success: function(text){

@@ -3930,6 +3930,11 @@ public class EzBoardController extends EgovFileMngUtil{
 			startDateTime = startDateTime + ":30:00"; 
 		}
 		
+		/* 2019-12-02 홍승비 - 임시저장된 게시물 재작성 시 예약게시물 판단 분기 추가 */
+		if (mode.equals("temp") && boardListVO.getIsReserved().equals("true")) {
+			reservedItem = "true";
+		}
+		
 		if (reservedItem.equals("true")) {
 			startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
 		}
