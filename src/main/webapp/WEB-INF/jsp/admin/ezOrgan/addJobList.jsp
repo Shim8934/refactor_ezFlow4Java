@@ -609,7 +609,7 @@
 						return;
 					}
 
-					if (confirm(strLang30)) {
+					if (confirm(strLangKJE01)) {
 						var inputElmt = document.getElementsByName("checks");
 						var length    = inputElmt.length;
 
