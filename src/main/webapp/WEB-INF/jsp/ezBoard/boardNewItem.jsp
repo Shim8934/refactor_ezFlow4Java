@@ -123,7 +123,7 @@
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    var mailShareId = "${mailShareId}";
 		    
-		    window.onload = function () {		    	
+		    window.onload = function () {
 		        if (pUseBackGround == "TRUE") {
 		            document.getElementById("pUseBackGroundTR").style.display = "";
 		            GetBackGroundImage();
@@ -173,7 +173,8 @@
 			        }
 			    }
 
-			    if (pMode == "new" || pMode == "new1") {
+			    /* 2019-12-02 홍승비 - 임시저장된 게시물 재작성하는 경우 예약게시일 설정 가능, 초기화 동작 추가 */
+			    if (pMode == "new" || pMode == "new1" || (pMode == "temp" && pReservedItem != "true")) {
 			        btn_PostDate_Clear();
 			    } else {
 			        if (pReservedItem != "true") {
@@ -299,7 +300,7 @@
 		        var settime = "${startDateTime}";
 		        var NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 		        NowDate.setMonth(NowDate.getMonth() - 1);
-		
+		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
 		        $('#Stimepicker').timepicker();
@@ -526,10 +527,11 @@
 		                return;
 		            }
 		        }
-		        if (document.getElementById("chk_reservation").checked && pMode == "temp") {
+		        /* 2019-12-02 홍승비 - 임시저장 기능과 예약게시 기능을 동시에 사용할 수 있도록 변경 */
+/* 		        if (document.getElementById("chk_reservation").checked && pMode == "temp") {
 		            alert("<spring:message code='ezBoard.t00029' />");
 		            return;
-		        }
+		        } */
 		        if (document.getElementById("chk_reservation").checked && pStartDate == "") {
 		            alert("<spring:message code='ezBoard.t385' />");
 		            return;
@@ -2261,7 +2263,8 @@
 	                </table>
 	                <table id="tab02" class="content" style="display: none;">
 	                	<c:choose>
-	                		<c:when test="${(mode== 'new' || mode== 'new1' || reservedItem == 'true' || url != '') && boardInfo.guBun != '2'}">
+	                	<%-- 2019-12-02 홍승비 - 임시저장과 예약게시 기능을 동시에 사용 가능하도록 수정 --%>
+	                		<c:when test="${(mode== 'new' || mode== 'new1' || mode == 'temp' || reservedItem == 'true' || url != '') && boardInfo.guBun != '2'}">
 			                    <tr id="tdReservationDate">
 	                		</c:when>
 	                		<c:otherwise>

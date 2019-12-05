@@ -4383,6 +4383,22 @@
         AND
          	COMPANYID = #companyID#        	
 	</select>
+
+	<select id="EzApprovalG.getFormPath" parameterClass="Map" resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				formId,
+				formFileLocation
+			FROM
+				TBL_FORMINFO
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyId = #companyId#
+			AND
+				formId = #formId#
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
 <!-- 		{CALL EZSP_GETFORMRECVAPR(#v_FORMID#, #v_USERID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->

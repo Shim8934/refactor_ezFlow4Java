@@ -119,6 +119,7 @@
 		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
 		<result property="guBun" 					column="GUBUN" 					columnIndex="32"/>
 		<result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="33"/>
+		<result property="isReserved" 		column="ISRESERVED" 		columnIndex="34"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -2573,7 +2574,15 @@
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10 ,
 	            DOCNO,
-	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE,
+	            CASE
+					WHEN
+						STARTDATE < #nowDate#
+					THEN
+						'false'
+					ELSE
+						'true'
+					END AS ISRESERVED
 	        FROM 
 	        	TBL_Board_Item_temp A
 	        JOIN

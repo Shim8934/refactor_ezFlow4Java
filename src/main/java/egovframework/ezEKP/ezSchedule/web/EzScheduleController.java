@@ -2266,6 +2266,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("name", name);
 		model.addAttribute("today", today);
 		model.addAttribute("primary", loginVO.getPrimary());
+		model.addAttribute("lang", loginVO.getLang());
 		
 		return "ezSchedule/schedulePrint";
 	}

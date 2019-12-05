@@ -46,6 +46,9 @@
 	   		var CurPage = "1";
 	   		var totalPage = "";
 	   		
+	   		/* 2019-12-04 홍승비 - 다국어 스타일 적용을 위한 lang 변수 */
+	   		var lang = "<c:out value='${lang}'/>";
+	   		
 	   		document.onselectstart = function () { return false; };
 	   		function close_Click(){
 	   			window.close();
@@ -538,6 +541,13 @@
 		   				}
 	   				},"#lplistView tr");
 	   			});
+	   			
+	   			/* 2019-12-04 홍승비 - 다국어 환경에서 즐겨찾기 버튼 마진 수정 */
+	   			if (lang == "2") {
+	   				document.getElementById("addFavoriteLineA").style.marginLeft = "53px";
+	   			} else if (lang == "3") {
+	   				document.getElementById("addFavoriteLineA").style.marginLeft = "57px";
+	   			}
    			});
 	   		
 	   		var Tab1_SelectID = "1tab1";
@@ -749,7 +759,7 @@
 		                            <h2 class="receiver_tltype01" style="margin-top:4px; border-bottom:none;">
 										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t80'/> </span>
 									</h2>
-								 	<a class="imgbtn imgbck" style="margin-top: 6px; margin-left: 65px;">
+								 	<a id="addFavoriteLineA" class="imgbtn imgbck" style="margin-top: 6px; margin-left: 65px;">
 								 		<span onclick="addFavoriteLine()"><spring:message code='ezJournal.t92'/></span>
 								 	</a>
 								</div>
