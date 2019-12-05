@@ -290,24 +290,7 @@ public class EzTalkGateController {
 			loginService.insertLog(vo);
 			
 			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
-			
-			String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
-			
-        	if (!useSession.isEmpty()) {
-        		int sessionTime = 0;
-        		
-        		try {
-        			sessionTime = Integer.parseInt(useSession);
-        		} catch (NumberFormatException nfe) {  
-        			nfe.printStackTrace();
-        		}
-        		
-	        	if (sessionTime != 0) {
-	        		HttpSession session = request.getSession();
-		        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
-	        	}
-        	}						
-			
+						
 			logger.debug("ezTalkGateMain ended.");
 			
 			if (ezTalkSsoType.equals("mail")) {
@@ -387,24 +370,7 @@ public class EzTalkGateController {
 				String compId = userVO.getPhysicalDeliveryOfficeName();
 				
 				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, deptId, compId);
-				
-				String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
-				
-	        	if (!useSession.isEmpty()) {
-	        		int sessionTime = 0;
-	        		
-	        		try {
-	        			sessionTime = Integer.parseInt(useSession);
-	        		} catch (NumberFormatException nfe) {  
-	        			nfe.printStackTrace();
-	        		}
-	        		
-		        	if (sessionTime != 0) {
-		        		HttpSession session = request.getSession();
-			        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
-		        	}
-	        	}						
-				
+								
 	        	if (ezTalkGateNoticeBoardId != null) {
 					redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
 									+ URLEncoder.encode(ezTalkGateNoticeBoardId, "UTF-8") + "&boardType=" + boardType;
