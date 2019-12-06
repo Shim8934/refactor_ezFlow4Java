@@ -408,16 +408,6 @@ public class LoginController {
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
 	        	
-	        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-	        	if (!useSession.equals("")) {
-	        		int sessionTime = Integer.parseInt(useSession);
-	        		
-	        		if (sessionTime != 0) {
-	        			session = request.getSession(); 
-	        			session.setMaxInactiveInterval(sessionTime * 60);	// 세션 유지 시간 설정
-	        		}
-	        	}
-//	        	return "redirect:/ezPortal/portalMain.do";
 	        	return "redirect:/ezNewPortal/newPortalMain.do";
         		
         	} else {
@@ -830,7 +820,23 @@ public class LoginController {
     	Cookie multiLoginCookieID = new Cookie("multiLoginCookie", multiLoginTime);
     	multiLoginCookieID.setPath("/");
     	response.addCookie(multiLoginCookieID);
-    	// end
+
+		String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+		
+    	if (!useSession.isEmpty()) {
+    		int sessionTime = 0;
+    		
+    		try {
+    			sessionTime = Integer.parseInt(useSession);
+    		} catch (NumberFormatException nfe) {  
+    			nfe.printStackTrace();
+    		}
+    		
+        	if (sessionTime != 0) {
+        		HttpSession session = request.getSession();
+	        	session.setMaxInactiveInterval(sessionTime*60); // 세션의 유지 시간 설정
+        	}
+    	}    	
     }
     
     /**
