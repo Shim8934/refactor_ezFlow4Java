@@ -979,7 +979,7 @@ function event_listDBClick(obj) {
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
         window.open("/ezAddress/addressRead.do?addressid=" + encodeURIComponent(pAddressID) + "&folderid=" + encodeURIComponent(pFolderID) + "&type=" + pFolderType, "",
-            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
+            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 530px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
     else {
         var conHeight = 575;

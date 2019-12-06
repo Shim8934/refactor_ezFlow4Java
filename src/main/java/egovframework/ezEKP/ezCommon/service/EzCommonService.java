@@ -152,5 +152,7 @@ public interface EzCommonService {
 	public void addSnMenuAuth() throws Exception;
 
 	public void alterChamjoView() throws Exception;
+
+	public void addAddressFurigana() throws Exception;
 }
 

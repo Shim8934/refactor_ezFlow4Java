@@ -21,6 +21,7 @@
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var pNoneActiveX = "<c:out value='${noneActiveX}'/>";
 		    var getMemo = "<c:out value='${getsMemo}'/>";
+		    var address = "<c:out value='${addressInfo}'/>"
 		    
 		    window.onload = function () {
 		    	getMemo = getMemo.replace(/&lt;br&gt;/gi, "\n").replace(/\\\\/gi, "\\"); 
@@ -168,6 +169,10 @@
 			    selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		    </script>
 		    <table class="popuplist" style="width:100%; table-layout: fixed; ">
+		          <tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
+		            <th style="width: 71px;"><spring:message code='main.ksa01' /></th>
+		            <td colspan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName" title="${addressInfo.sFurigana}"> <c:out value='${addressInfo.sFurigana}' /></span></td>
+		          </tr>
 		          <tr>
 		            <th width="13%"><spring:message code='ezAddress.t124' /></th>
 		            <td style="width:32%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName" title="${addressInfo.sName}"> <c:out value='${addressInfo.sName}' /></span></td>

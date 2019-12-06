@@ -808,4 +808,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public void addAddressFurigana() {
+		try {
+			select("EzCommonDAO.checkAddressFurigana"); 
+		} catch (Exception e) {
+			update("EzCommonDAO.addAddressFurigana");
+			logger.debug("JMOCHA_ADDRESS_INFO S_FURIGANA doesn't exist. creating the column...");
+			e.printStackTrace();
+		}
+	}
 }

@@ -1651,4 +1651,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void alterChamjoView() throws Exception {
 		ezCommonDAO.alterChamjoView();
 	}
+	
+	@Override
+	public void addAddressFurigana() throws Exception {
+		ezCommonDAO.addAddressFurigana();
+	}
 }

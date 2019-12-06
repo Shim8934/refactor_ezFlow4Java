@@ -1399,4 +1399,20 @@
 		    	TBL_ENDAPRDOCINFO.docstate <> '031'
            ]]>
 	</statement>
+	
+	<select id="EzCommonDAO.checkAddressFurigana">
+		<![CDATA[
+			SELECT
+				IFNULL(s_furigana,0)
+			FROM 
+				jmocha_address_info
+			LIMIT 1
+		]]>
+	</select>
+	<update id="EzCommonDAO.addAddressFurigana">
+		<![CDATA[
+			ALTER TABLE jmocha_address_info
+			ADD COLUMN s_furigana VARCHAR(120) NULL DEFAULT NULL AFTER s_type
+		]]>
+	</update>
 </sqlMap>

@@ -1346,5 +1346,18 @@
 		ADD 
 			sn INT DEFAULT 0
 	</statement>
-
+	
+	<select id="EzCommonDAO.checkAddressFurigana">
+		<![CDATA[
+			SELECT S_FURIGANA FROM jmocha_address_info WHERE ROWNUM <= 1
+		]]>
+	</select>
+	
+	<update id="EzCommonDAO.addAddressFurigana">
+		<![CDATA[
+			ALTER TABLE JMOCHA_ADDRESS_INFO ADD S_FURIGANA NVARCHAR2(120) DEFAULT NULL
+		]]>
+		
+	</update>
+	
 </sqlMap>
