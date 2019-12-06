@@ -107,7 +107,7 @@
                     reParam["ret"] = "OK";
                     
                     reParam["ouCode"] = GetAttribute(tr, "DATA1");
-                    reParam["pouCode"] = GetAttribute(tr, "DATA1");
+                    reParam["pouCode"] = GetAttribute(tr, "DATA5");
                     reParam["topOuCode"] = GetAttribute(tr, "DATA4");
                     reParam["chiefTitle"] = GetAttribute(tr, "DATA6");
                     reParam["Title"] = GetAttribute(tr, "DATA6");
@@ -133,7 +133,7 @@
                         var tr = SelectedRows[i];
 
                         reParam["ouCode"][i] = GetAttribute(tr, "DATA1");
-                        reParam["pouCode"][i] = GetAttribute(tr, "DATA1");
+                        reParam["pouCode"][i] = GetAttribute(tr, "DATA5");
                         reParam["topOuCode"][i] = GetAttribute(tr, "DATA4");
                         reParam["chiefTitle"][i] = GetAttribute(tr, "DATA6");
                         reParam["Title"][i] = GetAttribute(tr, "DATA6");
