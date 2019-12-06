@@ -4149,6 +4149,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				
 				result = ezOrganAdminService.updatePermissionGroup(groupID, groupName, auth.getId(), companyId, tenantId, memberList);
 			}
+			
+			/* 2019-12-06 홍승비 - 권한그룹 추가, 수정 시 게시판의 트리캐시 삭제 동작 추가 */
+			ezBoardAdminService.trunkBoard(tenantId);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -4356,6 +4360,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             logger.debug("tenantID=" + tenantID + ",cnList=" + groupList);
             ezOrganAdminService.deletePermissionGroup(groupList, companyID, tenantID);
             result = "OK";
+            
+            /* 2019-12-06 홍승비 - 권한그룹 삭제 시 게시판의 트리캐시 삭제 동작 추가 */
+			ezBoardAdminService.trunkBoard(tenantID);
             
         } catch (Exception e) {
 			e.printStackTrace();
