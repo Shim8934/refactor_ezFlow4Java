@@ -4319,7 +4319,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				ezAddressService.insertAddress(info.getTenantId(), ownerId, folderId, info.getUserId(),
 						info.getUserName(), info.getUserName2(), sName, sEmail, sCompany, sDept,
-						sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "P");
+						sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "P", "");
 				
 		        result.put("status", "ok");
 				result.put("code", 0);			
@@ -4479,7 +4479,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				
 				ezAddressService.updateAddress(info.getTenantId(), addressId, info.getUserId(), info.getUserName(), info.getUserName2(), 
-						sName, sEmail, sCompany, sDept, sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo);
+						sName, sEmail, sCompany, sDept, sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "");
 				
 		        result.put("status", "ok");
 				result.put("code", 0);			
