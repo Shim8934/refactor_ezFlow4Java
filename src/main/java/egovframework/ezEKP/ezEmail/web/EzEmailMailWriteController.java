@@ -4657,27 +4657,40 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            	
 			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
 			                // 이 경우에는 메일을 다시 전송하지 않는다.
-			                if (mailSendCompleted == false) {			     			                	
-				            	Address[] allRecipients = message.getAllRecipients();
+			                if (mailSendCompleted == false) {				                	
+		                		Address[] allRecipients = message.getAllRecipients();
 				            	
 				            	message.removeHeader("TO");
 				        		message.removeHeader("CC");
 				        		message.removeHeader("BCC");
 				        		
-				            	for (Address a : allRecipients) {
-				            		logger.debug("address=" + a);
+								String useAdvancedEachMail = ezCommonService.getTenantConfig("useAdvancedEachMail", userInfo.getTenantId());
+								
+								if (useAdvancedEachMail.equals("YES")) {				        		
+					        		message.setRecipients(RecipientType.TO, allRecipients);
+					        		
+					        		message.setHeader("X-JMocha-Each-Mail", "true");
 				            		
-				            		try {
-					            		message.setRecipient(RecipientType.TO, a);
-					            		
-					            		Transport.send(message);
-				            		} catch (Exception e) {
-				            			e.printStackTrace();
-				            		}
+					        		Transport.send(message);
 				            		
 	    			            	sentFolderMessageUID = 0;
-	    			            	mailSendCompleted = true;				            		
-				            	}
+	    			            	mailSendCompleted = true;				
+								} else {
+					            	for (Address a : allRecipients) {
+					            		logger.debug("address=" + a);
+					            		
+					            		try {
+						            		message.setRecipient(RecipientType.TO, a);
+						            		
+						            		Transport.send(message);
+					            		} catch (Exception e) {
+					            			e.printStackTrace();
+					            		}
+					            		
+		    			            	sentFolderMessageUID = 0;
+		    			            	mailSendCompleted = true;				            		
+					            	}									
+								}
 			                }
 			            	
 			                // this deletion code block has been moved here because
