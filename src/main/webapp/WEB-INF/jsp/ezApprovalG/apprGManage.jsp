@@ -659,7 +659,7 @@
                             var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
                             var AttachUrlA1 = GetAttribute(tr,"DATA1");
                             var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
-                            var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length).toLowerCase(); //fileExt(.hwp, .ezd, .mht)
+                            var AttachUrlA2 = getOriginalFileExtension(AttachUrlA1); //fileExt(.hwp, .ezd, .mht)
                             AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
                           
                             if (AttachfilenameN1 < 0) {
@@ -695,7 +695,7 @@
 	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
 	                                    var openLocation;
 	                                    
-	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
+	                                    if (AttachUrlA2 == ".hwp") {
 	                                    	if (isIE()) {
 	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 	                                    	} else {
@@ -782,9 +782,8 @@
 		            para[0] = pDocID;
 		            para[1] = pURL;
 		            var openLocation;
-		            var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
-		            // 2018.07.26 (KLIB) - ezd 확장자 처리
-		            if (ext == "hwp" || ext == "ezd") {
+		            var ext = getOriginalFileExtension(pURL);
+		            if (ext == "hwp") {
 		            	if (isIE()) {
 			            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                } else {
@@ -854,10 +853,9 @@
 		            var FunctionType = pCurSelRow.getAttribute("DATA10");
 		            var Html = pCurSelRow.getAttribute("DATA3");
 		
-		            Html1 = Html.substring(Html.length - 3);
+		            var Html1 = getOriginalFileExtension(Html);
 		
-		            // 2018.07.26 (KLIB) - ezd 확장자 처리
-		            if (Html1 == "hwp" || Html1 == 'ezd') {
+		            if (Html1 == "hwp") {
 		                if (FunctionType == "000")                   //한글양식 미결 문서
 		                    openServerDraftUI("REDRAFT", pCurSelRow);
 		                else
@@ -930,11 +928,11 @@
 		                var pDocID = pCurSelRow.getAttribute("DATA1");
 		                var pURL = pCurSelRow.getAttribute("DATA3");
 		                var openLocation = "";
-		                var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
+		                var ext = getOriginalFileExtension(pURL);
 		                
 		                if (ext == "doc") {
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
-		                } else if (ext == "hwp" || ext == "ezd") { // 2018.07.26 (KLIB) - ezd 확장자 처리
+		                } else if (ext == "hwp") { // 2018.07.26 (KLIB) - ezd 확장자 처리
 		                    if (CrossYN() && !(/netscape/i.test(navigator.appName) && /trident/i.test(navigator.userAgent) || /msie/i.test(navigator.userAgent))) {
 		                        alert(strLang1103);
 		                        return;
@@ -1349,10 +1347,9 @@
 		        var pOrgCompanyID = tr.getAttribute("ORGCOMPANYID");
 		        var pDocTitle = tr.firstChild.textContent;
 		        
-		        // 2018.07.06 (KLIB) - ezd 확장자 처리
-		        var pHrefExt = pHref.substr(pHref.length - 3, pHref.length).toLowerCase();
+		        var pHrefExt = getOriginalFileExtension(pHref);
 		        
-		        if (pHrefExt === "hwp" || pHrefExt === "ezd") {
+		        if (pHrefExt === "hwp") {
 		            if (/msie/i.test(navigator.userAgent)) {
 		                alert(strLang1103);
 		                return;
@@ -2129,6 +2126,23 @@
 		    	
 		    	return result == "FALSE" ? true : false;
 		    }
+
+			function getOriginalFileExtension(filePath) {
+				var pathLength = filePath.length;
+				var lastIndexOfDot = filePath.lastIndexOf(".");
+				
+				if (lastIndexOfDot < 0) {
+					return "";
+				}
+				
+				var ext = trim_Cross(filePath.substr(lastIndexOfDot + 1, filePath.length).toLowerCase());
+				
+				if (ext === "ezd") {
+					return getOriginalFileExtension(filePath.substr(0, lastIndexOfDot));
+				}
+				
+				return ext;
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
