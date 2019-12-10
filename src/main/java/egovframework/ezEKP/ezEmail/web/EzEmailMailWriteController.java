@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -1307,6 +1308,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			bodyType = "0";
 		}
 		
+		boolean useAdditionalInfo = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId()));
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
@@ -1385,6 +1388,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		model.addAttribute("isMailToMe", isMailToMe); // 내게쓰기 버튼 클릭시  checkobx checked
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("useAdditionalInfo", useAdditionalInfo);
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
@@ -5956,6 +5960,52 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		return "<DATA>OK</DATA>";
 	}
 	
+	/**
+	 * 수신인 추가시 부서나 이메일주소 등을 덧붙는 접두사를 반환
+	 * email 파라미터로 OrganUserVO를 구한 후 접두사 만듦
+	 */
+	@RequestMapping(value="/ezEmail/mailGetUserAdditionalInfo.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String mailGetUserAdditionalInfo(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		int tenantId = loginVO.getTenantId();
+
+		String email = request.getParameter("email");
+		String userId = loginVO.getEmail().equals(email)
+				? loginVO.getId()
+				: ezOrganService.getCNByEmail(email, loginVO.getTenantId());
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, loginVO.getPrimary(), loginVO.getTenantId());
+
+		String additionalFormat = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalFormat", tenantId);
+		String additionalParameters = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalParameters", tenantId);
+		String[] fieldNameArray = additionalParameters.split(";");
+		int size = fieldNameArray.length;
+		Object[] args = new String[size];
+
+		for (int i = 0; i < size; i++) {
+			try {
+				Field field = OrganUserVO.class.getDeclaredField(fieldNameArray[i]);
+				field.setAccessible(true);
+				String value = field.get(userInfo).toString();
+				args[i] = value;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				args[i] = "";
+			}
+		}
+
+		try {
+			return String.format(additionalFormat, args);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return "";
+		}
+	}
+
 	/**
 	 * 사원 Organ 정보 호출 함수
 	 */

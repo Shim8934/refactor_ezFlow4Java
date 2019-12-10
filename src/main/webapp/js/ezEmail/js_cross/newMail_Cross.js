@@ -3147,16 +3147,19 @@ function NameChange_onClick() {
     rgParams["g_EditNameDialog"] = "";
 
     if (this != null) {
-        GetMailAddresses(TrimText(ReplaceText((event.target ? event.target : event.srcElement).textContent, ";", "")));
+    	var eventElement = (event.target ? event.target : event.srcElement);
+    	var name = eventElement.parentElement.getAttribute("name");
+    	
+        GetMailAddresses(name);
         rgParams["addrBook"] = m_addrBook;
-        rgParams["g_DisplayName"] = TrimText(ReplaceText((event.target ? event.target : event.srcElement).textContent, ";", ""));
-        rgParams["g_EmailAddress"] = (event.target ? event.target : event.srcElement).getAttribute("email");
+        rgParams["g_DisplayName"] = name;
+        rgParams["g_EmailAddress"] = eventElement.getAttribute("email");
         rgParams["cmd"] = "JustThis";
         checkname_cross_dialogArguments = new Array();
         checkname_cross_dialogArguments[0] = rgParams;
         checkname_cross_dialogArguments[1] = NameChange_onClick_Complete;
         checkname_cross_dialogArguments[2] = DivPopUpHidden;
-        checkname_cross_dialogArguments[3] = (event.target ? event.target : event.srcElement).parentElement;
+        checkname_cross_dialogArguments[3] = eventElement.parentElement;
         
         if (!CrossYN()) {
             EzHTTPTrans.style.display = "none";
@@ -3361,6 +3364,31 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     var TopSpan = document.createElement("span");
     var newElem = document.createElement("span");
     
+    // 수신인 추가 정보 (부서 이름 또는 이메일 주소)
+    if (g_useAdditionalInfo) {
+    	$.ajax({
+    		type	: "GET",
+    		data	: {email: email},
+    		contentType : "application/json;charset=utf-8",
+    		url		: "/ezEmail/mailGetUserAdditionalInfo.do",
+    		async	: true,
+    		success	: function(additionalInfo) {
+    			var targetElem = document.querySelector("#infoTable span[itype='" + iWhich + "'][email='" + email + "']");
+    			
+    			if (type == "mailgroup") {
+    				targetElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + additionalInfo + "</u>; ";
+    				targetElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+    			} else {
+    				targetElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + additionalInfo + "</u>; ";
+    				targetElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+    			}
+    		},
+    		error	: function(error) {
+    			console.log(error);
+    		}
+    	});
+    }
+    
     newElem.style.cursor = "pointer";
     newElem.setAttribute("iType", iWhich); //newElem.getAttribute("iType") = iWhich;
     newElem.setAttribute("onclick", "NameChange_onClick()");
@@ -3372,10 +3400,13 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     	newElem.setAttribute("href", href);
     	newElem.style.fontWeight = "bold";
         newElem.style.color = inMailColor;
-        newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + "</u>; ";
         
         TopSpan.appendChild(newElem);
-        TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+        
+        if (!g_useAdditionalInfo) {
+        	newElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + "</u>; ";
+        	TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+        }
     } else {
     	var innerDomainList = InnerDomain.toLowerCase().split(';');
     	var emailDomain = email.split('@')[1].toLowerCase();
@@ -3394,10 +3425,13 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     		newElem.style.color = outMailColor;
     	}
         
-        newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + "</u>; ";
         
         TopSpan.appendChild(newElem);
-        TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+        
+        if (!g_useAdditionalInfo) {
+        	newElem.innerHTML = "<u title=\"" + email + "\" alt=\"" + email + "\" >" + name + "</u>; ";
+        	TopSpan.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + email + "\",\"" + iWhich + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
+        }
     }
 
     return TopSpan;
