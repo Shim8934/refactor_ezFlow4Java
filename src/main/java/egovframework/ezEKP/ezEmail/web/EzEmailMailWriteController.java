@@ -6047,13 +6047,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String copyrightDiv = "<p>&nbsp;</p><div id=\"recipientPharse\" style=\"box-sizing:border-box; padding:5px 3px; border:1px solid #999; "
 				+ defaultFontAndSize + " color: rgb(153, 153, 153);\">%s</div>";
+		String useCopyrightMenu = ezCommonService.getTenantConfig("useCopyright", tenantId);
+		useCopyrightMenu = useCopyrightMenu.equals("") ? "NO" : useCopyrightMenu;
 		String useCopyright = ezCommonService.getCompanyConfig(tenantId, companyId, "useCopyright");
 		useCopyright = useCopyright.equals("") ? "YES" : useCopyright;
 		String copyrightText = ezEmailUserAdminService.getCopyrightText(userInfo.getTenantId(), companyId);	
 		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId 
-				+ "useCopyright=" + useCopyright + ", copyrightText=" + copyrightText);
+				+ "useCopyright=" + useCopyright + ", copyrightText=" + copyrightText + ", useCopyrightMenu=" + useCopyrightMenu);
 
-		if (!useCopyright.equals("NO") && !copyrightText.trim().equals("")) {
+		if (useCopyrightMenu.equals("YES") && !useCopyright.equals("NO") && !copyrightText.trim().equals("")) {
 			mailBody = mailBody.replaceAll("\\p{Z}", " "); // 유니코드 범주내에서 구분 기호, 공백을  replacAll
 			
 			if ((!copyrightText.equals("id=\"recipientPharse\"")) || (mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
