@@ -84,7 +84,7 @@
 		        	WriteDate = "${strNow}";
 		        }
 		        
-		        document.getElementById('PostDate').innerHTML = WriteDate;
+		        document.getElementById('PostDate').innerHTML = WriteDate.substring(0, 16);
 		        
 		        if (pEndDate.substr(0, 4) == "9999") {
 		        	pEndDate = "<spring:message code='ezBoard.t287'/>";
@@ -106,22 +106,25 @@
 		            if (TDs.item(i).innerHTML == "") TDs.item(i).innerHTML = "&nbsp;";
 		        }
 		
+		        /* 2019-10-24 홍승비 - 확장칼럼 사용 시 라디오버튼, 체크박스 선택지가 하나인 경우, 미리보기에서 반드시 표출되는 오류 수정 */
 		        for (var i = 0; i < 5; i++) {
-		            if (document.getElementById("extensionAttribute" + (i + 6)) != null) {
-		                var paremtElement = opener.document.getElementsByName("extensionAttribute" + (i + 6));
+					if (document.getElementById("extensionAttribute" + (i + 6)) != null) {
+						var paremtElement = opener.document.getElementsByName("extensionAttribute" + (i + 6));
 		                var WriterValue = "";
-		                if (paremtElement.length > 1) {
+		                if (paremtElement.length > 0) {
 		                    for (var j = 0; j < paremtElement.length; j++) {
-		                        if (paremtElement[j].checked) {
+		                        if ((paremtElement[j].type == "radio" || paremtElement[j].type == "checkbox") && paremtElement[j].checked) { // 라디오버튼 또는 체크박스
 		                            WriterValue += paremtElement[j].value + ",";
+		                        } else if (paremtElement[j].type == "text") { // 텍스트
+		                        	WriterValue = paremtElement[j].value;
 		                        }
 		                    }
-		                    WriterValue = WriterValue.substring(0, WriterValue.length - 1);
-		                } else {
-		                    WriterValue = paremtElement[0].value;
+			                
+		                	if (paremtElement[0].type == "radio" || paremtElement[0].type == "checkbox") {
+		                    	WriterValue = WriterValue.substring(0, WriterValue.length - 1);
+		                	}
+		                    document.getElementById("extensionAttribute" + (i + 6)).innerHTML = WriterValue;
 		                }
-		
-		                document.getElementById("extensionAttribute" + (i + 6)).innerHTML = WriterValue;
 		            }
 		        }
 		    };
@@ -187,7 +190,15 @@
 						<!-- 게시자&부서 -->
 						<tr>
 							<th style="width:10%;"><spring:message code='ezBoard.t207'/></th> 
-							<td id="WriteUserNM" style="white-space:nowrap; width:40%">
+							<%-- 2019-09-17 홍승비 - 익명게시판 게시물 작성 시 미리보기 TD 수정 --%>
+							<c:choose>
+								<c:when test="${guBun == '2'}">
+									<td id="WriteUserNM" style="white-space:nowrap; width:40%" colspan="3">
+								</c:when>
+								<c:otherwise>
+									<td id="WriteUserNM" style="white-space:nowrap; width:40%">
+								</c:otherwise>
+							</c:choose>
 								<div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer"></div>
 							</td>
 							<c:if test="${guBun != '2'}">

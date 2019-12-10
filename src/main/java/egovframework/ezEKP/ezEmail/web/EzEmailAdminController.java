@@ -684,6 +684,80 @@ public class EzEmailAdminController {
 
 		return result;
 	}
+	
+	/**
+	 * 공용배포그룹 조건별 검색
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailGetDistributionSearchByItem.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mailGetDistributionSearchByItem(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("mailGetDistributionSearchByItem started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String returnData = "";
+		try {
+			Document doc = commonUtil.convertStringToDocument(bodyData);
+			String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
+			String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+			String searchType = doc.getElementsByTagName("SEARCHTYPE").item(0).getTextContent();
+			String searchValue = doc.getElementsByTagName("SEARCHVALUE").item(0).getTextContent();
+			int tenantID = auth.getTenantId();
+			logger.debug("companyId=" + companyId + ", searchType=" + searchType + ",searchValue=" + searchValue);
+			
+			List<MailDistributionVO> distributionTotalList = null;
+			if (searchValue == null || searchValue.equals("")) {
+				//모든 공용배포그룹
+				distributionTotalList = ezEmailService
+						.getDistributionList(companyId, auth.getTenantId());
+			} else {
+				// 공용배포그룹 조건으로 검색
+				distributionTotalList = ezEmailService
+						.getDistributionSearchListByItem(companyId, tenantID, searchValue, searchType);
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailDistributionVO vo : distributionTotalList) {
+				sb.append("<ROW><CELL>");
+
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getName()));
+				sb.append("</VALUE>");
+
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getId()));
+				sb.append("</DATA1>");
+
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getMail()));
+				sb.append("</DATA2>");
+
+				sb.append("</CELL></ROW>");
+			}
+
+			sb.append("</ROWS></LISTVIEWDATA>");
+
+			returnData = sb.toString();
+
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailGetDistributionSearchByItem ended.");
+
+		return returnData;
+	}
+
 
 	/**
 	 * 메일 기본설정 (관리자) 화면 호출 함수
@@ -1013,13 +1087,15 @@ public class EzEmailAdminController {
         String domain = ezCommonService.getTenantConfig("DomainName",userInfo.getTenantId());
         String mailServerAddress = config.getProperty("config.MailServerAddress");
         String iMAPPort = config.getProperty("config.IMAPPort");
+        
+        boolean primaryChk = userInfo.getPrimary().equals("1") ? true : false;
 
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {				
 			List<String> quaList = new ArrayList<String>();
 			String userId = organUser.getCn();
-			String department = organUser.getDescription();
-			String displayname = organUser.getDisplayName();
+			String department = primaryChk ? organUser.getDescription() : organUser.getDescription2();
+			String displayname = primaryChk ? organUser.getDisplayName() : organUser.getDisplayName2();
 			displayname = displayname + "(" + userId + ")";		
 			
 			quaList.add(0, userId);
@@ -1102,13 +1178,15 @@ public class EzEmailAdminController {
 		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
 		
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
+		
+		boolean primaryChk = userInfo.getPrimary().equals("1") ? true : false;
 
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {
 			List<String> quaList = new ArrayList<String>();
 			String userId = organUser.getCn();
-			String department = organUser.getDescription();
-			String displayname = organUser.getDisplayName();
+			String department = primaryChk ? organUser.getDescription() : organUser.getDescription2();
+			String displayname = primaryChk ? organUser.getDisplayName() : organUser.getDisplayName2();
 			displayname = displayname + "(" + userId + ")";	
 				
 			quaList.add(0, userId);
@@ -1697,6 +1775,20 @@ public class EzEmailAdminController {
 				return "json";
 			}
 			
+			if (!companyDomain.isEmpty()) {
+				String newMailAddr = shareId + "@" + companyDomain;				
+				String returnValue = ezEmailService.checkIndividualAlias(newMailAddr, tenantId);
+				
+				if (!returnValue.equals("OK")) {
+					logger.debug("create sharedMailbox account failed. '" + shareId + "' ID is already used.");
+					resultCode = "DUPLICATE";
+					
+					model.addAttribute("resultCode", resultCode);
+					logger.debug("addSharedMailbox ended. resultCode=" + resultCode);
+					return "json";					
+				}
+			}			
+			
 			String mailAddr = shareId + "@" + domain;
 			
 			// 이메일 시스템에 계정을 생성한다.
@@ -1932,6 +2024,67 @@ public class EzEmailAdminController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 공유사서함 조건별 검색
+	 */
+	@RequestMapping(value = "/admin/ezEmail/getSharedMailboxListSearchByItem.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSharedMailboxListSearch(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getSharedMailboxListSearch started.");
+		
+		String returnData = "";
+		
+		try {
+			// 관리자 권한체크
+			LoginVO auth = commonUtil.checkAdmin(loginCookie);
+			
+			if (auth == null) {
+				returnData = "NO_PERMISSION";
+				logger.debug("getSharedMailboxListSearch ended. returnData=" + returnData);
+				
+				return returnData;
+			}
+			
+			String userId = auth.getId();
+			String compId = request.getParameter("compId");
+			int tenantId = auth.getTenantId();
+			String searchType = request.getParameter("searchType");
+			String searchValue = request.getParameter("searchValue");
+			logger.debug("userId=" + userId + ",compId=" + compId + ",tenantId=" + tenantId + ",searchType=" + searchType 
+					+ ",searchValue=" + searchValue);
+			
+			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxListSearchByItem(compId, auth.getTenantId(), searchType, searchValue);
+			logger.debug("sharedMailboxList size=" + sharedMailboxList.size());
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailSharedMailboxVO vo : sharedMailboxList) {
+				sb.append("<ROW><CELL>");
+
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getShareName()));
+				sb.append("</VALUE>");
+
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getShareId()));
+				sb.append("</DATA1>");
+
+				sb.append("</CELL></ROW>");
+			}
+
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getSharedMailboxListSearch ended.");
+		return returnData;
 	}
 	
 	private String checkLicenseKey(int tenantID, String domain) throws Exception {
@@ -2227,6 +2380,10 @@ public class EzEmailAdminController {
 				// e.printStackTrace();
 			}
 		} 
+		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR",userInfo.getTenantId()));
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		model.addAttribute("signNo", signNo);
@@ -2235,6 +2392,8 @@ public class EzEmailAdminController {
 		model.addAttribute("displayname2", displayname2);
 		model.addAttribute("type", type);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("signNo=" + signNo + ", content=" + content + ", displayname=" + displayname + ", displayname2=" + displayname2);
 		logger.debug("signEditPopUp ended.");

@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html style="height:100%"> 
+<html style="height:100%" ondragover="bodydragover(event)"> 
 	<head>
 		<c:choose>
 			<c:when test="${mode eq 'reuse'}">
@@ -53,9 +53,9 @@
 
 		    window.onload = function () {
 		    	//2018-02-13 주홍선 IE10에서 창이 정상적으로 열리지 않던 것 수정
-		    	if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
-		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
-		    	}
+		    	//2019-09-20 김민성 - 크롬 & CK 에디터 환경에서 회람 작성창 하단 첨부파일 영역 나타나지 않는 현상 수정
+		    	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
+		    	
 				if (listSize != 0) {
 		        	document.getElementById("title").value = "${result.title}";
 		        	document.getElementById("receiverlist").innerHTML = "${userName}";
@@ -367,6 +367,12 @@
 	                }
 				});
 			}
+			
+			function bodydragover(evt) {
+				evt.dataTransfer.dropEffect = "none";
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
 		</script>
 	</head>
 	
@@ -391,7 +397,7 @@
         						</c:when>
         						<c:otherwise>
         							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezCircular.t28 => t25 -->
-		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t25"/></span></li>	
+		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.kbm01"/></span></li>	
 		          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>       						
         						</c:otherwise>
         					</c:choose>

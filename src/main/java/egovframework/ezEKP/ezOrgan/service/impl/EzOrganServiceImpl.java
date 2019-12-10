@@ -674,7 +674,7 @@ public class EzOrganServiceImpl implements EzOrganService {
     }	
 
 	@Override
-	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception {
+	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID, String adminOrgan) throws Exception {
 		logger.debug("getSearchList started");
 		
         String[] searchParam = null;
@@ -760,6 +760,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("type", type);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
+        map.put("adminOrgan", adminOrgan);
         
         logger.debug("strSQL=" + strSQL);
         
@@ -943,7 +944,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
     @Override
-    public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID, String companyId) throws Exception {
+    public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID, String companyId, String adminOrgan) throws Exception {
     	logger.debug("getSearchListPagination started");
     	
         String strSQL="";
@@ -1053,6 +1054,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         	map.put("count", 50);        
         	map.put("strSQLCom", strSQLCom);  
         	map.put("strSQLAddjobCom", strSQLAddjobCom);
+        	map.put("adminOrgan", adminOrgan);
 
         	logger.debug("strSQL=" + strSQL);
         	logger.debug("strSQLCom=" + strSQLCom);
@@ -1102,6 +1104,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         	
         	memberlist2.append("</ROWS></LISTVIEWDATA>");
         } catch (Exception e) {
+        	e.printStackTrace();
         	memberlist2 = new StringBuilder("<LISTVIEWDATA>");
         	memberlist2.append("<TOTALCOUNT>" + "0" + "</TOTALCOUNT><ROWS>");
         	memberlist2.append("</ROWS></LISTVIEWDATA>");
@@ -1996,7 +1999,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
-	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, String companyId, int tenantID, String noAddJob) throws Exception {
+	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, String companyId, int tenantID, String noAddJob, String adminOrgan) throws Exception {
 		logger.debug("getSearchList started");
 		
         String[] searchParam = null;
@@ -2101,6 +2104,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("strSQLCom", strSQLCom);
         map.put("strSQLAddjobCom", strSQLAddjobCom);
         map.put("noAddJob", noAddJob);
+        map.put("adminOrgan", adminOrgan);
         
         logger.debug("strSQL=" + strSQL);
         logger.debug("strSQLCom=" + strSQLCom);//getSearchList

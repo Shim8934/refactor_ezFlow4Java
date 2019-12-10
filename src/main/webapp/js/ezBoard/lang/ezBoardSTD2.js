@@ -40,6 +40,7 @@ var strLang55 =	"Preview is not available for moved or deleted scrap.";
 var strLang60 = "OK";
 var strLang61 = "Atmosphere";
 var strLang62 = "Return";
+var strLang63 =	"There is no post.";
 
 
 //2016 추가

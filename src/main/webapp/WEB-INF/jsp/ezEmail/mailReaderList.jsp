@@ -20,6 +20,7 @@
 	        var docHeight = window.outerHeight;
 	        
 	        document.onselectstart = function () { return false; };
+
 	        function ReSend(pEmail) {
 	            var pEmail = pEmail.getAttribute("EMAIL");
 	            if (pEmail.indexOf("(") > -1) {
@@ -31,6 +32,7 @@
 	            } catch (e) {
 	            }
 	        }
+
 	        var g_xmlHttp;
 	        function MailCancel(pGubun) {
 	            var xmlDom = createXmlDom();
@@ -69,6 +71,7 @@
 	            g_xmlHttp.onreadystatechange = mail_cancelsend_after;
 	            g_xmlHttp.send(xmlDom);
 	        }
+
 	        function mail_cancelsend_after() {
 	            if (g_xmlHttp != null && g_xmlHttp.readyState == 4) {
 	                var szStatus = g_xmlHttp.status;
@@ -85,16 +88,20 @@
 	                }
 	            }
 	        }
+
 	        window.onload = function () {
 	            document.getElementById("1tab1").setAttribute("class", "tabon");
 	            Tab1_SelectID = "1tab1";
 	            Get_MailReceiverList();
 	        }
+
 	        function Refresh() {
 	            Get_MailReceiverList();
 	        }
+
 	        var xmlhttp_MailReceiverList;
 	        var MailReceiverListXML;
+
 	        function Get_MailReceiverList() {
 	            document.getElementById("HeaderAllCheckBox").checked = false;
 	            MailReceiverListXML = null;
@@ -111,6 +118,7 @@
 	            xmlhttp_MailReceiverList.onreadystatechange = event_xmlhttp_MailReceiverList_Complete;
 	            xmlhttp_MailReceiverList.send(strQuery);
 	        }
+
 	        function event_xmlhttp_MailReceiverList_Complete() {
 	            if (xmlhttp_MailReceiverList != null && xmlhttp_MailReceiverList.readyState == 4) {
 	                if (xmlhttp_MailReceiverList.status >= 200 && xmlhttp_MailReceiverList.status < 300) {
@@ -120,18 +128,23 @@
 	                }
 	            }
 	        }
+
 	        var Tab1_SelectID = "";
 	        function Tab1_MouserOver(obj) {
 	            obj.className = "tabover";
 	        }
+
 	        function Tab1_MouserOut(obj) {
 	            if (Tab1_SelectID != obj.id)
 	                obj.className = "";
 	        }
+
 	        function Tab1_MouseClick(obj) {
 	            obj.className = "tabon";
+
 	            if (obj.id != Tab1_SelectID) {
-	                if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+
+	            	if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
 	                    document.getElementById(Tab1_SelectID).className = "";
 	
 	                obj.className = "tabon";
@@ -139,6 +152,7 @@
 	                ChangeTab(obj);
 	            }
 	        }
+
 	        function Tab1_NewTabIni(pTabNodeID) {
 	            for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
 	                if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
@@ -163,6 +177,7 @@
 	            while (GetListInfo_ContentObject.childNodes.length > 0) {
 	                GetListInfo_ContentObject.removeChild(GetListInfo_ContentObject.childNodes.item(0));
 	            }
+
 	            var XmlRows = SelectNodes(MailReceiverListXML, "DATA/ROW");
 	            XmlRows = sortNode(XmlRows, "READDATE", "UNREAD", "DESC"); // READDATE 컬럼 기준 UNREAD가 아닌것 정렬 (내림차순으로)
 	            
@@ -192,6 +207,7 @@
 	                    TD1_Sub.style.height = "13px";
 	                    TD1.appendChild(TD1_Sub);
 	                }
+
 	                TD2.innerHTML = ReplaceText(SelectSingleNodeValue(XmlRows[i], "READERNAME"), "&", "&amp;");
 	                TD2.style.width = "92px";
 	                TD2.style.overflow = "hidden";
@@ -202,6 +218,7 @@
 	                TD3.style.overflow = "hidden";
 	                TD3.style.textOverflow = "ellipsis";
 	                TD3.style.whiteSpace = "nowrap";
+
 	                if (ReadDate == "UNREAD" || (CancelStatus != "" && CancelStatus != "2")) {
 	                    TD4_ATag = document.createElement("A");
 	                    TD4_ATag.className = "imgbtn";
@@ -215,6 +232,7 @@
 	                else {
 	                    TD4.innerHTML = ReadDate;
 	                }
+
 	                TD4.style.width = "142px";
 	                TD4.style.overflow = "hidden";
 	                TD4.style.textOverflow = "ellipsis";
@@ -226,6 +244,7 @@
 	                TR.appendChild(TD3);
 	                TR.appendChild(TD4);
 	                TR.appendChild(TD5);
+
 	                if (pGubun == "ALL") {
 	                    GetListInfo_ContentObject.appendChild(TR);
 	                }
@@ -256,6 +275,7 @@
 	            	}
 	            }
 	        }
+
 	        function event_listCheckboxclick(obj) {
 	            if (obj.checked) {
 	                for (var RowCnt = 0; RowCnt < MailList.childNodes.length; RowCnt++) {
@@ -272,6 +292,7 @@
 	                }
 	            }
 	        }
+
 	        function ChangeTab(obj) {
 	            var pSelectTab = obj.getAttribute("divname");
 	            switch (pSelectTab) {
@@ -289,6 +310,7 @@
 	                    break;
 	            }
 	        }
+
 	        function Window_Print() {
 	            window.print();
 	        }

@@ -26,8 +26,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var companyId = "${userCompany}";
+			var searchFlag = false;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -45,7 +47,6 @@
 		    function company_change() {
 		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
 		        document.getElementById("DIV_Member").innerHTML = "";
-		
 		        var xmlDom = createXmlDom();
 		        var xmlHTTP = createXMLHttpRequest();
 		
@@ -77,6 +78,11 @@
 		                headerData.documentElement.appendChild(xmlRtn);
 		            }
 		            document.getElementById("OrganListView").innerHTML = "";
+		            
+		            // 리스트 총 개수
+		            var listCount = headerData.getElementsByTagName("ROWS")[0].childElementCount;
+		            document.getElementById("listCount").innerHTML = listCount;
+		            
 		            var pUserList = new ListView();
 		            pUserList.SetID("lvUserList");
 		            pUserList.SetRowOnDblClick("mod_dl");
@@ -177,10 +183,10 @@
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		
 		        var selectedCount = listview.GetSelectedRows().length;
-		        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
 		        
-		        if (ret) {
-			        if (selectedCount > 0) {
+		        if (selectedCount > 0) {
+			        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
+		        	if (ret) {
 				        createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
 				        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
 				        
@@ -194,10 +200,11 @@
 				        }
 				        
 				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
-				        company_change();
-			        } else {
-			            alert("<spring:message code='ezEmail.t51' />");		            
+				        //company_change();
+				        selectList_Change();
 			        }
+		        } else {
+		            alert("<spring:message code='ezEmail.t51' />");		            
 		        }
 		    }
 		    
@@ -239,7 +246,7 @@
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
 		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
-		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
+		            mail_add_distributionlist_cross_dialogArguments[1] = mod_dl_Complete;
 		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
@@ -250,6 +257,87 @@
 		            if (typeof (rtnValue) != "undefined")
 		                company_change();
 		        }
+		    }
+		    function mod_dl_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined")
+		        	selectList_Change();
+		    }
+		    function search_click() {
+				var searchType = document.getElementById("searchType").value;
+		    	var searchValue = document.getElementById("searchValue").value;
+		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
+		    	searchFlag = true;
+
+		    	if (searchValue == "") {
+		    		alert("<spring:message code='ezEmail.t10' />");
+		    		return;
+		    	}
+		    	
+		        var xmlDom = createXmlDom();
+		        var xmlHTTP = createXMLHttpRequest();
+		        var objRoot;
+		        createNodeInsert(xmlDom, objRoot, "DATA");
+		        createNodeAndInsertText(xmlDom, objRoot, "CN", null);
+		        createNodeAndInsertText(xmlDom, objRoot, "COMPID", companyId);
+		        createNodeAndInsertText(xmlDom, objRoot, "SEARCHTYPE", searchType);
+		        createNodeAndInsertText(xmlDom, objRoot, "SEARCHVALUE", searchValue);
+			
+		        xmlHTTP.open("POST", "/admin/ezEmail/mailGetDistributionSearchByItem.do", false);
+		        xmlHTTP.send(xmlDom);
+		        var stateVlaue = "";
+		        
+		        if (CrossYN())
+		            stateVlaue = xmlHTTP.responseXML.documentElement.textContent.substr(0, 5)
+		        else
+		            stateVlaue = xmlHTTP.responseXML.documentElement.text.substr(0, 5)
+		            
+		        if (xmlHTTP.status != 200 || stateVlaue == "ERROR")
+		            alert("<spring:message code='ezEmail.t50' />");
+		        else {
+		            var headerData = createXmlDom();
+		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		
+		            if (CrossYN()) {
+		                var xmlRtn = xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
+		                var Node = headerData.importNode(xmlRtn, true);
+		                headerData.documentElement.appendChild(Node);
+		            }
+		            else {
+		                var xmlRtn = xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
+		                headerData.documentElement.appendChild(xmlRtn);
+		            }
+		            document.getElementById("OrganListView").innerHTML = "";
+		            
+		            // 리스트 총 개수
+		            var listCount = headerData.getElementsByTagName("ROWS")[0].childElementCount;
+		            document.getElementById("listCount").innerHTML = listCount;
+		            
+		            var pUserList = new ListView();
+		            pUserList.SetID("lvUserList");
+		            pUserList.SetRowOnDblClick("mod_dl");
+		            pUserList.SetRowOnClick("View_dl");
+		            pUserList.SetSelectFlag(false);
+		            pUserList.SetHeightFree(true);
+		            pUserList.DataSource(headerData);
+		            pUserList.DataBind("OrganListView");
+		        }
+		    } // search_onclick END
+		    
+		    function selectList_Change() {
+		    	var selectTR_Data1 = $("#lvUserList tr[selected=true]")[0].getAttribute("data1");
+		    	
+		    	if (searchFlag == true && document.getElementById("searchValue").value != "") {
+		    		search_click();
+		    	} else {
+		    		company_change();
+		    	}
+
+				var reListTR_ = $("#lvUserList tr[data1='" + selectTR_Data1 + "']")[0];
+				reListTR_ = typeof reListTR_ != "undefined"  ? reListTR_.getAttribute("id") : "";
+				
+		    	if (selectTR_Data1 != "" && reListTR_ != "") {
+		    		tr_select(reListTR_, "lvUserList", View_dl);
+		    	}
 		    }
 		</script>
 	</head>
@@ -282,18 +370,44 @@
 	  <script type="text/javascript">
 	      selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	</script>
-	    <table class="mainlist">
+		<div style="width:825px;">
+		<!-- 검색 -->
+		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box; line-height: 30px;">
+			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
+				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
+			</div>
+			<div id="userSearchRayer" style="float:right; display: inline-block;">
+				<div style="display: inline-block; float:left;">
+				<select id="searchType" style="height: 26px; width: 120px;">
+					<option value="displayName"><spring:message code='ezEmail.t710' /></option> <!-- 그룹이름 -->
+					<option value="groupID"><spring:message code='ezEmail.lhm09' /></option> <!-- 그룹아이디 -->
+					<option value="memberName"><spring:message code='ezEmail.ksaDistribution01' /></option> <!-- 구성원이름 -->
+					<option value="memberID"><spring:message code='ezEmail.ksaDistribution02' /></option> <!-- 구성원아이디 -->
+				</select>
+				</div>
+				<div style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 519px;padding-left: 5px;">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:89%">
+					<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+				</div>
+			</div>
+		</div>
+	    <table class="mainlist" style="width:100%;">
+	    	<colgroup>
+	    		<col width="37%"/>
+	    		<col width=""/>
+	    	</colgroup>
 	        <tr>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div style="width:300px">
+	                <div style="width:100%">
 	                    <div id="OrganListView" style ="BORDER:0;WIDTH:100%; height:400px; overflow-y: auto; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;"></div>      
 	                </div>
 	            </td>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div id="DIV_Member" style="padding-top:10px; padding-left:5px; width: 515px; height: 390px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;"></div>      
+	                <div id="DIV_Member" style="padding-top:10px; padding-left:5px; height: 390px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;"></div>      
 	            </td>
 	        </tr>
 	    </table>
+	    </div>
 	</form>
 	</body>
 </html>

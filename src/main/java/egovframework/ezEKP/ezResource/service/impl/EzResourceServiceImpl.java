@@ -2062,7 +2062,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			/*else {		// 아이디 혹은 everyone에서 관리자 권한 있을 때
 				return "Y";
 			}*/
-		} else {	//부서의 관리자 권한 확인
+		else {	//부서의 관리자 권한 확인
 			Map<String,Object> map = new HashMap<String, Object>();
 			map.put("v_PCOMPANYID", companyID);
 			map.put("v_BRD_UPPER", brdID);
@@ -2178,7 +2178,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				accessLvl = AccessDeptLvl;
 			} */
 		}
-
+		}
 		
 		if(accessLvl.trim().equals("1")) {
 			return "Y";
@@ -2317,7 +2317,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         if(langStr.equals("1")) {
         	strData2 = xmlRes.getElementsByTagName("BRDNM").item(0).getTextContent();
         } else {
-        	strData2 = xmlRes.getElementsByTagName("BRDNM"+langStr).item(0).getTextContent();
+        	strData2 = commonUtil.cleanValue(xmlRes.getElementsByTagName("BRDNM"+langStr).item(0).getTextContent());
         }
         String strData3 = xmlRes.getElementsByTagName("BRDLEVEL").item(0).getTextContent();
         String strData4 = xmlRes.getElementsByTagName("BRDSTEP").item(0).getTextContent();
@@ -3710,7 +3710,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate1)) {
 						loopFlag = false;
 						break;
-					} else if (oSDate.compareTo(oStartDate) >= 0 && tEDate.compareTo(oEndDate) <= 0) {
+					} else if (!tmpStartDate.before(resStartDate)) {
+						if (oSDate.compareTo(oStartDate) >= 0 && tEDate.compareTo(oEndDate) <= 0) {
 //						tempEndCal.setTime(tmpStartDate);
 //						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
@@ -3718,6 +3719,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								tmpStartDate, 
 								tempEndCal.getTime()
 						});
+						}
 					}
 				}
 				// 반복 횟수 지정했을 경우

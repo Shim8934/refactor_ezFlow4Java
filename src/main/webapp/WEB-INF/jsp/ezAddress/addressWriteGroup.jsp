@@ -388,7 +388,7 @@
 	        	
 	        	if (pTextName.indexOf("&") > -1 || pTextName.indexOf("<") > -1 || pTextName.indexOf(">") > -1 
 		        		 || pTextName.indexOf("\"") > -1 || pTextName.indexOf("'") > -1 || pTextName.indexOf(';') != -1) {
-	           		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+	           		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
 	           		document.getElementById("TextName").focus();
 		            return;
 		        }
@@ -1075,7 +1075,7 @@
 	        
 	        if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
 	        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1 || strName.indexOf(";") > -1) {
-           		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+           		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
            		document.getElementById("emailname").focus();
 	            return;
 	        }

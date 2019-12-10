@@ -1545,16 +1545,27 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANTID", tenantID);
 		
 		if (!pageNum.equals("") && !pageSize.equals("")) {
-			pageNum = String.valueOf((Integer.parseInt(pageNum) * Integer.parseInt(pageSize)) - Integer.parseInt(pageSize));
-			map.put("v_PAGESIZE", pageSize);
-			map.put("v_PAGENUM", pageNum);
+			int pPageSize = Integer.parseInt(pageSize);
+			int pPageNum = Integer.parseInt(pageNum);
+			pPageNum = (pPageNum * pPageSize) - pPageSize;
+			
+			logger.debug("getTitleUserList pageSize : " + pPageSize + " pageNum : " + pPageNum);
+			
+			map.put("v_PAGESIZE", pPageSize);
+			map.put("v_PAGENUM", pPageNum);
 		}
 		
 		if (!searchType.equals("") && !searchValue.equals("")) {
 			StringBuffer sb = new StringBuffer();
+			
 			if (searchType.equals("displayname")) {
-				sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+				if (primary.equals("1")) {
+					sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+				} else {
+					sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%'");
+				}
 			}
+			
 			map.put("v_SUBQUERY", "WHERE " + sb.toString());
 		}
 		

@@ -211,10 +211,10 @@
 	            
 	            if (type == "config") {
 	                if (CrossYN())
-	                    document.getElementById("h1Title").textContent = strLang314 + " <spring:message code='ezEmail.t832' />";
+	                    document.getElementById("h1Title").textContent = strLang314 + "<spring:message code='ezEmail.t832' />";
 	                else
-	                    document.getElementById("h1Title").innerText = strLang314 + " <spring:message code='ezEmail.t832' />";
-	                document.title = strLang314 + " <spring:message code='ezEmail.t832' />";
+	                    document.getElementById("h1Title").innerText = strLang314 + "<spring:message code='ezEmail.t832' />";
+	                document.title = strLang314 + "<spring:message code='ezEmail.t832' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "";
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
@@ -328,6 +328,9 @@
                });
 	            
 	            ChangeListView_onClick(getOrganListType());
+	            
+	            //메일창에서 수신자설정창을 열고 메일창을 먼저 닫았을 경우, 수신사설정창도 닫히도록 처리 2019-07-31 홍대표
+	            checkMailWriteWindow();
 	        }
 	        
 		    function recevieListview(pID, pListView) {
@@ -3346,7 +3349,7 @@
                 
                 if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
 		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1 || strName.indexOf(";") > -1) {
-               		alert("<spring:message code='ezEmail.t31' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+	           		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
                		document.getElementById("emailname").focus();
 		            return;
 		        }
@@ -3776,6 +3779,20 @@
 	        	} else {
 	        		receiverCount -= 1;
 	        	}
+	        }
+	        
+	        function checkMailWriteWindow(){
+	        	setInterval(function(){ 
+	        		if (isIE()) {
+		        		if(window.opener.closed) {
+		        			window.close();
+		        		} 
+	        		} else {
+	        			if(!window.opener) {
+	        				window.close();
+	        			}
+	        		}
+	        	}, 500);
 	        }
 	    </script>
 	</head>

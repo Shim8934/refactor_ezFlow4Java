@@ -359,7 +359,7 @@
 					<td><input type="text" id="tbCateName" name="tbCateName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="10"/></td>
 				</tr>
 				<tr>
-					<th><spring:message code = 'ezApprovalG.t1762' /> <span style="color:red">*</span></th>
+					<th><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1765' />)<span style="color:red"> *</span></th>
 					<td><input type="text" id="tbCateName2" name="tbCateName2" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"/></td>
 				</tr>
 				<tr>

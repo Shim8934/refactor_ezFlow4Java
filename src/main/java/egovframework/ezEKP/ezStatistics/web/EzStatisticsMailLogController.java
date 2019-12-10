@@ -343,6 +343,17 @@ public class EzStatisticsMailLogController {
 		String pageSize = request.getParameter("pageSize");
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String companyId = request.getParameter("companyId");
+		String orgSearchValue = searchValue;
+		
+		if (searchField != null && (searchField.equals("recipientEmail") || searchField.equals("senderEmail"))) {
+			String realEmailAddress = ezEmailUtil.getRealEmailAddress(searchValue);
+			
+			logger.debug("realEmailAddress=" + realEmailAddress);
+			
+			if (realEmailAddress != null && !realEmailAddress.isEmpty()) {
+				searchValue = realEmailAddress;
+			}
+		}
 		
 		if (!searchStartTime.isEmpty()) {
 			searchStartTime = searchStartTime.replaceAll("[^0-9]", "");

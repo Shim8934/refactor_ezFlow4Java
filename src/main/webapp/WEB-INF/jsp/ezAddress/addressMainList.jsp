@@ -486,16 +486,10 @@
 	                alert("<spring:message code='ezAddress.t220' />");
 	                return;
                 } 
-                
-                if (pQname.indexOf('<') != -1 || pQname.indexOf('>') != -1 || pQname.indexOf(';') != -1) {
-	        		document.getElementById("qname").focus();
-		        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
-		        	return;
-		        }
 	        	
                 if (pQname.indexOf("&") > -1 || pQname.indexOf("<") > -1 || pQname.indexOf(">") > -1 
    	        		 || pQname.indexOf("\"") > -1 || pQname.indexOf("'") > -1 || pQname.indexOf(";") > -1) {
-              		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+              		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
               		document.getElementById("pQname").focus();
    	            	return;
    	        	}
@@ -597,9 +591,20 @@
 	        	$("#srarchpopup").css("left", popupX);
 	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 	        	
+	        	// 검색 레이어 팝업 열기 전에 input 내용 지워주도록 처리. 2019-08-02 홍대표.
+	        	var inputElem = document.getElementById("srarchpopup").getElementsByTagName("input");
+	        	[].forEach.call(inputElem, function(elem){
+	        		if(elem.type == "checkbox") {
+	        			elem.checked = false;
+	        		}
+	        		
+	        		elem.value = "";
+	        	});
+	        	
 	        	$("#srarchpopup").modal();
 	        }	        
 	        function SearchOptionHidden() {
+	        	quick_add_close();
 	        	$.modal.close();
 	        }	        
 	        function ShowQuickAddres() {
@@ -621,6 +626,9 @@
 	        	
 	        	$("#addpopup").css("left", popupX);
 	        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+	        	
+	        	// 레이어 팝업에서 x 버튼과 배경을 눌러서 껏을 때, 동작 차이 버그 수정. 모든 검색 내용을 삭제 후 팝업 오픈 2019-08-02 홍대표
+	        	quick_add_close();
 	        	
 	        	$("#addpopup").modal();
 	        }	        

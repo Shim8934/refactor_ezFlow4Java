@@ -1668,7 +1668,7 @@
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
-	        <ul id="menuend">
+	        <ul id="menuend" style="display:none">
 	        	<c:if test ="${approvalFlag == 'S'}">	        	
 	            <li id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
 	            <li id="tsendCir" style="display: none"><span id="sendCir" onClick="return sendCirCulation_onclick()" ><spring:message code='ezApprovalG.hyj25'/></span></li>
@@ -1717,7 +1717,7 @@
 		        </li>
 	        </ul>
 	        <!-- 	        후결 문서함 -->
-	    	<ul id="menuapr">
+	    	<ul id="menuapr" style="display:none">
 		        <li id="tViewDocApr"><span id="ViewDocApr" onClick="return ViewDoc_onclick()" ><spring:message code='ezApproval.pjj35'/></span></li> 
 		        <li id="tSearchCondiApr"><span id="SearchCondiApr" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>

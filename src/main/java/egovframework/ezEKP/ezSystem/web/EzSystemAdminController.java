@@ -171,6 +171,13 @@ public class EzSystemAdminController {
 				}
 			}
 		}
+
+		if (configMap.get("useSession") == null || configMap.get("useSession").equals("")) {
+			configMap.put("useSession", "0");
+		}
+		if (configMap.get("useSessionMobile") == null || configMap.get("useSessionMobile").equals("")) {
+			configMap.put("useSessionMobile", "0");
+		}
 		
 		int userCount = ezOrganAdminService.getUserCount(userInfo.getTenantId());
 		
@@ -368,6 +375,11 @@ public class EzSystemAdminController {
 		
 		String offset = userInfo.getOffset();
 		String currPage = request.getParameter("pageNum");
+		String config = request.getParameter("config");	// 사용자화면에서도 사용하기 위해
+		if (config == null) {
+			config = "";
+		}
+		logger.debug("config=" + config);
 		
 		int maxItemPerPage = 20; 
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
@@ -417,51 +429,52 @@ public class EzSystemAdminController {
 		font.setBoldweight((short)HSSFFont.BOLDWEIGHT_BOLD);
 		headerStyle.setFont(font);
 		
+		String histHeader = config.equals("u") ? egovMessageSource.getMessage("ezSystem.ksaLoginHistUser", locale) : egovMessageSource.getMessage("ezSystem.ksaLoginHistAdmin", locale);
+		String[] histHeaderArr = histHeader.split(";");
+		int histHeaderLen = histHeaderArr.length;
+		
 		row = sheet.createRow(0);
 		cell = row.createCell(0);	
 		cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0032", locale) + " : " + startDate + " ~ " + endDate);
-		cell = row.createCell(5);
+		cell = row.createCell(histHeaderLen-1);
 		cell.setCellValue(egovMessageSource.getMessage("main.t252", locale) + " " + totalCount + egovMessageSource.getMessage("ezSystem.kyj2", locale));
 		
 		row = sheet.createRow(1);
-		cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0022", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0023", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(2);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0024", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(3);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0025", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0026", locale)); 
-		cell.setCellStyle(headerStyle);
-		cell = row.createCell(5);	cell.setCellValue(egovMessageSource.getMessage("ezSystem.x0027", locale)); 
-		cell.setCellStyle(headerStyle);
+		for (int i = 0; i < histHeaderLen; i ++) {
+			cell = row.createCell(i);	cell.setCellValue(histHeaderArr[i]); 
+			cell.setCellStyle(headerStyle);
+		}
 		
 		for (int i = 2; i < totalCount + 2; i++) {
 			row = sheet.createRow(i);
 			row.setHeight((short)300);
 			int j = 2;
 			
-			if (sysLang.equals("primary")) {
-				cell = row.createCell(0); cell.setCellValue((String) loginHistList.get(i-j).getUsernm());
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(1); cell.setCellValue((String) loginHistList.get(i-j).getDeptnm());
-				cell.setCellStyle(bodyStyle);
+			ConnectionInfoVO infoVo = loginHistList.get(i-j);
+			String userName = infoVo.getUsernm();
+			String userDeptName = infoVo.getDeptnm();
+			String userCompanyName = infoVo.getCompanynm();
+			if (!sysLang.equals("primary")) {
+				userName = infoVo.getUsernm2();
+				userDeptName = infoVo.getDeptnm2();
+				userCompanyName = infoVo.getCompanynm2();
+			}
+			String userConnectIp = infoVo.getConnectip();
+			String userConnectTime = infoVo.getConnecttime();
+			String userConnectBrowser = infoVo.getConnectbrowser();
+			String userConnectOS = infoVo.getConnectos();
+			
+			String[] userHist = null;
+			if (config.equals("u")){
+				userHist = new String [] {userName,userDeptName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
 			} else {
-				cell = row.createCell(0); cell.setCellValue((String) loginHistList.get(i-j).getUsernm2());
-				cell.setCellStyle(bodyStyle);
-				cell = row.createCell(1); cell.setCellValue((String) loginHistList.get(i-j).getDeptnm2());
-				cell.setCellStyle(bodyStyle);
+				userHist = new String [] {userName,userDeptName,userCompanyName,userConnectIp,userConnectTime,userConnectBrowser,userConnectOS};
 			}
 			
-			cell = row.createCell(2); cell.setCellValue((String) loginHistList.get(i-j).getConnectip());
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(3); cell.setCellValue((String) loginHistList.get(i-j).getConnecttime());
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(4); cell.setCellValue((String) loginHistList.get(i-j).getConnectbrowser());
-			cell.setCellStyle(bodyStyle);
-			cell = row.createCell(5); cell.setCellValue((String) loginHistList.get(i-j).getConnectos());
-			cell.setCellStyle(bodyStyle);
+			for (int k = 0; k < histHeaderLen; k ++) {
+				cell = row.createCell(k);	cell.setCellValue((String) userHist[k]); 
+				cell.setCellStyle(bodyStyle);
+			}
 			
 			sheet.autoSizeColumn(i-1);
 		}
@@ -958,29 +971,35 @@ public class EzSystemAdminController {
         
 		int tenantId = loginService.getTenantId(serverName);
 		
-		String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+		// 20190828 김수아 : 세션 유지 시간 모바일 추가하면서 수정
+		Map<String, String> sessionConfig = new HashMap<String, String>();
+		sessionConfig.put("useSession", ezCommonService.getTenantConfig("useSession", tenantId));
+		sessionConfig.put("useSessionMobile", ezCommonService.getTenantConfig("useSessionMobile", tenantId));
 		
 		// tenant_config 테이블에 useSession row 없으면 추가
-		if (useSession.equals("")) {
-			
-			Map<String, Object> sessionParam = new HashMap<String, Object>();
-			
-			sessionParam.put("tenantID", tenantId);
-			sessionParam.put("confName", "useSession");
-    		sessionParam.put("property_value", "0");
-			sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
-			sessionParam.put("config_name", "세션 유지 시간");
-			sessionParam.put("config_type", "일반");
-			
-			String regdate = commonUtil.getTodayUTCTime("");
-			
-			sessionParam.put("regdate", regdate);
-			
-			ezCommonService.insertUseSession(sessionParam);
-    	}
+		for (String key : sessionConfig.keySet()) {
+			if (sessionConfig.get(key).equals("")) {
+				String configName = key.equals("useSessionMobile") ? "세션 유지 시간(모바일)" : "세션 유지 시간";
+				
+				Map<String, Object> sessionParam = new HashMap<String, Object>();
+				
+				sessionParam.put("tenantID", tenantId);
+				sessionParam.put("confName", key);
+	    		sessionParam.put("property_value", "0");
+				sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
+				sessionParam.put("config_name", configName);
+				sessionParam.put("config_type", "일반");
+				
+				String regdate = commonUtil.getTodayUTCTime("");
+				
+				sessionParam.put("regdate", regdate);
+				
+				ezCommonService.insertUseSession(sessionParam);
+			}
+		}
 		
 		logger.debug("checkUseSession ended");
-		return useSession;
+		return "";
 	}
 	
 	@RequestMapping(value = "/admin/ezSystem/systemModuleMonitor.do")

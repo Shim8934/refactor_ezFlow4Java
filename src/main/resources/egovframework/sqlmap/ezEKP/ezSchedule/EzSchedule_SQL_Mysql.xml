@@ -648,6 +648,15 @@
 				tenant_id = #v_TENANTID#
 			and
         		PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				cn not in ( SELECT 
+										cn 
+								FROM
+						           		TBL_USERMASTER_RETIRE 
+						        WHERE
+						                TENANT_ID = #v_TENANTID#
+						        AND 
+						           		PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# )
 					
 			UNION ALL
 				SELECT
@@ -1186,11 +1195,7 @@
 				datetype = #v_DATETYPE#,
 				startdate = #v_STARTDATE#,				
 				enddate = #v_ENDDATE#,
-			]]>	
-			<isNotEmpty property="v_REPETITION">
 				repetition = ifnull(#v_REPETITION#, ''),
-			</isNotEmpty>	
-			<![CDATA[	
 				title = #v_TITLE#,
 				location = ifnull(#v_LOCATION#, '')
 	   		where  

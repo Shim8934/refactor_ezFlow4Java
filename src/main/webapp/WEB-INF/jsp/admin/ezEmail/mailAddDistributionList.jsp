@@ -284,7 +284,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
@@ -294,8 +294,15 @@
 	
 	                    if (CrossYN()) {
 	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
-	                        headerData.documentElement.appendChild(Node);
+	                        //headerData.documentElement.appendChild(Node);
+	                        headerData.documentElement.prepend(Node);
 	                    }
 	                    else {
 	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
@@ -413,7 +420,7 @@
 		        	data : {
 		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", 
 		        		type : "user"
 		        	},
 		        	success : function(result){	
@@ -424,8 +431,16 @@
 	                    var xmlDom = loadXMLString(result);
 	                    if (CrossYN()) {
 	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            		//$(this).find("CELL").eq(3).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
-	                        headerData.documentElement.appendChild(Node);
+	                        //headerData.documentElement.appendChild(Node);
+	                        headerData.documentElement.prepend(Node);
 	                    }
 	                    else {
 	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
@@ -2463,7 +2478,7 @@
                 
                 if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
 		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
-                	alert("<spring:message code='ezEmail.t31' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+                	alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ]");
                 	document.getElementById("emailname").focus();
 		            return;
 		        }
@@ -2740,9 +2755,9 @@
 		                <table id="TreeViewTD">
 		                    <tr>
 		                        <td>
-		                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-		                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
-		                                    <table style="margin-top: 3px; width: 100%;">
+		                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;border: 1px solid #eaeaea; padding:0;">
+		                                <div class="portlet_tabpart03_top" id="tab1" style="border-bottom:0; height:26px;">
+		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td>
 		                                                <div style="margin-left: 5px;">
@@ -2824,7 +2839,7 @@
 		                            <table style="width: 100%;">
 		                                <tr>
 		                                    <td id="AddrSearch">
-		                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+		                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 4px; padding: 0px; border: 1px solid #eaeaea;">
 		                                            <div class="portlet_tabpart03_top" id="Div1" style="border-bottom: 0px; height:26px;">
 		                                                <table style="margin-top: 4px; width: 100%;">
 		                                                    <tr>
@@ -2891,9 +2906,9 @@
 		                <table id="ListViewDLTD" style="display: none">
 		                    <tr>
 		                        <td>
-		                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;">
-		                                <div class="portlet_tabpart03_top" id="Div2" style="border: 1px solid #d3d2d2;">
-		                                    <table style="margin-top: 3px; width: 100%;">
+		                            <div class="portlet_tabpart03" style="background-color: #f8f8f8; margin-top: 4px;border: 1px solid #eaeaea; padding:0;">
+		                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom:0; height:26px;">
+		                                    <table style="margin-top: 4px; width: 100%;">
 		                                        <tr>
 		                                            <td id="dlmember" style="display: none">
 		                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
@@ -2911,7 +2926,7 @@
 		                <table id="ListViewINPUT" style="display: none">
 		                    <tr>
 		                        <td>
-		                             <div id="ManualView" style="width: 648px; height: 476px; padding: 10px; border-right: 1px solid #ddd" class="box">
+		                             <div id="ManualView" style="width: 648px; height: 472px; padding: 10px; border-right: 1px solid #ddd; margin-top: 4px;" class="box">
 	                        		 	<table class="content">
 	                            			<tr>
 	                                			<th><spring:message code='ezEmail.t31' /></th>

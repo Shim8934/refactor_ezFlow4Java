@@ -1133,7 +1133,7 @@
 					document.getElementById("Search_txtlist_table").style.display = "none";
 
 					if (pSeach) {
-						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >"
+						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >"
 								+ strLang257
 								+ ""
 								+ "-[<span style='color:#017BEC;'>"
@@ -1153,7 +1153,7 @@
 					} else {
 						document.getElementById("Search_txtlist_table").style.display = "";
 						document.getElementById("txtlist_table").style.display = "none";
-						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >"
+						document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >"
 								+ strLang257
 								+ ""
 								+ "-[<span style='color:#017BEC;'>"
@@ -1794,32 +1794,35 @@
 								circularDeptList = "";
 								list = result.circularDeptList;
 
-								list
-										.forEach(function(vo, index) {
-											circularDeptList += ("<tr id='"
-													+ vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
-											circularDeptList += ("<td style='width:5%'>"
-													+ (index + 1) + "</td>");
-											circularDeptList += ("<td style='width:45%'>"
-													+ vo.title + "</td>");
-											circularDeptList += ("<td style='width:20%'>"
-													+ vo.regDate.substring(0,
-															16) + "</td>");
-
-											if (vo.memberNameCount == 0) {
-												circularDeptList += ("<td style='width:30%'>"
-														+ vo.memberName + "</td>");
-											} else {
-												circularDeptList += ("<td style='width:30%'>"
-														+ vo.memberName
-														+ " <spring:message code='ezCircular.t50' /> "
-														+ vo.memberNameCount
-														+ " <spring:message code='ezCircular.t51' />" + "</td>");
-											}
-
-											//circularDeptList += ("<td style='width:13%'>");
-											circularDeptList += ("</tr>");
-										});
+								if(list.length > 0) {
+									list.forEach(function(vo, index) {
+										circularDeptList += ("<tr id='"
+												+ vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
+										circularDeptList += ("<td style='width:5%'>"
+												+ (index + 1) + "</td>");
+										circularDeptList += ("<td style='width:45%'>"
+												+ vo.title + "</td>");
+										circularDeptList += ("<td style='width:20%'>"
+												+ vo.regDate.substring(0,
+														16) + "</td>");
+	
+										if (vo.memberNameCount == 0) {
+											circularDeptList += ("<td style='width:30%'>"
+													+ vo.memberName + "</td>");
+										} else {
+											circularDeptList += ("<td style='width:30%'>"
+													+ vo.memberName
+													+ " <spring:message code='ezCircular.t50' /> "
+													+ vo.memberNameCount
+													+ " <spring:message code='ezCircular.t51' />" + "</td>");
+										}
+	
+										//circularDeptList += ("<td style='width:13%'>");
+										circularDeptList += ("</tr>");
+									});
+								} else {
+									circularDeptList = "<tr><td colspan='4' style='text-align:center;'><spring:message code='ezCircular.t47' /></td></tr>";
+								}
 
 								$("#List_TBODY").html("");
 								$("#List_TBODY").append(circularDeptList);

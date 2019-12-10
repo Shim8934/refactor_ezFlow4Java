@@ -516,7 +516,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.insertCircularAttach(attachMap);
 
 				// mode = modify -> 회람수정 일 때이므로 수정 시 Temp 폴더에서 첨부파일 이동
-				if (mode.equals("modify")) {
+				if (mode.equals("modify") || mode.equals("temp")) {
+					// 해당 폴더가 없을 때 생성
+					logger.debug("pDirpath : " + pDirPath);
+					File file = new File(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+					 
+					if (!file.exists()) {
+			        	file.mkdirs();
+			        }
+					
 					String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + fileName;
 					String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + fileName;
 					
@@ -582,6 +590,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("circularID", circularID);
 		map.put("hasFile", hasFile);
 		map.put("tenantID", tenantID);
+		map.put("regDate", commonUtil.getTodayUTCTime(""));
 		
 		ezCircularDAO.modifyCircular(map);
 		
@@ -692,7 +701,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 			String circularID = idsArr[0];
 			String memberID = idsArr[1];
 
-			deleteDirectory(circularID, pDirpath, tenantID);
 
 			logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || userID = " + userID + " || tenantID = " + tenantID);
 			
@@ -703,6 +711,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.deleteCircular(map);
 				ezCircularDAO.deleteCircularUser(map);
 				ezCircularDAO.deleteCircularAttach(map);
+				deleteDirectory(circularID, pDirpath, tenantID);
 			} else {
 				ezCircularDAO.updateDeleteFlag(map);
 				map.put("memberID", userID);

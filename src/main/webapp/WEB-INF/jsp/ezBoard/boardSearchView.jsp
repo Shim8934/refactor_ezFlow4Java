@@ -44,6 +44,7 @@
 			var startdate = "";
 			var enddate = "";
 			var usepostDate = false;
+			var isSearchPage = true;
 			document.onselectstart = function () { return false; };
 			
 			window.onload = function () {

@@ -867,6 +867,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	        logger.debug("moveEntry result=" + result);
 		}
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
         
 		logger.debug("movDept ended.");
 		
@@ -1080,8 +1083,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         }
         
 		// 현재 관리자의 암호를 구한다.
-		List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
-		String adminPassword = userCookieInfo.get(1);
+		/* List<String> userCookieInfo = commonUtil.getUserIdAndRealPassword(loginCookie);
+		String adminPassword = userCookieInfo.get(1); */
+        
+        // UUID로 pass 변경
+        String adminPassword = UUID.randomUUID().toString();
         
         int tenantID = userInfo.getTenantId();
         String offset = userInfo.getOffset();
@@ -1227,6 +1233,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				break;
 			}
 		}
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("movUser ended.");
 		
@@ -1395,6 +1404,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 			// dhlee - end
 		}		
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("delUser ended. result=" + result);
 		
@@ -2591,7 +2603,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				}
 			}
 			// dhlee - end			
-		}		
+		}	
+		
+		//게시판 트리캐시 삭제
+		ezBoardAdminService.trunkBoard(tenantID);
 		
 		logger.debug("restoreRetireUser ended. result=" + result);
 		
@@ -3307,8 +3322,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		
 		logger.debug("jobInfoList ended.");
 		return "admin/ezOrgan/jobInfoList";
@@ -3336,11 +3356,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (mode != null && mode.equals("Add"))
 			jobCnt++;
 		
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("jobCnt", jobCnt);
 		model.addAttribute("type", type);
 		model.addAttribute("mode", mode);
 		model.addAttribute("jobID", jobID);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";

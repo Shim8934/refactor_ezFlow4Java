@@ -140,7 +140,13 @@
 	
 // 	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-	            CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
+	            //CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
+
+	            if (CKEDITOR.instances.editor1.mode === "source") {
+					CKEDITOR.instances.editor1.setData(getNodeText(XmlBodyDATA));
+				} else {
+					CKEDITOR.instances.editor1.editable().setHtml(getNodeText(XmlBodyDATA));
+				}
 	        }
 			
 			function GetEditorContentURL(url) {

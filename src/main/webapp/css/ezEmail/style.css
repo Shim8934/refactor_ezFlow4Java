@@ -88,7 +88,7 @@ body {
 	cursor: pointer;
 	outline: none;
 	height: 22px;
-	line-height: 17px;
+	line-height: 20px;
 	vertical-align: middle;
 }
 
@@ -128,7 +128,7 @@ body {
 	height: 160px;
 }
 
-.lmLetterBoxTitle>div {
+.lmLetterBoxTitle>div:first-child {
 	width: 70px;
 	border-right: 1px solid #ddd;
 	display: inline-block;
@@ -138,6 +138,17 @@ body {
 	width: 170px;
 	color: #393939;
 	border: 1px solid #ddd;
+}
+
+.lmLetterBoxTitle > .lmLetterBoxTitSearch {
+	float: right;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.lmLetterBoxTitle > .lmLetterBoxTitSearch > button{ 
+	margin: 0 2px;	
 }
 
 /* .jstree-clicked {
@@ -184,7 +195,7 @@ body {
 
 .lmLetterListUl li {
 	height: 30px;
-	line-height: 30px;
+	/* line-height: 30px; */
 	box-sizing: border-box;
 	border-bottom: 1px solid #f2f2f2;
 	padding: 0 6px;
@@ -192,7 +203,7 @@ body {
 }
 
 .lmLetterListUl li span {
-	/*margin-right: 10px;*/
+	line-height: 30px;
 	display: inline-block;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -202,8 +213,15 @@ body {
     padding-right: 10px;
 }
 
+.lmLetterListUl li > div {
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+
 .lmLetterListUl li button {
 	margin: 0 2px;
+	line-height: 20px;
 }
 
 .lmBtns button {

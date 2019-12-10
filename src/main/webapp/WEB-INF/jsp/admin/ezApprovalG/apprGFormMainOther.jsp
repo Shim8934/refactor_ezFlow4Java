@@ -240,6 +240,10 @@
 		        			selFormKind.value = result.vo.formDocType;
 		        			formURL = encodeURI(result.vo.formFileLocation);
 		        			
+		        			if (!(result.vo.formDocType == "003" || result.vo.formDocType == "004")) {
+			        			$("#ApvForm_sub5").hide();
+		        			}
+		        			
 		        			if (result.vo.formConnFlag == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
 			                }
@@ -693,7 +697,7 @@
 		        itemcode_dialogArgument[0] = "";
 		        itemcode_dialogArgument[1] = btnItemCode_Complete;
 		        var url = "/admin/ezApprovalG/apprGDocNumUI.do";
-		        GetOpenWindow(url, "docnumui_Cross", 745, 370, "NO");
+		        GetOpenWindow(url, "docnumui_Cross", 795, 370, "NO");
 		    }
 		
 		    function btnItemCode_Complete(retVal) {
@@ -975,6 +979,14 @@
 		            CurSelRow[0].cells[0].innerText = AddressName;
 		        }
 		    }
+		    
+		    function changeSelFormKind(value) {
+		        if (!(value == "003" || value == "004")) {
+					$("#ApvForm_sub5").hide();		        
+		        } else {
+		        	$("#ApvForm_sub5").show();
+		        }
+		    }
 		</script>
 		<style>
 			#mainmenu ul li {float:right !important}
@@ -1027,7 +1039,7 @@
                     </td>
                     <th style="width:100px; text-align:center"><spring:message code='ezApproval.t758'/></th>
                     <td style="width:40%;" colspan="5">
-                        <select id="selFormKind" name="selFormKind" style="width: 100%;">${docType}</select>
+                        <select id="selFormKind" name="selFormKind" style="width: 100%;" onchange="changeSelFormKind(this.value)">${docType}</select>
                     </td>
                 </tr>
                 <tr>

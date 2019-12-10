@@ -666,6 +666,9 @@ function ListView() {
             objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
             oTbody.appendChild(objTr);
             var oText = document.createTextNode(strLang43);
+            if(typeof isSearchPage != "undefined" && isSearchPage){
+            	oText = document.createTextNode(strLang63);
+            }
             var objTd = document.createElement("TD");
             objTd.align = "center";
             objTd.colSpan = colCount;

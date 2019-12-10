@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html>
+<html ondragover="bodydragover(event)">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
@@ -305,6 +305,11 @@
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }
 		
+		    function bodydragover(evt) {
+				evt.dataTransfer.dropEffect = "none";
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
 		</script>
 	</head>  
 	<body style ="width:100%;height:100%;overflow:hidden">   

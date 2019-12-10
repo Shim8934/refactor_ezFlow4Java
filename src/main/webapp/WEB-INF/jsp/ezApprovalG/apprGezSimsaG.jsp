@@ -274,7 +274,7 @@
 		        }
 		    }
 		    function btnSetReceivLine_onclick() {
-		        DivPopUpShow(540, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext);
+		        DivPopUpShow(720, 240, "/ezApprovalG/ezReceiptInfo.do?docID=" + pDocID + "&ext=" + ext);
 		    }
 		    function btnOpinion_onclick() {
 		        var parameter = new Array();
@@ -331,6 +331,16 @@
 		        if (isExternal) {
 		            if (isAddress) {
 		                rtnVal = SetContainer();
+		                
+				        if (rtnVal == "TRUE") {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t206'/>";
+				            OpenAlertUI(pAlertContent);
+				            setBtnDisable();
+				        } else {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t217'/>";
+				            OpenAlertUI(pAlertContent);
+				            setMenuDisable("btnSend", false);
+				        }
 		            } else {
 		                is_Enc = OpenCheckUI();
 		            }
@@ -356,14 +366,15 @@
 		    function OpenCheckUI() {
 		    	var parameter = "";
 
-		    	selectenc_dialogArguments[0] = parameter;
+		    	/* selectenc_dialogArguments[0] = parameter;
 		    	selectenc_dialogArguments[1] = OpenCheckUI_Complete;
 
-		    	DivPopUpShow(330, 205, "/ezApprovalG/selectEnc.do");
+		    	DivPopUpShow(330, 205, "/ezApprovalG/selectEnc.do"); */
+		    	OpenCheckUI_Complete("NONE");
 		    }
 		    
 		    function OpenCheckUI_Complete(returnvalue) {
-		        DivPopUpHidden();
+		        //DivPopUpHidden();
 		        is_Enc = returnvalue;
 		        rtnVal = sendExt();
 		        
@@ -597,6 +608,7 @@
 		    		url : "/ezApprovalG/saveEndFile.do",
 		    		data : {
 		    			docID : pOrgDocID,
+                        // formId : pFormID,
 		    			html  : mhtBody
 		    		},
 		    		success: function(xml){
@@ -611,6 +623,7 @@
 		    		url : "/ezApprovalG/saveFile.do",
 		    		data : {
 		    			docID : pDocID,
+						// formId : pFormID,
 		    			html  : mhtBody,
 		    			orgCompanyID : orgCompanyID
 		    		},

@@ -1494,7 +1494,11 @@ function setRecevInfo(ret) {
     	if (SummaryOuterReceiverList != "") {
             setNodeText(field , SummaryOuterReceiverList);
         }else{
-        	setNodeText(field , precipents);
+        	var precipentsList = precipents.split(",");
+        	
+        	if (precipentsList.length > 1) {
+                setNodeText(field , precipents);
+        	}
         }
     }
 }
@@ -2740,16 +2744,22 @@ function openAaprDocAttachUI_Complete(ret) {
  * */
 function SaveDraftDocInfo() {
     var rtnVal;
-    SaveFile();
+    rtnVal = SaveFile();
+
+    if (rtnVal.toUpperCase() != "TRUE") {
+        return rtnVal;
+    }
+
     SignSave();
     rtnVal = SaveDraftDocInfo_ilban("002");
     if (rtnVal.toUpperCase() == "FALSE") {
     	 return rtnVal;
     }
-//    rtnVal = SaveFile();
+
     if (rtnVal.toUpperCase() != "TRUE") {
         SaveOrgFile();
     }
+
     return rtnVal;
 }
 
@@ -3751,6 +3761,7 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
+            formId : pFormID,
 			html  : mhtBody,
 			orgCompanyID : orgCompanyID
 		},
@@ -3795,6 +3806,7 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
+            formId : pFormID,
 			html  : mhtBody,
 			orgCompanyID : orgCompanyID
 		},
@@ -4077,6 +4089,7 @@ function SaveTMPFile(AutoSave) {
 		url : "/ezApprovalG/saveTmpFile.do",
 		data : {
 			docID : pDocID,
+            formId : pFormID,
 			html  : mhtBody
 		},
 		success: function(text){

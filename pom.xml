@@ -44,6 +44,16 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+                <repository>
+                        <id>egovframe2</id>
+                        <url>http://maven.egovframe.kr:8080/maven/</url>
+                        <releases>
+                                <enabled>true</enabled>
+                        </releases>
+                        <snapshots>
+                                <enabled>false</enabled>
+                        </snapshots>
+                </repository>
 	</repositories>
 
 	<dependencies>

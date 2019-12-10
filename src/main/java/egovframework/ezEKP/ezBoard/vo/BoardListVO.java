@@ -140,6 +140,10 @@ public class BoardListVO {
 	private String mainImageID;
 	/** 게시물 내용*/
 	private String content;
+	/** 2019-11-06 홍승비 - 미리보기 시 댓글옵션 변수 추가 */
+	private String oneLineReply;
+	/** 2019-12-02 홍승비 - 임시저장 기능과 예약게시 기능의 동시 사용을 위한 예약게시물 여부 변수 추가 */
+	private String isReserved;
 
 	public int getrNum() {
 		return rNum;
@@ -555,5 +559,16 @@ public class BoardListVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+	public String getOneLineReply() {
+		return oneLineReply;
+	}
+	public void setOneLineReply(String oneLineReply) {
+		this.oneLineReply = oneLineReply;
+	}
+	public String getIsReserved() {
+		return isReserved;
+	}
+	public void setIsReserved(String isReserved) {
+		this.isReserved = isReserved;
+	}
 }

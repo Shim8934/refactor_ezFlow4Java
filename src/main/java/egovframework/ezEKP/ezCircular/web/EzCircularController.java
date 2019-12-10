@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1142,7 +1143,12 @@ public class EzCircularController extends EgovFileMngUtil {
 				strAttach.append("<DATA5><![CDATA[OK]]></DATA5>");
 
 				if (mode.equals("reuse")) {
-					ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
+					String fileName = attach.getFilePath().split("/")[2];
+					String originFile = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName; // 복사할 파일의 경로
+					String copyFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + fileName;
+					
+					Files.copy(new File(originFile).toPath(), new File(copyFilePath).toPath());
+					//ezCircularService.copyFileList(pDirPath, attach.getFilePath().split("/")[2], circularID);
 				}
 			}
 

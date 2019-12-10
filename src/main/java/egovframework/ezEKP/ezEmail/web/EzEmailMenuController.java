@@ -597,6 +597,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 편지함들의 읽지않은 메시지 개수 정보 호출 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezEmail/getUnreadCountAll.do", method=RequestMethod.POST, produces="application/json; charset=utf-8")
 	@ResponseBody
 	public JSONObject getUnreadCountAll(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData) throws Exception {
@@ -649,17 +650,33 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				String mailboxName = (String) requestMailboxList.get(i);
 				unreadCountMap.put(mailboxName, ia.getUnreadCount(mailboxName));
 			}
-			
+						
 			int totalUnreadCount = ezEmailService.getTotalUnreadCount(userInfo.getId(), userInfo.getTenantId());
+			int totalUnreadCountInAllAccounts = totalUnreadCount;
 			
 			if (useSharedMailbox.equals("YES")) {
 				List<Map<String, String>> shareInfoList = ezEmailService.getUserSharedMailboxList(userInfo.getId(), true, userInfo.getTenantId());
 				resultObject.put("shareInfoList", shareInfoList);
+				
+				for (Map<String, String> item : shareInfoList) {
+					String unreadCountStr = item.get("totalUnreadCount");
+					
+					if (unreadCountStr != null) {
+						try {
+							int unreadCountInShared = Integer.parseInt(unreadCountStr);
+							
+							totalUnreadCountInAllAccounts += unreadCountInShared;
+						} catch (NumberFormatException ne) {
+							ne.printStackTrace();
+						}
+					}
+				}
 			}
 			
 			resultObject.put("shareId", shareId == null ? "" : shareId);
 			resultObject.put("unreadCountMap", unreadCountMap);
 			resultObject.put("totalUnreadCount", totalUnreadCount);
+			resultObject.put("totalUnreadCountInAllAccounts", totalUnreadCountInAllAccounts);
 		} catch (Exception e) {
 			resultCode = e.getMessage();
 			e.printStackTrace();

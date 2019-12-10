@@ -245,9 +245,9 @@ function datanameweek(year, month, day, contral)
     }
     else if(contral == "HEARDER")
     {
-        DateReslut = String(year) + strLang277 + " " + 
-        String(((month < 10) ? "0" + month : month)) + strLang279 + " " +
-        String(((day < 10) ? "0" + day : day)) + strLang278;
+        DateReslut = String(year) + "-" + 
+        String(((month < 10) ? "0" + month : month)) + "-" +
+        String(((day < 10) ? "0" + day : day));
     }
     else if (contral == "ADD")
     {
@@ -299,7 +299,8 @@ function tableListControl_Week()
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
         //document.getElementById("divViewHeader").setAttribute("style", "color:#777;");
-        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " - " + weekEndDatename);
+        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
+        document.getElementById("divViewHeader").style.color = "";
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
         var b = 0;
@@ -615,7 +616,7 @@ function tableListControl_Week()
 
                     var _mtd2 = document.createElement("TD");
                    // _mtd2.style.width = "14.2%";
-                    if(weekdatename[i] == today) { 							// 날짜가 오늘이면
+                    if(weekdatename[i-1] == today) { 							// 날짜가 오늘이면
                     	_mtd2.setAttribute("class", "weektd_02 today");
                     }
                     else {
@@ -734,7 +735,14 @@ function tableListControl_Week()
                 _span.setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[j]));
                 _span.setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
                 _span.setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
-
+                
+                var _span2 = document.createElement("SPAN");
+                if(getNodeText(xmldom.getElementsByTagName("importance")[j]) == "3") {
+                	_span2.setAttribute("class", "icon_h");
+                } else if(getNodeText(xmldom.getElementsByTagName("importance")[j]) == "1") {
+                	_span2.setAttribute("class", "icon_l");
+                }
+                
                 //_span.addEventListener("mouseover", function (event) { onmouse_over(this, event) });
                 _span.onmouseover = function (event) { onmouse_over(this, event); };
                 _span.onmouseout = new Function("onmouse_out(this);");
@@ -742,6 +750,7 @@ function tableListControl_Week()
                 pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();             
                 _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                 setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                _td.appendChild(_span2);
                 _td.appendChild(_span);
                 _tr.appendChild(_td);
                 _table.appendChild(_tr);
@@ -776,15 +785,21 @@ function tableListControl_Week()
                 }
                 else if (weekdatename[0] <= s_weekDateSet && weekdatename[6] < e_weekDateSet) {
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
-                    for (var i = startCnt; i < 8; i++) {
-                        if (i == 7 || i == 0) {
-                        	if (DefaultView == 1) { // 월요일 시작
-                        		makeTable(xmldom, j, 0);
-                        	}
-                        	break;
-                        } else {
-                        	makeTable(xmldom, j, i);
-                        }
+                    if (DefaultView == 0) { //일요일 시작
+                    	for (var i = startCnt; i < 7; i++) {
+                    		makeTable(xmldom, j, i);
+                    	}
+                    } else {
+	                    for (var i = startCnt; i < 8; i++) {
+	                        if (i == 7 || i == 0) {
+	                        	if (DefaultView == 1) { // 월요일 시작
+	                        		makeTable(xmldom, j, 0);
+	                        	}
+	                        	break;
+	                        } else {
+	                        	makeTable(xmldom, j, i);
+	                        }
+	                    }
                     }
                 }
                 else {
@@ -863,6 +878,13 @@ function makeTable(xmldom, pNum, dayType) {
     _span.setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[pNum]));
     _span.setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[pNum]));
     _span.setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[pNum]));
+    
+    var _span2 = document.createElement("SPAN");
+    if(getNodeText(xmldom.getElementsByTagName("importance")[pNum]) == "3") {
+    	_span2.setAttribute("class", "icon_h");
+    } else if(getNodeText(xmldom.getElementsByTagName("importance")[pNum]) == "1") {
+    	_span2.setAttribute("class", "icon_l");
+    }
 
     _span.onmouseover = function (event) { onmouse_over(this, event); };
     _span.onmouseout = new Function("onmouse_out(this);");
@@ -871,6 +893,7 @@ function makeTable(xmldom, pNum, dayType) {
     // 2018-03-12 서주연 - 2일 이상 자원예약시 자원메인 주보기에서 자원이름이 깨지는 현상 수정
     _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
     setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[pNum]));
+    _td.appendChild(_span2);
     _td.appendChild(_span);
     _tr.appendChild(_td);
     _table.appendChild(_tr);
@@ -1244,7 +1267,7 @@ function tableListControl_today() {
             _tr.appendChild(_th);
         }
         _table.appendChild(_tr);
-
+        tdcount = 0;
         for (var k = 0; k < title_name.length; k++) {
             for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
                 var s_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0]);

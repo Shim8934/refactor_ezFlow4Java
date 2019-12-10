@@ -21,14 +21,17 @@
 				padding-left:10px;
 			}
 		</style>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var companyId = "${userCompany}";
+			var searchFlag = false;
+			var selectList_ChangeFlag = false;
+			var selectTR_Data1;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -72,7 +75,11 @@
 	    		            } else {
 	    		                headerData.documentElement.appendChild(xmlRtn);
 	    		            }
-	    					
+	
+	    		            // 리스트 총 개수
+	    		            var listCount = headerData.getElementsByTagName("ROWS")[0].childElementCount;
+	    		            document.getElementById("listCount").innerHTML = listCount;
+	    		            
 	    		            document.getElementById("sharedMailboxList").innerHTML = "";
 	    		            var pUserList = new ListView();
 	    		            pUserList.SetID("sharedMailbox");
@@ -82,6 +89,8 @@
 	    		            pUserList.SetHeightFree(true);
 	    		            pUserList.DataSource(headerData);
 	    		            pUserList.DataBind("sharedMailboxList");
+	    		            
+	    		            selectList_Change2();
 	    				}
 	    			},
 	    			error: function(err) {
@@ -213,7 +222,8 @@
 				    					alert("<spring:message code='ezEmail.sharedMailbox07' />");
 				    				}
 				    				
-				    				companyChange();
+				    				//companyChange();
+				    				selectList_Change();
 				    			},
 				    			error: function(err) {
 				    				alert("<spring:message code='ezEmail.sharedMailbox07' />");
@@ -267,7 +277,7 @@
 		        feature = feature + GetShowModalPosition(990, 670);
 		        
 		        if (CrossYN()) {
-		        	sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
+		        	sharedMailboxDialogArguments[0] = modSharedMailboxComplete;
 		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, "", GetOpenWindowfeature(990, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
@@ -276,6 +286,12 @@
 		            if (typeof (rtnValue) != "undefined") {
 		                companyChange();
 		            }
+		        }
+		    }
+		    
+		    function modSharedMailboxComplete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		        	selectList_Change();
 		        }
 		    }
 		    
@@ -319,6 +335,86 @@
 		            });
 	            }
 		    }
+		    
+		    function search_click() {
+				var searchType = document.getElementById("searchType").value;
+		    	var searchValue = document.getElementById("searchValue").value;
+		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
+		    	searchFlag = true;
+		    	
+		    	if (searchValue == "") {
+		    		//companyChange();
+		    		alert("<spring:message code='ezEmail.t10' />");
+		    		return;
+		    	}
+		    	
+		    	$.ajax({
+					type : "post",
+					dataType: 'text',
+					data : {"searchType":searchType, "searchValue":searchValue, "compId":companyId},
+					url : "/admin/ezEmail/getSharedMailboxListSearchByItem.do",
+					success: function(result) {
+	    				if (result === "NO_PERMISSION") {
+	    					alert("<spring:message code='ezOrgan.t302' />");
+	    				} else if (result === "ERROR") {
+	    					alert("<spring:message code='ezEmail.sharedMailbox07' />");
+	    				} else {
+	    					document.getElementById("sharedMailboxUser").innerHTML = "";
+	    					var resultXml = loadXMLString(result);
+	    					var headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	    		            var xmlRtn = resultXml.documentElement.getElementsByTagName("ROWS")[0];
+	    					
+	    		            if (CrossYN()) {
+	    		                var Node = headerData.importNode(xmlRtn, true);
+	    		                headerData.documentElement.appendChild(Node);
+	    		            } else {
+	    		                headerData.documentElement.appendChild(xmlRtn);
+	    		            }
+	
+	    		            // 리스트 총 개수
+	    		            var listCount = headerData.getElementsByTagName("ROWS")[0].childElementCount;
+	    		            document.getElementById("listCount").innerHTML = listCount;
+	    		            
+	    		            document.getElementById("sharedMailboxList").innerHTML = "";
+	    		            var pUserList = new ListView();
+	    		            pUserList.SetID("sharedMailbox");
+	    		            pUserList.SetRowOnDblClick("modSharedMailbox");
+	    		            pUserList.SetRowOnClick("viewSharedMailboxInfo");
+	    		            pUserList.SetSelectFlag(false);
+	    		            pUserList.SetHeightFree(true);
+	    		            pUserList.DataSource(headerData);
+	    		            pUserList.DataBind("sharedMailboxList");
+	    		            
+	    		            selectList_Change2();
+	    				}
+	    			},
+	    			error: function(err) {
+	    				alert("<spring:message code='ezEmail.sharedMailbox07' />");
+	    			}
+		    	});
+		    }
+		    
+		    function selectList_Change() {
+		    	selectList_ChangeFlag = true;
+		    	selectTR_Data1 = $("#sharedMailbox tr[selected=true]")[0].getAttribute("data1");
+		    	
+		    	if (searchFlag == true && document.getElementById("searchValue").value != "") {
+		    		search_click();
+		    	} else {
+		    		companyChange();
+		    	}
+		    }
+		    function selectList_Change2() {
+		    	if (selectList_ChangeFlag) {
+		    		selectList_ChangeFlag = false;
+			    	var reListTR_ = $("#sharedMailbox tr[data1='" + selectTR_Data1 + "']")[0];
+					reListTR_ = typeof reListTR_ != "undefined"  ? reListTR_.getAttribute("id") : "";
+					
+			    	if (selectTR_Data1 != "" && reListTR_ != "") {
+			    		tr_select(reListTR_, "sharedMailbox", viewSharedMailboxInfo);
+			    	}
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -352,20 +448,46 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<table class="mainlist">
+		<div style="width:825px;">
+		<!-- 검색 -->
+		<div style="border: 1px solid #e8e8e8; WIDTH:100%; border-bottom: 0px; height: 30px; box-sizing: border-box;">
+			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
+				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC; font-weight:bold;" id="listCount"></span> <spring:message code='ezSystem.kyj2'/>]</span>
+			</div>
+			<div id="userSearchRayer" style="float:right; display: inline-block; line-height: 30px;">
+				<div style="display: inline-block; float:left;">
+				<select id="searchType" style="height: 26px; width: 130px;">
+					<option value="displayname"><spring:message code='ezEmail.sharedMailbox18' /></option> <!-- 공유사서함 이름 -->
+					<option value="groupID"><spring:message code='ezEmail.sharedMailbox19' /></option> <!-- 공유사서함 ID -->
+					<option value="memberName"><spring:message code='ezEmail.ksaSharedMailbox25' /></option> <!-- 공유자 이름 -->
+					<option value="memberID"><spring:message code='ezEmail.ksaSharedMailbox26' /></option> <!-- 공유자 ID -->
+				</select>
+				</div>
+				<div style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 518px;padding-left: 5px;">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:89%">
+					<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+				</div>
+			</div>
+		</div>
+		<table class="mainlist" style="width:100%;">
+	    	<colgroup>
+	    		<col width="37%"/>
+	    		<col width="63%"/>
+	    	</colgroup>
 			<tr>
 				<td style="vertical-align:top; border-bottom:0;">
-					<div style="width:300px; height:400px; overflow-y:auto; border-color:#dbdbda; border-width:1px; border-style:solid;">
+					<div style="width:100%; height:400px; overflow-y:auto; border-color:#dbdbda; border-width:1px; border-style:solid;">
 						<div id="sharedMailboxList"></div>      
 					</div>
 				</td>
 				<td style="vertical-align:top; border-bottom:0;">
-					<div style="margin-left:5px; width:500px; height:380px;">
-						<div id="sharedMailboxUser" style="width:100%; height:100%; padding:10px; overflow-y:auto; border-color:#dbdbda; border-width:1px; border-style:solid;"></div>
+					<div style="margin-left:5px; height:400px; border-color:#dbdbda; border-width:1px; border-style:solid; ">
+						<div id="sharedMailboxUser" style="width:100%; height:100%; padding:10px; overflow-y:auto; box-sizing: border-box;"></div>
 					</div>
 				</td>
 			</tr>
 		</table>
+		</div>
 	</body>
 </html>
 

@@ -1190,6 +1190,13 @@ function ListOwnerID_Change()
 	            if (pCompanyAdmin != "Y") {
 	                alert(strLang1000);
 	                $("#ListOwnerID option:eq(0)").prop("selected", true);
+
+	                document.getElementById("receiverinput").disabled = false;
+	                document.getElementById("imgbutton").disabled = false;
+	        	    document.getElementById("imgbutton").style.display = "";
+	                document.getElementById("receiverTr1").style.display = "";
+	        	    document.getElementById("receiverTr2").style.display = "";
+	        	    
 	                return;
 	            }
 	        }
@@ -1197,6 +1204,13 @@ function ListOwnerID_Change()
 	            if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
 	                alert(strLang1001);
 	                $("#ListOwnerID option:eq(0)").prop("selected", true);
+	                
+	                document.getElementById("receiverinput").disabled = false;
+	                document.getElementById("imgbutton").disabled = false;
+	        	    document.getElementById("imgbutton").style.display = "";
+	                document.getElementById("receiverTr1").style.display = "";
+	        	    document.getElementById("receiverTr2").style.display = "";
+	        	    
 	                return;
 	            }
 	        }

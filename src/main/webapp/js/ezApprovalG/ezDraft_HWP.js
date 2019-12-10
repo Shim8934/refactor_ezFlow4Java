@@ -1292,8 +1292,11 @@ function openAaprDocAttachUI()
 
 function SaveDraftDocInfo() {
 	var rtnVal;
-	if (SaveFile() != "TRUE")
-		return "FALSE";
+
+	rtnVal = SaveFile();
+	if (rtnVal.toUpperCase() != "TRUE") {
+        return "rtnVal";
+    }
 		
     SignSave();
 	rtnVal = SaveDraftDocInfo_ilban("002");
@@ -1582,6 +1585,7 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFileHWP.do",
 		data : {
 			docID : pDocID,
+			formId : pFormID,
 			html  : HwpCtrl.GetCloneData("", "HWP")
 		},
 		success: function(text){
@@ -1602,6 +1606,7 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFileHWP.do",
 		data : {
 			docID : pDocID,
+			formId : pFormID,
 			html  : pOrgHtml
 		},
 		success: function(text){
@@ -1709,6 +1714,7 @@ function SaveTMPFile() {
 		url : "/ezApprovalG/saveTmpFileHWP.do",
 		data : {
 			docID : pDocID,
+			formId : pFormID,
 			html  : HwpCtrl.GetCloneData("", "HWP")
 		},
 		success: function(text){

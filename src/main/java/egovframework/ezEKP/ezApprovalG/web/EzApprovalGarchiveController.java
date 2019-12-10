@@ -744,11 +744,17 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		}
     	
     	String searchList = "extensionAttribute4::" + userInfo.getCompanyID().trim();
-    	String strRetXml = ezOrganService.getSearchList(searchList, "", "", "group", 100, userInfo.getPrimary(), tenantID);
+    	String strRetXml = ezOrganService.getSearchList(searchList, "", "", "group", 100, userInfo.getPrimary(), tenantID, "n");
     	Document xmlResult = commonUtil.convertStringToDocument(strRetXml); 
     	
     	if (xmlResult.getElementsByTagName("DATA2").getLength() > 0) {
     		mDeptInfo = xmlResult.getElementsByTagName("DATA2").item(0).getTextContent();
+    	}
+    	
+    	String simsaListByDept = ezCommonService.getTenantConfig("simsaListByDepartment", userInfo.getTenantId());
+    	
+    	if (simsaListByDept == null || simsaListByDept.equals("")) {
+    		simsaListByDept = "YES";
     	}
     	
     	model.addAttribute("userInfo", userInfo);
@@ -756,6 +762,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     	model.addAttribute("serverName", serverName);
     	model.addAttribute("susinXML", susinXML);
     	model.addAttribute("mDeptInfo", mDeptInfo);
+    	model.addAttribute("simsaListByDept", simsaListByDept);
     	
     	logger.debug("ezSelectOne ended");
     	

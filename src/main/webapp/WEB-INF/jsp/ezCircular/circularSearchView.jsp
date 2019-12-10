@@ -38,6 +38,7 @@
             //2018-07-17 김보미 - 프로그래스바
             var startTime = "";
             var endTime = "";
+            var isSearchPage = true;
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -242,7 +243,15 @@
                     	}
 						
 	                    if (filter == "circularNew") {
-	                    	if(OrderCell == 'TITLE') {
+	                    	if (OrderCell == 'IMPORTANCE') {
+								$('#BoardList_TH_1').append(imgTag);
+							} else if (OrderCell == 'CONFIRMSTATUS') {
+								$('#BoardList_TH_2').append(imgTag);
+							} else if (OrderCell == 'COMMENTSTATUS') {
+								$('#BoardList_TH_3').append(imgTag);
+							} else if (OrderCell == 'HASFILE') {
+								$('#BoardList_TH_4').append(imgTag);
+							} else if(OrderCell == 'TITLE') {
 			                	$('#BoardList_TH_5').append(imgTag);
 			                } else if(OrderCell == 'MEMBERNAME') {
 			                	$('#BoardList_TH_6').append(imgTag);
@@ -252,7 +261,13 @@
 			                	$('#BoardList_TH_9').append(imgTag);
 			                }
 	                    } else {
-	                    	if(OrderCell == 'TITLE') {
+	                    	if (OrderCell == 'IMPORTANCE') {
+								$('#BoardList_TH_1').append(imgTag);
+							} else if (OrderCell == 'CONFIRMSTATUS') {
+								$('#BoardList_TH_2').append(imgTag);
+							} else if (OrderCell == 'HASFILE') {
+								$('#BoardList_TH_3').append(imgTag);
+							} else if(OrderCell == 'TITLE') {
 			                	$('#BoardList_TH_4').append(imgTag);
 			                } else if(OrderCell == 'MEMBERNAME') {
 			                	$('#BoardList_TH_5').append(imgTag);

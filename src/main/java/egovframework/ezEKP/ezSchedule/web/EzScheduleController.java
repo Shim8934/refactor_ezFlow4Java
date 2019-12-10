@@ -18,6 +18,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -391,11 +392,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			if(dList != null && dList.size()>0){
 				for (int i = 0; i < dList.size(); i++) {
-					if(tList == null || tList.size()<=0){
 						if (i == 0) {
 							pidListSub += ",";
 						}	
-					}
 					ScheduleDeptVO data = dList.get(i);			
 					pidListSub += "\'" + data.getDeptId()+ "\',";				
 				}				
@@ -604,8 +603,13 @@ public class EzScheduleController extends EgovFileMngUtil {
         	idList = idTypeChk;
         }
         
-        
-
+        List<String> publicIds = pubScheDeptVO.stream().map(s -> s.getDeptId()).collect(Collectors.toList());
+        JSONArray jsonArray = new JSONArray();
+        for (int j = 0; j < publicIds.size(); j++) {
+        	JSONObject obj = new JSONObject();
+			obj.put("id", publicIds.get(j));
+			jsonArray.add(j, obj);
+		}
         pOffset = loginVO.getOffset().split("\\|")[1];      
         timeZone = (Integer.parseInt(pOffset.split(":")[0]) * 60) + Integer.parseInt(pOffset.split(":")[1]);
 
@@ -632,6 +636,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("defaultTitle",	defaultTitle);
         model.addAttribute("shareList",		sb.toString());
         model.addAttribute("useScheduleIcs",useScheduleIcs);
+        model.addAttribute("publicIds",jsonArray);
         
 		return "/ezSchedule/scheduleMain";
 	}
@@ -822,6 +827,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         String gubun = request.getParameter("gubun");
         String type = request.getParameter("type");
         String pSearchString = request.getParameter("searchString");
+        String userID = request.getParameter("ownerid");
 				    		
 		if (title == null) title = "";		
 		if (startTime == null) startTime = "";
@@ -833,6 +839,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
 		
+		if (userID == null || userID.equals("")) userID = loginVO.getId();
+		
 		model.addAttribute("title", title);
 		model.addAttribute("startTime", startTime);
 		model.addAttribute("endTime", endTime);
@@ -840,13 +848,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("pSearchString", pSearchString);
 		model.addAttribute("use_ocs", use_ocs);
-		model.addAttribute("userID", loginVO.getId());
+		model.addAttribute("userID", userID);
 		model.addAttribute("deptID", loginVO.getDeptID());
 		model.addAttribute("companyID", loginVO.getCompanyID());
-		
-		
-		//2018-06-22 구해안
-		
 		
 		return "ezSchedule/scheduleSelectAttendant";
 	}	
@@ -1915,7 +1919,7 @@ public class EzScheduleController extends EgovFileMngUtil {
     	Calendar cal = Calendar.getInstance();
     	cal.setTime(sdf.parse(enddate));
     	
-    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+    	if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
     		cal.add(Calendar.MINUTE, -1);        		
     		enddate = sdf.format(cal.getTime());
     	}
@@ -2179,6 +2183,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("name", name);
 		model.addAttribute("today", today);
 		model.addAttribute("primary", loginVO.getPrimary());
+		model.addAttribute("lang", loginVO.getLang());
 		
 		return "ezSchedule/schedulePrint";
 	}

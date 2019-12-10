@@ -286,7 +286,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		if (tCheck.equals("fContIns")) {
 			if (contID != null) {
 				if (!contID.equalsIgnoreCase("ROOT")) {
-					parentName = ezApprovalGAdminService.getParentContName(contID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+					/*기존 20190710 변경 김은석*/
+//					parentName = ezApprovalGAdminService.getParentContName(contID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+					parentName = ezApprovalGAdminService.getParentContName(contID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getPrimary());
 				} else {//ezApprovalG.t1539
 					parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
 				}
@@ -294,7 +296,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		} else {
 			if (parentID != null) {
 				if (!parentID.equalsIgnoreCase("ROOT")) {
-					parentName = ezApprovalGAdminService.getParentContName(parentID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+					/*기존 20190710 변경 김은석*/
+//					parentName = ezApprovalGAdminService.getParentContName(parentID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang());
+					parentName = ezApprovalGAdminService.getParentContName(parentID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getPrimary());
 				} else {//ezApprovalG.t1539
 					parentName = egovMessageSource.getMessage("ezApprovalG.t1539", userInfo.getLocale());
 				}
