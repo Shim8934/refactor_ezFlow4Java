@@ -22,6 +22,8 @@
 		var pOpinionType; //001,002,003,004
 		var pDocID, pDisplay, pDraftFlag, pDocState, pOrgCompanyID, pExt;
 		
+		var pTempRowID = "";
+		
 		var pUserID = "<c:out value='${userInfo.id}'/>";
 		var pUserTitle = "<c:out value='${userInfo.title1}'/>";
 		var pUserTitle2 = "<c:out value='${userInfo.title2}'/>";
@@ -69,6 +71,7 @@
 			pOpinionType = getOpinionType(pDisplay); //001,002,003,004
 			
 			initOpinionInfo();
+			autoOpinionPopUp(); // 자동으로 의견 작성창 오픈
 		};
 		
 		//파라미터 유효성 검사 및 초기값 세팅
@@ -139,6 +142,7 @@
 	            for (var i = 0; i < pTotalRen; i++) {
 	            	if (GetAttribute(pTotalRows[i], "DATA2") == pUserID) {
 	            		if (GetAttribute(pTotalRows[i], "DATA6") == pType) {
+	            			pTempRowID = pTotalRows[i].id; // 의견 작성창 자동팝업에 쓰임
 		            		rtnVal = true;
 		            		break;
 	            		}
@@ -272,6 +276,21 @@
 				OpenAlertUI(strLang490);
 			} else if (result == "FALSE") {
 				OpenAlertUI(strLang417);
+			}
+		}
+		
+		//의견 작성창 자동으로 팝업되도록
+		function autoOpinionPopUp() {
+			if (pDisplay != "" && pDisplay.toUpperCase() != "SHOW") {
+				var OpinionList = new ListView();
+				OpinionList.LoadFromID("OpinionList");
+				
+				if (pTempRowID != "") {
+					OpinionList.SetSelectedID(pTempRowID);
+					btn_OpinionMod_onclick(); //자신이 작성한 같은 타입의 의견이 있으면 [수정]창
+				} else {
+					btn_OpinionAdd_onclick(); //자신이 작성한 같은 타입의 의견이 없으면 [작성]창
+				}
 			}
 		}
 	
