@@ -4267,6 +4267,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String sMobile = "";
 			String sMemo = "";
 			String folderId = "";
+			String sFurigana = "";
 			
 			if (jsonObject.get("folderType") != null) {
 				folderType = (String)jsonObject.get("folderType");
@@ -4308,6 +4309,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				sMemo = (String)jsonObject.get("sMemo");
 			}
 			
+			if (jsonObject.get("sFurigana") != null) {
+				sFurigana = (String)jsonObject.get("sFurigana");
+			}
+			
 			if (!folderType.isEmpty()) {				
 				if (folderType.equals("C")) {
 					ownerId = info.getCompanyId();
@@ -4319,7 +4324,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				ezAddressService.insertAddress(info.getTenantId(), ownerId, folderId, info.getUserId(),
 						info.getUserName(), info.getUserName2(), sName, sEmail, sCompany, sDept,
-						sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "P", "");
+						sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "P", sFurigana);
 				
 		        result.put("status", "ok");
 				result.put("code", 0);			
@@ -4428,6 +4433,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String sMobile = "";
 			String sMemo = "";
 			String folderId = "";
+			String sFurigana = "";
 			
 			if (jsonObject.get("folderType") != null) {
 				folderType = (String)jsonObject.get("folderType");
@@ -4469,6 +4475,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				sMemo = (String)jsonObject.get("sMemo");
 			}
 			
+			if (jsonObject.get("sFurigana") != null) {
+				sFurigana = (String)jsonObject.get("sFurigana");
+			}
+			
 			if (!folderType.isEmpty()) {				
 				if (folderType.equals("C")) {
 					ownerId = info.getCompanyId();
@@ -4479,7 +4489,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				
 				ezAddressService.updateAddress(info.getTenantId(), addressId, info.getUserId(), info.getUserName(), info.getUserName2(), 
-						sName, sEmail, sCompany, sDept, sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, "");
+						sName, sEmail, sCompany, sDept, sTitle, sCompanyPhone, "", sMobile, "", "", "", "", "", sMemo, sFurigana);
 				
 		        result.put("status", "ok");
 				result.put("code", 0);			
