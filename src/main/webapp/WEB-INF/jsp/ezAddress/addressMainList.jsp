@@ -1100,7 +1100,7 @@
 					<tr>
 						<td style="text-align:center;">
 							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezAddress.t25' /></span></a>
+								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezEmail.t37' /></span></a>
 							</div>	
 						</td>
 					</tr>
