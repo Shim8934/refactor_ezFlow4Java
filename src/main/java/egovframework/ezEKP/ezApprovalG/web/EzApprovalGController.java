@@ -6629,6 +6629,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			LoginVO userInfo2 = new LoginVO();
 			String userRealDeptId = ezOrganService.getUserOrgDeptId(shareUserId, userInfo.getTenantId(), userInfo.getCompanyID());
 			userInfo2.setId(shareUserId);
+			userInfo.setId(shareUserId);
 			userInfo2.setDeptID(userRealDeptId);
 			userInfo2.setCompanyID(userInfo.getCompanyID());
 			userInfo2.setLocale(userInfo.getLocale());
