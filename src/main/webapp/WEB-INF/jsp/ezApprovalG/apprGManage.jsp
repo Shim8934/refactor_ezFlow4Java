@@ -1092,8 +1092,9 @@
 		    }
 		
 		    function doCancelForce(pDocID, tempListType) {
+				var GetCurrentlinelist = getAprLinefor("APR", tempDocID);
 				var result = "";
-	        	
+				
 	        	$.ajax({
 	        		type : "POST",
 	        		dataType : "text",
@@ -1115,6 +1116,7 @@
 	        	var RtnVal = getNodeText(loadXMLString(result).documentElement);
 	        	
 		        if (RtnVal == "TRUE") {
+		        	SendMailToCancel_Function(GetCurrentlinelist);
 		            if (tempListType == "3") {
 		                var pAlertContent = strLang891 + "\n" + strLang892;
 		                alert(pAlertContent);
@@ -1146,6 +1148,66 @@
 	                alert(pAlertContent);
 	            }
 		    }
+		    
+		    function SendMailToCancel_Function(GetCurrentlinelist) {
+	            var MemberList = loadXMLString(GetCurrentlinelist)
+	            var pDocTitle = GetDocTitleInfoData("APR", "DOCTITLE");
+	            var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
+	            g_szUserID = pUserID;
+	            g_senderinfo = "";
+	            for (i = 0; i < objNodes.length; i++) {
+	                var nowstate = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[12]);
+	                var LineUserID = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[4]);
+	                var LineSN = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW")[i])[0])[0]);
+	                if (nowstate == "002" || nowstate == "003") {
+	                    if (LineSN != "1") {
+	                        sendmail(LineUserID, pDocTitle, arr_userinfo[2], js_yyyy_mm_dd_hh_mm_ss(), "callback", "", true)
+	                    }
+	                }
+
+	            }
+	        }
+	        function GetDocTitleInfoData(mode, filed) {
+	            try {
+	                var value = "";
+	                var xmlpara = createXmlDom();
+	                var objNode;
+	                
+	                createNodeInsert(xmlpara, objNode, "PARAMETER");
+	                createNodeAndInsertText(xmlpara, objNode, "DocID", tempDocID);
+	                createNodeAndInsertText(xmlpara, objNode, "mode", mode);
+	                createNodeAndInsertText(xmlpara, objNode, "fields", filed);
+
+	                var xmlhttp = createXMLHttpRequest();
+	                xmlhttp.open("Post", "/ezApprovalG/GetDocInfoMode.do", false);
+	                xmlhttp.send(xmlpara);
+
+	                var xmlDocument = createXmlDom();
+	                xmlDocument = loadXMLString(xmlhttp.responseText);
+
+	                var objNodes = GetChildNodes(xmlDocument.documentElement);
+
+	                if (objNodes) {
+	                    if (objNodes.length > 0) {
+	                        value = getNodeText(objNodes[0]);
+	                    }
+	                }
+	                return value;
+	            }
+	            catch (e) { }
+	        }
+	        
+	        function js_yyyy_mm_dd_hh_mm_ss() {
+	            now = new Date();
+	            year = "" + now.getFullYear();
+	            month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+	            day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+	            hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+	            minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+	            second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+	            return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+	        }
+		    
 		    function Recipent_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
