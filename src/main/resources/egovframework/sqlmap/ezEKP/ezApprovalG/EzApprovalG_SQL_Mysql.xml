@@ -9232,9 +9232,15 @@
 							   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN
 							   	AND
 							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
-							   	<isNotEmpty property="v_CONTID">
-									AND
-							   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+							   <isNotEmpty property="v_CONTID">
+							   		<isEmpty property="deptId">
+										AND
+								   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+							   		</isEmpty>
+						   			<isNotEmpty property="deptId">
+										AND
+								   			TBL_ENDAPRDOCINFO.COMPANYID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# AND TENANT_ID = #v_TENANTID#)
+									</isNotEmpty>
 								</isNotEmpty>
 								<isEmpty property="v_CONTID">
 						   		AND
@@ -9293,8 +9299,14 @@
 							    AND
 							    		 TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 							   	<isNotEmpty property="v_CONTID">
-									AND
-							   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+							   		<isEmpty property="deptId">
+										AND
+								   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+							   		</isEmpty>
+						   			<isNotEmpty property="deptId">
+										AND
+								   			TBL_ENDAPRDOCINFO.COMPANYID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# AND TENANT_ID = #v_TENANTID#)
+									</isNotEmpty>
 								</isNotEmpty>
 								<isEmpty property="v_CONTID">
 						   		AND
@@ -9437,8 +9449,14 @@
 												TENANT_ID = #v_TENANTID#
 										]]>
 										 <isNotEmpty property="v_CONTID">
-											AND
-									   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+									   		<isEmpty property="deptId">
+												AND
+										   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+									   		</isEmpty>
+								   			<isNotEmpty property="deptId">
+												AND
+										   			TBL_ENDAPRDOCINFO.COMPANYID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# AND TENANT_ID = #v_TENANTID#)
+											</isNotEmpty>
 										</isNotEmpty>
 										<isEmpty property="v_CONTID">
 								   		AND
@@ -14954,8 +14972,14 @@
    		AND 
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
    		<isNotEmpty property="v_CONTID">
-			AND
-	   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+	   		<isEmpty property="deptId">
+				AND
+		   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+	   		</isEmpty>
+   			<isNotEmpty property="deptId">
+				AND
+		   			TBL_ENDAPRDOCINFO.COMPANYID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# AND TENANT_ID = #v_TENANTID#)
+			</isNotEmpty>
 		</isNotEmpty>
 		<isEmpty property="v_CONTID">
    		AND
@@ -15117,6 +15141,12 @@
 							              		AprMemberID = #v_USERID#
 							              AND
 												TENANT_ID = #v_TENANTID#
+							   		]]>
+							   			<isNotEmpty property="deptId">
+											AND
+									   			COMPANYID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptId# AND TENANT_ID = #v_TENANTID#)
+										</isNotEmpty>
+								   		<isEmpty property="deptId">
 										  AND
 												COMPANYID IN (
 														SELECT 
@@ -15143,8 +15173,8 @@
 														AND
 															TENANT_ID = #v_TENANTID# 
 														)
+								   		</isEmpty>
 							      				) = 'Y')
-							   		]]>
 							   	</isEqual>
 							   	<isEqual property="v_SECURITYLINEFLAG" compareValue="N">
 							   	 	<![CDATA[
@@ -20298,7 +20328,7 @@
 	        WHERE  
 	        	A.TENANT_ID = #v_TENANTID#
 	        AND
-	        	A.COMPANYID = #companyID#
+	        	A.COMPANYID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptID# AND TENANT_ID = #v_TENANTID#)
 	        AND
 	        	A.containerowndepid = #deptID#
 	        ORDER BY 
@@ -20334,7 +20364,7 @@
 	        WHERE 
 	        	A.TENANT_ID = #v_TENANTID#
 	        AND
-	        	A.COMPANYID = #companyID#
+	        	A.COMPANYID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptID# AND TENANT_ID = #v_TENANTID#)
 	        AND
 	        	C.usedepid = #deptID#
             AND 
@@ -20373,7 +20403,7 @@
 	        WHERE
 	        	A.TENANT_ID = #v_TENANTID#
 	        AND
-	        	A.COMPANYID = #companyID#
+	        	A.COMPANYID = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN = #deptID# AND TENANT_ID = #v_TENANTID#)
 	        AND  
 	        	C.usedepid = #deptID#
             AND 

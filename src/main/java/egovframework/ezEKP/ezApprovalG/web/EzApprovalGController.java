@@ -6672,6 +6672,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		//2019-02-19 김보미 - 개인문서함의 경우 파일다운로드 방식이 틀려, 파일명을 javascript에서 지정하기 때문에 가져간다.
 		model.addAttribute("excelFileName", EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + messageSource.getMessage("ezApprovalG.t1750", userInfo.getLocale()));
+		model.addAttribute("shareDeptId", shareDeptId);
 		
  		logger.debug("getContainerInfo ended");
 		
@@ -6728,6 +6729,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String ReturnQuery = "(1 = 1) ";
         Document xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(23).getTextContent());
         String TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
+        String shareDeptId = "";
+        if(xmlDom.getDocumentElement().getChildNodes().getLength() >= 25 && xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent() !=null && !xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent().equals("")){
+        	shareDeptId = xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
+        }
         
         if(TempQuery.indexOf("KAPR;") > -1) {
         	ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
@@ -6761,7 +6766,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
         }
          result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
-                papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, searchStatus,
+                papprto, mypapprfrom, mypapprto, draftDeptName, docState, shareDeptId, pageSize, pageNum, orderCell, orderOption, searchStatus,
                 userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
          logger.debug("getFormSearchDocListS ended");
