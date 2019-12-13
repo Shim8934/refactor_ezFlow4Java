@@ -286,7 +286,7 @@
   					data : {
   						deptID : tempDeptID ,
   						cell : "company;description;displayName;title;telephoneNumber",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
   						page : CurPage ,
   						type : "user"
   					} ,
@@ -391,7 +391,7 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 						page : CurPage ,
 						type : "user"
 					} ,
@@ -443,7 +443,10 @@
 					method : 'POST',
 					dataType : "xml",
 					async : false,
-					data : {search : "displayname::" + document.all("deptkeyword").value, cell : "extensionAttribute3;displayname;extensionAttribute9;", prop : "", type : 'group'}, 
+					data : {search : "displayname::" + document.all("deptkeyword").value, 
+						cell : "company;description;displayName;title;telephoneNumber", 
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
+						type : 'group'}, 
    					success : function(result) {
    						xmlDOM = result
    						var row = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW");
@@ -1184,7 +1187,7 @@
 	        			var currOwner = $("#OwnerList_TR_0").attr("data1");
 	        			var IsInsert = CheckMailReceiver(userId, "3");
 	        			var flag;
-	        			var dept = $(".node_selected").parent()[0].getAttribute("cn");
+	        			var dept = p_ListOrderObject.getAttribute("_data10");
 	        			/* if (userId == currOwner) {		// 선택한 유저가 이미 부관리자에 추가된 경우
 	        				alert("<spring:message code='ezQuestion.t18'/>");
 		   				} */
@@ -1233,12 +1236,12 @@
         	                var strDeptName2;
 
         	                strId = p_ListOrderObject.getAttribute("_data2");
-        	                strName = p_ListOrderObject.getAttribute("_data10");
+        	                strName = p_ListOrderObject.getAttribute("_data4");
         	                strName1 = p_ListOrderObject.getAttribute("_data6");
         	                strDeptName1 = p_ListOrderObject.getAttribute("_data5");
 
         	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-        	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + DeptID + "]]></DATA2>";
+        	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + dept + "]]></DATA2>";
         	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName + "]]></DATA3>";
         	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strName1 + "]]></DATA4>";
         	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName1 + "]]></DATA5>";
@@ -1479,17 +1482,17 @@
 			          		<div style="vertical-align:top;height:340px;overflow:auto;width:425px;" id="txtlist_Layer">
 			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
 			              			<tr>
-			                  			<td style="width:170px;font-weight:bold;font-weight: normal" class="td_gray"><spring:message code="ezResource.t9"/></td>
-			                  			<td style="width:150px;font-weight:bold;font-weight: normal" class="td_gray"><spring:message code="ezResource.t10"/></td>
-			                  			<td class="td_gray" style="font-weight:bold;font-weight: normal"><spring:message code="ezResource.t11"/></td>
+			                  			<td style="width:170px;font-weight: normal" class="td_gray"><spring:message code="ezResource.t9"/></td>
+			                  			<td style="width:150px;font-weight: normal" class="td_gray"><spring:message code="ezResource.t10"/></td>
+			                  			<td class="td_gray" style="font-weight: normal"><spring:message code="ezResource.t11"/></td>
 			              			</tr>
 			          			</table>
 			          			<table style="width:100%;border:1px solid #ddd;display:none;" id="Search_txtlist_table" class="mainlist" > 
 			              			<tr>
-			                  			<td style="width:130px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t132"/></td>
-			                  			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t9"/></td>
-			                  			<td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code="ezResource.t10"/></td>
-			                  			<td class="td_gray" style="font-weight:bold;"><spring:message code="ezResource.t11"/></td>
+			                  			<td style="width:130px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t132"/></td>
+			                  			<td style="width:90px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t9"/></td>
+			                  			<td style="width:90px;font-weight:normal;" class="td_gray"><spring:message code="ezResource.t10"/></td>
+			                  			<td class="td_gray" style="font-weight:normal;"><spring:message code="ezResource.t11"/></td>
 			              			</tr>
 			          			</table>
 			          		</div>
