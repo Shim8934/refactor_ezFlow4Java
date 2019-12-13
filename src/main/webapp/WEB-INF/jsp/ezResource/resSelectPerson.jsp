@@ -444,7 +444,7 @@
 					dataType : "xml",
 					async : false,
 					data : {search : "displayname::" + document.all("deptkeyword").value, 
-						cell : "company;description;displayName;title;telephoneNumber", 
+						cell : "extensionAttribute3;displayname;extensionAttribute9", 
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
 						type : 'group'}, 
    					success : function(result) {
