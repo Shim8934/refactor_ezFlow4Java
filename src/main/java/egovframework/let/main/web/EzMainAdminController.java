@@ -52,6 +52,7 @@ public class EzMainAdminController {
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
 		
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezDMS", use_ezDMS);
@@ -64,11 +65,13 @@ public class EzMainAdminController {
 		model.addAttribute("use_ezPMS", use_ezPMS);
 		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가  */
 		model.addAttribute("use_community", use_community);
+		model.addAttribute("use_webfolder", useWebfolder);
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			model.addAttribute("firstScreen_Mail", "NO");
 		}
 		//2018-07-26 김보미 - 저널, 애티튜드 널일때 처리
+
 		if (use_attitude == null || use_attitude.equals("")) {
 			model.addAttribute("use_attitude", "YES");
 		}
@@ -78,13 +81,16 @@ public class EzMainAdminController {
 		if (use_community == null || use_community.equals("")) {
 			model.addAttribute("use_community", "YES");
 		}
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 ){
+			model.addAttribute("admin", "admin");
+		} 
 		
 		//baonk added
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1 && userInfo.getRollInfo().indexOf("wf=1") != -1) {
-			model.addAttribute("isWFAdmin", "1");
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("wf=1") > -1) {
+			model.addAttribute("isWFAdmin", "YES");
 		}
 		//end
-		
+
 		String useActiveX = ezCommonService.getTenantConfig("useActiveX", userInfo.getTenantId());
 		if(useActiveX == null || useActiveX.equals("")) {
 			useActiveX = "NO";

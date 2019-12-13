@@ -55,6 +55,14 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminController.class);
 	
+	@RequestMapping(value = "/admin/ezWebFolder/webFolderMain.do", method = RequestMethod.GET)
+	public String webFolderMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("webFolderMain start");
+		
+		logger.debug("webFolderMain end");
+		return "admin/ezWebFolder/webFolderMain";
+	}
+	
 	@RequestMapping(value = "/admin/ezWebFolder/webFolderConfig.do", method = RequestMethod.GET)
 	public String webFolderConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("webFolderConfig start");
