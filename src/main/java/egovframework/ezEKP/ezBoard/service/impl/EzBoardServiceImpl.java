@@ -567,9 +567,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		ezBoardDAO.updateCopyItem(map);
 		
-		/* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 조회자정보 유지 */
+		/* 2019-12-17 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 조회자정보 유지 */
 		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
-		if (isReadCountCopyUsed != null && isReadCountCopyUsed.equals("YES")) {
+		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) {
 			ezBoardDAO.insertBoardItemReadForCopy(map);
 		}
 
@@ -588,11 +588,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("destBoardID", destBoardID); // 이동 후의 게시판ID
 		map.put("tenantID", tenantID);
 		
-		/* 2019-12-13 홍승비 - 게시물 이동 시, 기존의 조회자정보를 유지함 */
 		ezBoardDAO.updateMoveItem(map);
 		ezBoardDAO.deleteBoardItem(map);
-		//ezBoardDAO.deleteBoardItemRead2(map);
-		ezBoardDAO.updateBoardItemRead(map);
+		
+		/* 2019-12-17 홍승비 - 게시물 이동 시, 테넌트 컨피그에 따라 기존의 조회자정보를 유지함 */
+		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
+		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL"))) {
+			ezBoardDAO.updateBoardItemRead(map);
+		} else {
+			ezBoardDAO.deleteBoardItemRead2(map);
+		}
+		
 		ezBoardDAO.deleteBoardReply(map);
 
 		logger.debug("updateMoveItem ended");
@@ -3877,9 +3883,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		//구분 추가
 		boardListVO.setGuBun(doc.getElementsByTagName("GUBUN").item(0).getTextContent());
 		
-		/* 2019-12-13 홍승비 - 게시물 이동인 경우 조회수 유지 (복사인 경우, 테넌트 컨피그에 따라 옵션처리) */
+		/* 2019-12-17 홍승비 - 게시물 복사/이동 시 테넌트 컨피그에 따라 조회수 유지 */
 		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", userInfo.getTenantId());
-		if ((pMode.equals("copy") && isReadCountCopyUsed != null && isReadCountCopyUsed.equals("YES")) || pMode.equals("move")) {
+		if ((pMode.equals("copy") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) ||
+				(pMode.equals("move") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL")))) {
 			boardListVO.setReadCount(Integer.valueOf(doc.getElementsByTagName("READCOUNT").item(0).getTextContent()));
 		} else { // READCOUNT값은 기본적으로 0으로 삽입된다.
 			boardListVO.setReadCount(0);
