@@ -1,12 +1,22 @@
 package egovframework.ezMobile.ezApprovalG.web;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.security.PrivateKey;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import kr.dogfoot.hwplib.object.HWPFile;
+import kr.dogfoot.hwplib.reader.HWPReader;
+import kr.dogfoot.hwplib.writer.HWPWriter;
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +62,9 @@ public class MApprovalGGWController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+
+    @Autowired
+    private Properties config;
 	
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
