@@ -15,7 +15,7 @@
 		</style>
 	</head>
 	<body class="mainbody">
-		<h1>
+		<h1 style="display:none;">
 			<spring:message code="ezBoard.t58" />
 		</h1>
 <!-- 		<div style="text-align: center"> -->
