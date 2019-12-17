@@ -116,6 +116,8 @@ public interface EzCommonService {
 	public void insertPortalThemePortletInitdata() throws Exception;
 	
 	public void addJournalFormDelFlag() throws Exception;
+	
+	public void createJmochaMailCopyright() throws Exception;
 
 	public void updateTaskUrl() throws Exception;
 

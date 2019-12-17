@@ -560,32 +560,45 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public void updateCopyItem(String destItemID, int tenantID) throws Exception {
+	public void updateCopyItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception {
 		logger.debug("updateCopyItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("destItemID", destItemID);
+		map.put("orgItemID", orgItemID); // 복사 전의 게시물ID
+		map.put("destItemID", destItemID); // 복사 후의 게시물ID
+		map.put("orgBoardID", orgBoardID); // 복사 전의 게시판ID
+		map.put("destBoardID", destBoardID); // 복사 후의 게시판ID
 		map.put("tenantID", tenantID);
 		
 		ezBoardDAO.updateCopyItem(map);
+		
+		/* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 조회자정보 유지 */
+		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
+		if (isReadCountCopyUsed != null && isReadCountCopyUsed.equals("YES")) {
+			ezBoardDAO.insertBoardItemReadForCopy(map);
+		}
 
 		logger.debug("updateCopyItem ended");
 	}
 
 	@Override
-	public void updateMoveItem(String destItemID, String orgItemID, int tenantID) throws Exception {
+	public void updateMoveItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception {
 		logger.debug("updateMoveItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("itemID", orgItemID);
-		map.put("destItemID", destItemID);
+		map.put("itemID", orgItemID); // 이동 전의 게시물ID
+		map.put("destItemID", destItemID); // 이동 후의 게시물ID
+		map.put("orgBoardID", orgBoardID); // 이동 전의 게시판ID
+		map.put("destBoardID", destBoardID); // 이동 후의 게시판ID
 		map.put("tenantID", tenantID);
 		
+		/* 2019-12-13 홍승비 - 게시물 이동 시, 기존의 조회자정보를 유지함 */
 		ezBoardDAO.updateMoveItem(map);
 		ezBoardDAO.deleteBoardItem(map);
-		ezBoardDAO.deleteBoardItemRead2(map);
+		//ezBoardDAO.deleteBoardItemRead2(map);
+		ezBoardDAO.updateBoardItemRead(map);
 		ezBoardDAO.deleteBoardReply(map);
 
 		logger.debug("updateMoveItem ended");
@@ -3759,14 +3772,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        if (useAppr.equals("Y")) {
 	        	sb.append("<APPRFLAG>N</APPRFLAG>");
 	        }
+	        /* 2019-12-13 홍승비 - 게시물 이동 시 조회수, 조회자정보 유지 */
+	        sb.append("<READCOUNT>" + boardListVO.getReadCount() + "</READCOUNT>");
 	        
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
-	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
+	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "move", realPath, userInfo);
 	        
 	        if (result.equals("OK")) {
-	        	updateMoveItem(destItemID, orgItemID, userInfo.getTenantId());
+	        	updateMoveItem(destItemID, orgItemID, destBoardID, orgBoardID, userInfo.getTenantId());
 	        	destItemIDStr.append(destItemID).append(";");
 	        	resultStr.append(result).append("|");
 	        }
@@ -3838,9 +3853,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		if (doc.getElementsByTagName("DOCCONTENT").item(0) != null) {
 			boardListVO.setContent(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent())));
-		}		
-		
-		if (pMode.equals("copy")) {
+		}
+
+		if (pMode.equals("copy") || pMode.equals("move")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
 		} else {
 			boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
@@ -3865,9 +3880,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
 		
-		if (!pMode.equals("copy")) {
+		if (!pMode.equals("copy") && !pMode.equals("move")) {
 			boardListVO.setMainContent(commonUtil.stripScriptTags(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n")));
-			
+
 			if (pMode.equals("reply") || pMode.equals("modify")) {
 				boardListVO.setParentWriteDate(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
 			} else {
@@ -3926,7 +3941,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setExtensionAttribute10("");
 		}
 		
-		if (!pMode.equals("copy")) {
+		if (!pMode.equals("copy") && !pMode.equals("move")) {
 			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
 			if (saveMHTResult == false) {
 				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
@@ -3944,6 +3959,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		//구분 추가
 		boardListVO.setGuBun(doc.getElementsByTagName("GUBUN").item(0).getTextContent());
+		
+		/* 2019-12-13 홍승비 - 게시물 이동인 경우 조회수 유지 (복사인 경우, 테넌트 컨피그에 따라 옵션처리) */
+		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", userInfo.getTenantId());
+		if ((pMode.equals("copy") && isReadCountCopyUsed != null && isReadCountCopyUsed.equals("YES")) || pMode.equals("move")) {
+			boardListVO.setReadCount(Integer.valueOf(doc.getElementsByTagName("READCOUNT").item(0).getTextContent()));
+		} else { // READCOUNT값은 기본적으로 0으로 삽입된다.
+			boardListVO.setReadCount(0);
+		}
 		
 		if (pMode.equals("modify")) {
 			brdUpdateItem(boardListVO, "BOARD");
@@ -4101,13 +4124,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        	sb.append("<APPRFLAG>N</APPRFLAG>");
 	        }
 	        
+	        /* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라  조회수, 조회자정보 유지 */
+	        sb.append("<READCOUNT>" + boardLisitVO.getReadCount() + "</READCOUNT>");
+	        
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
 	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
 	        
 	        if (result.equals("OK")) {
-	        	updateCopyItem(destItemID, userInfo.getTenantId());
+	        	/* 2019-12-16 홍승비 - 조회자정보 저장을 위한 파라미터 추가 */
+	        	updateCopyItem(destItemID, orgItemID, destBoardID, orgBoardID, userInfo.getTenantId());
 	        	destItemIDStr.append(destItemID).append(";");
 	        	resultStr.append(result).append("|");
 	        }

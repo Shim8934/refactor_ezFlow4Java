@@ -784,13 +784,18 @@ public class MResourceGWController extends EgovFileMngUtil {
 			//의미확인후 삭제 또는 변경
 			cID = "VIEW";	
 			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			List<ResScheGetHolidayVO> getHoliday2 = mResourceService.getTholiday(cID.trim(), "ALL", info.getTenantId());
 			
 			LOGGER.debug("userId : " + userId);
 			LOGGER.debug("companyID : " + cID);
 			
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("getHoliday", getHoliday);
+			resultMap.put("memorialDay", getHoliday2);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", getHoliday);
+			result.put("data", resultMap);
 			
 		} catch (Exception e) {
 			
