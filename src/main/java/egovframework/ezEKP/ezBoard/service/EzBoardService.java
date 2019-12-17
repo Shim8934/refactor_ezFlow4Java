@@ -210,9 +210,11 @@ public interface EzBoardService {
 	
 	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg, String oFileName, int tenantID) throws Exception;
 
-	public void updateCopyItem(String itemID, int tenantID) throws Exception;
+	/* 2019-12-16 홍승비 - 게시물 복사 시 조회자 정보를 유지하기 위한 파라미터 추가 */
+	public void updateCopyItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception;
 	
-	public void updateMoveItem(String destItemID, String orgItemID, int tenantID) throws Exception;
+	/* 2019-12-13 홍승비 - 게시물 이동 시 조회자 정보를 유지하기 위한 게시판ID 파라미터 추가 */
+	public void updateMoveItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception;
 	
 	public void setBoardList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
 	
