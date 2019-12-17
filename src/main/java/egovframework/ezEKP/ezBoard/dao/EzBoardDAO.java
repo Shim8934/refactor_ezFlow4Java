@@ -730,4 +730,14 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public List<BoardPropertyVO> getAllSubBoardProperty(Map<String, Object> map) throws Exception {
 		return (List<BoardPropertyVO>) list("EzBoardDAO.getAllSubBoardProperty", map);
 	}
+
+	/* 2019-12-13 홍승비 - 게시물 이동 시 조회자 정보를 삭제하지 않고 유지하는 쿼리 */
+	public void updateBoardItemRead(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.updateBoardItemRead", map);
+	}
+
+	/* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 기존 게시물의 조회자정보를 삽입하는 쿼리 */
+	public void insertBoardItemReadForCopy(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.insertBoardItemReadForCopy", map);
+	}
 }
