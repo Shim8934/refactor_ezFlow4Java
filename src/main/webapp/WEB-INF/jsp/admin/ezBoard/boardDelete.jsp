@@ -94,8 +94,6 @@
 			  	</tr>
 			</table><br/>			
 			<div class="box" style="padding:10px" >
-				<spring:message code="ezBoard.t116"/><b>'<c:out value="${boardName}"/>'</b>
-				<spring:message code="ezBoard.t117"/><br/>
 			  	<spring:message code="ezBoard.t118"/>
 			</div>			
 			<div class="btnpositionJsp">
