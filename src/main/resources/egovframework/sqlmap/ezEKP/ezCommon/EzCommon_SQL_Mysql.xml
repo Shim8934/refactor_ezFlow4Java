@@ -780,6 +780,7 @@
 			TBL_PORTAL_THEME_USER
 		ADD 
 			is_default int(11) DEFAULT 0
+	</statement>
 	<select id="EzCommonDAO.checkJmochaMailCopyright">
 		SELECT 
 			TENANT_ID
