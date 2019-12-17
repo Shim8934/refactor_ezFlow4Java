@@ -1183,6 +1183,6 @@ function mail_link(){
 		}
 	}
 	
-	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900));
+	window.open(real_href, 'apprmailLink', GetOpenWindowfeature(880, 900, true));
 
 }
