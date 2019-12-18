@@ -129,14 +129,14 @@
 			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table>
-			<br/>
+			<%-- <br/>
 			<h2 style="font-weight: normal">▒ <spring:message code="ezBoard.t130" /></h2>
 			<table class="content">
 				<tr>
 			    	<th><spring:message code="ezBoard.t131" /></th>
 			    	<td><c:out value='${boardName}'/></td>
 			  	</tr>
-			</table>
+			</table> --%>
 			<br/>
 			<div id="mainmenu">
 				<ul>
