@@ -2554,9 +2554,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n")); 
 			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 			
-			if (userInfo.getLang().equals("2")) {
+			/*if (userInfo.getLang().equals("2")) {
 				member.setUserName(member.getUserName2());
-			}
+			}*/
 			
 			name1 = member.getUserName();
 		}
