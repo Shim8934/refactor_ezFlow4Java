@@ -1192,7 +1192,7 @@
 	    </script>
 	</head>
 	<body class="popup">
-		<h1><spring:message code='ezOrgan.hyh08' /></h1>
+		<h1><spring:message code='ezOrgan.kje01' /></h1>
 	    <xml id="listviewheader" style="display:none">
 			<LISTVIEWDATA>
 				<HEADERS>

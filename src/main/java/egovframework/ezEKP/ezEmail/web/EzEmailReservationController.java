@@ -598,6 +598,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			mailMaxReceiverCount = "200";
 		}
 		
+		boolean useAdditionalInfo = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId()));
+		
 		model.addAttribute("to", to);
 		model.addAttribute("cc", cc);
 		model.addAttribute("bcc", bcc);
@@ -661,6 +663,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("draftsFolderName", draftsFolderName);
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("useAdditionalInfo", useAdditionalInfo);
 		
         logger.debug("mailEdit ended.");
         

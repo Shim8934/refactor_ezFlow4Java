@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -118,6 +119,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 
 /** 
  * @Description [Controller] 메일 쓰기
@@ -165,6 +167,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+
+	@Autowired
+	private EzEmailUserAdminService ezEmailUserAdminService;
 	
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
@@ -1307,6 +1312,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			bodyType = "0";
 		}
 		
+		boolean useAdditionalInfo = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailWriteRecipientAdditional", loginInfo.getTenantId()));
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
@@ -1385,6 +1392,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
 		model.addAttribute("isMailToMe", isMailToMe); // 내게쓰기 버튼 클릭시  checkobx checked
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
+		model.addAttribute("useAdditionalInfo", useAdditionalInfo);
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
@@ -3822,6 +3830,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 				// simpleMime의 값이 1인 경우는 Plain Text 형식이다.
 				if (simpleMime.equals("1")) {
+					textBody += addCopyrightText(userInfo, textBody, "text/plain"); // copyrightText
+					
 				 // 메일을 발송하는 경우
 		            if (!cmd.toUpperCase().equals("SAVE")) {
 		                // 예약 메일의 경우
@@ -3840,6 +3850,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            }
 		        // HTML 형식의 경우
 		        } else {
+		        	htmlBody += addCopyrightText(userInfo, htmlBody, "text/html"); // copyrightText
+					
 					// HTML 안에 포함된 인라인 이미지들에 대한 다운로드 링크를 cid 형식으로 변환한다.
 		        	// 이후 Related Part 처리 코드에서 변환을 하지만 Related Part 없이 HTML 파트만으로
 		        	// 인라인 이미지를 포함하고 있는 메일이 있어 추가함. 이 경우 이 처리를 하지 않으면
@@ -4657,27 +4669,40 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            	
 			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
 			                // 이 경우에는 메일을 다시 전송하지 않는다.
-			                if (mailSendCompleted == false) {			     			                	
-				            	Address[] allRecipients = message.getAllRecipients();
+			                if (mailSendCompleted == false) {				                	
+		                		Address[] allRecipients = message.getAllRecipients();
 				            	
 				            	message.removeHeader("TO");
 				        		message.removeHeader("CC");
 				        		message.removeHeader("BCC");
 				        		
-				            	for (Address a : allRecipients) {
-				            		logger.debug("address=" + a);
+								String useAdvancedEachMail = ezCommonService.getTenantConfig("useAdvancedEachMail", userInfo.getTenantId());
+								
+								if (useAdvancedEachMail.equals("YES")) {				        		
+					        		message.setRecipients(RecipientType.TO, allRecipients);
+					        		
+					        		message.setHeader("X-JMocha-Each-Mail", "true");
 				            		
-				            		try {
-					            		message.setRecipient(RecipientType.TO, a);
-					            		
-					            		Transport.send(message);
-				            		} catch (Exception e) {
-				            			e.printStackTrace();
-				            		}
+					        		Transport.send(message);
 				            		
 	    			            	sentFolderMessageUID = 0;
-	    			            	mailSendCompleted = true;				            		
-				            	}
+	    			            	mailSendCompleted = true;				
+								} else {
+					            	for (Address a : allRecipients) {
+					            		logger.debug("address=" + a);
+					            		
+					            		try {
+						            		message.setRecipient(RecipientType.TO, a);
+						            		
+						            		Transport.send(message);
+					            		} catch (Exception e) {
+					            			e.printStackTrace();
+					            		}
+					            		
+		    			            	sentFolderMessageUID = 0;
+		    			            	mailSendCompleted = true;				            		
+					            	}									
+								}
 			                }
 			            	
 			                // this deletion code block has been moved here because
@@ -5944,6 +5969,52 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 수신인 추가시 부서나 이메일주소 등을 덧붙는 접두사를 반환
+	 * email 파라미터로 OrganUserVO를 구한 후 접두사 만듦
+	 */
+	@RequestMapping(value="/ezEmail/mailGetUserAdditionalInfo.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String mailGetUserAdditionalInfo(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		int tenantId = loginVO.getTenantId();
+
+		String email = request.getParameter("email");
+		String userId = loginVO.getEmail().equals(email)
+				? loginVO.getId()
+				: ezOrganService.getCNByEmail(email, loginVO.getTenantId());
+		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, loginVO.getPrimary(), loginVO.getTenantId());
+
+		String additionalFormat = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalFormat", tenantId);
+		String additionalParameters = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalParameters", tenantId);
+		String[] fieldNameArray = additionalParameters.split(";");
+		int size = fieldNameArray.length;
+		Object[] args = new String[size];
+
+		for (int i = 0; i < size; i++) {
+			try {
+				Field field = OrganUserVO.class.getDeclaredField(fieldNameArray[i]);
+				field.setAccessible(true);
+				String value = field.get(userInfo).toString();
+				args[i] = value;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				args[i] = "";
+			}
+		}
+
+		try {
+			return String.format(additionalFormat, args);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return "";
+		}
+	}
+
+	/**
 	 * 사원 Organ 정보 호출 함수
 	 */
 	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, LoginVO userInfo) {
@@ -6499,6 +6570,61 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("downloadAttachInWriter ended");
+	}
+	
+	
+	/*
+	 * 수신인 안내문구 
+	 * 
+	 */
+	private String addCopyrightText (LoginVO userInfo, String mailBody, String type) throws Exception {
+		int tenantId = userInfo.getTenantId();
+		String companyId = userInfo.getCompanyID();
+		String defaultFontAndSize = "";
+		String addCopyrightStr = "";
+
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "font-size:" + fontSize + ";font-family:" + fontFamily + ";";
+			}
+		}
+		
+		String copyrightDiv = "<p>&nbsp;</p><div id=\"recipientPharse\" style=\"box-sizing:border-box; padding:5px 3px; border:1px solid #999; "
+				+ defaultFontAndSize + " color: rgb(153, 153, 153);\">%s</div>";
+		String useCopyrightMenu = ezCommonService.getTenantConfig("useCopyright", tenantId);
+		useCopyrightMenu = useCopyrightMenu.equals("") ? "NO" : useCopyrightMenu;
+		String useCopyright = ezCommonService.getCompanyConfig(tenantId, companyId, "useCopyright");
+		useCopyright = useCopyright.equals("") ? "YES" : useCopyright;
+		String copyrightText = ezEmailUserAdminService.getCopyrightText(userInfo.getTenantId(), companyId);	
+		logger.debug("tenantId=" + tenantId + ", companyId=" + companyId 
+				+ "useCopyright=" + useCopyright + ", copyrightText=" + copyrightText + ", useCopyrightMenu=" + useCopyrightMenu);
+
+		if (useCopyrightMenu.equals("YES") && !useCopyright.equals("NO") && !copyrightText.trim().equals("")) {
+			mailBody = mailBody.replaceAll("\\p{Z}", " "); // 유니코드 범주내에서 구분 기호, 공백을  replacAll
+			
+			if ((!copyrightText.equals("id=\"recipientPharse\"")) || (mailBody.indexOf(copyrightText) > -1) || (mailBody.indexOf(copyrightText.replace(" ", "&nbsp;")) > -1)) {
+				logger.debug("copyrightText ended.");
+				return addCopyrightStr;
+			}
+			
+			if (type.equals("text/html")) {
+				addCopyrightStr = String.format(copyrightDiv, copyrightText);
+			} else if(type.equals("text/plain")) {
+				String line = "--------------------------------------------------";
+				addCopyrightStr = "\r\n" + line;
+				addCopyrightStr += "\r\n" + copyrightText; // 태그 제외 된 copyright 문구, copyright 문구 뒤가 1-3개씩 잘리는 현상때문에 줄바꿈 추가
+				addCopyrightStr += "\r\n" + line + "\r\n";
+			}
+		}
+
+		logger.debug("addCopyrightStr=" + addCopyrightStr);
+		return addCopyrightStr;
 	}
 	
 }

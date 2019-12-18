@@ -5995,8 +5995,8 @@
  				displayName,
  				department,
  				description,
-				mailboxquota,
-				mailboxusage,
+				to_number(mailboxquota) as mailboxquota,
+				to_number(mailboxusage) as mailboxusage,
 				displayName2,
 				description2
  			FROM

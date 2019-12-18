@@ -264,6 +264,7 @@ public class MOrganGWController {
 			result.put("code", "0");
 			result.put("data", mOrganListVOs);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", "1");
 		}		

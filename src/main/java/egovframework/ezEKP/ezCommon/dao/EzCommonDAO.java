@@ -581,6 +581,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void createJmochaMailCopyright() {
+		try {
+			select("EzCommonDAO.checkJmochaMailCopyright");
+		} catch (Exception e) {
+			logger.debug("jmocha_mail_copyright doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJmochaMailCopyright");
+		}
+	}
+
 	public void updateListOptionData() {
 		try {
 			if ((int) select("EzCommonDAO.checkListOptionData1") > 0) {
@@ -911,6 +921,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		} catch (Exception e) {
 			logger.debug("alterChamjoView() ERROR...");
+			e.printStackTrace();
+		}
+	}
+	
+	public void addAddressFurigana() {
+		try {
+			select("EzCommonDAO.checkAddressFurigana"); 
+		} catch (Exception e) {
+			update("EzCommonDAO.addAddressFurigana");
+			logger.debug("JMOCHA_ADDRESS_INFO S_FURIGANA doesn't exist. creating the column...");
 			e.printStackTrace();
 		}
 	}

@@ -4294,8 +4294,8 @@
 			displayName,
 			department,
 			description,
-			mailboxquota,
-			mailboxusage,
+			CAST(mailboxquota AS UNSIGNED) as mailboxquota,
+			CAST(mailboxusage AS UNSIGNED) as mailboxusage,
 			displayName2,
 			description2
 		FROM 

@@ -158,6 +158,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addPortalPortletUserPortletUsed();
     	ezCommonService.addPortalPortletUserThemeId();
     	ezCommonService.addTblPortalThemeUserIsDefault();
+    	ezCommonService.createJmochaMailCopyright();
     	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
     	ezCommonService.addQuickLinkLinkOrder();
     	ezCommonService.addComCloseCompanyId();
@@ -175,6 +176,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
     	ezCommonService.addSnThemeAndPortletAuth();
     	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
+    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
     	
     	logger.debug("init ended.");
     }
@@ -228,6 +230,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("useSignatureTemplate=" + useSignatureTemplate);
+
+		String useCopyrightMenu = ezCommonService.getTenantConfig("useCopyrightMenu", user.getTenantId());
+		if (useCopyrightMenu.equals("")) {
+			useCopyrightMenu = "NO";
+		}
+		logger.debug("useCopyrightMenu=" + useCopyrightMenu);
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
 		
@@ -236,6 +244,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useLoginStop", useLoginStop);
 		model.addAttribute("useSignatureTemplate", useSignatureTemplate);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
+		model.addAttribute("useCopyrightMenu", useCopyrightMenu);
 		model.addAttribute("cChk", cChk);
 		
 		return "admin/ezOrgan/organLeft";

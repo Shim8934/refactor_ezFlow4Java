@@ -36,3 +36,4 @@ var strLang535 = "No Items";
 var strLangLHM01 = "Restoration to the other companies is not supported.";
 var strLangKHJ01 = "사원";
 var strLangKHJ02 = "명을 복구하시겠습니까?";
+var strLangKJE01 = "你确定要删除所有并发位置？";

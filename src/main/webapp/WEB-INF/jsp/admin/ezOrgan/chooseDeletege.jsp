@@ -32,7 +32,7 @@
 			
 			var cData = "";
 			if (ReturnFunction == "ALL") {
-				cData = "<spring:message code='ezAddress.t362' />" + strLang20;
+				cData = "<spring:message code='ezAddress.kje01' />" + strLang20;
 			} else {
 				cData = type + strLang20;
 			}

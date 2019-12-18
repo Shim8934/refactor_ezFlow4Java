@@ -609,7 +609,7 @@ CREATE TABLE `jmocha_mail_copyright` (
   `COPYRIGHT_TEXT` varchar(1000) DEFAULT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

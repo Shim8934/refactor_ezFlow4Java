@@ -185,6 +185,8 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("tenantID", tenantId);
 		map.put("companyId", companyId);
 		
+		map.put("useShowAllCompanies", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAllCompanies", tenantId)));
+		
 		LOGGER.debug("deptId : " + deptID.replace("%", "\\%").replace("_", "\\_"));
 		LOGGER.debug("lang : " + commonUtil.getMultiData(lang, tenantId));
 		

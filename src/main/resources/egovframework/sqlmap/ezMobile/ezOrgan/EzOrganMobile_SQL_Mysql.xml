@@ -217,8 +217,11 @@
 						DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%')
 					AND
 						TENANT_ID = #tenantID#
-					AND       
+				]]>
+					<isEqual property="useShowAllCompanies" compareValue="false" prepend="and">
 						EXTENSIONATTRIBUTE2 = #companyId#
+					</isEqual>
+				<![CDATA[
 					AND
 						DEPT_CD_PATH NOT LIKE '%trash\_dept%'
 					)
@@ -265,8 +268,12 @@
 										TBL_DEPTMASTER 
 									WHERE 
 										DEPT_CD_PATH NOT LIKE '%trash\_dept%'
-									AND
-										EXTENSIONATTRIBUTE2 = #companyId#)	
+				]]>
+									<isEqual property="useShowAllCompanies" compareValue="false" prepend="and">
+										EXTENSIONATTRIBUTE2 = #companyId#
+									</isEqual>
+				<![CDATA[
+								)
 				)
 				]]>    
 				<!-- UNION ALL

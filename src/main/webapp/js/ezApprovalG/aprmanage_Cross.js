@@ -1030,11 +1030,11 @@ function openViewDocInfo(type) {
     }
 
     var openLocation;
-    var formUrlExt = formURL.substr(formURL.length - 3, formURL.length).toLowerCase();
+    // 20191210 ezd 확장자 빼기
+    var formUrlExt = getOriginalFileExtension(formURL);
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
-    	// 2018.07.26 (KLIB) - ezd 확장자 처리
-        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+        if (formUrlExt === "hwp") {
             if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
             } else {
@@ -1051,7 +1051,7 @@ function openViewDocInfo(type) {
     }
     else {
     	// 2018.07.06 (KLIB) - ezd 확장자 처리
-        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+        if (formUrlExt === "hwp") {
             if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezviewAprHWP.do";
             } else {

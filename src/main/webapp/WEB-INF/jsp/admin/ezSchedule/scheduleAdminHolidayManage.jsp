@@ -629,7 +629,7 @@
 		    			
 		    				var lastTh = $("#manage_HEAD tr th").last();
 		    				lastTh.attr("id", "forScroll");
-		    				lastTh.css("width", "8px");
+		    				lastTh.css("width", "2%");
 						
 		    			//마지막 tr 요소 아래선 감추기
 		    			$('#managelist_body tbody tr').last().find('td').css('border-bottom','none');

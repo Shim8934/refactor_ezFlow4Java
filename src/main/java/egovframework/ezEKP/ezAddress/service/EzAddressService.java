@@ -27,11 +27,11 @@ public interface EzAddressService {
 	public void insertAddress(int tenantId, String pOwnerId, String pFolderId, String pCreatorId, String pCreatorName, String pCreatorName2,
 			String sName, String sEmail, String sCompany, String sDept, String sTitle, 
 			String sCompanyPhone, String sFax, String sMobile, String sHomePage, 
-			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sType) throws Exception;
+			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sType, String sFurigana) throws Exception;
 	public void updateAddress(int tenantId, String pAddressId, String pModifierId, String pModifierName, String pModifierName2,
 			String sName, String sEmail, String sCompany, String sDept, String sTitle,
 			String sCompanyPhone, String sFax, String sMobile, String sHomePage, 
-			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo) throws Exception;
+			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sFurigana) throws Exception;
 	public void deleteAddress(String[] pAddressIds) throws Exception;
 	public void moveAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId) throws Exception;
 	public void copyAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId, String pCreatorId, String pCreatorName, String pCreatorName2) throws Exception;

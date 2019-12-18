@@ -273,6 +273,7 @@
 		        createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM", usernm);
 		        createNodeAndInsertCDataText(xmlDom, objNode, "USERNM2", usernm2);
+		        createNodeAndInsertCDataText(xmlDom, objNode, "FURIGANA", document.getElementById("TextFurigana").value);
 		        objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
 		        
 		        /* if(foldertype=="P")
@@ -365,6 +366,7 @@
 		        if(document.getElementById("TextComAddr").value != "") return false;
 		        if(document.getElementById("TextHomeAddr").value != "") return false;
 		        if (document.getElementById("TextEmail").value != "") return false;
+		        if (document.getElementById("TextFurigana").value != "") return false;
 		        
 		        return true;
 		    }
@@ -477,6 +479,10 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		  </script>
 		  <table class="content">
+		  	<tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
+	        	<th style="width: 71px;"><spring:message code='main.ksa01' /></th>
+	            <td style="width: 240px"><input id="TextFurigana" style="width: 100%;" maxlength="20" value="<c:out value='${addressInfo.sFurigana}' />"></td>
+	        </tr>
 		    <tr>
 		      <!-- <th rowspan="4" align="center" ><span id="LiteralPhoto" width="119"></span></th> -->
 		      <th><spring:message code='ezAddress.t124' /></th>

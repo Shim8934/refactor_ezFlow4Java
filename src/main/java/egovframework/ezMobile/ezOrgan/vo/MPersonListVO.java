@@ -110,6 +110,8 @@ public class MPersonListVO {
 	
 	private String rowNum;
 	
+	private String furigana;
+	
     /** 사용자가 속한 Tenant의 고유 ID */
     private int tenantId = -1;
 	public String getParentCn() {
@@ -442,5 +444,12 @@ public class MPersonListVO {
 	public void setRowNum(String rowNum) {
 		this.rowNum = rowNum;
 	}	
+	
+	public String getFurigana() {
+		return furigana;
+	}
+	public void setFurigana(String furigana) {
+		this.furigana = furigana;
+	}
 	
 }

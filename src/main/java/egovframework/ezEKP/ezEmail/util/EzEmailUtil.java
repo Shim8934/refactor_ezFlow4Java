@@ -4587,7 +4587,7 @@ public class EzEmailUtil {
 						logger.debug("autoMailAddress make : " + address);
 						ezAddressService.insertAddress(tenantId, userId, "0", userAccount, 
 								displayName, displayName2, name, address, "", "", "", 
-								"", "", "", "", "", "", "", "", "", "P");
+								"", "", "", "", "", "", "", "", "", "P", "");
 					}
 				}
 				

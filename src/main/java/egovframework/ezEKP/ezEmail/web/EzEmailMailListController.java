@@ -1067,7 +1067,7 @@ public class EzEmailMailListController {
 				}
 	        }
 	        
-	        logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
+	        logger.debug("mailDelete userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 	        
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);

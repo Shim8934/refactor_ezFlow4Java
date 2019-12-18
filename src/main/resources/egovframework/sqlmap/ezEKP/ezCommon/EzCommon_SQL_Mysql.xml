@@ -781,6 +781,21 @@
 		ADD 
 			is_default int(11) DEFAULT 0
 	</statement>
+	<select id="EzCommonDAO.checkJmochaMailCopyright">
+		SELECT 
+			TENANT_ID
+		FROM 
+			JMOCHA_MAIL_COPYRIGHT
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaMailCopyright"> 
+		CREATE TABLE `jmocha_mail_copyright` (
+		  `TENANT_ID` INT NOT NULL,
+		  `COPYRIGHT_TEXT` varchar(1000) DEFAULT NULL,
+          PRIMARY KEY (`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
 
 	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
 		SELECT 
@@ -1681,4 +1696,20 @@
 		    	TBL_ENDAPRDOCINFO.docstate <> '031'
            ]]>
 	</statement>
+	
+	<select id="EzCommonDAO.checkAddressFurigana">
+		<![CDATA[
+			SELECT
+				IFNULL(s_furigana,0)
+			FROM 
+				jmocha_address_info
+			LIMIT 1
+		]]>
+	</select>
+	<update id="EzCommonDAO.addAddressFurigana">
+		<![CDATA[
+			ALTER TABLE jmocha_address_info
+			ADD COLUMN s_furigana VARCHAR(120) NULL DEFAULT NULL AFTER s_type
+		]]>
+	</update>
 </sqlMap>

@@ -1574,7 +1574,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	@Override
 	public void addTblPortalThemeUserIsDefault() throws Exception {
-		ezCommonDAO.addTblPortalThemeUserIsDefault();
+        ezCommonDAO.addTblPortalThemeUserIsDefault();
+    }
+
+	public void createJmochaMailCopyright() throws Exception {
+		ezCommonDAO.createJmochaMailCopyright();
 	}
 	
 	@Override
@@ -1668,5 +1672,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void alterChamjoView() throws Exception {
 		ezCommonDAO.alterChamjoView();
+	}
+	
+	@Override
+	public void addAddressFurigana() throws Exception {
+		ezCommonDAO.addAddressFurigana();
 	}
 }
