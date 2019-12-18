@@ -2509,15 +2509,28 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String result = "";
         
         //여러부서 보낼수 있게 수정
-        for (String recevID : arrReceiveID) {
-        	result = ezApprovalGService.getFileName(mapPath, sendID + recevID + strTime, "sendtemp", strXML, userInfo.getTenantId());
-        	
-        	if (result.equals("FALSE")) {
-        		logger.debug("sendMsg Fail : " + sendID + recevID + strTime);
-        		
-        		return result;
-        	}
-		}
+//        for (String recevID : arrReceiveID) {
+//        	result = ezApprovalGService.getFileName(mapPath, sendID + recevID + strTime, "sendtemp", strXML, userInfo.getTenantId());
+//        	
+//        	if (result.equals("FALSE")) {
+//        		logger.debug("sendMsg Fail : " + sendID + recevID + strTime);
+//        		
+//        		return result;
+//        	}
+//		}
+        
+        // 여러부서 보낼수 있게 수정 -> 문서유통센터에서 전화옴 19.12.18
+        // 문서유통센터에서 전화옴 19.12.18 xml 파일 하나 떨구는 걸로 변경
+        logger.debug("####mapPath : " + mapPath);
+        logger.debug("####sendID : " + sendID);
+        logger.debug("####recevID : " + arrReceiveID[0]);
+        logger.debug("####strTime : " + strTime);
+        result = ezApprovalGService.getFileName(mapPath, sendID + arrReceiveID[0] + strTime, "sendtemp", strXML, userInfo.getTenantId());
+        
+        if (result.equals("FALSE")) {
+               logger.debug("sendMsg Fail : " + sendID + arrReceiveID[0] + strTime);
+               return result;
+        }
         
         logger.debug("sendMsg ended");
         return result;
