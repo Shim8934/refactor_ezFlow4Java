@@ -5988,6 +5988,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				: ezOrganService.getCNByEmail(email, loginVO.getTenantId());
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, loginVO.getPrimary(), loginVO.getTenantId());
 
+		if (userInfo == null) {
+			return "";
+		}
+
 		String additionalFormat = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalFormat", tenantId);
 		String additionalParameters = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalParameters", tenantId);
 		String[] fieldNameArray = additionalParameters.split(";");
