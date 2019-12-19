@@ -13186,7 +13186,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String oldYear = getDocHrefYear(orgDocID, companyID, tenantID);
 				
 				if (!fileName.trim().equals("")) {
-					String extFileName = getExtendedFileName(fileName);
+					String extFileName;
+					
+					if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						extFileName = getExtendedFileName(fileName.substring(0, fileName.lastIndexOf('.')));
+					} else {
+						extFileName = getExtendedFileName(fileName);
+					}
 					
 					deleteFile(dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName);
 					rtnVal = true;
