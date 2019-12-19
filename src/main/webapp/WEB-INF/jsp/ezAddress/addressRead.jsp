@@ -24,6 +24,11 @@
 		    var address = "<c:out value='${addressInfo}'/>"
 		    
 		    window.onload = function () {
+		        var name = '<c:out value="${addressInfo.sName}"/>';
+		        name = replaceEntityCodeToStr(name);
+				document.getElementById("TextName").innerText = name;		        		        
+		        document.getElementById("TextName").title = name;
+		        
 		    	getMemo = getMemo.replace(/&lt;br&gt;/gi, "\n").replace(/\\\\/gi, "\\"); 
 		        document.getElementById("TextMemo").innerText = getMemo;
 		    }
@@ -171,11 +176,11 @@
 		    <table class="popuplist" style="width:100%; table-layout: fixed; ">
 		          <tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
 		            <th style="width: 71px;"><spring:message code='main.ksa01' /></th>
-		            <td colspan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName" title="${addressInfo.sFurigana}"> <c:out value='${addressInfo.sFurigana}' /></span></td>
+		            <td colspan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextFurigana" title="${addressInfo.sFurigana}"> <c:out value='${addressInfo.sFurigana}' /></span></td>
 		          </tr>
 		          <tr>
 		            <th width="13%"><spring:message code='ezAddress.t124' /></th>
-		            <td style="width:32%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName" title="${addressInfo.sName}"> <c:out value='${addressInfo.sName}' /></span></td>
+		            <td style="width:32%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextName"></span></td>
 		            <th width="13%"><spring:message code='ezAddress.t286' /></th>
 		            <td title="<spring:message code='ezAddress.t287' />" style="width:30%; overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span onClick="show_personinfo(0)" style="cursor:pointer"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></span></td>
 		          </tr>

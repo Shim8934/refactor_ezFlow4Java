@@ -41,6 +41,10 @@
 		            changetype();
 		        }
 		        
+		        var name = '<c:out value="${addressInfo.sName}"/>'
+		        name = replaceEntityCodeToStr(name);
+		        document.getElementById("TextName").value = name;
+		        
 		        var getMemo = document.getElementById("TextMemo").value;
 		        getMemo = getMemo.replace(/\\\\/gi, "\\");
 		        document.getElementById("TextMemo").innerText = "";
@@ -486,7 +490,7 @@
 		    <tr>
 		      <!-- <th rowspan="4" align="center" ><span id="LiteralPhoto" width="119"></span></th> -->
 		      <th><spring:message code='ezAddress.t124' /></th>
-		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass" value="<c:out value="${addressInfo.sName}"/>"></td>
+		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t51' /></th>
