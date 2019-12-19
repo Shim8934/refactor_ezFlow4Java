@@ -149,6 +149,18 @@
 				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
 				return feature;
 			}
+			
+			function replaceEntityCodeToStr(str) {
+				return str.replace(/&amp;/g, "&")
+						  .replace(/&lt;/g, "<")
+						  .replace(/&gt;/g, ">")
+						  .replace(/&quot;/g, '\"')
+						  .replace(/&#40;/g, "\(")
+						  .replace(/&#41;/g, "\)")
+						  .replace(/&#39;/g, "'")
+						  .replace(/&#34;/g, '\"')
+						  .replace(/&amp;/g, "&");
+			}
 		</script>
 	</head>
 	<body class="popup" >

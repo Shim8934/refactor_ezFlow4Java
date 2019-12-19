@@ -461,6 +461,18 @@
 			    folderid = document.getElementById("selectfolder").options[selectedindex].value;
 			    ownerid = document.getElementById("selectfolder").options[selectedindex].getAttribute("ownerid");
 			}
+			// 모바일과 함께 적용되어있는 사항 때문에  XmlHttpRequest.js와 다르게 &#34 형태로 적용
+			function replaceEntityCodeToStr(str) {
+				return str.replace(/&amp;/g, "&")
+						  .replace(/&lt;/g, "<")
+						  .replace(/&gt;/g, ">")
+						  .replace(/&quot;/g, '\"')
+						  .replace(/&#40;/g, "\(")
+						  .replace(/&#41;/g, "\)")
+						  .replace(/&#39;/g, "'")
+						  .replace(/&#34;/g, '\"')
+						  .replace(/&amp;/g, "&");
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
