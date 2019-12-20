@@ -11163,13 +11163,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (dlength >= 2) {
 			String aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent());
 			
-			if (!(aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATgian) || aprType.equals(staATgumto))) {
+			if (!(aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATByungRyulHyubJo) || aprType.equals(staATgian) || aprType.equals(staATgumto))) {
 				rtnVal = false;
 			}
 			
 			aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(1).getTextContent());
 			
-			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATJunGyul))) {
+			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATByungRyulHyubJo) || aprType.equals(staATJunGyul))) {
 				rtnVal = false;
 			}
 			
@@ -11229,7 +11229,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					continue;
 				}
 				if (NextLineCheck) {
-					if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("004") || aprtype.equals("007") || aprtype.equals("008") || aprtype.equals("013") || aprtype.equals("016") || aprtype.equals("019"))) {
+					if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("004") || aprtype.equals("007") || aprtype.equals("008") || aprtype.equals("009") || aprtype.equals("013") || aprtype.equals("016") || aprtype.equals("019"))) {
 						result = "<RESULT>FALSE</RESULT>";
 						break;
 					}
