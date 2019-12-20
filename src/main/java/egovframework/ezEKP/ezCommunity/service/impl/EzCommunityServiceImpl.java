@@ -412,7 +412,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			thumb = code + "_thumbnail.png";
 		}
 		
-		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, thumb, bBoardName[Integer.parseInt(userInfo.getPrimary())].trim(), bBoardName[2].trim(), comatt, code, bNotiName[1].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), tenantID);
+		/* 2019-12-20 홍승비 - 커뮤니티 생성 시, 커뮤니티 생성자의 언어 환경에 따라 게시판명 다국어 처리 */
+		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, thumb, bBoardName[Integer.parseInt(userInfo.getLang())].trim(), bBoardName[2].trim(), comatt, code, bNotiName[Integer.parseInt(userInfo.getLang())].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), tenantID);
 		/* 커뮤니티 테이블 삽입 후 tbl_logo_size에도 사이즈 넣어주기 */
 		commMakeOkSet1(logoFileSize, thumbFileSize, code, tenantID);
 		

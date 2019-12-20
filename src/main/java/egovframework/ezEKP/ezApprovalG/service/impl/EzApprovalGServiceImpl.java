@@ -13188,6 +13188,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (!fileName.trim().equals("")) {
 					String extFileName;
 					
+					// 191219 KLIB 암호화 후 1000 폴더에 있던게 삭제가 안 됐었음
 					if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 						extFileName = getExtendedFileName(fileName.substring(0, fileName.lastIndexOf('.')));
 					} else {
@@ -16288,7 +16289,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							map3.put("v_FLAG", "APR");
 							
 							String fileName = ezApprovalGDAO.getDocInfoHref(map3);
-							String extFileName = getExtendedFileName(fileName);
+							String extFileName;
+							
+							if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+								extFileName = getExtendedFileName(fileName.substring(0, fileName.lastIndexOf('.')));
+							} else {
+								extFileName = getExtendedFileName(fileName);
+							}
+							
 							String url = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + receiptCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(newID) + commonUtil.separator + newID + "." + extFileName;
 							
 							if (rtnVal) {
