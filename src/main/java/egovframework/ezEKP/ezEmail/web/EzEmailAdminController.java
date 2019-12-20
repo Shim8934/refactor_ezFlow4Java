@@ -298,14 +298,11 @@ public class EzEmailAdminController {
 		
 		String distributionMail = "";
 		if (!cn.equals("")) { // 편집일 경우
-			List<MailDistributionVO> distributionList = ezEmailService.getDistributionSearchList(companyId, tenantId, cn);
+			MailDistributionVO distributionVo = ezEmailService.getDistributionInfo(cn, tenantId);
 			
-			if (distributionList != null && distributionList.size() > 0) {	
-				logger.debug("distributionListSize=" + distributionList.size());
-				for (MailDistributionVO distribution : distributionList) {
-					distributionMail = distribution.getMail();
-					companyMailDomain = distributionMail.split("@")[1];
-				}				
+			if (distributionVo != null) {	
+				distributionMail = distributionVo.getMail();
+				companyMailDomain = distributionMail.split("@")[1];
 			}		
 		}
 		logger.debug("distributionMail=" + distributionMail + ", companyMailDomain=" + companyMailDomain);

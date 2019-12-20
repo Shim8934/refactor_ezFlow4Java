@@ -68,6 +68,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.impl.EzOrganServiceImpl;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -3424,6 +3425,38 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("setIndividualAliasForMig ended. returnValue=" + returnValue);
 		
 		return returnValue;
+	}
+
+	@Override
+	public MailDistributionVO getDistributionInfo(String cn, int tenantId)
+			throws Exception {
+		logger.debug("getDistributionInfo started.");
+		
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		MailDistributionVO vo = new MailDistributionVO();
+		logger.debug("cn=" + cn + ",tenantId=" + tenantId + ", tenantDomain=" + tenantDomain);
+		
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + tenantDomain;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionInfo";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			JSONObject resultObj = (JSONObject)	responseObj.get("result");
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0 && resultObj != null) {
+				vo.setName((String)resultObj.get("groupName"));
+				vo.setId((String)resultObj.get("userName"));
+				vo.setMail((String)resultObj.get("mail"));
+			}
+		}		
+		
+		logger.debug("getDistributionInfo ended.");
+		return vo;
 	}
 	
 }
