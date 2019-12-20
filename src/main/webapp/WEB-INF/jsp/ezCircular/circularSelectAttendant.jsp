@@ -54,6 +54,7 @@
 	        var ReturnFunction;
 	        var deptClickFlag; // 2018-05-11 (문성업) 직원 맴버를 전원 클릭하는 것 같은 효과를 나타내는 마우스 효과 (수정)
 	        var deptID = "<c:out value='${deptID}'/>";
+	        var lang = "<c:out value='${userInfo.lang}'/>";
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -197,8 +198,12 @@
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-	                
+	                if(lang == "1") {
+	               	 	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                }
+	                else {
+	                	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
+	                }
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                var Resultxml = loadXMLString(pparsingXML2);
 	
