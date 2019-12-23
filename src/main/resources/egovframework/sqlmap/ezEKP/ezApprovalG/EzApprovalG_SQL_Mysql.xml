@@ -31427,8 +31427,12 @@
 		UPDATE
 			TBL_OPENGOVDOCINFO
 		SET
-			createdate = STR_TO_DATE(#nowDate#, '%Y-%m-%d %H:%i:%s'),
+			createdate = STR_TO_DATE(#nowDateTime#, '%Y-%m-%d %H:%i:%s'),
 			sendflag = 'N'
+			<isNotEmpty property="nowDate">
+			<!--                   당일로 넣어주기 주석처리 -->
+			<!--                   ,openlimitdate = STR_TO_DATE(#nowDate#, '%Y%m%d') -->
+			</isNotEmpty>
 		WHERE
 			DOCID = #v_DOCID#
 		AND
@@ -31452,5 +31456,90 @@
 			TENANT_ID = #tenantID#
 		AND
 			COMPANYID = #companyID#
+	</update>
+
+	<select id="EzApprovalG.isSN" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(SN)
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #docID#
+	</select>
+
+	<select id="EzApprovalG.getSN" parameterClass="Map" resultClass="int">
+		SELECT
+			MAX(SN)
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #docID#
+	</select>
+
+	<insert id="EzApprovalG.insertModifyOpenGovHistory" parameterClass="Map">
+		INSERT INTO TBL_OPENGOVMODIFYHISTORY
+			(DOCID,
+			MODIFIERNAME,
+			SN,
+			MODIFIERDEPTNAME,
+			MODIFYDATE,
+			MODIFYREASON,
+			TENANTID,
+			COMPANYID,
+			MODIFIERID,
+			MODIFIERDEPTID)
+		VALUES
+			(#docID#,
+			#modifierName#,
+			#sn#,
+			#modifierDeptName#,
+			#modifyDate#,
+			#modifyReason#,
+			#tenantID#,
+			#companyID#,
+			#modifierId#,
+			#modifierDeptId#)
+	</insert>
+	<select id="EzApprovalG.getOpenGovLimitDate" parameterClass="Map" resultClass="String">
+		SELECT
+			IFNULL(OPENLIMITDATE, 'N')
+		FROM
+			TBL_OPENGOVDOCINFO
+		WHERE
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #v_DOCID#
+	</select>
+	<update id="EzApprovalG.updateOpenGovDocFileSize" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVDOCINFO
+		SET
+			DOCSIZE = #docSize#
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+	</update>
+
+	<update id="EzApprovalG.setOpenGovSendFlagToY" >
+		<![CDATA[
+			UPDATE TBL_OPENGOVDOCINFO
+			SET
+				SENDFLAG = 'Y'
+			WHERE
+				createdate < curdate()
+		]]>
 	</update>
 </sqlMap>

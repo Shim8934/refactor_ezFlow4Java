@@ -1,5 +1,46 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
+import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovModifyHistoryVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
+import org.apache.commons.io.FileUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,49 +58,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletContext;
-
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
-import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
-import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Service("EzApprovalGAdminService")
 public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzApprovalGAdminService{
@@ -4197,5 +4195,96 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		ezApprovalGAdminDAO.resendOpenGov(map);
 		
 		logger.debug("resendOpenGov ended");
+	}
+
+	@Override
+	public String getModifyOpenGovHistory(String docID, String lang, int tenantID, String companyID, String offset) throws Exception {
+		logger.debug("getModifyOpenGovHistory started.");
+		StringBuilder sb = new StringBuilder();
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LISTTYPE", "084");
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getListHeader started.");
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		logger.debug("getListHeader ended.");
+
+		sb.append("<LISTVIEWDATA><HEADERS>");
+
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+
+			sb.append("<HEADER>");
+			sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			sb.append("</HEADER>");
+		}
+		sb.append("</HEADERS><ROWS>");
+
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("docID", docID);
+		map1.put("companyID", companyID);
+		map1.put("tenantID", tenantID);
+
+		/////////////////////////////////////////////////////////////////////////////////////// 가져오는곳
+		List<ApprGOpenGovModifyHistoryVO> listBody = ezApprovalGAdminDAO.getOpenGovModifyHistory(map1);
+
+		for (int i = 0; i < listBody.size(); i++) {
+			ApprGOpenGovModifyHistoryVO bodyVo = listBody.get(i);
+
+			sb.append("<ROW>");
+
+			for (int j = 0; j < listHeader.size(); j++) {
+				ApprGListHeaderVO headerVo = listHeader.get(j);
+				String fieldName = headerVo.getColName();
+				String fieldValue = "";
+
+				for (Field field : bodyVo.getClass().getDeclaredFields()) {
+					field.setAccessible(true);
+
+					if (field.getName().toUpperCase().equals(fieldName.toUpperCase()) && field.get(bodyVo) != null) {
+						fieldValue = String.valueOf(field.get(bodyVo));
+					}
+				}
+
+				sb.append("<CELL><VALUE>");
+				if (fieldName.equals("ModifyDate")) {
+					sb.append(fieldValue.substring(0, fieldValue.length() - 2) + "</VALUE>");
+				} else {
+					sb.append(commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
+				}
+				if (j == 0) {
+					sb.append("<DATA1>" + bodyVo.getDocID() + "</DATA1>");
+					sb.append("<DATA2>" + bodyVo.getSN() + "</DATA2>");
+				}
+
+				sb.append("</CELL>");
+			}
+
+			sb.append("</ROW>");
+		}
+
+		sb.append("</ROWS></LISTVIEWDATA>");
+
+		logger.debug("getModifyOpenGovHistory ended.");
+
+		return sb.toString();
+	}
+
+	@Override
+	public String getModifyOpenGovHistoryReason(String docID, String sn, int tenantId, String companyID) throws Exception {
+		logger.debug("getModifyOpenGovHistoryReason started.");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("sn", sn);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+
+		String reason = ezApprovalGAdminDAO.getOpenGovModifyHistoryReason(map);
+		logger.debug("getModifyOpenGovHistoryReason ended.");
+		return reason;
 	}
 }

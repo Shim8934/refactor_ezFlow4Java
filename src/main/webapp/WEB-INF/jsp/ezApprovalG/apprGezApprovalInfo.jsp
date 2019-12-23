@@ -351,6 +351,10 @@
 	            if (approvalFlag != "G" || useOpenGov != "YES") {
 	            	$(".openGov").hide();
 	            }
+
+                if (pReDraftFlag == "SUSIN") {
+                	$('.openGov').hide();
+				}
 	        };
 	
 	        function KeEventControl(obj) {
@@ -392,7 +396,7 @@
 	            pSignCount = RetValue[2];        //사인칸 수
 	            pSignInfo = RetValue[3];        //사인정보
 	            pHapYuiCount = RetValue[4];        //합의칸 수
-	            pReDraftFlag = RetValue[5];        //재기안 Flag : REDRAFT / DRAFT
+                pReDraftFlag = RetValue[5];        //기안 Flag : REDRAFT / DRAFT / SUSIN
 	            pSuSinFlag = RetValue[6];        //수신자유뮤 Flag : Y  / N
 	            pChamJoFlag = RetValue[7];        //참조유무 Flag : Y / N
 	            pGongramCount = RetValue[8];       //공람수
@@ -2751,7 +2755,7 @@
 		                    </select>
 		                </td>
 		            </tr>
-		            <tr>
+		            <tr class="openGov">
 		                <th><spring:message code='ezApprovalG.kes06'/> &nbsp;&nbsp;&nbsp;</th>
 		                <td>
 		                    <div style="padding-left: 3px; padding-top: 5px; padding-bottom: 5px;">
@@ -2781,7 +2785,7 @@
 		                    <input readonly="readonly" id='idDatepickerForOpenGov' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 		                </td>
 		            </tr>
-		            <tr>
+		            <tr class="openGov">
 		                <th>첨부정보</th>
 		                <td>
 		                <div style="overflow: auto; width: 100%; height: 115px;">
@@ -2801,7 +2805,7 @@
 						</div>
 		                </td>
 		            </tr>
-		            <tr>
+		            <tr class="openGov">
 		                <th><spring:message code='ezApprovalG.t989'/></th>
 		                <td>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
@@ -2819,7 +2823,7 @@
 		                    </div>
 		                </td>
 		            </tr>
-		            <tr>
+		            <tr class="openGov">
 		                <th><spring:message code='ezApprovalG.t876'/></th>
 		                <td>
 		                    <input type="text" name="txtLimitRange" id="txtLimitRange" class="text" style="Width: 170px; font-size: 9pt"><span>(<spring:message code='ezApprovalG.t1209'/></span></td>

@@ -238,7 +238,9 @@
     	}
         
         if (updateOpenGovInfo() == "TRUE") {
-		    OpenAlertUI("원문정보를 정상적으로 변경하였습니다.", window.close);
+		    // OpenAlertUI("원문정보를 변경하였습니다.", window.close);
+            alert("원문정보를 변경하였습니다.");
+            window.close();
         }
         
     }
@@ -656,10 +658,10 @@
 	  	</tbody>
 		</table>
  	
-</div>
-<div class="btnposition btnpositionNew" style="display:block;">
-  <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()">취소</span></a>
-  <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()">저장</span></a>
+    <div class="btnposition btnpositionNew" style="display:block;">
+      <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()">취소</span></a>
+      <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()">저장</span></a>
+    </div>
 </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

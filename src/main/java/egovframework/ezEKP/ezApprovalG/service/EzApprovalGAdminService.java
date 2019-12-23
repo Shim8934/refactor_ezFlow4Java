@@ -1,17 +1,16 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
-import java.util.List;
-import java.util.Locale;
-
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
-import org.w3c.dom.Document;
-
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.let.user.login.vo.LoginVO;
+import org.w3c.dom.Document;
+
+import java.util.List;
+import java.util.Locale;
 
 public interface EzApprovalGAdminService {
 
@@ -190,4 +189,8 @@ public interface EzApprovalGAdminService {
 	public List<ApprGAttachInfoVO> getAdminTotalDownloadCnt(String docIdList, String mode, String companyID, int tenantID) throws Exception;
 
 	public void resendOpenGov(String resendStartTime, String resendEndTime, int tenantId, String companyID) throws Exception;
+
+	public String getModifyOpenGovHistory(String docID, String lang, int tenantId, String companyID, String offset) throws Exception;
+
+	public String getModifyOpenGovHistoryReason(String docID, String sn, int tenantId, String companyID) throws Exception;
 }

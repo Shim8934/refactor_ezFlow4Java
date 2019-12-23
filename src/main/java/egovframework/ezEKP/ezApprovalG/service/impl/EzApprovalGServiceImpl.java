@@ -14396,9 +14396,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (rtnVal) {
 				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
-				
-				String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""),"235|+09:00", false);
-				map.put("nowDate", nowDate);
+
+                String nowDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+                map.put("nowDateTime", nowDateTime);
+
+                String isLimitDate = ezApprovalGDAO.getOpenGovLimitDate(map);
+
+                if (isLimitDate.equals("N")) {
+                    map.put("nowDate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), "235|+09:00", false));
+                }
+
 				ezApprovalGDAO.updateOpenGovDocInfoComp_createDate(map);
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
@@ -16044,6 +16051,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtnVal = copyFile(source, targetPath, dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID));
 				// 파일 복사에 성공하면 완료문서 관련 테이블에 데이터 입력.
 				if (rtnVal) {
+                    File file = new File(commonUtil.detectPathTraversal(targetPath));
+                    String fileSize = "";
+                    if (file.exists()) {
+                        long lFileSize = file.length();
+                        fileSize = Long.toString(lFileSize);
+                    } else {
+                        fileSize = "90112";
+                    }
+                    map.put("docSize", fileSize);
+
 					map.put("v_DOCID", docID);
 					map.put("v_DOCSTATE", docState);
 					map.put("v_endURL", endURL);
@@ -16051,6 +16068,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_ContainerID", containerID);
 					map.put("companyID", companyID);
 					map.put("v_TENANTID", tenantID);
+
+//                    여기서 파일사이즈 넣어주자
+                    ezApprovalGDAO.updateOpenGovDocFileSize(map);
 					
 					ezApprovalGDAO.insertApprovEndAprDocInfo(map);
 					ezApprovalGDAO.insertApprovEndAprLineInfo(map);
@@ -29345,12 +29365,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
 					}
 				} else if (fieldName.equals("OPENLIMITDATE")) {
-					if (!fieldValue.equals("")) {
-						fieldValue = fieldValue.substring(0, fieldValue.length() - 11);
+//					if (!fieldValue.equals("")) {
+//						fieldValue = fieldValue.substring(0, fieldValue.length() - 11);
 						resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
-					} else {
-						resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
-					}
+//					} else {
+//						resultXML.append("<VALUE>" + commonUtil.cleanValue(fieldValue) + " </VALUE>");
+//					}
 				} else {
 					resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + " </VALUE>");
 				}
@@ -29573,39 +29593,67 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return ezApprovalGDAO.getOpenGovInfoForUpdate(map);
 	}
 
-	@Override
-	public String updateOpenGovInfo(String openGovListFlag, String fileOpenFlagList, String basis, String reason,
-			String publicity, String docID, String limitDate, String companyID, int tenantId) throws Exception {
-			//openGovListFlag 가 N 이면 basis 필요 없음
-			//publicity.substring(0,1) 이 1이면 reason 필요없음
-			logger.debug("getGongRamLineInfo started");
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("docID", docID);
-			map.put("openFlag", publicity.substring(0,1));
-			map.put("openGovListFlag", openGovListFlag);
-			map.put("companyID", companyID);
-			map.put("tenantID", tenantId);
-			map.put("basis", basis);
-			map.put("reason", reason);
-			map.put("publicityCode", publicity);
-			
-			if (!limitDate.equals("")) {
-				map.put("limitDate", limitDate);
-			}
-			
-			ezApprovalGDAO.updateOpenGovDocInfo(map);
-			
-			if (publicity.substring(0,1).equals("2")) {
-				for (int i = 0 ; i <fileOpenFlagList.length(); i++) {
-					map.put("sn", i + 1);
-					map.put("fileOpenFlag", Character.toString(fileOpenFlagList.charAt(i)));
-					ezApprovalGDAO.updateFileOpenFlag(map);
-				}
-			} else {
-				ezApprovalGDAO.updateOpenGovFileInfo(map);
-			}
-			
-			logger.debug("getGongRamLineInfo ended");
-		return null;
-	}
+    @Override
+    public String updateOpenGovInfo(String openGovListFlag, String fileOpenFlagList, String basis, String reason,
+                                    String publicity, String docID, String limitDate, String companyID, int tenantId, String modifyReason, LoginVO userInfo) throws Exception {
+        //openGovListFlag 가 N 이면 basis 필요 없음
+        //publicity.substring(0,1) 이 1이면 reason 필요없음
+        logger.debug("getGongRamLineInfo started");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("docID", docID);
+        map.put("openFlag", publicity.substring(0, 1));
+        map.put("fileOpenFlag", publicity.substring(0,1));
+        map.put("openGovListFlag", openGovListFlag);
+        map.put("companyID", companyID);
+        map.put("tenantID", tenantId);
+        map.put("basis", basis);
+        map.put("reason", reason);
+        map.put("publicityCode", publicity);
+
+        if (!limitDate.equals("")) {
+            map.put("limitDate", limitDate);
+        }
+
+        ezApprovalGDAO.updateOpenGovDocInfo(map);
+
+        if (publicity.substring(0, 1).equals("2")) {
+            for (int i = 0; i < fileOpenFlagList.length(); i++) {
+                map.put("sn", i + 1);
+                map.put("fileOpenFlag", Character.toString(fileOpenFlagList.charAt(i)));
+                ezApprovalGDAO.updateFileOpenFlag(map);
+            }
+        } else {
+            ezApprovalGDAO.updateOpenGovFileInfo(map);
+        }
+
+        int snCount = ezApprovalGDAO.isSN(map);
+        int sn = 0;
+        if (snCount == 0) {
+            sn = 1;
+        } else {
+            sn = ezApprovalGDAO.getSN(map) + 1;
+        }
+        // 수정이력 추가
+        map.put("modifyReason", modifyReason);
+        map.put("modifierName", userInfo.getDisplayName());
+        map.put("sn", sn);
+        map.put("modifierDeptName", userInfo.getDeptName());
+
+        String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), "235|+09:00", false);
+        map.put("modifyDate", nowDate);
+        map.put("modifierId", userInfo.getId());
+        map.put("modifierDeptId", userInfo.getDeptID());
+
+        ezApprovalGDAO.insertModifyOpenGovHistory(map);
+
+        logger.debug("getGongRamLineInfo ended");
+        return null;
+    }
+
+    @Override
+    public void setOpenGovSendFlagToY() throws Exception {
+        logger.debug("setOpenGovSendFlagToY started");
+        ezApprovalGDAO.setOpenGovSendFlagToY();
+        logger.debug("setOpenGovSendFlagToY ended");
+    }
 }

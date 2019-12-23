@@ -1,13 +1,5 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Repository;
-
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -21,6 +13,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListForOpenGovVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryAttachVO;
@@ -31,6 +24,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovCsvVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
@@ -50,6 +44,12 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Repository("EzApprovalGDAO")
 public class EzApprovalGDAO extends EgovAbstractDAO {
@@ -3370,5 +3370,34 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public void updateOpenGovFileInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateOpenGovDocInfo_OPENGOVFILEINFO", map);
+	}
+
+	public int isSN(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.isSN", map);
+	}
+
+	public int getSN(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getSN", map);
+	}
+
+	public void insertModifyOpenGovHistory(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertModifyOpenGovHistory", map);
+	}
+
+	public String getOpenGovLimitDate(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOpenGovLimitDate", map);
+	}
+
+	public void updateOpenGovDocFileSize(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateOpenGovDocFileSize", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGOpenGovCsvVO> getOpenGovCSV() throws Exception {
+		return (List< ApprGOpenGovCsvVO>) list("EzApprovalG.getOpenGovCSV");
+	}
+
+	public void setOpenGovSendFlagToY() throws Exception {
+		update("EzApprovalG.setOpenGovSendFlagToY");
 	}
 }

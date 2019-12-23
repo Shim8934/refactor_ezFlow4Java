@@ -9572,8 +9572,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String reason = request.getParameter("reason");
 		String publicity = request.getParameter("publicityCode");
 		String limitDate = request.getParameter("openLimitDate");
-		
-		String result = ezApprovalGService.updateOpenGovInfo(openGovListFlag, fileOpenFlagList, basis, reason, publicity, docID, limitDate, userInfo.getCompanyID(), userInfo.getTenantId());
+		String modifyReason = request.getParameter("modifyReason");
+
+		String result = ezApprovalGService.updateOpenGovInfo(openGovListFlag, fileOpenFlagList, basis, reason, publicity, docID, limitDate, userInfo.getCompanyID(), userInfo.getTenantId(), modifyReason, userInfo);
 		
 		logger.debug("updateOpenGovInfo ended.");
 		

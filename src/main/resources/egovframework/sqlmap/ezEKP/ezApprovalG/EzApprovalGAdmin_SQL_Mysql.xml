@@ -9,6 +9,7 @@
 	<typeAlias alias="ApprGAutoRuleVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO"/>
 	<typeAlias alias="ApprGContInfoVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO"/>
 	<typeAlias alias="ApprGFormConnInfoVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO"/>
+	<typeAlias alias="ApprGOpenGovModifyHistoryVO"  type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovModifyHistoryVO"/>
 
 	<!-- <procedure id="EzApprovalGAdmin.getContainerInfoManage" parameterClass="Map" 
 		resultClass="ApprGLeftVO"> -->
@@ -4770,4 +4771,33 @@
 			CREATEDATE >=  STR_TO_DATE(#startTime#, '%Y-%m-%d %H:%i:%S')
 		]]>
 	</update>
+
+	<select id="EzApprovalGAdminDAO.getOpenGovModifyHistory" parameterClass="Map" resultClass="ApprGOpenGovModifyHistoryVO" remapResults="true">
+		SELECT
+			DOCID, MODIFIERNAME, MODIFIERDEPTNAME, MODIFYDATE, SN
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		ORDER BY
+			SN DESC
+	</select>
+	<select id="EzApprovalGAdminDAO.getOpenGovModifyHistoryReason" parameterClass="Map" resultClass="String">
+		SELECT
+			MODIFYREASON
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			DOCID = #docID#
+		AND
+			SN = #sn#
+		AND
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</select>
 </sqlMap>

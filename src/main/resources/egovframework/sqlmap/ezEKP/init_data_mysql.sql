@@ -1414,6 +1414,9 @@ INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, Tabl
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('083', 7, '생성일자', NULL, NULL, NULL, 140, NULL, 'CreateDate', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('083', 8, '작성자', NULL, NULL, NULL, 100, NULL, 'WriterName', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('083', 9, '기안부서', NULL, NULL, NULL, 140, NULL, 'WriterDeptName', NULL, NULL, NULL, NULL, 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('084', 1, '변경자 부서', NULL, NULL, NULL, 200, NULL, 'ModifierDeptName', NULL, NULL, NULL, NULL, 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('084', 2, '변경자', NULL, NULL, NULL, 200, NULL, 'ModifierName', NULL, NULL, NULL, NULL, 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('084', 3, '변경일', NULL, NULL, NULL, 300, NULL, 'ModifyDate', NULL, NULL, NULL, NULL, 'Top', 0);
 
 
 INSERT INTO TBL_LISTINFO (LISTTYPE,SN,NAME,WIDTH,TABLENAME,COLNAME,COLALIAS,DTYPE,TYPEDESC,FIELDDESC,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('005',1,'순번',40,null,null,'dtSerialNum','dtSerialNum','기록물 이관목록',null,'No.','順番','序号','Top',0);

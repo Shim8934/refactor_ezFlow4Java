@@ -7789,7 +7789,7 @@ CREATE TABLE `tbl_opengovdocinfo` (
   `openflag` char(9) DEFAULT NULL,
   `basis` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
   `reason` varchar(1000) CHARACTER SET utf8 DEFAULT NULL,
-  `openlimitdate` datetime DEFAULT NULL,
+  `openlimitdate` date DEFAULT NULL,
   `createdate` datetime DEFAULT NULL,
   `updatedate` datetime DEFAULT NULL,
   `tenant_id` mediumint(5) NOT NULL,

@@ -1012,6 +1012,37 @@
 	            GetRecordList();
 	        }
 	    }
+
+		var modifyOpenGovHistory_cross_dialogArguments = new Array();
+
+		function btnOpenGovInfoHistory_onclick() {
+			var DocList = new ListView();
+			DocList.LoadFromID("DocList");
+			var selRow = DocList.GetSelectedRows();
+			if (selRow.length != 0) {
+				var tr = selRow[0];
+				var para = new Array();
+				para[0] = tr.getAttribute("DATA1");
+				para[1] = tr.children[1].textContent;
+				//                         para[2] = arr_userinfo[1];
+				//                         para[3] = arr_userinfo[2];
+				//                         para[4] = true;
+				//                         para[5] = tr.getAttribute("DATA1");
+
+				var url = "/admin/ezApprovalG/modifyOpenGovHistory.do";
+
+				modifyOpenGovHistory_cross_dialogArguments[0] = para;
+
+				var OpenWin = window.open(url, "ModifyOpenGovHistory_Cross", GetOpenWindowfeature(680, 510));
+				try {
+					OpenWin.focus();
+				} catch (e) {
+				}
+			}
+			else {
+				OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+			}
+		}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -1046,6 +1077,7 @@
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
 	            <li id="tbtnViewDoc"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
 	            <li id="tdModifyOpenGov"><span id="ModifyOpenGov" onclick="return btnChangeOpenGovInfo_onclick()">원문공개수정</span></li>
+				<li id="tdModifyOpenGovHistory"><span id="ModifyOpenGovHistory" onclick="return btnOpenGovInfoHistory_onclick()">수정이력</span></li>
 	            <li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
 	            <li style="border:0px;line-height:35px;margin-left:10px;">
                  <input style="width:25px;height:25px" type="checkbox" name="resendChk" id="resendChk" value="checkbox" onclick="resendChk_onClick()">

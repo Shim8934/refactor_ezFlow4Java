@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovModifyHistoryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
@@ -538,5 +539,14 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public void resendOpenGov(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdminDAO.resendOpenGov", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGOpenGovModifyHistoryVO> getOpenGovModifyHistory(Map<String, Object> map1) throws Exception {
+		return (List<ApprGOpenGovModifyHistoryVO>) list("EzApprovalGAdminDAO.getOpenGovModifyHistory", map1);
+	}
+
+	public String getOpenGovModifyHistoryReason(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalGAdminDAO.getOpenGovModifyHistoryReason", map);
 	}
 }

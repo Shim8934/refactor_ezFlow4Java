@@ -4301,4 +4301,47 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		logger.debug("resendOpenGov ended.");
 	}
+
+	/**
+	 * 원문공개 수정이력 페이지
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/modifyOpenGovHistory.do", method = RequestMethod.GET)
+	public String modifyOpenGovHistory() {
+		return "admin/ezApprovalG/apprGModifyOpenGovHistory";
+	}
+
+	/**
+	 * 원문공개 수정이력 내역
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getModifyOpenGovHistory.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String getModifyOpenGovHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getModifyOpenGovHistory started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+
+		String result = ezApprovalGAdminService.getModifyOpenGovHistory(docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getOffset());
+
+		logger.debug("getModifyOpenGovHistory ended.");
+
+		return result;
+	}
+
+	@RequestMapping(value = "/admin/ezApprovalG/getModifyOpenGovHistoryReason.do", produces = "text/html;charset=utf-8", method = RequestMethod.GET)
+	@ResponseBody
+	public String getModifyOpenGovHistoryReason(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model)
+			throws Exception {
+		logger.debug("getModifyOpenGovHistoryReason started.");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String sn = request.getParameter("sn");
+
+		String result = ezApprovalGAdminService.getModifyOpenGovHistoryReason(docID, sn, userInfo.getTenantId(), userInfo.getCompanyID());
+
+		logger.debug("getModifyOpenGovHistoryReason ended.");
+
+		return result;
+	}
 }
