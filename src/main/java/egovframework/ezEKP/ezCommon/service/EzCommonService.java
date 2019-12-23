@@ -102,5 +102,7 @@ public interface EzCommonService {
 
 	public void addAddJobMasterProxy() throws Exception;
 
+	public int checkDeptId(String userID, String deptID, String tenantId);
+
 }
 

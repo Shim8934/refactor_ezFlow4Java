@@ -460,4 +460,8 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo");
 		}
 	}
+
+	public int checkDeptId(Map<String, Object> map) {
+		return (int) select("EzCommonDAO.checkDeptId", map);
+	}
 }
