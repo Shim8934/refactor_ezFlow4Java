@@ -1446,4 +1446,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addAddJobMasterProxy() throws Exception {
 		ezCommonDAO.addAddJobMasterProxy();
 	}
+
+	@Override
+	public int checkDeptId(String userID, String deptID, String tenantId) {
+		logger.debug("checkDeptId started");
+		int result = 0;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantId);
+		map.put("deptID", deptID);
+		map.put("userID", userID);
+		result= ezCommonDAO.checkDeptId(map);
+		logger.debug("checkDeptId started");
+		return result;
+	}
 }
