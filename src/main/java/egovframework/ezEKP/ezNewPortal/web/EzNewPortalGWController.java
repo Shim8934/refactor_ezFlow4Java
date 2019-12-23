@@ -1460,7 +1460,9 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String offset = info.getOffSet();
-			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat adf = new SimpleDateFormat("yyyy-MM-dd");
+			String nowDate = adf.format(cal.getTime());
 			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);
