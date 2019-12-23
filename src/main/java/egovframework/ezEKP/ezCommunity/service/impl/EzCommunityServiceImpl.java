@@ -411,8 +411,43 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			thumb = code + "_thumbnail.png";
 		}
 		
-		/* 2019-12-20 홍승비 - 커뮤니티 생성 시, 커뮤니티 생성자의 언어 환경에 따라 게시판명 다국어 처리 */
-		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, thumb, bBoardName[Integer.parseInt(userInfo.getLang())].trim(), bBoardName[2].trim(), comatt, code, bNotiName[Integer.parseInt(userInfo.getLang())].trim(), bNotiName[2].trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), tenantID);
+		/* 2019-12-23 홍승비 - 커뮤니티 생성 시, 시스템의 멀티언어(메인, 서브)에 따라 기본생성 게시판명 다국어 처리 */
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary2", userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary2", userInfo.getTenantId());
+		String boardGroupName1 = "";
+		String boardGroupName2 = "";
+		String boardNotiName1 = "";
+		String boardNotiName2 = "";
+		
+		if (langPrimary.equalsIgnoreCase("Korean")) {
+			boardGroupName1 = bBoardName[1];
+			boardNotiName1 = bNotiName[1];
+		} else if (langPrimary.equalsIgnoreCase("English")) {
+			boardGroupName1 = bBoardName[2];
+			boardNotiName1 = bNotiName[2];
+		} else if (langPrimary.equalsIgnoreCase("Japanese")) {
+			boardGroupName1 = bBoardName[3];
+			boardNotiName1 = bNotiName[3];
+		} else { // 현재 중국어는 대응되지 않으나 임시로 else문 설정
+			boardGroupName1 = bBoardName[4];
+			boardNotiName1 = bNotiName[4];
+		}
+		
+		if (langSecondary.equalsIgnoreCase("Korean")) {
+			boardGroupName2 = bBoardName[1];
+			boardNotiName2 = bNotiName[1];
+		} else if (langSecondary.equalsIgnoreCase("English")) {
+			boardGroupName2 = bBoardName[2];
+			boardNotiName2 = bNotiName[2];
+		} else if (langSecondary.equalsIgnoreCase("Japanese")) {
+			boardGroupName2 = bBoardName[3];
+			boardNotiName2 = bNotiName[3];
+		} else { // 현재 중국어는 대응되지 않으나 임시로 else문 설정
+			boardGroupName2 = bBoardName[4];
+			boardNotiName2 = bNotiName[4];
+		}
+		
+		commMakeOkInsert2(clubNo, clubName, clubName2, cCateA, cCateB, cCateC, clubType, clubConfirmType, intro, isIn, logo, thumb, boardGroupName1.trim(), boardGroupName2.trim(), comatt, code, boardNotiName1.trim(), boardNotiName2.trim(), pNewID, boardNo, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getCompanyName1(), userInfo.getDeptName1(), pNewSubID, openEmail, openHp, openComp, openHouse, openJob, openBirth, openSex, userInfo.getCompanyID(), tenantID);
 		/* 커뮤니티 테이블 삽입 후 tbl_logo_size에도 사이즈 넣어주기 */
 		commMakeOkSet1(logoFileSize, thumbFileSize, code, tenantID);
 		
