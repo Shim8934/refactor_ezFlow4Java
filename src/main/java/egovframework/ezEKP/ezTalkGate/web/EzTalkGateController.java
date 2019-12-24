@@ -81,6 +81,45 @@ public class EzTalkGateController {
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
 
+	@RequestMapping("/ezTalkGate/getUserCn.do")
+	@ResponseBody
+	public JSONObject getUserCn(@RequestParam String userId, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getUserCn started.");
+
+		Map<String, Object> result = new HashMap<>();
+		String userCn = userId;
+		// 1 성공 2 실패
+		String value = "1";
+
+		try {
+			String serverName = request.getServerName();
+			int tenantId = loginService.getTenantId(serverName);
+			logger.debug("serverName={}, tenantId={}, uesrId={}", serverName, tenantId, userId);
+
+			LoginVO login = new LoginVO();
+			login.setId(userId);
+			login.setDn("NOPASSWORD");
+			login.setTenantId(tenantId);
+			LoginVO user = loginService.selectUser(login);
+
+			if (user == null) {
+				value = "2";
+			} else {
+				userCn = user.getId();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			value = "2";
+		}
+
+		result.put("userCn", userCn);
+		result.put("value", value);
+
+		logger.debug("getUserCn ended. result={}", result);
+
+		return new JSONObject(result);
+	}
+
     @RequestMapping("/ezTalkGate/tokenLogin.do")
     @ResponseBody
     public String ezTalkTokenLogin(
