@@ -102,7 +102,7 @@ public class EzTalkGateController {
 			login.setTenantId(tenantId);
 			LoginVO user = loginService.selectUser(login);
 
-			if (user == null) {
+			if (user == null || user.getId() == null) {
 				value = "2";
 			} else {
 				userCn = user.getId();
