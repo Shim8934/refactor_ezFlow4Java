@@ -828,4 +828,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+
+	public int checkDeptId(Map<String, Object> map) {
+		return (int) select("EzCommonDAO.checkDeptId", map);
+	}
 }

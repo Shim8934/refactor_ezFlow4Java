@@ -156,5 +156,8 @@ public interface EzCommonService {
 	public void alterChamjoView() throws Exception;
 
 	public void addAddressFurigana() throws Exception;
+
+	public int checkDeptId(String userID, String deptID, String tenantId);
+
 }
 
