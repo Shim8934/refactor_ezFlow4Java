@@ -84,10 +84,12 @@
 			    		parent.window.location.reload();
 		    		},
 		    		error : function(request, status, error){
-		    			if (request.status == 500) {
-							alert("<spring:message code='ezBoard.t127'/>");
-		    			} else if (request.status == 501) {
-		    				alert("<spring:message code='ezBoard.hsbMv01'/>");
+		    			if (request.status == 600) { // 상위게시판을 자신의 하위게시판으로 이동하는 경우
+							alert("<spring:message code='ezBoard.hsbMv01'/>");
+		    			} else if (request.status == 601) { // 그룹사게시판과 일반게시판 간에 이동하는 경우
+		    				alert("<spring:message code='ezBoard.hsbMv02'/>");
+		    			} else {
+		    				alert("<spring:message code='ezBoard.t127'/>");
 		    			}
 		    		}
 		    	});		    	

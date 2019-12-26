@@ -758,11 +758,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 					ezBoardAdminService.updateBoardTreePath(subBoardID, subNewBoardTreePath, userInfo.getTenantId());
 				}
 			} else {
-				response.sendError(501);
+				response.sendError(600);
 			}
 		}
 		else {
-			response.sendError(500);
+			response.sendError(601); // 그룹사게시판과 일반게시판 간의 이동 예외처리 수정
 		}
 
 		logger.debug("moveBoard ended");
