@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<title>left_attitude</title>
-		<link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css"/>
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('/css/main.css')}" type="text/css"/>	
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
