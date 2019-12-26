@@ -149,7 +149,7 @@
 					CONCAT(
 						'본문:',
 						TBL_OPENGOVDOCINFO.docid,
-						':결재본문.hwp:',
+						':결재본문.mht:',
 						IFNULL(TBL_OPENGOVDOCINFO.docsize, '60112'),
 						':0:',
 						CASE WHEN openflag = '3' THEN 'N' ELSE 'Y' END,

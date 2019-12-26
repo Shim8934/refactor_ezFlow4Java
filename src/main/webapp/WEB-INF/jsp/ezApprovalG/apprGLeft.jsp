@@ -1309,7 +1309,9 @@
 				</c:if>
 				<c:if test="${useOpenGov == 'YES'}">
 					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'ff=1')}">
-					<h2><span style="display:inline-block;width:100%;" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span></h2>				
+						<h2>
+							<span class="h2Title" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span>
+						</h2>
 					</c:if>
 				</c:if>
 			</div>

@@ -94,6 +94,7 @@
                     case 16:
                         //원문공개문서함
                         url = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
+                        break;
 					case "enforce":
 						//시행문변환 - 관인등록
 						url = "/admin/ezApprovalG/enforceSihangSeal.do";
