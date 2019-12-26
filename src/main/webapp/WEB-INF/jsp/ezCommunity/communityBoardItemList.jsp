@@ -667,7 +667,7 @@
         
 	</head>
 	<body class = "cmhome_body">
-		<h1 class="type1_h1">${boardInfo.boardName}<span id="mailBoxInfo"></span></h1>
+		<h1 class="type1_h1">${multiBoardName}<span id="mailBoxInfo"></span></h1>
 		
 		<div id="mainmenu">
 			<ul>
