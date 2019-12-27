@@ -828,7 +828,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void createOpenGovTable() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblOpenGovDocInfo");
@@ -852,8 +852,12 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			select("EzCommonDAO.checkOpenGovFlag");
 		} catch (Exception e) {
 			logger.debug("tbl_forminfo openGovFlag doesn't exist. creating the column...");
-			
+
 			update("EzCommonDAO.addOpenGovFlag");
 		}
+	}
+
+	public int checkDeptId(Map<String, Object> map) {
+		return (int) select("EzCommonDAO.checkDeptId", map);
 	}
 }

@@ -282,7 +282,7 @@ function nonElecRecInfoInit() {
 function setNonElecRecInfo(ret) {
 	if (isIE()) {
 		var objNodes, count;
-		var title = "비전자문서";
+		var title = "";
 		var xmldom = new ActiveXObject("Microsoft.XMLDOM");
 		xmldom.async = false;
 		xmldom.loadXML(ret);

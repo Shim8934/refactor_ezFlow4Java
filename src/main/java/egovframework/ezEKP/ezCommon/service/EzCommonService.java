@@ -161,5 +161,7 @@ public interface EzCommonService {
 
 	public void addOpenGovFlag() throws Exception;
 
+	public int checkDeptId(String userID, String deptID, String tenantId);
+
 }
 

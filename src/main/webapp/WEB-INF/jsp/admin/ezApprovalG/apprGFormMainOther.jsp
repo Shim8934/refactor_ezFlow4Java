@@ -1098,8 +1098,8 @@
 						</c:if>
 						<!-- FormBuilder - end -->
                         <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
-                        <input type="checkbox" id="setDraftAllFlag" onclick="changePassAprFlag()" style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"/> 일괄기안
-						<input type="checkbox" id="setPassAprLineFlag" /> 기결재통과
+                        <%--<input type="checkbox" id="setDraftAllFlag" onclick="changePassAprFlag()" style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"/> 일괄기안
+						<input type="checkbox" id="setPassAprLineFlag" /> 기결재통과--%>
 					</td>
 				</tr>
 			</table>

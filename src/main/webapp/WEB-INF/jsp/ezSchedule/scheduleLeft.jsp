@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>left_schedule</title>
-		<link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
 	    <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Calendar_cross.css')}" type="text/css" />
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">

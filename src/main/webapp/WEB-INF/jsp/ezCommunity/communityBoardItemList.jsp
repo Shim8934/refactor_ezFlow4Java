@@ -667,17 +667,7 @@
         
 	</head>
 	<body class = "cmhome_body">
-		<h1 class="type1_h1">
-		<c:choose>
-			<c:when test="${userInfo == '1' }">
-				${boardInfo.boardName}
-			</c:when>
-			<c:otherwise>
-				${boardInfo.boardName2}
-			</c:otherwise>
-		</c:choose>
-		<span id="mailBoxInfo"></span>
-		</h1>
+		<h1 class="type1_h1">${multiBoardName}<span id="mailBoxInfo"></span></h1>
 		
 		<div id="mainmenu">
 			<ul>

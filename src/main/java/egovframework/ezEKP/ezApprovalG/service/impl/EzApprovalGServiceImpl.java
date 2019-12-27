@@ -11229,7 +11229,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (!NextLineCheck && tempUserID.trim().equals(aprmenberid.trim())) {
 					NextLineCheck = true;
-					if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("008") || aprtype.equals("018") || aprtype.equals("019"))) {
+					if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("008") || aprtype.equals("009") || aprtype.equals("018") || aprtype.equals("019"))) {
 						result = "<RESULT>FALSE</RESULT>";
 						break;
 					}
