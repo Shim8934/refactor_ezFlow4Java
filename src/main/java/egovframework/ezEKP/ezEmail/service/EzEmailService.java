@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
@@ -39,6 +40,7 @@ public interface EzEmailService {
 	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
 	public void deleteMailDelete(int tenantId, String pUserID, String pFolderPath) throws Exception;
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception;
+	public List<MailDeletedIdVO> getMailDeletedIdList() throws Exception;
 	public List<MailDeleteVO> getMailDeleteList() throws Exception;
 	public List<MailReservationVO> getMailReserved(int tenantId, String pUserId) throws Exception;
 	public List<MailReservationVO> getMailReserved2() throws Exception;

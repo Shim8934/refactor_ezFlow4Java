@@ -781,6 +781,7 @@
 		ADD 
 			is_default int(11) DEFAULT 0
 	</statement>
+	
 	<select id="EzCommonDAO.checkJmochaMailCopyright">
 		SELECT 
 			TENANT_ID
@@ -795,6 +796,22 @@
 		  `COPYRIGHT_TEXT` varchar(1000) DEFAULT NULL,
           PRIMARY KEY (`TENANT_ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
+	<select id="EzCommonDAO.checkJamesMailDeletedId">
+		SELECT 
+			MAILBOX_ID
+		FROM 
+			JAMES_MAIL_DELETED_ID
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJamesMailDeletedId"> 
+		CREATE TABLE `james_mail_deleted_id` (
+		  `MAILBOX_ID` bigint(20) NOT NULL,
+		  `MAIL_UID` bigint(20) NOT NULL,
+		  PRIMARY KEY (`MAILBOX_ID`,`MAIL_UID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
 
 	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">

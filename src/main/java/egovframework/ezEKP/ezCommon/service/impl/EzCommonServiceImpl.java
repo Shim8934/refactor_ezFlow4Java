@@ -1577,8 +1577,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.addTblPortalThemeUserIsDefault();
     }
 
+	@Override
 	public void createJmochaMailCopyright() throws Exception {
 		ezCommonDAO.createJmochaMailCopyright();
+	}
+
+	@Override
+	public void createJamesMailDeletedId() throws Exception {
+		ezCommonDAO.createJamesMailDeletedId();
 	}
 	
 	@Override

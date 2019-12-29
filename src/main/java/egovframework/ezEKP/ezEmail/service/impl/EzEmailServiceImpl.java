@@ -53,6 +53,7 @@ import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
@@ -114,7 +115,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception {
 		return ezEmailDAO.getOrphanedMailBlobList();
 	}
-		
+
+	@Override
+	public List<MailDeletedIdVO> getMailDeletedIdList() throws Exception {
+		return ezEmailDAO.getMailDeletedIdList();
+	}
+	
 	@Override
 	public List<MailGeneralVO> getMailGeneral(int tenantId, String userId) throws Exception {
 		logger.debug("getMailGeneral started. tenantId=" + tenantId + ",userId=" + userId);

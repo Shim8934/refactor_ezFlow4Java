@@ -591,6 +591,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void createJamesMailDeletedId() {
+		try {
+			select("EzCommonDAO.checkJamesMailDeletedId");
+		} catch (Exception e) {
+			logger.debug("james_mail_deleted_id doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJamesMailDeletedId");
+		}
+	}
+	
 	public void updateListOptionData() {
 		try {
 			if ((int) select("EzCommonDAO.checkListOptionData1") > 0) {

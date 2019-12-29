@@ -118,6 +118,8 @@ public interface EzCommonService {
 	public void addJournalFormDelFlag() throws Exception;
 	
 	public void createJmochaMailCopyright() throws Exception;
+	
+	public void createJamesMailDeletedId() throws Exception;
 
 	public void updateTaskUrl() throws Exception;
 
