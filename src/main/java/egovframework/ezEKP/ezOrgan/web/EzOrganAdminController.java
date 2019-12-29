@@ -130,55 +130,60 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public void init() throws Exception {
     	logger.debug("init started.");
 
-    	ezCommonService.createTblCompanyConfig();
-    	ezCommonService.createReformFlagColumn();
-    	ezCommonService.addMailToJMochaDistribution();
-    	ezCommonService.addAddJobMasterOrderBy();
-    	ezCommonService.createTblIPAccessID();
-    	ezCommonService.createTblIPAccessIP();
-    	ezCommonService.createJMochaDistributionSub();
-    	ezCommonService.addUserMasterManualFlag();
-    	ezCommonService.addDeptMasterManualFlag();
-    	ezCommonService.addAddJobMasterManualFlag();
-    	ezCommonService.createJMochaMailSignatureTemplate();
-    	ezCommonService.createJobMasterTable();
-    	ezCommonService.addUserMasterPasswordUpdateDT();
-    	ezCommonService.addJobMasterJobID();
-    	ezCommonService.createWebfolderToken();
-    	ezCommonService.addJmochaMailGenenalPreviewMailImage();
-    	ezCommonService.createPortalThemePortlet();
-    	ezCommonService.insertPortalThemePortletInitdata();
-    	ezCommonService.addPortalThemePortletIsFixed();
-    	ezCommonService.addUserMasterMailBoxQuota();
-    	ezCommonService.createTblUserMultiLogin();
-    	ezCommonService.addHolidayFlag();
-    	ezCommonService.addHolidayRepeat();
-    	ezCommonService.addJournalFormDelFlag();
-    	ezCommonService.updateTaskUrl();
-    	ezCommonService.addPortalPortletUserPortletUsed();
-    	ezCommonService.addPortalPortletUserThemeId();
-    	ezCommonService.addTblPortalThemeUserIsDefault();
-    	ezCommonService.createJmochaMailCopyright();
-    	ezCommonService.createJamesMailDeletedId();
-    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
-    	ezCommonService.addQuickLinkLinkOrder();
-    	ezCommonService.addComCloseCompanyId();
-    	ezCommonService.addWebfolderTotalLimit();
-    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
-		ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
-    	ezCommonService.addMsgInMailSearch(); 
-		ezCommonService.addFormVersion();
-    	ezCommonService.addAddJobMasterProxy();
-    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
-    	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
-    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
-    	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
-    	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
-    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
-    	ezCommonService.createJobMasterTable();
-    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
-//    	ezCommonService.addPassAprLineFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
-    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+    	try {
+	    	ezCommonService.createTblCompanyConfig();
+	    	ezCommonService.createReformFlagColumn();
+	    	ezCommonService.addMailToJMochaDistribution();
+	    	ezCommonService.addAddJobMasterOrderBy();
+	    	ezCommonService.createTblIPAccessID();
+	    	ezCommonService.createTblIPAccessIP();
+	    	ezCommonService.createJMochaDistributionSub();
+	    	ezCommonService.addUserMasterManualFlag();
+	    	ezCommonService.addDeptMasterManualFlag();
+	    	ezCommonService.addAddJobMasterManualFlag();
+	    	ezCommonService.createJMochaMailSignatureTemplate();
+	    	ezCommonService.createJobMasterTable();
+	    	ezCommonService.addUserMasterPasswordUpdateDT();
+	    	ezCommonService.addJobMasterJobID();
+	    	ezCommonService.createWebfolderToken();
+	    	ezCommonService.addJmochaMailGenenalPreviewMailImage();
+	    	ezCommonService.createPortalThemePortlet();
+	    	ezCommonService.insertPortalThemePortletInitdata();
+	    	ezCommonService.addPortalThemePortletIsFixed();
+	    	ezCommonService.addUserMasterMailBoxQuota();
+	    	ezCommonService.createTblUserMultiLogin();
+	    	ezCommonService.addHolidayFlag();
+	    	ezCommonService.addHolidayRepeat();
+	    	ezCommonService.addJournalFormDelFlag();
+	    	ezCommonService.updateTaskUrl();
+	    	ezCommonService.addPortalPortletUserPortletUsed();
+	    	ezCommonService.addPortalPortletUserThemeId();
+	    	ezCommonService.addTblPortalThemeUserIsDefault();
+	    	ezCommonService.createJmochaMailCopyright();
+	    	ezCommonService.createJamesMailDeletedId();
+	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+	    	ezCommonService.addQuickLinkLinkOrder();
+	    	ezCommonService.addComCloseCompanyId();
+	    	ezCommonService.addWebfolderTotalLimit();
+	    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
+			ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+	    	ezCommonService.addMsgInMailSearch(); 
+			ezCommonService.addFormVersion();
+	    	ezCommonService.addAddJobMasterProxy();
+	    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
+	    	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
+	    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
+	    	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
+	    	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
+	    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
+	    	ezCommonService.createJobMasterTable();
+	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
+	//    	ezCommonService.addPassAprLineFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+	    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	
     	logger.debug("init ended.");
     }
 
