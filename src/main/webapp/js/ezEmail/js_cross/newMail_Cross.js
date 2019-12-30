@@ -1303,7 +1303,7 @@ function NameCertify_onClick(returnFunction) {
 
 function removeAsciiCode(str) {
     str = str.replace(/\ufeff/g,'');                    	// BOM 제거 window에서는 보이지 않고 linux에서는 whitespace로 나타나는 문자 제거
-    return str.replace(/[\x00-\x1F\x7F\x80-\xff]/g, '');	// remove non-printable Ascii code
+    return str.replace(/[\x00-\x1F\x7F]/g, '');				// remove non-printable Ascii code
 }
 
 function GetMailTips() {
