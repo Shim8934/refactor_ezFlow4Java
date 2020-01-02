@@ -434,7 +434,7 @@
 					<td style="width: *;" colspan=2>
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
-						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.kje02' /></span></a>
+						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 						<a class="imgbtn"><span onclick="addAtt();"><spring:message code='ezAttitude.t51' /></span></a>
 						
 					</td>
