@@ -1687,7 +1687,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("deptID", deptID);
 		map.put("userID", userID);
 		result= ezCommonDAO.checkDeptId(map);
-		logger.debug("checkDeptId started");
+		logger.debug("checkDeptId ended");
 		return result;
 	}
 }
