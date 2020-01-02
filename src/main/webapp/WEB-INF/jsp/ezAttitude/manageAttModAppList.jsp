@@ -1069,8 +1069,8 @@
 		<h1><spring:message code='ezAttitude.t7' /><span id="mailBoxInfo"></span></h1>
         <div id="mainmenu">
         <ul id="tb_Parent">
-			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
-        	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
+			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.kje02'/></span></li>
+        	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.kje03'/></span></li>
 	        <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
         	<li><span onClick="att_search('refresh')"><spring:message code='ezAttitude.t122'/></span></li>
         	<li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
