@@ -387,28 +387,30 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {      
-                    	if(k == memorial.length-1) {
-                        	holidayName += memorial[k].name;
-                        }
-                        else {
-                        		holidayName += memorial[k].name + ", ";
-                        }
-                        if (memorial[k].holiday) {
-                            isholiday = true;
-                        }
-                    }
-                    
-                    for (var k = 0; k < yearmemorial.length; k++) {
-                    	if(k == yearmemorial.length-1) {
-                        	holidayName2 += yearmemorial[k].name;
-                        }
-                        else {
-                        	holidayName2 += yearmemorial[k].name + ", ";
-                        }
-                        if (yearmemorial[k].holiday) {
-                            isholiday = true;
-                        }
+                    if(LunarDate.leapMonth == 0) {
+	                    for (var k = 0; k < memorial.length; k++) {      
+	                    	if(k == memorial.length-1) {
+	                        	holidayName += memorial[k].name;
+	                        }
+	                        else {
+	                        		holidayName += memorial[k].name + ", ";
+	                        }
+	                        if (memorial[k].holiday) {
+	                            isholiday = true;
+	                        }
+	                    }
+	                    
+	                    for (var k = 0; k < yearmemorial.length; k++) {
+	                    	if(k == yearmemorial.length-1) {
+	                        	holidayName2 += yearmemorial[k].name;
+	                        }
+	                        else {
+	                        	holidayName2 += yearmemorial[k].name + ", ";
+	                        }
+	                        if (yearmemorial[k].holiday) {
+	                            isholiday = true;
+	                        }
+	                    }
                     }
                     
                     if(holidayName != "" && holidayName2 == "") {
@@ -494,28 +496,30 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {      
-                    	if(k == memorial.length-1) {
-                        	holidayName += memorial[k].name;
-                        }
-                        else {
-                        	holidayName += memorial[k].name + ", ";
-                        }
-                        if (memorial[k].holiday) {
-                            isholiday = true;
-                        }
-                    }
-                    
-                    for (var k = 0; k < yearmemorial.length; k++) {
-                    	if(k == yearmemorial.length-1) {
-                        	holidayName2 += yearmemorial[k].name;
-                        }
-                        else {
-                        	holidayName2 += yearmemorial[k].name + ", ";
-                        }
-                        if (yearmemorial[k].holiday) {
-                            isholiday = true;
-                        }
+                    if(LunarDate.leapMonth == 0) {
+	                    for (var k = 0; k < memorial.length; k++) {      
+	                    	if(k == memorial.length-1) {
+	                        	holidayName += memorial[k].name;
+	                        }
+	                        else {
+	                        	holidayName += memorial[k].name + ", ";
+	                        }
+	                        if (memorial[k].holiday) {
+	                            isholiday = true;
+	                        }
+	                    }
+	                    
+	                    for (var k = 0; k < yearmemorial.length; k++) {
+	                    	if(k == yearmemorial.length-1) {
+	                        	holidayName2 += yearmemorial[k].name;
+	                        }
+	                        else {
+	                        	holidayName2 += yearmemorial[k].name + ", ";
+	                        }
+	                        if (yearmemorial[k].holiday) {
+	                            isholiday = true;
+	                        }
+	                    }
                     }
                     
                     if(holidayName != "" && holidayName2 == "") {
@@ -1041,15 +1045,17 @@ function tableListControl_today() {
             var yearmemorial = yearmemorialDayCheck(current_day, LunarDate);                   
 
             var isholiday = false;
-            for (var k = 0; k < memorial.length; k++) {                    	
-                if (memorial[k].holiday) {
-                    isholiday = true;                    
-                }
-            }
-            for (var k = 0; k < yearmemorial.length; k++) {
-                if (yearmemorial[k].holiday) {
-                    isholiday = true;                    
-                }
+            if(LunarDate.leapMonth == 0) {
+	            for (var k = 0; k < memorial.length; k++) {                    	
+	                if (memorial[k].holiday) {
+	                    isholiday = true;                    
+	                }
+	            }
+	            for (var k = 0; k < yearmemorial.length; k++) {
+	                if (yearmemorial[k].holiday) {
+	                    isholiday = true;                    
+	                }
+	            }
             }
             if (current_day.getDay() == "0" || isholiday)
             	document.getElementById("divViewHeader").style.color = "#ee1c25";
