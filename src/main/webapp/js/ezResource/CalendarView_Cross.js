@@ -68,7 +68,8 @@ function CalendarView(pTagetID) {
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();
                 var tempmemorial;
-                var tempyearmemorial
+                var tempyearmemorial;
+                var LunarDate2;
                 if (tempyear > 1800 && tempyear <= 2101) {
                     var month = sDate.getMonth() + 1;
                     var LunarDate = lunarCalc(tempyear, month, sDate.getDate(), 1);
@@ -76,7 +77,7 @@ function CalendarView(pTagetID) {
                     var LunarDateday = LunarDate.day;
                     tempmemorial = memorialDayCheck(sDate, LunarDate);
                     tempyearmemorial = yearmemorialDayCheck(sDate, LunarDate);
-                    LunarDate = LunarDatemonth + "." + LunarDateday;
+                    LunarDate2 = LunarDatemonth + "." + LunarDateday;
                 }
                 oTable.className = "calendar_day_title";
                 if (tempyear > 1800 && tempyear <= 2101) {
@@ -84,40 +85,42 @@ function CalendarView(pTagetID) {
                     var holidayname = "";;
                     var holidayname2 = "";;
 
-                    for (var i = 0; i < tempmemorial.length; i++) {
-                        memorial = tempmemorial[i];
-                        if (uselang == "1") {
-                            if (i == tempmemorial.length - 1)
-                                holidayname += memorial.name;
-                            else
-                                holidayname += memorial.name + ", ";
-                        }
-                        else {
-                            if (i == tempmemorial.length - 1)
-                                holidayname += memorial.name2;
-                            else
-                                holidayname += memorial.name2 + ", ";
-                        }
-                        if (memorial.holiday)
-                            isholiday = true;
-                    }
-
-                    for (var i = 0; i < tempyearmemorial.length; i++) {
-                        yearmemorial = tempyearmemorial[i];
-                        if (uselang == "1") {
-                            if (i == tempyearmemorial.length - 1)
-                                holidayname2 += yearmemorial.name;
-                            else
-                                holidayname2 += yearmemorial.name + ", ";
-                        }
-                        else {
-                            if (i == tempyearmemorial.length - 1)
-                                holidayname2 += yearmemorial.name2;
-                            else
-                                holidayname2 += yearmemorial.name2 + ", ";
-                        }
-                        if (yearmemorial.holiday)
-                            isholiday = true;
+                    if(LunarDate.leapMonth == 0) {
+	                    for (var i = 0; i < tempmemorial.length; i++) {
+	                        memorial = tempmemorial[i];
+	                        if (uselang == "1") {
+	                            if (i == tempmemorial.length - 1)
+	                                holidayname += memorial.name;
+	                            else
+	                                holidayname += memorial.name + ", ";
+	                        }
+	                        else {
+	                            if (i == tempmemorial.length - 1)
+	                                holidayname += memorial.name2;
+	                            else
+	                                holidayname += memorial.name2 + ", ";
+	                        }
+	                        if (memorial.holiday)
+	                            isholiday = true;
+	                    }
+	
+	                    for (var i = 0; i < tempyearmemorial.length; i++) {
+	                        yearmemorial = tempyearmemorial[i];
+	                        if (uselang == "1") {
+	                            if (i == tempyearmemorial.length - 1)
+	                                holidayname2 += yearmemorial.name;
+	                            else
+	                                holidayname2 += yearmemorial.name + ", ";
+	                        }
+	                        else {
+	                            if (i == tempyearmemorial.length - 1)
+	                                holidayname2 += yearmemorial.name2;
+	                            else
+	                                holidayname2 += yearmemorial.name2 + ", ";
+	                        }
+	                        if (yearmemorial.holiday)
+	                            isholiday = true;
+	                    }
                     }
 
                     if (holidayname != "" && holidayname2 != "")
@@ -127,7 +130,7 @@ function CalendarView(pTagetID) {
 
                     var dayText;
                     if (LunarUse)
-                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) +  " (" + LunarDate + ")";
+                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) +  " (" + LunarDate2 + ")";
                     else
                         dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
 
@@ -580,41 +583,43 @@ function MonthData(oThisDate, TDIndex) {
     var holidayname = "";;
     var holidayname2 = "";;
 
-    for (var i = 0; i < tempmemorial.length; i++) {
-        memorial = tempmemorial[i];
-        if (uselang == "1") {
-            if (i == tempmemorial.length - 1)
-                holidayname += memorial.name;
-            else
-                holidayname += memorial.name + ", ";
-        }
-        else {
-            if (i == tempmemorial.length - 1)
-                holidayname += memorial.name2;
-            else
-                holidayname += memorial.name2 + ", ";
-        }
-        if (memorial.holiday)
-            isholiday = true;
-    }
-
-    for (var i = 0; i < tempyearmemorial.length; i++) {
-        yearmemorial = tempyearmemorial[i];
-        if (uselang == "1") {
-            if (i == tempyearmemorial.length - 1)
-                holidayname2 += yearmemorial.name;
-            else
-                holidayname2 += yearmemorial.name + ", ";
-        }
-        else {
-            if (i == tempyearmemorial.length - 1)
-                holidayname2 += yearmemorial.name2;
-            else
-                holidayname2 += yearmemorial.name2 + ", ";
-        }
-        if (yearmemorial.holiday)
-            isholiday = true;
-    }
+    if(LunarDate.leapMonth == 0) {
+	    for (var i = 0; i < tempmemorial.length; i++) {
+	        memorial = tempmemorial[i];
+	        if (uselang == "1") {
+	            if (i == tempmemorial.length - 1)
+	                holidayname += memorial.name;
+	            else
+	                holidayname += memorial.name + ", ";
+	        }
+	        else {
+	            if (i == tempmemorial.length - 1)
+	                holidayname += memorial.name2;
+	            else
+	                holidayname += memorial.name2 + ", ";
+	        }
+	        if (memorial.holiday)
+	            isholiday = true;
+	    }
+	
+	    for (var i = 0; i < tempyearmemorial.length; i++) {
+	        yearmemorial = tempyearmemorial[i];
+	        if (uselang == "1") {
+	            if (i == tempyearmemorial.length - 1)
+	                holidayname2 += yearmemorial.name;
+	            else
+	                holidayname2 += yearmemorial.name + ", ";
+	        }
+	        else {
+	            if (i == tempyearmemorial.length - 1)
+	                holidayname2 += yearmemorial.name2;
+	            else
+	                holidayname2 += yearmemorial.name2 + ", ";
+	        }
+	        if (yearmemorial.holiday)
+	            isholiday = true;
+	    }
+	}
 
     if (holidayname != "" && holidayname2 != "")
         holidayname = holidayname + ", " + holidayname2;
@@ -947,7 +952,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
     var divID = (startOfWeek.getFullYear()) + "-" + leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2);
 
-    if (tempyear > 1800 && tempyear <= 2101) {
+    if (tempyear > 1800 && tempyear <= 2101 && LunarDate.leapMonth == 0) {
         var tempmemorial = memorialDayCheck(startOfWeek, LunarDate);
         var tempyearmemorial = yearmemorialDayCheck(startOfWeek, LunarDate);
 
