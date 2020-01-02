@@ -493,18 +493,17 @@
 	                var count = 0;
 	                var i = 0;
 	
-	                count = div_Content.getElementsByTagName("*").length;
+	                var fieldElements = div_Content.querySelectorAll(".FIELD");
+	                count = fieldElements.length;
 	
 	                for (i = 0; i < count; i++) {
-	                    if (div_Content.getElementsByTagName("*")[i].getAttribute("class") == "FIELD") {
-	                        var tmp = div_Content.getElementsByTagName("*")[i];
+	                        var tmp = fieldElements[i];
 	
 	                        if (!tmp.FieldID)
 	                            tmp.FieldID = tmp.id;
 	
 	                        FieldsList[FieldCount] = tmp;
 	                        FieldCount++;
-	                    }
 	                }
 	                return FieldsList;
 	            } catch (e) {
