@@ -1176,7 +1176,7 @@
 					<td colspan="2">
 						<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t121'/></span></a>
 						<a class="imgbtn" id="cancelBtn" onclick="att_search('refresh')" style="margin-top:3px;"><span><spring:message code='ezAttitude.t122'/></span></a>
-						<a class="imgbtn" id="cancelBtn" onclick="get_excelAtt_list()" style="margin-top:3px;"><span><spring:message code='ezAttitude.kje02'/></span></a>
+						<a class="imgbtn" id="cancelBtn" onclick="get_excelAtt_list()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t145'/></span></a>
 						<a class="imgbtn" id="cancelBtn" onclick="modApprove()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t210'/></span></a>
 						<a class="imgbtn" id="cancelBtn" onclick="modReturn()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t211'/></span></a>
 					</td>
