@@ -36,10 +36,7 @@ public class EzApprovalGOpenGovScheduler {
     @Autowired
     EzApprovalGOpenGovService ezApprovalGOpenGovService;
 
-    //매일 0시 5분에 실행
-    // 1분마다 테스트
-	@Scheduled(cron = "0 0/1 * * * *")
-//    @Scheduled(cron = "0 5 0 * * *")
+    @Scheduled(cron = "0 5 0 * * *")
     public void makeOpenGovCSV() throws Exception {
         logger.debug("makeOpenGovCSV started.");
 
