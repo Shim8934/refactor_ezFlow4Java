@@ -78,6 +78,10 @@ function CalendarView(pTagetID) {
                     tempmemorial = memorialDayCheck(sDate, LunarDate);
                     tempyearmemorial = yearmemorialDayCheck(sDate, LunarDate);
                     LunarDate2 = LunarDatemonth + "." + LunarDateday;
+                    
+                    if (LunarDate.leapMonth) {
+                    	LunarDate2 = strLangkmsr04 + LunarDate2;
+                    }
                 }
                 oTable.className = "calendar_day_title";
                 if (tempyear > 1800 && tempyear <= 2101) {
@@ -85,42 +89,52 @@ function CalendarView(pTagetID) {
                     var holidayname = "";;
                     var holidayname2 = "";;
 
-                    if(LunarDate.leapMonth == 0) {
-	                    for (var i = 0; i < tempmemorial.length; i++) {
-	                        memorial = tempmemorial[i];
-	                        if (uselang == "1") {
-	                            if (i == tempmemorial.length - 1)
-	                                holidayname += memorial.name;
-	                            else
-	                                holidayname += memorial.name + ", ";
-	                        }
-	                        else {
-	                            if (i == tempmemorial.length - 1)
-	                                holidayname += memorial.name2;
-	                            else
-	                                holidayname += memorial.name2 + ", ";
-	                        }
-	                        if (memorial.holiday)
-	                            isholiday = true;
-	                    }
-	
-	                    for (var i = 0; i < tempyearmemorial.length; i++) {
-	                        yearmemorial = tempyearmemorial[i];
-	                        if (uselang == "1") {
-	                            if (i == tempyearmemorial.length - 1)
-	                                holidayname2 += yearmemorial.name;
-	                            else
-	                                holidayname2 += yearmemorial.name + ", ";
-	                        }
-	                        else {
-	                            if (i == tempyearmemorial.length - 1)
-	                                holidayname2 += yearmemorial.name2;
-	                            else
-	                                holidayname2 += yearmemorial.name2 + ", ";
-	                        }
-	                        if (yearmemorial.holiday)
-	                            isholiday = true;
-	                    }
+                    for (var i = 0; i < tempmemorial.length; i++) {
+                        memorial = tempmemorial[i];
+                        
+                        // 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && memorial.solarLunar == 2) {
+                        	continue;
+                        }
+                        
+                        if (uselang == "1") {
+                            if (i == tempmemorial.length - 1)
+                                holidayname += memorial.name;
+                            else
+                                holidayname += memorial.name + ", ";
+                        }
+                        else {
+                            if (i == tempmemorial.length - 1)
+                                holidayname += memorial.name2;
+                            else
+                                holidayname += memorial.name2 + ", ";
+                        }
+                        if (memorial.holiday)
+                            isholiday = true;
+                    }
+
+                    for (var i = 0; i < tempyearmemorial.length; i++) {
+                        yearmemorial = tempyearmemorial[i];
+                        
+                        // 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && yearmemorial.solarLunar == 2) {
+                        	continue;
+                        }
+                        
+                        if (uselang == "1") {
+                            if (i == tempyearmemorial.length - 1)
+                                holidayname2 += yearmemorial.name;
+                            else
+                                holidayname2 += yearmemorial.name + ", ";
+                        }
+                        else {
+                            if (i == tempyearmemorial.length - 1)
+                                holidayname2 += yearmemorial.name2;
+                            else
+                                holidayname2 += yearmemorial.name2 + ", ";
+                        }
+                        if (yearmemorial.holiday)
+                            isholiday = true;
                     }
 
                     if (holidayname != "" && holidayname2 != "")
@@ -566,6 +580,10 @@ function MonthData(oThisDate, TDIndex) {
         var LunarDatemonth = LunarDate.month;
         var LunarDateday = LunarDate.day;
         LunarDate2 = LunarDatemonth + "." + LunarDateday;
+        
+        if (LunarDate.leapMonth) {
+        	LunarDate2 = strLangkmsr04 + LunarDate2;
+        }
     }
 
     var objTd = document.createElement("TD");
@@ -583,43 +601,53 @@ function MonthData(oThisDate, TDIndex) {
     var holidayname = "";;
     var holidayname2 = "";;
 
-    if(LunarDate.leapMonth == 0) {
-	    for (var i = 0; i < tempmemorial.length; i++) {
-	        memorial = tempmemorial[i];
-	        if (uselang == "1") {
-	            if (i == tempmemorial.length - 1)
-	                holidayname += memorial.name;
-	            else
-	                holidayname += memorial.name + ", ";
-	        }
-	        else {
-	            if (i == tempmemorial.length - 1)
-	                holidayname += memorial.name2;
-	            else
-	                holidayname += memorial.name2 + ", ";
-	        }
-	        if (memorial.holiday)
-	            isholiday = true;
-	    }
+    for (var i = 0; i < tempmemorial.length; i++) {
+        memorial = tempmemorial[i];
+        
+        // 윤달일 때 기념일 안나타나도록 수정
+        if(LunarDate.leapMonth == 1 && memorial.solarLunar == 2) {
+        	continue;
+        }
+        
+        if (uselang == "1") {
+            if (i == tempmemorial.length - 1)
+                holidayname += memorial.name;
+            else
+                holidayname += memorial.name + ", ";
+        }
+        else {
+            if (i == tempmemorial.length - 1)
+                holidayname += memorial.name2;
+            else
+                holidayname += memorial.name2 + ", ";
+        }
+        if (memorial.holiday)
+            isholiday = true;
+    }
 	
-	    for (var i = 0; i < tempyearmemorial.length; i++) {
-	        yearmemorial = tempyearmemorial[i];
-	        if (uselang == "1") {
-	            if (i == tempyearmemorial.length - 1)
-	                holidayname2 += yearmemorial.name;
-	            else
-	                holidayname2 += yearmemorial.name + ", ";
-	        }
-	        else {
-	            if (i == tempyearmemorial.length - 1)
-	                holidayname2 += yearmemorial.name2;
-	            else
-	                holidayname2 += yearmemorial.name2 + ", ";
-	        }
-	        if (yearmemorial.holiday)
-	            isholiday = true;
-	    }
-	}
+    for (var i = 0; i < tempyearmemorial.length; i++) {
+        yearmemorial = tempyearmemorial[i];
+        
+        // 윤달일 때 기념일 안나타나도록 수정
+        if(LunarDate.leapMonth == 1 && yearmemorial.solarLunar == 2) {
+        	continue;
+        }
+        
+        if (uselang == "1") {
+            if (i == tempyearmemorial.length - 1)
+                holidayname2 += yearmemorial.name;
+            else
+                holidayname2 += yearmemorial.name + ", ";
+        }
+        else {
+            if (i == tempyearmemorial.length - 1)
+                holidayname2 += yearmemorial.name2;
+            else
+                holidayname2 += yearmemorial.name2 + ", ";
+        }
+        if (yearmemorial.holiday)
+            isholiday = true;
+    }
 
     if (holidayname != "" && holidayname2 != "")
         holidayname = holidayname + ", " + holidayname2;
@@ -948,11 +976,15 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var LunarDatemonth = LunarDate.month;
         var LunarDateday = LunarDate.day;
         LunarDate2 = LunarDatemonth + "." + LunarDateday;
+        
+        if (LunarDate.leapMonth) {
+        	LunarDate2 = strLangkmsr04 + LunarDate2;
+        }
     }
 
     var divID = (startOfWeek.getFullYear()) + "-" + leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2);
 
-    if (tempyear > 1800 && tempyear <= 2101 && LunarDate.leapMonth == 0) {
+    if (tempyear > 1800 && tempyear <= 2101) {
         var tempmemorial = memorialDayCheck(startOfWeek, LunarDate);
         var tempyearmemorial = yearmemorialDayCheck(startOfWeek, LunarDate);
 
@@ -962,6 +994,12 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempmemorial.length; i++) {
             memorial = tempmemorial[i];
+            
+            // 윤달일 때 기념일 안나타나도록 수정
+            if(LunarDate.leapMonth == 1 && memorial.solarLunar == 2) {
+            	continue;
+            }
+            
             if (uselang == "1") {
                 if (i == tempmemorial.length - 1)
                     holidayname += memorial.name;
@@ -980,6 +1018,12 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempyearmemorial.length; i++) {
             yearmemorial = tempyearmemorial[i];
+            
+            // 윤달일 때 기념일 안나타나도록 수정
+            if(LunarDate.leapMonth == 1 && yearmemorial.solarLunar == 2) {
+            	continue;
+            }
+            
             if (uselang == "1") {
                 if (i == tempyearmemorial.length - 1)
                     holidayname2 += yearmemorial.name;

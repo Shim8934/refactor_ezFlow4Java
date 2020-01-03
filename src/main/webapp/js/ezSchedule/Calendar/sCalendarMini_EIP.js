@@ -242,10 +242,16 @@ function GetTableMiniBodyObj() {
 
                 var isholiday = false;
                 for (var k = 0; k < memorial.length; k++) {
+                	if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+                    	continue;
+                    }
                     if (memorial[k].holiday)
                         isholiday = true;
                 }
                 for (var k = 0; k < yearmemorial.length; k++) {
+                	if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+                    	continue;
+                    }
                     if (yearmemorial[k].holiday)
                         isholiday = true;
                 }
