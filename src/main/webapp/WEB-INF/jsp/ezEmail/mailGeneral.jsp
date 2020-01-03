@@ -333,7 +333,7 @@
 		        <div id="mailquatersize" style="width:400px; height:200px;display: inline-block;"></div>
 		    </div>
 		<br />
-		<h2><spring:message code='ezEmail.t177' /></h2>
+		<h2><spring:message code='ezPersonal.yej01' /></h2>
 		<span class="txt">▒ <spring:message code='ezEmail.t178' /></span> <br>
 		<span class="txt">▒ <spring:message code='ezEmail.t99000033' /></span> <br><br>
 		<table class="content" style="width:680px;">
