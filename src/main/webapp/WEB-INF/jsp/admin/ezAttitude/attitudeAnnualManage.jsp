@@ -429,7 +429,7 @@
 					<td style="width: *;" colspan=2>
 						<a class="imgbtn"><span onclick="searchAnnualList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAnnualList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
-						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.kje02' /></span></a>
+						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 						<a class="imgbtn"><span onclick="annualExcelUploadPop();"><spring:message code='ezAttitude.t235' /></span></a>
 						<a class="imgbtn"><span onclick="modifyAllAnnualPop();"><spring:message code='ezAttitude.t236' /></span></a>
 <!-- 						<a class="imgbtn"><span onclick="directScheduler();">스케줄러 동작</span></a> -->
