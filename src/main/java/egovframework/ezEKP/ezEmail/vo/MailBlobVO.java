@@ -3,8 +3,8 @@ package egovframework.ezEKP.ezEmail.vo;
 public class MailBlobVO {
 
 	public long mailBlobId;
-	public long mailBoxId;
-	public long mailUid;
+	public Long mailBoxId;
+	public Long mailUid;
 
 	public long getMailBlobId() {
 		return mailBlobId;
@@ -14,19 +14,19 @@ public class MailBlobVO {
 		this.mailBlobId = mailBlobId;
 	}
 		
-	public long getMailBoxId() {
+	public Long getMailBoxId() {
 		return mailBoxId;
 	}
 
-	public void setMailBoxId(long mailBoxId) {
+	public void setMailBoxId(Long mailBoxId) {
 		this.mailBoxId = mailBoxId;
 	}
 
-	public long getMailUid() {
+	public Long getMailUid() {
 		return mailUid;
 	}
 
-	public void setMailUid(long mailUid) {
+	public void setMailUid(Long mailUid) {
 		this.mailUid = mailUid;
 	}
 

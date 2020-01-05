@@ -69,24 +69,31 @@ public class EzEmailDAO extends EgovAbstractDAO {
 		delete("EzEmailDAO.deleteOrphanedMailBlob", mailBlobVO);
 		
 		long sleepTime = 500;
-		long mailboxId = mailBlobVO.getMailBoxId();
-		long mailUid = mailBlobVO.getMailUid();
-		String headerPath = ezEmailUtil.getMailHeaderPath(mailboxId, mailUid);
-		String bodyPath = ezEmailUtil.getMailBodyPath(mailboxId, mailUid);
-		File headerFile = new File(headerPath);
-		File bodyFile = new File(bodyPath);
 		
-		if (headerFile.exists()) {
-			headerFile.delete();
+		if (mailBlobVO.getMailBoxId() != null && mailBlobVO.getMailUid() != null) {
+			long mailboxId = mailBlobVO.getMailBoxId();
+			long mailUid = mailBlobVO.getMailUid();
+			String headerPath = ezEmailUtil.getMailHeaderPath(mailboxId, mailUid);
+			String bodyPath = ezEmailUtil.getMailBodyPath(mailboxId, mailUid);
+			File headerFile = new File(headerPath);
+			File bodyFile = new File(bodyPath);
+			
+			if (headerFile.exists()) {
+				headerFile.delete();
+				
+				sleepTime = 0;
+			}
+			
+			if (bodyFile.exists()) {
+				bodyFile.delete();
+				
+				sleepTime = 0;
+			}		
+		} else {
+			logger.debug("deleteOrphanedMailBlob mailboxId=" + mailBlobVO.getMailBoxId() + ",mailUid=" + mailBlobVO.getMailUid());
 			
 			sleepTime = 0;
 		}
-		
-		if (bodyFile.exists()) {
-			bodyFile.delete();
-			
-			sleepTime = 0;
-		}		
 		
 		return sleepTime;
 	}
