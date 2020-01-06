@@ -112,6 +112,12 @@
 					case 34:
 					 	url = "/admin/ezEmail/mailCopyright.do";
 				    	break;
+					case 35:
+						url = "/admin/ezEmail/multiDomain.do";
+						break;
+					case 36:
+						url = "/admin/ezEmail/companyMultiDomain.do";
+						break;
 				}
 				window.open(url,"right");
 			}
@@ -158,7 +164,14 @@
 						<ul></ul>
 					</h2>
 				</c:if>
-
+				<c:if test="${cChk == '1'}">
+				<h2>
+					<span onClick="goPage(35)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa01' /></span>
+				</h2> 
+				<h2>
+					<span onClick="goPage(36)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa02' /></span>
+				</h2>
+	  			</c:if>
 				<!-- 2018-02-20 재은 수정 (편지지 등록) -->
 				<c:if test="${useLetter == 'YES'}">
 					<h2>

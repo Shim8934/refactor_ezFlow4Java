@@ -2230,4 +2230,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public int checkStopUser(Map<String, Object> map) throws Exception {
     	return (int) select ("EzOrganAdminDAO.checkStopUser", map);
     }
+
+    public void setDeptPrimaryMail (Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.setDeptMail", map);
+	}
+	
+	public void deleteCompanyConfig(Map<String, Object> map) throws Exception {
+		delete("EzOrganAdminDAO.deleteCompanyConfig", map);
+	}
 }
