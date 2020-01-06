@@ -210,9 +210,11 @@ public interface EzBoardService {
 	
 	public void photoListUpdate(String imageID, String boardID, String content, String file_Path, String itemID, String mainFg, String oFileName, int tenantID) throws Exception;
 
-	public void updateCopyItem(String itemID, int tenantID) throws Exception;
+	/* 2019-12-16 홍승비 - 게시물 복사 시 조회자 정보를 유지하기 위한 파라미터 추가 */
+	public void updateCopyItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception;
 	
-	public void updateMoveItem(String destItemID, String orgItemID, int tenantID) throws Exception;
+	/* 2019-12-13 홍승비 - 게시물 이동 시 조회자 정보를 유지하기 위한 게시판ID 파라미터 추가 */
+	public void updateMoveItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception;
 	
 	public void setBoardList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
 	
@@ -318,5 +320,11 @@ public interface EzBoardService {
 	
 	/* 2019-05-29 홍승비 - 해당 ID가 부서(회사)ID인지 확인하는 기능 서비스로 분리 */
 	public int isDeptChk(String id, int tenantID) throws Exception;
+
+	/* 2019-11-08 홍승비 - 해당 게시판을 포함하여 하위에 속한 모든 게시판들을 가져오는 메서드 */
+	public List<BoardPropertyVO> getAllSubBoardProperty(String boardID, int tenantID) throws Exception;
+
+	/* 2019-11-08 홍승비 - 주어진 게시판ID에 대하여, 새로운 BOARDTREEPATH를 생성해 리턴하는 메서드 */
+	public String getNewBoardTreePath(String subBoardID, int tenantId) throws Exception;
 	
 }

@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
@@ -600,4 +601,6 @@ public interface EzApprovalGService {
 	public String getProxyUser2(String userID, String userLang, int tenantID, String offset) throws Exception;
 
 	public List<ApprGProxyVO> getProxyUserInfo(String userID, String userLang, int tenantID, String offSet) throws Exception;
+
+	ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception;
 }

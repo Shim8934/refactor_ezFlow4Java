@@ -219,12 +219,13 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			
 			result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
 			result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
-			result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
+			/* 2020-01-02 홍승비 - 퀵링크 리스트에서 등록일, 수정일 칼럼 초단위 제거 */
+			result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false).substring(0, 16) + "</VALUE></CELL>");
 			
 			if (vo.getModiDate() == null) {
 				result.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
 			} else {
-				result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getModiDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
+				result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getModiDate(), userInfo.getOffset(), false).substring(0, 16) + "</VALUE></CELL>");
 			}
 			
 			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE></CELL>");

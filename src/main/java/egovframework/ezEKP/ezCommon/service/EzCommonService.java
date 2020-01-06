@@ -91,6 +91,8 @@ public interface EzCommonService {
 	public void addUserMasterMailBoxQuota() throws Exception;
 
 	public void addJournalFormDelFlag() throws Exception;
+	
+	public void createJmochaMailCopyright() throws Exception;
 
 	public void updateListOptionData() throws Exception;
 
@@ -99,6 +101,8 @@ public interface EzCommonService {
 	public void addFormVersion() throws Exception;
 
 	public void addAddJobMasterProxy() throws Exception;
+
+	public int checkDeptId(String userID, String deptID, String tenantId);
 
 }
 

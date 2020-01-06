@@ -536,6 +536,22 @@
 			)
 	</statement>
 	
+	<select id="EzCommonDAO.checkJmochaMailCopyright">
+		SELECT 
+			TENANT_ID
+		FROM 
+			JMOCHA_MAIL_COPYRIGHT
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaMailCopyright"> 
+		CREATE TABLE `jmocha_mail_copyright` (
+		  `TENANT_ID` INT NOT NULL,
+		  `COPYRIGHT_TEXT` varchar(1000) DEFAULT NULL,
+          PRIMARY KEY (`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
 	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
 		SELECT 
 			COUNT(*) 
@@ -655,4 +671,44 @@
 		ADD COLUMN 
 			FORMVERSION INT NULL DEFAULT 0 
 	</statement>
+	
+	<select id="EzCommonDAO.checkDeptId" parameterClass="Map" resultClass="int">
+	<![CDATA[
+		SELECT 
+			COUNT(DEPTID) 
+		FROM 
+			(SELECT 
+				DEPTID 
+			FROM 
+				TBL_ADDJOBMASTER A
+			INNER JOIN 
+				TBL_DEPTMASTER TD 
+			ON 
+				(A.DEPTID = TD.CN AND A.TENANT_ID  = TD.TENANT_ID)
+			WHERE 
+				TD.EXTENSIONATTRIBUTE2 <> (SELECT 
+												PHYSICALDELIVERYOFFICENAME 
+											FROM 
+												TBL_USERMASTER 
+											WHERE 
+												CN = #userID# 
+											AND 
+												TENANT_ID = #tenantID#) 
+			AND
+				A.CN = #userID#
+			AND 
+				A.TENANT_ID = #tenantID#
+			UNION
+			SELECT 
+				DEPARTMENT AS DEPTID 
+			FROM 
+				TBL_USERMASTER 
+			WHERE 
+				CN = #userID#
+			AND 
+				TENANT_ID = #tenantID#) D
+		WHERE 
+			D.DEPTID = #deptID#
+	]]>
+	</select>
 </sqlMap>

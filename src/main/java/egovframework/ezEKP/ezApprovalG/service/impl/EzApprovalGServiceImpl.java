@@ -3381,6 +3381,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return sb.toString();
 	}
 
+    @Override
+    public ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception {
+        logger.debug("getFormPath started. formId = " + formId + ", companyId = " + companyId + ", tenantId = " + tenantId);
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("formId", formId);
+        map.put("companyId", companyId);
+        map.put("tenantId", tenantId);
+
+        ApprGFormVO vo = ezApprovalGDAO.getFormPath(map);
+
+        logger.debug("getFormPath ended");
+
+        return vo;
+    }
+
 	@Override
 	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID, String useReceiveInfoName) throws Exception {
 		logger.debug("getFormRecvApr started");
@@ -13557,7 +13574,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			// 마지막 합의자가 아닌 경우
 			if (subCount >= 1) {
-				return strSQL.toString();
+				return "TRUE";
 			}
 			
 			
@@ -13584,7 +13601,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map1.put("v_APRSTATE", staASBanSong);
 						ezApprovalGDAO.updateDocInfoAprstate(map1);
 						doBansong(docID, "", proxyUserID, "004", dirPath, deptID, companyID, lang, userInfo, curDocNum);
-						return strSQL.toString();
+						return "TRUE";
 					}	
 				}				
 			}
@@ -14156,7 +14173,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							map.put("v_DOCID", docID);
 							map.put("v_TENANTID", userInfo.getTenantId());
 							// ProcessYN(진행여부)를 O으로 변경
-							ezApprovalGDAO.updateReceiptPointInfo(map);
+							//ezApprovalGDAO.updateReceiptPointInfo(map);
 						}
 					}
 					//시행문일때만 발신함
@@ -21731,6 +21748,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//(2007.08.10 김상건) : 수기기록물이고 첨부파일이 있을 경우 docid 필요
 			docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 			registerDate = xmlDom.getElementsByTagName("REGISTERDATE").item(0).getTextContent().trim();
+			registerDate = commonUtil.getDateStringInUTC(registerDate, offset, true);
 			specialCatalogFlag = xmlDom.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent().trim();
 			
 			// 2011.04.04 수기등록시 첨부등록 추가
@@ -21809,7 +21827,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ProcessDeptName2", deptName2);
 		map.put("v_ProcessDeptCode",  deptCode);
 		map.put("v_RegisterYear", regYear);
-		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_SYSDATE", registerDate);
 		map.put("v_RegisterNo", registerSN);
 		map.put("v_AprMemberTitle", aprMemberTitle);
 		map.put("v_AprMemberTitle2", aprMemberTitle2);
@@ -25304,17 +25322,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			int tagsWithClasses = doc.getElementsByAttribute("class").size();
 			for (int i = 0; i < tagsWithClasses; i++) {
 				doc.getElementsByAttribute("class").get(0).removeAttr("class");
-			}
-			
-			//센터정렬 없는 p태그 추가 hwp에서 html로 변환할 때 센터정렬값만 안가져와서 추가해줌
-			for (int i = 0; i < doc.getElementsByTag("p").size(); i++) {
-				String style = doc.getElementsByTag("p").get(i).attr("style").toString();
-				
-				if (style.indexOf("text-align") > -1) {
-					
-				} else {
-					 doc.getElementsByTag("p").get(i).attr("style", "text-align:center;" + style );
-				}
 			}
 			
 			String fontFamily = "";

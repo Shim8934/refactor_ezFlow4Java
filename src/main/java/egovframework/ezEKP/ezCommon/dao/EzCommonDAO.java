@@ -399,6 +399,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 	
+	public void createJmochaMailCopyright() {
+		try {
+			select("EzCommonDAO.checkJmochaMailCopyright");
+		} catch (Exception e) {
+			logger.debug("jmocha_mail_copyright doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJmochaMailCopyright");
+		}
+	}
+
 	public void updateListOptionData() {
 		try {
 			if ((int) select("EzCommonDAO.checkListOptionData1") > 0) {
@@ -449,5 +459,9 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_tmpexpaprdocinfo formVersion doesn't exist. creating the column...");
 			update("EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo");
 		}
+	}
+
+	public int checkDeptId(Map<String, Object> map) {
+		return (int) select("EzCommonDAO.checkDeptId", map);
 	}
 }

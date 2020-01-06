@@ -2529,6 +2529,102 @@ public class EzEmailAdminController {
 		return "admin/ezEmail/signaturePreview";
 
 	}
+
+	/**
+	 * 수취인안내설정 관리 화면(copyright)
+	 * 
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailCopyright.do", method = RequestMethod.GET)
+	public String mailCopyright(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailCopyright started.");
+		
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().contains("c=1") || userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
+		logger.debug("mailCopyright ended.");
+		return "admin/ezEmail/mailCopyright";
+	}
+	
+	/**
+	 * 수취인안내설정 데이터 가져오기(copyright)
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailCopyrightData.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject mailCopyrightData(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailCopyrightData started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String companyId = request.getParameter("companyId");
+		logger.debug("companyId=" + companyId);
+		
+		String useCopyright =  ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyId, "useCopyright"); // 수취인안내설정 사용여부
+		
+		if (useCopyright.equals("")) {
+			useCopyright = "NO";
+		}
+		
+		logger.debug("useCopyright=" + useCopyright);
+		
+		String copyrightText = ezEmailUserAdminService.getCopyrightText(userInfo.getTenantId(), companyId);
+		
+		if (copyrightText == null) {
+			copyrightText = "";
+		}
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("useCopyright", useCopyright);
+		jsonObj.put("copyrightText", copyrightText);
+
+		logger.debug("mailCopyrightData ended.");
+		return jsonObj;
+	}
+	
+	/**
+	 * 수취인안내설정 저장(copyright)
+	 * 
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailCopyrightSave.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailCopyrightSave(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailCopyrightSave started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String copyrightText = request.getParameter("copyrightText");
+		String useCopyright = request.getParameter("useCopyright");
+		String companyId = request.getParameter("companyId");
+		String returnValue = "ERROR";
+		
+		int rc = ezEmailUserAdminService.saveMailCopyright(copyrightText, useCopyright, userInfo.getTenantId(), companyId);
+		
+		if (rc == 0) {
+			returnValue = "OK";
+		}
+		
+		logger.debug("mailCopyrightSave ended.");
+		return returnValue;
+	}
 	
 	/**
 	 * 전체 도메인 관리 화면 

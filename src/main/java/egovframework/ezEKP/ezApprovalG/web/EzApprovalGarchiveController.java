@@ -751,11 +751,18 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     		mDeptInfo = xmlResult.getElementsByTagName("DATA2").item(0).getTextContent();
     	}
     	
+    	String simsaListByDept = ezCommonService.getTenantConfig("simsaListByDepartment", userInfo.getTenantId());
+    	
+    	if (simsaListByDept == null || simsaListByDept.equals("")) {
+    		simsaListByDept = "YES";
+    	}
+    	
     	model.addAttribute("userInfo", userInfo);
     	model.addAttribute("susinAdmin", susinAdmin);
     	model.addAttribute("serverName", serverName);
     	model.addAttribute("susinXML", susinXML);
     	model.addAttribute("mDeptInfo", mDeptInfo);
+    	model.addAttribute("simsaListByDept", simsaListByDept);
     	
     	logger.debug("ezSelectOne ended");
     	
@@ -2552,7 +2559,13 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			 Document xmlDoc = commonUtil.xmlLod(commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + xmlPath);
 			 
 			 strContent = commonUtil.convertDocumentToString(xmlDoc);
-			 strContent = strContent.substring(strContent.indexOf("<content>"),strContent.indexOf("</content>")).replace("<content>", "");
+			 
+			 //문서유통 본문 내용이 없을 경우 공백으로 들어가도록 처리. textContent를 strContent로 넣으면 폰트 스타일이 다 사라짐. 2019-12-13 홍대표
+			 if("".equals(xmlDoc.getElementsByTagName("content").item(0).getTextContent())) {
+				 strContent = "";
+			 } else {
+				 strContent = strContent.substring(strContent.indexOf("<content>"),strContent.indexOf("</content>")).replace("<content>", "");
+			 }
 			 
 			 strContent = "<![CDATA[" + strContent + "]]>";
 			

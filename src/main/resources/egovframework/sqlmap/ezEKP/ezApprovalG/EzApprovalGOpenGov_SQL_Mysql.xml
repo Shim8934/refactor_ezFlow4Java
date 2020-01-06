@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezApprovalGOpenGov">
+	<typeAlias  alias="ApprGOpenGovCsvVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovCsvVO"/>
+
+	<select id="EzApprovalGOpenGov.getOpenGovDocOpenFlag" parameterClass="Map" resultClass="String">
+		SELECT
+			openflag
+		FROM
+			TBL_OPENGOVDOCINFO
+		WHERE
+			docid = #docId#
+	</select>
+
+	<select id="EzApprovalGOpenGov.getOpenGovDocHref" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT
+			href
+		FROM
+			TBL_OPENGOVDOCINFO
+		INNER JOIN
+			TBL_ENDAPRDOCINFO
+		ON
+			TBL_OPENGOVDOCINFO.docid = TBL_ENDAPRDOCINFO.docid
+		WHERE
+			TBL_OPENGOVDOCINFO.docid = #docId#
+		AND
+			openflag <> '3';
+	    ]]>
+	</select>
+
+	<select id="EzApprovalGOpenGov.getOpenGovAttachHref" parameterClass="Map" resultClass="String">
+		SELECT
+			attachfilehref
+		FROM
+			TBL_OPENGOVFILEINFO
+		INNER JOIN
+			TBL_ENDATTACHINFO
+		ON
+			TBL_OPENGOVFILEINFO.docid = TBL_ENDATTACHINFO.docid
+		AND
+			TBL_OPENGOVFILEINFO.sn = TBL_ENDATTACHINFO.attachfilesn
+		WHERE
+			TBL_OPENGOVFILEINFO.docid = #docId#
+		AND
+			TBL_OPENGOVFILEINFO.sn = #sn#
+		AND
+			fileopenflag = 'Y'
+	</select>
+
+	<insert id="EzApprovalGOpenGov.insertGovDocSend" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_GOVDOCSEND
+				(docid, attachsn, type, senddate, tenant_id, companyid)
+			VALUES
+				(#docId#, #attachSn#, #type#, now(), '0', #companyNum#)
+		]]>
+	</insert>
+
+	<update id="EzApprovalGOpenGov.setOpenGovSendFlagToY">
+		<![CDATA[
+			UPDATE
+				TBL_GOVSENDDOCHISTORY
+			SET
+				sendflag = 'Y'
+		]]>
+
+	</update>
+
+	<select id="EzApprovalGOpenGov.getGovSendDocHistorySn" resultClass="String">
+		<![CDATA[
+			SELECT
+				CASE
+				WHEN
+					(SELECT
+						COUNT(*)
+					FROM
+						TBL_GOVSENDDOCHISTORY) = 0
+	        	THEN '1'
+	        	ELSE
+	        		(SELECT
+	        			MAX(sn)
+	        		FROM
+	        			TBL_GOVSENDDOCHISTORY) + 1
+				END AS sn
+		]]>
+	</select>
+
+	<insert id="EzApprovalGOpenGov.insertTodayGovSendDocHistory" parameterClass="String">
+		<![CDATA[
+			INSERT INTO TBL_GOVSENDDOCHISTORY
+				(sn, senddate, sendflag)
+			VALUES
+				(#sn#, now(), 'Y')
+		]]>
+	</insert>
+
+	<!--scheduler-->
+	<select id="EzApprovalGOpenGov.getOpenGovCsv" resultClass="ApprGOpenGovCsvVO">
+		<![CDATA[
+			SELECT
+				TBL_OPENGOVDOCINFO.docid,
+    			'' AS 'n2',
+    			'' AS 'n3',
+    			'' AS 'n4',
+				'' AS 'n5',
+				'' AS 'n6',
+				'' AS 'n7',
+				TBL_ENDAPRDOCINFO.doctitle,
+				'' AS 'n9',
+				DATE_FORMAT(TBL_OPENGOVDOCINFO.createdate, "%Y%m%d%H%i%s") AS createdate,
+				#companyNum# AS companycode,
+				#companyName# AS companyname,
+				TBL_ENDAPRDOCINFO.writerdeptid,
+				TBL_ENDAPRDOCINFO.writerdeptname,
+				TBL_ENDAPRDOCINFO.writername,
+				'' AS 'n16',
+				TBL_ENDAPRDOCINFO.docno,
+				TBL_CABINETCLASS.keepingperiod,
+				TBL_EXPENDAPRDOCINFO.publicitycode,
+				TBL_OPENGOVDOCINFO.basis,
+				TBL_OPENGOVDOCINFO.reason,
+				'' AS 'n22',
+				'' AS 'n23',
+				'' AS 'n24',
+				'' AS 'n25',
+				TBL_OPENGOVDOCINFO.listopenflag,
+				'' AS 'n27',
+				'' AS 'n28',
+				TBL_RECORD.aprmembertitle,
+				(SELECT
+					aprmemberjobtitle
+				FROM
+					TBL_ENDAPRLINEINFO
+				WHERE
+					docid = TBL_OPENGOVDOCINFO.docid
+				AND
+					aprtype IN ('001' OR '016' OR '004')
+				ORDER BY
+					aprmembersn DESC
+				LIMIT
+					1) AS aprmemberjobtitle,
+				IFNULL(TBL_OPENGOVDOCINFO.openlimitdate, CURDATE()-1) AS openlimitdate,
+				'' AS 'n32',
+				'' AS 'n33',
+				'01' AS 'n34',
+				(SELECT
+					CONCAT(
+						'본문:',
+						TBL_OPENGOVDOCINFO.docid,
+						':결재본문.hwp:',
+						IFNULL(TBL_OPENGOVDOCINFO.docsize, '60112'),
+						':0:',
+						CASE WHEN openflag = '3' THEN 'N' ELSE 'Y' END,
+						CASE WHEN attach IS NULL THEN '' ELSE attach END)
+				) AS filelist
+			FROM
+				TBL_OPENGOVDOCINFO
+    		INNER JOIN
+    			TBL_ENDAPRDOCINFO
+    		ON
+    			TBL_OPENGOVDOCINFO.docid = TBL_ENDAPRDOCINFO.docid
+    		AND
+    			TBL_OPENGOVDOCINFO.tenant_id = TBL_ENDAPRDOCINFO.tenant_id
+    		AND
+    			TBL_ENDAPRDOCINFO.companyid = TBL_ENDAPRDOCINFO.companyid
+    		INNER JOIN
+    			TBL_EXPENDAPRDOCINFO
+    		ON
+    			TBL_OPENGOVDOCINFO.docid = TBL_EXPENDAPRDOCINFO.docid
+    		AND
+    			TBL_OPENGOVDOCINFO.tenant_id = TBL_EXPENDAPRDOCINFO.tenant_id
+    		AND
+    			TBL_OPENGOVDOCINFO.companyid = TBL_EXPENDAPRDOCINFO.companyid
+    		INNER JOIN
+    			TBL_RECORD
+    		ON
+    			TBL_OPENGOVDOCINFO.docid = TBL_RECORD.docid
+    		AND
+    			TBL_OPENGOVDOCINFO.tenant_id = TBL_RECORD.tenant_id
+    		AND
+    			TBL_OPENGOVDOCINFO.companyid = TBL_RECORD.companyid
+		    INNER JOIN
+		    	TBL_CABINET
+    		ON
+    			TBL_EXPENDAPRDOCINFO.cabinetid = TBL_CABINET.cabinetid
+    		INNER JOIN
+    			TBL_CABINETCLASS
+    		ON
+    			TBL_CABINET.cabinetclassno = TBL_CABINETCLASS.cabinetclassno
+    		LEFT OUTER JOIN
+				(SELECT
+					docid,
+					GROUP_CONCAT(attach SEPARATOR '') AS attach
+				FROM
+					(SELECT
+						TBL_OPENGOVFILEINFO.docid,
+						CONCAT(
+							':첨부:',
+							TBL_OPENGOVFILEINFO.docid,
+							sn,
+							':',
+							attachfilename,
+							':',
+							IFNULL(attachfilesize, '1024'),
+							':',
+							sn-1,
+							':',
+							fileopenflag) AS attach
+					FROM
+						TBL_OPENGOVFILEINFO
+					INNER JOIN
+						TBL_ENDATTACHINFO
+					ON
+						TBL_OPENGOVFILEINFO.docid = TBL_ENDATTACHINFO.docid
+					AND
+						TBL_OPENGOVFILEINFO.sn = TBL_ENDATTACHINFO.attachfilesn
+					AND
+						TBL_OPENGOVFILEINFO.tenant_id = TBL_ENDATTACHINFO.tenant_id
+					AND
+						TBL_OPENGOVFILEINFO.companyid = TBL_ENDATTACHINFO.companyid
+					) ATTACHLIST
+				GROUP BY
+					docid
+    			) FILEATTACHLIST
+    		ON
+    			TBL_OPENGOVDOCINFO.docid = FILEATTACHLIST.docid
+    		WHERE
+    			(TBL_ENDAPRDOCINFO.docstate <> '011' OR TBL_ENDAPRDOCINFO.docstate IS NULL)
+    		AND
+    			DATE(TBL_OPENGOVDOCINFO.createdate) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+		]]>
+	</select>
+
+	<select id="EzApprovalGOpenGov.getResendDate" resultClass="String">
+		SELECT
+			DATE(senddate)
+		FROM
+			TBL_GOVSENDDOCHISTORY
+		WHERE
+			sendflag = 'N'
+	</select>
+
+	<select id="EzApprovalGOpenGov.getOpenGovResendCsv" resultClass="String">
+		<![CDATA[
+			SELECT
+				TBL_OPENGOVDOCINFO.docid,
+				'' AS 'n2',
+				'' AS 'n3',
+				'' AS 'n4',
+				'' AS 'n5',
+				'' AS 'n6',
+				'' AS 'n7',
+	    		TBL_ENDAPRDOCINFO.doctitle,
+	    		'' AS 'n9',
+	    		DATE_FORMAT(TBL_OPENGOVDOCINFO.createdate, "%Y%m%d%H%i%s") AS createdate,
+	    		#companyNum# AS companycode,
+	    		#companyName# AS companyname,
+	    		TBL_ENDAPRDOCINFO.writerdeptid,
+	    		TBL_ENDAPRDOCINFO.writerdeptname,
+	    		TBL_ENDAPRDOCINFO.writername,
+	    		'' AS 'n16',
+	    		TBL_ENDAPRDOCINFO.docno,
+	    		TBL_CABINETCLASS.keepingperiod,
+				TBL_EXPENDAPRDOCINFO.publicitycode,
+				TBL_OPENGOVDOCINFO.basis,
+				TBL_OPENGOVDOCINFO.reason,
+				'' AS 'n22',
+				'' AS 'n23',
+				'' AS 'n24',
+				'' AS 'n25',
+				TBL_OPENGOVDOCINFO.listopenflag,
+				'' AS 'n27',
+				'' AS 'n28',
+				TBL_RECORD.aprmembertitle,
+				(SELECT
+					aprmemberjobtitle
+				FROM
+					TBL_ENDAPRLINEINFO
+				WHERE
+					docid = TBL_OPENGOVDOCINFO.docid
+				AND
+					aprtype IN ('001' OR '016' OR '004')
+				ORDER BY
+					aprmembersn DESC
+				LIMIT
+					1) AS aprmemberjobtitle,
+				IFNULL(TBL_OPENGOVDOCINFO.openlimitdate, CURDATE()-1) AS openlimitdate,
+				'' AS 'n32',
+				'' AS 'n33',
+				'01' AS 'n34',
+				(SELECT
+					CONCAT(
+						'본문:',
+						TBL_OPENGOVDOCINFO.docid,
+						':결재본문.hwp:',
+						IFNULL(TBL_OPENGOVDOCINFO.docsize, '60112'),
+						':0:',
+						CASE WHEN openflag = '3' THEN 'N' ELSE 'Y' END,
+						CASE WHEN attach IS NULL THEN '' ELSE attach END)
+				) AS filelist
+	    FROM
+	    	TBL_OPENGOVDOCINFO
+	    INNER JOIN
+	    	TBL_ENDAPRDOCINFO
+	    ON
+	    	TBL_OPENGOVDOCINFO.docid = TBL_ENDAPRDOCINFO.docid
+	    AND
+	    	TBL_OPENGOVDOCINFO.tenant_id = TBL_ENDAPRDOCINFO.tenant_id
+	    AND
+	    	TBL_ENDAPRDOCINFO.companyid = TBL_ENDAPRDOCINFO.companyid
+	    INNER JOIN
+	    	TBL_EXPENDAPRDOCINFO
+	    ON
+	    	TBL_OPENGOVDOCINFO.docid = TBL_EXPENDAPRDOCINFO.docid
+	    AND
+	    	TBL_OPENGOVDOCINFO.tenant_id = TBL_EXPENDAPRDOCINFO.tenant_id
+	    AND
+	    	TBL_OPENGOVDOCINFO.companyid = TBL_EXPENDAPRDOCINFO.companyid
+	    INNER JOIN
+	    	TBL_RECORD
+	    ON
+	    	TBL_OPENGOVDOCINFO.docid = TBL_RECORD.docid
+	    AND
+	    	TBL_OPENGOVDOCINFO.tenant_id = TBL_RECORD.tenant_id
+	    AND
+	    	TBL_OPENGOVDOCINFO.companyid = TBL_RECORD.companyid
+	    INNER JOIN
+	    	TBL_CABINET
+	    ON
+	    	TBL_EXPENDAPRDOCINFO.cabinetid = TBL_CABINET.cabinetid
+	    INNER JOIN
+	    	TBL_CABINETCLASS
+	    ON
+	    	TBL_CABINET.cabinetclassno = TBL_CABINETCLASS.cabinetclassno
+	    LEFT OUTER JOIN
+	    	(SELECT
+	    		docid,
+	    		GROUP_CONCAT(attach SEPARATOR '') AS attach
+			FROM
+				(SELECT
+					TBL_OPENGOVFILEINFO.docid,
+					CONCAT(
+						':첨부:',
+						TBL_OPENGOVFILEINFO.docid,
+						sn,
+						':',
+						attachfilename,
+						':',
+						IFNULL(attachfilesize, '1024'),
+						':',
+						sn-1,
+						':',
+						fileopenflag) AS attach
+				FROM
+					TBL_OPENGOVFILEINFO
+				INNER JOIN
+					TBL_ENDATTACHINFO
+				ON
+					TBL_OPENGOVFILEINFO.docid = TBL_ENDATTACHINFO.docid
+				AND
+					TBL_OPENGOVFILEINFO.sn = TBL_ENDATTACHINFO.attachfilesn
+				AND
+					TBL_OPENGOVFILEINFO.tenant_id = TBL_ENDATTACHINFO.tenant_id
+				AND
+					TBL_OPENGOVFILEINFO.companyid = TBL_ENDATTACHINFO.companyid
+				) ATTACHLIST
+	        GROUP BY
+	        	docid
+	    	) FILEATTACHLIST
+	    ON
+	    	TBL_OPENGOVDOCINFO.docid = FILEATTACHLIST.docid
+	    WHERE
+	    	(TBL_ENDAPRDOCINFO.docstate <> '011' OR TBL_ENDAPRDOCINFO.docstate IS NULL)
+		]]>
+	</select>
+</sqlMap>

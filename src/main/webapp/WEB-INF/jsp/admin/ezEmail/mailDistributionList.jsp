@@ -183,10 +183,10 @@
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		
 		        var selectedCount = listview.GetSelectedRows().length;
-		        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
 		        
-		        if (ret) {
-			        if (selectedCount > 0) {
+		        if (selectedCount > 0) {
+			        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
+		        	if (ret) {
 				        createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
 				        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
 				        
@@ -202,9 +202,9 @@
 				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
 				        //company_change();
 				        selectList_Change();
-			        } else {
-			            alert("<spring:message code='ezEmail.t51' />");		            
 			        }
+		        } else {
+		            alert("<spring:message code='ezEmail.t51' />");		            
 		        }
 		    }
 		    

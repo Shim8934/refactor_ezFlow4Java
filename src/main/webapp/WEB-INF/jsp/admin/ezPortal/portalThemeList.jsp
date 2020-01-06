@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -139,7 +140,7 @@
 	                		</colgroup>
 	                		<tr>
 								<th><spring:message code='ezPortal.t258'/> </th>
-	                      		<td>${item.modifyDate}</td>
+	                      		<td>${fn:substring(item.modifyDate, 0, 16)}</td>
 	                		</tr>
 	                  		<tr>
 		                    	<th width="100" ><spring:message code='ezPortal.t990002'/></th>

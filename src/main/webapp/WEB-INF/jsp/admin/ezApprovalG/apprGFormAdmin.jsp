@@ -467,7 +467,8 @@
 		            if ((GetAttribute(tr, "DATA4") != null ? GetAttribute(tr, "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
 		               $("#btnFormListView").hide();
 		            } else {
-		            	$("#btnFormListView").show();
+		            	//2019.12.30 김정언 - 미리보기 없애기
+		            	$("#btnFormListView").hide();
 		            }
 		        }
 		    }
