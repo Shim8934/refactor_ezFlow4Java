@@ -233,3 +233,6 @@ var strLang336 = "If the resource is set to disabled, it can not be scheduled.";
 
 //2019-05-28
 var strLang337 = "Approval has been denied."
+
+//2020-01-03
+var strLangkmsr04 = "윤 ";

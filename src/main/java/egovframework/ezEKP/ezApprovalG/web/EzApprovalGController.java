@@ -3776,7 +3776,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signatureDir = commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId());
 		
 		fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-		signatureDir = signatureDir + commonUtil.separator + fileName.split("_")[0];
+		signatureDir = signatureDir + commonUtil.separator + fileName.substring(0, fileName.lastIndexOf("_"));
 		
 		String result = signatureDir + commonUtil.separator + fileName;
 
