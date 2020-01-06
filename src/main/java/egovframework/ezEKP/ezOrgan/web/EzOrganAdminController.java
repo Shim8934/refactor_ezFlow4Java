@@ -1069,7 +1069,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (type.equals("APPROVALSIGN")) {
 			//2016-04-15 장진혁과장 -- Approval Attach 구현 필요
 		} else {			
-			String filePath = commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + fileName.split("_")[0] + commonUtil.separator + fileName;
+			String filePath = commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + fileName.substring(0, fileName.lastIndexOf("_")) + commonUtil.separator + fileName;
 			
 			if (fileName != null && !fileName.equals("")) {
 				downImage(filePath, request, response);
