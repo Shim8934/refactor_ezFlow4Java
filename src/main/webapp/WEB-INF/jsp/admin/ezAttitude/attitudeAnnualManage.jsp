@@ -12,6 +12,12 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezAttitude/ListView_list.js')}"></script>
 	    <style>
+	    	body::-webkit-scrollbar {
+    			display: none !important;
+			}
+			body {
+				-ms-overflow-style: none !important;
+			}
 	    	#contentlist table.mainlist tr:not(.tr_noItems) td {
 	    		overflow : hidden;
 	    		white-space : nowrap;
