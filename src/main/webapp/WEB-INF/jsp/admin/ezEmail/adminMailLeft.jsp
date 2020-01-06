@@ -109,6 +109,9 @@
 					case 33:
 						url = "/admin/ezEmail/showSharedMailboxList.do";
 						break;
+					case 34:
+					 	url = "/admin/ezEmail/mailCopyright.do";
+				    	break;
 				}
 				window.open(url,"right");
 			}
@@ -183,6 +186,12 @@
 						<li><span style="display:inline-block;width:100%;" onclick="goPage(28)"><spring:message code='ezStatistics.kyj1' /></span></li>
 						<li><span style="display:inline-block;width:100%;" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
 					</ul>
+				</c:if>
+				<c:if test="${useCopyrightMenu == 'YES'}">
+	  			<h2>
+					<span onClick="goPage(34)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.ksa06'/></span>
+				    <ul></ul>
+				</h2>
 				</c:if>
 			</div>
 		</div>
