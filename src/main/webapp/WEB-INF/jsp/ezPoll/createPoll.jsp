@@ -1353,7 +1353,7 @@
 				</tr>						
 			</table>			
 			<div class="btnpositionJsp">				
-				<a class="imgbtn" onclick="fun_OK()"><span><spring:message code="ezPoll.t145" /></span></a>				
+				<a class="imgbtn" onclick="fun_OK()"><span><spring:message code="ezPoll.kje01" /></span></a>				
 				<a class="imgbtn" onclick="fun_Cancel()"><span><spring:message code="ezPoll.t139" /></span></a>				
 			</div>
 		</div>	
