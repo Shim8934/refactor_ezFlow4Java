@@ -249,13 +249,12 @@
 		        }
 		        
 		        var shareId = selnode[0].getAttribute("DATA1");
-		        var feature = "dialogHeight:670px; dialogWidth:1080px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(1080, 670);
+		        var feature = "dialogHeight:690px; dialogWidth:1080px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(1080, 690);
 		        
 		        if (CrossYN()) {
 		        	sharedMailboxDialogArguments[0] = modSharedMailboxComplete;
-		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1080, 670));
-
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1080, 690));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), feature);
@@ -392,6 +391,20 @@
 			    	}
 		    	}
 		    }
+		    
+		    function mail_manage(){
+		    	var listview = new ListView();
+		        listview.LoadFromID("sharedMailbox");
+		        
+		        if (listview.GetSelectedRows().length == 0) {
+					alert("<spring:message code='ezEmail.sharedMailbox20' />");
+					return;
+				}
+
+		        var selectId = GetAttribute(listview.GetSelectedRows()[0],"DATA1");
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=share" + "&companyId=" + companyId;
+			    window.open(url , "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -422,6 +435,7 @@
 		    	<li><span onClick="modSharedMailbox()"><spring:message code='ezEmail.sharedMailbox04' /></span></li>
 		      	<li><span onClick="delSharedMailbox()"><spring:message code='ezEmail.sharedMailbox05' /></span></li>
 		      	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t231' /></span></li>
+		      	<li><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
 		    </ul>
 		</div>
 		<script type="text/javascript">

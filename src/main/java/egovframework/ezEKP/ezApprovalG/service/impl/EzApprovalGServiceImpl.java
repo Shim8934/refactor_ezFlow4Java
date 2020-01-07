@@ -14402,7 +14402,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
                 String isLimitDate = ezApprovalGDAO.getOpenGovLimitDate(map);
 
-                if (isLimitDate.equals("N")) {
+                if (isLimitDate != null && isLimitDate.equals("N")) {
                     map.put("nowDate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), "235|+09:00", false));
                 }
 
@@ -28619,6 +28619,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			targetUserID = xmlDom.getElementsByTagName("WRITERID").item(0).getTextContent();
 			targetUserName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
+		}
+		
+		String notiXml = ezPersonalService.getApprovNotiConfig(targetUserID, targetUserID, tenantID);
+		Document notiDom = commonUtil.convertStringToDocument(notiXml);
+		String notiYN = "";
+		
+		if (mode.equalsIgnoreCase("APR")) {
+			notiYN = notiDom.getElementsByTagName("ALERT").item(0).getTextContent();
+		} else {
+			notiYN = notiDom.getElementsByTagName("COMPLETE").item(0).getTextContent();
+		}
+		
+		if (!notiYN.equalsIgnoreCase("1")) {
+			return result;
 		}
 		
 		targetUserEmail = ezOrganService.getPropertyValue(targetUserID, "mail", tenantID);
