@@ -14402,7 +14402,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
                 String isLimitDate = ezApprovalGDAO.getOpenGovLimitDate(map);
 
-                if (isLimitDate.equals("N")) {
+                if (isLimitDate != null && isLimitDate.equals("N")) {
                     map.put("nowDate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), "235|+09:00", false));
                 }
 
