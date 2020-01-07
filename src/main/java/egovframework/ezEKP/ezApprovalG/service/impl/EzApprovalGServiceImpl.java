@@ -28621,6 +28621,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			targetUserName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
 		}
 		
+		String notiXml = ezPersonalService.getApprovNotiConfig(targetUserID, targetUserID, tenantID);
+		Document notiDom = commonUtil.convertStringToDocument(notiXml);
+		String notiYN = "";
+		
+		if (mode.equalsIgnoreCase("APR")) {
+			notiYN = notiDom.getElementsByTagName("ALERT").item(0).getTextContent();
+		} else {
+			notiYN = notiDom.getElementsByTagName("COMPLETE").item(0).getTextContent();
+		}
+		
+		if (!notiYN.equalsIgnoreCase("1")) {
+			return result;
+		}
+		
 		targetUserEmail = ezOrganService.getPropertyValue(targetUserID, "mail", tenantID);
 		
 		logger.debug("target : " + targetUserID + "/" + targetUserName + "/" + targetUserEmail);
