@@ -5507,6 +5507,18 @@
 	    ]]>    		 				
 	</select>
 	
+	<select id="EzOrganAdminDAO.allUserList" parameterClass="int" resultMap="userCnList">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER a
+            WHERE
+				a.tenant_id = #tenantID#
+	    	ORDER BY cn
+	    ]]>
+	</select>
+	
     <select id="EzOrganAdminDAO.userCount" parameterClass="int" resultClass="int">
         <![CDATA[
             SELECT 
@@ -5946,7 +5958,7 @@
  			FROM
  				TBL_USERMASTER
  			WHERE
- 				tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
+ 				tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
  				<include refid="EzOrganAdminDAO.searchQuery"/>
  			ORDER BY
  			<isNotEmpty property="sortColumn">
@@ -5969,7 +5981,7 @@
 			COUNT(CN) 
 		FROM 
             TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
+		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
   		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
 	

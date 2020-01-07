@@ -1843,6 +1843,14 @@
      			TBL_DEPTMASTER 
       		WHERE  
       			extensionattribute1 = #deptID#
+      		 ]]> 
+      		<isEmpty property="isOrgan">
+				<![CDATA[
+		      		AND
+		      			extensionattribute2 <> CN
+			     ]]> 
+    		</isEmpty>
+    		<![CDATA[
       		AND
       			tenant_id = #tenantId#	
 	     ]]> 
