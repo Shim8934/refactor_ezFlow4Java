@@ -442,9 +442,9 @@
 		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('sDate')"/>
 		    	</td>
 		  	</tr>
-		  	<tr>
+		  	<%-- <tr>
 		    	<td><input type="radio" name="optRangeEnd" value="radiobutton" value="-1" checked><spring:message code='ezResource.t314' /></td>
-		  	</tr>
+		  	</tr> --%>
 		  	<tr>
 		    	<td>
 		    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" value="1"/><spring:message code='ezResource.t315' />
@@ -453,7 +453,7 @@
 		  	</tr>
 		  	<tr>
 		    	<td>
-		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0"/><spring:message code='ezResource.t317' />
+		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0" checked/><spring:message code='ezResource.t317' />
 		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('eDate')"/>
 		    	</td>
 		  	</tr>
