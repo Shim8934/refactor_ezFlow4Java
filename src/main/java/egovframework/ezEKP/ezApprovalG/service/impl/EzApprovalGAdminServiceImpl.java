@@ -3002,7 +3002,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			useFlag = doc.getElementsByTagName("USEFLAG").item(0).getTextContent();
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
-			formDraftAllFlag = doc.getElementsByTagName("draftAllFlag").item(0).getTextContent();
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
 		}
 
