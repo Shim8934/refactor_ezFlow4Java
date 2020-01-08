@@ -1509,7 +1509,16 @@
 			SELECT
 				A.CN AS USER_ID,
 				(IFNULL(B.MONTHLY_HOLIDAY_CNT, 0) + IFNULL(B.ANNUAL_HOLIDAY_CNT, 0) + IFNULL(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS ORIGIN_ANNUAL_CNT,
-				(IFNULL(B.MONTHLY_HOLIDAY_CNT, 0) + IFNULL(B.ANNUAL_HOLIDAY_CNT, 0) + '$annualCnt$') AS CHANGE_ANNUAL_CNT,
+		]]>
+				<isEqual property="flagCheck" compareValue="excelChange">
+					(IFNULL(B.MONTHLY_HOLIDAY_CNT, 0) + IFNULL(B.ANNUAL_HOLIDAY_CNT, 0)) AS CHANGE_ANNUAL_CNT,
+				</isEqual>
+				<isNotEqual property="flagCheck" compareValue="excelChange">
+				<![CDATA[
+					(IFNULL(B.MONTHLY_HOLIDAY_CNT, 0) + IFNULL(B.ANNUAL_HOLIDAY_CNT, 0) + '$annualCnt$') AS CHANGE_ANNUAL_CNT,
+				]]>
+				</isNotEqual>
+		<![CDATA[
 				'$changeReason$' AS CHANGE_REASON,
 				NOW() AS CHANGE_DATE,
 				'$changeUserId$' AS CHANGE_USER_ID,
@@ -1533,6 +1542,17 @@
 				A.CN = #userId#
 		]]>
 	</insert>
+	
+	<update id ="ezAttitudeAdminDAO.updateAnnualHistory" parameterClass ="Map">
+		UPDATE 
+			TBL_ATTITUDE_ANNUAL_HISTORY A JOIN TBL_ATTITUDE_ANNUAL B ON A.USER_ID = B.USER_ID
+		SET
+			CHANGE_ANNUAL_CNT = (IFNULL(B.MONTHLY_HOLIDAY_CNT, 0) + IFNULL(B.ANNUAL_HOLIDAY_CNT, 0))
+		WHERE
+			A.USER_ID = #userId#
+		AND
+			A.TENANT_ID = #tenantId#
+	</update>
 	
 	<insert id="ezAttitudeAdminDAO.changeAnnualHistory" parameterClass="Map">
 			INSERT INTO tbl_attitude_annual_history
@@ -1619,12 +1639,20 @@
 			</isNotEmpty>
 	</insert>
 	
+	<delete id = "ezAttitudeAdminDAO.deleteAnnualHistory" parameterClass = "Map">
+		DELETE FROM 
+			TBL_ATTITUDE_ANNUAL_HISTORY
+		WHERE
+			USER_ID = #userId#
+	</delete>
+	
 	<insert id="ezAttitudeAdminDAO.excelChangeAnnual" parameterClass="Map">
 			UPDATE 
 				tbl_attitude_annual
 			SET 
 				MONTHLY_HOLIDAY_CNT = #annualCnt#,
 				ANNUAL_HOLIDAY_CNT = 0,
+				ADDITIONAL_HOLIDAY_CNT = 0,
 				JOIN_DATE = #joinDate#
 			WHERE
 				TENANT_ID = #tenantId#

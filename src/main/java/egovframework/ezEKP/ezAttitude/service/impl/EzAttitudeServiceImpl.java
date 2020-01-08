@@ -2691,13 +2691,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void excelChangeAnnual(Map<String, Object> map) throws Exception {
 		LOGGER.debug("excelChangeAnnual started");
 		
+		//2020-01-08 김은석 추가 엑셀업로드시 기존의 히스토리는 전부 삭제
+		ezAttitudeDAO.deleteAnnualHistory(map);
 		ezAttitudeDAO.insertAnnualHistory(map);
+		
 		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
 			ezAttitudeDAO.excelInsertAnnual(map);
 		} else {
 			//ezAttitudeDAO.changeAnnualHistory(map);
 			ezAttitudeDAO.excelChangeAnnual(map);
 		}
+		//2020-01-08 김은석 추가 TBL_ATTITUDE_ANNUAL 업데이트 후 변경된 연차로 history 테이블에서 수정
+		ezAttitudeDAO.updateAnnualHistory(map);
 		
 		LOGGER.debug("excelChangeAnnual ended");
 	}
