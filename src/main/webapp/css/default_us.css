@@ -680,7 +680,7 @@ form{display:inline;margin:0}
 }
 
 .content th, .popuplist th{
-    text-align:center;
+    text-align:left;
 	height:23px;
 	font-weight:normal;
     
