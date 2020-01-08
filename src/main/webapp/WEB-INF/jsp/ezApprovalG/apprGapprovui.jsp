@@ -165,6 +165,12 @@
 			//2018-11-07 배현상, 결재자 순번
 			var wAprMemberSN = "";
 			
+			//원문공개정보
+			var basis = "<c:out value ='${basis}'/>";
+			var reason = "<c:out value ='${reason}'/>";
+			var listOpenFlag = "<c:out value ='${listOpenFlag}'/>";
+			var fileOpenFlagList = "<c:out value ='${fileOpenFlagList}'/>";
+			
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -1557,6 +1563,11 @@
 			        parameter[33] = pSummery;
 			        parameter[41] = tempItemName;
 			        parameter[42] = tempItemName2;
+		        } else {
+			        parameter[52] = basis;
+			        parameter[53] = reason;
+			        parameter[54] = listOpenFlag;
+			        parameter[55] = fileOpenFlagList;
 		        }
 		
 		        if (tempItemCode != "")

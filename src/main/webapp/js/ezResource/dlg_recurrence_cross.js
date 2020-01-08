@@ -79,14 +79,14 @@ function window_onload() {
     					
     		switch (info[0])
     		{
-    			case "-1":
+    			/*case "-1":
     				document.getElementsByName("optRangeEnd")[0].checked = true;
-    				break;
+    				break;*/
     			case "0":
-    				document.getElementsByName("optRangeEnd")[2].checked = true;
+    				document.getElementsByName("optRangeEnd")[1].checked = true;
     				break;
     			default:
-    				document.getElementsByName("optRangeEnd")[1].checked = true;
+    				document.getElementsByName("optRangeEnd")[0].checked = true;
     				list_ReCount.value = info[0];
     				break;
     		}

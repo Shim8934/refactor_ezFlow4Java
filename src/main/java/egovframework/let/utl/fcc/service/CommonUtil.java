@@ -563,8 +563,9 @@ public class CommonUtil {
 		                        //쿠기에 저장되어 있는 IP
 		                        cValue = egovFileScrty.decryptAES(cookie.getValue());
 		
-		                        if(cValue.split("///")[3].equals(ip)){                  
+		                        if(cValue.split("///")[3].equals(ip) && checkDeptId(cValue)){                  
 		                            isCookie = true;
+		                            break;
 		                        }
 		                    } catch (Exception e) {
 		                        e.printStackTrace();
@@ -596,8 +597,9 @@ public class CommonUtil {
 							//쿠기에 저장되어 있는 IP
 							cValue = egovFileScrty.decryptAES(cookie.getValue());
 							
-							if(cValue.split("///")[3].equals(ip)){                  
+							if(cValue.split("///")[3].equals(ip) && checkDeptId(cValue)){                  
 								isCookie = true;
+								break;
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -607,6 +609,37 @@ public class CommonUtil {
 			}
 		}
         return isCookie;
+	}
+	
+	public boolean checkDeptId(String cValue){
+		String[] decDataArray = cValue.split("///");
+		
+		String userID = decDataArray[1];
+        String tenantId = "0";
+        String deptID = "";
+        
+        if (decDataArray.length >= 9) {
+            tenantId = decDataArray[8];	
+        }
+        if(decDataArray.length >= 10) {
+        	deptID = decDataArray[9];
+        }
+        
+        // ezSyncServer에서 ezFlow를 호출하는 경우에는 쿠키안에 부서 아이디가 포함되어 있지 않으므로
+        // 이 경우엔 true를 반환한다.
+        if ("".equals(deptID)) {
+        	return true;
+        }
+        
+		int isDept = ezCommonService.checkDeptId(userID, deptID, tenantId);
+		
+		if(isDept>0){
+			return true;
+		} else {
+			logger.debug("checkDeptId isDept=" + isDept + ",userID=" + userID + ",deptID=" + deptID);
+			
+			return false;
+		}
 	}
 	
 	public Document convertStringToDocument(String xmlStr) {

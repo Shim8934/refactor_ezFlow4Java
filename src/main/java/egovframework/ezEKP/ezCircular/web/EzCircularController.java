@@ -1820,6 +1820,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("userID", userInfo.getId());
 		model.addAttribute("deptID", userInfo.getDeptID()); //baonk added
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("userInfo", userInfo);
 		
 		return "/ezCircular/circularSelectAttendant";
 	}
@@ -1868,6 +1869,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("userName", userName);
 		model.addAttribute("userName2", userName2);
 		model.addAttribute("listSize", list.size());
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("circularDeptModify ended");
 	

@@ -557,6 +557,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
 		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 		
+		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		String multiBoardName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
+		}
+		
 		model.addAttribute("treeCtrl", treeCtrl);
 		model.addAttribute("code", code);
 		model.addAttribute("boardInfo", boardInfo);
@@ -564,6 +572,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("pBoardName", boardName);
 		model.addAttribute("userLevel", userLevel);
 		model.addAttribute("pastDate", pastDate);
+		model.addAttribute("multiBoardName", multiBoardName);
 		
 		logger.debug("boarditemList ended.");
 		
@@ -2554,9 +2563,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n")); 
 			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 			
-			if (userInfo.getLang().equals("2")) {
+			/*if (userInfo.getLang().equals("2")) {
 				member.setUserName(member.getUserName2());
-			}
+			}*/
 			
 			name1 = member.getUserName();
 		}
@@ -2836,10 +2845,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		CommunityBoardPropertyVO boardProp = ezCommunityService.getBoardProperty(boardID, userInfo.getTenantId());
 		
-		if (userInfo.getLang().equals("2")) {
-			boardInfo.setBoardName(boardInfo.getBoardName2());
-		}
-		
 		if (boardProp.getDeleteAfter() == null) {
 			boardProp.setDeleteAfter("-1");
 		}
@@ -2852,6 +2857,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 			style = "display:none";
 		}
 		
+		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		String multiBoardName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
+		}
+		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
@@ -2862,6 +2875,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardProp", boardProp);
 		model.addAttribute("_style", style);
 		model.addAttribute("userInfo",userInfo);
+		model.addAttribute("multiBoardName", multiBoardName);
 		
 		logger.debug("adminBoardProperty ended.");
 		
@@ -2939,8 +2953,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		if (userInfo.getLang().equals("2")) {
-			boardInfo.setBoardName(boardInfo.getBoardName2());
+		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		String multiBoardName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
 		}
 		
 		model.addAttribute("code", code);
@@ -2948,7 +2966,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("upperBoardID", parentBoardID);
-		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
+		model.addAttribute("boardName", multiBoardName);
 
 		return "ezCommunity/communityAdminBoardOrder";
 	}
@@ -3016,8 +3034,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		if (userInfo.getLang().equals("2")) {
-			boardInfo.setBoardName(boardInfo.getBoardName2());
+		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		String multiBoardName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
 		}
 		
 		model.addAttribute("boardID", boardID);
@@ -3026,7 +3048,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
-		model.addAttribute("parentBoardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
+		model.addAttribute("parentBoardName", multiBoardName);
 		
 		return "ezCommunity/communityAdminBoardCreate";
 	}
@@ -3065,15 +3087,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		if (userInfo.getLang().equals("2")) {
-			boardInfo.setBoardName(boardInfo.getBoardName2());
+		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		String multiBoardName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
 		}
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
+		model.addAttribute("boardName", multiBoardName);
 		
 		return "ezCommunity/communityAdminBoardMove";
 	}
@@ -3120,8 +3146,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		if (userInfo.getLang().equals("2")) {
-			boardInfo.setBoardName(boardInfo.getBoardName2());
+		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		String multiBoardName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
 		}
 		
 		String strXML = ezCommunityService.getBoardTree(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 0, 1, 0, " ", code, userInfo.getPrimary(), userInfo.getTenantId());
@@ -3136,7 +3166,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
+		model.addAttribute("boardName", multiBoardName);
 		model.addAttribute("xmlret", strXML);
 		
 		return "ezCommunity/communityAdminBoardDelete";
@@ -3195,8 +3225,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		if (userInfo.getLang().equals("2")) {
-			boardInfo.setBoardName(boardInfo.getBoardName());
+		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		String multiBoardName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
 		}
 		
 		int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
@@ -3230,7 +3264,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("boardName", userInfo.getPrimary() == "1" ? boardInfo.getBoardName() : boardInfo.getBoardName2());
+		model.addAttribute("boardName", multiBoardName);
         model.addAttribute("userInfo", userInfo);
         model.addAttribute("boardInfo", boardInfo);
         model.addAttribute("orgBoardParameters", orgBoardParameters);
@@ -4162,9 +4196,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityClubVO club = ezCommunityService.boardItemListPhotoGet1(userInfo.getId(), boardID, userInfo.getTenantId());
 		
-		if (userInfo.getLang().equals("2")) {
-			boardInfo.setBoardName(boardInfo.getBoardName2());
-			userInfo.setDisplayName1(userInfo.getDisplayName2());
+		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		String multiBoardName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
 		}
 		
 		if (club == null) {
@@ -4221,6 +4258,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("page", pPage);
 		model.addAttribute("pastDate", pastDate);
+		model.addAttribute("multiBoardName", multiBoardName);
 		
 		return "ezCommunity/communityBoardItemListPhoto";
 	}
@@ -4258,8 +4296,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
-		if (userInfo.getLang().equals("2")) {
-			boardInfo.setBoardName(boardInfo.getBoardName2());
+		/* 2019-12-26 홍승비 - 커뮤니티 게시판명에 다국어 적용 */
+		String multiBoardName = "";
+		if (userInfo.getPrimary().equals("1")) {
+			multiBoardName = boardInfo.getBoardName();
+		} else {
+			multiBoardName = boardInfo.getBoardName2();
 		}
 		
 		expireDays = boardInfo.getExpireDays();
@@ -4301,6 +4343,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("multiBoardName", multiBoardName);
 		
 		return "ezCommunity/communityNewBoardItemPhoto";
 	}

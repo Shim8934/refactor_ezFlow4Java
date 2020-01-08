@@ -826,8 +826,8 @@ public class EzMemoController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		int bottomPositon = Integer.parseInt(gadgetBottom);
-		int rightPosition = Integer.parseInt(gadgetRight);
+		int bottomPositon = (int)Double.parseDouble(gadgetBottom);
+		int rightPosition = (int)Double.parseDouble(gadgetRight);
 		
 		param.put("gadget_bottom", bottomPositon);
 		param.put("gadget_right", rightPosition);

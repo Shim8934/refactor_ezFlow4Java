@@ -78,7 +78,7 @@
 		    }
 		    
 		    function memoFolderClickE() {
-		  		$(".node").click(function(){
+		  		$(".node_normal").click(function(){
 					if(selId!==""){
 						$("#"+selId).css("font-weight", "normal");
 					}

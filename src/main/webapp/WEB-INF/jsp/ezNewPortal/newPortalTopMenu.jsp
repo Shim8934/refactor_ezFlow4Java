@@ -281,8 +281,8 @@
 				str += '<ul class="util">';
 				//통합검색
 				if ('${useTotalSearch}' === 'YES') str += "<li><div class='top_totalSearch'><input id='input_totalSearch' class='input_text' type='text' onkeyup='totalSearch_key_event()' onfocus=\"this.placeholder=' '\"/><input type='image' src='/images/kr/cm/top_search_btn.gif' alt='' id='topsearch_btn' class=\"topsearch_btn\" ></div></li>";
-				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="메신저다운로드"></span></li>';//메신저 다운로드 추가
-				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' +'"></span></li>';
+				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
+				if ('${roleInfo}' === 'admin') str += '<li><span class="icon_topmenu util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
 				str += '<li><span class="icon_topmenu util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
 				/* str += '<li><span class="icon_topmenu util_frame" id="util_frame" title="프레임설정"></span></li>'; */
 				str += '<li><span class="icon_topmenu util_set" id="util_set" title="' + '<spring:message code="ezNewPortal.t006" />' + '"></span></li>';

@@ -823,6 +823,7 @@
 		        <ul>
 		          <li id="btnWhoKyul" style="display:none"><span onClick="return btnWhoKyul_onclick()"><spring:message code='ezApproval.pjj35'/></span></li>
 		          <li id="btnDocInfo"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+		          <li id="btnOpinion"><span id="span_btnOpinion" onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>

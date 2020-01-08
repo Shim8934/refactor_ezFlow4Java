@@ -994,6 +994,11 @@
 		                	PresentOpen = "DOC_ADMIN";
 		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forDoc.do?type=user";
 		                	break;
+						case "openGov":
+							//원문공개문서함
+							PresentOpen = "DOC_ADMIN";
+							window.parent.frames.right.document.location.href = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
+							break;	
 		            }
 		        } catch (e) { }
 		    }
@@ -1300,6 +1305,13 @@
                            	<li><span class="sub_iconLNB tree_appr_ing"></span><span class="list_text" id="approvalForDoc_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj14'/></span></li>
                            	<li><span class="sub_iconLNB tree_appr_complete"></span><span class="list_text" id="approvalForDoc_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj15'/></span></li>
 						</ul>
+					</c:if>
+				</c:if>
+				<c:if test="${useOpenGov == 'YES'}">
+					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'ff=1')}">
+						<h2>
+							<span class="h2Title" id="openGov" onClick="Menu_Click(this)">원문공개문서함</span>
+						</h2>
 					</c:if>
 				</c:if>
 			</div>

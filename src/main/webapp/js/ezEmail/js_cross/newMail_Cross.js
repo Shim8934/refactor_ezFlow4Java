@@ -1,4 +1,4 @@
-﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+﻿﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
 var emailFlag=false;
 function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
@@ -1277,6 +1277,9 @@ function onblurOnRecipientInputField(value) {
 
 var NameCertify_onClick_returnFunction;
 function NameCertify_onClick(returnFunction) {
+	document.getElementById("MsgTo").value = removeAsciiCode(document.getElementById("MsgTo").value);
+	document.getElementById("MsgCC").value = removeAsciiCode(document.getElementById("MsgCC").value);
+	document.getElementById("MsgBCC").value = removeAsciiCode(document.getElementById("MsgBCC").value);
     if (document.getElementById("MsgTo").value == "" && document.getElementById("MsgCC").value == "" && document.getElementById("MsgBCC").value == "") {
         NameCertify_onClick_returnFunction = null;
         if(returnFunction != undefined)
@@ -1296,6 +1299,11 @@ function NameCertify_onClick(returnFunction) {
     // 20181127 조진호 - 검색 후에 검색 리스트가 계속 보이는 현상 수정
     $(".ui-autocomplete").css('display', 'none');
     return true;
+}
+
+function removeAsciiCode(str) {
+    str = str.replace(/\ufeff/g,'');                    	// BOM 제거 window에서는 보이지 않고 linux에서는 whitespace로 나타나는 문자 제거
+    return str.replace(/[\x00-\x1F\x7F]/g, '');				// remove non-printable Ascii code
 }
 
 function GetMailTips() {

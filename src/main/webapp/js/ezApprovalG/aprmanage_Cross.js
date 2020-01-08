@@ -2587,36 +2587,45 @@ function cancelYN_after(xml) {
         document.getElementById("tbtncallback").style.display = "";
         document.getElementById("tbtnforcecallback").style.display = "none";
     }
+    else if (RtnVal == "CALLBACK" && pListTypeValue == "3" && !GetBujaeFlag()) {
+    	document.getElementById("tbtncallback").style.display = "";
+    	document.getElementById("tbtnforcecallback").style.display = "none";
+    }
     else if (RtnVal == "CANCEL" && pListTypeValue == "3" && !GetBujaeFlag()) {
         document.getElementById("tbtncallback").style.display = "";
         document.getElementById("tbtnforcecallback").style.display = "none";
     }
     else {
     	if (forceCallBackYN == "YES") {
-    	var result = "";
-    	
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/doForceCancelYN.do",
-    		data : {
-    			docID : temppDocID,
-    			userID : pUserID
-    		},
-    		success: function(xml){
-    			result = xml;
+    		//강제회수는 기안자만 가능하도록 수정
+    		if (!checkIsDrafter()) {
+    			return;
     		}
-    	});
-    	
-        var RtnVal = getNodeText(loadXMLString(result).documentElement);
-        if (RtnVal == "TRUE")
-        	document.getElementById("tbtnforcecallback").style.display = "";
-        else
-            document.getElementById("tbtnforcecallback").style.display = "none";
-
-        document.getElementById("tbtncallback").style.display = "none";
-        temppDocID = null;
+    		
+	    	var result = "";
+	    	
+	    	$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/doForceCancelYN.do",
+	    		data : {
+	    			docID : temppDocID,
+	    			userID : pUserID
+	    		},
+	    		success: function(xml){
+	    			result = xml;
+	    		}
+	    	});
+	    	
+	        var RtnVal = getNodeText(loadXMLString(result).documentElement);
+	        if (RtnVal == "TRUE")
+	        	document.getElementById("tbtnforcecallback").style.display = "";
+	        else
+	            document.getElementById("tbtnforcecallback").style.display = "none";
+	
+	        document.getElementById("tbtncallback").style.display = "none";
+	        temppDocID = null;
     	} else {
     		 document.getElementById("tbtnforcecallback").style.display = "none";
     	     document.getElementById("tbtncallback").style.display = "none";
@@ -2978,4 +2987,20 @@ function attitude_annual_conn(docId) {
 		success : function(result) { 			},
 		error : function() { 			} 		
 	});  
+}
+
+function checkIsDrafter() {
+	var rtnVal = false;
+	
+	var DocList = new ListView();
+	DocList.LoadFromID("DocList");
+	
+	var oSelRow = DocList.GetSelectedRows();
+	if (oSelRow.length > 0) {
+		if (GetAttribute(oSelRow[0], "DATA16") == arr_userinfo[1]) {
+			rtnVal = true;
+		}
+	}
+	
+	return rtnVal;
 }

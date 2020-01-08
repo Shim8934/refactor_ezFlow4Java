@@ -20,6 +20,8 @@
 		<result property="isUse"			column="ISUSE"				columnIndex="8"/>
 		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
 		<result property="calendarDay"		column="CALENDARDAY"			columnIndex="10"/>
+		<result property="holidayFlag"		column="HOLIDAYFLAG"			columnIndex="11"/>
+		<result property="holidayRepeat"		column="HOLIDAYREPEAT"			columnIndex="12"/>
 		</resultMap>
 	
 		<resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListVO">
@@ -1330,7 +1332,9 @@
 	                ifnull(isrepeat, '0') isrepeat,
 	                ifnull(isuse, '0') isuse,
 	                ifnull(isrest, '0') isrest,
-	                usecompany
+	                usecompany,
+	                holidayflag,
+	                holidayrepeat
 	           	from 
 					tbl_holidaylist
 				where
@@ -1350,7 +1354,9 @@
 		                ifnull(isrepeat, '0') isrepeat,
 		                ifnull(isuse, '0') isuse,
 		                ifnull(isrest, '0') isrest,
-		                usecompany
+		                usecompany,
+	                	holidayflag,
+	                	holidayrepeat
 		           	from 
 		           		tbl_holidaylist 
 					where  
@@ -1371,7 +1377,9 @@
 		                ifnull(isrepeat, '0') isrepeat,
 		                ifnull(isuse, '0') isuse,
 		                ifnull(isrest, '0') isrest,
-		                usecompany
+		                usecompany,
+	                	holidayflag,
+	              		holidayrepeat
 					from 
 						tbl_holidaylist 
 					where  

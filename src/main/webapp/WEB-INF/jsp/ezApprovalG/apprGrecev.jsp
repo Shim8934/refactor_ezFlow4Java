@@ -116,6 +116,13 @@
 			var ext = "mht";
 			var isHWP = "";
 			
+			//원문정보공개
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			//부서순차합의를 위해 아래 파라미터 추가. 2019-02-08 홍대표
+			//최종결재시 채번
+			var useReceiveDocNo = "${useReceiveDocNo}";
+			var nonElecRec = "${nonElecRec}";
+			
 			window.onload = function () {
 			};
 			
@@ -894,7 +901,20 @@
 		        parameter[39] = SummaryFlag;
 		        parameter[41] = tempItemName;
 		        parameter[42] = tempItemName2;
-		
+
+		        if(pDocState == "012") {
+		        	parameter[45] = "";
+		        	parameter[46] = "";
+		        }
+				
+		        if (approvalFlag == "G") {
+			        parameter[52] = basis;
+			        parameter[53] = reason;
+			        parameter[54] = listOpenFlag;
+			        parameter[55] = fileOpenFlagList;
+			        parameter[56] = limitDate;
+		        }
+		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		

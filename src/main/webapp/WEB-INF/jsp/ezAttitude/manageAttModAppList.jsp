@@ -1072,8 +1072,8 @@
 		<h1><spring:message code='ezAttitude.t7' /><span id="mailBoxInfo"></span></h1>
         <div id="mainmenu">
         <ul id="tb_Parent">
-			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
-        	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
+			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.kje02'/></span></li>
+        	<li id="ret"><span onClick="modReturn()"><spring:message code='ezAttitude.kje03'/></span></li>
 	        <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
 	        <li id="search"><span class="icon16 icon16_search" onClick="search_popup()"></span></li>
         	<li onClick="att_search('refresh')"><span class="icon16 icon16_refresh"></span></li>
@@ -1150,7 +1150,7 @@
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="WRITER_DEPT_NAME"><spring:message code='ezAttitude.t148'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="ORIGIN_TIME"><spring:message code='ezAttitude.t206'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="NO"><spring:message code='ezAttitude.t207'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:5%;" colname="APPR_STATUS" ><spring:message code='ezAttitude.t208'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:5%;" colname="APPR_STATUS" ><spring:message code='ezAttitude.kje01'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:9%;" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
 				<th width="100px" style="cursor:pointer;" colname="NO"><spring:message code='ezAttitude.t97'/></th>

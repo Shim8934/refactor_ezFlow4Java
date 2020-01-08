@@ -231,11 +231,13 @@ public class EzStatisticsMailLogController {
 			searchEndTime = searchEndTime.replaceAll("[^0-9]", "");
 		}
 
-		if (sysLang.equals(userInfo.getLang())) {
+		isPrimaryLang = userInfo.getPrimary();
+		logger.debug("isPrimaryLang=" + isPrimaryLang);
+		/*if (sysLang.equals(userInfo.getLang())) {
 			isPrimaryLang = sysLang;
 		} else { 
 			isPrimaryLang = userInfo.getLang();
-		}
+		}*/
 		
 		if (companyId == null || companyId.equals("Top/organ")) {
 			companyId = "";

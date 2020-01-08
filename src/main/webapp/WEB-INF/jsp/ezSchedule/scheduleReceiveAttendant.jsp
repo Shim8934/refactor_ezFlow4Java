@@ -380,31 +380,29 @@
 	        <div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:370px"> 
 	            <table class="popuplist" style="WIDTH: 100%">
 	                <tr>
-	                    <th style="white-space:nowrap; width:20px"><spring:message code='ezSchedule.t190' /></th> 
-	                    <th style="white-space:nowrap; width:40px"><spring:message code='ezSchedule.t340' /></th> 
-	                    <th style="white-space:nowrap; width:60px"><spring:message code='ezSchedule.t164' /></th> 
-	                    <th style="white-space:nowrap; width:100px"><spring:message code='ezSchedule.t341' /></th> 
-	                    <th style="white-space:nowrap"><spring:message code='ezSchedule.t272' /></th> 
-	                    <th><spring:message code='ezSchedule.t318' /></th> 
+	                    <th style="white-space:nowrap; text-align:center; width:20px"><spring:message code='ezSchedule.t190' /></th> 
+	                    <th style="white-space:nowrap; text-align:center; width:40px"><spring:message code='ezSchedule.t340' /></th> 
+	                    <th style="white-space:nowrap; text-align:center; width:60px"><spring:message code='ezSchedule.t164' /></th> 
+	                    <th style="white-space:nowrap; text-align:center; width:100px"><spring:message code='ezSchedule.t341' /></th> 
+	                    <th style="white-space:nowrap; text-align:center;"><spring:message code='ezSchedule.t272' /></th> 
+	                    <th style="text-align:center;"><spring:message code='ezSchedule.t318' /></th> 
 	                </tr> 
 	              	<c:forEach var="item" items="${receiveList}">
 	              	<tr> 
 	                    <td style="text-align:center">
 	                    	<input type='checkbox' value="1" scheduleid='${item.scheduleId}' />
 	                    </td> 
-	                    <td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer" onClick="parentwin.show_personinfo('${item.creatorId}')">
+	                    <td title="<spring:message code='ezSchedule.t162' />" style="cursor:pointer; text-align:center;" onClick="parentwin.show_personinfo('${item.creatorId}')">
 	                    	<c:if test="${userInfo.primary == '1'}">${item.creatorName}</c:if>
 	                    	<c:if test="${userInfo.primary != '1'}">${item.creatorName2}</c:if>	                    
 	                    </td> 
-	                    <td>
+	                    <td style="text-align:center;">
 	                    	<c:if test="${item.status == '0'}"><spring:message code='ezSchedule.t166' /></c:if>
 	                    	<c:if test="${item.status != '0'}"><spring:message code='ezSchedule.t169' /></c:if>
 	                    </td> 
-	                    <td><c:out value="${item.location }" /></td> 
-	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all;cursor:pointer;text-overflow:ellipsis;overflow:hidden" onClick="open_schedule_in_receiveAttendant('${item.scheduleId}', 'Y')"><c:out value="${item.title}" /></td> 
-	                    <td class="showDateType" style="white-space:nowrap" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}">
-	                    	
-	                    </td> 
+	                    <td style="text-align:center;"><c:out value="${item.location }" /></td> 
+	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all; cursor:pointer; text-overflow:ellipsis; overflow:hidden; text-align:center;" onClick="open_schedule_in_receiveAttendant('${item.scheduleId}', 'Y')"><c:out value="${item.title}" /></td> 
+	                    <td class="showDateType" style="white-space:nowrap; text-align:center;" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}"></td> 
 	                </tr>	              		
 	              	</c:forEach>	                 
 	            </table>
