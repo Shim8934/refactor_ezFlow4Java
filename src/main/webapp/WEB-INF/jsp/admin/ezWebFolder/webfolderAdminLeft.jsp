@@ -5,12 +5,13 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTree.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript" >
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
@@ -36,6 +37,21 @@
 				
 				preprocess();
 			};
+			
+			$(document).ready(function() {
+				leftResize();
+		        $(".adminListBox").mCustomScrollbar({
+		    		theme : "dark"
+		    	});
+			});
+	        
+	        function leftResize(){
+	        	$(".adminListBox").height(window.innerHeight-58);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+	    	});
 			
 			function preprocess() {
 				var leftElmt    = document.getElementById("left");
@@ -82,8 +98,8 @@
 				while (divTree2.hasChildNodes()) {
 					divTree2.removeChild(divTree2.lastChild);
 				} */
-				document.getElementById("folderTree").style.display  = "none";
-				document.getElementById("folderTree2").style.display = "none";
+				document.getElementById("lnbUL2").style.display  = "none";
+				document.getElementById("lnbUL").style.display = "none";
 			}
 			
 			function companyFile(obj) {
@@ -92,6 +108,7 @@
 				}
 				
 				clearToggle();
+				document.getElementById("lnbUL").style.display = "";
 				getCompanyData(companyId, "", "folderTree");
 			}
 			
@@ -116,6 +133,7 @@
 				}
 				
 				clearToggle();
+				document.getElementById("lnbUL2").style.display  = "";
 				getDepartmentData(companyId, "", "folderTree2");
 			}
 			
@@ -134,56 +152,33 @@
 			}
 		</script>
 	</head>
-	<body class="leftbody" style="overflow: auto; height:100%">
-		<div id="left" style="overflow: auto">
-			<div class="left_webfolder" title="<spring:message code='ezWebFolder.t10'/>">
-				<span><spring:message code="ezWebFolder.t10"/></span>
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+			<div class="left_title"><spring:message code="ezWebFolder.t10"/></div>
+			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
+				<h2 class="on">
+					<span class="sub_iconLNB tree_arrow_up"></span>
+					<span class="h2Title"  onClick="displayPersonal();"><spring:message code='ezWebFolder.t101'/></span>
+				</h2>
+				<ul class="lnbUL">
+					<li><span id="company" class="list_text leftMenu_btn"  onClick="goPage(1);" ><spring:message code='ezWebFolder.t102'/></span></li>
+					<li><span id="personal" class="list_text leftMenu_btn" onClick="goPage(2);" ><spring:message code='ezWebFolder.t103'/></span></li>
+				</ul>
+				<h2><span onClick="companyFolder();"><spring:message code='ezWebFolder.t126'/></span></h2>
+				<h2><span onClick="companyFile(this);"><spring:message code='ezWebFolder.t127'/></span>
+				</h2>
+				<ul class="lnbUL" id='lnbUL' style="min-height: 200px; display: none; overflow-x: hidden; white-space: nowrap; padding: 5px 0px 0px 5px;">
+					<div id="folderTree" class="tree onlytree" ></div>
+				</ul>
+				<h2><span onClick="departmentFolder();"><spring:message code='ezWebFolder.t219'/></span></h2>
+				<h2><span onClick="departmentFile(this);"><spring:message code='ezWebFolder.t220'/></span></h2>
+				<ul class="lnbUL" id="lnbUL2" style="min-height: 200px; display: none; overflow-x: hidden; white-space: nowrap; padding: 5px 0px 0px 5px;">
+					<div id="folderTree2" class="tree onlytree" ></div>
+				</ul>
+				<h2><span onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128'/></span></h2>
+ 				<h2><span onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span></h2>
 			</div>
-			
-			<h2>
-				<span style="display:inline-block;width:100%;" onClick="displayPersonal();"><spring:message code='ezWebFolder.t101'/></span>
-			</h2>
-			<ul>
-				<li><span id="company"  style="width: 100%; display: inline-block;" onClick="goPage(1);" ><spring:message code='ezWebFolder.t102'/></span></li>
-				<li><span id="personal" style="width: 100%; display: inline-block;" onClick="goPage(2);" ><spring:message code='ezWebFolder.t103'/></span></li>
-			</ul>
-			
-			<h2>
-				<span style="display:inline-block;width:100%;" onClick="companyFolder();"><spring:message code='ezWebFolder.t126'/></span>
-			</h2>
-			<ul></ul>
-			
-			<h2>
-				<span style="display:inline-block;width:100%;" onClick="companyFile(this);"><spring:message code='ezWebFolder.t127'/></span>
-			</h2>
-			<ul></ul>
-			<div id="folderTree" style="min-height: 200px; display: none; overflow-x: hidden; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
-			
-			<h2>
-				<span style="display:inline-block;width:100%;" onClick="departmentFolder();"><spring:message code='ezWebFolder.t219'/></span>
-			</h2>
-			<ul></ul>
-			
-			<h2>
-				<span style="display:inline-block;width:100%;" onClick="departmentFile(this);"><spring:message code='ezWebFolder.t220'/></span>
-			</h2>
-			<ul></ul>
-			<div id="folderTree2" style="min-height: 200px; display: none; overflow-x: hidden; white-space: nowrap; padding: 5px 0px 0px 5px;"></div>
-			
-			<h2>
-				<span style="display:inline-block;width:100%;" onClick="fileTransactionHistory();"><spring:message code='ezWebFolder.t128'/></span>
-			</h2>
-			<ul>
-			</ul>
-			<h2>
-  				<span style="display:inline-block;width:100%;" onclick="getTrashCanList();"><spring:message code='ezWebFolder.t269'/></span>
-  			</h2>
-  			<ul>
-			</ul>
 		</div>
 		<div id="bnkBlockLeft" class="blockLeft" style="width:100%; height:100%; display: none; z-index: 10;" onclick="closePop();"></div>
-		<script type="text/javascript">
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>
 	</body>
 </html>
