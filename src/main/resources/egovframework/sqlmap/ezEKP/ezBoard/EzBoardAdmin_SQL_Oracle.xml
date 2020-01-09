@@ -2233,56 +2233,73 @@
 		]]>
 	</update>
 	
+	<!-- 2020-01-09 홍승비 - 오라클의 중복 키 업데이트 쿼리 MERGE INTO로 수정 -->
 	<!-- 2019-11-13 홍승비 - '접근권한이 허용'인 하위게시판 권한복사 시 상위게시판에 권한정보 일부 삽입 또는 업데이트 -->
 	<insert id="EzBoardAdminDAO.saveACLIncludeUppderBoard2" parameterClass="Map">
-	<![CDATA[
-		INSERT INTO tbl_board_boardmanage (
-			BOARDID, 
-			ACCESSID, 
-			ACCESSNAME, 
-			ACCESSNAME2, 
-			ACCESS_, 
-		    PARENTBOARDID, 
-		    BOARDADMIN_FG, 
-		    LISTVIEW_FG, 
-		    READ_FG, 
-		    WRITE_FG, 
-		    REPLY_FG, 
-		    DELETE_FG, 
-		    INHERIT_FG, 
-		    POSTNOTICE, 
-		    BOARDGROUPACL, 
-		    TENANT_ID, 
-		    COMPANYID
-		    )
-		SELECT 
-			#v_BOARDID#, 
-			ACCESSID, 
-			ACCESSNAME, 
-			ACCESSNAME2, 
-			'1',
-		    #v_PARENTBOARDID#, 
-		    'false', 
-		    'false', 
-		    'false', 
-		    'false',   
-		    'false', 
-		    'false', 
-		    'false', 
-		    'false', 
-		    #v_BOARDGROUPACL#, 
-		    TENANT_ID, 
-		    COMPANYID
-		FROM
-			tbl_board_boardmanage
-		WHERE
-			BOARDID = #v_ORGBOARDID#
-		AND
-			TENANT_ID = #v_TENANTID#
-		AND
-			ACCESSID = #v_ACCESSID#
-		ON DUPLICATE KEY UPDATE 
-			ACCESS_ = '1'	
+		<![CDATA[
+			MERGE INTO
+				TBL_BOARD_BOARDMANAGE A
+			USING (
+				SELECT
+					ACCESSID, 
+					ACCESSNAME, 
+					ACCESSNAME2, 
+					TENANT_ID, 
+				    COMPANYID
+				FROM
+					TBL_BOARD_BOARDMANAGE B
+				WHERE
+					B.BOARDID = #v_ORGBOARDID#
+				AND
+					B.TENANT_ID = #v_TENANTID#
+				AND
+					B.ACCESSID = #v_ACCESSID#
+				) TMP
+			ON
+				(A.BOARDID = #v_BOARDID#
+				AND A.TENANT_ID = #v_TENANTID#
+				AND A.ACCESSID = #v_ACCESSID#)
+			WHEN MATCHED THEN
+				UPDATE SET
+					ACCESS_ = '1'
+			WHEN NOT MATCHED THEN
+			 	INSERT (
+					BOARDID, 
+					ACCESSID, 
+					ACCESSNAME, 
+					ACCESSNAME2, 
+					ACCESS_, 
+				    PARENTBOARDID, 
+				    BOARDADMIN_FG, 
+				    LISTVIEW_FG, 
+				    READ_FG, 
+				    WRITE_FG, 
+				    REPLY_FG, 
+				    DELETE_FG, 
+				    INHERIT_FG, 
+				    POSTNOTICE, 
+				    BOARDGROUPACL, 
+				    TENANT_ID, 
+				    COMPANYID
+				)
+				VALUES (
+					#v_BOARDID#, 
+					TMP.ACCESSID, 
+					TMP.ACCESSNAME, 
+					TMP.ACCESSNAME2, 
+					'1',
+				    #v_PARENTBOARDID#, 
+				    'false', 
+				    'false', 
+				    'false', 
+				    'false',   
+				    'false', 
+				    'false', 
+				    'false', 
+				    'false', 
+				    #v_BOARDGROUPACL#, 
+				    TMP.TENANT_ID, 
+				    TMP.COMPANYID)
 		]]>
 	</insert>
 </sqlMap>
