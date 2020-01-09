@@ -98,6 +98,7 @@
 		    var shareId = "${shareId}";
 		    var deletePermission = "${deletePermission}";
 		    var sendPermission = "${sendPermission}";
+		    var managePermission = "${managePermission}";
 		    var systemCountryCode = "${systemCountryCode}";
 		    var useShowSystemCountry = "${useShowSystemCountry}";
 		    var file 		 = new Array();
@@ -185,7 +186,7 @@
 		        	btnReject.style.display = "";
 		        }
 				
-		        if (shareId != "") {
+		        if (shareId != "" && managePermission != "Y") {
 		        	btnReject.style.display = 'none';
 		        }
 		        

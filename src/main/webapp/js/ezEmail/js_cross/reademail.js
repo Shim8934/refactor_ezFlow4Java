@@ -612,7 +612,14 @@ function func_reject_Complete(retVal) {
         var objXml = new DOMParser().parseFromString('<DATA></DATA>', "text/xml");
         var objRoot = objXml.documentElement;
 
-
+        if (typeof(shareId) != "undefined" && shareId != "") {
+        	var objRow = objXml.createElement("ROW");
+            objRoot.appendChild(objRow);
+            
+            var objNode = objXml.createElement("SHAREID");
+            objNode.appendChild(objXml.createCDATASection(shareId));
+            objRow.appendChild(objNode);
+       }
 
         for (var i = 0 ; i < retVal.length ; i++) {
             var objRow = objXml.createElement("ROW");

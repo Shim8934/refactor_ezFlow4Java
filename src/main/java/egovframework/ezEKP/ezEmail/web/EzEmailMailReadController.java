@@ -178,6 +178,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				model.addAttribute("shareId", shareId);
 				model.addAttribute("deletePermission", shareVO.getDeletePermission());
 				model.addAttribute("sendPermission", shareVO.getSendPermission());
+				model.addAttribute("managePermission", shareVO.getManagePermission());
 			}
 		}
 		
