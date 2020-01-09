@@ -1704,6 +1704,22 @@
 					            	setNonElecRecInfo(nonElecRecInfoXml);
 				            	}
 				            }
+
+                            $.ajax({
+                                type : "POST",
+                                ataType : "text",
+                                sync : false,
+                                url : "/ezApprovalG/openGovInfoSave.do",
+                                data : {
+                                    openGovListFlag : ret[27],
+                                    fileOpenFlagList : ret[28],
+                                    basis : ret[29],
+                                    reason : ret[30],
+                                    publicity : ret[11],
+                                    docID : pDocID,
+                                    limitDate : ret[31]
+                                }
+                            });
 			                
 		                } else {
 		                	//회람

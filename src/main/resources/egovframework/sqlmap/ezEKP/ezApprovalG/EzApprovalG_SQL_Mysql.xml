@@ -31510,7 +31510,7 @@
 	</insert>
 	<select id="EzApprovalG.getOpenGovLimitDate" parameterClass="Map" resultClass="String">
 		SELECT
-			IFNULL(OPENLIMITDATE, 'N')
+			IFNULL(OPENLIMITDATE, 'N') AS openlitdate
 		FROM
 			TBL_OPENGOVDOCINFO
 		WHERE

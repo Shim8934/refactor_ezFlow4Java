@@ -1671,13 +1671,13 @@
 	                    		async : false,
 	                    		url : "/ezApprovalG/openGovInfoSave.do",
 	                    		data : {
-	                    				openGovListFlag : ret[27],
-	                    				fileOpenFlagList : ret[28],
-	                    				basis : ret[29],
-	                    				reason : ret[30],
-	                    				publicity : ret[11],
-	                    				docID : pDocID,
-	                    				limitDate : ret[31]
+									openGovListFlag : ret[27],
+									fileOpenFlagList : ret[28],
+									basis : ret[29],
+									reason : ret[30],
+									publicity : ret[11],
+									docID : pDocID,
+									limitDate : ret[31]
 	                    		}
 		                	});
 		                	
@@ -1686,7 +1686,7 @@
 		                	basis = ret[29];
 		                	reason = ret[30];
 		                	limitDate = ret[31];
-		                	passAprLine = ret[32];
+		                	// passAprLine = ret[32];
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

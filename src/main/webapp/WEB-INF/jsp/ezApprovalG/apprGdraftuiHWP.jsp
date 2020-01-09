@@ -1362,7 +1362,7 @@
 	                	basis = ret[29];
 	                	reason = ret[30];
 	                	limitDate = ret[31];
-	                	passAprLine = ret[32];
+	                	// passAprLine = ret[32];
 			        }
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e.description);

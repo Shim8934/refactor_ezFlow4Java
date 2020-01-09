@@ -28925,13 +28925,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public List<ApprGOpenGovAttachVO> getAttachListForOpenGov(String docID, String endFlag, String companyID, int tenantId) throws Exception {
+	    logger.debug("getAttachListForOpenGov started.");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docID);
 		map.put("tenantID", tenantId);
 		map.put("companyID", companyID);
 		map.put("endFlag", endFlag);
-		
-		return ezApprovalGDAO.getAttachListForOpenGov(map); 
+
+        List<ApprGOpenGovAttachVO> result = ezApprovalGDAO.getAttachListForOpenGov(map);
+
+        logger.debug("getAttachListForOpenGov ended. result size = " + result.size());
+
+		return result;
 	}
 
 	public int GongRamDocLineInfo(String docID, String companyID, int tenantID) throws Exception {
@@ -29139,7 +29145,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String openGovInfoSave(String openGovListFlag, String fileOpenFlagList, String basis, String reason, String publicity, String docID, String limitDate, String companyID, int tenantId) throws Exception {
 		//openGovListFlag 가 N 이면 basis 필요 없음
 		//publicity.substring(0,1) 이 1이면 reason 필요없음
-		logger.debug("getGongRamLineInfo started");
+		logger.debug("openGovInfoSave started");
+		logger.debug("docID = " + docID + ", openGovListFlag = " + openGovListFlag + ", fileOpenFlagList = " + fileOpenFlagList + ", basis = " + basis + ", reason = " + reason + ", publicity = " + publicity + ", limitDate = " + limitDate);
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docID);
 		map.put("openFlag", publicity.substring(0,1));
@@ -29148,6 +29156,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("tenantID", tenantId);
 		map.put("basis", basis);
 		map.put("reason", reason);
+
 		if (!limitDate.equals("")) {
 			map.put("limitDate", limitDate);
 		}
@@ -29162,8 +29171,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.updateFileOpenFlag(map);
 			}
 		}
-		
-		logger.debug("getGongRamLineInfo ended");
+
+		logger.debug("openGovInfoSave ended");
+
+		//TODO 이건뭐지
 		return null;
 	}
 	
@@ -29228,7 +29239,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
 			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
 			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String alFlag, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
-		logger.debug("getSearchDocList started");
+		logger.debug("getSearchDocListForOpenGov started");
 
 		StringBuilder resultXML = new StringBuilder();
 		String orderOption1 = "";
@@ -29421,7 +29432,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</LISTVIEWDATA>");
 		resultXML.append("</DOCLIST>");
 
-		logger.debug("getSearchDocList ended");
+		logger.debug("getSearchDocListForOpenGov ended");
 		
 		return resultXML.toString();
 	}
@@ -29612,7 +29623,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                                     String publicity, String docID, String limitDate, String companyID, int tenantId, String modifyReason, LoginVO userInfo) throws Exception {
         //openGovListFlag 가 N 이면 basis 필요 없음
         //publicity.substring(0,1) 이 1이면 reason 필요없음
-        logger.debug("getGongRamLineInfo started");
+        logger.debug("updateOpenGovInfo started");
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("docID", docID);
         map.put("openFlag", publicity.substring(0, 1));
@@ -29660,7 +29671,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         ezApprovalGDAO.insertModifyOpenGovHistory(map);
 
-        logger.debug("getGongRamLineInfo ended");
+        logger.debug("updateOpenGovInfo ended");
         return null;
     }
 
