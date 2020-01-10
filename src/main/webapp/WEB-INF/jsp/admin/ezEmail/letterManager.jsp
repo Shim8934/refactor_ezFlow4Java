@@ -220,7 +220,7 @@
 				var interval = window.setInterval(function() {
 					try {
 						if (win === null || win.closed) {
-							if (searchTxt !== "") {
+							if ($("#lmSearchInput").val().trim() !== "") {
 								letterSearch();
 							} else {
 								getLetterList(selectNode.node.id);
@@ -279,7 +279,7 @@
 				success : function() {
 					var lmPreIframe = $(".lmPreViewIframe");
 
-					if (searchTxt != "") {
+					if ($("#lmSearchInput").val().trim() != "") {
 						letterSearch(); // 검색된 편지지 목록
 					} else {
 						getLetterList(letterBoxNo);

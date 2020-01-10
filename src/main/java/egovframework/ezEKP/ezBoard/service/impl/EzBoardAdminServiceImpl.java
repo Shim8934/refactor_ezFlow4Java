@@ -162,8 +162,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String fullPath = realPath + commonUtil.detectPathTraversal(docPath);
 			File doc = new File(fullPath);
 			
+			/* 2020-01-09 홍승비 - 파일경로 폴더 생성 방식 수정 (존재하지 않는 상위폴더를 전부 생성하도록 수정) */
 			if (!doc.exists() || !doc.isDirectory()) {
-				doc.mkdir();
+				doc.mkdirs();
 			}
 			
 			dbPath = docPath + boardID + ".mht";

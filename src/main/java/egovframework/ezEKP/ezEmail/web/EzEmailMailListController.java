@@ -144,6 +144,7 @@ public class EzEmailMailListController {
 					model.addAttribute("shareId", shareId);
 					model.addAttribute("deletePermission", shareVO.getDeletePermission());
 					model.addAttribute("sendPermission", shareVO.getSendPermission());
+					model.addAttribute("managePermission", shareVO.getManagePermission());
 				}
 			}
 		}
@@ -1587,9 +1588,9 @@ public class EzEmailMailListController {
 		logger.debug("mailRequestDenial started.");
 		
 		String returnData = "<DATA><![CDATA[ERROR]]></DATA>";
-		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		NodeList nodes = xmldom.getElementsByTagName("DENIAL");
+		NodeList shareId = xmldom.getElementsByTagName("SHAREID");
 		
 		if (nodes == null || nodes.getLength() == 0) {
 			logger.error("cannot get request data");
@@ -1602,6 +1603,12 @@ public class EzEmailMailListController {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
         String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
         String userEmail = loginInfo.getId() + "@" + domainName;
+        // 20200109 공유사서함 수신거부 기능 추가
+        if (shareId != null && shareId.getLength() != 0) { 
+        	String shared = shareId.item(0).getTextContent();
+            logger.debug("shared=" + shared);
+        	userEmail = shared + "@" + domainName;
+        }
 		
         logger.debug("userEmail=" + userEmail);
         
