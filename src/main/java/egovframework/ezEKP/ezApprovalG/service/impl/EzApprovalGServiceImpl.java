@@ -29309,7 +29309,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, commonUtil.getMultiData(lang, tenantID), approvUser, approvalFlag, companyID, tenantID, offset);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
 		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
-		int querySize3 = querySize - Integer.parseInt(pageSize) ;
+		int querySize3 = querySize - Integer.parseInt(pageSize);
 		
 		if (!alFlag.equals("1")) {
 			if (querySize2 >= Integer.parseInt(pageSize)) {
