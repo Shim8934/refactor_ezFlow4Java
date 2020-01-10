@@ -34,8 +34,8 @@
 .time_stats .statsUL li{ margin:0px; padding:0px; overflow:hidden;}
 .time_stats .statsUL li .statsDL{margin:0px;padding: 5px 10px;overflow:hidden;/* border-bottom: 1px solid #f1f1f1; */box-sizing: border-box; height:31px;}
 .time_stats .statsUL li .statsDL dt{ margin:0px; float:left; font-family:Meiryo UI; font-size:12px; color:#000; padding:4px 0px 0px 21px;}
-.time_stats .statsUL li .statsDL dt.inOut{background: url(/images/ezAttitude/inOut.png) no-repeat left 6px;}
-.time_stats .statsUL li .statsDL dt.trip{background: url(/images/ezAttitude/trip.png) no-repeat left 6px;}
-.time_stats .statsUL li .statsDL dt.refresh{background: url(/images/ezAttitude/refresh.png) no-repeat left 6px;}
-.time_stats .statsUL li .statsDL dt.absence{background: url(/images/ezAttitude/absence.png) no-repeat left 6px;}
+.time_stats .statsUL li .statsDL dt.inOut{background: url(/images/ezAttitude/inOut.png) no-repeat left 2px;}
+.time_stats .statsUL li .statsDL dt.trip{background: url(/images/ezAttitude/trip.png) no-repeat left 2px;}
+.time_stats .statsUL li .statsDL dt.refresh{background: url(/images/ezAttitude/refresh.png) no-repeat left 2px;}
+.time_stats .statsUL li .statsDL dt.absence{background: url(/images/ezAttitude/absence.png) no-repeat left 2px;}
 .time_stats .statsUL li .statsDL dd{margin:0px;padding:2px 5px;float:right;font-size: 12px;color: #0470e4;font-family: Meiryo UI;font-weight: bold;height: 21px;line-height: 21px;box-sizing:border-box;/* background: rgb(243, 245, 247); *//* border: 1px solid #c8ccd0; */border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:20px;cursor:pointer;}
