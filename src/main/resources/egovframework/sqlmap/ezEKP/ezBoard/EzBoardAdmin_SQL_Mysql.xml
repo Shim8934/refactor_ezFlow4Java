@@ -357,7 +357,7 @@
 		                      	</isEqual>
 		                      </isEqual>
 		                      <![CDATA[
-		                      	) B   
+		                      	) B
 		                ON 
 		                	A.TENANT_ID = B.TENANT_ID
 		                AND

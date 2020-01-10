@@ -545,17 +545,10 @@
                	  FROM 
 					(SELECT 
                	  		IMAGEID,
-						ITEMID,
-						BOARDID,
-						WRITERID,
-						WRITERNAME,
-						WRITERDEPTID,
 						FILEPATH,
-						WRITEDATE,
 						FILECONTENT,
-						IMAGENAME,
 						MAIN_FLAG FLAG,
-						TENANT_ID
+						IMAGENAME
                	  	  FROM
                	  		TBL_Photo_ImageItem 
                   	  WHERE  
@@ -4720,9 +4713,9 @@
        			WHERE
        				tenant_id = #v_TENANTID#
        			AND  
-       				ImageID = #v_ImageID#
+       				TRIM(ImageID) = #v_ImageID#
         		AND 
-        			BoardID = #v_BoardID#
+        			TRIM(BoardID) = #v_BoardID#
 			]]>
 		</isNotEmpty>
 		<isEmpty property="v_FilePath">
@@ -4733,9 +4726,9 @@
        			WHERE  
        				tenant_id = #v_TENANTID#
        			AND
-       				ImageID = #v_ImageID#
+       				TRIM(ImageID) = #v_ImageID#
         		AND 
-        			BoardID = #v_BoardID#
+        			TRIM(BoardID) = #v_BoardID#
 			]]>
 		</isEmpty>
 	</update>
