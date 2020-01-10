@@ -100,7 +100,8 @@ function getBoardComment() {
 					boardCommentList += "<img src='/images/ImgIcon/comment_del.gif'" +
 							" style='cursor:pointer;vertical-align:middle;inline-block;padding-bottom:1.6px' onclick='deleteBoardComment(this)'/>";
 				} else {
-					if (vo.userID == "") {
+					/* 2020-01-10 홍승비 - 익명게시판 댓글 체크 부분 오라클 호환 수정 */
+					if (vo.userID == null || vo.userID == "") {
 						//익명일 경우
 						boardCommentList += "<img src='/images/ImgIcon/comment_del.gif'" +
 								" style='cursor:pointer;vertical-align:middle;inline-block;padding-bottom:1.6px;' onclick='deleteBoardComment(this)'/>";
