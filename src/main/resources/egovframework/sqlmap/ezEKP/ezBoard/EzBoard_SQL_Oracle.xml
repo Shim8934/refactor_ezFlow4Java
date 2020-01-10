@@ -4266,7 +4266,7 @@
 		WHERE
        		tenant_id = #v_TENANTID#
        	AND  
-       		imageID = #v_IMAGEID#
+       		TRIM(imageID) = #v_IMAGEID#
        	AND
        		ItemID = #v_ITEMID#
 	</select>
@@ -4617,7 +4617,7 @@
 			UPDATE TBL_Photo_ImageItem
         	SET 
         		main_Flag = CASE
-        					WHEN imageID = #v_IMAGEID# THEN 'Y'
+        					WHEN TRIM(imageID) = #v_IMAGEID# THEN 'Y'
         					ELSE 'N'
         					END
         	WHERE
@@ -4906,7 +4906,7 @@
         	WHERE  
         		TENANT_ID = #v_TENANTID#
         	AND
-        		ImageID = #v_ImageID#
+        		TRIM(ImageID) = #v_ImageID#
         	AND 
         		BoardID = #v_BoardID#
 		]]>
@@ -4983,7 +4983,7 @@
 			WHERE  
 				TENANT_ID = #v_TENANTID#
 			AND
-				IMAGEID = #v_pIMAGEID#
+				TRIM(IMAGEID) = #v_pIMAGEID#
 		]]>
 	</delete>	
 	
