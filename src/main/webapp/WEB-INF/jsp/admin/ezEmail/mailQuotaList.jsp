@@ -359,7 +359,7 @@
 				    				$('#searchKeycode option:eq(' + idx + ')').attr('selected', 'selected');
 			    				}
 			    				
-			    				$('#searchKeyword').val(res.searchKeyword);
+			    				// $('#searchKeyword').val(res.searchKeyword);
 			    			}
 			    			,error: function(err) {
 			    				alert(strLang321);
