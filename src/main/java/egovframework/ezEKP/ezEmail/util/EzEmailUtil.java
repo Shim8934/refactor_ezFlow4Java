@@ -794,8 +794,10 @@ public class EzEmailUtil {
 	                        rawHeader = rawHeader.replace(charSet, "gbk");
 	                                                
 	                        subject = MimeUtility.decodeText(rawHeader);
+	                    // 료비에서 구자체 한문을 사용하는 메일의 경우 iso-2022-jp로 인코딩되어 있으나
+	                    // 표시가 제대로 되지 않아 x-windows-iso2022jp로 변경처리함
 	                    } else if (charSet.equals("iso-2022-jp")) {
-	                        rawHeader = rawHeader.replace(charSet, "cp50220");
+	                        rawHeader = rawHeader.replace(charSet, "x-windows-iso2022jp");
 	                                                
 	                        subject = MimeUtility.decodeText(rawHeader);
 	                    } 
@@ -1124,10 +1126,13 @@ public class EzEmailUtil {
                 
                 filename = MimeUtility.decodeText(originalFilename);
             // 일본어 파일명에 원형 숫자가 포함되면 문자가 깨져서 cp50220으로 변환하도록 함.
+            // 료비에서 구자체 한문을 사용하는 메일의 경우 iso-2022-jp로 인코딩되어 있으나
+            // 표시가 제대로 되지 않아 cp50220에서 x-windows-iso2022jp로 변경처리함.
+            // x-windows-iso2022jp는 원형 숫자도 제대로 표시함.
             } else if (originalFilename != null && originalFilename.startsWith("=?iso-2022-jp")) {
-                originalFilename = originalFilename.replace("iso-2022-jp", "cp50220");
+                originalFilename = originalFilename.replace("iso-2022-jp", "x-windows-iso2022jp");
                 
-                logger.debug("originalFilename changed iso-2022-jp to cp50220.");
+                logger.debug("originalFilename changed iso-2022-jp to x-windows-iso2022jp.");
                 
                 filename = MimeUtility.decodeText(originalFilename);
             } else if (originalFilename != null && originalFilename.startsWith("=?cp932")) {
@@ -1290,9 +1295,9 @@ public class EzEmailUtil {
 								byte[] buf = new byte[is.available()];
 								is.read(buf);
 								
-								logger.debug("text/html changed iso-2022-jp to cp50220.");
+								logger.debug("text/html changed iso-2022-jp to x-windows-iso2022jp.");
 								
-								strContent = new String(buf, "cp50220");
+								strContent = new String(buf, "x-windows-iso2022jp");
 							}											
 						}
 					}
@@ -1485,16 +1490,16 @@ public class EzEmailUtil {
 										byte[] buf = new byte[is.available()];
 										is.read(buf);
 										
-										logger.debug("text/plain changed iso-2022-jp to cp50220.");
+										logger.debug("text/plain changed iso-2022-jp to x-windows-iso2022jp.");
 										
-										strContent = new String(buf, "cp50220");
+										strContent = new String(buf, "x-windows-iso2022jp");
 									}											
 								}
 							} 
 						}
 						
 						// Content-Type 헤더에 charset 속성이 없는 경우엔 US-ASCII로만 구성되어야 한다.
-						// Content-Type: text/plain 과 같이 charset이 없지만 본문이 iso-2022-jp(cp50220)로 작성된 메일이 발견되어 추가함.
+						// Content-Type: text/plain 과 같이 charset이 없지만 본문이 iso-2022-jp(x-windows-iso2022jp)로 작성된 메일이 발견되어 추가함.
 						if (!isCharSet) {
 							logger.debug("rawContentType=" + rawContentType);
 							logger.debug("no charset attribute");
@@ -1520,10 +1525,10 @@ public class EzEmailUtil {
 									byte[] buf = new byte[is.available()];
 									is.read(buf);
 									
-									if (isCharEncRight(buf, "cp50220")) {
-										strContent = new String(buf, "cp50220");
+									if (isCharEncRight(buf, "x-windows-iso2022jp")) {
+										strContent = new String(buf, "x-windows-iso2022jp");
 										
-										logger.debug("it's cp50220");																
+										logger.debug("it's x-windows-iso2022jp");																
 									}
 								}														
 							}
