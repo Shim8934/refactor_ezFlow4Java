@@ -968,7 +968,7 @@
 				<isEqual property="v_SEARCHTYPE2" compareValue="pCommCloseReason">
 					<![CDATA[
 						AND
-							CLOSEREASON LIKE CONCAT('%', #v_STRQUERY#, '%')
+							CLOSEREASON LIKE '%' || #v_STRQUERY# || '%'
 					]]>
 				</isEqual>
 				<![CDATA[
