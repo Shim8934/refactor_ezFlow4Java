@@ -4522,8 +4522,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
 		
+		String pDeptID = "";
+		if (xmlDom.getElementsByTagName("BANSONGDEPTID").item(0) != null && !xmlDom.getElementsByTagName("BANSONGDEPTID").item(0).getTextContent().trim().equals("")) {
+			pDeptID = xmlDom.getElementsByTagName("BANSONGDEPTID").item(0).getTextContent();
+		} else {
+			pDeptID = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
+		}
+		
 		String result = ezApprovalGService.doProcess("004", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
-				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
+				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, pDeptID, 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
 		logger.debug("doBansongApprov ended.");
