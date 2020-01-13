@@ -3243,10 +3243,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					
 					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
 						// 삭제된 예약이면 넘어감
-						if (deletedList.contains(format2.format(dateVO[0]))) {		// 날짜만 비교하도록 수정
+						/*if (deletedList.contains(format2.format(dateVO[0]))) {		// 날짜만 비교하도록 수정
 							continue;
-						}
-						if (!deletedList.contains(format.format(dateVO2[0]))) {
+						}*/
+						if (!deletedList.contains(format2.format(dateVO2[0]))) {
 							
 							logger.debug("첫번째 조건 : " + (dateVO[0].before(dateVO2[1])));
 							logger.debug("두번째 조건 : " + (dateVO[1].after(dateVO2[0])));
