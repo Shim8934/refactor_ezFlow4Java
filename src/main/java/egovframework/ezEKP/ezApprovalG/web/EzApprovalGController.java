@@ -3522,7 +3522,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             logger.debug("formId = " + formId + ", formText.length = " + formText + ", formFile.length = " + formFile.length() + ", targetFile.length = " + targetFile.length());
 
-            if (targetFile.exists()) {
+            /*if (targetFile.exists()) {
                 //update
                 if (formText.equals("") || formFile.length() >= targetFile.length()) {
                     logger.debug("update oriTmpFile backup started.");
@@ -3550,7 +3550,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 					return ret;
                 }
-            }
+            }*/
 
 			if (extension.equals(".hwp")) {
 				stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
@@ -3834,13 +3834,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (!file.exists()) {
 				file.mkdirs();
 			}
-			
 
-			if (!"".equals(formId) && !"2003000007".equals(formId) && !"2016000001".equals(formId)) {
-				/*Recvdocnumber_Cross.js
+			/*if (!"".equals(formId) && !"2003000007".equals(formId) && !"2016000001".equals(formId)) {
+				Recvdocnumber_Cross.js
 				Recvdocnumber_HWP.js
 				ezSimsaG.jsp
-				ezSimsagHWP.jsp*/
+				ezSimsagHWP.jsp
 
 				ApprGFormVO formVO = ezApprovalGService.getFormPath(formId, userInfo.getCompanyID(), userInfo.getTenantId());
 				File formFile = new File(realPath + formVO.getFormFileLocation());
@@ -3877,7 +3876,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						return ret;
 					}
 				}
-			}
+			}*/
 
 			if (extension.equals(".hwp")) {
 				stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
