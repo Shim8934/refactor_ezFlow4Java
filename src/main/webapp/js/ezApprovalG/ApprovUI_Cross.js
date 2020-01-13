@@ -1699,6 +1699,11 @@ function SaveApproveInfo(pApproveFlag) {
    	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
    }
     
+    //반송일때, 반송문서를 부서문서함(반송함)에 보관할 부서ID를 가져온다.
+    if (pApproveFlag == "2") {
+    	createNodeAndInsertText(xmlpara, objNode, "BANSONGDEPTID", getBansongDeptID());
+    }
+    
     if (nonElecRec == "Y") {
 		var NonElecXML = createXmlDom();
 		NonElecXML = loadXMLString(nonElecRecInfoXml);
@@ -1814,6 +1819,30 @@ function SaveApproveInfo(pApproveFlag) {
      		 return "FALSE";
      	 }
    }
+}
+
+/*
+ * 반송함에 들어갈 부서를 반환함
+ * - 기안결재중 반송은 기안부서
+ * - 접수결재중 반송은 접수부서
+ * */
+function getBansongDeptID() {
+	var rtnDeptID = "";
+	
+	try {
+		var oRows = SelectNodes(document.getElementById("APRLINEINFO").dataSource, "LISTVIEWDATA/ROWS/ROW");
+		var oRowsLeng = oRows.length;
+		if (oRowsLeng > 0) {
+			rtnDeptID = SelectSingleNodeValue(GetChildNodes(oRows[oRowsLeng - 1])[0], "DATA6");
+		} else {
+			rtnDeptID = draftDeptID;
+		}
+	} catch (e) {
+		console.error(e.description);
+		rtnDeptID = draftDeptID;
+	}
+	
+	return rtnDeptID;
 }
 
 function getfieldValue(pfield) {

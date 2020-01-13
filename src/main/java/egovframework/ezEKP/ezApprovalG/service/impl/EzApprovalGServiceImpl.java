@@ -29681,4 +29681,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         ezApprovalGDAO.setOpenGovSendFlagToY();
         logger.debug("setOpenGovSendFlagToY ended");
     }
+    
+    @Override
+    public String getBansongDeptID(String docID, String orgCompanyID, int tenantID, LoginVO userInfo) throws Exception {
+    	logger.debug("getBansongDeptID started. DOCID >> " + docID);
+    	String result = "";
+    	
+    	try {
+	    	String pMode = getLineModeFlag(docID, userInfo.getId(), orgCompanyID, tenantID);
+	    	String xmlStr = getAprLineInfo(docID, "", "", orgCompanyID, userInfo.getLang(), tenantID, userInfo.getOffset(), "", "", "", pMode);
+	    	
+	    	Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+	    	
+	    	int rLength = xmlDom.getElementsByTagName("ROW").getLength();
+	    	if (rLength > 0) {
+	    		result = xmlDom.getElementsByTagName("DATA6").item(rLength - 1).getTextContent();
+	    	} else {
+	    		result = userInfo.getDeptID();
+	    	}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		result = userInfo.getDeptID();
+    	}
+    	
+    	logger.debug("getBansongDeptID ended. RESULT >> " + result);
+    	return result;
+    }
 }
