@@ -671,4 +671,6 @@ public interface EzApprovalGService {
                                     String publicity, String docID, String limitDate, String companyID, int tenantId, String modifyReason, LoginVO userInfo) throws Exception;
 
     public void setOpenGovSendFlagToY() throws Exception;
+    
+    public String getBansongDeptID(String docID, String orgCompanyID, int tenantID, LoginVO userInfo) throws Exception;
 }
