@@ -7240,12 +7240,12 @@
 		<![CDATA[
 			SELECT 
 				c_clubno,
-				boardid,
+				TRIM(boardid) AS BOARDID,
 				boardname,
 				boardname2,
 				treevieworder,
 				boardlevel,
-				parentboardid,
+				TRIM(parentboardid) AS PARENTBOARDID,
 				boarddescription,
 				itemexpires,
 				attachsizelimit,
