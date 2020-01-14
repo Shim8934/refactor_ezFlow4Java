@@ -200,6 +200,9 @@
 	        var g_CabID = "";
 	        var useReceiveInfoName = "${useReceiveInfoName}";
 	        
+	        // 부서감사 관련 2020-01-14 홍대표
+	        var pDeptgamsaCount = 0;
+	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
 	        		$("#idDatepicker").attr('disabled',false);
@@ -247,6 +250,36 @@
 	            if (SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0] == null) {
 	                document.getElementById("deptaddbtn").style.display = "none";
 	            }
+	            
+                for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
+                    if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType13) {
+                        if (pDeptgamsaCount == 0) {
+                            var node = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i];
+                            var pnode = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES")[0];
+                            pnode.removeChild(node);
+                            break;
+                        }
+                    }
+                }
+
+                for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
+                    if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType21) {
+                        if (pYesanCount == 0) {
+                            var node = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i];
+                            var pnode = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES")[0];
+                            pnode.removeChild(node);
+                            break;
+                        }
+                    }
+                }
+
+                if (pDeptgamsaCount > 0) {
+                    document.getElementById("btnAddGamsaDept").style.display = "";
+                }
+                
+                if (pDeptgamsaCount > 0) {
+                    GetGamsaYesanDeptInfo();
+                }
             
 	            if(approvalFlag == "G") {
 		            CheckGubunInit();
@@ -410,6 +443,8 @@
 	                    document.getElementById("h1_header").innerHTML = "문서정보";
 		        	}
 	            }
+	            
+	            pDeptgamsaCount = RetValue[43];
 	            
 	            if (pSuSinFlag == "N" || pDocType == "002") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
@@ -1777,6 +1812,17 @@
 	                listview.DeleteRow(GetAttribute(CurSelRow[0], "id"));
 		        } */
 		    }
+		    
+	        function GetGamsaYesanDeptInfo() {
+	            var xmlhttp = createXMLHttpRequest();
+	            var xmlpara = createXmlDom();
+
+	            xmlhttp.open("POST", "/ezApprovalG/getGamsaYesanDeptInfo.do", false);
+	            xmlhttp.send(xmlpara);
+
+	            GamsaYesanInfoXML = loadXMLString(xmlhttp.responseText);
+
+	        }
 	    </script>
 	    <style>
 	    	.mainlist_free tr th {text-align:center}

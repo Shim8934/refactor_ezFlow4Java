@@ -2529,6 +2529,10 @@ function SetAutoPropertyValue() {
             pChamJoFlag = "N";
         }
         pChamJoFlag = "Y";
+        
+        if (message.GetListItem(fields, "deptgamsasign")) {
+            deptgamsaCount = 1;
+        }
 
     } catch (e) {
         alert("SetAutoPropertyValue()" + e.description);

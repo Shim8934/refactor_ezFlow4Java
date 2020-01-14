@@ -162,6 +162,9 @@
 			var nonSepAttachLVXml = "";
 			var wAprMemberSN = "1";
 			
+			//부서감사 관련 2020-01-14 홍대표
+			var deptgamsaCount = 0;
+			
 		    window.onload = function ()
 		    {
 		        try {
@@ -1479,6 +1482,8 @@
 			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
 			        parameter[49] = nonSepAttachLVXml; // 분첨
 		        }
+		        
+		        parameter[43] = deptgamsaCount;
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
