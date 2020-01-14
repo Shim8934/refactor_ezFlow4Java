@@ -1667,7 +1667,8 @@ public class EzEmailUtil {
 						isAttach = "OK";
 					}
 				// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있어 추가함.
-				} else if (p.isMimeType("application/*")) { 
+				// ContentID가 있는 경우에는 내부에서 참조되는 인라인 이미지일 수 있으므로 제외함.
+				} else if (p.isMimeType("application/*") && ((MimePart)p).getContentID() == null) { 
 					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
@@ -1703,7 +1704,7 @@ public class EzEmailUtil {
 						htmlBody += tempList.get(0);						
 					// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있음. 이 경우 위에서 MIME Type이 application인 경우
 					// 이미 첨부파일로 추가되었기 때문에 중복 추가되지 않도록 하기 위해 !p.isMimeType("application/*") 조건을 추가함.
-					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE) && !p.isMimeType("application/*")) {						
+					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE) && !(p.isMimeType("application/*") && ((MimePart)p).getContentID() == null)) {						
 						extraMap.put("includeInlineAsAttachment", true);
 						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 						htmlBody += tempList.get(0);
@@ -2767,7 +2768,7 @@ public class EzEmailUtil {
 					if (((MimePart)p).getContentID() != null
 							|| (includeAttachment 
 									&& ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) 
-											|| p.isMimeType("application/*")))) {
+											|| (p.isMimeType("application/*") && ((MimePart)p).getContentID() == null)))) {
 						dest.addBodyPart(p);	
 						isAdded = true;
 					}
