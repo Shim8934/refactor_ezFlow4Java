@@ -2793,7 +2793,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		CommunityBoardPropertyVO vo = ezCommunityDAO.getBoardProperty(map);
 		
-		logger.debug("getBoardProperty started.");
+		logger.debug("getBoardProperty ended.");
 		
 		return vo;
 	}	
