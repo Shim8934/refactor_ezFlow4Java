@@ -184,7 +184,7 @@
 				        </tr>
 				        <tr> 
 				        	<th style="width:10%"><spring:message code = 'ezCommunity.t210' /></th>
-				          	<td width="100%" id="cTitle" colSpan="5"><div id="Div1" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; overflow-y:auto;"><c:out value = '${item.title}' /></div></td>
+				          	<td width="100%" id="cTitle" colSpan="5"><div id="Div1" style="WIDTH: 100%; overflow-y:auto; word-wrap: break-word;"><c:out value = '${item.title}' /></div></td>
 				        </tr>
 			    	</table>
 			   	</td>
