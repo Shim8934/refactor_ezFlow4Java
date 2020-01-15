@@ -62,10 +62,6 @@
 	    	var treeCtrl = "<c:out value='${treeCtrl}' />";
 	    	
 	    	window.onload = function () {
-	    		$("#message").contents().find("body").css("word-wrap", "break-word");
-	    		$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
-				$("#message").contents().find("body").css("font-size", "13px");
-	    		
 	    	    try {
 	    	    	var html = "";
 					$.ajax({
@@ -85,6 +81,11 @@
 					doc.open();
 					doc.write(html);
 					doc.close();
+					
+					/* 2020-01-15 홍승비 - 게시물 본문의 스타일 적용 시점 변경 */
+		    		$("#message").contents().find("body").css("word-wrap", "break-word");
+		    		//$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
+					$("#message").contents().find("body").css("font-size", "13px");
 					
 // 					if (gubun == "2") {
 // 						$("#messagePad").css("height","460px");
