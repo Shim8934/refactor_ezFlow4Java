@@ -111,6 +111,7 @@
 		<spring:message code='ezNewPortal.t056' />
 		<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		<select class="companySelect" id="ListCompany"></select>
+		<span> * 기본 포틀릿은 URL을 수정할 수 없습니다. 게시판 포틀릿은 게시판을 설정해야하며, 포틀릿 사용시 사용자 화면에 나타납니다.</span>
 	</h1>
 		
 	<ul id="portletListContainer" class="col-container" style="overflow: auto"></ul>
