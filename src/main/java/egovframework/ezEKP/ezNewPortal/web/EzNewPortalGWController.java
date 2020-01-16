@@ -625,7 +625,13 @@ public class EzNewPortalGWController {
 			for (int i = 0; i < userThemeList.size(); i++) {
 				if (userThemeList.get(i).getThemeId() == usedTheme) {
 					userThemeList.get(i).setThemeUsed(true);
+					hasUserDefault = true;
 				}
+			}
+			
+			// 자신의 default 테마도 없고, 기본테마에도 권한이 없는 경우 themelist의 첫번째를 선택하게 해줌
+			if (!hasUserDefault) {
+				userThemeList.get(0).setThemeUsed(true);
 			}
 			 
 			result.put("status", "ok");
