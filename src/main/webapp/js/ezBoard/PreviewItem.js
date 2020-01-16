@@ -372,6 +372,9 @@ var WriterName;
 var WriterDeptName;
 var WriterCompanyName;
 var ContentLocation;
+var OneLineReplyFlag;
+var Gubun;
+var BoardID;
 
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
@@ -431,7 +434,7 @@ function event_ItemPreviewRead_photo() {
 
             setNodeText(document.getElementById("PreH_sub_subject"), Title);
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
-            setNodeText(document.getElementById("PreH_date"), WriteDate);
+            setNodeText(document.getElementById("PreH_date"), WriteDate.substring(0, 16));
             var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + javaURLEncode(ContentLocation);
             if (location.href.toLowerCase().indexOf('temp') > -1)
                 document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
@@ -465,16 +468,19 @@ function event_ItemPreviewRead() {
             WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
             Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
             ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
+            /* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 표출용 변수 추가 */
+            OneLineReplyFlag = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ONELINEREPLY");
+            BoardID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/BoardID");
            
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
-                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do";
+                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + ItemID + "&boardID=" + BoardID + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do";
+                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + ItemID + "&boardID=" + BoardID + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";
@@ -520,7 +526,7 @@ function previewItemSet() {
     } else {
         document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
         document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;
-        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate;
+        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate.substring(0, 16);
         var readHTML = WriteContent(ContentLocation, ItemID);
         var tempText = xmlhttp2.responseText;
 
@@ -565,7 +571,7 @@ function loadsetInterval(readHTML, responseText) {
 function event_downContent(result, result2) {
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_sub_subject").textContent = Title;
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_MailReceiver").innerHTML = pOCS;
-        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate;
+        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate.substring(0, 16);
         document.getElementById("ifrmPreView" + pPreviewShow_HOW.trim()).contentWindow.makeWriteContent(result, result2);
 }
 

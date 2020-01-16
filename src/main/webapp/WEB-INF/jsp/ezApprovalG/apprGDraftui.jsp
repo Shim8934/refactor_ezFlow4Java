@@ -669,13 +669,10 @@
 			            setDrafterAddress();
 			            if (pDraftFlag == "REDRAFT")
 			                delOpinionInfo();
-			            if (nonElecRec != "Y") {
-				            if (LastSignSN == 1 || DraftLastFlag) {
-				                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
-				                OpenInformationUI(pInformationContent, check_btnSendDraft4);
-				            }
-				            else
-				                CheckPassWord();
+
+			            if (nonElecRec != "Y" && (LastSignSN == 1 || DraftLastFlag)) {
+							var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
+							OpenInformationUI(pInformationContent, check_btnSendDraft4);
 			            } else {
 			                CheckPassWord();
 			            }
@@ -948,11 +945,9 @@
 		        
 		        var rtnval;
 		        if ((LastSignSN == 1 && totalMemSN == 0)|| DraftLastFlag) {
-		            //rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
 		            rtnval = getDocNumberNew(arr_userinfo[4], "", docNumZeroCnt);
 		        }
 		        else {
-		            //rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
 		            rtnval = getDocNumberNew(arr_userinfo[4], "be", docNumZeroCnt);
 		        }
 		

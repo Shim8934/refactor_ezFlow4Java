@@ -155,7 +155,7 @@
 		        
 	        	feature = GetOpenPosition(790, 810);
 	        	
-                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 820px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 820px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 		    }
 	
 		    function WriteTask() {

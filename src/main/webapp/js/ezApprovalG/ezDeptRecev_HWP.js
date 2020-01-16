@@ -1113,27 +1113,22 @@ function getOpinionCount()
 }
 
 
-function SaveDraftDocInfo()
-{
+function SaveDraftDocInfo() {
 	var rtnVal;
-	
-	
+
 	rtnVal = SaveFile();
-    if (rtnVal != "TRUE")
-	{
+    if (rtnVal.toUpperCase() != "TRUE") {
 		return rtnVal;
 	}
 	
 	SignSave();
 	
-	switch (pDraftFlag)
-	{
-		case "SUSIN" :				
+	switch (pDraftFlag) {
+		case "SUSIN" :
 			rtnVal = SaveDraftDocInfo_susin();
 			break;
 		
 		case "REDRAFT" :
-			
 			if(pDocState == "011")
 				rtnVal = SaveDraftDocInfo_susin();
 			else
@@ -1145,10 +1140,10 @@ function SaveDraftDocInfo()
 			break;
 	}
 
-	if (rtnVal.toUpperCase() != "TRUE")
-	{
+	if (rtnVal.toUpperCase() != "TRUE") {
 		SaveOrgFile();
-	}	
+	}
+
 	return rtnVal;
 }
 

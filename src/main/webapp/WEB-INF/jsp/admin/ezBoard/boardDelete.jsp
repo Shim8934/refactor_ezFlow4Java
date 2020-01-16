@@ -66,7 +66,7 @@
 		<c:if test="${hasSubBoard == '1'}">		
 			<table  class="content">
 				<tr>
-			    	<th><spring:message code="ezBoard.t114"/></th>
+			    	<th><spring:message code="ezBoard.kje01"/></th>
 			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table><br/>
@@ -89,13 +89,11 @@
 		<c:if test="${hasSubBoard != '1'}">			
 			<table class="content">
 				<tr>
-			    	<th><spring:message code="ezBoard.t114"/></th>
+			    	<th><spring:message code="ezBoard.kje01"/></th>
 			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table><br/>			
 			<div class="box" style="padding:10px" >
-				<spring:message code="ezBoard.t116"/><b>'<c:out value="${boardName}"/>'</b>
-				<spring:message code="ezBoard.t117"/><br/>
 			  	<spring:message code="ezBoard.t118"/>
 			</div>			
 			<div class="btnpositionJsp">

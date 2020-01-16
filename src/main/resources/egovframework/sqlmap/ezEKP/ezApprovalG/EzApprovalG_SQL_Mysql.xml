@@ -4380,7 +4380,7 @@
 		AND
 		  COMPANYID = #companyID#
 		ORDER BY 
-		  APRMEMBERSN DESC 
+		  APRMEMBERSN 
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormInfoDetail" parameterClass="Map" resultClass="ApprGFormVO"> -->
@@ -4397,6 +4397,22 @@
         	FORMID = #v_FORMID#
         AND
          	COMPANYID = #companyID#
+	</select>
+
+	<select id="EzApprovalG.getFormPath" parameterClass="Map" resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				formId,
+				formFileLocation
+			FROM
+				TBL_FORMINFO
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyId = #companyId#
+			AND
+				formId = #formId#
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
@@ -22724,9 +22740,9 @@
    <insert id="EzApprovalG.insertTmpAttachInfo" parameterClass="Map"> 
    		INSERT INTO 
    			TBL_TMPATTACHINFO
-	    ( SELECT 
-	    		#v_USERID#, 
-	    		#v_SN#, 
+			(
+				OWNERID,
+	    		SN,
 	    		ATTACHFILESN , 
 	    		ATTACHFILENAME , 
 	    		ATTACHFILEHREF , 
@@ -22743,15 +22759,35 @@
 	    		AttachUserJobTitle2 , 
 	    		AttachUserDeptName2, 
 	    		TENANT_ID ,
-	    		COMPANYID  
+	    		COMPANYID  ) 
+	     SELECT 
+	    		#v_USERID#, 
+	    		#v_SN#, 
+	    		A.ATTACHFILESN , 
+	    		A.ATTACHFILENAME , 
+	    		A.ATTACHFILEHREF , 
+	    		A.ATTACHFILESIZE , 
+	    		A.ATTACHUSERID , 
+	    		A.ATTACHUSERNAME , 
+	    		A.ATTACHUSERJOBTITLE , 
+	    		A.ATTACHUSERDEPTID , 
+	    		A.ATTACHUSERDEPTNAME , 
+	    		A.PAGENUM , 
+	    		A.DISPLAYNAME , 
+	    		A.BODYATTACH , 
+	    		A.AttachUserName2 ,  
+	    		A.AttachUserJobTitle2 , 
+	    		A.AttachUserDeptName2, 
+	    		A.TENANT_ID ,
+	    		A.COMPANYID  
 	      FROM 
 	      		TBL_APRATTACHINFO A 
 	      WHERE  
-	      		DOCID = #v_DOCID# 
+	      		A.DOCID = #v_DOCID# 
 		  AND 	
-		   		TENANT_ID = #v_TENANTID#
+		   		A.TENANT_ID = #v_TENANTID#
 		  AND
-		  		COMPANYID = #companyID#)
+		  		A.COMPANYID = #companyID#
    </insert>
    
    <insert id="EzApprovalG.insertTmpExpAprLine" parameterClass="Map"> 
