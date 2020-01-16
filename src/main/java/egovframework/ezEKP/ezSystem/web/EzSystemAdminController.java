@@ -342,6 +342,7 @@ public class EzSystemAdminController {
 			sysLang = "primary";
 		}
 		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
 		
@@ -503,7 +504,7 @@ public class EzSystemAdminController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHistNotAdmin(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, 
 				startDate, endDate, companyId, userInfo.getId());
@@ -624,6 +625,8 @@ public class EzSystemAdminController {
 		if (userInfoUser.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
+		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = new ArrayList<ConnectionInfoVO>();
 		int totalCount = 0;
 		if (config.equals("u")){
