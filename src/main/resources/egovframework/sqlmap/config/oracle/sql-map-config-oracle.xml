@@ -95,4 +95,14 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitudeAdmin_SQL_Oracle.xml"/>
 	<!-- 포탈개인화 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezNewPortal/EzNewPortalAdmin_SQL_Oracle.xml"/>
+	<!-- 오라클 모바일 자원관리 -->
+	<sqlMap resource="egovframework/sqlmap/ezMobile/ezResource/EzResourceMobile_SQL_Oracle.xml"/>
+	<!-- 전자결재 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezApprovalG/EzApprovalGMobile_SQL_Oracle.xml"/>
+	<!-- 게시판 -->
+	<sqlMap resource="egovframework/sqlmap/ezMobile/ezBoard/EzBoardMobile_SQL_Oracle.xml"/>
+	<!-- 일정관리 -->
+	<sqlMap resource="egovframework/sqlmap/ezMobile/ezSchedule/EzScheduleMobile_SQL_Oracle.xml"/>
+	<!-- 조직도,직원조회 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezOrgan/EzOrganMobile_SQL_Oracle.xml"/>
 </sqlMapConfig>

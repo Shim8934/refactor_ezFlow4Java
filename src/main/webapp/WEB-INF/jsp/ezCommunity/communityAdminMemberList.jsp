@@ -10,72 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		
 		<script type="text/javascript">
-			function MM_swapImgRestore() { 
-				var i,x,a=document.MM_sr;
-				
-				for (i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) {
-					x.src=x.oSrc;
-				}
-			}
-	
-			function MM_preloadImages() { 
-				var d=document;
-				
-				if (d.images) { 
-					if (!d.MM_p) {
-						d.MM_p=new Array();
-					}
-					
-					var i,j=d.MM_p.length,a=MM_preloadImages.arguments;
-					for(i=0; i<a.length; i++) {
-						if (a[i].indexOf("#")!=0){ 
-							d.MM_p[j]=new Image;
-							d.MM_p[j++].src=a[i];
-						}
-					}
-				}
-			}
-	
-			function MM_findObj(n, d) { 
-				var p,i,x;
-				
-				if (!d) {
-					d=document;
-				}
-				
-				if ((p=n.indexOf("?"))>0&&parent.frames.length) {
-					d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);
-				}
-				
-				if (!(x=d[n])&&d.all) {
-					x=d.all[n];
-				}
-				
-				for (i=0;!x&&i<d.forms.length;i++) {
-					x=d.forms[i][n];
-				}
-				
-				for(i=0;!x&&d.layers&&i<d.layers.length;i++) {
-					x=MM_findObj(n,d.layers[i].document);
-				}
-				
-				return x;
-			}
-	
-			function MM_swapImage() {
-				var i,j=0,x,a=MM_swapImage.arguments; 
-				document.MM_sr=new Array; 
-				for(i=0;i<(a.length-2);i+=3) {
-					if ((x=MM_findObj(a[i]))!=null) {
-						document.MM_sr[j++]=x;
-						
-						if(!x.oSrc) {
-							x.oSrc=x.src; x.src=a[i+2];
-						}
-					}
-				}
-			}
-	
+			/* 2020-01-14 홍승비 - 사용하지 않는 코드 정리 */
 			/* 2019-02-20 홍승비 - 커뮤니티 CSRF 수정 (단순 호출 작동 시 get방식 사용) */
 			function sendit() {
 			    if (document.getElementById("ser").value == "" ) {
@@ -127,9 +62,9 @@
 			<tr>
 				<th><spring:message code = 'ezCommunity.t31' /></th>
 				<td>
-					<input type="radio" id="searchID" value="id" style="margin:0px 0px -2px 3px">
+					<input type="radio" id="searchID" value="id" name="flag" style="margin:0px 0px -2px 3px">
 	        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t508' /></label>
-	        		<input type="radio" id="searchName" value="name" checked style="margin:0px 0px -2px 3px">
+	        		<input type="radio" id="searchName" value="name" name="flag" checked style="margin:0px 0px -2px 3px">
 	        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t509' /></label>
 	        		<input style="height:22px" id ="ser" type="text">
 	        		<a class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>

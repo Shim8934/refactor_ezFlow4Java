@@ -45,6 +45,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
     
     @Autowired
     private EzNewPortalDAO ezNewPortalDAO;
+
+    @Autowired
+	private Properties globals;
     
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception {
 		return (ApprovPWDVO) select("EzCommonDAO.getApprovPWD", userInfo);
@@ -869,5 +872,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	public int checkDeptId(Map<String, Object> map) {
 		return (int) select("EzCommonDAO.checkDeptId", map);
+	}
+
+	public void createRsFavoriteTable() {
+		try {
+			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				select("EzCommonDAO.checkTblRsFavorite");
+			}
+		} catch (Exception e) {
+			logger.debug("tbl_rs_favorite doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblRsFavorite");
+		}
 	}
 }

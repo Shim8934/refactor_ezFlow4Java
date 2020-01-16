@@ -16,10 +16,15 @@
 				text-overflow:ellipsis;
 				display: inline-block;
 			}
-			
 			.node_div {
 				overflow:hidden;
 				text-overflow:ellipsis;
+			}
+			.node_div span {
+				vertical-align:text-bottom;
+			}
+			.node_div img {
+				margin-bottom: 3px;
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
