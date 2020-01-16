@@ -8,7 +8,7 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
 
         name = pPrefix + "docnumber";
         
-        if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+        if (approvalFlag == 'G' && (pDraftFlag == "SUSIN" || pDraftFlag == "HABYUI") && useReceiveDocNo == 'NO') {
         	name = "receiptnumber";
         }
         
@@ -445,6 +445,7 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     	}
     }
 }
+
 function getCabinetSN(pDeptID) {
 	var rtnVal = "";
 	

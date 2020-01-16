@@ -115,6 +115,8 @@
 			var ext = "mht";
 			var isHWP = "";
 			
+			var isReDraft = '${isReDraft}';
+			
 			//부서순차합의를 위해 아래 파라미터 추가. 2019-02-08 홍대표
 			//최종결재시 채번
 			var useReceiveDocNo = "${useReceiveDocNo}";
@@ -691,7 +693,8 @@
 		    function CheckAprLine(Ans) {
 		        DivPopUpHidden();
 		        if (Ans) {
-		            btnApprovalInfo("9");
+		            //기록물철 선택과정에서 버그가 있어 파라미터를 14로 수정. 2019-03-12 홍대표
+		        	btnApprovalInfo("14");
 		            return;
 		        }
 		        else {
@@ -894,7 +897,7 @@
 		        parameter[33] = pSummery;
 		        parameter[34] = pSpecialRecordCode;
 		        parameter[35] = pPublicityCode;
-		        //parameter[36] = pLimitRange;
+		        parameter[36] = pLimitRange;
 		        parameter[37] = pPageNum;
 		        parameter[38] = tempSecurityDate;
 		        parameter[39] = SummaryFlag;
@@ -948,35 +951,109 @@
 		                IsSkipDrafter = "FALSE";
 		            }
 		            
-		            if (approvalFlag == "S") {
-			            if (ret[4] != undefined) {
-			                var g_SelCabXml = ret[4];
-			                var xmlCab = createXmlDom();
-			                xmlCab = loadXMLString(g_SelCabXml);
-			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
-		                }
-		            	
-			            tempSecurity = ret[7];
-		                tempUrgent = ret[8];
-		                pSummery = ret[9];
-		                tempSecurityDate = ret[14];
-		                pPublicityCode = ret[11];
-		                
-		                tempKeep = ret[16];
-	                	tempItemName = ret[17];
-	                	tempItemName2 = ret[18];
-	                	pPageNum = "1";
-	                	pLimitRange = "1";
-	                	pSpecialRecordCode = "1";
-	                	tempPublic = ret[11];
-	                	SetDocOption(ret[20]);
+		            if (ret[4] != undefined) {
+		                var g_SelCabXml = ret[4];
+		                var xmlCab = createXmlDom();
+		                xmlCab = loadXMLString(g_SelCabXml);
+		                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+	                }
+	            	
+		            tempSecurity = ret[7];
+	                tempUrgent = ret[8];
+	                pSummery = ret[9];
+	                tempSecurityDate = ret[14];
+	                pPublicityCode = ret[11];
+	                pPublicityYN = ret[21];
+	                
+// 	                tempKeep = ret[16];
+//                 	tempItemName = ret[17];
+//                 	tempItemName2 = ret[18];
+                	pPageNum = ret[13];
+                	pLimitRange = ret[12];
+                	pSpecialRecordCode = ret[10];
+//                 	tempPublic = ret[11];
+//                 	SetDocOption(ret[20]);
+					if (nonElecRec == "Y") {
+		            	nonElecRecInfoXml = ret[23];
+		            	nonSepAttachLVXml = ret[24];
+		            	g_szSCListXml = ret[25];
+		            	sepAttachCheckYN = ret[26];
+		            	setNonElecRecInfo(nonElecRecInfoXml);
 		            }
 		            
 		        }
 		        SummaryFlag = true;
 		        
 		        savexmlhttp = null;
+		    }
+		    
+		    var apropinion_cross_dialogArguments = new Array();
+		    var temppDocSN;
+		    function btnReturn_onclick() {
+		    	if (isReDraft == "Y" && checkAprState()) {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
+	    			return;
+		    	}
+		    	
+		        var RecevState = getDocRecevState();
+		        if (RecevState != "011" && RecevState != "012" && RecevState != "014" && RecevState != "013") {
+		            if (RecevState == "015") {
+		                var pAlertContent = strLang912;
+		                OpenAlertUI(pAlertContent);
+		            }
+		            return false;
+		        }
+		        var pDocSN = "";
+		        var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "receiptnumber");
+		        if (field) {
+		            var fieldValue = trim(field.textContent);
+		            if (fieldValue != "" && fieldValue.replace("@", "") == fieldValue) {
+		                var tmpDocSN = fieldValue.substr(fieldValue.lastIndexOf("-") + 1);
+		                if (!isNaN(tmpDocSN))
+		                    pDocSN = tmpDocSN;
+		            }
+		        }
+		        var parameter = new Array();
+		        parameter[0] = pDocID;
+		        parameter[1] = "HeSong";
+		        parameter[2] = KuyjeType;
+		        parameter[3] = "";
+		
+		        if (pDocSN != "")
+		            parameter[4] = "Y";
+		        else
+		            parameter[4] = "N";
+		        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
+		        parameter[99] = ext;
+		        
+		        temppDocSN = pDocSN;
+		        apropinion_cross_dialogArguments[0] = parameter;
+		        apropinion_cross_dialogArguments[1] = btnReturn_onclick_Complete;
+		
+		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+		    }
+		    function btnReturn_onclick_Complete(ret) {
+		        DivPopUpHidden();
+		        if (isReDraft == "Y" && checkAprState()) {
+		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
+	    			window.close();
+	    			return;
+		    	}
+		        var hesongok = true;
+		        if (ret != "cancel") {
+		            setButtonReceiveTrue();
+		
+		            if (temppDocSN != "")
+		                hesongok = setCabinetHeSong(temppDocSN);
+		
+		            if (hesongok) {
+		            	 SendMailToDrafter_Hesong();
+		                hesongok = setHeSongDocInfo();
+		            }
+		        }
 		    }
 		
 		    var totalsavefileinfo_dialogArguments = new Array();
@@ -1011,6 +1088,56 @@
 					return false;
 				}
 			}
+		    
+		    function checkAprState() {
+		    	var result = "";
+		    	
+		    	if (approvalFlag == "S") {
+			    	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/checkAprState.do",
+			    		data : {
+			    			docID : pDocID,
+			    			docState : pDocState,
+			    			userID : '',
+			    			aprMemberSN : wAprMemberSN,
+			    			orgCompanyID : orgCompanyID
+			    		},
+			    		success : function(text) {
+			    			result = text;
+			    		}
+			    	});
+		    	}
+		    	
+		    	return result == "FALSE" ? true : false;
+		    }
+		    
+		    function getDocRecevState() {
+		        try {
+					var result = "FALSE";
+		        	
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/ezApprovalG/getDocState.do",
+		        		data : {
+		        			docID : pDocID,
+		        			deptID: arr_userinfo[4]
+		        		},
+		        		success: function(text){
+		        			result = text;
+		        		}
+		        	});
+		        	
+		            return result;
+		        } 
+		        catch (e) {
+		            alert("getDocRecevState :: " + e.description);
+		        }
+		    }
 		</script>
 	</head>
 	<body class="popup" style="height:100%">
@@ -1018,9 +1145,10 @@
 		  <tr>
 		    <td style="height:20px"><div id="menu">
 		        <ul>
-		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('9')" ><spring:message code="ezApprovalG.t1742"/></span></li>
+		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('14')" ><spring:message code="ezApprovalG.t1742"/></span></li>
 		          <span style ="display:none" ><li id="btnSetAprLine"> <span onclick="return btnSetAprLine_onclick()" ><spring:message code='ezApprovalG.t153'/></span></li></span>
 		          <li id="btnSendDraft"> <span onclick="return btnSendDraft_onclick()" ><spring:message code='ezApprovalG.t156'/></span></li>
+		          <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
 		          <span style ="display:none" ><li id="btnDocInfo" style="display:none;"> <span onclick="return btnDocInfo_onclick()"  ><spring:message code='ezApprovalG.t54'/></span></li></span>
 		          <li id="btnOpinion"> <span onclick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnServerSave" style="display:none;"> <span onclick="return btnServerSave_onclick()" ><spring:message code='ezApprovalG.t59'/></span></li>

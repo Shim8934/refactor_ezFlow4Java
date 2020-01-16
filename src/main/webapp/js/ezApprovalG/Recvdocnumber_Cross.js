@@ -198,7 +198,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 	        name = "receiptnumber";
 	        var field = message.GetListItem(fields, name);
 	        
-	        if (LastSignSN == 1 || useReceiveDocNo != 'NO') {
+	        if (LastSignSN == 1 || useReceiveDocNo != 'NO' || pDraftFlag == "HAPYUI") {
 	        	//전결,편철 or config값에 따라 접수시 채번
 	        	$.ajax({
 	        		type : "POST",

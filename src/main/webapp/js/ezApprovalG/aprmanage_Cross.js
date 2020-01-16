@@ -1110,6 +1110,8 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
         } else {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
+            var orgCompanyID = GetAttribute(pCurSelRow, "orgCompanyID");
+            
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
             	if (/chrome/i.test(navigator.userAgent)) {
             		alert(strLang1103);
@@ -1117,10 +1119,12 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             	} else {
             		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
             	}
+            } else if (pDraftFlag == "HAPYUI" && approvalFlag == "G") {
+            	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
             } else {
-                openLocation = "/ezApprovalG/recev.do";
+            	openLocation = "/ezApprovalG/recev.do";
             }
-            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
+            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag) + "&orgCompanyID=" + encodeURI(orgCompanyID);
             openwindow(openLocation, "receive", 880, 550);
         }
     } else {
@@ -1149,6 +1153,8 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         pArgument[1] = GetAttribute(pCurSelRow, "DATA2");
 
         var pURL = GetAttribute(pCurSelRow, "DATA3");
+        var tmpDocState = GetAttribute(pCurSelRow, "DATA12");
+        
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
         	openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
@@ -1156,7 +1162,12 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
         else {
-            openLocation = "/ezApprovalG/recevGSusin.do";
+        	//docstate가 012(합의) 일 경우에 부서합의 페이지 띄우도록 수정 2019-02-27 홍대표
+        	if (tmpDocState == strDocState12) {
+        		openLocation = "/ezApprovalG/recevGDeptHapyui.do";
+        	} else {
+        		openLocation = "/ezApprovalG/recevGSusin.do";
+        	}
 
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }

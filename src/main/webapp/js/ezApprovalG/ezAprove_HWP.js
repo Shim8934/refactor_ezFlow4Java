@@ -1308,8 +1308,9 @@ function getLastOpinon()
 		}
 	});
 	
+	var content = "";
 	if (loadXMLString(result).documentElement.childNodes.length > 0 )
-	    var content = getNodeText(loadXMLString(result).documentElement.childNodes(0));		
+	    content = getNodeText(loadXMLString(result).documentElement.childNodes[0]);		
 
 	if (HwpCtrl.CheckFieldExist("memo"))
 		HwpCtrl.SetFieldText("memo", content);
