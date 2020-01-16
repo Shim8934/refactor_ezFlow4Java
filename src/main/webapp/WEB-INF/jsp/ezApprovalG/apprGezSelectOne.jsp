@@ -49,6 +49,10 @@
 		var rtnVal = new Array("");
 		var ReturnFunction;
 		var g_xmlHTTP = null;
+		
+		//2019.10.21 심사자 리스트 부서별보기/전체보기
+		var simsaListByDept = "<c:out value='${simsaListByDept}'/>";
+		
 		window.onload = function()
 		{
 			try
@@ -77,15 +81,20 @@
 		        }
 		
 		        listview.DataBind("OrganListView");                        // ListView DataBind
+		        
 		        if (pMDeptInfo == "") {
 		            InitTreeVal = arr_userinfo[4];
 		        }
 		        else {
 		            InitTreeVal = pMDeptInfo;
 		        }
-				
-				Tree_setconfig();
-				TreeViewinitialize(InitTreeVal, companyID, "", "${serverName}");	
+		        
+		        if (simsaListByDept !== "NO") {
+					Tree_setconfig();
+					TreeViewinitialize(InitTreeVal, companyID, "", "${serverName}");	
+		        } else {
+		        	displayUserList();
+		        }
 					  
 				rtnVal[0] = "cancel";
 				rtnVal[1] = "";
@@ -175,7 +184,13 @@
 			{
 			  	var pAlertContent = "<spring:message code='ezApprovalG.t226'/>";
 				OpenAlertUI(pAlertContent);
-			  	TreeViewNodeClick()
+				
+				if (simsaListByDept != "NO") {
+					TreeViewNodeClick();
+				} else {
+					displayUserList("");
+				}
+			  	
 			}
 			else if (strSearch.length < 2 )
 			{
@@ -237,14 +252,20 @@
 		}
 		
 		function displayUserList(DeptID)
-		{
+		{ 
+			var searchList = "EXACT_Department::" + DeptID + ";;extensionAttribute1::i=1";
+			
+			if (simsaListByDept === "NO") {
+				searchList = "extensionAttribute1::i=1";
+			}
+			
 		    $.ajax({
 		    	type : "POST",
 		    	dataType : "text",
 		    	url : "/ezOrgan/getSearchList.do",
 		    	async : false,
 		    	data : {
-		    		search : "EXACT_Department::" + DeptID + ";;extensionAttribute1::i=1",
+		    		search : searchList,
 		    		cell : "displayname;title;description;telephonenumber",
 		    		prop : "Department;extensionAttribute4;displayname;title;description",
 		    		type : "user"
@@ -314,27 +335,50 @@
                 <li><span onclick="return btnCancel_onclick()"></span></li>
             </ul>
         </div>
-		<table style="margin-top:-15px;" >
-			<tr>
-				<td style="vertical-align:top">
-					<h2><spring:message code='ezApprovalG.t232'/></h2>
-					<div class="box" style="overflow:auto;height:380px; width:250px" id="TreeView"></div>
-				</td>
-				<td style="vertical-align:top;padding-left:5px" >
-					<h2><spring:message code='ezApprovalG.t233'/></h2>
-					<div class="listview">
-						<DIV id="OrganListView" class="text" style="overflow:auto; border:0;Width:320px; Height:358px;margin:0px;"></DIV>
-					</div>
-					<table style="width:100%">
-						<tr>
-							<td style="width:25px"><input type="text" id="textUser" name="textUser" style="width:130px;" value="" onKeyPress="return textUser_onkeypress()">
-								<a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
+        <c:choose>
+        	<c:when test="${simsaListByDept eq 'NO' }">
+				<table style="margin-top:-10px;" >
+					<tr>
+						<td style="vertical-align:top;padding-left:5px" >
+							<h2><spring:message code='ezApprovalG.t233'/></h2>
+							<div class="listview">
+								<DIV id="OrganListView" class="text" style="overflow:auto; border:0;Height:358px;width:572px;margin:0px;"></DIV>
+							</div>
+							<table style="width:100%">
+								<tr>
+									<td style="width:25px"><input type="text" id="textUser" name="textUser" style="width:130px; margin-top:8px;" value="" onKeyPress="return textUser_onkeypress()">
+										<a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+        	</c:when>
+        	<c:otherwise>
+				<table style="margin-top:--7px;" >
+					<tr>
+						<td style="vertical-align:top">
+							<h2><spring:message code='ezApprovalG.t232'/></h2>
+							<div class="box" style="overflow:auto;height:380px; width:250px" id="TreeView"></div>
+						</td>
+						<td style="vertical-align:top;padding-left:9px" >
+							<h2><spring:message code='ezApprovalG.t233'/></h2>
+							<div class="listview">
+								<DIV id="OrganListView" class="text" style="overflow:auto; border:0;Width:320px; Height:351px;margin:0px;"></DIV>
+							</div>
+							<table style="width:100%">
+								<tr>
+									<td style="width:25px"><input type="text" id="textUser" name="textUser" style="width:130px; margin-top:8px;" value="" onKeyPress="return textUser_onkeypress()">
+										<a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+        	</c:otherwise>
+        </c:choose>
 		<div class="btnpositionNew">
 			<a class="imgbtn"><span onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>

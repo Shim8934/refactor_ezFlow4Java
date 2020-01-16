@@ -528,6 +528,7 @@
 	    		url : "/ezApprovalG/saveEndFileHwp.do",
 	    		data : {
 	    			docID : pOrgDocID,
+                    // formId : pFormID,
 	    			html  : HwpCtrl.GetCloneData("", "HWP")
 	    		},
 	    		success: function(xml){
@@ -542,6 +543,7 @@
 	    		url : "/ezApprovalG/saveFileHWP.do",
 	    		data : {
 	    			docID : pDocID,
+                    // formId : pFormID,
 	    			html  :  HwpCtrl.GetCloneData("", "HWP")
 	    		},
 	    		success: function(text){

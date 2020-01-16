@@ -72,6 +72,8 @@
             iframeStyle += "TABLE TD    { text-indent: 0px }";
             iframeStyle += "BLOCKQUOTE  { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          
+            //투표 내용이 언어에 따라 폰트가 변하도록 수정. 2019-10-25 홍대표.
+            iframeStyle += "<link rel='stylesheet' href=\"${util.addVer('ezPoll.i1', 'msg')}\" type='text/css'>";
             
     		window.onunload = function() {
     		    if (stompClient !== null) {
@@ -840,7 +842,7 @@
 	 	    		}
 	 	    		
 	 	    		if (numberOfMultiSelect != 0 && numberOfSelected >= numberOfMultiSelect) {
-	 					alert("<spring:message code = 'ezPoll.t171'/>" + " " + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
+	 					alert("<spring:message code = 'ezPoll.t171'/>" + numberOfMultiSelect + "<spring:message code = 'ezPoll.t173'/>");
 	 					return;
 	 	    		}
 	 	    		
@@ -3346,14 +3348,14 @@
 								<c:choose>
 									<c:when test="${question.secretVote == 1}">
 										<li class="voteIconImg_li_info icon">
-											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t253'/>" >
-											<span><spring:message code = 'ezPoll.t253'/></span>
+											<img src="/images/poll/anonymousVote_On.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.hdp17'/>" >
+											<span><spring:message code = 'ezPoll.hdp17'/></span>
 										</li>
 									</c:when>
 									<c:otherwise>
 										<li class="voteIconImg_li_info icon">
-											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/>" >
-											<span><spring:message code = 'ezPoll.t240'/> <spring:message code = 'ezPoll.t103'/></span>
+											<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="<spring:message code = 'ezPoll.t240'/>" >
+											<span><spring:message code = 'ezPoll.t240'/></span>
 										</li>
 									</c:otherwise>
 								</c:choose>
@@ -3390,7 +3392,7 @@
 		        	<div id="attachedFile" class="vote_attachedFile" style="position:relative; overflow: hidden;display:inline-block; width: 100%; border-top:1px solid #e1ebf7; border-left:1px solid #e1ebf7; border-right:1px solid #e1ebf7; margin:0px 0px 20px 0px;">
 		        		<img src="/images/poll/attach_file_vote.png" class="attach_img" style="float: left;display:block;" >
 		        		<div class="txt" style="float: left;display:block; width:100%;">
-		        			<spring:message code='ezEmail.t99000003' /> - <c:out value='${numOfFile}'/> 개(<c:out value='${totalFilesSize}'/>)
+		        			<spring:message code='ezEmail.t99000003' /> - <c:out value='${numOfFile}'/> <spring:message code='ezPoll.hdp16' />(<c:out value='${totalFilesSize}'/>)
 		        		</div>
 		        		<div class="all_save" style="display:block;">
 		        			<span class="icon_grayup" id="BtnAttachDetail" onclick="AttachDetail_view(this);" style="display:inline-block;"></span> 

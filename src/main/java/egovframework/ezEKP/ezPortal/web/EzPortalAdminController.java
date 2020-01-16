@@ -827,7 +827,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 			
 			mainHtml += "</td>";
-			mainHtml += "<td width='170'>"+commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("CREATEDATE").item(i).getTextContent(), userInfo.getOffset(), false)+"</td>";
+			/* 2020-01-02 홍승비 - 포탈페이지관리 리스트의 등록일 칼럼에서 초단위 제거, 등록일 UTC시간 제대로 표출되도록 수정 */
+			mainHtml += "<td width='170'>" + commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("CREATEDATE").item(i).getTextContent().substring(0, 16), userInfo.getOffset(), false)+ "</td>";
 			mainHtml += "</tr>";
 		}
 

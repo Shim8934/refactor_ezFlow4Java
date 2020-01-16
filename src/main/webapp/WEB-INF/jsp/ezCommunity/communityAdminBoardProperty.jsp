@@ -426,7 +426,7 @@
 		<table class="content" style="margin-top:10px">
 			<tr>
 				<th><spring:message code = 'ezCommunity.t306' /></th>
-				<td>&nbsp;&nbsp;${boardInfo.boardName}</td>
+				<td>&nbsp;&nbsp;${multiBoardName}</td>
 			</tr>
 			<tr>
 				<th><spring:message code = 'ezCommunity.t381' /></th>

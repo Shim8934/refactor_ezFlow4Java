@@ -3710,7 +3710,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate1)) {
 						loopFlag = false;
 						break;
-					} else if (oSDate.compareTo(oStartDate) >= 0 && tEDate.compareTo(oEndDate) <= 0) {
+					} else if (!tmpStartDate.before(resStartDate)) {
+						if (oSDate.compareTo(oStartDate) >= 0 && tEDate.compareTo(oEndDate) <= 0) {
 //						tempEndCal.setTime(tmpStartDate);
 //						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
@@ -3718,6 +3719,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								tmpStartDate, 
 								tempEndCal.getTime()
 						});
+						}
 					}
 				}
 				// 반복 횟수 지정했을 경우

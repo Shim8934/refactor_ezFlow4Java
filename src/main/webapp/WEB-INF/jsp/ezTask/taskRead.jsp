@@ -1732,7 +1732,7 @@
 		</script>
 	</head>
 	
-	<body class="popup" style="overflow:auto; height:99%">
+	<body class="popup" style="overflow:auto; height:99%" scroll="auto">
 		<div id="menu" style="margin-bottom:10px;">
 			<ul>
 				<c:if test="${userInfo.id == taskInfoVO.creatorID }">

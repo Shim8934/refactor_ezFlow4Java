@@ -665,8 +665,6 @@
 		    function AutoAddtoExpireDate() {
 		        var temp = ExpireDays;
 		        if (temp == "-1") temp = "30";
-							
-		        idDatepicker.vtLocalEndDate = AddDate(idDatepicker.vtLocalDate, temp);			
 		    }
 						
 		    function LoadFromPC() {
@@ -795,7 +793,6 @@
                 } else {
                     document.getElementById('ChkPermanence').checked = false;
                     document.getElementById('Makedate').style.display = "";
-                    idDatepicker.vtLocalEndDate(AddDate(idDatepicker.vtLocalDate(), parseInt(ExpireDays)));
                 }
             }
 

@@ -3213,4 +3213,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public int checkDocIdIsDuplicated(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.checkDocIdIsDuplicated", map);
 	}
+
+	public ApprGFormVO getFormPath(Map<String, Object> map) throws Exception {
+		return (ApprGFormVO) select("EzApprovalG.getFormPath", map);
+	}
 }

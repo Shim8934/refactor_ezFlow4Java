@@ -296,6 +296,10 @@ function previewItemSet() {
     document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
     document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").setAttribute("title", Title);
     document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = MemberName;
+    document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").setAttribute("style", "cursor: pointer; color: rgb(102, 102, 102)");
+    document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").setAttribute("onmouseover", "this.style.color='#164aad'");
+    document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").setAttribute("onmouseout", "this.style.color='#666'");
+    document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").addEventListener("click", function(e) {showUserInfoFromId(MemberId);}, false);
     document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = RegDate.substring(0, 16);
     var readHTML = Content;
     var tempText = xmlhttp2.responseText;
@@ -314,6 +318,12 @@ function previewItemSet() {
             }
         }, 100);
     }
+}
+
+function showUserInfoFromId(userId) {
+	var feature = "height=435px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
+	feature += GetOpenPosition(420, 435);
+	userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 }
 
 function loadsetInterval(readHTML, responseText) {

@@ -1344,42 +1344,36 @@ function openOpinionUI_Complete(ret) {
 }
 
 // 기안문서정보를 저장하는 함수 
-function SaveDraftDocInfo()
-{
+function SaveDraftDocInfo() {
     var rtnVal;
 	
     // 수정(2008.06.12) : 결재문서 파일 저장 시 임시파일 생성 후 파일크기를 체크하여 원본 파일로 복사하도록 루틴 수정
     rtnVal = SaveFile();
-    if (rtnVal != "TRUE")
-    {
+    if (rtnVal.toUpperCase() != "TRUE") {
         return rtnVal;
     }
 	
     SignSave();
 	
-    switch (pDraftFlag)
-    {
-        case "SUSIN" :				
+    switch (pDraftFlag) {
+        case "SUSIN" :
             rtnVal = SaveDraftDocInfo_susin();
             break;
-		
         case "REDRAFT" :
-			 
             if(pDocState == strDocState11)
                 rtnVal = SaveDraftDocInfo_susin();
             else
                 rtnVal = SaveDraftDocInfo_ilban();
-            break;	
-				
+            break;
         default :
             rtnVal = SaveDraftDocInfo_ilban();
             break;
     }
 
-    if (rtnVal.toUpperCase() != "TRUE")
-    {
+    if (rtnVal.toUpperCase() != "TRUE") {
         SaveOrgFile();
-    }	
+    }
+
     return rtnVal;
 }
 
@@ -2377,6 +2371,7 @@ function SaveDraftDocInfo()
     		url : "/ezApprovalG/saveFile.do",
     		data : {
     			docID : pDocID,
+				formId : pFormID,
     			html  : mhtBody,
     			orgCompanyID : orgCompanyID
     		},
@@ -2435,6 +2430,7 @@ function SaveDraftDocInfo()
     		url : "/ezApprovalG/saveFile.do",
     		data : {
     			docID : pDocID,
+				formId : pFormID,
     			html  : mhtBody,
     			orgCompanyID : orgCompanyID
     		},

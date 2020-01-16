@@ -265,6 +265,7 @@ function SaveFile() {
     		url : "/ezApprovalG/saveFileHWP.do",
     		data : {
     			docID : pDocID,
+                // formId : pFormID,
     			html  : HwpCtrl.GetCloneData("", "HWP")
     		},
     		success: function(text){
