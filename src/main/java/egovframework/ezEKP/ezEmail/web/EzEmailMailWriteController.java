@@ -5442,13 +5442,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         }        
 		
         String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);	
+        String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         
         if (useShowAllCompanies.equals("YES")) {
         	// Company ID를 본래값으로 복원한다.
         	userInfo.setCompanyID(orgCompanyId);
         }
         
-        String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
         String sharedMailboxXML = getSharedMailboxSearch(pSharedMailboxSearchList, userInfo);
 
@@ -5650,6 +5650,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		try {
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+	        String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
+			
+	        // useShowAllCompanies가 YES이고 company 패러메터가 전달된 경우에는
+	        // Company ID를 ""로 세트하여 그룹사 전체를 대상으로 검색하도록 한다.
+	        if (useShowAllCompanies.equals("YES")) {
+				String companyId  = request.getParameter("company");
+				
+				if (companyId != null) {
+					userInfo.setCompanyID("");
+				}
+	        }
 			
 			List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(userInfo.getCompanyID(), userInfo.getTenantId());
 			
@@ -5988,6 +6000,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				: ezOrganService.getCNByEmail(email, loginVO.getTenantId());
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, loginVO.getPrimary(), loginVO.getTenantId());
 
+		if (userInfo == null) {
+			return "";
+		}
+
 		String additionalFormat = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalFormat", tenantId);
 		String additionalParameters = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalParameters", tenantId);
 		String[] fieldNameArray = additionalParameters.split(";");
@@ -6310,13 +6326,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			Document organXML = commonUtil.convertStringToDocument(
 					getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo));
+			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));			
 			
 	        if (useShowAllCompanies.equals("YES")) {
 	        	// Company ID를 본래값으로 복원한다.
 	        	userInfo.setCompanyID(orgCompanyId);
 	        }
 	        
-			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, userInfo));
 			Document addressXML = commonUtil.convertStringToDocument(getAddressSearch(pAddressFilter, userInfo));
 			Document sharedMailboxXML = commonUtil.convertStringToDocument(getSharedMailboxSearch(pSharedMailboxSearchList, userInfo));
 

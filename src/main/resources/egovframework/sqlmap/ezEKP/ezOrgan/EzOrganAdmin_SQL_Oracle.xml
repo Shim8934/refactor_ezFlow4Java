@@ -7,6 +7,7 @@
 	<typeAlias alias="OrganDeptVO" 	type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganProxyVO" type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
 	<typeAlias alias="OrganJobVO" type="egovframework.ezEKP.ezOrgan.vo.OrganJobVO"/>
+	<typeAlias alias="OrganLoginStopUserVO" type="egovframework.ezEKP.ezOrgan.vo.OrganLoginStopUserVO"/>
 	
 	<resultMap id="userAddJobList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>
@@ -49,6 +50,19 @@
 		<result property="updateDT" 							column="UpdateDT" 						columnIndex="12"/>
 	</resultMap>
 	
+	<resultMap id="loginStopList" class="OrganLoginStopUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>
+		<result property="displayName" 							column="DisplayName" 					columnIndex="2"/>
+		<result property="displayName2" 						column="DisplayName2"					columnIndex="3"/>
+		<result property="department" 							column="department"						columnIndex="4"/>
+		<result property="description" 							column="Description"					columnIndex="5"/>
+		<result property="description2" 						column="Description2"					columnIndex="6"/>
+		<result property="company" 								column="company" 						columnIndex="7"/>
+		<result property="company2" 							column="company2" 						columnIndex="8"/>
+		<result property="passwordUpdateDT" 					column="passwordUpdateDT"				columnIndex="9"/>
+		<result property="loginStopDT" 							column="loginStopDT"					columnIndex="10"/>
+	</resultMap>
+	
 	<resultMap id="userCnList" class="OrganUserVO">
 		<result property="cn" 									column="CN" 							columnIndex="1"/>	
 	</resultMap>
@@ -85,6 +99,29 @@
 			<isNotEmpty property="searchEndDate">
 				<![CDATA[
 					UPDATEDT > to_date(#searchStartDate#, 'yyyy-MM-dd HH24:MI:SS') AND UPDATEDT < to_date(#searchEndDate#, 'yyyy-MM-dd HH24:MI:SS')
+				]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</sql>
+	
+	<sql id="EzOrganAdminDAO.searchQueryForLoginStop">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+					<isEqual property="search_keycode" compareValue="userName">
+						a.DISPLAYNAME LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="deptName">
+						a.DESCRIPTION LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="userId">
+						a.CN LIKE '%' || #search_keyword# || '%' ESCAPE '\'
+					</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="searchStartDate" prepend="AND">
+			<isNotEmpty property="searchEndDate">
+				<![CDATA[
+					a.UPDATEDT > to_date(#searchStartDate#, 'yyyy-MM-dd HH24:MI:SS') AND a.UPDATEDT < to_date(#searchEndDate#, 'yyyy-MM-dd HH24:MI:SS')
 				]]>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -5563,6 +5600,18 @@
 	    ]]>    		 				
 	</select>
 	
+	<select id="EzOrganAdminDAO.allUserList" parameterClass="int" resultMap="userCnList">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER a
+            WHERE
+				a.tenant_id = #tenantID#
+	    	ORDER BY cn
+	    ]]>
+	</select>
+	
     <select id="EzOrganAdminDAO.userCount" parameterClass="int" resultClass="int">
         <![CDATA[
             SELECT 
@@ -6002,7 +6051,7 @@
  			FROM
  				TBL_USERMASTER
  			WHERE
- 				tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
+ 				tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
  				<include refid="EzOrganAdminDAO.searchQuery"/>
  			ORDER BY
  			<isNotEmpty property="sortColumn">
@@ -6025,7 +6074,7 @@
 			COUNT(CN) 
 		FROM 
             TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN') AND PHYSICALDELIVERYOFFICENAME = #companyId#
+		WHERE	tenant_id = #tenantID# AND PHYSICALDELIVERYOFFICENAME = #companyId#
   		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
 	
@@ -6686,6 +6735,184 @@
 				TENANT_ID = #v_TENANT_ID#
 		]]>
 	</select>
+	
+	<select id="EzOrganAdminDAO.getLoginStopUserList" parameterClass="map" resultMap="loginStopList">
+		<isNotEqual property="stopFlag" compareValue="Y">
+			<![CDATA[
+			SELECT 
+				CN,
+				displayName,
+				displayName2,
+				department,
+				description,
+				description2,
+				company,
+				company2,
+				TO_CHAR(PASSWORD_UPDATEDT + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-MM-dd HH24:mi:ss') AS passwordUpdateDT,
+				'' as loginStopDT
+			FROM 
+		    	TBL_USERMASTER
+		    ]]>
+	        WHERE 
+	            TENANT_ID = #tenantID#
+	        <isNotEmpty property="companyId">
+           	AND
+           		PHYSICALDELIVERYOFFICENAME = #companyId#
+           	</isNotEmpty>
+           	AND
+           		CN NOT IN ( SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+				<include refid="EzOrganAdminDAO.searchQuery"/>
+		    <isNotEqual property="v_start" compareValue="-1">
+		    <![CDATA[
+		    AND
+		    	ROWNUM >= #v_start#
+			AND
+				ROWNUM < #pageCount#
+			]]>
+			</isNotEqual>
+		    ORDER BY 
+		    	PASSWORD_UPDATEDT, displayName
+		</isNotEqual>
+		<isEqual property="stopFlag" compareValue="Y">
+			<![CDATA[
+			SELECT 
+				a.CN,
+				a.displayName,
+				a.displayName2,
+				a.department,
+				a.description,
+				a.description2,
+				a.company,
+				a.company2,
+				TO_CHAR(a.PASSWORD_UPDATEDT + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-MM-dd HH24:mi:ss') AS passwordUpdateDT,
+				TO_DATE(b.PROPERTY_VALUE, 'yyyy-MM-dd HH24:mi:ss') + $offset$ / (24 * 60) AS loginStopDT
+			FROM 
+		    	TBL_USERMASTER a
+		    JOIN
+		    	TBL_USER_CONFIG b
+		    ON
+		    	a.TENANT_ID = b. TENANT_ID
+		    AND
+		    	a.CN = b.USER_ID
+		    AND
+		    	b.PROPERTY_NAME = 'LoginStopUser'
+	        WHERE
+	        ]]>
+	            a.TENANT_ID = #tenantID#
+	        <isNotEmpty property="companyId">
+            AND
+				a.PHYSICALDELIVERYOFFICENAME = #companyId#
+			</isNotEmpty>
+				<include refid="EzOrganAdminDAO.searchQueryForLoginStop"/>
+		    <isNotEqual property="v_start" compareValue="-1">
+		    <![CDATA[
+		    AND
+		    	ROWNUM >= #v_start#
+			AND
+				ROWNUM < #pageCount#
+			]]>
+			</isNotEqual>
+		    ORDER BY 
+		    	a.PASSWORD_UPDATEDT, a.displayName
+		</isEqual>
+	</select>
+	
+	<select id="EzOrganAdminDAO.getLoginStopUserListCount" parameterClass="map" resultClass="Integer">
+		<isNotEqual property="stopFlag" compareValue="Y">
+			<![CDATA[
+			SELECT 
+				COUNT(CN)
+			FROM 
+		    	TBL_USERMASTER
+	        WHERE 
+	            TENANT_ID = #tenantID#
+		    ]]>
+		    <isNotEmpty property="companyId">
+	        AND
+	        	PHYSICALDELIVERYOFFICENAME = #companyId#
+	        </isNotEmpty>
+	        AND
+	        	CN NOT IN ( SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+				<include refid="EzOrganAdminDAO.searchQuery"/>
+		</isNotEqual>
+		<isEqual property="stopFlag" compareValue="Y">
+			<![CDATA[
+			SELECT
+				COUNT(CN)
+			FROM
+		    	TBL_USERMASTER a
+		    JOIN
+		    	TBL_USER_CONFIG b
+		    ON
+		    	a.TENANT_ID = b. TENANT_ID
+		    AND
+		    	a.CN = b.USER_ID
+		    AND
+		    	b.PROPERTY_NAME = 'LoginStopUser'
+		    ]]>
+	        WHERE
+	            a.TENANT_ID = #tenantID#
+	        <isNotEmpty property="companyId">
+			AND
+	            a.PHYSICALDELIVERYOFFICENAME = #companyId#
+	        </isNotEmpty>
+				<include refid="EzOrganAdminDAO.searchQueryForLoginStop"/>
+		</isEqual>
+	</select>
+	
+	<insert id="EzOrganAdminDAO.insertStopUser" parameterClass="map">
+		INSERT INTO TBL_USER_CONFIG
+			(TENANT_ID, USER_ID, PROPERTY_NAME, PROPERTY_VALUE)
+		<iterate property="cnArr" conjunction="UNION ALL">
+		SELECT #tenantID#, #cnArr[]#, 'LoginStopUser', #nowDate# FROM DUAL
+		</iterate>
+	</insert>
+	
+	<update id="EzOrganAdminDAO.deleteStopUser" parameterClass="map">
+		DELETE FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID IN (<iterate property="cnArr" conjunction=","> #cnArr[]# </iterate>)
+	</update>
+	
+	<select id="EzOrganAdminDAO.checkStopUser" parameterClass="map" resultClass="Integer">
+		SELECT
+			count(*)
+		FROM
+			TBL_USER_CONFIG
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+		AND
+			PROPERTY_NAME = 'LoginStopUser'
+	</select>
+	
+	<update id="EzOrganAdminDAO.setDeptMail" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_DEPTMASTER
+			SET
+     			mail = #MAIL#
+     		WHERE
+      			cn = #CN#
+      		AND 
+            	tenant_id = #TENANT_ID#
+		]]>
+	</update>
+	
+	<delete id="EzOrganAdminDAO.deleteCompanyConfig" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_COMPANY_CONFIG
+          	WHERE
+          		COMPANY_ID = #v_CN#
+          	AND
+          		TENANT_ID = #v_TENANT_ID#	
+		]]>
+	</delete>
 	
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}

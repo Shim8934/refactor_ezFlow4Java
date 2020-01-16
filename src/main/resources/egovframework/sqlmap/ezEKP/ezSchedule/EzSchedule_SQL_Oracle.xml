@@ -141,6 +141,7 @@
 		<result property="dateType"			column="DATETYPE"			columnIndex="9"/>
 		<result property="startDate"		column="STARTDATE"			columnIndex="10"/>
 		<result property="endDate"			column="ENDDATE"			columnIndex="11"/>
+		<result property="repetition"		column="REPETITION"			columnIndex="12"/>
 	</resultMap>
 
 	<resultMap class="OrganUserVO" id="organUserVO">
@@ -288,7 +289,7 @@
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like '%'||(REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')||'%'
+            	title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty> 
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
@@ -381,7 +382,7 @@
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like concat('%',concat(REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            	title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
@@ -701,6 +702,15 @@
 				TENANT_ID = #v_TENANTID#
 			AND
        		PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+       		AND
+				cn not in ( SELECT 
+										cn 
+								FROM
+						           		TBL_USERMASTER_RETIRE 
+						        WHERE
+						                TENANT_ID = #v_TENANTID#
+						        AND 
+						           		PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# )
 			UNION ALL
 				SELECT
 					A.CN ,                  			
@@ -1139,7 +1149,8 @@
              	B.LOCATION AS LOCATION,
              	B.DATETYPE AS DATETYPE,             	
              	(B.STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,             	
-             	(B.ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE
+             	(B.ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE,
+             	b.repetition as repetition
         	FROM
         		TBL_ATTENDANT A JOIN TBL_SCHEDULE B ON A.SCHEDULEID = B.SCHEDULEID AND A.TENANT_ID = B.TENANT_ID
         	WHERE
@@ -1350,11 +1361,7 @@
 				DATETYPE = #v_DATETYPE#,
 				STARTDATE = TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),				
 				ENDDATE = TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),
-		    ]]>
-            <isNotEmpty property="v_REPETITION">
                 REPETITION = NVL(#v_REPETITION#, ' '),
-            </isNotEmpty>
-            <![CDATA[	
 				TITLE = #v_TITLE#,
 				LOCATION = NVL(#v_LOCATION#, ' ')
 	   		WHERE  
@@ -1427,6 +1434,17 @@
 	   			SCHEDULEID = #v_SCHEDULEID#
 	   		AND
 	   			TENANT_ID = #v_TENANTID#
+	   	]]>		
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleRepeChild" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedulerepetition_del
+	   		where  
+	   			scheduleid in (select scheduleid from tbl_schedule where parentid = #v_SCHEDULEID#)
+	   		and
+	   			tenant_id = #v_TENANTID#
 	   	]]>		
 	</delete>
 	

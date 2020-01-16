@@ -699,12 +699,16 @@ function getDataInfo() {
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
 
-    var tr = DocList.GetSelectedRows()[0];
+    var selectedRows = DocList.GetSelectedRows();
+    
+    if(selectedRows.length > 0) {
+    	var tr = selectedRows[0];
 
-    if (tr.getAttribute("DATA10") != "" && tr.getAttribute("DATA10") >= GetTodayDate()) {
-        if (CheckAprLine(tr.getAttribute("DATA1")) != "TRUE") {
-            getdoclistSub_after("NOTPERMISSION");
-            return;
+        if (tr.getAttribute("DATA10") != "" && tr.getAttribute("DATA10") >= GetTodayDate()) {
+            if (CheckAprLine(tr.getAttribute("DATA1")) != "TRUE") {
+                getdoclistSub_after("NOTPERMISSION");
+                return;
+            }
         }
     }
 	

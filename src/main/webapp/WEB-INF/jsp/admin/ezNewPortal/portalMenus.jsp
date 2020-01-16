@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <!DOCTYPE html>
-<html>
+<html style="height: 97%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t055' /></title>

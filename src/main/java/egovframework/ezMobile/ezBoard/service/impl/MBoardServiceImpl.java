@@ -128,6 +128,8 @@ public class MBoardServiceImpl implements MBoardService {
 				vo.setNewItemFlag("N");
 			}
 		}
+		//NoticeItemList가  거꾸로  mBoardItemList 에 add 되므로 추가
+		Collections.reverse(mBoardNoticeItemList);
 		
 		//스크롤 페이징할 때 공지사항 추가 안되게 add를 받아옴
 		if ((add == null || add.equals("")) && (pSearchText == null || pSearchText.equals(""))) {

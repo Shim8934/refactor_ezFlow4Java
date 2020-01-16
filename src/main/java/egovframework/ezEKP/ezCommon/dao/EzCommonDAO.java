@@ -45,6 +45,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
     
     @Autowired
     private EzNewPortalDAO ezNewPortalDAO;
+
+    @Autowired
+	private Properties globals;
     
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception {
 		return (ApprovPWDVO) select("EzCommonDAO.getApprovPWD", userInfo);
@@ -591,6 +594,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void createJamesMailDeletedId() {
+		try {
+			select("EzCommonDAO.checkJamesMailDeletedId");
+		} catch (Exception e) {
+			logger.debug("james_mail_deleted_id doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJamesMailDeletedId");
+		}
+	}
+	
 	public void updateListOptionData() {
 		try {
 			if ((int) select("EzCommonDAO.checkListOptionData1") > 0) {
@@ -932,6 +945,50 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addAddressFurigana");
 			logger.debug("JMOCHA_ADDRESS_INFO S_FURIGANA doesn't exist. creating the column...");
 			e.printStackTrace();
+		}
+	}
+
+	public void createOpenGovTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblOpenGovDocInfo");
+		} catch (Exception e) {
+			logger.debug("tbl_opengovdocinfo doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblOpenGovDocInfo");
+		}
+		
+		try {
+			select("EzCommonDAO.checkTblOpenGovfileInfo");
+		} catch (Exception e) {
+			logger.debug("tbl_opengovfileinfo doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblOpenGovFileInfo");
+		}
+	}
+	
+	public void addOpenGovFlag() {
+		try {
+			select("EzCommonDAO.checkOpenGovFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo openGovFlag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addOpenGovFlag");
+		}
+	}
+
+	public int checkDeptId(Map<String, Object> map) {
+		return (int) select("EzCommonDAO.checkDeptId", map);
+	}
+
+	public void createRsFavoriteTable() {
+		try {
+			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				select("EzCommonDAO.checkTblRsFavorite");
+			}
+		} catch (Exception e) {
+			logger.debug("tbl_rs_favorite doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblRsFavorite");
 		}
 	}
 }

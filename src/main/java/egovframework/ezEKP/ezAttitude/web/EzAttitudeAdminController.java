@@ -2579,6 +2579,7 @@ public class EzAttitudeAdminController {
 		String userId = request.getParameter("userId");
 		String changeReason = request.getParameter("changeReason");
 		String annualCnt = request.getParameter("annualCnt");
+		String flagCheck = request.getParameter("flagCheck");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
@@ -2594,7 +2595,8 @@ public class EzAttitudeAdminController {
 				.queryParam("changeUserId", userInfo.getId())
 				.queryParam("changeReason", changeReason)
 				.queryParam("companyId", companyId)
-				.queryParam("annualCnt", annualCnt);
+				.queryParam("annualCnt", annualCnt)
+				.queryParam("flagCheck", flagCheck);
 		
 		
 		RestTemplate rest = new RestTemplate();

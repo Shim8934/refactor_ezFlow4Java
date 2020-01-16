@@ -41,6 +41,10 @@
 		            changetype();
 		        }
 		        
+		        var name = '<c:out value="${addressInfo.sName}"/>'
+		        name = replaceEntityCodeToStr(name);
+		        document.getElementById("TextName").value = name;
+		        
 		        var getMemo = document.getElementById("TextMemo").value;
 		        getMemo = getMemo.replace(/\\\\/gi, "\\");
 		        document.getElementById("TextMemo").innerText = "";
@@ -457,6 +461,18 @@
 			    folderid = document.getElementById("selectfolder").options[selectedindex].value;
 			    ownerid = document.getElementById("selectfolder").options[selectedindex].getAttribute("ownerid");
 			}
+			// 모바일과 함께 적용되어있는 사항 때문에  XmlHttpRequest.js와 다르게 &#34 형태로 적용
+			function replaceEntityCodeToStr(str) {
+				return str.replace(/&amp;/g, "&")
+						  .replace(/&lt;/g, "<")
+						  .replace(/&gt;/g, ">")
+						  .replace(/&quot;/g, '\"')
+						  .replace(/&#40;/g, "\(")
+						  .replace(/&#41;/g, "\)")
+						  .replace(/&#39;/g, "'")
+						  .replace(/&#34;/g, '\"')
+						  .replace(/&amp;/g, "&");
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
@@ -486,7 +502,7 @@
 		    <tr>
 		      <!-- <th rowspan="4" align="center" ><span id="LiteralPhoto" width="119"></span></th> -->
 		      <th><spring:message code='ezAddress.t124' /></th>
-		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass" value="<c:out value="${addressInfo.sName}"/>"></td>
+		      <td><input type="text" id="TextName" name="TextName" style="width:100%" maxlength="24" class="txtClass"></td>
 		    </tr>
 		    <tr>
 		      <th><spring:message code='ezAddress.t51' /></th>

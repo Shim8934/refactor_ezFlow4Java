@@ -162,6 +162,8 @@
 			var nonSepAttachLVXml = "";
 			var reformFlag = "${reformflag}";
 			var wAprMemberSN = "1";
+			//원문정보공개
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			
 		    window.onload = function ()
 		    {
@@ -1542,6 +1544,12 @@
 			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
 			        parameter[49] = nonSepAttachLVXml; // 분첨
 		        }
+		        
+		        parameter[52] = basis;
+		        parameter[53] = reason;
+		        parameter[54] = listOpenFlag;
+		        parameter[55] = fileOpenFlagList;
+		        parameter[56] = limitDate;
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1618,6 +1626,7 @@
 		                    setRecevInfo("");
 		                }
 		                
+		                
 		                if (ret[4] != undefined) {
 			                var g_SelCabXml = ret[4];
 			                var xmlCab = createXmlDom();
@@ -1655,6 +1664,29 @@
 			                	
 			                	setNonElecRecInfo(nonElecRecInfoXml);
 			                }
+			                
+		                	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/openGovInfoSave.do",
+	                    		data : {
+									openGovListFlag : ret[27],
+									fileOpenFlagList : ret[28],
+									basis : ret[29],
+									reason : ret[30],
+									publicity : ret[11],
+									docID : pDocID,
+									limitDate : ret[31]
+	                    		}
+		                	});
+		                	
+	                	    listOpenFlag = ret[27];
+		       		        fileOpenFlagList = ret[28];
+		                	basis = ret[29];
+		                	reason = ret[30];
+		                	limitDate = ret[31];
+		                	// passAprLine = ret[32];
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

@@ -3628,9 +3628,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false));
 		boardItem.setEndDate(commonUtil.getDateStringInUTC(boardItem.getEndDate(), userInfo.getOffset(), false));
 		
-		if (boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4).equals("9999")) {
+		/* 2019-12-23 홍승비 - 게시만료일을 메세지로 치환하여 전달하는 부분 주석처리 (jsp단에서 영구게시 메세지 분기처리하므로) */
+/*		if (boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4).equals("9999")) {
 			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", userInfo.getLocale()));
-		}
+		}*/
 		
 		BoardVO adjacentItem = new BoardVO();
 		if (adjacentItemsEnableFlag != null && showAdjacent != null && adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {

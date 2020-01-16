@@ -162,7 +162,13 @@
 	        var useReceiveDocNo = "<c:out value ='${useReceiveDocNo}'/>";
 	        var orgCompanyID = "<c:out value='${userInfo.companyID}'/>";
 	        var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
-	        
+			var isUsed = "<c:out value ='${isUsed}'/>";
+			var beforeDocID = "<c:out value ='${beforeDocID}'/>";
+			var beforeUrl = "<c:out value ='${beforeUrl}'/>";
+			var apprReuseConfig = "<c:out value='${apprReuseConfig}' />";
+			//원문정보공개
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+
 	        window.onload = function () {
 	            try {
 	                window.onresize();
@@ -1251,6 +1257,12 @@
 				        parameter[51] = sepAttachCheckYN;
 			        }
 			        
+			        parameter[52] = basis;
+			        parameter[53] = reason;
+			        parameter[54] = listOpenFlag;
+			        parameter[55] = fileOpenFlagList;
+			        parameter[56] = limitDate;
+			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
 			
@@ -1328,6 +1340,29 @@
 			            	sepAttachCheckYN = ret[26];
 			            	setNonElecRecInfo(nonElecRecInfoXml);
 			            }
+			            
+	                	$.ajax({
+                    		type : "POST",
+                    		dataType : "text",
+                    		async : false,
+                    		url : "/ezApprovalG/openGovInfoSave.do",
+                    		data : {
+                    				openGovListFlag : ret[27],
+                    				fileOpenFlagList : ret[28],
+                    				basis : ret[29],
+                    				reason : ret[30],
+                    				publicity : ret[11],
+                    				docID : pDocID,
+                    				limitDate : ret[31]
+                    		}
+	                	});
+	                	
+                	    listOpenFlag = ret[27];
+	       		        fileOpenFlagList = ret[28];
+	                	basis = ret[29];
+	                	reason = ret[30];
+	                	limitDate = ret[31];
+	                	// passAprLine = ret[32];
 			        }
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e.description);

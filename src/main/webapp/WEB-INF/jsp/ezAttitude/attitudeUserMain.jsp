@@ -7,7 +7,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/Calendar_cross.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />
+<%-- 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" /> --%>
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i2', 'msg')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >		
@@ -2284,7 +2285,8 @@
 	    </c:if>
 		
 		<!-- 근태관리 달력형 테이블(개인근태현황, 부서근태현황)-->
-		<table id="attiCalendarTB" <c:if test="${deptFlag != 'true'}">style="display:none"</c:if>>
+		<!-- 2020.01.10 김정언 - 부서근태현황의 근태통계에 silde 추가 -->
+		<table id="attiCalendarTB">
 			<tr>
 				<td style="vertical-align:top; width:100%;">
 					<div style="vertical-align:top;" id="attiCalendar"></div>
@@ -2295,7 +2297,8 @@
 						<div id="slideBtn" style="position:absolute;top:164px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
 					</c:if>
 					<c:if test="${deptFlag == 'true'}">
-						<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>
+						<div style="vertical-align:top;width:0px;height:0px;overflow:hidden;" class="time_stats" id="attiStatis"></div>
+						<div id="slideBtn" style="position:absolute;top:83px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
 					</c:if>	
 				</td>
 			</tr>

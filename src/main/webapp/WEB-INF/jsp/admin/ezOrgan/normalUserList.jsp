@@ -73,7 +73,7 @@
   							
 							html += "<tr>";
 							html += "   <td style='width:22px;text-align:center;cursor:deafult;'>" +
-									"		<input id='" + cn + "'type='checkbox' style='margin:0;padding:0;width:13px;height:13px;cursor=pointer;'/>" +
+									"		<input id='" + cn + "'type='checkbox' style='margin:0;padding:0;width:13px;height:13px;'/>" +
 									"	</td>";
     						html += "   <td>" + j + "</td>";
     						html += "	<td title=\'" + userName + "(" + cn + ")'>" + userName + "(" + cn + ")" + "</td>";

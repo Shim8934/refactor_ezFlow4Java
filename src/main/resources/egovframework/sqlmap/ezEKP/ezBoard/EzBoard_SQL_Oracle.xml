@@ -545,17 +545,10 @@
                	  FROM 
 					(SELECT 
                	  		IMAGEID,
-						ITEMID,
-						BOARDID,
-						WRITERID,
-						WRITERNAME,
-						WRITERDEPTID,
 						FILEPATH,
-						WRITEDATE,
 						FILECONTENT,
-						IMAGENAME,
 						MAIN_FLAG FLAG,
-						TENANT_ID
+						IMAGENAME
                	  	  FROM
                	  		TBL_Photo_ImageItem 
                   	  WHERE  
@@ -4273,7 +4266,7 @@
 		WHERE
        		tenant_id = #v_TENANTID#
        	AND  
-       		imageID = #v_IMAGEID#
+       		TRIM(imageID) = #v_IMAGEID#
        	AND
        		ItemID = #v_ITEMID#
 	</select>
@@ -4624,7 +4617,7 @@
 			UPDATE TBL_Photo_ImageItem
         	SET 
         		main_Flag = CASE
-        					WHEN imageID = #v_IMAGEID# THEN 'Y'
+        					WHEN TRIM(imageID) = #v_IMAGEID# THEN 'Y'
         					ELSE 'N'
         					END
         	WHERE
@@ -4720,9 +4713,9 @@
        			WHERE
        				tenant_id = #v_TENANTID#
        			AND  
-       				ImageID = #v_ImageID#
+       				TRIM(ImageID) = #v_ImageID#
         		AND 
-        			BoardID = #v_BoardID#
+        			TRIM(BoardID) = #v_BoardID#
 			]]>
 		</isNotEmpty>
 		<isEmpty property="v_FilePath">
@@ -4733,9 +4726,9 @@
        			WHERE  
        				tenant_id = #v_TENANTID#
        			AND
-       				ImageID = #v_ImageID#
+       				TRIM(ImageID) = #v_ImageID#
         		AND 
-        			BoardID = #v_BoardID#
+        			TRIM(BoardID) = #v_BoardID#
 			]]>
 		</isEmpty>
 	</update>
@@ -4786,6 +4779,7 @@
 	          	Attachments = #hasAttach#,
 	          	WriterName = #writerName#,
 	          	WriterName2 = #writerName2#,
+				WRITERID = #writerID#,
 	          	WRITERDEPTID = #writerDeptID#,
 	          	WRITERDEPTNAME = #writerDeptName#,
 	          	WRITERDEPTNAME2 = #writerDeptName2#,
@@ -4912,7 +4906,7 @@
         	WHERE  
         		TENANT_ID = #v_TENANTID#
         	AND
-        		ImageID = #v_ImageID#
+        		TRIM(ImageID) = #v_ImageID#
         	AND 
         		BoardID = #v_BoardID#
 		]]>
@@ -4989,7 +4983,7 @@
 			WHERE  
 				TENANT_ID = #v_TENANTID#
 			AND
-				IMAGEID = #v_pIMAGEID#
+				TRIM(IMAGEID) = #v_pIMAGEID#
 		]]>
 	</delete>	
 	

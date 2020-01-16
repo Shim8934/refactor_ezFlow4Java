@@ -1331,7 +1331,8 @@
 		        </ul>
 		        <c:if test="${useSharedMailbox == 'YES'}">
 			        <c:forEach items="${shareInfoList}" var="shareInfo">
-			        	<h2 class="off" id="h2_${shareInfo.shareId}" onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
+			        	<h2 class="off" id="h2_${shareInfo.shareId}" title="${shareInfo.shareName}" 
+			        		 onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}', '${shareInfo.managePermission}');">
 			        		<span class="sub_iconLNB tree_arrow_up"></span>
 			        		<span class="h2Title" id="h2Title_${shareInfo.shareId}" style="display:inline-block"><c:out value="${shareInfo.shareName}" /></span>&nbsp;&nbsp;
 			        		<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;">

@@ -500,7 +500,7 @@
 		SET 
 			COUNTRY_CODE = #countryCode#
 		WHERE 
-			TENANT_ID = #tenantId#;
+			TENANT_ID = #tenantId#
 		]]>
 	</update>
 	

@@ -606,7 +606,8 @@
 		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("POST", "/ezEmail/mailGetDistribution.do", false);
+		            // useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 company 패러메터를 빈 값으로 추가함.
+		            xmlHTTP.open("POST", "/ezEmail/mailGetDistribution.do?company=", false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {

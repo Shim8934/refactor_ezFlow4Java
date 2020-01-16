@@ -31,7 +31,7 @@
 		<script type="text/javascript">
 			var pUploadFilePath = "<c:out value = '${pUploadPath}' />";
 			var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
-			var pBoardName = "<c:out value = '${boardInfo.boardName}' />";
+			var pBoardName = "<c:out value = '${multiBoardName}' />";
 			var pMode = "<c:out value = '${pMode}'/>";
 			var MHTLoadComplete = "";
 			var SSUserID = "<c:out value = '${userInfo.id}' />";
@@ -422,7 +422,7 @@
 	    			<table class="content">
 						<tr>
 	          				<th><spring:message code = 'ezCommunity.t1168' /></th>
-	          				<td colspan="2" id="tdBoardName"><c:out value = '${boardInfo.boardName}' /></td>
+	          				<td colspan="2" id="tdBoardName"><c:out value = '${multiBoardName}' /></td>
 	        			</tr>
 				        <tr>
           					<th><spring:message code = 'ezCommunity.t124' /></th>

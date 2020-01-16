@@ -1577,8 +1577,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.addTblPortalThemeUserIsDefault();
     }
 
+	@Override
 	public void createJmochaMailCopyright() throws Exception {
 		ezCommonDAO.createJmochaMailCopyright();
+	}
+
+	@Override
+	public void createJamesMailDeletedId() throws Exception {
+		ezCommonDAO.createJamesMailDeletedId();
 	}
 	
 	@Override
@@ -1677,5 +1683,34 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addAddressFurigana() throws Exception {
 		ezCommonDAO.addAddressFurigana();
+	}
+	
+	@Override
+	public void createOpenGovTable() throws Exception {
+		ezCommonDAO.createOpenGovTable();
+	}
+	
+	@Override
+	public void addOpenGovFlag() throws Exception {
+        ezCommonDAO.addOpenGovFlag();
+    }
+
+	@Override
+	public int checkDeptId(String userID, String deptID, String tenantId) {
+		logger.debug("checkDeptId started");
+		int result = 0;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantId);
+		map.put("deptID", deptID);
+		map.put("userID", userID);
+		result= ezCommonDAO.checkDeptId(map);
+		logger.debug("checkDeptId ended");
+		return result;
+	}
+
+	@Override
+	public void createRsFavoriteTable() {
+		ezCommonDAO.createRsFavoriteTable();
 	}
 }

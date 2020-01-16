@@ -781,6 +781,7 @@
 		ADD 
 			is_default int(11) DEFAULT 0
 	</statement>
+	
 	<select id="EzCommonDAO.checkJmochaMailCopyright">
 		SELECT 
 			TENANT_ID
@@ -795,6 +796,22 @@
 		  `COPYRIGHT_TEXT` varchar(1000) DEFAULT NULL,
           PRIMARY KEY (`TENANT_ID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
+	<select id="EzCommonDAO.checkJamesMailDeletedId">
+		SELECT 
+			MAILBOX_ID
+		FROM 
+			JAMES_MAIL_DELETED_ID
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJamesMailDeletedId"> 
+		CREATE TABLE `james_mail_deleted_id` (
+		  `MAILBOX_ID` bigint(20) NOT NULL,
+		  `MAIL_UID` bigint(20) NOT NULL,
+		  PRIMARY KEY (`MAILBOX_ID`,`MAIL_UID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
 
 	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
@@ -1712,4 +1729,107 @@
 			ADD COLUMN s_furigana VARCHAR(120) NULL DEFAULT NULL AFTER s_type
 		]]>
 	</update>
+
+	<select id="EzCommonDAO.checkTblOpenGovDocInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVDOCINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblOpenGovfileInfo" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_OPENGOVFILEINFO
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblOpenGovDocInfo"> 
+		CREATE TABLE `tbl_opengovdocinfo` (
+		  `docid` varchar(80) NOT NULL,
+		  `openflag` char(9) DEFAULT NULL,
+		  `basis` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+		  `reason` varchar(1000) CHARACTER SET utf8 DEFAULT NULL,
+		  `openlimitdate` datetime DEFAULT NULL,
+		  `createdate` datetime DEFAULT NULL,
+		  `updatedate` datetime DEFAULT NULL,
+		  `tenant_id` mediumint(5) NOT NULL,
+		  `companyid` varchar(20) NOT NULL,
+		  `listopenflag` char(2) DEFAULT NULL,
+		  PRIMARY KEY (`docid`,`tenant_id`,`companyid`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<statement id="EzCommonDAO.createTblOpenGovFileInfo"> 
+		CREATE TABLE `tbl_opengovfileinfo` (
+		  `DOCID` varchar(80) NOT NULL,
+		  `SN` bigint(10) NOT NULL,
+		  `FILEOPENFLAG` char(1) DEFAULT NULL,
+		  `COMPANYID` varchar(20) NOT NULL,
+		  `TENANT_ID` mediumint(5) NOT NULL,
+		  PRIMARY KEY (`DOCID`,`SN`,`COMPANYID`,`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='원문정보공개 첨부파일 테이블';
+	</statement>
+	
+	<select id="EzCommonDAO.checkOpenGovFlag">
+		SELECT
+			opengovflag
+		FROM
+			TBL_FORMINFO
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addOpenGovFlag">
+		ALTER TABLE
+			TBL_FORMINFO
+		ADD (
+			OPENGOVFLAG VARCHAR(4) DEFAULT 'N'
+			)
+	</statement>
+
+	<select id="EzCommonDAO.checkDeptId" parameterClass="Map" resultClass="int">
+	<![CDATA[
+		SELECT 
+			COUNT(DEPTID) 
+		FROM 
+			(SELECT 
+				DEPTID 
+			FROM 
+				TBL_ADDJOBMASTER A
+			INNER JOIN 
+				TBL_DEPTMASTER TD 
+			ON 
+				(A.DEPTID = TD.CN AND A.TENANT_ID  = TD.TENANT_ID)
+			WHERE 
+				TD.EXTENSIONATTRIBUTE2 <> (SELECT 
+												PHYSICALDELIVERYOFFICENAME 
+											FROM 
+												TBL_USERMASTER 
+											WHERE 
+												CN = #userID# 
+											AND 
+												TENANT_ID = #tenantID#) 
+			AND
+				A.CN = #userID#
+			AND 
+				A.TENANT_ID = #tenantID#
+			UNION
+			SELECT 
+				DEPARTMENT AS DEPTID 
+			FROM 
+				TBL_USERMASTER 
+			WHERE 
+				CN = #userID#
+			AND 
+				TENANT_ID = #tenantID#) D
+		WHERE 
+			D.DEPTID = #deptID#
+	]]>
+	</select>
 </sqlMap>

@@ -828,6 +828,8 @@
 			TBL_PORTAL_THEME_USER
 		ADD 
 			is_default NUMBER(11, 0) DEFAULT 0
+	</statement>
+	
 	<select id="EzCommonDAO.checkJmochaMailCopyright">
 		<![CDATA[
 			SELECT 
@@ -845,6 +847,25 @@
 		  "COPYRIGHT_TEXT" varchar2(1000) DEFAULT NULL,
 		  PRIMARY KEY ("TENANT_ID")
 		)
+	</statement>
+
+	<select id="EzCommonDAO.checkJamesMailDeletedId">
+		<![CDATA[
+			SELECT 
+			    MAILBOX_ID
+			FROM 
+			    JAMES_MAIL_DELETED_ID
+			where 
+			    ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createJamesMailDeletedId"> 
+		  CREATE TABLE "JAMES_MAIL_DELETED_ID" (
+		  	"MAILBOX_ID" NUMBER NOT NULL, 
+			"MAIL_UID" NUMBER NOT NULL, 
+			CONSTRAINT "JAMES_MAIL_DELETED_ID_PK" PRIMARY KEY ("MAILBOX_ID", "MAIL_UID")
+		  )	
 	</statement>
 
 	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
@@ -1671,4 +1692,63 @@
 		
 	</update>
 	
+	<select id="EzCommonDAO.checkDeptId" parameterClass="Map" resultClass="int">
+	<![CDATA[
+		SELECT 
+			COUNT(DEPTID) 
+		FROM 
+			(SELECT 
+				DEPTID 
+			FROM 
+				TBL_ADDJOBMASTER A
+			INNER JOIN 
+				TBL_DEPTMASTER TD 
+			ON 
+				(A.DEPTID = TD.CN AND A.TENANT_ID  = TD.TENANT_ID)
+			WHERE 
+				TD.EXTENSIONATTRIBUTE2 <> (SELECT 
+												PHYSICALDELIVERYOFFICENAME 
+											FROM 
+												TBL_USERMASTER 
+											WHERE 
+												CN = #userID# 
+											AND 
+												TENANT_ID = #tenantID#) 
+			AND
+				A.CN = #userID#
+			AND 
+				A.TENANT_ID = #tenantID#
+			UNION
+			SELECT 
+				DEPARTMENT AS DEPTID 
+			FROM 
+				TBL_USERMASTER 
+			WHERE 
+				CN = #userID#
+			AND 
+				TENANT_ID = #tenantID#) D
+		WHERE 
+			D.DEPTID = #deptID#
+	]]>
+	</select>
+
+	<select id="EzCommonDAO.checkTblRsFavorite" resultClass="String">
+		SELECT
+			RESID
+		FROM
+			TBL_RS_FAVORITE
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblRsFavorite">
+		CREATE TABLE TBL_RS_FAVORITE
+		( 
+			"RESID" NVARCHAR2(40), 
+			"RESCOMPANY" NVARCHAR2(40), 
+			"USERID" NVARCHAR2(40), 
+			"TENANT_ID" NUMBER(5,0) DEFAULT 0,
+			CONSTRAINT "PK_TBL_RS_FAVORITE" PRIMARY KEY ("RESID", "USERID", "TENANT_ID")
+		)
+	</statement>
 </sqlMap>

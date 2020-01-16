@@ -118,6 +118,8 @@ public interface EzCommonService {
 	public void addJournalFormDelFlag() throws Exception;
 	
 	public void createJmochaMailCopyright() throws Exception;
+	
+	public void createJamesMailDeletedId() throws Exception;
 
 	public void updateTaskUrl() throws Exception;
 
@@ -162,5 +164,13 @@ public interface EzCommonService {
 	public void alterChamjoView() throws Exception;
 
 	public void addAddressFurigana() throws Exception;
+
+	public void createOpenGovTable() throws Exception;
+
+	public void addOpenGovFlag() throws Exception;
+
+	public int checkDeptId(String userID, String deptID, String tenantId);
+
+	public void createRsFavoriteTable();
 }
 

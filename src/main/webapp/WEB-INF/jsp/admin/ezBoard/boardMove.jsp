@@ -84,10 +84,12 @@
 			    		parent.window.location.reload();
 		    		},
 		    		error : function(request, status, error){
-		    			if (request.status == 500) {
-							alert("<spring:message code='ezBoard.t127'/>");
-		    			} else if (request.status == 501) {
-		    				alert("<spring:message code='ezBoard.hsbMv01'/>");
+		    			if (request.status == 600) { // 상위게시판을 자신의 하위게시판으로 이동하는 경우
+							alert("<spring:message code='ezBoard.hsbMv01'/>");
+		    			} else if (request.status == 601) { // 그룹사게시판과 일반게시판 간에 이동하는 경우
+		    				alert("<spring:message code='ezBoard.hsbMv02'/>");
+		    			} else {
+		    				alert("<spring:message code='ezBoard.t127'/>");
 		    			}
 		    		}
 		    	});		    	
@@ -129,14 +131,14 @@
 			    	<td class="point"><c:out value='${boardName}'/></td>
 			  	</tr>
 			</table>
-			<br/>
+			<%-- <br/>
 			<h2 style="font-weight: normal">▒ <spring:message code="ezBoard.t130" /></h2>
 			<table class="content">
 				<tr>
 			    	<th><spring:message code="ezBoard.t131" /></th>
 			    	<td><c:out value='${boardName}'/></td>
 			  	</tr>
-			</table>
+			</table> --%>
 			<br/>
 			<div id="mainmenu">
 				<ul>

@@ -38,3 +38,4 @@ var strLangKHJ01 = "사원";
 var strLangKHJ02 = "명을 복구하시겠습니까?";
 var strLangKHJ03 = "사원 %s명을 복구하시겠습니까?";
 var strLangKJE01 = "모든 겸직을 삭제하시겠습니까?";
+var strLangKSM01 = "부서를 선택하세요.";

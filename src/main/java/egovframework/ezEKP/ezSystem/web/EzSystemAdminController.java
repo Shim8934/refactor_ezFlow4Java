@@ -1316,15 +1316,10 @@ public class EzSystemAdminController {
 		String topID = userInfo.getCompanyID();
 		String companyId = request.getParameter("companyId");
 		String adminChk = "false";
-		
+		topID = companyId;
+
 		if (userInfo.getRollInfo().indexOf("c=1") != -1) {
 			adminChk = "true";
-			
-			if (!topID.equals(companyId)){
-				topID = companyId;
-			} else {
-				topID = "Top";
-			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);

@@ -38,3 +38,4 @@ var strLangKHJ01 = "사원";
 var strLangKHJ02 = "명을 복구하시겠습니까?";
 var strLangKHJ03 = "Do you want to recover %s employees?";
 var strLangKJE01 = "Are you sure you want to delete all the concurrent position?";
+var strLangKSM01 = "Please select a department.";

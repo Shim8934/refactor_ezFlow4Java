@@ -1,5 +1,64 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovAttachVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.HandlerMapping;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -24,65 +83,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpRequest;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.HandlerMapping;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.let.utl.fcc.service.KlibUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 사용자 - 전자결재G
@@ -175,6 +175,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String hideSusin =  ezCommonService.getTenantConfig("hideSusin", userInfo.getTenantId());
 		//공유결재문서 추가개발
 		String useShareApproval = ezCommonService.getTenantConfig("useShareApproval", userInfo.getTenantId());
+		
+		//원문공개사용여부
+		String useOpenGov = config.getProperty("config.useOpenGov"); 
+		
+		model.addAttribute("useOpenGov", useOpenGov);
 		
 		StringBuffer containers = new StringBuffer();
 		
@@ -1073,6 +1078,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), userInfo.getCompanyID(), tenantID).getReformFlag());
 		}
 		
+		String formId = ezApprovalGService.getFormId(formURL);
+		String openGovFlag = ezApprovalGService.getOpenGovFlag(formId, userInfo.getTenantId(), userInfo.getCompanyID());
+		model.addAttribute("openGovFlag", openGovFlag);
+		
 		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";
@@ -1260,6 +1269,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
+		
+		String useOpenGov = config.getProperty("config.useOpenGov");
+		
+		if (useOpenGov != null && useOpenGov.equals("YES")) {
+			model.addAttribute("useOpenGov", useOpenGov);
+		}
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -1648,7 +1663,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.deleteDocInfo(docID, "CHECK", userInfo.getCompanyID(), userInfo.getTenantId());
-		
+		//원문정보공개 데이터 제거
+		ezApprovalGService.deleteOpenGovDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("undoDoc ended.");
 		
 		return result;
@@ -2635,6 +2651,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		try {
 			result = ezApprovalGService.updateAttachFileInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = "File_NonAttach";
 		}
 		
@@ -3505,7 +3522,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             logger.debug("formId = " + formId + ", formText.length = " + formText + ", formFile.length = " + formFile.length() + ", targetFile.length = " + targetFile.length());
 
-            if (targetFile.exists()) {
+            /*if (targetFile.exists()) {
                 //update
                 if (formText.equals("") || formFile.length() >= targetFile.length()) {
                     logger.debug("update oriTmpFile backup started.");
@@ -3533,7 +3550,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 					return ret;
                 }
-            }
+            }*/
 
 			if (extension.equals(".hwp")) {
 				stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
@@ -3759,7 +3776,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signatureDir = commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId());
 		
 		fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
-		signatureDir = signatureDir + commonUtil.separator + fileName.split("_")[0];
+		signatureDir = signatureDir + commonUtil.separator + fileName.substring(0, fileName.lastIndexOf("_"));
 		
 		String result = signatureDir + commonUtil.separator + fileName;
 
@@ -3817,13 +3834,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (!file.exists()) {
 				file.mkdirs();
 			}
-			
 
-			if (!"".equals(formId) && !"2003000007".equals(formId) && !"2016000001".equals(formId)) {
-				/*Recvdocnumber_Cross.js
+			/*if (!"".equals(formId) && !"2003000007".equals(formId) && !"2016000001".equals(formId)) {
+				Recvdocnumber_Cross.js
 				Recvdocnumber_HWP.js
 				ezSimsaG.jsp
-				ezSimsagHWP.jsp*/
+				ezSimsagHWP.jsp
 
 				ApprGFormVO formVO = ezApprovalGService.getFormPath(formId, userInfo.getCompanyID(), userInfo.getTenantId());
 				File formFile = new File(realPath + formVO.getFormFileLocation());
@@ -3860,7 +3876,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						return ret;
 					}
 				}
-			}
+			}*/
 
 			if (extension.equals(".hwp")) {
 				stream = new ByteArrayInputStream(Base64.decodeBase64(formText));
@@ -4233,6 +4249,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("formId", formId);
 		}
 		
+		if (approvalFlag.equals("G")) {
+			//basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "";
+			Map<String, Object> openGovMap = ezApprovalGService.getOpenGovInfo(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+			
+			model.addAttribute("basis", openGovMap.get("basis"));
+			model.addAttribute("reason", openGovMap.get("reason"));
+			model.addAttribute("listOpenFlag", openGovMap.get("listOpenFlag"));
+			model.addAttribute("fileOpenFlagList", openGovMap.get("fileOpenFlagList"));
+		}
+		
 		logger.debug("approvui ended");
 		
 		return "ezApprovalG/apprGapprovui";
@@ -4495,8 +4521,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
 		
+		String pDeptID = "";
+		if (xmlDom.getElementsByTagName("BANSONGDEPTID").item(0) != null && !xmlDom.getElementsByTagName("BANSONGDEPTID").item(0).getTextContent().trim().equals("")) {
+			pDeptID = xmlDom.getElementsByTagName("BANSONGDEPTID").item(0).getTextContent();
+		} else {
+			pDeptID = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
+		}
+		
 		String result = ezApprovalGService.doProcess("004", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
-				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
+				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, pDeptID, 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
 		logger.debug("doBansongApprov ended.");
@@ -9205,17 +9238,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String getNonElecInfoSusinInit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getNonElecInfoSusinInit started.");
-		
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String companyID = userInfo.getCompanyID();
 		int tenantID = userInfo.getTenantId();
-		
+
 		String result = ezApprovalGService.getNonElecInfoSusinInit(docID, companyID, tenantID);
 		logger.debug("getNonElecInfoSusinInit ended.");
 		return result;
 	}
-	
+
 	/* 2018-06-18 천성준
 	 * 비전자문서 수신처 등록 메소드
 	 * */
@@ -9223,15 +9256,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public void nonElecRecSusinInit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("nonElecRecSusinInit started.");
-		
+
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
-		
+
 		ezApprovalGService.setNonElecRecSusinInit(docID, userInfo.getDeptID(), userInfo.getDeptName(), userInfo.getDeptName2(), userInfo.getCompanyID(), userInfo.getTenantId());
-		
+
 		logger.debug("nonElecRecSusinInit ended.");
 	}
-	
+
 	/* 2018-06-21 천성준
 	 * 비전자문서 접수 후, 임시 캐비넷 아이디 선택 캐비넷 아이디로 바꿈
 	 * */
@@ -9239,17 +9272,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public void nonElecRecTempCabSwitch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("nonElecRecTempCabSwitch started.");
-		
+
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String orgDocID = request.getParameter("orgDocID");
 		String nonElecRecXML = request.getParameter("xml");
-		
+
 		ezApprovalGService.setNonElecRecCabID(docID, orgDocID, nonElecRecXML, userInfo.getCompanyID(), userInfo.getTenantId());
-		
+
 		logger.debug("nonElecRecTempCabSwitch ended.");
 	}
-	
+
 	/* 2018-07-17 천성준
 	 * 비전자문서 등록 후, 바로 기안자 문서함에서 삭제
 	 * */
@@ -9257,12 +9290,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public void setNonElecRecDocDel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setNonElecRecDocDel started.");
-		
+
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
-		
+
 		ezApprovalGService.setNonElecRecDocDelFlag(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		
+
 		logger.debug("setNonElecRecDocDel ended.");
 	}
 	
@@ -9375,7 +9408,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 
 	 * 회송문서의 철정보를  선택한 철 정보로 변경
 	 * */
-	@SuppressWarnings("null")
 	@RequestMapping(value = "/ezApprovalG/setHesongBansongCabinetInfo.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void setHesongBansongCabinetInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
@@ -9500,9 +9532,127 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("enforceSihangDocView ended.");
 
-		return "ezApprovalG/apprGenforceSihangDocView";
+        return "ezApprovalG/apprGenforceSihangDocView";
+    }
+
+	/**
+	 * 결재정보 원문공개정보 저장
+	 */
+	@RequestMapping(value = "/ezApprovalG/openGovInfoSave.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String openGovInfoSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("openGovInfoSave started.");
+		  
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String openGovListFlag = request.getParameter("openGovListFlag");
+		String fileOpenFlagList = request.getParameter("fileOpenFlagList");
+		String basis = request.getParameter("basis");
+		String reason = request.getParameter("reason");
+		String publicity = request.getParameter("publicity");
+		String docID = request.getParameter("docID");
+		String limitDate = request.getParameter("limitDate");
+		
+		String result = ezApprovalGService.openGovInfoSave(openGovListFlag, fileOpenFlagList, basis, reason, publicity, docID, limitDate, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("openGovInfoSave ended.");
+		
+ 		return result;
+	}
+	/**
+	 * 기록물등록대장 원문공개수정
+	 */
+	@RequestMapping(value = "/ezApprovalG/updateOpenGovInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateOpenGovInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("updateOpenGovInfo started.");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String openGovListFlag = request.getParameter("listOpenFlag");
+		String fileOpenFlagList = request.getParameter("fileOpenFlagList");
+		String basis = request.getParameter("basis");
+		String reason = request.getParameter("reason");
+		String publicity = request.getParameter("publicityCode");
+		String limitDate = request.getParameter("openLimitDate");
+		String modifyReason = request.getParameter("modifyReason");
+
+		String result = ezApprovalGService.updateOpenGovInfo(openGovListFlag, fileOpenFlagList, basis, reason, publicity, docID, limitDate, userInfo.getCompanyID(), userInfo.getTenantId(), modifyReason, userInfo);
+		
+		logger.debug("updateOpenGovInfo ended.");
+		
+		return result;
 	}
 	
+	/* 
+	 * 결재정보 첨부리스트 호출
+	 * */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezApprovalG/getAttachListForOpenGov.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONArray getAttachListForOpenGov(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getAttachListForOpenGov started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String endFlag = request.getParameter("endFlag");
+		logger.debug("docID = " + docID);
+		
+		List<ApprGOpenGovAttachVO> attachList = ezApprovalGService.getAttachListForOpenGov(docID, endFlag, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		JSONObject attachJson = null;
+		
+		JSONArray attachJsonArr = new JSONArray();
+		
+		for (ApprGOpenGovAttachVO attach : attachList) {
+			attachJson = new JSONObject();
+			attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
+			attachJson.put("sn", attach.getAttachFileSN());
+			attachJson.put("fileName", attach.getAttachFileName());
+			
+			String fileSize = attach.getAttachFileSize();
+			
+			int cnt = (int) (Math.log10(Double.parseDouble(fileSize)) / Math.log10(1024));
+			String[] unit = {"bytes", "KB", "MB", "GB"};
+			
+			double filesize = Double.parseDouble(fileSize) / Math.pow(1024, cnt);
+			fileSize = String.format("%.1f",filesize);
+			fileSize = fileSize + unit[cnt];
+			
+			attachJson.put("fileSize", fileSize);
+			
+			attachJsonArr.add(attachJson);
+		}
+		
+		logger.debug("getAttachListForOpenGov ended.");
+		return attachJsonArr;
+	}
+
+	/* 
+	 * 원문정보 수정
+	 * */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezApprovalG/getOpenGovInfoForUpdate.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject getOpenGovInfoForUpdate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getOpenGovInfoForUpdate started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		logger.debug("docID = " + docID);
+		
+		ApprGOpenGovInfoVO openGovInfo = ezApprovalGService.getOpenGovInfoForUpdate(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		JSONObject openGovJson = new JSONObject();
+		openGovJson.put("openGovInfo", openGovInfo);
+//			attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
+//			attachJson.put("sn", attach.getAttachFileSN());
+//			attachJson.put("fileName", attach.getAttachFileName());
+//			attachJson.put("fileSize", fileSize);
+//			
+		
+		logger.debug("getOpenGovInfoForUpdate ended.");
+		return openGovJson;
+	}
+
 	@RequestMapping(value = "/ezApprovalG/enforceSihangSealChoose.do", method = RequestMethod.GET)
 	public String enforceSihangSealChoose(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("enforceSihangSealChoose started.");
@@ -9542,5 +9692,35 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("enforceSihangDocSave ended.");
 		return "";
+	}
+
+	/*
+	 * 한글일괄기안 원문정보 가져오기
+	 * */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezApprovalG/getOpenGovDocInfo.do", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject getOpenGovDocInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getOpenGovDocInfo started.");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		logger.debug("docID = " + docID);
+
+		Map<String, Object> openGovMap = ezApprovalGService.getOpenGovInfo(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+
+		JSONObject openGovJson = new JSONObject();
+		openGovJson.put("basis", openGovMap.get("basis"));
+		openGovJson.put("reason", openGovMap.get("reason"));
+		openGovJson.put("listOpenFlag", openGovMap.get("listOpenFlag"));
+		openGovJson.put("fileOpenFlagList", openGovMap.get("fileOpenFlagList"));
+		/*attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
+		attachJson.put("sn", attach.getAttachFileSN());
+		attachJson.put("fileName", attach.getAttachFileName());
+		attachJson.put("fileSize", fileSize);*/
+
+		logger.debug("getOpenGovDocInfo ended.");
+
+		return openGovJson;
 	}
 }

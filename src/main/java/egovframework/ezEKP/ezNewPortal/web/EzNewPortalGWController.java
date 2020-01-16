@@ -787,7 +787,9 @@ public class EzNewPortalGWController {
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
 			 */
 			String roleInfo = "user";
-			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1) {
+			
+			// 전체관리자, 회사관리자, 웹폴더관리자면 관리자 버튼이 나타나도록 추가 -> 관리자 안에서 웹폴더관리자는 웹폴더 관리만 나타나도록 수정 
+			if (info.getRollInfo().indexOf("c=1") > -1 || info.getRollInfo().indexOf("k=1") > -1 || info.getRollInfo().indexOf("wf=1") > -1) {
 				roleInfo = "admin";
 				// 권한 없는 사람이 강제로 주소를 치고 들어가는 상황을 대비해 admin 주소는 서버에서 올리는 걸로.
 				data.put("utilAdminUrl", "/admin/main.do");
@@ -1485,7 +1487,9 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String portletLang = info.getLang();
 			String offset = info.getOffSet();
-			String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat adf = new SimpleDateFormat("yyyy-MM-dd");
+			String nowDate = adf.format(cal.getTime());
 			String deptId = info.getDeptId();
 			String offsetMin = commonUtil.getMinuteUTC(info.getOffSet());
 			String userEmail = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenantId);

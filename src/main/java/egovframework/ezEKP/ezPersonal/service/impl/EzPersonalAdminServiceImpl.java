@@ -202,6 +202,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			
 			if (vo.getModiDate() != null) {
 				vo.setModiDate(commonUtil.getDateStringInUTC(vo.getModiDate(), userInfo.getOffset(), false));
+
 			}
 		}
 		
