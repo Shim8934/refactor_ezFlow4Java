@@ -505,6 +505,11 @@
 				themeAuths = JSON.parse(themeAuths);
 			}
 			
+			if (themeAuths.length == 0) {
+				alert("<spring:message code='ezNewPortal.yej11' />");
+				return;
+			}
+			
    			var request = new XMLHttpRequest();
    			request.open('PATCH','/admin/ezNewPortal/checkThemeAuths.do');
 			request.setRequestHeader('Content-Type', 'application/json');
@@ -516,7 +521,7 @@
 					if (result) {
 						checkAuthAfter(themeId, companyValue, themeInfo, frameInfos);
 					} else if (!result) {
-						alert("특정 사용자가 모든 테마에 접근 불가능할 수 없습니다.");
+						alert("<spring:message code='ezNewPortal.yej13' />");
 						return;
 					}
 				}

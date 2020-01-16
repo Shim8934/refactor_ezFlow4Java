@@ -131,6 +131,7 @@
 		var board_alertArguments = new Array();
 		
 		var savePortletAuthSetting = function() {
+			board_alertArguments[1] = DivPopUpHidden;
 			var companyValue = "<c:out value='${companyId}'/>";
 			var portletId = "<c:out value='${portletId}'/>";
 			var request = new XMLHttpRequest();
@@ -139,7 +140,6 @@
 			
 			request.onload = function() { 
 				var result = request.responseText;
-				board_alertArguments[1] = DivPopUpHidden;
 				
 				if (result == "ok") {
 					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.yej07' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.yej07'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -161,6 +161,12 @@
 			
 			if (typeof portletAuths == "string") {
 				portletAuths = JSON.parse(portletAuths);
+			}
+			
+			if (portletAuths.length < 1) {
+				var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezNewPortal.yej12'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezNewPortal.yej12'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+				DivPopUpShow(330, 205, pUrl);
+				return;
 			}
 			
 			var data = JSON.stringify({
