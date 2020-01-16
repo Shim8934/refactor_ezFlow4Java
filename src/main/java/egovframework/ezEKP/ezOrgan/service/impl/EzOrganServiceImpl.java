@@ -738,7 +738,8 @@ public class EzOrganServiceImpl implements EzOrganService {
                             strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "')";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%')";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                            		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
@@ -753,7 +754,8 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 } else {
                     if (checkSearchField(searchInfo[0])) {
-                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
+                        strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString 
+                        		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {
                             strSQL = strSQL + " AND " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParam[i] + "' ";
@@ -871,10 +873,12 @@ public class EzOrganServiceImpl implements EzOrganService {
                 if (i == 0) {
                     if (checkSearchField(searchInfo[0])) {
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].toString().equals("/")) {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "'";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParam[i] 
+                            		+ "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "'";
                             searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
                         } else {
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString;
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString 
+                            		+ " OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString;
                         }
                     } else {
                         if (searchInfo[0].indexOf("EXACT_") == 0) {

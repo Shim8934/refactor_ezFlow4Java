@@ -2129,7 +2129,7 @@
       	WHERE
       		DEPARTMENT = #deptId#
       	AND
-      		(CN LIKE #searchValue# OR DISPLAYNAME LIKE #searchValue#)
+      		(CN LIKE #searchValue# ESCAPE '\' OR DISPLAYNAME LIKE #searchValue# ESCAPE '\')
       	AND
       		TENANT_ID = #tenantId#
 		ORDER BY
