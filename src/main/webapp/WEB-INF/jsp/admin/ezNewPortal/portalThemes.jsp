@@ -67,7 +67,7 @@
 	        .admin_thema .authList {clear:none; margin:20px 0px 0px; height:189px; width:359px;} 
 	        .admin_thema .authList th {width:90px; border-left:none;} 
 	        .admin_thema .menuIconTD {padding:0px;}
-	        .admin_thema .menuIconTD div {height:100%; overflow:auto; padding:5px;}
+	        .admin_thema .menuIconTD div {height:82px; overflow:auto; padding:5px;}
 		</style>
 	</head>
 	
