@@ -1721,7 +1721,12 @@
                                     limitDate : ret[31]
                                 }
                             });
-			                
+
+                            listOpenFlag = ret[27];
+                            fileOpenFlagList = ret[28];
+                            basis = ret[29];
+                            reason = ret[30];
+                            limitDate = ret[31];
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

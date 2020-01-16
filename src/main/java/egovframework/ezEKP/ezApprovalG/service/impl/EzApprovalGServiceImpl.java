@@ -29709,6 +29709,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
 		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
 		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));
+
+        map.forEach((key, value) -> logger.debug("key = " + key + ", value = " + value));
 		
 		List<ApprGDocListForOpenGovVO> apprGDocListVOList = ezApprovalGDAO.getSearchDocListForOpenGov(map);
 		

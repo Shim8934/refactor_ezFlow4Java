@@ -591,9 +591,35 @@
 					
 				}
 			} else {
-				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t078' />) </th><td class='portletInfoTD'><input class='portletName' data1='1' type='text' maxlength='50'></td></tr>";
-				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t079' />) </th><td class='portletInfoTD'><input class='portletName' data1='2' type='text' maxlength='50'></td></tr>";
-				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(<spring:message code='ezNewPortal.t080' />) </th><td class='portletInfoTD'><input class='portletName' data1='3' type='text' maxlength='50'></td></tr>";
+				var mainTitle = "<spring:message code='ezNewPortal.t078' />";
+				var subTitle1 = "<spring:message code='ezNewPortal.t079' />";
+				var subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+				
+				var mainTitleId = "1";
+				var subTitle1Id = "2";
+				var subTitle2Id = "3";
+				
+				if (primary == "2") {
+					mainTitle = "<spring:message code='ezNewPortal.t079' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+					
+					mainTitleId = "2";
+					subTitle1Id = "1";
+					subTitle2Id = "3";
+				} else if (primary == "3") {
+					mainTitle = "<spring:message code='ezNewPortal.t080' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
+					
+					mainTitleId = "3";
+					subTitle1Id = "1";
+					subTitle2Id = "2";
+				}
+				
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + mainTitle + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + mainTitleId + "' type='text' maxlength='50'></td></tr>";
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + subTitle1 + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + subTitle1Id + "' type='text' maxlength='50'></td></tr>";
+				listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + subTitle2 + ") </th><td class='portletInfoTD'><input class='portletName' data1='" + subTitle2Id + "' type='text' maxlength='50'></td></tr>";
 			}
 			
 			listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t098' /> </th><td class='portletInfoTD'>";
