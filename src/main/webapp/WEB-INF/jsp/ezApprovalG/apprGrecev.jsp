@@ -112,12 +112,11 @@
 			var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
 			var curDocNum = "";
 			var draftDeptID = "<c:out value = '${draftDeptID}'/>";
-			var orgCompanyID = "";
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			var orgCompanyID = "${userInfo.companyID}";
 			var ext = "mht";
 			var isHWP = "";
 			
-			//원문정보공개
-			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			//부서순차합의를 위해 아래 파라미터 추가. 2019-02-08 홍대표
 			//최종결재시 채번
 			var useReceiveDocNo = "${useReceiveDocNo}";
@@ -315,24 +314,26 @@
 			        }
 			    }
 			
-			    if (message.GetListItem(fields, "keepperiod")) {
-			        if (message2.GetListItem(fields2, "keepperiod")) {
-			            for (var i = 0; i < message.GetListItem(fields, "keepperiod").options.length ; i++) {
-			                if (message2.GetListItem(fields2, "keepperiod").innerHTML == message.GetListItem(fields, "keepperiod").options[i].innerHTML)
-			                    message.GetListItem(fields, "keepperiod").options.textContent = CKediter_Trim(message.GetListItem(fields, "keepperiod").options[i].textContent);
-			            }
-			
-			            var a = message2.GetListItem(fields2, "keepperiod").innerHTML;
-			            var re = new RegExp("&nbsp;", "gi");
-			            var b = a.replace(re, "");
-			            var c = parseInt(b);
-			
-			            if (!isNaN(c))
-			                message.GetListItem(fields, "keepperiod").options.textContent = c;
-			            else
-			                message.GetListItem(fields, "keepperiod").textContent = "<spring:message code='ezApprovalG.t1692'/>";
-			        }
-			    }
+			    if (GetNamedItem(document.getElementById('message'), "keepperiod")) {
+		            if (GetNamedItem(document.getElementById('message2'), "keepperiod")) {
+		                if (GetNamedItem(document.getElementById('message'), "keepperiod").options != undefined) {
+		                    for (var i = 0; i < GetNamedItem(document.getElementById('message'), "keepperiod").options.length ; i++) {
+		                        if (GetNamedItem(document.getElementById('message2'), "keepperiod").innerHTML == GetNamedItem(document.getElementById('message'), "keepperiod").options[i].innerHTML)
+		                            GetNamedItem(document.getElementById('message'), "keepperiod").options.textContent = CKediter_Trim(GetNamedItem(document.getElementById('message'), "keepperiod").options[i].textContent);
+		                    }
+		                }
+		
+		                var a = GetNamedItem(document.getElementById('message2'), "keepperiod").innerHTML;
+		                var re = new RegExp("&nbsp;", "gi");
+		                var b = a.replace(re, "");
+		                var c = parseInt(b);
+		
+		                if (!isNaN(c))
+		                    GetNamedItem(document.getElementById('message'), "keepperiod").options.textContent = c;
+		                else
+		                    GetNamedItem(document.getElementById('message'), "keepperiod").textContent = "<spring:message code='ezApprovalG.t1692'/>";
+		            }
+		        }
 			    
 			    if (message.GetListItem(fields, "docnumber")) {
 			        if (message2.GetListItem(fields2, "docnumber")) {
@@ -624,9 +625,9 @@
 		        }
 		        
 		        if (LastSignSN == 1 || DraftLastFlag)
-		            rtnval = getRecvDocNumber(arr_userinfo[4]);
+		            rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		        else
-		            rtnval = getRecvDocNumber(arr_userinfo[4]);
+		            rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		
 		        if (!rtnval) {
 		            var pAlertContent = "[<spring:message code='ezApprovalG.t1493'/>";
@@ -639,11 +640,11 @@
 		        }
 		        else {
 		            if (LastSignSN == 1 || DraftLastFlag) {
-		                rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
+		                rtnval = getDocNumberNew(arr_userinfo[4], "", docNumZeroCnt);
 		                if (rtnval) docAccess = 2; 
 		            }
 		            else {
-		                rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
+		                rtnval = getDocNumberNew(arr_userinfo[4], "be", docNumZeroCnt);
 		                if (rtnval) docAccess = 1; 
 		            }
 		        }
@@ -901,7 +902,6 @@
 		        parameter[39] = SummaryFlag;
 		        parameter[41] = tempItemName;
 		        parameter[42] = tempItemName2;
-
 		        if(pDocState == "012") {
 		        	parameter[45] = "";
 		        	parameter[46] = "";

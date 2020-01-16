@@ -1,5 +1,85 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+
+import kr.dogfoot.hwplib.object.HWPFile;
+import kr.dogfoot.hwplib.object.bodytext.Section;
+import kr.dogfoot.hwplib.object.bodytext.control.Control;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
+import kr.dogfoot.hwplib.object.docinfo.BinData;
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataCompress;
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataState;
+import kr.dogfoot.hwplib.object.docinfo.bindata.BinDataType;
+import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
+import kr.dogfoot.hwplib.reader.HWPReader;
+import kr.dogfoot.hwplib.writer.HWPWriter;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.html.HTMLCollection;
+import org.w3c.dom.html.HTMLElement;
+import org.w3c.dom.html.HTMLTableElement;
+import org.w3c.dom.html.HTMLTableRowElement;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
@@ -56,82 +136,9 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
-import kr.dogfoot.hwplib.object.HWPFile;
-import kr.dogfoot.hwplib.object.bodytext.Section;
-import kr.dogfoot.hwplib.object.bodytext.control.Control;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
-import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
-import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.writer.HWPWriter;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.html.HTMLCollection;
-import org.w3c.dom.html.HTMLElement;
-import org.w3c.dom.html.HTMLTableElement;
-import org.w3c.dom.html.HTMLTableRowElement;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import javax.annotation.Resource;
-import javax.mail.internet.InternetAddress;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service("EzApprovalGService")
 public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
@@ -6076,7 +6083,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		}
-
+		
 		logger.debug("findHwpField ended");
 		
 		return false;
@@ -6114,8 +6121,46 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		}
-
+ 
 		logger.debug("setHwpSign ended");
+	}
+	
+	/**
+	 * @param fieldName ex) sign1, sign2
+	 * @param hwpFile
+	 * @throws Exception
+	 * 한글파일에서 특정 필드 값 읽어오기
+	 */
+	private String getHwpText(String fieldName, HWPFile hwpFile) throws Exception {
+		logger.debug("getHwpSign started");
+		String fieldText = "";
+		
+		for (Section s : hwpFile.getBodyText().getSectionList()) {
+			for (Paragraph p : s) {
+				ArrayList<Control> controlList = p.getControlList();
+				if (controlList == null) {
+					continue;
+				}
+				
+				for (Control c : controlList) {
+					if (c.getType() == ControlType.Table) {
+						ControlTable ct = (ControlTable) c;
+						
+						for (Row row : ct.getRowList()) {
+							for (Cell cell : row.getCellList()) {
+								if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
+									fieldText = cell.getParagraphList().getParagraph(0).getText().getNormalString(0);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		logger.debug("getHwpSign ended");
+		return fieldText;
 	}
 	
 	/**
@@ -6174,6 +6219,59 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 
 		logger.debug("setHwpSign ended");
+	}
+	
+	/**
+	 * @param hwpFile
+	 * @param fieldName 
+	 * @param filePath
+	 * @throws Exception
+	 * 한글파일에 사인기입하기
+	 */
+	private void insertingImageHWP(HWPFile hwpFile, String fieldName, String filePath) throws Exception {
+		logger.debug("insertingImageHWP started");
+		
+		String imageFileExt = getExtendedFileName(filePath);
+		int streamIdx = hwpFile.getBinData().getEmbeddedBinaryDataList().size() + 1;
+		String streamName = "Bin" + String.format("%04X", streamIdx) + "." + imageFileExt;
+		byte[] fileBinary = loadFile(filePath);
+		BinDataCompress compressMethod = BinDataCompress.ByStroageDefault;
+		
+		hwpFile.getBinData().addNewEmbeddedBinaryData(streamName, fileBinary, compressMethod);
+		addBinDataInDocInfo(hwpFile, streamIdx, compressMethod, imageFileExt);
+		
+		
+		logger.debug("insertingImageHWP ended");
+	}
+	
+	private byte[] loadFile(String filePath) throws IOException {
+		File file = new File(filePath);
+		byte[] buffer = new byte[(int) file.length()];
+		InputStream ios = null;
+		try {
+			ios = new FileInputStream(file);
+			ios.read(buffer);
+		} finally {
+			try {
+				if (ios != null) {
+					ios.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return buffer;
+	}
+	
+	private int addBinDataInDocInfo(HWPFile hwpFile, int streamIndex, BinDataCompress compressMethod, String imageFileExt) {
+		BinData bd = new BinData();
+		bd.getProperty().setType(BinDataType.Embedding);
+		bd.getProperty().setCompress(compressMethod);
+		bd.getProperty().setState(BinDataState.NotAcceess);
+		bd.setBinDataID(streamIndex);
+		bd.setExtensionForEmbedding(imageFileExt);
+		hwpFile.getDocInfo().getBinDataList().add(bd);
+		return hwpFile.getDocInfo().getBinDataList().size();
 	}
 
 	private String createHwpFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang,
@@ -8558,11 +8656,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.insertOptionInfo(map);
 				
 				if (docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(9).getTextContent().equals("004")) {
-					String orgDocID = ezApprovalGDAO.getAprOrgDocID(map);
-					map.put("v_ORGDOCID", orgDocID);
-					int opinionCnt = ezApprovalGDAO.getEndAprOpinionCnt(map);
-					map.put("v_ORGOPINIONSN", opinionCnt + 1);
-					ezApprovalGDAO.insertHesongOpinion(map);
+					//부서합의  회송의견 처리하기 위해 분기 추가. 2019-03-06 홍대표
+					map.put("v_habDocID", docID);
+					List<ApprGDocListVO> habDocInfo = ezApprovalGDAO.getLastHabYuiDocState(map);
+					map.remove("v_habDocID");
+					
+					if(!(habDocInfo.size() > 0 && habDocInfo.get(0).getDocState().equals("012"))) {
+						String orgDocID = ezApprovalGDAO.getAprOrgDocID(map);
+						map.put("v_ORGDOCID", orgDocID);
+						int opinionCnt = ezApprovalGDAO.getEndAprOpinionCnt(map);
+						map.put("v_ORGOPINIONSN", opinionCnt + 1);
+						ezApprovalGDAO.insertHesongOpinion(map);
+					}
 				}
 			}
 			
@@ -9086,7 +9191,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	start = Integer.parseInt(doc.getElementsByTagName("PAGESIZE").item(0).getTextContent());
         } else {
         	end = Integer.parseInt(recordListVO.getPageSize()) * Integer.parseInt(recordListVO.getPageNO());
-        	start = end - Integer.parseInt(recordListVO.getPageSize()) + 1;
+         	start = end - Integer.parseInt(recordListVO.getPageSize()) + 1;
         }
         
         
@@ -15018,111 +15123,184 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String docHref = ezApprovalGDAO.getDocInfoHref(map3);
 		String formURL = userInfo.getRealPath() + docHref;
-		String loadMht = ezCommonService.loadMHTFile(formURL); // 결재문서 가져오기
-		// HTML -> MHT
-		String content = ezCommonService.startMHT2HTML(userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), userInfo.getRealPath(), userInfo.getLocale(), "", "");
-		//HTML 파싱 document 클래스 겹쳐서 임포트 못함
-		org.jsoup.nodes.Document doc = Jsoup.parse(content);
+		String ext = getExtendedFileName(formURL);
 		
-		if (isHesong) {
-			if (doc.getElementById(susinSN + "habyuipositon" + aprSN) != null) {
-				doc.getElementById(susinSN + "habyuipositon" + aprSN).html(userInfo.getTitle());
-			}
-		} else {
-			if (doc.getElementById(susinSN + "habyuipositon" + aprSN) != null) {
-				doc.getElementById(susinSN + "habyuipositon" + aprSN).html(signTitle);
-			}
-		}
-		
-		if (signType.equals("IMAGE")) {
-			String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+		if("mht".equals(ext)) {
+			String loadMht = ezCommonService.loadMHTFile(formURL); // 결재문서 가져오기
+			// HTML -> MHT
+			String content = ezCommonService.startMHT2HTML(userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), userInfo.getRealPath(), userInfo.getLocale(), "", "");
+			//HTML 파싱 document 클래스 겹쳐서 임포트 못함
+			org.jsoup.nodes.Document doc = Jsoup.parse(content);
 			
-			String[] tempSignCont = signCont.split("::");
-			
-			if (tempSignCont[1] != null && tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1) {
-				if (signImageType.equals("NAME")) {
-					signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
-				} else {
-					signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'>";
+			if (isHesong) {
+				if (doc.getElementById(susinSN + "habyuipositon" + aprSN) != null) {
+					doc.getElementById(susinSN + "habyuipositon" + aprSN).html(userInfo.getTitle());
 				}
 			} else {
-				if (signImageType.equals("NAME")) {
-					signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=50 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
-				} else {
-					signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=50 spath='" + tempSignCont[0] + "'>";
+				if (doc.getElementById(susinSN + "habyuipositon" + aprSN) != null) {
+					doc.getElementById(susinSN + "habyuipositon" + aprSN).html(signTitle);
 				}
 			}
-		}
-		
-		//부서 합의 일 경우 원문서 문서번호 채번
-		if (!isHesong) {
-			int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
-			String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
-			if (lastHabyuiCnt > 0) {
-				map.put("v_habDocID", docID);
-				List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
+			
+			if (signType.equals("IMAGE")) {
+				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 				
-				if (docState.size() > 0) {
-					if (docState.get(0).getDocState().equals("012")) {
-						Document xmlDom = commonUtil.convertStringToDocument(getCabinetNum(orgDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset()));
-						cabinetSN = xmlDom.getElementsByTagName("RESULT").item(0).getTextContent();
-						
-						map.put("v_DOCNO", doc.getElementById("docnumber").html() + createDocNO(cabinetSN, docNumZeroCnt));
-						map.put("v_MODE", "APR");
-						ezApprovalGDAO.updateDocNumber(map);
-						map.put("v_MODE", "END");
-						map.put("v_DOCID", orgDocID);
-						ezApprovalGDAO.updateDocNumber(map);
+				String[] tempSignCont = signCont.split("::");
+				
+				if (tempSignCont[1] != null && tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1) {
+					if (signImageType.equals("NAME")) {
+						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
+					} else {
+						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'>";
 					}
-					doc.getElementById("docnumber").html(doc.getElementById("docnumber").html() + createDocNO(cabinetSN, docNumZeroCnt));					
+				} else {
+					if (signImageType.equals("NAME")) {
+						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=50 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
+					} else {
+						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=50 spath='" + tempSignCont[0] + "'>";
+					}
 				}
-			}   
-		}
-		
-		if (doc.getElementById(susinSN + "habyuisign" + aprSN) != null) {
-			doc.getElementById(susinSN + "habyuisign" + aprSN).html(signCont);
-		}
+			}
+			
+			//부서 합의 일 경우 원문서 문서번호 채번
+			if (!isHesong) {
+				int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
+				String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
+				if (lastHabyuiCnt > 0) {
+					map.put("v_habDocID", docID);
+					List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
+					
+					if (docState.size() > 0) {
+						if (docState.get(0).getDocState().equals("012")) {
+							Document xmlDom = commonUtil.convertStringToDocument(getCabinetNum(orgDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset()));
+							cabinetSN = xmlDom.getElementsByTagName("RESULT").item(0).getTextContent();
+							
+							map.put("v_DOCNO", doc.getElementById("docnumber").html() + createDocNO(cabinetSN, docNumZeroCnt));
+							map.put("v_MODE", "APR");
+							ezApprovalGDAO.updateDocNumber(map);
+							map.put("v_MODE", "END");
+							map.put("v_DOCID", orgDocID);
+							ezApprovalGDAO.updateDocNumber(map);
+						}
+						doc.getElementById("docnumber").html(doc.getElementById("docnumber").html() + createDocNO(cabinetSN, docNumZeroCnt));					
+					}
+				}   
+			}
+			
+			if (doc.getElementById(susinSN + "habyuisign" + aprSN) != null) {
+				doc.getElementById(susinSN + "habyuisign" + aprSN).html(signCont);
+			}
 
-		if (doc.getElementById(susinSN + "habyuidate" + aprSN) != null) {
-			doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
-		}
-		
-		String tempHtml = doc.outerHtml();
-		OutputStream outputStream = null;
-		OutputStreamWriter output = null;
-		
-		try {
-			String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
-			String tempMht = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + orgDocID + "_backup.mht";
-			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempMht)));
+			if (doc.getElementById(susinSN + "habyuidate" + aprSN) != null) {
+				doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
+			}
 			
-			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(formURL)));
-			output = new OutputStreamWriter(outputStream);
+			String tempHtml = doc.outerHtml();
+			OutputStream outputStream = null;
+			OutputStreamWriter output = null;
 			
-			output.write(convertedMHT);
-		}  catch (FileNotFoundException fnfe) {
-			logger.debug("fnfe: {}", fnfe);
-		} catch (IOException ioe) {
-			logger.debug("ioe: {}", ioe);
-		} catch (Exception e) {
-			logger.debug("e: {}", e);
-		}  finally{
-			
-			if (output != null) {
-				try {
-					output.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
+			try {
+				String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
+				String tempMht = new File(formURL).getParentFile() + commonUtil.separator + orgDocID + "_backup.mht";
+				FileUtils.copyFile(new File(formURL), new File(tempMht));
+				
+				outputStream = new FileOutputStream(new File(formURL));
+				output = new OutputStreamWriter(outputStream);
+				
+				output.write(convertedMHT);
+			}  catch (FileNotFoundException fnfe) {
+				logger.debug("fnfe: {}", fnfe);
+			} catch (IOException ioe) {
+				logger.debug("ioe: {}", ioe);
+			} catch (Exception e) {
+				logger.debug("e: {}", e);
+			}  finally{
+				
+				if (output != null) {
+					try {
+						output.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+				}
+				if (outputStream != null) {
+					try {
+						outputStream.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+						return "";
+					}
 				}
 			}
-			if (outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-					return "";
+		} else if("hwp".equals(ext)) { //부서합의 한글 기안기 처리하기 위해 수정. 접수 후 결재완료 됐을 경우 파싱 에러 때문에 수정. 2019-09-24 홍대표
+			HWPFile loadHwp = HWPReader.fromFile(formURL);
+			
+			if (findHwpField(susinSN + "habyuipositon" + aprSN, loadHwp)) {
+				if(isHesong) {
+					setHwpText(susinSN + "habyuipositon" + aprSN, userInfo.getTitle(), loadHwp);
+				} else {
+					setHwpText(susinSN + "habyuipositon" + aprSN, signTitle, loadHwp);
 				}
 			}
+			
+			//사인이 이미지일 경우는 나중에 작업해야할듯.
+//			if (signType.equals("IMAGE")) {
+//				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+//				
+//				String[] tempSignCont = signCont.split("::");
+//				
+//				if (tempSignCont[1] != null && tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1) {
+//					if (signImageType.equals("NAME")) {
+//						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
+//					} else {
+//						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=28 spath='" + tempSignCont[0] + "'>";
+//					}
+//				} else {
+//					if (signImageType.equals("NAME")) {
+//						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=50 spath='" + tempSignCont[0] + "'><br>" + userInfo.getDisplayName();
+//					} else {
+//						signCont = "<img src='" + tempSignCont[0] + "' border=0 embedding=1 width=50 height=50 spath='" + tempSignCont[0] + "'>";
+//					}
+//				}
+//			}
+			
+			//부서 합의 일 경우 원문서 문서번호 채번
+			if (!isHesong) {
+				int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
+				String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
+				if (lastHabyuiCnt > 0) {
+					String docNo = getHwpText("docnumber", loadHwp);
+					
+					map.put("v_habDocID", docID);
+					List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
+					
+					if (docState.size() > 0) {
+						if (docState.get(0).getDocState().equals("012")) {
+							Document xmlDom = commonUtil.convertStringToDocument(getCabinetNum(orgDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset()));
+							cabinetSN = xmlDom.getElementsByTagName("RESULT").item(0).getTextContent();
+							
+							map.put("v_DOCNO", docNo + createDocNO(cabinetSN, docNumZeroCnt));
+							map.put("v_MODE", "APR");
+							ezApprovalGDAO.updateDocNumber(map);
+							map.put("v_MODE", "END");
+							map.put("v_DOCID", orgDocID);
+							ezApprovalGDAO.updateDocNumber(map);
+						}
+						setHwpText(loadHwp, "docnumber", docNo + createDocNO(cabinetSN, docNumZeroCnt));
+					}
+				}
+			}
+			
+			if (findHwpField(susinSN + "habyuisign" + aprSN, loadHwp)) {
+				setHwpText(loadHwp, susinSN + "habyuisign" + aprSN, signCont);
+			}
+			
+			String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", ".");
+			if (findHwpField(susinSN + "habyuidate" + aprSN, loadHwp)) {
+				setHwpText(loadHwp, susinSN + "habyuidate" + aprSN, strDate);
+			}
+			
+			HWPWriter.toFile(loadHwp, formURL);
 		}
 		
 		// '합의' 서명 XML 생성
@@ -25386,9 +25564,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_PDOCID", pOrgDocID);
 				map.put("v_PDEPTID", pDeptID);
 				List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doHabyuiHesongTypeS(map);
+				String aprType = aprTypeList.get(0).getAprType();
 				
-				if (aprTypeList.get(0).getAprType().equals(staATBuSeuSoonChaHyubJo)) {
+				if (aprType.equals(staATBuSeuSoonChaHyubJo)) {
                     result = doBansong(pOrgDocID, docID, pDeptID,  staASWheSong, dirPath, pDeptID, pOrgCompanyID, lang, userInfo, curDocNum);//2011.03.28 개인병렬합의시 대리결재자가 반송시 대리결재자 정보 추가
+					if (result.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					}
+				} else if(aprType.equals(staATBuSeuByungRyulHyubJo)) {
+					// 부서병렬합의에서 회송일 경우, 결재선에서 합의부서 상태값을 015로 넣어주기 위해 추가. 추후 else를 이걸로 수정해도 될듯. 2019-03-05 홍대표
+					result = doApprove(pOrgDocID, pDeptID, staASWheSong, ezOrganService.getPropertyValue(pDeptID, "DisplayName", tenantID), ezOrganService.getPropertyValue(pDeptID, "DisplayName2", tenantID), dirPath, pDeptID, "", pOrgCompanyID, lang, userInfo, curDocNum, "", "");
+
 					if (result.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
 					}
@@ -25410,7 +25596,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				//같은 회사 일 때
-				if (companyID.equals(pOrgCompanyID)) {
+				//부서합의 회송일 경우 파생된 문서정보를 삭제하도록 재수정. 2019-03-15 홍대표
+				if (companyID.equals(pOrgCompanyID) && !aprType.equals(staATBuSeuSoonChaHyubJo) && !aprType.equals(staATBuSeuByungRyulHyubJo)) {
 
 					map.put("v_APRSTATE1", staASWheSong);
 					map.put("v_APRSTATE2", staASJinHang);
