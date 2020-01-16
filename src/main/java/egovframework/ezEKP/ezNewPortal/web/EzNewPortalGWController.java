@@ -2102,10 +2102,39 @@ public class EzNewPortalGWController {
 			MenuInfoVO menuInfo = ezNewPortalService.getMenuInfo(menuId, companyId, tenantId, menuLang);
 			List<MenuNameVO> menuNames = ezNewPortalService.getMenuNames(menuId, usePrimaryLangOnly, primaryLang, companyId, tenantId);
 			
+			int menuNamesCount = menuNames.size();
 			JSONObject data = new JSONObject();
 			data.put("menuInfo", menuInfo);
-			data.put("menuNames", menuNames);
-
+			
+			if (menuNamesCount > 2) {
+				List<MenuNameVO> menuNamesWithOrder = new ArrayList<MenuNameVO>();
+				int[] langOrder = new int[3];
+				
+				if (primaryLang.equals("2")) {
+					langOrder[0] = 2;
+					langOrder[1] = 1;
+					langOrder[2] = 3;
+				} else if (primaryLang.equals("3")){
+					langOrder[0] = 3;
+					langOrder[1] = 1;
+					langOrder[2] = 2;
+				} else {
+					langOrder[0] = 1;
+					langOrder[0] = 2;
+					langOrder[0] = 3;
+				}
+				
+				for (int i = 0; i < langOrder.length; i++) {
+					int langIndex = langOrder[i] - 1;
+					
+					menuNamesWithOrder.add(menuNames.get(langIndex));
+				}
+				
+				data.put("menuNames", menuNamesWithOrder);
+			} else {
+				data.put("menuNames", menuNames);
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -2421,7 +2450,36 @@ public class EzNewPortalGWController {
 			
 			for (PortletInfoVO pvo : portletList) {
 				List<PortletNameInfoVO> portletNameList = ezNewPortalService.getPortletNameList(companyId, tenantId, pvo.getPortletId(), usePrimaryLangOnly, primaryLang);
-				pvo.setPortletNameList(portletNameList);
+				
+				int menuNamesCount = portletNameList.size();
+				
+				if (menuNamesCount > 2) {
+					List<PortletNameInfoVO> portletNamesWithOrder = new ArrayList<PortletNameInfoVO>();
+					int[] langOrder = new int[3];
+					
+					if (primaryLang.equals("2")) {
+						langOrder[0] = 2;
+						langOrder[1] = 1;
+						langOrder[2] = 3;
+					} else if (primaryLang.equals("3")){
+						langOrder[0] = 3;
+						langOrder[1] = 1;
+						langOrder[2] = 2;
+					} else {
+						langOrder[0] = 1;
+						langOrder[0] = 2;
+						langOrder[0] = 3;
+					}
+					
+					for (int i = 0; i < langOrder.length; i++) {
+						int langIndex = langOrder[i] - 1;
+						
+						portletNamesWithOrder.add(portletNameList.get(langIndex));
+					}
+					pvo.setPortletNameList(portletNamesWithOrder);
+				} else {
+					pvo.setPortletNameList(portletNameList);
+				}
 			}
 						
 			data.put("PortletList", portletList);
