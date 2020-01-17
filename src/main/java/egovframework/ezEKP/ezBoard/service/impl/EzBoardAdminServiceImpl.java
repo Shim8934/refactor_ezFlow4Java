@@ -1284,4 +1284,19 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("getAllUpperBoardProperty ended");
 		return parentBoardIDs.toString();
 	}
+	
+	/* 2020-01-16 홍승비 - 전달된 값으로 BOARDGROUPID를 업데이트하는 메서드 */
+	@Override
+	public void updateBoardGroupID(String boardID, String newBoardGroupID, int tenantID) throws Exception {
+		logger.debug("updateBoardGroupID started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_NEWBOARDGROUPID", newBoardGroupID);
+		map.put("v_TENANTID", tenantID);
+		
+		ezBoardAdminDAO.updateBoardGroupID(map);
+		logger.debug("updateBoardGroupID ended");
+	}
 }

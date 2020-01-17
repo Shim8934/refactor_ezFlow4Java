@@ -2514,7 +2514,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
 			
-		String isManger = ezResourceService.isResourceGroupManager(selectedResourceGroupId, loginVO.getId(),loginVO.getTenantId(), loginVO.getCompanyID());
+		String isManger = ezResourceService.isResourceGroupManager(selectedResourceGroupId, loginVO.getId(),loginVO.getTenantId(), loginVO.getCompanyID(), loginVO.getDeptID());
 		
 		logger.debug("============ moveResourceToOtherResourceGroup ended ============");
 		return isManger;

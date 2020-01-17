@@ -22,16 +22,24 @@
 	            AND
 	            	A.PHYSICALDELIVERYOFFICENAME = B.PHYSICALDELIVERYOFFICENAME
 	            WHERE
-	                A.PHYSICALDELIVERYOFFICENAME = #companyID#
-	            AND
 	                A.TENANT_ID = #tenantID#
 	            AND 
 	            	B.CN IS NULL
+            	AND
+                    A.CN <> 'masteradmin'	            	
+	            AND
+	            	A.DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' escape '\')
 		]]>
+		<isNotEmpty property="companyID">
+            <![CDATA[
+	            AND
+	            	A.PHYSICALDELIVERYOFFICENAME = #companyID#            
+            ]]>
+        </isNotEmpty> 
         <isNotEmpty property="pSearchText">
          	<![CDATA[
          		AND
-                	(A.DISPLAYNAME LIKE '%' || #pSearchText# || '%' OR A.DESCRIPTION LIKE '%' || #pSearchText# || '%') 
+                	(A.DISPLAYNAME LIKE '%' || #pSearchText# || '%' ESCAPE '\' OR A.DESCRIPTION LIKE '%' || #pSearchText# || '%' ESCAPE '\' ) 
             ]]>
    		</isNotEmpty>
 	        <![CDATA[
@@ -40,7 +48,7 @@
 	        ]]>
 		<isNotEmpty property="rowNum">        
          	<![CDATA[ 
-         		WHERE
+         		) E WHERE
          			"rowNum" > #rowNum#
 			]]>
 		</isNotEmpty>
@@ -65,15 +73,23 @@
             	A.TENANT_ID = B.TENANT_ID
             WHERE
             	B.CN is null
-			AND
-                A.PHYSICALDELIVERYOFFICENAME = #companyID#
             AND
                 A.TENANT_ID = #tenantID#
+             AND
+                A.CN <> 'masteradmin'
+             AND
+            	A.DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' escape '\')
 	        ]]>        
+	        <isNotEmpty property="companyID">
+	            <![CDATA[
+		            AND
+		            	A.PHYSICALDELIVERYOFFICENAME = #companyID#            
+	            ]]>
+	        </isNotEmpty> 
 	        <isNotEmpty property="pSearchText">
 	            <![CDATA[
 	                AND
-	                    (A.DISPLAYNAME LIKE ('%' || #pSearchText# || '%') OR A.DESCRIPTION LIKE ('%' || #pSearchText# || '%'))    
+	                    (A.DISPLAYNAME LIKE ('%' || #pSearchText# || '%') ESCAPE '\'  OR A.DESCRIPTION LIKE ('%' || #pSearchText# || '%') ESCAPE '\' )    
 	            ]]>
 	        </isNotEmpty>
     </select>
@@ -196,11 +212,16 @@
 					FROM
 						TBL_DEPTMASTER
 					WHERE
-						DISPLAYNAME$lang$ LIKE ('%' || #deptID# || '%')
+						DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\'
 					AND
 						TENANT_ID = #tenantID#
-					AND       
+				]]>
+					<isEqual property="useShowAllCompanies" compareValue="false" prepend="and">
 						EXTENSIONATTRIBUTE2 = #companyId#
+					</isEqual>
+				<![CDATA[
+					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
 					)
 					
 					UNION ALL
@@ -216,7 +237,7 @@
 	  					ELSE DISPLAYNAME$lang$
 	  				END userName,
 	  				DESCRIPTION as deptName,
-	  				TO_CHAR(NVL(TITLE,' ')),
+	  				TO_CHAR(NVL(TITLE,' ')) as TITLE,
 	  				MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(EXTENSIONATTRIBUTE2) as imageName,
@@ -224,9 +245,9 @@
 				FROM
 					TBL_USERMASTER
 				WHERE
-					(DISPLAYNAME$lang$ LIKE ('%' || #deptID# || '%')
+					(DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\'
 				OR
-					DESCRIPTION$lang$ LIKE ('%' || #deptID# || '%'))
+					DESCRIPTION$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\')
 				AND
 					CN <> 'masteradmin'
 				AND
@@ -244,7 +265,13 @@
 									FROM 
 										TBL_DEPTMASTER 
 									WHERE 
-										EXTENSIONATTRIBUTE2 = #companyId#)	
+										DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+				]]>
+									<isEqual property="useShowAllCompanies" compareValue="false" prepend="and">
+										EXTENSIONATTRIBUTE2 = #companyId#
+									</isEqual>
+				<![CDATA[
+									)	
 				)
 				]]>    
 				<!-- UNION ALL
@@ -309,6 +336,8 @@
 					WHERE
 						CN = #deptID#
 					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+					AND
 						TENANT_ID = #tenantID#)
 					
 					UNION ALL
@@ -324,7 +353,7 @@
 	  					ELSE DISPLAYNAME$lang$
 	  				END userName,
 	  				DESCRIPTION as deptName,
-	  				TO_CHAR(NVL(TITLE,' ')),
+	  				TO_CHAR(NVL(TITLE,' ')) as TITLE,
 	  				MAIL,
 				    CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15,
 				    TO_CHAR(EXTENSIONATTRIBUTE2) as imageName,
@@ -342,6 +371,8 @@
 									TBL_USERMASTER_RETIRE
 								WHERE
 									TENANT_ID = #tenantID#)
+				AND
+					DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' escape '\')
 				AND
 					TENANT_ID = #tenantID#)
 			]]>    
@@ -402,6 +433,8 @@
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+				AND
 					CN = 'Top')
 					
 				UNION ALL
@@ -422,6 +455,8 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
 				AND
 					EXTENSIONATTRIBUTE1 = 'Top')
 				)
@@ -451,6 +486,8 @@
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+				AND
 					CN = #companyID#)
 					
 				UNION ALL
@@ -471,6 +508,8 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
 				AND
 					EXTENSIONATTRIBUTE1 = #companyID#)
 				)
@@ -502,6 +541,8 @@
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
+				DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+			AND
 				CN = #deptID#)
 				
 			UNION ALL
@@ -522,6 +563,8 @@
 				TBL_DEPTMASTER A
 			WHERE
 				TENANT_ID = #tenantID#
+			AND
+				DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
 			AND
 				EXTENSIONATTRIBUTE1 = #deptID#)
 			)
@@ -552,6 +595,8 @@
 					WHERE
 						TENANT_ID = #tenantID#
 					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+					AND
 						EXTENSIONATTRIBUTE1 = 'Top'
 					ORDER BY
 		        		A.EXTENSIONATTRIBUTE15,
@@ -577,6 +622,8 @@
 						TBL_DEPTMASTER A
 					WHERE
 						TENANT_ID = #tenantID#
+					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
 					AND
 						CN IN ( SELECT
 									EXTENSIONATTRIBUTE1
@@ -605,6 +652,8 @@
 						TBL_DEPTMASTER A
 					WHERE
 						TENANT_ID = #tenantID#
+					AND
+						DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
 					AND
 						EXTENSIONATTRIBUTE1 IN ( SELECT
 													EXTENSIONATTRIBUTE1
@@ -650,6 +699,8 @@
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
+				AND
 					CN IN ( SELECT
 								EXTENSIONATTRIBUTE1
 							FROM
@@ -679,6 +730,8 @@
 					TBL_DEPTMASTER A
 				WHERE
 					TENANT_ID = #tenantID#
+				AND
+					DEPT_CD_PATH NOT LIKE '%trash\_dept%' escape '\'
 				AND
 					EXTENSIONATTRIBUTE1 IN ( SELECT
 												EXTENSIONATTRIBUTE1

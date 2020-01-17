@@ -173,12 +173,22 @@
 				if (request.status >= 200 && request.status < 400) {
 					var result = JSON.parse(request.responseText);
 					var themes = result.list;
+					var userLang = result.userLang;
 					var themesHTML = "";
 					
 					themes.forEach(function (item, index) {
 						themesHTML += "<li>";
 						themesHTML += "<div class='theme' id='theme" + item.themeId + "' onclick='selectTheme(this)'>";
-						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/Theme" + item.themeId + ".JPG' class='themeThumbnails' alt='img02'/>";
+						
+						var themeImgFolder = "kr";
+						
+						if (userLang == "2") {
+							themeImgFolder = "kr"; //나중에 en으로 바꿔야함! (현재 영문용 이미지가 없음)
+						} else if (userLang == "3") {
+							themeImgFolder = "jp";
+						}
+						
+						themesHTML += "<div class='themeImg'><img src='/images/ezNewPortal/themeImg/" + themeImgFolder + "/Theme" + item.themeId + ".png' class='themeThumbnails' alt='img02'/>";
 						themesHTML += "</div><div>";
 						themesHTML += "<div class='themeTitle' id='themeTitle" + item.themeId + "'>";
 						themesHTML += "<span class='themePortlet' id='themePortlet" + item.themeId + "'><img src='/images/admin/frameSetting3.png'></span>";

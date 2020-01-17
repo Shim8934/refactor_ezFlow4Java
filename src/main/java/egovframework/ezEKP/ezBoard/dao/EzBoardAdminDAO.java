@@ -344,4 +344,9 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public void saveACLIncludeUppderBoard2(Map<String, Object> map) throws Exception {
 		insert("EzBoardAdminDAO.saveACLIncludeUppderBoard2", map);
 	}
+	
+	/* 2020-01-16 홍승비 - 전달된 값으로 BOARDGROUPID를 업데이트하는 메서드 */
+	public void updateBoardGroupID(Map<String, Object> map) throws Exception {
+		update("EzBoardAdminDAO.updateBoardGroupID", map);
+	}
 }

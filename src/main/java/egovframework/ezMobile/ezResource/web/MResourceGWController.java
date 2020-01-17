@@ -89,7 +89,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 자원예약리스트조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/main-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/main-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceMainList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/main-list/users/{userId}] started.");
 
@@ -289,7 +289,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 즐겨찾기 대상 자원리스트 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/favorite-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/favorite-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceFavoriteList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/favorite-list/users/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -693,7 +693,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [delete] 즐겨찾기삭제
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/favorite/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/favorite/users/{userId:.+}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject delFavorite(@PathVariable String resourceId, @PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/favorite/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -814,7 +814,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 자원예약 승인대상 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/approve-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/approve-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject approveList( @PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/approve-list/users/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -978,7 +978,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [post] 자원예약 승인/미승인 처리결과 메일 전송
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/send-mail/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/send-mail/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject sendMailApprove(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/send-mail/users/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -1064,7 +1064,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 승인대상 자원리스트 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/apprFolder-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/apprFolder-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceApprFolderList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/apprfolder-list/users/{userId}] started.");
 		JSONObject result = new JSONObject();
@@ -1108,7 +1108,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [get] 승인대상 자원권한체크
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/auth-check/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezresource/auth-check/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceApprFolderListCheck(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/auth-check/users/{userId}] started.");
 		JSONObject result = new JSONObject();

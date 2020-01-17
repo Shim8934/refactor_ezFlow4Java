@@ -5048,25 +5048,25 @@
 		
 		<isNotEmpty property="searchValue" prepend="AND">
 			<isEqual property="searchType" compareValue="cn">
-				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="displayname">
-				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="title">
-				title LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				title LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="description">
-				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="mail">
-				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="telephonenumber">
-				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="company">
-				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 		</isNotEmpty>
 	</select>
@@ -5147,25 +5147,25 @@
     	
     	<isNotEmpty property="searchValue" prepend="AND">
 			<isEqual property="searchType" compareValue="cn">
-				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="displayname">
-				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="title">
-				title LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				title LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="description">
-				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="mail">
-				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="telephonenumber">
-				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%') ESCAPE '\'
 			</isEqual>
 			<isEqual property="searchType" compareValue="company">
-				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%') ESCAPE '\'
 			</isEqual>
 		</isNotEmpty>
 		
@@ -6682,8 +6682,7 @@
 	
 	<select id="EzOrganAdminDAO.getLoginStopUserList" parameterClass="map" resultMap="loginStopList">
 		<isNotEqual property="stopFlag" compareValue="Y">
-			<![CDATA[
-			SELECT 
+			SELECT
 				CN,
 				displayName,
 				displayName2,
@@ -6692,72 +6691,107 @@
 				description2,
 				company,
 				company2,
-				TO_CHAR(PASSWORD_UPDATEDT + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-MM-dd HH24:mi:ss') AS passwordUpdateDT,
-				'' as loginStopDT
-			FROM 
-		    	TBL_USERMASTER
-		    ]]>
-	        WHERE 
-	            TENANT_ID = #tenantID#
-	        <isNotEmpty property="companyId">
-           	AND
-           		PHYSICALDELIVERYOFFICENAME = #companyId#
-           	</isNotEmpty>
-           	AND
-           		CN NOT IN ( SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
-				<include refid="EzOrganAdminDAO.searchQuery"/>
+				passwordUpdateDT,
+				loginStopDT
+			FROM
+				<![CDATA[
+				(
+				SELECT 
+					CN,
+					displayName,
+					displayName2,
+					department,
+					description,
+					description2,
+					company,
+					company2,
+					TO_CHAR(PASSWORD_UPDATEDT + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-MM-dd HH24:mi:ss') AS passwordUpdateDT,
+					'' as loginStopDT,
+					ROWNUM NUM
+				FROM 
+			    	TBL_USERMASTER
+			    ]]>
+		        WHERE 
+		            TENANT_ID = #tenantID#
+		        AND
+	       			DEPARTMENT NOT LIKE 'shared_mailbox%'
+		        <isNotEmpty property="companyId">
+	           	AND
+	           		PHYSICALDELIVERYOFFICENAME = #companyId#
+	           	</isNotEmpty>
+	           	AND
+	           		CN NOT IN ( SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+					<include refid="EzOrganAdminDAO.searchQuery"/>
+			    ORDER BY 
+			    	PASSWORD_UPDATEDT, displayName
+			    )
 		    <isNotEqual property="v_start" compareValue="-1">
 		    <![CDATA[
-		    AND
-		    	ROWNUM >= #v_start#
+		    WHERE
+		    	NUM >= #v_start# + 1
 			AND
-				ROWNUM < #pageCount#
+				NUM <= #v_start# + #pageCount#
 			]]>
 			</isNotEqual>
-		    ORDER BY 
-		    	PASSWORD_UPDATEDT, displayName
 		</isNotEqual>
 		<isEqual property="stopFlag" compareValue="Y">
-			<![CDATA[
-			SELECT 
-				a.CN,
-				a.displayName,
-				a.displayName2,
-				a.department,
-				a.description,
-				a.description2,
-				a.company,
-				a.company2,
-				TO_CHAR(a.PASSWORD_UPDATEDT + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-MM-dd HH24:mi:ss') AS passwordUpdateDT,
-				TO_DATE(b.PROPERTY_VALUE, 'yyyy-MM-dd HH24:mi:ss') + $offset$ / (24 * 60) AS loginStopDT
-			FROM 
-		    	TBL_USERMASTER a
-		    JOIN
-		    	TBL_USER_CONFIG b
-		    ON
-		    	a.TENANT_ID = b. TENANT_ID
-		    AND
-		    	a.CN = b.USER_ID
-		    AND
-		    	b.PROPERTY_NAME = 'LoginStopUser'
-	        WHERE
-	        ]]>
-	            a.TENANT_ID = #tenantID#
-	        <isNotEmpty property="companyId">
-            AND
-				a.PHYSICALDELIVERYOFFICENAME = #companyId#
-			</isNotEmpty>
-				<include refid="EzOrganAdminDAO.searchQueryForLoginStop"/>
+			SELECT
+				CN,
+				displayName,
+				displayName2,
+				department,
+				description,
+				description2,
+				company,
+				company2,
+				passwordUpdateDT,
+				loginStopDT
+			FROM
+				<![CDATA[
+				(
+				SELECT 
+					a.CN,
+					a.displayName,
+					a.displayName2,
+					a.department,
+					a.description,
+					a.description2,
+					a.company,
+					a.company2,
+					TO_CHAR(a.PASSWORD_UPDATEDT + NUMTODSINTERVAL(#offset#, 'MINUTE'), 'yyyy-MM-dd HH24:mi:ss') AS passwordUpdateDT,
+					TO_DATE(b.PROPERTY_VALUE, 'yyyy-MM-dd HH24:mi:ss') + $offset$ / (24 * 60) AS loginStopDT,
+					ROWNUM NUM
+				FROM 
+			    	TBL_USERMASTER a
+			    JOIN
+			    	TBL_USER_CONFIG b
+			    ON
+			    	a.TENANT_ID = b. TENANT_ID
+			    AND
+			    	a.CN = b.USER_ID
+			    AND
+			    	b.PROPERTY_NAME = 'LoginStopUser'
+		        WHERE
+		        ]]>
+		            a.TENANT_ID = #tenantID#
+       	        AND
+	       			a.DEPARTMENT NOT LIKE 'shared_mailbox%'
+		        <isNotEmpty property="companyId">
+	            AND
+					a.PHYSICALDELIVERYOFFICENAME = #companyId#
+				</isNotEmpty>
+					<include refid="EzOrganAdminDAO.searchQueryForLoginStop"/>
+			    ORDER BY 
+			    	a.PASSWORD_UPDATEDT, a.displayName
+			    )
 		    <isNotEqual property="v_start" compareValue="-1">
 		    <![CDATA[
-		    AND
-		    	ROWNUM >= #v_start#
+		    WHERE
+		    	NUM >= #v_start# + 1
 			AND
-				ROWNUM < #pageCount#
+				NUM <= #v_start# + #pageCount#
 			]]>
 			</isNotEqual>
-		    ORDER BY 
-		    	a.PASSWORD_UPDATEDT, a.displayName
 		</isEqual>
 	</select>
 	
@@ -6770,6 +6804,8 @@
 		    	TBL_USERMASTER
 	        WHERE 
 	            TENANT_ID = #tenantID#
+	        AND
+	       		DEPARTMENT NOT LIKE 'shared_mailbox%'
 		    ]]>
 		    <isNotEmpty property="companyId">
 	        AND
@@ -6777,6 +6813,8 @@
 	        </isNotEmpty>
 	        AND
 	        	CN NOT IN ( SELECT USER_ID FROM TBL_USER_CONFIG WHERE TENANT_ID = #tenantID# AND PROPERTY_NAME = 'LoginStopUser')
+	        AND
+	       		DEPARTMENT NOT LIKE 'shared_mailbox%'
 				<include refid="EzOrganAdminDAO.searchQuery"/>
 		</isNotEqual>
 		<isEqual property="stopFlag" compareValue="Y">
@@ -6796,6 +6834,8 @@
 		    ]]>
 	        WHERE
 	            a.TENANT_ID = #tenantID#
+	        AND
+	       		a.DEPARTMENT NOT LIKE 'shared_mailbox%'
 	        <isNotEmpty property="companyId">
 			AND
 	            a.PHYSICALDELIVERYOFFICENAME = #companyId#

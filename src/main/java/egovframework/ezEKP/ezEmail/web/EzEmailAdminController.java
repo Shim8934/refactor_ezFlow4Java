@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2330,6 +2331,7 @@ public class EzEmailAdminController {
 	@ResponseBody
 	public JSONArray searchSignList(@CookieValue("loginCookie") String loginCookie, String companyId, String search, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("searchSignList started.");
+		search = URLDecoder.decode(search);
 		logger.debug("companyId=" + companyId);
 		logger.debug("search=" + search);
 		
