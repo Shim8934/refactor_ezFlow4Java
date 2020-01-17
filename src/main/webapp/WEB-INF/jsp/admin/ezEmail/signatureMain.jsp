@@ -194,6 +194,7 @@
 	        	
 	        	if (search == '' || search.length == 0 || search.trim().length == 0 || search.trim().length ==0) {
 	        		alert("<spring:message code='ezEmail.t10'/>");
+	        		signatureTemplateView();
 	        		return;
 	        	}
 	        	
