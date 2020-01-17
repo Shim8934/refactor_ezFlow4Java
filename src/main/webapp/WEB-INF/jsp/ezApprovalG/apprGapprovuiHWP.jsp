@@ -146,6 +146,8 @@
             var listOpenFlag = "<c:out value ='${listOpenFlag}' />";
             var fileOpenFlagList = "<c:out value ='${fileOpenFlagList}' />";
 	        
+	        var curDocNum = "";
+	        
 		    function getNextDocList() {
 		        NextDocID = "";
 		        if (selectedDocID != "") {
@@ -337,7 +339,6 @@
 		
 		                if (pDocHref != "") {
 		                    showProgress("<spring:message code='ezApprovalG.t368'/>");
-		                    
 				        var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocHref) + "&tempTime=" + aprDocTimeStamp;
 				        var isTrue = HwpCtrl.LoadFile(URL, false);
 
@@ -646,7 +647,7 @@
 			                }
 			            }
 			
-			            if (pDraftFlag != "SUSIN") {
+			            if (pDraftFlag != "SUSIN" && pDraftFlag != "HABYUI") {
 			                if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			                    if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 			                        var rtnval;

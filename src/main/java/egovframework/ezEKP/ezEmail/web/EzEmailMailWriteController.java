@@ -5451,9 +5451,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
         String sharedMailboxXML = getSharedMailboxSearch(pSharedMailboxSearchList, userInfo);
-
+        
+        // 20190619 조진호 - 메일 주소 검색 대상 순서 변경 추가
+     	String mailAddressSearchOrder =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
+        
         logger.debug("mailNameCheck ended.");
-        return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS><SHAREDMAILBOX>%s</SHAREDMAILBOX></RESULT>", organXML, dlXML, addressXML, sharedMailboxXML);
+        return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS><SHAREDMAILBOX>%s</SHAREDMAILBOX><MAILADDRESSSEARCHORDER><LISTVIEWDATA><ROWS><ROW><CELL><VALUE>%s</VALUE></CELL></ROW></ROWS></LISTVIEWDATA></MAILADDRESSSEARCHORDER></RESULT>", organXML, dlXML, addressXML, sharedMailboxXML, mailAddressSearchOrder);
 	}
 	
 	/**
@@ -6338,75 +6341,157 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			Document sharedMailboxXML = commonUtil.convertStringToDocument(getSharedMailboxSearch(pSharedMailboxSearchList, userInfo));
 
 			HashMap<String, Object> jsonObject = null;
+
 			List<Object> jsonList = new ArrayList<Object>();
-
-			NodeList organRow = organXML.getElementsByTagName("ROW");
-			for (int i = 0; i < organRow.getLength(); i++) {
-				Element row = (Element) organRow.item(i);
-				NodeList organList = row.getElementsByTagName("CELL");
-				Element organCell = (Element) organList.item(0);
-				if (organCell.getElementsByTagName("DATA6").item(0) != null 
-						&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
-					jsonObject = new HashMap<String, Object>();
-					jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
-					jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
-					jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
-					jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
-					jsonObject.put("type", "");
-					jsonObject.put("href", "");
-					jsonList.add(jsonObject);
-				}
-			}
-
-			NodeList dlRow = dlXML.getElementsByTagName("ROW");
-			for (int i = 0; i < dlRow.getLength(); i++) {
-				Element row = (Element) dlRow.item(i);
-				NodeList dlList = row.getElementsByTagName("CELL");
-				Element dlCell = (Element) dlList.item(0);
-				if (dlCell.getElementsByTagName("DATA3").item(0) != null 
-						&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
-					jsonObject = new HashMap<String, Object>();
-					jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
-					jsonObject.put("title", "");
-					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
-					jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
-					jsonObject.put("type", "");
-					jsonObject.put("href", "");
-					jsonList.add(jsonObject);
-				}
-			}
-
-			NodeList addressRow = addressXML.getElementsByTagName("ROW");
-			for (int i = 0; i < addressRow.getLength(); i++) {
-				Element row = (Element) addressRow.item(i);
-				if (row.getElementsByTagName("SEMAIL").item(0) != null 
-						&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
-					jsonObject = new HashMap<String, Object>();
-					jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
-					jsonObject.put("title", "");
-					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
-					jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
-					jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
-					jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("FOLDERTYPE").item(0).getTextContent());
-					jsonList.add(jsonObject);
-				}
-			}
 			
-			NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
-			for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
-				Element row = (Element) sharedMailboxRow.item(i);
-				NodeList sharedMailboxList = row.getElementsByTagName("CELL");
-				Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
-				if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
-						&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
-					jsonObject = new HashMap<String, Object>();
-					jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
-					jsonObject.put("title", "");
-					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
-					jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
-					jsonObject.put("type", "");
-					jsonObject.put("href", "");
-					jsonList.add(jsonObject);
+			// 20190619 조진호 - 메일 주소 검색 대상 순서 변경 추가
+			String mailAddressSearchOrder = ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
+
+			if (mailAddressSearchOrder.equals("")) {
+				NodeList organRow = organXML.getElementsByTagName("ROW");
+				for (int i = 0; i < organRow.getLength(); i++) {
+					Element row = (Element) organRow.item(i);
+					NodeList organList = row.getElementsByTagName("CELL");
+					Element organCell = (Element) organList.item(0);
+					if (organCell.getElementsByTagName("DATA6").item(0) != null 
+							&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
+						jsonObject = new HashMap<String, Object>();
+						jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
+						jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
+						jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
+						jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+						jsonObject.put("type", "");
+						jsonObject.put("href", "");
+						jsonList.add(jsonObject);
+					}
+				}
+
+				NodeList dlRow = dlXML.getElementsByTagName("ROW");
+				for (int i = 0; i < dlRow.getLength(); i++) {
+					Element row = (Element) dlRow.item(i);
+					NodeList dlList = row.getElementsByTagName("CELL");
+					Element dlCell = (Element) dlList.item(0);
+					if (dlCell.getElementsByTagName("DATA3").item(0) != null 
+							&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+						jsonObject = new HashMap<String, Object>();
+						jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
+						jsonObject.put("title", "");
+						jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
+						jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+						jsonObject.put("type", "");
+						jsonObject.put("href", "");
+						jsonList.add(jsonObject);
+					}
+				}
+
+				NodeList addressRow = addressXML.getElementsByTagName("ROW");
+				for (int i = 0; i < addressRow.getLength(); i++) {
+					Element row = (Element) addressRow.item(i);
+					if (row.getElementsByTagName("SEMAIL").item(0) != null 
+							&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
+						jsonObject = new HashMap<String, Object>();
+						jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
+						jsonObject.put("title", "");
+						jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
+						jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
+						jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
+						jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("FOLDERTYPE").item(0).getTextContent());
+						jsonList.add(jsonObject);
+					}
+				}
+				
+				NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
+				for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
+					Element row = (Element) sharedMailboxRow.item(i);
+					NodeList sharedMailboxList = row.getElementsByTagName("CELL");
+					Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
+					if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
+							&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+						jsonObject = new HashMap<String, Object>();
+						jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
+						jsonObject.put("title", "");
+						jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
+						jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
+						jsonObject.put("type", "");
+						jsonObject.put("href", "");
+						jsonList.add(jsonObject);
+					}
+				}
+			} else {
+				String[] mailAddressSearchOrderSplit = mailAddressSearchOrder.split(";");
+
+				for (int j = 0; j < mailAddressSearchOrderSplit.length; j++) {
+					if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("organ")) {
+						NodeList organRow = organXML.getElementsByTagName("ROW");
+						for (int i = 0; i < organRow.getLength(); i++) {
+							Element row = (Element) organRow.item(i);
+							NodeList organList = row.getElementsByTagName("CELL");
+							Element organCell = (Element) organList.item(0);
+							if (organCell.getElementsByTagName("DATA6").item(0) != null 
+									&& !organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim().equals("")) {
+								jsonObject = new HashMap<String, Object>();
+								jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
+								jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
+								jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
+								jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+								jsonObject.put("type", "");
+								jsonObject.put("href", "");
+								jsonList.add(jsonObject);
+							}
+						}
+					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("address")) {
+						NodeList addressRow = addressXML.getElementsByTagName("ROW");
+						for (int i = 0; i < addressRow.getLength(); i++) {
+							Element row = (Element) addressRow.item(i);
+							if (row.getElementsByTagName("SEMAIL").item(0) != null 
+									&& !row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim().equals("")) {
+								jsonObject = new HashMap<String, Object>();
+								jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
+								jsonObject.put("title", "");
+								jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
+								jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
+								jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
+								jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("FOLDERTYPE").item(0).getTextContent());
+								jsonList.add(jsonObject);
+							}
+						}
+					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("dl")) {
+						NodeList dlRow = dlXML.getElementsByTagName("ROW");
+						for (int i = 0; i < dlRow.getLength(); i++) {
+							Element row = (Element) dlRow.item(i);
+							NodeList dlList = row.getElementsByTagName("CELL");
+							Element dlCell = (Element) dlList.item(0);
+							if (dlCell.getElementsByTagName("DATA3").item(0) != null 
+									&& !dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+								jsonObject = new HashMap<String, Object>();
+								jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
+								jsonObject.put("title", "");
+								jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
+								jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+								jsonObject.put("type", "");
+								jsonObject.put("href", "");
+								jsonList.add(jsonObject);
+							}
+						}
+					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("shared")) {
+						NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
+						for (int i = 0; i < sharedMailboxRow.getLength(); i++) {
+							Element row = (Element) sharedMailboxRow.item(i);
+							NodeList sharedMailboxList = row.getElementsByTagName("CELL");
+							Element sharedMailboxCell = (Element) sharedMailboxList.item(0);
+							if (sharedMailboxCell.getElementsByTagName("DATA3").item(0) != null
+									&& !sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent().trim().equals("")) {
+								jsonObject = new HashMap<String, Object>();
+								jsonObject.put("name", sharedMailboxCell.getElementsByTagName("VALUE").item(0).getTextContent());
+								jsonObject.put("title", "");
+								jsonObject.put("description", egovMessageSource.getMessage("ezEmail.sharedMailbox02", locale));
+								jsonObject.put("mail", sharedMailboxCell.getElementsByTagName("DATA3").item(0).getTextContent());
+								jsonObject.put("type", "");
+								jsonObject.put("href", "");
+								jsonList.add(jsonObject);
+							}
+						}
+					}
 				}
 			}
 			

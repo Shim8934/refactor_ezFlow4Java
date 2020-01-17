@@ -2303,4 +2303,18 @@
 				    TMP.COMPANYID)
 		]]>
 	</insert>
+	
+	<update id="EzBoardAdminDAO.updateBoardGroupID" parameterClass="Map" >
+		<![CDATA[
+			UPDATE
+				TBL_BOARD_BOARDINFO
+         	SET 
+             	BOARDGROUPID = #v_NEWBOARDGROUPID#
+       		WHERE
+       			TENANT_ID = #v_TENANTID#
+       		AND  
+       			BOARDID = #v_BOARDID#
+		]]>
+	</update>
+	
 </sqlMap>
