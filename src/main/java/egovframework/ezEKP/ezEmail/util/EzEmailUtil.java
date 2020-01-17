@@ -81,6 +81,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.util.encoders.Hex;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -4996,5 +4997,36 @@ public class EzEmailUtil {
 			logger.debug("send ended");
 		}
 	}
+
+    public String spamSniperEnc(String emailAddress, String spamSniperAuthKey, String spamSniperAuthIv) throws Exception {
+    	logger.debug("spamSniperEnc start");
+    	String cryptResult = null;
+		String authKey = spamSniperAuthKey;
+		String authIv = spamSniperAuthIv;
+		String algorithm = "AES";
+		String mode = "CBC";
+		
+		if(!(emailAddress.equals("") || authKey.equals("") || authIv.equals(""))) {
+			byte[] secretKey = authKey.getBytes();
+
+			String transform = String.format("%s/%s/%s", algorithm, mode, "PKCS5Padding");
+			Cipher cipher = null;
+			cipher = Cipher.getInstance(transform);
+
+			byte[] iv = authIv.getBytes();
+			int len = 16;
+
+			SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey , 0, len, algorithm);
+			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(iv, 0, len));
+
+			byte[] encrypted = cipher.doFinal(emailAddress.getBytes());
+			cryptResult = new String(Hex.encode(encrypted));
+		}
+    	
+		logger.debug("emailAddress=" + emailAddress + ",spamSniperAuthKey=" + spamSniperAuthKey 
+				+ ",spamSniperAuthIv=" + spamSniperAuthIv);
+		logger.debug("spamSniperEnc end");
+    	return cryptResult;
+    }
 }
 
