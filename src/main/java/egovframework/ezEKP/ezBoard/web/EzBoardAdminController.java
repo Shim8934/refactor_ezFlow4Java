@@ -756,6 +756,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 					String subBoardID = allSubBoardProperty.get(i).getBoardID();
 					String subNewBoardTreePath= ezBoardService.getNewBoardTreePath(subBoardID, userInfo.getTenantId());
 					ezBoardAdminService.updateBoardTreePath(subBoardID, subNewBoardTreePath, userInfo.getTenantId());
+					/* 2020-01-16 홍승비 - 하위게시판을 가지는 상위게시판을 이동하는 경우, 하위게시판들의 BoardGroupID가 갱신되지 않는 오류 수정 */
+					ezBoardAdminService.updateBoardGroupID(subBoardID, newBoardGroupID, userInfo.getTenantId());
 				}
 			} else {
 				response.sendError(600);

@@ -166,7 +166,9 @@ function openUserInfo() {
             var width = window.screen.availWidth;
             var left = (width - 650) / 2;
             var top = (heigth - 300) / 2;
-            window.open("/myoffice/ezApprovalG/ezDocInfo/ezLineInfo_Cross.aspx?pDocID=" + tr.getAttribute("DATA3") + "&pDeptID=" + tr.getAttribute("DATA4") + "&pDocState=012", "", "height=270px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+            //G버전 부서순차합의에서 합의부서 결재선 보일 수 있도록 수정. 2019-02-14 홍대표
+//            window.open("/myoffice/ezApprovalG/ezDocInfo/ezLineInfo_Cross.aspx?pDocID=" + tr.getAttribute("DATA3") + "&pDeptID=" + tr.getAttribute("DATA4") + "&pDocState=012", "", "height=270px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr[0].getAttribute("DATA3") + "&deptID=" + tr[0].getAttribute("DATA4") + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + GetOpenPosition(1155, 460));
         } else {
             var heigth = window.screen.availHeight;
             var width = window.screen.availWidth;

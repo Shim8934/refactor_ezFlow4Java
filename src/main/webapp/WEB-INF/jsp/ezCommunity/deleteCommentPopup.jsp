@@ -41,6 +41,7 @@
 		        return ( orgStr.replace( re, replaceStr ) );
 		    }
 		
+		    /* 2020-01-17 홍승비 - 커뮤니티 익명게시물 또는 익명게시물의 댓글 삭제 시 암호 확인 분기 추가 */
 		    function btn_OpinionOK_onclick() {
 		        if (inpPassword.value == "") 
 		        {
@@ -52,11 +53,12 @@
 					dataType : "text",
 					async : false,
 					url : "/ezCommunity/confirmPassword.do",
-					data : { newPassword   : rsa.encrypt(document.getElementById("inpPassword").value),
-							 replyID : "${replyID}",
-							 itemID  : "${itemID}",
-							 oldPassword : "${password}"
-							},
+					data : {
+						newPassword   : rsa.encrypt(document.getElementById("inpPassword").value),
+						oldPassword : "",
+						replyID : "${replyID}",
+						itemID  : "${itemID}"
+					},
 					success: function(result){
 						rtnVal = result;
 						if(rtnVal == "OK") {
