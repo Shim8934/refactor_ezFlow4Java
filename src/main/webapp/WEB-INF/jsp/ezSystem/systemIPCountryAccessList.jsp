@@ -200,7 +200,11 @@
 			url : "/ezSystem/saveAccessCountryList.do",
 			data : { "saveList" : countryAccessList.join(";")},
 			success : function(data) {
-				alert("<spring:message code='ezSystem.ksa06' />");				
+				if (data == "PERMISSION_ERROR") {
+					alert("<spring:message code='ezTask.t1' />");
+				} else {
+					alert("<spring:message code='ezSystem.ksa06' />");				
+				}
 			}, error : function () {
 				alert("<spring:message code='ezSystem.ksa07' />");	
 			}

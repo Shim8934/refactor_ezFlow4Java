@@ -1057,11 +1057,18 @@ public class EzSystemAdminController {
 	 * 접속 허용 국가 저장
 	 */
 	@RequestMapping(value="/ezSystem/saveAccessCountryList.do", method=RequestMethod.POST)
+	@ResponseBody
 	public String saveAccessCountryList(@CookieValue("loginCookie") String loginCookie, Model model, 
 			HttpServletRequest request) throws Exception {
 		logger.debug("saveAccessCountryList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "OK";
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			result = "PERMISSION_ERROR";
+			return result;
+		}
 		
 		String saveCountryList = request.getParameter("saveList");
 		logger.debug("saveCountryList=" + saveCountryList);
@@ -1069,7 +1076,7 @@ public class EzSystemAdminController {
 		ezSystemAdminService.setAccessCountry(userInfo.getTenantId(), saveCountryList);
 		
 		logger.debug("saveAccessCountryList ended");
-		return "json";
+		return result;
 	}
 	
 	
