@@ -20,6 +20,8 @@
 		<result property="isUse"			column="ISUSE"				columnIndex="8"/>
 		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
 		<result property="calendarDay"		column="CALENDARDAY"			columnIndex="10"/>
+		<result property="holidayFlag"		column="HOLIDAYFLAG"			columnIndex="11"/>
+		<result property="holidayRepeat"		column="HOLIDAYREPEAT"			columnIndex="12"/>
 		</resultMap>
 	
 		<resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListVO">
@@ -684,7 +686,9 @@
                 	A.BRD_GB = '1'
 				AND
                 	A.TENANT_ID = #tenantID#		
-				
+			]]>
+			<isNotEqual property="v_PAUTHYN" compareValue="N">	
+		<![CDATA[	
 			UNION
 			
 			SELECT
@@ -706,17 +710,14 @@
 				A.BRD_COMPANY = #v_PBRDCOMPANY#
 			AND 
 				A.BRD_GB = '2'
-			]]>	
-			<isNotEqual property="v_PAUTHYN" compareValue="A">			
-      		AND
-            	A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID )
-			</isNotEqual>
-			<![CDATA[
+			AND
+					A.APPROVEFLAG <> '2'
 			AND
                 A.TENANT_ID = #tenantID#
+            ]]>
+           </isNotEqual>
       	   ORDER BY
-           BRD_GB, BRD_STEP	
-		]]>
+           BRD_GB, BRD_STEP
 	</select>
   
   	<insert id="MResourceDAO.addResSch" parameterClass="Map" >
@@ -911,6 +912,8 @@
 				A.TENANT_ID = #tenantID#
 			AND 
 				A.RESCOMPANY = #v_PCOMPANYID#
+			AND
+				B.APPROVEFLAG <> '2'
       	   ORDER BY
            C.BRD_UPPER, C.BRD_STEP, B.BRD_STEP	
 		]]>
@@ -966,12 +969,12 @@
                 A.CHARACTERID ,
                 A.APPROVEFLAG ,
                 C.APPROVEFLAG RESAPPROVEFLAG,
-                B.DISPLAYNAME OWNERNM  ,
-                B.DISPLAYNAME2 OWNERNM2  ,
-                B.DESCRIPTION DEPTNM  ,
-                B.DESCRIPTION2 DEPTNM2  ,
-                B.TITLE JOBTITLE  ,
-                B.TITLE2 JOBTITLE2,
+                BB.DISPLAYNAME OWNERNM  ,
+                BB.DISPLAYNAME2 OWNERNM2  ,
+                BB.DESCRIPTION DEPTNM  ,
+                BB.DESCRIPTION2 DEPTNM2  ,
+                BB.TITLE JOBTITLE  ,
+                BB.TITLE2 JOBTITLE2,
                 C.BRD_NM BRDNM,
                 C.BRD_NM2 BRDNM2,
                 C.BRD_STEP BRDSTEP,
@@ -980,6 +983,10 @@
            	FROM 
            		TBL_RS_SCHEDULE A
 			JOIN
+			  (SELECT
+					B.*,
+					ROW_NUMBER() OVER (PARTITION BY B.CN ORDER BY ROWNUM) CNT
+				FROM
 				((SELECT
 					D.cn,
 					D.displayname,
@@ -1024,9 +1031,9 @@
 				WHERE
 					E.tenant_id = #tenantID#
 				AND
-					G.extensionattribute2 = #v_PCOMPANYID#)) B
+					G.extensionattribute2 = #v_PCOMPANYID#)) B ) BB
 			ON
-				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
+				A.WRITERID = BB.CN AND A.TENANT_ID = BB.TENANT_ID AND BB.CNT = '1'
 		    JOIN
 				TBL_RS_BRD C
 			ON
@@ -1048,11 +1055,13 @@
 						]]>
 			<isEmpty property="v_POWNERID">
 			AND 
-			    B.DEPARTMENT = #v_WRITERDEPT#
+			    BB.DEPARTMENT = #v_WRITERDEPT#
 			</isEmpty>	
 			<![CDATA[   	
 			AND
-				A.TENANT_ID = #tenantID#	
+				C.APPROVEFLAG <> '2'
+			AND
+				A.TENANT_ID = #tenantID#
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC 
@@ -1138,6 +1147,8 @@
 			<![CDATA[    
 			AND 
 				A.TENANT_ID = #tenantID#	
+			AND
+				D.APPROVEFLAG <> '2'
         	ORDER BY
         		STARTDATE ASC,
                 ENDDATE DESC
@@ -1323,7 +1334,9 @@
 	                NVL(isrepeat, '0') isrepeat,
 	                NVL(isuse, '0') isuse,
 	                NVL(isrest, '0') isrest,
-	                usecompany
+	                usecompany,
+	                holidayflag,
+	                holidayrepeat
 	           	from 
 					tbl_holidaylist
 				where
@@ -1343,7 +1356,9 @@
 		                NVL(isrepeat, '0') isrepeat,
 		                NVL(isuse, '0') isuse,
 		                NVL(isrest, '0') isrest,
-		                usecompany
+		                usecompany,
+	               	 	holidayflag,
+	                	holidayrepeat
 		           	from 
 		           		tbl_holidaylist 
 					where  
@@ -1364,7 +1379,9 @@
 		                NVL(isrepeat, '0') isrepeat,
 		                NVL(isuse, '0') isuse,
 		                NVL(isrest, '0') isrest,
-		                usecompany
+		                usecompany,
+	              		holidayflag,
+	               		holidayrepeat
 					from 
 						tbl_holidaylist 
 					where  
@@ -1482,7 +1499,7 @@
 			AND
             	( C.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND C.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )	
 			OR 
-				C.OWNERID = #v_PUSERID# OR C.OWNERID LIKE CONCAT(CONCAT('%', ','), #v_PUSERID#) OR C.OWNERID LIKE CONCAT(CONCAT(#v_PUSERID#, ','), '%') )
+				C.OWNERID = #v_PUSERID# OR C.OWNERID LIKE CONCAT(CONCAT('%', ','), #v_PUSERID#) OR C.OWNERID LIKE CONCAT(CONCAT(#v_PUSERID#, ','), '%') or C.OWNERID LIKE '%' || ',' || #v_PUSERID# || ',' || '%' )
 			</isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND 
@@ -1582,7 +1599,7 @@
 			AND
             	( D.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND D.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )
 			 OR 
-			 	D.OWNERID = #v_PUSERID# OR D.OWNERID LIKE CONCAT(CONCAT('%', ',' ), #v_PUSERID#) OR D.OWNERID LIKE CONCAT(CONCAT(#v_PUSERID#, ',' ), '%') )
+			 	D.OWNERID = #v_PUSERID# OR D.OWNERID LIKE CONCAT(CONCAT('%', ',' ), #v_PUSERID#) OR D.OWNERID LIKE CONCAT(CONCAT(#v_PUSERID#, ',' ), '%') OR D.OWNERID LIKE '%' || ',' || #v_PUSERID# || ',' || '%'  )
 			 </isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND
@@ -1600,7 +1617,7 @@
 						]]>
 			<isNotEmpty property="v_WRITERNAME">
 			AND 
-                ( B.DISPLAYNAME LIKE CONCAT(CONCAT('%', #v_WRITERNAME#), '%') OR B.DISPLAYNAME2 LIKE CONCAT(CONCAT('%', #v_WRITERNAME#), '%') )	    
+                ( B.DISPLAYNAME LIKE '%' || #v_WRITERNAME# || '%' OR B.DISPLAYNAME2 LIKE '%' || #v_WRITERNAME# || '%' )	    
 			</isNotEmpty>
 			<![CDATA[
 			AND 
@@ -1641,7 +1658,7 @@
       		AND
             	( A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID AND B.ACCESS_LVL = '1' )
             OR
-            	A.OWNERID = #v_PUSERID# OR A.OWNERID LIKE CONCAT(CONCAT('%', ','), #v_PUSERID#) OR A.OWNERID LIKE CONCAT(CONCAT(#v_PUSERID#, ','), '%') )
+            	A.OWNERID = #v_PUSERID# OR A.OWNERID LIKE '%' || ',' || #v_PUSERID# OR A.OWNERID LIKE #v_PUSERID# || ',' || '%' OR A.OWNERID LIKE '%' || ',' || #v_PUSERID# || ',' || '%' )
 			</isNotEqual>
 			<![CDATA[
 			AND
@@ -1659,8 +1676,6 @@
 				TBL_RS_RESACL 
 			WHERE 
 				(
-						MEMBER_ID = #v_PUSERCOMPANY# 
-					OR 
 						MEMBER_ID = #v_PUSERDEPT# 
 					OR 
 						MEMBER_ID = #v_PUSERID# 
@@ -1668,8 +1683,41 @@
 						MEMBER_ID = 'everyone') 
 			AND 
 				TENANT_ID = #tenantID#  
+			]]>
+			<isEmpty property="v_brdID">	
+				AND 
+					ACCESS_LVL = 1 
+			</isEmpty>
+			<isNotEmpty property="v_brdID">
+				AND
+					RESID = #v_brdID#
+			</isNotEmpty>
+			AND
+				COMPANYID = #v_PBRDCOMPANY#
+	</select>
+	
+	<select id="MResourceDAO.getResApprBrdListCheck2" parameterClass="Map" resultMap="mResourceApprBrdVO">
+		<![CDATA[
+			SELECT
+				RESID
+			FROM 
+				TBL_RS_RESACL 
+			WHERE 
+				MEMBER_ID = #v_PUSERDEPT# 
+			AND 
+				TENANT_ID = #tenantID#  
+			]]>
+			<isEmpty property="v_brdID">	
 			AND 
 				ACCESS_LVL = 1 
+			</isEmpty>
+			<isNotEmpty property="v_brdID">
+			AND
+				RESID = #v_brdID#
+			</isNotEmpty>
+			<![CDATA[
+			AND
+				SDA_YN = 'Y'
 			AND
 				COMPANYID = #v_PBRDCOMPANY#
 		]]>
@@ -1699,7 +1747,7 @@
 			FROM 
 				TBL_RS_BRD
 			WHERE 
-				( OWNERID = #userId# OR OWNERID LIKE CONCAT(CONCAT('%', ','), #userId#) OR OWNERID LIKE CONCAT(CONCAT(#userId#, ','), '%') )
+				( OWNERID = #userId# OR OWNERID LIKE CONCAT(CONCAT('%', ','), #userId#) OR OWNERID LIKE CONCAT(CONCAT(#userId#, ','), '%') OR OWNERID LIKE '%' || ',' || #userId# || ',' || '%' )
 			AND 
 				TENANT_ID = #tenantId#  
 			AND
