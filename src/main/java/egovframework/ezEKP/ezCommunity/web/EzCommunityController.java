@@ -1179,15 +1179,27 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/confirmPassword.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String confirmPassword(HttpServletRequest request) throws Exception {
+	public String confirmPassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("confirmPassword started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
     	
+    	/* 2020-01-17 홍승비 - 커뮤니티 익명게시물 또는 익명게시물의 댓글 삭제 시 암호 확인 분기 추가 */
 		String newPassword = request.getParameter("newPassword");
-		String oldPassword = request.getParameter("oldPassword");
+		String oldPassword = request.getParameter("oldPassword"); // 기본적으로 익명게시물의 암호임
+		String replyID = request.getParameter("replyID");
+		String itemID = request.getParameter("itemID");
 		
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		String rpwd = EgovFileScrty.decryptRsa(pk, newPassword);
+		
+		if (replyID != null && !replyID.equals(""))	{
+			oldPassword = ezCommunityService.checkReplyPassword(itemID, replyID, userInfo.getTenantId()).trim();
+		}
+		
+		logger.debug("confirmPassword ended.");
 		
 		if (EgovFileScrty.encryptPassword(rpwd, "unknown").equals(oldPassword)) {
 			return "OK";
