@@ -379,9 +379,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 		
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		JSONObject json = new JSONObject();
 		json.put("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
-		json.put("primary", userInfo.getPrimary());
+		json.put("primary", primaryLang);
 		json.put("mode", mode);
 		json.put("lang", userInfo.getLang());
 		
