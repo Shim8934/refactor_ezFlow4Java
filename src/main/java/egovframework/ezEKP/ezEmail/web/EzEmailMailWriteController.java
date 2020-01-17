@@ -6365,7 +6365,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					}
 				}
 
-				/*NodeList dlRow = dlXML.getElementsByTagName("ROW");
+				NodeList dlRow = dlXML.getElementsByTagName("ROW");
 				for (int i = 0; i < dlRow.getLength(); i++) {
 					Element row = (Element) dlRow.item(i);
 					NodeList dlList = row.getElementsByTagName("CELL");
@@ -6381,7 +6381,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						jsonObject.put("href", "");
 						jsonList.add(jsonObject);
 					}
-				}*/
+				}
 
 				NodeList addressRow = addressXML.getElementsByTagName("ROW");
 				for (int i = 0; i < addressRow.getLength(); i++) {
@@ -6455,7 +6455,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							}
 						}
 					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("dl")) {
-						/*NodeList dlRow = dlXML.getElementsByTagName("ROW");
+						NodeList dlRow = dlXML.getElementsByTagName("ROW");
 						for (int i = 0; i < dlRow.getLength(); i++) {
 							Element row = (Element) dlRow.item(i);
 							NodeList dlList = row.getElementsByTagName("CELL");
@@ -6471,7 +6471,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								jsonObject.put("href", "");
 								jsonList.add(jsonObject);
 							}
-						}*/
+						}
 					} else if (mailAddressSearchOrderSplit[j].equalsIgnoreCase("shared")) {
 						NodeList sharedMailboxRow = sharedMailboxXML.getElementsByTagName("ROW");
 						for (int i = 0; i < sharedMailboxRow.getLength(); i++) {

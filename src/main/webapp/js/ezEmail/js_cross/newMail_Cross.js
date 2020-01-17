@@ -1423,7 +1423,7 @@ function GetMailAddresses(name) {
     	            }
     	        }
     	        
-/*			} else if (mailAddressSearchOrderSplit[i] == "dl") {
+			} else if (mailAddressSearchOrderSplit[i] == "dl") {
 				rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
 				adCount = m_addrBook.name.length;
 		        for (var count = 0 ; count < rows.length ; count++) {
@@ -1435,7 +1435,7 @@ function GetMailAddresses(name) {
 		            m_addrBook["dept"][count + adCount] = "";
 		            m_addrBook["title"][count + adCount] = "";
 		        }
-		        */
+		        
 			} else if (mailAddressSearchOrderSplit[i] == "address") {
 				var contactList = SelectNodes(xmlDOM, "RESULT/ADDRESS/ROW");
 		        var row;
