@@ -262,16 +262,16 @@
                     }
                 }
 
-                for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
-                    if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType21) {
-                        if (pYesanCount == 0) {
-                            var node = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i];
-                            var pnode = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES")[0];
-                            pnode.removeChild(node);
-                            break;
-                        }
-                    }
-                }
+//                 for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
+//                     if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType21) {
+//                         if (pYesanCount == 0) {
+//                             var node = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i];
+//                             var pnode = SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES")[0];
+//                             pnode.removeChild(node);
+//                             break;
+//                         }
+//                     }
+//                 }
 
                 if (pDeptgamsaCount > 0) {
                     document.getElementById("btnAddGamsaDept").style.display = "";
@@ -2050,6 +2050,9 @@
 	                            <tr>
 	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
+	                                	<a style="margin-top: 8px;" class="imgbtn imgbck">
+	                                		<span id="btnAddGamsaDept" onclick="return btnAddEtcDept_onclick('013')">감사추가</span>
+	                                	</a>
 	                                    <a style="margin-top: 8px;" class="imgbtn imgbck">
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">

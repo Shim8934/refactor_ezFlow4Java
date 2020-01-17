@@ -603,4 +603,6 @@ public interface EzApprovalGService {
 	public List<ApprGProxyVO> getProxyUserInfo(String userID, String userLang, int tenantID, String offSet) throws Exception;
 
 	ApprGFormVO getFormPath(String formId, String companyId, int tenantId) throws Exception;
+
+	public String getGamsaYesanDeptInfo(String approvalFlag, String companyID, String lang, int tenantID) throws Exception;
 }

@@ -123,6 +123,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGYesanGamsaVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -2816,8 +2817,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnXML.append("<USERTYPES>");
 		
 		for (int k = 0; k < dlength; k++) {
-			if (!docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim().equals(staATBuSeuSoonChaHyubJo) && !docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim().equals(staATBuSeuByungRyulHyubJo)) {
-				rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim()));
+			String strCode2 = docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim();
+			if (!strCode2.equals(staATBuSeuSoonChaHyubJo) && !strCode2.equals(staATBuSeuByungRyulHyubJo) && !strCode2.equals(staATGamSaBu)) {
+				rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(strCode2));
 				rtnXML.append("</CODE><NAME>" + commonUtil.cleanValue(docXML.getElementsByTagName("NAME").item(k).getTextContent()));
 				rtnXML.append("</NAME></APRTYPE>");
 			}
@@ -2827,8 +2829,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnXML.append("<DEPTTYPES>");
 		
 		for (int k = 0; k < dlength; k++) {
-			if (docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim().equals(staATBuSeuSoonChaHyubJo) || docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim().equals(staATBuSeuByungRyulHyubJo)) {
-				rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim()));
+			String strCode2 = docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim();
+			if (strCode2.equals(staATBuSeuSoonChaHyubJo) || strCode2.equals(staATBuSeuByungRyulHyubJo) || strCode2.equals(staATGamSaBu)) {
+				rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(strCode2));
 				rtnXML.append("</CODE><NAME>" + commonUtil.cleanValue(docXML.getElementsByTagName("NAME").item(k).getTextContent()));
 				rtnXML.append("</NAME></APRTYPE>");
 			}
@@ -28521,6 +28524,32 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getProxyUserInfo ended");
 		
 		return list2;
+	}
+	
+	@Override
+	public String getGamsaYesanDeptInfo(String approvalFlag, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getGamsaYesanDeptInfo started");
+
+		StringBuilder rtnXML = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("approvalFlag", approvalFlag);
+		map.put("v_TENANTID", tenantID);
+		
+		List<ApprGYesanGamsaVO> apprGYesanGamsaVOlist = ezApprovalGDAO.getGamsaYesanDeptInfo(map); 
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		
+		for (int i = 0; i < apprGYesanGamsaVOlist.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGYesanGamsaVOlist.get(i)));
+		}
+		
+		sb.append("</DATA>");
+
+		logger.debug("getGamsaYesanDeptInfo ended");
+		
+        return sb.toString();
 	}
 	
 }

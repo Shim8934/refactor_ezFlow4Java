@@ -9314,17 +9314,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 의견내용 작성 팝업 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getGamsaYesanDeptInfo.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezApprovalG/getGamsaYesanDeptInfo.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getGamsaYesanDeptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("getGamsaYesanDeptInfo started.");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String result = null;
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
+		String gamsa = ezApprovalGService.getGamsaYesanDeptInfo(approvalFlag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());;
 		
 		logger.debug("getGamsaYesanDeptInfo ended.");
 		
-		return "ezApprovalG/apprGaprOpinionPopup";
+		return gamsa;
 	}
 }
