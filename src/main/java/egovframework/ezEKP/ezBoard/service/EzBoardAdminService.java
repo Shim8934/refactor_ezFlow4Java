@@ -130,4 +130,7 @@ public interface EzBoardAdminService {
 	
 	/* 2019-11-13 홍승비 - 주어진 게시판ID에 대하여 자신을 포함한 모든 상위게시판들을 문자열로 이어붙여 가져오는 메서드 */
 	public String getAllUpperBoardID(String boardID, int tenantID) throws Exception;
+	
+	/* 2020-01-16 홍승비 - 전달된 값으로 BOARDGROUPID를 업데이트하는 메서드 */
+	public void updateBoardGroupID(String boardID, String newBoardGroupID, int tenantID) throws Exception;
 }

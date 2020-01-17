@@ -112,9 +112,9 @@
 		            document.getElementById("HolderElse").style.display = "";
 		        }
 		        
-		        if (shareId != "" && managePermission != "Y") {
+		        /* if (shareId != "" && managePermission != "Y") {
 		        	document.getElementById("btn_reject").parentNode.style.display = "none";
-		        }
+		        } */
 		        
 		        if (shareId != "" && sendPermission != "Y") {
 		        	btnReply.style.display = "none";
@@ -634,7 +634,9 @@
 		                    <td nowrap class="pos2" id="btnInsertAddr">
 		                    	<c:if test="${mailWritePreview != true}">
 			                    	<a style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
-		                    		<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
+		                    		<c:if test="${(shareId == null) || (shareId ne '' && managePermission eq 'Y')}">
+		                    			<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
+			                    	</c:if>
 			                    </c:if>
 		                    </td>
 		                </tr>
