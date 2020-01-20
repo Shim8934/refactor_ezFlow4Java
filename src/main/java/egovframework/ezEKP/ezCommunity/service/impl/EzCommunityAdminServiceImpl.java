@@ -572,8 +572,9 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				if (cBoard.getRe_Level() > 0) {
 					 int wid = 10 * cBoard.getRe_Level();
 					 
+					 /* 2020-01-20 홍승비 - 아이콘 정렬 수정 */
                      strHTML.append("<img src=\"/images/dum.gif\" width=\"" + wid + "\" height=\"1\" border=\"0\">"); 
-                     strHTML.append("<img src=\"/images/i_rep.gif\" alt border=\"0\" VALIGN=\"TOP\">"); 
+                     strHTML.append("<img src=\"/images/i_rep.gif\" alt border=\"0\" style=\"vertical-align:middle;\">&nbsp;"); 
 				}
 			}
 			
@@ -581,7 +582,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 
 			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
-				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">&nbsp;");
+				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\" style=\"vertical-align:middle;\">&nbsp;");
 			}
 			
 			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
