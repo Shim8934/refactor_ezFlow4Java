@@ -73,7 +73,7 @@
         </ul>
     </div>
     <h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezBoard.t999011'/></h2>
-    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="Width: 100%; Height: 150px; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
+    <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="Width: 100%; Height: 150px; box-sizing: border-box; -moz-box-sizing: border-box; resize:none;"></textarea>
     <div class="btnposition btnpositionNew">
         <a class="imgbtn" ><span onclick="btn_OK()"><spring:message code='ezBoard.t14'/></span></a>
     </div>
