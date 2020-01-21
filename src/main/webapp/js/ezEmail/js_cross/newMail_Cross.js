@@ -3480,6 +3480,10 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     		success	: function(additionalInfo) {
     			var targetElem = document.querySelector("#infoTable span[itype='" + iWhich + "'][email='" + email + "']");
     			
+    			if (!targetElem || targetElem.innerHTML.trim() != "") {
+    				return;
+    			}
+    			
     			if (type == "mailgroup") {
     				targetElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + additionalInfo + "</u>; ";
     				targetElem.parentElement.innerHTML += "<img src='/images/icon/oneline_delete.gif' onclick='deleteMailUser(\"" + type + "\",\"" + iWhich + "\",\"" + href + "\")' style='width:10px;height:10px;cursor:pointer;'/>";
