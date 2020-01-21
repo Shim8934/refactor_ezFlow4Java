@@ -5028,5 +5028,26 @@ public class EzEmailUtil {
 		logger.debug("spamSniperEnc end");
     	return cryptResult;
     }
+    
+    // 메일 완료/완료취소 flag
+    public boolean hasMailConfirmFlag(Message message) throws MessagingException {
+		boolean isMailConfirmFlag = false;
+		String[] flags = message.getFlags().getUserFlags();		
+		
+		for (String flag : flags) {
+			if (flag.equals("$MailConfirm")) {
+				isMailConfirmFlag = true;
+				break;
+			}
+		}
+
+		return isMailConfirmFlag;
+	}
+	
+    // 메일 완료/완료취소 flag
+	public void setMailConfirmFlag(Message message, boolean isSet) throws MessagingException {
+		Flags MailConfirmFlag = new Flags("$MailConfirm");
+		message.setFlags(MailConfirmFlag, isSet);
+	}
 }
 

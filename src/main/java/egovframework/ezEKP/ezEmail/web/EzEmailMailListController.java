@@ -25,6 +25,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
+import org.antlr.grammar.v3.ANTLRParser.throwsSpec_return;
+import org.antlr.runtime.EarlyExitException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -964,6 +966,8 @@ public class EzEmailMailListController {
 					}
 				}
 				
+				sb.append(String.format("<mailConfirm><![CDATA[%s]]></mailConfirm>", ezEmailUtil.hasMailConfirmFlag(message)));
+				
 				sb.append("</response>");
 			}
 			
@@ -1775,6 +1779,99 @@ public class EzEmailMailListController {
 		logger.debug("getPortletMailList ended.");
 		
 		return returnData;
+	}
+	
+	/**
+	 * 메일 완료/완료취소 컨피그 설정
+	 */
+	@RequestMapping(value="/ezEmail/mailSetFlagForMailConfirm.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String mailSetFlagForMailConfirm(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request,
+			@RequestBody String bodyData,
+			Locale locale, Model model) throws Exception {
+		logger.debug("mailSetFlagForMailConfirm started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		String returnData = "OK";
+		
+		// get user credentials
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+        String userEmail = userInfo.getId() + "@" + domainName;
+        String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+        if (useSharedMailbox.equals("YES")) {
+        	String shareId = request.getParameter("shareId");
+    		logger.debug("shareId=" + shareId);
+            
+            if (shareId != null) {
+    			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+    				logger.debug("the user cannot access the shareId.");
+    				logger.debug("mailSetFlag ended.");
+    				
+    				return "";
+    			}
+    			
+    			userEmail = shareId + "@" + domainName;
+    		}
+        }
+        logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
+        
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String uniqueId = doc.getElementsByTagName("ITEMID").item(0).getTextContent();	
+		
+		String folderId = null;
+		long[] uids = null;
+		
+		if (uniqueId.endsWith(";")) {
+			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+		}
+		
+		String[] folderAndMsgIdArray = uniqueId.split(";");
+		folderId = folderAndMsgIdArray[0].split("/")[0];			
+		uids = new long[folderAndMsgIdArray.length];
+		
+		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+			String folderAndMsgId = folderAndMsgIdArray[folderAndMsgIdArray.length - i - 1];
+			String msgId = folderAndMsgId.split("/")[1];
+			uids[i] = Long.parseLong(msgId);
+		}	
+		
+		logger.debug("folderId=" + folderId);		
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+					
+			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
+			sourceFolder.open(Folder.READ_WRITE);		
+					
+			Message[] msgs = sourceFolder.getMessagesByUID(uids);
+			for (int i = 0; i < msgs.length; i++) {
+				Message msg = msgs[i];
+				ezEmailUtil.setMailConfirmFlag(msg, !ezEmailUtil.hasMailConfirmFlag(msg));
+			}
+					
+			sourceFolder.close(true);
+		} catch (Exception e) {
+			returnData = "ERROR : " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailSetFlagForMailConfirm ended.");
+		
+		return returnData;				
 	}
 	
 }

@@ -2001,3 +2001,55 @@ function mailPrevIframeSize() {
 	
 	$("#ifrmPreView" + pPreviewShow_HOW).height(pPreview - previewmail_info);
 }
+
+function mailConfirm_flag_btn() {
+	var listContentArrLen = listContentArry.length;
+	var listSubContentArrLen = listSubContentArry.length;
+	var pSelectItem  = "";
+	var url = "/ezEmail/mailSetFlagForMailConfirm.do";
+	
+	if (listContentArrLen == 0 && listSubContentArrLen == 0) {
+        alert(strLang42);
+        return;
+    }
+
+	if (listContentArrLen > 0) {
+        for (var i = 0; i < listContentArry.length; i++) {
+            pSelectItem += document.getElementById(listContentArry[i]).getAttribute("_href") + ";";
+        }
+    } else {
+        pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
+    }
+
+    flagXmlHttp = createXMLHttpRequest();
+    var xmlDom = createXmlDom();
+    console.log(pSelectItem);
+    var objNode;
+    createNodeInsert(xmlDom, objNode, "DATA");
+    createNodeAndInsertText(xmlDom, objNode, "ITEMID", pSelectItem);
+    
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		url += "?shareId=" + encodeURIComponent(shareId);
+	}
+    
+    try {
+        flagXmlHttp.open("POST", url, true);
+        flagXmlHttp.onreadystatechange = function() {
+        	if(flagXmlHttp.readyState == 4) {
+        		if (flagXmlHttp.responseText == "OK") {
+        			mailConfirm_line(); 
+        		} else {
+        			alert(strLang321);
+        		}
+        	}
+        };
+        flagXmlHttp.send(xmlDom);
+    }
+    catch (e) { }
+}
+
+function mailConfirm_line() {
+	listContentArry.forEach(function(val, key) {
+		$("#"+val).toggleClass("mail_confirm");
+	});
+}
