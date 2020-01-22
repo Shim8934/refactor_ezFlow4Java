@@ -682,6 +682,7 @@ var strLang1028 = "년";
 var strLang1029 = "월";
 var strLang1030 = "일";
 var strLang1031 = "익명게시판 또는 포토게시판 또는 URL링크 게시판에는 메일/결재문서 게시를 할 수 없습니다.";
+var strLang1038 = "외부발송문서 본문에는 이미지와 링크가 들어갈 수 없습니다.";
 
 // DocType : 문서형태 A01
 var strDocType4 = "004";

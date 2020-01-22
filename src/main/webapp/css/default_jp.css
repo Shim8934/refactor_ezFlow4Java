@@ -3484,7 +3484,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .othersLogicArea {display: flex; padding-left: 15px;}
 .prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
 .prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
-.skipSelect, .logicSelect {height: 22px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 90px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
+.skipSelect, .logicSelect {height: 22px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 110px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
 
 /* skip part */
 .prevQsWrapper .skipArea {display: flex;}
