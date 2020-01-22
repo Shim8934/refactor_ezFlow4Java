@@ -3468,6 +3468,9 @@ function GetGroupEmail(pAddressId) {
 function PrepareMailTag(iWhich, type, name, email, href) {
     var TopSpan = document.createElement("span");
     var newElem = document.createElement("span");
+    // 앞 뒤로 따옴표 제거
+    name = name.replace(/^["']/, "").replace(/["']$/, "");
+    email = email.replace(/^["']/, "").replace(/["']$/, "");
     
     // 수신인 추가 정보 (부서 이름 또는 이메일 주소)
     if (g_useAdditionalInfo) {
@@ -3479,6 +3482,10 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     		async	: true,
     		success	: function(additionalInfo) {
     			var targetElem = document.querySelector("#infoTable span[itype='" + iWhich + "'][email='" + email + "']");
+    			
+    			if (!targetElem || targetElem.innerHTML.trim() != "") {
+    				return;
+    			}
     			
     			if (type == "mailgroup") {
     				targetElem.innerHTML = "<u title=\"" + strLang126 + "\" alt=\"" + strLang126 + "\" >" + name + additionalInfo + "</u>; ";

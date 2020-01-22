@@ -201,8 +201,8 @@ public class EzEmailAdminController {
 					
 					if (totalId.equals(cn)) {
 						distributionTotalList.remove(i);
-					}
-					
+						break;
+					}					
 				}
 				
 				totalSzie = distributionTotalList.size();
@@ -219,11 +219,10 @@ public class EzEmailAdminController {
 						
 						if (totalId.equals(upperId)) {
 							distributionTotalList.remove(i);
-						}
-						
+							break;
+						}						
 					}
-				}
-				
+				}				
 			}
 			
 			StringBuilder sb = new StringBuilder();
