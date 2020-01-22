@@ -2294,7 +2294,7 @@ FROM
 WHERE
 	PRIMARYLANG = #primaryLang#
 ORDER BY
-	SN asc
+	TO_NUMBER(SN) asc
 ]]>
 </select>
 
