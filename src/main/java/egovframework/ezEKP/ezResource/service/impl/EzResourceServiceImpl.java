@@ -4034,21 +4034,27 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	//public void changeResourceOrder(String selectedResourceId, String targetResourceId, int tenantId,String companyID,String upperResourceId);
 	
 	@Override
-	public void changeResourceOrder(String selectedResourceId, String targetResourceId, int tenantId,String companyID,String upperResourceId) throws Exception {
+	public void changeResourceOrder(String selectedResourceId, String targetStatus, int tenantId,String companyID,String upperResourceId) throws Exception {
 		logger.debug("changeResourceOrder start");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("resourceId", selectedResourceId);
 		map.put("tenantId", tenantId);
 		map.put("brd_company", companyID);
 		map.put("upperResourceId", upperResourceId);
+		
+		String selectedResourceIdOrder = ezResourceDAO.getResourceOrder(map);
 
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		map2.put("resourceId", targetResourceId);
+		map2.put("status", targetStatus);
 		map2.put("tenantId", tenantId);
 		map2.put("brd_company", companyID);
 		map2.put("upperResourceId", upperResourceId);
+		map2.put("brd_step", selectedResourceIdOrder);
 		
-		String selectedResourceIdOrder = ezResourceDAO.getResourceOrder(map);
+		String targetResourceId = ezResourceDAO.getTargetResourceOrder(map2);
+		
+		map2.put("resourceId", targetResourceId);
+		
 		String targetResourceIdOrder = ezResourceDAO.getResourceOrder(map2);
 		
 		String tempOrder = selectedResourceIdOrder;
