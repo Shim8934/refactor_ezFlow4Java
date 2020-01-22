@@ -109,6 +109,15 @@
 					case 33:
 						url = "/admin/ezEmail/showSharedMailboxList.do";
 						break;
+					case 34:
+					 	url = "/admin/ezEmail/mailCopyright.do";
+				    	break;
+					case 35:
+						url = "/admin/ezEmail/multiDomain.do";
+						break;
+					case 36:
+						url = "/admin/ezEmail/companyMultiDomain.do";
+						break;
 				}
 				window.open(url,"right");
 			}
@@ -135,16 +144,17 @@
 				<spring:message code='main.t78' />
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<c:if test="${cChk == '1' || kChk == '1'}">
 				<h2>
 					<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
 				</h2>
+				<c:if test="${cChk == '1'}">
 				<h2>
 					<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
 				</h2>
 				<h2>
 					<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
 				</h2>  
+				</c:if>
 				<h2>
 					<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
 				</h2>  
@@ -154,8 +164,14 @@
 						<ul></ul>
 					</h2>
 				</c:if>
-				</c:if>
-
+				<c:if test="${cChk == '1'}">
+				<h2>
+					<span onClick="goPage(35)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa01' /></span>
+				</h2> 
+				<h2>
+					<span onClick="goPage(36)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa02' /></span>
+				</h2>
+	  			</c:if>
 				<!-- 2018-02-20 재은 수정 (편지지 등록) -->
 				<c:if test="${useLetter == 'YES'}">
 					<h2>
@@ -183,6 +199,12 @@
 						<li><span style="display:inline-block;width:100%;" onclick="goPage(28)"><spring:message code='ezStatistics.kyj1' /></span></li>
 						<li><span style="display:inline-block;width:100%;" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
 					</ul>
+				</c:if>
+				<c:if test="${useCopyrightMenu == 'YES'}">
+	  			<h2>
+					<span onClick="goPage(34)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.ksa06'/></span>
+				    <ul></ul>
+				</h2>
 				</c:if>
 			</div>
 		</div>

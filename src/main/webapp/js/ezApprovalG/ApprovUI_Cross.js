@@ -1462,7 +1462,7 @@ function getCurApproverAprLine(type) {
     LastTotalKyulSN = getLastTotalSignSN(objNodes);
     LastSignSN = objNodes.length;
 
-    for (var i = 0; i < objNodes.length; i++) {
+    for (var i = objNodes.length - 1; i < objNodes.length; i--) {
         var params = new Array();
         params[0] = "0";
         var dataNodes = GetLastChildNodes(objNodes[i], params);
@@ -1509,7 +1509,12 @@ function getCurApproverAprLine(type) {
  * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
  * */
 function SaveApproveInfo(pApproveFlag) {
-    SaveFile();
+    var rtnVal = SaveFile();
+
+    if(rtnVal.toUpperCase() != "TRUE") {
+        return rtnVal;
+    }
+
     SignSave();
 
     var fields = message.GetFieldsList();
@@ -1694,6 +1699,11 @@ function SaveApproveInfo(pApproveFlag) {
    	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
    }
     
+    //반송일때, 반송문서를 부서문서함(반송함)에 보관할 부서ID를 가져온다.
+    if (pApproveFlag == "2") {
+    	createNodeAndInsertText(xmlpara, objNode, "BANSONGDEPTID", getBansongDeptID());
+    }
+    
     if (nonElecRec == "Y") {
 		var NonElecXML = createXmlDom();
 		NonElecXML = loadXMLString(nonElecRecInfoXml);
@@ -1811,6 +1821,30 @@ function SaveApproveInfo(pApproveFlag) {
    }
 }
 
+/*
+ * 반송함에 들어갈 부서를 반환함
+ * - 기안결재중 반송은 기안부서
+ * - 접수결재중 반송은 접수부서
+ * */
+function getBansongDeptID() {
+	var rtnDeptID = "";
+	
+	try {
+		var oRows = SelectNodes(document.getElementById("APRLINEINFO").dataSource, "LISTVIEWDATA/ROWS/ROW");
+		var oRowsLeng = oRows.length;
+		if (oRowsLeng > 0) {
+			rtnDeptID = SelectSingleNodeValue(GetChildNodes(oRows[oRowsLeng - 1])[0], "DATA6");
+		} else {
+			rtnDeptID = draftDeptID;
+		}
+	} catch (e) {
+		console.error(e.description);
+		rtnDeptID = draftDeptID;
+	}
+	
+	return rtnDeptID;
+}
+
 function getfieldValue(pfield) {
     var rtnVal = "";
     if (pfield) {
@@ -1842,6 +1876,7 @@ function SaveFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
+            formId : pFormID,
 			html  : mhtBody,
 			orgCompanyID : orgCompanyID
 		},
@@ -1855,20 +1890,24 @@ function SaveFile() {
 function SaveOrgFile() {
 	var result = "";
     var objNode;
-
     var mhtBody = "";
     var HTML = document.createElement("HTML");
     var HEAD = document.createElement("HEAD");
     var META = document.createElement("META");
+    var META2 = document.createElement("META");
+    var BODY = document.createElement("BODY");
+
     META.content = "text/html; charset=utf-8";
     META.httpEquiv = "Content-Type";
-    var META2 = document.createElement("META");
+
     META2.name = "GENERATOR";
     META2.content = "MSHTML 10.00.9200.16721";
+
     HEAD.appendChild(META);
     HEAD.appendChild(META2);
+
     HTML.appendChild(HEAD);
-    var BODY = document.createElement("BODY");
+
     Doc_ContentHtml = document.createElement("DIV");
     Doc_ContentHtml.innerHTML = OrgHtml;
     BODY.appendChild(Doc_ContentHtml);
@@ -1884,6 +1923,7 @@ function SaveOrgFile() {
 		url : "/ezApprovalG/saveFile.do",
 		data : {
 			docID : pDocID,
+            formId : pFormID,
 			html  : mhtBody,
 			orgCompanyID : orgCompanyID
 		},
@@ -2114,7 +2154,7 @@ function SReAprLineSingMapping(ret) {
             break;
         }
         else {
-            if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5) {
+            if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5) {
                 startIdx = startIdx + 1;
                 IngFlag = true;
             }
@@ -2230,7 +2270,7 @@ function SReAprLineSingMapping(ret) {
     var hidx = hapyuiCnt;
     var startOrder = 1;
     for (i = 1; i < OrderStat.length; i++) {
-        if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5)
+        if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
             break;
         else
             startOrder = startOrder + 1;
@@ -2480,7 +2520,7 @@ function ReAprLineSingMapping(ret) {
             break;
         }
         else {
-            if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5)
+            if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
                 startIdx = startIdx + 1;
             else if (OrderType[i] != strAprType2 && OrderType[i] != strAprType7 && OrderType[i] != strAprType9 & OrderType[i] != strAprType11 && OrderType[i] != strAprType12)
                 startIdx = startIdx + 1;
@@ -2583,7 +2623,7 @@ function ReAprLineSingMapping(ret) {
     var hidx = hapyuiCnt;
     var startOrder = 1;
     for (i = 1; i < OrderStat.length; i++) {
-        if (OrderStat[i] == strAprState2 || OrderStat[i] == strAprState5)
+        if ((OrderStat[i] == strAprState2 && OrderType[i] != strAprType7) || OrderStat[i] == strAprState5)
             break;
         else
             startOrder = startOrder + 1;

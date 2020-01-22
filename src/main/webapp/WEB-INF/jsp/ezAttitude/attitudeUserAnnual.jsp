@@ -152,6 +152,9 @@
 	    		});
 	    		
 	    		makeoptionyear();
+	    		//2020.01.06 김정언 - 개인연차현황 selectBox option 최근 날짜로 선택 되도록 변경
+	    		$("#searchYear option:eq(0)").prop("selected", true);
+	    		getUserAnnualList();
 	    		
 	    		var height = parseInt(document.documentElement.clientHeight - 235);
 	        	$("#contentlist").css("height", height +"px");
@@ -196,7 +199,7 @@
 	            var startDate = "";
 	            var endDate = "";
 	    		
-				if ($("#searchYear").val() == null && $("#searchYear").val() == "") {
+				if ($("#searchYear").val() == null || $("#searchYear").val() == "") {
 					selyear = joinDate.split("-")[0];
 	    		}
 
@@ -239,7 +242,7 @@
 	                $("#searchYear").html(optionHtml);
 	                $("#searchYear").val(selyear);
 	    		}
-	    		
+
 	    		//리스트
 	    		getUserAnnualList();
 	    		//통계

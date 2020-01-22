@@ -5,7 +5,7 @@ var CabinetMessages = {
 	strNext      : "",
 	strTotal     : "",
 	strItem      : "",
-	strTtlAdd    : "フォルダ管理",
+	strTtlAdd    : "フォルダ追加",
 	strTtlChange : "フォルダ修正",
 	strTtlMove   : "フォルダ移動",
 	strTtlCopy   : "フォルダコピー",

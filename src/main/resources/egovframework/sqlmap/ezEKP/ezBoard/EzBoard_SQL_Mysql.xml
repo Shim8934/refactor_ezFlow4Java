@@ -82,6 +82,7 @@
         <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
         <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="34"/>
         <result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="35"/>
+        <result property="oneLineReply" 		column="ONELINEREPLY" 		columnIndex="36"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -118,6 +119,7 @@
 		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
 		<result property="guBun" 					column="GUBUN" 					columnIndex="32"/>
 		<result property="userImageFile" 		column="USERIMAGEFILE" 		columnIndex="33"/>
+		<result property="isReserved" 		column="ISRESERVED" 		columnIndex="34"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -899,14 +901,6 @@
 					TBL_USERMASTER D
 				WHERE
 					D.TENANT_ID = #tenantID#
-			]]>
-		<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
-			<![CDATA[
-				AND
-					D.PHYSICALDELIVERYOFFICENAME = #companyID#
-			]]>
-		</isNotEqual>
-		<![CDATA[
 				)
 				
 				UNION ALL
@@ -1361,7 +1355,9 @@
  					BOARDID = #v_PBOARDID#
 		]]>
 			<isEqual property="adminType" compareValue="false" prepend="AND">
-				TOPWRITERID = #v_PUSERID#
+				(TOPWRITERID = #v_PUSERID#
+				OR
+				WRITERID = #v_PUSERID#)
 			</isEqual>
 			<isEqual property="type" compareValue="1">
 			  	<![CDATA[
@@ -2518,7 +2514,8 @@
 	            EXTENSIONATTRIBUTE10 ,
 	            A.BOARDID ,
 	            A.DOCNO,
-				(SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE
+				(SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE,
+	            B.ONELINEREPLY
 	        FROM 
 	        	TBL_Board_Item A
             JOIN 
@@ -2569,7 +2566,15 @@
 	            EXTENSIONATTRIBUTE9 ,
 	            EXTENSIONATTRIBUTE10 ,
 	            DOCNO,
-	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE
+	            (SELECT extensionattribute2 FROM TBL_USERMASTER F WHERE A.WRITERID = F.CN AND A.TENANT_ID = F.TENANT_ID) AS USERIMAGEFILE,
+	            CASE
+					WHEN
+						STARTDATE < #nowDate#
+					THEN
+						'false'
+					ELSE
+						'true'
+					END AS ISRESERVED
 	        FROM 
 	        	TBL_Board_Item_temp A
 	        JOIN
@@ -2673,8 +2678,10 @@
                    	ENDDATE > #nowDate#
 			]]>
                <isEqual property="v_PADMINTYPE" compareValue="false">
-                   AND 
-                   	TOPWRITERID = #v_PUSERID#
+				AND 
+					(TOPWRITERID = #v_PUSERID#
+					OR
+					WRITERID = #v_PUSERID#)
 			</isEqual>
 		</isEqual>
 		<isEqual property="v_PTYPE" compareValue="2">
@@ -2714,8 +2721,10 @@
                    	D.TOTALCOUNT IS NULL
 			]]>
                <isEqual property="v_PADMINTYPE" compareValue="false">
-                   AND 
-                   	TOPWRITERID = #v_PUSERID#
+				AND 
+					(TOPWRITERID = #v_PUSERID#
+					OR
+					WRITERID = #v_PUSERID#)
 			</isEqual>
 		</isEqual>
 		<isEqual property="v_PTYPE" compareValue="3">
@@ -2734,8 +2743,10 @@
                    	ENDDATE < #nowDate#
 			]]>
 			<isEqual property="v_PADMINTYPE" compareValue="false">
-                   AND 
-                   	TOPWRITERID = #v_PUSERID#
+					AND 
+	                   	(TOPWRITERID = #v_PUSERID#
+						OR
+						WRITERID = #v_PUSERID#)
 			</isEqual>
 		</isEqual>
 	</select>
@@ -4127,7 +4138,7 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content# 
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content# 
 	        )
 		</isEqual>
 		<isNotEqual property="parentWriteDate" compareValue="docNO">
@@ -4135,7 +4146,7 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#
 	        )
 		</isNotEqual>
 	</insert>
@@ -4146,7 +4157,7 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content# 
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content# 
 	        )
 		</isEqual>
 		<isNotEqual property="parentWriteDate" compareValue="docNO">
@@ -4154,7 +4165,7 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content 
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#
 	        )
 		</isNotEqual>
 	</insert>
@@ -5187,8 +5198,6 @@
 					TBL_BOARD_ITEM_READ
 				WHERE 
 					TENANT_ID = #v_TENANTID#
-				AND
-					COMPANYID = #v_pCompanyID#
 				  AND
 					USERID = #v_PUSERID#
 				GROUP BY
@@ -5228,7 +5237,9 @@
 				]]>
 				</isNotEmpty>
 					<![CDATA[
-					A.TOPWRITERID = #v_PUSERID# 
+					(A.TOPWRITERID = #v_PUSERID#
+					OR
+					A.WRITERID = #v_PUSERID#)
 					AND
 					I.BOARDID IN ]]>
 					<iterate property="v_qnaItemList" open="(" close=")" conjunction=","> #v_qnaItemList[]# </iterate>
@@ -5296,7 +5307,9 @@
 				]]>
 				</isNotEmpty>
 					<![CDATA[
-					A.TOPWRITERID = #v_PUSERID# 
+					(A.TOPWRITERID = #v_PUSERID#
+					OR
+					A.WRITERID = #v_PUSERID#)
 					AND
 					I.BOARDID IN ]]>
 					<iterate property="v_qnaItemList" open="(" close=")" conjunction=","> #v_qnaItemList[]# </iterate>
@@ -5377,5 +5390,52 @@
 				TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
+	
+	<select id="EzBoardDAO.getAllSubBoardProperty" parameterClass="Map" resultClass="BoardPropertyVO">
+		<![CDATA[
+			SELECT 
+				*
+			FROM 
+				TBL_BOARD_BOARDINFO 
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				(BOARDID = #v_BOARDID# OR BOARDTREEPATH LIKE CONCAT('%', #v_BOARDID#, '%'))
+		]]>		
+	</select>
+	
+	<update id="EzBoardDAO.updateBoardItemRead" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_BOARD_ITEM_READ
+           	SET 
+           		ITEMID = #destItemID#,
+           		BOARDID = #destBoardID#
+           	WHERE  
+           		TENANT_ID = #tenantID#
+           	AND
+           		ITEMID = #itemID#
+           	AND
+           		BOARDID = #orgBoardID#
+		]]>
+	</update>
+	
+	<insert id="EzBoardDAO.insertBoardItemReadForCopy" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_ITEM_READ ( 
+				BOARDID, ITEMID, USERID, USERNAME, USERNAME2, USERDEPTNAME, USERDEPTNAME2, USERCOMPANYNAME, USERCOMPANYNAME2, USERTITLE, USERTITLE2, READDATE, TENANT_ID, COMPANYID
+			)
+			SELECT
+				#destBoardID#, #destItemID#, USERID, USERNAME, USERNAME2, USERDEPTNAME, USERDEPTNAME2, USERCOMPANYNAME, USERCOMPANYNAME2, USERTITLE, USERTITLE2, READDATE, TENANT_ID, COMPANYID
+			FROM
+				TBL_BOARD_ITEM_READ
+			WHERE
+				BOARDID = #orgBoardID#
+			AND
+				ITEMID = #orgItemID#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</insert>
 	
 </sqlMap>

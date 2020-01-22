@@ -89,7 +89,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
         
         name = "receiptnumber";
         
-        if (LastSignSN == 1 || useReceiveDocNo != 'NO') {
+        if (LastSignSN == 1 || useReceiveDocNo != 'NO' || pDraftFlag == "HAPYUI") {
         	$.ajax({
         		type : "POST",
         		dataType : "text",
@@ -265,6 +265,7 @@ function SaveFile() {
     		url : "/ezApprovalG/saveFileHWP.do",
     		data : {
     			docID : pDocID,
+                // formId : pFormID,
     			html  : HwpCtrl.GetCloneData("", "HWP")
     		},
     		success: function(text){

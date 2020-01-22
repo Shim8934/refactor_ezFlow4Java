@@ -356,7 +356,15 @@
 						  WHERE BRD_UPPER = A.BRD_ID
 						  AND Brd_Company = #v_P_CompanyID#
 						  AND Brd_GB = N'2' 
-						  AND TENANT_ID = #tenantID# ) sub_rescnt ,
+						  AND TENANT_ID = #tenantID# 
+						   ]]>
+						 <isEmpty property="adminType" >
+							<![CDATA[
+								AND APPROVEFLAG <> '2'
+							]]>
+						</isEmpty>
+						<![CDATA[
+						  ) sub_rescnt ,
 						N'0' Access_Lvl ,
 						A.APPROVEFLAG 
 					FROM
@@ -2274,6 +2282,49 @@
 			and
 				brd_gb = '2'
 		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getTargetResourceOrder" parameterClass="map" resultClass="String">
+			<isEqual property="status" compareValue="up">
+			<![CDATA[
+				select 
+					max(brd_id) brd_id
+				from 
+					tbl_rs_brd
+				where
+					tenant_id = #tenantId#
+				and
+					brd_company = #brd_company#	 		
+				and
+					brd_upper = #upperResourceId#
+				and
+					brd_step < #brd_step#
+				and
+					brd_gb = '2'
+				group by
+					brd_upper
+			]]>
+			</isEqual>
+			<isEqual property="status" compareValue="down">
+			<![CDATA[
+				select 
+					min(brd_id) brd_id
+	            from 
+					tbl_rs_brd
+				where
+					tenant_id = #tenantId#
+				and
+					brd_company = #brd_company#	 		
+				and
+					brd_upper = #upperResourceId#
+				and
+					brd_step > #brd_step#
+				and
+					brd_gb = '2'
+				group by
+					brd_upper
+			]]>
+			</isEqual>
 	</select>
 	
 	<update id="EzResourceDAO.ChangeResourceOrder" parameterClass="map">

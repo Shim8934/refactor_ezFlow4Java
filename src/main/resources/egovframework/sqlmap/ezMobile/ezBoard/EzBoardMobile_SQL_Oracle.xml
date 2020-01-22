@@ -1,0 +1,1872 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezBoardMobile">
+	<typeAlias  alias="userInfo"					     type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias  alias="MBoardInfoVO"				 type="egovframework.ezMobile.ezBoard.vo.MBoardInfoVO"/>
+	<typeAlias  alias="MBoardListHeaderVO"		 type="egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO"/>
+	<typeAlias  alias="MBoardItemVO"				 type="egovframework.ezMobile.ezBoard.vo.MBoardItemVO"/>
+    <typeAlias  alias="MBoardFavoriteVO"         type="egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO"/>
+	<typeAlias  alias="MBoardListVO"               type="egovframework.ezMobile.ezBoard.vo.MBoardListVO"/>
+    <typeAlias  alias="MBoardTreeVO"              type="egovframework.ezMobile.ezBoard.vo.MBoardTreeVO"/>
+    <typeAlias  alias="MBoardAttachVO"           type="egovframework.ezMobile.ezBoard.vo.MBoardAttachVO"/>
+    <typeAlias  alias="MBoardNewListVO"           type="egovframework.ezMobile.ezBoard.vo.MBoardNewListVO"/>
+    
+	<select id="MBoardDAO.getListHeader" parameterClass="Map" resultClass="MBoardListHeaderVO">
+        <![CDATA[
+            SELECT
+                CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END name,
+				width,
+				colname
+			FROM
+				TBL_BOARD_ITEM_LISTOPTION
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				LISTTYPE = #listCode#
+			AND
+				VIEW_FG = 'Y'
+			ORDER BY
+				SN
+        ]]>
+    </select>
+	
+    <select id="MBoardDAO.getBoardProperty" parameterClass="Map" resultClass="MBoardInfoVO">
+	   <![CDATA[
+            SELECT 
+                boardid,
+                CASE  #primary#
+                    WHEN 
+                        '1'
+                    THEN
+                        boardname
+                    ELSE
+                        CASE
+                            WHEN
+                                (boardname2 = '' OR boardname2 IS NULL)
+                            THEN
+                                boardname
+                            ELSE
+                                boardname2
+                        END
+                END boardname,
+                treevieworder,
+				boardlevel,
+				parentboardid,
+				boarddescription,
+				itemexpires,
+				attachsizelimit,
+				replynotify,
+				boardgroupid,
+				alertpostitem,
+				gubun,
+				url,
+				deleteafter,
+				boardno,
+				portlet,
+				onelinereply,
+				boardtreepath,
+				formlocation,
+				formflag,
+				apprflag,
+				apprmailflag,
+				attributeyn,
+				tenant_id
+            FROM 
+                TBL_BOARD_BOARDINFO 
+			WHERE  
+                tenant_id = #tenantID#
+			AND
+				boardid = #boardID#
+        ]]>
+	</select>
+	
+	<select id="MBoardDAO.getACL" parameterClass="Map" resultClass="MBoardInfoVO">
+        <![CDATA[
+            SELECT 
+                boardid,
+				accessid,
+				accesslevel,
+				access_,
+				parentboardid,
+				boardadmin_fg,
+				listview_fg,
+				read_fg,
+				write_fg,
+				reply_fg,
+				delete_fg,
+				inherit_fg,
+				postnotice,
+				boardgroupacl
+            FROM 
+                TBL_BOARD_BOARDMANAGE 
+            WHERE  
+                TENANT_ID = #tenantID#
+			AND
+				boardid = #boardID# 
+			AND 
+				accessid = #userDeptPath#
+		]]>
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+	 			AND
+	 				boardgroupacl = 'Y'
+			</isEqual>
+		</isEqual>
+		<![CDATA[
+			AND
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<select id="MBoardDAO.getBoardItemList" parameterClass="Map" resultClass="MBoardItemVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				(SELECT 
+					A.boardid,
+					A.itemid,
+					A.writerid,
+					A.writername,
+					A.writerdeptname,
+					A.writercompanyname,
+					TO_DATE(A.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+					TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
+					A.parentwritedate,
+					TO_NUMBER(A.parentwritedate) as orderparentwritedate,
+					A.importance,
+					A.title,
+					A.readcount,
+					A.attachments,
+					A.itemlevel,
+					A.abstract,
+					CASE WHEN D.totalcount IS NULL THEN '0' ELSE '1' END readflag,
+					A.extensionattribute5,
+					A.writername2,
+					A.writerdeptname2,
+					A.writercompanyname2,
+					(SELECT 
+						COUNT(*)  
+					FROM 
+						TBL_BOARD_ONELINEREPLY
+					WHERE  
+						tenant_id = A.tenant_id
+					AND
+						itemid = A.itemid) onelinecnt,
+						TO_CHAR(A.upperitemidtree) as upperitemidtree,
+						A.docno,
+						'' AS notice,
+						TO_CHAR(A.maincontent) as maincontent,
+						A.extensionattribute6,
+						A.extensionattribute7,
+						A.extensionattribute8,
+						A.extensionattribute9,
+						A.extensionattribute10,
+						(SELECT
+							gubun
+						FROM
+							TBL_BOARD_BOARDINFO B
+						WHERE
+							B.tenant_id = #tenantID#
+						AND
+							B.boardid = A.boardid) AS gubun
+						FROM
+							TBL_BOARD_ITEM A
+						LEFT OUTER JOIN
+							(SELECT
+								COUNT(userid) AS totalcount, 
+								itemid,
+								tenant_id 
+							FROM
+								TBL_BOARD_ITEM_READ
+							WHERE
+								tenant_id = #tenantID#
+							AND
+								userid = #userID#
+							AND
+								boardid = #boardID#
+							GROUP BY
+								itemid,
+								tenant_id ) D
+							ON
+								A.tenant_id = D.tenant_id
+							AND
+								A.itemid = D.itemid
+							WHERE
+								A.tenant_id = #tenantID#
+							AND
+								boardid = #boardID#
+			]]>
+			
+			<isEqual property="apprFlag" compareValue="Y">
+				<![CDATA[
+					AND
+						A.apprflag = 'Y'
+				]]>
+			</isEqual>
+	        
+	        <isNotEmpty property="pSearchText">
+	            <![CDATA[
+	                AND
+	                    (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                        OR
+	                    A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	            ]]>
+	        </isNotEmpty>
+			
+			<isEqual property="gubun" compareValue="1">
+	            <![CDATA[
+	                AND
+	                    startdate <= #nowDate#
+	                AND
+	                    enddate > #nowDate#
+	            ]]>
+	        </isEqual>           
+			
+			<isEqual property="gubun" compareValue="2">
+				 <![CDATA[
+					AND
+						startdate <= #nowDate#
+					AND
+						enddate > #nowDate#
+					AND
+						D.totalcount IS NULL
+				]]> 
+			</isEqual>
+				
+			<isEqual property="gubun" compareProperty="3">
+				<![CDATA[
+					AND
+						startdate <= #nowDate#
+					AND
+						enddate < #nowDate#
+				]]>
+			</isEqual>
+	        
+	        <isNotEmpty property="parentWriteDate">
+	            <![CDATA[
+	                AND
+	                    parentwritedate = #parentWriteDate#
+	            ]]>
+	        </isNotEmpty>
+	        <isNotEmpty property="upperitemidtree">
+	            <![CDATA[
+	                AND
+	                    TO_CHAR(upperitemidtree) > #upperitemidtree#
+	            ]]>        
+	        </isNotEmpty>
+			
+			<![CDATA[
+	            UNION 
+	              SELECT 
+	                A.boardid,
+	                A.itemid,
+	                A.writerid,
+	                A.writername,
+	                A.writerdeptname,
+	                A.writercompanyname,
+	                TO_DATE(A.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+	                TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
+	                A.parentwritedate,
+	                TO_NUMBER(A.parentwritedate) as orderparentwritedate,
+	                A.importance,
+	                A.title,
+	                A.readcount,
+	                A.attachments,
+	                A.itemlevel,
+	                A.abstract,
+	                CASE WHEN D.totalcount IS NULL THEN '0' ELSE '1' END readflag,
+	                A.extensionattribute5,
+	                A.writername2,
+	                A.writerdeptname2,
+	                A.writercompanyname2,
+	                (SELECT 
+	                    COUNT(*)  
+	                FROM 
+	                    TBL_BOARD_ONELINEREPLY
+	                WHERE  
+	                    tenant_id = A.tenant_id
+	                AND
+	                    itemid = A.itemid) onelinecnt,
+	                    TO_CHAR(A.upperitemidtree) as upperitemidtree,
+	                    A.docno,
+	                    '' AS notice,
+	                    TO_CHAR(A.maincontent) as maincontent,
+	                    A.extensionattribute6,
+	                    A.extensionattribute7,
+	                    A.extensionattribute8,
+	                    A.extensionattribute9,
+	                    A.extensionattribute10,
+	                    (SELECT
+	                        gubun
+	                    FROM
+	                        TBL_BOARD_BOARDINFO B
+	                    WHERE
+	                        B.tenant_id = #tenantID#
+	                    AND
+	                        B.boardid = A.boardid) AS gubun
+	                    FROM
+	                        TBL_BOARD_ITEM A
+	                    LEFT OUTER JOIN
+	                        (SELECT
+	                            COUNT(userid) AS totalcount, 
+	                            itemid,
+	                            tenant_id 
+	                        FROM
+	                            TBL_BOARD_ITEM_READ
+	                        WHERE
+	                            tenant_id = #tenantID#
+	                        AND
+	                            userid = #userID#
+	                        AND
+	                            boardid = #boardID#
+	                        GROUP BY
+	                            itemid,
+	                            tenant_id ) D
+	                        ON
+	                            A.tenant_id = D.tenant_id
+	                        AND
+	                            A.itemid = D.itemid
+	                        WHERE
+	                            A.tenant_id = #tenantID#
+	                        AND
+	                            boardid = #boardID#  
+	            ]]>
+	                            
+	            <isEqual property="apprFlag" compareValue="Y">
+	                <![CDATA[
+	                    AND
+	                        A.apprflag = 'Y'
+	                ]]>
+	            </isEqual>
+	        
+	            <isNotEmpty property="pSearchText">
+	                <![CDATA[
+	                    AND
+	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                            OR
+	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                ]]>
+	            </isNotEmpty>                
+	            
+	            <![CDATA[
+	                AND
+	                    startdate <= #nowDate#
+	                AND
+	                    enddate > #nowDate#
+	            ]]>        
+	            <isNotEmpty property="parentWriteDate">
+	                <![CDATA[
+	                    AND
+	                        parentwritedate < #parentWriteDate# 
+	                ]]>
+	            </isNotEmpty>
+	             <![CDATA[             
+	                ORDER BY
+	                    orderparentwritedate DESC, UPPERITEMIDTREE)
+			WHERE
+				ROWNUM <= #listSize#
+            ]]>
+	</select>
+	
+	<select id="MBoardDAO.getNoticePostItemList" parameterClass="Map" resultClass="MBoardItemVO">
+			SELECT
+				*
+			FROM
+				(
+				SELECT
+					*
+				FROM
+					(
+					SELECT
+					<isEqual property="apprFlag" compareValue="Y">
+						ROW_NUMBER() OVER ( ORDER BY A.ParentWriteDate, A.WriteDate DESC  ) rnum,
+					</isEqual>
+					<isEmpty property="apprFlag">
+						ROW_NUMBER() OVER ( ORDER BY A.NotiNo ASC, A.ParentWriteDate DESC, A.WriteDate DESC  ) rnum,
+					</isEmpty>
+					<![CDATA[
+						A.boardid ,
+						A.itemid ,
+						A.writerid ,
+						A.writername ,
+						A.writerdeptname ,
+						A.writercompanyname ,
+						TO_DATE(A.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+						TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
+						A.parentwritedate,
+						A.importance ,
+						A.title ,
+						A.readcount ,
+						A.attachments ,
+						A.itemlevel ,
+						A.abstract ,
+						'0' readflag  ,
+						A.extensionattribute5 ,
+						A.writername2 ,
+						A.writerdeptname2 ,
+						A.writercompanyname2 ,
+						(SELECT
+							COUNT(*)
+						FROM
+							TBL_BOARD_ONELINEREPLY
+						WHERE
+							tenant_id = A.tenant_id
+						AND
+							itemid = A.ITEMID) onelinecnt,
+						A.upperitemidtree,
+						A.docno,
+						A.extensionattribute2 notice,
+						A.notino,
+						A.maincontent,
+						A.extensionattribute6,
+						A.extensionattribute7,
+						A.extensionattribute8,
+						A.extensionattribute9,
+						A.extensionattribute10,
+						(SELECT
+							gubun 
+						FROM 
+							TBL_BOARD_BOARDINFO B 
+						WHERE
+							B.tenant_id = #tenantID#
+						AND 
+							B.boardid = A.boardid) as gubun
+						FROM
+							TBL_BOARD_ITEM A
+						WHERE
+							TENANT_ID = #tenantID#
+						AND
+							BOARDID = #boardID#
+						AND
+							STARTDATE <= #nowDate#
+						AND
+							ENDDATE > #nowDate#
+						AND
+							extensionAttribute1 = '0'
+						AND
+							extensionAttribute2 = '1'
+				]]>
+				
+				<isEqual property="apprFlag" compareValue="Y">
+					<![CDATA[
+						AND
+							A.apprflag = 'Y'
+					]]>
+				</isEqual>
+						ORDER BY 
+							A.NotiNo ASC, 
+							A.ParentWriteDate DESC, 
+							A.WriteDate DESC
+		<![CDATA[
+					) T1
+				WHERE rnum <= #endRow#
+				) T2
+			WHERE rnum >= #startRow#
+		]]>
+	</select>
+	
+	
+	<select id="MBoardDAO.getBoardApprFlag" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				DISTINCT B.apprflag
+			FROM
+				TBL_BOARD_APPRLIST A
+			JOIN
+				TBL_BOARD_BOARDINFO B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.boardid = B.boardid
+			WHERE
+				B.tenant_id = #tenantID#
+			AND
+				B.boardid = #boardID#
+		]]>
+	</select>
+	
+	<select id="MBoardDAO.getBoardItemListCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="gubun" compareValue="1">
+			<![CDATA[
+				SELECT 
+					COUNT(itemid) totalcount
+				FROM 
+					TBL_BOARD_ITEM 
+				WHERE  
+					tenant_id = #tenantID#
+				AND
+					boardid = #boardID#
+				AND
+					startdate <= #nowDate#
+				AND
+					enddate > #nowDate#
+			]]>
+            
+            <isNotEmpty property="pSearchText">
+                <![CDATA[
+                    AND
+                        (title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+                            OR
+                        writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))
+                ]]>
+            </isNotEmpty>
+			
+			<isEqual property="apprFlag" compareValue="Y">
+				<![CDATA[
+					AND
+						apprflag = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
+		
+		<isEqual property="gubun" compareValue="2">
+			<![CDATA[
+				SELECT 
+					COUNT(A.itemid)  totalcount
+				FROM 
+                	TBL_BOARD_ITEM A
+				LEFT JOIN 
+					(SELECT
+						COUNT(userid) totalcount,
+						itemid,
+						tenant_id
+					FROM
+						TBL_BOARD_ITEM_READ
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						userid = #userID#
+					AND
+						boardid = #boardID#
+					GROUP BY
+						itemid) D
+				ON
+					A.tenant_id = D.tenant_id
+				AND
+					A.itemid = D.itemid
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					boardid = #boardID#
+				AND
+					startdate <= #nowDate#
+				AND
+					enddate > #nowDate#
+				AND
+					D.totalcount IS NULL
+			]]>
+			
+			<isEqual property="apprFlag" compareValue="Y">
+				<![CDATA[
+					AND
+						apprflag = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
+		
+		<isEqual property="gubun" compareValue="3">
+			<![CDATA[
+				SELECT
+					COUNT(itemid) totalcount
+				FROM
+					TBL_BOARD_ITEM 
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					boardid = #boardDd#
+				AND
+					startdate <= #nowDate#
+				AND
+					enddate > #nowDate#
+			]]>
+			
+			<isEqual property="apprFlag" compareValue="Y">
+				<![CDATA[
+					AND
+						apprflag = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
+	</select>
+	
+	<select id="MBoardDAO.getNoticePostItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(itemid) CNT  
+	        FROM 
+	        	TBL_BOARD_ITEM 
+	        WHERE  
+	        	tenant_id = #tenantID#
+	        AND
+	        	boardid = #boardID#
+	        AND 
+	        	startdate <= #nowDate#
+	        AND 
+	        	enddate > #nowDate#
+	        AND 
+	        	extensionattribute1 = '0'
+	        AND 
+	        	extensionattribute2 = '1'
+        ]]>
+	</select>
+  
+<!-- 2018-10-25 홍승비 - 새게시물 리스트에 그룹사게시판 게시물 포함 -->
+    <select id="MBoardDAO.getNewItemList" parameterClass="Map" resultClass="MBoardNewListVO">
+      <![CDATA[
+          SELECT
+            *
+          FROM
+	          (
+	          SELECT
+	              ROW_NUMBER() OVER (ORDER BY A.writedate DESC) AS RNUM,
+	              A.BOARDID,
+	              B.BOARDNAME AS BOARDNAME,   
+	              A.ITEMID,           
+	              A.WRITERID,           
+	              A.WRITERNAME,         
+	              A.WRITERDEPTNAME,     
+	              A.WRITERCOMPANYNAME,  
+	              TO_DATE(A.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+	              TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
+	              A.PARENTWRITEDATE,    
+	              A.IMPORTANCE,         
+	              A.TITLE,            
+	              A.ATTACHMENTS,       
+	              A.READCOUNT,        
+	              A.ITEMLEVEL,        
+	              A.ABSTRACT,         
+	              B.BOARDNAME2 AS BOARDNAME2,   
+	              A.WRITERNAME2,          
+	              A.WRITERDEPTNAME2,      
+	              A.WRITERCOMPANYNAME2,  
+	              (SELECT 
+						COUNT(*)  
+	               FROM 
+	                  	TBL_Board_OneLineReply 
+	               WHERE  
+	               		TENANT_ID = A.TENANT_ID
+	               AND
+	                	ITEMID = A.ItemID) ONELINECNT,
+	              A.UPPERITEMIDTREE,
+	              A.DOCNO,
+	              '' AS NOTICE,
+	              P.GUBUN,
+	              A.MAINCONTENT
+	              FROM 
+	                TBL_BOARD_ITEM A 
+	              INNER JOIN 
+	                ( SELECT 
+	                  BOARDID, 
+	                  BOARDNAME, 
+	                  BOARDNAME2,
+	                  TENANT_ID,
+	                  COMPANYID
+	                  FROM 
+	                    TBL_BOARD_MYBOARDS 
+	                  WHERE   
+	                    TENANT_ID = #tenantID#
+	                  AND
+	                  	(COMPANYID = #companyID# OR COMPANYID = '*') 
+	                  AND
+	                    USERID = #userID# ) B 
+	              ON 
+	                A.TENANT_ID = B.TENANT_ID
+	              AND
+	                A.BOARDID = B.BOARDID                
+	              INNER JOIN 
+	                TBL_BOARD_BOARDINFO P  
+	              ON 
+	                A.TENANT_ID = P.TENANT_ID
+	              AND
+	     			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+	              AND
+	                A.BOARDID = P.BOARDID
+	              AND 
+	                A.TENANT_ID = #tenantID#
+	              AND
+	              	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
+						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+	              AND
+	                (A.APPRFLAG = 'Y' 
+	                 OR A.APPRFLAG IS NULL)
+	              AND 
+	                A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
+	            ]]>
+	            
+	            <isNotEmpty property="lastDate">
+	                <![CDATA[
+	                    AND 
+	                        A.writedate < #lastDate#
+	                    AND 
+	                        A.ENDDATE > #nowDate#
+	                ]]>
+	            </isNotEmpty>
+	            <isEmpty property="lastDate">
+	                <![CDATA[
+	                    AND 
+	                        A.writedate < #nowDate#
+	                    AND 
+	                        A.ENDDATE > #nowDate#
+	                ]]>
+	            </isEmpty>
+	            
+	            <isNotEmpty property="pSearchText">
+	                <![CDATA[
+	                    AND
+	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                            OR
+	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                ]]>
+	            </isNotEmpty>
+	            
+	            <![CDATA[                  
+	              AND 
+	                (NOT EXISTS
+	                    (SELECT 
+	                      USERID 
+	                     FROM 
+	                      TBL_BOARD_ITEM_READ S 
+	                     WHERE 
+	                      S.TENANT_ID = A.TENANT_ID
+	                     AND
+	                      S.BOARDID = A.BOARDID 
+	                     AND 
+	                      S.ITEMID = A.ITEMID 
+	                     AND 
+	                      S.TENANT_ID = #tenantID#
+	                     AND
+	                      S.USERID = #userID# 
+	                     AND 
+	                      S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
+	          )
+          WHERE 
+            RNUM <= #listSize#
+            ]]>
+  </select>
+  
+  <!-- 2018-10-25 홍승비 - 모바일게시판 즐겨찾기에 그룹사게시판 포함 -->
+  <select id="MBoardDAO.getFavoriteList" parameterClass="Map" resultClass="MBoardFavoriteVO" remapResults="true">
+	<![CDATA[
+		SELECT 
+			A.BOARDID ,
+			CASE  #primary#
+				WHEN 
+					'1'
+				THEN
+					A.boardname
+				ELSE
+				CASE
+					WHEN
+						(A.boardname2 = '' OR A.boardname2 IS NULL)
+					THEN
+						A.boardname
+					ELSE
+						A.boardname2
+				END
+			END boardname,
+            A.BOARDNAME2 ,
+            TABUSED ,
+            B.GUBUN 
+		FROM 
+			TBL_Board_MyBoards A
+        JOIN 
+            TBL_Board_BoardInfo B   
+        ON 
+            A.BoardID = B.BoardID
+        AND
+            A.TENANT_ID = B.TENANT_ID
+        WHERE
+            A.TENANT_ID = #tenantID#
+		AND
+			(B.COMPANYID = #companyID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+        AND  
+            (USERID = #userID#	   OR    (USERID = 'everyone'    AND    A.BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'))
+        AND 
+            TABUSED = 'Y'
+        ORDER BY 
+            VIEWORDER ASC
+      ]]>
+  </select>
+  
+  <select id="MBoardDAO.getBrdItemInfo" parameterClass="Map" resultClass="MBoardItemVO">
+    <![CDATA[
+          SELECT
+              ITEMID ,
+              WRITERID ,
+              WRITERNAME$lang$ WRITERNAME,
+              WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+              WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
+              WRITEDATE ,
+              PARENTWRITEDATE ,
+              IMPORTANCE ,
+              TITLE ,
+              CONTENTLOCATION ,
+              STARTDATE ,
+              ENDDATE ,
+              ABSTRACT ,
+              ATTACHMENTS ,
+              UPPERITEMIDTREE ,
+              ITEMLEVEL ,
+              COPIEDITEM ,
+              EXTENSIONATTRIBUTE1 ,
+              EXTENSIONATTRIBUTE2 ,
+              EXTENSIONATTRIBUTE3$lang$ EXTENSIONATTRIBUTE3,
+              EXTENSIONATTRIBUTE4 ,
+              EXTENSIONATTRIBUTE5 ,
+              MAINCONTENT ,
+              A.APPRFLAG  ,
+              B.GUBUN ,
+              EXTENSIONATTRIBUTE6 ,
+              EXTENSIONATTRIBUTE7 ,
+              EXTENSIONATTRIBUTE8 ,
+              EXTENSIONATTRIBUTE9 ,
+              EXTENSIONATTRIBUTE10 ,
+              A.BOARDID ,
+              A.DOCNO
+          FROM 
+              TBL_Board_Item A
+          JOIN 
+              TBL_Board_BoardInfo B   
+          ON 
+              A.TENANT_ID = B.TENANT_ID
+          AND
+              A.BoardID = B.BoardID
+          WHERE
+              A.TENANT_ID = #tenantID#
+          AND  
+              ItemID = #itemID#
+    ]]>
+  </select>
+  
+  <select id="MBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
+        <isEqual property="v_pBoardID" compareValue="{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}">
+            <![CDATA[
+                SELECT 
+                    1
+                FROM 
+                    DUAL
+                WHERE 
+                    NOT EXISTS ( SELECT 
+                                    ITEMID 
+                                 FROM 
+                                    TBL_Board_Item_Read 
+                                 WHERE  
+                                    TENANT_ID = #v_TENANTID#
+                                 AND
+                                    ItemID = #v_pItemID#
+                                 AND 
+                                    UserID = #v_pUserID#
+                                 AND 
+                                    BoardID = ( SELECT 
+                                                    BOARDID 
+                                                FROM 
+                                                    TBL_Board_Item
+                                                WHERE
+                                                    TENANT_ID = #v_TENANTID#
+                                                AND  
+                                                    ItemID = #v_pItemID# ) )
+            ]]>
+        </isEqual>
+        <isNotEqual property="v_pBoardID" compareValue="{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}">
+            <![CDATA[
+                SELECT 
+                    1
+                FROM 
+                    DUAL
+                WHERE 
+                    NOT EXISTS ( SELECT 
+                                    ITEMID
+                                 FROM 
+                                    TBL_Board_Item_Read 
+                                 WHERE  
+                                    TENANT_ID = #v_TENANTID#
+                                 AND
+                                    ItemID = #v_pItemID#
+                                 AND 
+                                    UserID = #v_pUserID#
+                                 AND 
+                                    BoardID = #v_pBoardID# )
+            ]]>
+        </isNotEqual>
+    </select>
+    
+    <select id="MBoardDAO.getWriterID" parameterClass="Map" resultClass="String">
+        <![CDATA[
+            SELECT 
+                WRITERID
+            FROM 
+                TBL_Board_Item 
+            WHERE  
+                TENANT_ID = #v_TENANTID#
+            AND
+                ItemID = #v_pItemID#
+        ]]>
+    </select>
+  
+    <insert id="MBoardDAO.insertBrdItem" parameterClass="Map">
+        <isEqual property="parentWriteDate" compareValue="docNO">
+            INSERT INTO TBL_Board_Item ( 
+              ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content 
+          ) VALUES ( 
+              #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content# 
+          )
+    </isEqual>
+    <isNotEqual property="parentWriteDate" compareValue="docNO">
+           INSERT INTO TBL_Board_Item ( 
+              ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content 
+          ) VALUES ( 
+              #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content# 
+          )
+    </isNotEqual>
+  </insert>
+  
+    <insert id="MBoardDAO.insertBrdItem2" parameterClass="Map">
+        <isEqual property="parentWriteDate" compareValue="docNO">
+            INSERT INTO TBL_Board_Item ( 
+                ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content 
+            ) VALUES ( 
+                #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content# 
+            )
+    </isEqual>
+    <isNotEqual property="parentWriteDate" compareValue="docNO">
+           INSERT INTO TBL_Board_Item ( 
+               ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content 
+          ) VALUES ( 
+               #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content# 
+          )
+    </isNotEqual>
+  </insert>
+  
+  <insert id="MBoardDAO.setAsRead" parameterClass="Map">
+        <![CDATA[
+            INSERT INTO TBL_Board_Item_Read ( 
+                BoardID,      ItemID,      UserID,      UserName,      UserDeptName,      UserCompanyName,      UserTitle,      UserName2,      UserDeptName2,      UserCompanyName2,      UserTitle2,      ReadDate,    TENANT_ID, COMPANYID
+            )
+            VALUES ( 
+                #v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANTID#, #v_COMPANYID# 
+            )
+        ]]>
+    </insert>
+    
+    <update id="MBoardDAO.setAsRead2" parameterClass="Map">
+        <![CDATA[
+            UPDATE TBL_Board_Item
+            SET 
+                ReadCount = ReadCount + 1
+            WHERE
+                TENANT_ID = #v_TENANTID#
+            AND
+            	WRITERCOMPANYID = #v_COMPANYID#
+            AND  
+                ItemID = #v_pItemID#
+        ]]>
+    </update>
+  
+  <update id="MBoardDAO.updateItem" parameterClass="Map">
+        UPDATE
+            TBL_Board_Item
+        SET 
+            UpdateDate = #writeDate#,
+            Importance = #importance#,
+            Title = #title#,
+            <!-- StartDate = #startDate#, -->
+            <!-- EndDate = #endDate#, -->
+            <!-- Abstract = #abstract#, -->
+            Attachments = #hasAttach#,
+            <isEqual property="guBun" compareValue="2">
+                WriterName = #writerName#,
+                WriterName2 = #writerName2#,
+              </isEqual>
+            ExtensionAttribute2 = #extensionAttribute2#,
+            ExtensionAttribute5 = #extensionAttribute5#,
+            DocPassWord = #docPassword#,
+            extensionAttribute6 = #extensionAttribute6#,
+            extensionAttribute7 = #extensionAttribute7#,
+            extensionAttribute8 = #extensionAttribute8#,
+            extensionAttribute9 = #extensionAttribute9#,
+            extensionAttribute10 = #extensionAttribute10#,
+            content = #content#
+        WHERE  
+          TENANT_ID = #tenantID#
+        AND
+          ItemID = #itemID#
+  </update>
+  
+  <delete id="MBoardDAO.deleteBoardItem" parameterClass="Map">
+    <![CDATA[
+      DELETE FROM
+          TBL_Board_Item
+      WHERE  
+          TENANT_ID = #tenantID#
+      AND
+          ITEMID = #itemID#
+    ]]>
+  </delete>
+  
+  <delete id="MBoardDAO.deleteBoardReply" parameterClass="Map">
+    <![CDATA[
+      DELETE FROM
+          TBL_Board_OneLineReply
+      WHERE  
+          TENANT_ID = #tenantID#
+      AND
+          ITEMID = #itemID#
+    ]]>
+  </delete>
+  
+  <delete id="MBoardDAO.deleteBoardItemRead2" parameterClass="Map">
+    <![CDATA[
+      DELETE FROM
+          TBL_Board_Item_Read
+      WHERE
+          TENANT_ID = #tenantID#
+      AND  
+          ItemID = #itemID#
+    ]]>
+  </delete>
+  
+  <insert id="MBoardDAO.insertDeleteReservedItem" parameterClass="Map">
+    <![CDATA[
+        INSERT INTO TBL_Board_DeleteReservedItem (
+            BOARDID,   ITEMID,   TENANT_ID 
+        ) VALUES ( 
+            #boardID#, #itemID#, #tenantID# 
+        )
+    ]]>
+  </insert>
+  
+  <!-- 2018-10-25 홍승비 - 모바일게시판 좌측게시판리스트에 그룹사게시판 포함 -->
+    <select id="MBoardDAO.brdBoardTree" parameterClass="Map" resultClass="MBoardTreeVO">
+        <isEqual property="mode" compareValue="1">
+            <isEqual property="selectBy" compareValue="3">
+            <!--        쓰기 권한이 있는 게시판만 가져옴 -->
+                <![CDATA[
+                    SELECT 
+                        DISTINCT A.boardid BoardID,
+                        CASE #primary#
+                            WHEN
+                               '1'
+                            THEN
+                                A.boardname
+                            ELSE
+                                CASE
+                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+                                    THEN A.boardname
+                                    ELSE A.boardname2
+                                END
+                        END
+                        BoardName,
+                        A.treevieworder TreeViewOrder,
+                        A.boardcolor BoardColor,
+                        A.gubun,
+                        '' BoardGroupACL
+                    FROM 
+                        TBL_Board_BoardInfo A
+                    JOIN 
+                        (SELECT 
+                            boardid ,
+                            accessid ,
+                            access_,
+                            tenant_id
+                         FROM 
+                            TBL_Board_BoardManage 
+                         WHERE
+                            TENANT_ID = #tenantID#
+                         AND  
+                            parentboardid = #rootBoardID#
+                         AND 
+                            access_ = 1
+                         AND 
+                            write_fg = 'true'
+                         AND 
+                            boardid <> NVL(#excludeBoardID#, ' ')
+                         AND 
+                            accessid = #userID#
+						]]>
+	                      <isEqual property="v_ISDEPT" compareValue="1">
+	                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
+		                      AND
+		                      	BoardGroupACL = 'Y'
+	                      	</isEqual>
+	                      </isEqual>
+						<![CDATA[
+                         ) B   
+                    ON 
+                        A.TENANT_ID = B.TENANT_ID
+                    AND
+                        A.boardid = B.boardid
+                    WHERE
+                        A.TENANT_ID = #tenantID#
+					AND
+	                	(A.companyid = #companyID# OR TRIM(A.COMPANYID) = '' OR A.COMPANYID IS NULL)
+                    ORDER BY 
+                        A.treevieworder ASC
+                  ]]>
+              </isEqual>
+              <isNotEqual property="selectBy" compareValue="3">
+              <!--        접근 권한이 있는 게시판만 가져옴(DEFAULT) -->
+              <!--         하위부서 권한체크(BOARDGROUPACL) 조건 추가 18.10.05   -->
+              <!-- 2019-06-11 홍승비 - 게시판그룹의 관리자권한이 존재하는 경우, 하위게시판을 전부 가져오도록 수정 -->
+				<isEqual property="v_boardGroupAdmin_FG" compareValue="OK">
+	                <![CDATA[
+	                    SELECT 
+	                        DISTINCT A.BoardID BoardID,
+	                        CASE #primary#
+	                            WHEN
+	                                '1'
+	                            THEN
+	                                A.boardname
+	                            ELSE
+	                                CASE
+	                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+	                                    THEN A.boardname
+	                                    ELSE A.boardname2
+	                                END
+	                        END BoardName,
+	                        A.TreeViewOrder TreeViewOrder  ,
+	                        A.BoardColor BoardColor  ,
+	                        A.Gubun ,
+	                        B.BOARDGROUPACL BOARDGROUPACL  
+	                    FROM 
+	                        TBL_Board_BoardInfo A
+	                   WHERE
+		          			A.TENANT_ID = #tenantID#
+		          		AND
+			                (A.companyid = #companyID# OR	TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+		          		AND
+		          			A.PARENTBOARDID = #rootBoardID#
+		                AND 
+		                	A.BoardID <> #excludeBoardID#
+		           		ORDER BY 
+		           			A.TreeViewOrder ASC
+					]]>
+				</isEqual>
+				<isNotEqual property="v_boardGroupAdmin_FG" compareValue="OK">
+					<![CDATA[
+						(SELECT 
+	                        DISTINCT A.BoardID BoardID,
+	                        CASE #primary#
+	                            WHEN
+	                                '1'
+	                            THEN
+	                                A.boardname
+	                            ELSE
+	                                CASE
+	                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+	                                    THEN A.boardname
+	                                    ELSE A.boardname2
+	                                END
+	                        END BoardName,
+	                        A.TreeViewOrder TreeViewOrder  ,
+	                        A.BoardColor BoardColor  ,
+	                        A.Gubun ,
+	                        B.BOARDGROUPACL BOARDGROUPACL  
+		                FROM 
+		                	TBL_Board_BoardInfo A
+		                JOIN 
+		                	( SELECT 
+		                		C.BoardID ,
+		                        C.AccessID ,
+		                        C.Access_ ,
+		                        C.BoardGroupACL ,
+		                        C.tenant_id
+		                      FROM 
+		                      	TBL_Board_BoardManage C
+		                      LEFT JOIN 
+		                      	TBL_Board_BoardInfo D   
+		                      ON
+		                      	C.TENANT_ID = D.TENANT_ID 
+		                      AND
+		                      	C.BoardID = D.BoardID
+		                      WHERE
+		                      	C.TENANT_ID = #tenantID#
+		                      AND
+		                      	C.Access_ = 1
+		                      AND 
+		                      	C.BoardID <> NVL(#excludeBoardID#, ' ')
+		                      AND 
+		                      	( C.AccessID = #userID# )
+		                      AND 
+		                      	D.ParentBoardID = #rootBoardID#
+		                      ]]>
+		                      <isEqual property="v_ISDEPT" compareValue="1">
+		                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
+			                      AND
+			                      	C.BoardGroupACL = 'Y'
+		                      	</isEqual>
+		                      </isEqual>
+		                      <![CDATA[
+		                      	) B   
+		                ON 
+		                	A.TENANT_ID = B.TENANT_ID
+		                AND
+		                	A.BoardID = B.BOARDID
+		                WHERE
+		                	A.TENANT_ID = #tenantID#
+		                AND
+		                	(A.companyid = #companyID# OR TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+		                )
+		                ORDER BY 
+		                	TreeViewOrder ASC
+		        	]]>
+					</isNotEqual>
+                </isNotEqual>
+            </isEqual>
+            <isNotEqual property="mode" compareValue="1">
+<!-- 			게시판관리자 '허용' 권한 & ADMIN권한 -->
+<!-- 2019-06-11 홍승비 - 전체관리자를 제외한 관리자는 그룹사게시판의 권한을 체크하도록 수정 -->
+				<isEqual property="v_isCompanyAdmin" compareValue="true">
+	                <![CDATA[
+	                    SELECT 
+	                        DISTINCT A.BoardID ,
+	                        CASE #primary#
+	                            WHEN
+	                                '1'
+	                            THEN
+	                                A.boardname
+	                            ELSE
+	                                CASE
+	                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+	                                    THEN A.boardname
+	                                    ELSE A.boardname2
+	                                END
+	                        END BoardName,
+	                        A.TreeViewOrder ,
+	                        A.BoardColor BoardColor,
+	                        A.Gubun ,
+	                        '' BoardGroupACL
+	                    FROM 
+	                        TBL_Board_BoardInfo A
+	                    WHERE
+	                        A.TENANT_ID = #tenantID#
+						AND
+		                	(A.companyid = #companyID# OR TRIM(A.COMPANYID) = '' OR A.COMPANYID IS NULL)
+	                    AND
+	                        A.PARENTBOARDID = #rootBoardID#
+	                    AND 
+	                        A.BoardID <> NVL(#excludeBoardID#, ' ')
+	                    ORDER BY 
+	                        A.TreeViewOrder ASC
+	                ]]>
+                </isEqual>
+				<isNotEqual property="v_isCompanyAdmin" compareValue="true">
+	          		<![CDATA[
+	          			SELECT
+	          				*
+	          			FROM (
+		          			(SELECT
+		                        DISTINCT A.BoardID ,
+		                        CASE #primary#
+		                            WHEN
+		                                '1'
+		                            THEN
+		                                A.boardname
+		                            ELSE
+		                                CASE
+		                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+		                                    THEN A.boardname
+		                                    ELSE A.boardname2
+		                                END
+		                        END BoardName,
+		                        A.TreeViewOrder ,
+		                        A.BoardColor BoardColor,
+		                        A.Gubun ,
+		                        '' BoardGroupACL
+			           		FROM 
+			           			TBL_Board_BoardInfo A
+			          		WHERE
+			          			A.TENANT_ID = #tenantID#
+			          		AND
+				                (A.companyid = #companyID#)
+			          		AND
+			          			A.PARENTBOARDID = #rootBoardID#
+			                AND 
+			                	A.BoardID <> NVL(#excludeBoardID#, ' ')
+			           		)
+			           			
+		          		UNION
+		          		
+		          			(SELECT 
+		                        DISTINCT A.BoardID ,
+		                        CASE #primary#
+		                            WHEN
+		                                '1'
+		                            THEN
+		                                A.boardname
+		                            ELSE
+		                                CASE
+		                                    WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+		                                    THEN A.boardname
+		                                    ELSE A.boardname2
+		                                END
+		                        END BoardName,
+		                        A.TreeViewOrder ,
+		                        A.BoardColor BoardColor,
+		                        A.Gubun ,
+		                        '' BoardGroupACL
+			           		FROM 
+			           			TBL_Board_BoardInfo A
+						]]>
+			           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
+			           		<![CDATA[
+			           		 JOIN 
+			                	( SELECT 
+			                		C.BoardID ,
+			                        C.AccessID ,
+			                        C.Access_ ,
+			                        C.BoardGroupACL ,
+			                        C.tenant_id
+			                      FROM 
+			                      	TBL_Board_BoardManage C
+			                      LEFT JOIN 
+			                      	TBL_Board_BoardInfo D   
+			                      ON
+			                      	C.TENANT_ID = D.TENANT_ID 
+			                      AND
+			                      	C.BoardID = D.BoardID
+			                      WHERE
+			                      	C.TENANT_ID = #tenantID#
+			                      AND
+			                      	C.Access_ = 1
+			                      AND 
+			                      	C.BoardID <> NVL(#excludeBoardID#, ' ')
+			                      AND 
+			                      	C.AccessID = #userID#
+			                      AND 
+			                      	D.ParentBoardID = #rootBoardID#
+							]]>
+							<isEqual property="v_ISDEPT" compareValue="1">
+								<isEqual property="v_ISEQUALDEPT" compareValue="0">
+									AND
+										C.BoardGroupACL = 'Y'
+								</isEqual>
+							</isEqual>
+							<![CDATA[
+				                      	) B   
+				                ON 
+				                	A.TENANT_ID = B.TENANT_ID
+				                AND
+				                	A.BoardID = B.BOARDID
+							]]>
+						</isEqual>
+						<![CDATA[
+				          		WHERE
+				          			A.TENANT_ID = #tenantID#
+				          		AND
+					                (TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+				          		AND
+				          			A.PARENTBOARDID = #rootBoardID#
+				                AND 
+				                	A.BoardID <> NVL(#excludeBoardID#, ' ')
+				             )
+			           		ORDER BY 
+			           			TreeViewOrder ASC)
+				]]>
+			</isNotEqual>
+          </isNotEqual>
+      </select>
+      
+      <select id="MBoardDAO.checkIfBoardGroupAdmin" parameterClass="Map" resultClass="Integer">
+          <![CDATA[
+              SELECT 
+                  COUNT(AccessID) TOTALCOUNT
+              FROM 
+                  TBL_Board_BoardManage
+              WHERE 
+                  TENANT_ID = #tenantID#
+              AND 
+                  BoardAdmin_FG = 'true'
+              AND 
+				   (AccessID = #userID#
+                   OR AccessID = #deptID#
+                   OR AccessID = #companyID#
+                   OR ACCESSID IN (
+					SELECT
+						AM.DEPTID
+                    FROM
+						tbl_usermaster UM
+                    INNER JOIN
+						TBL_ADDJOBMASTER AM
+                    ON
+						UM.TENANT_ID = AM.TENANT_ID
+					AND
+						UM.CN = AM.CN
+                    AND
+						UM.CN = #userID#
+					AND
+						UM.PHYSICALDELIVERYOFFICENAME = #companyID#
+					INNER JOIN
+						TBL_DEPTMASTER DM
+					ON
+						UM.TENANT_ID = DM.TENANT_ID
+                    AND
+						AM.DEPTID = DM.CN
+					AND
+						DM.EXTENSIONATTRIBUTE2 = #companyID#
+					WHERE
+						UM.TENANT_ID = #tenantID# ))
+               AND 
+                  BoardID = IFNULL(( SELECT 
+	                                      BoardGroupID 
+	                                   FROM 
+	                                      TBL_Board_BoardInfo 
+	                                   WHERE  
+	                                      TENANT_ID = #tenantID#
+	                                   AND
+	                                   		COMPANYID = #companyID#
+	                                   AND 
+	                                      BoardID = #boardID# ), #boardID#)
+          ]]>
+      </select>
+      
+      <select id="MBoardDAO.getBoardTreeGet2" parameterClass="Map" resultClass="MBoardInfoVO" remapResults="true">
+          <![CDATA[
+                SELECT 
+                     CONCAT(BOARDID, ';') BOARDID  
+                FROM 
+                     TBL_Board_BoardManage 
+                WHERE
+                     TENANT_ID = #tenantID#
+                AND  
+                     ACCESS_ = 0
+                AND 
+                     ACCESSID = #accessID#
+                AND 
+                     PARENTBOARDID = #rootBoardID#
+          ]]>
+  </select>
+  
+    <!-- 2018-10-25 홍승비 - 모바일게시판 새게시물 카운트에 그룹사게시판 포함 -->
+    <select id="MBoardDAO.getNewBoardListCount" parameterClass="Map" resultClass="Integer">
+	    <![CDATA[
+	      SELECT
+	        COUNT(A.ITEMID) CNT
+	          FROM
+	            TBL_Board_Item A
+	            JOIN
+	              ( SELECT
+	                BOARDID,
+	                TENANT_ID,
+	                COMPANYID
+	                  FROM
+	                    TBL_Board_MyBoards
+	                  WHERE
+	                    TENANT_ID = #tenantID#
+	                  AND
+	                  	(COMPANYID = #companyID# OR COMPANYID = '*')
+	                  AND
+	                    UserID = #userID# ) B
+	            ON
+					A.TENANT_ID = B.TENANT_ID
+	            AND
+	              	A.BoardID = B.boardid
+	            JOIN
+	              	TBL_Board_BoardInfo P
+	            ON
+	              	A.TENANT_ID = P.TENANT_ID
+	            AND
+					A.BoardID = P.boardid
+				AND 
+					A.TENANT_ID = #tenantID#
+				AND
+	            	(A.WRITERCOMPANYID = #companyID# OR TRIM(A.WRITERCOMPANYID) = ''
+	            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+				AND 
+	              ( A.APPRFLAG = 'Y'
+	                  OR A.APPRFLAG IS NULL )
+				AND 
+				  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
+				AND 
+				  	A.STARTDATE <= #nowDate#
+				AND 
+				  	A.ENDDATE > #nowDate#
+				AND 
+				  	(NOT EXISTS
+								(SELECT
+									USERID
+								 FROM 
+								 	TBL_BOARD_ITEM_READ S
+								 WHERE 
+								 	S.TENANT_ID = A.TENANT_ID
+								 AND
+								 	S.BOARDID = A.BOARDID
+								 AND 
+								 	S.ITEMID = A.ITEMID
+								 AND 
+								 	S.TENANT_ID = #tenantID#
+								 AND
+								 	S.USERID = #userID#
+								 AND 
+								 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
+		]]>
+	<isNotEmpty property="pSearchText">
+		<![CDATA[
+	        WHERE
+	            (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                OR
+	            A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))
+	    ]]>
+	</isNotEmpty>
+  </select>
+  
+    <insert id="MBoardDAO.insertFavorite" parameterClass="Map">
+		<isEqual  property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
+				INSERT INTO TBL_Board_MyBoards (
+					USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+				)
+	         	( SELECT
+	         		#userID# USERID ,
+	              	BOARDID ,
+	                BOARDNAME ,
+	                BOARDNAME2 ,
+	                ( SELECT
+	                	COUNT(BOARDID) + 1
+	     			  FROM 
+	     			  	TBL_Board_MyBoards
+	     			  WHERE
+	     			  	TENANT_ID = #tenantID#
+	     			  AND
+	     			  	(COMPANYID = #companyID#	OR COMPANYID = '*')
+	     			  AND  
+	     			  	USERID = #userID# ),
+	                ( SELECT
+	                	CASE
+	                		WHEN MAX(VIEWORDER) IS NULL
+	                		THEN 2 
+	                		ELSE MAX(VIEWORDER) + 1
+	                	END
+	                  FROM 
+	                  	TBL_Board_MyBoards 
+	                  WHERE
+	                  	TENANT_ID = #tenantID#
+	                  AND
+	     			  	(COMPANYID = #companyID# 	OR COMPANYID = '*')
+	                  AND
+	                  	USERID = #userID# ),
+	                TENANT_ID,
+	                '*' as COMPANYID
+	           	  FROM
+	           	  	TBL_Board_BoardInfo
+	           	  WHERE
+	           	  	TENANT_ID = #tenantID#
+	           	  AND
+	           	  	BOARDID = #boardID# )
+			]]>
+		</isEqual>
+		<isNotEqual  property="isAllGroupBoard" compareValue="Y">
+	        <![CDATA[
+	          INSERT INTO TBL_Board_MyBoards (
+	            USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+	          )
+	              ( SELECT
+	                #userID# USERID ,
+	                    BOARDID ,
+	                    BOARDNAME ,
+	                    BOARDNAME2 ,
+	                    ( SELECT 
+	                      	COUNT(BOARDID) + 1
+		                FROM
+		                  	TBL_Board_MyBoards
+		                WHERE
+		                  	TENANT_ID = #tenantID#
+		                AND
+		     			  	(COMPANYID = #companyID# 	OR COMPANYID = '*')
+		                AND  
+		                  	USERID = #userID# ),
+	                    ( SELECT
+	                      	CASE
+	                        	WHEN MAX(VIEWORDER) IS NULL
+	                        	THEN 2
+	                        	ELSE MAX(VIEWORDER) + 1
+	                    	END
+	                      FROM
+	                      	TBL_Board_MyBoards
+	                      WHERE
+	                        TENANT_ID = #tenantID#
+	                      AND
+		     			  	(COMPANYID = #companyID# 	OR COMPANYID = '*')
+	                      AND
+	                        USERID = #userID# ),
+	                    TENANT_ID,
+	                    COMPANYID
+	                  FROM
+	                    TBL_Board_BoardInfo
+	                  WHERE
+	                    TENANT_ID = #tenantID#
+	                  AND
+	                    BOARDID = #boardID# )
+	        ]]>
+        </isNotEqual>
+      </insert>
+      
+      <delete id="MBoardDAO.deleteFavorite" parameterClass="Map">
+           <![CDATA[
+              DELETE FROM
+                  TBL_Board_MyBoards
+              WHERE
+                  USERID = #userID#
+              AND
+                  BOARDID = #boardID#
+              AND    
+                  TENANT_ID = #tenantID#    
+           ]]>
+      </delete>
+      
+       <select id="MBoardDAO.checkFavorite" parameterClass="Map" resultClass="Integer">
+          <![CDATA[
+              SELECT 
+                  COUNT(*) 
+              FROM 
+                  TBL_Board_MyBoards 
+              WHERE  
+                  USERID = #userID#
+              AND
+                  BOARDID = #boardID#
+              AND
+                  TENANT_ID = #tenantID#
+              ]]>
+  </select>
+      
+      <select id="MBoardDAO.getAttachList" parameterClass="Map" resultClass="MBoardAttachVO">
+          <![CDATA[
+              SELECT 
+                  * 
+              FROM 
+                  TBL_BOARD_ITEM_ATTACHMENTS 
+              WHERE  
+                  tenant_id = #tenantID#
+              AND
+                  itemid = #itemID#
+              ORDER BY
+                  GUID
+              ]]>
+  </select>
+  
+   <select id="MBoardDAO.getDeptPathCode" resultClass="String">
+        <![CDATA[
+            SELECT 
+                concat('top,Top,', dept_cd_path) as deptPathCode
+            FROM 
+                TBL_DEPTMASTER
+            WHERE 
+                cn = #departmentID# AND tenant_id = #tenantID#
+        ]]>
+    </select>
+    
+    <select id="MBoardDAO.photoViewDB" parameterClass="Map" resultClass="MBoardAttachVO">
+        <![CDATA[
+              SELECT 
+                IMAGEID ,
+                FILEPATH ,
+                FILECONTENT ,
+                MAIN_FLAG FLAG  ,
+                IMAGENAME 
+              FROM 
+                TBL_Photo_ImageItem 
+              WHERE  
+                TENANT_ID = #tenantID#
+              AND
+                ItemID = #itemID#
+              AND 
+                BoardID = #boardID#
+              ORDER BY 
+                WriteDate ASC
+        ]]>
+    </select>
+    
+    <select id="MBoardDAO.photoViewDBCount" parameterClass="Map" resultClass="Integer">
+        <![CDATA[
+            SELECT
+                COUNT(*)
+            FROM
+                TBL_Photo_ImageItem 
+            WHERE  
+                TENANT_ID = #tenantID#
+            AND
+                ItemID = #itemID#
+            AND 
+                BoardID = #boardID#
+        ]]>
+    </select>
+    
+    <insert id="MBoardDAO.saveAttachInfo" parameterClass="Map">
+        <![CDATA[
+            INSERT INTO TBL_Board_Item_Attachments ( 
+                ITEMID,        GUID,       FILEPATH,           FILESIZE,     FILENAME,     TENANT_ID 
+            )
+            VALUES ( 
+                #v_STRITEMID#, #seqNum#, #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
+            )
+        ]]>
+    </insert>
+    
+    <select id="MBoardDAO.getApprFlag" parameterClass="Map" resultClass="String">
+        <![CDATA[
+            SELECT
+                APPRFLAG
+            FROM 
+                TBL_Board_BoardInfo
+            WHERE 
+                TENANT_ID = #tenantID#
+            AND
+                boardid = #boardID#
+        ]]>
+    </select>
+    
+    <delete id="MBoardDAO.newItem" parameterClass="Map">
+        <![CDATA[
+            DELETE FROM
+                TBL_BOARD_ITEM_ATTACHMENTS
+            WHERE  
+                tenant_id = #tenantID#
+            AND
+                itemid = #itemID#
+        ]]>
+    </delete>
+    
+    <update id="MBoardDAO.setApprFlag" parameterClass="Map">
+        <![CDATA[
+            UPDATE TBL_Board_Item
+            SET 
+                APPRFLAG = 'N'
+            WHERE
+                TENANT_ID = #tenantID#
+            AND  
+                apprFlag = 'C'
+            AND
+                ItemID = #itemID#
+        ]]>
+    </update>
+    
+    <update id="MBoardDAO.setInitReadCount" parameterClass="Map">
+        <![CDATA[
+            UPDATE TBL_Board_Item
+            SET 
+                ReadCount = 0
+            WHERE
+                TENANT_ID = #tenantID#
+            AND
+                ItemID = #itemID#
+        ]]>
+    </update>
+    
+    <select id="MBoardDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
+         SELECT 
+            <isEqual property="v_STRLANG" compareValue="2"> result2 </isEqual> 
+            <isEqual property="v_STRLANG" compareValue=""> result </isEqual>
+         FROM 
+            TBL_Board_TreeCache 
+         WHERE 
+            TENANT_ID = #v_TENANTID#
+         AND 
+            QUERY = #v_PQUERY#
+    </select>
+    
+    <insert id="MBoardDAO.getBoardTree_Set" parameterClass="Map">
+        <isEqual property="v_STRLANG" compareValue="2">
+            <![CDATA[
+                INSERT INTO TBL_Board_TreeCache ( 
+                    QUERY,      RESULT2 ,   TENANT_ID 
+                )
+                VALUES ( 
+                    #v_PQUERY#, #v_RESULT#, #v_TENANTID#
+                )
+            ]]>
+        </isEqual>
+        <isNotEqual property="v_STRLANG" compareValue="2">
+            <![CDATA[
+                INSERT INTO TBL_Board_TreeCache ( 
+                    QUERY,      RESULT,     TENANT_ID 
+                )
+                VALUES (
+                    #v_PQUERY#, #v_RESULT#, #v_TENANTID# 
+                )
+            ]]>
+        </isNotEqual>
+    </insert>
+    
+    <delete id="MBoardDAO.getBoardTree_Set_D" parameterClass="Map" >
+        <![CDATA[
+            DELETE FROM
+                TBL_Board_TreeCache
+            WHERE
+                TENANT_ID = #v_TENANTID#
+            AND  
+                QUERY = #v_PQUERY#
+        ]]>
+    </delete>
+    
+    <select id="MBoardDAO.getBoardTree_Get2" parameterClass="Map" resultClass="String" remapResults="true">
+        <![CDATA[
+            SELECT 
+                CONCAT(BOARDID, ';') BOARDID  
+            FROM 
+                TBL_Board_BoardManage 
+            WHERE
+                TENANT_ID = #v_TENANTID#
+            AND  
+                ACCESS_ = 0
+            AND 
+                ACCESSID = #v_PACCESSID#
+            AND 
+                PARENTBOARDID = #v_PROOTBOARDID#
+        ]]>
+    </select>
+    
+    <select id="MBoardDAO.isDeptChk" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM TBL_DEPTMASTER
+			WHERE
+				CN = #id#
+			AND
+				TENANT_ID = #tenantID#
+		]]>  	
+	</select>
+  
+	  <select id="MBoardDAO.getPDOAddJobDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				AM.DEPTID
+			FROM
+				tbl_usermaster UM
+			INNER JOIN
+				TBL_ADDJOBMASTER AM
+			ON
+				UM.TENANT_ID = AM.TENANT_ID
+			AND
+				UM.CN = AM.CN
+			AND
+				UM.CN = #v_pUserID#
+			INNER JOIN
+				TBL_DEPTMASTER DM
+			ON
+				UM.TENANT_ID = DM.TENANT_ID
+			AND
+				AM.DEPTID = DM.CN
+			AND
+				DM.EXTENSIONATTRIBUTE2 = #v_pCompanyID#
+			WHERE
+				UM.TENANT_ID = #v_TENANTID# 
+		]]>
+	</select>
+	
+	<select id="MBoardDAO.getUpperDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				EXTENSIONATTRIBUTE1
+			FROM
+				tbl_deptmaster
+			WHERE
+				CN = #v_DEPTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+</sqlMap>
+

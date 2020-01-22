@@ -398,6 +398,9 @@ var WriterDeptName;
 var WriterCompanyName;
 var ContentLocation;
 var UserIMG;
+var OneLineReplyFlag;
+var Gubun;
+var BoardID;
 
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
@@ -467,7 +470,7 @@ function event_ItemPreviewRead_photo() {
 
             setNodeText(document.getElementById("PreH_sub_subject"), Title);
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
-            setNodeText(document.getElementById("PreH_date"), WriteDate);
+            setNodeText(document.getElementById("PreH_date"), WriteDate.substring(0, 16));
             var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + javaURLEncode(ContentLocation);
             
             /* 20118-11-07 홍승비 - 동영상게시물 미리보기 분기 추가 */
@@ -510,16 +513,19 @@ function event_ItemPreviewRead() {
             Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
             ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
             UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
+            /* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 표출용 변수 추가 */
+            OneLineReplyFlag = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ONELINEREPLY");
+            BoardID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/BoardID");
            
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
-                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do";
+                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + ItemID + "&boardID=" + BoardID + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do";
+                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do?itemID=" + ItemID + "&boardID=" + BoardID + "&OneLineReplyFlag=" + OneLineReplyFlag;
             }
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";
@@ -572,7 +578,7 @@ function previewItemSet() {
     } else {
         document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
         document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;
-        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate;
+        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate.substring(0, 16);
         var readHTML = WriteContent(ContentLocation, ItemID);
         var tempText = xmlhttp2.responseText;
 
@@ -617,7 +623,7 @@ function loadsetInterval(readHTML, responseText) {
 function event_downContent(result, result2) {
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_sub_subject").textContent = Title;
         document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_MailReceiver").innerHTML = pOCS;
-        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate;
+        document.getElementById("Pre" + pPreviewShow_HOW.trim() + "_date").textContent = WriteDate.substring(0, 16);
         document.getElementById("ifrmPreView" + pPreviewShow_HOW.trim()).contentWindow.makeWriteContent(result, result2);
 }
 
@@ -814,7 +820,8 @@ function MailReadOpen() {
 		}
 		
 		pTop = (pheight - 789) / 2;
-		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height +",width=765,top=" + pTop + ",left=" + pLeft, "");
+		pLeft = (pwidth - 790) / 2;
+		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height +",width=790,top=" + pTop + ",left=" + pLeft, "");
     } else if (previewType == "MOVIE" || selobj.getAttribute("DATA10") == "7" ) {
     	 pTop = (pheight - 679) / 2;
          window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(selobj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");

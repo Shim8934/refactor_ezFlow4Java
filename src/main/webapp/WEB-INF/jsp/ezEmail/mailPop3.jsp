@@ -426,6 +426,33 @@
 		        xmlHTTP.send(popXML);
 		    }
 					
+		    function reset_setting(idx) {
+		        var elem = document.getElementById("popServer" + idx);
+		        elem.value = "";
+
+		        var elem = document.getElementById("popSelect" + idx);
+		        elem.selectedIndex = 0;
+		        
+		        elem = document.getElementById("popPort" + idx);
+		        elem.value = "";
+		        
+		        elem = document.getElementById("popSSL" + idx);
+		        elem.checked = false;		        	
+		        
+		        elem = document.getElementById("popID" + idx);
+		        elem.value = "";		        
+
+		        elem = document.getElementById("popPW" + idx);
+		        elem.value = "";		  
+		        
+		        elem = document.getElementById("popBox" + idx);
+		        elem.setAttribute("url", "");
+		        elem.innerText = "<spring:message code='ezEmail.t158' />";
+		        
+		        elem = document.getElementById("popDelete" + idx);
+		        elem.checked = false;		        			        
+		    }
+		    
 		    function replaceAll(pStrContent, pStrOrg, pStrRep) {
 		        return pStrContent.split(pStrOrg).join(pStrRep);
 		    }
@@ -437,6 +464,7 @@
 			<div>▒ <spring:message code='ezEmail.t239' /></div> 
 		    <div style="margin-top:3px">▒ <spring:message code='ezEmail.t240' /></div> 
 		    <div style="margin-top:3px">▒ <spring:message code='ezEmail.t241' /></div>
+		    <div style="margin-top:3px">▒ ${pop3MaxFetchSizeMessage}</div>
 		</div>
 		<h2 class="h2_dot"><spring:message code='ezEmail.t242' /></h2>	
 		<table class="content" style="width:720px;"> 
@@ -466,7 +494,9 @@
 			    <OPTION VALUE=""><spring:message code='ezEmail.t244' /></option>
 			</select>	
 		      Port : <input type="text" name="popPort1" id="popPort1" class="textarea" style="width:30px" value="110"> 
-		      SSL :<input type="checkbox" name="popSSL1" id="popSSL1"></td> 
+		      SSL :<input type="checkbox" name="popSSL1" id="popSSL1">
+		      <a  class="imgbtn imgbck" style="float: right"><span onClick="reset_setting(1)"><spring:message code='ezEmail.ldh04' /></span></a>
+		    </td> 
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t263' /></th> 
@@ -511,7 +541,9 @@
 			    <OPTION VALUE=""><spring:message code='ezEmail.t244' /></option>
 		      </select> 
 		      Port : <input type="text" name="popPort2" id="popPort2" class="textarea" style="width:30px" value="110"> 
-		      SSL :<input type="checkbox" name="popSSL2" id="popSSL2"></td> 
+		      SSL :<input type="checkbox" name="popSSL2" id="popSSL2">
+		      <a  class="imgbtn imgbck" style="float: right"><span onClick="reset_setting(2)"><spring:message code='ezEmail.ldh04' /></span></a>
+		    </td> 
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t263' /></th> 
@@ -556,7 +588,9 @@
 			    <OPTION VALUE=""><spring:message code='ezEmail.t244' /></option>
 		      </select> 
 		      Port : <input type="text" name="popPort3" id="popPort3" class="textarea" style="width:30px" value="110"> 
-		      SSL :<input type="checkbox" name="popSSL3" id="popSSL3"></td> 
+		      SSL :<input type="checkbox" name="popSSL3" id="popSSL3">
+		      <a  class="imgbtn imgbck" style="float: right"><span onClick="reset_setting(3)"><spring:message code='ezEmail.ldh04' /></span></a>
+		    </td> 
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t263' /></th>

@@ -349,12 +349,15 @@ function dblClickBoard(boardID, itemID) {
 		async: false,
 		contentType: "application/json",
 		data : JSON.stringify({
-			boardID: boardID
+			boardID: boardID,
+			itemID : itemID
 		}),
 		success: function (result) {
 			readAuthor = result;
 		}
 	});
+	
+	//readAuthor = "true";
 	
 	if(readAuthor === "true") {
 		boardList.filter(function(e){
@@ -575,7 +578,9 @@ function btn_searchStart() {
 		,btnStart : true  // 검색버튼으로 실행했을 경우.
 	}
 	
-	clickTab("all");
+	clickTab(type);
+	parent.parent.document.getElementById("topFrame").contentWindow.deleteTotalSearchValue();
+	//clickTab("all");
 }
 
 /**
@@ -977,7 +982,7 @@ function totalSearchEnterEevnt() {
 	                <tbody>
 	                    <tr>
 	                        <td align="right" height="23px">
-	                            <a onclick="clickTab('approval')" href="#"><img src="/images/totalsearch/total_search_icon02.png" width="16" height="16" style="vertical-align:top; border:0px none;" /><spring:message code="ezTotalSearch.t0027" /></a>
+	                            <a onclick="clickTab('approval')"><img src="/images/totalsearch/total_search_icon02.png" width="16" height="16" style="vertical-align:top; border:0px none;" /><spring:message code="ezTotalSearch.t0027" /></a>
 	                        </td>
 	                    </tr>
 	                </tbody>
@@ -1018,7 +1023,7 @@ function totalSearchEnterEevnt() {
 	                <tbody>
 	                    <tr>
 	                        <td align="right" height="23px">
-	                            <a onclick="clickTab('board')" href="#"><img src="/images/totalsearch/total_search_icon02.png" width="16" height="16" style="vertical-align:top; border:0px none;" /><spring:message code="ezTotalSearch.t0027" /></a>
+	                            <a onclick="clickTab('board')"><img src="/images/totalsearch/total_search_icon02.png" width="16" height="16" style="vertical-align:top; border:0px none;" /><spring:message code="ezTotalSearch.t0027" /></a>
 	                        </td>
 	                    </tr>
 	                </tbody>

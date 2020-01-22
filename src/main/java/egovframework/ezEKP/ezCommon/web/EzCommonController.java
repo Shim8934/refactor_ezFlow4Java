@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -316,7 +317,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String literalExtensionPhone = "";
 		String literalOfficeMobile = "";
 		
-		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT;FURIGANA;EXTENSIONPHONE;OFFICEMOBILE";
+		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
 		
 		if (request.getParameter("id") != null) {
 			id = request.getParameter("id");
@@ -331,6 +332,13 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("id=" + id + ",email=" + email + ",dept=" + pDeptID);
+		
+		OrganUserVO userCheckVO = ezOrganService.getUserInfo(id, "1", loginVO.getTenantId());
+		if (userCheckVO != null) {
+			logger.debug(id + " is member.");
+			proplist += ";FURIGANA;EXTENSIONPHONE;OFFICEMOBILE";
+		}
+		logger.debug("prop=" + proplist);
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginVO.getTenantId());
 		String dotNetUrl = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
@@ -472,9 +480,28 @@ public class EzCommonController extends EgovFileMngUtil{
 				literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
 				literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
 				literalInfo = commonUtil.cleanValue(xmldom.getElementsByTagName("INFO").item(0).getTextContent());
-				literalFurigana = xmldom.getElementsByTagName("FURIGANA").item(0).getTextContent();
-				literalExtensionPhone = xmldom.getElementsByTagName("EXTENSIONPHONE").item(0).getTextContent();
-				literalOfficeMobile = xmldom.getElementsByTagName("OFFICEMOBILE").item(0).getTextContent();
+				if (userCheckVO != null) { // 사용자 정보보기 일때만
+					literalFurigana = xmldom.getElementsByTagName("FURIGANA").item(0).getTextContent();
+					literalExtensionPhone = xmldom.getElementsByTagName("EXTENSIONPHONE").item(0).getTextContent();
+					literalOfficeMobile = xmldom.getElementsByTagName("OFFICEMOBILE").item(0).getTextContent();
+				}
+				OrganDeptVO deptVO = ezOrganService.getDeptInfo(id, loginVO.getPrimary(), loginVO.getTenantId());
+				
+				// 이메일 아이디에 match되는 부서가 있는 경우
+				if (deptVO != null) {
+					if (loginVO.getPrimary().equals("1")) {
+						literalCompany = deptVO.getExtensionAttribute3();
+					} else {
+						literalCompany = deptVO.getCompNm2();
+					}
+					
+					literalEmail = deptVO.getMail();
+					literalDisplayName = deptVO.getDisplayName();
+					
+					if (!deptVO.getExtensionAttribute2().equals(deptVO.getCn())){
+						literalDept = deptVO.getDisplayName();
+					}
+				} 
 			}
 		} else {
 			String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
@@ -496,6 +523,10 @@ public class EzCommonController extends EgovFileMngUtil{
 							literalCompany = deptVO.getExtensionAttribute3();
 						} else {
 							literalCompany = deptVO.getCompNm2();
+						}
+						
+						if (!deptVO.getExtensionAttribute2().equals(deptVO.getCn())){
+							literalDept = deptVO.getDisplayName();
 						}
 						
 						literalEmail = deptVO.getMail();

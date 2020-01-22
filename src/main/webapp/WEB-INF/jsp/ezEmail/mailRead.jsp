@@ -55,6 +55,7 @@
 		    var shareId = "${shareId}";
 		    var deletePermission = "${deletePermission}";
 		    var sendPermission = "${sendPermission}";
+		    var managePermission = "${managePermission}";
 		    var mailWritePreview = "${mailWritePreview}"; // 메일 작성 > 미리보기
 		    var g_uid = "${uid}";
 		    var countryName = "${countryName}";
@@ -110,6 +111,10 @@
 		        	document.getElementById("HolderSent").style.display = "none";
 		            document.getElementById("HolderElse").style.display = "";
 		        }
+		        
+		        /* if (shareId != "" && managePermission != "Y") {
+		        	document.getElementById("btn_reject").parentNode.style.display = "none";
+		        } */
 		        
 		        if (shareId != "" && sendPermission != "Y") {
 		        	btnReply.style.display = "none";
@@ -629,8 +634,8 @@
 		                    <td nowrap class="pos2" id="btnInsertAddr">
 		                    	<c:if test="${mailWritePreview != true}">
 			                    	<a style="margin-right:5px;"><span onClick="func_addaddr()" id="btn_addaddr"><img title="<spring:message code='ezEmail.t554' />" src="/images/email/icon_address_add.png" style="border:0px" /></span></a>
-			                    	<c:if test="${shareId == null or shareId == ''}">
-			                    		<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
+		                    		<c:if test="${(shareId == null) || (shareId ne '' && managePermission eq 'Y')}">
+		                    			<a style="margin-right:5px;"><span onClick="func_reject()" id="btn_reject"><img title="<spring:message code='ezEmail.t270' />" src="/images/email/icon_mail_refusal.png" style="border:0px" /></span></a>
 			                    	</c:if>
 			                    </c:if>
 		                    </td>

@@ -162,6 +162,8 @@
 			var nonSepAttachLVXml = "";
 			var reformFlag = "${reformflag}";
 			var wAprMemberSN = "1";
+			//원문정보공개
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			
 		    window.onload = function ()
 		    {
@@ -257,8 +259,15 @@
 						setFirstDrafter("", "");
 					}
 		            
-		            if (approvalFlag == "S" && ListType != "21") {
-			            SetAutoDocnumItem();
+		            if (approvalFlag == "S") {
+		            	// 임시보관함에서 기안할 때, 자동분류코드가 로드안되는 문제 해결 | 임시저장문서 재기안 시, 기존에 저장한 분류코드 설정이 있기 때문에 양식에 설정된 자동분류코드를 로드하지 않는다.
+	            		if (ListType == "21") {
+	            			if (pDraftFlag != "REDRAFT") {
+					            SetAutoDocnumItem();
+	            			}
+		            	} else {
+				            SetAutoDocnumItem();
+		            	}
 		            }
 		        }
 		    }
@@ -433,7 +442,6 @@
 				                	if( apprReuseConfig != '1' ){
 			                			getDocInfo();
 				                		setAttachInfo(pDocID, "APR", lstAttachLink);
-				                		// message.SetEditable(true);
 				                	}
 			                	}
 		                    }
@@ -568,6 +576,28 @@
 			                    return;
 			                }
 			            }
+			            
+	                    //2017.07.12 건국대 시행문일경우 본문에 이미지 삽입되어있으면 상신안되게 변경
+	                    //2020-01-20 홍대표. 외부발송문서 본문에 이미지와 링크를 입력하지 못하도록 수정. 닷넷참고
+	                    if (pDocType == "001") {
+	                        var objElem = document.createElement("div");
+	                        objElem.innerHTML = message.GetBodyHTML();
+	                        var objElems = objElem.getElementsByTagName("*");
+	                        for (var i = 0; i < objElems.length; i++) {
+	                            if (objElems.item(i).tagName.toUpperCase() == "IMG" || objElems.item(i).tagName.toUpperCase() == "A") {
+	                                var pAlertContent = strLang1038;
+	                                OpenAlertUI(pAlertContent);
+	                                return;
+	                            }
+	                        }
+
+// 	                     	if (message.GetBodyHTML() != beforeEncode) {
+// 	                            var pAlertContent = strLang1039;
+// 	                            Alert_Message(pAlertContent, Document_Encode, "");
+// 	                            return;
+// 	                        }
+	                    }
+			            
 			            var rtnSignInfo;
 			            var fields = message.GetFieldsList();
 			            pDocTitle = trim_Cross(message.GetDocTitle());
@@ -698,13 +728,10 @@
 			            setDrafterAddress();
 			            if (pDraftFlag == "REDRAFT")
 			                delOpinionInfo();
-			            if (nonElecRec != "Y") {
-				            if (LastSignSN == 1 || DraftLastFlag) {
-				                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
-				                OpenInformationUI(pInformationContent, check_btnSendDraft4);
-				            }
-				            else
-				                CheckPassWord();
+
+			            if (nonElecRec != "Y" && (LastSignSN == 1 || DraftLastFlag)) {
+							var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
+							OpenInformationUI(pInformationContent, check_btnSendDraft4);
 			            } else {
 			                CheckPassWord();
 			            }
@@ -995,11 +1022,9 @@
 		        
 		        var rtnval;
 		        if ((LastSignSN == 1 && totalMemSN == 0)|| DraftLastFlag) {
-		            //rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
 		            rtnval = getDocNumberNew(arr_userinfo[4], "", docNumZeroCnt);
 		        }
 		        else {
-		            //rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
 		            rtnval = getDocNumberNew(arr_userinfo[4], "be", docNumZeroCnt);
 		        }
 		
@@ -1541,6 +1566,12 @@
 			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
 			        parameter[49] = nonSepAttachLVXml; // 분첨
 		        }
+		        
+		        parameter[52] = basis;
+		        parameter[53] = reason;
+		        parameter[54] = listOpenFlag;
+		        parameter[55] = fileOpenFlagList;
+		        parameter[56] = limitDate;
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1617,6 +1648,7 @@
 		                    setRecevInfo("");
 		                }
 		                
+		                
 		                if (ret[4] != undefined) {
 			                var g_SelCabXml = ret[4];
 			                var xmlCab = createXmlDom();
@@ -1654,6 +1686,29 @@
 			                	
 			                	setNonElecRecInfo(nonElecRecInfoXml);
 			                }
+			                
+		                	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/openGovInfoSave.do",
+	                    		data : {
+									openGovListFlag : ret[27],
+									fileOpenFlagList : ret[28],
+									basis : ret[29],
+									reason : ret[30],
+									publicity : ret[11],
+									docID : pDocID,
+									limitDate : ret[31]
+	                    		}
+		                	});
+		                	
+	                	    listOpenFlag = ret[27];
+		       		        fileOpenFlagList = ret[28];
+		                	basis = ret[29];
+		                	reason = ret[30];
+		                	limitDate = ret[31];
+		                	// passAprLine = ret[32];
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

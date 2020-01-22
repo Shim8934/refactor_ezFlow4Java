@@ -4383,6 +4383,22 @@
         AND
          	COMPANYID = #companyID#        	
 	</select>
+
+	<select id="EzApprovalG.getFormPath" parameterClass="Map" resultClass="ApprGFormVO">
+		<![CDATA[
+			SELECT
+				formId,
+				formFileLocation
+			FROM
+				TBL_FORMINFO
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyId = #companyId#
+			AND
+				formId = #formId#
+		]]>
+	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getFormRecvAprDB" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
 <!-- 		{CALL EZSP_GETFORMRECVAPR(#v_FORMID#, #v_USERID#, #v_FLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -6963,6 +6979,7 @@
 	       	 	 ROWNUM <= 1
 	       	 	 ]]> 
 	</select>
+	<!-- 합의문 또는 감사문 회송시 합의부서 문서의 마지막 의견을 원문서에 만들어주는 로직에서 사용 -->
 <!-- 	<procedure id="EzApprovalG.setLastOpinionToOrgDoc" parameterClass="Map" resultClass="ApprGOpinionVO"> -->
 <!-- 		{CALL EZSP_SETLASTOPINIONTOORGDOC(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -6974,17 +6991,7 @@
 				SELECT 
 					TBL_APROPINIONINFO.* 
 				FROM 
-					TBL_APROPINIONINFO 
-		        JOIN 
-		        	TBL_APRLINEINFO    
-		        ON 
-		        	TBL_APROPINIONINFO.DocID = TBL_APRLINEINFO.DocID
-		        AND 
-		        	TBL_APROPINIONINFO.UserID = TBL_APRLINEINFO.AprMemberID
-		        AND
-		        	TBL_APROPINIONINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
-        		AND
-        			TBL_APROPINIONINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID		        	
+					TBL_APROPINIONINFO
 				WHERE  
 					TBL_APROPINIONINFO.DocID = #v_DOCID#
 				AND
@@ -11851,18 +11858,20 @@
 <!-- 		{CALL EZSP_DOBANSONG_APRTYPE(#v_DOCID#, #v_APRMEMBERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.doBanSongAprType" parameterClass="Map" resultClass="ApprGDocListVO">
-		SELECT 
-				APRTYPE 
-	    FROM 
-	    		TBL_APRLINEINFO 
-	    WHERE  
-	    		DOCID = #v_DOCID#
-	    AND 
-	    		APRMEMBERID = #v_APRMEMBERID#
+		SELECT
+			APRTYPE
+	    FROM
+			TBL_APRLINEINFO
+	    WHERE
+			DOCID = #v_DOCID#
 	    AND
-	    		TENANT_ID = #v_TENANTID#
+			APRMEMBERID = #v_APRMEMBERID#
 	    AND
-           		COMPANYID = #companyID#	    		
+        	(APRSTATE = #v_STAASJINHANG# OR APRSTATE = #v_STAASBORYU#)
+	    AND
+			TENANT_ID = #v_TENANTID#
+	    AND
+			COMPANYID = #companyID#
 	</select>
 <!-- 	<procedure id="EzApprovalG.getLastOpinionContent" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETLASTOPINIONCONTENT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -22410,6 +22419,8 @@
    		AND
    			APRTYPE = #v_APRTYPE#
    		AND
+   			APRSTATE != '003'
+   		AND
    			APRMEMBERID != #v_APRMEMBERID#
    		AND
    			TENANT_ID = #v_TENANTID#
@@ -28884,7 +28895,30 @@
 			AND FORMINFO.TENANT_ID = DOCINFO.TENANT_ID
 		WHERE
 			DOCINFO.DOCID = #docId#
-			AND DOCINFO.COMPANYID = #companyId#
+			AND DOCINFO.COMPANYID IN (
+				SELECT
+					EXTENSIONATTRIBUTE2
+				FROM
+					TBL_DEPTMASTER
+				INNER JOIN
+					TBL_ADDJOBMASTER
+				ON
+					(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
+					AND
+					TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID)
+				WHERE
+					TBL_ADDJOBMASTER.TENANT_ID = #tenantId#
+				AND
+					TBL_ADDJOBMASTER.CN = #userId#
+				UNION ALL
+				SELECT
+					PHYSICALDELIVERYOFFICENAME
+				FROM
+					TBL_USERMASTER
+				WHERE
+					CN = #userId#
+				AND
+					TENANT_ID = #tenantId#)
 			AND DOCINFO.TENANT_ID = #tenantId#
 	</select>
 	

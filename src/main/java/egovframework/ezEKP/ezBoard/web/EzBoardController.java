@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -90,6 +91,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -145,6 +147,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Resource(name = "EzMemoService")
 	private EzMemoService ezMemoService;
 	
+	@Autowired
+	private KlibUtil klibUtil;
+
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardController.class);
 	
 	/**
@@ -935,7 +940,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
 		
-		if (boardProperty != null && boardProperty.getOneLineReply() != null && boardProperty.getOneLineReply().equals("1")) {
+		if (boardProperty != null && boardProperty.getOneLineReply() != null && !boardProperty.getOneLineReply().equals("") && !boardProperty.getOneLineReply().equals("0")) {
 			use_oneLineCount = "YES";
 		} else {
 			use_oneLineCount = "NO";
@@ -1123,6 +1128,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setUrl(strProp.getUrl());
 			boardInfo.setApprMail_FG(strProp.getApprMailFlag());
 			boardInfo.setAttributeYN(strProp.getAttributeYN());
+			boardInfo.setOneLineReply(strProp.getOneLineReply()); // 댓글옵션정보 추가
 			
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
@@ -3622,9 +3628,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false));
 		boardItem.setEndDate(commonUtil.getDateStringInUTC(boardItem.getEndDate(), userInfo.getOffset(), false));
 		
-		if (boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4).equals("9999")) {
+		/* 2019-12-23 홍승비 - 게시만료일을 메세지로 치환하여 전달하는 부분 주석처리 (jsp단에서 영구게시 메세지 분기처리하므로) */
+/*		if (boardItem.getEndDate() != null && boardItem.getEndDate().substring(0, 4).equals("9999")) {
 			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", userInfo.getLocale()));
-		}
+		}*/
 		
 		BoardVO adjacentItem = new BoardVO();
 		if (adjacentItemsEnableFlag != null && showAdjacent != null && adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
@@ -3659,7 +3666,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setBoardName2(commonUtil.cleanValue(boardInfo.getBoardName2()));
 		}
 		//2017.12.29 강민수92 댓글 갯수 구하기
-		if (boardPropertyVO.getOneLineReply() != null && boardPropertyVO.getOneLineReply().equals("1")) {
+		if (boardPropertyVO.getOneLineReply() != null && !boardPropertyVO.getOneLineReply().equals("") && !boardPropertyVO.getOneLineReply().equals("0")) {
 			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
 			model.addAttribute("commentCount", commentCount);
 		}
@@ -3922,6 +3929,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			startDateTime = getTime.format(formatter);
 			startDateTime = startDateTime + ":30:00"; 
+		}
+		
+		/* 2019-12-02 홍승비 - 임시저장된 게시물 재작성 시 예약게시물 판단 분기 추가 */
+		if (mode.equals("temp") && boardListVO.getIsReserved().equals("true")) {
+			reservedItem = "true";
 		}
 		
 		if (reservedItem.equals("true")) {
@@ -4333,9 +4345,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		fileName = fileName.replace("=", "%3d");
 		
 		String fileExt = "";
+		String extension = "";
 		
 		if (fileName.length() > 4) {
 			fileExt = fileName.substring(fileName.length() - 4).toLowerCase();
+			extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 		}
 		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
@@ -4404,7 +4418,13 @@ public class EzBoardController extends EgovFileMngUtil{
 				nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
 			}
 			
-			BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+			BufferedImage bufferedImage = null;
+			/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
+			if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+				bufferedImage = new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_4BYTE_ABGR);
+			} else {
+				bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+			}
 			bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
 			ImageIO.write(bufferedImage, ext, new File(commonUtil.detectPathTraversal(mapPath + "s_" + uploadSN + fileExt)));
 		}
@@ -5082,9 +5102,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (request.getParameter("nodeID") != null) {
 			nodeID = request.getParameter("nodeID");
 		}
+		String selectedBoardtype = request.getParameter("selectedBoardtype");
 		
 		model.addAttribute("selID", selID);
 		model.addAttribute("nodeID", nodeID);
+		model.addAttribute("selectedBoardtype", selectedBoardtype);
 
 		logger.debug("myBoardmovecopy ended");
 		return "ezBoard/boardMyBoardMoveCopy";
@@ -5575,7 +5597,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardItem.setParentWriteDate(commonUtil.getDateStringInUTC(boardItem.getParentWriteDate(), userInfo.getOffset(), false));
 		
 		//2017.12.29 강민수92 댓글 갯수 구하기
-		if (boardProperty.getOneLineReply().equals("1")) {
+		if (boardProperty.getOneLineReply() != null && !boardProperty.getOneLineReply().equals("") && !boardProperty.getOneLineReply().equals("0")) {
 			String commentCount = ezBoardService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId());
 			model.addAttribute("commentCount", commentCount);
 		}
@@ -5938,7 +5960,13 @@ public class EzBoardController extends EgovFileMngUtil{
 						nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
 					}
 					
-					BufferedImage bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+					BufferedImage bufferedImage = null;
+					/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
+					if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+						bufferedImage = new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_4BYTE_ABGR);
+					} else {
+						bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
+					}
 					bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
 					ImageIO.write(bufferedImage, extension, new File(commonUtil.detectPathTraversal(serverPath + thumbnailName)));
 				}
@@ -6224,7 +6252,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			String listImage = photoViewList.get(k).getImageID();
 			
 			if (imageID.equals(listImage)) {
-				imageContent = photoViewList.get(k).getFileContent();
+				imageContent = commonUtil.cleanValue(photoViewList.get(k).getFileContent());
 				String filePath = photoViewList.get(k).getFilePath();
 				int idx = filePath.lastIndexOf(commonUtil.separator);
 				
@@ -6821,7 +6849,34 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 미리보기게시물 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/boardItemPreviewContent.do", method = RequestMethod.GET)
-	public String boardItemPreviewContent() throws Exception {
+	public String boardItemPreviewContent(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardItemPreviewContent started");
+		
+		/* 2019-11-06 홍승비 - 미리보기 시 댓글옵션에 따라 댓글정보 표출해주기 위한 파라미터 추가 */
+		userInfo = commonUtil.userInfo(loginCookie);
+		String publicModulus = egovFileScrty.getPbm();
+        String publicExponent = "10001";
+		
+		String OneLineReplyFlag = request.getParameter("OneLineReplyFlag");
+		String itemID = request.getParameter("itemID");
+		String boardID = request.getParameter("boardID");
+		
+		if (OneLineReplyFlag == null) {
+			OneLineReplyFlag = "";
+		}
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		model.addAttribute("OneLineReplyFlag", OneLineReplyFlag);
+		model.addAttribute("gubun", boardInfo.getGuBun());
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("userInfoID", userInfo.getId());
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
+		
+		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
 	}
 	
@@ -7695,11 +7750,20 @@ public class EzBoardController extends EgovFileMngUtil{
 			int width = Integer.parseInt(request.getParameter("WIDTH"));
 			int height = Integer.parseInt(request.getParameter("HEIGHT"));
 			
-			File imageFile = new File(serverPath + commonUtil.separator + commonUtil.detectPathTraversal(fileName));
+
+			File imageFile = new File(serverPath + commonUtil.separator + fileName);
+			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 			
-			if (imageFile.exists()) {
+			if (imageFile.exists()) {			
 				BufferedImage bi = ImageIO.read(imageFile);
-                BufferedImage bufferedImage = new BufferedImage(width, height, bi.getType());
+				BufferedImage bufferedImage = null;
+				/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
+				if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
+					bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+				} else {
+					bufferedImage = new BufferedImage(width, height, bi.getType());
+				}
+
                 bufferedImage.createGraphics().drawImage(bi, 0, 0, width, height, null);
                 ImageIO.write(bufferedImage, "png", new File(savePath + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName)));
 			}
@@ -8477,17 +8541,17 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					try {
 						File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesUIDArr[i]));
-				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
-				        fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
-				        ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
-				        zos.putNextEntry(zentry);
-				        
-				        byte[] buffer = new byte[bufferSize];
-				        int cnt = 0;
-				        while ((cnt = bis.read(buffer, 0, bufferSize)) != -1) {
-				            zos.write(buffer, 0, cnt);
-			        }
-			        zos.closeEntry();
+						byte[] fileBytes = Files.readAllBytes(sourceFile.toPath());
+						
+						if (fileNamesUIDArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							fileBytes = klibUtil.decrypt(fileBytes);
+						}
+						
+						fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
+						ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
+						zos.putNextEntry(zentry);
+						zos.write(fileBytes);
+						zos.closeEntry();
 					} catch (IOException e) {
 						e.printStackTrace();
 					} finally {

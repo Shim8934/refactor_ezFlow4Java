@@ -1720,6 +1720,19 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("primaryLang", primaryLang);
 		
+		int pop3MaxFetchSize;
+		
+		try {
+			String pop3MaxFetchSizeStr = ezCommonService.getTenantConfig("Pop3MaxFetchSize", userInfo.getTenantId());
+			pop3MaxFetchSize = Optional.ofNullable(pop3MaxFetchSizeStr).map(Integer::parseInt).orElse(40);
+		} catch (Exception ex) {
+			pop3MaxFetchSize = 40;
+		}
+		
+		String pop3MaxFetchSizeMessage = egovMessageSource.getMessageExtend("ezEmail.t500", new Object[] { pop3MaxFetchSize }, locale);
+		
+		model.addAttribute("pop3MaxFetchSizeMessage", pop3MaxFetchSizeMessage);
+		
 		logger.debug("infoXML=" + infoXML);
 		logger.debug("publicModulus=" + publicModulus);
 		logger.debug("publicExponent=" + publicExponent);
@@ -1828,6 +1841,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ "<script type='text/javascript'>"
 				/*+ "selToggleList(document.getElementById('close'), 'ul', 'li', '0');"*/
 				+ "</script>"
+				+ "<a  class='imgbtn'><span onClick='location.reload()'>" + egovMessageSource.getMessage("ezEmail.ldh05", locale) + "</span></a>"				
 				+ "<div class='nobox' id='status_view' style='background-color:#FFFFFF; border-style:solid; border-width:1px; border-color:#ddd; overflow-y:auto; height:265px; overflow-x:auto; width:98%; padding-top:5px; padding-left:5px; padding-right:3px; margin-top:7px;'>");
 		out.write(egovMessageSource.getMessage("ezEmail.t491", locale));
 		out.flush();
@@ -2074,6 +2088,63 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		out.close();
 		
 		logger.debug("mailGetPop3 ended.");
+	}
+	
+	
+	/**
+	 * 수신자 자동완성 및 이름 확인의 주소 순서 설정 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailAddressSearchOrder.do")
+	public String mailAddressSearchOrder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailAddressSearchOrder started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String mailAddressSearchOrder =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder");
+		logger.debug("mailAddressSearchOrder = " + mailAddressSearchOrder);
+		if (mailAddressSearchOrder.equals("")) {
+			
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+			mailAddressSearchOrder = "organ;address;dl";
+			if (useSharedMailbox.equalsIgnoreCase("yes")) {
+				mailAddressSearchOrder = "organ;address;dl;shared";
+			}
+			
+			ezCommonService.insertUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder", mailAddressSearchOrder);
+		}
+		
+		model.addAttribute("mailAddressSearchOrder", mailAddressSearchOrder);
+		
+		logger.debug("mailAddressSearchOrder ended.");
+		
+		return "ezEmail/mailAddressSearchOrder";
+	}
+	
+	
+	/**
+	 * 수신자 자동완성 및 이름 확인의 주소 순서 수정
+	 */
+	@RequestMapping(value = "/ezEmail/setMailAddressSearchOrder.do", produces = "text/xml; charset=utf-8")
+	public String setMailAddressSearchOrder(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model,
+			HttpServletRequest request) throws Exception {
+		logger.debug("setMailAddressSearchOrder started.");
+
+		String mailAddressSearchOrder = request.getParameter("mailAddressSearchOrder");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("mailAddressSearchOrder = " + mailAddressSearchOrder);
+		try {
+			if (mailAddressSearchOrder.equals("")) {
+				model.addAttribute("data", "FAIL");
+			} else {
+				ezCommonService.updateUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "mailAddressSearchOrder", mailAddressSearchOrder);
+				model.addAttribute("data", "OK");
+			}
+		} catch (Exception e) {
+			model.addAttribute("data", "FAIL");
+		}
+
+		logger.debug("setMailAddressSearchOrder ended.");
+		return "json";
 	}
 	
 }

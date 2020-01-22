@@ -55,6 +55,14 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminController.class);
 	
+	@RequestMapping(value = "/admin/ezWebFolder/webFolderMain.do", method = RequestMethod.GET)
+	public String webFolderMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("webFolderMain start");
+		
+		logger.debug("webFolderMain end");
+		return "admin/ezWebFolder/webFolderMain";
+	}
+	
 	@RequestMapping(value = "/admin/ezWebFolder/webFolderConfig.do", method = RequestMethod.GET)
 	public String webFolderConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("webFolderConfig start");
@@ -658,6 +666,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String userName      = request.getParameter("userName")   != null ? request.getParameter("userName")   : "";
 		String fileType      = request.getParameter("fileType")   != null ? request.getParameter("fileType")   : "";
 		String actionType    = request.getParameter("actionType") != null ? request.getParameter("actionType") : "";
+		String sortType    	 = request.getParameter("sortType")   != null ? request.getParameter("sortType")   : "";
+		String sortColumn    = request.getParameter("sortColumn") != null ? request.getParameter("sortColumn") : "";
 		
 		logger.debug("Current page: " + currPage + " || CompanyId: " + companyId + " || Column: " + column + " || Order: " + order + " || ListCount: " + listCnt + " || StartDate: " + startDate + " || EndDate: " + endDate + " || File ext: " + fileExt + " || File Name: " + fileName + " || UserName: " + userName + " || File Type: " + fileType + " || Action Type: " + actionType);
 		
@@ -682,7 +692,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("order", order)
 										.queryParam("listCnt", listCnt)
 										.queryParam("actionType", actionType)
-										.queryParam("endDate", endDate);
+										.queryParam("endDate", endDate)
+										.queryParam("sortType", sortType)
+										.queryParam("sortColumn", sortColumn);
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -1007,6 +1019,8 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		String column      = request.getParameter("column");
 		String order       = request.getParameter("order");
 		String listCnt     = request.getParameter("listCntSize");
+		String sortType    = request.getParameter("sortType");
+		String sortColumn    = request.getParameter("sortColumn");
 		
 		logger.debug("Current page: " + currPage + " || StartDate: " + startDate + " || EndDate: " + endDate + " || File ext: " + fileExt + " || File Name: " + fileName + " || User name: " + userName + " || File type: " + fileType + " || Folder Id: " + folderId + " || Column: " + column + " || Order: " + order + " || listCount: " + listCnt);
 		
@@ -1028,7 +1042,9 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 										.queryParam("column", column)
 										.queryParam("order", order)
 										.queryParam("listCnt", listCnt)
-										.queryParam("endDate", endDate);
+										.queryParam("endDate", endDate)
+										.queryParam("sortType", sortType)
+										.queryParam("sortColumn", sortColumn);
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		

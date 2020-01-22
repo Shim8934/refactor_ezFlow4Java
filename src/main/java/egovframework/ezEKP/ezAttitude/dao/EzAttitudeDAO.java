@@ -532,6 +532,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAnnualConfig", map);
 	}
+
+	public void updateAnnualHistory(Map<String, Object> map) throws Exception {
+		update("ezAttitudeAdminDAO.updateAnnualHistory", map);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getJoinDate(Map<String, Object> map) throws Exception{
@@ -544,5 +548,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 
 	public List<AttitudeVO> getDisabledAttitudeList(Map<String, Object> map) {
 		return (List<AttitudeVO>) list("ezAttitudeDAO.getDisabledAttitudeList", map);
+	}
+
+	public void deleteAnnualHistory(Map<String, Object> map) {
+		delete("ezAttitudeAdminDAO.deleteAnnualHistory", map);
+		
 	}
 }

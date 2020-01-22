@@ -334,5 +334,19 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public String checkIfBoardGroupAdmin2(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardAdminDAO.checkIfBoardGroupAdmin2", map);
 	}
+
+	/* 2019-11-08 홍승비 - 전달된 값으로 BOARDTREEPATH를 업데이트하는 쿼리 */
+	public void updateBoardTreePath(Map<String, Object> map) throws Exception {
+		update("EzBoardAdminDAO.updateBoardTreePath", map);
+	}
+
+	/* 2019-11-13 홍승비 - 권한복사 시 상위게시판에 권한정보 일부 삽입 또는 업데이트 */
+	public void saveACLIncludeUppderBoard2(Map<String, Object> map) throws Exception {
+		insert("EzBoardAdminDAO.saveACLIncludeUppderBoard2", map);
+	}
 	
+	/* 2020-01-16 홍승비 - 전달된 값으로 BOARDGROUPID를 업데이트하는 메서드 */
+	public void updateBoardGroupID(Map<String, Object> map) throws Exception {
+		update("EzBoardAdminDAO.updateBoardGroupID", map);
+	}
 }

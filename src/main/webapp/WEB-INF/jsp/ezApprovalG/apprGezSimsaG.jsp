@@ -608,6 +608,7 @@
 		    		url : "/ezApprovalG/saveEndFile.do",
 		    		data : {
 		    			docID : pOrgDocID,
+                        // formId : pFormID,
 		    			html  : mhtBody
 		    		},
 		    		success: function(xml){
@@ -622,6 +623,7 @@
 		    		url : "/ezApprovalG/saveFile.do",
 		    		data : {
 		    			docID : pDocID,
+						// formId : pFormID,
 		    			html  : mhtBody,
 		    			orgCompanyID : orgCompanyID
 		    		},
@@ -1686,7 +1688,7 @@
 				    <li id=btnSend><span onClick="return btnSend_onclick()"  ><spring:message code='ezApprovalG.t214'/></span></li> 
 				    <li id=btnBoard><span onClick="return btnBoard_onclick()"  ><spring:message code='ezApprovalG.t215'/></span></li> 
 				    <li id=btnReject><span onClick="return btnReject_onclick()"  ><spring:message code='ezApprovalG.t49'/></span></li> 
-				    <li id=btnPrint><span onClick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
+				    <li id=btnPrint><span class='icon16 popup_icon16_print' onClick="return btnPrint_onclick()" ></span></li>
 				</ul>
 				</div>
 				<div id="close">

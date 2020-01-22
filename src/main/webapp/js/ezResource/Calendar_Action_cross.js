@@ -387,7 +387,11 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {      
+                    for (var k = 0; k < memorial.length; k++) {    
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+                        	continue;
+                        }
                     	if(k == memorial.length-1) {
                         	holidayName += memorial[k].name;
                         }
@@ -400,6 +404,10 @@ function tableListControl_Week()
                     }
                     
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+                        	continue;
+                        }
                     	if(k == yearmemorial.length-1) {
                         	holidayName2 += yearmemorial[k].name;
                         }
@@ -494,7 +502,12 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {      
+                    for (var k = 0; k < memorial.length; k++) {  
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+                        	continue;
+                        }
+                        
                     	if(k == memorial.length-1) {
                         	holidayName += memorial[k].name;
                         }
@@ -507,6 +520,11 @@ function tableListControl_Week()
                     }
                     
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	// 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+                        	continue;
+                        }
+                        
                     	if(k == yearmemorial.length-1) {
                         	holidayName2 += yearmemorial[k].name;
                         }
@@ -1041,16 +1059,24 @@ function tableListControl_today() {
             var yearmemorial = yearmemorialDayCheck(current_day, LunarDate);                   
 
             var isholiday = false;
-            for (var k = 0; k < memorial.length; k++) {                    	
-                if (memorial[k].holiday) {
-                    isholiday = true;                    
-                }
-            }
-            for (var k = 0; k < yearmemorial.length; k++) {
-                if (yearmemorial[k].holiday) {
-                    isholiday = true;                    
-                }
-            }
+	            for (var k = 0; k < memorial.length; k++) {      
+	            	// 윤달일 때 기념일 안나타나도록 수정
+	                if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
+	                	continue;
+	                }
+	                if (memorial[k].holiday) {
+	                    isholiday = true;                    
+	                }
+	            }
+	            for (var k = 0; k < yearmemorial.length; k++) {
+	            	// 윤달일 때 기념일 안나타나도록 수정
+	                if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
+	                	continue;
+	                }
+	                if (yearmemorial[k].holiday) {
+	                    isholiday = true;                    
+	                }
+	            }
             if (current_day.getDay() == "0" || isholiday)
             	document.getElementById("divViewHeader").style.color = "#ee1c25";
             	//document.getElementById("divViewHeader").style.color = "";

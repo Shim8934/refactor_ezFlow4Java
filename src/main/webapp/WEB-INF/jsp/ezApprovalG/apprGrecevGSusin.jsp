@@ -128,6 +128,8 @@
 		    var useReceiveDocNo = "<c:out value = '${useReceiveDocNo}'/>";
 			var wAprMemberSN = "1";
 			var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
+			//원문정보공개
+			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -530,10 +532,12 @@
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1414'/>" + "<br>" +
 		                                    "<spring:message code='ezApprovalG.t1415'/>";
 		            OpenAlertUI(pAlertContent);
-		            try {
+		            
+		            //2020-01-17 천성준 - 사용하지 않는 버튼을 호출해서 에러 알람나오는 현상 수정(결재선 지정 버튼)
+		            /* try {
 		                btnSetAprLine_onclick();
 		            }
-		            catch (e) { }
+		            catch (e) { } */
 		            return;
 		        }
 		
@@ -655,7 +659,7 @@
 		                    if (LastSignSN == 1)
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
 		                      	//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 접수자 전결
-		                        if (CurAprType == "전결" && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		                        if (CurAprType == "<spring:message code='ezApprovalG.t25'/>" && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
 			    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-script').getAttribute("code");
 			    		        	var script = document.createElement("script");
 			    					script.type = "text/javascript";
@@ -1481,6 +1485,12 @@
 			        parameter[33] = pSummery;
 			        parameter[41] = tempItemName;
 			        parameter[42] = tempItemName2;
+		        } else {
+			        parameter[52] = basis;
+			        parameter[53] = reason;
+			        parameter[54] = listOpenFlag;
+			        parameter[55] = fileOpenFlagList;
+			        parameter[56] = limitDate;
 		        }
 		        
 		        if (tempItemCode != "")
@@ -1585,6 +1595,28 @@
 				            	sepAttachCheckYN = ret[26];
 				            	setNonElecRecInfo(nonElecRecInfoXml);
 				            }
+			                
+		                	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/openGovInfoSave.do",
+	                    		data : {
+	                    				openGovListFlag : ret[27],
+	                    				fileOpenFlagList : ret[28],
+	                    				basis : ret[29],
+	                    				reason : ret[30],
+	                    				publicity : ret[11],
+	                    				docID : pDocID,
+	                    				limitDate : ret[31]
+	                    		}
+		                	});
+		                	
+	                	    listOpenFlag = ret[27];
+		       		        fileOpenFlagList = ret[28];
+		                	basis = ret[29];
+		                	reason = ret[30];
+		                	limitDate = ret[31];
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];

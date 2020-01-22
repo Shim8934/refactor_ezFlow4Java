@@ -495,6 +495,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("userId", userInfo.getId());
 			model.addAttribute("primaryLang", primaryLang);
+			model.addAttribute("lang", userInfo.getLang());
 		}		
 		logger.debug("selectReceiver ended");
 		return "/ezJournal/journalSelectReceiver";

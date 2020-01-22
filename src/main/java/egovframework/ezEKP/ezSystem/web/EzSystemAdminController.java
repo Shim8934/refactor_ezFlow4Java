@@ -342,6 +342,7 @@ public class EzSystemAdminController {
 			sysLang = "primary";
 		}
 		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
 		
@@ -503,7 +504,7 @@ public class EzSystemAdminController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHistNotAdmin(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, 
 				startDate, endDate, companyId, userInfo.getId());
@@ -624,6 +625,8 @@ public class EzSystemAdminController {
 		if (userInfoUser.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
+		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = new ArrayList<ConnectionInfoVO>();
 		int totalCount = 0;
 		if (config.equals("u")){
@@ -693,11 +696,11 @@ public class EzSystemAdminController {
 			int j = 2;
 			
 			ConnectionInfoVO infoVo = loginHistList.get(i-j);
-			String userName = infoVo.getUsernm();
+			String userName = infoVo.getUsernm() + "(" + infoVo.getUserid() + ")";
 			String userDeptName = infoVo.getDeptnm();
 			String userCompanyName = infoVo.getCompanynm();
 			if (!sysLang.equals("primary")) {
-				userName = infoVo.getUsernm2();
+				userName = infoVo.getUsernm2() + "(" + infoVo.getUserid() + ")";
 				userDeptName = infoVo.getDeptnm2();
 				userCompanyName = infoVo.getCompanynm2();
 			}
@@ -1054,11 +1057,18 @@ public class EzSystemAdminController {
 	 * 접속 허용 국가 저장
 	 */
 	@RequestMapping(value="/ezSystem/saveAccessCountryList.do", method=RequestMethod.POST)
+	@ResponseBody
 	public String saveAccessCountryList(@CookieValue("loginCookie") String loginCookie, Model model, 
 			HttpServletRequest request) throws Exception {
 		logger.debug("saveAccessCountryList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "OK";
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			result = "PERMISSION_ERROR";
+			return result;
+		}
 		
 		String saveCountryList = request.getParameter("saveList");
 		logger.debug("saveCountryList=" + saveCountryList);
@@ -1066,7 +1076,7 @@ public class EzSystemAdminController {
 		ezSystemAdminService.setAccessCountry(userInfo.getTenantId(), saveCountryList);
 		
 		logger.debug("saveAccessCountryList ended");
-		return "json";
+		return result;
 	}
 	
 	
@@ -1314,15 +1324,10 @@ public class EzSystemAdminController {
 		String topID = userInfo.getCompanyID();
 		String companyId = request.getParameter("companyId");
 		String adminChk = "false";
-		
+		topID = companyId;
+
 		if (userInfo.getRollInfo().indexOf("c=1") != -1) {
 			adminChk = "true";
-			
-			if (!topID.equals(companyId)){
-				topID = companyId;
-			} else {
-				topID = "Top";
-			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);

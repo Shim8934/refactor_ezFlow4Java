@@ -213,14 +213,14 @@
 
 				url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox="
 						+ letterBox + "&letterNo=" + letterNo + "&letterId="
-						+ letterId;
+						+ letterId + "&companyId=" + returnCompany;
 				var win = window.open(url, "_blank", GetOpenWindowfeature(550, 450));
 
 				// 팝업이 끝나면 실행되는 부분
 				var interval = window.setInterval(function() {
 					try {
 						if (win === null || win.closed) {
-							if (searchTxt !== "") {
+							if ($("#lmSearchInput").val().trim() !== "") {
 								letterSearch();
 							} else {
 								getLetterList(selectNode.node.id);
@@ -279,7 +279,7 @@
 				success : function() {
 					var lmPreIframe = $(".lmPreViewIframe");
 
-					if (searchTxt != "") {
+					if ($("#lmSearchInput").val().trim() != "") {
 						letterSearch(); // 검색된 편지지 목록
 					} else {
 						getLetterList(letterBoxNo);

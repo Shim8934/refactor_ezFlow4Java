@@ -65,6 +65,8 @@
 		    var useReform = "${useReform}" === "true";
 		    var reformUrl = "${reformUrl}";
 		    // FormBuilder end
+		    var useOpenGov = "<c:out value = '${useOpenGov}'/>";
+		    var openGovFlag = "<c:out value = '${openGovFlag}'/>";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -271,6 +273,10 @@
 				                    document.getElementById("keepperiod").value = result.vo.keepPeriodCode;
 				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
 			                	}
+			                } else {
+								if (useOpenGov == "YES" && result.vo.openGovFlag == "Y") {
+									document.getElementById("setOpenGovFlag").checked = true;	
+								}
 			                }
 			            }
 						
@@ -1091,6 +1097,9 @@
 							<label for="reform-checkbox"><span><spring:message code='reform.using'/></span></label>
 						</c:if>
 						<!-- FormBuilder - end -->
+                        <span style="<c:if test="${useOpenGov != 'YES' || approvalFlag != 'G'}">display:none;</c:if>"><input type="checkbox" id="setOpenGovFlag" /> 원문정보공개</span>
+                        <%--<input type="checkbox" id="setDraftAllFlag" onclick="changePassAprFlag()" style="<c:if test="${useDraftAll != 'YES' && approvalFlag != 'G'}">display:none;</c:if>"/> 일괄기안
+						<input type="checkbox" id="setPassAprLineFlag" /> 기결재통과--%>
 					</td>
 				</tr>
 			</table>
@@ -1417,7 +1426,7 @@
 		        <table class="content">
 		            <tr>
 		                <td>
-		                    <textarea class="textarea" id="txt_reformFunction" onkeydown="if (event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'    '+v.substring(e);this.selectionStart=this.selectionEnd=s+4;return false;}" style="font-size:12pt; width:820px; height:790px; ime-mode: inactive;"><c:if test="${!empty reformFunction}">${reformFunction}</c:if></textarea>
+		                    <textarea class="textarea" id="txt_reformFunction" onkeydown="if (event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'    '+v.substring(e);this.selectionStart=this.selectionEnd=s+4;return false;}" style="font-size:12pt; width:820px; height:790px; ime-mode: inactive;"><c:if test="${!empty reformFunction}"><c:out value='${reformFunction}'/></c:if></textarea>
 		                </td>
 		            </tr>
 		        </table>

@@ -141,7 +141,7 @@
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - conWidth) / 2;
 	            window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "",
-	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 510px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
 	        function new_group() {
 	        	if (useAnyoneEdit != "YES") {
@@ -538,6 +538,7 @@
 	            createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
 	            createNodeAndInsertText(xmlDom, objNode, "USERNM", "");
 	            createNodeAndInsertText(xmlDom, objNode, "USERNM2", "");
+	            createNodeAndInsertText(xmlDom, objNode, "FURIGANA", "");
 	            objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
 	            
 	            xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);	            
@@ -1099,7 +1100,7 @@
 					<tr>
 						<td style="text-align:center;">
 							<div class="btnpositionLayer">
-								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezAddress.t25' /></span></a>
+								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezEmail.t37' /></span></a>
 							</div>	
 						</td>
 					</tr>

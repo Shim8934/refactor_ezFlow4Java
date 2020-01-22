@@ -60,7 +60,7 @@ import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 @Service("EzAttitudeService")
 public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzAttitudeServiceImpl.class);
-	private static final int defaultAnnualHolidayCnt = 15;
+	private static final int defaultAnnualHolidayCnt = 15; // 기본 연차 발생 수
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -2691,13 +2691,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void excelChangeAnnual(Map<String, Object> map) throws Exception {
 		LOGGER.debug("excelChangeAnnual started");
 		
+		//2020-01-08 김은석 추가 엑셀업로드시 기존의 히스토리는 전부 삭제
+		ezAttitudeDAO.deleteAnnualHistory(map);
 		ezAttitudeDAO.insertAnnualHistory(map);
+		
 		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
 			ezAttitudeDAO.excelInsertAnnual(map);
 		} else {
 			//ezAttitudeDAO.changeAnnualHistory(map);
 			ezAttitudeDAO.excelChangeAnnual(map);
 		}
+		//2020-01-08 김은석 추가 TBL_ATTITUDE_ANNUAL 업데이트 후 변경된 연차로 history 테이블에서 수정
+		ezAttitudeDAO.updateAnnualHistory(map);
 		
 		LOGGER.debug("excelChangeAnnual ended");
 	}
@@ -2778,7 +2783,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			if(useAnnualCnt > 11.0) {
 				useAnnualCnt = 11.0;
 			}
-			double totalAnnualCnt = Double.parseDouble(list.get(0).getTotalAnnualCnt());
+			double totalAnnualCnt = Double.parseDouble(v.getTotalAnnualCnt());
 			if (v.getJoinDate() != null) {
 				list.get(0).setTotalAnnualCnt(totalAnnualCnt - useAnnualCnt + "");
 			}
@@ -2951,20 +2956,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String joinDate = (String)map.get("joinDate");
 		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
 
-		int workingDayCnt = checkHoliday(joinDate, today, "1", companyId, tenantId).size();
-		float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(map);
-		float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0);
+		int workingDayCnt = checkHoliday(joinDate, today, "1", companyId, tenantId).size(); //workingDayCnt : 소정근로일수
+		float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(map); //attendanceDay : 출근일
+		float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0); // 출근율
 		
 		if (attendanceRate >= 80.0) {
-			map.put("holidayCnt", defaultAnnualHolidayCnt);
+			map.put("holidayCnt", defaultAnnualHolidayCnt); // 기본 연차(15개) 발생
 		} else {
-			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map); // DB에서 1년 차에 월차 개념으로 발생한 연차 개수 가져오기 (MONTHLY_HOLIDAY_CNT)
 			map.put("holidayCnt", monthlyHolidayCnt);
 		}
 
 		map.put("attendanceRateCondition","1");
 		
-		ezAttitudeDAO.updateAnnualHoliday(map);
+		ezAttitudeDAO.updateAnnualHoliday(map); // MONTHLY_HOLIDAY_CNT에서 가져온 값을 ANNUAL_HOLIDAY_CNT에 넣어주기
 
 		setAnnualHistory(map);
 		
@@ -3023,17 +3028,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(map);
 		float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0);
 
+		// 출근율이 80% 이상일 때
 		if (attendanceRate >= 80.0) {
 			
 			int workingMonthCnt = Integer.parseInt((String)map.get("workingMonthCnt"));
 			annualHolidayCnt = defaultAnnualHolidayCnt + (int) (workingMonthCnt / 12 - 1) / 2;
-			annualHolidayCnt = annualHolidayCnt > 25 ? 25 : annualHolidayCnt;
+			annualHolidayCnt = annualHolidayCnt > 25 ? 25 : annualHolidayCnt; // 3년 차부터 연차는 최대 25개를 넘을 수 없기 때문에 25개를 초과할 시 25로 설정
 			
+		// 출근율이 80% 미만일 때
 		} else {
-			annualHolidayCnt = getExceedAnnualCnt(map);
+			annualHolidayCnt = getExceedAnnualCnt(map); // 전년도의 출근율을 계산하여 월차의 개념으로 연차를 발생시킴
 		}
 		
-		// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화 해준다.
+		// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화해준다.
 		map.put("holidayCnt", 0);
 		map.put("attendanceRateCondition","3");
 		setAnnualHistory(map);
@@ -3093,6 +3100,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				Date joinDate = sdf.parse(date1);
 				Date initialDate = sdf.parse(date2);
 				
+				// 입사 후 처음으로 맞이하는 기산일은 12개월을 넘을 수 없음
+				// 첫 기산일 이후에는 3년 차 연차 발생계산법 사용
 				if (workingMonthCnt < 12) {
 					
 					double calDate = joinDate.getTime() - initialDate.getTime();
@@ -3132,11 +3141,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 					if (attendanceRate >= 80.0) {
 						annualHolidayCnt = defaultAnnualHolidayCnt + (int)(workingMonthCnt / 12 - 1) / 2;
-						annualHolidayCnt = annualHolidayCnt > 25 ? 25 : annualHolidayCnt;
+						annualHolidayCnt = annualHolidayCnt > 25 ? 25 : annualHolidayCnt; // 연차는 최대 25개를 넘을 수 없기 때문에 25개를 초과할 시 25로 설정
 					} else {
-						annualHolidayCnt = getExceedAnnualCnt(m);
+						annualHolidayCnt = getExceedAnnualCnt(m); // 전년도의 출근율을 계산하여 월차의 개념으로 연차를 발생시킴
 					}
 					
+					// 3년 차일 때 연차, 월차 0으로 초기화 후 계산한 연차를 DB에 넣어줌
 					if (workingMonthCnt > 24) {
 						m.put("holidayCnt", 0);
 						m.put("attendanceRateCondition","3");
@@ -3175,7 +3185,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("oneMonthAgo",oneMonthAgo);
 		map.put("oneDayAgo", oneDayAgo);
 		
-		int userAbsentCnt = ezAttitudeDAO.checkAbsentDay(map);
+		int userAbsentCnt = ezAttitudeDAO.checkAbsentDay(map); // DB에서 결근한 날 가져오기
 		/*
 		 * userAttendanceCnt = 전 달 소정근로일수
 		 * monthWorkingDayCnt =  전 달 사용자 실제 출근일수
@@ -3206,6 +3216,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		double totalAnnualCnt = 0.0;
 		for ( Map<String, Object> m : ezAttitudeDAO.getuserAnnualCnt(map)) {
+			// typeId가 연차라면 1을 곱해서 totalAnuualCnt에 누적하고, 연차가 아니라면 0.5를 곱하여 누적
 			totalAnnualCnt += ((String)m.get("typeId")).equals("A11") ? Double.parseDouble((String.valueOf(m.get("cnt")))) * 1.0 : Double.parseDouble((String.valueOf(m.get("cnt")))) * 0.5;
 		}
 		

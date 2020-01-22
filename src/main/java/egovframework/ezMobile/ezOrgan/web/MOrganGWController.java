@@ -79,6 +79,7 @@ public class MOrganGWController {
 				companyId = "";
 			}
 			
+			pSearchText = pSearchText.replace("%", "\\%").replace("_", "\\_");
 			List <MPersonListVO> list = mOrganService.getPersonList(companyId, info.getTenantId(),pSearchText,rowNum);
 			int listCount = mOrganService.getPersonListCount(companyId, info.getTenantId(), pSearchText);
 			
@@ -264,6 +265,7 @@ public class MOrganGWController {
 			result.put("code", "0");
 			result.put("data", mOrganListVOs);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", "1");
 		}		

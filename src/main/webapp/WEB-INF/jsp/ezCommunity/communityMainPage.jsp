@@ -164,7 +164,7 @@
                 var bestcoummunity = SelectNodes(xmldom, "DATA/ROW");
                 
                 document.getElementById("newcomm").innerHTML = "";
-                if(bestcoummunity.length>0) {
+                if (bestcoummunity.length > 0) {
                 	document.getElementById("newcomm").innerHTML = "";
                 	var best = document.getElementById("newcomm");
 	                best.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNO").trim());
@@ -222,6 +222,12 @@
 		             dt.appendChild(img);
 		             dl.appendChild(dt);
 		             dl.appendChild(dd);
+		             
+		            /* 2019-10-24 홍승비 - 신규 커뮤니티 미존재 시 '+' 버튼 클릭하면 메인페이지 갱신 */
+					var btn = document.getElementById("newcommBtn");
+					btn.onclick = function () {
+						refresh_onclick();
+					};
                 }
                 
                /*  for (var i = 0; i < bestcoummunity.length; i++) {
@@ -288,7 +294,7 @@
 
                 var bestcoummunity = SelectNodes(xmldom, "DATA/ROW");
                 
-                if(bestcoummunity.length>0) {
+                if (bestcoummunity.length > 0) {
                 	document.getElementById("bestcomm").innerHTML = "";
                 	var best = document.getElementById("bestcomm");
 	                best.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[0], "C_CLUBNO").trim());
@@ -347,6 +353,12 @@
 		             dt.appendChild(img);
 		             dl.appendChild(dt);
 		             dl.appendChild(dd);
+		             
+		            /* 2019-10-24 홍승비 - 인기 커뮤니티 미존재 시 '+' 버튼 클릭하면 메인페이지 갱신 */
+					var btn = document.getElementById("bestcommBtn");
+					btn.onclick = function () {
+						refresh_onclick();
+					};
                }
                 /* for (var i = 0; i < bestcoummunity.length; i++) {
                     var dl = document.createElement("DL");

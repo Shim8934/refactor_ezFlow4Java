@@ -75,6 +75,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     @Autowired
     private Properties config;
     
+   	@Autowired
+	private Properties globals;
+    
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
     
@@ -1070,6 +1073,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	
 	    	deleteUserAddJob(cn, tenantID);
 	    	
+	    	// company_config 삭제
+	    	deleteCompanyConfig(cn, tenantID);
+	    	
 	        ezOrganAdminDao.deleteDBData(map);
 	        
 	        //회사 삭제시 넣었던 초기데이터 테이블 삭제
@@ -1374,7 +1380,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
-    									 String keycode,String keyword,String companyId) throws Exception {     
+    									 String keycode,String keyword,String companyId, String sortColumn, String sortType) throws Exception {     
     	logger.debug("getUserList started");
     	
     	Map<String, Object> params = new HashMap<String, Object>();
@@ -1386,7 +1392,22 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		params.put("companyId", companyId);
+		params.put("sortColumn", sortColumn);      
+		params.put("sortType", sortType);
 		
+		String orderByData = "";
+		if(!sortColumn.equals("")){
+			if(sortColumn.equals("persent")){
+				orderByData = " (MAILBOXUSAGE/MAILBOXQUOTA)*100 " + sortType;
+			}else if (sortColumn.equals("mailboxusage")){
+				orderByData = sortColumn +"/1024 " + sortType;
+			}				
+			 else {
+				orderByData = sortColumn + " " + sortType;
+			}
+		}
+		
+		params.put("orderbyData", orderByData);
     	List<OrganUserVO> list = ezOrganAdminDao.getUserList(params);
     	
     	logger.debug("getUserList ended");
@@ -1599,9 +1620,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			if (searchType.equals("displayname")) {
 				if (primary.equals("1")) {
-					sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+		            	sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%' ESCAPE '\\' " );
+		            } else {
+		            	sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+		            }
 				} else {
-					sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%'");
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%' ESCAPE '\\' ");
+					} else{
+						sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%'");
+					}
 				}
 			}
 			
@@ -1923,5 +1952,20 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return flag;
 	}
 	
+	private void deleteCompanyConfig(String compId, int tenantId) throws Exception {
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_CN", compId);
+		map1.put("v_TENANT_ID", tenantId);
+    	
+		Map<String, Object> map2 = new HashMap<String, Object>(map1);
+		map2.put("v_FIELD", "EXTENSIONATTRIBUTE2");
+		
+    	String extensionAttr2 = ezOrganDao.getPropertyValue_S5(map2);
+    	logger.debug("companyID=" + compId + "extenstionAttr2=" + extensionAttr2);
+    	
+    	if (compId.equals(extensionAttr2)) { // 회사면
+        	ezOrganAdminDao.deleteCompanyConfig(map1);    		
+    	}
+     }
 	
 }

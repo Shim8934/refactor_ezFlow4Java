@@ -81,6 +81,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.util.encoders.Hex;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -794,11 +795,25 @@ public class EzEmailUtil {
 	                        rawHeader = rawHeader.replace(charSet, "gbk");
 	                                                
 	                        subject = MimeUtility.decodeText(rawHeader);
+	                    // 료비에서 구자체 한문을 사용하는 메일의 경우 iso-2022-jp로 인코딩되어 있으나
+	                    // 표시가 제대로 되지 않아 x-windows-iso2022jp로 변경처리함
 	                    } else if (charSet.equals("iso-2022-jp")) {
-	                        rawHeader = rawHeader.replace(charSet, "cp50220");
+	                        rawHeader = rawHeader.replace(charSet, "x-windows-iso2022jp");
 	                                                
 	                        subject = MimeUtility.decodeText(rawHeader);
 	                    } 
+	                    
+	                    // 료비에서 의뢰한 메일 중 제목이
+	                    // Subject: =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4
+	                    //  10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
+	                    // 와 같은 경우 여전히 subject가
+	                    // =?UTF-8?Q?=E7=B5=A6=E4=B8=8E=E6=98=8E=E7=B4=B0=E6=9B=B8 (2019=E5=B9=B4 10=E6=9C=88) [=E7=A4=BE=E5=93=A1=E7=95=AA=E5=8F=B7:81706]?=
+	                    // 로 디코딩되지 않은 형태로 나온다. 이 때 공백 문자를 =20으로 변경하면 제대로 디코딩이 이루어진다. 
+	                    if (subject.startsWith("=?")) {
+	                    	if (encoding.equalsIgnoreCase("Q")) {
+	                    		subject = MimeUtility.decodeText(subject.replace(" ", "=20"));
+	                    	}
+	                    }
 	                }
 	            }
 	            
@@ -1112,10 +1127,13 @@ public class EzEmailUtil {
                 
                 filename = MimeUtility.decodeText(originalFilename);
             // 일본어 파일명에 원형 숫자가 포함되면 문자가 깨져서 cp50220으로 변환하도록 함.
+            // 료비에서 구자체 한문을 사용하는 메일의 경우 iso-2022-jp로 인코딩되어 있으나
+            // 표시가 제대로 되지 않아 cp50220에서 x-windows-iso2022jp로 변경처리함.
+            // x-windows-iso2022jp는 원형 숫자도 제대로 표시함.
             } else if (originalFilename != null && originalFilename.startsWith("=?iso-2022-jp")) {
-                originalFilename = originalFilename.replace("iso-2022-jp", "cp50220");
+                originalFilename = originalFilename.replace("iso-2022-jp", "x-windows-iso2022jp");
                 
-                logger.debug("originalFilename changed iso-2022-jp to cp50220.");
+                logger.debug("originalFilename changed iso-2022-jp to x-windows-iso2022jp.");
                 
                 filename = MimeUtility.decodeText(originalFilename);
             } else if (originalFilename != null && originalFilename.startsWith("=?cp932")) {
@@ -1209,6 +1227,11 @@ public class EzEmailUtil {
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";
 		} else if(part.isMimeType("text/html")){
+			// multipart/related가 중첩되어 있는 경우
+			// 이전 multipart/related 파트에서 이미 text/html 파트가 발견된 경우가 있어
+			// 이를 나타내기 위해 추가함.
+			extraMap.put("htmlPartFound", true);
+			
 			String strContent = null;			
 			String contentType = part.getContentType();
 			
@@ -1273,9 +1296,9 @@ public class EzEmailUtil {
 								byte[] buf = new byte[is.available()];
 								is.read(buf);
 								
-								logger.debug("text/html changed iso-2022-jp to cp50220.");
+								logger.debug("text/html changed iso-2022-jp to x-windows-iso2022jp.");
 								
-								strContent = new String(buf, "cp50220");
+								strContent = new String(buf, "x-windows-iso2022jp");
 							}											
 						}
 					}
@@ -1468,16 +1491,16 @@ public class EzEmailUtil {
 										byte[] buf = new byte[is.available()];
 										is.read(buf);
 										
-										logger.debug("text/plain changed iso-2022-jp to cp50220.");
+										logger.debug("text/plain changed iso-2022-jp to x-windows-iso2022jp.");
 										
-										strContent = new String(buf, "cp50220");
+										strContent = new String(buf, "x-windows-iso2022jp");
 									}											
 								}
 							} 
 						}
 						
 						// Content-Type 헤더에 charset 속성이 없는 경우엔 US-ASCII로만 구성되어야 한다.
-						// Content-Type: text/plain 과 같이 charset이 없지만 본문이 iso-2022-jp(cp50220)로 작성된 메일이 발견되어 추가함.
+						// Content-Type: text/plain 과 같이 charset이 없지만 본문이 iso-2022-jp(x-windows-iso2022jp)로 작성된 메일이 발견되어 추가함.
 						if (!isCharSet) {
 							logger.debug("rawContentType=" + rawContentType);
 							logger.debug("no charset attribute");
@@ -1503,10 +1526,10 @@ public class EzEmailUtil {
 									byte[] buf = new byte[is.available()];
 									is.read(buf);
 									
-									if (isCharEncRight(buf, "cp50220")) {
-										strContent = new String(buf, "cp50220");
+									if (isCharEncRight(buf, "x-windows-iso2022jp")) {
+										strContent = new String(buf, "x-windows-iso2022jp");
 										
-										logger.debug("it's cp50220");																
+										logger.debug("it's x-windows-iso2022jp");																
 									}
 								}														
 							}
@@ -1645,7 +1668,8 @@ public class EzEmailUtil {
 						isAttach = "OK";
 					}
 				// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있어 추가함.
-				} else if (p.isMimeType("application/*")) { 
+				// ContentID가 있는 경우에는 내부에서 참조되는 인라인 이미지일 수 있으므로 제외함.
+				} else if (p.isMimeType("application/*") && ((MimePart)p).getContentID() == null) { 
 					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
@@ -1661,11 +1685,16 @@ public class EzEmailUtil {
 				}
 			}
 			
+			// multipart/related가 중첩되어 있는 경우
+			// 이전 multipart/related 파트에서 이미 text/html 파트가 발견된 경우가 있어
+			// 이를 확인함.
+			boolean htmlPartFound = (boolean)extraMap.get("htmlPartFound");
+			
 			// text/html 파트 혹은 multipart/alternative 파트가 발견되지 않았을 경우엔 
 			// text/plain 파트를 찾는다.
 			// pacific에서 보낸 메일 중에 multipart/related안에 text/plain 파트만 있고 인라인 이미지가 첨부된 
 			// 경우가 있어 추가함.
-			if (!isHtmlOrAlternativeFound) {
+			if (!htmlPartFound && !isHtmlOrAlternativeFound) {
 				logger.debug("isHtmlOrAlternativeFound is false. Trying to find the text/plain part..");
 				
 				for (int i = 0; i < count; i++) {
@@ -1676,7 +1705,7 @@ public class EzEmailUtil {
 						htmlBody += tempList.get(0);						
 					// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있음. 이 경우 위에서 MIME Type이 application인 경우
 					// 이미 첨부파일로 추가되었기 때문에 중복 추가되지 않도록 하기 위해 !p.isMimeType("application/*") 조건을 추가함.
-					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE) && !p.isMimeType("application/*")) {						
+					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE) && !(p.isMimeType("application/*") && ((MimePart)p).getContentID() == null)) {						
 						extraMap.put("includeInlineAsAttachment", true);
 						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 						htmlBody += tempList.get(0);
@@ -2721,7 +2750,11 @@ public class EzEmailUtil {
 			for (int i = 0; i < count; i++) {
 				BodyPart p = mp.getBodyPart(i);
 				
-				if (p instanceof MimePart) {
+				if (p.isMimeType("multipart/related")) {
+					if (copyInlineParts(p, dest, includeAttachment, convertInlineImageToAttachment)) {
+						return true;
+					}					
+				} else if (p instanceof MimePart) {
 					// text/html 파트가 없으면 인라인 이미지 파트를 첨부파일 파트로 변환한다.(이미지를 첨부로 대신 표시하기 위해)
 					if (convertInlineImageToAttachment) {
 						if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {
@@ -2736,7 +2769,7 @@ public class EzEmailUtil {
 					if (((MimePart)p).getContentID() != null
 							|| (includeAttachment 
 									&& ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) 
-											|| p.isMimeType("application/*")))) {
+											|| (p.isMimeType("application/*") && ((MimePart)p).getContentID() == null)))) {
 						dest.addBodyPart(p);	
 						isAdded = true;
 					}
@@ -3003,7 +3036,15 @@ public class EzEmailUtil {
 				Part p = mp.getBodyPart(i);
 				
 				if (p instanceof MimePart) {
-					if (((MimePart)p).getContentID() != null && ((MimePart)p).getContentID().equals(contentId)) {
+					if (p.isMimeType("multipart/related")) {
+						p = getInlinePart(p, contentId);
+						
+						if (p != null) {
+							logger.debug("getInlinePart ended.");
+							
+							return p;
+						}						
+					} else if (((MimePart)p).getContentID() != null && ((MimePart)p).getContentID().equals(contentId)) {
 						logger.debug("getInlinePart ended.");
 						
 						return p;
@@ -4553,7 +4594,7 @@ public class EzEmailUtil {
 						logger.debug("autoMailAddress make : " + address);
 						ezAddressService.insertAddress(tenantId, userId, "0", userAccount, 
 								displayName, displayName2, name, address, "", "", "", 
-								"", "", "", "", "", "", "", "", "", "P");
+								"", "", "", "", "", "", "", "", "", "P", "");
 					}
 				}
 				
@@ -4597,22 +4638,28 @@ public class EzEmailUtil {
 		
 		Object partContent;
 
-		for (int i = 0; i < partCount; i++) {
-			BodyPart bodyPart = multipart.getBodyPart(i);
-			
-			if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
-				continue;
+		try {
+			for (int i = 0; i < partCount; i++) {
+				BodyPart bodyPart = multipart.getBodyPart(i);
+				
+				if (BodyPart.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
+					continue;
+				}
+				
+				partContent = bodyPart.getContent();
+				
+				if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
+					return true;
+				}
+	
+				if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
+					return true;
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 			
-			partContent = bodyPart.getContent();
-			
-			if (partContent instanceof Multipart && containsHtmlMultipart((Multipart) partContent)) {
-				return true;
-			}
-
-			if (bodyPart.isMimeType("text/html") || bodyPart.isMimeType("message/*")) {
-				return true;
-			}
+			return true;
 		}
 
 		return false;
@@ -4854,11 +4901,14 @@ public class EzEmailUtil {
 
 				// set content and attachment
 				if (hasAttchment) {
-					BodyPart htmlContentPart = new MimeBodyPart();
-					htmlContentPart.setContent(content, "text/html; charset=utf-8");
-
 					MimeMultipart multipartContent = new MimeMultipart();
-					multipartContent.addBodyPart(htmlContentPart);
+
+					if (content != null) {
+						BodyPart htmlContentPart = new MimeBodyPart();
+						htmlContentPart.setContent(content, "text/html; charset=utf-8");
+
+						multipartContent.addBodyPart(htmlContentPart);
+					}
 
 					for (EmailAttachment attachment : attachmentList) {
 						InputStream attachInputStream = attachment.getInputStream();
@@ -4947,5 +4997,36 @@ public class EzEmailUtil {
 			logger.debug("send ended");
 		}
 	}
+
+    public String spamSniperEnc(String emailAddress, String spamSniperAuthKey, String spamSniperAuthIv) throws Exception {
+    	logger.debug("spamSniperEnc start");
+    	String cryptResult = null;
+		String authKey = spamSniperAuthKey;
+		String authIv = spamSniperAuthIv;
+		String algorithm = "AES";
+		String mode = "CBC";
+		
+		if(!(emailAddress.equals("") || authKey.equals("") || authIv.equals(""))) {
+			byte[] secretKey = authKey.getBytes();
+
+			String transform = String.format("%s/%s/%s", algorithm, mode, "PKCS5Padding");
+			Cipher cipher = null;
+			cipher = Cipher.getInstance(transform);
+
+			byte[] iv = authIv.getBytes();
+			int len = 16;
+
+			SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey , 0, len, algorithm);
+			cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(iv, 0, len));
+
+			byte[] encrypted = cipher.doFinal(emailAddress.getBytes());
+			cryptResult = new String(Hex.encode(encrypted));
+		}
+    	
+		logger.debug("emailAddress=" + emailAddress + ",spamSniperAuthKey=" + spamSniperAuthKey 
+				+ ",spamSniperAuthIv=" + spamSniperAuthIv);
+		logger.debug("spamSniperEnc end");
+    	return cryptResult;
+    }
 }
 

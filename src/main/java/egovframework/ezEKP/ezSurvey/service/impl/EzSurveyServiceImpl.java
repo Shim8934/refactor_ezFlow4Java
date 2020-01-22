@@ -1074,13 +1074,20 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		SurveyVO survey = ezSurveyDAO.getSurveyInfo(map);
 		
-		if (survey.getResponseFlag() == 0) {
-			result.put("status", "ok");
-			result.put("code", 0);
+		// 2019-11-22 김민성 - 전자설문 수정시 작성자만 수정 가능
+		if(!survey.getCreatorId().equals(userInfo.getId())) {
+			result.put("status", "error");
+			result.put("code", 3);
 		}
 		else {
-			result.put("status", "error");
-			result.put("code", 4);
+			if (survey.getResponseFlag() == 0) {
+				result.put("status", "ok");
+				result.put("code", 0);
+			}
+			else {
+				result.put("status", "error");
+				result.put("code", 4);
+			}
 		}
 		
 		return result;

@@ -701,7 +701,7 @@
 		<div id="preview_nodata" class="preview_nodata">
 			<dl class="nodata_sIcon">
 				<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
-				<dd id="nodata_title" style="font-family: malgun gothic"></dd>
+				<dd id="nodata_title"></dd>
 			</dl>
 		</div>
 	</div>

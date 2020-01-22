@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	    <title><spring:message code='ezBoard.t10044'/></title>
-	    <link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -367,10 +367,11 @@
 	                alert("<spring:message code='ezBoard.t10043'/>");
 	                return;
 	            }
+	            /* 2019-11-15 홍승비 - 마이게시판 이동 시 게시판 또는 하위분류 타입 파라미터 전달 */
 	            if (CrossYN()) {
 	                myboard_movecopy_dialogArguments[0] = "";
 	                myboard_movecopy_dialogArguments[1] = move_onclick_Complete;
-	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + encodeURIComponent(SelectedBoardID) + "&nodeID=" + selectedNodeID);
+	                DivPopUpShow(320, 375, "/ezBoard/myBoardmovecopy.do?selID=" + encodeURIComponent(SelectedBoardID) + "&nodeID=" + encodeURIComponent(selectedNodeID) + "&selectedBoardtype=" + encodeURIComponent(selectedBoardtype));
 	            }
 	            else {
 	                var feature = "dialogWidth:320px; dialogHeight:375px; status:no; help:no; scroll:no; edge:sunken";

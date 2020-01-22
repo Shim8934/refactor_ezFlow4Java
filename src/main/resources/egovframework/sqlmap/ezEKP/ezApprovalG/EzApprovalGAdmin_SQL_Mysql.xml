@@ -9,6 +9,7 @@
 	<typeAlias alias="ApprGAutoRuleVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO"/>
 	<typeAlias alias="ApprGContInfoVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO"/>
 	<typeAlias alias="ApprGFormConnInfoVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO"/>
+	<typeAlias alias="ApprGOpenGovModifyHistoryVO"  type="egovframework.ezEKP.ezApprovalG.vo.ApprGOpenGovModifyHistoryVO"/>
 
 	<!-- <procedure id="EzApprovalGAdmin.getContainerInfoManage" parameterClass="Map" 
 		resultClass="ApprGLeftVO"> -->
@@ -965,7 +966,8 @@
 					formdoctype,
 					formdescription,
 					formfilelocation,
-					formconnflag 
+					formconnflag,
+					opengovflag 
 				FROM
 					TBL_FORMINFO
 				WHERE
@@ -1689,7 +1691,8 @@
 				formconnflag,
 				reformflag,
 				companyid,
-				tenant_id)
+				tenant_id,
+				opengovflag)
 			VALUES
 				(#v_PFORMCONTAINERID#,
 				#v_PFORMID#,
@@ -1701,7 +1704,8 @@
 				#v_PFORMCONNFLAG#,
 				#v_PREFORMFLAG#,
 				#companyID#,
-				#tenantID#)
+				#tenantID#,
+				#v_POPENGOVFLAG#)
 		]]>
 	</insert>
 
@@ -1718,7 +1722,8 @@
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#,
 				reformflag = #v_PREFORMFLAG#,
-				formversion = formversion + 1
+				formversion = formversion + 1,
+				opengovflag = #v_POPENGOVFLAG#
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -4533,4 +4538,266 @@
 			    #companyID# )
 		]]>				
 	</insert>
+
+	<select id="EzApprovalGAdminDAO.getAdminTotalDownload" parameterClass="Map" resultClass="ApprGAttachInfoVO">
+				SELECT * FROM (
+				<isEqual property="v_PMODE" compareValue="ALL">
+					 SELECT 
+							DOCID,
+			        		'ATTDOC' TYPE  ,
+			                AttachDocName FILENAME  ,
+			                AttachDocURL FILEPATH  
+			        FROM 
+			        		TBL_ENDAPRDOCATTACHINFO 
+			        WHERE  
+			        	1=1
+		        	 <isNotEmpty property="docIdList" prepend="AND">
+						<iterate prepend="DOcID IN" property="docIdList" open="(" close=")" conjunction=",">
+				      		#docIdList[]#
+						</iterate>
+					</isNotEmpty> 
+			        AND
+		         			TENANT_ID = #v_TENANTID#
+		         	AND
+		         		    COMPANYID = #companyID#
+					
+					UNION ALL
+					
+					SELECT 
+							DOCID,
+							'DOC' TYPE  ,
+			                DocTitle FILENAME  ,
+			                Href FILEPATH   
+			        FROM 
+			        		TBL_ENDAPRDOCINFO
+			        WHERE  
+			        	1=1
+			        <isNotEmpty property="docIdList" prepend="AND">
+						<iterate prepend="DOcID IN" property="docIdList" open="(" close=")" conjunction=",">
+				      		#docIdList[]#
+						</iterate>
+					</isNotEmpty> 
+			        AND
+		         			TENANT_ID = #v_TENANTID#
+		         	AND
+		         		    COMPANYID = #companyID#
+			        
+				        UNION ALL 
+				        
+				        SELECT
+				        		DOCID, 
+				        		'ATT' TYPE  ,
+				                AttachFileName FILENAME  ,
+				                AttachFileHref FILEPATH  
+				        FROM 
+				        		TBL_ENDATTACHINFO 
+				        WHERE
+				        	1=1  
+				        <isNotEmpty property="docIdList" prepend="AND">
+							<iterate prepend="DocID IN" property="docIdList" open="(" close=")" conjunction=",">
+					      		#docIdList[]#
+							</iterate>
+						</isNotEmpty> 
+				        AND
+			         		TENANT_ID = #v_TENANTID#
+			            AND
+			         		COMPANYID = #companyID#		
+			        </isEqual>
+			        <isEqual property="v_PMODE" compareValue="MHT">
+			        	 SELECT 
+							DOCID,
+			        		'ATTDOC' TYPE  ,
+			                AttachDocName FILENAME  ,
+			                AttachDocURL FILEPATH  
+			        FROM 
+			        		TBL_ENDAPRDOCATTACHINFO 
+			        WHERE  
+			        	1=1
+		        	 <isNotEmpty property="docIdList" prepend="AND">
+						<iterate prepend="DOcID IN" property="docIdList" open="(" close=")" conjunction=",">
+				      		#docIdList[]#
+						</iterate>
+					</isNotEmpty> 
+			        AND
+		         			TENANT_ID = #v_TENANTID#
+		         	AND
+		         		    COMPANYID = #companyID#
+					
+					UNION ALL
+					
+					SELECT 
+							DOCID,
+							'DOC' TYPE  ,
+			                DocTitle FILENAME  ,
+			                Href FILEPATH   
+			        FROM 
+			        		TBL_ENDAPRDOCINFO
+			        WHERE  
+			        	1=1
+			        <isNotEmpty property="docIdList" prepend="AND">
+						<iterate prepend="DOcID IN" property="docIdList" open="(" close=")" conjunction=",">
+				      		#docIdList[]#
+						</iterate>
+					</isNotEmpty> 
+			        AND
+		         			TENANT_ID = #v_TENANTID#
+		         	AND
+		         		    COMPANYID = #companyID#
+			        </isEqual>
+			        <isEqual property="v_PMODE" compareValue="ATT">
+			         SELECT 
+							DOCID,
+			        		'ATTDOC' TYPE  ,
+			                AttachDocName FILENAME  ,
+			                AttachDocURL FILEPATH  
+			        FROM 
+			        		TBL_ENDAPRDOCATTACHINFO 
+			        WHERE  
+			        	1=1
+		        	 <isNotEmpty property="docIdList" prepend="AND">
+						<iterate prepend="DOcID IN" property="docIdList" open="(" close=")" conjunction=",">
+				      		#docIdList[]#
+						</iterate>
+					</isNotEmpty> 
+			        AND
+		         			TENANT_ID = #v_TENANTID#
+		         	AND
+		         		    COMPANYID = #companyID#
+		         	UNION ALL
+		         	
+		         	 SELECT
+				        		DOCID, 
+				        		'ATT' TYPE  ,
+				                AttachFileName FILENAME  ,
+				                AttachFileHref FILEPATH  
+				        FROM 
+				        		TBL_ENDATTACHINFO 
+				        WHERE
+				        	1=1  
+				        <isNotEmpty property="docIdList" prepend="AND">
+							<iterate prepend="DocID IN" property="docIdList" open="(" close=")" conjunction=",">
+					      		#docIdList[]#
+							</iterate>
+						</isNotEmpty> 
+				        AND
+			         		TENANT_ID = #v_TENANTID#
+			            AND
+			         		COMPANYID = #companyID#	
+		         	
+			        
+			        </isEqual>
+					) A ORDER BY A.DOCID DESC , A.TYPE DESC
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getAdminTotalDownloadCnt" parameterClass="Map" resultClass="ApprGAttachInfoVO">
+				
+				SELECT DISTINCT DOCID, FILENAME FROM (
+					SELECT 
+							DOCID,
+			        		'ATTDOC' TYPE  ,
+			                AttachDocName FILENAME  ,
+			                AttachDocURL FILEPATH  
+			        FROM 
+			        		TBL_ENDAPRDOCATTACHINFO 
+			        WHERE  
+			        	1=1
+		        	 <isNotEmpty property="docIdList" prepend="AND">
+						<iterate prepend="DOcID IN" property="docIdList" open="(" close=")" conjunction=",">
+				      		#docIdList[]#
+						</iterate>
+					</isNotEmpty> 
+			        AND
+		         			TENANT_ID = #v_TENANTID#
+		         	AND
+		         		    COMPANYID = #companyID#
+					
+					UNION ALL
+					
+					SELECT 
+							DOCID,
+							'DOC' TYPE  ,
+			                DocTitle FILENAME  ,
+			                Href FILEPATH   
+			        FROM 
+			        		TBL_ENDAPRDOCINFO
+			        WHERE  
+			        	1=1
+			        <isNotEmpty property="docIdList" prepend="AND">
+						<iterate prepend="DOcID IN" property="docIdList" open="(" close=")" conjunction=",">
+				      		#docIdList[]#
+						</iterate>
+					</isNotEmpty> 
+			        AND
+		         			TENANT_ID = #v_TENANTID#
+		         	AND
+		         		    COMPANYID = #companyID#
+			        UNION ALL 
+				        
+			        SELECT
+			        		DOCID, 
+			        		'ATT' TYPE  ,
+			                '' FILENAME  ,
+			                AttachFileHref FILEPATH  
+			        FROM 
+			        		TBL_ENDATTACHINFO 
+			        WHERE
+			        	1=1  
+			        <isNotEmpty property="docIdList" prepend="AND">
+						<iterate prepend="DocID IN" property="docIdList" open="(" close=")" conjunction=",">
+				      		#docIdList[]#
+						</iterate>
+					</isNotEmpty> 
+			        AND
+		         		TENANT_ID = #v_TENANTID#
+		            AND
+		         		COMPANYID = #companyID#		
+			       
+					) A WHERE A.FILENAME <![CDATA[<>]]> '' ORDER BY A.DOCID DESC , A.TYPE DESC
+					
+	</select>
+	<update id="EzApprovalGAdminDAO.resendOpenGov" parameterClass="Map">
+		UPDATE
+			TBL_OPENGOVDOCINFO
+		SET
+			SENDFLAG = 'N'
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		AND
+		<![CDATA[
+			CREATEDATE <=  STR_TO_DATE(#endTime#, '%Y-%m-%d %H:%i:%S')
+		AND
+			CREATEDATE >=  STR_TO_DATE(#startTime#, '%Y-%m-%d %H:%i:%S')
+		]]>
+	</update>
+
+	<select id="EzApprovalGAdminDAO.getOpenGovModifyHistory" parameterClass="Map" resultClass="ApprGOpenGovModifyHistoryVO" remapResults="true">
+		SELECT
+			DOCID, MODIFIERNAME, MODIFIERDEPTNAME, MODIFYDATE, SN
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			DOCID = #docID#
+		AND
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		ORDER BY
+			SN DESC
+	</select>
+	<select id="EzApprovalGAdminDAO.getOpenGovModifyHistoryReason" parameterClass="Map" resultClass="String">
+		SELECT
+			MODIFYREASON
+		FROM
+			TBL_OPENGOVMODIFYHISTORY
+		WHERE
+			DOCID = #docID#
+		AND
+			SN = #sn#
+		AND
+			TENANTID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+	</select>
 </sqlMap>

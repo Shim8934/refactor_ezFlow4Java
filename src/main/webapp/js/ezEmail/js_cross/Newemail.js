@@ -753,6 +753,11 @@ function reject_onclick_Complete(retVal)
     var objRow;
     var objRow2;
     objNode = createNodeInsert(xmlpara, objNode, "DATA");
+    objRow = createNodeAndAppandNode(xmlpara, objNode, objRow, "ROW");
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	 createNodeAndAppandNodeText(xmlpara, objRow, objRow2, "SHAREID", shareId);
+    }
     for (var i = 0; i < retVal.length; i++) {
         objRow = createNodeAndAppandNode(xmlpara, objNode, objRow, "ROW");
         createNodeAndAppandNodeText(xmlpara, objRow, objRow2, "DENIAL", retVal[i]);

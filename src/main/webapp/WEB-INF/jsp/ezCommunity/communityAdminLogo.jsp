@@ -135,11 +135,11 @@
 		        		tempLogoPath = result["tempLogoPath"];
 		        		
 		        		var check = "false";
-				           
 					 	document.getElementById("filename1").innerText = logoFile.name;
-				            
+					 	
+					 	/* 2020-01-13 홍승비 - 확장자 체크 부분 수정 */
 				        var extension = logoFile.name.split('.');
-				        check = compareExtension(check, extension[1]);
+				        check = compareExtension(check, extension[extension.length - 1]);
 				            
 				        if (check == "false") {
 				            alert("<spring:message code ='ezCommunity.lhj03' />");
@@ -184,11 +184,11 @@
 		      			tempThumbPath = result["tempThumbPath"];
 		       			
 		       			var check = "false";
-			            
 			            document.getElementById("filename2").innerText = thumbFile.name;
 			            
+			            /* 2020-01-13 홍승비 - 확장자 체크 부분 수정 */
 			            var extension = thumbFile.name.split('.');
-			            check = compareExtension(check, extension[1]);
+			            check = compareExtension(check, extension[extension.length - 1]);
 			            
 			            if (check == "false") {
 			                alert("<spring:message code ='ezCommunity.lhj03' />");

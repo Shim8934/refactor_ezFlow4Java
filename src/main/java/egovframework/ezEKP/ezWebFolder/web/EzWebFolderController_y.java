@@ -139,6 +139,8 @@ public class EzWebFolderController_y {
 		param.put("searchCreateName", orElse(request.getParameter("searchCreateName")	, ""));
 		param.put("searchFileType"	, orElse(request.getParameter("searchFileType")		, ""));
 		param.put("searchPageCount"	, orElse(request.getParameter("searchPageCount")	, ""));
+		param.put("sortType"		, orElse(request.getParameter("sortType")			, ""));
+		param.put("sortColumn"		, orElse(request.getParameter("sortColumn")			, ""));
 		
 		LOGGER.debug("folderId : " + folderId);
 		LOGGER.debug(	"listCount : " + request.getParameter("listCount") 

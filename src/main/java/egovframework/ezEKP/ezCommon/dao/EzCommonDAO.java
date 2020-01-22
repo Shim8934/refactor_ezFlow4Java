@@ -46,6 +46,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
     
     @Autowired
     private EzNewPortalDAO ezNewPortalDAO;
+
+    @Autowired
+	private Properties globals;
     
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception {
 		return (ApprovPWDVO) select("EzCommonDAO.getApprovPWD", userInfo);
@@ -582,6 +585,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 	
+	public void createJmochaMailCopyright() {
+		try {
+			select("EzCommonDAO.checkJmochaMailCopyright");
+		} catch (Exception e) {
+			logger.debug("jmocha_mail_copyright doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJmochaMailCopyright");
+		}
+	}
+
+	public void createJamesMailDeletedId() {
+		try {
+			select("EzCommonDAO.checkJamesMailDeletedId");
+		} catch (Exception e) {
+			logger.debug("james_mail_deleted_id doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJamesMailDeletedId");
+		}
+	}
+	
 	public void updateListOptionData() {
 		try {
 			if ((int) select("EzCommonDAO.checkListOptionData1") > 0) {
@@ -890,6 +913,72 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.debug("tbl_portal_menu_auth sn doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.snMenuAuth");
+		}
+	}
+	
+	public void alterChamjoView() {
+		try {
+			if ((int) select("EzCommonDAO.checkAlterChamjoView") <= 0) {
+				update("EzCommonDAO.alterAprDoingView");
+				update("EzCommonDAO.alterChamjoView");
+			}
+		} catch (Exception e) {
+			logger.debug("alterChamjoView() ERROR...");
+			e.printStackTrace();
+		}
+	}
+	
+	public void addAddressFurigana() {
+		try {
+			select("EzCommonDAO.checkAddressFurigana"); 
+		} catch (Exception e) {
+			update("EzCommonDAO.addAddressFurigana");
+			logger.debug("JMOCHA_ADDRESS_INFO S_FURIGANA doesn't exist. creating the column...");
+			e.printStackTrace();
+		}
+	}
+
+	public void createOpenGovTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblOpenGovDocInfo");
+		} catch (Exception e) {
+			logger.debug("tbl_opengovdocinfo doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblOpenGovDocInfo");
+		}
+		
+		try {
+			select("EzCommonDAO.checkTblOpenGovfileInfo");
+		} catch (Exception e) {
+			logger.debug("tbl_opengovfileinfo doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblOpenGovFileInfo");
+		}
+	}
+	
+	public void addOpenGovFlag() {
+		try {
+			select("EzCommonDAO.checkOpenGovFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_forminfo openGovFlag doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addOpenGovFlag");
+		}
+	}
+
+	public int checkDeptId(Map<String, Object> map) {
+		return (int) select("EzCommonDAO.checkDeptId", map);
+	}
+
+	public void createRsFavoriteTable() {
+		try {
+			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				select("EzCommonDAO.checkTblRsFavorite");
+			}
+		} catch (Exception e) {
+			logger.debug("tbl_rs_favorite doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblRsFavorite");
 		}
 	}
 }

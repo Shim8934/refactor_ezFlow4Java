@@ -62,6 +62,7 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzBoardService")
@@ -91,6 +92,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
+	@Autowired
+	private KlibUtil klibUtil;
+
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardServiceImpl.class);
 
 	@Override
@@ -556,32 +560,51 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public void updateCopyItem(String destItemID, int tenantID) throws Exception {
+	public void updateCopyItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception {
 		logger.debug("updateCopyItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("destItemID", destItemID);
+		map.put("orgItemID", orgItemID); // 복사 전의 게시물ID
+		map.put("destItemID", destItemID); // 복사 후의 게시물ID
+		map.put("orgBoardID", orgBoardID); // 복사 전의 게시판ID
+		map.put("destBoardID", destBoardID); // 복사 후의 게시판ID
 		map.put("tenantID", tenantID);
 		
 		ezBoardDAO.updateCopyItem(map);
+		
+		/* 2019-12-17 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라 조회자정보 유지 */
+		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
+		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) {
+			ezBoardDAO.insertBoardItemReadForCopy(map);
+		}
 
 		logger.debug("updateCopyItem ended");
 	}
 
 	@Override
-	public void updateMoveItem(String destItemID, String orgItemID, int tenantID) throws Exception {
+	public void updateMoveItem(String destItemID, String orgItemID, String destBoardID, String orgBoardID, int tenantID) throws Exception {
 		logger.debug("updateMoveItem started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("itemID", orgItemID);
-		map.put("destItemID", destItemID);
+		map.put("itemID", orgItemID); // 이동 전의 게시물ID
+		map.put("destItemID", destItemID); // 이동 후의 게시물ID
+		map.put("orgBoardID", orgBoardID); // 이동 전의 게시판ID
+		map.put("destBoardID", destBoardID); // 이동 후의 게시판ID
 		map.put("tenantID", tenantID);
 		
 		ezBoardDAO.updateMoveItem(map);
 		ezBoardDAO.deleteBoardItem(map);
-		ezBoardDAO.deleteBoardItemRead2(map);
+		
+		/* 2019-12-17 홍승비 - 게시물 이동 시, 테넌트 컨피그에 따라 기존의 조회자정보를 유지함 */
+		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", tenantID);
+		if (isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL"))) {
+			ezBoardDAO.updateBoardItemRead(map);
+		} else {
+			ezBoardDAO.deleteBoardItemRead2(map);
+		}
+		
 		ezBoardDAO.deleteBoardReply(map);
 
 		logger.debug("updateMoveItem ended");
@@ -1360,7 +1383,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pItemID", itemID);
 		map.put("lang", multiLang);
 		map.put("v_TENANTID", tenantID);
-
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
 		logger.debug("getBrdGetItemInfoTemp ended");
 		return ezBoardDAO.getBrdGetItemInfoTemp(map);
 	}
@@ -1989,6 +2013,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}			
 			sb.append("<UserIMG>" + commonUtil.cleanValue(userImg) + "</UserIMG>");
 			
+			/* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 정보 추가 */
+			sb.append("<ONELINEREPLY>" + commonUtil.cleanValue(itemInfo.getOneLineReply()) + "</ONELINEREPLY>");
 			sb.append("</NODE>");
 			sb.append("</NODES>");
 		} else {
@@ -3284,52 +3310,74 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			for (int i = 0; i < strAttachments.split("\\|").length; i++) {
+				String tempAttachmentPath = commonUtil.detectPathTraversal(strAttachments.split("\\|")[i]);
+				boolean isKlibEncrypted = tempAttachmentPath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
+				String uploadAttachmentPath;
+				
+				if (isKlibEncrypted) {
+					uploadAttachmentPath = tempAttachmentPath.substring(0, tempAttachmentPath.lastIndexOf('.'));
+				} else {
+					uploadAttachmentPath = tempAttachmentPath;
+				}
+				
 				if (strType.equals("BOARD")) {
-					if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-						filePath = strAttachments.split("\\|")[i];
+					if (tempAttachmentPath.indexOf("upload_board") > -1) {
+						filePath = tempAttachmentPath;
 					} else {
-						filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+						filePath = strFilePath + commonUtil.separator + tempAttachmentPath;
 					}
 					
 					File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
 					fileSize = file.length();
 					
-					if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
-						filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
+					if (tempAttachmentPath.indexOf("tempUploadFile") > -1) {
+						filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + uploadAttachmentPath.replace("tempUploadFile", "");
 						
 						File fileinfo = new File(realPath + commonUtil.detectPathTraversal(filePath2));
 						
 						if (!fileinfo.exists()) {
-							FileUtils.moveFile(file, fileinfo);
+							if (isKlibEncrypted) {
+								byte[] fileBytes = FileUtils.readFileToByteArray(file);
+								fileBytes = klibUtil.decrypt(fileBytes);
+								FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+							} else {
+								FileUtils.moveFile(file, fileinfo);
+							}
 						}
-					} else if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-						filePath2 = strAttachments.split("\\|")[i];
+					} else if (tempAttachmentPath.indexOf("upload_board") > -1) {
+						filePath2 = tempAttachmentPath;
 					} else {
-						filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+						filePath2 = strFilePath + commonUtil.separator + tempAttachmentPath;
 					}
 					
 					file = null;
 				} else {
-					String checkPath = commonUtil.detectPathTraversal(strAttachments.split("\\|")[i].split("/")[2]);
-					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + checkPath);
+					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + tempAttachmentPath.split("/")[2]);
 					fileSize = file.length();
 					
-					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + checkPath;
+					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + uploadAttachmentPath.split("/")[2];
 					
 					File fileinfo = new File(realPath + filePath2);
 					
 					if (!fileinfo.exists()) {
-						FileUtils.moveFile(file, fileinfo);
+						if (isKlibEncrypted) {
+							byte[] fileBytes = FileUtils.readFileToByteArray(file);
+							fileBytes = klibUtil.decrypt(fileBytes);
+							FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+						} else {
+							FileUtils.moveFile(file, fileinfo);
+						}
+						
 						file.delete();
 					}
 				}
 				
 				fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
 				
-				// 2018.07.05 - KLIB - ezd 확장자 없애기
-				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-					fileName = fileName.substring(0, fileName.lastIndexOf("."));
-				}
+//				// 2018.07.05 - KLIB - ezd 확장자 없애기
+//				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+//					fileName = fileName.substring(0, fileName.lastIndexOf("."));
+//				}
 				
 				saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
 			}
@@ -3730,14 +3778,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        if (useAppr.equals("Y")) {
 	        	sb.append("<APPRFLAG>N</APPRFLAG>");
 	        }
+	        /* 2019-12-13 홍승비 - 게시물 이동 시 조회수, 조회자정보 유지 */
+	        sb.append("<READCOUNT>" + boardListVO.getReadCount() + "</READCOUNT>");
 	        
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
-	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
+	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "move", realPath, userInfo);
 	        
 	        if (result.equals("OK")) {
-	        	updateMoveItem(destItemID, orgItemID, userInfo.getTenantId());
+	        	updateMoveItem(destItemID, orgItemID, destBoardID, orgBoardID, userInfo.getTenantId());
 	        	destItemIDStr.append(destItemID).append(";");
 	        	resultStr.append(result).append("|");
 	        }
@@ -3809,9 +3859,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		if (doc.getElementsByTagName("DOCCONTENT").item(0) != null) {
 			boardListVO.setContent(commonUtil.stripScriptTags(commonUtil.htmlUnescape(doc.getElementsByTagName("DOCCONTENT").item(0).getTextContent())));
-		}		
-		
-		if (pMode.equals("copy")) {
+		}
+
+		if (pMode.equals("copy") || pMode.equals("move")) {
 			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
 		} else {
 			boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
@@ -3836,9 +3886,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
 		
-		if (!pMode.equals("copy")) {
+		if (!pMode.equals("copy") && !pMode.equals("move")) {
 			boardListVO.setMainContent(commonUtil.stripScriptTags(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n")));
-			
+
 			if (pMode.equals("reply") || pMode.equals("modify")) {
 				boardListVO.setParentWriteDate(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
 			} else {
@@ -3897,7 +3947,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setExtensionAttribute10("");
 		}
 		
-		if (!pMode.equals("copy")) {
+		if (!pMode.equals("copy") && !pMode.equals("move")) {
 			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
 			if (saveMHTResult == false) {
 				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
@@ -3915,6 +3965,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		//구분 추가
 		boardListVO.setGuBun(doc.getElementsByTagName("GUBUN").item(0).getTextContent());
+		
+		/* 2019-12-17 홍승비 - 게시물 복사/이동 시 테넌트 컨피그에 따라 조회수 유지 */
+		String isReadCountCopyUsed = ezCommonService.getTenantConfig("copyReadCountBoardItem", userInfo.getTenantId());
+		if ((pMode.equals("copy") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("COPY") || isReadCountCopyUsed.equals("ALL"))) ||
+				(pMode.equals("move") && isReadCountCopyUsed != null && (isReadCountCopyUsed.equals("MOVE") || isReadCountCopyUsed.equals("ALL")))) {
+			boardListVO.setReadCount(Integer.valueOf(doc.getElementsByTagName("READCOUNT").item(0).getTextContent()));
+		} else { // READCOUNT값은 기본적으로 0으로 삽입된다.
+			boardListVO.setReadCount(0);
+		}
 		
 		if (pMode.equals("modify")) {
 			brdUpdateItem(boardListVO, "BOARD");
@@ -4072,13 +4131,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        	sb.append("<APPRFLAG>N</APPRFLAG>");
 	        }
 	        
+	        /* 2019-12-16 홍승비 - 게시물 복사 시 테넌트 컨피그에 따라  조회수, 조회자정보 유지 */
+	        sb.append("<READCOUNT>" + boardLisitVO.getReadCount() + "</READCOUNT>");
+	        
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
 	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
 	        
 	        if (result.equals("OK")) {
-	        	updateCopyItem(destItemID, userInfo.getTenantId());
+	        	/* 2019-12-16 홍승비 - 조회자정보 저장을 위한 파라미터 추가 */
+	        	updateCopyItem(destItemID, orgItemID, destBoardID, orgBoardID, userInfo.getTenantId());
 	        	destItemIDStr.append(destItemID).append(";");
 	        	resultStr.append(result).append("|");
 	        }
@@ -4398,4 +4461,40 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.isDeptChk(map);
 	}
 	
+	/* 2019-11-08 홍승비 - 해당 게시판을 포함하여 하위에 속한 모든 게시판들을 가져오는 메서드 */
+	@Override
+	public List<BoardPropertyVO> getAllSubBoardProperty(String boardID, int tenantID) throws Exception {
+		logger.debug("getAllSubBoardProperty started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_BOARDID", boardID);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getAllSubBoardProperty ended");
+		return ezBoardDAO.getAllSubBoardProperty(map);
+	}
+	
+	/* 2019-11-08 홍승비 - 주어진 게시판ID에 대하여, 새로운 BOARDTREEPATH를 생성해 리턴하는 메서드 */
+	@Override
+	public String getNewBoardTreePath(String boardID, int tenantID) throws Exception {
+		logger.debug("getNewBoardTreePath started");
+		
+		StringJoiner addJobStr = new StringJoiner(",");
+		String tempParentBoardID = boardID;
+		
+		boolean isBoardPropertyExist = true;
+		while (isBoardPropertyExist == true) {
+			BoardPropertyVO boardProperty = getBoardProperty(tempParentBoardID, tenantID);
+			if (boardProperty != null && !boardProperty.getParentBoardID().equals("top")) {
+				addJobStr.add(boardProperty.getParentBoardID());
+				tempParentBoardID = boardProperty.getParentBoardID();
+			} else {
+				isBoardPropertyExist = false;
+			}
+		}
+		
+		logger.debug("getNewBoardTreePath ended");
+		return addJobStr.toString();
+	}
 }

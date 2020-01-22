@@ -32,10 +32,10 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1><spring:message code='ezPoll.hdp16'/></h1>
+    <h1><spring:message code='ezPoll.hdp20'/></h1>
     <div class="portlet_tabpart01">
         <div class="portlet_tabpart01_top" id="tab1">
-            <p id="BoardEnv_sub3" style="display: block"><span divname="BoardEnv_div3" id="1tab3" class="tabover"><spring:message code="ezBoard.t10011" /></span></p>
+            <p id="BoardEnv_sub3" style="display: block"><span divname="BoardEnv_div3" id="1tab3" class="tabover"><spring:message code="ezPoll.hsbCf01" /></span></p>
         </div>
     </div>
     <iframe id="BoardEnv_ifrm" style="width: 100%; height: 100%;" frameborder="0" ></iframe>

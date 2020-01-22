@@ -128,26 +128,9 @@
 // 		            window.close();
 		            
 			        /* 2019-07-02 홍승비 - 승인게시판에 게시물 복사, 이동 시에도 승인메일 보내도록 수정 */
-			        $.ajax({
-    					type : "GET",
-    					dataType : "text",
-    					async : true,
-    					url : "/ezBoard/getBoardApprProperty.do",
-    					data : {
-    						boardID : pDestBoardID
-						},
-    					success: function(result){
-    						var itemIDs = returnItemIDStr.split(";");
-						 	if (result == "Y") {
-								for (var i = 0; i < itemIDs.length - 1 ;i++) {
-				                    xmlhttp = createXMLHttpRequest();
-				                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
-				                    xmlhttp.send();
-				                    xmlhttp = null;
-								}
-							}
-    					}
-    				});
+			        sendApprMail(pDestBoardID, returnItemIDStr);
+			        /* 2019-12-17 홍승비 - 게시물 이동 시에도 게시알림 메일을 보내도록 수정 */
+			        sendNotiMail(pDestBoardID, returnItemIDStr);
 		        } 
 		        //else if (window.parent.strListInfo == "" || typeof (window.parent.strListInfo) == "undefined") {
 		        	//var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t497' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t497'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -309,6 +292,46 @@
 		            }
 		        }
 		    }
+		    
+		    /* 2019-12-17 홍승비 - 승인메일 발송 동작 함수로 분리 */
+		    function sendApprMail(pDestBoardID, returnItemIDStr) {
+		        $.ajax({
+					type : "GET",
+					dataType : "text",
+					async : true,
+					url : "/ezBoard/getBoardApprProperty.do",
+					data : {
+						boardID : pDestBoardID
+					},
+					success: function(result){
+						var xmlhttp;
+						var itemIDs = returnItemIDStr.split(";");
+						
+					 	if (result == "Y") {
+							for (var i = 0; i < itemIDs.length - 1 ;i++) {
+			                    xmlhttp = createXMLHttpRequest();
+			                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+			                    xmlhttp.send();
+			                    xmlhttp = null;
+							}
+						}
+					}
+				});
+		    }
+		    
+		    /* 2019-12-17 홍승비 - 게시물 이동 시에도 게시알림 메일을 보내도록 수정 */
+	        function sendNotiMail(pDestBoardID, returnItemIDStr) {
+				var xmlhttp;
+				var itemIDs = returnItemIDStr.split(";");
+				
+				for (var i = 0; i < itemIDs.length - 1 ;i++) {
+					xmlhttp = createXMLHttpRequest();
+	                xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pDestBoardID) + "&itemID=" + encodeURIComponent(itemIDs[i]), true);
+	                xmlhttp.send();
+	                xmlhttp = null;
+				}
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup"> 

@@ -18,8 +18,8 @@
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 <!-- time picker-->
-<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
-<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/jquery.timepicker.css')}" />
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.timepicker.js')}"></script>
 <script type="text/javascript">
 	var reformEditorContent = "";
 	

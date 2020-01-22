@@ -37,9 +37,9 @@
     	<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
     	<script type="text/javascript">
 	    	var pBoardID = "<c:out value = '${boardInfo.boardID}' />";
-	        var pBoardName = "<c:out value = '${boardInfo.boardName}' />";
+	        var pBoardName = "<c:out value = '${multiBoardName}' />";
 	        var SSUserID = "<c:out value = '${userInfo.id}' />";
-	        var SSUserName = "<c:out value = '${userInfo.displayName1}' />";
+	//        var SSUserName = "<c:out value = '${userInfo.displayName1}' />";
 	        var CurPage = "<c:out value = '${page}' />";
 	        var totalPage = "<c:out value = '${totalPage}' />";
 	        var totalCount = "<c:out value = '${totalCount}' />";
@@ -320,7 +320,7 @@
     	</script>
 	</head>
 	<body class="cmhome_body" style="overflow-x:hidden">
-	    <h1 class="type1_h1">${boardInfo.boardName }<span id="mailBoxInfo"></span></h1>
+	    <h1 class="type1_h1">${multiBoardName}<span id="mailBoxInfo"></span></h1>
 	    
 	    <div id = "mainmenu">
 	    	<c:if test="${boardInfo.boardID !=  '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">

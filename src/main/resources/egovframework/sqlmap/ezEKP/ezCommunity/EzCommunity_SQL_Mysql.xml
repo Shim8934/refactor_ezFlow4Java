@@ -6236,6 +6236,7 @@
 				boardid,
 				boardname,
 				boardname2,
+				TREEVIEWORDER,
 				parentboardid,
 				boardno,
 				replynotify,
@@ -6245,6 +6246,16 @@
 				#v_BOARDGROUPID#,
 				#v_BOARDGROUPNAME#,
 				#v_BOARDGROUPNAME2#,
+				(SELECT
+					CASE WHEN MAX(TCB.TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TCB.TREEVIEWORDER) + 1 END
+				FROM
+					TBL_COMM_BOARDINFO TCB
+				WHERE
+					TCB.TENANT_ID = #tenantID#
+				AND
+					TCB.PARENTBOARDID = 'top'
+				AND
+					TCB.C_CLUBNO = #v_CODE#),
 				'top',
 				#v_BOARDNO#,
 				0,
@@ -6328,6 +6339,7 @@
 				boardid,
 				boardname,
 				boardname2,
+				TREEVIEWORDER,
 				parentboardid,
 				boardgroupid,
 				itemexpires,
@@ -6340,6 +6352,16 @@
 				#v_BOARDID#,
 				#v_BOARDNAME#,
 				#v_BOARDNAME2#,
+				(SELECT
+					CASE WHEN MAX(TCB.TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TCB.TREEVIEWORDER) + 1 END
+				FROM
+					TBL_COMM_BOARDINFO TCB
+				WHERE
+					TCB.TENANT_ID = #tenantID#
+				AND
+					TCB.PARENTBOARDID = #v_PARENTBOARDID#
+				AND
+					TCB.C_CLUBNO = #v_CODE#),
 				#v_PARENTBOARDID#,
 				#v_BOARDGROUPID#,
 				-1,

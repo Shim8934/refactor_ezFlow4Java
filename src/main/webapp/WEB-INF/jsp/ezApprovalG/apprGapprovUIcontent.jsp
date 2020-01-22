@@ -223,7 +223,7 @@
 	                        //Div_.style.textAlign = "left";
 	                        if (navigator.userAgent.indexOf('Firefox') != -1)
 	                            Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
-	                        Div_.innerHTML = TDRows.item(i).innerHTML;
+	                        Div_.innerHTML = TDRows.item(i).innerHTML.replace(/(<div>|<\/div>)/gi, "");
 	                        TDRows.item(i).innerHTML = "";
 	                        TDRows.item(i).appendChild(Div_);
 	                    }
@@ -243,6 +243,12 @@
 	                    }
 	                }
 	            } catch (e) { }
+	            
+	            validateAllTextArea(obj);
+                var textAreaElements = obj.getElementsByTagName("textarea");
+                for (i = 0; i < textAreaElements.length; i++) {
+                	textAreaElements.item(i).oninput = onInputTextarea;
+                }
 	        }
 	        function Set_EditorContentURL(url) {
 	            try {
@@ -308,9 +314,7 @@
  	                    BodyTagsDisabled(document.getElementById('div_Content'));
  	                    parent.FieldsAvailable();
  	                    
- 						<c:if test="${isReform}">
- 							validateAllTextArea(document.getElementById('div_Content'));
- 						</c:if>
+ 						validateAllTextArea(document.getElementById('div_Content'));
 	                }
 	            } catch (e)
 	            { }
@@ -338,6 +342,12 @@
 							} else if (CheckRows.item(i).type == "radio") {
 								CheckRows.item(i).onchange = RadioOnClick;
 							}
+	                    }
+	                    
+	                    validateAllTextArea(document.getElementById('div_Content'));
+	                    var textAreaElements = document.getElementById('div_Content').getElementsByTagName("textarea");
+	                    for (i = 0; i < textAreaElements.length; i++) {
+	                    	textAreaElements.item(i).oninput = onInputTextarea;
 	                    }
 	                    
 	                    var Body_innerHTML = "";
@@ -441,9 +451,7 @@
 	                     BodyTagsDisabled(document.getElementById('div_Content'));
 	                     document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
 	                     
-	                     <c:if test="${isReform}">
-		                     validateAllTextArea(document.getElementById('div_Content'));
-	                     </c:if>
+		                 validateAllTextArea(document.getElementById('div_Content'));
 	                }
 	            }
 	            catch (e) {
@@ -485,18 +493,17 @@
 	                var count = 0;
 	                var i = 0;
 	
-	                count = div_Content.getElementsByTagName("*").length;
+	                var fieldElements = div_Content.querySelectorAll(".FIELD");
+	                count = fieldElements.length;
 	
 	                for (i = 0; i < count; i++) {
-	                    if (div_Content.getElementsByTagName("*")[i].getAttribute("class") == "FIELD") {
-	                        var tmp = div_Content.getElementsByTagName("*")[i];
+	                        var tmp = fieldElements[i];
 	
 	                        if (!tmp.FieldID)
 	                            tmp.FieldID = tmp.id;
 	
 	                        FieldsList[FieldCount] = tmp;
 	                        FieldCount++;
-	                    }
 	                }
 	                return FieldsList;
 	            } catch (e) {
@@ -785,7 +792,7 @@
 	            } catch (e)
 	            { return ""; }
 	        }
-	    </script>
+		</script>
 	</head>
 	<body>
 	    <div id="div_Content"></div>

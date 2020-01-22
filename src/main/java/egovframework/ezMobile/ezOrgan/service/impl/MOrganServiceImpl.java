@@ -43,16 +43,24 @@ public class MOrganServiceImpl implements MOrganService {
 	@Override
 	public List<MPersonListVO> getPersonList(String companyID, int tenantID, String pSearchText, String rowNum) throws Exception {
 		LOGGER.debug("getPersonList started");
-
+		
+		// oracle List Size
+		int oracleRowNum = 0;
+		int oracleListSize = 50;
+		
+		if (rowNum != null && !rowNum.equals("")) {
+			oracleListSize += Integer.parseInt(rowNum);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("pSearchText", pSearchText);
 		map.put("rowNum", rowNum);
 		map.put("listSize", 50);
-
-		LOGGER.debug("getPersonList ended");
+		map.put("oracleListSize", oracleListSize);
 		
+		LOGGER.debug("getPersonList ended");
 		return mOrganDAO.getPersonList(map);
 	}
 
@@ -64,9 +72,8 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("pSearchText", pSearchText);
-		
+
 		LOGGER.debug("getPersonListCount ended");
-		
 		return mOrganDAO.getPersonListCount(map);
 	}
 
@@ -184,6 +191,8 @@ public class MOrganServiceImpl implements MOrganService {
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
 		map.put("companyId", companyId);
+		
+		map.put("useShowAllCompanies", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useShowAllCompanies", tenantId)));
 		
 		LOGGER.debug("deptId : " + deptID.replace("%", "\\%").replace("_", "\\_"));
 		LOGGER.debug("lang : " + commonUtil.getMultiData(lang, tenantId));

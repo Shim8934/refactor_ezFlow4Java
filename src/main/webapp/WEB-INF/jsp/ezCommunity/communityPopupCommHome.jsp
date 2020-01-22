@@ -490,6 +490,7 @@
 		    		document.getElementById(tempboard.getAttribute("TreeCtrl") + "obj").style.display = "none";
 		    	}
 		    	
+		    	/* 2019-10-24 홍승비 - 커뮤니티 팝업홈 중 좌측메뉴가 게시판이 아닌 경우, 동일 메뉴 클릭 시 하이라이트 유지 */
 		        if (userLevel == "0" || userLevel == "9") {
 		            switch (btn.id) {
 		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel, "right";
@@ -497,7 +498,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_QsPoll") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -517,7 +518,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_home") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -533,7 +534,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_guest") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -595,7 +596,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_QsPoll") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -611,7 +612,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_MemberInfo") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -641,7 +642,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_home") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    
@@ -657,7 +658,7 @@
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
 		                    
-		                    if (tempmenuid != "") {
+		                    if (tempmenuid != "" && tempmenuid != "btn_guest") {
 		                        document.getElementById(tempmenuid).className = "off";
 		                    }
 		                    

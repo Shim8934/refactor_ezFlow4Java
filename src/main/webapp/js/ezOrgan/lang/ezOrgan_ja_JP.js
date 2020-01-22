@@ -37,3 +37,5 @@ var strLangLHM03 = "本当に削除してよろしいですか？";
 var strLangKHJ01 = "사원";
 var strLangKHJ02 = "명을 복구하시겠습니까?";
 var strLangKHJ03 = "%s人の退職者を復職処理しますか？";
+var strLangKJE01 = "すべての兼務を削除します。" + "\n" + "よろしいですか？";
+var strLangKSM01 = "部署を選択してください。";

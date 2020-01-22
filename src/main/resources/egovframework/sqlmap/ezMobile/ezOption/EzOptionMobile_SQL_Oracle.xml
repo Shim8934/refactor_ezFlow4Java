@@ -37,6 +37,36 @@
       <result property="tenantId"       	column="tenant_id"        					columnIndex="7"/>     
     </resultMap>
     
+    <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
+    	<![CDATA[
+	    	SELECT
+	    		b.tenant_id,
+	    		a.lang,    	
+				a.timeZone,		    
+			    b.department,
+			    b.description,
+			    b.description2,
+			    b.physicaldeliveryofficename,
+			    b.company,
+			    b.company2,
+			    b.cn,
+			    b.displayName,
+			    b.displayName2,
+			    b.title,
+			    b.title2,
+                b.extensionattribute1 as rollinfo,
+                b.extensionattribute2 as userFileUrl,
+                b.mail as email,
+                b.telephonenumber
+			FROM
+				TBL_USERMOBILEINFO a right join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
+			WHERE
+				b.cn = #userId#
+			AND
+				b.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
+		]]>		
+  	</select>
+    
   	<select id="EzOptionDAO.commonInfoWeb" parameterClass="Map" resultMap="MCommonVO">
     	<![CDATA[
 	    	SELECT
@@ -65,6 +95,35 @@
 				b.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
 		]]>		
   	</select>
+  	
+  	<select id="EzOptionDAO.optionInfo" parameterClass="Map" resultMap="MOptionVO">
+    	<![CDATA[
+	    	SELECT
+	    		userId,
+	    		timeZone, 	
+				lang,
+			  	mainType,
+			    listCnt,			    
+			    useSecurity,
+			    tenant_id
+			FROM
+				TBL_USERMOBILEINFO
+			WHERE
+				userid = #userId#
+			AND
+				tenant_id = #tenantId#
+		]]>		
+  	</select>
+  	
+  	<insert id="EzOptionDAO.insertOption" parameterClass="Map">
+  		<![CDATA[
+			INSERT INTO TBL_USERMOBILEINFO(
+				userId,			timeZone, 			lang, 			mainType,			listCnt,		useSecurity,		tenant_id
+			) values (
+				#userId#,		#timeZone#,			#lang#,			#mainType#,			#listCnt#,		#useSecurity#,		#tenantId#
+			)
+   		]]>
+  	</insert>
   	
 </sqlMap>
 

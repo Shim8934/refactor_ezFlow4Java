@@ -123,6 +123,7 @@
 		    var receiverCount = 0;
 	        var groupAddressCountMap = {};
 	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+	        var g_useAdditionalInfo = ${useAdditionalInfo};
 	        var previewChk = false; // 메일 미리보기
 	        
 			function window_onload() {

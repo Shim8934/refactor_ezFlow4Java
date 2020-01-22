@@ -255,7 +255,7 @@
 	                      <isEqual property="v_ISDEPT" compareValue="1">
 	                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
 		                      AND
-		                      	C.BoardGroupACL = 'Y'
+		                      	BoardGroupACL = 'Y'
 	                      	</isEqual>
 	                      </isEqual>
 						<![CDATA[
@@ -270,12 +270,13 @@
 	                	(A.companyid = #v_COMPANYID# OR TRIM(A.companyid) = ''	 OR A.companyid IS NULL)
 	                )
 	              	ORDER BY 
-	              		TreeViewOrder ASC
+	              		A.TreeViewOrder ASC
 				]]>
 			</isEqual>
 			<isNotEqual property="v_pSelectBy" compareValue="3">
 <!-- 				접근 권한이 있는 게시판만 가져옴(DEFAULT) -->
 <!--                하위부서 권한체크(BOARDGROUPACL) 조건 추가 18.09.20   -->
+<!-- 2019-06-05 홍승비 - 게시판그룹의 관리자권한이 존재하는 경우, 하위게시판을 전부 가져오도록 수정 -->
 				<isEqual property="v_boardGroupAdmin_FG" compareValue="OK">
 	          		<![CDATA[
 						SELECT 
@@ -355,7 +356,7 @@
 		                      	</isEqual>
 		                      </isEqual>
 		                      <![CDATA[
-		                      	) B  	                      	   
+		                      	) B
 		                ON 
 		                	A.TENANT_ID = B.TENANT_ID
 		                AND
@@ -373,7 +374,7 @@
 		</isEqual>
 		<isNotEqual property="v_pMode" compareValue="1">
 <!-- 			게시판관리자 '허용' 권한 & ADMIN권한 -->
-<!-- 2018-10-15 홍승비 - 전체관리자는 그룹사게시판을 리스트에 표출하도록 수정 -->
+<!-- 2018-10-15 홍승비 - 전체관리자는 항상 그룹사게시판을 리스트에 표출하도록 수정 -->
 <!-- 2019-06-04 홍승비 - 전체관리자를 제외한 관리자는 그룹사게시판의 권한을 체크하도록 수정 -->
 			<isEqual property="v_isCompanyAdmin" compareValue="true">
           		<![CDATA[
@@ -1721,6 +1722,7 @@
 		</isNotEqual>
 	</insert>
 	
+	<!-- 2019-11-05 홍승비 - 하위게시판 생성 시 댓글옵션의 기본값을 '본문하단(2)'으로 수정 -->
 	<!-- 2018-10-15 홍승비 - 그룹사게시판그룹(구분값 "99") 생성 시 companyID 미사용 -->
 	<!-- 2018-02-01 김보미 - 한줄답변컬럼(ONELINEREPLY) 기본값을 사용하기로 되게끔 변경, REPLYNOTIFY 기본값 0으로 세팅 추가 -->
 	<insert id="EzBoardAdminDAO.createBoard_I" parameterClass="Map" >
@@ -1730,7 +1732,7 @@
 					BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY
 				)
 		   		VALUES ( 
-		   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '1', 0 
+		   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0 
 		   		)
 			]]>
 		</isEqual>
@@ -1740,7 +1742,7 @@
 				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY, COMPANYID
 			)
 	   		VALUES ( 
-	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '1', 0, #v_COMPANYID#  
+	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0, #v_COMPANYID#  
 	   		)
 		]]>
 		</isNotEqual>
@@ -2218,5 +2220,101 @@
 	    		QUERY = #v_PQUERY#
     	]]>
 	</delete>
-
+	
+	<update id="EzBoardAdminDAO.updateBoardTreePath" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_BOARD_BOARDINFO
+		    SET 
+		    	BOARDTREEPATH = #v_BOARDTREEPATH#
+            WHERE
+            	BOARDID = #v_BOARDID#
+            AND  
+            	TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
+	
+	<!-- 2020-01-09 홍승비 - 오라클의 중복 키 업데이트 쿼리 MERGE INTO로 수정 -->
+	<!-- 2019-11-13 홍승비 - '접근권한이 허용'인 하위게시판 권한복사 시 상위게시판에 권한정보 일부 삽입 또는 업데이트 -->
+	<insert id="EzBoardAdminDAO.saveACLIncludeUppderBoard2" parameterClass="Map">
+		<![CDATA[
+			MERGE INTO
+				TBL_BOARD_BOARDMANAGE A
+			USING (
+				SELECT
+					ACCESSID, 
+					ACCESSNAME, 
+					ACCESSNAME2, 
+					TENANT_ID, 
+				    COMPANYID
+				FROM
+					TBL_BOARD_BOARDMANAGE B
+				WHERE
+					B.BOARDID = #v_ORGBOARDID#
+				AND
+					B.TENANT_ID = #v_TENANTID#
+				AND
+					B.ACCESSID = #v_ACCESSID#
+				) TMP
+			ON
+				(A.BOARDID = #v_BOARDID#
+				AND A.TENANT_ID = #v_TENANTID#
+				AND A.ACCESSID = #v_ACCESSID#)
+			WHEN MATCHED THEN
+				UPDATE SET
+					ACCESS_ = '1'
+			WHEN NOT MATCHED THEN
+			 	INSERT (
+					BOARDID, 
+					ACCESSID, 
+					ACCESSNAME, 
+					ACCESSNAME2, 
+					ACCESS_, 
+				    PARENTBOARDID, 
+				    BOARDADMIN_FG, 
+				    LISTVIEW_FG, 
+				    READ_FG, 
+				    WRITE_FG, 
+				    REPLY_FG, 
+				    DELETE_FG, 
+				    INHERIT_FG, 
+				    POSTNOTICE, 
+				    BOARDGROUPACL, 
+				    TENANT_ID, 
+				    COMPANYID
+				)
+				VALUES (
+					#v_BOARDID#, 
+					TMP.ACCESSID, 
+					TMP.ACCESSNAME, 
+					TMP.ACCESSNAME2, 
+					'1',
+				    #v_PARENTBOARDID#, 
+				    'false', 
+				    'false', 
+				    'false', 
+				    'false',   
+				    'false', 
+				    'false', 
+				    'false', 
+				    'false', 
+				    #v_BOARDGROUPACL#, 
+				    TMP.TENANT_ID, 
+				    TMP.COMPANYID)
+		]]>
+	</insert>
+	
+	<update id="EzBoardAdminDAO.updateBoardGroupID" parameterClass="Map" >
+		<![CDATA[
+			UPDATE
+				TBL_BOARD_BOARDINFO
+         	SET 
+             	BOARDGROUPID = #v_NEWBOARDGROUPID#
+       		WHERE
+       			TENANT_ID = #v_TENANTID#
+       		AND  
+       			BOARDID = #v_BOARDID#
+		]]>
+	</update>
+	
 </sqlMap>

@@ -169,10 +169,10 @@
 		        createNodeInsert(xmlDom, objNode, "DATA");
 		
 		        var selectedCount = listview.GetSelectedRows().length;
-		        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
 		        
-		        if (ret) {
-			        if (selectedCount > 0) {
+		        if (selectedCount > 0) {
+			        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
+		        	if (ret) {
 				        createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[0].getAttribute("DATA1"));
 				        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
 				        
@@ -188,9 +188,9 @@
 				        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
 				        //company_change();
 				        selectList_Change();
-			        } else {
-			            alert("<spring:message code='ezEmail.t51' />");		            
 			        }
+		        } else {
+		            alert("<spring:message code='ezEmail.t51' />");		            
 		        }
 		    }
 		    
@@ -227,13 +227,13 @@
 		        }
 		        var DeptID = selnode[0].getAttribute("DATA1");
 		
-		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(970, 670);
+		        var feature = "dialogHeight:690px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(970, 690);
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
 		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = mod_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 690));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -256,7 +256,7 @@
 
 		    	if (searchValue == "") {
 		    		alert("<spring:message code='ezEmail.t10' />");
-		    		return;
+		    		// return;
 		    	}
 		    	
 		        var xmlDom = createXmlDom();
@@ -327,6 +327,20 @@
 		    		tr_select(reListTR_, "lvUserList", View_dl);
 		    	}
 		    }
+		    
+		    function mail_manage(){
+		    	var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+		        
+		        if (listview.GetSelectedRows().length == 0) {
+					alert("<spring:message code='ezEmail.t55' />");
+					return;
+				}
+
+		        var selectId = GetAttribute(listview.GetSelectedRows()[0],"DATA1");
+		        var url = "/admin/ezOrgan/configEmail.do?id=" + selectId + "&type=ml" + "&companyId=" + companyId;
+			    window.open(url , "", "height=315px,width=462px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(462, 315));
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -341,18 +355,22 @@
 	  </LISTVIEWDATA>
 	</xml>
 	<form id="Form1" method="post">
-		<h1><spring:message code='ezEmail.t58' /></h1>
-		<div id="mainmenu">
-			<span style="display:none;"><b> <spring:message code='ezEmail.t59' /></b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px; display:none;">
+		<h1>
+			<spring:message code='ezEmail.t58' />
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			
+			<select name="ListCompany" id="ListCompany" class="companySelect" onchange="company_change()" style="margin-bottom:10px;">
 				<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>	      		
 	      	</select>
+		</h1>
+		<div id="mainmenu">
 			<ul>
 				<li class="important"><span onClick="add_dl()"><spring:message code='ezEmail.t60' /></span></li>
 		    	<li><span onClick="mod_dl()"><spring:message code='ezEmail.t61' /></span></li>
 		      	<li><span class="icon16 icon16_delete" onClick="del_dl()"></span></li>
+		      	<li><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
 		    </ul>
 	  </div>
 	  <script type="text/javascript">

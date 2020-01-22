@@ -183,7 +183,9 @@ function search_Set(pPage) {
 			"column"      : orderInf.col ? orderInf.col : "",
 			"order"       : orderInf.ord ? orderInf.ord : "",
 			"listCntSize" : listCnt,
-			"folderId"    : folderId
+			"folderId"    : folderId,
+			"sortType"	  : sortType,
+			"sortColumn"  : sortColumn
 		},
 		dataType: "JSON",
 		async: false,
@@ -239,9 +241,9 @@ function startSearch() {
 	
 	if (!sDateVal && !eDateVal && !fileExtVal && !fileNameVal && !userNameVal) { alert(strLang36); return;}
 	
-	if ((!sDateVal && eDateVal) || (sDateVal && !eDateVal)) {alert(strLang34); return;}
+	if ((!sDateVal && eDateVal) || (sDateVal && !eDateVal)) {alert(strLang43); return;}
 	
-	if (sDateVal && eDateVal) {if (sDateVal > eDateVal) {alert(strLang35); return;}}
+	if (sDateVal && eDateVal) {if (sDateVal > eDateVal) {alert(strLang43); return;}}
 	
 	startDateStr = sDateVal;
 	endDateStr   = eDateVal;
@@ -324,7 +326,7 @@ function fileDelete() {
 	if (filesList == null) {alert(strLang38); return;}
 	
 	openLeftPanel();
-	DivPopUpShow(450, 250, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
+	DivPopUpShow(450, 200, "/ezWebFolder/deleteConfirm.do?fileList=" + filesList.toString());
 }
 
 function fileRename() {
@@ -335,7 +337,7 @@ function fileRename() {
 	
 	var fileId = filesList[0];
 	openLeftPanel();
-	DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
+	DivPopUpShow(450, 200, "/ezWebFolder/fileRenameConfirm.do?fileId=" + fileId);
 }
 
 function fileMove() {

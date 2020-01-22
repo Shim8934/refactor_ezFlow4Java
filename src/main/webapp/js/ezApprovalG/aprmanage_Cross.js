@@ -766,6 +766,11 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         }
         
         windowName = "openDraftUI_REDRAFT";
+        
+        //2020-01-16 홍대표. receptGubunYN이 Y인데 재기안 할 경우, 민원인 주소 입력 버튼이 사라지는 버그 수정. 닷넷 참고.
+        if (formDocType == "") {
+            formDocType = GetAttribute(pCurSelRow, "DATA15");
+        }
     }
 
     var pArgument = new Array();
@@ -1030,11 +1035,11 @@ function openViewDocInfo(type) {
     }
 
     var openLocation;
-    var formUrlExt = formURL.substr(formURL.length - 3, formURL.length).toLowerCase();
+    // 20191210 ezd 확장자 빼기
+    var formUrlExt = getOriginalFileExtension(formURL);
 
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
-    	// 2018.07.26 (KLIB) - ezd 확장자 처리
-        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+        if (formUrlExt === "hwp") {
             if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
             } else {
@@ -1051,7 +1056,7 @@ function openViewDocInfo(type) {
     }
     else {
     	// 2018.07.06 (KLIB) - ezd 확장자 처리
-        if (formUrlExt === "hwp" || formUrlExt === "ezd") {
+        if (formUrlExt === "hwp") {
             if (CrossYN() && isIE()) {
             	openLocation = "/ezApprovalG/ezviewAprHWP.do";
             } else {
@@ -1119,6 +1124,8 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
         } else {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
+            var orgCompanyID = GetAttribute(pCurSelRow, "orgCompanyID");
+            
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
             	if (/chrome/i.test(navigator.userAgent)) {
             		alert(strLang1103);
@@ -1126,10 +1133,12 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             	} else {
             		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
             	}
+            } else if (pDraftFlag == "HAPYUI" && approvalFlag == "G") {
+            	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
             } else {
-                openLocation = "/ezApprovalG/recev.do";
+            	openLocation = "/ezApprovalG/recev.do";
             }
-            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
+            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag) + "&orgCompanyID=" + encodeURI(orgCompanyID);
             openwindow(openLocation, "receive", 880, 550);
         }
     } else {
@@ -1158,6 +1167,8 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         pArgument[1] = GetAttribute(pCurSelRow, "DATA2");
 
         var pURL = GetAttribute(pCurSelRow, "DATA3");
+        var tmpDocState = GetAttribute(pCurSelRow, "DATA12");
+        
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
         	openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
@@ -1165,7 +1176,12 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
         else {
-            openLocation = "/ezApprovalG/recevGSusin.do";
+        	//docstate가 012(합의) 일 경우에 부서합의 페이지 띄우도록 수정 2019-02-27 홍대표
+        	if (tmpDocState == strDocState12) {
+        		openLocation = "/ezApprovalG/recevGDeptHapyui.do";
+        	} else {
+        		openLocation = "/ezApprovalG/recevGSusin.do";
+        	}
 
             openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
@@ -2587,36 +2603,45 @@ function cancelYN_after(xml) {
         document.getElementById("tbtncallback").style.display = "";
         document.getElementById("tbtnforcecallback").style.display = "none";
     }
+    else if (RtnVal == "CALLBACK" && pListTypeValue == "3" && !GetBujaeFlag()) {
+    	document.getElementById("tbtncallback").style.display = "";
+    	document.getElementById("tbtnforcecallback").style.display = "none";
+    }
     else if (RtnVal == "CANCEL" && pListTypeValue == "3" && !GetBujaeFlag()) {
         document.getElementById("tbtncallback").style.display = "";
         document.getElementById("tbtnforcecallback").style.display = "none";
     }
     else {
     	if (forceCallBackYN == "YES") {
-    	var result = "";
-    	
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/doForceCancelYN.do",
-    		data : {
-    			docID : temppDocID,
-    			userID : pUserID
-    		},
-    		success: function(xml){
-    			result = xml;
+    		//강제회수는 기안자만 가능하도록 수정
+    		if (!checkIsDrafter()) {
+    			return;
     		}
-    	});
-    	
-        var RtnVal = getNodeText(loadXMLString(result).documentElement);
-        if (RtnVal == "TRUE")
-        	document.getElementById("tbtnforcecallback").style.display = "";
-        else
-            document.getElementById("tbtnforcecallback").style.display = "none";
-
-        document.getElementById("tbtncallback").style.display = "none";
-        temppDocID = null;
+    		
+	    	var result = "";
+	    	
+	    	$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/doForceCancelYN.do",
+	    		data : {
+	    			docID : temppDocID,
+	    			userID : pUserID
+	    		},
+	    		success: function(xml){
+	    			result = xml;
+	    		}
+	    	});
+	    	
+	        var RtnVal = getNodeText(loadXMLString(result).documentElement);
+	        if (RtnVal == "TRUE")
+	        	document.getElementById("tbtnforcecallback").style.display = "";
+	        else
+	            document.getElementById("tbtnforcecallback").style.display = "none";
+	
+	        document.getElementById("tbtncallback").style.display = "none";
+	        temppDocID = null;
     	} else {
     		 document.getElementById("tbtnforcecallback").style.display = "none";
     	     document.getElementById("tbtncallback").style.display = "none";
@@ -2978,4 +3003,20 @@ function attitude_annual_conn(docId) {
 		success : function(result) { 			},
 		error : function() { 			} 		
 	});  
+}
+
+function checkIsDrafter() {
+	var rtnVal = false;
+	
+	var DocList = new ListView();
+	DocList.LoadFromID("DocList");
+	
+	var oSelRow = DocList.GetSelectedRows();
+	if (oSelRow.length > 0) {
+		if (GetAttribute(oSelRow[0], "DATA16") == arr_userinfo[1]) {
+			rtnVal = true;
+		}
+	}
+	
+	return rtnVal;
 }

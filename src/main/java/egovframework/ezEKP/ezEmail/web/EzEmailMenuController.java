@@ -25,7 +25,6 @@ import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
-import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -69,9 +68,9 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import net.lingala.zip4j.core.ZipFile;
 /** 
@@ -117,6 +116,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	// 웹소켓 커넥션은 인스턴스가 싱글톤이 아니기 때문에 힙에 생성되는 1개의 인스턴스 Map을 공유할 수 있도록 Static으로 선언하였다. 
 	private static Map<String, Session> sessionMap = new ConcurrentHashMap<>();
@@ -140,6 +142,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String useMailBoxBackUp = ezCommonService.getTenantConfig("UseMailBoxBackUp", loginInfo.getTenantId());
 		String useMailReceiveScreen = ezCommonService.getTenantConfig("useMailReceiveScreen", loginInfo.getTenantId());
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+		String useSpamSniper = ezCommonService.getTenantConfig("useSpamSniper", loginInfo.getTenantId());
 		logger.debug("userEmail=" + userEmail + ",usePreviewSubTree=" + usePreviewSubTree + ",useBottomFrameOnly=" + useBottomFrameOnly 
 				+ ",useMailBoxBackUp=" + useMailBoxBackUp + ",useMailReceiveScreen=" + useMailReceiveScreen + ",useSharedMailbox=" + useSharedMailbox);
 		
@@ -278,6 +281,18 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			subCode = request.getParameter("subCode");
 		}
 		
+		String spamSniperUrl = ezCommonService.getTenantConfig("spamSniperUrl", loginInfo.getTenantId());
+		String spamSniperAuthKey = ezCommonService.getTenantConfig("spamSniperAuthKey", loginInfo.getTenantId());
+		String spamSniperAuthIv = ezCommonService.getTenantConfig("spamSniperAuthIv", loginInfo.getTenantId());
+		
+		String cryptResult = "";
+		if(useSpamSniper.equals("YES")){
+			cryptResult =  ezEmailUtil.spamSniperEnc(loginInfo.getEmail(), spamSniperAuthKey, spamSniperAuthIv);
+			model.addAttribute("cryptResult", cryptResult);
+		}
+		
+		model.addAttribute("useSpamSniper", useSpamSniper);
+		model.addAttribute("spamSniperUrl", spamSniperUrl);
 		model.addAttribute("mailServerAddress", mailServerAddress);
 		model.addAttribute("rootFolderXML", rootFolderXML.toString());
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
@@ -987,8 +1002,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					messageCount++;
 				}
 			} catch (Exception e) {
-				charset = Charset.forName("EUC-KR");
-				logger.debug("charset is changed as EUC-KR.");
+				charset = Charset.forName("ms949");
+				logger.debug("charset is changed as ms949.");
 				
 				if (zis1 != null) {
 					try { zis1.closeEntry(); } catch (Exception e1) {}
@@ -1959,4 +1974,36 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		return "ezEmail/mailImportOption";
 	}
 	
+	/**
+	 * 공유사서함의 email로 암호화
+	 */
+	@RequestMapping(value="/ezEmail/shareBoxSpam.do", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject shareBoxSpam(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			HttpServletRequest request) throws Exception{
+		
+		logger.debug("shareBoxSpam started.");
+		
+		JSONObject resultObject = new JSONObject();
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String shareId = request.getParameter("shareId");
+		
+		String mailAddress = ezOrganService.getPropertyValue(shareId, "mail", loginInfo.getTenantId());
+		String spamSniperAuthKey = ezCommonService.getTenantConfig("spamSniperAuthKey", loginInfo.getTenantId());
+		String spamSniperAuthIv = ezCommonService.getTenantConfig("spamSniperAuthIv", loginInfo.getTenantId());
+		
+		String cryptResult = ezEmailUtil.spamSniperEnc(mailAddress, spamSniperAuthKey, spamSniperAuthIv);
+		
+		logger.debug("shareId=" + shareId + ",mailAddress=" + mailAddress + ",cryptResult" + cryptResult);
+		
+		resultObject.put("shareId", shareId);
+		resultObject.put("cryptResult", cryptResult);
+		
+		logger.debug("shareBoxSpam ended.");
+		return resultObject;
+	}
 }

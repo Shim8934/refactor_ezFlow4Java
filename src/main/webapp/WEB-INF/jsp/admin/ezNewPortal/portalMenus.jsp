@@ -3,12 +3,12 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <!DOCTYPE html>
-<html>
+<html style="height: 97%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezNewPortal.t055' /></title>
-		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/default.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/thumbnailGrid/component.css')}" />
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')}" />
@@ -51,6 +51,7 @@
 			.accessOK div, .accessNO div {margin-left:15px;display:inline-block;}
 			.menuChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
 			li.menu dl dd span {white-space:normal; line-height:1.2; word-wrap:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
+			.bottomBtn .btnA:hover{text-decoration:none;}
 		</style>
 	</head>
 	
@@ -553,15 +554,42 @@
 					menusHTML += "</tr>";	
 				}
 			} else {
+				var mainTitle = "<spring:message code='ezNewPortal.t078' />";
+				var subTitle1 = "<spring:message code='ezNewPortal.t079' />";
+				var subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+				
+				var mainTitleId = "menu1";
+				var subTitle1Id = "menu2";
+				var subTitle2Id = "menu3";
+				
+				if (primary == "2") {
+					mainTitle = "<spring:message code='ezNewPortal.t079' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+					
+					mainTitleId = "menu2";
+					subTitle1Id = "menu1";
+					subTitle2Id = "menu3";
+				} else if (primary == "3") {
+					mainTitle = "<spring:message code='ezNewPortal.t080' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
+					
+					mainTitleId = "menu3";
+					subTitle1Id = "menu1";
+					subTitle2Id = "menu2";
+				}
+					
+				
 				menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
-				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t078' />)</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + mainTitle + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + mainTitleId + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t079' />)</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu2' type='text' maxlength='50'></td>";
+				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle1 + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle1Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu3' type='text' maxlength='50'></td>";
+				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle2 + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle2Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
 			}
 			menusHTML += "</table>";

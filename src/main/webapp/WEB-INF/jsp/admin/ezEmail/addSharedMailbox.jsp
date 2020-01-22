@@ -54,6 +54,8 @@
 	        var m_orgImg = {"normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif"};
 	        var m_tabDialogState = {"org": "select"};
 	        var selSpan = "";
+	        var selectDomain = "${companyMailDomain}";
+	        var sharedMailbox_Mail = "${sharedMailboxMail}";
 	        
 	        window.onload = function () {
 	            try {
@@ -313,21 +315,30 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
 		        		
-	                    headerData = loadXMLString(result);
+	                    // headerData = loadXMLString(result);
 	
 	                    if (CrossYN()) {
-	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
+	                    	var xmlRtn = resultXML.documentElement;
+	                        var xmlRtn2 = xmlRtn.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn2.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
-	                        headerData.documentElement.appendChild(Node);
+	                        headerData.appendChild(Node);
 	                    }
 	                    else {
-	                        var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
-	                        headerData.documentElement.appendChild(xmlRtn);
+	                        /* var xmlRtn = resultXML.documentElement.getElementsByTagName("ROWS")[0];
+	                        headerData.documentElement.appendChild(xmlRtn); */
+	                        var xmlRtn = resultXML.documentElement;
+	                        headerData.appendChild(xmlRtn);
 	                    }
 	                    pListXML_Info = headerData;
 	                    pSeach = false;
@@ -398,22 +409,31 @@
 		        	data : {
 		        		search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", 
 		        		type : "user"
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();
-	                    headerData = loadXMLString(result);
+	                    // headerData = loadXMLString(result);
 						
 	                    var xmlDom = loadXMLString(result);
 	                    if (CrossYN()) {
-	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
+	                    	var xmlRtn = xmlDom.documentElement;
+	                        var xmlRtn2 = xmlRtn.getElementsByTagName("ROWS")[0];
+	                        $(xmlRtn2.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA11").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+				            		$(this).find("CELL").eq(0).find("DATA6").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 	                        var Node = headerData.importNode(xmlRtn, true);
-	                        headerData.documentElement.appendChild(Node);
+	                        headerData.appendChild(Node);
 	                    }
 	                    else {
-	                        var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
-	                        headerData.documentElement.appendChild(xmlRtn);
+	                        /* var xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
+	                        headerData.documentElement.appendChild(xmlRtn); */
+	                    	var xmlRtn = xmlDom.documentElement;
+	                        headerData.appendChild(xmlRtn);
 	                    }
 	                    pListXML_Info = headerData;
 	                    pSeach = true;
@@ -461,6 +481,11 @@
 	            	alert("<spring:message code='ezEmail.sharedMailbox12' />");
 	            	document.getElementById("TextId").focus();
 	            	return;
+	            }
+	            
+	            if (shareId == "" && $("#selectDomain").val() == "") {
+					alert("<spring:message code='ezEmail.multiDomain.ksa17' />");
+					return;	
 	            }
 	            
 	            if (shareId == "") {
@@ -555,7 +580,8 @@
     	            	"shareName" : document.getElementById("TextName").value.trim(),
     	            	"password" : document.getElementById("TextPassword").value,
     	            	"compId" : companyId,
-    	            	"userList" : userList
+    	            	"userList" : userList,
+    	            	"selectDomain" : selectDomain
     	            };
 	            	
 	            	$.ajax({
@@ -1349,6 +1375,12 @@
 	        	window.close();
 	        }
 	        
+	        $(document).on("change", "#selectDomain", function() {
+				var mailDomain = "@" + $(this).val();
+	        	$("#mailDomain").text(mailDomain);
+	        	
+	        	selectDomain = $(this).val();
+	        });
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -1374,11 +1406,27 @@
 				<th><spring:message code='ezEmail.sharedMailbox19' /></th>
 				<td style="width:60%">
 					<input id="TextId" name="TextId" type="text" maxlength="20" class="txtClass" tabindex="2" style="ime-mode: disabled; width:40%;">
-					<span id="mailDomain" style="font-weight: bold;">@${mailDomain}</span>
+					<span id="mailDomain" style="font-weight: bold;display:none;">@${mailDomain}</span>
+					<c:if test="${empty shareId}">
+						<span style="font-weight: bold; ">@</span>
+						<select id="selectDomain" style="width: 220px; ">
+							<c:forEach var="item" items="${domainList}">
+								<option value="<c:out value='${item}'/>" ${item eq companyMailDomain ? 'selected' : ''}><c:out value='${item}'/></option>
+							</c:forEach>
+						</select>
+					</c:if>
 				</td>
 				<th><spring:message code='ezEmail.lhm61' /></th>
 				<td style="width:40%"><input id="TextPassword2" name="TextPassword2" type="password" maxlength="24" class="txtClass" tabindex="4" style="width:100%"></td>
 			</tr>
+			<c:if test="${!empty shareId}">
+				<tr>
+					<th><spring:message code='main.t78' /></th>
+					<td style="width:100%" colspan="3">
+						${sharedMailboxMail}
+					</td>
+				</tr>
+			</c:if>
 		</table>
 		
 	    <table style="width:100%;margin-top:10px">

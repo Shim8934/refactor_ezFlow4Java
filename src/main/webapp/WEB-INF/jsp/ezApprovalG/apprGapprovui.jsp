@@ -165,6 +165,12 @@
 			//2018-11-07 배현상, 결재자 순번
 			var wAprMemberSN = "";
 			
+			//원문공개정보
+			var basis = "<c:out value ='${basis}'/>";
+			var reason = "<c:out value ='${reason}'/>";
+			var listOpenFlag = "<c:out value ='${listOpenFlag}'/>";
+			var fileOpenFlagList = "<c:out value ='${fileOpenFlagList}'/>";
+			
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -732,7 +738,8 @@
 		        }
 		        
 		        // getDocNumber를 이용한 문서번호 채번
-		        if (pDraftFlag != "SUSIN") {
+		        // 합의문서일 경우 채번하기 위해 조건 추가함. 2019-02-21 홍대표
+		        if (pDraftFlag != "SUSIN" && pDraftFlag != "HABYUI") {
 		        	if (approvalFlag == "S") {
 		        		// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
 		        		// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
@@ -1557,6 +1564,11 @@
 			        parameter[33] = pSummery;
 			        parameter[41] = tempItemName;
 			        parameter[42] = tempItemName2;
+		        } else {
+			        parameter[52] = basis;
+			        parameter[53] = reason;
+			        parameter[54] = listOpenFlag;
+			        parameter[55] = fileOpenFlagList;
 		        }
 		
 		        if (tempItemCode != "")
@@ -1693,7 +1705,28 @@
 					            	setNonElecRecInfo(nonElecRecInfoXml);
 				            	}
 				            }
-			                
+
+                            $.ajax({
+                                type : "POST",
+                                ataType : "text",
+                                sync : false,
+                                url : "/ezApprovalG/openGovInfoSave.do",
+                                data : {
+                                    openGovListFlag : ret[27],
+                                    fileOpenFlagList : ret[28],
+                                    basis : ret[29],
+                                    reason : ret[30],
+                                    publicity : ret[11],
+                                    docID : pDocID,
+                                    limitDate : ret[31]
+                                }
+                            });
+
+                            listOpenFlag = ret[27];
+                            fileOpenFlagList = ret[28];
+                            basis = ret[29];
+                            reason = ret[30];
+                            limitDate = ret[31];
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

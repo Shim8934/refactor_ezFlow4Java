@@ -719,7 +719,12 @@
 	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
 	                                    var openLocation;
 	                                    
-	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
+	                                    if (AttachUrlA2.lastIndexOf(".ezd") === AttachUrlA2.length - 5) {
+	                                    	docID = docID.substr(0, docID.lastIndexOf("."));
+	                                    	AttachUrlA2 = "." + getOriginalFileExtension(AttachUrlA1)
+	                                    }
+	                                    
+	                                    if (AttachUrlA2 == ".hwp") {
 	                                    	if (isIE()) {
 	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 	                                    	} else {
@@ -742,6 +747,22 @@
 	                    }
 		            }
 		        }
+		    }
+		    function getOriginalFileExtension(filePath) {
+		    	var pathLength = filePath.length;
+		    	var lastIndexOfDot = filePath.lastIndexOf(".");
+
+		    	if (lastIndexOfDot < 0) {
+		    		return "";
+		    	}
+
+		    	var ext = trim_Cross(filePath.substr(lastIndexOfDot + 1, filePath.length).toLowerCase());
+
+		    	if (ext === "ezd") {
+		    		return getOriginalFileExtension(filePath.substr(0, lastIndexOfDot));
+		    	}
+
+		    	return ext;
 		    }
 		    //START
 		    function ViewDoc_onclick() {
@@ -1052,7 +1073,9 @@
 	        			var draftTo = condition[4];
 	        			var searchStatus = $("#sel_status").val();
 	        			if(searchStatus && searchStatus != "ALL"){
-	        				subCondition += "PROCESSYN = '" + searchStatus + "'";
+	        				searchStatus = "PROCESSYN = '" + searchStatus + "'";
+	        			} else {
+	        				searchStatus = "";
 	        			}
 	        			
 		        		if(condition[7] != "" && condition[6] == "") {
@@ -1095,7 +1118,7 @@
 		                "&P19=" + encodeURI(condition[19]) + "&P20=" + encodeURI(condition[20]) + "&P21=" + encodeURI(condition[21]) +
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition)+ "&allFG=" + AllFG ;
+		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition + searchStatus)+ "&allFG=" + AllFG ;
 		            
 		               for(var i=3; i<=20; i++) {
 		                	condition[i] = "";
@@ -1746,6 +1769,7 @@
 		    }
 		    
 		    function onSelect_Status() {
+		    	subCondition = "";
 		    	GetDocSearch();
 		    }
 		    

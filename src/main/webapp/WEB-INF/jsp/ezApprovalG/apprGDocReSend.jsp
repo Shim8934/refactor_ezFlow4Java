@@ -382,6 +382,7 @@
 		    		url : "/ezApprovalG/saveFile.do",
 		    		data : {
 		    			docID : newDocID,
+						formId : pFormID,
 		    			html  : mhtBody,
 		    			orgCompanyID : orgCompanyID
 		    		},

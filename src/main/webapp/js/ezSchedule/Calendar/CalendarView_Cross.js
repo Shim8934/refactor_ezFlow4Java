@@ -74,6 +74,7 @@ function CalendarView(pTagetID,chk_str) {
                 var tempyear = sDate.getFullYear();
                 var tempmemorial;
                 var tempyearmemorial
+                var LunarDate2
                 if (tempyear > 1800 && tempyear <= 2101) {
                     var month = sDate.getMonth() + 1;
                     var LunarDate = lunarCalc(tempyear, month, sDate.getDate(), 1);
@@ -81,7 +82,7 @@ function CalendarView(pTagetID,chk_str) {
                     var LunarDateday = LunarDate.day;
                     tempmemorial = memorialDayCheck(sDate, LunarDate);
                     tempyearmemorial = yearmemorialDayCheck(sDate, LunarDate);
-                    LunarDate = LunarDatemonth + "." + LunarDateday;
+                    LunarDate2 = LunarDatemonth + "." + LunarDateday;
                 }
 
                 oTable.className = "calendar_day_title";
@@ -92,6 +93,11 @@ function CalendarView(pTagetID,chk_str) {
 
                     for (var i = 0; i < tempmemorial.length; i++) {
                         memorial = tempmemorial[i];
+                        
+                        // 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && memorial.solarLunar == 2) {
+                        	continue;
+                        }
                         if (primaryLang == "1") {
                             if (i == tempmemorial.length - 1)
                                 holidayname += memorial.name;
@@ -110,6 +116,11 @@ function CalendarView(pTagetID,chk_str) {
 
                     for (var i = 0; i < tempyearmemorial.length; i++) {
                         yearmemorial = tempyearmemorial[i];
+                        
+                        // 윤달일 때 기념일 안나타나도록 수정
+                        if(LunarDate.leapMonth == 1 && yearmemorial.solarLunar == 2) {
+                        	continue;
+                        }
                         if (primaryLang == "1") {
                             if (i == tempyearmemorial.length - 1)
                                 holidayname2 += yearmemorial.name;
@@ -134,7 +145,7 @@ function CalendarView(pTagetID,chk_str) {
                     var dayText;
                     if (LunarUse)
                         //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
-                    	dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " (" + LunarDate + ")";
+                    	dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " (" + LunarDate2 + ")";
                     else
                         //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
                     	dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
@@ -658,6 +669,11 @@ function MonthData(oThisDate, TDIndex) {
 
     for (var i = 0; i < tempmemorial.length; i++) {
         memorial = tempmemorial[i];
+        
+        // 윤달일 때 기념일 안나타나도록 수정
+        if(LunarDate.leapMonth == 1 && memorial.solarLunar == 2) {
+        	continue;
+        }
         if (primaryLang == "1") {
             if (i == tempmemorial.length - 1)
                 holidayname += memorial.name;
@@ -676,6 +692,11 @@ function MonthData(oThisDate, TDIndex) {
 
     for (var i = 0; i < tempyearmemorial.length; i++) {
         yearmemorial = tempyearmemorial[i];
+        
+        // 윤달일 때 기념일 안나타나도록 수정
+        if(LunarDate.leapMonth == 1 && yearmemorial.solarLunar == 2) {
+        	continue;
+        }
         if (primaryLang == "1") {
             if (i == tempyearmemorial.length - 1)
                 holidayname2 += yearmemorial.name;
@@ -1038,6 +1059,11 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempmemorial.length; i++) {
             memorial = tempmemorial[i];
+            
+            // 윤달일 때 기념일 안나타나도록 수정
+            if(LunarDate.leapMonth == 1 && memorial.solarLunar == 2) {
+            	continue;
+            }
             if (primaryLang == "1") {
                 if (i == tempmemorial.length - 1)
                     holidayname += memorial.name;
@@ -1056,6 +1082,11 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempyearmemorial.length; i++) {
             yearmemorial = tempyearmemorial[i];
+            
+            // 윤달일 때 기념일 안나타나도록 수정
+            if(LunarDate.leapMonth == 1 && yearmemorial.solarLunar == 2) {
+            	continue;
+            }
             if (primaryLang == "1") {
                 if (i == tempyearmemorial.length - 1)
                     holidayname2 += yearmemorial.name;
@@ -2061,7 +2092,7 @@ var lunarMonthTable = [
 [2, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2],
 [1, 2, 1, 2, 4, 2, 1, 2, 1, 2, 2, 2],
 [1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
-[2, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2],
+[2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
 [2, 1, 2, 5, 2, 1, 1, 2, 1, 2, 1, 2],
 [1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],   
 [2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
