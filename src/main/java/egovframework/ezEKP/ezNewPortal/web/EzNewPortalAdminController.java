@@ -264,6 +264,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		if (status.equals("ok")) {
 			model.addAttribute("list", resultBody.get("data"));
+			model.addAttribute("userLang", userInfo.getLang());
 		}
 		
 		LOGGER.debug("getPortalThemes ended.");
@@ -1017,8 +1018,18 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			
 			return "cmm/error/adminDenied";
 		} else {
+			String userLang = userInfo.getLang();
+			String imgFolder = "kr";
+			
+			if (userLang.equals("2")) {
+				imgFolder = "kr"; // en으로 나중에 변경 필요
+			} else if (userLang.equals("3")) {
+				imgFolder = "jp";
+			}
+			
 			model.addAttribute("themeId", request.getParameter("themeId"));
 			model.addAttribute("frameId", request.getParameter("frameId"));
+			model.addAttribute("imgFolder", imgFolder);
 			LOGGER.debug("themePreview ended.");
 			return "/admin/ezNewPortal/themePreview";
 		}

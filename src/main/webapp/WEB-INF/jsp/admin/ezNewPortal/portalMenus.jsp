@@ -556,15 +556,42 @@
 					menusHTML += "</tr>";	
 				}
 			} else {
+				var mainTitle = "<spring:message code='ezNewPortal.t078' />";
+				var subTitle1 = "<spring:message code='ezNewPortal.t079' />";
+				var subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+				
+				var mainTitleId = "menu1";
+				var subTitle1Id = "menu2";
+				var subTitle2Id = "menu3";
+				
+				if (primary == "2") {
+					mainTitle = "<spring:message code='ezNewPortal.t079' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t080' />";
+					
+					mainTitleId = "menu2";
+					subTitle1Id = "menu1";
+					subTitle2Id = "menu3";
+				} else if (primary == "3") {
+					mainTitle = "<spring:message code='ezNewPortal.t080' />";
+					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
+					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
+					
+					mainTitleId = "menu3";
+					subTitle1Id = "menu1";
+					subTitle2Id = "menu2";
+				}
+					
+				
 				menusHTML += "<tr><th rowspan='3' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
-				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t078' />)</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
+				menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + mainTitle + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + mainTitleId + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t079' />)</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu2' type='text' maxlength='50'></td>";
+				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle1 + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle1Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
-				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(<spring:message code='ezNewPortal.t080' />)</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu3' type='text' maxlength='50'></td>";
+				menusHTML += "<tr><td class='menuIconTD'><spring:message code='ezNewPortal.t077' />(" + subTitle2 + ")</td>";
+				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle2Id + "' type='text' maxlength='50'></td>";
 				menusHTML += "</tr>";
 			}
 			menusHTML += "</table>";

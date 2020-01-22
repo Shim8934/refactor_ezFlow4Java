@@ -37,28 +37,28 @@
 			<isNotEmpty property="search_keyword" >
 				<isEqual property="lang" compareValue="primary" >
 					<isEqual property="search_keycode" compareValue="1">
-						USERNM LIKE '%'||#search_keyword#||'%'
+						USERNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="2">
-						DEPTNM LIKE '%'||#search_keyword#||'%'
+						DEPTNM LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 					</isEqual>
 				</isEqual>
 				<isNotEqual property="lang" compareValue="primary">
 					<isEqual property="search_keycode" compareValue="1">
-						USERNM2 LIKE '%'||#search_keyword#||'%'
+						USERNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="2">
-						DEPTNM2 LIKE '%'||#search_keyword#||'%'
+						DEPTNM2 LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 					</isEqual>
 				</isNotEqual>
 				<isEqual property="search_keycode" compareValue="3">
-					CONNECTIP LIKE '%'||#search_keyword#||'%'
+					CONNECTIP LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 				</isEqual>
 				<isEqual property="search_keycode" compareValue="4">
-					CONNECTBROWSER LIKE '%'||#search_keyword#||'%'
+					CONNECTBROWSER LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 				</isEqual>
 				<isEqual property="search_keycode" compareValue="5">
-					CONNECTOS LIKE '%'||#search_keyword#||'%'
+					CONNECTOS LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 				</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -131,7 +131,7 @@
 						$companyOracleStr$
 						<include refid="EzSystemAdminDAO.searchQuery"/>
 						<isEqual property="search_keycode" compareValue="6">
-							AND C.USERID LIKE '%'||#search_keyword#||'%'
+							AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 						</isEqual>
 				    ORDER BY 
 				    	C."SEQUENCE" DESC
@@ -157,7 +157,7 @@
 		$companyOracleStr$
 		<include refid="EzSystemAdminDAO.searchQuery"/>
 		<isEqual property="search_keycode" compareValue="6">
-			AND C.USERID LIKE '%'||#search_keyword#||'%'
+			AND C.USERID LIKE '%'||#search_keyword#||'%' ESCAPE '\'
 		</isEqual>
 	</select>
 	

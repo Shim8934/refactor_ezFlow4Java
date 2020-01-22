@@ -27,7 +27,7 @@
    			var userName = "<c:out value='${userName}'/>";
 			var userName2 = "<c:out value='${userName2}'/>";
 			var listSize = "<c:out value='${listSize}'/>";
-			var lang = "<c:out value='${userInfo.lang}'/>";
+			var lang = "<c:out value='${userInfo.primary}'/>";
     		
 	    	window.onload = function() {				
 	    		window.resizeTo(450 + (window.outerWidth - window.innerWidth), 275 + (window.outerHeight - window.innerHeight));
