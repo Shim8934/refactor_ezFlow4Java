@@ -532,10 +532,12 @@
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1414'/>" + "<br>" +
 		                                    "<spring:message code='ezApprovalG.t1415'/>";
 		            OpenAlertUI(pAlertContent);
-		            try {
+		            
+		            //2020-01-17 천성준 - 사용하지 않는 버튼을 호출해서 에러 알람나오는 현상 수정(결재선 지정 버튼)
+		            /* try {
 		                btnSetAprLine_onclick();
 		            }
-		            catch (e) { }
+		            catch (e) { } */
 		            return;
 		        }
 		
@@ -657,7 +659,7 @@
 		                    if (LastSignSN == 1)
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
 		                      	//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 접수자 전결
-		                        if (CurAprType == "전결" && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		                        if (CurAprType == "<spring:message code='ezApprovalG.t25'/>" && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
 			    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-script').getAttribute("code");
 			    		        	var script = document.createElement("script");
 			    					script.type = "text/javascript";

@@ -6137,6 +6137,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         
         try {
         	String searchValue = pSearchList.split("::")[1];
+        	searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
         	
 			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxSearchList(userInfo.getCompanyID(), userInfo.getTenantId(), searchValue);
 			

@@ -75,6 +75,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     @Autowired
     private Properties config;
     
+   	@Autowired
+	private Properties globals;
+    
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
     
@@ -1617,9 +1620,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			if (searchType.equals("displayname")) {
 				if (primary.equals("1")) {
-					sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+		            	sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%' ESCAPE '\\' " );
+		            } else {
+		            	sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+		            }
 				} else {
-					sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%'");
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%' ESCAPE '\\' ");
+					} else{
+						sb.append("DISPLAYNAME2 LIKE '%" + searchValue.trim() + "%'");
+					}
 				}
 			}
 			

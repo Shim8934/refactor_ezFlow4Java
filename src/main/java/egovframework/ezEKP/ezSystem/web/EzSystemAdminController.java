@@ -342,6 +342,7 @@ public class EzSystemAdminController {
 			sysLang = "primary";
 		}
 		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate, companyId);
 		
@@ -503,7 +504,7 @@ public class EzSystemAdminController {
 		if (userInfo.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
-		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHistNotAdmin(Integer.valueOf(userInfo.getTenantId()), 
 				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, 
 				startDate, endDate, companyId, userInfo.getId());
@@ -624,6 +625,8 @@ public class EzSystemAdminController {
 		if (userInfoUser.getLang().equals(sysLang))  {
 			sysLang = "primary";
 		}
+		
+		searchKeyword = searchKeyword.replace("%", "\\%").replace("_", "\\_");
 		List<ConnectionInfoVO> loginHistList = new ArrayList<ConnectionInfoVO>();
 		int totalCount = 0;
 		if (config.equals("u")){
@@ -1054,11 +1057,18 @@ public class EzSystemAdminController {
 	 * 접속 허용 국가 저장
 	 */
 	@RequestMapping(value="/ezSystem/saveAccessCountryList.do", method=RequestMethod.POST)
+	@ResponseBody
 	public String saveAccessCountryList(@CookieValue("loginCookie") String loginCookie, Model model, 
 			HttpServletRequest request) throws Exception {
 		logger.debug("saveAccessCountryList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String result = "OK";
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			result = "PERMISSION_ERROR";
+			return result;
+		}
 		
 		String saveCountryList = request.getParameter("saveList");
 		logger.debug("saveCountryList=" + saveCountryList);
@@ -1066,7 +1076,7 @@ public class EzSystemAdminController {
 		ezSystemAdminService.setAccessCountry(userInfo.getTenantId(), saveCountryList);
 		
 		logger.debug("saveAccessCountryList ended");
-		return "json";
+		return result;
 	}
 	
 	

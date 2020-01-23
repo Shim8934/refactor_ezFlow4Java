@@ -2511,7 +2511,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
 		int startRow = (pageSize * (pageNum - 1)) + 1;
         int endRow = pageSize * pageNum;
-                
+        
+		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
+		
         int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID);
 
         logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
@@ -3724,6 +3726,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		if (searchValue == null)
 			searchValue = "";
 		
+		searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
 		String result = ezOrganAdminService.getTitleUserList(type, jobID, pageSize, pageNum, searchType, searchValue, userInfo.getPrimary(), companyID, userInfo.getTenantId());
 		
 		logger.debug("jobTitleUserListView ended.");
@@ -3847,6 +3850,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
 		int startRow = (pageSize * (pageNum - 1)) + 1;
         int endRow = pageSize * pageNum;
+        
+        searchValue = searchValue.replace("%", "\\%").replace("_", "\\_");
                 
         int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID);
 

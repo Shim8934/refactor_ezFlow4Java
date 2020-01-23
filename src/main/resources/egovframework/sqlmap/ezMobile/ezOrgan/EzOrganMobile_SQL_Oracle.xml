@@ -39,7 +39,7 @@
         <isNotEmpty property="pSearchText">
          	<![CDATA[
          		AND
-                	(A.DISPLAYNAME LIKE '%' || #pSearchText# || '%' OR A.DESCRIPTION LIKE '%' || #pSearchText# || '%') 
+                	(A.DISPLAYNAME LIKE '%' || #pSearchText# || '%' ESCAPE '\' OR A.DESCRIPTION LIKE '%' || #pSearchText# || '%' ESCAPE '\' ) 
             ]]>
    		</isNotEmpty>
 	        <![CDATA[
@@ -89,7 +89,7 @@
 	        <isNotEmpty property="pSearchText">
 	            <![CDATA[
 	                AND
-	                    (A.DISPLAYNAME LIKE ('%' || #pSearchText# || '%') OR A.DESCRIPTION LIKE ('%' || #pSearchText# || '%'))    
+	                    (A.DISPLAYNAME LIKE ('%' || #pSearchText# || '%') ESCAPE '\'  OR A.DESCRIPTION LIKE ('%' || #pSearchText# || '%') ESCAPE '\' )    
 	            ]]>
 	        </isNotEmpty>
     </select>
@@ -212,7 +212,7 @@
 					FROM
 						TBL_DEPTMASTER
 					WHERE
-						DISPLAYNAME$lang$ LIKE ('%' || #deptID# || '%')
+						DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\'
 					AND
 						TENANT_ID = #tenantID#
 				]]>
@@ -245,9 +245,9 @@
 				FROM
 					TBL_USERMASTER
 				WHERE
-					(DISPLAYNAME$lang$ LIKE ('%' || #deptID# || '%')
+					(DISPLAYNAME$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\'
 				OR
-					DESCRIPTION$lang$ LIKE ('%' || #deptID# || '%'))
+					DESCRIPTION$lang$ LIKE ('%' || #deptIDEscape# || '%') ESCAPE '\')
 				AND
 					CN <> 'masteradmin'
 				AND

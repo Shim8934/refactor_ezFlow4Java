@@ -354,7 +354,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/config/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/config/id/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getUserPreviewConfig(@PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();
@@ -395,7 +395,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/config/id/{userid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/config/id/{userid:.+}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveUserConfig(@RequestBody JSONObject configItem, @PathVariable(value="userid") String userId, HttpServletRequest request) {
 		String serverName    = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		String prevMode      = configItem.get("prevMode")  != null ? configItem.get("prevMode").toString()  : "";
@@ -661,7 +661,7 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezsurvey/user-info/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/user-info/{userid:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getSurveyAdministratorInfo(@PathVariable(value="userid") String userId, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		JSONObject result = new JSONObject();

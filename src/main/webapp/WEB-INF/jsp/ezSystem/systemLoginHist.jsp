@@ -459,7 +459,7 @@
 									$('#searchKeycode option[value='+ idx + ']').attr('selected', 'selected');
 								}
 
-								$('#searchKeyword').val(res.searchKeyword);
+								// $('#searchKeyword').val(res.searchKeyword);
 								$('#startDatepicker').val(res.startDate);
 								$('#endDatepicker').val(res.endDate);
 								

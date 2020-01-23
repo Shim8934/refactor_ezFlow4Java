@@ -79,6 +79,7 @@ public class MOrganGWController {
 				companyId = "";
 			}
 			
+			pSearchText = pSearchText.replace("%", "\\%").replace("_", "\\_");
 			List <MPersonListVO> list = mOrganService.getPersonList(companyId, info.getTenantId(),pSearchText,rowNum);
 			int listCount = mOrganService.getPersonListCount(companyId, info.getTenantId(), pSearchText);
 			
