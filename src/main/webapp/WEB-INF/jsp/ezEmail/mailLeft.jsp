@@ -36,6 +36,7 @@
 	      	var operatorMailAddress = "${operatorMailAddress}";
 	      	var receiveText = "<spring:message code='ezEmail.t516' />";
 	      	var pRefreshinterval = "${refreshInterval}";
+	      	var spamOutLoginURI = "${spamOutLoginURI}";
 	      	var pSaveInterval = 0;
 		    var nextMailListRefreshTime = 0;
 		    var refreshIntervalTimerId = 0;
@@ -687,6 +688,13 @@
 	            }	            
 	        }
 	        
+			function oepnSpamOutBox() {
+				try {
+					window.open(spamOutLoginURI, "right");
+				} catch (e) {
+				}
+			}
+
 	        function Open_ReservationManage() {
 	            var OpenWin = window.open("/ezEmail/mailReservation.do", "mail_reservation_cross", GetOpenWindowfeature(501, 350));
 	            try { OpenWin.focus(); } catch (e) { }
@@ -1384,7 +1392,10 @@
 		            </c:if>	
 		            <c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
 		            	<li onclick="spamMailBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text">스팸편지함</span></li>
-		            </c:if>	
+		            </c:if>
+		            <c:if test="${useSpamOut}">
+		            	<li onclick="oepnSpamOutBox()"><span class="sub_iconLNB tree_junk"></span><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
+		            </c:if>
 		        </ul>
 		        <c:if test="${useSharedMailbox == 'YES'}">
 			        <c:forEach items="${shareInfoList}" var="shareInfo">
