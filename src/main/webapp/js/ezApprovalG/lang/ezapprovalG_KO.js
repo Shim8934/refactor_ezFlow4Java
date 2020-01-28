@@ -683,6 +683,10 @@ var strLang1029 = "월";
 var strLang1030 = "일";
 var strLang1031 = "익명게시판 또는 포토게시판 또는 URL링크 게시판에는 메일/결재문서 게시를 할 수 없습니다.";
 
+var strLang1068 = "감사부서는 [";
+var strLang1069 = "예산심의부서는 [";
+var strLang1070 = "]만 지정 가능합니다.";
+
 // DocType : 문서형태 A01
 var strDocType4 = "004";
 var strLangDocType4 = "시행문";

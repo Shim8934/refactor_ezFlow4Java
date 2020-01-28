@@ -342,6 +342,10 @@ function AprlineType_onchangeLine(obj) {
             if (pHapyuiArea == 0 && pHapYuiCount != "0")
                 Rtnval = CheckHapYuiCellValue();
         }
+        
+        if (Rtnval && (pCheckTypevalue == "013" || pCheckTypevalue == "021" )) {
+            Rtnval = CheckGamsaYesan(pCheckTypevalue, obj);
+        }
 
         if (Rtnval)
             APRLINETYPECHANGEFunction(pCheckTypevalue, TypeName);
@@ -1498,4 +1502,39 @@ function check_presence() {
         }
     }
     pSIPUriList = null;
+}
+
+function CheckGamsaYesan(pAprType, pObj) {
+    try {
+        var pDeptID, pDeptName;
+        for (i = 0; i < SelectNodes(GamsaYesanInfoXML, "DATA/ROW").length; i++) {
+            if (SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "APRTYPE") == pAprType) {
+                pDeptID = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "CN");
+                pDeptName = SelectSingleNodeValue(SelectNodes(GamsaYesanInfoXML, "DATA/ROW")[i], "DISPLAYNAME");
+            }
+        }
+
+        var pAPRLINE = new ListView();
+        pAPRLINE.LoadFromID("lvAPRLINE");
+
+        var pSelRow = pAPRLINE.GetSelectedRows();
+        if (pSelRow.length > 0) {
+            if (pDeptID != GetAttribute(pSelRow[0], "DATA4")) {
+                var pAlertContent = "";
+                if (pAprType == "013")
+                    pAlertContent = strLang1068 + pDeptName + strLang1070;
+                else
+                    pAlertContent = strLang1069 + pDeptName + strLang1070;
+
+                OpenAlertUI(pAlertContent);
+                
+                pObj.value = GetAttribute(pSelRow[0], "DATA11");
+                return false;
+            }
+        }
+       
+       return true;
+    } catch (e) {
+    	alert("CheckGamsaYesan :: " + e.description);
+    }
 }
