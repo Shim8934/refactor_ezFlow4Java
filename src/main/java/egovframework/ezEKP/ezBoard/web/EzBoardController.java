@@ -598,6 +598,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("endTime", endTime);
 		model.addAttribute("listOfTarget", listOfTarget);
 		model.addAttribute("xmlRange", strXMLRange.toString());
+		model.addAttribute("lang", userInfo.getLang());
 		
 		return "ezBoard/boardPoll";
 	}
