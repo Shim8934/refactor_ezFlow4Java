@@ -513,7 +513,13 @@
 		        if (GetAttribute(srcEl, "dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 		            datetype = "1";
 		            sdate = GetAttribute(srcEl, "dispTime");
-		            edate = sdate.replace(":00:", ":30:");
+
+		        	// 2020-01-28 김민성 - 일보기/주보기에서 단위 시간 체크 추가
+		            var timeString = GetAttribute(srcEl, "dispTime").substring(11,16);
+		            var sdateTime = GetAttribute(srcEl, "id").split(":")[1][0];
+		            
+		            edateSplit = sdate.split(" ")[1].split(":");
+					edate = sdate.replace(sdate.split(" ")[1], edateSplit[0] + ":" + leadingZeros(edateSplit[1]*1+30, 2) + ":" + edateSplit[2]);
 		        } 
 		        // 월보기 클릭
 		        else if(GetAttribute(srcEl, "id").indexOf("ALL") < 0) {
