@@ -50,7 +50,8 @@
 						{ name : "editorFontStyle", value : editorFontStyle },
 						{ name : "useAllUserOldMailDeletePeriod", value : useAllUserOldMailDeletePeriod },
 						{ name : "useSession", value : document.getElementById("useSession").value.trim() },
-						{ name : "useSessionMobile", value : document.getElementById("useSessionMobile").value.trim() }
+						{ name : "useSessionMobile", value : document.getElementById("useSessionMobile").value.trim() },
+						{ name : "useMailConfirm", value : document.getElementById("use_MailConfirm").value.trim() }
 					  ];
 				
 				if (!paramArray[0].value.match(/^\d+$/)) {
@@ -282,7 +283,10 @@
 						});
 					</script>
 				</c:if>
-		    	
+		    	<tr>
+		    		<th><spring:message code="ezSystem.x0040"/></th>
+		    		<td><select id="use_MailConfirm"><option <c:if test="${configMap.useMailConfirm == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useMailConfirm == null or configMap.useMailConfirm == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
+		    	</tr>
 	        </tbody>
 	    </table> 
 	    <div class="btnpositionJsp">

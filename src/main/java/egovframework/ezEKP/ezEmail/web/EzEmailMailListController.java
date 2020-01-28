@@ -127,7 +127,7 @@ public class EzEmailMailListController {
 		String systemCountryCode = ezCommonService.getTenantConfig("systemCountryCode", userInfo.getTenantId());
 		String useShowSystemCountry = ezCommonService.getTenantConfig("useShowSystemCountry", userInfo.getTenantId());
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String useMailConfirm = ezCommonService.getTenantConfig("useMailConfirm", userInfo.getTenantId());
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -170,6 +170,10 @@ public class EzEmailMailListController {
 		
 		if (useMailNewWindow.equals("")) {
 			useMailNewWindow = "NO";
+		}
+		
+		if (useMailConfirm.equals("")) {
+			useMailConfirm = "NO";
 		}
 		
 		if (dispname != null) {
@@ -221,11 +225,12 @@ public class EzEmailMailListController {
 		model.addAttribute("useCountryIP", useCountryIP);
 		model.addAttribute("systemCountryCode", systemCountryCode.toLowerCase());
 		model.addAttribute("useShowSystemCountry", useShowSystemCountry);
+		model.addAttribute("useMailConfirm", useMailConfirm);
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
 				 + ",useOcs=" + useOcs + ",importanceColor=" + importanceColor + ",UseEncryptZipForEmail=" + useEncryptZipForEmail
-				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP);
+				 + ",useMailBoxBackUp=" + useMailBoxBackUp + ",useCountryIP=" + useCountryIP + ", useMailConfirm=" + useMailConfirm);
 		logger.debug("mailGeneral=" + mailGeneral);
 		logger.debug("showMailList ended.");
 		

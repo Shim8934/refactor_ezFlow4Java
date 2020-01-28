@@ -500,7 +500,7 @@ function MakeListInfoHTML(ConentObject) {
             				}
                     	}
                     	
-                    	if (p_mailConfirm == "true") {
+                    	if (useMailConfirm == "YES" && p_mailConfirm == "true") {
                             _TR.setAttribute("class", "mail_confirm");
                     	}
                     	
