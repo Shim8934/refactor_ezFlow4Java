@@ -532,10 +532,12 @@
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1414'/>" + "<br>" +
 		                                    "<spring:message code='ezApprovalG.t1415'/>";
 		            OpenAlertUI(pAlertContent);
-		            try {
+		            
+		            //2020-01-17 천성준 - 사용하지 않는 버튼을 호출해서 에러 알람나오는 현상 수정(결재선 지정 버튼)
+		            /* try {
 		                btnSetAprLine_onclick();
 		            }
-		            catch (e) { }
+		            catch (e) { } */
 		            return;
 		        }
 		

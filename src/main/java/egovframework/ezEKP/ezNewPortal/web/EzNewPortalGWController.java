@@ -2120,8 +2120,8 @@ public class EzNewPortalGWController {
 					langOrder[2] = 2;
 				} else {
 					langOrder[0] = 1;
-					langOrder[0] = 2;
-					langOrder[0] = 3;
+					langOrder[1] = 2;
+					langOrder[2] = 3;
 				}
 				
 				for (int i = 0; i < langOrder.length; i++) {
@@ -2467,8 +2467,8 @@ public class EzNewPortalGWController {
 						langOrder[2] = 2;
 					} else {
 						langOrder[0] = 1;
-						langOrder[0] = 2;
-						langOrder[0] = 3;
+						langOrder[1] = 2;
+						langOrder[2] = 3;
 					}
 					
 					for (int i = 0; i < langOrder.length; i++) {

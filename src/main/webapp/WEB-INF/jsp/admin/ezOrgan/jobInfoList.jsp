@@ -47,6 +47,7 @@
 		
 		var pCompanyID = "${userInfo.companyID}";
 		var pCompanyNM = "${userInfo.companyName}";
+		var isPrimary = "<c:out value='${userInfo.primary}'/>"; // 다국어 처리용 primary값
 		
 		document.onselectstart = function () {
             if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -145,7 +146,22 @@
 			var oArrRows = jobList.GetSelectedRows();
 			if (oArrRows != 0) {
 				var pJobID = oArrRows[0].getAttribute("DATA1");
-				var pJobNM = oArrRows[0].childNodes[1].textContent;
+				var pJobNM = "";
+				
+				/* 2020-01-22 홍승비 - 직위관리 및 직책관리 우측의 표기이름에 다국어 적용 */
+				if (Tab1_SelectID == "001") { // 직위
+					if (isPrimary == "1") { // 기본 언어
+						pJobNM = oArrRows[0].childNodes[1].textContent;
+					} else {
+						pJobNM = oArrRows[0].childNodes[2].textContent;
+					}
+				} else { // 직책
+					if (isPrimary == "1") { // 기본 언어
+						pJobNM = oArrRows[0].childNodes[0].textContent;
+					} else {
+						pJobNM = oArrRows[0].childNodes[1].textContent;
+					}
+				}
 				
 				$.ajax({
 	            	type : "POST",
