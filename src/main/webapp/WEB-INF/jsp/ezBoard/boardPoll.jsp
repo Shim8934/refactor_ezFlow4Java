@@ -16,7 +16,8 @@
     	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var g_windowReference = null;
-			var checkFlag 		  = "<c:out value='${hasConfig}'/>";
+			var checkFlag = "<c:out value='${hasConfig}'/>";
+			var lang = "<c:out value='${lang}'/>";
 			
          	document.onselectstart = function () { return false; };
          	
@@ -28,6 +29,14 @@
 	                document.body.style.oUserSelect = 'none';
                		document.body.style.UserSelect = 'none';
            		}	
+           		
+           		/* 2020-01-28 홍승비 - 다국어 환경인 경우, 투표 대상자 정렬 조정 */
+           		if (lang == "2") { // 영어
+           			document.getElementById("newTargetDiv").style.left = "137px";
+           			document.getElementById("newTargetDiv").style.maxWidth = "325px";
+           		} else if (lang == "3") { // 일본어
+           			document.getElementById("newTargetDiv").style.left = "134px";
+           		}
            		
            		preProcess();
         	}   
