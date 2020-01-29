@@ -6471,9 +6471,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = "";
 	
-		docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-		docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-        drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+		docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
+		docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
+        drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
         String draftfrom = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
         String draftto = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
         String apprfrom = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
@@ -6481,7 +6481,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String mypapprfrom = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
         String mypapprto = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
         formID = xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent();
-        draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+        draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
         containerID = xmlDom.getDocumentElement().getChildNodes().item(12).getTextContent();
         userID = xmlDom.getDocumentElement().getChildNodes().item(13).getTextContent();
         pageNum = xmlDom.getDocumentElement().getChildNodes().item(16).getTextContent();
