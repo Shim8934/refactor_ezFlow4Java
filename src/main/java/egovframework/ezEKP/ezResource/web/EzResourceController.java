@@ -1696,6 +1696,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			String selEd = "";
 			String cDate = "";
 			String cTime = "";
+			String cTime2 = "";
 			
 			if (req.getParameter("selsd") != null) {
 				selSd = req.getParameter("selsd");
@@ -1706,25 +1707,40 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (selSd.equals("") || selEd.equals("")) {
 				cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
 				cTime = cDate.split(" ")[1].substring(0, 2);
+				cTime2 = cDate.split(" ")[1].substring(3, 5);
 				
 				if (req.getParameter("startDate") != null) {
 					cDate = req.getParameter("startDate");
 				}
 				cDate = cDate.substring(0, 10);
-				startDateTime = cDate + " " + cTime + ":00:00";
-				
+				if(Integer.parseInt(cTime2) < 30) {
+					startDateTime = cDate + " " + cTime + ":00:00";
+				} else {
+					startDateTime = cDate + " " + cTime + ":30:00";
+				}
+					
 				if (req.getParameter("endDate") != null) {
 					cDate = req.getParameter("endDate");
 				}
 				cDate = cDate.substring(0, 10);
-				endDateTime = cDate + " " + cTime + ":30:00";
+				if(Integer.parseInt(cTime2) < 30) {
+					endDateTime = cDate + " " + cTime + ":30:00";
+				} else {
+					endDateTime = cDate + " " + cTime + ":60:00";
+				}
 			} else {
 				if (selSd.length() == 10) {
 					cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
 					cTime = cDate.split(" ")[1].substring(0, 2);
+					cTime2 = cDate.split(" ")[1].substring(3, 5);
 					cDate = cDate.substring(0, 10);
-					startDateTime = selSd + " " + cTime + ":00:00";
-					endDateTime = selEd + " " + cTime + ":30:00";
+					if(Integer.parseInt(cTime2) < 30) {
+						startDateTime = selSd + " " + cTime + ":00:00";
+						endDateTime = selEd + " " + cTime + ":30:00";
+					} else {
+						startDateTime = selSd + " " + cTime + ":30:00";
+						endDateTime = selEd + " " + cTime + ":60:00";
+					}
 					allDay = "1"; // 2018-08-06 김민성 - 종일일정 클릭 시 기간 하루종일로 변경
 				} else {
 					startDateTime = selSd;

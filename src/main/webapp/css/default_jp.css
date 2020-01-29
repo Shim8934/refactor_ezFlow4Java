@@ -1936,7 +1936,7 @@ form{display:inline;margin:0}
 .address_boxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_boxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_boxlist ul .company { color:#393939; margin-bottom: 10px;}
-.address_boxlist .point_txt { color:steelblue; margin-left:3px; font-family: dotum;}
+.address_boxlist .point_txt { color:steelblue; margin-left:3px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
@@ -1946,7 +1946,7 @@ form{display:inline;margin:0}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_onboxlist ul .company { color:#393939; margin-bottom: 10px;}
-.address_onboxlist .point_txt { color:steelblue; margin-left:3px; font-family: dotum;}
+.address_onboxlist .point_txt { color:steelblue; margin-left:3px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
 
 .sublist{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .sublist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:3px 4px 4px; border-bottom:1px solid #ddd; font-weight:normal;}
@@ -2290,7 +2290,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .volume_num{ margin:0px; padding:0px;}
 .volume_graph{ margin:5px 0px 10px 0px; padding:0px; width:100%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#e9e9e9;}
 .volume_graph span{ display:inline-block; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-.volumeDL{ margin:0px; padding:0px; font-family:Dotum; font-size:12px; font-weight:bold;}
+.volumeDL{ margin:0px; padding:0px; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:12px; font-weight:bold;}
 .volumeDL dt{margin:0px; padding:0px 0px 0px 0px; float:left; color:#000;}
 .volumeDL dt span{ display:inline-block; color:#959595;}
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}

@@ -10,6 +10,11 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
+		<style>
+			.cabPrevItemJP dd {
+				padding: 0px 0px 2px 68px;
+			}
+		</style>
 	</head>
 	<body class="mainbody overY">
 		<h1 id="cabInfo">
@@ -194,6 +199,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetItem.js')   }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')   }"></script>
 		<script type="text/javascript">
+			var lang = "<c:out value='${lang}'/>";
+		
 			$(function () {
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
 					closeText: "<spring:message code='main.t3' />",

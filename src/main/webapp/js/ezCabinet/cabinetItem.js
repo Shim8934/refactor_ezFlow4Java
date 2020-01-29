@@ -773,6 +773,11 @@ var CabinetItem = function() {
 		pSpanElmt1.className = "cabPrevIcon";
 		pSpanElmt2.className = "cabTitleTxt";
 		
+		/* 2020-01-29 홍승비 - 다국어 대응을 위한 클래스 추가 */
+		if (lang == "3") {
+			dlElmt.classList.add("cabPrevItemJP");
+		}
+		
 		pElmt.appendChild(pSpanElmt1);
 		pElmt.appendChild(pSpanElmt2);
 		pElmt.appendChild(spanElmt);
@@ -795,6 +800,11 @@ var CabinetItem = function() {
 		var spanDate    = divElmt.querySelector("span[class='cabPreDate']");
 		var dlElmt      = divElmt.querySelector("dl[class='cabPrevItem']");
 		var parentDiv   = divElmt.parentElement;
+		
+		/* 2020-01-29 홍승비 - 다국어 대응을 위한 클래스 추가 */
+		if (lang == "3") {
+			dlElmt = divElmt.querySelector("dl[class='cabPrevItem cabPrevItemJP']");
+		}
 		
 		spanIcon.onclick        = function(e) {openFileDetail(itemInfo["itemId"]);};
 		spanSubject.textContent = itemInfo["title"];
