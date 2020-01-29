@@ -1132,7 +1132,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.className = "calendar_t_text";
         dTd.setAttribute("id", "TD_" + divID + "_" + k + ":3_Value");
         dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
-        dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":00:00");
+        dTd.setAttribute("dispTime", divID + " " + leadingZeros(k, 2) + ":30:00");
         dTr.appendChild(dTd);
         dTable.appendChild(dTr);
         objTd.appendChild(dTable);
@@ -1227,7 +1227,7 @@ function DayData(j) {
     s_Td.className = "calendar_t_text";
     s_Td.setAttribute("ondblclick", "newSchedule_onclick(event)");
     s_Td.setAttribute("id", "TD_" + divID + "_" + j + ":3_Value");
-    s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":00:00");
+    s_Td.setAttribute("dispTime", divID + " " + leadingZeros(j, 2) + ":30:00");
     s_Tr.appendChild(s_Td);
     sTable.appendChild(s_Tr);
     return sTable;

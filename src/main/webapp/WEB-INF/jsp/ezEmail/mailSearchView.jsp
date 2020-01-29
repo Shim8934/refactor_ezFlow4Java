@@ -1027,7 +1027,7 @@
 		     	<th><spring:message code="ezEmail.t653" /></th>	
 			    <td style="height: 40px;">
 			    	<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code="ezEmail.t654" /></label>
-			    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
+			    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;" readonly> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;" readonly>
 			    </td>
 			</tr>
 		</tbody></table>
