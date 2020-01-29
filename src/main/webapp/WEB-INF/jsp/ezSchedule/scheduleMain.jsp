@@ -259,14 +259,20 @@
 		            DivPopUpShow(980,470,"/ezSchedule/scheduleReceiveAttendant.do");
 		        	
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 305;
-		        	$("#iFramePanel").css("left", popupX);
+		            /* var popupX = parent.document.body.clientWidth/2 - (730/2) - 305;
+		        	$("#iFramePanel").css("left", popupX); */
 
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            windowonload_Complete("empty");
 		        }
 		        
+		    }
+		    
+		    window.onresize = function(){
+		    	if($("#iFramePanel") != undefined) {
+		    		$('#iFramePanel').css({ 'left' : ($(window).width() - $('#iFramePanel').width()) / 2, 'top' : ($(window).height() - $('#iFramePanel').height()) / 2 });
+		    	}
 		    }
 
 		    // aspx.cs에 있던 함수. 2016/08/22 by kgs
@@ -294,8 +300,8 @@
 		            DivPopUpShow(730,370,"/ezSchedule/scheduleReceiveMember.do");
 		            
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
-		        	$("#iFramePanel").css("left", popupX);
+		        	/* var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
+		        	$("#iFramePanel").css("left", popupX); */
 		        	
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
