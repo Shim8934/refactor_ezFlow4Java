@@ -251,7 +251,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useSurvey.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 42));
+				portletOrder.removeIf(vo -> (vo.getMenuId() == 19));
 			}
 			
 			if (useMemo.equals("NO")) {
@@ -368,7 +368,7 @@ public class EzNewPortalGWController {
 					isUseQuestionAuth = true;
 				}
 				
-				if (mVO.getMenuId()==42 && useSurvey.equals("YES")) {
+				if (mVO.getMenuId()==19 && useSurvey.equals("YES")) {
 					isUseSurveyAuth = true;
 				}
 				
@@ -2037,7 +2037,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useSurvey.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 42));
+				menuInfos.removeIf(vo -> (vo.getMenuId() == 19));
 			}
 			
 			if (useMemo.equals("NO")) {
@@ -4076,7 +4076,7 @@ public class EzNewPortalGWController {
 //					isUseQuestionAuth = true;
 //				}
 				
-				if (mVO.getMenuId()==42 && useSurvey.equals("YES")) {
+				if (mVO.getMenuId()==19 && useSurvey.equals("YES")) {
 					isUseSurveyAuth = true;
 				}
 				

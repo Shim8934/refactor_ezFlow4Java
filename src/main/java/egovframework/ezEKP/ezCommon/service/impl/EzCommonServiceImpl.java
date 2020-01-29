@@ -1696,7 +1696,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		Map<String, Object> svMap = new HashMap<String, Object>();
 		svMap.put("portletId", portletIds[2]);
-		svMap.put("menuId", 42);
+		svMap.put("menuId", 19);
 		svMap.put("portletUrl", "/ezNewPortal/surveyPortlet.do");
 		svMap.put("portletType", "G");
 		svMap.put("defaultOrder", 20);
