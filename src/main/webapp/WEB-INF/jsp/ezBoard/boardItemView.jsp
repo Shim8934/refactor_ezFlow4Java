@@ -674,7 +674,7 @@
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
 		            /* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
 		            filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
-		            filenameView = ReplaceText(ReplaceText(ReplaceText(filenameOrg, ">", "&gt;"), "<", "&lt;"), "&", "&amp;");
+		            filenameView = MakeXMLString(filenameOrg);
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 		            
 		            var strTarget = "target=''";
@@ -708,7 +708,8 @@
 		            var protocol = window.location.protocol;
 		            var serverName = window.location.hostname;
 		            
-		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filenameView + "' >";
+		            /* 2020-01-30 홍승비 - 모두저장 기능을 위해 속성 추가 */
+		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filePath='" + MakeXMLString(filepath) + "'>";
 		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
 		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a><br>";
 		        }
@@ -720,11 +721,14 @@
 		        for (var i = 0; i < checks.length; i++)
 		            checks.item(i).checked = true;
 		    }
+		    
+		    /* 2020-01-30 홍승비 - 체크한 파일이 1개 이상인 경우, zip 파일로 다운받도록 수정 */
 		    function attach_Download() {
 		        var checks = document.getElementById('lstAttachLink');
-		        downloadAll(checks);
+		        //downloadAll(checks);
+		        AttachAllDownload(checks);
 		    }
-		
+		    
 		    var suffix = 0;
 		    function downloadAll(checks) {
 		        if (checks.getElementsByTagName("input").item(suffix)) {
@@ -740,7 +744,46 @@
 		        else
 		            suffix = 0;
 		    }
-		
+		    
+		    /* 2020-01-30 홍승비 - 체크한 파일이 1개 이상인 경우, zip 파일로 다운받는 함수 */
+	        function AttachAllDownload(checks) {
+	            var checkedFiles = $("#lstAttachLink").find("input:checkbox[name='fileSelect']:checked");
+	            var checkedFilesLength = checkedFiles.length;
+	            var filePath = ""; // 전체파일경로
+	            var filePathTemp = "";
+				var fileNames = ""; // 파일이름
+				var fileNamesUID = ""; // 파일이름(UID 포함)
+				
+				if (checkedFilesLength == 1) { // 하나만 저장
+					downloadAll(checks);
+				}
+				else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
+					filePath = GetAttribute(checkedFiles.get(0), "filepath");
+					filePath = filePath.substr(0, filePath.lastIndexOf("/") + 1);
+					
+					for (var i = 0; i < checkedFilesLength; i++) {
+						filePathTemp = GetAttribute(checkedFiles.get(i), "filepath"); // 각 파일의 풀경로
+						fileNames += MakeXMLString(checkedFiles.get(i).value) + ":"; // 각 파일의 이름을 :로 이어붙인 것
+						fileNamesUID += MakeXMLString(filePathTemp.substr(filePathTemp.lastIndexOf("/"), filePathTemp.length)) + ":"; // 각 파일의 이름+UID를 :로 이어붙인 것
+					}
+					
+					var $frm = $("<form></form>");
+			    	$frm.attr('action', "/ezBoard/downloadAttachAll.do");
+			    	$frm.attr('method', 'post');
+			    	$frm.appendTo('body');
+			
+			    	param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
+			    	param2 = $("<input type='hidden' value='" + fileNames + "' name='fileNames' />");
+			    	param3 = $("<input type='hidden' value='" + fileNamesUID + "' name='fileNamesUID' />");
+			    	
+			    	$frm.append(param1).append(param2).append(param3);
+			    	$frm.submit();
+				}
+				else { // 체크된 파일 없음
+					return;
+				}
+	        }
+		    
 		    /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 		    function MemberInfo_onclick(pUserID, pDeptID) {
 		        var feature = "height=490px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
@@ -980,10 +1023,13 @@
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
+		    /* 2020-01-30 홍승비 - 특수문자 파싱 추가 */
 		    function MakeXMLString(p_str) {
 		        p_str = ReplaceText(p_str, "&", "&amp;");
 		        p_str = ReplaceText(p_str, "<", "&lt;");
 		        p_str = ReplaceText(p_str, ">", "&gt;");
+		        p_str = ReplaceText(p_str, "'", "&apos;");
+		        p_str = ReplaceText(p_str, "\"", "&quot;");
 		        return p_str;
 		    }
 		    function OpenItem(strItemID) {
