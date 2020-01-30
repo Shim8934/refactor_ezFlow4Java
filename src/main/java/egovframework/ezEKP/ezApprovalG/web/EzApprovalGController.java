@@ -1039,6 +1039,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
+		//2020-01-28 김은석 추가
+		String useAnnualSusinYN = ezCommonService.getTenantConfig("useAnnualSusinYN", userInfo.getTenantId());
+		
+		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
 		model.addAttribute("beforeDocID", beforeDocID);
 		model.addAttribute("isUsed", isUsed);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -4213,7 +4217,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		//2020-01-23 김은석 추가
+		String useAnnualSusinYN = ezCommonService.getTenantConfig("useAnnualSusinYN", userInfo.getTenantId());
+		
+		model.addAttribute("useAnnualSusinYN", useAnnualSusinYN);
+	    model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
 		model.addAttribute("optJunKyulInfo", optJunKyulInfo);
