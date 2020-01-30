@@ -674,7 +674,7 @@
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
 		            /* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
 		            filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
-		            filenameView = ReplaceText(ReplaceText(ReplaceText(filenameOrg, ">", "&gt;"), "<", "&lt;"), "&", "&amp;");
+		            filenameView = MakeXMLString(filenameOrg);
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 		            
 		            var strTarget = "target=''";
@@ -1023,10 +1023,13 @@
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
+		    /* 2020-01-30 홍승비 - 특수문자 파싱 추가 */
 		    function MakeXMLString(p_str) {
 		        p_str = ReplaceText(p_str, "&", "&amp;");
 		        p_str = ReplaceText(p_str, "<", "&lt;");
 		        p_str = ReplaceText(p_str, ">", "&gt;");
+		        p_str = ReplaceText(p_str, "'", "&apos;");
+		        p_str = ReplaceText(p_str, "\"", "&quot;");
 		        return p_str;
 		    }
 		    function OpenItem(strItemID) {
