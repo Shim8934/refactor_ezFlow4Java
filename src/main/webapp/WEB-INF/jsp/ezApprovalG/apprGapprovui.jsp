@@ -171,6 +171,9 @@
 			var listOpenFlag = "<c:out value ='${listOpenFlag}'/>";
 			var fileOpenFlagList = "<c:out value ='${fileOpenFlagList}'/>";
 			
+			//2020-01-23 김은석 추가
+			var useAnnualSusinYN = "<c:out value ='${useAnnualSusinYN}'/>";
+			
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -937,11 +940,23 @@
 		    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
 		    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-script').getAttribute("code");
 		    		        	var script = document.createElement("script");
+		    		        	var tempDocId = "";
 		    					script.type = "text/javascript";
 		    					script.innerHTML = code;
 		    					document.querySelector("head").appendChild(script);
+
+		    					//2020-01-23 김은석
+		    					if (useAnnualSusinYN == "1") {
+	    							tempDocId = pDocID;
+		    					} else {
+		    						if (pDocType == "001") {
+	    								tempDocId = pDocID;
+		    						} else {
+	    								tempDocId = pOrgDocID;
+		    						}
+		    					}
 		    					
-		    		        	attitude_annual_conn(pOrgDocID);
+		    		        	attitude_annual_conn(tempDocId);
 		    		        }
 		                } else {
 		                	 CurrentAprType = pAprLineType;
