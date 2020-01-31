@@ -210,14 +210,9 @@
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
 	            	filepathHTMLEscape = MakeXMLString(getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath")));
-	            	filename = MakeXMLString(filepath.substr(120, filepath.length - 119));
+	            	/* 2020-01-31 홍승비 - filePath가 아닌 fileName으로 파일명을 가져오도록 수정 */
+	            	filename = MakeXMLString(getNodeText(SelectSingleNode(xmldomNodes[i], "FileName")));
 	            	filenameAttr = MakeXMLString(filepath.substr(filepath.lastIndexOf("/"), filepath.length));
-// 	                filename = filepath.substr(filepath.indexOf("}_") + 2);
-// 	                filename = ReplaceText(filename, "%2b", "+");
-// 	                filename = ReplaceText(filename, "%3b", ";");
-// 	                filename = ReplaceText(filename, "%7e", "~");
-// 	                filename = ReplaceText(filename, "%3d", "=");
-	               // filepath = "/upload_board/" + filepath;
 	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	
 	                var strTarget = "target=''";
