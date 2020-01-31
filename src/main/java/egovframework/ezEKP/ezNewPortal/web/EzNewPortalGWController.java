@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezNewPortal.web;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -5156,6 +5157,42 @@ public class EzNewPortalGWController {
 		}
 		
 		LOGGER.debug("ezNewPortal G/W updatePortletAuth ended.");
+		return result;
+	}
+	
+	// 2020-01-22 유은정  메뉴코드로 메뉴 권한 체크 관련 로직
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/admin/ezPortal/menu/access", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject checkMenuAuth(HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezNewPortal G/W checkMenuAuth started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			String menuCode = request.getParameter("menuCode");
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String[] menuArr = menuCode.split(",");
+			
+			ArrayList<String> menuCodeList = new ArrayList(Arrays.asList(menuArr));
+			int tenantId = userInfo.getTenantId();
+			String deptId = userInfo.getDeptID();
+			String companyId = userInfo.getCompanyID();
+			String lang = userInfo.getLang();
+			
+			Map<String, Boolean> menuAccess = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("menuAccess", menuAccess);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("ezNewPortal G/W checkMenuAuth ended.");
 		return result;
 	}
 }
