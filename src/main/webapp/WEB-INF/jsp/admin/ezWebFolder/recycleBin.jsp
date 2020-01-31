@@ -602,7 +602,7 @@
         <iframe style="border:none;" id="iFrameLayer"></iframe>
     </div>
 	<div id="searchPanel"class="popup wfSearchPanel" style="display:none;">
-		<h1><spring:message code='ezWebFolder.t10'/><spring:message code='ezWebFolder.t123' /></h1> 
+		<h1><spring:message code='ezWebFolder.kje01'/></h1> 
 		<div class="wfClose" onclick="doLayerPopup();"><ul><li><span></span></li></ul></div>
 		<div style="margin: 10px 0px 15px;">
 			<table class="content wftable">
