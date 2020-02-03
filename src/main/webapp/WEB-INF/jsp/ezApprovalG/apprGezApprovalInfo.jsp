@@ -2050,8 +2050,8 @@
 	                            <tr>
 	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
-	                                	<a style="margin-top: 8px;" class="imgbtn imgbck">
-	                                		<span id="btnAddGamsaDept" onclick="return btnAddEtcDept_onclick('013')">감사추가</span>
+	                                	<a id="btnAddGamsaDept" style="margin-top: 8px; display: none;" class="imgbtn imgbck">
+	                                		<span onclick="return btnAddEtcDept_onclick('013')">감사추가</span>
 	                                	</a>
 	                                    <a style="margin-top: 8px;" class="imgbtn imgbck">
 	                                 </c:if>

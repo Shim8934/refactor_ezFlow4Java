@@ -14023,7 +14023,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	                subSQL = doDeptAssist(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(),
 	                		docXML2.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent(),
 	                		docXML2.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent(), 
-						dirPath, staATGamSaBu, staDSGamSaBu, docXML2.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent(), companyID, userInfo.getTenantId());
+						dirPath, staATBuSeuSoonChaHyubJo, staDSHabYui, docXML2.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent(), companyID, userInfo.getTenantId());
 	                
 	                if (subSQL.toUpperCase().equals("FALSE")) {
 	                	rtnVal = false;
@@ -14866,6 +14866,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String signTitle = "";
 		String signCont = "";
 		String cabinetSN = "";
+		Boolean isGamsaDoc = false;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -14933,6 +14934,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 			org.jsoup.nodes.Document doc = Jsoup.parse(content);
 			
+			if(doc.getElementById("deptgamsaname") != null) {
+				isGamsaDoc = true;
+			}
+			
 			if (isHesong) {
 				if (doc.getElementById(susinSN + "habyuipositon" + aprSN) != null) {
 					doc.getElementById(susinSN + "habyuipositon" + aprSN).html(userInfo.getTitle());
@@ -14987,13 +14992,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}   
 			}
-			
-			if (doc.getElementById(susinSN + "habyuisign" + aprSN) != null) {
-				doc.getElementById(susinSN + "habyuisign" + aprSN).html(signCont);
-			}
-
-			if (doc.getElementById(susinSN + "habyuidate" + aprSN) != null) {
-				doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
+			if (isGamsaDoc) {
+				if (doc.getElementById("deptgamsasign") != null) {
+					doc.getElementById("deptgamsasign").html(signCont);
+				}
+			} else {
+				if (doc.getElementById(susinSN + "habyuisign" + aprSN) != null) {
+					doc.getElementById(susinSN + "habyuisign" + aprSN).html(signCont);
+				}
+				
+				if (doc.getElementById(susinSN + "habyuidate" + aprSN) != null) {
+					doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
+				}
 			}
 			
 			String tempHtml = doc.outerHtml();

@@ -122,6 +122,9 @@
 			var useReceiveDocNo = "${useReceiveDocNo}";
 			var nonElecRec = "${nonElecRec}";
 			
+			//부서감사 관련 2020-01-14 홍대표
+			var deptgamsaCount = 0;
+			
 			window.onload = function () {
 			};
 			
@@ -903,8 +906,9 @@
 		        parameter[39] = SummaryFlag;
 		        parameter[41] = tempItemName;
 		        parameter[42] = tempItemName2;
+		        parameter[43] = deptgamsaCount;
 		        
-		        if(pDocState == "012") {
+		        if(pDocState == "012" || pDocState == "014") {
 		        	parameter[45] = "";
 		        	parameter[46] = "";
 		        }

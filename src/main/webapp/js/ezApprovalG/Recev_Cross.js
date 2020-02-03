@@ -1133,7 +1133,7 @@ function SetAutoPropertyValue() {
 		var field = fields[i];
 		if(!fields) return;
 		
-		if(pDraftFlag == "HAPYUI" || (pDraftFlag == "GAMSABU" && ConvertYN == "Y") || pDraftFlag == "WHOKYUL") {
+		if(pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
 	  		switch (field.id) {
 	  			case "bedocnumber" :
 	  				setDocNumFormat("be");
