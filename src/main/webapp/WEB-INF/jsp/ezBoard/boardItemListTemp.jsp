@@ -108,6 +108,9 @@
 		            document.getElementById("divList").style.height = height + "px";
 		            window_onunload_Event = true;
 		            getBoardList();
+		            
+			        /* 2020-02-03 홍승비 - 아무것도 선택하지 않은 상태의 하단 미리보기 영역 마진 수정 */
+			      	ifrmPreViewW.document.getElementById("ifrmPreViewW_div").style.marginTop = "-2px";
 		        };
 		        
 		        /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
@@ -954,6 +957,16 @@
 	                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        }
 		    }
+		    
+			/* 2020-02-03 홍승비 - 하단 미리보기 사용 시 아무 게시물도 선택되지 않은 상태라면 최소 높이 설정 */
+		    function checkPreViewWSrc() {
+	    	  if (document.getElementById("ifrmPreViewW").src.indexOf("/blank") > -1) {
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "130px";
+	            } else { // 게시물 선택 시 최소 높이 해제
+	            	document.getElementById("ifrmPreViewW").style.minHeight = "";
+	            }
+		    }
+			
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -1076,7 +1089,7 @@
 						</dl>
 	                </div>
 					<iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
-					<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+					<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" onLoad="checkPreViewWSrc();" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
             </div>
         </div>
     </div>

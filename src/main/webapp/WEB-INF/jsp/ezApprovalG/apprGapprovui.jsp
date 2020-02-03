@@ -171,6 +171,9 @@
 			var listOpenFlag = "<c:out value ='${listOpenFlag}'/>";
 			var fileOpenFlagList = "<c:out value ='${fileOpenFlagList}'/>";
 			
+			//2020-01-23 김은석 추가
+			var useAnnualSusinYN = "<c:out value ='${useAnnualSusinYN}'/>";
+			
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -937,11 +940,23 @@
 		    		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
 		    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-script').getAttribute("code");
 		    		        	var script = document.createElement("script");
+		    		        	var tempDocId = "";
 		    					script.type = "text/javascript";
 		    					script.innerHTML = code;
 		    					document.querySelector("head").appendChild(script);
+
+		    					//2020-01-23 김은석
+		    					if (useAnnualSusinYN == "1") {
+	    							tempDocId = pDocID;
+		    					} else {
+		    						if (pDocType == "001") {
+	    								tempDocId = pDocID;
+		    						} else {
+	    								tempDocId = pOrgDocID;
+		    						}
+		    					}
 		    					
-		    		        	attitude_annual_conn(pOrgDocID);
+		    		        	attitude_annual_conn(tempDocId);
 		    		        }
 		                } else {
 		                	 CurrentAprType = pAprLineType;
@@ -1777,6 +1792,7 @@
 		            modeflag = false;
 		            chkBtnConfirm("1");
 		            chkBtn(false, approvalFlag);            
+		            setMenuBar("btnAddRelatedCabinet", false);
 		            beforeHtml = message.Get_EditorBodyHTML();
 		            message.SetEditable(true);
 		            var contentEditable = message.DocumentBodyGetAttribute("contentEditable");
@@ -1824,6 +1840,7 @@
 		        }
 		        message.SetEditable(false);
 		        chkBtnConfirm("2");
+		        setMenuBar("btnAddRelatedCabinet", true);
 		        modeflag = true;
 		    }
 		    function btnSave_onclick() {
@@ -2106,7 +2123,7 @@
 						  <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
 		                  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
 		                  <c:if test="${useCabinet == 'YES'}">
-								<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+								<li id="btnAddRelatedCabinet"><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 						  </c:if>
 		              </ul>
 				</div>

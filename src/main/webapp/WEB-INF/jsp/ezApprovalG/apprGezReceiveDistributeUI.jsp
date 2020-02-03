@@ -875,17 +875,17 @@
 	            ListViewLen = lvTest.GetDataRows();
 	
 	            if (ListViewLen.length == 0) {
-	                alert("<spring:message code='ezApprovalG.pjj31'/>");
+	                OpenAlertUI("<spring:message code='ezApprovalG.pjj31'/>");
 	                return;
 	            }
 	            if (ListViewLen.length == 1) {
 	                if (GetAttribute(ListViewLen[0], "id") == "listAPRLINE1_TR_noItems") {
 	                	if(tempmode == 'MODIFY'){
-		                    alert("<spring:message code='ezApprovalG.pjj31'/>");
+		                    OpenAlertUI("<spring:message code='ezApprovalG.pjj31'/>");
 		                    return;
 	                	}
 	                	if(tempmode == 'NEW'){
-		                    alert("<spring:message code='ezApprovalG.psb31'/>");
+		                    OpenAlertUI("<spring:message code='ezApprovalG.psb31'/>");
 		                    return;
 	                	}
 	                }

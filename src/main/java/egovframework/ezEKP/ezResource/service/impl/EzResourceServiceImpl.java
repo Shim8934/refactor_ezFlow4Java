@@ -2052,7 +2052,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		/* 2018-07-13 홍승비 - everyone을 관리자로 설정한 경우 우선적으로 해당 관리자 플래그 받아오도록 수정 */
 		ResGetAdminFlagVO resGetAdminFlag = getAdmFlag(companyID, brdID, userID, tenantID);
 		
-		if (resGetAdminFlag.getAccessLvl() != null && !resGetAdminFlag.getAccessLvl().equals("")) {
+		if (resGetAdminFlag != null && resGetAdminFlag.getAccessLvl() != null && !resGetAdminFlag.getAccessLvl().equals("")) {
 			String strXML = "<DATA>"+commonUtil.getQueryResult(resGetAdminFlag)+"</DATA>";
 			Document xmlDom = commonUtil.convertStringToDocument(strXML);
 			

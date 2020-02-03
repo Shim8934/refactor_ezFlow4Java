@@ -82,6 +82,11 @@
                     alert("<spring:message code='ezEmail.t158' />");
                     return;
                 }
+                // 하위 편지함 5개까지 생성가능 top편지함의 하위편지함이 1레벨로 생각
+                if (getFolderDeptLevel(PostTreeView.selectedIndex()) > 5) {
+                	alert("<spring:message code='ezEmail.ksaMailBox01' />");
+                	return;
+                }
                 
                 inputNameDlg_cross_dialogArguments[0] = "";
                 inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
@@ -492,6 +497,12 @@
 			
 			function manageClose() {
 				window.close();
+			}
+			
+		    // 폴더 뎁스 레벨
+			function getFolderDeptLevel(nodeIdx) {
+				var folderUrl = PostTreeView.getvalue(nodeIdx, "href");
+				return folderUrl.split(".").length;
 			}
 			
 			/* 2016-12-28 이효민 : 사용하지 않음 

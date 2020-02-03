@@ -18233,7 +18233,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String makeSearchField(String orgStr) {
-		return orgStr.replace("'", "''").replace("\0", "").replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+		return orgStr.replace("'", "''").replace("\0", "").replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
 	}
 
 	public String getLVFieldInfo(String listType, String companyID, String lang, int tenantID) throws Exception{
@@ -19629,10 +19629,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_PUBFLAG", "N");
 		}
 		map.put("v_SUBQUERY", subQuery);
-		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DOCTITLE", docTitle.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DOCTITLE", docTitle.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DRAFTER", drafter.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_FORMID", formID.trim());
 		map.put("v_ENDDATE1", tmpEndDate1);
 		map.put("v_ENDDATE2", tmpEndDate2);
@@ -19685,7 +19685,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("approvalFlag", approvalFlag);
 		map.put("v_LANGTYPE", langType);
 		map.put("v_TENANTID", tenantID);
-		map.put("v_APPROVUSER", approvUser.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_APPROVUSER", approvUser.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
@@ -19725,10 +19725,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		map.put("v_offset", offset);
 		map.put("v_SUBQUERY", subQuery);
-		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DOCTITLE", docTitle.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DOCTITLE", docTitle.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DRAFTER", drafter.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_FORMID", formID.trim());
 		map.put("v_STARTDATE1", tmpStartDate1);
 		map.put("v_STARTDATE2", tmpStartDate2);
@@ -19750,7 +19750,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCSTATE", docState.trim());
 		map.put("v_LANGTYPE", langType);
 		map.put("v_TENANTID", tenantID);
-		map.put("v_APPROVUSER", approvUser.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_APPROVUSER", approvUser.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		
 		int resultCnt = ezApprovalGDAO.getSearchDocListCount(map);
 
@@ -29646,10 +29646,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_PUBFLAG", "N");
 		}
 		map.put("v_SUBQUERY", subQuery);
-		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DOCTITLE", docTitle.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DOCTITLE", docTitle.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DRAFTER", drafter.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_FORMID", formID.trim());
 		map.put("v_ENDDATE1", tmpEndDate1);
 		map.put("v_ENDDATE2", tmpEndDate2);
@@ -29702,7 +29702,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("approvalFlag", approvalFlag);
 		map.put("v_LANGTYPE", langType);
 		map.put("v_TENANTID", tenantID);
-		map.put("v_APPROVUSER", approvUser.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_APPROVUSER", approvUser.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
@@ -29744,10 +29744,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		map.put("v_offset", offset);
 		map.put("v_SUBQUERY", subQuery);
-		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DOCTITLE", docTitle.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
-		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_DOCNUMBER", docNumber.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DOCTITLE", docTitle.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DRAFTER", drafter.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
+		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		map.put("v_FORMID", formID.trim());
 		map.put("v_STARTDATE1", tmpStartDate1);
 		map.put("v_STARTDATE2", tmpStartDate2);
@@ -29769,7 +29769,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCSTATE", docState.trim());
 		map.put("v_LANGTYPE", langType);
 		map.put("v_TENANTID", tenantID);
-		map.put("v_APPROVUSER", approvUser.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("v_APPROVUSER", approvUser.trim().replace("[", "\\[").replace("%", "\\%").replace("_", "\\_"));
 		
 		int resultCnt = ezApprovalGDAO.getSearchDocListCountForOpenGov(map);
 
