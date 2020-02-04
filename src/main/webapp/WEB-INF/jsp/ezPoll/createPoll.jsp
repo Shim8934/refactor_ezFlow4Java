@@ -1291,11 +1291,11 @@
 							<span><spring:message code="ezPoll.t159"/></span>
 							
 							<div id="_dateTimePicker" style="display: none;">										
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
-								<select id="sTimePicker"></select>
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center;vertical-align:top;" readonly >
+								<select id="sTimePicker" style="height:24px;"></select>
 								<span>~</span>
-								<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
-								<select id="eTimePicker"></select>						
+								<input type="text" id="Edatepicker" style="width:80px;text-align:center;vertical-align:top;" readonly >
+								<select id="eTimePicker" style="height:24px;"></select>						
 							</div>
 							
 							<div id="openToAllDiv" class="qstSettingInnerDivRight">
