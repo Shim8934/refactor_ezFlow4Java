@@ -235,7 +235,7 @@
 		                document.getElementById("PreviewRayerW").style.display = "block";
 		
 		                CurrenWidth = document.documentElement.clientWidth - 10;
-		                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                CurrentHeight = document.documentElement.clientHeight - 95 - (document.getElementById("mainmenu").clientHeight - 28);
 		                document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
 		                document.getElementById("ResizeBarW").style.width = (CurrenWidth - 10) + "px";
 		                pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
@@ -261,7 +261,7 @@
 		                document.getElementById("PreviewRayerH").style.display = "inline-block";
 		
 		                CurrenWidth = document.documentElement.clientWidth - 20;
-		                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                CurrentHeight = document.documentElement.clientHeight - 95 - (document.getElementById("mainmenu").clientHeight - 28);
 		                pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
 		                pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
 		                document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
@@ -282,7 +282,7 @@
 		            }
 		            
 		        } else {
-		            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		            CurrentHeight = document.documentElement.clientHeight - 95 - (document.getElementById("mainmenu").clientHeight - 28);
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
 		            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
@@ -1009,7 +1009,7 @@
 			}
 		</script>	
 	</head>
-	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span>
 	      <span class="searchForm">
               <select name="searchCheck" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
