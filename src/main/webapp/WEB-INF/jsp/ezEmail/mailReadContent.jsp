@@ -412,7 +412,6 @@
 			     			"width" : "100%",
 			     		    "padding" : "0px 0px 0px 10px",
 			     			"margin" : "0px",
-			     			"font-family" : "malgun gothic",
 			     			"font-size" : "12px",
 			     			"color" : "#333"
 				    	});
