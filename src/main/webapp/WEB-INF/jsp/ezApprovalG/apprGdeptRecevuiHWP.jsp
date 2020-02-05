@@ -327,11 +327,19 @@
 				}
 				else {
                     if (CheckUsePassword()) {
-                        chk_Passwd();
+	                    var chkpass = chk_Passwd();
+	                    if (chkpass == "False") {
+	                        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+	                        OpenAlertUI(pAlertContent);
+	                        return;
+	                    } else if (chkpass == "cancel" || chkpass == undefined) {
+	                        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+                            OpenAlertUI(pAlertContent);
+                            return;
+                        }
                     }
-                    else {
-                        check_skipdraft();
-                    }
+                    
+                    check_skipdraft();
 			      }
 			  } catch (e) {
 			      alert(e.description);
