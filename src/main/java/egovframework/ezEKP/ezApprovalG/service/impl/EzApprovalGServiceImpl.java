@@ -15047,6 +15047,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else if("hwp".equals(ext)) { //부서합의 한글 기안기 처리하기 위해 수정. 접수 후 결재완료 됐을 경우 파싱 에러 때문에 수정. 2019-09-24 홍대표
 			HWPFile loadHwp = HWPReader.fromFile(formURL);
 			
+			if(findHwpField("deptgamsaname", loadHwp)) {
+				isGamsaDoc = true;
+			}
+			
 			if (findHwpField(susinSN + "habyuipositon" + aprSN, loadHwp)) {
 				if(isHesong) {
 					setHwpText(susinSN + "habyuipositon" + aprSN, userInfo.getTitle(), loadHwp);
@@ -15103,13 +15107,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 			
-			if (findHwpField(susinSN + "habyuisign" + aprSN, loadHwp)) {
-				setHwpText(loadHwp, susinSN + "habyuisign" + aprSN, signCont);
-			}
-			
-			String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", ".");
-			if (findHwpField(susinSN + "habyuidate" + aprSN, loadHwp)) {
-				setHwpText(loadHwp, susinSN + "habyuidate" + aprSN, strDate);
+			if (isGamsaDoc) {
+				if (findHwpField("deptgamsasign", loadHwp)) {
+					setHwpText(loadHwp, "deptgamsasign", signCont);
+				}
+			} else {
+				if (findHwpField(susinSN + "habyuisign" + aprSN, loadHwp)) {
+					setHwpText(loadHwp, susinSN + "habyuisign" + aprSN, signCont);
+				}
+				
+				String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", ".");
+				if (findHwpField(susinSN + "habyuidate" + aprSN, loadHwp)) {
+					setHwpText(loadHwp, susinSN + "habyuidate" + aprSN, strDate);
+				}
 			}
 			
 			HWPWriter.toFile(loadHwp, formURL);

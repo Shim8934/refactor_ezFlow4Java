@@ -163,6 +163,9 @@
 	        var orgCompanyID = "<c:out value='${userInfo.companyID}'/>";
 	        var docNumZeroCnt = "${docNumZeroCnt}";
 	        
+			//부서감사 관련 2020-01-14 홍대표
+			var deptgamsaCount = 0;
+	        
 	        window.onload = function () {
 	            try {
 	                window.onresize();
@@ -1239,6 +1242,8 @@
 				        parameter[49] = nonSepAttachLVXml;
 				        parameter[51] = sepAttachCheckYN;
 			        }
+			        
+			        parameter[43] = deptgamsaCount;
 			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;

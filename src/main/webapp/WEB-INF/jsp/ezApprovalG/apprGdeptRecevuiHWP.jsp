@@ -109,6 +109,9 @@
 			var SummaryFlag = true;
 			var pDocNumCode = "";
 			
+			//부서감사 관련 2020-01-14 홍대표
+			var deptgamsaCount = 0;
+			
 			var strLang12 = "";
 			
 			function process_AfterOpen() {
@@ -327,11 +330,19 @@
 				}
 				else {
                     if (CheckUsePassword()) {
-                        chk_Passwd();
+	                    var chkpass = chk_Passwd();
+	                    if (chkpass == "False") {
+	                        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+	                        OpenAlertUI(pAlertContent);
+	                        return;
+	                    } else if (chkpass == "cancel" || chkpass == undefined) {
+	                        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+                            OpenAlertUI(pAlertContent);
+                            return;
+                        }
                     }
-                    else {
-                        check_skipdraft();
-                    }
+                    
+                    check_skipdraft();
 			      }
 			  } catch (e) {
 			      alert(e.description);
@@ -755,8 +766,9 @@
 		        parameter[39] = SummaryFlag;
 		        parameter[41] = tempItemName;
 		        parameter[42] = tempItemName2;
+		        parameter[43] = deptgamsaCount;
 		        
-		        if(pDocState == "012") {
+		        if(pDocState == "012" || pDocState == "014") {
 		        	parameter[45] = "";
 		        	parameter[46] = "";
 		        }
