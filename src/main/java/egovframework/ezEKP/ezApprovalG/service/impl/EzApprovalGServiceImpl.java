@@ -11216,7 +11216,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(1).getTextContent());
 			
-			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATJunGyul))) {
+			// 부서합의와 동일하게 부서감사도 회수버튼이 보이지 않도록 수정. 2020-02-05 홍대표.
+			if (!(aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATJunGyul))) {
 				rtnVal = false;
 			}
 			
