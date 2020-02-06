@@ -1820,10 +1820,10 @@
 				]]>
 			</isNotEmpty>
 			)
+		</dynamic>
 		)
 		WHERE
 			CNT = 1
-		</dynamic>
     </select>
     
     <select id="EzPollDAO.getQuestionRelatedDept" resultClass="String">
