@@ -512,9 +512,10 @@
 		                            return;
 		                        }
 		
-		                        if (pDraftFlag == "HAPYUI") {
-		                        	LastHapyui();
-		                        }
+		                        //불필요한 로직 주석처리. 닷넷 동일. 2020-02-05 홍대표.
+// 		                        if (pDraftFlag == "HAPYUI") {
+// 		                        	LastHapyui();
+// 		                        }
 		
 		                    }
 		                    else {
