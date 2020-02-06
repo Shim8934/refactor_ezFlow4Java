@@ -1659,8 +1659,12 @@
     <select id="EzPollDAO.getUserInfoM" resultMap="login">
     	<isEmpty property="companyUser">
     	<![CDATA[
+		SELECT
+			*
+		FROM (
 			SELECT 
-				a.cn,  
+				ROW_NUMBER() OVER (PARTITION BY a.CN ORDER BY ROWNUM) CNT,
+				a.cn,
 				a.password,
 				a.displayname,
 				a.displayname2,
@@ -1712,8 +1716,12 @@
     	</isEmpty>
 		<isNotEmpty property="companyUser">
 		<![CDATA[
+		SELECT
+			*
+		FROM (
 			SELECT 
-				a.cn,  
+				ROW_NUMBER() OVER (PARTITION BY a.CN ORDER BY ROWNUM) CNT,
+				a.cn,
 				a.password,
 				a.displayname,
 				a.displayname2,
@@ -1811,8 +1819,11 @@
 				)
 				]]>
 			</isNotEmpty>
+			)
 		)
-		</dynamic>	
+		WHERE
+			CNT = 1
+		</dynamic>
     </select>
     
     <select id="EzPollDAO.getQuestionRelatedDept" resultClass="String">
