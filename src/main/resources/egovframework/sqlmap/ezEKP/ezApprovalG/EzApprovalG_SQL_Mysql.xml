@@ -23690,69 +23690,75 @@
 		   		COMPANYID = #companyID#)
    </insert>
    
-   <insert id="EzApprovalG.insertTmpAttachInfo" parameterClass="Map"> 
-   		INSERT INTO 
-   			TBL_TMPATTACHINFO
+	<insert id="EzApprovalG.insertTmpAttachInfo" parameterClass="Map">
+		INSERT INTO TBL_TMPATTACHINFO
 			(
-				OWNERID,
-	    		SN,
-	    		ATTACHFILESN ,
-	    		ATTACHFILENAME ,
-	    		ATTACHFILEHREF ,
-	    		ATTACHFILESIZE ,
-	    		ATTACHUSERID ,
-	    		ATTACHUSERNAME ,
-	    		ATTACHUSERJOBTITLE ,
-	    		ATTACHUSERDEPTID ,
-	    		ATTACHUSERDEPTNAME ,
-	    		PAGENUM ,
-	    		DISPLAYNAME ,
-	    		BODYATTACH ,
-	    		AttachUserName2 ,
-	    		AttachUserJobTitle2 ,
-	    		AttachUserDeptName2,
-	    		TENANT_ID ,
-	    		COMPANYID,
-                FILEOPENFLAG )
-	     SELECT
-	    		#v_USERID#,
-	    		#v_SN#,
-	    		A.ATTACHFILESN ,
-	    		A.ATTACHFILENAME ,
-	    		A.ATTACHFILEHREF ,
-	    		A.ATTACHFILESIZE ,
-	    		A.ATTACHUSERID ,
-	    		A.ATTACHUSERNAME ,
-	    		A.ATTACHUSERJOBTITLE ,
-	    		A.ATTACHUSERDEPTID ,
-	    		A.ATTACHUSERDEPTNAME ,
-	    		A.PAGENUM ,
-	    		A.DISPLAYNAME ,
-	    		A.BODYATTACH ,
-	    		A.AttachUserName2 ,
-	    		A.AttachUserJobTitle2 ,
-	    		A.AttachUserDeptName2,
-	    		A.TENANT_ID ,
-	    		A.COMPANYID ,
-	    		FILEOPENFLAG 
-	      FROM
-	      		TBL_APRATTACHINFO A 
-	      INNER JOIN
-	      		TBL_OPENGOVFILEINFO B
-	      ON
-	      		A.DOCID = B.DOCID
-	      AND
-	      		A.ATTACHFILESN = B.SN
-	      AND
-	      		A.TENANT_ID = B.TENANT_ID
-	      AND
-	      		A.COMPANYID = B.COMPANYID
-	      WHERE  
-	      		A.DOCID = #v_DOCID# 
-		  AND 	
-		   		A.TENANT_ID = #v_TENANTID#
-		  AND
-		  		A.COMPANYID = #companyID#
+			OWNERID,
+			SN,
+			ATTACHFILESN ,
+			ATTACHFILENAME ,
+			ATTACHFILEHREF ,
+			ATTACHFILESIZE ,
+			ATTACHUSERID ,
+			ATTACHUSERNAME ,
+			ATTACHUSERJOBTITLE ,
+			ATTACHUSERDEPTID ,
+			ATTACHUSERDEPTNAME ,
+			PAGENUM ,
+			DISPLAYNAME ,
+			BODYATTACH ,
+			AttachUserName2 ,
+			AttachUserJobTitle2 ,
+			AttachUserDeptName2,
+			TENANT_ID ,
+			COMPANYID
+			<isEqual prepend=", " property="useOpenGov" compareValue="YES">
+				FILEOPENFLAG
+			</isEqual>
+			)
+		SELECT
+			#v_USERID#,
+			#v_SN#,
+			A.ATTACHFILESN ,
+			A.ATTACHFILENAME ,
+			A.ATTACHFILEHREF ,
+			A.ATTACHFILESIZE ,
+			A.ATTACHUSERID ,
+			A.ATTACHUSERNAME ,
+			A.ATTACHUSERJOBTITLE ,
+			A.ATTACHUSERDEPTID ,
+			A.ATTACHUSERDEPTNAME ,
+			A.PAGENUM ,
+			A.DISPLAYNAME ,
+			A.BODYATTACH ,
+			A.AttachUserName2 ,
+			A.AttachUserJobTitle2 ,
+			A.AttachUserDeptName2,
+			A.TENANT_ID ,
+			A.COMPANYID
+			<isEqual prepend=", " property="useOpenGov" compareValue="YES">
+				FILEOPENFLAG
+			</isEqual>
+		FROM
+			TBL_APRATTACHINFO A
+		<isEqual property="useOpenGov" compareValue="YES">
+			INNER JOIN
+				TBL_OPENGOVFILEINFO B
+			ON
+				A.docid = B.docid
+			AND
+				A.attachfilesn = B.sn
+			AND
+				A.tenant_id = B.tenant_id
+			AND
+				A.companyid = B.companyid
+		</isEqual>
+		WHERE
+			A.DOCID = #v_DOCID#
+		AND
+			A.TENANT_ID = #v_TENANTID#
+		AND
+			A.COMPANYID = #companyID#
    </insert>
    
    <insert id="EzApprovalG.insertTmpExpAprLine" parameterClass="Map"> 
@@ -30442,33 +30448,34 @@
     		COMPANYID = #companyID#
 	</delete>
 
-	  	  <select id="EzApprovalG.getAttachListForOpenGov" parameterClass="Map" resultClass="ApprGOpenGovAttachVO">
-		  SELECT
-		   		* 
-		  FROM
-		  <isNotEqual property="endFlag" compareValue="Y">
-		  		 tbl_aprattachinfo a 
-		  </isNotEqual>
-		  <isEqual property="endFlag" compareValue="Y">
-		  		 tbl_endattachinfo a 
-		  </isEqual>
-		  INNER JOIN
-		  		 tbl_opengovfileinfo b 
-		  ON
-		  		 a.docid = b.docid
-		  AND
-		  		 a.tenant_id = b.tenant_id 
-		  AND
-		  		 a.attachfilesn = b.sn
-		  AND
-		  		 a.companyid = b.companyid
-		  WHERE  
-    			 a.DOCID = #docID#
-	      AND
-	    		 a.TENANT_ID = #tenantID#
-	      AND
-    			 a.COMPANYID = #companyID#
-	  </select> 
+	<select id="EzApprovalG.getAttachListForOpenGov" parameterClass="Map" resultClass="ApprGOpenGovAttachVO" remapResults="true">
+		SELECT
+			*
+		FROM
+			<isNotEqual property="endFlag" compareValue="Y">
+				TBL_APRATTACHINFO A
+			</isNotEqual>
+			<isEqual property="endFlag" compareValue="Y">
+				TBL_ENDATTACHINFO A
+			</isEqual>
+		INNER JOIN
+			TBL_OPENGOVFILEINFO B
+		ON
+			A.docid = B.docid
+		AND
+			A.tenant_id = B.tenant_id
+		AND
+			A.attachfilesn = B.sn
+		AND
+			A.companyid = B.companyid
+		WHERE
+			A.docid = #docID#
+		AND
+			A.tenant_id = #tenantID#
+		AND
+			A.companyid = #companyID#
+	</select>
+
 	  	<insert id="EzApprovalG.insertOpenGovDocInfo" parameterClass="Map">
 	 	INSERT INTO                 
 	 		TBL_OPENGOVDOCINFO
@@ -31523,15 +31530,5 @@
 			TENANT_ID = #v_TENANTID#
 		AND
 			COMPANYID = #companyID#
-	</update>
-
-	<update id="EzApprovalG.setOpenGovSendFlagToY" >
-		<![CDATA[
-			UPDATE TBL_OPENGOVDOCINFO
-			SET
-				SENDFLAG = 'Y'
-			WHERE
-				createdate < curdate()
-		]]>
 	</update>
 </sqlMap>

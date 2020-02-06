@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE HTML>
 <html style="height:97%">
 	<head>
@@ -116,7 +118,8 @@
 			var isHWP = "";
 			
 			var isReDraft = '${isReDraft}';
-			
+
+            var useOpenGov = "<c:out value='${useOpenGov}' />";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 			//부서순차합의를 위해 아래 파라미터 추가. 2019-02-08 홍대표
 			//최종결재시 채번
@@ -910,7 +913,7 @@
 		        	parameter[46] = "";
 		        }
 		        
-		        if (approvalFlag == "G") {
+		        if (useOpenGov == "YES") {
 			        parameter[52] = basis;
 			        parameter[53] = reason;
 			        parameter[54] = listOpenFlag;
@@ -990,30 +993,32 @@
 		            	sepAttachCheckYN = ret[26];
 		            	setNonElecRecInfo(nonElecRecInfoXml);
 		            }
-					
-					$.ajax({
-                		type : "POST",
-                		dataType : "text",
-                		async : false,
-                		url : "/ezApprovalG/openGovInfoSave.do",
-                		data : {
-                				openGovListFlag : ret[27],
-                				fileOpenFlagList : ret[28],
-                				basis : ret[29],
-                				reason : ret[30],
-                				publicity : ret[11],
-                				docID : pDocID,
-                				limitDate : ret[31]
-                		}
-                	});
-                	
-            	    listOpenFlag = ret[27];
-       		        fileOpenFlagList = ret[28];
-                	basis = ret[29];
-                	reason = ret[30];
-                	limitDate = ret[31];
-		            
+
+		            if (useOpenGov == "YES") {
+                        $.ajax({
+                            type : "POST",
+                            dataType : "text",
+                            async : false,
+                            url : "/ezApprovalG/openGovInfoSave.do",
+                            data : {
+                                openGovListFlag : ret[27],
+                                fileOpenFlagList : ret[28],
+                                basis : ret[29],
+                                reason : ret[30],
+                                publicity : ret[11],
+                                docID : pDocID,
+                                limitDate : ret[31]
+                            }
+                        });
+
+                        listOpenFlag = ret[27];
+                        fileOpenFlagList = ret[28];
+                        basis = ret[29];
+                        reason = ret[30];
+                        limitDate = ret[31];
+					}
 		        }
+
 		        SummaryFlag = true;
 		        
 		        savexmlhttp = null;
