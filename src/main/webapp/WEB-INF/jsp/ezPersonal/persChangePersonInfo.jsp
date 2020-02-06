@@ -312,6 +312,18 @@
 			    		birthType = "N";
 			    	}
 			    	
+			    	<c:if test="${useMailAliasSettingOnLogin}">
+			    	var aliasSaveSuccess = false;
+			    	
+			    	emailCheckContext.submit(function() {
+			    		aliasSaveSuccess = true;
+					});
+					
+					if (!aliasSaveSuccess) {
+						return;
+					}
+			    	</c:if>
+			    	
 			    	var cn = "${userInfo.id}";
 			    	
 					$.ajax({
@@ -340,7 +352,12 @@
 			    			} 
 						},
 			    		error : function() {
+			    			<c:if test="${useMailAliasSettingOnLogin}">
+			    			alert("<spring:message code='ezPersonal.t192.aliassuccess'/>");
+			    			</c:if>
+			    			<c:if test="${not useMailAliasSettingOnLogin}">
 			    			alert("<spring:message code='ezPersonal.t192'/>");
+			    			</c:if>
 			    		}
 			    	});
 			     }
@@ -398,9 +415,24 @@
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t176'/></th> 
-            		<td>
-            			${labelMail }
+					<c:if test="${useMailAliasSettingOnLogin}">
+            		<td style="padding: 5px 0px 5px 5px; vertical-align: top;">
+						<input id="email-input" type="text" value="${labelMail}" maxlength="20" spellcheck="false" style="ime-mode: disabled;"/>
+						<span style="padding-left: 5px;">@${domainName}</span>
+						<div class="btnpositionLayer" style="display: inline-block; margin: 0px; padding: 0px; padding-left: 5px; background: none; border: none; vertical-align: middle;">
+							<a class="imgbtn" id="email-check"><span><spring:message code='email.alias.button' /></span></a>
+						</div>
+						<div id="checkmsg" style="height: 0px; opacity: 0; transition: 0.2s all;">
+							<br>
+						</div>
+						<span><spring:message code='email.alias.login.warn' /></span>
+					</td>
+					</c:if>
+					<c:if test="${not useMailAliasSettingOnLogin}">
+					<td>
+            			${labelMail}
             		</td> 
+            		</c:if>
         		</tr> 
     		</table> 
     		<table class="content" width="50%" style="margin-top:10px;"> 
@@ -503,5 +535,12 @@
 	<br/>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
+		<script type="text/javascript" src="${util.addVer('email.alias.lang', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email-check.js')}"></script>
+		<script>
+			emailCheckContext.setOnCheckEventListener(function() {
+				document.getElementById("checkmsg").style.height = "15px";
+			});
+		</script>
 	</body>
 </html>
