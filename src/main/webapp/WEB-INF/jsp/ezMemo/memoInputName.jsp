@@ -18,6 +18,7 @@
 	        var InputValue;
             var FolderId="";
             var folderNameList = "<c:out value='${folderNameList}' />";
+            var submit = true;
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -82,25 +83,29 @@
 	            	method = "put";
 	            }
 	            
-				$.ajax({
-					method : "POST",
-					dataType : "text",
-					async : false,
-					url : url,
-					data : {
-						"folder_name" : folderName,
-						"methodType" : method
-					},
-					success : function() {
-						opener.parent.parent.parent.parent.memoFoldersInfo(method);
-						window.close();
-					},
-					error : function() {
-						alert("<spring:message code='ezMemo.t0037' />");	
-					}
-				});
-				opener.memoFoldersInfo();
-				window.opener.parent.parent.frames["left"].memoFolderList();
+	            if(submit) {
+					$.ajax({
+						method : "POST",
+						dataType : "text",
+						async : false,
+						url : url,
+						data : {
+							"folder_name" : folderName,
+							"methodType" : method
+						},
+						success : function() {
+							submit = false;
+							window.close();
+							opener.parent.parent.parent.parent.memoFoldersInfo(method);
+						},
+						error : function() {
+							submit = true;
+							alert("<spring:message code='ezMemo.t0037' />");	
+						}
+					});
+					opener.memoFoldersInfo();
+					window.opener.parent.parent.frames["left"].memoFolderList();
+	            }
 	        }
 	        
 	        function btn_cancel_onclick() {
