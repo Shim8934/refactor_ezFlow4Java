@@ -14507,10 +14507,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 map.put("nowDateTime", nowDateTime);
 
                 if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
-                    /*//limitDate 쓰지도 않고 있어서 주석
                     String isLimitDate = ezApprovalGDAO.getOpenGovLimitDate(map);
 
-                    if (isLimitDate != null && isLimitDate.equals("N")) {
+                    /*if (isLimitDate != null && isLimitDate.equals("N")) {
                         map.put("nowDate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), "235|+09:00", false));
                     }*/
 
