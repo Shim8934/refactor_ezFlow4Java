@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -384,6 +385,16 @@ public class LoginController {
     			}
     		}
         	
+			// 사용자 이메일 alias 설정 페이지
+			String useMailAliasSettingOnLogin = ezCommonService.getTenantConfig("useMailAliasSettingOnLogin", tenantId);
+
+			if ("YES".equals(useMailAliasSettingOnLogin)
+					&& ezCommonService.getUserConfigInfo(tenantId, _uid, "userFriendlyEmailAddress").isEmpty()) {
+				Cookie loginIdCookie = new Cookie("loginId", loginId);
+				loginIdCookie.setPath("/");
+				response.addCookie(loginIdCookie);
+			}
+
         	// masteradmin의 암호로 로그인 가능하여 masteradmin 암호가 맞는 경우
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
         	if (masteradminLogin) {
@@ -1008,6 +1019,17 @@ public class LoginController {
         }    	
     }
     
+	@RequestMapping(value = "/user/login/email.do", produces = "text/html; charset=utf-8", method = RequestMethod.GET)
+	public String email(@CookieValue("loginCookie") String loginCookie, @CookieValue("loginId") String loginId, Model model) throws Exception {
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
+		model.addAttribute("domainName", domainName);
+		model.addAttribute("loginId", loginId);
+
+		return "/user/login/email";
+	}
+
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
         if (numberOfLoginFailPermit <= 0) {        	
         	//Users will never be blocked

@@ -931,6 +931,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (isUsed == null) {
 			isUsed = "";
 		}
+
+		String useOpenGov = config.getProperty("config.useOpenGov");
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
@@ -1081,10 +1083,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getId(), userInfo.getCompanyID(), tenantID).getReformFlag());
 		}
-		
-		String formId = ezApprovalGService.getFormId(formURL);
-		String openGovFlag = ezApprovalGService.getOpenGovFlag(formId, userInfo.getTenantId(), userInfo.getCompanyID());
-		model.addAttribute("openGovFlag", openGovFlag);
+
+		if (useOpenGov.equalsIgnoreCase("YES")) {
+            String formId = ezApprovalGService.getFormId(formURL);
+            String openGovFlag = ezApprovalGService.getOpenGovFlag(formId, userInfo.getTenantId(), userInfo.getCompanyID());
+            model.addAttribute("openGovFlag", openGovFlag);
+        }
+
+		model.addAttribute("useOpenGov", useOpenGov);
 		
 		logger.debug("draftui ended.");
 
@@ -1275,11 +1281,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String companyID = userInfo.getCompanyID();
 		
 		String useOpenGov = config.getProperty("config.useOpenGov");
-		
-		if (useOpenGov != null && useOpenGov.equals("YES")) {
-			model.addAttribute("useOpenGov", useOpenGov);
-		}
-		
+
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
 		}
@@ -1349,7 +1351,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		model.addAttribute("ext", ext);
 		model.addAttribute("useReceiveInfoName", useReceiveInfoName);
-		
+		model.addAttribute("useOpenGov", useOpenGov);
+
 		logger.debug("ezApprovalInfo ended.");
 		
 		return "ezApprovalG/apprGezApprovalInfo";
@@ -1666,9 +1669,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+
+        //원문정보공개 데이터 제거
+        if (config.getProperty("useOpenGov").equalsIgnoreCase("YES")) {
+            ezApprovalGService.deleteOpenGovDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+        }
+
 		String result = ezApprovalGService.deleteDocInfo(docID, "CHECK", userInfo.getCompanyID(), userInfo.getTenantId());
-		//원문정보공개 데이터 제거
-		ezApprovalGService.deleteOpenGovDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+
 		logger.debug("undoDoc ended.");
 		
 		return result;
@@ -4093,6 +4101,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			susinAdmin = "NO";
 		}
+
+		String useOpenGov = config.getProperty("config.useOpenGov");
 		
 		String docID = request.getParameter("docID");
 		String uID = request.getParameter("id");
@@ -4257,8 +4267,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("formId", formId);
 		}
 		
-		if (approvalFlag.equals("G")) {
-			//basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "";
+		if (useOpenGov.equalsIgnoreCase("YES") && approvalFlag.equalsIgnoreCase("G")) {
 			Map<String, Object> openGovMap = ezApprovalGService.getOpenGovInfo(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 			
 			model.addAttribute("basis", openGovMap.get("basis"));
@@ -4266,6 +4275,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("listOpenFlag", openGovMap.get("listOpenFlag"));
 			model.addAttribute("fileOpenFlagList", openGovMap.get("fileOpenFlagList"));
 		}
+
+		model.addAttribute("useOpenGov", useOpenGov);
 		
 		logger.debug("approvui ended");
 		
@@ -5158,6 +5169,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
+		model.addAttribute("useOpenGov", config.getProperty("useOpenGov"));
 
 		logger.debug("recevGSusin ended.");
 		
@@ -9511,6 +9523,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
 		model.addAttribute("isReDraft", isReDraft);
+		model.addAttribute("useOpenGov", config.getProperty("config.useOpenGov"));
 		
 		logger.debug("recevGDeptHapyui ended");
 
@@ -9755,13 +9768,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		JSONObject openGovJson = new JSONObject();
 		openGovJson.put("openGovInfo", openGovInfo);
-//			attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
-//			attachJson.put("sn", attach.getAttachFileSN());
-//			attachJson.put("fileName", attach.getAttachFileName());
-//			attachJson.put("fileSize", fileSize);
-//			
 		
 		logger.debug("getOpenGovInfoForUpdate ended.");
+
 		return openGovJson;
 	}
 
@@ -9826,10 +9835,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		openGovJson.put("reason", openGovMap.get("reason"));
 		openGovJson.put("listOpenFlag", openGovMap.get("listOpenFlag"));
 		openGovJson.put("fileOpenFlagList", openGovMap.get("fileOpenFlagList"));
-		/*attachJson.put("fileOpenFlag", attach.getFileOpenFlag());
-		attachJson.put("sn", attach.getAttachFileSN());
-		attachJson.put("fileName", attach.getAttachFileName());
-		attachJson.put("fileSize", fileSize);*/
 
 		logger.debug("getOpenGovDocInfo ended.");
 
