@@ -1237,11 +1237,13 @@
 				        parameter[51] = sepAttachCheckYN; // 분첨
 			        }
 
-			        parameter[52] = basis;
-				    parameter[53] = reason;
-				    parameter[54] = listOpenFlag;
-				    parameter[55] = fileOpenFlagList;
-			        
+			        if (useOpenGov == "YES") {
+                        parameter[52] = basis;
+                        parameter[53] = reason;
+                        parameter[54] = listOpenFlag;
+                        parameter[55] = fileOpenFlagList;
+					}
+
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
 			        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
@@ -1330,28 +1332,30 @@
 				            	}
 				            }
 
-                            $.ajax({
-								type : "POST",
-								ataType : "text",
-								sync : false,
-								url : "/ezApprovalG/openGovInfoSave.do",
-								data : {
-									openGovListFlag : ret[27],
-									fileOpenFlagList : ret[28],
-									basis : ret[29],
-									reason : ret[30],
-									publicity : ret[11],
-									docID : pDocID,
-									limitDate : ret[31]
-								}
-							});
+				            if (useOpenGov == "YES") {
+                                $.ajax({
+                                    type : "POST",
+                                    dataType : "text",
+                                    async : false,
+                                    url : "/ezApprovalG/openGovInfoSave.do",
+                                    data : {
+                                        openGovListFlag : ret[27],
+                                        fileOpenFlagList : ret[28],
+                                        basis : ret[29],
+                                        reason : ret[30],
+                                        publicity : ret[11],
+                                        docID : pDocID,
+                                        limitDate : ret[31]
+                                    }
+                                });
 
-							listOpenFlag = ret[27];
-							fileOpenFlagList = ret[28];
-							basis = ret[29];
-							reason = ret[30];
-							limitDate = ret[31];
-			                
+                                listOpenFlag = ret[27];
+                                fileOpenFlagList = ret[28];
+                                basis = ret[29];
+                                reason = ret[30];
+                                limitDate = ret[31];
+							}
+
 			                SummaryFlag = true;
 			                savexmlhttp = null;
 			                HwpCtrl.ChangeMode(3);

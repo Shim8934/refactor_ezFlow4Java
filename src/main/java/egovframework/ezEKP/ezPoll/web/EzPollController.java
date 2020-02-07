@@ -139,14 +139,15 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		if (!mode.equals("") && qstId != -1) {
 			String qstParams = Integer.toString(qstId);
-			session.setAttribute("modifying_question", qstParams);						
+			session.setAttribute("modifying_question", qstParams);
 			//Get question
-			try {				
+			try {
 				PollQuestionVO pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, loginVO.getTenantId());
 				
+				/* 2020-02-07 홍승비 - 투표 수정 시 기존 첨부파일 구분자를 변경 (; -> \\|) */
 				if (pollQuestionVO.getFilePath() != null && !pollQuestionVO.getFilePath().equals("")) {
-					filePath = pollQuestionVO.getFilePath().split(";");
-				}	
+					filePath = pollQuestionVO.getFilePath().split("\\|");
+				}
 				
 				content = pollQuestionVO.getContent();
 				

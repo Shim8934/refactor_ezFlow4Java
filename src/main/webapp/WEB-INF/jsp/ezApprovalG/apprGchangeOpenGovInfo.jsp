@@ -96,6 +96,7 @@
             g_bRecAdmin = RetValue[4];
             pDocID = RetValue[5];
         }
+
         getAttachList();
         GetRecordSimpleInfo();
         
@@ -261,29 +262,27 @@
         	}
         }
         
-//         var result = "";
-    	 $.ajax({
-     		type : "POST",
-     		dataType : "text",
-     		async : false,
-     		url : "/ezApprovalG/updateOpenGovInfo.do",
-     		data : {
-     			docID : pDocID,
-     			publicityCode : publicityCode,
-     			listOpenFlag : listOpenFlag,
-     			reason : reason,
-     			basis : basis,
-     			openLimitDate : openLimitDate,
-     			fileOpenFlagList : fileOpenFlagList,
-     			// 수정사유
-     			modifyReason : modifyReason
-     		},
-     		success: function(xml){
- 			    rtnVal[0] = "TRUE";
-//  			    result = "TRUE";
-     		}
-     	});
- 		return rtnVal[0];
+        $.ajax({
+            type : "POST",
+            dataType : "text",
+            async : false,
+            url : "/ezApprovalG/updateOpenGovInfo.do",
+            data : {
+                docID : pDocID,
+                publicityCode : publicityCode,
+                listOpenFlag : listOpenFlag,
+                reason : reason,
+                basis : basis,
+                openLimitDate : openLimitDate,
+                fileOpenFlagList : fileOpenFlagList,
+                // 수정사유
+                modifyReason : modifyReason
+            },
+            success: function(xml){
+                rtnVal[0] = "TRUE";
+            }
+        });
+        return rtnVal[0];
     }
     
     window.onbeforeunload = function () {
