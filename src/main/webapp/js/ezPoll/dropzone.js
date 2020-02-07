@@ -195,11 +195,12 @@ function setAttachFileInfo1(strXML) {
             		
             		var fileSize = parseInt(fileinfo.split("/")[2]);
             		
+            		/* 2020-02-07 홍승비 - personalizedPortal에서 등록, 수정 시 첨부파일의 크기를 상세보기 시와 동일하게 수정 */
             		if (fileSize / 1024 / 1024 > 1) {
-            			fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+            			fileSize = ((parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(2) + "MB";
             		}
             		else if (fileSize / 1024 > 1) {
-            			fileSize = parseInt(fileSize / 1024) + "KB";
+            			fileSize = parseFloat(fileSize / 1024).toFixed(2) + "KB";
             		}
             		else {
             			fileSize = fileSize + "B";
