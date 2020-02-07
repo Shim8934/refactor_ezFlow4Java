@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -1020,12 +1021,12 @@ public class LoginController {
     }
     
 	@RequestMapping(value = "/user/login/email.do", produces = "text/html; charset=utf-8", method = RequestMethod.GET)
-	public String email(@CookieValue("loginCookie") String loginCookie, @CookieValue("loginId") String loginId, Model model) throws Exception {
+	public String emailSetting(@CookieValue("loginCookie") String loginCookie, @CookieValue("loginId") Optional<String> loginId, Model model) throws Exception {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 
 		String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
 		model.addAttribute("domainName", domainName);
-		model.addAttribute("loginId", loginId);
+		model.addAttribute("loginId", loginId.orElse(loginVO.getId()));
 
 		return "/user/login/email";
 	}
