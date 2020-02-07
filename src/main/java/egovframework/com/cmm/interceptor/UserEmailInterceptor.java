@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.util.WebUtils;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -31,9 +32,11 @@ public class UserEmailInterceptor extends WebContentInterceptor {
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
 
+	@Autowired
+	private EzEmailService ezEmailService;
+
 	/** Logger */
-	// private static final Logger LOGGER =
-	// LoggerFactory.getLogger(UserEmailInterceptor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserEmailInterceptor.class);
 
 	private static final String EMAIL_ALIAS_PAGE = "/user/login/email.do";
 
@@ -61,18 +64,28 @@ public class UserEmailInterceptor extends WebContentInterceptor {
 			}
 
 			String requestUri = request.getRequestURI();
-			String userFriendlyEmailAddress = ezCommonService.getUserConfigInfo(loginVO.getTenantId(), loginVO.getId(), "userFriendlyEmailAddress");
+			String userId = loginVO.getId();
+			String userPrimaryEmail = loginVO.getEmail();
+			String userFriendlyEmailAddress = ezCommonService.getUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress");
+			boolean isPrimaryDifferentFromCn = !userPrimaryEmail.startsWith(userId + "@");
 			boolean hasFriendlyPrimary = !userFriendlyEmailAddress.trim().isEmpty();
 			boolean isEmailPage = requestUri.startsWith(EMAIL_ALIAS_PAGE);
 
-			if (isEmailPage && hasFriendlyPrimary) {
-				response.sendRedirect("/ezNewPortal/newPortalMain.do");
-				return false;
-			}
-
-			if (!isEmailPage && !hasFriendlyPrimary) {
-				response.sendRedirect(EMAIL_ALIAS_PAGE);
-				return false;
+			if (hasFriendlyPrimary) {
+				if (isEmailPage) {
+					response.sendRedirect("/ezNewPortal/newPortalMain.do");
+					return false;
+				}
+			} else {
+				if (isPrimaryDifferentFromCn) {
+					String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+					String userEmail = new StringBuilder(userId).append("@").append(domainName).toString();
+					ezEmailService.updatePrimaryIndividualAlias(userEmail, "", userPrimaryEmail, tenantId);
+					LOGGER.debug("auto alias apply. userEmail: {}, aliasEmail: {}", userEmail, userPrimaryEmail);
+				} else if (!isEmailPage) {
+					response.sendRedirect(EMAIL_ALIAS_PAGE);
+					return false;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
