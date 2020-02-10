@@ -21,7 +21,7 @@
 					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd>
 			</dl>
-			<div class="community_list">
+			<div id="communityList" class="community_list">
 				<c:choose>
 					<c:when test="${fn:length(CommunityList) == 0 }">
 						<ul class="portlet_list">

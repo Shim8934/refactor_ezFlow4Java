@@ -2086,37 +2086,36 @@
 		#v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getTaskCodeNodeExist"
-		parameterClass="Map" resultClass="Integer">
-		<isEqual property="v_DEPTID" compareValue="">
-			<![CDATA[
-				SELECT
-					NVL(COUNT(taskcode), 0)
-				FROM
-					TBL_CABINETCLASS
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					taskcode = #v_TASKCODE#
-			]]>
-		</isEqual>
+	<select id="EzApprovalGAdmin.getTaskCodeNodeExist" parameterClass="Map" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_CABINETCLASS
+		INNER JOIN
+			TBL_CABINET
+		ON
+			TBL_CABINETCLASS.CABINETCLASSNO = TBL_CABINET.CABINETCLASSNO
+		AND
+			TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+		AND
+			TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+		WHERE
+			TBL_CABINETCLASS.COMPANYID = #companyID#
+		AND
+			TBL_CABINETCLASS.TENANT_ID = #tenantID#
+		AND
+			TBL_CABINETCLASS.TASKCODE = #v_TASKCODE#
+		AND
+			TBL_CABINET.DELETEDATE IS NULL
+		AND
+			TBL_CABINET.DELFLAG = '0'
+	]]>
 		<isNotEqual property="v_DEPTID" compareValue="">
-			<![CDATA[
-				SELECT
-					NVL(COUNT(taskcode), 0)
-				FROM
-					TBL_CABINETCLASS
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					taskcode = #v_TASKCODE#
-				AND
-					TRIM(processdeptcode) = #v_DEPTID#
-			]]>
+		<![CDATA[
+			AND
+				TRIM(PROCESSDEPTCODE) = #v_DEPTID#
+		]]>
 		</isNotEqual>
 	</select>
 

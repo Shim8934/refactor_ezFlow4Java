@@ -111,7 +111,7 @@
 	<body class="mainbody">
 		<c:choose>
        		<c:when test="${flag eq 'schedule'}">
-       			<h1><spring:message code='ezSchedule.t00010' /></h1>		
+       			<h1><spring:message code='ezSchedule.t1012' /></h1>		
        		</c:when>
        		<c:otherwise>
        			<h1><spring:message code='ezTask.hyh001' /></h1>	

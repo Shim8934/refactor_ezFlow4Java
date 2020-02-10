@@ -48,8 +48,10 @@
 			dt img {width:21px;height:21px;margin-top:20px;}
 			.menuIcon img {width:21px;height:21px;}
 			.deleteMenu {display:inline-block;margin-left:50px;vertical-align:top;margin-top:-3px;}
-			.accessOK div, .accessNO div {margin-left:15px;display:inline-block;}
+			.accessOK div, .accessNO div {display:inline-block;}
 			.menuChoice {background: #edf7ff; border: 1px solid #2196f3; color: #0470e3;}
+	        .admin_menu .menuIconTD {padding:0px;}
+	        .admin_menu .menuIconTD div {height:100%; overflow:auto; padding:5px;}
 			li.menu dl dd span {white-space:normal; line-height:1.2; word-wrap:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
 			.bottomBtn .btnA:hover{text-decoration:none;}
 		</style>
@@ -308,7 +310,7 @@
 					
 					menusHTML += "</table>";
 					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
 					
 					if (menuAuthsY != null && menuAuthsY.length != 0) {
 						var menuAuthsYList = "";
@@ -322,10 +324,10 @@
 							}
 						});
 						
-						menusHTML += menuAuthsYList.substring(1) + "</td></tr>";
+						menusHTML += menuAuthsYList.substring(1) + "</div></td></tr>";
 					}
 					
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'>";
+					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div>";
 					
 					if (menuAuthsN != null && menuAuthsN.length != 0) {
 						var menuAuthsNList = "";
@@ -339,7 +341,7 @@
 							}
 						});
 						
-						menusHTML += menuAuthsNList.substring(1) + "</td></tr>";
+						menusHTML += menuAuthsNList.substring(1) + "</div></td></tr>";
 					}
 					
 					menusHTML += "</table>";
@@ -794,7 +796,7 @@
 		var openMenuAuth = function(event) {
 			var mode = event.data.mode;
 
-			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId;
+			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId + "&mode=menu";
 			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
 		    	try { OpenWin.focus(); } catch (e) { }
 		}

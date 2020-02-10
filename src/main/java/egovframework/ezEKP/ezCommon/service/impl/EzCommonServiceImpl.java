@@ -1649,6 +1649,18 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void createThemeAndPortletAuth() throws Exception {
+		ezCommonDAO.createTblThemeAuth();
+		ezCommonDAO.createTblPortletAuth();
+	}
+
+	@Override
+	public void addMenuAndPortletCode() throws Exception {
+		ezCommonDAO.addMenuCode();
+		ezCommonDAO.addPortletCode();
+	}
+	
+	@Override
 	public List<CountryVO> getCountryInfo(Map<String, Object> map) throws Exception {
 		return ezCommonDAO.getCountryInfo(map);
 	}
@@ -1730,6 +1742,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void addSnMenuAuth() throws Exception {
 		ezCommonDAO.addSnMenuAuth();
+	}
+
+	@Override
+	public void addSnThemeAndPortletAuth() throws Exception {
+		ezCommonDAO.addSnThemeAuth();
+		ezCommonDAO.addSnPortletAuth();
 	}
 	
 	@Override

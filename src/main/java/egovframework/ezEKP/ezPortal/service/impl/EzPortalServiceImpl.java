@@ -3848,7 +3848,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 	}
 	
 	public String makeSearchField(String orgStr) {
-		return orgStr.replace("'", "''").replace("\0", "").replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+		return orgStr.replace("'", "''").replace("\0", "").replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
 	}
 	
 	public String searchMenuItem (String pDisplayName, int pStartRow, int pEndRow, String pAccessIDList, int tenantID) throws Exception {

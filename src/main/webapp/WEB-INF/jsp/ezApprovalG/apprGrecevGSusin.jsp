@@ -129,6 +129,7 @@
 			var wAprMemberSN = "1";
 			var docNumZeroCnt = "<c:out value = '${docNumZeroCnt}'/>";
 			//원문정보공개
+			var useOpenGov = "<c:out value = '${useOpenGov}'/>";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
 		    
 		    $(document).ready(function(){
@@ -1485,7 +1486,9 @@
 			        parameter[33] = pSummery;
 			        parameter[41] = tempItemName;
 			        parameter[42] = tempItemName2;
-		        } else {
+		        }
+
+		        if(useOpenGov == "YES") {
 			        parameter[52] = basis;
 			        parameter[53] = reason;
 			        parameter[54] = listOpenFlag;
@@ -1595,28 +1598,30 @@
 				            	sepAttachCheckYN = ret[26];
 				            	setNonElecRecInfo(nonElecRecInfoXml);
 				            }
-			                
-		                	$.ajax({
-	                    		type : "POST",
-	                    		dataType : "text",
-	                    		async : false,
-	                    		url : "/ezApprovalG/openGovInfoSave.do",
-	                    		data : {
-	                    				openGovListFlag : ret[27],
-	                    				fileOpenFlagList : ret[28],
-	                    				basis : ret[29],
-	                    				reason : ret[30],
-	                    				publicity : ret[11],
-	                    				docID : pDocID,
-	                    				limitDate : ret[31]
-	                    		}
-		                	});
-		                	
-	                	    listOpenFlag = ret[27];
-		       		        fileOpenFlagList = ret[28];
-		                	basis = ret[29];
-		                	reason = ret[30];
-		                	limitDate = ret[31];
+
+				            if (useOpenGov == "YES") {
+                                $.ajax({
+                                    type : "POST",
+                                    dataType : "text",
+                                    async : false,
+                                    url : "/ezApprovalG/openGovInfoSave.do",
+                                    data : {
+                                        openGovListFlag : ret[27],
+                                        fileOpenFlagList : ret[28],
+                                        basis : ret[29],
+                                        reason : ret[30],
+                                        publicity : ret[11],
+                                        docID : pDocID,
+                                        limitDate : ret[31]
+                                    }
+                                });
+
+                                listOpenFlag = ret[27];
+                                fileOpenFlagList = ret[28];
+                                basis = ret[29];
+                                reason = ret[30];
+                                limitDate = ret[31];
+							}
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];

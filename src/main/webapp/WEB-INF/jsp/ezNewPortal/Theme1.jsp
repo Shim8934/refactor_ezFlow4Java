@@ -243,7 +243,7 @@
             			</dl>
             		</div>
 				</article>
-				<article class="bestEmployee">
+				<article id="bestEmployee" class="bestEmployee">
 					<p class="emPic" id="emPic"><img src="/images/ezNewPortal/bestEmployee_pic_none.png"></p>
 					<dl class="emDL">
             			<dt class="emTit"><spring:message code='ezNewPortal.t019' /></dt>
@@ -494,66 +494,68 @@
  	
 	$(function() {
 		$("#featured").orbit();
-		
-		var portletCount = portletOrder.length;
-		var portletHTML = "";
-		
-		for (var i = 0; i < portletCount; i++) {
-			portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
-		}
-		
-		//$(".portlet_area").html(portletHTML);
-		document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
- 		frameSetting(frameId);
-		
- 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
-		for (var i = 0; i < portletCount; i++) {
-			var portletId = portletOrder[i].portletId;
-			var portletUrl = portletOrder[i].portletUrl;
-			var portletName = portletOrder[i].portletName;
+		if (portletOrder != null && portletOrder.length != 0) {
+			var portletCount = portletOrder.length;
+			var portletHTML = "";
 			
-			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
-		  		(function (portletId, portletUrl, portletName) {
-					$.ajax({
-						type : "GET",
-						dataType : "html",
-						data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
-						url : portletUrl,
-						tryCount : 0,
-						retryLimit : 3,
-						success : function(result) {
-							$("#" + portletId + "Portlet").append(result);
-							
-							if (portletId == 6) {
-								document.getElementById(portletId + "Portlet").style.background = "none";
-							}
-							
-							eventSetting(portletId, usedTheme);
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
-							}
-						},
-						error : function() {
-							this.url = "/ezNewPortal/errorPortlet.do";
-							this.tryCount++;
-							
-							if (this.tryCount <= this.retryLimit) {
-								//try again
-								$.ajax(this);
+			for (var i = 0; i < portletCount; i++) {
+				portletHTML += "<div class='portlet' id='" + portletOrder[i].portletId + "Portlet'></div>";
+			}
+			
+			//$(".portlet_area").html(portletHTML);
+			document.getElementsByClassName("portlet_area")[0].innerHTML = portletHTML;
+	 		frameSetting(frameId);
+			
+	 		//포틀릿별로 정보 및 포틀릿 jsp불러오기
+			for (var i = 0; i < portletCount; i++) {
+				var portletId = portletOrder[i].portletId;
+				var portletUrl = portletOrder[i].portletUrl;
+				var portletName = portletOrder[i].portletName;
+				var portletCode = portletOrder[i].portletCode;
+				
+				/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
+			  		(function (portletId, portletUrl, portletName, portletCode) {
+						$.ajax({
+							type : "GET",
+							dataType : "html",
+							data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
+							url : portletUrl,
+							tryCount : 0,
+							retryLimit : 3,
+							success : function(result) {
+								$("#" + portletId + "Portlet").append(result);
+								
+								if (portletId == 6) {
+									document.getElementById(portletId + "Portlet").style.background = "none";
+								}
+								
+								eventSetting(portletId, usedTheme, portletCode, false);
+								
+								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+									sortableEvent();
+								}
+							},
+							error : function() {
+								this.url = "/ezNewPortal/errorPortlet.do";
+								this.tryCount++;
+								
+								if (this.tryCount <= this.retryLimit) {
+									//try again
+									$.ajax(this);
+									return;
+								}
+								
+								if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
+									sortableEvent();
+								}
+								
 								return;
 							}
-							
-							if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1) {
-								sortableEvent();
-							}
-							
-							return;
-						}
-					});
-				}(portletId, portletUrl, portletName));
-			/* } */
-		}
+						});
+					}(portletId, portletUrl, portletName, portletCode));
+				/* } */
+			}
+		} 
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";
 		var useSurvey = "<c:out value='${useSurvey}'/>";
@@ -651,7 +653,53 @@
 		/* $(".portlet_area").disableSelection(); */
 
 		leftResize();
+		
+		settingPortalInterval();
 	});
+	
+	var settingPortalInterval = function () {
+		var refreshInterval = "<c:out value='${usePortalAutoRefreshInterval}'/>";
+		
+		if (refreshInterval != null && refreshInterval != "0") {
+			window.setInterval(function() {
+				var request = new XMLHttpRequest();
+				request.open('GET', '/ezNewPortal/getPortalInfo.do' , false);
+				request.setRequestHeader('Content-Type', 'application/json');
+
+				request.onload = function() {
+					if (request.status >= 200 && request.status < 400) {
+						if (request.responseText == null) {
+							return;
+						}
+						
+						var result = JSON.parse(request.responseText);
+						var refreshTheme = result.usedTheme;
+						var refreshFrame = result.usedFrame;
+						
+						if (refreshTheme == usedTheme && frameId == refreshFrame) {
+							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+							/* portletOrder = result.portletOrder;
+							var useQuestion = result.useQuestion;
+							var useCircular = result.useCircular;
+							var useMail = result.useMail;
+							var useApproval = result.useApproval;
+							var useSchedule = result.useSchedule;
+							var useAttitude = result.useAttitude;
+							refreshPortlet(useQuestion, useCircular, useMail, useApproval, useSchedule, useAttitude); */
+						} else {
+							parent.document.getElementById("mainFrame").contentWindow.location.reload(true);
+						}
+					}
+				};
+
+				request.onerror = function() {
+				  // There was a connection error of some sort
+				};
+				
+				request.send();
+			}, Number(refreshInterval) * 60000);
+		}
+	}
 	
 	var tryCount = 0;
 	
@@ -825,7 +873,7 @@
 			}
 		}
 	}
-	</script>
+</script>
 <!-- 협업 시작-->
 <c:if test="${useEzWorkspace eq 'YES' }">
     <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js"></script>

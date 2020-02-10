@@ -558,10 +558,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
 		        	
 		        	if (userInfo.getPrimary().equals("1")) {
-		        		listOfTargetBld.append(organDeptVO.getDisplayName1() + ",");
+		        		listOfTargetBld.append(organDeptVO.getDisplayName1() + ", ");
 		        	}
 		        	else {
-		        		listOfTargetBld.append(organDeptVO.getDisplayName2() + ",");
+		        		listOfTargetBld.append(organDeptVO.getDisplayName2() + ", ");
 		        	}
 		        	
 		        }
@@ -582,15 +582,15 @@ public class EzBoardController extends EgovFileMngUtil{
 	        		}
 	        		
 	        		LoginVO user = loginService.selectReceiver(userID, userInfo.getTenantId());
-	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1())
+	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(userInfo.getPrimary().equals("1") ? user.getDisplayName1() : user.getDisplayName2())
 		        			+ "\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\" deptid=\"" + commonUtil.cleanValue(deptID) + "\">"
 	        				+ commonUtil.cleanValue(user.getId()) + "</DATA>");
 	        		
 		        	if (userInfo.getPrimary().equals("1")) {
-		        		listOfTargetBld.append(user.getDisplayName1() + ",");
+		        		listOfTargetBld.append(user.getDisplayName1() + ", ");
 		        	}
 		        	else {
-		        		listOfTargetBld.append(user.getDisplayName2() + ",");
+		        		listOfTargetBld.append(user.getDisplayName2() + ", ");
 		        	}
 	        		
 	        	}		        	
@@ -600,8 +600,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	        
 	        listOfTarget = listOfTargetBld.toString();
 	        
-	        if (listOfTarget.endsWith(",")) {
-	        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
+	        if (listOfTarget.endsWith(", ")) {
+	        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 2);
 	        }
 		}
 		strXMLRange.append("</RANGE>");

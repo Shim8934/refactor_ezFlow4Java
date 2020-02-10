@@ -1683,6 +1683,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userLang = userInfo.getLang();
 		List<MailPOP3VO> pop3VoList = ezEmailService.getMailPOP3(userInfo.getTenantId(), userInfo.getId());
 		
 		StringBuilder sb = new StringBuilder();
@@ -1719,6 +1720,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("userLang", userLang);
 		
 		int pop3MaxFetchSize;
 		
@@ -1737,6 +1739,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("publicModulus=" + publicModulus);
 		logger.debug("publicExponent=" + publicExponent);
 		logger.debug("primaryLang=" + primaryLang);
+		logger.debug("userLang={}", userLang);
 		logger.debug("mailPop3 ended.");
 		
 		return "ezEmail/mailPop3";
