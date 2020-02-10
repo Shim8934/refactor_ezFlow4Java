@@ -5095,21 +5095,28 @@
             	ItemID = #itemID#
 		]]>
   </select>
-  
+ 
+<!-- 2020-02-10 홍승비 - 조회자정보 카운트에 퇴직자가 포함되지 않도록 수정 -->
   <select id="EzBoardDAO.getReaderListCount" parameterClass="Map" resultClass="Integer">
 	  	<![CDATA[
 	  		SELECT  
-				COUNT(USERID) 
+				COUNT(R.USERID) 
 			FROM 
-			   	TBL_BOARD_ITEM_READ 
+			   	TBL_BOARD_ITEM_READ R
+			INNER JOIN
+				TBL_USERMASTER U
+			ON
+				R.TENANT_ID = U.TENANT_ID
+			AND
+				R.USERID = U.CN
 			WHERE 
-			   	TENANT_ID = #tenantID#
+			   	R.TENANT_ID = #tenantID#
 			AND
-			   	BOARDID = #boardID#
+			   	R.BOARDID = #boardID#
 			AND 
-			   	ITEMID =  #itemID# 
+			   	R.ITEMID =  #itemID# 
 			AND
-			   	USERID <> ( SELECT 
+				R.USERID <> ( SELECT 
 			   						WRITERID 
 			   					FROM 
 			   						TBL_BOARD_ITEM 
