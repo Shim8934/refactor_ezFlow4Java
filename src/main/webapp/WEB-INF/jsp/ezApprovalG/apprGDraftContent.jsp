@@ -662,6 +662,16 @@
 	                }
 				}
 				
+				var inputElements = Div.querySelectorAll("input, select, textarea");
+				var element;
+
+				for (var i = 0; i < inputElements.length; i++) {
+					element = inputElements[i];
+
+					if (!element.disabled) {
+						element.disabled = true;
+					}
+				}
 				// var i, len, len2;
 	            // var InputRows = Div.getElementsByTagName("INPUT");
 	            // for (i = 0, len = InputRows.length; i < len; i++) {
