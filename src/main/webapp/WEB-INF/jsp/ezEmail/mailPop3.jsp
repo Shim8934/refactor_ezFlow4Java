@@ -458,6 +458,12 @@
 		    }
 		</script>
 	</head>
+	<c:if test="${userLang == '3'}">
+	<c:set var="tableWidth" value="750" />
+	</c:if>
+	<c:if test="${userLang != '3'}">
+	<c:set var="tableWidth" value="720" />
+	</c:if>
 	<body onload="javascript:window_onload()" style="margin-left:10px;margin-right:10px;">
 		<br>
 		<div class="txt" style="margin-bottom:25px">
@@ -467,7 +473,7 @@
 		    <div style="margin-top:3px">▒ ${pop3MaxFetchSizeMessage}</div>
 		</div>
 		<h2 class="h2_dot"><spring:message code='ezEmail.t242' /></h2>	
-		<table class="content" style="width:720px;"> 
+		<table class="content" style="width:${tableWidth}px;"> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer1" id="popServer1" class="textarea" style="width:200px" disabled /> 
@@ -514,7 +520,7 @@
 		</table> 
 		<br>
 		<h2 class="h2_dot"><spring:message code='ezEmail.t700' /></h2> 
-		<table class="content" style="width:720px;">
+		<table class="content" style="width:${tableWidth}px;">
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer2" id="popServer2" class="textarea" style="width:200px" disabled /> 
@@ -561,7 +567,7 @@
 		</table> 
 		<br> 
 		<h2 class="h2_dot"><spring:message code='ezEmail.t701' /></h2> 
-		<table class="content" style="width:720px;"> 
+		<table class="content" style="width:${tableWidth}px;"> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer3" id="popServer3" class="textarea" style="width:200px" disabled /> 
@@ -606,7 +612,7 @@
 		      <spring:message code='ezEmail.t268' /></td> 
 		  </tr> 
 		</table>
-		<div style="width:720px;text-align:center;">
+		<div style="width:${tableWidth}px;text-align:center;">
 			<div class="btnpositionJsp">
 		    	<a class="imgbtn" onClick="SavePop3()"><span><spring:message code='main.sp09' /></span></a>
 		    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
