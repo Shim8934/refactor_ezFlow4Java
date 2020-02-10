@@ -9263,6 +9263,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String companyID = userInfo.getCompanyID();
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
+			companyID = orgCompanyID;
+		}
+		
 		int tenantID = userInfo.getTenantId();
 		
 		String ext = ezApprovalGService.getDocExt(docID, companyID, tenantID);

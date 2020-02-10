@@ -1382,6 +1382,10 @@
 					AND menu_type = 'G' 
 				THEN 
 					'memo'
+				WHEN menu_url like '%ezSurvey%' 
+					AND menu_type = 'G' 
+				THEN 
+					'survey'
 			END
 	]]>
 	</update>
