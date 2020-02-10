@@ -3574,8 +3574,8 @@ function setDocNumFormat(pPrefix) {
 
     var field = message.GetListItem(fields, "receiptnumber");
     if (field) {
-        field.setAttribute("Format", field.textContent);
-        message.DocumentBodySetAttribute("receiptnumber", field.textContent);
+        field.setAttribute("Format", field.textContent.trim());
+        message.DocumentBodySetAttribute("receiptnumber", field.textContent.trim());
         field.textContent = "";
         if (new RegExp(/Firefox/).test(navigator.userAgent))
             field.innerHTML = "<br type='_moz'>";
