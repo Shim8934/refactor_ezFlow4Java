@@ -199,7 +199,9 @@ public class EzNewPortalGWController {
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
 			String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
-			
+			LOGGER.debug("[config] useQuestion : " + useQuestion + ", useSurvey : " + useSurvey + ", useMemo : " + useMemo + ", useCabinet : " + useCabinet
+						+ ", useVote : " + useVote + ", useJournal : " + useJournal + ", useCircular : " + useCircular + ", useAttitue : " + useAttitude
+						+ ", useWebfolder : " + useWebfolder + ", useEzPMS : " + useEzPMS + ", useCommunity : " + useCommunity + ", useEzWorkspace : " + useEzWorkspace);
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
 			}
@@ -233,7 +235,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useSurvey == null || useSurvey.equals("")) {
-				useSurvey = "NO";
+				useSurvey = "YES";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
@@ -253,7 +255,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useSurvey.equals("NO")) {
-				portletOrder.removeIf(vo -> (vo.getMenuId() == 19));
+				portletOrder.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("survey")));
 			}
 			
 			if (useMemo.equals("NO")) {
@@ -2048,7 +2050,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useSurvey == null || useSurvey.equals("")) {
-				useSurvey = "NO";
+				useSurvey = "YES";
 			}
 			
 			if (useWebfolder == null || useWebfolder.equals("")) {
@@ -2068,7 +2070,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useSurvey.equals("NO")) {
-				menuInfos.removeIf(vo -> (vo.getMenuId() == 19));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("survey")));
 			}
 			
 			if (useMemo.equals("NO")) {
@@ -4086,7 +4088,7 @@ public class EzNewPortalGWController {
 //			}
 			
 			if (useSurvey == null || useSurvey.equals("")) {
-				useSurvey = "NO";
+				useSurvey = "YES";
 			}
 			
 			if (useCircular == null || useCircular.equals("")) {

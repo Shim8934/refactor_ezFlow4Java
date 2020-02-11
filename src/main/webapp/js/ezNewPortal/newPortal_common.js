@@ -434,7 +434,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 		
 		break;
 
-	case 70 : // 웹폴더
+	case "webfolder" : // 웹폴더
 		url = "/js/ezNewPortal/portlets/webFolderPortlet.js";
 		
 		$.getScript(url)
@@ -451,7 +451,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 		
 		break;
 		
-	case 51 : // 자원관리
+	case "resource" : // 자원관리
 		url = "/js/ezNewPortal/portlets/resourcePortlet.js";
 		
 		$.getScript(url)
@@ -470,7 +470,7 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 		
 		break;
 		
-	case 73 : // 전자설문
+	case "survey" : // 전자설문
 		url = "/js/ezNewPortal/portlets/surveyPortlet.js";
 		
 		$.getScript(url)

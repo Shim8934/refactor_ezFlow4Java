@@ -156,6 +156,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
+		LOGGER.debug("[Service] getUserMenuList started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -216,7 +217,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				return Integer.compare(o1.getMenuOrder(), o2.getMenuOrder());
 			}
 		});
-		
+
+		LOGGER.debug("[Service] getUserMenuList ended");
 		return result;
 	}
 	
