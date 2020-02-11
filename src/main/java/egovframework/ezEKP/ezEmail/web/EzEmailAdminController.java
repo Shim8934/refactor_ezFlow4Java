@@ -283,6 +283,9 @@ public class EzEmailAdminController {
 				.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
 		String companyId = request.getParameter("companyId");
+		String userDL =  request.getParameter("userDL");
+		if (userDL == null ) { userDL = ""; }
+		String offsetMin = commonUtil.getMinuteUTC(auth.getOffset());
 		
 		int tenantId = auth.getTenantId();
 		String mailDomain = ezCommonService.getCompanyConfig(tenantId, companyId, "DomainName");
@@ -316,6 +319,9 @@ public class EzEmailAdminController {
 		model.addAttribute("domainList", domainList);
 		model.addAttribute("distributionMail", distributionMail);
 		model.addAttribute("companyMailDomain", companyMailDomain);
+		model.addAttribute("userDL", userDL);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("userId", auth.getId());
 		
 		String cChk = "0";
 		
@@ -353,6 +359,11 @@ public class EzEmailAdminController {
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
 		String selectDomain = doc.getElementsByTagName("SELECTDOMAIN").item(0).getTextContent();
 		selectDomain = selectDomain != null ? selectDomain : "";
+		
+		String ownerId = doc.getElementsByTagName("OWNERID").item(0) == null ? "" : doc.getElementsByTagName("OWNERID").item(0).getTextContent();
+		String policy = doc.getElementsByTagName("POLICY").item(0) == null ? "" : doc.getElementsByTagName("POLICY").item(0).getTextContent();
+		String explaination = doc.getElementsByTagName("EXPLAINATION").item(0) == null ? "" : doc.getElementsByTagName("EXPLAINATION").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0) == null ? "" : doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
 		NodeList addressIdList = doc.getElementsByTagName("ADDRESSID");
@@ -433,8 +444,7 @@ public class EzEmailAdminController {
 					}
 				}
 
-				
-				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID, selectDomain);
+				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID, selectDomain, ownerId, policy, explaination, endDate);
 			// 기존 공용배포그룹을 수정하는 경우
 			} else {
 				if (useBizmekaSpambox.equals("YES")) {
@@ -2937,5 +2947,50 @@ public class EzEmailAdminController {
 		model.addAttribute("useCopyrightMenu", useCopyrightMenu);
 		
 		return "admin/ezEmail/adminMailLeft";
+	}
+	
+	/**
+	 * 사용자 공용배포그룹 - 소유 공용배포그룹 리스트 출력
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailGetUserDistribution.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailGetUserDistribution(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailGetUserDistribution started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONObject returnJsonObj = new JSONObject();
+		JSONArray dlJsonArray = new JSONArray();
+		int dlListCnt = 0;
+		
+		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
+		String companyId = request.getParameter("companyId") == null ? userInfo.getCompanyID() : request.getParameter("companyId"); 
+		String userDLListType = request.getParameter("type") == null ? "owner" : request.getParameter("type");  // owner or include
+		
+		List<MailDistributionVO> dlList = new ArrayList<MailDistributionVO>();
+		try {
+			if (userDLListType.equals("owner")) {
+				dlList = ezEmailService.getUserOwnerDistributionList(companyId, userInfo.getTenantId(), userId);
+			} else {
+				dlList = ezEmailService.getDistributionList(companyId, userInfo.getTenantId());
+			}
+			
+			dlListCnt = dlList.size();
+			logger.debug("dlListCnt=" + dlListCnt);
+			
+			for (MailDistributionVO vo : dlList) {
+				dlJsonArray.add(vo.getJsonObj());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		returnJsonObj.put("count", dlListCnt);
+		returnJsonObj.put("list", dlJsonArray);
+		
+		logger.debug("mailGetUserDistribution ended.");
+		return returnJsonObj.toString();
 	}
 }

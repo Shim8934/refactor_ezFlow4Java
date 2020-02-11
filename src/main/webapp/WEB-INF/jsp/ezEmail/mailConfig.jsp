@@ -88,6 +88,9 @@
 	                case "MailEnv_div9":
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAddressSearchOrder.do";
 	                    break;
+	                case "MailEnv_div11":
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailUserDistribution.do";
+	                    break;
 	            }
 	        }
 	        var Tab1_SelectID = "";
@@ -153,6 +156,9 @@
 		                    <p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
 		                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
 		                    <p id = "MailEnv_sub9"><span divname="MailEnv_div9" id="1tab9"><spring:message code='ezEmail.t99000084' /></span></p>
+		                    <c:if test="${useUserDefinedDL eq 'YES'}">
+		                    <p id = "MailEnv_sub11"><span divname="MailEnv_div11" id="1tab11"><spring:message code='ezEmail.t57' /></span></p>
+		                    </c:if>
 					    </c:when>
 					    <c:when test="${flag eq 'email' && shareId != null}">
 					    	<p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab1"><spring:message code='ezEmail.t146' /></span></p>

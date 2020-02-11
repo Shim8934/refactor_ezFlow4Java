@@ -9,6 +9,9 @@
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/ezEmail/Controls/ezSearchDatePicker.htc')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
+   		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/jquery.ui.all.css')}" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}" type="text/javascript"></script>
@@ -18,6 +21,11 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview_namespace.htc.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/datepicker.htc.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
 	    <style>
 	    	.mainlist thead tr {
 	    		height: 0px;
@@ -71,6 +79,9 @@
 	        var searchgubun = "N";
 	        var selectDomain = "${companyMailDomain}";
 	        var distributionMail = "${distributionMail}";
+	        var userDL = "${userDL}"; // add, modify
+	        var offsetMin = "${offsetMin}";
+	        var userId = "${userId}";
 	        
 	        window.onload = function () {
 	            try {
@@ -100,6 +111,12 @@
 	            AddressTreeView.attachEvent('nodeselect', function () { address_selectnode("node") });
 	            AddressTreeView.attachEvent('nodedblclick', function () { AddressTreeView.toggle(AddressTreeView.selectedIndex()) });
 	           
+	            if (userDL != "") { // 사용자 정의 공용배포그룹
+	            	var $endDateCheckBox = $("input[name=endDateCheckBox]")[0];
+	            	userDLSetDatePicker();
+	            	endDateCheckBox_Click($endDateCheckBox);
+	            }
+	            
 	            var xmlpara = createXmlDom();
                 var xmlTree = createXmlDom();
                 var xmlHTTP = createXMLHttpRequest();
@@ -655,6 +672,18 @@
 	            createNodeAndInsertText(xmlDom, objNode, "NAME", document.all("TextName").value);
 	            createNodeAndInsertText(xmlDom, objNode, "ID", document.all("TextId").value);
 	            createNodeAndInsertText(xmlDom, objNode, "SELECTDOMAIN", selectDomain);
+	            
+	            if (userDL != "") { // sua
+	            	var endDateParam = "";
+	            	if ($("input[name=endDateCheckBox]:checked").val() != "on") {
+	            		endDateParam = $("input[name=endDate]").val();
+	            	}
+	            	
+		            createNodeAndInsertText(xmlDom, objNode, "OWNERID", userId);
+		            createNodeAndInsertText(xmlDom, objNode, "POLICY", $("input[name=policy]:checked").val());
+		            createNodeAndInsertText(xmlDom, objNode, "EXPLAINATION", $("input[name=explain]").val());
+		            createNodeAndInsertText(xmlDom, objNode, "ENDDATE", endDateParam);
+	            }
 	            
 	            var memberList = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children;
 	            var memberListLength = memberList.length;
@@ -1962,6 +1991,20 @@
             		tab2.className = "";
             		tab3.className = "";
             		tab4.className = "tabon";
+            	} 
+            	
+            	if (userDL == "modify") {
+            		var tab5 = document.getElementById("userDlApplyButton").children[0];
+            		
+            		if (target != 5) {
+                		tab5.className = "";
+            		} else {
+                		tab1.className = "";
+                		tab2.className = "";
+                		tab3.className = "";
+                		tab4.className = "";
+                		tab5.className = "tabon";
+            		}
             	}
 	        }
        	 	var PressShiftKey = false;
@@ -2673,6 +2716,59 @@
 	        	
 	        	selectDomain = $(this).val();
 	        });
+	        
+	        function userDLSetDatePicker() {
+	        	var NowDate = utcDate2(offsetMin);
+	        	
+	        	$("#Sdatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            minDate: 0,
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImageOnly: true,
+		        });
+		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Sdatepicker").datepicker('setDate', NowDate);
+	        }
+	        
+	        function endDateCheckBox_Click(obj) {
+		        if (obj.checked) {
+		            $("#Sdatepicker").datepicker('disable');
+		            $(".datepickerImg").css({"opacity" : 0.5, "cursor" : "pointer"});
+		        } else {
+		            $("#Sdatepicker").datepicker('enable');
+		            $(".datepickerImg").css({"opacity" : 1, "cursor" : "default"});
+		        }
+		    }
+	        
+	        function userDlApplyButton_onClick() {
+	        	methodForTabAction(5);
+	        	selTab = "userDlApply";
+	            selSpan = "userDlSpan";
+	            
+	            if (g_binputLoaded == false) {
+	                g_binputLoaded = true;
+	            }
+	            
+	            m_tabDialogState["org"] = "normal";
+	            m_tabDialogState["contact"] = "normal";
+	            m_tabDialogState["dl"] = "normal";
+	            m_tabDialogState["input"] = "normal";
+	            m_tabDialogState["userDlApply"] = "select";
+	            
+	            ImageUpdate();
+	             
+	            TreeViewTD.style.display = "none";
+	            ListViewTD.style.display = "none";
+	            ListViewDLTD.style.display = "none";
+	            ListViewINPUT.style.display = "none";
+	            ListViewUserDlApply.style.display = "block";
+	            
+	            //userDlMenu01.style.display = "block";
+		        m_selectedTree = ListViewUserDlApply;
+	        }
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -2755,13 +2851,13 @@
 		         <table class="content">
 		            <tr>
 		                <th><spring:message code='ezEmail.t710' /></th>
-		                <td>
+		                <td colspan='3'>
 		                    <input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:100%;" value="<c:out value='${textName}'/>">
 		                </td>
 		            </tr>
 		            <tr>
 		                <th><spring:message code='ezEmail.lhm09' /></th>
-		                <td>
+		                <td colspan='3'>
 		                    <input name="TextId" type="text" id="TextId" maxlength="20" class="txtClass" style="width:40%;" value="${cn}">
 		                    <span id="mailDomain" style="width:60%; font-weight: bold; display:none;">@${mailDomain}</span>
 							<c:if test="${cn eq ''}">
@@ -2777,10 +2873,52 @@
 		            <c:if test="${cn ne ''}">
 			            <tr>
 			            	<th><spring:message code='main.t78' /></th>
-							<td style="width:100%">
+							<td style="width:65%">
 								${distributionMail}
 							</td>	
+							<c:if test="${userDL eq 'modify'}">
+								<th style="width:10%; "><spring:message code='ezEmail.userDL25' /></th>
+			            		<td>
+			            			<label>
+										<span>snrnsnrns</span>	            			
+			            			</label>
+										<span>변경</span>	
+			            		</td>
+							</c:if>
 			            </tr>
+		            </c:if>
+		            <c:if test="${userDL ne ''}">
+		            	<tr id="userDLInput">
+		            		<th><spring:message code='ezEmail.userDL20' /></th>
+		            		<td style="width:65%;">
+		            			<label>
+			            			<input type="radio" name="policy" value="all" checked/>
+									<span><spring:message code='ezEmail.userDL21' /></span>	            			
+		            			</label>
+		            			<label>
+			            			<input type="radio" name="policy" value="member" />
+									<span><spring:message code='ezEmail.userDL22' /></span>	            			
+		            			</label>
+		            			<label>
+			            			<input type="radio" name="policy" value="private" />
+									<span><spring:message code='ezEmail.userDL23' /></span>	            			
+		            			</label>
+		            		</td>
+		            		<th style="width:10%; "><spring:message code='ezEmail.userDL05' /></th>
+		            		<td>
+		            			<label>
+		            				<input type="checkBox" name="endDateCheckBox" onClick="endDateCheckBox_Click(this)" checked />
+									<span><spring:message code='ezEmail.userDL24' /></span>	            			
+		            			</label>
+								<input type="text" name="endDate" id="Sdatepicker" style="width:80px;text-align:center">
+		            		</td>
+		            	</tr> 
+		            	<tr>
+		            		<th><spring:message code='ezEmail.userDL04' /></th>
+		            		<td colspan='3'>
+		            			<input type="text" name="explain" maxlength="65" style="width:100%;"/>
+		            		</td>
+		            	</tr>
 		            </c:if>
 		        </table>
 		    <table style="width:100%;margin-top:10px">
@@ -2800,6 +2938,11 @@
 		            			<p id="inputTabButton">
 	            					<span id="inputSpan" onclick="inputTabButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.t244' /></span>
 	            			</p>
+	            				<c:if test="${userDL eq 'modify'}">
+		            			<p id="userDlApplyButton">
+	            					<span id="userDlSpan" onclick="userDlApplyButton_onClick()" onmouseover="tabover(this)" onmouseout="tabout(this)"><spring:message code='ezEmail.userDL12' /></span>
+		            			</p>
+		            			</c:if>
 		            		</div>
 	            		</div>
 		                <table id="TreeViewTD">
@@ -3001,6 +3144,51 @@
 	                        				</div>	
 	                        			</div>
 	                    			</div>
+		                        </td>
+		                    </tr>
+		                </table>
+		                <table id="ListViewUserDlApply" style="display: none">
+		                    <tr>
+		                        <td>
+		                        	<div class="" style="background-color: #f8f8f8; margin-top: 4px;">
+		                                <div class="portlet_tabpart03_top" id="tab5" style="border: 1px solid #eaeaea;">
+		                                    <table style="margin-top: 3px; width: 100%;">
+		                                        <tr>
+		                                            <td id="userDlMenu01" style="">
+		                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
+		                                                    	반려</span></a>
+		                                            </td>
+		                                        </tr>
+		                                    </table>
+		                                </div>
+		                            </div>
+		                        
+		                            <div style="width: 668px; height: 457px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="" class="border_gray">
+		                            	<table class="mainlist" style="width: 100%">
+											<thead>
+												<tr>
+													<th>이름</th>
+													<th>메일</th>
+													<th>부서</th>
+													<th>등록일</th>
+												</tr>
+											</thead>		                            	
+		                            	</table>
+		                            	<div style="height: 425px; overflow-y: scroll;">
+			                            	<table class="mainlist"  style="width: 100%">
+												<thead>
+													<c:forEach begin="1" end="30">
+														<tr>
+															<td>김수아</td>
+															<td>tndk19@kaoni.com</td>
+															<td>솔루션1팀</td>
+															<td>2020-02-06</td>
+														</tr>
+													</c:forEach>
+												</thead>		                            	
+			                            	</table>
+		                            	</div>
+		                            </div>
 		                        </td>
 		                    </tr>
 		                </table>

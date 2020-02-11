@@ -1,6 +1,10 @@
 package egovframework.ezEKP.ezEmail.vo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.json.simple.JSONObject;
 
 public class MailDistributionVO {
 	
@@ -8,6 +12,10 @@ public class MailDistributionVO {
 	private String id;
 	private String mail;
 	private List<String> member;
+	private String ownerId;
+	private String disclosurePolicy;
+	private String explaination;
+	private String endDate;
 	
 	public String getName() {
 		return name;
@@ -33,10 +41,48 @@ public class MailDistributionVO {
 	public void setMember(List<String> member) {
 		this.member = member;
 	}
+	public String getOwnerId() {
+		return ownerId;
+	}
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
+	}
+	public String getDisclosurePolicy() {
+		return disclosurePolicy;
+	}
+	public void setDisclosurePolicy(String disclosurePolicy) {
+		this.disclosurePolicy = disclosurePolicy;
+	}
+	public String getExplaination() {
+		return explaination;
+	}
+	public void setExplaination(String explaination) {
+		this.explaination = explaination;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 	
 	@Override
 	public String toString() {
 		return "MailDistributionVO [name=" + name + ", id=" + id + ", mail=" + mail + "]";
+	}
+	
+	public JSONObject getJsonObj() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("name", name);
+		map.put("id", id);
+		map.put("mail", mail);
+		map.put("ownerId", ownerId);
+		map.put("disclosurePolicy", disclosurePolicy);
+		map.put("explaination", explaination);
+		map.put("endDate", endDate);
+		
+		JSONObject jsonObj = new JSONObject(map);
+		return jsonObj;
 	}
 	
 }

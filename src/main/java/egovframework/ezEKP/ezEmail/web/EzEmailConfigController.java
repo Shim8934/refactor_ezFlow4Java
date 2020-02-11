@@ -121,6 +121,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userInfo.getTenantId());
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -143,6 +144,10 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			}
 		}
 		
+		if (useUserDefinedDL == null || useUserDefinedDL.trim().equals("")) {
+			useUserDefinedDL = "NO";
+		}
+		
 		String userEditor = "";
 		String noneActiveX = "YES";
 		String flag = request.getParameter("flag");
@@ -155,6 +160,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
 		model.addAttribute("flag", flag);
 		model.addAttribute("dotnetFlag", dotnetFlag);
+		model.addAttribute("userEditor", userEditor);
+		model.addAttribute("useUserDefinedDL", useUserDefinedDL);
 		
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";
@@ -2145,6 +2152,90 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 		logger.debug("setMailAddressSearchOrder ended.");
 		return "json";
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹  화면 호출
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistribution.do")
+	public String mailUserDistribution(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistribution started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userId", userInfo.getId());
+		
+		logger.debug("mailUserDistribution ended.");
+		
+		return "ezEmail/mailUserDistributionMain";
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 소유 공용배포그룹
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistributionOwner.do")
+	public String mailUserDistributionOwner(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistributionOwner started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		
+		logger.debug("mailUserDistributionOwner ended.");
+		return "ezEmail/mailUserDistributionOwner";
+	}
+
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 소속 공용배포그룹
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistributionInclude.do")
+	public String mailUserDistributionInclude(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistributionInclude started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		logger.debug("mailUserDistributionInclude ended.");
+		
+		return "ezEmail/mailUserDistributionInclude";
+	}
+
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 검색
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistributionSearch.do")
+	public String mailUserDistributionSearch(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistributionSearch started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		logger.debug("mailUserDistributionSearch ended.");
+		
+		return "ezEmail/mailUserDistributionSearch";
+	}
+
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 공용배포그룹 멤버 리스트 팝업 화면
+	 */
+	@RequestMapping(value="/ezEmail/mailDistributionMemberListPop.do")
+	public String mailDistributionMemberListPop(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailDistributionMemberListPop started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		logger.debug("mailDistributionMemberListPop ended.");
+		
+		return "ezEmail/mailDistributionMemberListPopUp";
 	}
 	
 }

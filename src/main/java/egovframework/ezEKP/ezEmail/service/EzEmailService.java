@@ -142,4 +142,7 @@ public interface EzEmailService {
 	public String setIndividualAliasForMig(String userId, int tenantID, String targetAddr, String individualAliasList) throws Exception;
 	
 	public MailDistributionVO getDistributionInfo(String cn, int tenantId) throws Exception;
+	public int addDistributionList(String id, String name, List<String> memberList,List<Map<String, String>> distributionSubList, 
+			String companyId, int tenantID, String selectDomain, String ownerId, String policy, String explaination, String endDate) throws Exception;
+	public List<MailDistributionVO> getUserOwnerDistributionList(String companyId, int tenantId, String ownerId) throws Exception;
 }
