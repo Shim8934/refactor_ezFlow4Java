@@ -21,7 +21,7 @@
 			#editBtn img {width: 19px;height: 19px;margin-right: 10px;	margin-top: 8px;cursor: pointer;}
 			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
-			#logoUrl {width:106px; height:42px;}
+			#logoUrl {height:42px;}
 			/*-- top_totalSearch --*/
 			.top_totalSearch {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif; font-size:12px;float:right; margin:9px 30px 0px 0px; padding:0px; width:243px; height:34px; background:url(../images/kr/cm/top_search_bg.gif) no-repeat;vertical-align:middle; }
 			#input_totalSearch { float:left; width:196px; height:31px; border:0px ;padding:1px 0px 0px 9px; margin:1px 0px 0px 1px;  color:#555555; font-size:12px;}
@@ -447,7 +447,10 @@
 				if(item.menuUrl.indexOf('ezMemo') > -1 && item.menuUsed) {
 					parent.useMemoContextMenu = true;
 				}
-				str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
+				// 기존 전자설문은 메뉴 목록에서 제외
+				if (item.menuId != 14) {
+					str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
+				}
 			});
 
 			toggleMenu.innerHTML = str;

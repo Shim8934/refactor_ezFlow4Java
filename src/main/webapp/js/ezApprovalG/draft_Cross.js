@@ -2443,6 +2443,20 @@ function SetAutoPropertyValue() {
                     	/*field.textContent = FullDate;*/
                         field.textContent = CurrentDate;
                     	break;
+                    	
+                    /**
+                     * 부서이동 혹은 부서이름 변경 전 임시보관한 문서의 부서이름이 바뀌지 않는현상 수정
+                     * 부서이름 뿐만아니라 직위 및 기안자 이름도 수정되도록 수정 
+                     * */
+                    case "draftername":      
+                        field.textContent = arr_userinfo[2];
+                        break;
+                    case "position":
+                        field.textContent = arr_userinfo[3];
+                        break;
+                    case "department":
+                    	field.textContent = arr_userinfo[5];
+                    	break;
                 }
             }
             if (pDraftFlag == "SUSIN" || pDocState == "011") {
@@ -3560,8 +3574,8 @@ function setDocNumFormat(pPrefix) {
 
     var field = message.GetListItem(fields, "receiptnumber");
     if (field) {
-        field.setAttribute("Format", field.textContent);
-        message.DocumentBodySetAttribute("receiptnumber", field.textContent);
+        field.setAttribute("Format", field.textContent.trim());
+        message.DocumentBodySetAttribute("receiptnumber", field.textContent.trim());
         field.textContent = "";
         if (new RegExp(/Firefox/).test(navigator.userAgent))
             field.innerHTML = "<br type='_moz'>";

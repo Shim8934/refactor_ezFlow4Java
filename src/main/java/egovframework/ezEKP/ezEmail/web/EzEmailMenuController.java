@@ -38,7 +38,6 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -71,7 +70,6 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import net.lingala.zip4j.core.ZipFile;
 /** 
@@ -352,13 +350,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		if (useSpamOut) {
 			String spamOutLoginURI = ezCommonService.getTenantConfig("spamOutLoginURI", loginInfo.getTenantId());
-			logger.debug("spamOutLoginURI={}", spamOutLoginURI);
-			String clientAddress = ClientUtil.getClientIP(request);
 			String userEmailBase64 = new String(Base64.encodeBase64(userEmail.getBytes("UTF-8")), "UTF-8");
-			String markParameter = DigestUtils.md5Hex(clientAddress);
 			String userParameter = URLEncoder.encode(userEmailBase64, "UTF-8");
-			spamOutLoginURI = String.format(spamOutLoginURI, markParameter, userParameter);
-			logger.debug("clientAddress: {}, md5 hash: {}", clientAddress, markParameter);
+			spamOutLoginURI = String.format(spamOutLoginURI, userParameter);
 			logger.debug("userEmail {}, base64: {}, url encoded: {}", userEmail, userEmailBase64, userParameter);
 			logger.debug("spam uri: {}", spamOutLoginURI);
 			model.addAttribute("spamOutLoginURI", spamOutLoginURI);

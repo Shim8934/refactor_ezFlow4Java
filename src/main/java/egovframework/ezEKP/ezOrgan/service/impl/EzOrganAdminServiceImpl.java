@@ -752,6 +752,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I28(map1);
 				ezOrganAdminDao.insertCompanyInfo_I29(map1);
 				ezOrganAdminDao.insertCompanyInfo_I30(map1);
+				ezOrganAdminDao.insertCompanyInfo_I31(map1);
+				ezOrganAdminDao.insertCompanyInfo_I32(map1);
 				
 				//회사등록시 근태설정(연차설정관리) 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_IJHS1(map1);

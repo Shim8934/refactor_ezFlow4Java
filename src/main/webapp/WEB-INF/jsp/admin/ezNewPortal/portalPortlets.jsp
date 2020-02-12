@@ -81,8 +81,25 @@
 	}
 	.slideImageSetting {
 		position: absolute;
+	    right: 78px;
+	    top: 57px;
+        cursor: pointer;
+        display: inline-block;
+	}
+	.slideImageSetting img {
+		width : 12px;
+		height: 12px;
+	}
+	
+	.portletAuthSetting img {
+		width : 20px;
+		height: 20px;
+	}
+	
+	.portletAuthSetting {
+		position: absolute;
 	    right: 20px;
-	    top: 55px;
+	    top: 53px;
         cursor: pointer;
         display: inline-block;
 	}
@@ -94,6 +111,7 @@
 		<spring:message code='ezNewPortal.t056' />
 		<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		<select class="companySelect" id="ListCompany"></select>
+		<span> <spring:message code='ezNewPortal.yej14' /></span>
 	</h1>
 		
 	<ul id="portletListContainer" class="col-container" style="overflow: auto"></ul>
@@ -427,9 +445,13 @@
 						listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t096' /> : </th>";
 						if (portletId == 34) { //슬라이드 이미지 포틀릿의 경우
 							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
-							listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div></td>";
+							listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div>";
+							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
+							listHTML += "</td>";
 						} else {
-							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label></td>";
+							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
+							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
+							listHTML += "</td>";
 						}
 						listHTML += "</tr>";
 						
@@ -536,6 +558,9 @@
 						if (result[i].portletId == 34) {
 							$("#portlet" + result[i].portletId).find(".slideImageSetting").on("click", {"portletId" : result[i].portletId}, openSlideImageSetting);
 						}
+						
+						//포틀릿 권한 창 불러오기 버튼 활성화
+						$("#portlet" + result[i].portletId).find(".portletAuthSetting").on("click", {"portletId" : result[i].portletId}, openPortletAuthSetting);
 					}
 					
 					loadAfter();
@@ -733,6 +758,24 @@
 	        var top = (heigth - wHeight) / 2;
 	        
 	        window.open("/admin/ezNewPortal/openSlideImageSetting.do?portletId=" + portletId + "&companyId=" + companyId, "",
+	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+		}
+		
+		var openPortletAuthSetting = function (event) {
+			var portletId = event.data.portletId;
+	 		var companiesObj = document.getElementById("ListCompany");
+			var companyId = companiesObj.options[companiesObj.selectedIndex].value;
+			
+	        var wWeight = "401";
+	        var wHeight = "339";
+	
+	        var heigth = window.screen.availHeight;
+	        var width = window.screen.availWidth;
+	
+	        var left = (width - wWeight) / 2;
+	        var top = (heigth - wHeight) / 2;
+	        
+	        window.open("/admin/ezNewPortal/openPortletAuthSetting.do?portletId=" + portletId + "&companyId=" + companyId, "",
 	            "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
 		}
 	</script>

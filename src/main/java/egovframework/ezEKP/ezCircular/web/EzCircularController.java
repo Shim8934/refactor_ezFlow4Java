@@ -1763,6 +1763,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDeptConfig started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("circularDeptConfig ended");
 		

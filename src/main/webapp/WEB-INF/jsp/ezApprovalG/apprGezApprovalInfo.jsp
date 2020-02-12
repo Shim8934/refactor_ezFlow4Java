@@ -470,8 +470,10 @@
 	                }
 	            } catch (e) { alert(e.description); }
 
-                getAttachList();
-	            
+	            if(useOpenGov == "YES") {
+                    getAttachList();
+				}
+
 	            if (approvalFlag == "S") {
 	            	//(재)기안, 수신접수, 합의접수가 아닌 구분 상태에서는 결재선 즐겨찾기(탭, 버튼) 숨김처리
 		            if (pIniGubun != "1" && pIniGubun != "9" && pIniGubun != "11") {
@@ -997,7 +999,7 @@
 			                    return;
 			                }
 			                
-			                if (document.getElementById("openListFlag").checked == false) {
+			                if (useOpenGov == 'YES' && document.getElementById("openListFlag").checked == false) {
 			                	if ($("#txt_Basis").val() == "") {
 			                		OpenAlertUI("목록비공개사유를 입력해주세요");
 			                		return;
@@ -1160,33 +1162,34 @@
 			                	ret[25] = g_szSCListXml; // 특수목록
 			                	ret[26] = sepAttachCheckYN; // 분리첨부 확인여부
 			                }
-			                
-			                //원문정보공개 목록공개
-			                if (document.getElementById("openListFlag").checked) {
-			                	ret[27] = "Y"
-			                } else {
-			                	ret[27] = "N"
-			                }
-			                
-			                // 원문정보 첨부파일 공개/비공개
-			                ret[28] = "";
-			                
-			                for (var i = 0; i < document.getElementsByClassName('fileOpenFlagChk').length; i++) {
-			                	if (document.getElementsByClassName('fileOpenFlagChk')[i].checked) {
-			                		ret[28] += "Y";
-			                	} else {
-			                		ret[28] += "N";
-			                	}
-			                }
-			                
-			                ret[29] = $("#txt_Basis").val();
-			                ret[30] = $("#txt_Reason").val();
-			                
-			                if (document.getElementById("openGovLimitDate").checked) {
-			                	ret[31] = document.getElementById("idDatepickerForOpenGov").value.substring(0, 10);
-			                } else {
-			                	ret[31] = "";
-			                }
+			                if (useOpenGov == "YES") {
+                                //원문정보공개 목록공개
+                                if (document.getElementById("openListFlag").checked) {
+                                    ret[27] = "Y"
+                                } else {
+                                    ret[27] = "N"
+                                }
+
+                                // 원문정보 첨부파일 공개/비공개
+                                ret[28] = "";
+
+                                for (var i = 0; i < document.getElementsByClassName('fileOpenFlagChk').length; i++) {
+                                    if (document.getElementsByClassName('fileOpenFlagChk')[i].checked) {
+                                        ret[28] += "Y";
+                                    } else {
+                                        ret[28] += "N";
+                                    }
+                                }
+
+                                ret[29] = $("#txt_Basis").val();
+                                ret[30] = $("#txt_Reason").val();
+
+                                if (document.getElementById("openGovLimitDate").checked) {
+                                    ret[31] = document.getElementById("idDatepickerForOpenGov").value.substring(0, 10);
+                                } else {
+                                    ret[31] = "";
+                                }
+							}
 		                }
 		
 		                if (ReturnFunction != null) {
@@ -2093,11 +2096,8 @@
 		    function openGovLimitDate_onClick() {
 		        if (document.getElementById("openGovLimitDate").checked) {
 		            document.getElementById("idDatepickerForOpenGov").disabled = "";
-//		            $(".ui-datepicker-trigger").show();
-		        }
-		        else {
+		        } else {
 		            document.getElementById("idDatepickerForOpenGov").disabled = "disabled";
-//		            $(".ui-datepicker-trigger").hide();
 		        }
 		    }
 	    </script>
@@ -2766,17 +2766,17 @@
 		                        <input type="radio" name="rdoSecType" value="2" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t150'/></span>&nbsp;
 		                        <input type="radio" name="rdoSecType" value="3" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t46'/></span>&nbsp;
 		                        <span class="openGov">
-		                        <input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 목록공개</span>
+		                        	<input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 목록공개</span>
 		                        </span>
 		                    </div>
 		                </td>
 		            </tr>
-        		    <tr id="basis">
-		            <th>목록비공개사유</th>
-		            <td>
-                    	<input type="text" id="txt_Basis" name="txt_Basis" style="width: 50%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="35" />
-                    	* 35자 이내로 입력해주세요
-		            </td>
+        		    <tr id="basis" class="openGov">
+						<th>목록비공개사유</th>
+						<td>
+							<input type="text" id="txt_Basis" name="txt_Basis" style="width: 50%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="35" />
+							* 35자 이내로 입력해주세요
+						</td>
 		            </tr>
 		            <tr class="openGov">
 		                <th>원문공개열람제한일</th>
@@ -2823,7 +2823,7 @@
 		                    </div>
 		                </td>
 		            </tr>
-		            <tr class="openGov">
+		            <tr>
 		                <th><spring:message code='ezApprovalG.t876'/></th>
 		                <td>
 		                    <input type="text" name="txtLimitRange" id="txtLimitRange" class="text" style="Width: 170px; font-size: 9pt"><span>(<spring:message code='ezApprovalG.t1209'/></span></td>
@@ -3327,4 +3327,3 @@
 	    }
 	</script>
 </html>
-src/main/webapp/WEB-INF/jsp/ezApprovalG/apprGezApprovalInfo.jsp

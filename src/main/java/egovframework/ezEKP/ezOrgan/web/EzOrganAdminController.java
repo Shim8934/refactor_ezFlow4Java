@@ -131,7 +131,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
-
+    	
     	try {
 	    	ezCommonService.createTblCompanyConfig();
 	    	ezCommonService.createReformFlagColumn();
@@ -174,14 +174,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.addAddJobMasterProxy();
 	    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
 	    	ezCommonService.addThemeContentLang(); //2019-06-25 유은정 - 테마명 다국어 처리 관련 컬럼 및 이닛데이터 추가
+	    	ezCommonService.createThemeAndPortletAuth();
+	    	ezCommonService.addMenuAndPortletCode(); //2019-07-15 유은정 - 메뉴, 포틀릿 호출 로직 개선 위한 컬럼 추가
 	    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
 	    	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
+	    	ezCommonService.addSnThemeAndPortletAuth();
 	    	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
 	    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
 	    	ezCommonService.createJobMasterTable();
 	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
 	//    	ezCommonService.addPassAprLineFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
 	    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+	    	ezCommonService.createResourcePortlet(); // 2019-06-28 황윤호 -자원관리 포틀릿 테이블 추가
+	    	ezCommonService.insertSurveyTenantConfig(); // 2019-06-25 이석화 전자설문 리뉴얼 테넌트 컨피그 추가
+	    	ezCommonService.insertPortletInfo(); // 2019-07-02 자원, 웹폴더, 전자설문 포틀릿 데이터 확인 후 없으면 추가
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

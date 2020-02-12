@@ -6136,6 +6136,43 @@ CREATE TABLE `tbl_endaprdocinfo_old` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_endaprdocinfo_old`
+--
+
+DROP TABLE IF EXISTS `tbl_endaprdocinfo_old`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_endaprdocinfo_old` (
+  `DOCID` varchar(80) NOT NULL,
+  `ORGDOCID` varchar(80) DEFAULT NULL,
+  `DOCTYPE` varchar(12) DEFAULT NULL,
+  `DOCSTATE` varchar(12) DEFAULT NULL,
+  `FUNCTIONTYPE` varchar(12) DEFAULT NULL,
+  `HREF` varchar(1020) DEFAULT NULL,
+  `DOCTITLE` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `DOCNO` varchar(200) DEFAULT NULL,
+  `HASATTACHYN` varchar(4) DEFAULT NULL,
+  `HASOPINIONYN` varchar(4) DEFAULT NULL,
+  `STARTDATE` datetime DEFAULT NULL,
+  `ENDDATE` datetime DEFAULT NULL,
+  `WRITERID` varchar(400) DEFAULT NULL,
+  `WRITERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `WRITERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `WRITERDEPTID` varchar(400) DEFAULT NULL,
+  `WRITERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `FORMID` varchar(40) DEFAULT NULL,
+  `CONTAINERID` varchar(40) DEFAULT NULL,
+  `ISPUBLIC` varchar(4) DEFAULT NULL COMMENT '공개여부(Y/N)',
+  `WRITERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `WRITERJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `WRITERDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_endaprlineinfo`
 --
 
