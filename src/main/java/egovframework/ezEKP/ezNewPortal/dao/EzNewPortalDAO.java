@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzNewPortalDAO")
@@ -658,6 +659,11 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> getInitCompanyList() {
 		return (List<OrganDeptVO>) list("ezNewPortal.getInitCompanyList");
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FileVO> getWebFolderFileList(Map<String, Object> map) {
+		return (List<FileVO>)list("ezNewPortal.getWebFolderFileList", map);
 	}
 	
 	@SuppressWarnings("unchecked")

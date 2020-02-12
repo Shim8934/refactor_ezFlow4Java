@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
@@ -773,6 +774,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblAttitudeAprConn");
 		}
 	}
+	
+	public void createTblResourcePortlet() throws Exception {
+		try {
+			select("EzCommonDAO.checkResourcePortlet");
+		} catch (Exception e) {
+			logger.debug("tbl_rs_persportlet doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblResourcePortlet");
+		}
+	}
 
 	public void addThemeContent2() throws Exception {
 		try {
@@ -794,6 +805,91 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addThemeContent3");
 			update("EzCommonDAO.insertThemeContent3");
 		}
+	}
+	
+	public void insertSurveyTenantConfig(Map<String, Object> map) throws Exception{
+		String propertyValue = (String) select("EzCommonDAO.checkSurveyTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("survey tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertSurveyTenantConfig",map);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CompanyInfoVO> getAllCompanyIds() {
+		return (List<CompanyInfoVO>) list("EzCommonDAO.getAllCompanyIds");
+	}
+	
+	public void insertPortletInfo(Map<String, Object> map) {
+		String url = checkPortlet(map);
+
+		if (url == null) {
+			try {
+					insert("EzCommonDAO.insertPortlet",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private String checkPortlet(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkPortlet", map);
+	}
+	
+	public void insertRsPortletInfo(Map<String, Object> map) {
+		String companyId = checkPortletForComapny(map);
+
+		if (companyId == null) {
+			try {
+				logger.debug("insert resource portlet data");
+				insert("EzCommonDAO.insertPortletComp",map);
+				insert("EzCommonDAO.insertRsPortletName",map);
+				insert("EzCommonDAO.insertPortalThemePortlet",map);
+				insert("EzCommonDAO.insertPortalPortletAuth",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void insertWfPortletInfo(Map<String, Object> map) {
+		String companyId = checkPortletForComapny(map);
+		
+		if (companyId == null) {
+			try {
+				logger.debug("insert webfolder portlet data");
+				insert("EzCommonDAO.insertPortletComp",map);
+				insert("EzCommonDAO.insertWfPortletName",map);
+				insert("EzCommonDAO.insertPortalThemePortlet",map);
+				insert("EzCommonDAO.insertPortalPortletAuth",map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void insertSvPortletInfo(Map<String, Object> map) {
+		String companyId = checkPortletForComapny(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("insert survey portlet data");
+				insert("EzCommonDAO.insertPortletComp",map);
+				insert("EzCommonDAO.insertSvPortletName",map);
+				insert("EzCommonDAO.insertPortalThemePortlet",map);
+				insert("EzCommonDAO.insertPortalPortletAuth",map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private String checkPortletForComapny(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkPortletForComapny", map);
 	}
 
 	public void createTblThemeAuth() {

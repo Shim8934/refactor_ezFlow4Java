@@ -147,7 +147,13 @@ public interface EzCommonService {
 
 	public void createAttitudeAnnual() throws Exception;
 
+	public void createResourcePortlet() throws Exception;
+
+	public void insertSurveyTenantConfig() throws Exception;
+
 	public void addThemeContentLang() throws Exception;
+
+	public void insertPortletInfo() throws Exception;
 
 	public void createThemeAndPortletAuth() throws Exception;
 

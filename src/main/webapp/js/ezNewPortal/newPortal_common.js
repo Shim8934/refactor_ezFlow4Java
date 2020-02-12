@@ -433,6 +433,60 @@ function eventSetting(portletId, themeId, portletCode, isReload) { //포틀릿 �
 		}
 		
 		break;
+
+	case "webfolder" : // 웹폴더
+		url = "/js/ezNewPortal/portlets/webFolderPortlet.js";
+		
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				getWebFolderFileList();
+			} catch(err) {
+				console.log(err);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+		});
+		
+		break;
+		
+	case "resource" : // 자원관리
+		url = "/js/ezNewPortal/portlets/resourcePortlet.js";
+		
+		$.getScript(url)
+		.done(function(script, textStatus) {
+			try {
+				viewResource();
+				showPersResource();
+				getPersPortlet();
+			} catch(err) {
+				console.log(err);
+			}
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+		});
+		
+		break;
+		
+	case "survey" : // 전자설문
+		url = "/js/ezNewPortal/portlets/surveyPortlet.js";
+		
+		$.getScript(url)
+		.done(function (script, textStatus) {
+			try {
+				getPotletSurveyList();
+			} catch(err) {
+				console.log(err);
+			}
+			
+		})
+		.fail(function(jqxhr, settings, exception) {
+			console.log(exception);
+		});
+		
+		break;
 	}
 }
 
@@ -442,9 +496,11 @@ function viewPersonalEnv() {
 }
 
 //읽지않은 메일, 설문조사, 회람판, 결재할 문서, 오늘일정 개수 ajax가져오기
-function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule) {
+//function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSchedule) {
+function getUnreadCounts(useSurvey, useCircular, useMail, useApproval, useSchedule) {
 	var data = {
-		"useQuestion" : useQuestion,
+//		"useQuestion" : useQuestion,
+		"useSurvey" : useSurvey,
 		"useCircular" : useCircular,
 		"useMail"  : useMail,
 		"useApproval" : useApproval,
@@ -458,8 +514,11 @@ function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSche
 		contentType : "application/json",
 		dataType : "json",
 		success : function(result) {
-			if (useQuestion === "YES") {
+			/*if (useQuestion === "YES") {
 				setCountSetting("poll", result.pollCount);
+			}*/
+			if (useSurvey === "YES") {
+				setCountSetting("survey", result.surveyCnt);
 			}
 			
 			if (useCircular === "YES") {
@@ -484,6 +543,7 @@ function getUnreadCounts(useQuestion, useCircular, useMail, useApproval, useSche
 //읽지않은 메일, 설문조사, 회람판, 결재할 문서, 오늘일정 개수 setting
 function setCountSetting(countName, count) {
 	switch (countName) {
+	/*
 	case "poll" : 
 		if (count > 999) {
 			count = "999+";
@@ -498,6 +558,23 @@ function setCountSetting(countName, count) {
 		}
 
 		document.getElementById("pollCount").textContent = count;
+		
+		break;
+	*/
+	case "survey" : 
+		if (count > 999) {
+			count = "999+";
+			document.getElementById("surveyCount").classList.remove("iconCount_none");
+			document.getElementById("surveyCount").classList.add("iconCount");
+		} else if (count == 0) {
+			document.getElementById("surveyCount").classList.remove("iconCount");
+			document.getElementById("surveyCount").classList.add("iconCount_none");
+		} else {
+			document.getElementById("surveyCount").classList.remove("iconCount_none");
+			document.getElementById("surveyCount").classList.add("iconCount");
+		}
+		
+		document.getElementById("surveyCount").textContent = count;
 		
 		break;
 	case "circular" :
@@ -1000,8 +1077,14 @@ function quickMenuOpen(menu) {
 			url = "/ezSchedule/scheduleIndex.do?funCode=2";
 			location = "main";
 			break;
+		/*
 		case "Poll" :
 			url = "/ezQuestion/qstMain.do";
+			location = "main";
+			break;
+		*/
+		case "Survey" :
+			url = "/ezSurvey/surveyMain.do";
 			location = "main";
 			break;
 	    case "Circular":
