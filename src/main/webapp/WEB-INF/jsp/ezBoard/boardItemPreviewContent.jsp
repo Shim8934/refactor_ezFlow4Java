@@ -210,14 +210,9 @@
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
 	            	filepathHTMLEscape = MakeXMLString(getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath")));
-	            	filename = MakeXMLString(filepath.substr(120, filepath.length - 119));
+	            	/* 2020-01-31 홍승비 - filePath가 아닌 fileName으로 파일명을 가져오도록 수정 */
+	            	filename = MakeXMLString(getNodeText(SelectSingleNode(xmldomNodes[i], "FileName")));
 	            	filenameAttr = MakeXMLString(filepath.substr(filepath.lastIndexOf("/"), filepath.length));
-// 	                filename = filepath.substr(filepath.indexOf("}_") + 2);
-// 	                filename = ReplaceText(filename, "%2b", "+");
-// 	                filename = ReplaceText(filename, "%3b", ";");
-// 	                filename = ReplaceText(filename, "%7e", "~");
-// 	                filename = ReplaceText(filename, "%3d", "=");
-	               // filepath = "/upload_board/" + filepath;
 	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	
 	                var strTarget = "target=''";
@@ -235,7 +230,8 @@
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
 	                
 	                /* 2018-10-11 홍승비 - 모두저장용 filePath 속성 추가 */
-	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "'>" + filename + " (" + filesize + ")</a>";	                
+	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID"))
+	                		+ "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "' realFileName='" + filename + "'>" + filename + " (" + filesize + ")</a>";	                
 	              	strAttach += "</span>";
 	                strAttach += "</li>";
 	            }
@@ -293,7 +289,7 @@
 				
 				for (var i = 0; i < allobj.length; i++) {
 					filePathTemp = GetAttribute(allobj[i], "filepath");
-					fileNames += MakeXMLString(filePathTemp.substr(120, filePathTemp.length - 119)) + ":";
+					fileNames += MakeXMLString(GetAttribute(allobj[i], "realFileName")) + ":";
 					fileNamesUID += MakeXMLString(GetAttribute(allobj[i], "fileNameAttr")) + ":";
 				}
 				

@@ -139,7 +139,7 @@
 	<body style="background-color:#ffffff;">
 	    
 	<div  id="inboxRuleConbtn1" name="inboxRuleConbtn1" >
-		<div class="popupJQLayer" style="padding-top:6px;border-radius:0px;">
+		<div class="popupJQLayer" style="padding-top:6px;padding-bottom:9px;border-radius:0px;">
 			<h1 class="title" style="overflow:hidden; text-overflow:ellipsis; width:450px;"><spring:message code="ezEmail.pyy01" /></h1>
 			<div id="close">			
 	            <ul>

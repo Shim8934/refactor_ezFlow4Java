@@ -75,14 +75,15 @@
 			        }
 		    	} */
 
-		    	if (CheckIfAnonyBoard(selectedBoard) == "1") {
+		    	/* 2020-02-11 홍승비 - 익명게시판의 경우, 관리자 권한이 있다면 이동 및 복사가 가능하도록 주석처리 */
+/* 		    	if (CheckIfAnonyBoard(selectedBoard) == "1") {
 		    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.hsb01'/>");
 		            return;
-		        }
+		        } */
 
-		        if (CheckIfAnonyBoard(selectedBoard) == "2") {
+		        if (CheckIfAnonyBoard(selectedBoard).indexOf("2") > -1) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t999070' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t999070'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t999070'/>");
@@ -151,18 +152,24 @@
 		        else
 		            window.returnValue = rtnVal;
 		    };
+		    
 		    function CheckIfAnonyBoard(pBoardID) {
 		        var xmlhttp2 = createXMLHttpRequest();
 		        xmlhttp2.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
 		        xmlhttp2.send();
+		        
 		        var retval = "0";
-		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1)
+		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1) { // 익명게시판
 		            retval = "1";
-		        else if (xmlhttp2.responseText.indexOf("attributeextension") > -1)
-		            retval = "2";
+		        }
+		        if (xmlhttp2.responseText.indexOf("attributeextension") > -1) { // 확장칼럼
+		            retval += ";2";
+		        }
+		        
 		        xmlhttp2 = null;
 		        return retval;
 		    }
+		    
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = opener.moveboarditem_cross_dialogArguments[1];
