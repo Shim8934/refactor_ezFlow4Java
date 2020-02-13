@@ -283,22 +283,32 @@
 		        process_AfterOpen();
 		        
 		        if ($("#message").contents().find("#RecvautoAprLine").length == 0) {
-			        if (SignCount < 1) {
-			        	if (approvalFlag == "G") {
-				            pGubun = "12";
-				            if (CrossYN())
-				                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
-				            else
-				                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
-			        	} else {
-			        		document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.csj001'/>";
-			        	}
-			            document.getElementById("btnSetAprLine").style.display = "none";
-			            document.getElementById("btnSendDraft").style.display = "none";
-			            document.getElementById("btntotaldocinfo").style.display = "none";
-			        } else {
-			        	setFirstDrafter();
-			        }
+		        	//가변결재선을 사용하는 수신문인데 수신결재선 필드를 그리지 못하고 수신된 문서일 경우, 접수 할 때 그려주도록. (voc #55612)
+		        	if ($("#message").contents().find("#autoLine").length > 0 && pDocType == "003" && pDraftFlag == "SUSIN") {
+						var oDIV = document.createElement("DIV");
+						oDIV.className = "FIELD";
+						oDIV.id = "RecvautoAprLine";
+							
+                		$("#message").contents().find("#autoLine").append(oDIV);
+                		setFirstDrafter();
+                	} else {
+				        if (SignCount < 1) {
+				        	if (approvalFlag == "G") {
+					            pGubun = "12";
+					            if (CrossYN())
+					                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
+					            else
+					                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
+				        	} else {
+				        		document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.csj001'/>";
+				        	}
+				            document.getElementById("btnSetAprLine").style.display = "none";
+				            document.getElementById("btnSendDraft").style.display = "none";
+				            document.getElementById("btntotaldocinfo").style.display = "none";
+				        } else {
+				        	setFirstDrafter();
+				        }
+                	}
 		        } else {
 		        	setFirstDrafter();
 		        	setAutoProperty();

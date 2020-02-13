@@ -2534,7 +2534,7 @@ function SetAutoPropertyValue() {
         if (pDraftFlag != "SUSIN" && pDocState != "011") {
             var RtnVal = message.GetListItem(fields, "recipient");
 
-            if (RtnVal != null) {
+            if (RtnVal != null || DocType == "003") {
                 pSuSinFlag = "Y";
                 setMenuBar("btnSetReceivLine", true);
                 CheckGubun = "1";
