@@ -2534,14 +2534,21 @@ function SetAutoPropertyValue() {
         if (pDraftFlag != "SUSIN" && pDocState != "011") {
             var RtnVal = message.GetListItem(fields, "recipient");
 
-            if (RtnVal != null || DocType == "003") {
+            if (RtnVal != null) {
                 pSuSinFlag = "Y";
                 setMenuBar("btnSetReceivLine", true);
                 CheckGubun = "1";
             } else {
-                pSuSinFlag = "N";
-                setMenuBar("btnSetReceivLine", false);
-                CheckGubun = "11";
+            	//가변결재선 양식으로 수신문을 사용하는경우, 양식내에 수신처란이 없어도 수신문으로 인식되도록
+            	if ($("#message").contents().find("#autoLine").length > 0 && DocType == "003") {
+            		pSuSinFlag = "Y";
+            		setMenuBar("btnSetReceivLine", true); //사용하지도 않는 버튼 왜 살려두는지..
+            		CheckGubun = "1";
+            	} else {
+            		pSuSinFlag = "N";
+            		setMenuBar("btnSetReceivLine", false);
+            		CheckGubun = "11";
+            	}
             }
         }
         if (pSusinSN)
