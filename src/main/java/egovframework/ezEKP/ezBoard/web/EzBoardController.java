@@ -4887,13 +4887,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2019-06-03 홍승비 - 게시판 구분값과 확장컬럼 여부값만을 사용하므로, getBoardProperty로 메서드 변경 */
 		BoardPropertyVO boardInfo = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
+		/* 2020-02-13 홍승비 - 익명게시판이면서 확장칼럼을 가지는 경우도 체크하도록 수정 */
 		/* 2019-07-16 홍승비 - URL게시판 null 체크 위치 수정 */
 		if (boardInfo.getGuBun() != null && (boardInfo.getGuBun().equals("2") || (boardInfo.getUrl() != null && !boardInfo.getUrl().trim().equals("")) || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4") || boardInfo.getGuBun().equals("7"))) {
-			result = "<RESULT>anonyboard</RESULT>";
-		} else if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
-			result = "<RESULT>attributeextension</RESULT>";
-		} else {
-			result = "<RESULT>normalboard</RESULT>";
+			result += "<RESULT>anonyboard</RESULT>";
+		}
+		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+			result += "<RESULT>attributeextension</RESULT>";
 		}
 
 		logger.debug("checkIfAnonyBoard ended");
