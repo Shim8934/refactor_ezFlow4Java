@@ -304,10 +304,10 @@
 		                	<tr class="primary">
 		                        <th>
 		                        	<c:choose>
-		                        		<c:when test="${primary eq '2' }">
+		                        		<c:when test="${primaryLang eq '2' }">
 		                        			<spring:message code='ezPortal.t4093' />
 		                        		</c:when>
-		                        		<c:when test="${primary eq '3' }">
+		                        		<c:when test="${primaryLang eq '3' }">
 		                        			<spring:message code='ezSchedule.t4014' />
 		                        		</c:when>
 		                        		<c:otherwise>

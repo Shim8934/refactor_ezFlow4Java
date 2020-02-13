@@ -355,7 +355,14 @@
 					</td>
 				</tr>
 				<tr>
-					<th><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1764' />)<span style="color:red"> *</span></th>
+					<c:choose>
+						<c:when test="${primary eq '3' }">
+							<th><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezPortal.t4093' />)<span style="color:red"> *</span></th>
+						</c:when>
+						<c:otherwise>
+							<th><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1764' />)<span style="color:red"> *</span></th>
+						</c:otherwise>
+					</c:choose>
 					<td><input type="text" id="tbCateName" name="tbCateName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="10"/></td>
 				</tr>
 				<tr>
