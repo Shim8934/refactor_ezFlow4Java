@@ -518,37 +518,37 @@
 	<!-- 조직도 만들기 위한 쿼리 -->
    <select id="ezAttitudeAdminDAO.selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select 
-			d.CN as id,
+			d.CN as ID,
 			case 
-				when d.extensionattribute1 = null
+				when d.EXTENSIONATTRIBUTE1 IS NULL
 				<isNotEmpty property="companyId">
-					or d.CN = #companyId#
+					or d.CN = UNISTR(#companyId#)
 				</isNotEmpty>
-					then N'##'
+					then UNISTR('##')
 				else d.EXTENSIONATTRIBUTE1 
-			end as parent,
-			d.extensionattribute2 as companyId,
-			d.DISPLAYNAME$lang$ as text,
+			end as PARENT,
+			d.EXTENSIONATTRIBUTE2 as COMPANYID,
+			d.DISPLAYNAME$primary$ as TEXT,
 			case 
 				when d.CN = d.extensionattribute2 then 'COMP'
-				else 'dept'
-			end as isComp,
+				else 'DEPT'
+			end as ISCOMP,
 			case 
 				when d.CN = u.DEPARTMENT then 'YES'
-				else 'no'
-			end as myDept
+				else 'NO'
+			end as MYDEPT
 		from
-			tbl_deptmaster d 
+			TBL_DEPTMASTER d 
 		left join 
-			tbl_usermaster u 
+			TBL_USERMASTER u 
 		on 
-			d.tenant_id = u.TENANT_ID
+			d.TENANT_ID = u.TENANT_ID
 		where 
-			d.tenant_id = #tenantId#
+			d.TENANT_ID = #tenantId#
 		and 
 		 u.CN = #userId#
 		and
-			u.tenant_id = #tenantId#
+			u.TENANT_ID = #tenantId#
 		and 
 			(
 				((substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 0 
@@ -557,18 +557,16 @@
 			or
 				(substr(u.EXTENSIONATTRIBUTE1, 3, 1) = 1)
 			)
-		     AND
-		     	NOT((D.EXTENSIONATTRIBUTE1 IS NULL OR D.EXTENSIONATTRIBUTE1 = '') AND D.CN <![CDATA[<>]]> D.EXTENSIONATTRIBUTE2)
 		<isNotEmpty property="companyId">
 		<![CDATA[
 			AND 
-				D.EXTENSIONATTRIBUTE2 = #companyId#
+				d.EXTENSIONATTRIBUTE2 = #companyId#
 		]]>
 		</isNotEmpty>
 		<![CDATA[
-		    ORDER BY lpad(NVL(D.EXTENSIONATTRIBUTE15, 0), 6, 0), D.DISPLAYNAME$primary$			
+		    ORDER BY lpad(NVL(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME$primary$			
 		]]>
-   </select>
+	</select>
    
 	<!-- 조직도 부서별 사원 리스트 -->
 	<select id="ezAttitudeAdminDAO.getDeptUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
@@ -1649,9 +1647,12 @@
 	
 	<update id ="ezAttitudeAdminDAO.updateAnnualHistory" parameterClass ="Map">
 		UPDATE 
-			TBL_ATTITUDE_ANNUAL_HISTORY A JOIN TBL_ATTITUDE_ANNUAL B ON A.USER_ID = B.USER_ID
+			TBL_ATTITUDE_ANNUAL_HISTORY A
 		SET
-			CHANGE_ANNUAL_CNT = (NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0))
+			A.CHANGE_ANNUAL_CNT = (SELECT (NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0))
+                                FROM TBL_ATTITUDE_ANNUAL B
+                                WHERE B.USER_ID = #userId#
+                                AND B.TENANT_ID = #tenantId#)
 		WHERE
 			A.USER_ID = #userId#
 		AND
@@ -1770,7 +1771,8 @@
 	
 	<select id="ezAttitudeAdminDAO.getUserAnnual" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
-			SELECT 
+			SELECT
+				A.CN AS userId,
 			    A.DISPLAYNAME$primary$ AS userName,
 			    A.TITLE$primary$ AS userTitle,
 			    A.DESCRIPTION$primary$ AS deptName,
@@ -1809,25 +1811,7 @@
 					   ELSE 0
 					END
 				)), 0) AS annualCnt,				
-				NVL((
-						SELECT
-							E.CHANGE_ANNUAL_CNT
-						FROM
-							TBL_ATTITUDE_ANNUAL_HISTORY E
-						WHERE
-							E.TENANT_ID = #tenantId#
-						AND 
-							E.COMPANY_ID = #companyId#
-						AND 
-							E.USER_ID = #userId#
-						AND
-							(
-							E.CHANGE_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startTime#, 'YYYY-MM-DD HH24:MI:SS')
-							AND E.CHANGE_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endTime#, 'YYYY-MM-DD HH24:MI:SS')
-							)
-						AND
-							ROWNUM = 1
-					), 0) AS totalAnnualCnt,				
+				(Nvl(b.monthly_holiday_cnt, 0) + Nvl(b.annual_holiday_cnt, 0) + Nvl(b.additional_holiday_cnt, 0)) AS totalAnnualCnt,				
 				NVL((
 						SELECT
 							G.FUNCTIONTYPE
@@ -1859,7 +1843,7 @@
 				AND
 			 	A.CN = C.WRITER_ID)
 				AND 
-					(C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+					C.TYPE_ID IN ('A11', 'A12', 'A13')
 				AND 
 					C.MODAPPL <> '5'
 				AND 
@@ -1892,7 +1876,7 @@
 			AND 
 				A.cn = #userId#
 			GROUP BY
-				A.DISPLAYNAME,A.TITLE,A.DESCRIPTION,A.EXTENSIONATTRIBUTE2,C.TYPE_ID,D.TYPE_NAME,C.ATTITUDE_ID,C.CONTENT,C.MODAPPL, C.START_DATE,C.END_DATE, NVL(F.ANNUAL_APPR_STATUS, -1),F.ANNUAL_DOC_ID
+				A.CN,A.DISPLAYNAME,A.TITLE,A.DESCRIPTION,A.EXTENSIONATTRIBUTE2,C.TYPE_ID,D.TYPE_NAME,C.ATTITUDE_ID,C.CONTENT,C.MODAPPL, C.START_DATE,C.END_DATE, NVL(F.ANNUAL_APPR_STATUS, -1),(Nvl(b.monthly_holiday_cnt, 0) + Nvl(b.annual_holiday_cnt, 0) + Nvl(b.additional_holiday_cnt, 0)),F.ANNUAL_DOC_ID
 		]]>
 		<isNotEmpty property="orderCell">
 			<![CDATA[
@@ -1972,7 +1956,7 @@
 							C.START_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
 							AND C.START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
 							)
-						OR (b
+						OR (
 							C.END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#searchStartTime#, 'YYYY-MM-DD HH24:MI:SS')
 							AND C.END_DATE + #offsetMin# / (24 * 60) <TO_DATE(#searchEndTime#, 'YYYY-MM-DD HH24:MI:SS')
 							)
@@ -1990,7 +1974,9 @@
 					A.CN = #userId#
 		]]>
 		
-		GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, A.PHYSICALDELIVERYOFFICENAME
+		GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, A.PHYSICALDELIVERYOFFICENAME,
+		(NVL(B.MONTHLY_HOLIDAY_CNT, 0) + NVL(B.ANNUAL_HOLIDAY_CNT, 0) + NVL(B.ADDITIONAL_HOLIDAY_CNT, 0)), B.JOIN_DATE
+		
 		
 	</select>
 	
