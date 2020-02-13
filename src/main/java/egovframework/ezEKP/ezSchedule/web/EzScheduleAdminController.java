@@ -347,7 +347,8 @@ public class EzScheduleAdminController {
 		String holidayType = request.getParameter("holidayType");
 		String holidayFlag = request.getParameter("holidayFlag");
 		String holidayRepeat = request.getParameter("holidayRepeat");
-		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
 		if (holidayType.equals("a")) {
 			String company = request.getParameter("company");	
@@ -379,7 +380,8 @@ public class EzScheduleAdminController {
 		model.addAttribute("holidayType", holidayType);
 		model.addAttribute("holidayFlag", holidayFlag);
 		model.addAttribute("holidayRepeat", holidayRepeat);
-		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		
 		return "/admin/ezSchedule/scheduleAdminPopupHoliday";
 	}

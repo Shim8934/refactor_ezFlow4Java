@@ -625,25 +625,11 @@
 	        <tr>
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S' }">
-	        			<c:choose>
-	        				<c:when test="${primary eq '3' }">
-	        					<th><spring:message code = 'ezApprovalG.t1641' />(<spring:message code = 'ezPortal.t4093' />) <span style="color:red">*</span></th>
-	        				</c:when>
-	        				<c:otherwise>
-			        			<th><spring:message code = 'ezApprovalG.t1641' />(<spring:message code = 'ezApprovalG.t1764' />) <span style="color:red">*</span></th>
-	        				</c:otherwise>
-	        			</c:choose>
+			        	<th><spring:message code = 'ezApprovalG.t1641' />(${primary }) <span style="color:red">*</span></th>
 						<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="20"></td>
 	        		</c:when>
 	        		<c:otherwise>
-	        			<c:choose>
-	        				<c:when test="${primary eq '3' }">
-	        					<th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezPortal.t4093' />) <span style="color:red">*</span></th>
-	        				</c:when>
-	        				<c:otherwise>
-			        			<th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezApprovalG.t1764' />) <span style="color:red">*</span></th>
-	        				</c:otherwise>
-	        			</c:choose>
+       					<th><spring:message code = 'ezApprovalG.t597' />(${primary }) <span style="color:red">*</span></th>
 	            		<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="20"></td>
 	        		</c:otherwise>
 	        	</c:choose>
@@ -651,11 +637,11 @@
 	        <tr>
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S' }">
-	        			<th><spring:message code = 'ezApprovalG.t1641' />(<spring:message code = 'ezApprovalG.t1765' />) <span style="color:red">*</span></th>
+	        			<th><spring:message code = 'ezApprovalG.t1641' />(${secondary }) <span style="color:red">*</span></th>
             			<td><input type="text" id="tbTaskName2" name="tbTaskName2" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="200"></td>
 	        		</c:when>
 	        		<c:otherwise>
-	        			<th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezApprovalG.t1765' />) <span style="color:red">*</span></th>
+	        			<th><spring:message code = 'ezApprovalG.t597' />(${secondary }) <span style="color:red">*</span></th>
 	            		<td><input type="text" id="tbTaskName2" name="tbTaskName2" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="200"></td> 
 	        		</c:otherwise>
 	        	</c:choose>
