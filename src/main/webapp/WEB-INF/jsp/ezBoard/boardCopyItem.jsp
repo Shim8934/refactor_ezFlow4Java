@@ -93,7 +93,7 @@
 		            return;
 		        } */
 		        
-		        if (CheckIfAnonyBoard(pDestBoardID) == "2") { // 확장칼럼
+		        if (CheckIfAnonyBoard(pDestBoardID).indexOf("2") > -1) { // 확장칼럼
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t999069'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t999069'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 // 		            alert("<spring:message code='ezBoard.t999069'/>");
@@ -138,6 +138,7 @@
 // 		            alert("<spring:message code='ezBoard.t181'/>" + xmlhttp.responseText);
 		        }
 		    }
+		    
 		    function CheckIfCanWrite(pBoardID) {
 		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
 		        xmlhttp.send();
@@ -148,21 +149,24 @@
 		        	return false;
 		        }
 		    }
+		    
 		    function CheckIfAnonyBoard(pBoardID) {
 		        var xmlhttp2 = createXMLHttpRequest();
 		        xmlhttp2.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
 		        xmlhttp2.send();
+		        
 		        var retval = "0";
 		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1) { // 익명게시판
 		            retval = "1";
 		        }
-		        else if (xmlhttp2.responseText.indexOf("attributeextension") > -1) { // 확장칼럼
-		            retval = "2";
+		        if (xmlhttp2.responseText.indexOf("attributeextension") > -1) { // 확장칼럼
+		            retval += ";2";
 		        }
 		
 		        xmlhttp2 = null;
 		        return retval;
 		    }
+		    
 		    window.onload = function () {
 		    	try {
 		            ReturnFunction = opener.copyboarditem_cross_dialogArguments[1];
