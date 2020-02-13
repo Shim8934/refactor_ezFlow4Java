@@ -105,6 +105,7 @@
 		    var selRowChangeFlag = false;
 		    var orgCompanyID = "";
 		    var useHWP = "${useHWP}";
+		    var userLang = "<c:out value = '${userLang}'/>";
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
