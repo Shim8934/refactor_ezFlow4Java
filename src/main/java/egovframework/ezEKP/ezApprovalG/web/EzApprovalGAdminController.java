@@ -1968,6 +1968,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String companyID = request.getParameter("companyID");
+		String primary = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()) ;
 		
 		String title = "";
 		
@@ -1996,6 +1997,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("title", title);
 		model.addAttribute("tCheck", tCheck);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("primary", primary);
 		
 		logger.debug("taskCodeInsert ended.");
 		
