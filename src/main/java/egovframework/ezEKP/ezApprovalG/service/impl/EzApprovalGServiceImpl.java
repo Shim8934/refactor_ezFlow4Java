@@ -9810,7 +9810,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			apprGDocListVOList.get(0).setHasOpinionYn("N");;
 			
 			String apprReuseConfig = ezCommonService.getTenantConfig("apprReuseConfig", userInfo.getTenantId());
-			if ( apprReuseConfig != null && apprReuseConfig.equals("1") ){
+			if ( apprReuseConfig != null && !apprReuseConfig.equals("1") ){
 				ezApprovalGDAO.insertReuseAttachFileInfo(map);
 			}
 		}
