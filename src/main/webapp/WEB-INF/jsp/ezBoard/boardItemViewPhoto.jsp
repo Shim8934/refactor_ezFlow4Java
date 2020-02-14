@@ -223,7 +223,8 @@
 					xmlhttp = null;
 					return true;
 				}
-		
+				
+				/* 2020-02-14 홍승비 - 불필요한 구분값 체크 코드 정리 (포토게시판의 구분값은 "3") */
 				var checkpassword_dialogArguments = new Array();
 				function btn_Delete_Onclick()
 				{
@@ -240,77 +241,32 @@
 		
 					//게시판관리자 또는 게시판그룹관리자 또는 게시물작성자가 아니면 지울 수 없다
 				    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
-				        if (gubun == "2") {
-				            if (CrossYN()) {
-				                checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-				                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(470, 200));
-				                try { OpenWin.focus(); } catch (e) { }
-				            } else {
-				                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
-				                if (typeof (ret) == "undefined") {
-				                    alert("<spring:message code='ezBoard.t265'/>");
-				                    return;
-				                }
-		
-				                if (ret != "OK") {
-				                    alert("<spring:message code='ezBoard.t265'/>");
-				                    return;
-				                }
-		
-				                if (!confirm(strLang48)) return;
-		
-				                var xmlhttp = createXMLHttpRequest();
-				                xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
-				                xmlhttp.send();
-		
-				                if (xmlhttp.responseText == "NO") {
-				                    alert("<spring:message code='ezBoard.t265'/>");
-		                            return;
-		                        }
-		
-				                xmlhttp = null;
-				                try {
-				                	window.opener.leftCountRf(pBoardID);
-								} catch (e) {
-								}
-				                try {
-				                    window.opener.refresh_onclick();
-				                } catch (e) {
-				                }
-				                window.close();
-				            }
-				        }
-				        else {
-				            alert("<spring:message code='ezBoard.t265'/>");
-				            // GS 수정(2006.02.10) : 익명게시판인 경우 게시물 삭제 시 암호가 맞아도 삭제가 안되는 문제 수정 (return의 위치가 잘못되었음)
-				            return;
-				        }
-		
+			            alert("<spring:message code='ezBoard.t265'/>");
+			            return;
 				    } else {
-				        if (gubun != "2") {
-		
-				            if (!confirm(strLang48)) return;
-		
-				            var xmlhttp = createXMLHttpRequest();
-				            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
-				            xmlhttp.send();
-		
-				            if (xmlhttp.responseText == "NO") {
-				                alert("<spring:message code='ezBoard.t265'/>");
-		                        return;
-		                    }
-		
-				            xmlhttp = null;
-				            try {
-			                	window.opener.leftCountRf(pBoardID);
-							} catch (e) {
-							}
-				            try {
-				                window.opener.refresh_onclick();
-				            } catch (e) {
-				            }
-				            window.close();
-				        }
+			            if (!confirm(strLang48)) {
+			            	return;
+			            }
+	
+			            var xmlhttp = createXMLHttpRequest();
+			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + ";", false);
+			            xmlhttp.send();
+	
+			            if (xmlhttp.responseText == "NO") {
+			                alert("<spring:message code='ezBoard.t265'/>");
+	                        return;
+	                    }
+	
+			            xmlhttp = null;
+			            try {
+		                	window.opener.leftCountRf(pBoardID);
+						} catch (e) {
+						}
+			            try {
+			                window.opener.refresh_onclick();
+			            } catch (e) {
+			            }
+			            window.close();
 				    }
 				}
 		
@@ -469,148 +425,8 @@
 		
 					window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 				}
-		
-// 				function OneLineReply_onkeydown(e)
-// 				{
-// 				    if (e.keyCode == 13) {
-// 				        e.returnValue = false;
-// 				        e.cancelBubble = true;
-// 				        Save_OneLineReply(e);
-// 				    }
-// 				}
-		
-// 				function Save_OneLineReply(e)
-// 				{
-// 					if (Reply_FG != "true") 
-// 					{
-// 						alert("<spring:message code='ezBoard.t303'/>");
-// 						return;
-// 					}
-					
-// 				    e.returnValue = false;
-// 				    e.cancelBubble = true;
-		
-// 					//event.returnValue = false;
-// 					//event.cancelBubble = true;
-					
-// 					//2011-04 : 한줄 답변 옵션 처리
-// 					if(OneLineReplyFlag == "1")
-// 					{
-// 					    if (document.getElementById("onelinereply").value == "") 
-// 					    {
-// 						    alert("<spring:message code='ezBoard.t307'/>");
-// 						    return;
-// 					    }
-// 					}
-					
-// 					//2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가
-// 					if (gubun == "2" && trim(document.getElementById("txtPassWord").value) == "" )
-// 					{
-// 					    alert("<spring:message code='ezBoard.t391'/>");
-// 					    txtPassWord.focus();
-// 						return;
-// 					}
-					
-// 					var pReplyID = "";
-// 					pReplyID = generateGuid();
-					
-// 					var content,password;
-// 					if (OneLineReplyFlag == "1"){
-// 						content = MakeXMLString(document.getElementById('onelinereply').value);
-// 					}else{
-// 						content = "";
-// 					}
-// 					if (gubun != "2") {
-// 					    password = "";
-// 					}
-// 					else {
-// 					    password = rsa.encrypt(document.getElementById("txtPassWord").value);
-// 					}
-					
-// 					$.ajax({
-// 						type : "POST",
-// 						dataType : "text",
-// 						async : false,
-// 						url : "/ezBoard/saveOneLineReply.do",
-// 						data : { boardID    : pBoardID, 
-// 								 itemID 	: pItemID,
-// 								 replyID	: pReplyID,
-// 								 content	: content,
-// 								 password	: password
-									 
-// 							   },
-// 						success: function(){
-// 							reloadOneline();
-// 						}
-// 					});
-// 				}
-		
-// 				function reloadOneline(){
-// 				    if (OneLineReplyFlag == "1")
-// 				        document.getElementById('onelinereply').value = "";
-// 				    if (gubun == "2")
-// 				        document.getElementById('txtPassWord').value = "";
-// 				    getOneLineReply();
-// 				}
 				
-// 				function delete_onelinereply(pReplyID)
-// 				{
-// 				     var xmlhttp = createXMLHttpRequest();
-				    
-// 				    //게시판관리자 또는 게시판그룹관리자 또는 게시물작성자가 아니면 지울 수 없다
-// 					if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") 
-// 					{
-// 					    xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
-// 					    xmlhttp.send();
-		        			
-// 					    if (xmlhttp.responseText.substr(0,2) != "OK")
-// 					    {
-// 						    alert("<spring:message code='ezBoard.t310'/>");
-// 						    return;
-// 					    }
-		        			
-// 					    if (!confirm("<spring:message code='ezBoard.t311'/>")) 
-// 					    	return;
-		
-// 					} else {
-// 						    if(!confirm("<spring:message code='ezBoard.t311'/>")) 
-// 						    	return;
-// 						}
-					
-// 					xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID+"&guBun="+gubun, false);
-// 					xmlhttp.send();
-// 					getOneLineReply();			
-// 					xmlhttp = null;
-// 				}
-				
-// 			    function getOneLineReply()
-// 			    {
-// 			        var xmlhttp = createXMLHttpRequest();
-// 			        xmlhttp.open("POST", "/ezBoard/readOneLineReply.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
-// 			        xmlhttp.send();
-// 			        var xmldom = createXmlDom();
-// 			        //xmldom.loadXML(xmlhttp.responseText);
-// 			        xmldom = loadXMLString(xmlhttp.responseText);
-// 			        xmlhttp = null;
-// 			        strHTML = "";
-// 			        var temp;
-// 			        for (var i=0; i<xmldom.getElementsByTagName("REPLYID").length; i++)
-// 			        {
-// 			            temp = i+1;
-// 			            strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i))+ "\")'><p>";
-// 			        }
-// 			        if (i==0)
-// 			            strHTML = "<spring:message code='ezBoard.t312'/>";
-		            
-// 		            try
-// 		            {
-// 		                document.getElementById("onelinereplylist").innerHTML = strHTML;
-// 		            }
-// 		            catch(e)
-// 		            {
-// 		            }
-// 			    }
-				
+				/* 2020-02-14 홍승비 - 하단댓글 기능 적용으로 기존 한줄댓글 코드 제거 */
 				function ReplaceText( orgStr, findStr, replaceStr )
 				{
 					var re = new RegExp( findStr, "gi" );
