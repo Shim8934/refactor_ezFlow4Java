@@ -868,7 +868,19 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 게시판그룹이름변경 메뉴 확장컬럼 설정화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardExtensionAttribute.do")
-	public String boardExtensionAttribute() throws Exception {
+	public String boardExtensionAttribute(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("boardExtensionAttribute started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		/* 2020-02-14 홍승비 - 항목명 다국어 처리를 위한 파라미터 추가 */
+		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
+		model.addAttribute("lang_primary", lang_primary);
+		model.addAttribute("lang_secondary", lang_secondary);
+		
+		logger.debug("boardExtensionAttribute ended");
 		return "admin/ezBoard/boardExtensionAttribute";
 	}
 
