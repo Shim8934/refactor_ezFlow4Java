@@ -2324,7 +2324,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t209' /></th>
 	                        <td>
-	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100">
+	                            <input type="text" id="txtAbstract" style="WIDTH: 100%; word-break: break-all" value="" maxlength="100">
 							</td>
 	                    </tr>
 	                    <tr id="pUseBackGroundTR" style="display:none;" height="50px">
@@ -2433,7 +2433,7 @@
 	                    <tr style="display: none">
 	                        <th><spring:message code='ezBoard.t209' /></th>
 	                        <td style="vertical-align: middle" colspan="2">
-	                            <input type="text" id="txtAbstract" style="WIDTH: 95%; word-break: break-all" value="" maxlength="100"></td>
+	                            <input type="text" id="txtAbstract" style="WIDTH: 100%; word-break: break-all" value="" maxlength="100"></td>
 	                    </tr>
 	                </table>
 	            </td>
