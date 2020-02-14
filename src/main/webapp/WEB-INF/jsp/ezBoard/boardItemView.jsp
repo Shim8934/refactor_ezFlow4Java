@@ -1459,7 +1459,7 @@
 		  </tr>
 		  <tr>
 		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
-		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:495px; overflow:auto; border:1px solid #ddd"></iframe>
+		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:calc(100% - 2px); height:495px; overflow:auto; border:1px solid #ddd"></iframe>
 		        <%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 		        <c:if test="${boardPropertyVO.oneLineReply == '2'}">
 		        	<div style='height:auto;'>
