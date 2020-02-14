@@ -301,6 +301,8 @@
 							replyOffsetH = 12; // 확장칼럼 없는 일반, QNA게시판
 						}
 					}
+				} else { // 댓글을 사용하지 않거나 레이어 팝업인 경우
+					replyOffsetH = -18;
 				}
 				
 		        if (pAttributeYN == "Y") {
@@ -1569,85 +1571,25 @@
 		        <%-- 본문하단 댓글영역 끝 --%>
 		    </td>
 		  </tr>
-		  <c:choose>
-			  <c:when test="${boardPropertyVO.oneLineReply == '1'}">
-<!-- 				  <tr> -->
-<%-- 				  <c:choose> --%>
-<%-- 				      <c:when test="${guBun != '2'}"> --%>
-<!-- 					    <td style="vertical-align: top;"> -->
-<!-- 					        <table class="content"> -->
-<!-- 					        <tr> -->
-<!-- 					          <td style="height:50px;" colspan="3"><div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div></td> -->
-<!-- 					        </tr> -->
-<!-- 					        <tr> -->
-<%-- 					          <th><spring:message code='ezBoard.t324' /></th> --%>
-<!-- 					          <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td> -->
-<%-- 					          <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td> --%>
-<!-- 					        </tr> -->
-<!-- 					      </table> -->
-<!-- 					    </td> -->
-<%-- 				  	</c:when> --%>
-<%-- 				    <c:otherwise><!-- 2011.04.13 익명게시판의 경우 한줄답변 등록시 password 추가  --> --%>
-<!-- 				        <td style="vertical-align: top; height:10%;"> -->
-<!-- 				            <table class="content"> -->
-<!-- 				            <tr> -->
-<!-- 				              <td style="height:50px" colspan="5"> -->
-<!-- 				                  <div id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 51px; background-color:white; text-align:left"></div> -->
-<!-- 				              </td> -->
-<!-- 				            </tr> -->
-<!-- 				            <tr> -->
-<%-- 				              <th><spring:message code='ezBoard.t324' /></th> --%>
-<!-- 				              <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td> -->
-<%-- 				              <th><spring:message code='ezBoard.t438' /></th> --%>
-<!-- 				              <td> -->
-<!-- 				              	<INPUT type="password" id="txtPassWord_fake" name="pwd" style="WIDTH:80px; display: none;" autocomplete="new-password"> -->
-<!-- 				              	<INPUT type="password" id="txtPassWord" name="pwd" style="WIDTH:80px" maxlength="15" autocomplete="new-password"> -->
-<!-- 				              </td> -->
-<%-- 				              <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td> --%>
-<!-- 				            </tr> -->
-<!-- 				          </table> -->
-<!-- 				        </td> -->
-<%-- 				    </c:otherwise> --%>
-<%-- 			    </c:choose> --%>
-<!-- 			  </tr> -->
-			  <tr>
-			    <td class="pad1" style="vertical-align: top;">
-			        <table class="file">
-			        <tr>
-			          <th><spring:message code='ezBoard.t10025' /></th>
-			            <td>
-			            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 50px; background-color:white" id="lstAttachLink" ></div>
-			            </td>
-			        <td class="pos2">
-			        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-			        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
-			        </td>
-			        <td id="ItemLevel" style="display:none"></td>
-			        </tr>
-			      </table>
-			    </td>
-			  </tr>
-			  </c:when>
-			  <c:otherwise>
-			 	<tr>
-				    <td class="pad1" style="vertical-align: top; ">
-				        <table class="file">
-				        <tr>
-				          <th><spring:message code='ezBoard.t10025' /></th>
-		                     <td >
-				            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left"></div>
-				          </td>
-				          <td class="pos2">
-				             <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-				             <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
-				          </td>
-				          <td id="Td2" style="display:none"></td>
-				        </tr>
-				      </table>
-				    </td>
-				</tr>
-			  </c:otherwise>
-		  </c:choose>
+		<%-- 2020-02-13 홍승비 - 사용하지 않는 한줄댓글 코드 제거(본문하단 댓글으로 대체), 첨부파일 영역 확장 --%>
+		  <tr>
+		    <td class="pad1" style="vertical-align: top;">
+		        <table class="file">
+		        <tr>
+		          <th><spring:message code='ezBoard.t10025' /></th>
+		            <td>
+		            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 76px; background-color:white" id="lstAttachLink" ></div>
+		            </td>
+		        <td class="pos2">
+		        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+		        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+		        </td>
+		        <td id="ItemLevel" style="display:none"></td>
+		        </tr>
+		      </table>
+		    </td>
+		  </tr>
+
 		  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 			  <tr>
 			    <td style="vertical-align: top;">
