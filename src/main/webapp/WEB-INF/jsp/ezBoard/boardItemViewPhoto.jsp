@@ -243,10 +243,10 @@
 				        if (gubun == "2") {
 				            if (CrossYN()) {
 				                checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-				                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+				                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(470, 200));
 				                try { OpenWin.focus(); } catch (e) { }
 				            } else {
-				                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+				                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 				                if (typeof (ret) == "undefined") {
 				                    alert("<spring:message code='ezBoard.t265'/>");
 				                    return;

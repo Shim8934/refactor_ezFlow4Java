@@ -369,12 +369,12 @@
 		            if (gubun == "2") {
 		                if (CrossYN()) {
 		                    checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(470, 200));
 		                    try { OpenWin.focus(); } catch (e) { }
 		                } else {
-		                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                    feature = feature + GetShowModalPosition(330, 200);
-		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                    var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+		                    feature = feature + GetShowModalPosition(470, 200);
+		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 		                    
 			                if (ret == "NO") {
 			                    alert("<spring:message code='ezBoard.t267' />");
@@ -516,13 +516,13 @@
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments = new Array();
 		                checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
-		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(435, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(470, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            }
 		            else {
-		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+		                feature = feature + GetShowModalPosition(470, 200);
+		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID, "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		                if (ret == "NO") {
 		                    alert("<spring:message code='ezBoard.t267' />");
@@ -914,8 +914,8 @@
 // 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 // 		            if (gubun == "2") {
 // 		                if (CrossYN()) {
-// 		                	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-// 		                    feature = feature + GetShowModalPosition(330, 200);
+// 		                	var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+// 		                    feature = feature + GetShowModalPosition(470, 200);
 // 		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "", feature);
 		                    
 // 		                    if (ret == "NO") {
@@ -937,7 +937,7 @@
 // 		                } else {		                	
 // 		                    checkpassword_dialogArguments = new Array();
 // 		                    checkpassword_dialogArguments[1] = delete_onelinereply_Complete;
-// 		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+// 		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(470, 200));
 // 		                    try { OpenWin.focus(); } catch (e) { }
 // 		                }
 		                

@@ -646,12 +646,12 @@
 		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + strItemList[0], "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + strItemList[0], "CheckPassWord", GetOpenWindowfeature(470, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            } else {
-		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + arrList[0], "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+		                feature = feature + GetShowModalPosition(470, 200);
+		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + arrList[0], "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 		
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		
