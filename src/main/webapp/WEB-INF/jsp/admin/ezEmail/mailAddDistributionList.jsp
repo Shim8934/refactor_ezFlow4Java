@@ -82,6 +82,13 @@
 	        var userDL = "${userDL}"; // add, modify
 	        var offsetMin = "${offsetMin}";
 	        var userId = "${userId}";
+	        var userName = "${userName}";
+	        var setEndDate = utcDate2(offsetMin);
+	        var policy = "${policy}";
+	        var endDate = "${endDate}";
+	        var userDl_ownerId =  "${ownerId}";
+	        var userDl_ownerId_temp =  "${userId}";
+	        var userDl_ownerName = "${ownerName}";
 	        
 	        window.onload = function () {
 	            try {
@@ -113,6 +120,17 @@
 	           
 	            if (userDL != "") { // 사용자 정의 공용배포그룹
 	            	var $endDateCheckBox = $("input[name=endDateCheckBox]")[0];
+
+	            	if ("${cn}" != "" && userDL == "modify") {
+	            		userDl_ownerId_temp = userDl_ownerId;
+	            		
+	            		if (endDate != "") {
+		            		setEndDate = endDate;
+		            		$endDateCheckBox.checked = false;       			
+	            		}
+	            		$("#userDLInput input:radio[value='"+policy+"']")[0].checked = true;
+	            	}
+	            
 	            	userDLSetDatePicker();
 	            	endDateCheckBox_Click($endDateCheckBox);
 	            }
@@ -174,9 +192,13 @@
 	                xmlHTTP2.open("POST", "/admin/ezEmail/mailViewDistributionList.do", true);
 	                xmlHTTP2.onreadystatechange = event_GetDistributionList;
 	                xmlHTTP2.send(xmlpara);
+	            } else {
+	            	inputOwnerAddress(userName, userId);
 	            }
 	            
 	            ChangeListView_onClick(getOrganListType());
+
+	            setMsgToCnt();
 	        }
 	
 	        function MakeXMLString(pStr) {
@@ -246,9 +268,15 @@
 	                        listview.GetDataRows()[i].childNodes[0].style.overflow = "";
 	                        listview.GetDataRows()[i].childNodes[0].style.textOverflow = "";
 	                    }
+	                    
+	                    if (userDL == "modify") { // ownerId
+	    		            inputOwnerAddress(userDl_ownerName, userId);
+	    	            }
+	                    
 	                }
 	                
 	                xmlHTTP2 = null;
+	                setMsgToCnt();
 	            }
 	        }
 	
@@ -673,7 +701,7 @@
 	            createNodeAndInsertText(xmlDom, objNode, "ID", document.all("TextId").value);
 	            createNodeAndInsertText(xmlDom, objNode, "SELECTDOMAIN", selectDomain);
 	            
-	            if (userDL != "") { // sua
+	            if (userDL != "") {
 	            	var endDateParam = "";
 	            	if ($("input[name=endDateCheckBox]:checked").val() != "on") {
 	            		endDateParam = $("input[name=endDate]").val();
@@ -1470,7 +1498,62 @@
 	            	}
 	            } else if (m_selectedTree == ListViewINPUT) {
 	            	inputAddress();
+	            } else if (m_selectedTree == ListViewUserDlApply) {
+	            	var pListViewDL = new ListView();
+	                pListViewDL.LoadFromID("ListViewUserDlApplyDiv");
+	                var arrRows = pListViewDL.GetSelectedRows();
+	                
+	                if (arrRows.length > 0) {
+	                	for (var i = 0; i < arrRows.length; i++) {
+		                	var strId = GetAttribute(arrRows[i], "DATA1");
+			                var strName = GetAttribute(arrRows[i], "DATA2");
+							
+			                var listid = "MsgToList";
+			                var getlistview = new ListView();
+	                        getlistview.LoadFromID(listid);
+			                var bFlag = getlistview.ExistRow("data1", strId);
+			                
+		                    if (!bFlag) {
+	                    		pparsingXML2 = "";
+	                            pparsingXML = "";
+	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
+	                            pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	                            Resultxml = loadXMLString(pparsingXML2);
+			                    
+			                    var MaxID = 0;
+			                    var InitTr = getlistview.GetDataRows();
+			                    var MaxCntNum = 0;
+			
+			                    for (var j = 0; j < InitTr.length; j++) {
+			                        var curnum = Number(getlistview.GetSelectedRowID(j).substring(getlistview.GetSelectedRowID(j).lastIndexOf('_') + 1), getlistview.GetSelectedRowID(j).length);
+			                        if (MaxID < curnum) {
+			                            MaxID = curnum;
+			                            MaxCntNum = j;
+			                        }
+			                    }
+			
+			                    var objTr = getlistview.AddRow(InitTr.length);
+			                    if (MaxCntNum != 0) {
+			                        MaxCntNum = MaxCntNum + 1;
+			                    }
+			                    
+			                    SetAttribute(objTr, "id", getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+			                    getlistview.AddDataRow(objTr, Resultxml);
+			                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+			                    
+			                    for (var y = 0; y < _tdlength; y++) {
+			                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+			                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+			                    }
+		                    } 
+	                	}
+	                }
 	            }
+	            
+	            setMsgToCnt();
 	        }
 	
 	        function CheckMailReceiver(selRow, option) {
@@ -1507,8 +1590,12 @@
 	            var strName = "";
 	
 	            for (var i = 0; i < arrRows.length; i++) {
-	                selList.DeleteRow(arrRows[i].id);
+	            	if (userDL == '' || (userDL != '' && userDl_ownerId_temp != arrRows[i].getAttribute("data1"))) {
+		            	selList.DeleteRow(arrRows[i].id);
+		            }
 	            }
+	            
+	            setMsgToCnt();
 	        }
 			
 	        function orgTabButton_onClick() {
@@ -2602,6 +2689,8 @@
 	                  document.getElementById("emailaddr").value = "";
 	              }
                 }
+                
+                setMsgToCnt();
             }
 	        
 	        function AddrSearch_press() {
@@ -2718,8 +2807,6 @@
 	        });
 	        
 	        function userDLSetDatePicker() {
-	        	var NowDate = utcDate2(offsetMin);
-	        	
 	        	$("#Sdatepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
@@ -2730,7 +2817,7 @@
 		            buttonImageOnly: true,
 		        });
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Sdatepicker").datepicker('setDate', NowDate);
+		        $("#Sdatepicker").datepicker('setDate', setEndDate);
 	        }
 	        
 	        function endDateCheckBox_Click(obj) {
@@ -2743,14 +2830,11 @@
 		        }
 		    }
 	        
+	        // 사용자 정의 공용배포그룹 가입신청 탭
 	        function userDlApplyButton_onClick() {
 	        	methodForTabAction(5);
 	        	selTab = "userDlApply";
 	            selSpan = "userDlSpan";
-	            
-	            if (g_binputLoaded == false) {
-	                g_binputLoaded = true;
-	            }
 	            
 	            m_tabDialogState["org"] = "normal";
 	            m_tabDialogState["contact"] = "normal";
@@ -2765,10 +2849,186 @@
 	            ListViewDLTD.style.display = "none";
 	            ListViewINPUT.style.display = "none";
 	            ListViewUserDlApply.style.display = "block";
-	            
-	            //userDlMenu01.style.display = "block";
+
+		        dlmember.style.display = "none";
+		        AddrSearch.style.display = "none";
 		        m_selectedTree = ListViewUserDlApply;
+		        
+		        try {
+		        	var xmlDom = createXmlDom();
+		            var xmlHTTP = createXMLHttpRequest();
+		            var objRoot;
+		            createNodeInsert(xmlDom, objRoot, "DATA");
+		            createNodeAndInsertText(xmlDom, objRoot, "COMPID", companyid);
+		            
+		            if (cn != null) {
+		            	createNodeAndInsertText(xmlDom, objRoot, "CN", cn);
+		            }
+		            
+		            xmlHTTP.open("POST", "/ezEmail/mailUserDistributionApplyList.do", false);
+		            xmlHTTP.send(xmlDom);
+		        } catch (e) {
+		            alert("<spring:message code='ezEmail.userDL29' />" + e.description);
+		            xmlHTTP = null;
+		            return;
+		        }
+		        
+		        if (xmlHTTP.status != 200) {
+		            alert("<spring:message code='ezEmail.userDL29' />" + xmlHTTP.statusText);
+		                xmlHTTP = null;
+		                xmlDom = null;
+		                return;
+	            }
+		        
+	            document.getElementById("ListViewUserDlApplyDiv").innerHTML = "";
+	            var pListViewDLApply = new ListView();
+	            pListViewDLApply.SetID("ListViewUserDlApplyDiv");
+	            pListViewDLApply.SetSelectFlag(false);
+	            pListViewDLApply.SetMulSelectable(true);
+	            pListViewDLApply.SetRowOnDblClick("ListViewNodeDblClick");
+	            pListViewDLApply.DataBind("ListViewDL");
+	            pListViewDLApply.DataSource(loadXMLString(xmlHTTP.responseText));
+	            pListViewDLApply.RowDataBind();
+	
+	            var dataRows = pListViewDLApply.GetDataRows();
+	            var dataRowCount = pListViewDLApply.GetRowCount();
+	            
+	            for (var i = 0; i < dataRowCount; i++) {
+	                dataRows[i].draggable = true;
+	                if (CrossYN()) {
+	                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+	                } else {
+	                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
+	                }
+	
+	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
+	                }
+	                
+	            }
 	        }
+	        
+	        function setMsgToCnt() {
+	        	var msgCnt = $("#MsgToList tbody>tr").length;
+	        	$(".toTitleCnt b").text(msgCnt);
+	        }
+	        
+	        // 사용자 정의 공용배포그룹 소유자 등록
+	        function inputOwnerAddress(strName, strId) {
+	        	strName = strName.trim();
+	        	strId = strId.trim();
+	        	
+	        	if (strName == "" || strId == "") {return; }
+					                
+                var pparsingXML = "";
+                var pparsingXML2 = "";
+                var listid = "MsgToList";
+                var getlistview = new ListView();
+                getlistview.LoadFromID(listid);
+                var MaxID = 0;
+                var InitTr = getlistview.GetDataRows();
+                
+                var bFlag = getlistview.ExistRow("data1", strId);
+                if(!bFlag) {
+                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
+                    pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
+                    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "</VALUE></CELL></ROW>";
+                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+                    Resultxml = loadXMLString(pparsingXML2);	
+                	
+                    var MaxID = 0;
+                    var InitTr = getlistview.GetDataRows();
+                    var MaxCntNum = 0;
+
+                    for (var j = 0; j < InitTr.length; j++) {
+                        var curnum = Number(getlistview.GetSelectedRowID(j).substring(getlistview.GetSelectedRowID(j).lastIndexOf('_') + 1), getlistview.GetSelectedRowID(j).length);
+                        if (MaxID < curnum) {
+                            MaxID = curnum;
+                            MaxCntNum = j;
+                        }
+                    }
+
+                    var objTr = getlistview.AddRow(InitTr.length);
+                    if (MaxCntNum != 0) {
+                        MaxCntNum = MaxCntNum + 1;
+                    }
+                    
+					var ownerTR_ID = getlistview.GetSelectedRowID(MaxCntNum).substring(0, getlistview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1);
+                    SetAttribute(objTr, "id", ownerTR_ID);
+                    getlistview.AddDataRow(objTr, Resultxml);
+
+                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+                    for (var y = 0; y < _tdlength; y++) {
+                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+                    }
+                    
+                    setMsgToCnt();
+                }
+            }
+
+		    var mail_user_distributionOwner_cross_dialogArguments = new Array();
+	        function ownerChange() {
+	        	var popUrl = "/ezEmail/mailUserDistributionSelectOwner.do";
+				var param = "?ownerId=" + userDl_ownerId + "&ownerName=" +userDl_ownerName;
+				var popSizeW = 750;
+				var popSizeH = 580;
+				var feature = "dialogHeight:" + popSizeH + "px; dialogWidth:" + popSizeW + "px; scroll:no;status:no; help:no; edge:sunken";
+		        feature = feature + GetShowModalPosition(popSizeW, popSizeH);
+		        
+		        if (CrossYN()) {
+		            mail_user_distributionOwner_cross_dialogArguments[0] = ownerChange_Complete;
+		            var OpenWin = window.open(popUrl + param, "", GetOpenWindowfeature(popSizeW, popSizeH));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+		        else {
+		            var rtnValue = window.showModalDialog(popUrl + param, companyId, feature);
+		            if (typeof (rtnValue) != "undefined") {}
+		            	ownerChange_Complete();
+		        }
+	        }
+	        
+	        function ownerChange_Complete(returnVal) {
+	        	var id = returnVal.id;
+	        	var name = returnVal.name;
+	        	
+	        	userDl_ownerId_temp = id;
+	        	document.getElementById("ownerInput").setAttribute("data-id", id);
+	        	document.getElementById("ownerInput").value = name;
+	        	
+	        	inputOwnerAddress(name, id);
+	        }
+	        
+	        function refuseToApplyDL_onClick() {
+	        	var pListViewDL = new ListView();
+                pListViewDL.LoadFromID("ListViewUserDlApplyDiv");
+                var arrRows = pListViewDL.GetSelectedRows();
+                
+                if (arrRows.length > 0) {
+                	var strId = GetAttribute(arrRows[0], "DATA1");
+	        	
+		        	$.ajax({
+			        	type : "POST",
+			        	url : "/ezEmail/refuseToApplyDL.do",
+			        	data : {cn : cn, userId : strId },
+			        	success : function(result){	
+			        		if (result == "OK") {
+				        		alert(result);		        			
+			        		} else {
+			        			alert("<spring:message code='ezEmail.lhm14' />");
+			        		}
+			        	},
+			        	error : function(error){
+			        		alert("<spring:message code='ezEmail.lhm14' />" + error);
+			        		xmlDOM = null;
+			        	}
+			        });
+                } else {
+                	alert("<spring:message code='ezEmail.userDL30'/>");
+                }
+	        }   
+	        
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -2851,13 +3111,13 @@
 		         <table class="content">
 		            <tr>
 		                <th><spring:message code='ezEmail.t710' /></th>
-		                <td colspan='3'>
+		                <td <c:if test="${userDL ne ''}">colspan='3'</c:if>>
 		                    <input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:100%;" value="<c:out value='${textName}'/>">
 		                </td>
 		            </tr>
 		            <tr>
 		                <th><spring:message code='ezEmail.lhm09' /></th>
-		                <td colspan='3'>
+		                <td <c:if test="${userDL ne ''}">colspan='3'</c:if>>
 		                    <input name="TextId" type="text" id="TextId" maxlength="20" class="txtClass" style="width:40%;" value="${cn}">
 		                    <span id="mailDomain" style="width:60%; font-weight: bold; display:none;">@${mailDomain}</span>
 							<c:if test="${cn eq ''}">
@@ -2873,16 +3133,14 @@
 		            <c:if test="${cn ne ''}">
 			            <tr>
 			            	<th><spring:message code='main.t78' /></th>
-							<td style="width:65%">
+							<td <c:if test="${userDL eq 'modify'}">style="width:65%" </c:if>>
 								${distributionMail}
 							</td>	
 							<c:if test="${userDL eq 'modify'}">
 								<th style="width:10%; "><spring:message code='ezEmail.userDL25' /></th>
 			            		<td>
-			            			<label>
-										<span>snrnsnrns</span>	            			
-			            			</label>
-										<span>변경</span>	
+			            			<input id="ownerInput" type="text" data-id="<c:out value='${ownerId}'/>" value="<c:out value='${ownerName}'/>" style="width: 75%;" disabled/>
+									<a class="imgbtn" style="margin: 0; float: right;"><span onClick="ownerChange()"><spring:message code='ezEmail.userDL11' /></span></a>
 			            		</td>
 							</c:if>
 			            </tr>
@@ -2916,7 +3174,7 @@
 		            	<tr>
 		            		<th><spring:message code='ezEmail.userDL04' /></th>
 		            		<td colspan='3'>
-		            			<input type="text" name="explain" maxlength="65" style="width:100%;"/>
+		            			<input type="text" name="explain" maxlength="65" style="width:100%;" value="<c:out value='${explain}'/>"/>
 		            		</td>
 		            	</tr>
 		            </c:if>
@@ -3155,8 +3413,8 @@
 		                                    <table style="margin-top: 3px; width: 100%;">
 		                                        <tr>
 		                                            <td id="userDlMenu01" style="">
-		                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
-		                                                    	반려</span></a>
+		                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="refuseToApplyDL_onClick()">
+		                                                    	<spring:message code='ezEmail.userDL28' /></span></a>
 		                                            </td>
 		                                        </tr>
 		                                    </table>
@@ -3167,26 +3425,15 @@
 		                            	<table class="mainlist" style="width: 100%">
 											<thead>
 												<tr>
-													<th>이름</th>
-													<th>메일</th>
-													<th>부서</th>
-													<th>등록일</th>
+													<th><spring:message code='main.t76'/></th>
+													<th><spring:message code='main.t78'/></th>
+													<th><spring:message code='main.t75'/></th>
+													<th><spring:message code='ezEmail.userDL15' /></th>
 												</tr>
 											</thead>		                            	
 		                            	</table>
-		                            	<div style="height: 425px; overflow-y: scroll;">
-			                            	<table class="mainlist"  style="width: 100%">
-												<thead>
-													<c:forEach begin="1" end="30">
-														<tr>
-															<td>김수아</td>
-															<td>tndk19@kaoni.com</td>
-															<td>솔루션1팀</td>
-															<td>2020-02-06</td>
-														</tr>
-													</c:forEach>
-												</thead>		                            	
-			                            	</table>
+		                            	<div style="height: 425px; overflow-y: auto;">
+			                            	<table class="mainlist" id="ListViewUserDlApplyDiv" style="width: 100%"></table>
 		                            	</div>
 		                            </div>
 		                        </td>
@@ -3204,7 +3451,8 @@
 		                        </td>
 		                        <td style="vertical-align: top;">
 		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
-		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
+		                                <span style="min-width: 45px; padding-right:5px;" id="ToTitleStr"><spring:message code='ezEmail.t659' /></span>
+		                                <span style="min-width: 45px; padding:0;" class="toTitleCnt" ><b></b><spring:message code='main.t20000' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
 		                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event, this)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 501px; overflow: auto;" ondblclick="DeleteReceiver(ListViewMsgTo)"></div>

@@ -62,12 +62,15 @@ import egovframework.ezEKP.ezEmail.logic.POP3Access;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -111,6 +114,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	/**
 	 * 메일 기본 환경설정 화면 호출 함수
@@ -2236,6 +2242,218 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailDistributionMemberListPop ended.");
 		
 		return "ezEmail/mailDistributionMemberListPopUp";
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 소유 공용배포그룹 리스트 출력
+	 */
+	@RequestMapping(value = "/ezEmail/mailGetUserDistribution.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailGetUserDistribution(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailGetUserDistribution started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONObject returnJsonObj = new JSONObject();
+		JSONArray dlJsonArray = new JSONArray();
+		int dlListCnt = 0;
+		
+		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
+		String companyId = request.getParameter("companyId") == null ? userInfo.getCompanyID() : request.getParameter("companyId"); 
+		String userDLListType = request.getParameter("type") == null ? "owner" : request.getParameter("type");  // owner or include
+		
+		List<MailDistributionVO> dlList = new ArrayList<MailDistributionVO>();
+		try {
+			if (userDLListType.equals("owner")) {
+				dlList = ezEmailService.getUserOwnerDistributionList(companyId, userInfo.getTenantId(), userId);
+			} else {
+				dlList = ezEmailService.getUserIncludedDistributionList(companyId, userInfo.getTenantId(), userId);
+			}
+			
+			dlListCnt = dlList.size();
+			logger.debug("dlListCnt=" + dlListCnt);
+			
+			for (MailDistributionVO vo : dlList) {
+				dlJsonArray.add(vo.getJsonObj());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		returnJsonObj.put("count", dlListCnt);
+		returnJsonObj.put("list", dlJsonArray);
+		
+		logger.debug("mailGetUserDistribution ended.");
+		return returnJsonObj.toString();
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 소유자 변경 조직도 화면
+	 */
+	@RequestMapping(value="/ezEmail/mailUserDistributionSelectOwner.do")
+	public String mailUserDistributionSelectOwner(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailUserDistributionSelectOwner started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String cChk = "0";
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			cChk = "1";
+		}
+
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		model.addAttribute("deptId", userInfo.getDeptID());
+		model.addAttribute("cChk", cChk);
+		logger.debug("mailUserDistributionSelectOwner ended.");
+		
+		return "ezEmail/mailUserDistributionSelectOwner";
+	}
+	
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 가입신청 리스트
+	 */
+	@RequestMapping(value = "/ezEmail/mailUserDistributionApplyList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailUserDistributionApplyList(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("mailUserDistributionApplyList started.");
+		logger.debug("bodyData=" + bodyData);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		int tenantId = userInfo.getTenantId();
+		String lang = userInfo.getPrimary();
+		String returnData = "";
+
+		try {
+			Document doc = commonUtil.convertStringToDocument(bodyData);
+			String cn = doc.getElementsByTagName("CN").item(0).getTextContent() == null ? "" 
+					: doc.getElementsByTagName("CN").item(0).getTextContent();
+			logger.debug("cn=" + cn);
+
+			JSONArray userDlApplyJSONArr = ezEmailService.getUserDistributionApplyList(cn, tenantId);
+			
+			if (userDlApplyJSONArr != null && userDlApplyJSONArr.size() > 0) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("<LISTVIEWDATA><ROWS>");
+				
+				for (int i = 0; i < userDlApplyJSONArr.size(); i++) {
+					JSONObject userObject = (JSONObject) userDlApplyJSONArr.get(i);
+					
+					String objId = (String) userObject.get("applicantId");
+					String applicantDate = (String) userObject.get("applicantDate");
+					logger.debug("objId=" + objId + ", applicantDate=" + applicantDate);
+					
+					OrganUserVO userVo = ezOrganService.getUserInfo(objId, lang, tenantId);
+					String objName = commonUtil.cleanValue(userVo.getDisplayName());
+					String objMail = commonUtil.cleanValue(userVo.getMail());
+					String objDept = commonUtil.cleanValue(userVo.getDepartment());
+					
+					sb.append("<ROW>");
+					sb.append("<CELL>");
+						sb.append("<VALUE>" + objName + "</VALUE>");
+						sb.append("<DATA1>" + objId + "</DATA1>");
+						sb.append("<DATA2>" + objName + "</DATA2>");
+						sb.append("<DATA3>" + objMail + "</DATA3>");
+						sb.append("<DATA4>" + objDept + "</DATA4>");
+						sb.append("<DATA5>" + applicantDate + "</DATA5>");
+					sb.append("</CELL>");
+					sb.append("<CELL><VALUE>" + objMail + "</VALUE></CELL>");
+					sb.append("<CELL><VALUE>" + objDept + "</VALUE></CELL>");
+					sb.append("<CELL><VALUE>" + applicantDate + "</VALUE></CELL>");
+					sb.append("</ROW>");
+				}
+				
+				sb.append("</ROWS></LISTVIEWDATA>");
+				returnData = sb.toString();
+			}
+			
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailUserDistributionApplyList ended.");
+
+		return returnData;
+	}
+	
+	/**
+	 * 사용자 정의 공용배포그룹 
+	 * - 가입신청 반려
+	 */
+	@RequestMapping(value = "/ezEmail/refuseToApplyDL.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String refuseToApplyDL(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("refuseToApplyDL started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnStr = "OK";
+		int reasonCode = 0;
+		
+		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		
+		try {
+			reasonCode = ezEmailService.setUserDistributionApply(cn, userInfo.getTenantId(), userId, "del");
+			logger.debug("reasonCode=" + reasonCode);
+			
+			if (reasonCode != 0) {
+				returnStr = "ERROR";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("refuseToApplyDL ended.");
+		return returnStr;
+	}
+	
+	/**
+	 * 사용자 공용배포그룹 - 소속 공용배포그룹 탈퇴
+	 */
+	@RequestMapping(value = "/ezEmail/secessionDistribution.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String secessionDistribution(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("secessionDistribution started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnStr = "EMPTY";
+		int reasonCode = 0;
+		
+		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		
+		try {
+			reasonCode = ezEmailService.secessionDistribution(userInfo.getTenantId(), cn, userId);
+			logger.debug("reasonCode=" + reasonCode);
+			
+			if (reasonCode == -1) {
+				returnStr = "EMPTY";
+			} else if (reasonCode == -2) {
+				returnStr = "NOT INCLUDE";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("secessionDistribution ended.");
+		return returnStr;
 	}
 	
 }

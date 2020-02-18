@@ -74,7 +74,7 @@
 		
 		function window_onload() {
 			window_resize();
-			// getDLList();
+			getDLList();
 		}
 	    
 		function window_resize() {
@@ -89,7 +89,7 @@
 		function getDLList() {
 			$.ajax({
 				type:"post",
-				url:"/admin/ezEmail/mailGetUserDistribution.do",
+				url:"/ezEmail/mailGetUserDistribution.do",
 				dataType:"json",
 				data:{userId:userId, companyId:companyId, type:"owner"},
 				success:function(data) { // data.count, data.list
@@ -104,7 +104,7 @@
 			var showItem = ["id", "name", "disclosurePolicy", "explaination", "endDate"]; // 순서
 			var $DL_Tbody = $("<tbody></tbody>");
 			var $DLTable = $("#DL_Body");
-			if (data.length > 1) {
+			if (data.length > 0) {
 				for (var i in data) {
 					var dd = data[i];
 					var $TR_Temp = $("<tr></tr>");
@@ -210,7 +210,7 @@
 	        else {
 	            var rtnValue = window.showModalDialog(popUrl + param, companyId, feature);
 	            if (typeof (rtnValue) != "undefined")
-	            	getDLList();
+	            	mod_dl_Complete(rtnValue);
 	        }
 	    }
 		 
@@ -220,30 +220,37 @@
 	    }
 		
 		function delUserDL() {
-			var trSelectLen = $(".TRSelect").length;
-			if (trSelectLen < 1) {
-				alert("<spring:message code='ezEmail.t51' />");
-				return;
-			}
+			var $TRSelect = $(".TRSelect");
+			var selectedCount = $TRSelect.length;
 			
-			var ret = confirm("<spring:message code='ezEmail.0hun04' />");
-        	if (ret) {
-    			var trSelect = $(".TRSelect")[0];
-        		var dlId = trSelect.getAttr("id");
-        		
-				$.ajax({
-					type:"post",
-					url:"",
-					data:{},
-					success:function(e) {
-						alert("<spring:message code='ezEmail.userDL08' />");
-						getDLList();
-					}, error:function(er) {
-						alert("<spring:message code='ezEmail.t53' />");
-					}
-				});
-        	}
-		}
+	        var xmlDom = createXmlDom();
+	        var xmlHTTP = createXMLHttpRequest();
+	
+	        var objNode = "";
+	        createNodeInsert(xmlDom, objNode, "DATA");
+	
+	        if (selectedCount > 0) {
+		        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
+	        	if (ret) {
+			        createNodeAndInsertText(xmlDom, objNode, "CN", $TRSelect[0].getAttribute("data-id"));
+			        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
+			        
+			        xmlHTTP.open("POST", "/admin/ezEmail/mailDelDistributionList.do", false);
+			        xmlHTTP.send(xmlDom);
+			        
+			        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+			            alert("<spring:message code='ezEmail.t53' />");
+			            company_change();
+			            return;
+			        }
+			        
+			        alert(selectedCount + "<spring:message code='ezEmail.t54' />");
+			        getDLList();
+		        }
+	        } else {
+	            alert("<spring:message code='ezEmail.t51' />");		            
+	        }
+	    }
 		
 		function isScroll(){
 			var forScroll = $("#DL_Head #forScroll"); 

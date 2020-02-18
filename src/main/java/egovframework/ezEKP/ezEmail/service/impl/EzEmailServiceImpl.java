@@ -3352,8 +3352,21 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, 
 			String compId, int tenantId) throws Exception {
 		logger.debug("updateDistributionList started.");
+		int returnInt = updateDistributionList(id, name, memberList, subList, compId, tenantId, "", "", "", "");
+		logger.debug("updateDistributionList ended.");
+		return returnInt;
+	}
+	
+	/**
+	 * 공용배포그룹 수정
+	 */
+	@Override
+	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, 
+			String compId, int tenantId, String ownerId, String policy, String explaination, String endDate) throws Exception {
+		logger.debug("updateDistributionList started.");
 		logger.debug("id=" + id + ",name=" + name + ",memberList.size=" + memberList.size() + ",subList.size=" + subList.size() 
-			+ ",compId=" + compId + ",tenantId=" + tenantId);
+			+ ",compId=" + compId + ",tenantId=" + tenantId + ", ownerId=" + ownerId + ", policy=" + policy 
+			+ ", explaination=" + explaination + ", endDate=" + endDate);
 
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
 
@@ -3361,7 +3374,11 @@ public class EzEmailServiceImpl implements EzEmailService {
 			+ "&cn=" + URLEncoder.encode(id, "UTF-8") 
 			+ "&name=" + URLEncoder.encode(name, "UTF-8") 
 			+ "&id=" + URLEncoder.encode(id, "UTF-8") 
-			+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
+			+ "&domain=" + URLEncoder.encode(domain, "UTF-8")
+			+ "&ownerId=" + URLEncoder.encode(ownerId, "UTF-8")
+			+ "&policy=" + URLEncoder.encode(policy, "UTF-8")
+			+ "&explaination=" + URLEncoder.encode(explaination, "UTF-8")
+			+ "&endDate=" + URLEncoder.encode(endDate, "UTF-8");
 
 		// 공용배포그룹 맴버가 조직도 or 공용그룹인 경우
 		for (int i = 0; i < memberList.size(); i++) {
@@ -3820,5 +3837,195 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return distributionList;
 	}
 	
+	@Override
+	public List<MailDistributionVO> getUserIncludedDistributionList(String companyId, int tenantId, String userId) throws Exception {
+		logger.debug("getUserIncludedDistributionList started.");
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",userId=" + userId + ",domain=" + domain);
+		
+		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8")
+					+ "&domain=" + URLEncoder.encode(domain, "UTF-8") + "&userId=" +  URLEncoder.encode(userId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUserIncludeDistributionList";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();	
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						MailDistributionVO vo = new MailDistributionVO();
+						
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						
+						vo.setName((String)obj.get("distributionName"));
+						vo.setId((String)obj.get("distributionId"));
+						vo.setMail((String)obj.get("distributionMail"));
+						vo.setOwnerId((String)obj.get("ownerId"));
+						vo.setDisclosurePolicy((String)obj.get("policy"));
+						vo.setExplaination((String)obj.get("explaination"));
+						vo.setEndDate((String)obj.get("endDate"));
+
+						distributionList.add(vo);
+					}
+				}
+			}
+		}						
+		
+		logger.debug("getUserIncludedDistributionList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributionList.toString());
+		
+		return distributionList;
+	}
+	
+	@Override
+	public int secessionDistribution(int tenantId, String cn, String userId) throws Exception {
+		logger.debug("secessionDistribution started.");
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		logger.debug("tenantId=" + tenantId + ", cn=" + cn + ",userId=" + userId + ",domain=" + domain);
+		
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
+					+ "&domain=" + URLEncoder.encode(domain, "UTF-8") + "&userId=" +  URLEncoder.encode(userId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/delDistributionIndivisualMember";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}						
+		
+		logger.debug("secessionDistribution ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return reasonCode;
+	}
+	
+	@Override
+	public MailDistributionVO getUserDistributionInfo(String cn, int tenantId) throws Exception {
+		logger.debug("getUserDistributionInfo started.");
+
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		MailDistributionVO vo = new MailDistributionVO();
+		logger.debug("cn=" + cn + ",tenantId=" + tenantId + ", tenantDomain=" + tenantDomain);
+		
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + tenantDomain;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUserDistributionInfo";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			JSONObject resultObj = (JSONObject)	responseObj.get("result");
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0 && resultObj != null) {
+				vo.setId((String)resultObj.get("userName"));
+				vo.setOwnerId((String)resultObj.get("ownerId"));
+				vo.setDisclosurePolicy((String)resultObj.get("policy"));
+				vo.setExplaination((String)resultObj.get("explaination"));
+				vo.setEndDate((String)resultObj.get("endDate"));
+			}
+		}		
+		
+		logger.debug("getUserDistributionInfo ended.");
+		return vo;
+	}
+	
+	@Override
+	public JSONArray getUserDistributionApplyList(String cn, int tenantId) throws Exception {
+		logger.debug("getUserDistributionApplyList started.");
+		logger.debug("cn=" + cn + ",tenantId=" + tenantId);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+				
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUserDistributionApplyList";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		JSONArray resultArray = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					resultArray = (JSONArray)responseObj.get("result");
+				}
+			}
+		}						
+		
+		logger.debug("getUserDistributionApplyList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(resultArray.toString());
+		
+		return resultArray;
+	}
+	
+	@Override
+	public int setUserDistributionApply(String cn, int tenantId, String userId, String type) throws Exception {
+		logger.debug("setUserDistributionApply started.");
+		logger.debug("cn=" + cn + ",tenantId=" + tenantId + ",userId=" + userId + ",type=" + type);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+				
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + URLEncoder.encode(domain, "UTF-8")
+				 + "&userId=" + URLEncoder.encode(userId, "UTF-8") + "&type=" + URLEncoder.encode(type, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setUserDistributionApply";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}						
+		
+		logger.debug("getUserDistributionApplyList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return reasonCode;
+	}
 	
 }

@@ -272,8 +272,13 @@ public class EzEmailAdminController {
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userVO = commonUtil.userInfo(loginCookie);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
+			auth = userVO;
 		}
 
 		String deptID = auth.getDeptID();
@@ -300,6 +305,12 @@ public class EzEmailAdminController {
 		logger.debug("mailDomain=" + mailDomain + ", companyDomainList=" + companyDomainList);
 		
 		String distributionMail = "";
+		
+		String ownerId = "";
+		String ownerName = "";
+		String policy = "";
+		String explain = "";
+		String endDate = "";
 		if (!cn.equals("")) { // 편집일 경우
 			MailDistributionVO distributionVo = ezEmailService.getDistributionInfo(cn, tenantId);
 			
@@ -307,6 +318,19 @@ public class EzEmailAdminController {
 				distributionMail = distributionVo.getMail();
 				companyMailDomain = distributionMail.split("@")[1];
 			}		
+			
+			if (useUserDefinedDL.equalsIgnoreCase("YES") && !userDL.equals("")) {
+				MailDistributionVO userdistributionVo = ezEmailService.getUserDistributionInfo(cn, tenantId);
+				
+				ownerId = userdistributionVo.getOwnerId();
+				policy = userdistributionVo.getDisclosurePolicy();
+				explain = userdistributionVo.getExplaination();
+				endDate = userdistributionVo.getEndDate();
+				OrganUserVO ownerVo = ezOrganService.getUserInfo(ownerId, auth.getPrimary(), tenantId);
+				ownerName = ownerVo.getDisplayName();
+				logger.debug("ownerId=" + ownerId + ", ownerName=" + ownerName + ", policy=" + policy + ", explain=" + explain 
+						+ ", endDate=" + endDate);
+			}
 		}
 		logger.debug("distributionMail=" + distributionMail + ", companyMailDomain=" + companyMailDomain);
 		
@@ -322,6 +346,13 @@ public class EzEmailAdminController {
 		model.addAttribute("userDL", userDL);
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("userId", auth.getId());
+		model.addAttribute("userName", userVO.getDisplayName());
+		
+		model.addAttribute("ownerId", ownerId);
+		model.addAttribute("ownerName", ownerName);
+		model.addAttribute("policy", policy);
+		model.addAttribute("endDate", endDate);
+		model.addAttribute("explain", explain);
 		
 		String cChk = "0";
 		
@@ -348,8 +379,13 @@ public class EzEmailAdminController {
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userVO = commonUtil.userInfo(loginCookie);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
+			auth = userVO;
 		}
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
@@ -461,7 +497,7 @@ public class EzEmailAdminController {
 					}
 				}
 								
-				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID);
+				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID, ownerId, policy, explaination, endDate);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2949,48 +2985,4 @@ public class EzEmailAdminController {
 		return "admin/ezEmail/adminMailLeft";
 	}
 	
-	/**
-	 * 사용자 공용배포그룹 - 소유 공용배포그룹 리스트 출력
-	 */
-	@RequestMapping(value = "/admin/ezEmail/mailGetUserDistribution.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
-	@ResponseBody
-	public String mailGetUserDistribution(
-			@CookieValue("loginCookie") String loginCookie, Locale locale,
-			Model model, HttpServletRequest request) throws Exception {
-		logger.debug("mailGetUserDistribution started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		JSONObject returnJsonObj = new JSONObject();
-		JSONArray dlJsonArray = new JSONArray();
-		int dlListCnt = 0;
-		
-		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
-		String companyId = request.getParameter("companyId") == null ? userInfo.getCompanyID() : request.getParameter("companyId"); 
-		String userDLListType = request.getParameter("type") == null ? "owner" : request.getParameter("type");  // owner or include
-		
-		List<MailDistributionVO> dlList = new ArrayList<MailDistributionVO>();
-		try {
-			if (userDLListType.equals("owner")) {
-				dlList = ezEmailService.getUserOwnerDistributionList(companyId, userInfo.getTenantId(), userId);
-			} else {
-				dlList = ezEmailService.getDistributionList(companyId, userInfo.getTenantId());
-			}
-			
-			dlListCnt = dlList.size();
-			logger.debug("dlListCnt=" + dlListCnt);
-			
-			for (MailDistributionVO vo : dlList) {
-				dlJsonArray.add(vo.getJsonObj());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		returnJsonObj.put("count", dlListCnt);
-		returnJsonObj.put("list", dlJsonArray);
-		
-		logger.debug("mailGetUserDistribution ended.");
-		return returnJsonObj.toString();
-	}
 }

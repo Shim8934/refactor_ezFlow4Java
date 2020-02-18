@@ -145,4 +145,11 @@ public interface EzEmailService {
 	public int addDistributionList(String id, String name, List<String> memberList,List<Map<String, String>> distributionSubList, 
 			String companyId, int tenantID, String selectDomain, String ownerId, String policy, String explaination, String endDate) throws Exception;
 	public List<MailDistributionVO> getUserOwnerDistributionList(String companyId, int tenantId, String ownerId) throws Exception;
+	public List<MailDistributionVO> getUserIncludedDistributionList(String companyId, int tenantId, String userId) throws Exception;
+	public int secessionDistribution(int tenantId, String cn, String userId) throws Exception;
+	public MailDistributionVO getUserDistributionInfo(String cn, int tenantId) throws Exception;
+	public JSONArray getUserDistributionApplyList(String cn, int tenantId) throws Exception;
+	public int setUserDistributionApply(String cn, int tenantId, String userId, String type) throws Exception;
+	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId,
+			String ownerId, String policy, String explaination, String endDate) throws Exception;
 }
