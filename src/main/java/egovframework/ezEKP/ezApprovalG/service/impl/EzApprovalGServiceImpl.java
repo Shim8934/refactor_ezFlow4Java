@@ -25239,7 +25239,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doHabyuiHesongTypeS(map);
 				String aprType = aprTypeList.get(0).getAprType();
 				
-				if (aprType.equals(staATBuSeuSoonChaHyubJo)) {
+				if (aprType.equals(staATBuSeuSoonChaHyubJo) || aprType.equals(staATGamSaBu)) {
                     result = doBansong(pOrgDocID, docID, pDeptID,  staASWheSong, dirPath, pDeptID, pOrgCompanyID, lang, userInfo, curDocNum);//2011.03.28 개인병렬합의시 대리결재자가 반송시 대리결재자 정보 추가
 					if (result.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -25270,7 +25270,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				//같은 회사 일 때
 				//부서합의 회송일 경우 파생된 문서정보를 삭제하도록 재수정. 2019-03-15 홍대표
-				if (companyID.equals(pOrgCompanyID) && !aprType.equals(staATBuSeuSoonChaHyubJo) && !aprType.equals(staATBuSeuByungRyulHyubJo)) {
+				if (companyID.equals(pOrgCompanyID) && !aprType.equals(staATBuSeuSoonChaHyubJo) && !aprType.equals(staATBuSeuByungRyulHyubJo) && !aprType.equals(staATGamSaBu)) {
 
 					map.put("v_APRSTATE1", staASWheSong);
 					map.put("v_APRSTATE2", staASJinHang);
