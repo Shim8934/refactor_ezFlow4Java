@@ -1957,14 +1957,15 @@ function SetPropertyValue() {
 
 
 var ezchkpasswd_cross_dialogArguments = new Array();
-function chk_Passwd() {
+function chk_Passwd()
+{
     var parameter = pUserID;
-    var url = "/myoffice/ezApprovalG/ezchkPasswd_Cross.aspx";
+    var url = "/ezApprovalG/ezchkPasswd.do";
 
     ezchkpasswd_cross_dialogArguments[0] = parameter;
     ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, url);
+    DivPopUpShow(350, 225, url);
 }
 
 function btnSetTaskCode_onclick() {
