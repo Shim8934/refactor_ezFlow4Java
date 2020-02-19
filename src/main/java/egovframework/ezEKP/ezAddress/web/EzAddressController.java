@@ -424,6 +424,8 @@ public class EzAddressController{
 			useZipCodeSearch = "YES";
 		}
 		
+		String useAnyoneEdit = ezCommonService.getTenantConfig("UseAnyoneEdit", userInfo.getTenantId());
+		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
 		model.addAttribute("folderType", folderType);
@@ -440,6 +442,7 @@ public class EzAddressController{
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("compAdmin", compAdmin);
+		model.addAttribute("useAnyoneEdit", useAnyoneEdit);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
