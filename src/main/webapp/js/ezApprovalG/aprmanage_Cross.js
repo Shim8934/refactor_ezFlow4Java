@@ -1752,6 +1752,7 @@ var totalPage = "";
 function td_Create1(strtext) {
     document.getElementById("tblPageRayer").innerHTML = strtext;
 }
+
 function makePageSelPage() {
     var strtext;
     var PagingHTML = "";
@@ -1765,28 +1766,28 @@ function makePageSelPage() {
         
         if (approvalFlag == "G") { //2018-10-01 김보미 - G버전일때 추가.
         	if (SearchCond[3] != null && SearchCond[3] != "") {
-        		period = SearchCond[3] + strLang1028 + " " + SearchCond[4] + strLang1029 + " " + SearchCond[5] + strLang1030 + " ~ " + SearchCond[6] + strLang1028 + " " + SearchCond[7] + strLang1029 + " " + SearchCond[8] + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[3], SearchCond[4], SearchCond[5], SearchCond[6], SearchCond[7], SearchCond[8]);
         	} else if (SearchCond[9] != null && SearchCond[9] != "") {
-        		period = SearchCond[9] + strLang1028 + " " + SearchCond[10] + strLang1029 + " " + SearchCond[11] + strLang1030 + " ~ " + SearchCond[12] + strLang1028 + " " + SearchCond[13] + strLang1029 + " " + SearchCond[14] + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[9], SearchCond[10], SearchCond[11], SearchCond[12], SearchCond[13], SearchCond[14]);
         	} else if (SearchCond[25] != "" && SearchCond[25] != null) {
-        		period = SearchCond[25].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[25].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[25].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[26].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[26].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[26].substring(8, 10)) + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[25].substring(0, 4), parseInt(SearchCond[25].substring(5, 7)), parseInt(SearchCond[25].substring(8, 10)), SearchCond[26].substring(0, 4), parseInt(SearchCond[26].substring(5, 7)), parseInt(SearchCond[26].substring(8, 10)));
         	} else {
-        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        		period = getDatePeriod(userLang, (nowyear - 1), nowmonth, nowday, nowyear, nowmonth, nowday);
         	}
         } else {
         	if (SearchCond[5] != null && SearchCond[5] != "" ) {
         		//2018-09-27 배현상, 주간, 월간검색 시 날짜 표기오류 개선 
-        		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[5].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[5].substring(8,10)) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[6].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[6].substring(8, 10)) + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[5].substring(0, 4), parseInt(SearchCond[5].substring(5, 7)), parseInt(SearchCond[5].substring(8,10)), SearchCond[6].substring(0, 4), parseInt(SearchCond[6].substring(5, 7)), parseInt(SearchCond[6].substring(8, 10)));
         	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
-        		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[3].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[3].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[4].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[4].substring(8, 10)) + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[3].substring(0, 4), parseInt(SearchCond[3].substring(5, 7)), parseInt(SearchCond[3].substring(8,10)), SearchCond[4].substring(0, 4), parseInt(SearchCond[4].substring(5, 7)), parseInt(SearchCond[4].substring(8, 10)));
         	} else if (SearchCond[25] != "" && SearchCond[25] != null) {
-        		period = SearchCond[25].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[25].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[25].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[26].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[26].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[26].substring(8, 10)) + strLang1030;
+        		period = getDatePeriod(userLang, SearchCond[25].substring(0, 4), parseInt(SearchCond[25].substring(5, 7)), parseInt(SearchCond[25].substring(8,10)), SearchCond[26].substring(0, 4), parseInt(SearchCond[26].substring(5, 7)), parseInt(SearchCond[26].substring(8, 10)));
         	} else {
-        		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
+        		period = getDatePeriod(userLang, (nowyear - 1), nowmonth, nowday, nowyear, nowmonth, nowday);
         	}
         }
     } else {
-        period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
+    	period = getDatePeriod(userLang, document.getElementById("sel_year").value, 1, 1, document.getElementById("sel_year").value, 12, 31);
     }
     //document.getElementById("presentcell").innerHTML = " - " + localValue;
     document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
@@ -3019,4 +3020,61 @@ function checkIsDrafter() {
 	}
 	
 	return rtnVal;
+}
+
+function getEngMonth(month) {
+	var engMonthStr = "";
+	
+	switch(Number(month)) {
+		case 1 :
+			engMonthStr = "Jan";
+			break;
+		case 2 :
+			engMonthStr = "Feb";
+			break;
+		case 3 :
+			engMonthStr = "Mar";
+			break;
+		case 4 :
+			engMonthStr = "Apr";
+			break;
+		case 5 :
+			engMonthStr = "May";
+			break;
+		case 6 :
+			engMonthStr = "Jun";
+			break;
+		case 7 :
+			engMonthStr = "Jul";
+			break;
+		case 8 :
+			engMonthStr = "Aug";
+			break;
+		case 9 :
+			engMonthStr = "Sep";
+			break;
+		case 10 :
+			engMonthStr = "Oct";
+			break;
+		case 11 :
+			engMonthStr = "Nov";
+			break;
+		case 12 :
+			engMonthStr = "Dec";
+			break;
+	}
+	
+	return engMonthStr;
+}
+
+function getDatePeriod(userLang, startYear, startMonth, startDate, endYear, endMonth, endDate) {
+	return getDateStrByLang(userLang, startYear, startMonth, startDate) + " ~ " + getDateStrByLang(userLang, endYear, endMonth, endDate);
+}
+
+function getDateStrByLang(userLang, year, month, date) {
+	if (userLang == "2") {
+		return getEngMonth(month) + " " + date + ", " + year;
+	} else {
+		return year + strLang1028 + " " + month + strLang1029 + " " + date + strLang1030
+	}
 }

@@ -1,4 +1,4 @@
-﻿﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
+﻿var regex = /[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/g;
 var emailFlag=false;
 function MailToMe_Onclick() {
     var checked = document.getElementById('toMe').checked;
@@ -1306,6 +1306,10 @@ function removeAsciiCode(str) {
     return str.replace(/[\x00-\x1F\x7F]/g, '');				// remove non-printable Ascii code
 }
 
+function removeSpace(str) {
+    return str.replace(/ /g,'');
+}
+
 function GetMailTips() {
     NameCertify_onClick();
     var receivemail = "";
@@ -1703,8 +1707,11 @@ function CompleteEmailAddress(formName, validDIV, iType) {
 	    }
 	    
         if (mailName.indexOf("<") > -1 && mailName.indexOf(">") > 0) {
-            var reg_email = /^[<][-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{2,5}[>]$/;
             var preTag = mailName.indexOf("<");
+            var emailAddressPart = removeSpace(mailName.substring(preTag));
+            mailName = mailName.substring(0, preTag) + emailAddressPart;
+            
+            var reg_email = /^[<][-A-Za-z0-9_]+[-A-Za-z0-9_.]*[@]{1}[-A-Za-z0-9_]+[-A-Za-z0-9_.]*[.]{1}[A-Za-z]{2,5}[>]$/;
             var endTag = mailName.indexOf(">");
             var mailTagNM;
             var mailTagAddress;
@@ -1715,7 +1722,7 @@ function CompleteEmailAddress(formName, validDIV, iType) {
                 }
                 else {
                     mailTagNM = mailName.substring(preTag + 1, endTag);
-                    mailTagAddress = mailName.substring(preTag + 1, endTag);
+                    mailTagAddress = mailTagNM;
                 }
                 newElem = PrepareMailTag(iType, "email", mailTagNM, mailTagAddress, "");
                 var IsInsert = CheckMailReceiver(newElem);
@@ -1728,6 +1735,10 @@ function CompleteEmailAddress(formName, validDIV, iType) {
                 }
                 continue;
             }
+        }
+        
+        if (isEmailFormat(mailName) == true) {
+            mailName = removeSpace(mailName);
         }
         
 	    GetMailAddresses(mailName);

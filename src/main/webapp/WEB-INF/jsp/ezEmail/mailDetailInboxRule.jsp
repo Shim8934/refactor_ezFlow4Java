@@ -318,7 +318,7 @@
 		        	spanInnerHtml = "<span style='margin-bottom:10px; display:inline-block;'>";
 		        }
 		        else {
-		        	spanInnerHtml = "<br /><span><span onclick='deleteCell(this)' style='cursor:pointer;'><img src='/images/ImgIcon/delete.png' align='absmiddle'  height='16' style='margin-top:-3px;' hspace='2' />";
+		        	spanInnerHtml = "<br /><span><span onclick='deleteCell(this)' style='cursor:pointer;'><img src='/images/ImgIcon/delete.png' align='absmiddle'  height='16' style='margin-top:-3px;' hspace='2' /></span>";
 		        }
 		
 		        switch (obj.id) {

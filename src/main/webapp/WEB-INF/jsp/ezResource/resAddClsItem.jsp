@@ -515,7 +515,7 @@
             						<input type="radio" name="approve" id="approve0" value="0">
             						<spring:message code="ezResource.t157"/>
             						<input type="radio" name="approve" id="approve2" value="2">
-            						<spring:message code="ezSchedule.t404"/>
+            						<spring:message code="ezResource.kje01"/>
             					</td>
         					</tr>
         					<tr>
