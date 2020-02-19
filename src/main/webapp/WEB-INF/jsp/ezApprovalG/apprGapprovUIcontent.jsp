@@ -376,17 +376,28 @@
 	            }
 	        }
 	
-	        function GetDocTitle() {
-	            try {
-	                if (document.getElementById("frame_doctitle") == null) {
-	                    return getNodeText(document.getElementById("doctitle"));
-	                }
-	                else {
-	                    return getNodeText(document.getElementById("frame_doctitle"));
-	                }
-	            } catch (e)
-	            { return ""; }
-	        }
+           function GetDocTitle() {
+               try {
+               var docTitleElem;
+                   if (document.getElementById("frame_doctitle") == null) {
+                       docTitleElem = document.getElementById("doctitle");
+                   }
+                   else {
+                       docTitleElem = document.getElementById("frame_doctitle");
+               }
+
+               var encDocTitle = encodeURIComponent(docTitleElem.textContent);
+			   // 문서 발송시 오류때문에 제목에 줄바꿈문자 제거, 탭문자 공백문자처리
+               encDocTitle = encDocTitle.replace(new RegExp('%0A|%0D', 'gi'), '').replace(new RegExp('%09', 'gi'), '%20');
+
+               var decDocTitle = decodeURIComponent(encDocTitle);
+               docTitleElem.innerText = decDocTitle;
+
+               return decDocTitle;
+               
+               } catch (e)
+               { return ""; }
+           }
 	
 	        function Set_EditorInputBodyHTML(Content) {
 	            try {
