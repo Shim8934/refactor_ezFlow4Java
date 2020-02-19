@@ -91,10 +91,7 @@
 		    			var mailboxNameSpl = folderList[i].mailboxChangeName.split(".");	
 		    			var imgLength = "";
 		    			if (mailboxNameSpl.length > 1){
-		    				for (var yy = 0; yy < mailboxNameSpl.length-1; yy++) {
-// 		    					imgLength += '<span class="sub_iconLNB tree_blank" id="PostTreeView_img_6" name="PostTreeView_img_6"></span>';
-		    					imgLength += '<span >&nbsp;&nbsp;&nbsp;&nbsp;</span>';
-		    				}
+		    				imgLength += '<span class="folderdepth_' + mailboxNameSpl.length + '"> </span>';
 		    			}
 		    			var y = Number(mailboxNameSpl["length"])-1;
 		    			var mailbox = folderList[i].mailboxId;
@@ -111,20 +108,19 @@
 			    			
 			    		if (mailboxNameSpl["length"] > 1){
 				    		_html += "<td style='width:100%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" 
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');mailbox_exportUp();><spring:message code='ezEmail.kyj04' /></span></a>"
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');add_onclickUp();><spring:message code='ezEmail.t308' /></span></a>"
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');modify_onclickUp(); "
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');mailbox_exportUp();><spring:message code='ezEmail.kyj04' /></span></a>"
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');add_onclickUp();><spring:message code='ezEmail.t308' /></span></a>"
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');modify_onclickUp(); "
 				    				+ "folderIdSelect('"+ mailbox +"');><spring:message code='ezEmail.t149' /></span></a>"
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');delete_onclick();><spring:message code='ezEmail.pyy08' /></span></a>"
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');delete_mail_onclick();><spring:message code='ezEmail.pyy09' /></span></a>"
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');folder_ReadChange('R');><spring:message code='ezEmail.jyh01' /></span></a></td></tr>";
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');delete_onclick();><spring:message code='ezEmail.pyy08' /></span></a>"
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');delete_mail_onclick();><spring:message code='ezEmail.pyy09' /></span></a>"
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');folder_ReadChange('R');><spring:message code='ezEmail.jyh01' /></span></a></td></tr>";
 			    		} else {
 				    		_html += "<td style='width:100%; text-overflow:ellipsis; overflow:hidden;'>" 
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');mailbox_exportUp();><spring:message code='ezEmail.kyj04' /></span></a>"
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');add_onclickUp();><spring:message code='ezEmail.t308' /></span></a>"
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');delete_mail_onclick();><spring:message code='ezEmail.pyy09' /></span></a>"
-				    			+ "<a class='imgbtn' margin-right='3px;'><span onclick=folderIdSelect('"+mailbox+"');folder_ReadChange('R');><spring:message code='ezEmail.jyh01' /></span></a></td></tr>";
-			    			
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');mailbox_exportUp();><spring:message code='ezEmail.kyj04' /></span></a>"
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');add_onclickUp();><spring:message code='ezEmail.t308' /></span></a>"
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');delete_mail_onclick();><spring:message code='ezEmail.pyy09' /></span></a>"
+				    			+ "<a class='imgbtn imgbck mr3' style='margin-left:3px'><span style='text-align:center;' onclick=folderIdSelect('"+mailbox+"');folder_ReadChange('R');><spring:message code='ezEmail.jyh01' /></span></a></td></tr>";
 			    		}
 			    		allunReadCount += Number(folderList[i].notReadCount); 
 			    		allMailCount += Number(folderList[i].mailCount);   
@@ -135,7 +131,9 @@
 			    	_html +="<td style='white-space:nowrap; text-overflow:ellipsis; overflow:hidden;text-align:center;'>"
 			    		+ allunReadCount + "/" + allMailCount + "</td>";
 			    	_html +="<td style='white-space:nowrap; text-overflow:ellipsis; overflow:hidden;text-align:center;' colspan='2'>"
-			    		+ "<spring:message code='main.t00045' /><span class='mail_spaceText'>&nbsp;<span class='userPer' id='usePer'></span></span><span  id='myBar' class='mailBar'></span></td></tr>";
+			    		+ "<div class='graph_used'><dl><dt><spring:message code='main.t00045' /> </dt><dt><span class='color' id='used_cap'>97MB</span><span id='used_per'>(1.89%)</span></dt>"
+// 			    		+ "<spring:message code='main.t00045' /><span class='mail_spaceText'>&nbsp;<span class='userPer' id='usePer'></span>"
+			    		+ "<dd class='graph'><span class='bar' id='bar'></span></dd><dd class='graph_text' id='graph_text'></dd></div></td></tr>";
 			    		
 			    	document.getElementById("tbody").innerHTML = _html;
 				} catch (e) {
@@ -450,20 +448,22 @@
                  	   }
 
                  	   //뿌려주기
-                 	   $("#myBar").css({
+                 	   $("#bar").css({
                  	       "width" : percent + "%"
                  	   });                 	                   
                  	   //$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
-                 	   $("#usePer").text(percent+"% " + "(" + useVolume + " / " + totalVolume + ")");
+                 	   $("#used_cap").text(useVolume);
+                 	   $("#used_per").text("("+percent+"%)");
+                 	   $("#graph_text").text(totalVolume);
                  	   
                  	   //용량 체크(색깔로)
                  	   if (percent >= 80) {
-                 		  $("#myBar").addClass("danger");
+                 		  $("#bar").addClass("danger");
                  	   } else if (percent >= 70) {
-                 		  $("#myBar").addClass("warning");
+                 		  $("#bar").addClass("warning");
                  	   } else {
-							$("#myBar").removeClass();
-							$("#myBar").addClass("mailBar");
+							$("#bar").removeClass();
+							$("#bar").addClass("bar");
                  	   }               		   
                     }
                 });        	    
