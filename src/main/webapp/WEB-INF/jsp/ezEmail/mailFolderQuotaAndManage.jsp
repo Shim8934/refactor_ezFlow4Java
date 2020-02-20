@@ -174,7 +174,7 @@
 			function add_onclickUp(){
 				// 하위 편지함 5개까지 생성가능 top편지함의 하위편지함이 1레벨로 생각
                 if (folderDep > 5) {
-                   alert("<spring:messgae code='ezEmail.ksaMailBox01' />");
+                   alert("<spring:message code='ezEmail.ksaMailBox01' />");
                    return;
                 }
 				parent.parent.document.getElementsByName("right")[0].contentWindow.add_onclick(selectFolderName, selectFolderNameSpl);

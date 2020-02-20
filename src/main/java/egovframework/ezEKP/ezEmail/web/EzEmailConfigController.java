@@ -2181,7 +2181,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		logger.debug("folderQuotaAndManage ended.");
 		
-		return "ezEmail/folderQuotaAndManage";
+		return "ezEmail/mailFolderQuotaAndManage";
 	}
 	
 	/**
