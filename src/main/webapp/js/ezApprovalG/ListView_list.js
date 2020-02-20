@@ -447,7 +447,7 @@ function ListView() {
         objTr.id = _thisID + "_TH";
         
         //2020-02-18 천성준 - 결재문서리스트 의견표시여부
-        if (_thisID == "DocList" && approvalFlag == "S") {
+        if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
         	if (showOpinionImg) {
         		var objTd = document.createElement("TH");
             	objTd.id = _thisID + "_TH_OP";
@@ -660,7 +660,7 @@ function ListView() {
             }
             
             // 2020-02-18 천성준 - 결재문서리스트 의견표시여부
-            if (_thisID == "DocList" && approvalFlag == "S") {
+            if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
             	if (showOpinionImg) {
             		colCount++;
             	}
@@ -717,7 +717,7 @@ function ListView() {
 
                 objTr.setAttribute(strData, strValue);
                 
-                if (_thisID == "DocList" && approvalFlag == "S") {
+                if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
                 	if (showOpinionImg) {
                 		if (strData == "HASOPINIONYN" && strValue == "Y") {
                 			hasOpinionFlag = true;
@@ -728,7 +728,7 @@ function ListView() {
 
             oTbody.appendChild(objTr);
 
-            if (_thisID == "DocList" && approvalFlag == "S") {
+            if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
             	if (showOpinionImg) {
             		var objTd = document.createElement("TD");
                 	objTd.style.textAlign = "center";
