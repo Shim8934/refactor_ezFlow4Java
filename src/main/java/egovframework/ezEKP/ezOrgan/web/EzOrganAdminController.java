@@ -179,12 +179,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
 	    	ezCommonService.addSnMenuAuth(); //2019-07-29 유은정 - 메뉴 권한 설정 시, 정렬이 저장한 순서대로 나오도록 추가
 	    	ezCommonService.addSnThemeAndPortletAuth();
+	    	ezCommonService.addThemeAndPorteltAuthInit(); //2020-02-20 테마별, 포틀릿별 권한 추가
 	    	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
 	    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
 	    	ezCommonService.createJobMasterTable();
-	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
+	    	//ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
 	//    	ezCommonService.addPassAprLineFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
-	    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+	    	//ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
 	    	ezCommonService.createResourcePortlet(); // 2019-06-28 황윤호 -자원관리 포틀릿 테이블 추가
 	    	ezCommonService.insertSurveyTenantConfig(); // 2019-06-25 이석화 전자설문 리뉴얼 테넌트 컨피그 추가
 	    	ezCommonService.insertPortletInfo(); // 2019-07-02 자원, 웹폴더, 전자설문 포틀릿 데이터 확인 후 없으면 추가

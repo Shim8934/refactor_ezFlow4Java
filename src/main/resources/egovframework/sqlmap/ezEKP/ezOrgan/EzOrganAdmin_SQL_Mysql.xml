@@ -2857,7 +2857,7 @@
 	    		(#companyID#, #tenantID#, 16, 1, 1, 16),
 	    		(#companyID#, #tenantID#, 17, 1, 1, 17),
 	    		(#companyID#, #tenantID#, 18, 1, 1, 18),
-	    		(#companyID#, #tenantID#, 42, 1, 1, 19)
+	    		(#companyID#, #tenantID#, 19, 1, 1, 19)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I26" parameterClass="Map">
@@ -2885,7 +2885,7 @@
 	    		(16, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(17, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(18, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
-	    		(42, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+	    		(19, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I27" parameterClass="Map">
@@ -2948,9 +2948,9 @@
 	    		(18, 1, #companyID#, #tenantID#, '메모'),
 	    		(18, 2, #companyID#, #tenantID#, 'Memo'),
 	    		(18, 3, #companyID#, #tenantID#, 'メモ帳'),
-	    		(42, 1, #companyID#, #tenantID#, '전자설문'),
-	    		(42, 2, #companyID#, #tenantID#, 'Survey'),
-	    		(42, 3, #companyID#, #tenantID#, '電子アンケート')
+	    		(19, 1, #companyID#, #tenantID#, '전자설문'),
+	    		(19, 2, #companyID#, #tenantID#, 'Survey'),
+	    		(19, 3, #companyID#, #tenantID#, '電子アンケート')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I28" parameterClass="Map">
