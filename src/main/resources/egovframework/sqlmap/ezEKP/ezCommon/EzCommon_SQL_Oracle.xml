@@ -2051,4 +2051,92 @@
 			CONSTRAINT "PK_TBL_RS_FAVORITE" PRIMARY KEY ("RESID", "USERID", "TENANT_ID")
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkThemeAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			ROWNUM = 1
+	]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkPortletAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_PORTLET_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			ROWNUM = 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertThemeAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT ALL
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (1, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (2, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (3, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	    SELECT
+	    	*
+	    FROM DUAL
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertPortletAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT ALL
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (1, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (2, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (4, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (5, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (6, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (7, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (8, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (9, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (10, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (11, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (12, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (14, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (26, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (34, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (36, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (47, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (49, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	    SELECT
+	    	*
+	    FROM DUAL
+	]]>
+	</insert>
 </sqlMap>

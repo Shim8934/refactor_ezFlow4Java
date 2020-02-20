@@ -1788,4 +1788,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createRsFavoriteTable() {
 		ezCommonDAO.createRsFavoriteTable();
 	}
+
+	@Override
+	public void addThemeAndPorteltAuthInit() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertThemeAuthInit(map);
+				ezCommonDAO.insertPortletAuthInit(map);
+			}
+		}
+		
+	}
 }
