@@ -1706,9 +1706,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		wfMap.put("boardId", null);
 		ezCommonDAO.insertPortletInfo(wfMap);
 		
+		String surveyMenuId = checkSurveyMenu();
+		int surveyMenu = 0;
+		boolean isSurveyMenuNew = false;
+		
+		if (surveyMenuId == null) {
+			logger.debug("surveyMenu doesn't exist. add survey menu data...");
+			insertSurveyMenu();
+			surveyMenu = Integer.parseInt(checkSurveyMenu());
+			isSurveyMenuNew = true;
+		} else {
+			surveyMenu = Integer.parseInt(surveyMenuId);
+		}
+		
 		Map<String, Object> svMap = new HashMap<String, Object>();
 		svMap.put("portletId", portletIds[2]);
-		svMap.put("menuId", 19);
+		svMap.put("menuId", surveyMenu);
 		svMap.put("portletUrl", "/ezNewPortal/surveyPortlet.do");
 		svMap.put("portletType", "G");
 		svMap.put("defaultOrder", 20);
@@ -1729,10 +1742,28 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				
 				svMap.put("companyId", company.getCompanyId());
 				svMap.put("tenantId", company.getTenantId());
+				
+				if (isSurveyMenuNew) {
+					ezCommonDAO.insertSurveyMenuInfo(svMap);
+				}
+				
 				ezCommonDAO.insertSvPortletInfo(svMap); // 전자설문 포틀릿 유무 확인 후 insert
 				
 			}
 		}
+	}
+
+	private void insertSurveyMenu() {
+		logger.debug("insertSurveyMenu started");
+		ezCommonDAO.insertSurveyMenu();
+		logger.debug("insertSurveyMenu ended");
+	}
+
+	private String checkSurveyMenu() {
+		logger.debug("checkSurveyMenu started");
+		String surveyMenuId = ezCommonDAO.checkSurveyMenu();
+		logger.debug("[surveyMenuId]" + surveyMenuId);
+		return surveyMenuId;
 	}
 
 	public void createAccessCountry() throws Exception {

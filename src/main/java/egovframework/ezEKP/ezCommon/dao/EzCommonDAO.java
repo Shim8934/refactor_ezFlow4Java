@@ -1122,4 +1122,26 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public String checkPortletAuthInit(Map<String, Object> map) {
 		return (String) select("EzCommonDAO.checkPortletAuthInit", map);
 	}
+
+	public String checkSurveyMenu() {
+		return (String) select("EzCommonDAO.checkSurveyMenu");
+	}
+
+	public void insertSurveyMenu() {
+		try {
+			insert("EzCommonDAO.insertSurveyMenu");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void insertSurveyMenuInfo(Map<String, Object> map) {
+		try {
+			insert("EzCommonDAO.insertSurveyMenuComp", map);
+			insert("EzCommonDAO.insertSurveyMenuAuth", map);
+			insert("EzCommonDAO.insertSurveyMenuName", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
