@@ -8,10 +8,11 @@
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<title><spring:message code='ezEmail.userDL14'/></title>
+	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview_namespace.htc.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style>
@@ -53,13 +54,13 @@
   			<div style="border:1px solid #eaeaea; margin-top:20px;">
   				<div class="DL_title">
   					<div class="DL_title_sub">
-  						<span>공용배포그룹 이름</span>
-  						<span id="countInfo">&nbsp;&nbsp;<span class="countColor">3</span><spring:message code='main.t20000' /></span>
+  						<span data-id="${cn} ">${dlName}</span>
+  						<span id="countInfo">&nbsp;&nbsp;<span class="countColor">${memberListCnt}</span><spring:message code='main.t20000' /></span>
   					</div>
   					
   					<div class="DL_title_Btn" style="float:right;">
   						<c:choose>
-  							<c:when test="${join eq 'YES'}">
+  							<c:when test="${type eq 'include'}">
 		  						<a class="imgbtn"><span onclick="secessionUserDL()"><spring:message code='ezEmail.userDL09' /></span></a>						
   							</c:when>
   							<c:otherwise>
@@ -90,52 +91,37 @@
 		</div>
 	</body>
 	<script type="text/javascript">
-		var showItem = ["name", "email", "deptName", "joinDate"];
+		var dlCn = "${cn}";
+		var dlName = "${dlName}";
+		var dlCompanyId = "${dlCompanyId}";
+		var dlPolicy = "${dlPolicy}";
+		var memberList = "${memberListXML}";
+		var memberListCnt = "${memberListCnt}";
+		var ownerChk = ${ownerChk}; // boolean
 		
 		window.onload = window_onload;
 		
 		function window_onload() {
-			makeDlMemList();
-		}
-		
-		function getDLMemList() {
-			$.ajax({
-				type:"post",
-				url:"",
-				dataType:"json",
-				data:{},
-				success:function(data) {
-					makeDlMemList(data);
-					isScroll();
-				}
-			})
+			var parser = new DOMParser();
+			var xmlDoc = parser.parseFromString(memberList,"text/xml");
+			
+			makeDlMemList(xmlDoc);
 		}
 		
 		function makeDlMemList(data) {
-			var $DL_Tbody = $("<tbody></tbody>");
-			var $DLTable = $("#DL_Body");
-			if (data.length > 1) {
-				for (var i in data) {
-					var $TR_Temp = $("<tr></tr>");
-					
-					$.each(data[i], function(key, value){
-						$TR_Temp.attr("data-" + key, value);
-						
-						if (showItem.indexOf(key) > -1) {
-							var $TD_Temp = $("<td>" + value + "</td>");
-							$TR_Temp.append($TD_Temp);
-						}
-					});
-					
-					$DL_Tbody.append($TR_Temp);
-				}
-			} else {
-				var $TR_Temp = $("<tr id='noData'><td><spring:message code='ezEmail.userDL06' /></td></tr>");
-				$DL_Tbody.append($TR_Temp);
-			}				
+			$("#DL_Body").html("");
 			
-			$DLTable.html($DL_Tbody);
-			isScroll();
+			var listview = new ListView();
+            listview.SetID("DL_Body");
+            listview.SetRowOnClick("");
+            listview.SetEventSetFlag(false);
+            listview.SetSelectFlag(false);
+            listview.SetMulSelectable(false);
+            listview.SetAlignArr([1,1,1,1,1]);
+            listview.DataSource(data);
+            listview.RowDataBind();
+
+            isScroll();
 		}
 	
 		function isScroll(){
@@ -150,17 +136,23 @@
 		
 		// 탈퇴
 		function secessionUserDL() {
+			if (ownerChk) {
+				alert("<spring:message code='ezEmail.userDL33' />");
+				return;
+			}
+			
 			var ret = confirm("<spring:message code='ezEmail.userDL13' />");
         	if (ret) {
 				$.ajax({
 					type:"post",
-					url:"",
-					data:{},
+					url:"/ezEmail/secessionDistribution.do",
+					data:{cn:dlCn},
 					success:function(e) {
-						alert("<spring:message code='ezEmail.userDL08' />");
-						getDLList();
+						alert("<spring:message code='ezEmail.userDL26' />");
+						opener.getDLList();
+						window.close();
 					}, error:function(er) {
-						alert("<spring:message code='ezEmail.t53' />");
+						alert("<spring:message code='ezEmail.userDL27' /> ");
 					}
 				});
         	}

@@ -16,6 +16,7 @@ public class MailDistributionVO {
 	private String disclosurePolicy;
 	private String explaination;
 	private String endDate;
+	private String companyId;
 	
 	public String getName() {
 		return name;
@@ -65,10 +66,16 @@ public class MailDistributionVO {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
+	public String getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
 	
 	@Override
 	public String toString() {
-		return "MailDistributionVO [name=" + name + ", id=" + id + ", mail=" + mail + "]";
+		return "MailDistributionVO [name=" + name + ", id=" + id + ", mail=" + mail + ", companyId=" + companyId + "]";
 	}
 	
 	public JSONObject getJsonObj() {

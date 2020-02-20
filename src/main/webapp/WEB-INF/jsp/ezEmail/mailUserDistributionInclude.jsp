@@ -6,8 +6,12 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}" ></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview_namespace.htc.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <title><spring:message code='main.t57' /></title>
 	    <style>
@@ -73,7 +77,7 @@
 		
 		function window_onload() {
 			window_resize();
-			// getDLList();
+			getDLList();
 		}
 	    
 		function window_resize() {
@@ -88,86 +92,37 @@
 		function getDLList() {
 			$.ajax({
 				type:"post",
-				url:"",
-				dataType:"json",
-				data:{},
+				url:"/ezEmail/mailGetUserDistribution.do",
+				data:{userId:userId, companyId:companyId, type:"include"},
 				success:function(data) {
 					makeDlList(data);
-					isScroll();
 				}
 			})
 		}
 		
 		function makeDlList(data) {
-			var showItem = ["id", "name", "policy", "memo", "endDate"];
-			var $DL_Tbody = $("<tbody></tbody>");
-			var $DLTable = $("#DL_Body");
-			if (data.length > 1) {
-				for (var i in data) {
-					var $TR_Temp = $("<tr></tr>");
-					
-					$.each(data[i], function(key, value){
-						$TR_Temp.attr("data-" + key, value);
-						
-						if (showItem.indexOf(key) > -1) {
-							var $TD_Temp = $("<td>" + value + "</td>");
-							$TR_Temp.append($TD_Temp);
-						}
-					});
-					
-					$DL_Tbody.append($TR_Temp);
-				}
-			} else {
-				var $TR_Temp = $("<tr id='noData'><td><spring:message code='ezEmail.userDL06' /></td></tr>");
-				$DL_Tbody.append($TR_Temp);
-			}				
+			$("#DL_Body").html("");
 			
-			$DLTable.html($DL_Tbody);
-			DLListSetEvent();
+			var listview = new ListView();
+            listview.SetID("DL_Body");
+            listview.SetSelectFlag(false);
+            listview.SetMulSelectable(false);
+            listview.SetAlignArr([1,1,1,1,1]);
+            listview.SetRowOnDblClick("memberListPopUp");
+            listview.DataSource(data);
+            listview.RowDataBind();
+
 			isScroll();
 		}
 		
-		function DLListSetEvent() {
-			$("#DL_Body tr:not(#noData)").on({
-				click : function() { TR_MouseClick(this);},
-				dblclick : function() { TR_MouseDBClick(this);},
-				mouseover : function() { TR_MouserOver(this);},
-				mouseleave : function() { TR_MouserOut(this);}
-			});
-		}
-		
-		function TR_MouseClick(obj) {
-			$(obj).parent("tbody").find("tr").not(obj).removeClass("TRSelect");
-			$(obj).parent("tbody").find(obj).removeClass("TRHover");
-			$(obj).toggleClass("TRSelect");
-			/* 
-			다중선택
-			if ($(obj).hasClass("TRHover")){
-				$(obj).removeClass("TRHover");
-			}
-			$(obj).toggleClass("TRSelect"); */
-		}
-		
-		function TR_MouseDBClick(obj) {
-			$(obj).toggleClass("TRSelect");
-			memberListPopUp(obj);
-		}
+        function memberListPopUp() {
+        	var listview = new ListView();
+            listview.SetID("DL_Body");
+            selectNode = listview.GetSelectedRows()[0];
 
-		function TR_MouserOver(obj) {
-			if (!$(obj).hasClass("TRSelect")){
-				$(obj).addClass("TRHover");
-			}
-        }
-		
-        function TR_MouserOut(obj) {
-        	$(obj).removeClass("TRHover");
-        }
-        
-        function memberListPopUp(obj) {
-			var cn = $(obj).data("id");
-			var name = $(obj).data("name");
+            var cn = selectNode.getAttribute("data1");
 	        var popUrl = "/ezEmail/mailDistributionMemberListPop.do";
-			var param = "?companyId=" + companyId + "&cn=" + cn + "&name=" + encodeURIComponent(name);
+			var param = "?companyId=" + companyId + "&cn=" + cn + "&type=include";
 			var popSizeW = 750;
 			var popSizeH = 560;
 			var feature = "dialogHeight:" + popSizeH + "px; dialogWidth:" + popSizeW + "px; scroll:no;status:no; help:no; edge:sunken";
@@ -183,23 +138,41 @@
 	    }
 
 		function secessionUserDL() {
-			var trSelectLen = $(".TRSelect").length;
+			var listview = new ListView();
+            listview.SetID("DL_Body");
+			var trSelectLen = listview.GetSelectedRows();
+            selectNode = listview.GetSelectedRows()[0];
+            
 			if (trSelectLen < 1) {
 				alert("<spring:message code='ezEmail.t580' />");
 				return;
 			}
 			
+			var ownerChk = selectNode.getAttribute("data6");
+			if (ownerChk == "ownerChk_Y") {
+				alert("<spring:message code='ezEmail.userDL33' />");
+				return;
+			}
+			
 			var ret = confirm("<spring:message code='ezEmail.userDL13' />");
         	if (ret) {
+        		var cn = selectNode.getAttribute("data1");
+        		
 				$.ajax({
 					type:"post",
-					url:"",
-					data:{},
+					url:"/ezEmail/secessionDistribution.do",
+					data:{cn:cn},
 					success:function(e) {
-						alert("<spring:message code='ezEmail.userDL08' />");
-						getDLList();
+						try {
+							if (e != "OK") { throw new Error(e); }
+							alert("<spring:message code='ezEmail.userDL26' />");
+							getDLList();
+						} catch(ce) {
+							alert("<spring:message code='ezEmail.userDL27' /> " + ce);
+						}
+						
 					}, error:function(er) {
-						alert("<spring:message code='ezEmail.t53' />");
+						alert("<spring:message code='ezEmail.userDL27' /> ");
 					}
 				});
         	}

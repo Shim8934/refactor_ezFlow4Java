@@ -70,6 +70,7 @@ import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -2236,11 +2237,39 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		logger.debug("mailDistributionMemberListPop started.");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
-		model.addAttribute("userId", userInfo.getId());
-		model.addAttribute("companyId", userInfo.getCompanyID());
-		logger.debug("mailDistributionMemberListPop ended.");
+		int tenantId = userInfo.getTenantId();
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
+		String cn = request.getParameter("cn") == null ? "" : request.getParameter("cn");
+		String type = request.getParameter("type") == null ? "" : request.getParameter("type"); // include
+		logger.debug("cn=" + cn + ", type=" + type);
+		
+		MailDistributionVO dlVo = ezEmailService.getUserDistributionInfo(cn, tenantId);
+		String dlCn = dlVo.getId();
+		String dlName = dlVo.getName();
+		String dlComp = dlVo.getCompanyId();
+		String dlPolicy = dlVo.getDisclosurePolicy();
+		String dlOwnerId = dlVo.getOwnerId();
+		boolean ownerChk = dlOwnerId.equals(userInfo.getId()) ? true : false;
+		logger.debug("dlCn=" + dlCn + ", dlName=" + dlName + ", dlComp=" + dlComp + ", dlPolicy=" + dlPolicy + ", dlOwnerId=" + dlOwnerId + ", ownerChk=" + ownerChk);
+		
+		if (dlPolicy.equals("member")) {
+			int chk = ezEmailService.checkUserDistributionInCludedMember(tenantDomain, dlCn, userInfo.getId());
+			dlPolicy = chk == 0 ? "all" : dlPolicy;
+		}
+		 
+		Map<String, Object> memListInfo = createUserDistributionMemberListXML(dlCn, tenantDomain, dlComp, tenantId, userInfo.getPrimary(), dlPolicy, locale);
+		
+		model.addAttribute("cn", dlCn);
+		model.addAttribute("dlName", dlName);
+		model.addAttribute("dlCompanyId", dlComp);
+		model.addAttribute("dlPolicy", dlPolicy);
+		model.addAttribute("type", type);
+		model.addAttribute("ownerChk", ownerChk);
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("memberListXML", memListInfo.get("returnData"));
+		model.addAttribute("memberListCnt", memListInfo.get("returnMemCnt"));
+		logger.debug("mailDistributionMemberListPop ended.");
 		return "ezEmail/mailDistributionMemberListPopUp";
 	}
 	
@@ -2257,37 +2286,54 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		JSONObject returnJsonObj = new JSONObject();
-		JSONArray dlJsonArray = new JSONArray();
-		int dlListCnt = 0;
+		String returnData = "";
 		
 		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
 		String companyId = request.getParameter("companyId") == null ? userInfo.getCompanyID() : request.getParameter("companyId"); 
 		String userDLListType = request.getParameter("type") == null ? "owner" : request.getParameter("type");  // owner or include
+		logger.debug("userId=" + userId + ", companyId=" + companyId + ", userDlListType=" + userDLListType);
 		
-		List<MailDistributionVO> dlList = new ArrayList<MailDistributionVO>();
 		try {
+			List<MailDistributionVO> dlList = new ArrayList<MailDistributionVO>();
 			if (userDLListType.equals("owner")) {
 				dlList = ezEmailService.getUserOwnerDistributionList(companyId, userInfo.getTenantId(), userId);
 			} else {
 				dlList = ezEmailService.getUserIncludedDistributionList(companyId, userInfo.getTenantId(), userId);
 			}
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+			if (dlList != null && dlList.size() > 0) {
+				for (MailDistributionVO dlVo : dlList) {
+					String ownerChk = dlVo.getOwnerId().equals(userId) ? "ownerChk_Y" : "ownerChk_N";
+					
+					sb.append("<ROW>");
+					sb.append("<CELL>");
+						sb.append("<VALUE>" + dlVo.getId() + "</VALUE>");
+						sb.append("<DATA1>" + dlVo.getId() + "</DATA1>");
+						sb.append("<DATA2>" + dlVo.getName() + "</DATA2>");
+						sb.append("<DATA3>" + dlVo.getDisclosurePolicy() + "</DATA3>");
+						sb.append("<DATA4>" + dlVo.getExplaination() + "</DATA4>");
+						sb.append("<DATA5>" + dlVo.getEndDate() + "</DATA5>");
+						sb.append("<DATA6>" + ownerChk + "</DATA6>");
+					sb.append("</CELL>");
+					sb.append("<CELL><VALUE>" + dlVo.getName() + "</VALUE></CELL>");
+					sb.append("<CELL><VALUE>" + dlVo.getDisclosurePolicy() + "</VALUE></CELL>");
+					sb.append("<CELL><VALUE>" + dlVo.getExplaination() + "</VALUE></CELL>");
+					sb.append("<CELL><VALUE>" + dlVo.getEndDate() + "</VALUE></CELL>");
+					sb.append("</ROW>");
+				}
+			} 
+			sb.append("</ROWS></LISTVIEWDATA>");
+			returnData = sb.toString();
 			
-			dlListCnt = dlList.size();
-			logger.debug("dlListCnt=" + dlListCnt);
-			
-			for (MailDistributionVO vo : dlList) {
-				dlJsonArray.add(vo.getJsonObj());
-			}
 		} catch (Exception e) {
+			returnData = "ERROR";
 			e.printStackTrace();
 		}
 		
-		returnJsonObj.put("count", dlListCnt);
-		returnJsonObj.put("list", dlJsonArray);
-		
 		logger.debug("mailGetUserDistribution ended.");
-		return returnJsonObj.toString();
+		return returnData;
 	}
 	
 	/**
@@ -2433,7 +2479,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String returnStr = "EMPTY";
+		String returnStr = "OK";
 		int reasonCode = 0;
 		
 		String userId = request.getParameter("userId") == null ? userInfo.getId() : request.getParameter("userId");
@@ -2454,6 +2500,103 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		logger.debug("secessionDistribution ended.");
 		return returnStr;
+	}
+	
+	private Map<String, Object> createUserDistributionMemberListXML(String cn, String domain, String companyId, int tenantId, String primaryLang, String policy, Locale locale) throws Exception {
+		logger.debug("cn=" + cn + ", domain=" + domain + ", companyId=" + companyId + ", tenantId=" + tenantId
+				+ ", primaryLang=" + primaryLang + ", policy=" + policy);
+		
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		int returnMemCnt = 0;
+		String returnData = "";
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<LISTVIEWDATA><ROWS>");
+		
+		// all, member, private
+		if (!policy.equals("all")) {
+			String msg = policy.equals("private") ? "ezEmail.userDL31" : "ezEmail.userDL32";
+			
+			sb.append("<ROW>");
+			sb.append("<CELL>");
+				sb.append("<VALUE>" + egovMessageSource.getMessage(msg, locale) + "</VALUE>");
+			sb.append("</CELL>");
+			sb.append("</ROW>");
+		} else { // all
+			JSONArray resultArray = ezEmailService.getUserDistributionMemberList(domain, cn);
+			returnMemCnt = resultArray.size();
+			
+			for (int i = 0; i < returnMemCnt; i++) {
+				JSONObject address = (JSONObject) resultArray.get(i);
+				String pCn = (String) address.get("cn");
+				String pCnDomain = pCn.substring(pCn.indexOf("@") + 1, pCn.length());
+				String pClass = (String) address.get("class");
+				String displayName = (String) address.get("displayName");
+				String regDate = (String) address.get("regDate");
+				
+				if (domain.equals(pCnDomain)) {
+					pCn = pCn.substring(0, pCn.indexOf("@"));
+				} else {
+					pClass = "distributionSub";
+				}
+				logger.debug("pCn=" + pCn + ", pClass=" + pClass + ", displayName=" + displayName + ", regDate=" + regDate);
+				
+				String dlName = displayName;
+				String dlCn = pCn;
+				String dlMail = pCn;
+				String dlPClass = pClass;
+				String dlDeptName = "";
+				
+				if (pClass.equals("group")) {
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, primaryLang, tenantId);
+					
+					if (dept != null) { // 부서
+						dlCn = dept.getCn();
+						dlMail = dept.getMail();
+						dlDeptName = "";
+					} else { // 공용배포그룹
+						dlMail = cn;
+						dlPClass = "distribution";
+					}
+				} else if (pClass.equals("user")) {
+					OrganUserVO user = ezOrganService.getUserInfo(pCn, primaryLang, tenantId);
+					
+					if (user != null) {
+						dlName = user.getDisplayName();
+						dlMail = user.getMail();
+						dlDeptName = user.getDepartment();
+					} 
+				} else {//distribution_sub에서 가져오기(주소록, 직접입력)
+					MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(cn, pCn, companyId, tenantId);
+					
+					if (distributionSubVO != null) {
+						dlName = distributionSubVO.getName();
+						dlMail = distributionSubVO.getMail();
+					} 
+				}
+				
+				sb.append("<ROW>");
+				sb.append("<CELL>");
+					sb.append("<VALUE>" + dlName + "</VALUE>");
+					sb.append("<DATA1>" + dlCn + "</DATA1>");
+					sb.append("<DATA2>" + dlMail + "</DATA2>");
+					sb.append("<DATA3>" + dlPClass + "</DATA3>");
+				sb.append("</CELL>");
+				sb.append("<CELL><VALUE>" + dlMail + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + dlDeptName + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + regDate + "</VALUE></CELL>");
+				sb.append("</ROW>");
+			}
+		}
+
+		sb.append("</ROWS></LISTVIEWDATA>");
+		returnData = sb.toString();
+
+		returnMap.put("returnData", returnData);
+		returnMap.put("returnMemCnt", returnMemCnt);
+		
+		logger.debug("returnData=" + returnData);
+		return returnMap;
 	}
 	
 }

@@ -152,4 +152,6 @@ public interface EzEmailService {
 	public int setUserDistributionApply(String cn, int tenantId, String userId, String type) throws Exception;
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId,
 			String ownerId, String policy, String explaination, String endDate) throws Exception;
+	public JSONArray getUserDistributionMemberList(String domain, String cn) throws Exception;
+	public int checkUserDistributionInCludedMember(String domain, String cn, String userId) throws Exception;
 }

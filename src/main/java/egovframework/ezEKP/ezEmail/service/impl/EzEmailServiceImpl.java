@@ -3949,6 +3949,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 				vo.setDisclosurePolicy((String)resultObj.get("policy"));
 				vo.setExplaination((String)resultObj.get("explaination"));
 				vo.setEndDate((String)resultObj.get("endDate"));
+				vo.setMail((String)resultObj.get("mail"));
+				vo.setCompanyId((String)resultObj.get("companyId"));
+				vo.setName((String)resultObj.get("groupName"));
 			}
 		}		
 		
@@ -4027,5 +4030,64 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getUserDistributionApplyList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		return reasonCode;
 	}
+	
+	@Override
+	public JSONArray getUserDistributionMemberList(String domain, String cn) throws Exception {
+		logger.debug("getUserDistributionMemberList started.");
+		logger.debug("domain=" + domain + ", cn=" + cn);
+		
+		String resultCode = "";
+		JSONArray resultArray = null;
+		
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + URLEncoder.encode(domain, "UTF-8") + "&type=userDL";
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistribution";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			resultCode = (String) responseObj.get("resultCode");
+	
+			if (resultCode.equalsIgnoreCase("OK") && ((Long)responseObj.get("reasonCode")).intValue() == 0) {
+				resultArray = (JSONArray)responseObj.get("result");
+			}
+		}
+		
+		logger.debug("getUserDistributionMemberList ended. resultCode=" + resultCode);
+		return resultArray;
+	}
+	
+	@Override
+	public int checkUserDistributionInCludedMember(String domain, String cn, String userId) throws Exception {
+		logger.debug("checkUserDistributionInCludedMember started.");
+		logger.debug("domain=" + domain + ", cn=" + cn + ", userId=" + userId);
+		
+		String resultCode = "";
+		int reasonCode = -1;
+		
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + URLEncoder.encode(domain, "UTF-8")
+				 + "&userId=" + URLEncoder.encode(userId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/checkUserDistributionInCludedMember";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			resultCode = (String) responseObj.get("resultCode");
+			reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+		}
+		
+		logger.debug("checkUserDistributionInCludedMember ended. resultCode=" + resultCode + ", reasonCode=" + reasonCode);
+		return reasonCode;
+	}
+	
 	
 }

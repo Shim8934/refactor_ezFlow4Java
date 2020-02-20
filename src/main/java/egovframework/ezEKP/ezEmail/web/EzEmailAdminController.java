@@ -312,25 +312,26 @@ public class EzEmailAdminController {
 		String explain = "";
 		String endDate = "";
 		if (!cn.equals("")) { // 편집일 경우
-			MailDistributionVO distributionVo = ezEmailService.getDistributionInfo(cn, tenantId);
+			MailDistributionVO distributionVo = null;
+			if (useUserDefinedDL.equalsIgnoreCase("YES") && !userDL.equals("")) {
+				distributionVo = ezEmailService.getUserDistributionInfo(cn, tenantId);
+				
+				ownerId = distributionVo.getOwnerId();
+				policy = distributionVo.getDisclosurePolicy();
+				explain = distributionVo.getExplaination();
+				endDate = distributionVo.getEndDate();
+				OrganUserVO ownerVo = ezOrganService.getUserInfo(ownerId, auth.getPrimary(), tenantId);
+				ownerName = ownerVo.getDisplayName();
+				logger.debug("ownerId=" + ownerId + ", ownerName=" + ownerName + ", policy=" + policy + ", explain=" + explain 
+						+ ", endDate=" + endDate);
+			} else {
+				distributionVo = ezEmailService.getDistributionInfo(cn, tenantId);
+			}
 			
 			if (distributionVo != null) {	
 				distributionMail = distributionVo.getMail();
 				companyMailDomain = distributionMail.split("@")[1];
 			}		
-			
-			if (useUserDefinedDL.equalsIgnoreCase("YES") && !userDL.equals("")) {
-				MailDistributionVO userdistributionVo = ezEmailService.getUserDistributionInfo(cn, tenantId);
-				
-				ownerId = userdistributionVo.getOwnerId();
-				policy = userdistributionVo.getDisclosurePolicy();
-				explain = userdistributionVo.getExplaination();
-				endDate = userdistributionVo.getEndDate();
-				OrganUserVO ownerVo = ezOrganService.getUserInfo(ownerId, auth.getPrimary(), tenantId);
-				ownerName = ownerVo.getDisplayName();
-				logger.debug("ownerId=" + ownerId + ", ownerName=" + ownerName + ", policy=" + policy + ", explain=" + explain 
-						+ ", endDate=" + endDate);
-			}
 		}
 		logger.debug("distributionMail=" + distributionMail + ", companyMailDomain=" + companyMailDomain);
 		
@@ -696,8 +697,13 @@ public class EzEmailAdminController {
 
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		LoginVO userVO = commonUtil.userInfo(loginCookie);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userVO.getTenantId());
 		if (auth == null) {
-			return "cmm/error/adminDenied";
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
+			auth = userVO;
 		}
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
