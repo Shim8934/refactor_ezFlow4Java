@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<!-- <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}"> -->
 		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-4.7.0/css/font-awesome.min.css')}" type="text/css"/>
 		<style> 
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 			.pagetd{padding-top:6px; }
