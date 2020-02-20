@@ -27,6 +27,7 @@
 			var useEncryptZipForEmail = "${useEncryptZipForEmail}";
 			var host = defineHost(protocol) + window.location.host + '/websocket/${userId}';
 			var userId = '${userId}';
+			var folderDep = "";
 			
 			function defineHost(protocol){
 	    		var host = "";
@@ -98,7 +99,7 @@
 		    			var folderName = folderList[i].mailboxName;
 		    			imgLength += mailboxNameSpl[y];
 			    		_html += "<tr id='mailBoxId_" + folderList[i].mailboxId + "' data-id='" + mailbox
-			    			+ "' data-caption='" + mailboxNameSpl[y] + "' data-realFolderName='"+folderName+"' data-folderMailCnt='"+folderList[i].countmailuid+"'> ";
+			    			+ "' data-caption='" + mailboxNameSpl[y] + "' data-realFolderName='"+folderName+"' data-folderMailCnt='"+folderList[i].mailCount+"' data-folderDep='" + mailboxNameSpl.length + "'> ";
 			    		_html += "<td style='width:100%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" 
 			    			+ imgLength + "</td>";
 			    		_html += "<td style='width:100%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;text-align:center;'>" 
@@ -153,15 +154,29 @@
 				var ele = document.getElementById(splFolder);
 				selectFolderNameSpl = ele.getAttribute('data-caption');
 				selectFolderName = ele.getAttribute('data-realFolderName');
+				folderDep = ele.getAttribute('data-folderDep');
 			}
 			
 			function mailbox_exportUp(){
 				var splFolder = "mailBoxId_" + selectFolderId;
 				var ele = document.getElementById(splFolder);
 				var folderMailCnt = ele.getAttribute('data-folderMailCnt');
+				if (folderMailCnt === null || typeof folderMailCnt === "undefined") {
+					// 이 경우가 나오면 안되요.
+					console.log('folderTotalCount is null or undefined');
+					return;
+				} else if (folderMailCnt < 1) {
+					alert("<spring:message code='ezEmail.kyj13' />");
+					return;
+				}
 				parent.parent.document.getElementsByName("right")[0].contentWindow.mailbox_export(selectFolderName, selectFolderNameSpl, folderMailCnt);
 			}
 			function add_onclickUp(){
+				// 하위 편지함 5개까지 생성가능 top편지함의 하위편지함이 1레벨로 생각
+                if (folderDep > 5) {
+                   alert("<spring:messgae code='ezEmail.ksaMailBox01' />");
+                   return;
+                }
 				parent.parent.document.getElementsByName("right")[0].contentWindow.add_onclick(selectFolderName, selectFolderNameSpl);
 			}
 			function modify_onclickUp(){
