@@ -322,7 +322,7 @@
 		  	</tr>
 		  	<tr>
 	            <td colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;">
-	            	<div id="SIGNVIEW" style="width:405px;height:165px;overflow:auto;"></div>
+	            	<div id="SIGNVIEW" style="width:405px;height:195px;overflow:auto;"></div>
 	            </td>
 	        </tr>
 		</table>
