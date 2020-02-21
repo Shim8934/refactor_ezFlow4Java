@@ -204,7 +204,12 @@
 				    	dataType : "text",
 				    	url : "/ezOrgan/getSearchList.do",
 				    	async : false,
-				    	data : {search : "displayname::"+ strSearch + ";;extensionAttribute1::i=1" + ";;extensionAttribute1::i=1" , cell : "displayname;title;description;telephonenumber", prop : "Department;extensionAttribute4", type : "user"},
+				    	data : {
+							search : "displayname::"+ strSearch + ";;extensionAttribute1::i=1" + ";;extensionAttribute1::i=1", 
+							cell : "displayname;title;description;telephonenumber", 
+							prop : "Department;extensionAttribute4;displayname;title;description",
+							type : "user"
+						},
 				    	success : function(result){	
 				    		event_displayUserList(loadXMLString(result));
 				    	},
