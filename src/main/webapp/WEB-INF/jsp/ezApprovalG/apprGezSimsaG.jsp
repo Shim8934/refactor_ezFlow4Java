@@ -532,12 +532,12 @@
 		            var ResultXML = result;
 		            if (getNodeText(GetChildNodes(ResultXML)[0]) == "TRUE") {
 		            	var fields = message.GetFieldsList();
-				        var field = message.GetListItem(fields, "doctitle");
-				        
+		            	var field = message.GetListItem(fields, "doctitle");
+
 		            	if (field) {
 		            		docTitle = field.textContent;
 		            	}
-				        
+		            	
 		                //여기다 발송의뢰반송 메일알람 추가
 		                SendSimsaBansong(docTitle);
 		            	var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
