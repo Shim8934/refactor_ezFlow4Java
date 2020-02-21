@@ -1961,4 +1961,120 @@
 			D.DEPTID = #deptID#
 	]]>
 	</select>
+	
+	<select id="EzCommonDAO.checkThemeAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		LIMIT 1
+	]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkPortletAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_PORTLET_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertThemeAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_THEME_AUTH
+			(theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn) 
+		VALUES
+			(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+			(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+			(3, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertPortletAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_PORTLET_AUTH
+			(portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn) 
+		VALUES 
+    		(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(5, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(6, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(7, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(8, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(9, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(10, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(11, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(12, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(14, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(26, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(34, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(36, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(47, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(49, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.checkSurveyMenu" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			menu_id
+		FROM
+			tbl_portal_menu
+		WHERE
+			menucode = 'survey'
+		AND
+			menu_type = 'G'
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertSurveyMenu" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU 
+			(menu_url, menu_type, icon_url, default_order, menucode)
+		VALUES
+			('/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 19, 'survey')
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuComp" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_COMP 
+			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+		VALUES
+			(#companyId#, #tenantId#, #menuId#, 1, 1, 19)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuAuth" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_AUTH
+			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn)
+		VALUES
+			(#menuId#, #companyId#, #tenantId#, #companyId#, 1, 0, 19)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuName" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_NAME 
+			(menu_id, menu_lang, company_id, tenant_id, menu_name)
+		VALUES
+	    	(#menuId#, 1, #companyID#, #tenantID#, '전자설문'),
+	    	(#menuId#, 2, #companyID#, #tenantID#, 'Survey'),
+	    	(#menuId#, 3, #companyID#, #tenantID#, '電子アンケート')
+	]]>
+	</insert>
 </sqlMap>

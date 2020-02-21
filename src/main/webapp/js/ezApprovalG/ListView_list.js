@@ -1,12 +1,4 @@
-﻿﻿﻿/*###########################################################################################
-
-
-
-###########################################################################################*/
-
-
-//###########################################################################################
-// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
+﻿// 컨트롤, 쉬프트 키를 사용하도록 하기 위한 편법 시작
 
 //컨트롤키나 쉬프트 키가 눌려졌음을 체크하는 FLAG
 var PressCtrlKey = false;
@@ -19,6 +11,9 @@ var m_strColorDefault = "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
 var m_SecurityColor = "#999999";
+
+// 2020-02-18 천성준 - 결재문서리스트 의견표시여부
+var showOpinionImg = true;
 
 function add_key_event() {
     remove_key_event();
@@ -450,7 +445,26 @@ function ListView() {
     function GetTableHeaderObj() {
         var objTr = document.createElement("TR");
         objTr.id = _thisID + "_TH";
-
+        
+        //2020-02-18 천성준 - 결재문서리스트 의견표시여부
+        if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
+        	if (showOpinionImg) {
+        		var objTd = document.createElement("TH");
+            	objTd.id = _thisID + "_TH_OP";
+            	objTd.className = "h5_center";
+            	objTd.style.textAlign = "center";
+            	objTd.width = "15px";
+            	
+            	var oI = document.createElement("i");
+            	oI.className = "fa fa-comments-o";
+            	oI.style.fontSize = "17px";
+            	oI.title = strLang171;
+            	
+            	objTd.appendChild(oI);
+            	objTr.appendChild(objTd);
+        	}
+        }
+        
         var oHeaders = _dataSource.getElementsByTagName("HEADER");
         for (var i = 0; i < oHeaders.length; i++) {
     		var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
@@ -645,6 +659,13 @@ function ListView() {
             	colCount = 5;
             }
             
+            // 2020-02-18 천성준 - 결재문서리스트 의견표시여부
+            if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
+            	if (showOpinionImg) {
+            		colCount++;
+            	}
+            }
+            
             objTd.setAttribute("colSpan", colCount);
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
@@ -684,6 +705,8 @@ function ListView() {
                 objTr.style.backgroundColor = m_strColorDefault;
             }
 
+            var hasOpinionFlag = false;
+            
             //DATA1, DATA2, DATA3... 등의 값 세팅
             var oDatas = GetDataElements(oCells[0]);
             for (var j = 0; j < oDatas.length; j++) {
@@ -693,10 +716,35 @@ function ListView() {
                     strValue = oDatas[j].firstChild.nodeValue;
 
                 objTr.setAttribute(strData, strValue);
+                
+                if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
+                	if (showOpinionImg) {
+                		if (strData == "HASOPINIONYN" && strValue == "Y") {
+                			hasOpinionFlag = true;
+                		}
+                	}
+                }
             }
 
             oTbody.appendChild(objTr);
 
+            if (_thisID == "DocList" && typeof(approvalFlag) != "undefined" && approvalFlag == "S") {
+            	if (showOpinionImg) {
+            		var objTd = document.createElement("TD");
+                	objTd.style.textAlign = "center";
+                	objTd.width = "15px";
+                	
+            		if (hasOpinionFlag) {
+            			var oI = document.createElement("i");
+                    	oI.className = "fa fa-comments-o";
+                    	oI.style.fontSize = "17px";
+                    	
+                    	objTd.appendChild(oI);
+            		}
+            		objTr.appendChild(objTd);
+            	}
+            }
+            
             for (var j = 0; j < oCells.length; j++) {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");

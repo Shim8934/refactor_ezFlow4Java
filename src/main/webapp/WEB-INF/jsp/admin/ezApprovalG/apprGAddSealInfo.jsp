@@ -255,15 +255,15 @@
 	  		<tr> 
 	    		<th><spring:message code = 'ezApprovalG.t1262' /></th>
 	    		<td id="SealName"> 
-	    			<input type="text" id="tbSealName" name="tbSealName" style="width:140px">
+	    			<input type="text" id="tbSealName" name="tbSealName" style="width:100%;">
 	    		</td>
 	    	</tr>
 	    	<tr>
 				<th><spring:message code = 'ezApprovalG.t00010' /></th>
 				<td style="vertical-align:middle;">
 					<input type="text" readonly id="filename" style="width:180px;">
-	        		<a class="imgbtn"><label for="file1"><span><spring:message code = 'ezApprovalG.t1251' /></span></label></a>
-	        		<a class="imgbtn" ><span onClick="btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
+	        		<a class="imgbtn imgbck"><label for="file1"><span><spring:message code = 'ezApprovalG.t1251' /></span></label></a>
+	        		<a class="imgbtn imgbck" ><span onClick="btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
 	    		</td>
 	  		</tr>
 	  		<tr> 
