@@ -2978,7 +2978,7 @@
 	    		(#companyID#, #tenantID#, 49, 0, 1, 18, null),
 	    		(#companyID#, #tenantID#, 51, 6, 1, 21, null),
 	    		(#companyID#, #tenantID#, 70, 10, 1, 22, null),
-	    		(#companyID#, #tenantID#, 73, 42, 1, 20, null)
+	    		(#companyID#, #tenantID#, 73, 19, 1, 20, null)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I29" parameterClass="Map">
@@ -3044,9 +3044,9 @@
 	    		(70, 10, 1, #tenantID#, #companyID#, '개인폴더'),
 	    		(70, 10, 2, #tenantID#, #companyID#, 'Personal Folder'),
 	    		(70, 10, 3, #tenantID#, #companyID#, 'Webフォルダ'),
-	    		(73, 42, 1, #tenantID#, #companyID#, '전자설문'),
-	    		(73, 42, 2, #tenantID#, #companyID#, 'Survey'),
-	    		(73, 42, 3, #tenantID#, #companyID#, '電子アンケート')
+	    		(73, 19, 1, #tenantID#, #companyID#, '전자설문'),
+	    		(73, 19, 2, #tenantID#, #companyID#, 'Survey'),
+	    		(73, 19, 3, #tenantID#, #companyID#, '電子アンケート')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I30" parameterClass="Map">
@@ -3075,7 +3075,7 @@
 	    		(1, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
 	    		(1, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
 	    		(1, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
-	    		(1, #tenantID#, #companyID#, 73, 1, 20, 42, 0),
+	    		(1, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
 	    		(2, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(2, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(2, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
@@ -3094,7 +3094,7 @@
 	    		(2, #tenantID#, #companyID#, 47, 1, 16, 4, 0),
 	    		(2, #tenantID#, #companyID#, 48, 1, 17, 4, 0),
 	    		(2, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
-	    		(2, #tenantID#, #companyID#, 73, 1, 20, 42, 0),
+	    		(2, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
 	    		(2, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
 	    		(2, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
 	    		(3, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
@@ -3117,7 +3117,7 @@
 	    		(3, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
 	    		(3, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
 	    		(3, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
-	    		(3, #tenantID#, #companyID#, 73, 1, 20, 42, 0)
+	    		(3, #tenantID#, #companyID#, 73, 1, 20, 19, 0)
   		]]>
     </insert>
     
