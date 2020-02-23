@@ -60,11 +60,11 @@
   					
   					<div class="DL_title_Btn" style="float:right;">
   						<c:choose>
-  							<c:when test="${type eq 'include'}">
+  							<c:when test="${inCludedChk eq 0}">
 		  						<a class="imgbtn"><span onclick="secessionUserDL()"><spring:message code='ezEmail.userDL09' /></span></a>						
   							</c:when>
   							<c:otherwise>
-  								<a class="imgbtn"><span onclick="joinUserDL()"><spring:message code='ezEmail.userDL10' /></span></a>
+								<a class="imgbtn"><span onclick="joinUserDL()" id="applyBtn"></span></a>
   							</c:otherwise>
   						</c:choose>
   					</div>
@@ -98,6 +98,8 @@
 		var memberList = "${memberListXML}";
 		var memberListCnt = "${memberListCnt}";
 		var ownerChk = ${ownerChk}; // boolean
+		var inCludedChk = ${inCludedChk}; // 0 or -1
+		var appliedChk = ${appliedChk}; // 0 or -1
 		
 		window.onload = window_onload;
 		
@@ -105,6 +107,9 @@
 			var parser = new DOMParser();
 			var xmlDoc = parser.parseFromString(memberList,"text/xml");
 			
+			if (inCludedChk != 0) {
+				setJoin_Btn(appliedChk);
+			}
 			makeDlMemList(xmlDoc);
 		}
 		
@@ -160,21 +165,36 @@
 		
 		// 가입
 		function joinUserDL() {
+			var type = appliedChk == 0 ? "del" : "add";
 			$.ajax({
 				type:"post",
-				url:"",
-				data:{},
+				url:"/ezEmail/mailUserDistributionApply.do",
+				data:{
+					cn:dlCn,
+					type:type
+					},
 				success:function(e) {
-					alert("<spring:message code='ezEmail.userDL19' />");
-					joinCheck();
+					if (e == "ADD") {
+						appliedChk = 0;
+						alert("<spring:message code='ezEmail.userDL19' />");
+					} else {
+						appliedChk = -1;
+						alert("<spring:message code='ezEmail.userDL35' />");
+					}
+
+					setJoin_Btn(appliedChk);
 				}, error:function(er) {
 					alert("error");
 				}
 			});
        	}
 		
-		function joinCheck() {
-			
+		function setJoin_Btn() {
+			if (appliedChk == 0) {
+				$("#applyBtn").text("<spring:message code='ezEmail.userDL34' />");
+			} else {
+				$("#applyBtn").text("<spring:message code='ezEmail.userDL10' />");
+			}
 		}
 		
 	</script>

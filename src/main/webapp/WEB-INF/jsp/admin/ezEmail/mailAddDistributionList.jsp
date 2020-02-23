@@ -707,7 +707,7 @@
 	            		endDateParam = $("input[name=endDate]").val();
 	            	}
 	            	
-		            createNodeAndInsertText(xmlDom, objNode, "OWNERID", userId);
+		            createNodeAndInsertText(xmlDom, objNode, "OWNERID", userDl_ownerId_temp);
 		            createNodeAndInsertText(xmlDom, objNode, "POLICY", $("input[name=policy]:checked").val());
 		            createNodeAndInsertText(xmlDom, objNode, "EXPLAINATION", $("input[name=explain]").val());
 		            createNodeAndInsertText(xmlDom, objNode, "ENDDATE", endDateParam);

@@ -5616,6 +5616,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userInfo.getTenantId()); // 사용자 정의 DL
 		
 		if (mailMaxReceiverCount.equals("")) {
 			mailMaxReceiverCount = "200";
@@ -5629,6 +5630,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("useUserDefinedDL", useUserDefinedDL);
 		
 		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", userInfo.getTenantId());
 		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
@@ -5721,6 +5723,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String cn = request.getParameter("cn");
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String companyName = userInfo.getCompanyName();
+
+		/* 사용자 정의 공용배포그룹 컨피그가 활성화 되어있을때 공용배포그룹의 구성원 보기는 공개정책에 의해서 공개 허용 여부가 정해짐
+		 * 공개 허용 : policy가 all일 경우, policy가 멤버이면서 구성원일 경우, 관리자 페이지에서 생성된 공용배포그룹일 경우
+		 */
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userInfo.getTenantId());
+		if (useUserDefinedDL.equalsIgnoreCase("YES")) {
+			MailDistributionVO userDlVo = ezEmailService.getUserDistributionInfo(cn, userInfo.getTenantId());
+			if (userDlVo != null) { // null이면 관리자에서 생성된 dl
+				String dlOwnerId = userDlVo.getOwnerId();
+				if (!dlOwnerId.equals(userInfo.getId())) {
+					String dlPolicy = userDlVo.getDisclosurePolicy();
+					logger.debug("userDistribution policy=" + dlPolicy);
+					
+					if (dlPolicy.equals("member")) {
+						int chk = ezEmailService.checkUserDistributionInCludedMember(domain, cn, userInfo.getId());
+						logger.debug("chk=" + chk);
+						
+						dlPolicy = chk == 0 ? "all" : dlPolicy;
+					}
+					
+					if (!dlPolicy.equals("all")) {
+						model.addAttribute("list", null);
+						model.addAttribute("dlPolicy", dlPolicy);
+						logger.debug("== mailSelectDLMember ended.");
+						return "ezEmail/mailSelectDLMember";
+					}
+				}
+			}
+		}
 		
 		try {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
@@ -6674,6 +6705,40 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("downloadAttachInWriter ended");
 	}
 	
+	/**
+	 * 공용배포그룹 전체 검색
+	 * - useUserDefined == YES 일 때 수신자 설정 > 공용그룹 > 검색  박스 출력 
+	 *   '전체'로 셀랙트 박스 선택 후 검색 시  관리자페이지에서 생성한 공용배포그룹까지 검색
+	 */
+	@RequestMapping(value = "/ezEmail/mailGetUserDistributionSearchAll.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailGetUserDistributionSearchAll(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model,
+			HttpServletRequest request) throws Exception {
+		logger.debug("mailGetUserDistributionSearchAll started.");
+
+		String searchValue = request.getParameter("searchValue");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String returnData = "";
+
+		List<MailDistributionVO> distributionList = ezEmailService.getDistributionSearchList(userInfo.getCompanyID(), userInfo.getTenantId(), searchValue);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<LISTVIEWDATA><ROWS>");
+		for (MailDistributionVO vo : distributionList) {
+			sb.append("<ROW><CELL>");
+			sb.append("<VALUE>" + commonUtil.cleanValue(vo.getName()) + "</VALUE>");
+			sb.append("<DATA1>" + commonUtil.cleanValue(vo.getId()) + "</DATA1>");
+			sb.append("<DATA2>" + commonUtil.cleanValue(vo.getMail()) + "</DATA2>");
+			sb.append("</CELL></ROW>");
+		}
+		sb.append("</ROWS></LISTVIEWDATA>");
+		
+		returnData = sb.toString();
+
+		logger.debug("mailGetUserDistributionSearchAll ended.");
+		return returnData;
+	}
 	
 	/*
 	 * 수신인 안내문구 

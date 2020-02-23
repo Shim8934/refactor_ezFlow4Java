@@ -88,6 +88,7 @@
 	        var receiverCount = 0;
 	        var groupAddressCountMap = {};
 	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+	        var useUserDefinedDL = "${useUserDefinedDL}";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -603,49 +604,13 @@
 		        sharedMailboxMember.style.display = "none";
 		        AddrSearch.style.display = "none";
 		        m_selectedTree = ListViewDL;
-		        
-		        try {
-		            var xmlHTTP = createXMLHttpRequest();
-		            // useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 company 패러메터를 빈 값으로 추가함.
-		            xmlHTTP.open("POST", "/ezEmail/mailGetDistribution.do?company=", false);
-		            xmlHTTP.send("");
-		            
-		            if (xmlHTTP.status != 200) {
-			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
-		            } else {
-		            	document.getElementById("ListViewDL").innerHTML = "";
-			            var pListViewDL = new ListView();
-			            pListViewDL.SetID("pListViewDL");
-			            pListViewDL.SetSelectFlag(false);
-			            pListViewDL.SetMulSelectable(true);
-			            pListViewDL.SetRowOnDblClick("ListViewNodeDblClick");
-			            pListViewDL.DataSource(loadXMLString(document.getElementById("listviewheader3").innerHTML.toUpperCase()));
-			            pListViewDL.DataBind("ListViewDL");
-			            pListViewDL.DataSource(loadXMLString(xmlHTTP.responseText));
-			            pListViewDL.RowDataBind();
-			
-			            var dataRows = pListViewDL.GetDataRows();
-			            var dataRowCount = pListViewDL.GetRowCount();
-			            
-			            for (var i = 0; i < dataRowCount; i++) {
-			                dataRows[i].draggable = true;
-			                if (CrossYN())
-			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
-			                else
-			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
-			
-			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
-			                }
-			            }
-		            }
-		            
-		            xmlHTTP = null;
-		        } catch (e) {
-		            alert("<spring:message code='ezEmail.t574' />" + e.description);
-		            xmlHTTP = null;
-		            return;
+		       
+		        if (useUserDefinedDL == "YES") {
+		        	changeUserDlType();
+		        } else {
+			        distributionListSet();
 		        }
+		        
 	        }
 		    function sharedMailboxTabButton_onClick() {
 		    	methodForTabAction(5);
@@ -3853,6 +3818,114 @@
 	        		}
 	        	}, 500);
 	        }
+	        
+	        function distributionListSet(url) {
+	            // useShowAllCompanies config가 YES일 경우 그룹사 전체 조직도를 대상으로 검색하기 위해 company 패러메터를 빈 값으로 추가함.
+	        	var dlList_URL = "/ezEmail/mailGetDistribution.do?company=";
+	        	if (typeof url != "undefined" && url.trim() != "") {
+	        		dlList_URL = url;
+	        	}
+	        	
+	        	try {
+					var xmlHTTP = createXMLHttpRequest();
+		            xmlHTTP.open("POST", dlList_URL, false);
+		            xmlHTTP.send("");
+		            
+		            if (xmlHTTP.status != 200) {
+			            alert("<spring:message code='ezEmail.t574' />" + xmlHTTP.statusText);
+		            } else {
+		            	document.getElementById("ListViewDL").innerHTML = "";
+			            var pListViewDL = new ListView();
+			            pListViewDL.SetID("pListViewDL");
+			            pListViewDL.SetSelectFlag(false);
+			            pListViewDL.SetMulSelectable(true);
+			            pListViewDL.SetRowOnDblClick("ListViewNodeDblClick");
+			            pListViewDL.DataSource(loadXMLString(document.getElementById("listviewheader3").innerHTML.toUpperCase()));
+			            pListViewDL.DataBind("ListViewDL");
+			            pListViewDL.DataSource(loadXMLString(xmlHTTP.responseText));
+			            pListViewDL.RowDataBind();
+			
+			            var dataRows = pListViewDL.GetDataRows();
+			            var dataRowCount = pListViewDL.GetRowCount();
+			            
+			            for (var i = 0; i < dataRowCount; i++) {
+			                dataRows[i].draggable = true;
+			                if (CrossYN())
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); event.dataTransfer.setData('text/plain', 'dragged'); };
+			                else
+			                    dataRows[i].ondragstart = function (event) { event_listdragstart(this); };
+			
+			                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+			                    dataRows[i].ondragend = function (event) { event_listdragend(event); };
+			                }
+			            }
+		            }
+		            
+		            xmlHTTP = null;
+		        } catch (e) {
+		            alert("<spring:message code='ezEmail.t574' />" + e.description);
+		            xmlHTTP = null;
+		            return;
+		        }
+	        }
+	        
+	        function changeUserDlType() {
+	        	var dlList_URL = "/ezEmail/searchUserDistribution.do?searchValue=&listType=mailUser";
+				var userDlType = document.querySelector("#dlSearch_case").value;  
+	        	document.querySelector("#dlSearch_text").value = "";
+	        	
+	        	if (userDlType == "include") {
+	        		dlList_URL = "/ezEmail/mailGetUserDistribution.do?type=include&listType=mailUser";
+	        	} else if (userDlType == "owner") {
+	        		dlList_URL = "/ezEmail/mailGetUserDistribution.do?type=owner&listType=mailUser";
+	        	} else {
+	        		var pListViewDL = new ListView();
+		            pListViewDL.SetID("pListViewDL");
+		            pListViewDL.SetSelectFlag(false);
+		            pListViewDL.SetMulSelectable(true);
+		            pListViewDL.SetRowOnDblClick("ListViewNodeDblClick");
+		            pListViewDL.DataBind("ListViewDL");
+		            pListViewDL.DataSource("");
+		            pListViewDL.RowDataBind();
+		            
+		            return;
+	        	}
+	        	
+	        	distributionListSet(dlList_URL);
+	        }
+	        
+	        function dlSearch_press(e) {
+	        	if (window.event) {
+	                if (window.event.keyCode == 13) {
+	                	dlSearch_click("search");
+	                }
+	            }
+	            else {
+	                if (e.which == 13)
+	                	dlSearch_click("search");
+	            }
+	        }
+	        
+	        function dlSearch_click() {
+	        	var userDlType = document.querySelector("#dlSearch_case").value;  
+	        	var searchValue = document.querySelector("#dlSearch_text").value;
+	        	var dlList_URL = "/ezEmail/searchUserDistribution.do";
+	        	var param = "?searchValue=" + encodeURIComponent(searchValue) + "&searchRange=" + userDlType + "&listType=mailUser";
+				
+	        	if (userDlType == "search") {
+	        		dlList_URL = "/ezEmail/mailGetUserDistributionSearchAll.do"; // 전체 검색
+	        	}
+	        	
+	        	if (searchValue.trim() == "") {
+	        		alert("<spring:message code='ezEmail.t10' />");
+	                keyword.focus();
+	                changeUserDlType();
+	                return;
+	        	}
+
+	        	distributionListSet(dlList_URL + param);
+	        }
+	        
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -4135,6 +4208,25 @@
 	                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
 	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
+	                                        	<c:if test="${useUserDefinedDL eq 'YES' }" >
+	                                         	<td>
+                                                    <div style="margin-left: 5px;">
+                                                        <select name="dlSearch_case" id="dlSearch_case" style="padding-right:28px;" onChange="changeUserDlType()">
+                                                            <option value="include">
+                                                                <spring:message code='ezEmail.userDL17' /></option>
+                                                            <option value="owner">
+                                                                <spring:message code='ezEmail.userDL16' /></option>
+                                                            <option value="search">
+                                                                <spring:message code='ezEmail.t588' /></option>
+                                                        </select>
+                                                        <input id="dlSearch_text" value="" onkeyup="dlSearch_press()" style="width: 130px; margin: 0px; height:21px" name="Input">
+                                                        <a class="imgbtn">
+                                                            <span onclick="dlSearch_click()"><spring:message code='ezEmail.t37' /></span>
+                                                        </a>
+
+                                                    </div>
+                                                </td>
+                                                </c:if>
 	                                            <td id="dlmember" style="display: none">
 	                                                <a class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
 	                                                    <spring:message code='ezEmail.t598' /></span></a>

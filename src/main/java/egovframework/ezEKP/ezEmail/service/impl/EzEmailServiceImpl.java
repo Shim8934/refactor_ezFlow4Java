@@ -3928,7 +3928,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getUserDistributionInfo started.");
 
 		String tenantDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
-		MailDistributionVO vo = new MailDistributionVO();
+		MailDistributionVO vo = null;
 		logger.debug("cn=" + cn + ",tenantId=" + tenantId + ", tenantDomain=" + tenantDomain);
 		
 		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + tenantDomain;
@@ -3944,6 +3944,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			JSONObject resultObj = (JSONObject)	responseObj.get("result");
 			
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0 && resultObj != null) {
+				vo = new MailDistributionVO();
 				vo.setId((String)resultObj.get("userName"));
 				vo.setOwnerId((String)resultObj.get("ownerId"));
 				vo.setDisclosurePolicy((String)resultObj.get("policy"));
@@ -4082,10 +4083,95 @@ public class EzEmailServiceImpl implements EzEmailService {
 			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
 
 			resultCode = (String) responseObj.get("resultCode");
-			reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			reasonCode = ((Long)responseObj.get("reasonCode")).intValue(); //0:성공, -1:구성원 아님
 		}
 		
 		logger.debug("checkUserDistributionInCludedMember ended. resultCode=" + resultCode + ", reasonCode=" + reasonCode);
+		return reasonCode;
+	}
+
+	@Override
+	public List<MailDistributionVO> userDistributionListSearch(String domain, String searchRange, 
+			String searchValue, String userId) throws Exception {
+		logger.debug("userDistributionListSearch started.");
+		logger.debug("domain=" + domain + ", searchRange=" + searchRange
+				 + ", searchValue=" + searchValue + ", userId=" + userId);
+		
+		String resultCode = "";
+		int reasonCode = -1;
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();	
+		
+		String inputParams = "domain=" + URLEncoder.encode(domain, "UTF-8") + "&searchRange=" + URLEncoder.encode(searchRange, "UTF-8")
+				 + "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8")+ "&userId=" + URLEncoder.encode(userId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUserDistributionListSearch";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						MailDistributionVO vo = new MailDistributionVO();
+						
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						
+						vo.setName((String)obj.get("groupName"));
+						vo.setId((String)obj.get("userName"));
+						vo.setMail((String)obj.get("mail"));
+						vo.setOwnerId((String)obj.get("ownerId"));
+						vo.setDisclosurePolicy((String)obj.get("policy"));
+						vo.setExplaination((String)obj.get("explaination"));
+						vo.setEndDate((String)obj.get("endDate"));
+						vo.setCompanyId((String)obj.get("companyId"));
+						
+						distributionList.add(vo);
+					}
+				}
+			}
+		}	
+		
+		logger.debug("userDistributionListSearch ended. resultCode=" + resultCode + ", reasonCode=" + reasonCode);
+		return distributionList;
+	}
+	
+	@Override
+	public int checkUserDistributionApply(String cn, String domain, String userId) throws Exception {
+		logger.debug("checkUserDistributionApply started.");
+		logger.debug("cn=" + cn + ",domain=" + domain + ",userId=" + userId);
+		
+		String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8") + "&domain=" + URLEncoder.encode(domain, "UTF-8")
+				 + "&userId=" + URLEncoder.encode(userId, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUserDistributionApply";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue(); // 0:가입신청, -1:가입신청 안함
+			}
+		}						
+		
+		logger.debug("checkUserDistributionApply ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		return reasonCode;
 	}
 	
