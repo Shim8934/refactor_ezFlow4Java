@@ -68,6 +68,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -1206,6 +1207,47 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		}
 		
 		logger.debug("broadcastQuotaWarning end.");
+	}
+	
+	
+	/**
+	 * 만료일 지난 사용자 공용배포그룹 삭제
+	 */
+	@Scheduled(cron = "${config.cron.useDistributionoDelete}")
+	public void useDistributionoDelete() throws Exception{
+		logger.debug("useDistributionoDelete scheduler started.");
+		
+		//choose scheduler running server
+		if (!preScheduler("useDistributionoDelete")) {
+			logger.debug("useDistributionoDelete scheduler ended.");
+			return;
+		}
+		
+		int tenantId = 99;
+		String delDLURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteDistribution";
+		
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", tenantId);
+		
+		if (useUserDefinedDL.equalsIgnoreCase("YES")) {
+			try {
+				List<MailDistributionVO> dlVoList = ezEmailService.getExpiredUserDistributionList();
+				for (MailDistributionVO dlVo : dlVoList) {
+					String domain = dlVo.getDomain();
+					String dlId = dlVo.getId();
+					logger.debug("domain=" + domain + ", dlId=" + dlId);
+					
+					String delDlInputParams = "domain=" + domain + "&cn=" + dlId;
+					String delDlResponse = ezEmailUtil.getWebServiceResult(delDLURL, delDlInputParams);		
+					logger.debug("delDlResponse=" + delDlResponse);
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+			}
+		}	
+		
+		logger.debug("useDistributionoDelete scheduler ended.");
 	}
 	
 	/**

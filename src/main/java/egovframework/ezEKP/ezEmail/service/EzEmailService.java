@@ -156,4 +156,5 @@ public interface EzEmailService {
 	public int checkUserDistributionInCludedMember(String domain, String cn, String userId) throws Exception;
 	public List<MailDistributionVO> userDistributionListSearch(String domain, String searchRange, String searchValue, String userId) throws Exception;
 	public int checkUserDistributionApply(String cn, String domain, String userId) throws Exception;
+	public List<MailDistributionVO> getExpiredUserDistributionList() throws Exception;
 }

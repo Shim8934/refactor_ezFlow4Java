@@ -17,6 +17,7 @@ public class MailDistributionVO {
 	private String explaination;
 	private String endDate;
 	private String companyId;
+	private String domain;
 	
 	public String getName() {
 		return name;
@@ -71,6 +72,12 @@ public class MailDistributionVO {
 	}
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
+	}
+	public String getDomain() {
+		return domain;
+	}
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 	
 	@Override

@@ -4175,5 +4175,45 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return reasonCode;
 	}
 	
-	
+	@Override
+	public List<MailDistributionVO> getExpiredUserDistributionList() throws Exception {
+		logger.debug("getExpiredUserDistributionList started.");
+		
+		String inputParams = "";
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getExpiredUserDistributionList";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		List<MailDistributionVO> returnList = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				returnList = new ArrayList<MailDistributionVO>();
+
+				JSONArray resultArray = (JSONArray)responseObj.get("result");
+	        	
+	        	for (int i=0; i<resultArray.size(); i++) {
+	        		JSONObject obj = (JSONObject)resultArray.get(i);
+	        		
+	        		MailDistributionVO dlVo = new MailDistributionVO();
+	        		
+	        		dlVo.setDomain((String)obj.get("domain"));
+	        		dlVo.setId((String)obj.get("userName"));
+	        		
+	        		returnList.add(dlVo);
+	        	}
+			}
+		}						
+		
+		logger.debug("getExpiredUserDistributionList ended. resultCode=" + resultCode);
+		return returnList;
+	}
 }
