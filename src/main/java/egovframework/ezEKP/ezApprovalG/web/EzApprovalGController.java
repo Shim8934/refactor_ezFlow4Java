@@ -9848,4 +9848,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		return openGovJson;
 	}
+	
+	 /**
+	  * 2020-02-18 홍승비 - 회사관인/부서별관인(직인) 선택 레이어팝업 호출 메서드
+	  * */
+	@RequestMapping(value = "/ezApprovalG/selectSeal.do", method = RequestMethod.GET)
+	public String selectSeal() throws Exception {
+		return "ezApprovalG/apprGselectSeal";
+	}
 }

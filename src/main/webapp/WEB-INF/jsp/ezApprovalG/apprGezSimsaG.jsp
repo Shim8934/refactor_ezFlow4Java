@@ -87,7 +87,7 @@
 		    var PrtBodyContent;
 		    var orgCompanyID = "";
 		    var ext = "mht";
-		    var docTitle = "<c:out value = '${docTitle}'/>";
+		    var docTitle = "";
 		    
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
@@ -531,6 +531,13 @@
 		    		
 		            var ResultXML = result;
 		            if (getNodeText(GetChildNodes(ResultXML)[0]) == "TRUE") {
+		            	var fields = message.GetFieldsList();
+		            	var field = message.GetListItem(fields, "doctitle");
+
+		            	if (field) {
+		            		docTitle = field.textContent;
+		            	}
+		            	
 		                //여기다 발송의뢰반송 메일알람 추가
 		                SendSimsaBansong(docTitle);
 		            	var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
@@ -634,6 +641,7 @@
 		        
 		        return result;
 		    }
+		    
 		    function GetSealInfo() {
 				var result = "";
 		    	
@@ -652,6 +660,10 @@
 	    		
 		        return result;
 		    }
+		    
+		    /* 2020-02-18 홍승비 - 회사관인, 부서별관인(직인)을 선택할 수 있도록 수정 */
+		    var selectSeal_cross_dialogArguments = new Array(); // 관인선택 레이어팝업에 파라미터를 전달할 배열
+		    var selectSeal_cross_returnValues = new Array(); // 레이어팝업에서 선택된 관인의 정보를 리턴하는 배열
 		    var tempDeptSealXML;
 		    var tempCompSealXML;
 		    function btnStamp_onclick() {
@@ -664,29 +676,46 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
-		        if (!stampFlag) {
+		        
+		        if (!stampFlag && !NostampFlag) { // 관인영역이 비어있는 경우에만 진행
 		            var DeptSealXML = GetDeptSealInfo();
 		            var CompSealXML = GetSealInfo();
-		            if (GetChildNodes(DeptSealXML, "ROWS/ROW").length > 0 && GetChildNodes(CompSealXML, "ROWS/ROW").length > 0) {
+				    var sealType = "";
+				    
+				    /* 2020-02-19 홍승비 - 회사관인과 부서관인의 존재여부 체크 로직 수정(GetChildNodes -> SelectNodes) */
+		            // 회사관인과 부서관인이 모두 존재하는 경우
+		            if (SelectNodes(DeptSealXML, "ROWS/ROW").length > 0 && SelectNodes(CompSealXML, "ROWS/ROW").length > 0) {
 		                var pInformationContent = "<spring:message code='ezApprovalG.t192'/>" + "<BR>" + "<spring:message code='ezApprovalG.t193'/>";
 		                OpenInformationUI(pInformationContent, Stamp_OpenUI);
 		                tempDeptSealXML = DeptSealXML;
 		                tempCompSealXML = CompSealXML;
-
+		                
 		                return;
 		            }
-		            else if (GetChildNodes(DeptSealXML, "ROWS/ROW").length <= 0 && GetChildNodes(CompSealXML, "ROWS/ROW").length <= 0) {
+		            // 모든 관인이 존재하지 않는 경우
+		            else if (SelectNodes(DeptSealXML, "ROWS/ROW").length <= 0 && SelectNodes(CompSealXML, "ROWS/ROW").length <= 0) {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t194'/>" + "<br>" + "<spring:message code='ezApprovalG.t195'/>";
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
-		            else if (GetChildNodes(DeptSealXML, "ROWS/ROW").length > 0) {
+		            // 부서관인만 존재
+		            else if (SelectNodes(DeptSealXML, "ROWS/ROW").length > 0) {
 		                SealXML = DeptSealXML;
+		                sealType = "dept";
 		            }
-		            else if (GetChildNodes(CompSealXML, "ROWS/ROW").length > 0) {
+		            // 회사관인만 존재
+		            else if (SelectNodes(CompSealXML, "ROWS/ROW").length > 0) {
 		                SealXML = CompSealXML;
+		                sealType = "comp";
 		            }
-
+				    
+					selectSeal_cross_dialogArguments[0] = sealType; // 회사관인 또는 부서별관인(직인) 타입
+			        selectSeal_cross_dialogArguments[1] = SealXML; // 관인정보 XML
+			        selectSeal_cross_dialogArguments[2] = Stamp_OpenUI_complete; // 관인 선택 후 레이어팝업 종료 시 동작할 함수
+			        DivPopUpShow(350, 290, "/ezApprovalG/selectSeal.do");
+			        
+			        /* 2020-02-18 홍승비 - 기존 관인지정 코드 주석처리 */
+/* 		            
 		            var SealHref = getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[0], "DATA2"));
 		            var SealWidth = Number(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[1], "VALUE")));
 		            var SealHeight = Number(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[2], "VALUE")));
@@ -719,23 +748,38 @@
 		                field.setAttribute("surl", SealHref);
 		                stampFlag = true;
 		            }
+		             */
 		        }
-		        else {
+		        else { // 기존 관인이 찍혀있는 경우, 관인버튼 클릭 시 해당 이미지를 제거한다.
 		            field = message.GetListItem(fields, "sealsign");
 		            if (field) {
 		                field.innerHTML = " ";
 		                stampFlag = false;
+		                NostampFlag = false; // 관인생략 이미지도 제거하므로 플래그값 변경
 		            }
 		        }
 		    }
 		
+		    /* 2020-02-18 홍승비 - 회사관인, 부서별관인(직인)을 선택할 수 있도록 수정 중 */
 		    function Stamp_OpenUI(Ans) {
 		        DivPopUpHidden();
-		        if (!Ans)
+		        
+		        var sealType = "";
+		        if (!Ans) {
 		            SealXML = tempCompSealXML;
-		        else
+		            sealType = "comp";
+		        } else {
 		            SealXML = tempDeptSealXML;
-
+		            sealType = "dept";
+		        }
+		        
+		        selectSeal_cross_dialogArguments[0] = sealType; // 회사관인 또는 부서별관인(직인) 타입
+		        selectSeal_cross_dialogArguments[1] = SealXML; // 관인정보 XML
+		        selectSeal_cross_dialogArguments[2] = Stamp_OpenUI_complete; // 관인 선택 후 레이어팝업 종료 시 동작할 함수
+		        DivPopUpShow(350, 290, "/ezApprovalG/selectSeal.do");
+		        
+		        /* 2020-02-18 홍승비 - 기존 관인지정 코드 주석처리 */
+/* 
 		        var SealHref = getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[0], "DATA2"));
 		        var SealWidth = parseInt(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[1], "VALUE")));
 		        var SealHeight = parseInt(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[2], "VALUE")));
@@ -778,7 +822,61 @@
 		        } else {
 		        	alert("<spring:message code='ezApprovalG.t194'/>")
 		        }
+		         */
 		    }
+		    
+		    /* 2020-02-18 홍승비 - 관인선택 완료 시 동작할 함수 */
+		    function Stamp_OpenUI_complete(retVal) {
+		    	DivPopUpHidden();
+		    	
+		    	var SealHref = retVal[0];
+		        var SealWidth = retVal[1];
+		        var SealHeight = retVal[2];
+		        var SealCheck = retVal[3];
+		        var fields = message.GetFieldsList();
+		        field = message.GetListItem(fields, "sealsign");
+		        
+		        if (field && SealCheck != "false") {
+		            var signWidth = getPixel(SealWidth) + "px";
+		            var signHeight = getPixel(SealHeight) + "px";
+		            strimg = "<img src='" + encodeURI(SealHref) + "' border=0 embedding='1' ";
+		            strimg = strimg + " width=" + signWidth;
+		            strimg = strimg + " height=" + signHeight + ">";
+		            var field2 = message.GetListItem(fields, "chief");
+		            var chiefwidth = 1;
+		            if (field2) {
+		                chiefwidth = (GetByte(field2.innerText) / 2) * 20;
+		                field2.height = signHeight;
+		            }
+		            var sealwidth = (maxwidth + chiefwidth) / 2 - 5;
+		            var field2 = message.GetListItem(fields, "sealwidth");
+		            if (field2)
+		                field2.width = sealwidth;
+		            var field2 = message.GetListItem(fields, "noseal");
+		            if (field2) {
+		            	if ((maxwidth - sealwidth - getPixel(SealWidth)) < 0) {
+			                field2.width = 20;
+		            	} else {
+			                field2.width = (maxwidth - sealwidth - getPixel(SealWidth));
+		            	}
+		            	
+		                field2.innerHTML = " ";
+		                NostampFlag = false;
+		            }
+		            field.innerHTML = strimg;
+		            field.width = getPixel(SealWidth);
+		            field.height = getPixel(SealHeight);
+		            field.setAttribute("surl", SealHref);
+		            stampFlag = true;
+		        }
+		        else if (SealCheck == "false") {
+		        	return; // 관인선택 레이어팝업에서 취소버튼을 클릭한 경우
+		        }
+		        else {
+		        	alert("<spring:message code='ezApprovalG.t194'/>")
+		        }
+		    }
+		    
 		    function GetByte(pStr) {
 		        var len = pStr.length;
 		        var tot = 0;
@@ -806,7 +904,7 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
-		        if (!NostampFlag) {
+		        if (!NostampFlag && !stampFlag) { // 관인영역이 비어있는 경우에만 진행
 		            var SealHref = "/files/sealImg/nostamp.gif";
 		            var SealWidth = 30;
 		            var SealHeight = 30;
@@ -853,6 +951,7 @@
 		            if (field) {
 		                field.innerHTML = " ";
 		                NostampFlag = false;
+		                stampFlag = false; // 기존 관인생략 이미지 제거 시 관인이미지 플래그도 변경
 		            }
 		        }
 		    }

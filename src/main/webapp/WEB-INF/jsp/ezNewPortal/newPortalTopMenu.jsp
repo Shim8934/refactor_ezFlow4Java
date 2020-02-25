@@ -447,10 +447,8 @@
 				if(item.menuUrl.indexOf('ezMemo') > -1 && item.menuUsed) {
 					parent.useMemoContextMenu = true;
 				}
-				// 기존 전자설문은 메뉴 목록에서 제외
-				if (item.menuId != 14) {
-					str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
-				}
+
+				str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
 			});
 
 			toggleMenu.innerHTML = str;

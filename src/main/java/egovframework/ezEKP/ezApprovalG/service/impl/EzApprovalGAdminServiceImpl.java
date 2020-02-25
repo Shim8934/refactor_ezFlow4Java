@@ -2119,6 +2119,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					sb.append("<DATA12>" + docXml.getElementsByTagName("DOCSTATE").item(j).getTextContent() + "</DATA12>");
 					sb.append("<DATA13>" + docXml.getElementsByTagName("WRITERDEPTID").item(j).getTextContent() + "</DATA13>");
 					sb.append("<DATA14>" + docXml.getElementsByTagName("URGENTAPPROVAL").item(j).getTextContent() + "</DATA14>");
+					sb.append("<HASOPINIONYN>" + docXml.getElementsByTagName("HASOPINIONYN").item(j).getTextContent() + "</HASOPINIONYN>");
 				}
 				
 				if (fieldName.equals("HASATTACHYN")) {

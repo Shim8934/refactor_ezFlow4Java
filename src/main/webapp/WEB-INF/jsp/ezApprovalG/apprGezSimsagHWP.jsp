@@ -423,6 +423,7 @@
 	            	if (HwpCtrl.CheckFieldExist("doctitle")) {
 	            		docTitle = HwpCtrl.GetFieldText("doctitle");
 	            	}
+
 	            	//여기다 발송의뢰반송 메일알람 추가
 	                SendSimsaBansong(docTitle);
 	                var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";

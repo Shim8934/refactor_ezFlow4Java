@@ -1087,4 +1087,61 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblRsFavorite");
 		}
 	}
+
+	public void insertThemeAuthInit(Map<String, Object> map) {
+		String companyId = checkThemeAuthInit(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("tbl_theme_auth data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertThemeAuthInit", map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String checkThemeAuthInit(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkThemeAuthInit", map);
+	}
+	
+	public void insertPortletAuthInit(Map<String, Object> map) {
+		String companyId = checkPortletAuthInit(map);
+		
+		try {
+			if (companyId == null) {
+				logger.debug("tbl_portlet_auth data doesn't exist. insert the data of " + map.get("companyId") + "...");
+				insert("EzCommonDAO.insertPortletAuthInit", map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String checkPortletAuthInit(Map<String, Object> map) {
+		return (String) select("EzCommonDAO.checkPortletAuthInit", map);
+	}
+
+	public String checkSurveyMenu() {
+		return (String) select("EzCommonDAO.checkSurveyMenu");
+	}
+
+	public void insertSurveyMenu() {
+		try {
+			insert("EzCommonDAO.insertSurveyMenu");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void insertSurveyMenuInfo(Map<String, Object> map) {
+		try {
+			insert("EzCommonDAO.insertSurveyMenuComp", map);
+			insert("EzCommonDAO.insertSurveyMenuAuth", map);
+			insert("EzCommonDAO.insertSurveyMenuName", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

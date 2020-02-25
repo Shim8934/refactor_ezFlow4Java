@@ -2051,4 +2051,149 @@
 			CONSTRAINT "PK_TBL_RS_FAVORITE" PRIMARY KEY ("RESID", "USERID", "TENANT_ID")
 		)
 	</statement>
+	
+	<select id="EzCommonDAO.checkThemeAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			ROWNUM = 1
+	]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkPortletAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_PORTLET_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		AND
+			ROWNUM = 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertThemeAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT ALL
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (1, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (2, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+		    INTO TBL_PORTAL_THEME_AUTH (THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+		    VALUES (3, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	    SELECT
+	    	*
+	    FROM DUAL
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertPortletAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT ALL
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (1, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (2, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (4, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (5, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (6, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (7, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (8, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (9, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (10, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (11, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (12, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (14, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (26, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (34, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (36, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (47, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+  			INTO TBL_PORTAL_PORTLET_AUTH (PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    	VALUES (49, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	    SELECT
+	    	*
+	    FROM DUAL
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.checkSurveyMenu" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			menu_id
+		FROM
+			tbl_portal_menu
+		WHERE
+			menucode = 'survey'
+		AND
+			menu_type = 'G'
+		AND
+			ROWNUM = 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertSurveyMenu">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU 
+			(menu_id, menu_url, menu_type, icon_url, default_order, menucode)
+		VALUES
+			((SELECT NVL(MAX(menu_id), 0) + 1 FROM TBL_PORTAL_MENU), '/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 19, 'survey')
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuComp" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_COMP 
+			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+		VALUES
+			(#companyId#, #tenantId#, #menuId#, 1, 1, 19)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuAuth" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_AUTH
+			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn)
+		VALUES
+			(#menuId#, #companyId#, #tenantId#, #companyId#, 1, 0, 19)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuName" parameterClass="Map">
+	<![CDATA[
+		INSERT ALL
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) 
+		    VALUES (#menuId#, 1, #companyID#, #tenantID#, '전자설문')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) 
+		    VALUES (#menuId#, 2, #companyID#, #tenantID#, 'Survey')
+		    INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) 
+		    VALUES (#menuId#, 3, #companyID#, #tenantID#, '電子アンケート')
+	    SELECT
+	    	*
+	    FROM DUAL
+	]]>
+	</insert>
 </sqlMap>
