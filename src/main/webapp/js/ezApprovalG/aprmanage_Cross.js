@@ -1119,10 +1119,10 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             	} else {
             		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
             	}
-            } else if (pDraftFlag == "HAPYUI" && approvalFlag == "G") {
+            } else if (approvalFlag == "G") {
             	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
             } else {
-            	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
+            	openLocation = "/ezApprovalG/recev.do";
             }
             openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag) + "&orgCompanyID=" + encodeURI(orgCompanyID);
             openwindow(openLocation, "receive", 880, 550);
