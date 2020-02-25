@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -937,14 +938,14 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody JSONObject jsonObj) throws Exception{
 		LOGGER.debug("saveEndFileHwp started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String result = "";
-		String docID = request.getParameter("docID");
-		String formText = request.getParameter("html");
+		String docID = jsonObj.get("docID") == null ? null : jsonObj.get("docID").toString();
+		String formText = jsonObj.get("html") == null ? "" : jsonObj.get("html").toString();
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
