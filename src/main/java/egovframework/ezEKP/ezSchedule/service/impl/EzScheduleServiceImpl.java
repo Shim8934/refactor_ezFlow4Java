@@ -26,6 +26,8 @@ import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
+import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -54,6 +56,9 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzAttitudeDAO ezAttitudeDAO;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzScheduleServiceImpl.class);
 
@@ -210,7 +215,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 	
 	@Override
-	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID) throws Exception {						
+	public List<ScheduleInfoVO> getScheduleList(String indiList, String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId, String companyID, String userID, String deptID, String useAnnualScheduleYN) throws Exception {						
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_INDILIST", indiList);
@@ -224,8 +229,43 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_SEARCHTITLE", searchTitle);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_USERID", userID);
+		map.put("v_DEPTID", deptID);
 		
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
+
+		// 2020-02-24 김정언 - 근태 현황 일정관리 연동
+		if(useAnnualScheduleYN.equals("1")){
+			List<AttitudeVO> aList = ezAttitudeDAO.getAnuualListSchedule(map);
+
+			for (int j = 0; j < aList.size(); j++) {
+				AttitudeVO aVo = new AttitudeVO();
+				ScheduleInfoVO sVo = new ScheduleInfoVO();
+
+				aVo = aList.get(j);
+
+				if (aVo != null) {
+					sVo.setDateType("4");
+					sVo.setScheduleType("2");
+					sVo.setScheduleId(aVo.getAttitudeId());
+					sVo.setParentId(aVo.getTypeId());
+					sVo.setStartDate(aVo.getStartDate());
+					// 조퇴와 결근은 종료일을 시작일로 설정
+					if(aVo.getEndDate() == null || aVo.getEndDate().length() == 0){
+						sVo.setEndDate(aVo.getStartDate());
+					}else{
+						sVo.setEndDate(aVo.getEndDate());						
+					}
+					sVo.setCreatorName(aVo.getWriterName());
+					sVo.setCreatorName2(aVo.getWriterDeptName());
+					sVo.setTitle(aVo.getTypeName());
+					sVo.setContentPath(aVo.getImgPath());
+					sVo.setOwnerId(deptID);
+
+					sList.add(sVo);
+				}
+			}
+		}
+		
 		List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();
 		List<ScheduleInfoVO> tempResultList = new ArrayList<ScheduleInfoVO>();
 		

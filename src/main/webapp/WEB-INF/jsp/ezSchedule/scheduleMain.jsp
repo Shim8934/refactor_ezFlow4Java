@@ -454,7 +454,17 @@
 		            return;
 		        }
 		    }
-			
+		    
+		    // 2020-02-24 김정언 - 근태 상세보기
+		   	function ReadAttitude(divID) {
+		   		var str = divID.split(":");
+		        var ScheduleID = str[0];
+		        var ParentID = str[1];
+		        
+		        var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + ScheduleID + "&typeId=" + ParentID, "", GetOpenWindowfeature(672, 640));
+		        try { OpenWin.focus(); } catch (e) { }
+		   	}
+		    
 		    function WriteSchedule() {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -1275,6 +1285,11 @@
 	            <li id="dayView" class="${defaultView == '0' ? 'on' : 'off' }"><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="${defaultView == '1' ? 'on' : 'off' }"><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="${defaultView == '2' ? 'on' : 'off' }"><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
 	        </ul>
 	    </div>
+	    <c:if test="${useAnnualScheduleYN eq '1'}">
+		    <div style="margin-bottom:10px;">
+			    <span style="color:#3d8fea;"><spring:message code='ezSchedule.kje01'/></span>
+		    </div>	    
+	    </c:if>
 	    
         <script type="text/javascript">
             //selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
