@@ -2796,7 +2796,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 
 	public void deleteTmpAprDocInfo(Map<String, Object> map) throws Exception{
-		delete("EzApprovalG.deleteLastAprLine", map);
+		delete("EzApprovalG.deleteTmpAprDocInfo", map);
 	}
 	
 	public void deleteReSendEndReceiptPointInfo(Map<String, Object> map) throws Exception{
