@@ -1703,12 +1703,10 @@
 								aprmemberid = #proxyList[].id#
 							AND
 							    aprmemberdeptid = #proxyList[].dept#
-							AND
-								aprstate <> '002'
-							AND
-								aprstate <> '005'
-							AND
-								aprstate = '000'
+							AND	
+								aprtype = '007'
+							AND 
+								aprstate = '002'
 							AND
 								tenant_id = #v_TENANTID#
 							AND
@@ -4225,11 +4223,9 @@
                 AND
                     aprmemberdeptid = #proxyList[].dept#
                 AND
-                    aprstate <> '002'
+                    aprstate = '002'
                 AND
-                    aprstate <> '005'
-                AND
-                    aprstate = '000'
+                    aprtype = '007'
                 AND
                     tenant_id = #v_TENANTID#
                 AND
@@ -10847,12 +10843,10 @@
 							TBL_ENDAPRLINEINFO
 						WHERE
 							aprmemberid = #v_USERID#
-						AND
-							aprstate <> '002'
-						AND
-							aprstate <> '005'
-						AND
-							aprstate = '000'
+						AND 
+							aprtype = '007' 
+						AND 
+							aprstate = '002'
 						AND
 							tenant_id = #v_TENANTID#
 						AND
@@ -11010,11 +11004,9 @@
 							WHERE
 								aprmemberid = #proxyList[].id#
 							AND
-								aprstate <> '002'
+								aprstate = '002'
 							AND
-								aprstate <> '005'
-							AND
-								aprstate = '000'
+								aprtype = '007'
 							AND
 			                 	aprmemberdeptid = #proxyList[].dept#
 			                AND
@@ -15647,11 +15639,9 @@
 							AND
 							    aprmemberdeptid = #proxyList[].dept#
 							AND
-								aprstate <> '002'
+								aprstate = '002'
 							AND
-								aprstate <> '005'
-							AND
-								aprstate = '000'
+								aprtype = '007'
 							AND
 								tenant_id = #v_TENANTID#
 							AND
@@ -16314,11 +16304,9 @@
 							AND
 							    aprmemberdeptid = #proxyList[].dept#
 							AND
-                                aprstate <> '002'
+                                aprstate = '002'
                             AND
-                                aprstate <> '005'
-                            AND
-                                aprstate = '000'
+                                aprtype = '007'
 							AND
 								tenant_id = #v_TENANTID#
 							AND
@@ -23914,7 +23902,7 @@
     	WHERE  
     		OWNERID = #v_USERID#
     	AND
-    		TENANT_ID = #v_TNANTID#
+    		TENANT_ID = #v_TENANTID#
     	AND
     		COMPANYID = #companyID#
    </select>
@@ -28758,7 +28746,7 @@
 	  				PUBLICITYCODE = #v_PUBLICITYCODE#
 	  		</isEqual>
 	  		
-	  		<isNotEqual property="v-MODE" compareValue="E">
+	  		<isNotEqual property="v_MODE" compareValue="E">
 	  			UPDATE 
 	  				TBL_EXPAPRDOCINFO 
 	  			SET 
@@ -29429,11 +29417,9 @@
                             AND
                                 aprmemberdeptid = #proxyList[].dept#
                             AND
-                                aprstate <> '002'
-                            AND
-                                aprstate <> '005'
-                            AND
-                                aprstate = '000'
+                            	aprtype = '007' 
+							AND 
+								aprstate = '002' 
 							AND
 							    tenant_id = #v_TENANTID#
 							AND
