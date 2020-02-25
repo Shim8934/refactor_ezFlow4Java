@@ -607,33 +607,39 @@
 		        mhtBody = message.Get_EditorBodyHTML();
 		        mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
 		        mhtBody = ConvertHTMLtoMHT(mhtBody);
+		    	
+		    	var data = {
+	    			docID : pOrgDocID,
+                       // formId : pFormID,
+	    			html  : mhtBody
+		    	}
 		        
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/saveEndFile.do",
-		    		data : {
-		    			docID : pOrgDocID,
-                        // formId : pFormID,
-		    			html  : mhtBody
-		    		},
+		    		contentType : "application/json",
+		    		data : JSON.stringify(data),
 		    		success: function(xml){
 		    			result = xml;
 		    		}        			
 		    	});
+		    	
+		    	var reqData = {
+	    			docID : pDocID,
+					// formId : pFormID,
+	    			html  : mhtBody,
+	    			orgCompanyID : orgCompanyID
+		    	}
 		        
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
 		    		url : "/ezApprovalG/saveFile.do",
-		    		data : {
-		    			docID : pDocID,
-						// formId : pFormID,
-		    			html  : mhtBody,
-		    			orgCompanyID : orgCompanyID
-		    		},
+		    		contentType : "application/json",
+		    		data : JSON.stringify(reqData),
 		    		success: function(text){
 		    			result = text;
 		    		}        			

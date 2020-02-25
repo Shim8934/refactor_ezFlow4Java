@@ -540,16 +540,19 @@
 	    		}        			
 	    	});
 	        
+	        var reqData = {
+    			docID : pDocID,
+                   // formId : pFormID,
+    			html  :  HwpCtrl.GetCloneData("", "HWP")
+        	}
+	        
 	        $.ajax({
 	    		type : "POST",
 	    		dataType : "text",
 	    		async : false,
 	    		url : "/ezApprovalG/saveFileHWP.do",
-	    		data : {
-	    			docID : pDocID,
-                    // formId : pFormID,
-	    			html  :  HwpCtrl.GetCloneData("", "HWP")
-	    		},
+	    		contentType : "application/json",
+	    		data : JSON.stringify(reqData),
 	    		success: function(text){
 	    		}        			
 	    	});
