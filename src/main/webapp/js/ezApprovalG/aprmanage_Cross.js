@@ -1122,7 +1122,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             } else if (pDraftFlag == "HAPYUI" && approvalFlag == "G") {
             	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
             } else {
-            	openLocation = "/ezApprovalG/recev.do";
+            	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
             }
             openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag) + "&orgCompanyID=" + encodeURI(orgCompanyID);
             openwindow(openLocation, "receive", 880, 550);
