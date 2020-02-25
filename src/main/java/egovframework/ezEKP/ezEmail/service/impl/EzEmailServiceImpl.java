@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,8 +67,11 @@ import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureTemplateVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
+import egovframework.ezEKP.ezLadder.vo.LadderLineVO;
+import egovframework.ezEKP.ezLadder.vo.LadderVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.impl.EzOrganServiceImpl;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
@@ -109,6 +114,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	@Autowired
 	private EzEmailDAO ezEmailDAO;
 
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
+	
 	@Resource(name = "jspw")
 	private String jspw;
 
@@ -3284,7 +3292,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	 */
 	@Override
 	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, 
-			String compId, int tenantId, String selectDomain, String ownerId, String policy, String explaination, String endDate) throws Exception {
+			String compId, int tenantId, String selectDomain, String ownerId, String policy, String explaination, String endDate, String loginCookie) throws Exception {
 		logger.debug("addDistributionList started.");
 		logger.debug("id=" + id + ",name=" + name + ",memberList.size=" + memberList.size() + ",subList.size=" + subList.size() 
 			+ ",compId=" + compId + ",tenantId=" + tenantId + ", selectDomain=" + selectDomain);
@@ -3293,6 +3301,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String companyDomainName = ezCommonService.getCompanyConfig(tenantId, compId, "DomainName");
 		companyDomainName = !selectDomain.equals("") ? selectDomain : companyDomainName;
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", tenantId);
 
 		String inputParams = "companyId=" + URLEncoder.encode(compId, "UTF-8") 
 			+ "&name=" + URLEncoder.encode(name, "UTF-8") 
@@ -3338,6 +3347,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 			if (resultCode.equals("OK")) {
 				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				logger.debug("reasonCode=" + reasonCode + "config=" + useUserDefinedDL.equalsIgnoreCase("YES") + ", memsize=" + memberList.size() 
+						+ ", login=" + loginCookie);
+				if (reasonCode == 0 && useUserDefinedDL.equalsIgnoreCase("YES") && memberList.size() > 0 && !ownerId.equals("")) {
+					sendUserDLMail(loginCookie, id, "add", memberList);
+				}
 			}
 		}
 
@@ -3352,7 +3367,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, 
 			String compId, int tenantId) throws Exception {
 		logger.debug("updateDistributionList started.");
-		int returnInt = updateDistributionList(id, name, memberList, subList, compId, tenantId, "", "", "", "");
+		int returnInt = updateDistributionList(id, name, memberList, subList, compId, tenantId, "", "", "", "", "");
 		logger.debug("updateDistributionList ended.");
 		return returnInt;
 	}
@@ -3362,13 +3377,14 @@ public class EzEmailServiceImpl implements EzEmailService {
 	 */
 	@Override
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, 
-			String compId, int tenantId, String ownerId, String policy, String explaination, String endDate) throws Exception {
+			String compId, int tenantId, String ownerId, String policy, String explaination, String endDate, String loginCookie) throws Exception {
 		logger.debug("updateDistributionList started.");
 		logger.debug("id=" + id + ",name=" + name + ",memberList.size=" + memberList.size() + ",subList.size=" + subList.size() 
 			+ ",compId=" + compId + ",tenantId=" + tenantId + ", ownerId=" + ownerId + ", policy=" + policy 
 			+ ", explaination=" + explaination + ", endDate=" + endDate);
 
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", tenantId);
 
 		String inputParams = "companyId=" + URLEncoder.encode(compId, "UTF-8") 
 			+ "&cn=" + URLEncoder.encode(id, "UTF-8") 
@@ -3400,6 +3416,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		String resultCode = "Error";
 		int reasonCode = -100; 
+		String result = ""; // 새로 추가된 사용자 이메일
 
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
@@ -3408,6 +3425,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 			if (resultCode.equals("OK")) {
 				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				result = (String)responseObj.get("result");
+
+				logger.debug("reasonCode=" + reasonCode + "config=" + useUserDefinedDL.equalsIgnoreCase("YES") + ", result=" + result 
+						+ ", login=" + loginCookie);
+				// 새로 추가된 사용자한테 알림 메일 발송
+				if (reasonCode == 0 && useUserDefinedDL.equalsIgnoreCase("YES") && !result.equals("") && !ownerId.equals("")) {
+					List<String> toArr = new ArrayList<String>(Arrays.asList(result));
+					sendUserDLMail(loginCookie, id, "add", toArr);
+				}
 			}
 		}
 
@@ -4216,4 +4242,55 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getExpiredUserDistributionList ended. resultCode=" + resultCode);
 		return returnList;
 	}
+	
+	/**
+	 * 공용배포그룹 추가, 반려 알림 메일
+	 * type : add or refuse
+	 */
+	@Override
+	public void sendUserDLMail(String loginCookie, String cn, String type, List<String> toList) throws Exception {
+		logger.debug("sendUserDlMail started.");
+		
+		if (loginCookie.equals("")) {return; }
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("userId=" + userId + ", cn=" + cn + ", type=" + type + ", toList=" + toList.toString() + ", tenantId=" + tenantId);
+		
+		MailDistributionVO dlVo = getUserDistributionInfo(cn, tenantId);
+		String dlName = dlVo.getName();
+		logger.debug("dl Name=" + dlName);
+	
+		String mailTypeStr = type.equals("refuse") ? "ezEmail.userDL38" : "ezEmail.userDL37";
+		String subject = egovMessageSource.getMessage("ezEmail.userDL36", userInfo.getLocale());	// 메일제목
+		subject += egovMessageSource.getMessage(mailTypeStr, userInfo.getLocale());
+		StringBuilder bodyContent = new StringBuilder("");	// 메일 링크
+		bodyContent.append(" \'" + dlName + "\' " + egovMessageSource.getMessage(mailTypeStr, userInfo.getLocale()));
+		String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantId, userInfo.getLocale());
+		
+		// 참여자에게 메일 발송
+		int toListCnt = toList.size();
+		InternetAddress from = new InternetAddress();
+		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+		from.setAddress(userInfo.getEmail());
+		
+		for (int i=0; i < toListCnt; i++) {
+			String toId = toList.get(i).trim();
+			toId = toId.split("@")[0];
+			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(toId, userInfo.getPrimary(), tenantId);
+			
+			if (AccessUserInfo != null) {
+				InternetAddress to = new InternetAddress();
+				to.setPersonal(AccessUserInfo.getDisplayName(), "UTF-8");
+				to.setAddress(AccessUserInfo.getMail());
+				
+				InternetAddress [] toArr = new InternetAddress[]{to};
+				sendMail(loginCookie, from, toArr, null, null, subject, content, false);
+			}
+		}
+		
+		logger.debug("sendUserDlMail ended.");
+	}
+	
 }

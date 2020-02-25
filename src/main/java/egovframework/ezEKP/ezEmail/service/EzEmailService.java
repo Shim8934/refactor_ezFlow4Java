@@ -143,7 +143,7 @@ public interface EzEmailService {
 	
 	public MailDistributionVO getDistributionInfo(String cn, int tenantId) throws Exception;
 	public int addDistributionList(String id, String name, List<String> memberList,List<Map<String, String>> distributionSubList, 
-			String companyId, int tenantID, String selectDomain, String ownerId, String policy, String explaination, String endDate) throws Exception;
+			String companyId, int tenantID, String selectDomain, String ownerId, String policy, String explaination, String endDate, String loginCookie) throws Exception;
 	public List<MailDistributionVO> getUserOwnerDistributionList(String companyId, int tenantId, String ownerId) throws Exception;
 	public List<MailDistributionVO> getUserIncludedDistributionList(String companyId, int tenantId, String userId) throws Exception;
 	public int secessionDistribution(int tenantId, String cn, String userId) throws Exception;
@@ -151,10 +151,11 @@ public interface EzEmailService {
 	public JSONArray getUserDistributionApplyList(String cn, int tenantId) throws Exception;
 	public int setUserDistributionApply(String cn, int tenantId, String userId, String type) throws Exception;
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId,
-			String ownerId, String policy, String explaination, String endDate) throws Exception;
+			String ownerId, String policy, String explaination, String endDate, String loginCookie) throws Exception;
 	public JSONArray getUserDistributionMemberList(String domain, String cn) throws Exception;
 	public int checkUserDistributionInCludedMember(String domain, String cn, String userId) throws Exception;
 	public List<MailDistributionVO> userDistributionListSearch(String domain, String searchRange, String searchValue, String userId) throws Exception;
 	public int checkUserDistributionApply(String cn, String domain, String userId) throws Exception;
 	public List<MailDistributionVO> getExpiredUserDistributionList() throws Exception;
+	public void sendUserDLMail(String loginCookie, String cn, String type, List<String> toList) throws Exception;
 }

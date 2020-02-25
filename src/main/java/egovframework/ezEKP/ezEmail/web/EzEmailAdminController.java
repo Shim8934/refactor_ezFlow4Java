@@ -481,7 +481,7 @@ public class EzEmailAdminController {
 					}
 				}
 
-				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID, selectDomain, ownerId, policy, explaination, endDate);
+				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID, selectDomain, ownerId, policy, explaination, endDate, loginCookie);
 			// 기존 공용배포그룹을 수정하는 경우
 			} else {
 				if (useBizmekaSpambox.equals("YES")) {
@@ -498,7 +498,7 @@ public class EzEmailAdminController {
 					}
 				}
 								
-				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID, ownerId, policy, explaination, endDate);
+				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID, ownerId, policy, explaination, endDate, loginCookie);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

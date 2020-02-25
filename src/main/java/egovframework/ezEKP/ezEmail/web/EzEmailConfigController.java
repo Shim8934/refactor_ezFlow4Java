@@ -2474,6 +2474,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			
 			if (reasonCode != 0) {
 				returnStr = "ERROR";
+			} else {
+				List<String> toArr = new ArrayList<String>();
+				toArr.add(userId);
+				
+				ezEmailService.sendUserDLMail(loginCookie, cn, "refuse", toArr);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
