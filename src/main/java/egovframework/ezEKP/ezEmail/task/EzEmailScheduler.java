@@ -1223,7 +1223,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			return;
 		}
 		
-		int tenantId = 99;
+		int tenantId = 0;
 		String delDLURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteDistribution";
 		
 		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", tenantId);

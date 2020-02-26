@@ -192,7 +192,7 @@
 	                xmlHTTP2.open("POST", "/admin/ezEmail/mailViewDistributionList.do", true);
 	                xmlHTTP2.onreadystatechange = event_GetDistributionList;
 	                xmlHTTP2.send(xmlpara);
-	            } else {
+	            } else if (userDL != ""){
 	            	inputOwnerAddress(userName, userId);
 	            }
 	            
@@ -242,7 +242,7 @@
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "group"){
 	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t15' />" + getNodeText(GetChildNodes(nodes[i])[2]) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distribution") {
-	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " + Replace2HTML(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + "<spring:message code='ezEmail.t57' /> : " + memberReplaceHTML(getNodeText(GetChildNodes(nodes[i])[2])) + "</VALUE></CELL></ROW>";
 	                        } else if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
 	                            pparsingXML = pparsingXML + "<DATA3>" + getNodeText(GetChildNodes(nodes[i])[3]) + "</DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA4>DIRECT</DATA4>";
@@ -2854,7 +2854,11 @@
 		        AddrSearch.style.display = "none";
 		        m_selectedTree = ListViewUserDlApply;
 		        
-		        try {
+		        userDlApplyList();
+	        }
+	        
+	        function userDlApplyList() {
+	        	try {
 		        	var xmlDom = createXmlDom();
 		            var xmlHTTP = createXMLHttpRequest();
 		            var objRoot;
@@ -3014,10 +3018,12 @@
 			        	data : {cn : cn, userId : strId },
 			        	success : function(result){	
 			        		if (result == "OK") {
-				        		alert(result);		        			
+			        			alert("<spring:message code='ezEmail.userDL39' />");        			
 			        		} else {
 			        			alert("<spring:message code='ezEmail.lhm14' />");
 			        		}
+			        		
+			        		userDlApplyList();
 			        	},
 			        	error : function(error){
 			        		alert("<spring:message code='ezEmail.lhm14' />" + error);
@@ -3029,6 +3035,13 @@
                 }
 	        }   
 	        
+	        function memberReplaceHTML(orgStr) {
+	            var tempStr = new String(orgStr);
+	            tempStr = ReplaceText(tempStr, "&", "&amp;");
+	            tempStr = ReplaceText(tempStr, "<", "&lt;");
+	            tempStr = ReplaceText(tempStr, ">", "&gt;");
+	            return tempStr;
+	        }
     	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -3168,7 +3181,7 @@
 		            				<input type="checkBox" name="endDateCheckBox" onClick="endDateCheckBox_Click(this)" checked />
 									<span><spring:message code='ezEmail.userDL24' /></span>	            			
 		            			</label>
-								<input type="text" name="endDate" id="Sdatepicker" style="width:80px;text-align:center">
+								<input type="text" name="endDate" id="Sdatepicker" style="width:80px;text-align:center" readonly>
 		            		</td>
 		            	</tr> 
 		            	<tr>

@@ -167,9 +167,12 @@ public class EzEmailAdminController {
 		logger.debug("bodyData=" + bodyData);
 
 		// 관리자 권한체크
-		LoginVO auth = commonUtil.checkAdmin(loginCookie);
-		if (auth == null) {
-			return "cmm/error/adminDenied";
+		LoginVO auth = commonUtil.userInfo(loginCookie);
+		if (auth.getRollInfo().indexOf("c=1") == -1 && auth.getRollInfo().indexOf("k=1") == -1) {
+			String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", auth.getTenantId());
+			if (!useUserDefinedDL.equalsIgnoreCase("YES")) {
+				return "cmm/error/adminDenied";
+			}
 		}
 
 		String returnData = "";

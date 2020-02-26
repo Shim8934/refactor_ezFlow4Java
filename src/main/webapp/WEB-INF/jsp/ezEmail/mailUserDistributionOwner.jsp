@@ -182,19 +182,18 @@
 			var listview = new ListView();
             listview.SetID("DL_Body");
             var selectNode = listview.GetSelectedRows();
-
-            var dlId = selectNode[0].getAttribute("data1");
 			var selectedCount = selectNode.length;
 			
-	        var xmlDom = createXmlDom();
-	        var xmlHTTP = createXMLHttpRequest();
-	
-	        var objNode = "";
-	        createNodeInsert(xmlDom, objNode, "DATA");
-	
 	        if (selectedCount > 0) {
 		        var ret = confirm("<spring:message code='ezEmail.0hun04' />");
 	        	if (ret) {
+		            var dlId = selectNode[0].getAttribute("data1");
+
+		            var xmlDom = createXmlDom();
+	    	        var xmlHTTP = createXMLHttpRequest();
+	    	        var objNode = "";
+	    	        createNodeInsert(xmlDom, objNode, "DATA");
+	    	        
 			        createNodeAndInsertText(xmlDom, objNode, "CN", dlId);
 			        createNodeAndInsertText(xmlDom, objNode, "COMPID", companyId);
 			        

@@ -88,6 +88,7 @@
 			});
 			
 			window_resize();
+			isScroll();
 		}
 	    
 		function window_resize() {

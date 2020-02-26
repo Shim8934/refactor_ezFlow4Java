@@ -4217,7 +4217,7 @@
                                                             <option value="owner">
                                                                 <spring:message code='ezEmail.userDL16' /></option>
                                                             <option value="search">
-                                                                <spring:message code='ezEmail.t588' /></option>
+                                                                <spring:message code='ezEmail.userDL40' /></option>
                                                         </select>
                                                         <input id="dlSearch_text" value="" onkeyup="dlSearch_press()" style="width: 130px; margin: 0px; height:21px" name="Input">
                                                         <a class="imgbtn">
