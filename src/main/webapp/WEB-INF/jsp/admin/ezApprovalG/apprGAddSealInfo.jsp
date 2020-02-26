@@ -173,7 +173,7 @@
 		    }
 			
 		    /* 2020-02-26 홍승비 - 관인 이미지 업로드 시 파일 확장자 체크 */
-		    function btn_AttachAdd_onclick(obj) {
+		    function btn_AttachAdd_onclick() {
 		        if (document.form.file1.value != "") {
 					var frm = document.getElementById('form');
 		            var form = new FormData(frm);
