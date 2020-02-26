@@ -176,7 +176,7 @@
                     	</c:choose>
                     </li>
                     <li>
-					<c:if test="${useEzWorkspace eq 'YES' }">
+					<c:if test="${useEzWorkspace}">
                     <dl class="writebannerDL" id="ezWorkspace">
                         <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
                         <dt><spring:message code='ezNewPortal.pjg01' /></dt>
@@ -960,12 +960,13 @@
 	});
 </script>
 <!-- 협업 시작-->
-<c:if test="${useEzWorkspace eq 'YES' }">
-    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js"></script>
-    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js"></script>
+<c:if test="${useEzWorkspace}">
+    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="${workspaceContextRootUrl}/ezWorkspace/Scripts/Groupwareapi.js"></script>
     <script type="text/javascript">
 	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
-	    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var WorkspaceUrl = "${workspaceHostUrl}"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var workspaceContextRootUrl = "${workspaceContextRootUrl}";
 	    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
 	    var feedListCount = 10;
 	    var g_bRayful = false;
