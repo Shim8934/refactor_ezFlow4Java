@@ -663,19 +663,37 @@
         data.forEach(function(item, index) {
         	if(index > 4) return;
         	var li = document.createElement('li');
-        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
-        	li.style.cursor = "pointer";
-        	li.addEventListener('click', function() {
-			    var wWeight = "760";
-			    var wHeight = "670";
-			    var heigth = window.screen.availHeight;
-			    var width = window.screen.availWidth;
-			    var left = (width - wWeight) / 2;
-			    var top = (heigth - wHeight) / 2;
-			
-		        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(item.scheduleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&date=" + item.startDate.substr(0, 10) + "&pattern=0","",
-			        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
-        	});
+        	
+        	// 2020-02-25 김정언
+        	if(item.dateType == "4") {
+        		li.textContent = item.title + " : " + item.creatorName;
+            	li.style.cursor = "pointer";
+            	li.addEventListener('click', function() {  			    
+            		if (CrossYN()) {
+    					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", GetOpenWindowfeature(672, 640));
+    					
+    					try { OpenWin.focus(); } catch (e) { }
+    				} else {
+    					window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", 
+    					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+    				}   		
+            	});
+        	}
+        	else {        		
+	        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
+	        	li.style.cursor = "pointer";
+	        	li.addEventListener('click', function() {
+				    var wWeight = "760";
+				    var wHeight = "670";
+				    var heigth = window.screen.availHeight;
+				    var width = window.screen.availWidth;
+				    var left = (width - wWeight) / 2;
+				    var top = (heigth - wHeight) / 2;
+				
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(item.scheduleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&date=" + item.startDate.substr(0, 10) + "&pattern=0","",
+				        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
+	        	});
+        	}
         	schList.appendChild(li);
         });
 	}
