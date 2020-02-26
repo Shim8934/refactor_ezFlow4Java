@@ -1713,4 +1713,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void createRsFavoriteTable() {
 		ezCommonDAO.createRsFavoriteTable();
 	}
+
+	@Override
+	public void createUserDistributionTable() {
+		ezCommonDAO.createUserDistributionTable();
+	}
 }

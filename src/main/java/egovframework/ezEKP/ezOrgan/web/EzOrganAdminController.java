@@ -185,6 +185,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
 	//    	ezCommonService.addPassAprLineFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
 	    	ezCommonService.addOpenGovFlag(); //2019-07-18 강민수 - 전자결재양식 테이블 원문공개 플래그 추가
+    		ezCommonService.createUserDistributionTable(); // 20200226 사용자 정의 공용배포그룹 테이블 생성
+	    	
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

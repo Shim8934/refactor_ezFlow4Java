@@ -1832,4 +1832,63 @@
 			D.DEPTID = #deptID#
 	]]>
 	</select>
+	
+	<select id="EzCommonDAO.checkUserDlTable">
+		SELECT 
+			USER_NAME
+		FROM 
+			JMOCHA_USER_DISTRIBUTION
+		LIMIT 1
+	</select>
+	
+	<select id="EzCommonDAO.checkUserDlMemberTable">
+		SELECT 
+			USER_NAME
+		FROM 
+			JMOCHA_USER_DISTRIBUTION_MEMBER
+		LIMIT 1
+	</select>
+	
+	<select id="EzCommonDAO.checkUserDlApplyTable">
+		SELECT 
+			USER_NAME
+		FROM 
+			JMOCHA_USER_DISTRIBUTION_APPLY
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createUserDlTable"> 
+		CREATE TABLE `jmocha_user_distribution` (
+		  `DOMAIN_NAME` varchar(100) NOT NULL,
+		  `USER_NAME` varchar(100) NOT NULL,
+		  `OWNER_ID` varchar(100) NOT NULL,
+		  `DISCLOSURE_POLICY` varchar(100) NOT NULL,
+		  `EXPLAINATION` varchar(100) DEFAULT NULL,
+		  `DL_END_DATE` date DEFAULT NULL,
+		  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`),
+		  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
+	<statement id="EzCommonDAO.createUserDlMemberTable"> 
+		CREATE TABLE `jmocha_user_distribution_member` (
+		  `DOMAIN_NAME` varchar(100) NOT NULL,
+		  `USER_NAME` varchar(100) NOT NULL,
+		  `MEMBER_ID` varchar(100) NOT NULL,
+		  `REG_DATE` date NOT NULL,
+		  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`MEMBER_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+	</statement>
+	
+	<statement id="EzCommonDAO.createUserDlApplyTable"> 
+		CREATE TABLE `jmocha_user_distribution_apply` (
+		  `DOMAIN_NAME` varchar(100) NOT NULL,
+		  `USER_NAME` varchar(100) NOT NULL,
+		  `APPLICANT_ID` varchar(100) NOT NULL,
+		  `APPLICANT_DATE` date NOT NULL,
+		  PRIMARY KEY (`DOMAIN_NAME`,`USER_NAME`,`APPLICANT_ID`),
+		  KEY `foreign_keys_index` (`DOMAIN_NAME`,`USER_NAME`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+	
 </sqlMap>
