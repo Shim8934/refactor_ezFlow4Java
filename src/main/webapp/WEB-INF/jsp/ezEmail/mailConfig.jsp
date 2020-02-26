@@ -310,7 +310,7 @@
 			function cancleProgress(){
 	        	HiddenMailProgressNew();
 	        	webSocket.close();
-	        	location.reload();
+	        	$("#MailEnv_ifrm")[0].contentWindow.requestFolderList();
 			}
 			
 			function showDim() {
