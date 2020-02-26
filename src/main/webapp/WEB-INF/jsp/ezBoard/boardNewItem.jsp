@@ -830,6 +830,7 @@
 					} catch (e) {
 					}
 					
+					// 전자결재문서(시행문, 문서발송)를 게시한 경우의 자동발송 처리 (SuccessBoard 함수)
 		            try {
 			            if (window.parent != null && window.parent.SuccessBoard != undefined) {
 			                try {
