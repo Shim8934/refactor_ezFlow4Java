@@ -7,6 +7,7 @@
 	<typeAlias  alias="ApprovPWDVO" 				type="egovframework.ezEKP.ezCommon.vo.ApprovPWDVO"/>
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
+	<typeAlias  alias="CompanyInfoVO" 				type="egovframework.ezEKP.ezCommon.vo.CompanyInfoVO"/>
 	<typeAlias  alias="CountryVO" 					type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
@@ -1158,6 +1159,24 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
 	
+	<select id="EzCommonDAO.checkResourcePortlet">
+		SELECT 
+			BRD_ID
+		FROM 
+			TBL_RS_PERSPORTLET
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblResourcePortlet">
+		CREATE TABLE `TBL_RS_PERSPORTLET` (
+		  `CN` VARCHAR(80) NOT NULL COMMENT 'id',
+		  `BRD_ID` DECIMAL(22,0) NOT NULL COMMENT '자원관리 id',
+		  `BRD_COMPANY` VARCHAR(40) NOT NULL COMMENT 'company id',
+		  `TENANT_ID` MEDIUMINT(5) NOT NULL DEFAULT 0 COMMENT '테넌트 id',
+		  PRIMARY KEY (`TENANT_ID`,`CN`,`BRD_COMPANY`,`BRD_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
 	<select id="EzCommonDAO.checkThemeContent2">
 		SELECT
 			THEME_CONTENT2
@@ -1224,6 +1243,112 @@
 								WHEN theme_id = 3 THEN 'Theme3'
 							END
 	</update>
+	
+	<select id="EzCommonDAO.checkSurveyTenantConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'useSurvey'
+		AND
+			tenant_id = 0
+	</select>
+	
+	<insert id="EzCommonDAO.insertSurveyTenantConfig">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#tenantId#, #propertyName#, #propertyValue#, #description#, #configName#, #regDate#, #configType#) 
+	</insert>
+	
+	<select id="EzCommonDAO.getAllCompanyIds" resultClass="CompanyInfoVO">
+		SELECT
+			DISTINCT(PHYSICALDELIVERYOFFICENAME) as companyId
+			, TENANT_ID as tenantId
+		FROM
+			TBL_USERMASTER
+		ORDER BY 
+			PHYSICALDELIVERYOFFICENAME
+	</select>
+	<select id="EzCommonDAO.checkPortlet" resultClass="String">
+		SELECT
+			PORTLET_URL
+		FROM
+			TBL_PORTAL_PORTLET
+		WHERE
+			PORTLET_ID = #portletId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertPortlet">
+		INSERT INTO TBL_PORTAL_PORTLET 
+			(PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER)
+		VALUES 
+			(#portletId#, #menuId#, #portletUrl#, #portletType#, #defaultOrder#)
+	</insert>
+	
+	<select id="EzCommonDAO.checkPortletForComapny" resultClass="String">
+		SELECT 
+			COMPANY_ID 
+		FROM
+			TBL_PORTAL_PORTLET_COMP
+		WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+			PORTLET_ID = #portletId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertPortletComp">
+		INSERT INTO TBL_PORTAL_PORTLET_COMP 
+			(COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, PORTLET_USED, PORTLET_ORDER, BOARD_ID) 
+		VALUES 
+			(#companyId#, #tenantId#, #portletId#, #menuId#, #portletUsed#, #portletOrder#, #boardId#)
+	</insert>
+	
+	<insert id="EzCommonDAO.insertRsPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '자원관리'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Resource'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, '設備管理')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertWfPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '개인폴더'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Personal Folder'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, 'Webフォルダ')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSvPortletName">
+		INSERT INTO TBL_PORTAL_PORTLET_NAME
+			(PORTLET_ID, MENU_ID, PORTLET_LANG, TENANT_ID, COMPANY_ID, PORTLET_NAME) 
+		VALUES
+			(#portletId#, #menuId#, 1, #tenantId#, #companyId#, '전자설문'),
+			(#portletId#, #menuId#, 2, #tenantId#, #companyId#, 'Survey'),
+			(#portletId#, #menuId#, 3, #tenantId#, #companyId#, '電子アンケート')
+	</insert>
+	
+	<insert id="EzCommonDAO.insertPortalThemePortlet">
+		INSERT INTO TBL_PORTAL_THEME_PORTLET
+			(THEME_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, PORTLET_USED, PORTLET_ORDER, MENU_ID, IS_FIXED)
+		VALUES
+			(1, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
+			(2, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0),
+			(3, #tenantId#, #companyId#, #portletId#, #portletUsed#, #portletOrder#, #menuId#, 0)
+	</insert>
+	
+	<insert id="EzCommonDAO.insertPortalPortletAuth">
+		INSERT INTO TBL_PORTAL_PORTLET_AUTH
+			(PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE)
+		VALUES
+			(#portletId#, #companyId#, #tenantId#, #companyId#, 1, 0)
+	</insert>
 	
 	<select id="EzCommonDAO.checkTblThemeAuth">
 		SELECT 
@@ -1382,6 +1507,10 @@
 					AND menu_type = 'G' 
 				THEN 
 					'memo'
+				WHEN menu_url like '%ezSurvey%' 
+					AND menu_type = 'G' 
+				THEN 
+					'survey'
 			END
 	]]>
 	</update>
@@ -1891,4 +2020,120 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	</statement>
 	
+	<select id="EzCommonDAO.checkThemeAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_THEME_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		LIMIT 1
+	]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkPortletAuthInit" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			company_id
+		FROM
+			TBL_PORTAL_PORTLET_AUTH
+		WHERE
+			company_id = #companyId#
+		AND
+			tenant_id = #tenantId#
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertThemeAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_THEME_AUTH
+			(theme_id, company_id, tenant_id, user_id, access_YN, user_type, sn) 
+		VALUES
+			(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+			(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+			(3, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertPortletAuthInit" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_PORTLET_AUTH
+			(portlet_id, company_id, tenant_id, user_id, access_YN, user_type, sn) 
+		VALUES 
+    		(1, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(2, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(4, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(5, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(6, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(7, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(8, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(9, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(10, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(11, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(12, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(14, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(26, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(34, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(36, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(47, #companyId#, #tenantId#, #companyId#, 1, 0, 1),
+    		(49, #companyId#, #tenantId#, #companyId#, 1, 0, 1)
+	]]>
+	</insert>
+	
+	<select id="EzCommonDAO.checkSurveyMenu" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT
+			menu_id
+		FROM
+			tbl_portal_menu
+		WHERE
+			menucode = 'survey'
+		AND
+			menu_type = 'G'
+		LIMIT 1
+	]]>
+	</select>
+	
+	<insert id="EzCommonDAO.insertSurveyMenu" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU 
+			(menu_url, menu_type, icon_url, default_order, menucode)
+		VALUES
+			('/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 19, 'survey')
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuComp" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_COMP 
+			(company_id, tenant_id, menu_id, menu_used, company_lang, company_order)
+		VALUES
+			(#companyId#, #tenantId#, #menuId#, 1, 1, 19)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuAuth" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_AUTH
+			(menu_id, company_id, tenant_id, user_id, access_YN, user_type, sn)
+		VALUES
+			(#menuId#, #companyId#, #tenantId#, #companyId#, 1, 0, 19)
+	]]>
+	</insert>
+	
+	<insert id="EzCommonDAO.insertSurveyMenuName" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_PORTAL_MENU_NAME 
+			(menu_id, menu_lang, company_id, tenant_id, menu_name)
+		VALUES
+	    	(#menuId#, 1, #companyID#, #tenantID#, '전자설문'),
+	    	(#menuId#, 2, #companyID#, #tenantID#, 'Survey'),
+	    	(#menuId#, 3, #companyID#, #tenantID#, '電子アンケート')
+	]]>
+	</insert>
+
 </sqlMap>

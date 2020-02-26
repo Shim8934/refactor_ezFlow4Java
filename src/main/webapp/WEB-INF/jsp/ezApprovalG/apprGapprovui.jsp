@@ -1579,12 +1579,14 @@
 			        parameter[33] = pSummery;
 			        parameter[41] = tempItemName;
 			        parameter[42] = tempItemName2;
-		        } else {
-			        parameter[52] = basis;
-			        parameter[53] = reason;
-			        parameter[54] = listOpenFlag;
-			        parameter[55] = fileOpenFlagList;
 		        }
+
+		        if(useOpenGov = "YES") {
+                    parameter[52] = basis;
+                    parameter[53] = reason;
+                    parameter[54] = listOpenFlag;
+                    parameter[55] = fileOpenFlagList;
+                }
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1721,27 +1723,29 @@
 				            	}
 				            }
 
-                            $.ajax({
-                                type : "POST",
-                                ataType : "text",
-                                sync : false,
-                                url : "/ezApprovalG/openGovInfoSave.do",
-                                data : {
-                                    openGovListFlag : ret[27],
-                                    fileOpenFlagList : ret[28],
-                                    basis : ret[29],
-                                    reason : ret[30],
-                                    publicity : ret[11],
-                                    docID : pDocID,
-                                    limitDate : ret[31]
-                                }
-                            });
+				            if (useOpenGov == "YES") {
+                                $.ajax({
+                                    type : "POST",
+                                    dataType : "text",
+                                    async : false,
+                                    url : "/ezApprovalG/openGovInfoSave.do",
+                                    data : {
+                                        openGovListFlag : ret[27],
+                                        fileOpenFlagList : ret[28],
+                                        basis : ret[29],
+                                        reason : ret[30],
+                                        publicity : ret[11],
+                                        docID : pDocID,
+                                        limitDate : ret[31]
+                                    }
+                                });
 
-                            listOpenFlag = ret[27];
-                            fileOpenFlagList = ret[28];
-                            basis = ret[29];
-                            reason = ret[30];
-                            limitDate = ret[31];
+                                listOpenFlag = ret[27];
+                                fileOpenFlagList = ret[28];
+                                basis = ret[29];
+                                reason = ret[30];
+                                limitDate = ret[31];
+                            }
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {

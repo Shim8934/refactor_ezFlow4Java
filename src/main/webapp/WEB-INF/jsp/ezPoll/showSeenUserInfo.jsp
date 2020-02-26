@@ -134,7 +134,7 @@
 					</c:forEach>
 					<c:if test="${empty listOfUnSeenUsers}">
 						<tr class="white" style="border: 1px solid #DDD;">
-							<td style="height:51px;text-align: center">-</td>
+							<td style="height:50px;text-align: center">-</td>
 						</tr>
 					</c:if>
 				</table>

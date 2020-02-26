@@ -74,7 +74,6 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.impl.EzOrganServiceImpl;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -1177,6 +1176,93 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return returnValue;
 	}
 	
+	@Override
+	public String checkIndividualAliasWithoutOwned(String userEmail, String individualAlias, int tenantId) throws Exception {
+		logger.debug("checkIndividualAliasWithoutOwned started. userEmail={}, individualAlias={}", userEmail, individualAlias);
+
+		String returnValue = "ERROR";
+
+		String inputParams = new StringBuilder("userEmail=").append(URLEncoder.encode(userEmail, "UTF-8"))
+				.append("&individualAlias=").append(URLEncoder.encode(individualAlias, "UTF-8"))
+				.append("&tenantId=").append(tenantId).toString();
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/checkIndividualAliasWithoutOwned";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+
+			if (((String) responseObj.get("resultCode")).equals("OK")) {
+				int reasonCode = ((Long) responseObj.get("reasonCode")).intValue();
+				if (reasonCode == 0) {
+					returnValue = "OK";
+				} else if (reasonCode == -1) {
+					returnValue = "OTHERDOMAIN";
+				} else if (reasonCode == -2) {
+					returnValue = "OTHERUSER";
+				} else if (reasonCode == -4) {
+					returnValue = "INVALIDFORMAT";
+				}
+			}
+		}
+
+		logger.debug("checkIndividualAliasWithoutOwned ended. returnValue=" + returnValue);
+		return returnValue;
+	}
+
+	@Override
+	public String updatePrimaryIndividualAlias(String userEmail, String originAlias, String updateAlias, int tenantId) throws Exception {
+		logger.debug("updatePrimaryIndividualAlias started.");
+		logger.debug("userEmail={}, originAlias={}, updateAlias={}", userEmail, originAlias, updateAlias);
+
+		String returnValue = "ERROR";
+
+		String inputParams = "userEmail=" + URLEncoder.encode(userEmail, "UTF-8")
+				+ "&originAlias=" + URLEncoder.encode(originAlias, "UTF-8")
+				+ "&updateAlias=" + URLEncoder.encode(updateAlias, "UTF-8")
+				+ "&tenantId=" + tenantId;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updatePrimaryIndividualAlias";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+			String resultCode = (String) responseObj.get("resultCode");
+			Long reasonCode = (Long) responseObj.get("reasonCode");
+
+			if (resultCode.equals("OK") && (reasonCode == 0 || reasonCode == 2)) {
+				try {
+					String userId = userEmail.substring(0, userEmail.indexOf("@"));
+					ezOrganAdminDao.setUserPrimaryMail(userId, tenantId, updateAlias);
+
+					if (originAlias.isEmpty()) {
+						ezCommonService.insertUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress", updateAlias);
+					} else {
+						ezCommonService.updateUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress", updateAlias);
+					}
+					returnValue = "OK";
+				} catch (Exception ex) {
+					logger.debug("set primary error!");
+					ex.printStackTrace();
+				}
+			} else if (reasonCode == -1) {
+				returnValue = "OTHERUSER";
+			} else if (reasonCode == -2) {
+				returnValue = "INVALIDFORMAT";
+			}
+		}
+
+		logger.debug("updatePrimaryIndividualAlias ended. returnValue=" + returnValue);
+
+		return returnValue;
+	}
+
 	@Override
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception {
 		logger.debug("getAliasAddressMap started. tenantId=" + tenantId);

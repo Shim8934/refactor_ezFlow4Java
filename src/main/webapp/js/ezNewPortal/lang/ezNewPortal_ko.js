@@ -31,5 +31,21 @@ var messages = {
 	strLang30 : "진행문서",
 	strLang31 : "기안문서",
 	strLang32 : "부서수신함",
-	
+	strLang586 : "1월",
+	strLang587 : "2월",
+	strLang588 : "3월",
+	strLang589 : "4월",
+	strLang590 : "5월",
+	strLang591 : "6월",
+	strLang592 : "7월",
+	strLang593 : "8월",
+	strLang594 : "9월",
+	strLang595 : "10월",
+	strLang596 : "11월",
+	strLang597 : "12월",
+	strLang598 : "오늘",
+	strLang599 : "이전달",
+	strLang600 : "다음달",
+	strLang601 : "닫기",
+	strLang602 : "ko"
 }

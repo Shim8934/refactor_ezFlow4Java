@@ -1292,7 +1292,8 @@ function checkHWP(pDocID) {
 		async : false,
 		url : "/ezApprovalG/checkDocExt.do",
 		data : {
-			docID : pDocID
+			docID : pDocID,
+			orgCompanyID : orgCompanyID
 		},
 		success: function(xml){
 			docExt = xml;

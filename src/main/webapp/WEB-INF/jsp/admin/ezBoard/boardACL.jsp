@@ -53,7 +53,13 @@
 	            listview.SetID("AccessListView");
 	            listview.SetMulSelectable(true);
 	            listview.SetRowOnClick("AccessList_onDblclick");
-	            listview.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
+	            
+	            var pattern = /<([\/]*)([a-zA-Z_0-9]+)([^>]*)>/g 
+            	var newXml = document.getElementById("listviewheader").innerHTML.replace(pattern, function(full, before, tag, after) { 
+	            	return "<" + before + tag.toUpperCase() + after + ">"
+	            });
+	            
+	            listview.DataSource(loadXMLString(newXml));
 	            listview.DataBind("AccessList");
 	            var xmldomNode = SelectNodes(xmldom, "DATA/ROW")
 	            

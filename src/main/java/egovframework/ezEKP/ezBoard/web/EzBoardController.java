@@ -558,10 +558,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
 		        	
 		        	if (userInfo.getPrimary().equals("1")) {
-		        		listOfTargetBld.append(organDeptVO.getDisplayName1() + ",");
+		        		listOfTargetBld.append(organDeptVO.getDisplayName1() + ", ");
 		        	}
 		        	else {
-		        		listOfTargetBld.append(organDeptVO.getDisplayName2() + ",");
+		        		listOfTargetBld.append(organDeptVO.getDisplayName2() + ", ");
 		        	}
 		        	
 		        }
@@ -582,15 +582,15 @@ public class EzBoardController extends EgovFileMngUtil{
 	        		}
 	        		
 	        		LoginVO user = loginService.selectReceiver(userID, userInfo.getTenantId());
-	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1())
+	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(userInfo.getPrimary().equals("1") ? user.getDisplayName1() : user.getDisplayName2())
 		        			+ "\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\" deptid=\"" + commonUtil.cleanValue(deptID) + "\">"
 	        				+ commonUtil.cleanValue(user.getId()) + "</DATA>");
 	        		
 		        	if (userInfo.getPrimary().equals("1")) {
-		        		listOfTargetBld.append(user.getDisplayName1() + ",");
+		        		listOfTargetBld.append(user.getDisplayName1() + ", ");
 		        	}
 		        	else {
-		        		listOfTargetBld.append(user.getDisplayName2() + ",");
+		        		listOfTargetBld.append(user.getDisplayName2() + ", ");
 		        	}
 	        		
 	        	}		        	
@@ -600,8 +600,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	        
 	        listOfTarget = listOfTargetBld.toString();
 	        
-	        if (listOfTarget.endsWith(",")) {
-	        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
+	        if (listOfTarget.endsWith(", ")) {
+	        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 2);
 	        }
 		}
 		strXMLRange.append("</RANGE>");
@@ -4887,13 +4887,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2019-06-03 홍승비 - 게시판 구분값과 확장컬럼 여부값만을 사용하므로, getBoardProperty로 메서드 변경 */
 		BoardPropertyVO boardInfo = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
+		/* 2020-02-13 홍승비 - 익명게시판이면서 확장칼럼을 가지는 경우도 체크하도록 수정 */
 		/* 2019-07-16 홍승비 - URL게시판 null 체크 위치 수정 */
 		if (boardInfo.getGuBun() != null && (boardInfo.getGuBun().equals("2") || (boardInfo.getUrl() != null && !boardInfo.getUrl().trim().equals("")) || boardInfo.getGuBun().equals("3") || boardInfo.getGuBun().equals("4") || boardInfo.getGuBun().equals("7"))) {
-			result = "<RESULT>anonyboard</RESULT>";
-		} else if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
-			result = "<RESULT>attributeextension</RESULT>";
-		} else {
-			result = "<RESULT>normalboard</RESULT>";
+			result += "<RESULT>anonyboard</RESULT>";
+		}
+		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+			result += "<RESULT>attributeextension</RESULT>";
 		}
 
 		logger.debug("checkIfAnonyBoard ended");

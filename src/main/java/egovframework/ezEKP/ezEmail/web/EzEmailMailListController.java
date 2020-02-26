@@ -805,6 +805,12 @@ public class EzEmailMailListController {
 					name = ezEmailUtil.getFromNameOrAddressOfMessage(message);
 					String senderEmail = ezEmailUtil.getFromEmailAddressOfMessage(message);
 					
+					if (name.equals(senderEmail)) {
+						List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(name, senderEmail);
+						name = mailAddrList.get(0);
+						senderEmail = mailAddrList.get(1);
+					}
+					
 					msgto = String.format("%s <%s>", name, senderEmail);
 				}
 				// in case of Sent mailbox
@@ -1549,6 +1555,10 @@ public class EzEmailMailListController {
 				
 				if (name == null || name.trim().equals("")) {
 					name = email;
+					
+					List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(name, email);
+					name = mailAddrList.get(0);
+					email = mailAddrList.get(1);
 				}
 				
 				resultData = name + " <" + email + ">";

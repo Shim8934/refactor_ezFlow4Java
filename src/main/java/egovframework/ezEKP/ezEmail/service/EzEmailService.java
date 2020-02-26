@@ -61,6 +61,8 @@ public interface EzEmailService {
 	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList, String type, String companyId) throws Exception;
 	public int deleteIndividualAlias(String userId, int tenantID) throws Exception;
 	public String checkIndividualAlias(String individualAlias, int tenantId) throws Exception;
+	String checkIndividualAliasWithoutOwned(String userEmail, String individualAlias, int tenantId) throws Exception;
+	String updatePrimaryIndividualAlias(String userEmail, String originAlias, String updateAlias, int tenantId) throws Exception;
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception;
 	
 	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception;

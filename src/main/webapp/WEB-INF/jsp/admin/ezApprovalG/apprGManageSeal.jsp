@@ -152,7 +152,10 @@
 		    		type : "POST",
 		    		url : "/admin/ezApprovalG/deleteSealInfo.do",
 		    		async : false,
-		    		data : {pSealNum : pSealNum, companyID : pCompanyID},
+		    		data : {
+		    			pSealNum : pSealNum,
+		    			companyID : pCompanyID
+		    		},
 		    		success : function (result) {
 		    			tempRet = result;
 		    		},
@@ -174,6 +177,7 @@
 		        btnInfo_onclick();
 		    }
 		    
+		    /* 2020-02-17 홍승비 - 관인정보보기 팝업창에 삭제를 위한 파라미터 전달 */
 		    var ezsealinfo_dialogArguments = new Array();
 		    function btnInfo_onclick() {
 		    	var listview = new ListView();
@@ -190,11 +194,14 @@
 	                parameter[6] = getNodeText(selRow[0].cells[4]);
 	                parameter[7] = GetAttribute(selRow[0], "DATA3")
 	                parameter[8] = getNodeText(selRow[0].cells[5]);
+	                parameter[9] = "";  // 현재 선택된 부서ID (부서직인 관리 시에만 사용되므로, 공백으로 넘김)
+	                parameter[10] = pCompanyID;  // 현재 선택된 회사ID
 	                
 	                ezsealinfo_dialogArguments[0] = parameter;
 	                ezsealinfo_dialogArguments[1] = btnInfo_onclick_Complete;
+	                ezsealinfo_dialogArguments[2] = btnInfo_onDelete_Complete; // 관인삭제 후 동작
 	
-	                var ezSealInfo = window.open("/admin/ezApprovalG/sealInfo.do", "ezSealInfo", GetOpenWindowfeature(500, 420))
+	                var ezSealInfo = window.open("/admin/ezApprovalG/sealInfo.do", "ezSealInfo", GetOpenWindowfeature(504, 470))
 		        } else {
 		            var pInformationString = "<spring:message code = 'ezApprovalG.t1280' />";
 		            OpenAlertUI(pInformationString);
@@ -205,7 +212,12 @@
 	
 		    function btnInfo_onclick_Complete() {
 		    }
-	
+		    /* 2020-02-17 홍승비 - 관인삭제 이후 리스트 갱신 함수 */
+		    function btnInfo_onDelete_Complete() {
+		    	getSealList();
+		    }
+		    
+		    /* 2020-02-17 홍승비 - 관인등록 완료 시, 기존 관인을 삭제하지 않도록 수정 */
 		    var AddSealInfo_dialogArguments = new Array();
 		    function btnAdd_onclick() {
 		        var parameter = new Array();
@@ -218,19 +230,19 @@
 			        AddSealInfo_dialogArguments[1] = btnAdd_onclick_complete;
 			        
 			        var url = "/admin/ezApprovalG/addSealInfo.do";
-			        var ezSealInfo = window.open(url, "", GetOpenWindowfeature(430, 350));
+			        var ezSealInfo = window.open(url, "", GetOpenWindowfeature(435, 390));
 			        try { ezSealInfo.focus(); } catch (e) {
 	                }
 		        } else {
 		        	var url = "/admin/ezApprovalG/addSealInfo.do";
-	                var feature = "status:no;dialogWidth:430px;dialogHeight:350px;edge:sunken;scroll:no;help:no"
+	                var feature = "status:no;dialogWidth:435px;dialogHeight:390px;edge:sunken;scroll:no;help:no"
 	                var ret = window.showModalDialog(url, parameter, feature);
 
 	                if (ret[0] == "OK") {
-	                    var RtnVal = DeleteSealInfo("");
+/* 	                    var RtnVal = DeleteSealInfo("");
 
-	                    if (RtnVal == "TRUE") {
-	                        RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
+	                    if (RtnVal == "TRUE") { */
+	                        var RtnVal = InsertSealInfo(ret[1], ret[2], ret[3], ret[4], ret[5]);
 	                        if (RtnVal == "TRUE") {
 	                            var pInformationString = "<spring:message code = 'ezApprovalG.t1281' />";
 	                            OpenAlertUI(pInformationString);
@@ -241,20 +253,21 @@
 	                            OpenAlertUI(pInformationString);
 	                            return;
 	                        }
-	                    }
+/* 	                    }
 	                    else {
 	                        var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
 	                        OpenAlertUI(pInformationString);
 	                        return;
-	                    }
+	                    } */
 	                }
 		        }
 		    }
 		    
+		    /* 2020-02-17 홍승비 - 관인등록 완료 시, 기존 관인을 삭제하지 않도록 수정 */
 		    function btnAdd_onclick_complete(RtnVal) {
 		    	if (RtnVal[0] == "OK") {
-	                var DelRtnVal = DeleteSealInfo("");
-	                if (DelRtnVal == "TRUE") {
+/* 	                var DelRtnVal = DeleteSealInfo("");
+	              	if (DelRtnVal == "TRUE") { */
 	                    RtnVal = InsertSealInfo(RtnVal[1], RtnVal[2], RtnVal[3], RtnVal[4], RtnVal[5]);
 	                    if (RtnVal == "TRUE") {
 	                        var pInformationString = "<spring:message code = 'ezApprovalG.t1281' />";
@@ -266,12 +279,12 @@
 	                        OpenAlertUI(pInformationString);
 	                        return;
 	                    }
-	                }
+/* 	                }
 	                else {
 	                    var pInformationString = "<spring:message code = 'ezApprovalG.t1282' />";
 	                    OpenAlertUI(pInformationString);
 	                    return;
-	                }
+	                } */
 	            }
 		    }
 		    

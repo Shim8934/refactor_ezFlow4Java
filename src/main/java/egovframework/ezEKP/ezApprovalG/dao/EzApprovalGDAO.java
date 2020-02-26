@@ -2796,7 +2796,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 
 	public void deleteTmpAprDocInfo(Map<String, Object> map) throws Exception{
-		delete("EzApprovalG.deleteLastAprLine", map);
+		delete("EzApprovalG.deleteTmpAprDocInfo", map);
 	}
 	
 	public void deleteReSendEndReceiptPointInfo(Map<String, Object> map) throws Exception{
@@ -3395,9 +3395,5 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ApprGOpenGovCsvVO> getOpenGovCSV() throws Exception {
 		return (List< ApprGOpenGovCsvVO>) list("EzApprovalG.getOpenGovCSV");
-	}
-
-	public void setOpenGovSendFlagToY() throws Exception {
-		update("EzApprovalG.setOpenGovSendFlagToY");
 	}
 }

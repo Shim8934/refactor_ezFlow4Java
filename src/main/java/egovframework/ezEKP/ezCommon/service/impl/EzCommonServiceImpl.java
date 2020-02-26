@@ -55,6 +55,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
@@ -1637,6 +1638,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void createResourcePortlet() throws Exception {
+		ezCommonDAO.createTblResourcePortlet();
+	}
+	
+	@Override
 	public void addThemeContentLang() throws Exception {
 		ezCommonDAO.addThemeContent2();
 		ezCommonDAO.addThemeContent3();
@@ -1660,10 +1666,110 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void insertSurveyTenantConfig() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", 0);
+		map.put("propertyName", "useSurvey");
+		map.put("propertyValue", "YES");
+		map.put("description", "YES: 사용 NO: 사용안함 (default: YES)");
+		map.put("configName", "전자설문 리뉴얼 모듈 사용여부");
+		map.put("configType", "기타모듈");
+		map.put("regdate", "2019-06-25 00:00:00");
+
+		ezCommonDAO.insertSurveyTenantConfig(map);
+	}
+
+	@Override
+	public void insertPortletInfo() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		int[] portletIds = {51, 70, 73};
+		
+		Map<String, Object> rsMap = new HashMap<String, Object>();
+		rsMap.put("portletId", portletIds[0]);
+		rsMap.put("menuId", 6);
+		rsMap.put("portletUrl", "/ezNewPortal/resourcePortlet.do");
+		rsMap.put("portletType", "G");
+		rsMap.put("defaultOrder", 21);
+		rsMap.put("portletUsed", 1);
+		rsMap.put("portletOrder", 21);
+		rsMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(rsMap);
+		
+		Map<String, Object> wfMap = new HashMap<String, Object>();
+		wfMap.put("portletId", portletIds[1]);
+		wfMap.put("menuId", 10);
+		wfMap.put("portletUrl", "/ezNewPortal/webFolderPortlet.do");
+		wfMap.put("portletType", "G");
+		wfMap.put("defaultOrder", 22);
+		wfMap.put("portletUsed", 1);
+		wfMap.put("portletOrder", 22);
+		wfMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(wfMap);
+		
+		String surveyMenuId = checkSurveyMenu();
+		int surveyMenu = 0;
+		boolean isSurveyMenuNew = false;
+		
+		if (surveyMenuId == null) {
+			logger.debug("surveyMenu doesn't exist. add survey menu data...");
+			insertSurveyMenu();
+			surveyMenu = Integer.parseInt(checkSurveyMenu());
+			isSurveyMenuNew = true;
+		} else {
+			surveyMenu = Integer.parseInt(surveyMenuId);
+		}
+		
+		Map<String, Object> svMap = new HashMap<String, Object>();
+		svMap.put("portletId", portletIds[2]);
+		svMap.put("menuId", surveyMenu);
+		svMap.put("portletUrl", "/ezNewPortal/surveyPortlet.do");
+		svMap.put("portletType", "G");
+		svMap.put("defaultOrder", 20);
+		svMap.put("portletUsed", 1);
+		svMap.put("portletOrder", 20);
+		svMap.put("boardId", null);
+		ezCommonDAO.insertPortletInfo(svMap);
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				rsMap.put("companyId", company.getCompanyId());
+				rsMap.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertRsPortletInfo(rsMap); // 자원관리 포틀릿 유무 확인 후 insert
+				
+				wfMap.put("companyId", company.getCompanyId());
+				wfMap.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertWfPortletInfo(wfMap); // 웹폴더 포틀릿 유무 확인 후 insert
+				
+				svMap.put("companyId", company.getCompanyId());
+				svMap.put("tenantId", company.getTenantId());
+				
+				if (isSurveyMenuNew) {
+					ezCommonDAO.insertSurveyMenuInfo(svMap);
+				}
+				
+				ezCommonDAO.insertSvPortletInfo(svMap); // 전자설문 포틀릿 유무 확인 후 insert
+				
+			}
+		}
+	}
+
+	private void insertSurveyMenu() {
+		logger.debug("insertSurveyMenu started");
+		ezCommonDAO.insertSurveyMenu();
+		logger.debug("insertSurveyMenu ended");
+	}
+
+	private String checkSurveyMenu() {
+		logger.debug("checkSurveyMenu started");
+		String surveyMenuId = ezCommonDAO.checkSurveyMenu();
+		logger.debug("[surveyMenuId]" + surveyMenuId);
+		return surveyMenuId;
+	}
+
 	public void createAccessCountry() throws Exception {
 		ezCommonDAO.createTblAccessCountry();
 	}
-
+	
 	@Override
 	public void addSnMenuAuth() throws Exception {
 		ezCommonDAO.addSnMenuAuth();
@@ -1717,5 +1823,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void createUserDistributionTable() {
 		ezCommonDAO.createUserDistributionTable();
+	}
+
+	@Override
+	public void addThemeAndPorteltAuthInit() throws Exception {
+		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CompanyInfoVO company : companyList) {
+			if (company.getCompanyId() != null) {
+				map.put("companyId", company.getCompanyId());
+				map.put("tenantId", company.getTenantId());
+				ezCommonDAO.insertThemeAuthInit(map);
+				ezCommonDAO.insertPortletAuthInit(map);
+			}
+		}
 	}
 }

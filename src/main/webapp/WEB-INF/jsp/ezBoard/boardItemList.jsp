@@ -135,15 +135,16 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		
-		        if (BoardAdmin_FG == "true"){
+		    	
+		        if (BoardAdmin_FG == "true") {
 		            document.getElementById("noti").style.display = "";
 		        }
-		
-		        if (pBoardType == "2") {
+		        
+		        /* 2020-02-11 홍승비 - 익명게시판의 경우, 관리자 권한이 있다면 이동 및 복사가 가능하도록 수정 */
+		        if (pBoardType == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            document.getElementById("btn_copy").style.display = "none";
 		            document.getElementById("btn_move").style.display = "none";
-		            document.getElementById("noti").style.display = "none";
+		            document.getElementById("noti").style.display = "none"; // 익명게시판은 공지사항이 없음
 		        }
 		        
 		        /* 2019-01-30 홍승비 - 그룹사게시판의 경우, 사용자단에서 권한설정 버튼 숨김 */
@@ -752,12 +753,12 @@
 		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(strItemList[0]), "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(strItemList[0]), "CheckPassWord", GetOpenWindowfeature(470, 200));
 		                try { OpenWin.focus(); } catch (e) { }
 		            } else {
-		                var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
-		                feature = feature + GetShowModalPosition(330, 200);
-		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(arrList[0]), "", "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no");
+		                var feature = "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no";
+		                feature = feature + GetShowModalPosition(470, 200);
+		                var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + encodeURIComponent(arrList[0]), "", "status:no;dialogWidth:470px;dialogHeight:200px;help:no;scroll:no");
 		
 		                if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
 		

@@ -511,6 +511,7 @@ function func_addaddr_Complete(ret) {
             createNodeAndInsertText(xmlDom, objNode, "STYPE", "P");
             createNodeAndInsertText(xmlDom, objNode, "USERNM", "");
             createNodeAndInsertText(xmlDom, objNode, "USERNM2", "");
+            createNodeAndInsertText(xmlDom, objNode, "FURIGANA", "");
             objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
             
             xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);

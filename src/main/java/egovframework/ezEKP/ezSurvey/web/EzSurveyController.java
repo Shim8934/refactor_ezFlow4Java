@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezSurvey.web;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -723,25 +725,27 @@ public class EzSurveyController extends EgovFileMngUtil {
 		// Excel 객체 생성
 		XSSFWorkbook workbook = new XSSFWorkbook();
 
+		String fontFamily = egovMessageSource.getMessage("main.t0620", locale).split(";")[0];
+
 		// 1행 타이틀 font (bold, 맑은고딕, 크기 12pt)
 		XSSFFont titleFont = workbook.createFont();
 		titleFont.setBoldweight((short) titleFont.BOLDWEIGHT_BOLD);
 		titleFont.setFontHeight((short) 240);
-		titleFont.setFontName("맑은 고딕");
+		titleFont.setFontName(fontFamily);
 
 		// header font (bold, 맑은고딕)
 		XSSFFont headerFont = workbook.createFont();
 		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
-		headerFont.setFontName("맑은 고딕");
+		headerFont.setFontName(fontFamily);
 
 		// 기본 font(맑은고딕)
 		XSSFFont basicFont = workbook.createFont();
-		basicFont.setFontName("맑은 고딕");
+		basicFont.setFontName(fontFamily);
 
 		
 		// 헤더 스타일(회색 배경, border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
 		XSSFCellStyle headerStyle = workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_40_PERCENT.index);
 		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
@@ -767,6 +771,26 @@ public class EzSurveyController extends EgovFileMngUtil {
 		titleStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
 		titleStyle.setFont(titleFont);
+		
+		// 응답자 정보 헤더 스타일
+		XSSFCellStyle responserHeaderStyle = workbook.createCellStyle();
+		responserHeaderStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		responserHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		responserHeaderStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		responserHeaderStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		responserHeaderStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		responserHeaderStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		responserHeaderStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		responserHeaderStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		
+		// 응답자 정보 스타일
+		XSSFCellStyle responserStyle = workbook.createCellStyle();
+		responserStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		responserStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		responserStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		responserStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		responserStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		responserStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
 
 		String fileName = surveyTitle;		
 		String[] invalidName = {"\\\\","/",":","[*]","[?]","\"","<",">","[|]"}; // 윈도우 파일명으로 사용할 수 없는 문자
@@ -879,6 +903,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 				row.getCell(i).setCellStyle(headerStyle);
 			}
 			
+			boolean isFirstRow = true;
+			
 			rowCount++;
 			// 보기 갯수
 			int bogiCount;
@@ -918,6 +944,26 @@ public class EzSurveyController extends EgovFileMngUtil {
 						// 참여율
 						row.createCell(12).setCellValue(Math.round(responCount/resultTot * 1000)/10.0 + "%");
 						row.getCell(12).setCellStyle(taskNameStyle);
+						
+						if(annoynumous == 0) {
+							for(int i=0; i<responCount; i++) {
+								ResponseVO resVO = optVO.getResponses().get(i);
+								
+								rowCount++;
+								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
+								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
+								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+								row = sheet.createRow(rowCount);
+								
+								for(int j=8; j<=13; j++) {
+									row.createCell(j);
+									row.getCell(j).setCellStyle(responserStyle);
+								}
+								row.getCell(8).setCellValue(resVO.getUserName());
+								row.getCell(10).setCellValue(resVO.getDeptName());
+								row.getCell(12).setCellValue(resVO.getResponseDate().substring(0, 19));
+							}
+						}
 					}
 					break;
 				case 3: // 행렬 질문
@@ -965,8 +1011,19 @@ public class EzSurveyController extends EgovFileMngUtil {
 								}
 							}
 						}
+						
+						Collections.sort(responVO, new Comparator<ResponseVO>() {
+							@Override
+							public int compare(ResponseVO o1, ResponseVO o2) {
+								if(o1.getRowId() == o2.getRowId()) {
+									return Integer.compare(o1.getColumnId(), o2.getColumnId());
+								}
+								return Integer.compare(o1.getRowId(), o2.getRowId());
+							}
+						});
 	
 						// 매치된 값으로 sheet 생성
+						int responseCnt = 0;
 						for(int i=0; i<rowCol; i++) {
 							String rowName = matrixName[i];
 							for(int j=1;j<bogiCount-rowCol+1; j++) {
@@ -980,6 +1037,26 @@ public class EzSurveyController extends EgovFileMngUtil {
 								// 참여
 								row.createCell(13).setCellValue(rowColMatrix[i][j] + egovMessageSource.getMessage("ezSurvey.t102", locale));
 								row.getCell(13).setCellStyle(taskNameStyle);
+								
+								if(annoynumous == 0) {
+									for(int k=0; k<rowColMatrix[i][j]; k++) {
+										ResponseVO resVO = responVO.get(responseCnt++);
+										
+										rowCount++;
+										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
+										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
+										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+										row = sheet.createRow(rowCount);
+										
+										for(int l=8; l<=13; l++) {
+											row.createCell(l);
+											row.getCell(l).setCellStyle(responserStyle);
+										}
+										row.getCell(8).setCellValue(resVO.getUserName());
+										row.getCell(10).setCellValue(resVO.getDeptName());
+										row.getCell(12).setCellValue(resVO.getResponseDate().substring(0, 19));
+									}
+								}
 							}
 						}
 					}
@@ -991,10 +1068,52 @@ public class EzSurveyController extends EgovFileMngUtil {
 						for(ResponseVO rVO:qVO.getResponses()) {
 							rowCount++;
 							row = sheet.createRow(rowCount);
-							sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 0, 13));
+							
+							if(annoynumous == 0) {
+								if(isFirstRow) {
+									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 0, 7));
+									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
+									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
+									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+									
+									for(int l=0; l<=13; l++) {
+										row.createCell(l);
+										row.getCell(l).setCellStyle(responserHeaderStyle);
+									}
+									
+									row.getCell(0).setCellValue(egovMessageSource.getMessage("ezSurvey.t88", locale));
+									row.getCell(8).setCellValue(egovMessageSource.getMessage("ezSurvey.t57", locale));
+									row.getCell(10).setCellValue(egovMessageSource.getMessage("ezSurvey.t59", locale));
+									row.getCell(12).setCellValue(egovMessageSource.getMessage("ezSchedule.t165", locale));
+									
+									rowCount++;
+									row = sheet.createRow(rowCount);
+									
+									isFirstRow = false;
+								}
+								
+								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 0, 7));
+								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
+								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
+								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+							}
+							else {
+								sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 0, 13));
+							}
+							
 							// 답변
 							row.createCell(0).setCellValue(rVO.getTexts());
 							row.getCell(0).setCellStyle(sentenceStyle);
+							
+							if(annoynumous == 0) {
+								for(int j=8; j<=13; j++) {
+									row.createCell(j);
+									row.getCell(j).setCellStyle(responserStyle);
+								}
+								row.getCell(8).setCellValue(rVO.getUserName());
+								row.getCell(10).setCellValue(rVO.getDeptName());
+								row.getCell(12).setCellValue(rVO.getResponseDate().substring(0, 19));
+							}
 						}
 					}
 					break;
@@ -1024,8 +1143,16 @@ public class EzSurveyController extends EgovFileMngUtil {
 								}
 							}
 						}
+						
+						Collections.sort(responseVO, new Comparator<ResponseVO>() {
+							@Override
+							public int compare(ResponseVO o1, ResponseVO o2) {
+								return Integer.compare(o1.getSliderValue(), o2.getSliderValue());
+							}
+						});
 	
 						// 엑셀 그리기
+						int responseCnt = 0;
 						for(int []sArray:sliderArray) {
 							if(sArray[1] == 0) {
 								continue;
@@ -1039,6 +1166,26 @@ public class EzSurveyController extends EgovFileMngUtil {
 							// 응답자수
 							row.createCell(13).setCellValue(sArray[1] + egovMessageSource.getMessage("ezSurvey.t102", locale));
 							row.getCell(13).setCellStyle(taskNameStyle);
+							
+							if(annoynumous == 0) {
+								for(int i=0; i<sArray[1]; i++) {
+									ResponseVO resVO = responseVO.get(responseCnt++);
+									
+									rowCount++;
+									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
+									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
+									sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+									row = sheet.createRow(rowCount);
+									
+									for(int j=8; j<=13; j++) {
+										row.createCell(j);
+										row.getCell(j).setCellStyle(responserStyle);
+									}
+									row.getCell(8).setCellValue(resVO.getUserName());
+									row.getCell(10).setCellValue(resVO.getDeptName());
+									row.getCell(12).setCellValue(resVO.getResponseDate().substring(0, 19));
+								}
+							}
 						}
 					}
 					break;
@@ -1073,8 +1220,19 @@ public class EzSurveyController extends EgovFileMngUtil {
 								}
 							}
 						}
+						
+						Collections.sort(responsVO, new Comparator<ResponseVO>() {
+							@Override
+							public int compare(ResponseVO o1, ResponseVO o2) {
+								if(o1.getOptionId() == o2.getOptionId()) {
+									return Integer.compare(o1.getRankingLevel(), o2.getRankingLevel());
+								}
+								return Long.compare(o1.getOptionId(), o2.getOptionId());
+							}
+						});
 	
 						// 매치된 값으로 sheet 생성
+						int responseCnt = 0;
 						for(int i=0; i<bogiCount; i++) {
 							String rowName = optionName.get(i);
 							for(int j=1;j<bogiCount+1; j++) {
@@ -1087,6 +1245,26 @@ public class EzSurveyController extends EgovFileMngUtil {
 								// 참여
 								row.createCell(13).setCellValue(orderArray[i][j] + egovMessageSource.getMessage("ezSurvey.t102", locale));
 								row.getCell(13).setCellStyle(taskNameStyle);
+								
+								if(annoynumous == 0) {
+									for(int k=0; k<orderArray[i][j]; k++) {
+										ResponseVO resVO = responsVO.get(responseCnt++);
+										
+										rowCount++;
+										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 8, 9));
+										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 10, 11));
+										sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 12, 13));
+										row = sheet.createRow(rowCount);
+										
+										for(int l=8; l<=13; l++) {
+											row.createCell(l);
+											row.getCell(l).setCellStyle(responserStyle);
+										}
+										row.getCell(8).setCellValue(resVO.getUserName());
+										row.getCell(10).setCellValue(resVO.getDeptName());
+										row.getCell(12).setCellValue(resVO.getResponseDate().substring(0, 19));
+									}
+								}
 							}
 						}
 					}
@@ -1103,5 +1281,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		workbook.write(response.getOutputStream());
 		workbook.close();
 		logger.debug("jsonSaveResponse ended");
+	}
+	
+	@RequestMapping(value="/ezSurvey/checkRespondent.do", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONObject checkRespondent(int surveyId, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
+		logger.debug("checkRespondent started");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj = surveyRestService.checkRespondent(request, user.getId(), surveyId);
+		
+		logger.debug("checkRespondent ended");
+		return resultObj;
 	}
 }

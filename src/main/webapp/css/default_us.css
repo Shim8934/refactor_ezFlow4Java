@@ -1488,7 +1488,7 @@ form{display:inline;margin:0}
 	vertical-align:middle; 
 	width:230px;
 	overflow:hidden;
-	word-break:break-all;
+	word-break:break-word;
 	height:90px;
 	line-height:17px;
 	padding-top:31px;

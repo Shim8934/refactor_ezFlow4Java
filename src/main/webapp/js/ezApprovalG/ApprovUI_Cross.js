@@ -1869,17 +1869,20 @@ function SaveFile() {
 	EmbedContentIntoXML(mhtBody);
 	mhtBody = ConvertHTMLtoMHT(mhtBody);
 	
+	var data = {
+		docID : pDocID,
+		html  : mhtBody,
+		formId : pFormID,
+		orgCompanyID : orgCompanyID
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFile.do",
-		data : {
-			docID : pDocID,
-            formId : pFormID,
-			html  : mhtBody,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1915,18 +1918,21 @@ function SaveOrgFile() {
 
     mhtBody = HTML.outerHTML;
     mhtBody = ConvertHTMLtoMHT(mhtBody);
+	
+	var data = {
+		docID : pDocID,
+        formId : pFormID,
+		html  : mhtBody,
+		orgCompanyID : orgCompanyID
+	}
 
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFile.do",
-		data : {
-			docID : pDocID,
-            formId : pFormID,
-			html  : mhtBody,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			

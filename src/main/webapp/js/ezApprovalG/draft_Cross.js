@@ -3574,8 +3574,8 @@ function setDocNumFormat(pPrefix) {
 
     var field = message.GetListItem(fields, "receiptnumber");
     if (field) {
-        field.setAttribute("Format", field.textContent);
-        message.DocumentBodySetAttribute("receiptnumber", field.textContent);
+        field.setAttribute("Format", field.textContent.trim());
+        message.DocumentBodySetAttribute("receiptnumber", field.textContent.trim());
         field.textContent = "";
         if (new RegExp(/Firefox/).test(navigator.userAgent))
             field.innerHTML = "<br type='_moz'>";
@@ -3767,18 +3767,21 @@ function SaveFile() {
 	mhtBody = message.Get_EditorBodyHTML();
 	EmbedContentIntoXML(mhtBody);
 	mhtBody = ConvertHTMLtoMHT(mhtBody);
+	
+	var data = {
+		docID : pDocID,
+        formId : pFormID,
+		html  : mhtBody,
+		orgCompanyID : orgCompanyID
+	}
     
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFile.do",
-		data : {
-			docID : pDocID,
-            formId : pFormID,
-			html  : mhtBody,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -3812,18 +3815,21 @@ function SaveOrgFile() {
 	var mhtBody = "";
 	mhtBody = "<HTML>" + GetCKEditerHeader() + pOrgHtml + "</HTML>";
 	mhtBody = ConvertHTMLtoMHT(mhtBody);
+	
+	var data = {
+		docID : pDocID,
+        formId : pFormID,
+		html  : mhtBody,
+		orgCompanyID : orgCompanyID
+	}
     
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFile.do",
-		data : {
-			docID : pDocID,
-            formId : pFormID,
-			html  : mhtBody,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -4093,6 +4099,12 @@ function SaveTMPFile(AutoSave) {
     mhtBody = message.Get_EditorBodyHTML();
     mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
     mhtBody = ConvertHTMLtoMHT(mhtBody);
+	
+	var data = {
+		docID : pDocID,
+        formId : pFormID,
+		html  : mhtBody
+	}
 
     var result = "";
     
@@ -4101,11 +4113,8 @@ function SaveTMPFile(AutoSave) {
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveTmpFile.do",
-		data : {
-			docID : pDocID,
-            formId : pFormID,
-			html  : mhtBody
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			

@@ -57,6 +57,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
@@ -105,6 +106,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	@Resource(name = "crypto") 
 	private EgovFileScrty egovFileScrty;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	@Resource(name = "EzPersonalService")
 	private EzPersonalService ezPersonalService;
@@ -1189,6 +1193,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", userInfo.getTenantId());
 		String useAllowUserMobileManagement = ezCommonService.getTenantConfig("useAllowUserMobileManagement", userInfo.getTenantId());
 		
+		boolean useMailAliasSettingOnLogin = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailAliasSettingOnLogin", userInfo.getTenantId()));
+		
+		if (useMailAliasSettingOnLogin) {
+			int mailIdLength = labelMail.indexOf("@");
+			if (mailIdLength > 0) {
+				labelMail = labelMail.substring(0, mailIdLength);
+			}
+
+			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+			model.addAttribute("domainName", domainName);
+		}
+		
 		if (useMobileManagemant.equals("YES") && useAllowUserMobileManagement.equals("YES")) {
 			userMobileManaged = "YES";
 		}
@@ -1226,6 +1242,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("LiteralFurigana", literalFurigana);
 		model.addAttribute("LiteralExtensionPhone", literalExtensionPhone);
 		model.addAttribute("LiteralOfficeMobile", literalOfficeMobile);
+		model.addAttribute("useMailAliasSettingOnLogin", useMailAliasSettingOnLogin);
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";
@@ -2278,5 +2295,66 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		logger.debug("getBujaeInfo ended");
 		return result;
+	}
+
+	/**
+	 * 사용자가 설정하는 alias 메일주소 도메인체크 및 중복체크 실행 함수<br>
+	 * - 사용자 기본 이메일 주소(cn@도메인)를 제외한 alias는 중복에 안 걸림
+	 */
+	@RequestMapping(value = "/ezPersonal/checkEmailId.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String checkEmailId(@CookieValue("loginCookie") String loginCookie, @RequestParam String emailId) throws Exception {
+		logger.debug("checkEmailId started.");
+
+		String returnValue = "ERROR";
+
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			logger.debug("userId={}, emailId={}", userInfo.getId(), emailId);
+
+			int tenantId = userInfo.getTenantId();
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String userEmail = userInfo.getId() + "@" + domain;
+			String aliasEmail = emailId + "@" + domain;
+			returnValue = ezEmailService.checkIndividualAliasWithoutOwned(userEmail, aliasEmail, tenantId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("checkEmailId ended. returnValue={}", returnValue);
+
+		return returnValue;
+	}
+
+	/**
+	 * 사용자가 설정하는 alias 메일주소 도메인체크 및 중복체크 실행 함수 <br>
+	 * - 사용자 기본 이메일 주소(cn@도메인)를 제외한 alias는 중복에 안 걸림
+	 */
+	@RequestMapping(value = "/ezPersonal/saveUserEmail.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveUserEmail(@CookieValue("loginCookie") String loginCookie, @RequestParam String emailId) throws Exception {
+		logger.debug("saveUserEmail started.");
+
+		String returnValue = "ERROR";
+
+		try {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String userId = userInfo.getId();
+			logger.debug("userId={}, emailId={}", userId, emailId);
+
+			int tenantId = userInfo.getTenantId();
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String userEmail = userId + "@" + domain;
+			String updateAlias = emailId + "@" + domain;
+			String originAlias = ezCommonService.getUserConfigInfo(tenantId, userId, "userFriendlyEmailAddress");
+
+			returnValue = ezEmailService.updatePrimaryIndividualAlias(userEmail, originAlias, updateAlias, tenantId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("saveUserEmail ended. returnValue={}", returnValue);
+
+		return returnValue;
 	}
 }

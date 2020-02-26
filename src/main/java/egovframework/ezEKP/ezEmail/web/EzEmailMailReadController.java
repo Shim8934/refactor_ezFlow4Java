@@ -299,6 +299,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						fromStr = commonUtil.trimDoubleQuotes(fromStr);
 								
 						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
+						
+						if (fromStr.equals(fromEmail)) {
+							List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(fromStr, fromEmail);
+							fromStr = mailAddrList.get(0);
+							fromEmail = mailAddrList.get(1);
+						}
 					} else {
 						String[] fromHeaders = message.getHeader("From");
 						if (fromHeaders != null) {
@@ -1767,6 +1773,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					if (arrFroms != null) {
 						fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
 						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
+						
+						if (fromStr.equals(fromEmail)) {
+							List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(fromStr, fromEmail);
+							fromStr = mailAddrList.get(0);
+							fromEmail = mailAddrList.get(1);
+							
+							if (fromStr.indexOf("\"") == 0 && fromStr.lastIndexOf("\"") == (fromStr.length()-1)) {
+								fromStr = fromStr.substring(1, fromStr.length()-2);
+							}
+						}
 					} else {
 						String[] fromHeaders = message.getHeader("From");
 						if (fromHeaders != null) {

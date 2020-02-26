@@ -1,14 +1,18 @@
 package egovframework.ezEKP.ezSurvey.service;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzSurveyService {
@@ -44,4 +48,6 @@ public interface EzSurveyService {
 	JSONObject changeSurveyState(String itemId, LoginVO userInfo) throws Exception;
 	JSONObject saveResponseItem(JSONArray responses, long surveyId, LoginVO userInfo) throws Exception;
 	JSONObject getSurveyStatistic(Long surveyId, String realPath, LoginVO userInfo, String adminYN) throws Exception;
+	JSONObject checkRespondent(Long surveyId, LoginVO userInfo);
+	int getSurveyIngCnt(MCommonVO userInfo);
 }

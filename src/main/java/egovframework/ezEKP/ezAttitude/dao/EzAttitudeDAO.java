@@ -22,6 +22,7 @@ import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAttitudeDAO")
@@ -553,5 +554,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void deleteAnnualHistory(Map<String, Object> map) {
 		delete("ezAttitudeAdminDAO.deleteAnnualHistory", map);
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AttitudeVO> getAnuualListSchedule(Map<String, Object> map) {
+		return (List<AttitudeVO>) list("ezAttitudeDAO.getAnuualListSchedule", map);
 	}
 }

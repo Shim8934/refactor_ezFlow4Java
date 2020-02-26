@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 
 public interface EzNewPortalService {
 
@@ -205,5 +206,8 @@ public interface EzNewPortalService {
 
 	public int getApprovalDoingListCount(String userId, String companyId, int tenantId, String offset, String approvalFlag, String lang) throws Exception;
 	
+	public List<FileVO> getWebFolderFileList(String folderId, int tenantId) throws Exception;
+
 	public void addPortalTenantConfig(int tenantId, String propertyName, String propertyValue, String description, String configName, String configType) throws Exception;
+
 }
