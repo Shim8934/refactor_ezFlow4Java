@@ -21,11 +21,11 @@
 		     	word-break : break-word;   
 		    }
 		    
-			delsentence {
+			addsentence {
 				text-decoration: none;
 	            background-color: #d4fcbc;
 			}
-	        addsentence {
+	        delsentence {
 	            text-decoration: line-through;
 	            background-color: #fbb6c2;
 	            color: #555;
