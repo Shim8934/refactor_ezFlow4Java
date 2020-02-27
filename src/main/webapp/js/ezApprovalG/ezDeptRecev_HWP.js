@@ -1937,16 +1937,19 @@ function SaveFile()
 
     var result = "";
 
+	var data = {
+		docID : pDocID,
+		html  : HwpCtrl.GetCloneData("", "HWP"),
+		orgCompanyID : orgCompanyID
+	}
+
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : HwpCtrl.GetCloneData("", "HWP"),
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1959,16 +1962,19 @@ function SaveOrgFile()
 {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		html  : pOrgHtml,
+		orgCompanyID : orgCompanyID
+	}
+	
 	$.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			html  : pOrgHtml,
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			

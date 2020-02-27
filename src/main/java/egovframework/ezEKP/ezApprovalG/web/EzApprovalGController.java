@@ -3495,7 +3495,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = {"/ezApprovalG/saveTmpFile.do", "/ezApprovalG/saveTmpFileHWP.do"}, produces = "text/xml;charset=utf8", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveTmpFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String saveTmpFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody JSONObject jsonObj) throws Exception{
 		logger.debug("saveTmpFile started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -3507,9 +3507,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			extension = ".hwp";
 		}
 		
-		String docID = request.getParameter("docID");
-		String formId = request.getParameter("formId");
-		String formText = request.getParameter("html") == null ? "" : request.getParameter("html");
+		String docID = jsonObj.get("docID") == null ? null : jsonObj.get("docID").toString();
+		String formId = jsonObj.get("formId") == null ? "" : jsonObj.get("formId").toString();
+		String formText = jsonObj.get("html") == null ? "" : jsonObj.get("html").toString();
 		String realPath = commonUtil.getRealPath(request);
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -3802,7 +3802,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = {"/ezApprovalG/saveFile.do", "/ezApprovalG/saveFileHWP.do"}, produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String saveFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody JSONObject jsonObj) throws Exception{
 		logger.debug("saveFile started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -3814,10 +3814,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			extension = ".hwp";
 		}
 		
-		String docID = request.getParameter("docID");
-		String formId = request.getParameter("formId") == null ? "" : request.getParameter("formId");
-		String formText = request.getParameter("html") == null ? "" : request.getParameter("html");
-		String orgCompanyID = request.getParameter("orgCompanyID");
+		String docID = jsonObj.get("docID") == null ? null : jsonObj.get("docID").toString();
+		String formId = jsonObj.get("formId") == null ? "" : jsonObj.get("formId").toString();
+		String formText = jsonObj.get("html") == null ? "" : jsonObj.get("html").toString();
+		String orgCompanyID = jsonObj.get("orgCompanyID") == null? null : jsonObj.get("orgCompanyID").toString();
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !userInfo.getCompanyID().equals(orgCompanyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -8021,13 +8021,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/saveEndFile.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody JSONObject jsonObj) throws Exception{
 		logger.debug("saveEndFile started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String docID = request.getParameter("docID");
-		String formText = request.getParameter("html");
+		String docID = jsonObj.get("docID") == null? null : jsonObj.get("docID").toString();
+		String formText = jsonObj.get("html") == null? null : jsonObj.get("html").toString();
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		InputStream stream = null;

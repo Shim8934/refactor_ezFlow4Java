@@ -524,16 +524,19 @@
 			        mhtBody = message.Get_EditorBodyHTML();
 			        mhtBody = "<HTML>" + mhtBody + "</HTML>";
 			        mhtBody = ConvertHTMLtoMHT(mhtBody);
+			    	
+			    	var data = {
+		    			docID : pDocID,
+		    			html  : mhtBody
+			    	}
 			        
 			        $.ajax({
 			    		type : "POST",
 			    		dataType : "text",
 			    		async : false,
 			    		url : "/ezApprovalG/saveEndFile.do",
-			    		data : {
-			    			docID : pDocID,
-			    			html  : mhtBody
-			    		},
+			    		contentType : "application/json",
+			    		data : JSON.stringify(data),
 			    		success: function(xml){
 			    			result = xml;
 			    		}        			
