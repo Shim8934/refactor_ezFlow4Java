@@ -3536,7 +3536,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             /*if (targetFile.exists()) {
                 //update
-                if (formText.equals("") || formFile.length() >= targetFile.length()) {
+//                if (formText.equals("") || formFile.length() >= targetFile.length()) {
+				if (formText.equals("") || targetFile.length() <= 1) {
                     logger.debug("update oriTmpFile backup started.");
 
                     File backupDir = new File(tmpPath + commonUtil.separator + "backUp");
