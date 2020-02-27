@@ -452,6 +452,13 @@ public class EzNewPortalGWController {
 				usePortalAutoRefreshInterval = ezCommonService.getTenantConfig("usePortalAutoRefreshInterval", tenantId);
 			}
 			
+			if ("YES".equals(useEzWorkspace)) {
+				String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", tenantId);
+				String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", tenantId);
+				data.put("workspaceHostUrl", workspaceHostUrl);
+				data.put("workspaceContextRootUrl", workspaceContextRootUrl);
+			}
+			
 			data.put("usedTheme", userThemeSetting.getUsedTheme());
 			data.put("usedFrame", userThemeSetting.getUsedFrame());
 //			data.put("portletOrder", portletOrder);
