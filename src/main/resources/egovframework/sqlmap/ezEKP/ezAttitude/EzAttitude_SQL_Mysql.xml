@@ -2566,11 +2566,11 @@
 				<![CDATA[
 				AND  
 					(
-						(date_add(START_DATE, INTERVAL #v_OFFSETMIN# minute) >= #v_PSTARTDATE# and date_add(START_DATE, INTERVAL #v_OFFSETMIN# minute) <= #v_PENDDATE#) 
+						(START_DATE >= #v_PSTARTDATE# and START_DATE <= #v_PENDDATE#) 
 						or
-						(date_add(END_DATE, INTERVAL #v_OFFSETMIN# minute) >= #v_PSTARTDATE# and date_add(END_DATE, INTERVAL #v_OFFSETMIN# minute) < #v_PENDDATE#) 
+						(END_DATE >= #v_PSTARTDATE# and END_DATE < #v_PENDDATE#) 
 						or
-						(date_add(START_DATE, INTERVAL #v_OFFSETMIN# minute) < #v_PSTARTDATE# and date_add(END_DATE, INTERVAL #v_OFFSETMIN# minute) >= #v_PENDDATE#)
+						(START_DATE < #v_PSTARTDATE# and END_DATE >= #v_PENDDATE#)
 					)
 				]]>
 	</select>
