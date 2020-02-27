@@ -975,8 +975,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", userInfo.getTenantId());
+		String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", userInfo.getTenantId());
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
+		model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+		model.addAttribute("workspaceContextRootUrl", workspaceContextRootUrl);
 		
 		logger.debug("ezWorkspacePortlet End");
 		return "/ezNewPortal/portlets/ezWorkspacePortlet";

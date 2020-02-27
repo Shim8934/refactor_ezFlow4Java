@@ -2363,18 +2363,21 @@ function SaveDraftDocInfo() {
     	mhtBody = message.Get_EditorBodyHTML();
     	EmbedContentIntoXML(mhtBody);
     	mhtBody = ConvertHTMLtoMHT(mhtBody);
+    	
+    	var data = {
+			docID : pDocID,
+			formId : pFormID,
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
+    	}
         
         $.ajax({
     		type : "POST",
     		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/saveFile.do",
-    		data : {
-    			docID : pDocID,
-				formId : pFormID,
-    			html  : mhtBody,
-    			orgCompanyID : orgCompanyID
-    		},
+    		contentType : "application/json",
+    		data : JSON.stringify(data),
     		success: function(text){
     			result = text;
     		}        			
@@ -2422,18 +2425,21 @@ function SaveDraftDocInfo() {
         var mhtBody = "";
         mhtBody = "<HTML>" + GetCKEditerHeader() + pOrgHtml + "</HTML>";
         mhtBody = ConvertHTMLtoMHT(mhtBody);
+    	
+    	var data = {
+			docID : pDocID,
+			formId : pFormID,
+			html  : mhtBody,
+			orgCompanyID : orgCompanyID
+    	}
 
         $.ajax({
     		type : "POST",
     		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/saveFile.do",
-    		data : {
-    			docID : pDocID,
-				formId : pFormID,
-    			html  : mhtBody,
-    			orgCompanyID : orgCompanyID
-    		},
+    		contentType : "application/json",
+    		data : JSON.stringify(data),
     		success: function(text){
     			result = text;
     		}        			

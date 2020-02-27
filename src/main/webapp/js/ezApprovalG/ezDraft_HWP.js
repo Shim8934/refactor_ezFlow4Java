@@ -1577,17 +1577,20 @@ function setDocNumFormat(pPrefix)
 //구현해야하는부분
 function SaveFile() {
 	var result = "";
+
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP")
+	}
 	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : HwpCtrl.GetCloneData("", "HWP")
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1598,17 +1601,20 @@ function SaveFile() {
 
 function SaveOrgFile() {
 	var result = "";
+
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : pOrgHtml
+	}
 	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : pOrgHtml
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -1706,17 +1712,20 @@ function putSignXML(SignXML)
 
 function SaveTMPFile() {
     var result = "";
+
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP")
+	}
     
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveTmpFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : HwpCtrl.GetCloneData("", "HWP")
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			

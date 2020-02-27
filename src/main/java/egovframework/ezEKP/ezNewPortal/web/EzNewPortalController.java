@@ -409,6 +409,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
+			boolean useEzWorkspace = "YES".equals(data.get("useEzWorkspace"));
 			model.addAttribute("portletOrder", data.get("portletOrder"));
 			model.addAttribute("usedTheme", data.get("usedTheme"));
 			model.addAttribute("usedFrame", data.get("usedFrame"));
@@ -426,12 +427,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
-			model.addAttribute("useEzWorkspace", data.get("useEzWorkspace"));
+			model.addAttribute("useEzWorkspace", useEzWorkspace);
 			model.addAttribute("lastLogin", data.get("lastLogin"));
 			model.addAttribute("userEmail", data.get("userEmail"));
 			model.addAttribute("userId", userId);
 			model.addAttribute("usePortalAutoRefreshInterval", data.get("usePortalAutoRefreshInterval"));
 			
+			if (useEzWorkspace) {
+				model.addAttribute("workspaceHostUrl", data.get("workspaceHostUrl"));
+				model.addAttribute("workspaceContextRootUrl", data.get("workspaceContextRootUrl"));
+			}
+
 			String usedTheme = data.get("usedTheme").toString();
 			returnUrl += "Theme" + usedTheme;
 			logger.debug("returnUrl : " + returnUrl);
