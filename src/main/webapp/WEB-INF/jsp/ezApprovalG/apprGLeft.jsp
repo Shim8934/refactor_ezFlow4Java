@@ -38,6 +38,11 @@
 			#mCSB_1_container {
 				margin-right: 0px;
 			}
+			.node_normal, .node_selected {
+				overflow: hidden;
+			    text-overflow: ellipsis;
+			    display: inline-block;
+			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.7.2.min.js')}"></script>
@@ -128,7 +133,7 @@
 		            treeView.DataBind("divUserContTree");
 
 		            //title3[0].setAttribute("TITLE", title3[0].innerHTML); 
- 		            $(".node_normal").css("width", "135px");
+ 		            $(".node_normal").css("width", "145px");
  		            
 					var node = $(".node_normal");
 					
@@ -207,7 +212,7 @@
 	            treeView.LoadFromID(pTreeID);
 	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID);
 	            
-	            /* var node = document.getElementById(pNodeID);
+	            var node = document.getElementById(pNodeID);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
 		        
@@ -216,11 +221,11 @@
 		        }
 		        for(var i=0; i<title2.length; i++) {
 		        	var title3 = title2[i].getElementsByClassName("node_normal");
-		        	title3[0].setAttribute("TITLE", title3[0].innerHTML); 
-		        	title3[0].style.width = 135 - 16*(nodeLevel-1) +'px';
-		        	title3[0].style.textOverflow = 'ellipsis';
-		        	title3[0].style.overflow = 'hidden';
-		        } */		        
+		        	//title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	title3[0].style.width = 145 - 16*(nodeLevel-1) +'px';
+		        	//title3[0].style.textOverflow = 'ellipsis';
+		        	//title3[0].style.overflow = 'hidden';
+		        }
 	        }
 		    
 		    function Tree_setconfig() {
@@ -281,7 +286,7 @@
 	            treeView.DataSource(xmlDomRet);
 	            treeView.DataBind("divUserContTree");
 	            
-	            $(".node_normal").css("width", "135px");
+	            $(".node_normal").css("width", "145px");
  		          
 				var node = $(".node_normal");
 					
