@@ -2633,10 +2633,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID) throws Exception {
+	public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID, String docID) throws Exception {
 		logger.debug("makeTmp2IngDocInfo Started");
 		
- 		String docID = getNewID(companyID, tenantID);
+ 		if(docID.equals(""))
+ 			docID = getNewID(companyID, tenantID);
 		String rtnVal = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -10627,6 +10628,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DOCID", beforeDocID.trim());
 		}
 		
+		String oldDocID = "";
+		if(strXML.getElementsByTagName("saveFlag").getLength() > 0) {
+			oldDocID = strXML.getElementsByTagName("oldDocID").item(0).getTextContent();
+			map.put("v_DOCID", oldDocID);
+		}
+		
 		logger.debug("doProcess param : v_DOCID =" + docID.trim() + " v_TENANTID =" + userInfo.getTenantId() + " v_USERID =" + userID.trim());
 		// 진행 or 보류인 결재라인 정보 호출 TBL_APRDOCINFO
 		int aprCount = ezApprovalGDAO.doProcessCount(map);
@@ -10750,7 +10757,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					//따로 삭제하지말고 한번에 삭제하고 생성하자
-					if (!FormHref.equals("") && listType.equals("21") && draftFlag.equals("REDRAFT")) {
+					if (!FormHref.equals("") && listType.equals("21") && draftFlag.equals("REDRAFT") && !oldDocID.equals("")) {
 						if (!compareTmpDocID(FormHref, docSN, companyID, userInfo.getTenantId())) {
 							return "<RESULT>FALSE</RESULT>";
 						} else {
@@ -10763,7 +10770,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 					}
 					
-					subSQL = makeTmpDocInfo(userID, docID, proxyUserID, companyID, lang, userInfo.getTenantId());
+					if(oldDocID.equals("")) {
+						subSQL = makeTmpDocInfo(userID, docID, proxyUserID, companyID, lang, userInfo.getTenantId(), docID);
+					} else {
+						subSQL = makeTmpDocInfo(userID, docID, proxyUserID, companyID, lang, userInfo.getTenantId(), oldDocID);
+						subSQL = makeTmp2IngDocInfo(userID, subSQL, companyID, lang, userInfo.getTenantId(), docID);
+					}
 					
 					logger.debug("doapprov makeTmpDocInfo ended.");
 					
@@ -13348,10 +13360,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return rtnVal;
 	}
 
-	public String makeTmpDocInfo(String userID, String docID, String updateFlag, String companyID, String lang, int tenantID) throws Exception {
+	public String makeTmpDocInfo(String userID, String docID, String updateFlag, String companyID, String lang, int tenantID, String oldDocID) throws Exception {
 		logger.debug("makeTmpDocInfo started.");
 		logger.debug("updateFlag = " + updateFlag + " || docID = " + docID);
 		
+		String sn = "";
 		if (updateFlag.equals("UPDATE")) {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -13360,7 +13373,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("companyID", companyID);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			
-			String sn = ezApprovalGDAO.maxTmpDocSn(map);
+			sn = ezApprovalGDAO.maxTmpDocSn(map);
 			map.put("v_PSN", sn);
 			map.put("useOpenGov", config.getProperty("config.useOpenGov"));
 			
@@ -13383,12 +13396,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertTmpAprDocInfo(map);
 
 		} else {
-			String sn = getMaxTMPDocSN(userID, companyID, lang, tenantID);
+			sn = getMaxTMPDocSN(userID, companyID, lang, tenantID);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_USERID", userID);
 			map.put("v_SN", sn);
-			map.put("v_DOCID", docID);
+			map.put("v_DOCID", oldDocID);
 			map.put("companyID", companyID);
 			map.put("v_TENANTID", tenantID);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
@@ -13399,13 +13412,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertTmpAttachInfo(map);
 			ezApprovalGDAO.insertTmpExpAprLine(map);
 			ezApprovalGDAO.insertTmpAprLineInfo(map);
+			
+			map.put("v_DOCID", docID);
 			ezApprovalGDAO.insertTmpExpAprDocInfo(map);
 			ezApprovalGDAO.insertTmpAprDocInfo(map);
 		}
 		
 		logger.debug("makeTmpDocInfo ended.");
 		
-		return "TRUE";
+		return sn;
 	}
 
 	public String getMaxTMPDocSN(String userID, String companyID, String lang, int tenantID) throws Exception {
