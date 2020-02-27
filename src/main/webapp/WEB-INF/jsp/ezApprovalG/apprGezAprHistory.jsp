@@ -56,8 +56,12 @@
 		            }
 		        }
 		        else {
+		        	/* 2020-02-25 홍승비 - 결재문서 수정이력 비교화면 구현, 기존 수정이력화면 주석처리 */
 		            if (CrossYN()) {
-		                pUrl = "/ezApprovalG/docViewerCK.do?docHref=" + encodeURI(Arguments[0]);
+		                //pUrl = "/ezApprovalG/docViewerCK.do?docHref=" + encodeURI(Arguments[0]);
+		                pUrl = "/ezApprovalG/docViewerCompare.do?docHrefAfter=" + encodeURI(Arguments[0]) + "&docHrefBefore=" + encodeURI(oArrRows[0].getAttribute("BEFOREDOCURL"));
+		                openwindow2(pUrl);
+		                return;
 		            }
 		            else {
 		                pUrl = "DocViewer.aspx?DocHref=" + escapenew(Arguments[0]);
@@ -65,6 +69,7 @@
 		        }
 		        openwindow(pUrl, "", 800, 550);
 		    }
+		    
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
 		        try {
 		            var heigth = window.screen.availHeight;
@@ -90,6 +95,24 @@
 		            alert("openwindow :: " + e.description);
 		        }
 		    }
+		    /* 2020-02-25 홍승비 - 수정화면 비교용 팝업창 열기 함수 추가 (전체 화면 크기에 가깝게 열림) */
+		    function openwindow2(wfileLocation) {
+		        try {
+		            var heigth = window.screen.availHeight;
+		            var width = window.screen.availWidth;
+		            var left = 0;
+		            var top = 0;
+	                var pleftpos;
+	                
+	                heigth = parseInt(heigth) - 70;
+	                width = parseInt(width) - 20;
+	                
+		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+		        } catch (e) {
+		            alert("openwindow :: " + e.description);
+		        }
+		    }
+		    
 		    function lvAttachList_DBSelChange() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvAttachList");

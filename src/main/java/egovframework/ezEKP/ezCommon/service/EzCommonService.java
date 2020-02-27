@@ -104,5 +104,8 @@ public interface EzCommonService {
 
 	public int checkDeptId(String userID, String deptID, String tenantId);
 
+	public void addIsBeforeDoc() throws Exception;
+
+	public void addBeforeDocUrl() throws Exception;
 }
 

@@ -10127,6 +10127,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("CHANGEUSERID").item(k).getTextContent()) + "</DATA3>");
 					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("CHANGEUSERDEPTID").item(k).getTextContent()) + "</DATA4>");
 					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("CHKFLAG").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<BEFOREDOCURL>" + makeListField(docXML.getElementsByTagName("BEFOREDOCURL").item(k).getTextContent()) + "</BEFOREDOCURL>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -23826,8 +23827,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return rtnVal;
 	}
 
+	/* 2020-02-24 홍승비 - 편집 전후 문서를 판단하기 위한 플래그 isBeforeDoc 추가, 편집 전 문서의 인서트 성공 시 url 리턴 */
 	@Override
-	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo) throws Exception {
+	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String isBeforeDoc, String beforeDocURL, LoginVO userInfo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
 		map.put("companyID", userInfo.getCompanyID());
@@ -23846,9 +23848,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERDEPTNAME", userDeptName);
 		map.put("v_USERDEPTNAME2", userDeptName2);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_ISBEFOREDOC", isBeforeDoc);
+		map.put("v_BEFOREDOCURL", beforeDocURL);
 		
 		ezApprovalGDAO.insertHistoryDocInfo(map);
-		return "<RESULT>TRUE</RESULT>";
+		return url;
 	}
 
 	@Override

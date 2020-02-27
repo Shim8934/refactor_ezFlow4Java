@@ -397,7 +397,8 @@ public interface EzApprovalGService {
 
 	public String doCancelForce(String docID, String userID, String companyID, int tenantId) throws Exception;
 
-	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo)  throws Exception;
+	/* 2020-02-24 홍승비 - 편집 전후 문서를 판단하기 위한 플래그 isBeforeDoc, 편집전문서 파일경로 beforeDocURL 추가 */
+	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, String isBeforeDoc, String beforeDocURL, LoginVO userInfo)  throws Exception;
 
 	public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
 
