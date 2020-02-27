@@ -960,6 +960,8 @@
 		                        pDraftFlag = "SUSIN";
 		                    } else if (pCurSelRow.getAttribute("DATA9") == strDocState12 || pCurSelRow.getAttribute("DATA9") == strDocState2) {
 		                        pDraftFlag = "HAPYUI";
+		                    } else if (pCurSelRow.getAttribute("DATA9") == strDocState14) {
+		                    	pDraftFlag = "GAMSABU";
 		                    }
 		                    
 		                    OpenReceiveDraftUI(pCurSelRow, pDraftFlag);
