@@ -1267,7 +1267,7 @@
 			</div>
 		</div>
 		<div id="ContextMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
-		    <table cellpadding=2 cellspacing=1 border=0 style="width:150px;" class="popuplist">
+		    <table cellpadding=2 cellspacing=1 border=0 class="popuplist">
 		    <tr id="replyAllMenu">
 		        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="all_reply_mail_onclick();HiddenContextMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/i_reall.gif" alt=""  align="absmiddle" hspace="5"><spring:message code="ezEmail.t512" /></span></td>
 		    </tr>
