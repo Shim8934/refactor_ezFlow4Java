@@ -16977,7 +16977,7 @@
               ORGDOCID ,
               DOCTYPE ,
               DOCSTATE ,
-              FUNCTIONTYPE ,
+              '000' ,
               HREF ,
               DOCTITLE ,
               DOCNO ,
