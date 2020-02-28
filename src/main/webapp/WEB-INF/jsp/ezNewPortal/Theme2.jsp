@@ -989,8 +989,8 @@
 	    var feedListCount = 10;
 	    var g_bRayful = false;
 	    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
-	        
-    	ezWorkspaceData();
+	    
+    	ezWorkspaceData(workspaceContextRootUrl);
     </script>		
 </c:if>	
 <!-- 협업 끝 -->	
