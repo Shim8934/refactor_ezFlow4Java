@@ -3011,25 +3011,34 @@
                 
                 if (arrRows.length > 0) {
                 	var strId = GetAttribute(arrRows[0], "DATA1");
-	        	
-		        	$.ajax({
-			        	type : "POST",
-			        	url : "/ezEmail/refuseToApplyDL.do",
-			        	data : {cn : cn, userId : strId },
-			        	success : function(result){	
-			        		if (result == "OK") {
-			        			alert("<spring:message code='ezEmail.userDL39' />");        			
-			        		} else {
-			        			alert("<spring:message code='ezEmail.lhm14' />");
-			        		}
-			        		
-			        		userDlApplyList();
-			        	},
-			        	error : function(error){
-			        		alert("<spring:message code='ezEmail.lhm14' />" + error);
-			        		xmlDOM = null;
-			        	}
-			        });
+					
+	                var listid = "MsgToList";
+	                var getlistview = new ListView();
+                    getlistview.LoadFromID(listid);
+	                var bFlag = getlistview.ExistRow("data1", strId);
+                	
+	                if (!bFlag) {
+			        	$.ajax({
+				        	type : "POST",
+				        	url : "/ezEmail/refuseToApplyDL.do",
+				        	data : {cn : cn, userId : strId },
+				        	success : function(result){	
+				        		if (result == "OK") {
+				        			alert("<spring:message code='ezEmail.userDL39' />");        			
+				        		} else {
+				        			alert("<spring:message code='ezEmail.lhm14' />");
+				        		}
+				        		
+				        		userDlApplyList();
+				        	},
+				        	error : function(error){
+				        		alert("<spring:message code='ezEmail.lhm14' />" + error);
+				        		xmlDOM = null;
+				        	}
+			    		});
+	                } else {
+	                	alert("<spring:message code='ezEmail.userDL41'/>");
+	                }
                 } else {
                 	alert("<spring:message code='ezEmail.userDL30'/>");
                 }
