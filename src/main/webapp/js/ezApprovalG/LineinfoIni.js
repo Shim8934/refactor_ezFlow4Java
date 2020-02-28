@@ -300,11 +300,19 @@ function LineAprTyepSetAll() {
 			if ((pTotalRows[i].getAttribute("DATA11") == "009" || pTotalRows[i].getAttribute("DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
 				p_StatusDis = "disabled";
 			
+			// 감사부서는 감사결재 유형만 사용할 수 있도록 설정. 2020-02-28 홍대표.
+			if(pDeptgamsaCount > 0 && pTotalRows[i].getAttribute("DATA4") == optGamsabu) {
+				p_StatusDis = "disabled";
+			}
+			
 			if (p_isDept == "Y") {
 				var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));
 				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
 				AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
 				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+				
+				// 감사부서는 감사결재 유형만 사용할 수 있도록 설정. 2020-02-28 홍대표.
+				setDeptGamsaType(pTotalRows[i]);
 			} else {
 				var AprTypeObj = ChangeAprlineType("user", pTotalRows[i].getAttribute("DATA11"));
 				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
@@ -1537,4 +1545,13 @@ function CheckGamsaYesan(pAprType, pObj) {
     } catch (e) {
     	alert("CheckGamsaYesan :: " + e.description);
     }
+}
+
+function setDeptGamsaType(targetRow) {
+	[].forEach.call(targetRow.childNodes[4].getElementsByTagName("option"), function(elem) {
+		if(targetRow.getAttribute("DATA4") == optGamsabu && elem.value != strAprType13
+		  || targetRow.getAttribute("DATA4") != optGamsabu && elem.value == strAprType13) {
+			elem.remove();
+		}
+	})
 }
