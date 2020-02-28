@@ -1374,7 +1374,7 @@ function getApprovInfo() {
             case "B_GAMSA":
             	approvalType = "B_GAMSA";
                 setMenuBar("btnApprove", true);
-                setMenuBar("btnReject", false);
+                setMenuBar("btnReject", true);  // 부서감사 유형 감사부서에서 반송 가능하도록 수정. 2020-02-28 홍대표
                 setMenuBar("btnStay", false);
                 setMenuBar("btnJunKyul", false);
                 setMenuBar("btnModAprLine", false);
