@@ -2140,7 +2140,7 @@ logger.debug("map.toString()" + map.toString());
 			str ="icon_topmenu icon_nav_voting";
 		} else if (url.equals("/ezBoard/boardMain.do?func=4")) { //사다리
 			str ="icon_topmenu icon_nav_laddergame";
-		} else if (url.equals("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO")) { //협업
+		} else if (url.contains("/ezWorkspace/Account/SSO")) { //협업
 			str ="icon_topmenu icon_nav_collaboration";
 		} else if (url.equals("/ezCabinet/cabinetMain.do")) { //캐비넷
 			str ="icon_topmenu icon_nav_cabinet";
@@ -3848,7 +3848,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 	}
 	
 	public String makeSearchField(String orgStr) {
-		return orgStr.replace("'", "''").replace("\0", "").replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+		return orgStr.replace("'", "''").replace("\0", "").replace("[", "\\[").replace("%", "\\%").replace("_", "\\_");
 	}
 	
 	public String searchMenuItem (String pDisplayName, int pStartRow, int pEndRow, String pAccessIDList, int tenantID) throws Exception {

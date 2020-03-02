@@ -230,6 +230,31 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		return "/ezNewPortal/portlets/votePortlet";
 	}
 	
+	@RequestMapping(value = "/ezNewPortal/getVoteInfo.do", method=RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getVoteInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("getVoteInfo Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		param.put("portletId", req.getParameter("portletId"));
+		String url = "/rest/ezPortal/portlets/vote";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		String status = resultBody.get("status").toString();
+		JSONObject result = new JSONObject();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			result = data;
+		}
+		
+		logger.debug("getVoteInfo End");
+		return result;
+	}
+	
 	/**
 	 * 포틀릿 - 설문조사
 	 */
@@ -608,6 +633,31 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		return "/ezNewPortal/portlets/communityPortlet";
 	}
 	
+	@RequestMapping(value = "/ezNewPortal/getCommunityList.do", method=RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getCommunityList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("getCommunityList Start");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		String url = "/rest/ezPortal/portlets/community";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, req, "get", null);
+		String result = resultBody.get("status").toString();
+		JSONObject json = new JSONObject();
+		
+		if (result.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			json = data;
+		}
+		
+		logger.debug("getCommunityList End");
+		
+		return json;
+	}
+	
 	/**
 	 * 포들릿 - 커뮤니티 허가여부
 	 */
@@ -896,9 +946,26 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		}
 		
 		model.addAttribute("portletId", portletId);
+		logger.debug("allValues: " + model);
 		logger.debug("portalMovieBoardPortlet End");
 		return "/ezNewPortal/portlets/movieBoardPortlet";
 	}
+	
+	
+	/**
+	 * 포틀릿 - 자원관리
+	 */
+	@RequestMapping(value = "/ezNewPortal/resourcePortlet.do", method=RequestMethod.GET)
+	public String portalResourcePortlet(HttpServletRequest req, Model model) throws Exception {
+		logger.debug("portalResourcePortlet Start");
+		
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
+		model.addAttribute("portletName", req.getParameter("portletName"));
+
+		logger.debug("portalResourcePortlet End");
+		return "/ezNewPortal/portlets/resourcePortlet";
+	}
+	
 	/**
 	 * 포틀릿 - 협업 포틀릿
 	 */
@@ -908,8 +975,12 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String workspaceHostUrl = ezCommonService.getTenantConfig("workspaceHostUrl", userInfo.getTenantId());
+		String workspaceContextRootUrl = ezCommonService.getTenantConfig("workspaceContextRootUrl", userInfo.getTenantId());
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
+		model.addAttribute("workspaceHostUrl", workspaceHostUrl);
+		model.addAttribute("workspaceContextRootUrl", workspaceContextRootUrl);
 		
 		logger.debug("ezWorkspacePortlet End");
 		return "/ezNewPortal/portlets/ezWorkspacePortlet";
@@ -1008,7 +1079,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
-			model.addAttribute("pollCount", data.get("pollCount"));
+			// model.addAttribute("pollCount", data.get("pollCount"));
+			model.addAttribute("unResponseIngSurveyCnt", data.get("surveyCnt"));
 			model.addAttribute("circularCount", data.get("circularCount"));
 			model.addAttribute("scheduleCount", data.get("scheduleCount"));
 			model.addAttribute("approvalCount", data.get("approvalCount"));
@@ -1017,14 +1089,43 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("approvalDeptSusinCount", data.get("approvalDeptSusinCount"));
 			model.addAttribute("unreadMailCount", data.get("unreadMailCount"));
 			model.addAttribute("useCircular", data.get("useCircular"));
-			model.addAttribute("useQuestion", data.get("useQuestion"));
+			// model.addAttribute("useQuestion", data.get("useQuestion"));
+			model.addAttribute("useSurvey", data.get("useSurvey"));
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
 		}
-		
 		logger.debug("portalCountPortlet End");
 		return "/ezNewPortal/portlets/cntPortlet"; 
+	}
+	
+
+	@RequestMapping(value = "/ezNewPortal/getCountList.do", method=RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getCountList(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getCountList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/count/"+ userId;
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, req, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject result = new JSONObject();
+		
+		if (status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBody.get("data");
+			result = data;
+		}
+		
+		logger.debug("getCountList End");
+		return result; 
 	}
 	
 	@RequestMapping(value = "/ezNewPortal/errorPortlet.do", method=RequestMethod.GET)
@@ -1057,4 +1158,60 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		return value;
 	}
+	
+	/**
+	 * 포틀릿 - 웹폴더
+	 */
+	@RequestMapping(value = "/ezNewPortal/webFolderPortlet.do", method=RequestMethod.GET)
+	public String webFolderPortlet(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("webFolderPortlet Start");
+		
+		model.addAttribute("portletId", request.getParameter("portletId"));
+		model.addAttribute("portletName", request.getParameter("portletName"));
+		model.addAttribute("usedTheme", Integer.parseInt(request.getParameter("usedTheme")));
+		
+		logger.debug("webFolderPortlet End");
+		return "/ezNewPortal/portlets/webFolderPortlet"; 
+	}
+	
+	/**
+	 * 포틀릿 - 웹폴더
+	 */
+	@RequestMapping(value = "/ezNewPortal/getWebFolderFileList.do", method=RequestMethod.GET)
+	public String getWebFolderFileList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getWebFolderFileList Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userInfo.getId());
+		
+		String url = "/rest/ezportal/portlets/getWebFolderFileList";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "get", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			model.addAttribute("data", resultBody.get("data"));
+		}
+		
+		logger.debug("getWebFolderFileList End");
+		return "json"; 
+	}
+	
+	/**
+	 * 포틀릿 - 전자설문
+	 */
+	@RequestMapping(value = "/ezNewPortal/surveyPortlet.do", method=RequestMethod.GET)
+	public String portalSurveyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
+		logger.debug("portalSurveyPortlet Start");
+		
+		model.addAttribute("portletName", req.getParameter("portletName"));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
+		
+		logger.debug("portalSurveyPortlet End");
+		return "/ezNewPortal/portlets/surveyPortlet";
+	}
+	
 }

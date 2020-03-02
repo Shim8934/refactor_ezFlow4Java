@@ -167,7 +167,9 @@
 			var beforeUrl = "<c:out value ='${beforeUrl}'/>";
 			var apprReuseConfig = "<c:out value='${apprReuseConfig}' />";
 			//원문정보공개
+			var useOpenGov = "<c:out value='${useOpenGov}' />";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			var newpDocID = "";
 
 	        window.onload = function () {
 	            try {
@@ -1256,12 +1258,15 @@
 				        parameter[49] = nonSepAttachLVXml;
 				        parameter[51] = sepAttachCheckYN;
 			        }
-			        
-			        parameter[52] = basis;
-			        parameter[53] = reason;
-			        parameter[54] = listOpenFlag;
-			        parameter[55] = fileOpenFlagList;
-			        parameter[56] = limitDate;
+
+			        if (useOpenGov == "YES") {
+                        parameter[52] = basis;
+                        parameter[53] = reason;
+                        parameter[54] = listOpenFlag;
+                        parameter[55] = fileOpenFlagList;
+                        parameter[56] = limitDate;
+					}
+
 			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
@@ -1340,29 +1345,31 @@
 			            	sepAttachCheckYN = ret[26];
 			            	setNonElecRecInfo(nonElecRecInfoXml);
 			            }
-			            
-	                	$.ajax({
-                    		type : "POST",
-                    		dataType : "text",
-                    		async : false,
-                    		url : "/ezApprovalG/openGovInfoSave.do",
-                    		data : {
-                    				openGovListFlag : ret[27],
-                    				fileOpenFlagList : ret[28],
-                    				basis : ret[29],
-                    				reason : ret[30],
-                    				publicity : ret[11],
-                    				docID : pDocID,
-                    				limitDate : ret[31]
-                    		}
-	                	});
-	                	
-                	    listOpenFlag = ret[27];
-	       		        fileOpenFlagList = ret[28];
-	                	basis = ret[29];
-	                	reason = ret[30];
-	                	limitDate = ret[31];
-	                	// passAprLine = ret[32];
+
+			            if (useOpenGov == "YES") {
+                            $.ajax({
+                                type : "POST",
+                                dataType : "text",
+                                async : false,
+                                url : "/ezApprovalG/openGovInfoSave.do",
+                                data : {
+                                    openGovListFlag : ret[27],
+                                    fileOpenFlagList : ret[28],
+                                    basis : ret[29],
+                                    reason : ret[30],
+                                    publicity : ret[11],
+                                    docID : pDocID,
+                                    limitDate : ret[31]
+                                }
+                            });
+
+                            listOpenFlag = ret[27];
+                            fileOpenFlagList = ret[28];
+                            basis = ret[29];
+                            reason = ret[30];
+                            limitDate = ret[31];
+                            // passAprLine = ret[32];
+						}
 			        }
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e.description);
@@ -1414,6 +1421,10 @@
 // 			        if (ListType == "21" && DraftFlag == "REDRAFT") {
 // 			            RemoveTmpDoc(DocSN);
 // 			        }
+			        
+			        if(Saveflag) {
+		        		newpDocID = createNewDoc();
+		        	}
 			
 			        var rtnVal = SaveTMPFile();
 			        if (rtnVal == "TRUE") {
@@ -1423,7 +1434,7 @@
 			                    var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
 			                    OpenAlertUI(pAlertContent);
 			                    Saveflag = true;
-			                    window.close();
+			                    //window.close();
 			                } else {
 			                    Saveflag = true;
 			                }

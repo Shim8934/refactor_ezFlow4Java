@@ -2856,7 +2856,8 @@
 	    		(#companyID#, #tenantID#, 15, 1, 1, 15),
 	    		(#companyID#, #tenantID#, 16, 1, 1, 16),
 	    		(#companyID#, #tenantID#, 17, 1, 1, 17),
-	    		(#companyID#, #tenantID#, 18, 1, 1, 18)
+	    		(#companyID#, #tenantID#, 18, 1, 1, 18),
+	    		(#companyID#, #tenantID#, 19, 1, 1, 19)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I26" parameterClass="Map">
@@ -2883,7 +2884,8 @@
 	    		(15, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(16, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
 	    		(17, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
-	    		(18, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+	    		(18, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(19, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I27" parameterClass="Map">
@@ -2945,7 +2947,10 @@
 	    		(17, 3, #companyID#, #tenantID#, 'To Do管理'),
 	    		(18, 1, #companyID#, #tenantID#, '메모'),
 	    		(18, 2, #companyID#, #tenantID#, 'Memo'),
-	    		(18, 3, #companyID#, #tenantID#, 'メモ帳')
+	    		(18, 3, #companyID#, #tenantID#, 'メモ帳'),
+	    		(19, 1, #companyID#, #tenantID#, '전자설문'),
+	    		(19, 2, #companyID#, #tenantID#, 'Survey'),
+	    		(19, 3, #companyID#, #tenantID#, '電子アンケート')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I28" parameterClass="Map">
@@ -2970,7 +2975,10 @@
 	    		(#companyID#, #tenantID#, 34, 0, 1, 15, null),
 	    		(#companyID#, #tenantID#, 36, 0, 1, 16, null),
 	    		(#companyID#, #tenantID#, 47, 4, 1, 17, null),
-	    		(#companyID#, #tenantID#, 49, 0, 1, 18, null)
+	    		(#companyID#, #tenantID#, 49, 0, 1, 18, null),
+	    		(#companyID#, #tenantID#, 51, 6, 1, 21, null),
+	    		(#companyID#, #tenantID#, 70, 10, 1, 22, null),
+	    		(#companyID#, #tenantID#, 73, 19, 1, 20, null)
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I29" parameterClass="Map">
@@ -2990,7 +2998,7 @@
 	    		(4, 15, 3, #tenantID#, #companyID#, '投票'),
 	    		(5, 0, 1, #tenantID#, #companyID#, '빠른설문'),
 	    		(5, 0, 2, #tenantID#, #companyID#, 'Quick Poll'),
-	    		(5, 0, 3, #tenantID#, #companyID#, 'Quick Poll'),
+	    		(5, 0, 3, #tenantID#, #companyID#, '簡単アンケート'),
 	    		(6, 2, 1, #tenantID#, #companyID#, '일정'),
 	    		(6, 2, 2, #tenantID#, #companyID#, 'Schedule'),
 	    		(6, 2, 3, #tenantID#, #companyID#, '日程'),
@@ -3029,7 +3037,16 @@
 	    		(47, 4, 3, #tenantID#, #companyID#, '動画掲示板'),
 	    		(49, 0, 1, #tenantID#, #companyID#, '카운트'),
 	    		(49, 0, 2, #tenantID#, #companyID#, 'Count'),
-	    		(49, 0, 3, #tenantID#, #companyID#, 'カウント')
+	    		(49, 0, 3, #tenantID#, #companyID#, 'カウント'),
+	    		(51, 6, 1, #tenantID#, #companyID#, '자원관리'),
+	    		(51, 6, 2, #tenantID#, #companyID#, 'Resource'),
+	    		(51, 6, 3, #tenantID#, #companyID#, '設備管理'),
+	    		(70, 10, 1, #tenantID#, #companyID#, '개인폴더'),
+	    		(70, 10, 2, #tenantID#, #companyID#, 'Personal Folder'),
+	    		(70, 10, 3, #tenantID#, #companyID#, 'Webフォルダ'),
+	    		(73, 19, 1, #tenantID#, #companyID#, '전자설문'),
+	    		(73, 19, 2, #tenantID#, #companyID#, 'Survey'),
+	    		(73, 19, 3, #tenantID#, #companyID#, '電子アンケート')
   		]]>
     </insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I30" parameterClass="Map">
@@ -3056,6 +3073,9 @@
 	    		(1, #tenantID#, #companyID#, 47, 1, 16, 4, 0),
 	    		(1, #tenantID#, #companyID#, 48, 1, 17, 4, 0),
 	    		(1, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
+	    		(1, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
+	    		(1, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
+	    		(1, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
 	    		(2, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(2, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(2, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
@@ -3074,6 +3094,9 @@
 	    		(2, #tenantID#, #companyID#, 47, 1, 16, 4, 0),
 	    		(2, #tenantID#, #companyID#, 48, 1, 17, 4, 0),
 	    		(2, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
+	    		(2, #tenantID#, #companyID#, 73, 1, 20, 19, 0),
+	    		(2, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
+	    		(2, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
 	    		(3, #tenantID#, #companyID#, 1, 1, 1, 1, 0),
 	    		(3, #tenantID#, #companyID#, 2, 1, 2, 4, 0),
 	    		(3, #tenantID#, #companyID#, 4, 1, 3, 15, 0),
@@ -3091,7 +3114,47 @@
 	    		(3, #tenantID#, #companyID#, 36, 1, 15, 0, 0),
 	    		(3, #tenantID#, #companyID#, 47, 1, 16, 4, 0),
 	    		(3, #tenantID#, #companyID#, 48, 1, 17, 4, 0),
-	    		(3, #tenantID#, #companyID#, 49, 1, 18, 0, 0)
+	    		(3, #tenantID#, #companyID#, 49, 1, 18, 0, 0),
+	    		(3, #tenantID#, #companyID#, 51, 1, 21, 6, 0),
+	    		(3, #tenantID#, #companyID#, 70, 1, 22, 10, 0),
+	    		(3, #tenantID#, #companyID#, 73, 1, 20, 19, 0)
+  		]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I31" parameterClass="Map">
+  		<![CDATA[
+	    INSERT INTO 
+	    	TBL_PORTAL_THEME_AUTH 
+	    		(THEME_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    VALUES 
+	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(3, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
+  		]]>
+    </insert>
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I32" parameterClass="Map">
+  		<![CDATA[
+	    INSERT INTO 
+	    	TBL_PORTAL_PORTLET_AUTH 
+	    		(PORTLET_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, SN) 
+	    VALUES 
+	    		(1, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(2, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(4, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(5, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(6, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(7, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(8, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(9, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(10, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(11, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(12, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(14, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(26, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(34, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(36, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(47, #companyID#, #tenantID#, #companyID#, 1, 0, 1),
+	    		(49, #companyID#, #tenantID#, #companyID#, 1, 0, 1)
   		]]>
     </insert>
     

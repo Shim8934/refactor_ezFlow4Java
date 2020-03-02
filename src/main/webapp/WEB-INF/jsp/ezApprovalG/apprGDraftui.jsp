@@ -163,7 +163,9 @@
 			var reformFlag = "${reformflag}";
 			var wAprMemberSN = "1";
 			//원문정보공개
+            var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			var newpDocID = "";
 			
 		    window.onload = function ()
 		    {
@@ -1566,13 +1568,15 @@
 			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
 			        parameter[49] = nonSepAttachLVXml; // 분첨
 		        }
-		        
-		        parameter[52] = basis;
-		        parameter[53] = reason;
-		        parameter[54] = listOpenFlag;
-		        parameter[55] = fileOpenFlagList;
-		        parameter[56] = limitDate;
-		
+
+                if (useOpenGov == "YES") {
+                    parameter[52] = basis;
+                    parameter[53] = reason;
+                    parameter[54] = listOpenFlag;
+                    parameter[55] = fileOpenFlagList;
+                    parameter[56] = limitDate;
+				}
+
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
@@ -1686,29 +1690,31 @@
 			                	
 			                	setNonElecRecInfo(nonElecRecInfoXml);
 			                }
-			                
-		                	$.ajax({
-	                    		type : "POST",
-	                    		dataType : "text",
-	                    		async : false,
-	                    		url : "/ezApprovalG/openGovInfoSave.do",
-	                    		data : {
-									openGovListFlag : ret[27],
-									fileOpenFlagList : ret[28],
-									basis : ret[29],
-									reason : ret[30],
-									publicity : ret[11],
-									docID : pDocID,
-									limitDate : ret[31]
-	                    		}
-		                	});
-		                	
-	                	    listOpenFlag = ret[27];
-		       		        fileOpenFlagList = ret[28];
-		                	basis = ret[29];
-		                	reason = ret[30];
-		                	limitDate = ret[31];
-		                	// passAprLine = ret[32];
+
+                            if (useOpenGov == "YES") {
+                                $.ajax({
+                                    type : "POST",
+                                    dataType : "text",
+                                    async : false,
+                                    url : "/ezApprovalG/openGovInfoSave.do",
+                                    data : {
+                                        openGovListFlag : ret[27],
+                                        fileOpenFlagList : ret[28],
+                                        basis : ret[29],
+                                        reason : ret[30],
+                                        publicity : ret[11],
+                                        docID : pDocID,
+                                        limitDate : ret[31]
+                                    }
+                                });
+
+                                listOpenFlag = ret[27];
+                                fileOpenFlagList = ret[28];
+                                basis = ret[29];
+                                reason = ret[30];
+                                limitDate = ret[31];
+                                // passAprLine = ret[32];
+                            }
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {
@@ -1777,7 +1783,11 @@
 		        if (DraftFlag == "REDRAFT" && ListType == "21") {
 					//RemoveTmpDoc(DocSN);
 		        }
-		
+		        
+		        if(Saveflag) {
+		        	newpDocID = createNewDoc();
+		        }
+		        
 		        var rtnVal = SaveTMPFile(AutoSave);
 		        if (rtnVal == "TRUE") {
 		            rtnVal = SaveTMPDocInfo(AutoSave);
@@ -1785,7 +1795,9 @@
 		            if (rtnVal.indexOf("TRUE") > -1) {
 		                savetempflag = false; //닫기시 임시저장 로직 타지 않음 (바로 닫힘) - noonpark
 		                
-		                if (ListType == "1") {
+		                draftFlag = "true";
+		                Saveflag = true;
+		                /* if (ListType == "1") {
 			                $.ajax({
 								type : "POST",
 								dataType : "text",
@@ -1807,10 +1819,11 @@
 									OpenAlertUI(pAlertContent);
 								}
 							});
-		                }
+		                } */
 		                
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
-		                OpenAlertUI(pAlertContent, btnSaveServer_onclick_Complete);
+		                OpenAlertUI(pAlertContent);
+		                //OpenAlertUI(pAlertContent, btnSaveServer_onclick_Complete);
 		                //if(AutoSave != "Save")
 		            }
 		            else {

@@ -116,10 +116,13 @@
 	        	}
 	        }
 	        
+	        /* 2020-02-07 홍승비 - 주소록 가져오기, 내보내기 레이어 팝업도 동적으로 left 계산 */
 	        $(window).on("resize", function(){
 				var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
 	        	$("#addpopup").css("left", popupX);
-	        	$("#srarchpopup").css("left", popupX);	        	
+	        	$("#srarchpopup").css("left", popupX);
+	        	$("#importPopup").css("left", popupX);
+	        	$("#exportPopup").css("left", popupX);
 	        });
 	        
 	        function new_address() {

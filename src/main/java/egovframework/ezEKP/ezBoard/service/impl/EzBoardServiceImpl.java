@@ -3725,6 +3725,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (boardListVO.getExtensionAttribute5() == null) {
 				boardListVO.setExtensionAttribute5("0");
 			}
+			
+			if (boardListVO.getDocPassword() == null) { // 익명게시물 이동 시 비밀번호
+				boardListVO.setDocPassword("");
+			}
+			
 			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "move");
 			
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
@@ -3770,7 +3775,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<EXTENSIONATTRIBUTE32>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute32()) + "</EXTENSIONATTRIBUTE32>");
 	        sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
 	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
-	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
+	        /* 2020-02-11 홍승비 - 게시물 이동 시 비밀번호값도 이동하도록 수정 */
+	        sb.append("<DOCPASSWORD>" + boardListVO.getDocPassword() + "</DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>M</GUBUN>");
 	        sb.append("<DOCCONTENT>" + commonUtil.cleanValue(boardListVO.getContent()) + "</DOCCONTENT>");
@@ -4081,6 +4087,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (boardLisitVO.getExtensionAttribute5() == null) {
 				boardLisitVO.setExtensionAttribute5("0");
 			}
+			
+			if (boardLisitVO.getDocPassword() == null) { // 익명게시물 복사 시 비밀번호
+				boardLisitVO.setDocPassword("");
+			}
+			
 			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "copy");
 			
 			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
@@ -4123,7 +4134,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
 	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
 	        sb.append("<DOCCONTENT>" + commonUtil.cleanValue(boardLisitVO.getContent()) + "</DOCCONTENT>");
-	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
+	        /* 2020-02-11 홍승비 - 게시물 복사 시 비밀번호값도 복사하도록 수정 */
+	        sb.append("<DOCPASSWORD>" + boardLisitVO.getDocPassword() + "</DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
 	        sb.append("<GUBUN>C</GUBUN>");
 	        

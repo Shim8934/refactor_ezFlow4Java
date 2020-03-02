@@ -959,7 +959,6 @@ function SaveSchedule_onClick( cmd , resItem) {
 		objNode23 = "1";
 	}
 	createNodeAndInsertText(xmlDoc, objNode, "APPROVE", objNode23); //승인여부
-	
 	if(cmd == "add") {
 		createNodeAndInsertText(xmlDoc, objNode, "scheduleID", SaveScheduleId);		// 일정ID
 	}
@@ -1157,7 +1156,7 @@ function OnlySaveSchedule(resItem) {
 }
 // 2011-04 : 자원관리 중복 등록 관련 작업 진행
 function DupCheck(resItemID) {
-    //================================================================================
+    //========================================================================
 	// 자원사용 중복체크
 	var STime = "";
 	var ETime = "";

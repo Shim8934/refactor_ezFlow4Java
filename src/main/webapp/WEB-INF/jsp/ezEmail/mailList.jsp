@@ -245,7 +245,7 @@
 		                document.getElementById("PreviewRayerW").style.width = "100%";
 		                document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
 		                document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
-		                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
+// 		                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
 		                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 80) + "px";
 		                document.getElementById("PreW_subject").style.width = (CurrenWidth - 155) + "px";
 		                
@@ -262,7 +262,7 @@
 		                document.getElementById("PreviewRayerH").style.display = "inline-block";
 		
 		                CurrenWidth = document.documentElement.clientWidth - 20;
-		                CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
 		                pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
 		                pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
 		                document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
@@ -283,7 +283,7 @@
 		            }
 		            
 		        } else {
-		            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		            CurrentHeight = document.documentElement.clientHeight - 92 - (document.getElementById("mainmenu").clientHeight - 28);
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
 		            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
@@ -1010,7 +1010,7 @@
 			}
 		</script>	
 	</head>
-	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+	<body style="overflow:hidden;margin-bottom:0px;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span>
 	      <span class="searchForm">
               <select name="searchCheck" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
@@ -1197,7 +1197,7 @@
                 </div>
             </div>
         </div>        
-        <div id="PreviewRayerW" style="border:0px;width:100%;height:300px;overflow:hidden;display:none;">
+        <div id="PreviewRayerW" style="border:0px;width:100%;overflow:hidden;display:none;">
             <div onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width:100%;display:list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
 				<img src="/images/prevview_bar_dotted.gif">
             </div>

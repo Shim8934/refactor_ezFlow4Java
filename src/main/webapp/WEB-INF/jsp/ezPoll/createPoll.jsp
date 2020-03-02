@@ -12,6 +12,11 @@
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+	<style>
+		#Sdatepicker:disabled {
+			background-color:white;
+		}
+	</style>
 	 
 	<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script> 
 	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
@@ -501,6 +506,7 @@
 			$('#sTimePicker').show();
 		}
 		
+		/* 2020-01-31 홍승비 - IE에서 SdatePicker로 날짜 선택 시 계속해서 캘린더가 reopen되는 현상 수정 */
 		function setDateTimeValue() {
 	    	$("#Sdatepicker").datepicker({
 	        	changeMonth: true,
@@ -512,6 +518,12 @@
 	        	buttonImageOnly: true,
 	            onSelect: function(dateText, inst) {
 	            	dateCompare(dateText);
+	            	$(this).datepicker('disable'); // 캘린더에서 날짜 선택 시 datePicker를 disable 시킨다.
+	            },
+	            onClose: function () { // 캘린더가 닫힐때, datePicker를 enable시키고 잠깐 타임아웃을 건다.
+	                window.setTimeout(function (e) {
+	                    $(e).datepicker('enable');
+	                }.bind(undefined, this), 10);
 	            }
 	    	});
 	    	
@@ -1281,11 +1293,11 @@
 							<span><spring:message code="ezPoll.t159"/></span>
 							
 							<div id="_dateTimePicker" style="display: none;">										
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly >
-								<select id="sTimePicker"></select>
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center;vertical-align:top;" readonly >
+								<select id="sTimePicker" style="height:24px;"></select>
 								<span>~</span>
-								<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly >
-								<select id="eTimePicker"></select>						
+								<input type="text" id="Edatepicker" style="width:80px;text-align:center;vertical-align:top;" readonly >
+								<select id="eTimePicker" style="height:24px;"></select>						
 							</div>
 							
 							<div id="openToAllDiv" class="qstSettingInnerDivRight">

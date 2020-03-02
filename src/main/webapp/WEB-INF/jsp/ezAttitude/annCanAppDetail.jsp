@@ -226,8 +226,8 @@
 	            <div class="btnpositionNew" id="menuTable">
 	            	<c:if test="${attitudeConfigVO.attitudeModAppl == 1}">
                     	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
-                     		<a class="imgbtn"><span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span></a>
-                         	<a class="imgbtn"><span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span></a>
+                     		<a class="imgbtn"><span onclick="modApprove()"><spring:message code='ezAttitude.kje02'/></span></a>
+                         	<a class="imgbtn"><span onclick="modReturn()"><spring:message code='ezAttitude.kje03'/></span></a>
                     	</c:if>
                    	</c:if>
 	            </div>

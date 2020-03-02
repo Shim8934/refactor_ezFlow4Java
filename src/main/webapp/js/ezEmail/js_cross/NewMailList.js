@@ -184,23 +184,20 @@ function MakeHeaderHTML_SUB(HeaderObject) {
 }
 
 function drag(ev) {
-    var szItemID = "";
-
-    for (var i = 0; i < listContentArry.length; i++) {
-        szItemID += GetAttribute(document.getElementById(listContentArry[i]), "_href") + ",";
-    }
-
-    if (szItemID != "") {
-        ev.dataTransfer.setData("text", szItemID);
-    }
-    else {
-        if (typeof (ev.target) == "undefined") {
-            ev.dataTransfer.setData("text", GetAttribute(ev.srcElement, "_href") + ",");
-        }
-        else {
-            ev.dataTransfer.setData("text", GetAttribute(ev.target, "_href") + ",");
-        }
-    }
+	var eventTarget = ev.srcElement || ev.target;
+	var listContentLength = listContentArry.length;
+	
+	if (listContentLength > 1 && listContentArry.indexOf(eventTarget.id) > -1) {
+		var szItemID = "";
+		
+		for (var i = 0; i < listContentArry.length; i++) {
+			szItemID += GetAttribute(document.getElementById(listContentArry[i]), "_href") + ",";
+		}
+		
+		ev.dataTransfer.setData("text", szItemID);
+	} else {
+		ev.dataTransfer.setData("text", GetAttribute(eventTarget, "_href") + ",");
+	}
 }
 
 var xmlhttp_MailReceiverList = null;

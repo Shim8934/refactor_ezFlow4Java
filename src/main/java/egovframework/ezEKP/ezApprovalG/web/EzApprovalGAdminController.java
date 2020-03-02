@@ -1821,6 +1821,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String title = "";
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -1843,6 +1845,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("title", title);
 		model.addAttribute("tCheck", tCheck);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		
 		logger.debug("taskCategoryInsert ended.");
 		
@@ -1966,6 +1970,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String companyID = request.getParameter("companyID");
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
 		String title = "";
 		
@@ -1994,6 +2000,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("title", title);
 		model.addAttribute("tCheck", tCheck);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
 		
 		logger.debug("taskCodeInsert ended.");
 		
@@ -4167,11 +4175,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 
 	/**
-	 * 전자결재G관리 전체문서조회(완료문서) 메뉴 호출 함수
+	 * 전자결재G관리 원문공개문서함 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/openGovForDoc.do", method = RequestMethod.GET)
 	public String openGovForDoc(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("forDoc started.");
+		logger.debug("openGovForDoc started.");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
@@ -4202,18 +4210,18 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("type", type);
 
-		logger.debug("forDoc ended.");
+		logger.debug("openGovForDoc started.");
 
 		return "admin/ezApprovalG/apprGOpenGovForDoc";
 	}
 
 	/**
-	 * 전자결재G관리 전체문서조회(완료문서) 문서목록 호출 함수
+	 * 전자결재G관리 원문공개문서함 문서목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getStatSearchDocListForOpenGov.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getStatSearchDocLlistForOpenGov(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("getStatSearchDocList started.");
+		logger.debug("getStatSearchDocLlistForOpenGov started.");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docNumber = request.getParameter("docNumber");
@@ -4276,7 +4284,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
                 draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
                 draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, "", companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 
-        logger.debug("getStatSearchDocList ended.");
+        logger.debug("getStatSearchDocLlistForOpenGov ended.");
 
         return result;
     }

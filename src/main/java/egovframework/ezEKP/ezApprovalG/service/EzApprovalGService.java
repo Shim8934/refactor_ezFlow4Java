@@ -322,7 +322,7 @@ public interface EzApprovalGService {
 
     public String gongRamSaveEnd(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 
-    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID) throws Exception;
+    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID, String docID) throws Exception;
 
     public String checkAprLine(String docID, String mode, String userID, String companyID, int tenantID) throws Exception;
 
@@ -670,7 +670,5 @@ public interface EzApprovalGService {
     public String updateOpenGovInfo(String openGovListFlag, String fileOpenFlagList, String basis, String reason,
                                     String publicity, String docID, String limitDate, String companyID, int tenantId, String modifyReason, LoginVO userInfo) throws Exception;
 
-    public void setOpenGovSendFlagToY() throws Exception;
-    
     public String getBansongDeptID(String docID, String orgCompanyID, int tenantID, LoginVO userInfo) throws Exception;
 }

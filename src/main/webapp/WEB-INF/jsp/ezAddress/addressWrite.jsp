@@ -26,6 +26,7 @@
 		    var compAdmin = "${compAdmin}";
 		    var xmlHttpAddressTree;
 		    var closeAlertMsg = "<spring:message code='ezAddress.t337' />";
+		    var useAnyoneEdit = "<c:out value='${useAnyoneEdit}'/>";
 		    window.onload = function () {
 				if(addressid == "")
 				{
@@ -215,12 +216,14 @@
 		            return;
 		        }
 		        
-		        if (foldertype == "D" && deptAdmin != "Y") {
-		        	alert("<spring:message code='ezAddress.t999900003' />");
-		        	return;
-		        } else if (foldertype == "C" && compAdmin != "Y") {
-		        	alert("<spring:message code='ezAddress.t999900004' />");
-		        	return;
+		        if (useAnyoneEdit != "YES") {
+		        	if (foldertype == "D" && deptAdmin != "Y") {
+			        	alert("<spring:message code='ezAddress.t999900003' />");
+			        	return;
+			        } else if (foldertype == "C" && compAdmin != "Y") {
+			        	alert("<spring:message code='ezAddress.t999900004' />");
+			        	return;
+			        }	
 		        }
 		        
 		        if (!check_length(document.getElementById("TextCompanyPhone").value, 20, "<spring:message code='ezAddress.t222' />")) return;

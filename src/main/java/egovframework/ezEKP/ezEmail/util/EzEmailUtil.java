@@ -5049,5 +5049,43 @@ public class EzEmailUtil {
 		Flags MailConfirmFlag = new Flags("$MailConfirm");
 		message.setFlags(MailConfirmFlag, isSet);
 	}
+
+	/**
+     * 발신자 메일 주소와 이름이 같을 경우 (혹은 이름이 없어서 메일주소로 이름을 생성할 때)
+     * 이름에 ; : , 가 들어가면 수신거부 안되는 현상 때문에 추가
+     */
+    public List<String> mailAddrNameParse(String mailAddrName, String mailAddr) throws Exception {
+    	logger.debug("mailAddrNameParse started.");
+    	logger.debug("mailAddrName=" + mailAddrName + ", mailAddr=" + mailAddr);
+
+    	List<String> returnList = new ArrayList<String>();
+    	String reMailAddrName = mailAddrName;
+    	String reMailAddr = mailAddr;
+    	
+    	if (mailAddrName.equals(mailAddr)) {
+    		int mailAddrLeft = mailAddrName.lastIndexOf("<");
+    		int mailAddrRight = mailAddrName.lastIndexOf(">");
+    		
+    		if (mailAddrLeft < mailAddrRight) {
+    			String MailAddrNameTemp = mailAddrName.substring(0, mailAddrLeft);
+    			String MailAddrTemp = mailAddrName.substring(mailAddrLeft);
+    			
+    			MailAddrTemp = MailAddrTemp.replaceAll("<", "").replaceAll(">", "").replaceAll(";", "");
+    			
+    			MailAddrNameTemp = MailAddrNameTemp.trim().replaceAll(",", " ").replaceAll(":", " ").replaceAll(";", " ");
+    			MailAddrNameTemp = "\"" + MailAddrNameTemp + "\"";
+
+    			reMailAddrName = MailAddrNameTemp;
+    			reMailAddr = MailAddrTemp;
+    		}
+    	}
+    	logger.debug("reMailAddrName=" + reMailAddrName + ", reMailAddr=" + reMailAddr);
+    	
+		returnList.add(reMailAddrName);
+		returnList.add(reMailAddr);
+		
+    	logger.debug("mailAddrNameParse ended.");
+    	return returnList;
+    }
 }
 

@@ -772,17 +772,20 @@ function SaveApproveInfo(pApproveFlag) {
 function SaveFile() {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : HwpCtrl.GetCloneData("", "HWP"),
+		orgCompanyID : orgCompanyID
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : HwpCtrl.GetCloneData("", "HWP"),
-			orgCompanyID : orgCompanyID
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			
@@ -794,16 +797,19 @@ function SaveFile() {
 function SaveOrgFile() {
 	var result = "";
 	
+	var data = {
+		docID : pDocID,
+		formId : pFormID,
+		html  : OrgHtml
+	}
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
-		data : {
-			docID : pDocID,
-			formId : pFormID,
-			html  : OrgHtml
-		},
+		contentType : "application/json",
+		data : JSON.stringify(data),
 		success: function(text){
 			result = text;
 		}        			

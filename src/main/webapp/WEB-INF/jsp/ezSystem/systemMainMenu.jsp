@@ -51,7 +51,8 @@
 						{ name : "useAllUserOldMailDeletePeriod", value : useAllUserOldMailDeletePeriod },
 						{ name : "useSession", value : document.getElementById("useSession").value.trim() },
 						{ name : "useSessionMobile", value : document.getElementById("useSessionMobile").value.trim() },
-						{ name : "useMailConfirm", value : document.getElementById("use_MailConfirm").value.trim() }
+						{ name : "useMailConfirm", value : document.getElementById("use_MailConfirm").value.trim() },
+						{ name : "usePortalAutoRefreshInterval", value : document.getElementById("usePortalAutoRefreshInterval").value.trim() }
 					  ];
 				
 				if (!paramArray[0].value.match(/^\d+$/)) {
@@ -77,6 +78,9 @@
 				    return;
 				} else if (!paramArray[16].value.match(/^\d+$/)) {
 					alert("<spring:message code='ezSystem.ksaMobileSession'/>: <spring:message code='ezEmail.t99000066'/>");
+				    return;
+				} else if (!paramArray[17].value.match(/^\d+$/)) {
+					alert("<spring:message code='ezSystem.yej01'/>: <spring:message code='ezEmail.t99000066'/>");
 				    return;
 				}	
 						
@@ -287,6 +291,12 @@
 		    		<th><spring:message code="ezSystem.x0040"/></th>
 		    		<td><select id="use_MailConfirm"><option <c:if test="${configMap.useMailConfirm == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useMailConfirm == null or configMap.useMailConfirm == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
 		    	</tr>
+		    	<tr>
+					<th><spring:message code="ezSystem.yej01" /></th>
+					<td>
+						<input id="usePortalAutoRefreshInterval" maxlength="3" type="text" value="<c:out value='${usePortalAutoRefreshInterval}'/>"> (<spring:message code="ezSystem.yej02"/>)
+					</td>
+				</tr>
 	        </tbody>
 	    </table> 
 	    <div class="btnpositionJsp">
