@@ -682,7 +682,7 @@
 	            try {
 	                var url;
 	                
-	                url = "http://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
+	                url = "https://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
 	                window.open(url, "right");
 	            } catch (e) {	                
 	            }	            

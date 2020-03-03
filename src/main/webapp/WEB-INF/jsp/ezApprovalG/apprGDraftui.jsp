@@ -165,6 +165,7 @@
 			//원문정보공개
             var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 			var basis = "", reason = "", listOpenFlag = "", fileOpenFlagList = "", limitDate="";
+			var newpDocID = "";
 			
 		    window.onload = function ()
 		    {
@@ -533,6 +534,24 @@
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + replaceEntityCodeToStr(arr_userinfo[5]) + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
+
+                if (useOpenGov == "YES") {
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/openGovInfoSave.do",
+                        data : {
+                            openGovListFlag : listOpenFlag,
+                            fileOpenFlagList : fileOpenFlagList,
+                            basis : basis,
+                            reason : reason,
+                            publicity : pPublicityCode,
+                            docID : pDocID,
+                            limitDate : limitDate
+                        }
+                    });
+                }
 		    	
 		        try {
 		        	if (isEditorComplete == true) {
@@ -1782,15 +1801,38 @@
 		        if (DraftFlag == "REDRAFT" && ListType == "21") {
 					//RemoveTmpDoc(DocSN);
 		        }
-		
+		        
+		        if(Saveflag) {
+		        	newpDocID = createNewDoc();
+		        }
+		        
 		        var rtnVal = SaveTMPFile(AutoSave);
 		        if (rtnVal == "TRUE") {
 		            rtnVal = SaveTMPDocInfo(AutoSave);
+                    if (useOpenGov == "YES") {
+                        $.ajax({
+                            type : "POST",
+                            dataType : "text",
+                            async : false,
+                            url : "/ezApprovalG/openGovInfoSave.do",
+                            data : {
+                                openGovListFlag : listOpenFlag,
+                                fileOpenFlagList : fileOpenFlagList,
+                                basis : basis,
+                                reason : reason,
+                                publicity : pPublicityCode == "" ? "Y" : pPublicityCode,
+                                docID : newpDocID,
+                                limitDate : limitDate
+                            }
+                        });
+                    }
 		
 		            if (rtnVal.indexOf("TRUE") > -1) {
 		                savetempflag = false; //닫기시 임시저장 로직 타지 않음 (바로 닫힘) - noonpark
 		                
-		                if (ListType == "1") {
+		                draftFlag = "true";
+		                Saveflag = true;
+		                /* if (ListType == "1") {
 			                $.ajax({
 								type : "POST",
 								dataType : "text",
@@ -1812,10 +1854,11 @@
 									OpenAlertUI(pAlertContent);
 								}
 							});
-		                }
+		                } */
 		                
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
-		                OpenAlertUI(pAlertContent, btnSaveServer_onclick_Complete);
+		                OpenAlertUI(pAlertContent);
+		                //OpenAlertUI(pAlertContent, btnSaveServer_onclick_Complete);
 		                //if(AutoSave != "Save")
 		            }
 		            else {

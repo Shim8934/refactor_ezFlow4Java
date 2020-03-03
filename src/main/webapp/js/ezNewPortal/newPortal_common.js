@@ -1259,7 +1259,7 @@ function viewQuick() {
 //}
 
 // 협업 관련 추가
-function ezWorkspaceData() {
+function ezWorkspaceData(workspaceContextRootUrl) {
 	    //협업 카운트
 	if (typeof (GetWorkspaceUserActLogCount) === "function") {
 	    GetWorkspaceUserActLogCount("workspaceCnt", 1);
@@ -1321,7 +1321,7 @@ function ezWorkspaceData() {
 	}
 	
 	document.getElementById('ezWorkspace').addEventListener('click', function() {
-		window.open("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO", "main", "");
+		window.open(workspaceContextRootUrl + "/ezWorkspace/Account/SSO", "main", "");
 	});	
 
 }

@@ -322,7 +322,7 @@ public interface EzApprovalGService {
 
     public String gongRamSaveEnd(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 
-    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID) throws Exception;
+    public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID, String docID) throws Exception;
 
     public String checkAprLine(String docID, String mode, String userID, String companyID, int tenantID) throws Exception;
 

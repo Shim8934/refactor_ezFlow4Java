@@ -1088,6 +1088,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public void insertTblTenantConfig(Map<String, Object> map) {
+		try {
+			if (getTenantConfig(map) == null) {throw new Exception(); }
+		} catch (Exception e) {
+			logger.debug("tbl_tenant_config. add config...");
+			insertUseSession(map);
+		}
+	}
+
 	public void insertThemeAuthInit(Map<String, Object> map) {
 		String companyId = checkThemeAuthInit(map);
 		

@@ -14831,7 +14831,7 @@
 <!-- 	<procedure id="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZSP_GETSEARCHDOCLISTCOUNT(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DEPTNAME#, #v_FORMID#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_PROCESSDATE1#, #v_PROCESSDATE2#, #iv_APRFLAG#, #v_DOCSTATE#, #v_LANGTYPE#, #v_APPROVUSER#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id ="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int">
+	<select id ="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int" remapResults="true">
 	<![CDATA[
 		SELECT 
 			COUNT(DISTINCT TBL_ENDAPRDOCINFO.DOCID,TBL_ENDAPRDOCINFO.COMPANYID
@@ -17141,7 +17141,7 @@
               ORGDOCID ,
               DOCTYPE ,
               DOCSTATE ,
-              FUNCTIONTYPE ,
+              '000' ,
               HREF ,
               DOCTITLE ,
               DOCNO ,
@@ -17317,6 +17317,7 @@
 			AND
 				DOCID = #v_TMPDOCID#
 	</insert>
+
 	<insert id="EzApprovalG.aprMakeTmp2Ing13" parameterClass="Map">
 		INSERT INTO 
 			TBL_OPENGOVFILEINFO
@@ -17327,16 +17328,61 @@
 	          COMPANYID,
 	          TENANT_ID
        	  FROM 
-       	   	  TBL_TMPATTACHINFO 
+       	   	  TBL_OPENGOVFILEINFO
           WHERE 
           	  TENANT_ID = #v_TENANTID#
           AND
           	  COMPANYID = #companyID#
-	      AND   
-          	  OWNERID = #v_PUSERID#
           AND 
-          	  SN = #v_PSN# )
+          	  DOCID = #v_TMPDOCID# )
 	</insert>
+
+	<insert id="EzApprovalG.aprMakeTmp2Ing14" parameterClass="Map">
+		INSERT INTO
+	 		TBL_OPENGOVDOCINFO
+	 		(DOCID, OPENFLAG, BASIS, REASON, LISTOPENFLAG, CREATEDATE, OPENLIMITDATE, TENANT_ID, COMPANYID)
+	 	(SELECT
+	 		#v_PDOCID#,
+	 		openflag,
+	 		basis,
+	 		reason,
+	 		listopenflag,
+	 		now(),
+	 		openlimitdate,
+	 		tenant_id,
+	 		companyid
+	 	FROM
+	 		TBL_OPENGOVDOCINFO
+	 	WHERE
+	 		tenant_id = #v_TENANTID#
+		AND
+			companyid = #companyID#
+		AND
+			docid = #v_TMPDOCID#)
+	</insert>
+
+    <delete id="EzApprovalGDAO.aprDeleteDocInfo13" parameterClass="Map">
+        DELETE FROM
+            TBL_OPENGOVFILEINFO
+        WHERE
+            tenant_id = #v_TENANTID#
+		AND
+			companyid = #companyID#
+		AND
+			docid = #v_DocID#
+    </delete>
+
+    <delete id="EzApprovalGDAO.aprDeleteDocInfo14" parameterClass="Map">
+        DELETE FROM
+            TBL_OPENGOVDOCINFO
+        WHERE
+            tenant_id = #v_TENANTID#
+		AND
+			companyid = #companyID#
+		AND
+			docid = #v_DocID#
+    </delete>
+
 	<select id="EzApprovalG.checkTmpDocHasGongRam" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
 			COUNT(*)
@@ -26006,6 +26052,50 @@
 		  AND
 		  	 COMPANYID = #companyID#)
    	</insert>
+
+	<insert id="EzApprovalG.insertDocSendAprOpenGovDocInfo" parameterClass="Map">
+		INSERT INTO
+	 		TBL_OPENGOVDOCINFO
+	 		(DOCID, OPENFLAG, BASIS, REASON, LISTOPENFLAG, CREATEDATE, OPENLIMITDATE, TENANT_ID, COMPANYID)
+	 	(SELECT
+	 		#v_NEWID#,
+	 		openflag,
+	 		basis,
+	 		reason,
+	 		listopenflag,
+	 		now(),
+	 		openlimitdate,
+	 		tenant_id,
+	 		companyid
+	 	FROM
+	 		TBL_OPENGOVDOCINFO
+	 	WHERE
+	 		tenant_id = #v_TENANTID#
+		AND
+			companyid = #companyID#
+		AND
+			docid = #v_DOCID#)
+	</insert>
+
+	<insert id="EzApprovalG.insertDocSendAprOpenGovFileInfo" parameterClass="Map">
+		INSERT INTO
+			TBL_OPENGOVFILEINFO
+     	( SELECT
+     		  #v_NEWID# ,
+              SN,
+              FILEOPENFLAG,
+	          COMPANYID,
+	          TENANT_ID
+       	  FROM
+       	   	  TBL_OPENGOVFILEINFO
+          WHERE
+          	  TENANT_ID = #v_TENANTID#
+          AND
+          	  COMPANYID = #companyID#
+	      AND
+	      	  docid = #v_DOCID#
+          	)
+	</insert>
    	
    	<insert id="EzApprovalG.insertDocSendAprReceiptProcessInfo" parameterClass="Map">
    	     INSERT INTO 
@@ -30506,7 +30596,7 @@
 			COMPANYID = #companyID#
 		</select>
 		
-		<select id="EzApprovalG.getOpenGovInfo" parameterClass="Map" resultClass="java.util.HashMap">
+		<select id="EzApprovalG.getOpenGovInfo" parameterClass="Map" resultClass="ApprGOpenGovInfoVO">
 		SELECT
 			BASIS, REASON, LISTOPENFLAG
 		FROM
