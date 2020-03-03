@@ -223,10 +223,11 @@
 								if (result == "") {
 									if(webSocket == null){
 										return;
+									} else {
+										alert("<spring:message code='ezEmail.lhm33' />");
+										webSocket.close();
+										HiddenMailProgressNew();
 									}
-									alert("<spring:message code='ezEmail.lhm33' />");
-									webSocket.close();
-					            	parent.document.contentWindow.MailProgressNew();
 								} else if (result == "CANCEL") {
 									console.log('User Cancel');
 									webSocket.close();
