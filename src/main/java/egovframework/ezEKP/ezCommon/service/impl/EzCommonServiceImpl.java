@@ -1821,6 +1821,24 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void insertTblTenantConfig(String configName) throws Exception {
+		logger.debug("insertTest started");
+		Map<String, Map<String, Object>> test = new HashMap<String,  Map<String, Object>>();
+		test.put("mailConfirm", new HashMap<String, Object>(){{
+			put("tenantID", 0);
+			put("confName","useMailConfirm"); // property_name
+			put("property_value","NO");
+			put("config_name","메일 완료/완료취소");
+			put("regdate","2020-01-28 00:00:00");
+			put("description","메일 완료/완료취소 기능 사용 여부(default: NO)");
+			put("config_type","메일");
+			put("property","useMailConfirm"); // property_name
+		}});
+		
+		
+		ezCommonDAO.insertTblTenantConfig(test.get(configName));
+	}
+	
 	public void addThemeAndPorteltAuthInit() throws Exception {
 		List<CompanyInfoVO> companyList = ezCommonDAO.getAllCompanyIds();
 		Map<String, Object> map = new HashMap<String, Object>();
