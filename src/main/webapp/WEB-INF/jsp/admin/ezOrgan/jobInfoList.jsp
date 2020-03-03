@@ -696,7 +696,7 @@
 							<span class="preview_title" id="preview_title"></span>
 							<span class="preview_count" id="preview_count"></span>
 							<span id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px; margin-top: -9px;">
-								<select id="searchType" style="height: 26px; width: 50px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
+								<select id="searchType" style="height: 26px; width: 55px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
 								<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
 								<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
 							</span>
@@ -794,11 +794,11 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH></WIDTH>
+			<WIDTH>50</WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
-			<WIDTH></WIDTH>
+			<WIDTH>50</WIDTH>
 			</HEADER>
     	</HEADERS>
   	</LISTVIEWDATA>
