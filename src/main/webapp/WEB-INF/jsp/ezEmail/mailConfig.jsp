@@ -27,6 +27,8 @@
 			var uploading = "uploading";
 			var enc = "encrypt";
 		    var dec = "decrypt";
+		    var webSocket =  null;
+		    var importExportMode = false;
 			function defineHost(protocol){
 	    		var host = "";
 
@@ -259,7 +261,11 @@
 		            	HiddenMailProgressNew();
 		            }
 		        };
-		        $("#MailEnv_ifrm")[0].contentWindow.requestFolderList();
+		     // 웹소켓 연결 해제시 실행 되는 함수
+		        webSocket.onclose = function(event){
+		        	webSocket = null;
+		        	importExportMode = false;
+		        };
 		    }
 		  
 		    function ShowPercent(data) {
