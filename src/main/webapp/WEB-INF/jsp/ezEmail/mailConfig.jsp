@@ -221,6 +221,9 @@
 							data : { folderPath : selectFolderName, userkey : userkey},
 							success : function(result) {
 								if (result == "") {
+									if(webSocket == null){
+										return;
+									}
 									alert("<spring:message code='ezEmail.lhm33' />");
 									webSocket.close();
 					            	parent.document.contentWindow.MailProgressNew();
