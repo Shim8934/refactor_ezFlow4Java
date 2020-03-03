@@ -930,7 +930,7 @@
 		                var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
 		                var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
 		                var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-		                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
+		                var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data12");
 		                var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 		                var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 		                var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
@@ -968,7 +968,10 @@
 
 		                    Resultxml = loadXMLString(pparsingXML2); */
 
-	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		                    if(lang == "1")
+		                    	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		                    else
+		                    	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName2 + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 		                    
