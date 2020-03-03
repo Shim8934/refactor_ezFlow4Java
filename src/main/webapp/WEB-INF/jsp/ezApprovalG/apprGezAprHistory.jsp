@@ -56,12 +56,16 @@
 		            }
 		        }
 		        else {
-		        	/* 2020-02-25 홍승비 - 결재문서 수정이력 비교화면 구현, 기존 수정이력화면 주석처리 */
+		        	/* 2020-02-25 홍승비 - 결재문서 수정이력 비교화면 구현, 개선작업 이전의 기존 수정이력화면 분기처리 */
 		            if (CrossYN()) {
-		                //pUrl = "/ezApprovalG/docViewerCK.do?docHref=" + encodeURI(Arguments[0]);
-		                pUrl = "/ezApprovalG/docViewerCompare.do?docHrefAfter=" + encodeURI(Arguments[0]) + "&docHrefBefore=" + encodeURI(oArrRows[0].getAttribute("BEFOREDOCURL"));
-		                openwindow2(pUrl);
-		                return;
+		            	var beforeDocUrl = oArrRows[0].getAttribute("BEFOREDOCURL");
+		            	if (beforeDocUrl != null && beforeDocUrl != "") {
+		                	pUrl = "/ezApprovalG/docViewerCompare.do?docHrefAfter=" + encodeURI(Arguments[0]) + "&docHrefBefore=" + encodeURI(beforeDocUrl);
+		                	openwindow2(pUrl);
+		                	return;
+		            	} else {
+		                	pUrl = "/ezApprovalG/docViewerCK.do?docHref=" + encodeURI(Arguments[0]);
+		            	}
 		            }
 		            else {
 		                pUrl = "DocViewer.aspx?DocHref=" + escapenew(Arguments[0]);
