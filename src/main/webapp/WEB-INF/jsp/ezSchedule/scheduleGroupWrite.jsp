@@ -42,6 +42,7 @@
 		    var pListType = "TXT";
 		    var pListXML_Info = null;
 		    var CurPage = "1";
+		    var lang = "<c:out value='${userInfo.primary}'/>";
 	        		  	
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -767,8 +768,14 @@
 		        for (var i = 0; i < totalLen; i++) {		        	
 		        	var data = new Object();
                     data.memberID = GetAttribute(totalRows[i], "DATA1");
-                    data.memberName1 = GetAttribute(totalRows[i], "DATA2");
-                    data.memberName2 = GetAttribute(totalRows[i], "DATA3");                    
+                    if(lang == "1") {
+                    	data.memberName1 = GetAttribute(totalRows[i], "DATA2");
+                    	data.memberName2 = GetAttribute(totalRows[i], "DATA3");
+                    }
+                    else {
+                    	data.memberName1 = GetAttribute(totalRows[i], "DATA3");
+                    	data.memberName2 = GetAttribute(totalRows[i], "DATA2");
+                    }                     
                     
                     memberList.push(data);		            
 		        }
