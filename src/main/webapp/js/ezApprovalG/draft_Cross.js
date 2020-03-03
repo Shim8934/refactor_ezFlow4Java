@@ -3380,6 +3380,14 @@ function getDocInfo() {
         cabinetID = SelectSingleNodeValueNew(result, "DATA/CABINETID");
         TaskCode = SelectSingleNodeValueNew(result, "DATA/TASKCODE");
         tempSecurityDate = SelectSingleNodeValueNew(result, "DATA/SECURITYAPPROVAL");
+
+        if (useOpenGov == "YES") {
+            basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
+            reason = SelectSingleNodeValueNew(result, "DATA/REASON");
+            listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
+            fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
+            limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+        }
     }
 }
 

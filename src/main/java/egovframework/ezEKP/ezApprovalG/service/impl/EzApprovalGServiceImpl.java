@@ -2664,6 +2664,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo7(map);
 			ezApprovalGDAO.aprDeleteDocInfo8(map);
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
+
+            if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
+                ezApprovalGDAO.aprDeleteDocInfo13(map);
+                ezApprovalGDAO.aprDeleteDocInfo14(map);
+            }
 		}
 		
 		logger.debug("makeTmp2IngDocInfo Param : v_PUSERID =" + userID.trim() + "v_PDOCID = " + docID + "v_PSN = " + sn + "companyID =" + companyID + "v_TENANTID =" + tenantID);
@@ -2707,6 +2712,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
         if (config.getProperty("config.useOpenGov").equals("YES")) { //원문정보공개 사용이면 넣어주게하기
             ezApprovalGDAO.aprMakeTmp2Ing13(map);
+            ezApprovalGDAO.aprMakeTmp2Ing14(map);
         }
 			
         rtnVal = "<RESULT>" + docID + "</RESULT>";
@@ -9880,6 +9886,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append("<WRITERDEPTNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())) + "</WRITERDEPTNAME2>");
             rtnXML.append("<PUBLICITYYN>" + makeXMLString(makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent())).trim() + "</PUBLICITYYN>");
             rtnXML.append("<ORGCOMPANYID>" + makeXMLString(makeListField(docXML.getElementsByTagName("COMPANYID").item(0).getTextContent())) + "</ORGCOMPANYID>");
+
+            if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
+                Map<String, Object> resultMap = getOpenGovInfo(docID, tenantID, companyID);
+                rtnXML.append("<BASIS>" + resultMap.get("basis") + "</BASIS>");
+                rtnXML.append("<REASON>" + resultMap.get("reason") + "</REASON>");
+                rtnXML.append("<LISTOPENFLAG>" + resultMap.get("listOpenFlag") + "</LISTOPENFLAG>");
+                rtnXML.append("<FILEOPENFLAGLIST>" + resultMap.get("fileOpenFlagList") + "</FILEOPENFLAGLIST>");
+            }
 		} else {
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
@@ -16548,6 +16562,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								ezApprovalGDAO.insertDoSendExpAprDocInfo(map);
 								ezApprovalGDAO.insertDocSendAprAttachInfo(map);
 								ezApprovalGDAO.insertDocSendAprDocAttachInfo(map);
+
+								if (config.getProperty("config.useOpenGov").equalsIgnoreCase("YES")) {
+                                    ezApprovalGDAO.insertDocSendAprOpenGovDocInfo(map);
+                                    ezApprovalGDAO.insertDocSendAprOpenGovFileInfo(map);
+                                }
 								
 								int susinSN = ezApprovalGDAO.getReceiptProcessInfoRec(map3);
 								
@@ -29434,22 +29453,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("docID", docID);
 		map.put("tenantId", tenantId);
 		map.put("companyID", companyID);
-		
-		String basis = "";
-		String reason = "";
-		String listOpenFlag = "";
 
-		Map<String, Object> openGovMap = ezApprovalGDAO.getOpenGovInfo(map);
-		
-		basis = (String) openGovMap.get("BASIS");
-		reason = (String) openGovMap.get("REASON");
-		listOpenFlag = (String) openGovMap.get("LISTOPENFLAG");
-		
+		ApprGOpenGovInfoVO vo = ezApprovalGDAO.getOpenGovInfo(map);
+		List<String> fileList = ezApprovalGDAO.getFileOpenFlagList(map);
+
+        StringBuilder sb = new StringBuilder();
+        fileList.forEach(value -> sb.append(value));
+
 		Map<String, Object> openGovInfoMap = new HashMap<String, Object>();
-		
-		openGovInfoMap.put("basis", basis);
-		openGovInfoMap.put("reason", reason);
-		openGovInfoMap.put("listOpenFlag", listOpenFlag);
+
+		openGovInfoMap.put("basis", vo.getBasis());
+		openGovInfoMap.put("reason", vo.getReason());
+		openGovInfoMap.put("listOpenFlag", vo.getListOpenFlag());
+        openGovInfoMap.put("fileOpenFlagList", (sb.toString()));
+
+        openGovInfoMap.forEach((key, value) -> logger.debug("key =  " + key + ", value = " + value));
+        logger.debug("getOpenGovInfo ended");
 
 		return openGovInfoMap;
 	}
