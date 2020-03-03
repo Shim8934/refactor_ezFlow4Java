@@ -1757,9 +1757,8 @@
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
-		            if (FirstHtml == "") {
-		                FirstHtml = beforeHtml;
-		            }
+		            /* 2020-03-03 홍승비 - 화면 종료 없이 계속 편집 > 저장해도 정상적으로 수정이력을 저장하도록 수정 */
+					FirstHtml = beforeHtml;
 		            
 		            /* 2020-02-24 홍승비 - 편집모드 > 저장 > 즉시 편집 전&후의 html과 수정이력을 저장하도록 수정 */
 		            message.SetEditable(false);

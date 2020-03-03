@@ -198,7 +198,7 @@
                         }
                     }
                     BodyTagsDisabled(document.getElementById('div_Content'));
-                    parent.FieldsAvailable();
+                    // 미사용 parent.FieldsAvailable() 함수 제거
 	            } catch (e)
 	            { }
 	        }

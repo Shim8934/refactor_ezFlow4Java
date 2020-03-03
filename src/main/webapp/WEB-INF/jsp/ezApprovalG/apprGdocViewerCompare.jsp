@@ -13,23 +13,25 @@
 	        var pDocHrefBefore = "${docHrefBefore}"; // 편집 전 문서
 	        var pDocHrefAfter = "${docHrefAfter}"; // 편집 후 문서
 	        var PrtBodyContent = ""; // 인쇄용 변수
-	        var flag = false;
+	        var isBeforeDocLoaded = false;
+	        var isAfterDocLoaded = false;
 	        
+	        /* 2020-03-03 홍승비 - 결재문서이력의 중복 로드 방지 플래그 추가 */
 	        function DocumentComplete() {
-	            if (flag == false) {
-	                flag = true;
-	                
-	                if (pDocHrefBefore != "" && pDocHrefAfter != "") {
-	                    message.Set_EditorContentURL(pDocHrefBefore);
-	                    message2.Set_EditorContentURL_Compare(pDocHrefAfter, pDocHrefBefore);
-	                }
-	            }
+				if (pDocHrefBefore != "" && pDocHrefAfter != "") {
+					if (isBeforeDocLoaded == false) {	
+	             		message.Set_EditorContentURL(pDocHrefBefore);
+	             		isBeforeDocLoaded = true;
+					}
+					if (isAfterDocLoaded == false) {
+	             		message2.Set_EditorContentURL_Compare(pDocHrefAfter, pDocHrefBefore);
+	             		isAfterDocLoaded = true;
+					}
+            	}
 	        }
 	        
-	        function FieldsAvailable() {
-	            message.SetEditable(false);
-	            message2.SetEditable(false);
-	        }
+	        // 문서비교 화면 상에서 사용하지 않는 undefined 함수 호출 제거
+	        function FieldsAvailable() {}
 	        
 	        function btnPrint_onclick() {
 	            var pDocHref = "";
