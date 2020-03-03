@@ -15,17 +15,22 @@
 	        var PrtBodyContent = ""; // 인쇄용 변수
 	        var isBeforeDocLoaded = false;
 	        var isAfterDocLoaded = false;
+	        var isPrintDocLoaded = false;
 	        
 	        /* 2020-03-03 홍승비 - 결재문서이력의 중복 로드 방지 플래그 추가 */
 	        function DocumentComplete() {
 				if (pDocHrefBefore != "" && pDocHrefAfter != "") {
-					if (isBeforeDocLoaded == false) {	
+					if (isBeforeDocLoaded == false) {
 	             		message.Set_EditorContentURL(pDocHrefBefore);
 	             		isBeforeDocLoaded = true;
 					}
 					if (isAfterDocLoaded == false) {
 	             		message2.Set_EditorContentURL_Compare(pDocHrefAfter, pDocHrefBefore);
 	             		isAfterDocLoaded = true;
+					}
+					if (isPrintDocLoaded == false) { // 인쇄용 편집 후 문서 (취소선, 하이라이트 없음)
+	             		message3.Set_EditorContentURL(pDocHrefAfter);
+	             		isPrintDocLoaded = true;
 					}
             	}
 	        }
@@ -54,7 +59,7 @@
 	            if (mode == "BEFORE") {
 	            	PrtBodyContent = message.Get_EditorBodyHTML();
 	            } else if (mode == "AFTER") {
-	            	PrtBodyContent = message2.Get_EditorBodyHTML();
+	            	PrtBodyContent = message3.Get_EditorBodyHTML(); // 인쇄용 편집 후 문서 (취소선, 하이라이트 없음)
 	            }
 	            
 	            var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
@@ -164,11 +169,14 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td id="messageTD" style="padding-bottom: 10px">
+	            <td id="messageTD" style="padding-bottom: 10px;">
 	                <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" src="/ezApprovalG/aprDocViewContent.do" name="message" frameborder="0" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
 	            </td>
-				 <td id="message2TD" style="padding-bottom: 10px">
+				 <td id="message2TD" style="padding-bottom: 10px;">
 	                <iframe id="message2" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" src="/ezApprovalG/aprDocViewContent.do" name="message2" frameborder="0" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+	            </td>
+				<td id="message3TD" style="padding-bottom: 10px; display:none;">
+	                <iframe id="message3" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" src="/ezApprovalG/aprDocViewContent.do" name="message3" frameborder="0" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
 	            </td>
 	        </tr>
 	    </table>
