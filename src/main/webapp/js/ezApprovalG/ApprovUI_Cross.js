@@ -1230,6 +1230,14 @@ function getDocInfo() {
             TaskCode = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[31]);
             tempSecurityDate = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[36]);
             */
+
+            if (useOpenGov == "YES") {
+                basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
+                reason = SelectSingleNodeValueNew(result, "DATA/REASON");
+                listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
+                fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
+                limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+            }
         }
     } catch (e) {
         alert("getDocInfo :: " + e.description);
