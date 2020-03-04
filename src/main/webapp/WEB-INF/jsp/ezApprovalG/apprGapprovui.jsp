@@ -166,6 +166,7 @@
 			var wAprMemberSN = "";
 			
 			//원문공개정보
+            var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 			var basis = "<c:out value ='${basis}'/>";
 			var reason = "<c:out value ='${reason}'/>";
 			var listOpenFlag = "<c:out value ='${listOpenFlag}'/>";
