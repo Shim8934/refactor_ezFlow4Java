@@ -2931,7 +2931,7 @@
 	    		(12, 2, #companyID#, #tenantID#, 'PMS'),
 	    		(12, 3, #companyID#, #tenantID#, 'プロジェクト管理'),
 	    		(13, 1, #companyID#, #tenantID#, '주소록'),
-	    		(13, 2, #companyID#, #tenantID#, 'Address'),
+	    		(13, 2, #companyID#, #tenantID#, 'Contacts'),
 	    		(13, 3, #companyID#, #tenantID#, 'アドレス帳'),
 	    		(14, 1, #companyID#, #tenantID#, '설문조사'),
 	    		(14, 2, #companyID#, #tenantID#, 'Poll'),
