@@ -11,6 +11,7 @@ public class UserCapacityVO {
 	private String totalCapacity;
 	private String totalUsed;
 	private int usedRate;
+	private String totalCount;
 	private int tenantId;
 
 	public String getCn() {
@@ -93,6 +94,14 @@ public class UserCapacityVO {
 		this.usedRate = usedRate;
 	}
 
+	public String getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(String totalCount) {
+		this.totalCount = totalCount;
+	}
+	
 	public int getTenantId() {
 		return tenantId;
 	}
