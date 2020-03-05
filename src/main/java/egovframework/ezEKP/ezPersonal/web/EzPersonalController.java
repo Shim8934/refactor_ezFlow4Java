@@ -381,7 +381,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 			String[] info = result.split(":");
 			
 			userID = info[0];
-			textName = ezOrganService.getPropertyValue(info[0], "displayname", userInfo.getTenantId());
+			String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+			textName = ezOrganService.getPropertyValue(info[0], "displayname" + lang, userInfo.getTenantId());
 			deptID = info[2];
 			startDate = info[3] + ":" + info[4];
 			endDate = info[5] + ":" + info[6];
