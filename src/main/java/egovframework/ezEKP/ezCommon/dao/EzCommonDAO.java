@@ -1153,4 +1153,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public void addIsBeforeDoc() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddIsBeforeDoc");
+		} catch (Exception e) {
+			logger.debug("tbl_historydocinfo ISBEFOREDOC column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAddIsBeforeDoc");
+		}
+	}
+
+	public void addBeforeDocUrl() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddBeforeDocUrl");
+		} catch (Exception e) {
+			logger.debug("tbl_historydocinfo BEFOREDOCURL column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.updateAddBeforeDocUrl");
+		}
+	}
 }

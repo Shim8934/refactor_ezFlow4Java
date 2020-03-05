@@ -144,4 +144,5 @@ public interface EzEmailService {
 	public String setIndividualAliasForMig(String userId, int tenantID, String targetAddr, String individualAliasList) throws Exception;
 	
 	public MailDistributionVO getDistributionInfo(String cn, int tenantId) throws Exception;
+	public JSONArray getFolderQuota(String String, Locale locale) throws Exception;
 }

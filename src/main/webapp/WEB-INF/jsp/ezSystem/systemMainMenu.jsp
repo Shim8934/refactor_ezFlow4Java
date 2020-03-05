@@ -55,35 +55,11 @@
 						{ name : "usePortalAutoRefreshInterval", value : document.getElementById("usePortalAutoRefreshInterval").value.trim() }
 					  ];
 				
-				if (!paramArray[0].value.match(/^\d+$/)) {
-				    alert("<spring:message code='ezSystem.x0001'/>: <spring:message code='ezEmail.t99000066'/>");
-				    return;
-				} else if (!paramArray[1].value.match(/^\d+$/)) {
-				    alert("<spring:message code='ezSystem.x0002'/>: <spring:message code='ezEmail.t99000066'/>");
-				    return;
-				} else if (!paramArray[2].value.match(/^\d+$/)) {
-				    alert("<spring:message code='ezSystem.x0003'/>: <spring:message code='ezEmail.t99000066'/>");
-				    return;
-				} else if (!paramArray[3].value.match(/^\d+$/)) {
-				    alert("<spring:message code='ezSystem.x0005'/>: <spring:message code='ezEmail.t99000066'/>");
-				    return;
-				} else if (!paramArray[4].value.match(/^\d+$/)) {
-				    alert("<spring:message code='ezSystem.x0038'/>: <spring:message code='ezEmail.t99000066'/>");
-				    return;
-				} else if (!paramArray[5].value.match(/^\d+$/)) {
-				    alert("<spring:message code='ezSystem.x0006'/>: <spring:message code='ezEmail.t99000066'/>");
-				    return;
-				} else if (!paramArray[15].value.match(/^\d+$/)) {
-					alert("<spring:message code='ezSystem.lsh001'/>: <spring:message code='ezEmail.t99000066'/>");
-				    return;
-				} else if (!paramArray[16].value.match(/^\d+$/)) {
-					alert("<spring:message code='ezSystem.ksaMobileSession'/>: <spring:message code='ezEmail.t99000066'/>");
-				    return;
-				} else if (!paramArray[17].value.match(/^\d+$/)) {
-					alert("<spring:message code='ezSystem.yej01'/>: <spring:message code='ezEmail.t99000066'/>");
-				    return;
-				}	
-						
+				// 파라미터 체크로직 인덱스가 아닌 이름으로 찾도록 수정. 2020-03-04 홍대표.
+				if(!checkParamValid(paramArray)) {
+					return;					
+				}
+				
 				var jsonStr = JSON.stringify(paramArray);
 				
 				$.ajax({
@@ -117,6 +93,55 @@
 					success : function(result) {
 					}
 				});
+			}
+			
+			function checkParamValid(paramArray) {
+				for (var i = 0; i < paramArray.length; i++) {
+					var name = paramArray[i].name;
+					var value = paramArray[i].value;
+					var isNumber = value.match(/^\d+$/);
+					
+					if (!isNumber) {
+						var errFlag = true;
+						switch (name) {
+							case "BigSizeMailAttachDelDay" :
+								alertMsg = "<spring:message code='ezSystem.x0001'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "totBigSizeMailAttachLimit" :
+								alertMsg = "<spring:message code='ezSystem.x0002'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "MailAttachLimit" :
+								alertMsg = "<spring:message code='ezSystem.x0003'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;		
+							case "ExpirePassPeriod" :
+								alertMsg = "<spring:message code='ezSystem.x0005'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "MaxAllowedCountOfLoginFail" :
+								alertMsg = "<spring:message code='ezSystem.x0038'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "INDIVIDUALMAILUSER" :
+								alertMsg = "<spring:message code='ezSystem.x0006'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "useSession" :
+								alertMsg = "<spring:message code='ezSystem.lsh001'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "useSessionMobile" :
+								alertMsg = "<spring:message code='ezSystem.ksaMobileSession'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							case "usePortalAutoRefreshInterval" :
+								alertMsg = "<spring:message code='ezSystem.yej01'/>: <spring:message code='ezEmail.t99000066'/>";
+								break;
+							default :
+								errFlag = false;
+						}
+						
+						if (errFlag) {
+							alert(alertMsg);
+							return false;
+						}
+					}
+				}
+				return true;
 			}
 		</script>
 	</head>

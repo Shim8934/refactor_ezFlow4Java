@@ -1,4 +1,4 @@
-﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
+﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
 var pOrgAttach;
 var bbtnApprove = "";
 var bbtnReject = "";
@@ -1230,6 +1230,14 @@ function getDocInfo() {
             TaskCode = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[31]);
             tempSecurityDate = getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[36]);
             */
+
+            if (useOpenGov == "YES") {
+                basis = SelectSingleNodeValueNew(result, "DATA/BASIS");
+                reason = SelectSingleNodeValueNew(result, "DATA/REASON");
+                listOpenFlag = SelectSingleNodeValueNew(result, "DATA/LISTOPENFLAG");
+                fileOpenFlagList = SelectSingleNodeValueNew(result, "DATA/FILEOPENFLAGLIST");
+                limitDate = SelectSingleNodeValueNew(result, "DATA/LIMITDATE");
+            }
         }
     } catch (e) {
         alert("getDocInfo :: " + e.description);
@@ -3529,7 +3537,9 @@ function getHistory() {
 function getHistory_Complete() {
     DivPopUpHidden();
 }
-function UpdateDocHistory(pHtml) {
+
+/* 2020-02-24 홍승비 - 편집 전후 문서를 판단하기 위한 플래그 isBeforeDoc, 편집전문서 파일경로 beforeDocURL 파라미터 추가 */
+function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
 
     var xmlhttp2 = createXMLHttpRequest();
     var xmlpara = createXmlDom();
@@ -3538,11 +3548,13 @@ function UpdateDocHistory(pHtml) {
     createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
     createNodeAndInsertText(xmlpara, objNode, "pHtml", ConvertHTMLtoMHT(pHtml));
     createNodeAndInsertText(xmlpara, objNode, "mode", "mht");
+    createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
     
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
     xmlhttp2.send(xmlpara);
 
     var URL = xmlhttp2.responseText;
+    var returnURL = "";
     if (URL.length < 255 && URL != "FALSE") {
         var xmlhttp = createXMLHttpRequest();
         var xmlpara = createXmlDom();
@@ -3559,13 +3571,15 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
         createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
+        createNodeAndInsertText(xmlpara, objNode, "ISBEFOREDOC", isBeforeDoc);
+        createNodeAndInsertText(xmlpara, objNode, "BEFOREDOCURL", beforeDocURL);
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
         
         if (xmlhttp != null && xmlhttp.readyState == 4) {
           	 if (xmlhttp.statusText == "OK") {
-          		
+          		returnURL = xmlhttp.responseText;
           	 } else {
           		 var pAlertContent = strLang89;
                  OpenAlertUI(pAlertContent);
@@ -3575,6 +3589,8 @@ function UpdateDocHistory(pHtml) {
         var pAlertContent = strLang90;
         OpenAlertUI(pAlertContent);
     }
+    
+    return returnURL;
 }
 /**
  * 결재선의 이력관리
