@@ -2196,4 +2196,39 @@
 	    FROM DUAL
 	]]>
 	</insert>
+		
+	<select id="EzCommonDAO.checkAddIsBeforeDoc">
+		<![CDATA[
+			SELECT 
+				ISBEFOREDOC 
+			FROM 
+				TBL_HISTORYDOCINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAddIsBeforeDoc">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD 
+			ISBEFOREDOC CHAR(1 CHAR)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddBeforeDocUrl">
+		<![CDATA[
+			SELECT 
+				BEFOREDOCURL 
+			FROM 
+				TBL_HISTORYDOCINFO
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	<statement id="EzCommonDAO.updateAddBeforeDocUrl">
+		ALTER TABLE 
+			TBL_HISTORYDOCINFO
+		ADD 
+			BEFOREDOCURL VARCHAR2(255 CHAR)
+	</statement>
+	
 </sqlMap>

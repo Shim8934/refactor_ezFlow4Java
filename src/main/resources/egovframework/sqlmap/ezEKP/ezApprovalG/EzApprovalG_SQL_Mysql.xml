@@ -6810,27 +6810,30 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getHistoryForDoc" parameterClass="Map" resultClass="ApprGHistoryDocVO">
 		SELECT 
-				DOCID, 
-				CHANGESN, 
+				DOCID,
+				ROW_NUMBER() OVER (ORDER BY CHANGEDATE ASC) AS CHANGESN, 
 				URL, 
 				CHANGEUSERID, 
 				CHANGEUSERJOBTITLE, 
 				CHANGEUSERJOBTITLE2,
-   				CHANGEUSERNAME, 
-   				CHANGEUSERNAME2, 
-   				CHANGEUSERDEPTID, 
-   				CHANGEUSERDEPTNAME, 
-   				CHANGEUSERDEPTNAME2, 
-   				CHANGEDATE, 
-   				CHKFLAG
+				CHANGEUSERNAME, 
+				CHANGEUSERNAME2, 
+				CHANGEUSERDEPTID, 
+				CHANGEUSERDEPTNAME, 
+				CHANGEUSERDEPTNAME2, 
+				CHANGEDATE, 
+				CHKFLAG,
+				IFNULL(BEFOREDOCURL, '') AS BEFOREDOCURL
    		FROM 
-   				TBL_HISTORYDOCINFO 
+				TBL_HISTORYDOCINFO 
    		WHERE 
    				DOCID = #v_DOCID#
    		AND
    				TENANT_ID = #v_TENANTID#
    		AND
    				COMPANYID = #companyID#
+		AND
+   				(ISBEFOREDOC = 'N' OR ISBEFOREDOC IS NULL OR TRIM(ISBEFOREDOC) = '')
    		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
    			<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="10">
    				<isEqual property="v_ORDEROPTIONVALUE" compareValue="changedate">
@@ -6847,10 +6850,10 @@
    			 			$v_ORDEROPTION$, CHANGEDATE DESC
    			</isLessThan>
    		</isGreaterThan>
-   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+   		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
    			  ORDER BY 
    			 			CHANGEDATE DESC
-   		</isLessThan>
+   		</isLessEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getHistoryForLine" parameterClass="Map" resultClass="ApprGHistoryLineVO"> -->
 <!-- 		{CALL EZSP_GETHISTORYFORLINE(#v_DOCID#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -26482,9 +26485,9 @@
    	<insert id="EzApprovalG.insertHistoryDocInfo" parameterClass="Map" > 
    	 	INSERT INTO 
    	 		TBL_HISTORYDOCINFO
-        ( DOCID, CHANGESN, URL, CHANGEUSERID, CHANGEUSERNAME, CHANGEUSERNAME2, CHANGEUSERJOBTITLE, CHANGEUSERJOBTITLE2, CHANGEUSERDEPTID, CHANGEUSERDEPTNAME, CHANGEUSERDEPTNAME2, CHANGEDATE, CHKFLAG, TENANT_ID, COMPANYID )
+        ( DOCID, CHANGESN, URL, CHANGEUSERID, CHANGEUSERNAME, CHANGEUSERNAME2, CHANGEUSERJOBTITLE, CHANGEUSERJOBTITLE2, CHANGEUSERDEPTID, CHANGEUSERDEPTNAME, CHANGEUSERDEPTNAME2, CHANGEDATE, CHKFLAG, ISBEFOREDOC, BEFOREDOCURL, TENANT_ID, COMPANYID )
         VALUES 
-        ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2#, #v_SYSDATE#, ' ', #v_TENANTID#, #companyID#)
+        ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2#, #v_SYSDATE#, ' ', #v_ISBEFOREDOC#, #v_BEFOREDOCURL#, #v_TENANTID#, #companyID#)
    	</insert>
    	
    	<select id="EzApprovalG.getKeepType" parameterClass="Map" resultClass="ApprGLeftVO">
