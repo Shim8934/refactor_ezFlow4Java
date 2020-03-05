@@ -457,7 +457,7 @@
 				</select>
 				</div>
 				<div style="display: inline-block;box-sizing: border-box; padding-right: 2px;width: 518px;padding-left: 5px;">
-					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:89%">
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px; width:86%">
 					<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
 				</div>
 			</div>
