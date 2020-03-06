@@ -959,7 +959,7 @@
 				<th nowrap><spring:message code="ezEmail.t642" /></th>
 				<td style="width:100%, padding:8px;">
 					<div style="margin: 5px 5px 0px 5px;padding: 3px;">
-					    <select id="select2" style="height: 25px;margin-right: 5px;width: 86px;">
+					    <select id="select2" style="height: 25px;margin-right: 5px;">
 					    	<option value="ALL"><spring:message code="ezEmail.t643" /></option>      
 						    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
 						    <option value="${folderName}">
