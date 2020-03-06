@@ -1048,7 +1048,7 @@
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
 		            } else {
-		                var pMsg = "<spring:message code='ezApprovalG.t68'/>";
+		                var pMsg = "<spring:message code='ezApprovalG.ryobi.csj14'/>";
 		                var Ans = OpenInformationUI(pMsg, btncallback_onclick_Complete, "open");
 		            }
 		            
