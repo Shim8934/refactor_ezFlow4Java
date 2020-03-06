@@ -2591,9 +2591,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					OrganUserVO user = ezOrganService.getUserInfo(pCn, primaryLang, tenantId);
 					
 					if (user != null) {
+						OrganDeptVO dept = ezOrganService.getDeptInfo(user.getDepartment(), primaryLang, tenantId);
+						
 						dlName = user.getDisplayName();
 						dlMail = user.getMail();
-						dlDeptName = user.getDepartment();
+						dlDeptName = dept.getDisplayName();
 					} 
 				} else {//distribution_sub에서 가져오기(주소록, 직접입력)
 					MailDistributionVO distributionSubVO = ezEmailService.getDistributionSub(cn, pCn, companyId, tenantId);
