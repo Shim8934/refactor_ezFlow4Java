@@ -395,10 +395,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String apprAuthYn = "N";
 			
-			for (MResourceGetAdmSubClsTreeVO rVO : list) {
+			/*for (MResourceGetAdmSubClsTreeVO rVO : list) {
 				if(rVO.getBrdId().equals(resourceId)){
 					apprAuthYn = "Y";
 				}
+			}*/
+			
+			if(list.stream().anyMatch(rVO -> rVO.getBrdId().equals(resourceId))) {
+				apprAuthYn = "Y";
 			}
 			
 			resVO.setApprAuthYn(apprAuthYn);
@@ -1149,10 +1153,15 @@ public class MResourceGWController extends EgovFileMngUtil {
 				
 				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn, "");
 				if(!ownerId.equals("") && !ownerId.equals("1")) {
-					for(int i=0; i<list.size(); i++) {
+					/*for(int i=0; i<list.size(); i++) {
 						if(list.get(i).getBrdId().equals(ownerId)) {
 							authCheck = "Y";
 						}
+					}*/
+					// 20-03-06 김민성 - ownerId가 자원분류의 값이 아닌 자원ID 값인 경우가 있어 수정함
+					String ownerId2 = mResourceService.getResUpperBrdID(ownerId, tenantId, userCompany);
+					if(list.stream().anyMatch(res -> res.getBrdId().equals(ownerId2))) {
+						authCheck = "Y";
 					}
 				}
 				else {
@@ -1167,10 +1176,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 			// 2018-10-31 김민성 - 자원 관리자 권한 가진 자원이 있는지 체크
 			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId, brdCompany);
 			if(!ownerId.equals("")) {
-				for(int i=0; i<adminResList.size(); i++) {
+				/*for(int i=0; i<adminResList.size(); i++) {
 					if(adminResList.get(i).equals(ownerId)) {
 						adminYn = "Y";
 					}
+				}*/
+				String ownerId2 = ownerId;
+				if(adminResList.stream().anyMatch(res -> res.equals(ownerId2))) {
+					adminYn = "Y";
 				}
 			}
 			else {
