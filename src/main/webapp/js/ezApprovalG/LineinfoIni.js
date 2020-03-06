@@ -1551,7 +1551,7 @@ function setDeptGamsaType(targetRow) {
 	[].forEach.call(targetRow.childNodes[4].getElementsByTagName("option"), function(elem) {
 		if(targetRow.getAttribute("DATA4") == optGamsabu && elem.value != strAprType13
 		  || targetRow.getAttribute("DATA4") != optGamsabu && elem.value == strAprType13) {
-			elem.remove();
+			elem.parentNode.removeChild(elem);
 		}
 	})
 }
