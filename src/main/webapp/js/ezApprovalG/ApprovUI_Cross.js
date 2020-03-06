@@ -3552,7 +3552,7 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
     
     xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
     xmlhttp2.send(xmlpara);
-
+    
     var URL = xmlhttp2.responseText;
     var returnURL = "";
     if (URL.length < 255 && URL != "FALSE") {
@@ -3566,7 +3566,7 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
         createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
         createNodeAndInsertText(xmlpara, objNode, "pUserJobTitle", arr_userinfo[13]);
         createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", arr_userinfo[15]);
+        createNodeAndInsertText(xmlpara, objNode, "pUserDeptName", ConvMakeXMLString(arr_userinfo[15]));
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
@@ -4146,4 +4146,15 @@ function setDocNumFormat(pPrefix) {
     field.textContent = numHeader;
     if (numHeader.indexOf(strLang107) > 0)
         message.DocumentBodySetAttribute("docnum", numHeader);
+}
+
+/* 2020-03-06 홍승비 - 부서에 특수문자를 허용하므로, DB 저장 시 역인코딩을 위한 함수 추가 */
+function ConvMakeXMLString(str) {
+    str = ReplaceText(str, "&lt;", "<");
+    str = ReplaceText(str, "&gt;", ">");
+    str = ReplaceText(str, "&#039;", "'");
+    str = ReplaceText(str, "&#034;", "\"");
+	str = ReplaceText(str, "&amp;", "&");	    
+	str = ReplaceText(str, "&#92;", "\\");
+    return str;
 }
