@@ -183,10 +183,10 @@
 	        }
 	
 	        function ChangeTab(obj) {
-	        	if(obj.id = '1tab1'){
-		            document.getElementById("mainmenu").style.display = "none";
+	        	if(obj.id == '1tab1'){
+		            document.getElementById("ListCompany").style.display = "none";
 	        	} else {
-		            document.getElementById("mainmenu").style.display = "";
+		            document.getElementById("ListCompany").style.display = "";
 	        	}
 	        	
 	        	var SelectedTabID = obj.getAttribute("DATA1");
