@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.google.gson.JsonArray;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -2848,6 +2849,39 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("getSharedMailboxPermissionInfo ended.");
 		return shareMailBoxPermissonInfo;
+	}
+	
+	@Override
+	public JSONArray getFolderQuota(String email, Locale locale) throws Exception {
+		logger.debug("getFolderQuota started.");
+		String userIdParam = "primaryMail=" + URLEncoder.encode(email, "UTF-8");
+		String inputParams = userIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getFolderQuota";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		JSONArray jsonArr =  (JSONArray) object.get("resultData");
+		List<JSONObject> list = (List<JSONObject>) object.get("resultData");
+		
+		for(int i = 0; i <list.size(); i++){
+			
+			String mailboxName = (String) list.get(i).get("mailboxName");
+			list.get(i).put("mailboxChangeName", ezEmailUtil.getDisplayNameFromFolderId(mailboxName, locale));
+			String mailboxId = (String) list.get(i).get("mailboxId");
+			double size = Double.parseDouble(list.get(i).get("mailboxQuota").toString());
+			String mailboxQuota = ezEmailUtil.getSizeWithUnit(size);
+			list.get(i).replace("mailboxQuota", mailboxQuota);
+			String notReadCount = (String) list.get(i).get("notReadCount");
+			String mailCount = (String) list.get(i).get("mailCount");
+		}
+			
+		logger.debug("getFolderQuota ended.");
+		return jsonArr;
 	}
 	
 	@Override

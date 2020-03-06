@@ -166,6 +166,7 @@
 			var wAprMemberSN = "";
 			
 			//원문공개정보
+            var useOpenGov = "<c:out value ='${useOpenGov}'/>";
 			var basis = "<c:out value ='${basis}'/>";
 			var reason = "<c:out value ='${reason}'/>";
 			var listOpenFlag = "<c:out value ='${listOpenFlag}'/>";
@@ -453,8 +454,11 @@
 			*/
 		    function process_AfterApprove(mode)
 		    {
-		        if (FirstHtml != "")
+				/* 2020-02-24 홍승비 - 결재문서의 변경내역(수정이력) 저장 시점을 편집 -> 저장 직후로 변경 */
+/* 		        if (FirstHtml != "") {
 		            UpdateDocHistory(FirstHtml);
+		        } */
+				
 		        if (mode == "1")
 		        {
 		            if (allFlag == "1" || allFlag == "2")
@@ -1300,13 +1304,15 @@
 		        PrintClick("Cross", pDocID, "ING");
 		    }
 		
+		    /* 2020-02-24 홍승비 - 편집모드 > 저장 시 원문서 정보와 수정이력을 바로 업데이트하도록 수정하여, 기존 경고창 주석처리 */
 		    function btnClose_onclick() {
-		    	if (editedFlag) {
+/* 		    	if (editedFlag) {
 		    		var pInformationContent = "<spring:message code='ezApprovalG.t148'/>" + "<br>" + "<spring:message code='ezApprovalG.t149'/>";
 				    OpenInformationUI(pInformationContent, btnClose_onclick_Complete);
 		    	} else {
 			        window.close();
-		    	}
+		    	} */
+		    	window.close();
 		    }
 		    
 		    function btnClose_onclick_Complete(rtn) {
@@ -1779,6 +1785,8 @@
 	    			btnClose_onclick();
 		        }
 		    }
+		    
+		    /* 2020-02-24 홍승비 - 편집모드 내부에 '취소' 버튼 추가 */
 			var editedFlag = false;
 		    function btnEdit_onclick()
 		    {
@@ -1792,11 +1800,13 @@
 	    			}
 	    			return;
 	    		}
-		        if (modeflag) {
+		        if (modeflag) { // 편집모드 진입
 		            modeflag = false;
 		            chkBtnConfirm("1");
 		            chkBtn(false, approvalFlag);            
 		            setMenuBar("btnAddRelatedCabinet", false);
+		            document.getElementById("btnEditCancle").style.display = ""; // 편집모드 내부 취소버튼 표출
+		            
 		            beforeHtml = message.Get_EditorBodyHTML();
 		            message.SetEditable(true);
 		            var contentEditable = message.DocumentBodyGetAttribute("contentEditable");
@@ -1804,7 +1814,7 @@
 		                message.DocumentBodySetAttribute("contentEditable", "inherit");
 		            btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t1767'/>";
 		        }
-		        else {
+		        else { // 편집모드 내부에서 '저장'
 		            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";
 		            OpenInformationUI(pInformationContent, btnEdit_onclick_Complete);
 		        }
@@ -1831,12 +1841,23 @@
 			                OpenAlertUI(pAlertContent);
 			                return;
 		            }
-		            if (FirstHtml == "")
-		                FirstHtml = beforeHtml;
+		            /* 2020-03-03 홍승비 - 화면 종료 없이 계속 편집 > 저장해도 정상적으로 수정이력을 저장하도록 수정 */
+					FirstHtml = beforeHtml;
+		            
+		            /* 2020-02-24 홍승비 - 편집모드 > 저장 > 즉시 편집 전&후의 html과 수정이력을 저장하도록 수정 */
+		            message.SetEditable(false);
+		            var afterEditDoc = message.Get_EditorBodyHTML();
+		            afterEditDoc = EmbedContentIntoXML(afterEditDoc);
+		            
+					// 편집 전 본문 html > isBeforeDoc 값을 "Y"로 전달, 저장한 편집전문서 파일경로 URL 리턴
+		            var beforeDocURL = UpdateDocHistory(FirstHtml, "Y", "");
+		            UpdateDocHistory(afterEditDoc, "N", beforeDocURL);
+		            SaveFile();
+		            
 			        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
 			        editedFlag = true;
 		        }
-		        else {
+		        else { // 저장 > 취소
 		            message.Set_EditorInputBodyHTML(modifiOrgBody);
 		            message.Set_HtmlDocument();
 		            noFieldsAvailable = true;
@@ -1845,8 +1866,11 @@
 		        message.SetEditable(false);
 		        chkBtnConfirm("2");
 		        setMenuBar("btnAddRelatedCabinet", true);
+		        document.getElementById("btnEditCancle").style.display = "none"; 
+		        
 		        modeflag = true;
 		    }
+		    
 		    function btnSave_onclick() {
 		        var pDocID_ = "", pDocTitle_ = "";
 		        try {
@@ -2098,6 +2122,21 @@
 		    		return false;
 		    	}
 		    }
+		    
+		    /* 2020-02-24 홍승비 - 편집모드 > 취소버튼 동작 구현 */
+		    function btnEditCancle_onclick() {
+				message.Set_EditorInputBodyHTML(modifiOrgBody);
+	            message.Set_HtmlDocument();
+	            noFieldsAvailable = true;
+		        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
+		        
+		        message.SetEditable(false);
+		        chkBtnConfirm("2");
+		        document.getElementById("btnEditCancle").style.display = "none"; 
+		        
+		        modeflag = true;
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">
@@ -2114,7 +2153,9 @@
 		                  <li id="btnJunKyul" style="display:none"><span onClick="return btnJunKyul_onclick()"  ><spring:message code='ezApprovalG.t25'/></span></li>
 		                  <span style="display:none"><li id="btnModAprLine"><span onClick="return btnModAprLine_onclick()" ><spring:message code='ezApprovalG.t52'/></span></li></span>
 		                  <span style="display:none"><li id="btnModAprDept"><span onClick="return btnModAprDept_onclick()" ><spring:message code='ezApprovalG.t154'/></span></li></span>                 
-		                  <li id="btnEdit"><span onClick="return btnEdit_onclick()"  ><spring:message code='ezApprovalG.t44'/></span></li>
+		                  <li id="btnEdit"><span onClick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
+		                  <%-- 2020-02-24 홍승비 - 편집모드 내부 취소버튼 구현 --%>
+		                  <li id="btnEditCancle" style="display:none"><span onClick="btnEditCancle_onclick()"><spring:message code='ezApprovalG.t1761'/></span></li>
 		                  <span style="display:none"><li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()"  ><spring:message code='ezApprovalG.t54'/></span></li></span>            
 		                  <li id="btnOpinion"><span onClick="return btnOpinion_onclick()"  ><spring:message code='ezApprovalG.t55'/></span></li>
 		                  <li id="btnFileAttach"><span onClick="return btnFileAttach_onclick()" ><spring:message code='ezApprovalG.t56'/></span></li>

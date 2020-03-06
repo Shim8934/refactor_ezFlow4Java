@@ -289,7 +289,7 @@ FROM (
 		AND
 			USERID = #userId#
 		WHERE
-			COMPANYID = #companyId#
+			UPPER(COMPANYID) = UPPER(#companyId#)
 		AND
 			STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 		AND

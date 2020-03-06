@@ -534,6 +534,24 @@
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + replaceEntityCodeToStr(arr_userinfo[5]) + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
+
+                if (useOpenGov == "YES") {
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/openGovInfoSave.do",
+                        data : {
+                            openGovListFlag : listOpenFlag,
+                            fileOpenFlagList : fileOpenFlagList,
+                            basis : basis,
+                            reason : reason,
+                            publicity : pPublicityCode,
+                            docID : pDocID,
+                            limitDate : limitDate
+                        }
+                    });
+                }
 		    	
 		        try {
 		        	if (isEditorComplete == true) {
@@ -1791,6 +1809,23 @@
 		        var rtnVal = SaveTMPFile(AutoSave);
 		        if (rtnVal == "TRUE") {
 		            rtnVal = SaveTMPDocInfo(AutoSave);
+                    if (useOpenGov == "YES") {
+                        $.ajax({
+                            type : "POST",
+                            dataType : "text",
+                            async : false,
+                            url : "/ezApprovalG/openGovInfoSave.do",
+                            data : {
+                                openGovListFlag : listOpenFlag,
+                                fileOpenFlagList : fileOpenFlagList,
+                                basis : basis,
+                                reason : reason,
+                                publicity : pPublicityCode == "" ? "Y" : pPublicityCode,
+                                docID : newpDocID,
+                                limitDate : limitDate
+                            }
+                        });
+                    }
 		
 		            if (rtnVal.indexOf("TRUE") > -1) {
 		                savetempflag = false; //닫기시 임시저장 로직 타지 않음 (바로 닫힘) - noonpark

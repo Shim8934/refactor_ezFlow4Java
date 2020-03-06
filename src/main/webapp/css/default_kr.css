@@ -3577,6 +3577,31 @@ input[type=range]::-ms-tooltip {display: none;}
 .shared_boxesTable.public_distribution{table-layout:fixed;}
 .shared_boxesTable.public_distribution tr td > span.shared_boxesText{display:block; height:18px; line-height:16px; color:#333; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; padding-left:10px;}
 
+/* 그래프용량 */
+.graph_used{margin:0px auto;text-align: center;}
+.graph_used dl{margin:0px; padding:7px 0px; color:#333; font-size:12px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.graph_used dl dt{display:inline-block; margin:0px 3px; padding:0px;}
+.graph_used dl dt img{vertical-align:middle; margin:0px;}
+.graph_used dl dt span{display:inline-block; margin:0px 2px;}
+.graph_used dl dt span.color{color:#0470e4; font-weight:bold;}
+.graph_used dl dd{display:inline-block; margin:0px; padding:0px;}
+.graph_used dl dd.graph{width:120px; height:10px; margin:-4px 10px 0px 10px; vertical-align:middle; background:#e0e0e0; text-align:left}
+.graph_used dl dd.graph .bar{display:inline-block;  height:10px; background:#82b9f6; vertical-align:top }
+.graph_used dl dd.graph_text{color:#555; margin:0px; padding:0px;}
+.graph_used dl dd.graph_text span{display:inline-block; font-weight:bold;}
+/* mailbox_graph */
+.folderdepth_2, .folderdepth_3, .folderdepth_4, .folderdepth_5, .folderdepth_6, .folderdepth_7, .folderdepth_8, .folderdepth_9, .folderdepth_10 {width: 15px;height: 15px;display: inline-block;vertical-align: middle; margin-left: -5px; background:url(../images/folder_depth.gif);margin-right :3px; }
+.folderdepth_3 {margin-left: 10px;}
+.folderdepth_4 { margin-left: 20px; }
+.folderdepth_5 { margin-left: 30px; }
+.folderdepth_6 { margin-left: 40px; }
+.folderdepth_7 { margin-left: 50px; }
+.folderdepth_8 { margin-left: 60px; }
+.folderdepth_9 { margin-left: 70px; }
+.folderdepth_10 { margin-left: 80px; }
+/* font bold */
+.txt_bold { font-weight:bold;}
+
 /* 메일 리스트 완료/완료 취소 */
 .icon_mail_Confirm{ background:url(../images/ImgIcon/view-document-confirm.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
 .icon_mail_Cancle{ background:url(../images/ImgIcon/view-document-cancel.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
@@ -3584,3 +3609,4 @@ tr.mail_confirm > td{position:relative; }
 tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute; top:51%; left:0; border-bottom:1px solid #48494B; width:100%;}
 
 #ContextMenuDiv > .popuplist{ width:150px; }
+

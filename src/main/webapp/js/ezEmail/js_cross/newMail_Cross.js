@@ -1544,7 +1544,7 @@ function GetMailAddresses(name) {
             m_addrBook["title"][count + adCount] = SelectSingleNodeValue(contactList[count], "STITLE");
         }
         
-        /*rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
+        rows = SelectNodes(xmlDOM, "RESULT/DL/ROW");
         adCount += contactList.length;
         
         for (count = 0 ; count < rows.length ; count++) {
@@ -1555,7 +1555,7 @@ function GetMailAddresses(name) {
             m_addrBook["company"][count + adCount] = strLang114;
             m_addrBook["dept"][count + adCount] = "";
             m_addrBook["title"][count + adCount] = "";
-        }*/
+        }
         
         adCount += rows.length;
         rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");

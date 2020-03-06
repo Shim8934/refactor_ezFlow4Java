@@ -189,7 +189,7 @@ var strLangKHJ7 = "ics파일을 저장하는 중 에러발생";
 var strLangKHJ8 = "権限がありません。";
 //2018-12-27
 var strLangKHA1 = "会社記念日";
-var strLangKHA2 = "国民の祝日";
+var strLangKHA2 = "全体記念日";
 //2018-02-22
 var strLangGHA1 = "、";
 /* 2019-04-03 */

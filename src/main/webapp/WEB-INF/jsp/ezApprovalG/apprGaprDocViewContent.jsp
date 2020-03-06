@@ -6,6 +6,7 @@
 	    <title></title>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/diff.js')}"></script>
 	    <style type="text/css">
 	    	 P { margin-top: 0px;margin-bottom: 0px; }
 	        .viewbox {
@@ -19,6 +20,16 @@
 			#div_Content table {
 		     	word-break : break-word;   
 		    }
+		    
+			addsentence {
+				text-decoration: none;
+	            background-color: #d4fcbc;
+			}
+	        delsentence {
+	            text-decoration: line-through;
+	            background-color: #fbb6c2;
+	            color: #555;
+	        }
 	    </style>
 	    <script language="javascript" type="text/javascript">
 // 	        var XmlBodyATT = createXmlDom();
@@ -136,6 +147,95 @@
 	            } catch (e)
 	            { }
 	        }
+	        
+	        /* 2020-02-25 홍승비 - 본문 비교용 함수 추가 */
+	        function Set_EditorContentURL_Compare(OrgHref, Href) {
+	            try {
+	                var tempOrgXML = createXmlDom();
+	                var tempXML = createXmlDom();
+	                var XmlBodyOrgDATA = createXmlDom();
+	                var XmlBodyDATA = createXmlDom();
+	                var tempOrgStr = "";
+	                var tempStr = "";
+	                
+	                tempOrgStr = ConvertMHTtoHTML(encodeURI(OrgHref));
+	                tempStr = ConvertMHTtoHTML(encodeURI(Href));
+	                tempOrgXML = loadXMLString(tempOrgStr);
+                    tempXML = loadXMLString(tempStr);
+                    
+                    XmlBodyOrgDATA = GetElementsByTagName(tempOrgXML, 'BODYDATA')[0];
+                    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+
+                    var _DocOrgHTML = getNodeText(XmlBodyOrgDATA);
+                    var _DocHTML = getNodeText(XmlBodyDATA);
+
+                    // 이미지는 비교하지 않는다.
+                    var img_tag = /<IMG(.*?)>/gi;
+                    _DocHTML = _DocHTML.replace(img_tag, ""); 
+                    _DocHTML = _DocHTML.replace(/<OPTION(.*?)>/gi, ""); 
+                    //_DocHTML = _DocHTML.replace(/(<\/INPUT|<INPUT)*>/gi, ""); 
+                    //_DocHTML = _DocHTML.replace(/<\/INPUT|<INPUT)(type?radio?)(\/>|>)/gi, ""); 
+
+                    var _OrgHTMLTag = document.createElement("DIV");
+                    _OrgHTMLTag.innerHTML = _DocOrgHTML;
+                    var _DocOrgBody = "";
+
+                    var _HTMLTag = document.createElement("DIV");
+                    _HTMLTag.innerHTML = _DocHTML;
+                    var _DocBody = "";
+
+                    for (var i = 0; i < _OrgHTMLTag.getElementsByTagName("*").length; i++) {
+                        if (_OrgHTMLTag.getElementsByTagName("*")[i].id.toLocaleLowerCase() == "body") {
+                            _DocOrgBody = _OrgHTMLTag.getElementsByTagName("*")[i].innerHTML;
+
+                            for (var j = 0; j < _HTMLTag.getElementsByTagName("*").length; j++) {
+                                if (_HTMLTag.getElementsByTagName("*")[j].id.toLocaleLowerCase() == "body") {
+                                    _DocBody = _HTMLTag.getElementsByTagName("*")[j].innerHTML;
+                                    _OrgHTMLTag.getElementsByTagName("*")[i].innerHTML = htmldiff(_DocOrgBody, _DocBody);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    for (var i = 0; i < _OrgHTMLTag.getElementsByTagName("*").length; i++) {
+                        if (_OrgHTMLTag.getElementsByTagName("*")[i].id.toLocaleLowerCase() == "ezeditor" && _OrgHTMLTag.getElementsByTagName("*")[i].innerHTML.trim() == "") {
+                            _OrgHTMLTag.getElementsByTagName("*")[i].parentNode.removeChild(_OrgHTMLTag.getElementsByTagName("*")[i]);
+                            break;
+                        }
+                    }
+                    
+                    var _DocContentHtml = _OrgHTMLTag.innerHTML;
+                    var ConXmlDiv = document.createElement("DIV");
+                    ConXmlDiv.innerHTML = _DocContentHtml;
+
+                    if (ConXmlDiv.getElementsByTagName("XML").length > 0) {
+                        ConXmlDiv.getElementsByTagName("XML").item(0).style.display = "none";
+                        CONNINFO.innerHTML = ConXmlDiv.getElementsByTagName("XML").item(0).outerHTML;
+                        _DocContentHtml = ConXmlDiv.innerHTML;
+                    }
+                    
+                    document.getElementById('div_Content').innerHTML = "";
+                    document.getElementById('div_Content').innerHTML = _DocContentHtml;
+
+                    _htmlcontent = document.getElementById('div_Content').innerHTML;
+
+                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD")
+                    for (var i = 0; i < TDRows.length; i++) {
+                        if (GetAttribute(TDRows.item(i), "id") != null) {
+                            if (TDRows.item(i).childNodes.length == 0) {
+                                if (TDRows.item(i).innerHTML == "" || TDRows.item(i).innerHTML == " ") {
+                                    TDRows.item(i).innerHTML = "&nbsp;";
+                                }
+                            }
+                        }
+                    }
+                    BodyTagsDisabled(document.getElementById('div_Content'));
+                    // 미사용 parent.FieldsAvailable() 함수 제거
+	            } catch (e)
+	            { }
+	        }
+	        
 	        function GetFieldsList() {
 	            var FieldsList = new Array();
 	            var FieldCount = 0;
