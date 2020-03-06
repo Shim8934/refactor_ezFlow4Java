@@ -2652,8 +2652,8 @@
 			                                <table class="content" style="margin-bottom: 5px; width: 100%; ">
 			                                    <tr>
 			                                        <td style="text-align: center;">
-			                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDelCC_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
-			                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSaveCC_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+			                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDelCC_onclick()"><spring:message code='ezApprovalG.hsbFv01'/></span></a>
+			                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSaveCC_onclick('MODIFY')"><spring:message code='ezApprovalG.hsbFv02'/></span></a>
 			                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAddCC_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 			                                        </td>
 			                                    </tr>
