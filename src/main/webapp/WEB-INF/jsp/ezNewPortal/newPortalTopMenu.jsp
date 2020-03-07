@@ -265,7 +265,10 @@
 		var setEvent = function (id, url, location, option) {
 			var element = document.getElementById(id);
 			element.addEventListener('click', function () {
-				if (id != 'util_employee_search' && id != 'util_admin') {
+			    if (id == 'util_logout') {
+			        subMenuClickEvent('off');
+			        self.top.location.href = url;
+			    } if (id != 'util_employee_search' && id != 'util_admin') {
 					subMenuClickEvent('off', url);
 				} else {
 					subMenuClickEvent('off');
