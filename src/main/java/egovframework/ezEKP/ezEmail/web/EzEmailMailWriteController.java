@@ -404,6 +404,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		//파일첨부 제한 관련 변수 설정 
 		String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", loginInfo.getTenantId());
 		String bigSizeMailAttachLimit = ezCommonService.getTenantConfig("BigSizeMailAttachLimit", loginInfo.getTenantId());
+		String bigSizeAttachLimitCount = ezCommonService.getTenantConfig("MailBigSizeAttachLimitCount", loginInfo.getTenantId());
+		String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("MailBigSizeAttachDownloadLimitCount", loginInfo.getTenantId());
 		String totBigSizeMailAttachLimit = ezCommonService.getTenantConfig("totBigSizeMailAttachLimit", loginInfo.getTenantId());
 		String pBigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", loginInfo.getTenantId());
 		logger.debug("mailAttachLimit=" + mailAttachLimit + ",bigSizeMailAttachLimit=" + bigSizeMailAttachLimit
@@ -411,13 +413,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String bigSizeMailAttachDelDate = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(pBigAttachDownloadDay), "yyyy-MM-dd");
         String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
+        int pBigAttachLimitCount = Integer.parseInt(bigSizeAttachLimitCount);
+        int pBigAttachDownloadLimitCount = Integer.parseInt(bigSizeAttachDownloadLimitCount);
         String pAttachWarning = egovMessageSource.getMessage("ezEmail.lhm18", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm19", locale) 
-        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm20", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale);
+        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm20", locale); // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(
+        
+        if(pBigAttachLimitCount > 0) {
+        	pAttachWarning += "최대 " + bigSizeAttachLimitCount + "개 첨부, "; // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부,
+        }
+        
+        if(pBigAttachDownloadLimitCount > 0) {
+        	pAttachWarning += pBigAttachDownloadLimitCount + "회까지 다운로드 가능, "; // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부, 1회까지 다운로드 가능,
+        }
+        
+        pAttachWarning += pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale); // 일반첨부파일은 총 10MB까지 가능하며, 대용량첨부는 800MB까지 가능(최대 1개 첨부, 1회까지 다운로드 가능, 14일후 자동삭제)
+        
         if(totBigSizeMailAttachLimit.equals("0")){
         	pAttachWarning = egovMessageSource.getMessage("ezEmail.kms01", locale) + mailAttachLimit +egovMessageSource.getMessage("ezEmail.kms02", locale);
         }
         logger.debug("bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate + ",pBigAttachDownloadPeriod=" + pBigAttachDownloadPeriod
-        		+ ",pAttachWarning=" + pAttachWarning);
+        		+ ",pAttachWarning=" + pAttachWarning + ",pBigAttachLimitCount=" + pBigAttachLimitCount+ ",pBigAttachDownloadLimitCount=" + pBigAttachDownloadLimitCount);
         
         // set pAutoSaveTime,mailSendObject
  		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
@@ -1393,6 +1408,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("isMailToMe", isMailToMe); // 내게쓰기 버튼 클릭시  checkobx checked
 		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		model.addAttribute("useAdditionalInfo", useAdditionalInfo);
+		model.addAttribute("bigSizeAttachLimitCount", bigSizeAttachLimitCount);
+		model.addAttribute("bigSizeAttachDownloadLimitCount", bigSizeAttachDownloadLimitCount);
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);

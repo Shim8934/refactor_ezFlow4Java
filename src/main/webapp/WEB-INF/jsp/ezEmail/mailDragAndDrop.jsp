@@ -87,6 +87,7 @@
 		        var tempbigfilesize = 0;
 		        var filecnt = file.length;
 		        var bigFileCheck = false;
+		        var newBigAttachCount = 0;
 		        
 		        if (status == 1) {
 		        	isbigyn = "Y";
@@ -99,6 +100,7 @@
 		                bigFileCheck = true;
 		                bigfile[filecnt + i] = filelist[i];
 		                tempbigfilesize += filelist[i].size;
+		                newBigAttachCount++;
 		            } else {
 		                file[filecnt + i] = filelist[i];
 		                tempfilesize += filelist[i].size;
@@ -107,6 +109,12 @@
 				
 		        if (isbigyn == "Y") {
 		            bigFileCheck = true;
+		        }
+		        
+		        if (bigFileCheck == true) {
+		        	if(!bigFileAttachCountCheck(newBigAttachCount)) {
+		        		return;
+		        	}
 		        }
 		
 		        if (bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0) {
@@ -662,6 +670,16 @@
 		        filesize += tempfilesize;
 		        bigfilesize += tempbigfilesize;
 
+		        return true;
+		    }
+		    
+		    function bigFileAttachCountCheck(newBigAttachCount) {
+		        var BigSizeAttachLimitCount = window.parent.BigSizeAttachLimitCount;
+		        var curBigAttachCount = document.querySelectorAll("#filelist tr[_big='Y']").length;
+		        if (BigSizeAttachLimitCount > 0 && curBigAttachCount + newBigAttachCount > BigSizeAttachLimitCount) {
+		        	alert("대용량파일 첨부는 " + BigSizeAttachLimitCount + "개까지 가능합니다.");
+		        	return false;
+		        }
 		        return true;
 		    }
 		    
