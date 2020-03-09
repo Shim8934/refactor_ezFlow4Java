@@ -14509,7 +14509,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} 
 				}
 			} else {
-				subSQL = doApproveEnd(docID, dirPath, deptID, false, companyID, userInfo.getTenantId());
+				// 부서감사 결재완료 시 sendFlag 가 없어서 문서함이 계속 만들어지던 오류 수정. 2020-03-09 홍대표
+				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
