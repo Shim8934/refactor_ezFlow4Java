@@ -4020,13 +4020,14 @@ function btnAddEtcDept_onclick(pType) {
         AprLineAddIndex = AprLineRow.length;
         AprLineAddIndex = AprLineAddIndex + 1;
 
-        if (AprLineRow.length == 1) {
-            if (GetAttribute(AprLineRow[0], "DATA11") == strAprType1 || GetAttribute(AprLineRow[0], "DATA11") == strAprType4 || GetAttribute(AprLineRow[0], "DATA11") == strAprType16) {
-                var pAlertContent = "" + strLang298 + "<br>" + strLang299 + "";
-                Alert_Message(pAlertContent, null, "");
-                return;
-            }
-        }
+        //불필요한 결재선 체크 로직 수정. 결재선에 결재 유형만 있을 때, 에러 발생. 2020-03-09 홍대표
+//        if (AprLineRow.length == 1) {
+//            if (GetAttribute(AprLineRow[0], "DATA11") == strAprType1 || GetAttribute(AprLineRow[0], "DATA11") == strAprType4 || GetAttribute(AprLineRow[0], "DATA11") == strAprType16) {
+//                var pAlertContent = "" + strLang298 + "<br>" + strLang299 + "";
+//                OpenAlertUI(pAlertContent);
+//                return;
+//            }
+//        }
         
 
         var tr = pAPRLINE.GetSelectedRows();
