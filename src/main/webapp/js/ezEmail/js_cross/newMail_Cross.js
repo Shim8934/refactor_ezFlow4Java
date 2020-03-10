@@ -2652,6 +2652,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         xmlhttp.send();
         var pAttachXml = loadXMLString(xmlhttp.responseText);
         var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
+        var bigAttachFileArr = [];
 
 
         for (var i = 0 ; i < nodes.length ; i++) {
@@ -2694,17 +2695,28 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                                 "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;vertical-align:middle' border='0'/></a>" +
                                 "<a id='BigSizeFileLink' href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + FileName + " (" + fileSize + ")</a></td>" +
                                 "</tr>";
+                    
+                    bigAttachFileArr.push(getNodeText(GetChildNodes(nodes[i])[0]).substr(0, 36));
                 }
             }
         }
+        
+        // 대용량첨부 파일 다운로드 횟수제한 메시지 추가 및 대용량 첨부영역 넓이 수정. 2020-03-10 홍대표.
         TempText += "<tr>" +
-                    "<td width='75%' style='font-size:11px; font-weight:normal; color:#666666; padding-left:10px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" +
+                    "<td width='50%' style='font-size:11px; font-weight:normal; color:#666666; padding-left:10px; margin:0px; border-bottom:1px solid #dadada;border-left:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" +
                     strLang246 + "<span style='color:#FF0000 ;'>" + _pBigAttachDownloadPeriod + "</span></td>" +
-                    "<td width='30%' align='right' style='font-size:11px; font-weight:normal; color:#666666; padding-right:10px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" +
-	                strLang247 + "<span style='color:#FF0000 ;'>" + _pBigAttachDownloadDay + strLang248 + "</span>" + strLang249 + "</div>	</td>" +
-                    "</tr></table></div>";
+                    "<td width='50%' align='right' style='font-size:11px; font-weight:normal; color:#666666; padding-right:10px; margin:0px; border-bottom:1px solid #dadada;border-right:1px solid #dadada; background:#f6f6f6; height:25px; line-height:25px;'>" +
+	                strLang247 + "<span style='color:#FF0000 ;'>" + _pBigAttachDownloadDay + strLang248 + "</span>" + strLang249;
+        
+        if(BigSizeAttachDownloadLimitCount > 0) {
+        	TempText += " / <span style='color:#FF0000 ;'>" + BigSizeAttachDownloadLimitCount + "회까지" + "</span> 다운로드 가능"
+        }
+        
+        TempText += "</div></td></tr></table></div>";
 
         tempDiv.innerHTML = TempText + tempDiv.innerHTML;
+        
+        setBigAttachCountInfo(bigAttachFileArr);
     }
 
     var imgColl = tempDiv.getElementsByTagName("IMG");
@@ -4309,4 +4321,23 @@ function preMailRead(Href) {
     if (ReadMailOpenNewWin != null) {
     	window.ReadMailOpenNewWin.focus();
     }
+}
+
+function setBigAttachCountInfo (bigAttachArr) {
+	$.ajax({
+		type	: "POST",
+		data	: {
+			bigAttach : bigAttachArr,
+			BigSizeAttachDownloadLimitCount : BigSizeAttachDownloadLimitCount
+		},
+		dataType: "text",
+		url		: "/ezEmail/setBigAttachCountInfo.do",
+		async	: true,
+		success	: function(res) {
+//			alert("setBigAttachCountInfo success");
+		},
+		error	: function(error) {
+			console.log(error);
+		}
+	});
 }

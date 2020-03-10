@@ -6746,4 +6746,24 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		return addCopyrightStr;
 	}
 	
+	/**
+	 * 대용량첨부 횟수 정보 입력 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/setBigAttachCountInfo.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String setBigAttachCountInfo( @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("setBigAttachCountInfo started.");
+		
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String[] fileIdArr = request.getParameterValues("bigAttach[]");
+		int bigSizeAttachDownloadLimitCount = Integer.parseInt(request.getParameter("BigSizeAttachDownloadLimitCount"));
+		int tenantId = userInfo.getTenantId();
+        
+        ezEmailService.setBigAttachCountInfo(fileIdArr, bigSizeAttachDownloadLimitCount, tenantId);
+        
+        logger.debug("setBigAttachCountInfo ended.");
+        
+		return "";
+	}
 }

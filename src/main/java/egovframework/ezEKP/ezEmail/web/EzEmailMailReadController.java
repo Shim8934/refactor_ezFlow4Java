@@ -1394,6 +1394,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				response.getWriter().print(egovMessageSource.getMessage("main.t4", locale));
 				
 				return;
+			} else {
+				String exceededFilelimit = ezEmailService.checkBigAttachDownloadCount(fileId, tenantId);
+				if (exceededFilelimit != null) {
+					response.setContentType("text/plain; charset=utf-8");
+					response.getWriter().print("해당 파일은 " + exceededFilelimit + "회 이상 다운로드 되어, 더 이상 내려받을 수 없습니다.");
+					
+					return;
+				} else {
+					ezEmailService.updateBigAttachDownloadCount(fileId, tenantId);
+				}
 			}
 			
 			for (int i = 0; i < files.length; i++) {

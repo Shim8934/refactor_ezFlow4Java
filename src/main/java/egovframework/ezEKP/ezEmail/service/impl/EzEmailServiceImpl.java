@@ -3816,5 +3816,48 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getDistributionInfo ended.");
 		return vo;
 	}
+
+	@Override
+	public String setBigAttachCountInfo(String[] fileIdArr, int limitCount, int tenantId) throws Exception {
+		logger.debug("setBigAttachCountInfo started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("fileIdArr", fileIdArr);
+		map.put("limitCount", limitCount);
+		map.put("tenantId", tenantId);
+		
+		ezEmailDAO.setBigAttachCountInfo(map);
+		
+		logger.debug("setBigAttachCountInfo ended.");
+		return "";
+	}
+
+	@Override
+	public String checkBigAttachDownloadCount(String fileId, int tenantId) throws Exception {
+		logger.debug("checkBigAttachDownloadCount started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
+		
+		
+		logger.debug("checkBigAttachDownloadCount ended.");
+		
+		return ezEmailDAO.checkBigAttachDownloadCount(map);
+	}
+
+	@Override
+	public void updateBigAttachDownloadCount(String fileId, int tenantId) throws Exception {
+		logger.debug("updateBigAttachDownloadCount started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("fileId", fileId);
+		map.put("tenantId", tenantId);
+		
+		
+		logger.debug("updateBigAttachDownloadCount ended.");
+		
+		ezEmailDAO.updateBigAttachDownloadCount(map);
+	}
 	
 }

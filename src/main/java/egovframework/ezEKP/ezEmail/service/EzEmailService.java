@@ -145,4 +145,8 @@ public interface EzEmailService {
 	
 	public MailDistributionVO getDistributionInfo(String cn, int tenantId) throws Exception;
 	public JSONArray getFolderQuota(String String, Locale locale) throws Exception;
+	
+	public String setBigAttachCountInfo(String[] fileIdArr, int limitCount, int tenantId) throws Exception;
+	public String checkBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
+	public void updateBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
 }
