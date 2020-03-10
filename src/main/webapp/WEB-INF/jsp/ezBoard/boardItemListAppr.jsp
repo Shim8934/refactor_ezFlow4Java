@@ -530,6 +530,7 @@
 		            xmlhttp = null;
 		            return true;
 		        }
+		        
 		        function DeleteItem() {
 		            var xmlhttp = createXMLHttpRequest();
 		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + selobj.getAttribute("DATA1") + "&itemList=" + strListInfo, false);
@@ -537,12 +538,15 @@
 		
 		            if (xmlhttp.responseText == "NO") {
 		                alert("<spring:message code='ezBoard.t265'/>");
-		            return;
-		        }
+			            return;
+			        } else if (xmlhttp.responseText == "ERROR") {
+		                alert("<spring:message code='ezBoard.t1020'/>");
+		                return;
+		            }
 		
-		        xmlhttp = null;
-		        getBoardList();
-		    }
+			        xmlhttp = null;
+			        getBoardList();
+			    }
 		
 		    function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");
