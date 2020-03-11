@@ -429,6 +429,10 @@
 		        }
 		        
                 $("#MailEnv_ifrm")[0].contentWindow.requestFolderList();
+                if(window.parent.frames["left"].configFlag == "false") {
+			        window.parent.frames["left"].mailbox_treeview_reload();
+		        }
+                
 		    }
             
             function modify_onclick(selectFolderName, selectFolderNameSpl) {
@@ -469,6 +473,9 @@
 		        	return;
 		        }
 		        $("#MailEnv_ifrm")[0].contentWindow.requestFolderList();
+		        if(window.parent.frames["left"].configFlag == "false") {
+			        window.parent.frames["left"].mailbox_treeview_reload();
+		        }
 		    }
 		    
 		    function checkBadFolderName(szName) 

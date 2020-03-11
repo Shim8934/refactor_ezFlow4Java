@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript">
+			var configFlag = "true";
 		 	window.onload = function () {
 		 		// 20181018 조진호 - 패키지타입이 standard가 아닐때 일어나는 오류 수정
 		 		if ("${funCode}" == "1" || "${packageType}" != "standard" || "${firstScreen_Mail}" == "YES" || "${portalEnv}" == "3") {
