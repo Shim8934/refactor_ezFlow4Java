@@ -693,7 +693,7 @@
 	    		}
 		        
 		        redrawMappingSign();
-		        UpdateLineHistory();
+		        //UpdateLineHistory(); //결재선 변경이력 남기는 로직 위치변경 770->1004
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                var rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
@@ -927,6 +927,9 @@
 		            return;
 		        }
 		        else {
+		        	//결재처리가 완료되었을때 결재선 변경이력 남기도록
+		        	UpdateLineHistory();
+		        	
 		            if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                    var rtnVal = ExcuteInfo("LAST_END_AFTER", "");
@@ -1559,6 +1562,7 @@
 		        parameter[40] = "";
 		        parameter[45] = pPublicityYN;
 		        parameter[46] = nonElecRec;
+		        parameter[52] = OrgAprUserDeptID;
 			    
 			    if (nonElecRec == "Y") {
 			    	if (pGubun != "1") {

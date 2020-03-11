@@ -10936,7 +10936,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			map.put("companyID", companyID);
 			
-			ezApprovalGDAO.updateHistoryForLine(map);
+			String mode = getLineModeFlag(docID.trim(), userID.trim(), companyID, tenantID);
+			
+			if (mode.equals("APR")) {
+				ezApprovalGDAO.updateHistoryForLine(map);
+			} else {
+				ezApprovalGDAO.updateHistoryForLine2(map);
+			}
 		}
 
 		logger.debug("updateHistoryForLine ended");
@@ -13089,7 +13095,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document historyXML = commonUtil.convertStringToDocument(sb.toString());
 		
 		if (historyXML.getElementsByTagName("ROW").getLength() <= 0) {
-			return false;
+
+			map.put("v_FLAG", "4");
+			
+			apprGAprLineVOList = ezApprovalGDAO.compareLineHistory1(map);
+			sb = new StringBuffer();
+			sb.append("<DATA>");
+			
+			for (int i = 0; i < apprGAprLineVOList.size(); i++) {
+				sb.append(commonUtil.getQueryResult(apprGAprLineVOList.get(i)));
+			}
+			sb.append("</DATA>");
+			
+			historyXML = commonUtil.convertStringToDocument(sb.toString());
+			
+			if (historyXML.getElementsByTagName("ROW").getLength() <= 0) {
+				return false;
+			}
 		}
 		
 		map.put("v_FLAG", "3");
