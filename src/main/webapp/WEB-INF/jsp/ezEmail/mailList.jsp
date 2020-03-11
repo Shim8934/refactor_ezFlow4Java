@@ -1167,7 +1167,7 @@
 			                        			<span id="PreH_sub_MailSender"></span>
 			                        		</span>
 			                        	</span>
-			                        	<span class="t_right">
+			                        	<span class="t_right" style="margin-right:3px;">
 			                        		 <c:if test="${folderType == 'sent' or folderType == 'draft'}">
 				                        		<span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
                   							</c:if>
@@ -1225,7 +1225,7 @@
 				                        		<span id="PreW_sub_MailSender"></span>
 				                        	</span>
 			                        	</span>
-			                        	<span class="t_right">
+			                        	<span class="t_right" style="margin-right:3px;">
 			                        		<c:if test="${folderType == 'sent' or folderType == 'draft'}">
 				                        		<span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
                   							</c:if>
