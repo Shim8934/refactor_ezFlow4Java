@@ -709,7 +709,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.deleteBoardItemRead2(map);
 		
 		ezBoardDAO.insertDeleteReservedItem(map);
-
+		
 		logger.debug("deleteTempItem ended");
 	}
 
@@ -3516,21 +3516,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					}
 				}
 			} else {
-				BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
-				boardID = boardListVO.getBoardID();
-				
-				if (!boardInfo.getDelete_FG().equals("true")) {
-					if (!boardInfo.getBoardAdmin_FG().equals("true")) {
-						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-							return "NO";
-						}
-					} else {
-						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-							return "NO";
+					BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
+					boardID = boardListVO.getBoardID();
+					
+					if (!boardInfo.getDelete_FG().equals("true")) {
+						if (!boardInfo.getBoardAdmin_FG().equals("true")) {
+							if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+								return "NO";
+							}
+						} else {
+							if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+								return "NO";
+							}
 						}
 					}
 				}
-			}
 			
 			for (int i = 0; i < itemListArray.length; i++) {
 				//중복제거 구문
@@ -3550,7 +3550,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			logger.debug("deleteItem error");
-			return "NO";
+			return "ERROR";
 		}
 	}
 

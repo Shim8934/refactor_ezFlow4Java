@@ -230,6 +230,9 @@
 		        }
 		        requestFolderList();
 		        HiddenMailProgress();
+		        if(parent.parent.frames["left"].configFlag == "false") {
+		        	parent.parent.frames["left"].mailbox_treeview_reload();
+		        }
 		    }
 		    // 메일함 비우기
 		    function delete_mail_onclick() {
@@ -384,12 +387,12 @@
 		    }
 		    function ContextMenuHidden() {
 		        
-		        if (parent.frames["right"].parent.frames["left"].document.getElementById("mailPanel").style.display == "")
+		        if (parent.parent.frames["left"].document.getElementById("mailPanel").style.display == "")
 		        	HiddenContextMenu();
 		        
 		        if (parent.parent.frames["left"].document.getElementById("folderMenuDiv").style.display == "") {
-		        	parent.frames["right"].parent.parent.frames["left"].document.getElementById("mailPanel").style.display = "none";
-		        	parent.frames["left"].document.getElementById("folderMenuDiv").style.display = "none";
+		        	parent.parent.frames["left"].document.getElementById("mailPanel").style.display = "none";
+		        	parent.parent.frames["left"].document.getElementById("folderMenuDiv").style.display = "none";
 		        }
 		    }
 		    

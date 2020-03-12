@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript">
+			var configFlag = "true";
 		 	window.onload = function () {
 		 		// 20181018 조진호 - 패키지타입이 standard가 아닐때 일어나는 오류 수정
 		 		if ("${funCode}" == "1" || "${packageType}" != "standard" || "${firstScreen_Mail}" == "YES" || "${portalEnv}" == "3") {
@@ -262,7 +263,7 @@
                     </c:if>
                     <c:if test="${firstScreen_Mail != 'YES' && packageType != 'mail'}">
        					<c:if test="${isScheduleUsed == 'Y'}">
-                          	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezSchedule.t1012' /></span></li>
+                          	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()"><spring:message code='ezPersonal.t999900007' /></span></li>
                            	<li><span class="sub_iconLNB tree_env_firstPage"></span><span class="list_text" id="TaskEnv" name="TaskEnv" onClick="Task_Config()"><spring:message code='ezTask.hyh001' /></span></li>
 	                   </c:if>
 	                    <c:if test="${packageType == 'standard'}">

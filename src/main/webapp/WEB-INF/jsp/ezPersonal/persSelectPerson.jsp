@@ -510,7 +510,7 @@
 				            <option value="streetAddress"><spring:message code='ezPersonal.t76'/></option>
 				        </select>
 				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="width:130px; height:22px;" maxLength="50">
-				        <a class="imgbtn" style="margin-right:5px;"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
+				        <a class="imgbtn" style="margin-right:5px;"><span onClick="search_click()"><spring:message code='ezPersonal.t83'/></span></a>
 				    </div>
 			    	</c:if>			    	
 			    </td>

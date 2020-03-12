@@ -693,7 +693,7 @@
 	    		}
 		        
 		        redrawMappingSign();
-		        UpdateLineHistory();
+		        //UpdateLineHistory(); //결재선 변경이력 남기는 로직 위치변경 770->1004
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                var rtnVal = ExcuteInfo("DOCNUM_BEFORE", "");
@@ -927,6 +927,9 @@
 		            return;
 		        }
 		        else {
+		        	//결재처리가 완료되었을때 결재선 변경이력 남기도록
+		        	UpdateLineHistory();
+		        	
 		            if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 		                    var rtnVal = ExcuteInfo("LAST_END_AFTER", "");
@@ -1559,6 +1562,7 @@
 		        parameter[40] = "";
 		        parameter[45] = pPublicityYN;
 		        parameter[46] = nonElecRec;
+		        parameter[52] = OrgAprUserDeptID;
 			    
 			    if (nonElecRec == "Y") {
 			    	if (pGubun != "1") {
@@ -1587,7 +1591,7 @@
 			        parameter[42] = tempItemName2;
 		        }
 
-		        if(useOpenGov = "YES") {
+		        if(useOpenGov == "YES") {
                     parameter[52] = basis;
                     parameter[53] = reason;
                     parameter[54] = listOpenFlag;
@@ -1705,16 +1709,17 @@
 		                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련  
 		                
 		                //tempPublic 추가
-		                if (ret[11].substring(0,1) == '1') {
+		                /*if (ret[11].substring(0,1) == '1') {
 		                	tempPublic = 'Y';
 		                } else {
 		                	tempPublic = 'N';
-		                }
+		                }*/
 		                
 		                if (approvalFlag == "G") {
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
+                            tempPublic = ret[21]; //문서 공개/비공개
 			                //문서 공개 범위 설정
 			                //setPublicFlag();
 			                setPublicFlag();

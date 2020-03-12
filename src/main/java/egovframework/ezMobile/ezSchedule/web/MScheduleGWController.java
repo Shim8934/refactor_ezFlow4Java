@@ -546,6 +546,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("modifierId").toString());
+			MScheduleInfoVO vo = mScheduleService.scheduleInfo(scheduleId, commonUtil.getMinuteUTC(info.getOffSet()), info.getTenantId());
 			
 			jsonParam.put("modifierName", info.getUserName());
 			jsonParam.put("modifierName2", info.getUserName2());
@@ -598,6 +599,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			content = content.replace("replace_" + scheme, scheme);
 	        
 			jsonParam.put("content", content);
+			jsonParam.put("repetition", vo.getRepetition());
 	        
 	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId(), realPath, locale);
 	        
