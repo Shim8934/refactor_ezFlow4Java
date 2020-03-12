@@ -1260,9 +1260,12 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				File[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
 				
 				for (File expiredFile : files) {
+					File[] filelist = expiredFile.listFiles();
 					logger.debug("expired directory name=" + expiredFile.getName());
 					if (deleteDirectory(expiredFile)) {
 						logger.debug(expiredFile.getName() + " is deleted.");
+						//대용량 첨부파일 삭제 시 제한 횟수 정보도 삭제하는 로직 추가. 2020-03-12 홍대표.
+						ezEmailService.deleteBigAttachCountInfo(filelist, tenantVO.getTenantId());
 					}
 				}
 			}

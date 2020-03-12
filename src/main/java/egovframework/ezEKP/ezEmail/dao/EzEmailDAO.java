@@ -241,4 +241,8 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	public void updateBigAttachDownloadCount(Map<String, Object> map) throws Exception{
 		update("EzEmailDAO.updateBigAttachDownloadCount", map);
 	}
+
+	public void deleteBigAttachCountInfo(Map<String, Object> map) {
+		delete("EzEmailDAO.deleteBigAttachCountInfo", map);
+	}
 }

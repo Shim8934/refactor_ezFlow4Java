@@ -1395,6 +1395,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				return;
 			} else {
+				//대용량 첨부파일 다운로드 횟수 제한 처리 2020-03-10 홍대표.
 				String exceededFilelimit = ezEmailService.checkBigAttachDownloadCount(fileId, tenantId);
 				if (exceededFilelimit != null) {
 					response.setContentType("text/plain; charset=utf-8");

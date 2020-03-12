@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezEmail.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -149,4 +150,6 @@ public interface EzEmailService {
 	public String setBigAttachCountInfo(String[] fileIdArr, int limitCount, int tenantId) throws Exception;
 	public String checkBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
 	public void updateBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
+	public void deleteBigAttachCountInfo(File[] fileList, int tenantId) throws Exception;
+	public void deleteBigAttachCountInfo(String[] fileIdArr, int tenantId) throws Exception;
 }

@@ -329,4 +329,10 @@
             	TENANT_ID = #tenantId#
        	]]>
 	</update>
+	
+	<delete id="EzEmailDAO.deleteBigAttachCountInfo" parameterClass="Map">
+			DELETE FROM JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+     		WHERE FILE_ID IN (<iterate property="fileIdArr" conjunction=",">#fileIdArr[]#</iterate>)
+      		AND TENANT_ID = #tenantId#
+	</delete>
 </sqlMap>

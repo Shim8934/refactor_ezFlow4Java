@@ -3859,5 +3859,30 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		ezEmailDAO.updateBigAttachDownloadCount(map);
 	}
+
+	@Override
+	public void deleteBigAttachCountInfo(File[] fileList, int tenantId) throws Exception {
+		logger.debug("deleteBigAttachCountInfo(file[], int) started.");
+		
+		String[] fileIdArr = new String[fileList.length];
+		for (int i = 0; i < fileIdArr.length; i++) {
+			String fileName = fileList[i].getName();
+			fileIdArr[i] = fileName.substring(0, 36);
+		}
+		
+		deleteBigAttachCountInfo(fileIdArr, tenantId);
+		logger.debug("deleteBigAttachCountInfo ended.");
+	}
 	
+	@Override
+	public void deleteBigAttachCountInfo(String[] fileIdArr, int tenantId) throws Exception {
+		logger.debug("deleteBigAttachCountInfo(String[], tenantId) started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("fileIdArr", fileIdArr);
+		map.put("tenantId", tenantId);
+		
+		ezEmailDAO.deleteBigAttachCountInfo(map);
+		logger.debug("deleteBigAttachCountInfo ended.");
+	}
 }
