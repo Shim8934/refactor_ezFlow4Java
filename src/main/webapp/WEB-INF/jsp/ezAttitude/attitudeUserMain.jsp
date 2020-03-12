@@ -433,7 +433,7 @@
 			});
 			
 			function scheduleGetLunarUse() {
-				if (uselang != 3) {
+				if (uselang == 1) {
 				    $.ajax({
 			    		type : "GET",
 			    		dataType : "text",
