@@ -1591,7 +1591,7 @@
 			        parameter[42] = tempItemName2;
 		        }
 
-		        if(useOpenGov = "YES") {
+		        if(useOpenGov == "YES") {
                     parameter[52] = basis;
                     parameter[53] = reason;
                     parameter[54] = listOpenFlag;
@@ -1709,16 +1709,17 @@
 		                pPublicityYN = ret[21];             // 공개여부 및 공개등급 관련  
 		                
 		                //tempPublic 추가
-		                if (ret[11].substring(0,1) == '1') {
+		                /*if (ret[11].substring(0,1) == '1') {
 		                	tempPublic = 'Y';
 		                } else {
 		                	tempPublic = 'N';
-		                }
+		                }*/
 		                
 		                if (approvalFlag == "G") {
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
+                            tempPublic = ret[21]; //문서 공개/비공개
 			                //문서 공개 범위 설정
 			                //setPublicFlag();
 			                setPublicFlag();
