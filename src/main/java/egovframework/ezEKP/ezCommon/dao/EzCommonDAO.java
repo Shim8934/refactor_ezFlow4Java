@@ -1153,4 +1153,23 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public void createJmochaBigAttachDownloadLimit() throws Exception {
+		try {
+			select("EzCommonDAO.checkJmochaBigAttachDownloadLimit");
+		} catch (Exception e) {
+			logger.debug("jmocha_bigattach_download_limit doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJmochaBigAttachDownloadLimit");
+		}
+	}
+
+	public void insertMailBigSizeAttachLimit() throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.checkMailBigSizeAttachLimitTenantConfig");
+		
+		if (propertyValue == null) {
+			logger.debug("mail big size attach limit tenant config doesn't exist. insert data...");
+			update("EzCommonDAO.insertMailBigSizeAttachLimit");
+		}
+	}
 }

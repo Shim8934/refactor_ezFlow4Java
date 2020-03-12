@@ -2077,4 +2077,41 @@
 	    	(#menuId#, 3, #companyID#, #tenantID#, '電子アンケート')
 	]]>
 	</insert>
+	
+	<select id="EzCommonDAO.checkJmochaBigAttachDownloadLimit">
+		SELECT 
+			FILE_ID
+		FROM 
+			JMOCHA_BIGATTACH_DOWNLOAD_LIMIT
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaBigAttachDownloadLimit">
+		CREATE TABLE `jmocha_bigattach_download_limit` (
+		  `file_id` varchar(100) NOT NULL,
+		  `download_count` int(10) DEFAULT NULL,
+		  `limit_count` int(10) DEFAULT NULL,
+		  `tenant_id` mediumint(9) NOT NULL,
+		  PRIMARY KEY (`file_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+	</statement>
+	
+	<select id="EzCommonDAO.checkMailBigSizeAttachLimitTenantConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'MailBigSizeAttachLimitCount'
+		AND
+			tenant_id = 0
+	</select>
+	
+	<statement id="EzCommonDAO.insertMailBigSizeAttachLimit">
+		INSERT INTO TBL_TENANT_CONFIG 
+			(tenant_id, property_name, property_value, description, regdate, config_name, config_type)
+		VALUES
+	    	(0, 'MailBigSizeAttachDownloadLimitCount', 0, '대용량첨부 다운로드 횟수 제한, 0일 경우 무제한', current_timestamp(), '대용량첨부 다운로드 횟수 제한', '메일'),
+	    	(0, 'MailBigSizeAttachLimitCount', 0, '대용량첨부 개수 제한, 0일 경우 무제한', current_timestamp(), '대용량첨부 개수 제한', '메일')
+	</statement>
 </sqlMap>

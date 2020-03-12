@@ -182,5 +182,9 @@ public interface EzCommonService {
 	public void insertTblTenantConfig(String configName) throws Exception;
 
 	public void addThemeAndPorteltAuthInit() throws Exception;
+	
+	public void createJmochaBigAttachDownloadLimit() throws Exception;
+	
+	public void insertMailBigSizeAttachLimit() throws Exception;
 }
 
