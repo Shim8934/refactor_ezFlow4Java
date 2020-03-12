@@ -975,6 +975,7 @@ public class EzEmailUtil {
 		String securePassword = null;
 		boolean includeInlineAsAttachment = false;
 		String shareId = null;
+		String useImageConvertServer = null;
 		
 		// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
 		// ContentID 없이 Content-Dispostion이 inline으로 첨부된
@@ -997,6 +998,7 @@ public class EzEmailUtil {
 			if (extraMap.get("securePassword") != null) securePassword = (String)extraMap.get("securePassword");
 			if (extraMap.get("includeInlineAsAttachment") != null) includeInlineAsAttachment = (boolean)extraMap.get("includeInlineAsAttachment");
 			if (extraMap.get("shareId") != null) shareId = (String)extraMap.get("shareId");
+			if (extraMap.get("useImageConvertServer") != null) useImageConvertServer = (String)extraMap.get("useImageConvertServer");
 		}
 		
 		// 아래 if문 조건에 disposition이 attachment인지 체크했는데
@@ -1213,6 +1215,9 @@ public class EzEmailUtil {
 				
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
+				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
+					pAttachListHtml += " <span class='icon_rbtn2' style='right: 30px;' title='" + egovMessageSource.getMessage("ezEmail.t487", locale) + "' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Preview('" + URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + bodyPartIndex + "','" + EgovStringUtil.getSpclStrCnvr2(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle'></span>";
+				}
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16' style='vertical-align:middle'></span></li>";
 			}
 			
@@ -1785,6 +1790,9 @@ public class EzEmailUtil {
 				
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
+				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
+					pAttachListHtml += " <span class='icon_rbtn2' style='right: 30px;' title='" + egovMessageSource.getMessage("ezEmail.t487", locale) + "' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Preview('" + URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + bodyPartIndex + "','" + EgovStringUtil.getSpclStrCnvr2(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle'></span>";
+				}
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16' style='vertical-align:middle'></span></li>";
 			}
 			

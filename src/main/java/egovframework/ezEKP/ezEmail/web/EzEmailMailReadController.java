@@ -11,16 +11,19 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.Base64.Decoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -49,9 +52,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -59,6 +68,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -746,7 +757,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String mailId = userInfo.getId();
 		Map<String, Object> extraMap = new HashMap<String, Object>();
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+		
+		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
+		if (!useImageConvertServer.equalsIgnoreCase("0")) {
+			extraMap.put("useImageConvertServer", useImageConvertServer);
+		}
+		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -2145,6 +2162,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String mailId = userInfo.getId();
 		Map<String, Object> extraMap = new HashMap<String, Object>();
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+		
+		// 20200311 조진호 - 메일 읽기 > 첨부 파일 미리보기 활성화 여부 확인
+		if (!useImageConvertServer.equalsIgnoreCase("0")) {
+			extraMap.put("useImageConvertServer", useImageConvertServer);
+		}
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -4520,5 +4543,131 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("readAttachIamge ended.");
+	}
+	@RequestMapping(value="/ezEmail/attachFilePreview.do",method=RequestMethod.GET , produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public void attachFilePreview(HttpServletRequest request,HttpServletResponse response , @CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		logger.debug("attachFilePreview started.");
+		
+		String folderId = "";
+		String mailId = "";
+		String fileName = "";
+		String fileIndex = "";
+		
+		if (request.getParameter("folderId") != null) {
+			folderId = request.getParameter("folderId");
+		}
+		
+		if (request.getParameter("mailId") != null) {
+			mailId = request.getParameter("mailId");
+		}
+		
+		if (request.getParameter("fileName") != null) {
+			fileName = request.getParameter("fileName");
+		}
+		
+		if (request.getParameter("fileIndex") != null) {
+			fileIndex = request.getParameter("fileIndex");
+		}
+		
+		logger.debug("folderId : " + folderId + "mailId : " + mailId + "fileName : " + fileName + "fileIndex : " + fileIndex);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/mobile/ezemail/folders/" + folderId + "/mails/" + mailId + "/attach/" + fileIndex + "/users/" + userInfo.getId();
+
+		OutputStream output = null;
+							
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("filename", fileName);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+	
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+	
+		JSONObject data = (JSONObject) resultBody.get("data");
+		String filename = (String) data.get("filename");
+		String bytes = (String) data.get("bytes");
+		output = response.getOutputStream();
+		
+		try {
+			Decoder decoder = java.util.Base64.getDecoder();
+			
+			String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+			
+			if (useImageConvertServer.equals("1")) { //SAT
+				response.setContentType("text/plain");
+				
+				filename = URLDecoder.decode(filename, "UTF-8");
+				
+				String realPath = commonUtil.getRealPath(request);
+				String filePath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload"
+											+ commonUtil.separator + userInfo.getId();
+
+				MessageDigest md2 = MessageDigest.getInstance("MD5");
+				md2.update(filename.substring(0, filename.lastIndexOf(".")).getBytes());
+				byte mdDate2[] = md2.digest();
+				StringBuffer sb2 = new StringBuffer();
+				for (int i = 0; i < mdDate2.length; i++) {
+					sb2.append(Integer.toHexString((int) mdDate2[i] & 0x00ff));
+				}
+				String md5FileName = sb2.toString() + filename.substring(filename.lastIndexOf("."));
+				
+				File newFolder = new File(filePath);
+				if(!newFolder.exists()){
+					newFolder.mkdirs();
+				}
+				
+				File file = new File(filePath + commonUtil.separator + md5FileName);
+				FileOutputStream fos = new FileOutputStream(file);
+				
+				fos.write(decoder.decode(bytes));
+				fos.close();
+				fos = null;
+				
+				filePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) 
+				+ commonUtil.separator + "tempFileUpload" + commonUtil.separator + userInfo.getId() + commonUtil.separator + md5FileName;
+				String fileExt = filename.split("\\.")[filename.split("\\.").length - 1];
+				
+				logger.debug("filePath : " + filePath);
+				logger.debug("fileName : " + filename);
+				logger.debug("fileExt : " + fileExt);
+
+				String SATimageConvertServerURL = ezCommonService.getTenantConfig("SATimageConvertServerURL", userInfo.getTenantId());
+				
+				//output.write(("http://jmocha.kaoni.com:8080/uFOCS3.0/viewer/document/docviewer.do" + 
+				output.write((SATimageConvertServerURL + 
+							"?filepath=" + URLEncoder.encode(filePath, "UTF-8").replace("+", "%20") +
+							"&filename=" + URLEncoder.encode(filename, "UTF-8").replace("+", "%20") +
+							"&fileext=" + URLEncoder.encode(fileExt, "UTF-8").replace("+", "%20") +
+							"&viewerselect=image" +
+							"&userid=" + userInfo.getId()).getBytes());
+			} else {
+				
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			output.flush();
+			output.close();
+		}
+		
+		
+		
+
+		logger.debug("attachFilePreview ended.");
 	}
 }

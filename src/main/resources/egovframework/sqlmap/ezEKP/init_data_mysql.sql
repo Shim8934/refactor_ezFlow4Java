@@ -222,6 +222,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'spamOutLoginURI', '스팸아웃 서버 ID 로그인 주소', 'http://spam-demo.ked.com/src/id_direct.php?user=%s&tok=abcdefghijklmnopqrstuvwxyz', '스팸아웃 서버의 스팸편지함으로 ID 로그인을 할 수 있는 URI, %s 로 파라미터를 넣을 수 있게 한다.', '2019-11-18 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useAnnualSusinYN', '근태 휴가계 연동 결재 완료 시점', '0', '0:수신부서결재 사용, 1:내부결제사용 : 0이면 개인연차현황에서 완료처리가 되는 시점이 수신부서 결재완료, 1이면 내부결재 완료시 결재완료', '2020-01-23 14:00:00', '근태관리');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useMailAliasSettingOnLogin', '첫 로그인 시 이메일ID 설정 여부', 'NO', 'NO: 개인정보설정, 첫로그인에서 이메일ID 설정 불가능, YES: 개인정보설정, 첫 로그인 시 이메일ID 설정 가능', '2020-02-06 14:00:00', '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useImageConvertServer', '그룹웨어에서 이미지 변환 솔루션 사용 ', '0', '0 : 사용안함, 1 : SAT', '2020-03-12 14:00:00', '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'SATimageConvertServerURL', 'SAT 변환 솔루션 URL ', 'http://jmocha.kaoni.com:8080/uFOCS3.0/viewer/document/docviewer.do', 'IP 또는 PORT는 사이트에 맞게 변경', '2020-03-12 14:00:00', '메일');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (0, 'Top', 'useCopyright', 'NO');
 
 -- Board insert 

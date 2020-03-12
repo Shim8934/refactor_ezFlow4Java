@@ -420,6 +420,33 @@
 		     		
 			    	parent.mailPrevSentDateChk();
 		        }
+		     	
+		     	function AttachFile_Preview(mailPath, mailUid, fileIndex, fileName) {
+						
+		     		//window.open('http://jmocha.kaoni.com:8080/uFOCS3.0/viewer/document/docviewer.do?filepath=http://10.0.120.213:8080' + encodeURIComponent(downloadURL) + '&filename=' + fileName + '&fileext=txt&viewerselect=image');
+		    		  $.ajax({
+		    			  type : 'get',
+		    			  url : '/ezEmail/attachFilePreview.do',
+		    			  data : {
+		    				  "fileName" : fileName,
+		    				  "folderId" : mailPath,
+		    				  "mailId" : mailUid,
+		    				  "fileIndex" : fileIndex
+		    			  },
+		    			  error: function(xhr, status, error){
+		    			  },
+		    			  success : function(result){ // sat , kukudocs
+
+		    					  /* var link = document.createElement("a");
+
+		    					  link.setAttribute("onClick",result);
+		    					  link.setAttribute("target","_blink");
+		    					  link.click();  */
+		    					  window.open(result);
+		    			  }
+		    		  });
+		     	}
+		     	
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
